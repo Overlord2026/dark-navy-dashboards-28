@@ -65,6 +65,26 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     try {
       console.log("Loading user profile for user:", userId);
       
+      // Check cache first
+      const cacheKey = `profile_${userId}`;
+      const cachedProfile = localStorage.getItem(cacheKey);
+      
+      if (cachedProfile) {
+        try {
+          const { data: profile, timestamp } = JSON.parse(cachedProfile);
+          const isRecent = Date.now() - timestamp < 60000; // 1 minute cache
+          
+          if (isRecent) {
+            console.log("Using cached profile data");
+            setUserProfile(profile);
+            return;
+          }
+        } catch (error) {
+          console.warn("Invalid cached profile data");
+          localStorage.removeItem(cacheKey);
+        }
+      }
+      
       const { data: profile, error } = await supabase
         .from('profiles')
         .select('*')
@@ -87,7 +107,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           dateOfBirth = parseDateSafely(profile.date_of_birth);
         }
 
-        setUserProfile({
+        const userProfileData = {
           id: profile.id,
           name: profile.display_name || `${profile.first_name || ''} ${profile.last_name || ''}`.trim(),
           displayName: profile.display_name,
@@ -104,7 +124,15 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           investorType: profile.investor_type,
           role: profile.role || 'client',
           permissions: profile.permissions || []
-        });
+        };
+
+        // Cache the profile data
+        localStorage.setItem(cacheKey, JSON.stringify({
+          data: userProfileData,
+          timestamp: Date.now()
+        }));
+        
+        setUserProfile(userProfileData);
       }
     } catch (error) {
       console.error('Error in loadUserProfile:', error);
@@ -132,10 +160,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setUser(session?.user ?? null);
         
         if (session?.user) {
-          // Use setTimeout to defer profile loading and prevent auth state deadlock
-          setTimeout(() => {
-            loadUserProfile(session.user.id);
-          }, 0);
+          // Load profile immediately without setTimeout for better performance
+          loadUserProfile(session.user.id);
         } else {
           setUserProfile(null);
         }
@@ -150,9 +176,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setUser(session?.user ?? null);
       
       if (session?.user) {
-        setTimeout(() => {
-          loadUserProfile(session.user.id);
-        }, 0);
+        loadUserProfile(session.user.id);
       }
       
       setIsLoading(false);
