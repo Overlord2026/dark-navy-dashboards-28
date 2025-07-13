@@ -3,6 +3,7 @@
 import { homeNavItems } from "./tabs/HomeTab";
 import { accountsNavItems } from "./tabs/AccountsTab";
 import { educationNavItems } from "./tabs/EducationTab";
+import { healthcareOptimizationNavItems } from "./tabs/HealthcareOptimizationTab";
 import { familyWealthNavItems } from "./tabs/FamilyWealthTab";
 import { collaborationNavItems } from "./tabs/CollaborationTab";
 import { settingsNavItems } from "./tabs/SettingsTab";
@@ -22,6 +23,13 @@ export const navigationCategories: NavCategory[] = [
     title: "EDUCATION & SOLUTIONS",
     label: "EDUCATION & SOLUTIONS",
     items: educationNavItems,
+    defaultExpanded: true
+  },
+  {
+    id: "healthcare-optimization",
+    title: "HEALTHCARE OPTIMIZATION",
+    label: "HEALTHCARE OPTIMIZATION",
+    items: healthcareOptimizationNavItems,
     defaultExpanded: true
   },
   {
@@ -47,6 +55,7 @@ export const bottomNavItems = settingsNavItems;
 export { default as HomeTab } from "./tabs/HomeTab";
 export { default as AccountsTab } from "./tabs/AccountsTab";
 export { default as EducationTab } from "./tabs/EducationTab";
+export { default as HealthcareOptimizationTab } from "./tabs/HealthcareOptimizationTab";
 export { default as FamilyWealthTab } from "./tabs/FamilyWealthTab";
 export { default as CollaborationTab } from "./tabs/CollaborationTab";
 export { default as SettingsTab } from "./tabs/SettingsTab";
@@ -56,6 +65,7 @@ export {
   homeNavItems,
   accountsNavItems,
   educationNavItems,
+  healthcareOptimizationNavItems,
   familyWealthNavItems,
   collaborationNavItems,
   settingsNavItems

@@ -587,11 +587,39 @@ export type Database = {
         }
         Relationships: []
       }
+      families: {
+        Row: {
+          created_at: string | null
+          family_name: string
+          id: string
+          primary_member_id: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          family_name?: string
+          id?: string
+          primary_member_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          family_name?: string
+          id?: string
+          primary_member_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       family_members: {
         Row: {
           access_level: string | null
           created_at: string
           email: string | null
+          family_id: string | null
           has_app_access: boolean
           id: string
           invitation_sent_at: string | null
@@ -605,6 +633,7 @@ export type Database = {
           access_level?: string | null
           created_at?: string
           email?: string | null
+          family_id?: string | null
           has_app_access?: boolean
           id?: string
           invitation_sent_at?: string | null
@@ -618,12 +647,66 @@ export type Database = {
           access_level?: string | null
           created_at?: string
           email?: string | null
+          family_id?: string | null
           has_app_access?: boolean
           id?: string
           invitation_sent_at?: string | null
           invited_user_id?: string | null
           name?: string
           relationship?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "family_members_family_id_fkey"
+            columns: ["family_id"]
+            isOneToOne: false
+            referencedRelation: "families"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fee_scenarios: {
+        Row: {
+          created_at: string
+          current_fee: number
+          current_fee_type: string
+          growth_rate: number
+          healthcare_annual_budget: number
+          id: string
+          our_fee: number
+          our_fee_type: string
+          portfolio_value: number
+          time_horizon: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          current_fee?: number
+          current_fee_type?: string
+          growth_rate?: number
+          healthcare_annual_budget?: number
+          id?: string
+          our_fee?: number
+          our_fee_type?: string
+          portfolio_value?: number
+          time_horizon?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          current_fee?: number
+          current_fee_type?: string
+          growth_rate?: number
+          healthcare_annual_budget?: number
+          id?: string
+          our_fee?: number
+          our_fee_type?: string
+          portfolio_value?: number
+          time_horizon?: number
           updated_at?: string
           user_id?: string
         }
@@ -1078,6 +1161,492 @@ export type Database = {
             columns: ["professional_id"]
             isOneToOne: false
             referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hsa_accounts: {
+        Row: {
+          account_name: string
+          account_number_last4: string | null
+          account_type: string
+          annual_contribution_limit: number
+          annual_contribution_ytd: number
+          available_cash: number
+          cash_balance: number | null
+          catch_up_eligible: boolean
+          created_at: string
+          current_balance: number
+          custodian_id: string | null
+          custodian_name: string
+          employer_contribution_ytd: number
+          family_id: string | null
+          family_member_id: string | null
+          id: string
+          invested_balance: number
+          is_active: boolean
+          is_primary: boolean
+          last_sync_at: string | null
+          nickname: string | null
+          plaid_account_id: string | null
+          provider: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          account_name: string
+          account_number_last4?: string | null
+          account_type?: string
+          annual_contribution_limit?: number
+          annual_contribution_ytd?: number
+          available_cash?: number
+          cash_balance?: number | null
+          catch_up_eligible?: boolean
+          created_at?: string
+          current_balance?: number
+          custodian_id?: string | null
+          custodian_name: string
+          employer_contribution_ytd?: number
+          family_id?: string | null
+          family_member_id?: string | null
+          id?: string
+          invested_balance?: number
+          is_active?: boolean
+          is_primary?: boolean
+          last_sync_at?: string | null
+          nickname?: string | null
+          plaid_account_id?: string | null
+          provider?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          account_name?: string
+          account_number_last4?: string | null
+          account_type?: string
+          annual_contribution_limit?: number
+          annual_contribution_ytd?: number
+          available_cash?: number
+          cash_balance?: number | null
+          catch_up_eligible?: boolean
+          created_at?: string
+          current_balance?: number
+          custodian_id?: string | null
+          custodian_name?: string
+          employer_contribution_ytd?: number
+          family_id?: string | null
+          family_member_id?: string | null
+          id?: string
+          invested_balance?: number
+          is_active?: boolean
+          is_primary?: boolean
+          last_sync_at?: string | null
+          nickname?: string | null
+          plaid_account_id?: string | null
+          provider?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hsa_accounts_family_id_fkey"
+            columns: ["family_id"]
+            isOneToOne: false
+            referencedRelation: "families"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hsa_accounts_family_member_id_fkey"
+            columns: ["family_member_id"]
+            isOneToOne: false
+            referencedRelation: "family_members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hsa_contributions: {
+        Row: {
+          account_id: string | null
+          amount: number
+          created_at: string | null
+          id: string
+          source: string
+          tx_date: string
+        }
+        Insert: {
+          account_id?: string | null
+          amount: number
+          created_at?: string | null
+          id?: string
+          source?: string
+          tx_date: string
+        }
+        Update: {
+          account_id?: string | null
+          amount?: number
+          created_at?: string | null
+          id?: string
+          source?: string
+          tx_date?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hsa_contributions_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "hsa_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hsa_expenses: {
+        Row: {
+          account_id: string | null
+          amount: number
+          created_at: string | null
+          id: string
+          member_id: string | null
+          merchant: string | null
+          receipt_url: string | null
+          reimburse_status: string | null
+          tx_date: string
+        }
+        Insert: {
+          account_id?: string | null
+          amount: number
+          created_at?: string | null
+          id?: string
+          member_id?: string | null
+          merchant?: string | null
+          receipt_url?: string | null
+          reimburse_status?: string | null
+          tx_date: string
+        }
+        Update: {
+          account_id?: string | null
+          amount?: number
+          created_at?: string | null
+          id?: string
+          member_id?: string | null
+          merchant?: string | null
+          receipt_url?: string | null
+          reimburse_status?: string | null
+          tx_date?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hsa_expenses_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "hsa_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hsa_expenses_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "family_members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hsa_investment_rules: {
+        Row: {
+          cash_threshold: number
+          created_at: string
+          hsa_account_id: string
+          id: string
+          investment_percentage: number
+          is_active: boolean
+          rule_name: string
+          target_allocation: Json | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          cash_threshold?: number
+          created_at?: string
+          hsa_account_id: string
+          id?: string
+          investment_percentage?: number
+          is_active?: boolean
+          rule_name: string
+          target_allocation?: Json | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          cash_threshold?: number
+          created_at?: string
+          hsa_account_id?: string
+          id?: string
+          investment_percentage?: number
+          is_active?: boolean
+          rule_name?: string
+          target_allocation?: Json | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hsa_investment_rules_hsa_account_id_fkey"
+            columns: ["hsa_account_id"]
+            isOneToOne: false
+            referencedRelation: "hsa_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hsa_receipts: {
+        Row: {
+          category: string | null
+          content_type: string | null
+          created_at: string
+          description: string | null
+          file_name: string
+          file_path: string | null
+          file_size: number | null
+          hsa_account_id: string | null
+          id: string
+          is_hsa_eligible: boolean | null
+          is_matched: boolean
+          is_processed: boolean
+          matched_transaction_id: string | null
+          merchant_name: string | null
+          ocr_confidence: number | null
+          ocr_data: Json | null
+          receipt_date: string | null
+          tax_amount: number | null
+          total_amount: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          category?: string | null
+          content_type?: string | null
+          created_at?: string
+          description?: string | null
+          file_name: string
+          file_path?: string | null
+          file_size?: number | null
+          hsa_account_id?: string | null
+          id?: string
+          is_hsa_eligible?: boolean | null
+          is_matched?: boolean
+          is_processed?: boolean
+          matched_transaction_id?: string | null
+          merchant_name?: string | null
+          ocr_confidence?: number | null
+          ocr_data?: Json | null
+          receipt_date?: string | null
+          tax_amount?: number | null
+          total_amount?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          category?: string | null
+          content_type?: string | null
+          created_at?: string
+          description?: string | null
+          file_name?: string
+          file_path?: string | null
+          file_size?: number | null
+          hsa_account_id?: string | null
+          id?: string
+          is_hsa_eligible?: boolean | null
+          is_matched?: boolean
+          is_processed?: boolean
+          matched_transaction_id?: string | null
+          merchant_name?: string | null
+          ocr_confidence?: number | null
+          ocr_data?: Json | null
+          receipt_date?: string | null
+          tax_amount?: number | null
+          total_amount?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hsa_receipts_hsa_account_id_fkey"
+            columns: ["hsa_account_id"]
+            isOneToOne: false
+            referencedRelation: "hsa_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hsa_receipts_matched_transaction_id_fkey"
+            columns: ["matched_transaction_id"]
+            isOneToOne: false
+            referencedRelation: "hsa_transactions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hsa_reimbursements: {
+        Row: {
+          created_at: string
+          hsa_account_id: string
+          id: string
+          method: string | null
+          notes: string | null
+          processed_date: string | null
+          receipt_id: string | null
+          reimbursement_amount: number
+          requested_date: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          hsa_account_id: string
+          id?: string
+          method?: string | null
+          notes?: string | null
+          processed_date?: string | null
+          receipt_id?: string | null
+          reimbursement_amount: number
+          requested_date?: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          hsa_account_id?: string
+          id?: string
+          method?: string | null
+          notes?: string | null
+          processed_date?: string | null
+          receipt_id?: string | null
+          reimbursement_amount?: number
+          requested_date?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hsa_reimbursements_hsa_account_id_fkey"
+            columns: ["hsa_account_id"]
+            isOneToOne: false
+            referencedRelation: "hsa_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hsa_reimbursements_receipt_id_fkey"
+            columns: ["receipt_id"]
+            isOneToOne: false
+            referencedRelation: "hsa_receipts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hsa_spending_categories: {
+        Row: {
+          annual_budget: number | null
+          category_name: string
+          created_at: string
+          id: string
+          is_hsa_eligible: boolean
+          parent_category: string | null
+          updated_at: string
+          user_id: string
+          ytd_spending: number
+        }
+        Insert: {
+          annual_budget?: number | null
+          category_name: string
+          created_at?: string
+          id?: string
+          is_hsa_eligible?: boolean
+          parent_category?: string | null
+          updated_at?: string
+          user_id: string
+          ytd_spending?: number
+        }
+        Update: {
+          annual_budget?: number | null
+          category_name?: string
+          created_at?: string
+          id?: string
+          is_hsa_eligible?: boolean
+          parent_category?: string | null
+          updated_at?: string
+          user_id?: string
+          ytd_spending?: number
+        }
+        Relationships: []
+      }
+      hsa_transactions: {
+        Row: {
+          amount: number
+          category: string | null
+          created_at: string
+          description: string
+          hsa_account_id: string
+          id: string
+          is_qualified_expense: boolean | null
+          merchant_name: string | null
+          notes: string | null
+          posted_date: string | null
+          receipt_id: string | null
+          reimbursement_id: string | null
+          subcategory: string | null
+          transaction_date: string
+          transaction_id: string | null
+          transaction_type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          category?: string | null
+          created_at?: string
+          description: string
+          hsa_account_id: string
+          id?: string
+          is_qualified_expense?: boolean | null
+          merchant_name?: string | null
+          notes?: string | null
+          posted_date?: string | null
+          receipt_id?: string | null
+          reimbursement_id?: string | null
+          subcategory?: string | null
+          transaction_date: string
+          transaction_id?: string | null
+          transaction_type: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          category?: string | null
+          created_at?: string
+          description?: string
+          hsa_account_id?: string
+          id?: string
+          is_qualified_expense?: boolean | null
+          merchant_name?: string | null
+          notes?: string | null
+          posted_date?: string | null
+          receipt_id?: string | null
+          reimbursement_id?: string | null
+          subcategory?: string | null
+          transaction_date?: string
+          transaction_id?: string | null
+          transaction_type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hsa_transactions_hsa_account_id_fkey"
+            columns: ["hsa_account_id"]
+            isOneToOne: false
+            referencedRelation: "hsa_accounts"
             referencedColumns: ["id"]
           },
         ]
