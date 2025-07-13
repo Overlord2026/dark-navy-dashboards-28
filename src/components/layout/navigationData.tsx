@@ -3,6 +3,7 @@ import React from "react";
 import {
   homeNavItems,
   educationSolutionsNavItems,
+  healthcareOptimizationNavItems,
   familyWealthNavItems,
   collaborationNavItems,
   bottomNavItems
@@ -22,6 +23,13 @@ export const navigationCategories: NavCategory[] = [
     title: "Education & Solutions",
     label: "Education & Solutions",
     items: educationSolutionsNavItems,
+    defaultExpanded: true
+  },
+  {
+    id: "healthcare-optimization",
+    title: "Healthcare Optimization",
+    label: "Healthcare Optimization", 
+    items: healthcareOptimizationNavItems,
     defaultExpanded: true
   },
   {

@@ -139,6 +139,48 @@ export type Database = {
         }
         Relationships: []
       }
+      budget_goals: {
+        Row: {
+          category: string
+          created_at: string
+          current_amount: number
+          description: string | null
+          id: string
+          priority: string
+          target_amount: number
+          target_date: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          current_amount?: number
+          description?: string | null
+          id?: string
+          priority?: string
+          target_amount?: number
+          target_date: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          current_amount?: number
+          description?: string | null
+          id?: string
+          priority?: string
+          target_amount?: number
+          target_date?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       business_filings: {
         Row: {
           business_name: string
@@ -368,6 +410,51 @@ export type Database = {
           },
         ]
       }
+      epigenetic_tests: {
+        Row: {
+          biological_age: number
+          chronological_age: number
+          cost: number
+          created_at: string
+          delta_age: number
+          id: string
+          provider: string
+          results: Json | null
+          test_date: string
+          test_type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          biological_age: number
+          chronological_age: number
+          cost?: number
+          created_at?: string
+          delta_age: number
+          id?: string
+          provider: string
+          results?: Json | null
+          test_date: string
+          test_type: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          biological_age?: number
+          chronological_age?: number
+          cost?: number
+          created_at?: string
+          delta_age?: number
+          id?: string
+          provider?: string
+          results?: Json | null
+          test_date?: string
+          test_type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       estate_planning_documents: {
         Row: {
           content_type: string | null
@@ -410,6 +497,93 @@ export type Database = {
           status?: string
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      exercise_entries: {
+        Row: {
+          activity: string
+          calories_burned: number | null
+          created_at: string
+          date: string
+          duration: number
+          exercise_type: string
+          id: string
+          intensity: string
+          notes: string | null
+          reps: number | null
+          sets: number | null
+          updated_at: string
+          user_id: string
+          weight: number | null
+        }
+        Insert: {
+          activity: string
+          calories_burned?: number | null
+          created_at?: string
+          date?: string
+          duration?: number
+          exercise_type: string
+          id?: string
+          intensity: string
+          notes?: string | null
+          reps?: number | null
+          sets?: number | null
+          updated_at?: string
+          user_id: string
+          weight?: number | null
+        }
+        Update: {
+          activity?: string
+          calories_burned?: number | null
+          created_at?: string
+          date?: string
+          duration?: number
+          exercise_type?: string
+          id?: string
+          intensity?: string
+          notes?: string | null
+          reps?: number | null
+          sets?: number | null
+          updated_at?: string
+          user_id?: string
+          weight?: number | null
+        }
+        Relationships: []
+      }
+      exercise_goals: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean
+          preferred_activities: string[] | null
+          updated_at: string
+          user_id: string
+          weekly_calories_burn: number | null
+          weekly_minutes: number
+          weekly_workouts: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          preferred_activities?: string[] | null
+          updated_at?: string
+          user_id: string
+          weekly_calories_burn?: number | null
+          weekly_minutes?: number
+          weekly_workouts?: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          preferred_activities?: string[] | null
+          updated_at?: string
+          user_id?: string
+          weekly_calories_burn?: number | null
+          weekly_minutes?: number
+          weekly_workouts?: number
         }
         Relationships: []
       }
@@ -908,6 +1082,63 @@ export type Database = {
           },
         ]
       }
+      insurance_policies: {
+        Row: {
+          coverage: string
+          created_at: string
+          deductible: number
+          effective_date: string
+          expiration_date: string
+          group_number: string | null
+          id: string
+          member_id: string
+          notes: string | null
+          plan: string
+          policy_number: string
+          premium: number
+          provider: string
+          type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          coverage: string
+          created_at?: string
+          deductible?: number
+          effective_date: string
+          expiration_date: string
+          group_number?: string | null
+          id?: string
+          member_id: string
+          notes?: string | null
+          plan: string
+          policy_number: string
+          premium?: number
+          provider: string
+          type: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          coverage?: string
+          created_at?: string
+          deductible?: number
+          effective_date?: string
+          expiration_date?: string
+          group_number?: string | null
+          id?: string
+          member_id?: string
+          notes?: string | null
+          plan?: string
+          policy_number?: string
+          premium?: number
+          provider?: string
+          type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       investment_accounts: {
         Row: {
           account_type: string
@@ -1062,6 +1293,42 @@ export type Database = {
           },
         ]
       }
+      methylation_markers: {
+        Row: {
+          category: string
+          created_at: string
+          date: string
+          id: string
+          name: string
+          unit: string
+          updated_at: string
+          user_id: string
+          value: number
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          date: string
+          id?: string
+          name: string
+          unit: string
+          updated_at?: string
+          user_id: string
+          value: number
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          date?: string
+          id?: string
+          name?: string
+          unit?: string
+          updated_at?: string
+          user_id?: string
+          value?: number
+        }
+        Relationships: []
+      }
       model_portfolios: {
         Row: {
           asset_allocation: string | null
@@ -1110,6 +1377,102 @@ export type Database = {
           series_type?: string | null
           tax_status?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      nutrition_entries: {
+        Row: {
+          calories: number
+          carbs: number | null
+          created_at: string
+          date: string
+          fat: number | null
+          fiber: number | null
+          food_item: string
+          id: string
+          meal_type: string
+          notes: string | null
+          protein: number | null
+          serving_size: string | null
+          sugar: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          calories?: number
+          carbs?: number | null
+          created_at?: string
+          date?: string
+          fat?: number | null
+          fiber?: number | null
+          food_item: string
+          id?: string
+          meal_type: string
+          notes?: string | null
+          protein?: number | null
+          serving_size?: string | null
+          sugar?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          calories?: number
+          carbs?: number | null
+          created_at?: string
+          date?: string
+          fat?: number | null
+          fiber?: number | null
+          food_item?: string
+          id?: string
+          meal_type?: string
+          notes?: string | null
+          protein?: number | null
+          serving_size?: string | null
+          sugar?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      nutrition_goals: {
+        Row: {
+          created_at: string
+          daily_calories: number
+          daily_carbs: number
+          daily_fat: number
+          daily_fiber: number | null
+          daily_protein: number
+          daily_water_glasses: number | null
+          id: string
+          is_active: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          daily_calories?: number
+          daily_carbs?: number
+          daily_fat?: number
+          daily_fiber?: number | null
+          daily_protein?: number
+          daily_water_glasses?: number | null
+          id?: string
+          is_active?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          daily_calories?: number
+          daily_carbs?: number
+          daily_fat?: number
+          daily_fiber?: number | null
+          daily_protein?: number
+          daily_water_glasses?: number | null
+          id?: string
+          is_active?: boolean
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -1985,6 +2348,84 @@ export type Database = {
           name?: string
           preferred_retirement_age?: number
           relationship?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      subscribers: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          stripe_customer_id: string | null
+          subscribed: boolean
+          subscription_end: string | null
+          subscription_tier: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          stripe_customer_id?: string | null
+          subscribed?: boolean
+          subscription_end?: string | null
+          subscription_tier?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          stripe_customer_id?: string | null
+          subscribed?: boolean
+          subscription_end?: string | null
+          subscription_tier?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      supplements: {
+        Row: {
+          created_at: string
+          dosage: string
+          frequency: string
+          id: string
+          intake_reminders: boolean | null
+          name: string
+          notes: string | null
+          purpose: string | null
+          refill_reminders: boolean | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          dosage: string
+          frequency: string
+          id?: string
+          intake_reminders?: boolean | null
+          name: string
+          notes?: string | null
+          purpose?: string | null
+          refill_reminders?: boolean | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          dosage?: string
+          frequency?: string
+          id?: string
+          intake_reminders?: boolean | null
+          name?: string
+          notes?: string | null
+          purpose?: string | null
+          refill_reminders?: boolean | null
           updated_at?: string
           user_id?: string
         }
