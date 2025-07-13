@@ -5,6 +5,7 @@ import emailjs from '@emailjs/browser';
 const EMAILJS_SERVICE_ID = 'service_9eb6z0x';
 const EMAILJS_TEMPLATE_ID = 'template_0ttdq0e';
 const EMAILJS_LEARN_MORE_TEMPLATE_ID = 'template_hg3d85z';
+const EMAILJS_OTP_TEMPLATE_ID = 'template_otp_2fa'; // Template for OTP emails
 const EMAILJS_PUBLIC_KEY = 'rfbjUYJ8iPHEZaQvx';
 
 // Initialize EmailJS
@@ -25,6 +26,12 @@ export interface LearnMoreEmailData {
   itemType: string;
   pageContext: string;
   actionType: 'learn_more' | 'request_assistance' | 'consultant_request';
+}
+
+export interface OTPEmailData {
+  userEmail: string;
+  otpCode: string;
+  userName?: string;
 }
 
 export const sendInterestNotification = async (data: InterestEmailData): Promise<boolean> => {
@@ -125,6 +132,34 @@ Please provide the appropriate support to this client.`,
     return true;
   } catch (error) {
     console.error('Failed to send request email:', error);
+    return false;
+  }
+};
+
+export const sendOTPEmail = async (data: OTPEmailData): Promise<boolean> => {
+  try {
+    const templateParams = {
+      to_email: data.userEmail,
+      to_name: data.userName || 'User',
+      otp_code: data.otpCode,
+      from_name: 'Family Office Security',
+      subject: 'Your Two-Factor Authentication Code',
+      message: `Your verification code is: ${data.otpCode}. This code will expire in 10 minutes. If you didn't request this code, please ignore this email.`
+    };
+
+    console.log('Sending OTP email to:', data.userEmail);
+
+    const result = await emailjs.send(
+      EMAILJS_SERVICE_ID,
+      EMAILJS_OTP_TEMPLATE_ID,
+      templateParams,
+      EMAILJS_PUBLIC_KEY
+    );
+
+    console.log('OTP email sent successfully:', result);
+    return true;
+  } catch (error) {
+    console.error('Failed to send OTP email:', error);
     return false;
   }
 };

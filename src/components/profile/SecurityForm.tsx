@@ -6,12 +6,15 @@ import { toast } from "sonner";
 import { LockIcon, ShieldIcon, ArrowLeft, CheckCircle } from "lucide-react";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { auditLog } from "@/services/auditLog/auditLogService";
+import { supabase } from "@/lib/supabase";
+import { useAuth } from "@/context/AuthContext";
 
 export function SecurityForm({ onSave }: { onSave: () => void }) {
+  const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [verifying, setVerifying] = useState(false);
   const [step, setStep] = useState(0);
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [email, setEmail] = useState("");
   const [otpValue, setOtpValue] = useState("");
   const [success, setSuccess] = useState(false);
 
@@ -21,19 +24,19 @@ export function SecurityForm({ onSave }: { onSave: () => void }) {
     setOtpValue("");
   };
 
-  const handlePhoneSubmit = () => {
-    if (!phoneNumber || phoneNumber.length < 10) {
-      toast.error("Please enter a valid phone number");
+  const handleEmailSubmit = async () => {
+    if (!email || !email.includes("@")) {
+      toast.error("Please enter a valid email address");
       
       // Log failed attempt to audit log
       auditLog.log(
-        "current-user", // In a real application, this would be the actual user ID
+        user?.id || "current-user",
         "profile_update",
         "failure",
         {
           userName: "Current User",
           userRole: "client",
-          details: { step: "phone_verification", reason: "Invalid phone number" }
+          details: { step: "email_verification", reason: "Invalid email address" }
         }
       );
       
@@ -42,15 +45,32 @@ export function SecurityForm({ onSave }: { onSave: () => void }) {
 
     setLoading(true);
     
-    // Simulate sending verification code
-    setTimeout(() => {
+    try {
+      // Call the send-otp-email function
+      const { data, error } = await supabase.functions.invoke('send-otp-email', {
+        body: { 
+          email, 
+          userId: user?.id,
+          userName: user?.user_metadata?.display_name || 'User'
+        }
+      });
+
+      if (error) {
+        throw error;
+      }
+
       setLoading(false);
       setStep(1);
-      toast.success("Verification code sent to your phone");
+      toast.success("Verification code sent to your email");
+      
+      // In development, show the OTP code
+      if (data?.otpCode) {
+        toast.info(`Development OTP: ${data.otpCode}`);
+      }
       
       // Log verification code sent to audit log
       auditLog.log(
-        "current-user",
+        user?.id || "current-user",
         "settings_change",
         "success",
         {
@@ -58,20 +78,34 @@ export function SecurityForm({ onSave }: { onSave: () => void }) {
           userRole: "client",
           details: { 
             step: "verification_code_sent", 
-            phoneNumber: phoneNumber.replace(/\d(?=\d{4})/g, "*") // Mask the phone number
+            email: email.replace(/(.{2})(.*)(@.*)/, "$1***$3") // Mask the email
           }
         }
       );
-    }, 1500);
+    } catch (error: any) {
+      setLoading(false);
+      toast.error(error.message || "Failed to send verification code");
+      
+      auditLog.log(
+        user?.id || "current-user",
+        "profile_update",
+        "failure",
+        {
+          userName: "Current User",
+          userRole: "client",
+          details: { step: "email_verification", reason: error.message }
+        }
+      );
+    }
   };
 
-  const handleVerifyOtp = () => {
+  const handleVerifyOtp = async () => {
     if (otpValue.length !== 6) {
       toast.error("Please enter a valid verification code");
       
       // Log failed OTP verification
       auditLog.log(
-        "current-user",
+        user?.id || "current-user",
         "profile_update",
         "failure",
         {
@@ -86,15 +120,27 @@ export function SecurityForm({ onSave }: { onSave: () => void }) {
 
     setVerifying(true);
     
-    // Simulate verification
-    setTimeout(() => {
+    try {
+      // Call the verify-otp function
+      const { data, error } = await supabase.functions.invoke('verify-otp', {
+        body: { 
+          email, 
+          otpCode: otpValue,
+          userId: user?.id
+        }
+      });
+
+      if (error || !data?.success) {
+        throw new Error(data?.error || error?.message || 'Invalid OTP code');
+      }
+
       setVerifying(false);
       setSuccess(true);
       toast.success("Two-factor authentication enabled successfully");
       
       // Log successful MFA enablement to audit log
       auditLog.log(
-        "current-user",
+        user?.id || "current-user",
         "settings_change",
         "success",
         {
@@ -102,8 +148,8 @@ export function SecurityForm({ onSave }: { onSave: () => void }) {
           userRole: "client",
           details: { 
             step: "mfa_setup_complete",
-            method: "sms",
-            phoneNumber: phoneNumber.replace(/\d(?=\d{4})/g, "*") // Mask the phone number
+            method: "email",
+            email: email.replace(/(.{2})(.*)(@.*)/, "$1***$3") // Mask the email
           }
         }
       );
@@ -111,7 +157,21 @@ export function SecurityForm({ onSave }: { onSave: () => void }) {
       setTimeout(() => {
         onSave();
       }, 1500);
-    }, 2000);
+    } catch (error: any) {
+      setVerifying(false);
+      toast.error(error.message || "Failed to verify OTP");
+      
+      auditLog.log(
+        user?.id || "current-user",
+        "profile_update",
+        "failure",
+        {
+          userName: "Current User",
+          userRole: "client",
+          details: { step: "otp_verification", reason: error.message }
+        }
+      );
+    }
   };
 
   return (
@@ -119,12 +179,12 @@ export function SecurityForm({ onSave }: { onSave: () => void }) {
       <div>
         <h2 className="text-2xl font-semibold tracking-tight text-white mb-2">
           <ShieldIcon className="inline-block mr-2 h-6 w-6" />
-          {step === 0 ? "Turn On Two-Factor Authentication" : "Verify Your Phone Number"}
+          {step === 0 ? "Turn On Two-Factor Authentication" : "Verify Your Email Address"}
         </h2>
         <p className="text-sm text-gray-400 mt-4 mb-6">
           {step === 0 
-            ? "For additional security, turn on Two-Factor Authentication. A code will be sent to your mobile device for you to enter each time you log in." 
-            : "We've sent a verification code to your phone. Please enter the code below to enable Two-Factor Authentication."}
+            ? "For additional security, turn on Two-Factor Authentication. A code will be sent to your email address for you to enter each time you log in." 
+            : "We've sent a verification code to your email. Please enter the code below to enable Two-Factor Authentication."}
         </p>
         
         {step === 0 && !success && (
@@ -137,27 +197,27 @@ export function SecurityForm({ onSave }: { onSave: () => void }) {
               <ul className="list-disc list-inside text-gray-400 space-y-2 text-sm">
                 <li>Adds an additional layer of security to your account</li>
                 <li>Protects against unauthorized access even if your password is compromised</li>
-                <li>Verifies your identity using your mobile device</li>
+                <li>Verifies your identity using your email address</li>
                 <li>Receive immediate notifications of login attempts</li>
               </ul>
             </div>
             
             <div className="space-y-4">
               <div className="flex flex-col space-y-2">
-                <label className="text-sm font-medium text-gray-200">Phone Number</label>
+                <label className="text-sm font-medium text-gray-200">Email Address</label>
                 <div className="relative">
                   <Input
-                    type="tel"
-                    placeholder="(123) 456-7890"
-                    value={phoneNumber}
-                    onChange={(e) => setPhoneNumber(e.target.value)}
+                    type="email"
+                    placeholder="your@email.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     className="bg-[#0F0F2D] border-gray-700 text-white placeholder:text-gray-500"
                   />
                 </div>
               </div>
               
               <Button 
-                onClick={handlePhoneSubmit}
+                onClick={handleEmailSubmit}
                 className="w-full bg-white text-[#0F0F2D] hover:bg-white/90 py-6"
                 disabled={loading}
               >
@@ -178,7 +238,7 @@ export function SecurityForm({ onSave }: { onSave: () => void }) {
             </Button>
             
             <div className="flex flex-col items-center justify-center">
-              <p className="text-gray-400 text-sm mb-4">Enter the 6-digit code sent to {phoneNumber}</p>
+              <p className="text-gray-400 text-sm mb-4">Enter the 6-digit code sent to {email}</p>
               
               <InputOTP 
                 maxLength={6}
