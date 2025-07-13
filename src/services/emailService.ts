@@ -1,11 +1,11 @@
 
 import emailjs from '@emailjs/browser';
 
-// EmailJS configuration - UPDATE THESE WITH YOUR NEW ACCOUNT DETAILS
-const EMAILJS_SERVICE_ID = 'YOUR_NEW_SERVICE_ID'; // Replace with your new service ID
-const EMAILJS_TEMPLATE_ID = 'YOUR_NEW_INTEREST_TEMPLATE_ID'; // Replace with your new interest notification template ID
-const EMAILJS_LEARN_MORE_TEMPLATE_ID = 'YOUR_NEW_LEARN_MORE_TEMPLATE_ID'; // Replace with your new learn more template ID
-const EMAILJS_PUBLIC_KEY = 'YOUR_NEW_PUBLIC_KEY'; // Replace with your new public key
+// EmailJS configuration
+const EMAILJS_SERVICE_ID = 'service_9eb6z0x';
+const EMAILJS_TEMPLATE_ID = 'template_0ttdq0e';
+const EMAILJS_LEARN_MORE_TEMPLATE_ID = 'template_hg3d85z';
+const EMAILJS_PUBLIC_KEY = 'rfbjUYJ8iPHEZaQvx';
 
 // Initialize EmailJS
 emailjs.init(EMAILJS_PUBLIC_KEY);
