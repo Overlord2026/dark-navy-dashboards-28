@@ -22,16 +22,7 @@ export interface SupabaseLiability {
 export const useSupabaseLiabilities = () => {
   const [liabilities, setLiabilities] = useState<SupabaseLiability[]>([]);
   const [loading, setLoading] = useState(true);
-  
-  // Guard against auth context not being ready
-  let user = null;
-  try {
-    const authContext = useAuth();
-    user = authContext.user;
-  } catch (error) {
-    // Auth context not ready yet, user will be null
-    console.log('Auth context not ready, delaying liabilities fetch');
-  }
+  const { user } = useAuth();
 
   // Fetch liabilities from Supabase
   const fetchLiabilities = async () => {

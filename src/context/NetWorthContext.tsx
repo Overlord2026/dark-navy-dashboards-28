@@ -28,36 +28,23 @@ export { type Asset }; // Export Asset type to be used by components
 export const NetWorthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   console.log('NetWorthProvider rendering with real-time Supabase data');
   
-  // Guard against auth context not being ready
-  let assets: any[] = [];
-  let assetsLoading = true;
-  let getTotalValue = () => 0;
-  let addSupabaseAsset = async (assetData: any): Promise<any> => null;
-  let updateSupabaseAsset = async (id: string, updates: any): Promise<any> => null;  
-  let deleteSupabaseAsset = async (id: string): Promise<boolean> => false;
+  // Use Supabase hooks for real-time data
+  const { 
+    assets: supabaseAssets, 
+    getTotalValue, 
+    loading: assetsLoading,
+    addAsset: addSupabaseAsset,
+    updateAsset: updateSupabaseAsset,
+    deleteAsset: deleteSupabaseAsset
+  } = useSupabaseAssets();
   
-  let getTotalLiabilities = () => 0;
-  let liabilitiesLoading = true;
-  
-  try {
-    // Use Supabase hooks for real-time data
-    const assetHooks = useSupabaseAssets();
-    assets = assetHooks.assets;
-    assetsLoading = assetHooks.loading;
-    getTotalValue = assetHooks.getTotalValue;
-    addSupabaseAsset = assetHooks.addAsset;
-    updateSupabaseAsset = assetHooks.updateAsset;
-    deleteSupabaseAsset = assetHooks.deleteAsset;
-    
-    const liabilityHooks = useSupabaseLiabilities();
-    getTotalLiabilities = liabilityHooks.getTotalLiabilities;
-    liabilitiesLoading = liabilityHooks.loading;
-  } catch (error) {
-    console.log('Auth context not ready for NetWorthProvider, using defaults');
-  }
+  const { 
+    getTotalLiabilities, 
+    loading: liabilitiesLoading 
+  } = useSupabaseLiabilities();
 
   // Convert Supabase assets to Asset format
-  const convertedAssets: Asset[] = assets.map(asset => ({
+  const convertedAssets: Asset[] = supabaseAssets.map(asset => ({
     id: asset.id,
     name: asset.name,
     type: asset.type as Asset['type'],
@@ -78,7 +65,7 @@ export const NetWorthProvider: React.FC<{ children: ReactNode }> = ({ children }
   };
 
   const getTotalAssetsByType = (type: Asset['type']) => {
-    return assets
+    return supabaseAssets
       .filter(asset => asset.type === type)
       .reduce((total, asset) => total + Number(asset.value), 0);
   };

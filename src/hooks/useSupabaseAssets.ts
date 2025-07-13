@@ -2,7 +2,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { toast } from 'sonner';
-import { useAuth } from '@/context/AuthContext';
 
 export interface OtherAsset {
   id: string;
@@ -29,27 +28,17 @@ export const useSupabaseAssets = () => {
   const [assets, setAssets] = useState<OtherAsset[]>([]);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
-  
-  // Guard against auth context not being ready
-  let user = null;
-  try {
-    const authContext = useAuth();
-    user = authContext.user;
-  } catch (error) {
-    // Auth context not ready yet, user will be null
-    console.log('Auth context not ready, delaying assets fetch');
-  }
 
   // Fetch all assets for the current user
   const fetchAssets = async () => {
-    if (!user) {
-      console.log('No user available for assets fetch');
-      setLoading(false);
-      return;
-    }
-
     try {
       setLoading(true);
+      
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        console.log('No authenticated user found');
+        return;
+      }
 
       const { data, error } = await supabase
         .from('other_assets')
@@ -74,13 +63,14 @@ export const useSupabaseAssets = () => {
 
   // Add a new asset
   const addAsset = async (assetData: OtherAssetData): Promise<OtherAsset | null> => {
-    if (!user) {
-      toast.error('You must be logged in to add assets');
-      return null;
-    }
-
     try {
       setSaving(true);
+      
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        toast.error('You must be logged in to add assets');
+        return null;
+      }
 
       const { data, error } = await supabase
         .from('other_assets')
@@ -194,11 +184,8 @@ export const useSupabaseAssets = () => {
   };
 
   useEffect(() => {
-    // Only fetch when user is available
-    if (user) {
-      fetchAssets();
-    }
-  }, [user]);
+    fetchAssets();
+  }, []);
 
   return {
     assets,
