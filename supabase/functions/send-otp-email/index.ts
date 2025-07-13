@@ -82,9 +82,9 @@ const handler = async (req: Request): Promise<Response> => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          service_id: 'service_9eb6z0x',
-          template_id: 'template_otp_2fa',
-          user_id: 'rfbjUYJ8iPHEZaQvx',
+          service_id: 'service_cew8n8b',
+          template_id: 'template_xts37ho',
+          user_id: 'chtAi9WR2OnpWeUXo',
           template_params: {
             to_email: email,
             to_name: userName || 'User',

@@ -5,8 +5,10 @@ import emailjs from '@emailjs/browser';
 const EMAILJS_SERVICE_ID = 'service_9eb6z0x';
 const EMAILJS_TEMPLATE_ID = 'template_0ttdq0e';
 const EMAILJS_LEARN_MORE_TEMPLATE_ID = 'template_hg3d85z';
-const EMAILJS_OTP_TEMPLATE_ID = 'template_otp_2fa'; // Template for OTP emails
+const EMAILJS_OTP_TEMPLATE_ID = 'template_xts37ho'; // Updated OTP template
 const EMAILJS_PUBLIC_KEY = 'rfbjUYJ8iPHEZaQvx';
+const EMAILJS_OTP_SERVICE_ID = 'service_cew8n8b'; // New service for OTP
+const EMAILJS_OTP_PUBLIC_KEY = 'chtAi9WR2OnpWeUXo'; // New public key for OTP
 
 // Initialize EmailJS
 emailjs.init(EMAILJS_PUBLIC_KEY);
@@ -150,10 +152,10 @@ export const sendOTPEmail = async (data: OTPEmailData): Promise<boolean> => {
     console.log('Sending OTP email to:', data.userEmail);
 
     const result = await emailjs.send(
-      EMAILJS_SERVICE_ID,
+      EMAILJS_OTP_SERVICE_ID,
       EMAILJS_OTP_TEMPLATE_ID,
       templateParams,
-      EMAILJS_PUBLIC_KEY
+      EMAILJS_OTP_PUBLIC_KEY
     );
 
     console.log('OTP email sent successfully:', result);
