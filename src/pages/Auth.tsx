@@ -8,6 +8,8 @@ import { Separator } from "@/components/ui/separator";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
 import { Chrome } from "lucide-react";
+import OTPVerification from "@/components/auth/OTPVerification";
+import { supabase } from "@/lib/supabase";
 
 // Google Logo Component
 const GoogleIcon = () => (
@@ -42,6 +44,8 @@ export default function Auth() {
   const [googleLoading, setGoogleLoading] = useState(false);
   const [awaitingConfirmation, setAwaitingConfirmation] = useState(false);
   const [passwordResetSent, setPasswordResetSent] = useState(false);
+  const [showOTPVerification, setShowOTPVerification] = useState(false);
+  const [loginUserId, setLoginUserId] = useState<string | null>(null);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { isAuthenticated, login, signup, signInWithGoogle, resendConfirmation, resetPassword } = useAuth();
@@ -95,8 +99,45 @@ export default function Auth() {
         const result = await login(email, password);
 
         if (result.success) {
-          toast.success('Logged in successfully!');
-          navigate('/client-dashboard');
+          // Check if user has 2FA enabled
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('two_factor_enabled, id')
+            .eq('email', email)
+            .single();
+
+          if (profile?.two_factor_enabled) {
+            // User has 2FA enabled, show OTP verification
+            setLoginUserId(profile.id);
+            setShowOTPVerification(true);
+            
+            // Send OTP to user's email
+            try {
+              const otpResponse = await supabase.functions.invoke('send-otp-email', {
+                body: { 
+                  email,
+                  userId: profile.id,
+                  userName: `${firstName} ${lastName}`.trim() || 'User'
+                }
+              });
+
+              if (otpResponse.error) {
+                console.error('Failed to send OTP:', otpResponse.error);
+                toast.error('Failed to send verification code. Please try again.');
+                return;
+              }
+
+              toast.success('Verification code sent to your email');
+            } catch (error) {
+              console.error('OTP sending error:', error);
+              toast.error('Failed to send verification code. Please try again.');
+              return;
+            }
+          } else {
+            // No 2FA, proceed with normal login
+            toast.success('Logged in successfully!');
+            navigate('/client-dashboard');
+          }
         } else {
           if (result.error?.includes('Invalid login credentials')) {
             toast.error('Invalid email or password. Please check your credentials.');
@@ -178,11 +219,24 @@ export default function Auth() {
     }
   };
 
+  const handleOTPVerificationSuccess = () => {
+    toast.success('Two-factor authentication successful!');
+    setShowOTPVerification(false);
+    navigate('/client-dashboard');
+  };
+
+  const handleBackToLogin = () => {
+    setShowOTPVerification(false);
+    setLoginUserId(null);
+  };
+
   const resetForm = () => {
     setIsSignUp(false);
     setIsForgotPassword(false);
     setAwaitingConfirmation(false);
     setPasswordResetSent(false);
+    setShowOTPVerification(false);
+    setLoginUserId(null);
     setEmail("");
     setPassword("");
     setFirstName("");
@@ -202,6 +256,13 @@ export default function Auth() {
       </header>
       
       <div className="flex-1 flex justify-center items-center p-4 bg-white">
+        {showOTPVerification ? (
+          <OTPVerification
+            email={email}
+            onVerificationSuccess={handleOTPVerificationSuccess}
+            onBack={handleBackToLogin}
+          />
+        ) : (
         <Card className="p-8 w-full max-w-md bg-[#1B1B32] border border-gray-200 shadow-lg">
           <div className="text-center mb-6">
             <h1 className="text-2xl font-bold text-white">
@@ -426,6 +487,7 @@ export default function Auth() {
             </div>
           )}
         </Card>
+        )}
       </div>
       
       <footer className="py-2 px-4 bg-[#1B1B32] text-white text-center text-sm">

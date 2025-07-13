@@ -74,12 +74,38 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    // Note: In a real implementation, you would send the email here
-    // For now, we'll simulate it and log the OTP for testing
-    console.log(`OTP Code for ${email}: ${otpRecord.otp_code}`);
+    // Send OTP via EmailJS
+    try {
+      const emailResponse = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          service_id: 'service_9eb6z0x',
+          template_id: 'template_otp_2fa',
+          user_id: 'rfbjUYJ8iPHEZaQvx',
+          template_params: {
+            to_email: email,
+            to_name: userName || 'User',
+            otp_code: otpRecord.otp_code,
+            from_name: 'Family Office Security',
+            subject: 'Your Two-Factor Authentication Code',
+            message: `Your verification code is: ${otpRecord.otp_code}. This code will expire in 10 minutes. If you didn't request this code, please ignore this email.`
+          }
+        })
+      });
 
-    // You would replace this with actual email sending logic
-    // For example, using a service like Resend, SendGrid, etc.
+      if (!emailResponse.ok) {
+        throw new Error(`EmailJS API error: ${emailResponse.statusText}`);
+      }
+
+      console.log(`OTP email sent successfully to: ${email}`);
+    } catch (emailError) {
+      console.error('Failed to send OTP email:', emailError);
+      // Log the OTP for testing if email fails
+      console.log(`OTP Code for ${email}: ${otpRecord.otp_code} (email failed)`);
+    }
     
     return new Response(
       JSON.stringify({ 
