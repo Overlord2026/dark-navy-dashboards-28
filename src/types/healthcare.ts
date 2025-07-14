@@ -73,7 +73,7 @@ export interface HealthCardProps {
   value?: string | number;
   change?: string;
   changeType?: 'positive' | 'negative' | 'neutral';
-  status?: 'success' | 'warning' | 'info';
+  status?: 'success' | 'warning' | 'error' | 'info';
   icon?: React.ReactNode;
   className?: string;
 }
