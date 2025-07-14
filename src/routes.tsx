@@ -68,6 +68,7 @@ import HealthSettings from "@/pages/health/HealthSettings";
 
 // Healthcare Optimization pages
 import HealthcareDashboard from "@/pages/healthcare/HealthcareDashboard";
+import HealthcareDocuments from "@/pages/healthcare/HealthcareDocuments";
 
 // Wealth pages
 import WealthOverview from "@/pages/wealth";
@@ -387,7 +388,7 @@ const routes = createBrowserRouter([
   },
   {
     path: "/healthcare-documents",
-    element: <ProtectedRoute><div className="p-6 min-h-screen bg-background"><h1 className="text-2xl font-bold">Healthcare Documents - Coming Soon</h1></div></ProtectedRoute>
+    element: <ProtectedRoute><HealthcareDocuments /></ProtectedRoute>
   },
   {
     path: "/healthcare-knowledge",
