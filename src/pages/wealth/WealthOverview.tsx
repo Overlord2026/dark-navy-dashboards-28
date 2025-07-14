@@ -4,8 +4,16 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { LayoutGridIcon, TrendingUpIcon, DollarSignIcon, PlusIcon } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useBankAccounts } from "@/hooks/useBankAccounts";
+import { useFinancialPlans } from "@/hooks/useFinancialPlans";
 
 const WealthOverview = () => {
+  const { accounts, loading: accountsLoading, getFormattedTotalBalance } = useBankAccounts();
+  const { plans, activePlan, summary, loading: plansLoading } = useFinancialPlans();
+
+  const totalBalance = getFormattedTotalBalance();
+  const isLoading = accountsLoading || plansLoading;
+
   return (
     <div className="container mx-auto p-6 space-y-6">
       <div className="flex items-center justify-between">
@@ -29,19 +37,27 @@ const WealthOverview = () => {
             <TrendingUpIcon className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">$2,451,250</div>
-            <p className="text-xs text-muted-foreground">+5.2% from last month</p>
+            <div className="text-2xl font-bold">
+              {isLoading ? "Loading..." : totalBalance}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              {accounts.length} connected account{accounts.length !== 1 ? 's' : ''}
+            </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Net Worth</CardTitle>
+            <CardTitle className="text-sm font-medium">Financial Plans</CardTitle>
             <DollarSignIcon className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">$1,987,430</div>
-            <p className="text-xs text-muted-foreground">+3.8% from last month</p>
+            <div className="text-2xl font-bold">
+              {isLoading ? "..." : summary.activePlans}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              {summary.draftPlans} draft plan{summary.draftPlans !== 1 ? 's' : ''}
+            </p>
           </CardContent>
         </Card>
 
@@ -51,8 +67,12 @@ const WealthOverview = () => {
             <LayoutGridIcon className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">8</div>
-            <p className="text-xs text-muted-foreground">3 on track, 2 behind</p>
+            <div className="text-2xl font-bold">
+              {isLoading ? "..." : summary.totalGoals}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              {Math.round(summary.averageSuccessRate)}% success rate
+            </p>
           </CardContent>
         </Card>
       </div>

@@ -2,10 +2,38 @@ import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { TargetIcon, CalendarIcon, StarIcon, PlusIcon } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
+import { Badge } from "@/components/ui/badge";
+import { TargetIcon, CalendarIcon, StarIcon, PlusIcon, DollarSignIcon } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useFinancialPlans } from "@/hooks/useFinancialPlans";
 
 const GoalsBudgets = () => {
+  const { plans, activePlan, summary, loading } = useFinancialPlans();
+
+  // Get all goals across all plans
+  const allGoals = plans.flatMap(plan => 
+    plan.goals.map(goal => ({
+      ...goal,
+      planName: plan.name,
+      planId: plan.id
+    }))
+  );
+
+  // Sort goals by priority and progress
+  const prioritizedGoals = allGoals.sort((a, b) => {
+    const priorityOrder = { 'High': 3, 'Medium': 2, 'Low': 1 };
+    const aPriority = priorityOrder[a.priority] || 0;
+    const bPriority = priorityOrder[b.priority] || 0;
+    
+    if (aPriority !== bPriority) return bPriority - aPriority;
+    
+    // If same priority, sort by progress (closer to completion first)
+    const aProgress = a.targetAmount > 0 ? (a.currentAmount / a.targetAmount) : 0;
+    const bProgress = b.targetAmount > 0 ? (b.currentAmount / b.targetAmount) : 0;
+    return bProgress - aProgress;
+  });
+
   return (
     <div className="container mx-auto p-6 space-y-6">
       <div className="flex items-center justify-between">
@@ -30,6 +58,170 @@ const GoalsBudgets = () => {
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6">
+          {/* Goals Statistics */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Total Goals</CardTitle>
+                <TargetIcon className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">
+                  {loading ? "..." : summary.totalGoals}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  {allGoals.filter(g => !g.isComplete).length} active, {allGoals.filter(g => g.isComplete).length} completed
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Average Progress</CardTitle>
+                <CalendarIcon className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">
+                  {loading ? "..." : allGoals.length > 0 
+                    ? Math.round(allGoals.reduce((acc, goal) => {
+                        const progress = goal.targetAmount > 0 ? (goal.currentAmount / goal.targetAmount) : 0;
+                        return acc + Math.min(progress * 100, 100);
+                      }, 0) / allGoals.length) 
+                    : 0}%
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Completion rate
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Total Target</CardTitle>
+                <DollarSignIcon className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">
+                  {loading ? "..." : new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: 'USD',
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0,
+                  }).format(allGoals.reduce((acc, goal) => acc + goal.targetAmount, 0))}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Across all goals
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Next Deadline</CardTitle>
+                <StarIcon className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">
+                  {(() => {
+                    const upcomingGoals = allGoals
+                      .filter(goal => !goal.isComplete && goal.targetDate)
+                      .sort((a, b) => new Date(a.targetDate).getTime() - new Date(b.targetDate).getTime());
+                    
+                    if (upcomingGoals.length === 0) return "None";
+                    
+                    const nextGoal = upcomingGoals[0];
+                    const daysUntil = Math.ceil((new Date(nextGoal.targetDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+                    return daysUntil > 0 ? `${daysUntil}d` : "Overdue";
+                  })()}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  {allGoals.find(goal => !goal.isComplete && goal.targetDate)?.title?.substring(0, 20) || "No deadlines"}
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Active Goals List */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Active Financial Goals</CardTitle>
+              <CardDescription>Track your progress towards financial objectives</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {loading ? (
+                <div className="text-center py-8 text-muted-foreground">Loading goals...</div>
+              ) : prioritizedGoals.length > 0 ? (
+                prioritizedGoals.slice(0, 5).map((goal) => {
+                  const progress = goal.targetAmount > 0 
+                    ? Math.min((goal.currentAmount / goal.targetAmount) * 100, 100)
+                    : 0;
+                  
+                  const getPriorityColor = (priority: string) => {
+                    switch (priority) {
+                      case 'High': return 'text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900';
+                      case 'Medium': return 'text-yellow-600 dark:text-yellow-400 bg-yellow-100 dark:bg-yellow-900';
+                      case 'Low': return 'text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900';
+                      default: return 'text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900';
+                    }
+                  };
+
+                  return (
+                    <div key={`${goal.planId}-${goal.id}`} className="space-y-3 p-4 border rounded-lg">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-3">
+                          <div className={`p-2 rounded-lg ${getPriorityColor(goal.priority)}`}>
+                            <TargetIcon className="h-4 w-4" />
+                          </div>
+                          <div>
+                            <h3 className="font-medium">{goal.title}</h3>
+                            <p className="text-sm text-muted-foreground">
+                              {goal.description || `From ${goal.planName}`}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <div className="font-medium">
+                            {new Intl.NumberFormat('en-US', {
+                              style: 'currency',
+                              currency: 'USD',
+                              minimumFractionDigits: 0,
+                              maximumFractionDigits: 0,
+                            }).format(goal.currentAmount)} / {new Intl.NumberFormat('en-US', {
+                              style: 'currency',
+                              currency: 'USD',
+                              minimumFractionDigits: 0,
+                              maximumFractionDigits: 0,
+                            }).format(goal.targetAmount)}
+                          </div>
+                          <Badge variant={progress >= 100 ? "default" : progress >= 50 ? "secondary" : "outline"}>
+                            {Math.round(progress)}% Complete
+                          </Badge>
+                        </div>
+                      </div>
+                      <Progress value={progress} className="h-2" />
+                    </div>
+                  );
+                })
+              ) : (
+                <div className="text-center py-8 text-muted-foreground">
+                  No goals yet.{' '}
+                  <Link to="/financial-planning" className="text-primary hover:underline">
+                    Create your first financial plan
+                  </Link>{' '}
+                  to get started.
+                </div>
+              )}
+              {prioritizedGoals.length > 5 && (
+                <div className="text-center pt-4">
+                  <Button asChild variant="outline">
+                    <Link to="/financial-planning">View All Goals</Link>
+                  </Button>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Quick Access */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <Card>
               <CardHeader>
