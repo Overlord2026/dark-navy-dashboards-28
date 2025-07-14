@@ -66,6 +66,9 @@ import EducationKB from "@/pages/health/EducationKB";
 import RecommendationsKB from "@/pages/health/RecommendationsKB";
 import HealthSettings from "@/pages/health/HealthSettings";
 
+// Healthcare Optimization pages
+import HealthcareDashboard from "@/pages/healthcare/HealthcareDashboard";
+
 // Wealth pages
 import WealthOverview from "@/pages/wealth";
 import WealthAccounts from "@/pages/wealth/WealthAccounts";
@@ -352,6 +355,47 @@ const routes = createBrowserRouter([
   {
     path: "/health/settings",
     element: <ProtectedRoute><HealthSettings /></ProtectedRoute>
+  },
+  // Healthcare Optimization routes (new navigation structure)
+  {
+    path: "/healthcare-dashboard",
+    element: <ProtectedRoute><HealthcareDashboard /></ProtectedRoute>
+  },
+  {
+    path: "/healthcare-hsa-accounts",
+    element: <ProtectedRoute><div className="p-6 min-h-screen bg-background"><h1 className="text-2xl font-bold">HSA Accounts - Coming Soon</h1></div></ProtectedRoute>
+  },
+  {
+    path: "/healthcare-savings",
+    element: <ProtectedRoute><div className="p-6 min-h-screen bg-background"><h1 className="text-2xl font-bold">Healthcare Savings - Coming Soon</h1></div></ProtectedRoute>
+  },
+  {
+    path: "/healthcare-providers",
+    element: <ProtectedRoute><div className="p-6 min-h-screen bg-background"><h1 className="text-2xl font-bold">Healthcare Providers - Coming Soon</h1></div></ProtectedRoute>
+  },
+  {
+    path: "/healthcare-medications",
+    element: <ProtectedRoute><div className="p-6 min-h-screen bg-background"><h1 className="text-2xl font-bold">Medications - Coming Soon</h1></div></ProtectedRoute>
+  },
+  {
+    path: "/healthcare-supplements",
+    element: <ProtectedRoute><div className="p-6 min-h-screen bg-background"><h1 className="text-2xl font-bold">Supplements - Coming Soon</h1></div></ProtectedRoute>
+  },
+  {
+    path: "/healthcare-healthspan",
+    element: <ProtectedRoute><div className="p-6 min-h-screen bg-background"><h1 className="text-2xl font-bold">HealthSpan Expansion - Coming Soon</h1></div></ProtectedRoute>
+  },
+  {
+    path: "/healthcare-documents",
+    element: <ProtectedRoute><div className="p-6 min-h-screen bg-background"><h1 className="text-2xl font-bold">Healthcare Documents - Coming Soon</h1></div></ProtectedRoute>
+  },
+  {
+    path: "/healthcare-knowledge",
+    element: <ProtectedRoute><div className="p-6 min-h-screen bg-background"><h1 className="text-2xl font-bold">Knowledge & Support - Coming Soon</h1></div></ProtectedRoute>
+  },
+  {
+    path: "/healthcare-share-data",
+    element: <ProtectedRoute><div className="p-6 min-h-screen bg-background"><h1 className="text-2xl font-bold">Share Data - Coming Soon</h1></div></ProtectedRoute>
   },
   // Wealth Management routes
   {

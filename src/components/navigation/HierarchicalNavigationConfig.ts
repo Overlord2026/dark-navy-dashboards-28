@@ -20,7 +20,12 @@ import {
   HeartHandshakeIcon,
   ShareIcon,
   Users2Icon,
-  UserIcon
+  UserIcon,
+  PillIcon,
+  FlaskConicalIcon,
+  TrendingUpIcon,
+  FolderHeartIcon,
+  BookHeartIcon
 } from "lucide-react";
 
 import { NavItem } from "@/types/navigation";
@@ -151,7 +156,7 @@ export const hierarchicalNav: NavItem[] = [
         ]
       },
       
-      // Health Optimization section - placeholder for future expansion
+      // Health Optimization section
       { 
         id: 'health', 
         title: 'Health Optimization', 
@@ -176,7 +181,48 @@ export const hierarchicalNav: NavItem[] = [
             href: '/healthcare-savings', 
             icon: CircleDollarSignIcon 
           },
-          // More health routes will be inserted here later
+          { 
+            id: 'h-providers', 
+            title: 'Healthcare Providers', 
+            href: '/healthcare-providers', 
+            icon: HeartHandshakeIcon 
+          },
+          { 
+            id: 'h-meds', 
+            title: 'Medications', 
+            href: '/healthcare-medications', 
+            icon: PillIcon 
+          },
+          { 
+            id: 'h-supplements', 
+            title: 'Supplements', 
+            href: '/healthcare-supplements', 
+            icon: FlaskConicalIcon 
+          },
+          { 
+            id: 'h-healthspan', 
+            title: 'HealthSpan Expansion', 
+            href: '/healthcare-healthspan', 
+            icon: TrendingUpIcon 
+          },
+          { 
+            id: 'h-docs', 
+            title: 'Healthcare Documents', 
+            href: '/healthcare-documents', 
+            icon: FolderHeartIcon 
+          },
+          { 
+            id: 'h-knowledge', 
+            title: 'Knowledge & Support', 
+            href: '/healthcare-knowledge', 
+            icon: BookHeartIcon 
+          },
+          { 
+            id: 'h-share', 
+            title: 'Share Data', 
+            href: '/healthcare-share-data', 
+            icon: ShareIcon 
+          }
         ]
       },
       
