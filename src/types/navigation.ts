@@ -14,6 +14,8 @@ export interface NavItem {
   submenu?: NavItem[]; // Adding this for compatibility with existing code
   comingSoon?: boolean; // Adding this for coming soon functionality
   collapsible?: boolean; // For collapsible menu items
+  priority?: number; // Priority for sorting
+  id?: string; // Optional ID for navigation nodes
 }
 
 export interface NavCategory {
