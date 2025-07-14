@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { HealthCard } from "@/components/healthcare/HealthCard";
-import { useHealthData } from "@/hooks/useHealthData";
+import { useHealthData } from "@/hooks/healthcare/useHealthData";
 import { useToast } from "@/hooks/use-toast";
 import { 
   ActivityIcon, 
