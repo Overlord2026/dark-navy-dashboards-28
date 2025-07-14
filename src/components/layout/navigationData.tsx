@@ -4,13 +4,20 @@ import { hierarchicalNav, navigationData } from "@/components/navigation/Hierarc
 import { NavCategory, NavItem } from "@/types/navigation";
 
 // Convert hierarchical navigation to legacy format for backward compatibility
-export const navigationCategories: NavCategory[] = hierarchicalNav.map(item => ({
-  id: item.id || item.title.toLowerCase().replace(/\s+/g, '-'),
-  title: item.title,
-  label: item.title,
-  items: item.children || [item],
-  defaultExpanded: true
-}));
+export const navigationCategories: NavCategory[] = hierarchicalNav.map(item => {
+  // Only include items that have children for legacy category format
+  if (!item.children || item.children.length === 0) {
+    return null;
+  }
+  
+  return {
+    id: item.id || item.title.toLowerCase().replace(/\s+/g, '-'),
+    title: item.title,
+    label: item.title,
+    items: item.children,
+    defaultExpanded: true
+  };
+}).filter(Boolean) as NavCategory[];
 
 // Export hierarchical navigation for new components
 export { hierarchicalNav };
