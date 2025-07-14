@@ -67,7 +67,7 @@ import RecommendationsKB from "@/pages/health/RecommendationsKB";
 import HealthSettings from "@/pages/health/HealthSettings";
 
 // Wealth pages
-import WealthOverview from "@/pages/wealth/WealthOverview";
+import WealthOverview from "@/pages/wealth";
 import WealthAccounts from "@/pages/wealth/WealthAccounts";
 import CashTransfers from "@/pages/wealth/CashTransfers";
 import WealthCashManagement from "@/pages/wealth/WealthCashManagement";

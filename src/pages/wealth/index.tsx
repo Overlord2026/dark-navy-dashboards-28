@@ -1,0 +1,1 @@
+export { WealthManagementOverview as default } from '@/modules/wealth/WealthManagementOverview';

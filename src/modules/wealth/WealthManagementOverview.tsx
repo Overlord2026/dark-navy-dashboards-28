@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import { useBankAccounts } from "@/hooks/useBankAccounts";
 import { useFinancialPlans } from "@/hooks/useFinancialPlans";
 
-const WealthOverview = () => {
+export const WealthManagementOverview = () => {
   const { accounts, loading: accountsLoading, getFormattedTotalBalance } = useBankAccounts();
   const { plans, activePlan, summary, loading: plansLoading } = useFinancialPlans();
 
@@ -169,5 +169,3 @@ const WealthOverview = () => {
     </div>
   );
 };
-
-export default WealthOverview;
