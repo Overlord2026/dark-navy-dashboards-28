@@ -7,6 +7,7 @@ import { healthcareOptimizationNavItems } from "./tabs/HealthcareOptimizationTab
 import { familyWealthNavItems } from "./tabs/FamilyWealthTab";
 import { collaborationNavItems } from "./tabs/CollaborationTab";
 import { settingsNavItems } from "./tabs/SettingsTab";
+import { clientToolsNavItems } from "./WealthManagementRegistry";
 import { NavCategory } from "@/types/navigation";
 
 // Define navigation categories
@@ -23,6 +24,13 @@ export const navigationCategories: NavCategory[] = [
     title: "EDUCATION & SOLUTIONS",
     label: "EDUCATION & SOLUTIONS",
     items: educationNavItems,
+    defaultExpanded: true
+  },
+  {
+    id: "client-tools",
+    title: "CLIENT TOOLS",
+    label: "CLIENT TOOLS",
+    items: clientToolsNavItems,
     defaultExpanded: true
   },
   {
@@ -68,5 +76,6 @@ export {
   healthcareOptimizationNavItems,
   familyWealthNavItems,
   collaborationNavItems,
-  settingsNavItems
+  settingsNavItems,
+  clientToolsNavItems
 };
