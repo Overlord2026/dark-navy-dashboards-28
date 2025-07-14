@@ -66,6 +66,19 @@ import EducationKB from "@/pages/health/EducationKB";
 import RecommendationsKB from "@/pages/health/RecommendationsKB";
 import HealthSettings from "@/pages/health/HealthSettings";
 
+// Wealth pages
+import WealthOverview from "@/pages/wealth/WealthOverview";
+import WealthAccounts from "@/pages/wealth/WealthAccounts";
+import CashTransfers from "@/pages/wealth/CashTransfers";
+import WealthCashManagement from "@/pages/wealth/WealthCashManagement";
+import WealthTransfers from "@/pages/wealth/WealthTransfers";
+import WealthProperties from "@/pages/wealth/WealthProperties";
+import GoalsBudgets from "@/pages/wealth/GoalsBudgets";
+import WealthDocuments from "@/pages/wealth/WealthDocuments";
+import WealthSocialSecurity from "@/pages/wealth/WealthSocialSecurity";
+import WealthBusinessFilings from "@/pages/wealth/WealthBusinessFilings";
+import WealthBillPay from "@/pages/wealth/WealthBillPay";
+
 const routes = createBrowserRouter([
   {
     path: "/",
@@ -339,6 +352,63 @@ const routes = createBrowserRouter([
   {
     path: "/health/settings",
     element: <ProtectedRoute><HealthSettings /></ProtectedRoute>
+  },
+  // Wealth Management routes
+  {
+    path: "/wealth",
+    element: <ProtectedRoute><WealthOverview /></ProtectedRoute>
+  },
+  {
+    path: "/wealth/accounts",
+    element: <ProtectedRoute><WealthAccounts /></ProtectedRoute>
+  },
+  {
+    path: "/wealth/cash",
+    element: <ProtectedRoute><CashTransfers /></ProtectedRoute>
+  },
+  {
+    path: "/wealth/cash/management",
+    element: <ProtectedRoute><WealthCashManagement /></ProtectedRoute>
+  },
+  {
+    path: "/wealth/cash/transfers",
+    element: <ProtectedRoute><WealthTransfers /></ProtectedRoute>
+  },
+  {
+    path: "/wealth/properties",
+    element: <ProtectedRoute><WealthProperties /></ProtectedRoute>
+  },
+  {
+    path: "/wealth/goals",
+    element: <ProtectedRoute><GoalsBudgets /></ProtectedRoute>
+  },
+  {
+    path: "/wealth/goals/retirement",
+    element: <ProtectedRoute><GoalsBudgets /></ProtectedRoute>
+  },
+  {
+    path: "/wealth/goals/bucket-list",
+    element: <ProtectedRoute><GoalsBudgets /></ProtectedRoute>
+  },
+  {
+    path: "/wealth/goals/budgets",
+    element: <ProtectedRoute><GoalsBudgets /></ProtectedRoute>
+  },
+  {
+    path: "/wealth/docs",
+    element: <ProtectedRoute><WealthDocuments /></ProtectedRoute>
+  },
+  {
+    path: "/wealth/social-security",
+    element: <ProtectedRoute><WealthSocialSecurity /></ProtectedRoute>
+  },
+  {
+    path: "/wealth/business-filings",
+    element: <ProtectedRoute><WealthBusinessFilings /></ProtectedRoute>
+  },
+  {
+    path: "/wealth/bill-pay",
+    element: <ProtectedRoute><WealthBillPay /></ProtectedRoute>
   },
   // Legacy health redirects
   {
