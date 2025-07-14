@@ -28,7 +28,7 @@ import {
   AlertCircleIcon,
   CheckCircleIcon,
   ArrowUpDownIcon,
-  MousePointerClickIcon,
+  PointerIcon,
   Key,
   Lock,
   Eye,
@@ -268,7 +268,7 @@ export const wealthManagementNodes: NavigationNode[] = [
         id: "wealth.accounts.transfers.wire",
         title: "Wire Transfers",
         href: "/wealth/transfers/wire",
-        icon: MousePointerClickIcon,
+        icon: PointerIcon,
         category: "wealth-accounts",
         subcategory: "transfers",
         priority: 3

@@ -15,7 +15,7 @@ export function convertNavItemToNode(
   priority?: number
 ): NavigationNode {
   return {
-    id: item.title.toLowerCase().replace(/\s+/g, '-'),
+    id: item.id || item.title.toLowerCase().replace(/\s+/g, '-'),
     title: item.title,
     href: item.href,
     icon: item.icon,
@@ -24,11 +24,14 @@ export function convertNavItemToNode(
     children: item.children?.map((child, index) => 
       convertNavItemToNode(child, category, index)
     ),
-    category,
-    priority: priority ?? 0,
+    category: item.category || category,
+    subcategory: item.subcategory,
+    priority: item.priority ?? priority ?? 0,
+    permissions: item.permissions,
     metadata: {
       label: item.label,
-      external: item.external
+      external: item.external,
+      ...item.metadata
     }
   };
 }
@@ -38,6 +41,7 @@ export function convertNavItemToNode(
  */
 export function convertNodeToNavItem(node: NavigationNode): NavItem {
   return {
+    id: node.id,
     title: node.title,
     href: node.href,
     icon: node.icon,
@@ -45,6 +49,11 @@ export function convertNodeToNavItem(node: NavigationNode): NavItem {
     comingSoon: node.comingSoon,
     label: node.metadata?.label,
     external: node.metadata?.external,
+    category: node.category,
+    subcategory: node.subcategory,
+    priority: node.priority,
+    permissions: node.permissions,
+    metadata: node.metadata,
     children: node.children?.map(convertNodeToNavItem),
     items: node.children?.map(convertNodeToNavItem) // Legacy compatibility
   };
@@ -53,12 +62,13 @@ export function convertNodeToNavItem(node: NavigationNode): NavItem {
 /**
  * Flatten navigation tree to array
  */
-export function flattenNavigationTree(nodes: NavigationNode[]): NavigationNode[] {
+export function flattenNavigationTree(nodes: (NavigationNode | NavItem)[]): NavigationNode[] {
   const result: NavigationNode[] = [];
   
-  function traverse(items: NavigationNode[]) {
+  function traverse(items: (NavigationNode | NavItem)[]) {
     items.forEach(item => {
-      result.push(item);
+      const node = 'id' in item && item.id ? item as NavigationNode : convertNavItemToNode(item as NavItem);
+      result.push(node);
       if (item.children && item.children.length > 0) {
         traverse(item.children);
       }
@@ -73,13 +83,13 @@ export function flattenNavigationTree(nodes: NavigationNode[]): NavigationNode[]
  * Find navigation node by path
  */
 export function findNodeByPath(
-  nodes: NavigationNode[], 
+  nodes: (NavigationNode | NavItem)[], 
   path: string
 ): NavigationNode | null {
-  function search(items: NavigationNode[]): NavigationNode | null {
+  function search(items: (NavigationNode | NavItem)[]): NavigationNode | null {
     for (const item of items) {
       if (item.href === path) {
-        return item;
+        return 'id' in item && item.id ? item as NavigationNode : convertNavItemToNode(item as NavItem);
       }
       if (item.children && item.children.length > 0) {
         const found = search(item.children);
@@ -96,12 +106,13 @@ export function findNodeByPath(
  * Get navigation node depth
  */
 export function getNodeDepth(
-  nodes: NavigationNode[], 
+  nodes: (NavigationNode | NavItem)[], 
   targetId: string,
   currentDepth = 0
 ): number {
   for (const node of nodes) {
-    if (node.id === targetId) {
+    const nodeId = ('id' in node && node.id) ? node.id : node.title.toLowerCase().replace(/\s+/g, '-');
+    if (nodeId === targetId) {
       return currentDepth;
     }
     if (node.children && node.children.length > 0) {
@@ -116,7 +127,7 @@ export function getNodeDepth(
  * Filter nodes by permissions
  */
 export function filterNodesByPermissions(
-  nodes: NavigationNode[],
+  nodes: (NavigationNode | NavItem)[],
   userPermissions: string[]
 ): NavigationNode[] {
   return nodes.filter(node => {
@@ -129,19 +140,24 @@ export function filterNodesByPermissions(
     return node.permissions.some(permission => 
       userPermissions.includes(permission)
     );
-  }).map(node => ({
-    ...node,
-    children: node.children 
-      ? filterNodesByPermissions(node.children, userPermissions)
-      : undefined
-  }));
+  }).map(node => {
+    const converted = 'id' in node && node.id ? node as NavigationNode : convertNavItemToNode(node as NavItem);
+    return {
+      ...converted,
+      children: node.children 
+        ? filterNodesByPermissions(node.children, userPermissions)
+        : undefined
+    };
+  });
 }
 
 /**
  * Sort nodes by priority and title
  */
-export function sortNodes(nodes: NavigationNode[]): NavigationNode[] {
-  return [...nodes].sort((a, b) => {
+export function sortNodes(nodes: (NavigationNode | NavItem)[]): NavigationNode[] {
+  return [...nodes].map(node => 
+    'id' in node && node.id ? node as NavigationNode : convertNavItemToNode(node as NavItem)
+  ).sort((a, b) => {
     // First sort by priority
     const priorityDiff = (a.priority ?? 0) - (b.priority ?? 0);
     if (priorityDiff !== 0) return priorityDiff;
@@ -158,12 +174,13 @@ export function sortNodes(nodes: NavigationNode[]): NavigationNode[] {
  * Get all parent nodes for a given node
  */
 export function getParentNodes(
-  nodes: NavigationNode[], 
+  nodes: (NavigationNode | NavItem)[], 
   targetId: string,
   parents: NavigationNode[] = []
 ): NavigationNode[] {
   for (const node of nodes) {
-    if (node.id === targetId) {
+    const converted = 'id' in node && node.id ? node as NavigationNode : convertNavItemToNode(node as NavItem);
+    if (converted.id === targetId) {
       return parents;
     }
     
@@ -171,7 +188,7 @@ export function getParentNodes(
       const result = getParentNodes(
         node.children, 
         targetId, 
-        [...parents, node]
+        [...parents, converted]
       );
       if (result.length > parents.length) {
         return result;
@@ -186,13 +203,16 @@ export function getParentNodes(
  * Get all child nodes for a given node
  */
 export function getChildNodes(
-  nodes: NavigationNode[], 
+  nodes: (NavigationNode | NavItem)[], 
   targetId: string
 ): NavigationNode[] {
-  function search(items: NavigationNode[]): NavigationNode[] {
+  function search(items: (NavigationNode | NavItem)[]): NavigationNode[] {
     for (const item of items) {
-      if (item.id === targetId) {
-        return item.children || [];
+      const converted = 'id' in item && item.id ? item as NavigationNode : convertNavItemToNode(item as NavItem);
+      if (converted.id === targetId) {
+        return item.children?.map(child => 
+          'id' in child && child.id ? child as NavigationNode : convertNavItemToNode(child as NavItem)
+        ) || [];
       }
       if (item.children && item.children.length > 0) {
         const found = search(item.children);
@@ -208,7 +228,7 @@ export function getChildNodes(
 /**
  * Validate navigation structure
  */
-export function validateNavigationStructure(nodes: NavigationNode[]): {
+export function validateNavigationStructure(nodes: (NavigationNode | NavItem)[]): {
   isValid: boolean;
   errors: string[];
   warnings: string[];
@@ -218,28 +238,30 @@ export function validateNavigationStructure(nodes: NavigationNode[]): {
   const seenIds = new Set<string>();
   const seenHrefs = new Set<string>();
   
-  function validate(items: NavigationNode[], depth = 0) {
+  function validate(items: (NavigationNode | NavItem)[], depth = 0) {
     items.forEach((node, index) => {
+      const nodeId = ('id' in node && node.id) ? node.id : node.title.toLowerCase().replace(/\s+/g, '-');
+      
       // Check for required fields
-      if (!node.id) {
+      if (!nodeId) {
         errors.push(`Node at index ${index} (depth ${depth}) missing required 'id' field`);
       }
       
       if (!node.title) {
-        errors.push(`Node '${node.id}' missing required 'title' field`);
+        errors.push(`Node '${nodeId}' missing required 'title' field`);
       }
       
       // Check for duplicate IDs
-      if (node.id && seenIds.has(node.id)) {
-        errors.push(`Duplicate node ID: '${node.id}'`);
-      } else if (node.id) {
-        seenIds.add(node.id);
+      if (seenIds.has(nodeId)) {
+        errors.push(`Duplicate node ID: '${nodeId}'`);
+      } else {
+        seenIds.add(nodeId);
       }
       
       // Check for duplicate hrefs
       if (node.href) {
         if (seenHrefs.has(node.href)) {
-          warnings.push(`Duplicate href: '${node.href}' in node '${node.id}'`);
+          warnings.push(`Duplicate href: '${node.href}' in node '${nodeId}'`);
         } else {
           seenHrefs.add(node.href);
         }
@@ -247,12 +269,12 @@ export function validateNavigationStructure(nodes: NavigationNode[]): {
       
       // Check depth limits
       if (depth > 8) {
-        warnings.push(`Node '${node.id}' exceeds recommended depth of 8 levels`);
+        warnings.push(`Node '${nodeId}' exceeds recommended depth of 8 levels`);
       }
       
       // Check for disabled nodes with children
       if (node.disabled && node.children && node.children.length > 0) {
-        warnings.push(`Disabled node '${node.id}' has children`);
+        warnings.push(`Disabled node '${nodeId}' has children`);
       }
       
       // Recursively validate children
@@ -274,10 +296,10 @@ export function validateNavigationStructure(nodes: NavigationNode[]): {
 /**
  * Generate navigation sitemap
  */
-export function generateNavigationSitemap(nodes: NavigationNode[]): string[] {
+export function generateNavigationSitemap(nodes: (NavigationNode | NavItem)[]): string[] {
   const sitemap: string[] = [];
   
-  function traverse(items: NavigationNode[], prefix = '') {
+  function traverse(items: (NavigationNode | NavItem)[], prefix = '') {
     items.forEach(item => {
       if (item.href && !item.disabled && !item.comingSoon) {
         sitemap.push(item.href);

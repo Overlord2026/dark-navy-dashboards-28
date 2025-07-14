@@ -16,6 +16,11 @@ export interface NavItem {
   collapsible?: boolean; // For collapsible menu items
   priority?: number; // Priority for sorting
   id?: string; // Optional ID for navigation nodes
+  category?: string; // Category for grouping
+  subcategory?: string; // Subcategory for nested grouping
+  permissions?: string[]; // Required permissions
+  metadata?: Record<string, any>; // Additional metadata
+  loadComponent?: () => Promise<React.ComponentType>; // Dynamic component loading
 }
 
 export interface NavCategory {
