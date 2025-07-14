@@ -4,7 +4,7 @@ import { homeNavItems } from "./tabs/HomeTab";
 import { accountsNavItems } from "./tabs/AccountsTab";
 import { educationNavItems } from "./tabs/EducationTab";
 import { healthcareOptimizationNavItems } from "./tabs/HealthcareOptimizationTab";
-import { familyWealthNavItems } from "./tabs/FamilyWealthTab";
+// DEPRECATED: import { familyWealthNavItems } from "./tabs/FamilyWealthTab";
 import { collaborationNavItems } from "./tabs/CollaborationTab";
 import { settingsNavItems } from "./tabs/SettingsTab";
 import { clientToolsNavItems } from "./WealthManagementRegistry";
@@ -40,13 +40,14 @@ export const navigationCategories: NavCategory[] = [
     items: healthcareOptimizationNavItems,
     defaultExpanded: true
   },
-  {
-    id: "family-wealth",
-    title: "FAMILY WEALTH",
-    label: "FAMILY WEALTH",
-    items: familyWealthNavItems,
-    defaultExpanded: true
-  },
+  // DEPRECATED: Family Wealth moved to hierarchical Client Tools > Wealth Management
+  // {
+  //   id: "family-wealth",
+  //   title: "FAMILY WEALTH",
+  //   label: "FAMILY WEALTH",
+  //   items: familyWealthNavItems,
+  //   defaultExpanded: true
+  // },
   {
     id: "collaboration",
     title: "COLLABORATION & SHARING",
@@ -74,7 +75,7 @@ export {
   accountsNavItems,
   educationNavItems,
   healthcareOptimizationNavItems,
-  familyWealthNavItems,
+  // DEPRECATED: familyWealthNavItems, // Now part of hierarchical Wealth Management
   collaborationNavItems,
   settingsNavItems,
   clientToolsNavItems

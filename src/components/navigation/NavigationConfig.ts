@@ -142,67 +142,8 @@ export const healthcareOptimizationNavItems: NavItem[] = [
   }
 ];
 
-// FAMILY WEALTH category
-export const familyWealthNavItems: NavItem[] = [
-  { 
-    title: "Financial Plans", 
-    href: "/financial-plans", 
-    icon: LineChartIcon 
-  },
-  { 
-    title: "Accounts Overview", 
-    href: "/accounts", 
-    icon: WalletIcon 
-  },
-  { 
-    title: "All Assets", 
-    href: "/all-assets", 
-    icon: Diamond 
-  },
-  { 
-    title: "Real Estate", 
-    href: "/properties", 
-    icon: BuildingIcon 
-  },
-  { 
-    title: "Cash Management", 
-    href: "/cash-management", 
-    icon: BanknoteIcon,
-    comingSoon: true
-  },
-  { 
-    title: "Tax & Budgets", 
-    href: "/tax-budgets", 
-    icon: Calculator 
-  },
-  { 
-    title: "Transfers", 
-    href: "/transfers", 
-    icon: ArrowRightLeft 
-  },
-  { 
-    title: "Secure Family Vault", 
-    href: "/legacy-vault", 
-    icon: VaultIcon 
-  },
-  { 
-    title: "Social Security", 
-    href: "/client-social-security", 
-    icon: CircleDollarSignIcon,
-    submenu: [
-      {
-        title: "Business Filings",
-        href: "/client-business-filings",
-        icon: FileTextIcon
-      }
-    ]
-  },
-  { 
-    title: "Bill Pay", 
-    href: "/billpay", 
-    icon: Receipt 
-  }
-];
+// DEPRECATED: Family Wealth items moved to hierarchical Wealth Management structure
+export const familyWealthNavItems: NavItem[] = [];
 
 // COLLABORATION & SHARING category
 export const collaborationNavItems: NavItem[] = [

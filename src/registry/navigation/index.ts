@@ -35,7 +35,7 @@ export {
   homeNavItems,
   educationNavItems,
   healthcareOptimizationNavItems,
-  familyWealthNavItems,
+  // DEPRECATED: familyWealthNavItems, // Now part of hierarchical Wealth Management
   collaborationNavItems,
   settingsNavItems,
   clientToolsNavItems

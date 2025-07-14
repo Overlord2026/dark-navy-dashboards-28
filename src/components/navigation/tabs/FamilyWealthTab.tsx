@@ -1,127 +1,25 @@
 import React from "react";
-import {
-  LineChartIcon,
-  BanknoteIcon,
-  ArrowRightLeft,
-  BuildingIcon,
-  VaultIcon,
-  CircleDollarSignIcon,
-  Receipt,
-  Calculator,
-  Diamond,
-  BookIcon,
-  WalletIcon,
-} from "lucide-react";
 import { NavItem } from "@/types/navigation";
-import { Badge } from "@/components/ui/badge";
 
-export const familyWealthNavItems: NavItem[] = [
-  {
-    title: "Financial Plans",
-    href: "/financial-plans",
-    icon: LineChartIcon,
-  },
-  {
-    title: "Accounts Overview",
-    href: "/client-accounts",
-    icon: WalletIcon,
-  },
-  {
-    title: "All Assets",
-    href: "/client-all-assets",
-    icon: Diamond,
-  },
-  {
-    title: "Documents",
-    href: "/client-documents",
-    icon: BookIcon,
-  },
-  {
-    title: "Cash Management",
-    href: "/client-cash-management",
-    icon: BanknoteIcon,
-  },
-  {
-    title: "Transfers",
-    href: "/client-transfers",
-    icon: ArrowRightLeft,
-  },
-  {
-    title: "Properties",
-    href: "/client-properties",
-    icon: BuildingIcon,
-  },
-  {
-    title: "Tax & Budgets",
-    href: "/client-tax-budgets",
-    icon: Calculator,
-    comingSoon: true,
-  },
-  {
-    title: "Secure Family Vault",
-    href: "/legacy-vault",
-    icon: VaultIcon,
-  },
-  {
-    title: "Social Security",
-    href: "/social-security",
-    icon: CircleDollarSignIcon,
-    submenu: [
-      {
-        title: "Business Filings",
-        href: "/client-business-filings",
-        icon: LineChartIcon,
-      },
-    ],
-  },
-  {
-    title: "Business Filings",
-    href: "/client-business-filings",
-    icon: LineChartIcon,
-  },
-  {
-    title: "Bill Pay",
-    href: "/client-billpay",
-    icon: Receipt,
-    comingSoon: true,
-  },
-];
+// DEPRECATED: This tab has been reorganized into the hierarchical Client Tools > Wealth Management structure
+// The items below are now part of the new hierarchical navigation in HierarchicalNavigationConfig.ts
+
+// Legacy export for backward compatibility - use hierarchical structure instead
+export const familyWealthNavItems: NavItem[] = [];
 
 const FamilyWealthTab = () => {
   return (
     <div className="family-wealth-tab">
-      <h2 className="text-xl font-semibold mb-4">Family Wealth Management</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {familyWealthNavItems.map((item) => (
-          <div
-            key={item.href}
-            className={`p-4 border rounded-lg transition-colors flex items-center gap-3 ${
-              item.comingSoon
-                ? "cursor-not-allowed opacity-60 bg-muted/30"
-                : "hover:bg-muted/50 cursor-pointer"
-            }`}
-            onClick={
-              item.comingSoon
-                ? undefined
-                : () => (window.location.href = item.href)
-            }
-          >
-            {item.icon && <item.icon className="h-5 w-5 text-primary" />}
-            <div className="flex-1">
-              <span>{item.title}</span>
-              {item.comingSoon && (
-                <Badge variant="secondary" className="ml-2 text-xs">
-                  Coming Soon
-                </Badge>
-              )}
-              {item.submenu && (
-                <div className="mt-1 text-xs text-muted-foreground">
-                  Includes: {item.submenu.map((sub) => sub.title).join(", ")}
-                </div>
-              )}
-            </div>
-          </div>
-        ))}
+      <div className="p-8 text-center">
+        <h2 className="text-xl font-semibold mb-4">Family Wealth Management</h2>
+        <div className="bg-muted/50 p-6 rounded-lg">
+          <p className="text-muted-foreground mb-2">
+            This section has been reorganized into the new hierarchical navigation structure.
+          </p>
+          <p className="text-sm text-muted-foreground">
+            Find wealth management tools under: <strong>Client Tools → Wealth Management</strong>
+          </p>
+        </div>
       </div>
     </div>
   );
