@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useHealthDocs } from "@/hooks/healthcare/useHealthDocs";
+import { DocumentUploadModal } from "@/components/healthcare/DocumentUploadModal";
 import { 
   FileTextIcon, 
   DownloadIcon, 
@@ -13,7 +14,23 @@ import {
 } from "lucide-react";
 
 const HealthcareDocuments: React.FC = () => {
-  const { documents, loading, stats, fetchDocuments, downloadDocument, getDocumentStatus } = useHealthDocs();
+  const { documents, loading, stats, fetchDocuments, downloadDocument, getDocumentStatus, createDocument, uploadDocumentFile } = useHealthDocs();
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+
+  const handleDocumentUpload = async (documentData: any, file?: File) => {
+    try {
+      const doc = await createDocument(documentData);
+      
+      if (file && doc) {
+        await uploadDocumentFile(file, doc.id);
+      }
+      
+      await fetchDocuments(); // Refresh the list
+    } catch (error) {
+      console.error('Error uploading document:', error);
+      throw error; // Re-throw to let modal handle the error
+    }
+  };
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -79,7 +96,7 @@ const HealthcareDocuments: React.FC = () => {
                 <RefreshCwIcon className="h-4 w-4 mr-2" />
                 Refresh
               </Button>
-              <Button size="sm">
+              <Button size="sm" onClick={() => setIsUploadModalOpen(true)}>
                 <PlusIcon className="h-4 w-4 mr-2" />
                 Add Document
               </Button>
@@ -141,7 +158,7 @@ const HealthcareDocuments: React.FC = () => {
               <p className="text-muted-foreground mb-4">
                 Start by adding your first health document or medical record.
               </p>
-              <Button>
+              <Button onClick={() => setIsUploadModalOpen(true)}>
                 <PlusIcon className="h-4 w-4 mr-2" />
                 Add Your First Document
               </Button>
@@ -191,6 +208,13 @@ const HealthcareDocuments: React.FC = () => {
             })
           )}
         </div>
+
+        {/* Upload Modal */}
+        <DocumentUploadModal
+          isOpen={isUploadModalOpen}
+          onClose={() => setIsUploadModalOpen(false)}
+          onUpload={handleDocumentUpload}
+        />
       </div>
     </div>
   );
