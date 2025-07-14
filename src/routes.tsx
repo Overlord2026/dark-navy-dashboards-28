@@ -410,6 +410,31 @@ const routes = createBrowserRouter([
     path: "/wealth/bill-pay",
     element: <ProtectedRoute><WealthBillPay /></ProtectedRoute>
   },
+  // Legacy redirects
+  {
+    path: "/family-wealth/*",
+    element: <Navigate to="/wealth" replace />
+  },
+  {
+    path: "/client-tools/wealth/*",
+    element: <Navigate to="/wealth" replace />
+  },
+  {
+    path: "/healthcare-optimization/*",
+    element: <Navigate to="/health" replace />
+  },
+  {
+    path: "/tracking/*",
+    element: <Navigate to="/health/insights" replace />
+  },
+  {
+    path: "/hsa-accounts/*",
+    element: <Navigate to="/health/accounts/hsa" replace />
+  },
+  {
+    path: "/healthcare-savings-calculator",
+    element: <Navigate to="/health/accounts/hsa/calculator" replace />
+  },
   // Legacy health redirects
   {
     path: "/client-legacy-vault",
