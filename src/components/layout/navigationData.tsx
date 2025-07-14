@@ -1,63 +1,19 @@
 
 import React from "react";
-import {
-  homeNavItems,
-  educationSolutionsNavItems,
-  healthcareOptimizationNavItems,
-  familyWealthNavItems,
-  collaborationNavItems,
-  bottomNavItems
-} from "@/components/navigation/NavigationConfig";
-import { NavCategory } from "@/types/navigation";
+import { hierarchicalNav, navigationData } from "@/components/navigation/HierarchicalNavigationConfig";
+import { NavCategory, NavItem } from "@/types/navigation";
 
-export const navigationCategories: NavCategory[] = [
-  {
-    id: "home",
-    title: "Home",
-    label: "Home",
-    items: homeNavItems,
-    defaultExpanded: true
-  },
-  {
-    id: "education-solutions", 
-    title: "Education & Solutions",
-    label: "Education & Solutions",
-    items: educationSolutionsNavItems,
-    defaultExpanded: true
-  },
-  {
-    id: "healthcare-optimization",
-    title: "Healthcare Optimization",
-    label: "Healthcare Optimization", 
-    items: healthcareOptimizationNavItems,
-    defaultExpanded: true
-  },
-  {
-    id: "family-wealth",
-    title: "Family Wealth",
-    label: "Family Wealth", 
-    items: familyWealthNavItems.map(item => 
-      item.title === "Bill Pay" 
-        ? { ...item, comingSoon: true }
-        : item
-    ),
-    defaultExpanded: true
-  },
-  {
-    id: "collaboration",
-    title: "Collaboration & Sharing",
-    label: "Collaboration & Sharing",
-    items: collaborationNavItems,
-    defaultExpanded: true
-  },
-  {
-    id: "bottom",
-    title: "Support",
-    label: "Support",
-    items: bottomNavItems,
-    defaultExpanded: true
-  }
-];
+// Convert hierarchical navigation to legacy format for backward compatibility
+export const navigationCategories: NavCategory[] = hierarchicalNav.map(item => ({
+  id: item.id || item.title.toLowerCase().replace(/\s+/g, '-'),
+  title: item.title,
+  label: item.title,
+  items: item.children || [item],
+  defaultExpanded: true
+}));
+
+// Export hierarchical navigation for new components
+export { hierarchicalNav };
 
 export const getSecondaryMenuItems = (activeMainItem: string) => {
   // Return appropriate secondary menu items based on the active main item
