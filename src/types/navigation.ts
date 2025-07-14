@@ -4,14 +4,16 @@ import { LucideIcon } from "lucide-react";
 
 export interface NavItem {
   title: string;
-  href: string;
+  href?: string;
   disabled?: boolean;
   external?: boolean;
   icon?: LucideIcon;
   label?: string;
   items?: NavItem[];
+  children?: NavItem[]; // New property for hierarchical structure
   submenu?: NavItem[]; // Adding this for compatibility with existing code
   comingSoon?: boolean; // Adding this for coming soon functionality
+  collapsible?: boolean; // For collapsible menu items
 }
 
 export interface NavCategory {

@@ -47,6 +47,25 @@ import Auth from "@/pages/Auth";
 import ResetPassword from "@/pages/ResetPassword";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 
+// Health pages
+import HealthDashboard from "@/pages/health/HealthDashboard";
+import HSAAccounts from "@/pages/health/HSAAccounts";
+import HSACalculator from "@/pages/health/HSACalculator";
+import DailyMetrics from "@/pages/health/DailyMetrics";
+import LabBiomarkers from "@/pages/health/LabBiomarkers";
+import Epigenetics from "@/pages/health/Epigenetics";
+import Screenings from "@/pages/health/Screenings";
+import TrendsCoach from "@/pages/health/TrendsCoach";
+import Providers from "@/pages/health/Providers";
+import ShareData from "@/pages/health/ShareData";
+import Medications from "@/pages/health/Medications";
+import Supplements from "@/pages/health/Supplements";
+import DocsDirectives from "@/pages/health/DocsDirectives";
+import CoachingKB from "@/pages/health/CoachingKB";
+import EducationKB from "@/pages/health/EducationKB";
+import RecommendationsKB from "@/pages/health/RecommendationsKB";
+import HealthSettings from "@/pages/health/HealthSettings";
+
 const routes = createBrowserRouter([
   {
     path: "/",
@@ -251,6 +270,80 @@ const routes = createBrowserRouter([
   {
     path: "/navigation-diagnostics",
     element: <ProtectedRoute><NavigationDiagnostics /></ProtectedRoute>
+  },
+  // Health routes
+  {
+    path: "/health",
+    element: <ProtectedRoute><HealthDashboard /></ProtectedRoute>
+  },
+  {
+    path: "/health/accounts/hsa",
+    element: <ProtectedRoute><HSAAccounts /></ProtectedRoute>
+  },
+  {
+    path: "/health/accounts/hsa/calculator",
+    element: <ProtectedRoute><HSACalculator /></ProtectedRoute>
+  },
+  {
+    path: "/health/insights/vitals",
+    element: <ProtectedRoute><DailyMetrics /></ProtectedRoute>
+  },
+  {
+    path: "/health/insights/labs",
+    element: <ProtectedRoute><LabBiomarkers /></ProtectedRoute>
+  },
+  {
+    path: "/health/insights/epigenetics",
+    element: <ProtectedRoute><Epigenetics /></ProtectedRoute>
+  },
+  {
+    path: "/health/insights/screenings",
+    element: <ProtectedRoute><Screenings /></ProtectedRoute>
+  },
+  {
+    path: "/health/insights/trends",
+    element: <ProtectedRoute><TrendsCoach /></ProtectedRoute>
+  },
+  {
+    path: "/health/care/providers",
+    element: <ProtectedRoute><Providers /></ProtectedRoute>
+  },
+  {
+    path: "/health/care/share",
+    element: <ProtectedRoute><ShareData /></ProtectedRoute>
+  },
+  {
+    path: "/health/pharmacy/meds",
+    element: <ProtectedRoute><Medications /></ProtectedRoute>
+  },
+  {
+    path: "/health/pharmacy/supps",
+    element: <ProtectedRoute><Supplements /></ProtectedRoute>
+  },
+  {
+    path: "/health/docs",
+    element: <ProtectedRoute><DocsDirectives /></ProtectedRoute>
+  },
+  {
+    path: "/health/knowledge/coaching",
+    element: <ProtectedRoute><CoachingKB /></ProtectedRoute>
+  },
+  {
+    path: "/health/knowledge/education",
+    element: <ProtectedRoute><EducationKB /></ProtectedRoute>
+  },
+  {
+    path: "/health/knowledge/recommendations",
+    element: <ProtectedRoute><RecommendationsKB /></ProtectedRoute>
+  },
+  {
+    path: "/health/settings",
+    element: <ProtectedRoute><HealthSettings /></ProtectedRoute>
+  },
+  // Legacy health redirects
+  {
+    path: "/client-legacy-vault",
+    element: <Navigate to="/health" replace />
   },
   {
     path: "*",
