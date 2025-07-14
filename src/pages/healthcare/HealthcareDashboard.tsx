@@ -1,19 +1,86 @@
 import React from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { HealthCard } from "@/components/healthcare/HealthCard";
+import { useHealthData } from "@/hooks/useHealthData";
+import { useToast } from "@/hooks/use-toast";
 import { 
   ActivityIcon, 
   HeartIcon, 
   CalendarIcon, 
   FileTextIcon,
   AlertTriangleIcon,
-  PillIcon
+  PillIcon,
+  PlusIcon,
+  RefreshCwIcon
 } from "lucide-react";
 
 const HealthcareDashboard: React.FC = () => {
+  const { metrics, loading, error, addHealthMetric, refetch } = useHealthData();
+  const { toast } = useToast();
+
+  // Process metrics for display
+  const processedMetrics = React.useMemo(() => {
+    const latest = metrics.reduce((acc, metric) => {
+      if (!acc[metric.type] || new Date(metric.date) > new Date(acc[metric.type].date)) {
+        acc[metric.type] = metric;
+      }
+      return acc;
+    }, {} as Record<string, typeof metrics[0]>);
+
+    return [
+      {
+        title: "Blood Pressure",
+        value: latest.blood_pressure?.value || "120/80",
+        status: "success" as const,
+        icon: <HeartIcon className="h-6 w-6" />
+      },
+      {
+        title: "Heart Rate",
+        value: latest.heart_rate ? `${latest.heart_rate.value} BPM` : "72 BPM",
+        status: "success" as const,
+        icon: <ActivityIcon className="h-6 w-6" />
+      },
+      {
+        title: "Weight",
+        value: latest.weight ? `${latest.weight.value} ${latest.weight.unit || 'lbs'}` : "-- lbs",
+        status: "info" as const,
+        icon: <ActivityIcon className="h-6 w-6" />
+      },
+      {
+        title: "Total Metrics",
+        value: metrics.length.toString(),
+        status: "info" as const,
+        icon: <FileTextIcon className="h-6 w-6" />
+      }
+    ];
+  }, [metrics]);
+
+  const handleAddSampleMetric = async () => {
+    try {
+      await addHealthMetric({
+        type: 'blood_pressure',
+        value: '120/80',
+        unit: 'mmHg',
+        date: new Date().toISOString().split('T')[0],
+        notes: 'Morning reading'
+      });
+      toast({
+        title: "Success",
+        description: "Sample health metric added successfully"
+      });
+    } catch (err) {
+      toast({
+        title: "Error",
+        description: "Failed to add health metric",
+        variant: "destructive"
+      });
+    }
+  };
+
   // Mock data for demonstration
-  const healthMetrics = [
+  const staticMetrics = [
     {
       title: "Blood Pressure",
       value: "120/80",
@@ -80,15 +147,33 @@ const HealthcareDashboard: React.FC = () => {
 
         {/* Health Metrics Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {healthMetrics.map((metric, index) => (
-            <HealthCard
-              key={index}
-              title={metric.title}
-              value={metric.value}
-              status={metric.status}
-              icon={metric.icon}
-            />
-          ))}
+          {loading ? (
+            Array.from({ length: 4 }).map((_, index) => (
+              <Card key={index} className="p-6 animate-pulse">
+                <div className="h-4 bg-muted rounded mb-4"></div>
+                <div className="h-8 bg-muted rounded mb-2"></div>
+                <div className="h-3 bg-muted rounded w-1/2"></div>
+              </Card>
+            ))
+          ) : error ? (
+            <Card className="col-span-full p-6 border-destructive">
+              <p className="text-destructive">Error loading health data: {error}</p>
+              <Button onClick={refetch} className="mt-2" variant="outline" size="sm">
+                <RefreshCwIcon className="h-4 w-4 mr-2" />
+                Retry
+              </Button>
+            </Card>
+          ) : (
+            processedMetrics.map((metric, index) => (
+              <HealthCard
+                key={index}
+                title={metric.title}
+                value={metric.value}
+                status={metric.status}
+                icon={metric.icon}
+              />
+            ))
+          )}
         </div>
 
         {/* Alerts Section */}
@@ -119,18 +204,39 @@ const HealthcareDashboard: React.FC = () => {
               <h2 className="text-xl font-semibold text-foreground">Quick Actions</h2>
             </div>
             <div className="space-y-3">
-              <button className="w-full text-left p-3 rounded-lg bg-muted hover:bg-muted/80 transition-colors">
-                <div className="font-medium text-foreground">Log Health Metric</div>
-                <div className="text-sm text-muted-foreground">Record blood pressure, weight, etc.</div>
-              </button>
-              <button className="w-full text-left p-3 rounded-lg bg-muted hover:bg-muted/80 transition-colors">
-                <div className="font-medium text-foreground">Schedule Appointment</div>
-                <div className="text-sm text-muted-foreground">Book with your healthcare provider</div>
-              </button>
-              <button className="w-full text-left p-3 rounded-lg bg-muted hover:bg-muted/80 transition-colors">
-                <div className="font-medium text-foreground">Upload Document</div>
-                <div className="text-sm text-muted-foreground">Add medical records or reports</div>
-              </button>
+              <Button 
+                onClick={handleAddSampleMetric}
+                className="w-full justify-start h-auto p-3"
+                variant="outline"
+              >
+                <PlusIcon className="h-4 w-4 mr-3" />
+                <div className="text-left">
+                  <div className="font-medium">Log Health Metric</div>
+                  <div className="text-sm text-muted-foreground">Record blood pressure, weight, etc.</div>
+                </div>
+              </Button>
+              <Button 
+                className="w-full justify-start h-auto p-3"
+                variant="outline"
+                disabled
+              >
+                <CalendarIcon className="h-4 w-4 mr-3" />
+                <div className="text-left">
+                  <div className="font-medium">Schedule Appointment</div>
+                  <div className="text-sm text-muted-foreground">Book with your healthcare provider</div>
+                </div>
+              </Button>
+              <Button 
+                className="w-full justify-start h-auto p-3"
+                variant="outline"
+                disabled
+              >
+                <FileTextIcon className="h-4 w-4 mr-3" />
+                <div className="text-left">
+                  <div className="font-medium">Upload Document</div>
+                  <div className="text-sm text-muted-foreground">Add medical records or reports</div>
+                </div>
+              </Button>
             </div>
           </Card>
         </div>
