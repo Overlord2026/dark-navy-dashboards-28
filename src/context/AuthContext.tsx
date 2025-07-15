@@ -29,7 +29,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   isEmailConfirmed: boolean;
-  login: (email: string, password: string) => Promise<{ success: boolean; error?: string; requires2FA?: boolean; userId?: string; profileEmail?: string }>;
+  login: (email: string, password: string) => Promise<{ success: boolean; error?: string; requires2FA?: boolean; userId?: string }>;
   signup: (email: string, password: string, userData?: any) => Promise<{ success: boolean; error?: string }>;
   signInWithGoogle: () => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
@@ -164,53 +164,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     return () => subscription.unsubscribe();
   }, []);
 
-  const login = async (email: string, password: string): Promise<{ success: boolean; error?: string; requires2FA?: boolean; userId?: string; profileEmail?: string }> => {
+  const login = async (email: string, password: string): Promise<{ success: boolean; error?: string; requires2FA?: boolean; userId?: string }> => {
     try {
       setIsLoading(true);
       
-      console.log('Login attempt for email:', email);
-      
-      // First, try to get the user ID by doing a test authentication
-      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-      
-      if (authError) {
-        console.log('Authentication failed:', authError.message);
-        return { success: false, error: authError.message };
-      }
-      
-      console.log('Authentication successful for user:', authData.user.id);
-      
-      // Immediately sign out to prevent session persistence
-      await supabase.auth.signOut();
-      
-      // Now look up the user's profile using the user ID
-      const { data: profile, error: profileError } = await supabase
-        .from('profiles')
-        .select('two_factor_enabled, id, email')
-        .eq('id', authData.user.id)
-        .single();
-      
-      console.log('Profile lookup result:', profile, 'Error:', profileError);
-      
-      if (profile?.two_factor_enabled) {
-        console.log('2FA is enabled for user, showing OTP verification');
-        
-        // Credentials are valid and 2FA is enabled
-        return { 
-          success: false, 
-          requires2FA: true, 
-          userId: profile.id,
-          profileEmail: profile.email || email,
-          error: 'Two-factor authentication required'
-        };
-      }
-      
-      console.log('2FA is not enabled, proceeding with normal login');
-      
-      // If no 2FA, proceed with normal login
+      // First, verify credentials without creating a session
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -220,6 +178,25 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         return { success: false, error: error.message };
       }
       
+      // Check if user has 2FA enabled
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('two_factor_enabled, id')
+        .eq('id', data.user.id)
+        .single();
+      
+      if (profile?.two_factor_enabled) {
+        // If 2FA is enabled, sign out immediately and return requires2FA flag
+        await supabase.auth.signOut();
+        return { 
+          success: false, 
+          requires2FA: true, 
+          userId: profile.id,
+          error: 'Two-factor authentication required'
+        };
+      }
+      
+      // If no 2FA, proceed with normal login
       return { success: true };
     } catch (error) {
       console.error('Login error:', error);
