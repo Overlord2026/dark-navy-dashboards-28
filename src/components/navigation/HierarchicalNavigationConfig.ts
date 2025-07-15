@@ -230,14 +230,22 @@ export const hierarchicalNav: NavItem[] = [
               { 
                 id: 'h-hsa', 
                 title: 'HSA Accounts', 
-                href: '/healthcare-hsa-accounts', 
-                icon: WalletIcon 
-              },
-              { 
-                id: 'h-save', 
-                title: 'HSA Savings...', 
-                href: '/healthcare-savings', 
-                icon: CircleDollarSignIcon 
+                icon: WalletIcon,
+                collapsible: true,
+                children: [
+                  { 
+                    id: 'h-hsa-overview', 
+                    title: 'HSA Overview', 
+                    href: '/healthcare-hsa-accounts', 
+                    icon: WalletIcon 
+                  },
+                  { 
+                    id: 'h-hsa-calculator', 
+                    title: 'Contribution Calculator', 
+                    href: '/health/accounts/hsa/calculator', 
+                    icon: Calculator 
+                  }
+                ]
               }
             ]
           },
