@@ -25,7 +25,17 @@ import {
   FlaskConicalIcon,
   TrendingUpIcon,
   FolderHeartIcon,
-  BookHeartIcon
+  BookHeartIcon,
+  Grid3x3Icon,
+  CreditCardIcon,
+  DollarSignIcon,
+  HomeIcon as PropertyIcon,
+  TargetIcon,
+  CalendarIcon,
+  StarIcon,
+  FileTextIcon,
+  UserCheckIcon,
+  RepeatIcon
 } from "lucide-react";
 
 import { NavItem } from "@/types/navigation";
@@ -95,63 +105,101 @@ export const hierarchicalNav: NavItem[] = [
       { 
         id: 'wealth', 
         title: 'Wealth Management', 
-        icon: WalletIcon,
+        icon: BriefcaseIcon,
+        href: '/wealth',
         collapsible: true, 
         children: [
           { 
-            id: 'w-over', 
-            title: 'Financial Plans', 
-            href: '/financial-plans', 
-            icon: LineChartIcon 
+            id: 'wealth-overview', 
+            title: 'Overview', 
+            href: '/wealth', 
+            icon: Grid3x3Icon 
           },
           { 
-            id: 'w-acc', 
+            id: 'wealth-accounts', 
             title: 'Accounts Overview', 
-            href: '/accounts', 
-            icon: WalletIcon 
+            href: '/wealth/accounts', 
+            icon: CreditCardIcon 
+          },
+          {
+            id: 'wealth-cash',
+            title: 'Cash & Transfers',
+            icon: DollarSignIcon,
+            href: '/wealth/cash',
+            collapsible: true,
+            children: [
+              { 
+                id: 'cash-management', 
+                title: 'Cash Management', 
+                href: '/wealth/cash/management', 
+                icon: WalletIcon 
+              },
+              { 
+                id: 'transfers', 
+                title: 'Transfers', 
+                href: '/wealth/cash/transfers', 
+                icon: RepeatIcon 
+              },
+            ],
           },
           { 
-            id: 'w-assets', 
-            title: 'All Assets', 
-            href: '/all-assets', 
-            icon: Diamond 
-          },
-          { 
-            id: 'w-cash', 
-            title: 'Cash Management', 
-            href: '/cash-management', 
-            icon: BanknoteIcon,
-            comingSoon: true
-          },
-          { 
-            id: 'w-transfers', 
-            title: 'Transfers', 
-            href: '/transfers', 
-            icon: ArrowRightLeft 
-          },
-          { 
-            id: 'w-goals', 
-            title: 'Tax & Budgets', 
-            href: '/tax-budgets', 
-            icon: Calculator 
-          },
-          { 
-            id: 'w-prop', 
+            id: 'wealth-properties', 
             title: 'Properties', 
-            href: '/properties', 
-            icon: BuildingIcon 
+            href: '/wealth/properties', 
+            icon: PropertyIcon 
+          },
+          {
+            id: 'wealth-goals',
+            title: 'Goals & Budgets',
+            icon: TargetIcon,
+            href: '/wealth/goals',
+            collapsible: true,
+            children: [
+              { 
+                id: 'goals-retirement', 
+                title: 'Retirement Goals', 
+                href: '/wealth/goals/retirement', 
+                icon: CalendarIcon 
+              },
+              { 
+                id: 'goals-bucket', 
+                title: 'Bucket-List Goals', 
+                href: '/wealth/goals/bucket-list', 
+                icon: StarIcon 
+              },
+              { 
+                id: 'goals-budgets', 
+                title: 'Budgets (Soon)', 
+                href: '/wealth/goals/budgets', 
+                icon: ArchiveIcon,
+                disabled: true 
+              },
+            ],
           },
           { 
-            id: 'w-vault', 
-            title: 'Secure Family Vault', 
-            href: '/legacy-vault', 
-            icon: VaultIcon 
+            id: 'wealth-docs', 
+            title: 'Documents & Vault', 
+            href: '/wealth/docs', 
+            icon: FileTextIcon 
           },
           { 
-            id: 'w-ssa', 
+            id: 'wealth-ssn', 
             title: 'Social Security', 
-            href: '/client-social-security', 
-            icon: CircleDollarSignIcon 
+            href: '/wealth/social-security', 
+            icon: UserCheckIcon 
+          },
+          { 
+            id: 'wealth-business', 
+            title: 'Business Filings', 
+            href: '/wealth/business-filings', 
+            icon: BriefcaseIcon 
+          },
+          { 
+            id: 'wealth-bill-pay', 
+            title: 'Bill Pay (Soon)', 
+            href: '/wealth/bill-pay', 
+            icon: CreditCardIcon,
+            disabled: true 
           },
         ]
       },
