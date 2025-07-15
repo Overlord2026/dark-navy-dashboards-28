@@ -17,7 +17,7 @@ interface TwoFactorDialogProps {
 
 export function TwoFactorDialog({ open, onOpenChange }: TwoFactorDialogProps) {
   const { user } = useAuth();
-  const { userProfile, updateUserProfile } = useUser();
+  const { userProfile, updateUserProfile, refreshUserProfile } = useUser();
   const [loading, setLoading] = useState(false);
   const [verifying, setVerifying] = useState(false);
   const [step, setStep] = useState(0);
@@ -26,6 +26,7 @@ export function TwoFactorDialog({ open, onOpenChange }: TwoFactorDialogProps) {
   const [success, setSuccess] = useState(false);
   const [mode, setMode] = useState<'enable' | 'disable'>('enable');
   const [useCustomEmail, setUseCustomEmail] = useState(false);
+  const [profileLoading, setProfileLoading] = useState(false);
 
   const isEnabled = userProfile?.twoFactorEnabled || false;
 
@@ -60,13 +61,20 @@ export function TwoFactorDialog({ open, onOpenChange }: TwoFactorDialogProps) {
     };
   }, [open]);
 
-  const handleDialogOpen = (open: boolean) => {
+  const handleDialogOpen = async (open: boolean) => {
     if (open) {
-      console.log("TwoFactorDialog opening - Current profile state:", userProfile);
-      console.log("TwoFactorDialog opening - isEnabled value:", isEnabled);
-      console.log("TwoFactorDialog opening - userProfile.twoFactorEnabled:", userProfile?.twoFactorEnabled);
+      setProfileLoading(true);
       
-      setMode(isEnabled ? 'disable' : 'enable');
+      // Refresh profile to get the latest 2FA status from database
+      await refreshUserProfile();
+      
+      // Give a small delay to ensure state is updated
+      setTimeout(() => {
+        const currentlyEnabled = userProfile?.twoFactorEnabled === true;
+        setMode(currentlyEnabled ? 'disable' : 'enable');
+        setProfileLoading(false);
+      }, 100);
+      
       setStep(0);
       setEmail(user?.email || "");
       setOtpValue("");
@@ -236,6 +244,9 @@ export function TwoFactorDialog({ open, onOpenChange }: TwoFactorDialogProps) {
           if (isUserAction) {
             handleDialogOpen(false);
           }
+        } else {
+          // When opening, call the async handler
+          handleDialogOpen(true);
         }
       }}
       modal={true}
@@ -260,7 +271,18 @@ export function TwoFactorDialog({ open, onOpenChange }: TwoFactorDialogProps) {
         </DialogHeader>
         
         <div className="space-y-4">
-          {step === 0 && !success && (
+          {profileLoading && (
+            <div className="text-center space-y-4 p-4">
+              <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto">
+                <ShieldIcon className="h-8 w-8 text-muted-foreground animate-pulse" />
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Loading security settings...
+              </p>
+            </div>
+          )}
+          
+          {!profileLoading && step === 0 && !success && (
             <>
               {mode === 'enable' ? (
                 <div className="space-y-4">
