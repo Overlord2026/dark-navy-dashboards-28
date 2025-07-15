@@ -76,28 +76,36 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send OTP via EmailJS
     try {
+      const emailPayload = {
+        service_id: 'service_cew8n8b',
+        template_id: 'template_xts37ho',
+        user_id: 'chtAi9WR2OnpWeUXo',
+        template_params: {
+          to_email: email,
+          to_name: userName || 'User',
+          otp_code: otpRecord.otp_code,
+          from_name: 'Family Office Security',
+          subject: 'Your Two-Factor Authentication Code',
+          message: `Your verification code is: ${otpRecord.otp_code}. This code will expire in 10 minutes. If you didn't request this code, please ignore this email.`
+        }
+      };
+
+      console.log('EmailJS payload:', JSON.stringify(emailPayload, null, 2));
+
       const emailResponse = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          service_id: 'service_cew8n8b',
-          template_id: 'template_xts37ho',
-          user_id: 'chtAi9WR2OnpWeUXo',
-          template_params: {
-            to_email: email,
-            to_name: userName || 'User',
-            otp_code: otpRecord.otp_code,
-            from_name: 'Family Office Security',
-            subject: 'Your Two-Factor Authentication Code',
-            message: `Your verification code is: ${otpRecord.otp_code}. This code will expire in 10 minutes. If you didn't request this code, please ignore this email.`
-          }
-        })
+        body: JSON.stringify(emailPayload)
       });
 
+      const responseText = await emailResponse.text();
+      console.log('EmailJS response status:', emailResponse.status);
+      console.log('EmailJS response:', responseText);
+
       if (!emailResponse.ok) {
-        throw new Error(`EmailJS API error: ${emailResponse.statusText}`);
+        throw new Error(`EmailJS API error: ${emailResponse.status} ${emailResponse.statusText} - ${responseText}`);
       }
 
       console.log(`OTP email sent successfully to: ${email}`);
@@ -105,6 +113,9 @@ const handler = async (req: Request): Promise<Response> => {
       console.error('Failed to send OTP email:', emailError);
       // Log the OTP for testing if email fails
       console.log(`OTP Code for ${email}: ${otpRecord.otp_code} (email failed)`);
+      
+      // Re-throw the error to ensure proper error handling
+      throw emailError;
     }
     
     return new Response(
