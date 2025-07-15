@@ -15,18 +15,12 @@ import {
 } from "lucide-react";
 
 const HealthcareDocuments: React.FC = () => {
-  const { documents, loading, stats, fetchDocuments, downloadDocument, getDocumentStatus, createDocument, uploadDocumentFile } = useHealthDocs();
+  const { documents, isLoading, stats, refetch, downloadDocument, getDocumentStatus, createDocument } = useHealthDocs();
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
 
   const handleDocumentUpload = async (documentData: any, file?: File) => {
     try {
-      const doc = await createDocument(documentData);
-      
-      if (file && doc) {
-        await uploadDocumentFile(file, doc.id);
-      }
-      
-      await fetchDocuments(); // Refresh the list
+      await createDocument({ ...documentData, file });
     } catch (error) {
       console.error('Error uploading document:', error);
       throw error; // Re-throw to let modal handle the error
@@ -59,7 +53,7 @@ const HealthcareDocuments: React.FC = () => {
     }
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-background p-6">
         <div className="max-w-7xl mx-auto">
@@ -93,7 +87,7 @@ const HealthcareDocuments: React.FC = () => {
               </p>
             </div>
             <div className="flex gap-2">
-              <Button onClick={fetchDocuments} variant="outline" size="sm">
+              <Button onClick={refetch} variant="outline" size="sm">
                 <RefreshCwIcon className="h-4 w-4 mr-2" />
                 Refresh
               </Button>

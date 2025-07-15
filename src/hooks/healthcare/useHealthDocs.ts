@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from '@/hooks/use-toast';
 
 export interface HealthDoc {
   id: string;
@@ -40,18 +40,37 @@ export interface DocumentStats {
 
 export const useHealthDocs = () => {
   const [documents, setDocuments] = useState<HealthDoc[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [stats, setStats] = useState<DocumentStats>({
     totalDocuments: 0,
     expiringDocuments: 0,
     sharedDocuments: 0,
     emergencyAccessible: 0
   });
-  const { toast } = useToast();
+  const [retryCount, setRetryCount] = useState(0);
 
-  const fetchDocuments = async () => {
+  const clearError = useCallback(() => setError(null), []);
+
+  const calculateStats = useCallback((docs: HealthDoc[]): DocumentStats => {
+    const currentDate = new Date();
+    const thirtyDaysFromNow = new Date(currentDate.getTime() + 30 * 24 * 60 * 60 * 1000);
+    
+    return {
+      totalDocuments: docs.length,
+      expiringDocuments: docs.filter(doc => 
+        doc.expires_on && new Date(doc.expires_on) <= thirtyDaysFromNow
+      ).length,
+      sharedDocuments: docs.filter(doc => doc.id).length,
+      emergencyAccessible: docs.filter(doc => doc.is_emergency_accessible).length
+    };
+  }, []);
+
+  const fetchDocuments = useCallback(async (showLoading = true) => {
     try {
-      setLoading(true);
+      if (showLoading) setIsLoading(true);
+      setError(null);
+
       const { data, error } = await supabase
         .from('health_docs')
         .select('*')
@@ -59,43 +78,60 @@ export const useHealthDocs = () => {
 
       if (error) throw error;
 
-      setDocuments(data || []);
-      
-      // Calculate stats
       const docs = data || [];
-      const currentDate = new Date();
-      const thirtyDaysFromNow = new Date(currentDate.getTime() + 30 * 24 * 60 * 60 * 1000);
+      setDocuments(docs);
+      setStats(calculateStats(docs));
+      setRetryCount(0);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to fetch documents';
+      setError(errorMessage);
       
-      setStats({
-        totalDocuments: docs.length,
-        expiringDocuments: docs.filter(doc => 
-          doc.expires_on && new Date(doc.expires_on) <= thirtyDaysFromNow
-        ).length,
-        sharedDocuments: docs.filter(doc => doc.id).length,
-        emergencyAccessible: docs.filter(doc => doc.is_emergency_accessible).length
-      });
-    } catch (error) {
-      console.error('Error fetching documents:', error);
-      toast({
-        title: "Error",
-        description: "Failed to load documents",
-        variant: "destructive"
-      });
+      // Auto-retry up to 3 times with exponential backoff
+      if (retryCount < 3) {
+        setTimeout(() => {
+          setRetryCount(prev => prev + 1);
+          fetchDocuments(false);
+        }, Math.pow(2, retryCount) * 1000);
+      } else {
+        toast({
+          title: "Error fetching documents",
+          description: errorMessage,
+          variant: "destructive",
+        });
+      }
     } finally {
-      setLoading(false);
+      if (showLoading) setIsLoading(false);
     }
-  };
+  }, [calculateStats, retryCount]);
 
-  const createDocument = async (docData: Partial<HealthDoc>) => {
+  const createDocument = useCallback(async (docData: Partial<HealthDoc> & { file?: File }) => {
     try {
-      const user = await supabase.auth.getUser();
-      if (!user.data.user?.id) throw new Error('User not authenticated');
+      clearError();
+      const { data: user } = await supabase.auth.getUser();
+      if (!user.user) throw new Error('User not authenticated');
+
+      // Optimistic update for immediate UI feedback
+      const tempId = `temp-${Date.now()}`;
+      const optimisticDoc = {
+        ...docData,
+        id: tempId,
+        user_id: user.user.id,
+        storage_bucket: 'healthcare-documents',
+        document_status: 'current',
+        is_emergency_accessible: docData.is_emergency_accessible ?? false,
+        is_placeholder: docData.is_placeholder ?? false,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      } as HealthDoc;
       
+      setDocuments(prev => [optimisticDoc, ...prev]);
+
+      // Create document record
       const { data, error } = await supabase
         .from('health_docs')
         .insert({
           ...docData,
-          user_id: user.data.user.id,
+          user_id: user.user.id,
           doc_type: docData.doc_type!,
           document_name: docData.document_name!,
           storage_bucket: 'healthcare-documents',
@@ -108,58 +144,160 @@ export const useHealthDocs = () => {
 
       if (error) throw error;
 
-      setDocuments(prev => [data, ...prev]);
-      await fetchDocuments();
+      // Handle file upload if provided
+      if (docData.file) {
+        const fileExt = docData.file.name.split('.').pop();
+        const fileName = `${data.id}.${fileExt}`;
+        const filePath = `docs/${data.id}/${fileName}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from('healthcare-documents')
+          .upload(filePath, docData.file);
+
+        if (uploadError) throw uploadError;
+
+        // Update document with file info
+        const { error: updateError } = await supabase
+          .from('health_docs')
+          .update({ 
+            file_path: filePath,
+            file_size: docData.file.size,
+            content_type: docData.file.type
+          })
+          .eq('id', data.id);
+
+        if (updateError) throw updateError;
+
+        data.file_path = filePath;
+        data.file_size = docData.file.size;
+        data.content_type = docData.file.type;
+      }
+
+      // Replace optimistic update with real data
+      setDocuments(prev => prev.map(doc => doc.id === tempId ? data : doc));
+      setStats(prev => ({ ...prev, totalDocuments: prev.totalDocuments }));
       
       toast({
         title: "Success",
-        description: "Document created successfully"
+        description: "Document created successfully",
       });
 
       return data;
-    } catch (error) {
-      console.error('Error creating document:', error);
+    } catch (err) {
+      // Revert optimistic update
+      setDocuments(prev => prev.filter(doc => !doc.id.startsWith('temp-')));
+      
+      const errorMessage = err instanceof Error ? err.message : 'Failed to create document';
+      setError(errorMessage);
       toast({
         title: "Error",
-        description: "Failed to create document",
-        variant: "destructive"
+        description: errorMessage,
+        variant: "destructive",
       });
-      throw error;
+      throw err;
     }
-  };
+  }, [clearError]);
 
-  const uploadDocumentFile = async (file: File, docId: string): Promise<string> => {
+  const updateDocument = useCallback(async (id: string, updates: Partial<HealthDoc>) => {
     try {
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${docId}.${fileExt}`;
-      const filePath = `docs/${docId}/${fileName}`;
+      clearError();
+      
+      // Optimistic update
+      setDocuments(prev => prev.map(doc => 
+        doc.id === id ? { ...doc, ...updates } : doc
+      ));
 
-      const { error: uploadError } = await supabase.storage
-        .from('healthcare-documents')
-        .upload(filePath, file);
-
-      if (uploadError) throw uploadError;
-
-      // Update document record with file path
-      const { error: updateError } = await supabase
+      const { data, error } = await supabase
         .from('health_docs')
-        .update({ 
-          file_path: filePath,
-          file_size: file.size,
-          content_type: file.type
-        })
-        .eq('id', docId);
+        .update(updates)
+        .eq('id', id)
+        .select()
+        .single();
 
-      if (updateError) throw updateError;
+      if (error) throw error;
 
-      return filePath;
-    } catch (error) {
-      console.error('Error uploading file:', error);
-      throw error;
+      // Update with real data
+      setDocuments(prev => prev.map(doc => doc.id === id ? data : doc));
+      
+      toast({
+        title: "Success",
+        description: "Document updated successfully",
+      });
+
+      return data;
+    } catch (err) {
+      // Revert optimistic update
+      await fetchDocuments(false);
+      
+      const errorMessage = err instanceof Error ? err.message : 'Failed to update document';
+      setError(errorMessage);
+      toast({
+        title: "Error",
+        description: errorMessage,
+        variant: "destructive",
+      });
+      throw err;
     }
-  };
+  }, [clearError, fetchDocuments]);
 
-  const downloadDocument = async (doc: HealthDoc) => {
+  const deleteDocument = useCallback(async (id: string) => {
+    // Store original document for potential rollback
+    const originalDoc = documents.find(doc => doc.id === id);
+    
+    try {
+      clearError();
+      
+      // Optimistic update
+      setDocuments(prev => prev.filter(doc => doc.id !== id));
+
+      // Delete file from storage if it exists
+      const docToDelete = originalDoc;
+      if (docToDelete?.file_path) {
+        const { error: storageError } = await supabase.storage
+          .from('healthcare-documents')
+          .remove([docToDelete.file_path]);
+        
+        if (storageError) console.warn('Failed to delete file from storage:', storageError);
+      }
+
+      // Delete document record
+      const { error } = await supabase
+        .from('health_docs')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+      
+      // Update stats
+      setStats(prev => ({ 
+        ...prev, 
+        totalDocuments: Math.max(0, prev.totalDocuments - 1) 
+      }));
+      
+      toast({
+        title: "Success",
+        description: "Document deleted successfully",
+      });
+    } catch (err) {
+      // Revert optimistic update
+      if (originalDoc) {
+        setDocuments(prev => [originalDoc, ...prev].sort((a, b) => 
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        ));
+      }
+      
+      const errorMessage = err instanceof Error ? err.message : 'Failed to delete document';
+      setError(errorMessage);
+      toast({
+        title: "Error",
+        description: errorMessage,
+        variant: "destructive",
+      });
+      throw err;
+    }
+  }, [clearError, documents]);
+
+  const downloadDocument = useCallback(async (doc: HealthDoc) => {
     try {
       if (!doc.file_path) {
         throw new Error('No file path available');
@@ -179,17 +317,22 @@ export const useHealthDocs = () => {
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error('Error downloading document:', error);
+      
+      toast({
+        title: "Success",
+        description: "Document downloaded successfully",
+      });
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to download document';
       toast({
         title: "Error",
-        description: "Failed to download document",
-        variant: "destructive"
+        description: errorMessage,
+        variant: "destructive",
       });
     }
-  };
+  }, []);
 
-  const getDocumentStatus = (doc: HealthDoc): 'current' | 'expiring_soon' | 'expired' | 'needs_review' => {
+  const getDocumentStatus = useCallback((doc: HealthDoc): 'current' | 'expiring_soon' | 'expired' | 'needs_review' => {
     const currentDate = new Date();
     
     if (doc.expires_on && new Date(doc.expires_on) < currentDate) {
@@ -208,20 +351,28 @@ export const useHealthDocs = () => {
     }
     
     return 'current';
-  };
+  }, []);
+
+  const refetch = useCallback(() => {
+    setRetryCount(0);
+    return fetchDocuments(true);
+  }, [fetchDocuments]);
 
   useEffect(() => {
     fetchDocuments();
-  }, []);
+  }, [fetchDocuments]);
 
   return {
     documents,
-    loading,
     stats,
-    fetchDocuments,
+    isLoading,
+    error,
     createDocument,
-    uploadDocumentFile,
+    updateDocument,
+    deleteDocument,
     downloadDocument,
-    getDocumentStatus
+    getDocumentStatus,
+    refetch,
+    clearError,
   };
 };
