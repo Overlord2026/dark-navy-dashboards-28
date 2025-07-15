@@ -19,7 +19,7 @@ import {
 import { useNavigate } from "react-router-dom";
 
 const HealthcareDashboard: React.FC = () => {
-  const { metrics, loading, error, addHealthMetric, refetch } = useHealthData();
+  const { metrics, isLoading, error, createMetric, refetch } = useHealthData();
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -62,7 +62,7 @@ const HealthcareDashboard: React.FC = () => {
 
   const handleAddSampleMetric = async () => {
     try {
-      await addHealthMetric({
+      await createMetric({
         type: 'blood_pressure',
         value: '120/80',
         unit: 'mmHg',
@@ -150,7 +150,7 @@ const HealthcareDashboard: React.FC = () => {
 
         {/* Health Metrics Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {loading ? (
+          {isLoading ? (
             Array.from({ length: 4 }).map((_, index) => (
               <Card key={index} className="p-6 animate-pulse">
                 <div className="h-4 bg-muted rounded mb-4"></div>
