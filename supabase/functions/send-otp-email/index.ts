@@ -1,3 +1,4 @@
+
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
@@ -74,12 +75,13 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    // Send OTP via EmailJS
+    // Send OTP via EmailJS with server-side authentication
     try {
       const emailPayload = {
         service_id: 'service_cew8n8b',
         template_id: 'template_xts37ho',
         user_id: 'chtAi9WR2OnpWeUXo',
+        accessToken: Deno.env.get('EMAILJS_PRIVATE_KEY'), // Use the private key for server-side auth
         template_params: {
           to_email: email,
           to_name: userName || 'User',
