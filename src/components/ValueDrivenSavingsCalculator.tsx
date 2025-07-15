@@ -13,6 +13,7 @@ import CountUp from 'react-countup';
 import { Celebration } from '@/components/ConfettiAnimation';
 import { PrizeModal } from '@/components/PrizeModal';
 import { playSound } from '@/utils/sounds';
+import { DiamondTrophy, GoldenTrophy, SilverTrophy, BronzeTrophy } from '@/components/TrophyIcons';
 
 interface ValueDrivenSavingsCalculatorProps {
   isHeroWidget?: boolean;
@@ -50,36 +51,103 @@ export const ValueDrivenSavingsCalculator: React.FC<ValueDrivenSavingsCalculator
   const [prize, setPrize] = useState<{
     prizeText: string;
     analogy: string;
+    tier: 'fireworks' | 'fanfare' | 'champagne' | 'cash';
+    icon: React.ReactNode;
+    primaryCta: {
+      label: string;
+      onClick: () => void;
+    };
+    secondaryCta: {
+      label: string;
+      onClick: () => void;
+    };
   } | null>(null);
 
 
+
+  const trackAnalytics = (event: string, properties: Record<string, any>) => {
+    // Analytics tracking - replace with your preferred analytics service
+    console.log('Analytics Event:', event, properties);
+    // Example: analytics.track(event, properties);
+  };
 
   const triggerCelebration = (savings: number) => {
     setShowConfetti(true);
     
     let prizeText = "", analogy = "", soundKey: 'cash' | 'champagne' | 'fanfare' | 'fireworks' = 'cash';
-
+    let tier: 'fireworks' | 'fanfare' | 'champagne' | 'cash' = 'cash';
+    let icon: React.ReactNode = <BronzeTrophy />;
+    let primaryCtaLabel = "Book My Free Savings Review";
+    
     if (savings > 1_000_000) {
       prizeText = "Generational Wealth!";
       analogy = "That's enough to buy a second home or endow a family legacy!";
       soundKey = "fireworks";
+      tier = "fireworks";
+      icon = <DiamondTrophy />;
+      primaryCtaLabel = "Schedule Executive Wealth Review";
     } else if (savings > 500_000) {
       prizeText = "Incredible Savings!";
       analogy = "You could fund a decade of concierge healthcare or two luxury world cruises.";
       soundKey = "fanfare";
+      tier = "fanfare";
+      icon = <GoldenTrophy />;
+      primaryCtaLabel = "Book My Private Consultation";
     } else if (savings > 250_000) {
       prizeText = "Major Milestone!";
       analogy = "That's a med school tuition or 8 years of family health insurance.";
       soundKey = "champagne";
+      tier = "champagne";
+      icon = <SilverTrophy />;
+      primaryCtaLabel = "Get My Personalized Analysis";
     } else if (savings > 100_000) {
       prizeText = "Big Win!";
       analogy = "That's a new Tesla or a luxury European vacation every 5 years.";
       soundKey = "cash";
+      tier = "cash";
+      icon = <BronzeTrophy />;
+      primaryCtaLabel = "Book My Free Savings Review";
     }
 
     if (prizeText) {
-      setPrize({ prizeText, analogy });
+      const prizeData = {
+        prizeText,
+        analogy,
+        tier,
+        icon,
+        primaryCta: {
+          label: primaryCtaLabel,
+          onClick: () => {
+            trackAnalytics('cta_clicked', { 
+              tier, 
+              savings_amount: savings, 
+              cta_type: 'primary',
+              cta_label: primaryCtaLabel 
+            });
+            window.open("/schedule", "_blank");
+          }
+        },
+        secondaryCta: {
+          label: "Share My Savings",
+          onClick: () => {
+            trackAnalytics('share_clicked', { 
+              tier, 
+              savings_amount: savings 
+            });
+            handleShare();
+          }
+        }
+      };
+      
+      setPrize(prizeData);
       playSound(soundKey);
+      
+      // Track celebration event
+      trackAnalytics('celebration_triggered', {
+        tier,
+        savings_amount: savings,
+        prize_text: prizeText
+      });
     }
     
     setTimeout(() => {
@@ -103,16 +171,37 @@ export const ValueDrivenSavingsCalculator: React.FC<ValueDrivenSavingsCalculator
     }, 1000);
   };
 
-  const handleShare = () => {
-    const shareText = `I could save ${formatCurrency(results?.totalFeeSavings || 0)} on investment fees over ${timeHorizon} years! That's ${formatNumber(results?.longevityYears || 0)} additional years of funding. ${prize?.analogy || "Real savings achieved!"}`;
+  const handleShare = async () => {
+    const shareText = `💰 I could save ${formatCurrency(results?.totalFeeSavings || 0)} on investment fees over ${timeHorizon} years! That's ${formatNumber(results?.longevityYears || 0)} additional years of funding. ${prize?.analogy || "Real savings achieved!"} \n\nCalculate your savings: ${window.location.origin}`;
     
-    if (navigator.share) {
-      navigator.share({
-        title: 'My Investment Fee Savings',
-        text: shareText,
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: 'My Investment Fee Savings Calculator Results',
+          text: shareText,
+          url: window.location.origin
+        });
+        trackAnalytics('share_completed', { 
+          method: 'native',
+          savings_amount: results?.totalFeeSavings || 0,
+          tier: prize?.tier || 'unknown'
+        });
+      } else {
+        await navigator.clipboard.writeText(shareText);
+        trackAnalytics('share_completed', { 
+          method: 'clipboard',
+          savings_amount: results?.totalFeeSavings || 0,
+          tier: prize?.tier || 'unknown'
+        });
+        // Show success feedback
+        alert('Savings details copied to clipboard!');
+      }
+    } catch (error) {
+      console.error('Share failed:', error);
+      trackAnalytics('share_failed', { 
+        error: error.message,
+        savings_amount: results?.totalFeeSavings || 0 
       });
-    } else {
-      navigator.clipboard.writeText(shareText);
     }
   };
 
@@ -148,11 +237,16 @@ export const ValueDrivenSavingsCalculator: React.FC<ValueDrivenSavingsCalculator
         open={!!prize}
         prizeText={prize?.prizeText || ""}
         analogy={prize?.analogy || ""}
-        cta={{
-          label: "Book My Free Savings Review",
-          onClick: () => window.open("/schedule", "_blank")
+        icon={prize?.icon}
+        primaryCta={prize?.primaryCta}
+        secondaryCta={prize?.secondaryCta}
+        onClose={() => {
+          trackAnalytics('modal_closed', { 
+            tier: prize?.tier || 'unknown',
+            savings_amount: results?.totalFeeSavings || 0 
+          });
+          setPrize(null);
         }}
-        onClose={() => setPrize(null)}
       />
       
       <div className="text-center space-y-2">
@@ -304,7 +398,15 @@ export const ValueDrivenSavingsCalculator: React.FC<ValueDrivenSavingsCalculator
         {/* Calculate Button */}
         <div className="space-y-4">
           <Button 
-            onClick={handleCalculate} 
+            onClick={() => {
+              trackAnalytics('calculate_clicked', {
+                portfolio_value: portfolioValue,
+                time_horizon: timeHorizon,
+                current_fee: currentAdvisorFee,
+                our_fee: ourFee
+              });
+              handleCalculate();
+            }} 
             disabled={!isFormValid || isCalculating}
             size="lg"
             className="w-full text-lg py-6"
@@ -384,11 +486,31 @@ export const ValueDrivenSavingsCalculator: React.FC<ValueDrivenSavingsCalculator
 
               {/* Call to Action Buttons */}
               <div className="flex gap-4 justify-center">
-                <Button onClick={handleShare} variant="outline">
+                <Button 
+                  onClick={() => {
+                    trackAnalytics('share_button_clicked', {
+                      source: 'results_section',
+                      savings_amount: results?.totalFeeSavings || 0
+                    });
+                    handleShare();
+                  }} 
+                  variant="outline"
+                  className="hover:scale-105 transition-all duration-200"
+                >
                   <Share className="h-4 w-4 mr-2" />
                   Share My Savings
                 </Button>
-                <Button variant="outline">
+                <Button 
+                  onClick={() => {
+                    trackAnalytics('download_report_clicked', {
+                      savings_amount: results?.totalFeeSavings || 0,
+                      time_horizon: timeHorizon
+                    });
+                    alert('Report download coming soon!');
+                  }}
+                  variant="outline"
+                  className="hover:scale-105 transition-all duration-200"
+                >
                   <FileDown className="h-4 w-4 mr-2" />
                   Download Report
                 </Button>
