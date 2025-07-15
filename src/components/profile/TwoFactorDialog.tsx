@@ -62,6 +62,10 @@ export function TwoFactorDialog({ open, onOpenChange }: TwoFactorDialogProps) {
 
   const handleDialogOpen = (open: boolean) => {
     if (open) {
+      console.log("TwoFactorDialog opening - Current profile state:", userProfile);
+      console.log("TwoFactorDialog opening - isEnabled value:", isEnabled);
+      console.log("TwoFactorDialog opening - userProfile.twoFactorEnabled:", userProfile?.twoFactorEnabled);
+      
       setMode(isEnabled ? 'disable' : 'enable');
       setStep(0);
       setEmail(user?.email || "");
@@ -202,8 +206,6 @@ export function TwoFactorDialog({ open, onOpenChange }: TwoFactorDialogProps) {
       
       setTimeout(() => {
         handleDialogOpen(false);
-        // Force a page refresh to ensure the profile state is updated
-        window.location.reload();
       }, 1500);
     } catch (error: any) {
       setVerifying(false);

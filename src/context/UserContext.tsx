@@ -30,6 +30,7 @@ interface UserContextType {
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
   updateUserProfile: (profile: Partial<UserProfile>) => void;
+  refreshUserProfile: () => Promise<void>;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -140,10 +141,67 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const updatedProfile = { ...userProfile, ...profile };
         setUserProfile(updatedProfile);
         
-        // The database update is handled in the ProfileForm component
-        // This function is mainly for local state updates
+        // For critical updates like 2FA, also refresh from database
+        if (profile.hasOwnProperty('twoFactorEnabled')) {
+          setTimeout(async () => {
+            await refreshUserProfile();
+          }, 100);
+        }
       } catch (error) {
         console.error('Error in updateUserProfile:', error);
+      }
+    }
+  };
+
+  const refreshUserProfile = async () => {
+    if (user) {
+      try {
+        console.log("Refreshing user profile from database for user:", user.id);
+        
+        const { data: profile, error } = await supabase
+          .from('profiles')
+          .select('*, two_factor_enabled')
+          .eq('id', user.id)
+          .single();
+
+        if (error && error.code !== 'PGRST116') {
+          console.error('Error loading profile during refresh:', error);
+          return;
+        }
+
+        if (profile) {
+          console.log("Refreshed profile from database:", profile);
+          
+          // Handle date conversion properly
+          let dateOfBirth: Date | undefined;
+          if (profile.date_of_birth_date) {
+            dateOfBirth = parseDateSafely(profile.date_of_birth_date);
+          } else if (profile.date_of_birth) {
+            dateOfBirth = parseDateSafely(profile.date_of_birth);
+          }
+
+          setUserProfile({
+            id: profile.id,
+            name: profile.display_name || `${profile.first_name || ''} ${profile.last_name || ''}`.trim(),
+            displayName: profile.display_name,
+            email: profile.email || user.email,
+            firstName: profile.first_name,
+            lastName: profile.last_name,
+            middleName: profile.middle_name,
+            title: profile.title,
+            suffix: profile.suffix,
+            gender: profile.gender,
+            maritalStatus: profile.marital_status,
+            dateOfBirth: dateOfBirth,
+            phone: profile.phone,
+            investorType: profile.investor_type,
+            role: profile.role || 'client',
+            permissions: profile.permissions || [],
+            twoFactorEnabled: profile.two_factor_enabled || false
+          });
+        }
+      } catch (error) {
+        console.error('Error in refreshUserProfile:', error);
       }
     }
   };
@@ -156,7 +214,8 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isLoading,
         login,
         logout,
-        updateUserProfile
+        updateUserProfile,
+        refreshUserProfile
       }}
     >
       {children}
