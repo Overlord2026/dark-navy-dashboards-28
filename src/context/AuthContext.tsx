@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useRef } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
 
@@ -47,6 +47,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [session, setSession] = useState<Session | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const ignoreAuthStateChangeRef = useRef(false);
 
   // Helper function to safely parse date from database
   const parseDateSafely = (dateString: string): Date => {
@@ -118,7 +119,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     // Set up auth state listener first
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        console.log('Auth state changed:', event, session?.user?.id);
+        console.log('Auth state changed:', event, session?.user?.id, 'ignoring:', ignoreAuthStateChangeRef.current);
+        
+        // If we're ignoring auth state changes (during 2FA flow), don't process this session
+        if (ignoreAuthStateChangeRef.current) {
+          console.log('Ignoring auth state change during 2FA flow');
+          return;
+        }
         
         // Handle email confirmation
         if (event === 'TOKEN_REFRESHED' || event === 'SIGNED_IN') {
@@ -168,7 +175,50 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     try {
       setIsLoading(true);
       
-      // First, verify credentials without creating a session
+      // Look up user by email to check 2FA status first
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('two_factor_enabled, id, email')
+        .eq('email', email)
+        .single();
+      
+      if (profile?.two_factor_enabled) {
+        // If 2FA is enabled, ignore auth state changes temporarily
+        ignoreAuthStateChangeRef.current = true;
+        
+        try {
+          // Validate credentials but don't maintain session
+          const { data, error: authError } = await supabase.auth.signInWithPassword({
+            email,
+            password,
+          });
+          
+          if (authError) {
+            ignoreAuthStateChangeRef.current = false;
+            return { success: false, error: authError.message };
+          }
+          
+          // Immediately sign out to prevent session persistence
+          await supabase.auth.signOut();
+          
+          // Reset the ignore flag
+          ignoreAuthStateChangeRef.current = false;
+          
+          return { 
+            success: false, 
+            requires2FA: true, 
+            userId: profile.id,
+            profileEmail: profile.email || email,
+            error: 'Two-factor authentication required'
+          };
+        } catch (error) {
+          ignoreAuthStateChangeRef.current = false;
+          console.error('2FA validation error:', error);
+          return { success: false, error: 'Authentication failed' };
+        }
+      }
+      
+      // If no 2FA, proceed with normal login
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -178,26 +228,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         return { success: false, error: error.message };
       }
       
-      // Check if user has 2FA enabled and get profile email
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('two_factor_enabled, id, email')
-        .eq('id', data.user.id)
-        .single();
-      
-      if (profile?.two_factor_enabled) {
-        // If 2FA is enabled, sign out immediately and return requires2FA flag
-        await supabase.auth.signOut();
-        return { 
-          success: false, 
-          requires2FA: true, 
-          userId: profile.id,
-          profileEmail: profile.email || email, // Use profile email if available, fallback to login email
-          error: 'Two-factor authentication required'
-        };
-      }
-      
-      // If no 2FA, proceed with normal login
       return { success: true };
     } catch (error) {
       console.error('Login error:', error);
