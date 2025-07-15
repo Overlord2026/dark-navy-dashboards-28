@@ -35,7 +35,11 @@ import {
   StarIcon,
   FileTextIcon,
   UserCheckIcon,
-  RepeatIcon
+  RepeatIcon,
+  BarChart2Icon,
+  TestTubeIcon,
+  ShieldCheckIcon,
+  SettingsIcon
 } from "lucide-react";
 
 import { NavItem } from "@/types/navigation";
@@ -212,70 +216,164 @@ export const hierarchicalNav: NavItem[] = [
         collapsible: true, 
         children: [
           { 
-            id: 'h-dash', 
-            title: 'Health Dashboard', 
+            id: 'h-overview', 
+            title: 'Overview', 
             href: '/health', 
-            icon: ActivityIcon 
+            icon: Grid3x3Icon 
           },
-          { 
-            id: 'h-hsa', 
-            title: 'HSA Accounts', 
-            href: '/healthcare-hsa-accounts', 
-            icon: WalletIcon 
+          {
+            id: 'h-accounts',
+            title: 'Accounts',
+            icon: WalletIcon,
+            collapsible: true,
+            children: [
+              { 
+                id: 'h-hsa', 
+                title: 'HSA Accounts', 
+                href: '/healthcare-hsa-accounts', 
+                icon: WalletIcon 
+              },
+              { 
+                id: 'h-save', 
+                title: 'HSA Savings...', 
+                href: '/healthcare-savings', 
+                icon: CircleDollarSignIcon 
+              }
+            ]
           },
-          { 
-            id: 'h-save', 
-            title: 'Healthcare Savings', 
-            href: '/healthcare-savings', 
-            icon: CircleDollarSignIcon 
+          {
+            id: 'h-healthspan',
+            title: 'Healthspan',
+            icon: TrendingUpIcon,
+            collapsible: true,
+            children: [
+              { 
+                id: 'h-insights', 
+                title: 'Insights', 
+                href: '/healthcare-healthspan', 
+                icon: TrendingUpIcon 
+              },
+              { 
+                id: 'h-daily-metrics', 
+                title: 'Daily Metrics', 
+                href: '/health/metrics', 
+                icon: BarChart2Icon 
+              },
+              { 
+                id: 'h-lab-biomarkers', 
+                title: 'Lab Biomarkers', 
+                href: '/health/biomarkers', 
+                icon: TestTubeIcon 
+              },
+              { 
+                id: 'h-biological-age', 
+                title: 'Biological A...', 
+                href: '/health/biological-age', 
+                icon: ActivityIcon 
+              },
+              { 
+                id: 'h-preventive', 
+                title: 'Preventive S...', 
+                href: '/health/preventive', 
+                icon: ShieldCheckIcon 
+              },
+              { 
+                id: 'h-trends', 
+                title: 'Trends & M...', 
+                href: '/health/trends', 
+                icon: BarChart2Icon 
+              }
+            ]
           },
-          { 
-            id: 'h-providers', 
-            title: 'Healthcare Providers', 
-            href: '/healthcare-providers', 
-            icon: HeartHandshakeIcon 
+          {
+            id: 'h-care-team',
+            title: 'Care Team',
+            icon: HeartHandshakeIcon,
+            collapsible: true,
+            children: [
+              { 
+                id: 'h-providers', 
+                title: 'Providers', 
+                href: '/healthcare-providers', 
+                icon: HeartHandshakeIcon 
+              },
+              { 
+                id: 'h-share', 
+                title: 'Share Data (...', 
+                href: '/healthcare-share-data', 
+                icon: ShareIcon 
+              }
+            ]
           },
-          { 
-            id: 'h-meds', 
-            title: 'Medications', 
-            href: '/healthcare-medications', 
-            icon: PillIcon 
-          },
-          { 
-            id: 'h-supplements', 
-            title: 'Supplements', 
-            href: '/healthcare-supplements', 
-            icon: FlaskConicalIcon 
-          },
-          { 
-            id: 'h-healthspan', 
-            title: 'HealthSpan Expansion', 
-            href: '/healthcare-healthspan', 
-            icon: TrendingUpIcon 
+          {
+            id: 'h-pharmacy',
+            title: 'Pharmacy',
+            icon: PillIcon,
+            collapsible: true,
+            children: [
+              { 
+                id: 'h-meds', 
+                title: 'Medications', 
+                href: '/healthcare-medications', 
+                icon: PillIcon 
+              },
+              { 
+                id: 'h-supplements', 
+                title: 'Supplements', 
+                href: '/healthcare-supplements', 
+                icon: FlaskConicalIcon 
+              }
+            ]
           },
           { 
             id: 'h-docs', 
+            title: 'Docs & Directives', 
+            href: '/healthcare-documents', 
+            icon: FolderHeartIcon 
+          },
+          {
+            id: 'h-knowledge',
+            title: 'Knowledge',
+            icon: BookHeartIcon,
+            collapsible: true,
+            children: [
+              { 
+                id: 'h-books', 
+                title: 'Books', 
+                href: '/healthcare-knowledge', 
+                icon: BookHeartIcon 
+              },
+              { 
+                id: 'h-coaching', 
+                title: 'Coaching', 
+                href: '/healthcare-coaching', 
+                icon: UserIcon 
+              },
+              { 
+                id: 'h-education', 
+                title: 'Education', 
+                href: '/healthcare-education', 
+                icon: GraduationCapIcon 
+              },
+              { 
+                id: 'h-recommendations', 
+                title: 'Recommend...', 
+                href: '/healthcare-recommendations', 
+                icon: StarIcon 
+              }
+            ]
+          },
+          { 
+            id: 'h-settings', 
+            title: 'Settings', 
+            href: '/healthcare-settings', 
+            icon: SettingsIcon 
+          },
+          { 
+            id: 'h-medical-records', 
             title: 'Medical Records', 
             href: '/health/records', 
             icon: FolderHeartIcon 
-          },
-          { 
-            id: 'h-metrics', 
-            title: 'Health Metrics', 
-            href: '/health/metrics', 
-            icon: ActivityIcon 
-          },
-          { 
-            id: 'h-knowledge', 
-            title: 'Knowledge & Support', 
-            href: '/healthcare-knowledge', 
-            icon: BookHeartIcon 
-          },
-          { 
-            id: 'h-share', 
-            title: 'Share Data', 
-            href: '/healthcare-share-data', 
-            icon: ShareIcon 
           }
         ]
       },
