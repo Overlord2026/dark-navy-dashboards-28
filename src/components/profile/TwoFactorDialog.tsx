@@ -168,16 +168,14 @@ export function TwoFactorDialog({ open, onOpenChange }: TwoFactorDialogProps) {
         throw new Error(data?.error || error?.message || 'Invalid OTP code');
       }
 
-      if (mode === 'disable') {
-        // For disable mode, we need to update the profile directly
-        const { error: updateError } = await supabase
-          .from('profiles')
-          .update({ two_factor_enabled: false })
-          .eq('id', user?.id);
+      // Update the database for both enable and disable modes
+      const { error: updateError } = await supabase
+        .from('profiles')
+        .update({ two_factor_enabled: mode === 'enable' })
+        .eq('id', user?.id);
 
-        if (updateError) {
-          throw updateError;
-        }
+      if (updateError) {
+        throw updateError;
       }
 
       setVerifying(false);
@@ -204,6 +202,8 @@ export function TwoFactorDialog({ open, onOpenChange }: TwoFactorDialogProps) {
       
       setTimeout(() => {
         handleDialogOpen(false);
+        // Force a page refresh to ensure the profile state is updated
+        window.location.reload();
       }, 1500);
     } catch (error: any) {
       setVerifying(false);
