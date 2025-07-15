@@ -374,7 +374,7 @@ const routes = createBrowserRouter([
   },
   {
     path: "/healthcare-hsa-accounts",
-    element: <ProtectedRoute><div className="p-6 min-h-screen bg-background"><h1 className="text-2xl font-bold">HSA Accounts - Coming Soon</h1></div></ProtectedRoute>
+    element: <ProtectedRoute><HSAAccounts /></ProtectedRoute>
   },
   {
     path: "/healthcare-savings",
