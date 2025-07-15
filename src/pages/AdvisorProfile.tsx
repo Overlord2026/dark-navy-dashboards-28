@@ -229,7 +229,7 @@ const AdvisorProfile = () => {
                     <div className="rounded-full overflow-hidden w-32 h-32 flex-shrink-0">
                       <img
                         src="/lovable-uploads/dc1ba115-9699-414c-b9d0-7521bf7e7224.png"
-                        alt="Daniel Zamora"
+                        alt="Tony Gomes"
                         className="w-full h-full object-cover"
                       />
                     </div>

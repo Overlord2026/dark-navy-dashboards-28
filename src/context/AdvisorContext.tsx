@@ -31,7 +31,7 @@ interface AdvisorContextType {
 }
 
 const defaultAdvisorInfo: AdvisorInfo = {
-  name: "Daniel Zamora",
+  name: "Tony Gomes",
   title: "Certified Financial Planner™",
   location: "Sarasota, FL",
   email: "Daniel@awmfl.com",
