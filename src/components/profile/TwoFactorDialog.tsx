@@ -28,7 +28,7 @@ export function TwoFactorDialog({ open, onOpenChange }: TwoFactorDialogProps) {
   const [useCustomEmail, setUseCustomEmail] = useState(false);
   const [profileLoading, setProfileLoading] = useState(false);
 
-  const isEnabled = userProfile?.twoFactorEnabled || false;
+  
 
   // Prevent dialog from closing when tab is switched
   useEffect(() => {
@@ -272,7 +272,7 @@ export function TwoFactorDialog({ open, onOpenChange }: TwoFactorDialogProps) {
       >
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            {isEnabled ? (
+            {mode === 'disable' ? (
               <ShieldCheck className="h-5 w-5 text-green-500" />
             ) : (
               <ShieldAlert className="h-5 w-5 text-orange-500" />
