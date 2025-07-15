@@ -8,9 +8,10 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Slider } from '@/components/ui/slider';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Legend } from 'recharts';
-import { HelpCircle, RotateCcw, TrendingUp, DollarSign, Clock, Heart } from 'lucide-react';
+import { HelpCircle, RotateCcw, TrendingUp, DollarSign, Clock, Heart, Calculator, Share, FileDown, Sparkles } from 'lucide-react';
 import CountUp from 'react-countup';
 import Confetti from 'react-confetti';
+import { Howl } from 'howler';
 
 interface ValueDrivenSavingsCalculatorProps {
   isHeroWidget?: boolean;
@@ -36,13 +37,19 @@ export const ValueDrivenSavingsCalculator: React.FC<ValueDrivenSavingsCalculator
     setOurFeeType,
     annualWithdrawal,
     setAnnualWithdrawal,
-    calculations,
     timeHorizonOptions,
-    resetToDefaults
+    resetToDefaults,
+    calculateSavings
   } = useValueDrivenSavings();
 
+  const [showResults, setShowResults] = useState(false);
+  const [isCalculating, setIsCalculating] = useState(false);
+  const [results, setResults] = useState<any>(null);
   const [showConfetti, setShowConfetti] = useState(false);
+  const [confettiType, setConfettiType] = useState<'basic' | 'champagne' | 'vacation' | 'fireworks'>('basic');
   const [windowDimensions, setWindowDimensions] = useState({ width: 0, height: 0 });
+  const [celebrationMessage, setCelebrationMessage] = useState('');
+  const [analogy, setAnalogy] = useState('');
 
   useEffect(() => {
     const updateWindowDimensions = () => {
@@ -53,19 +60,127 @@ export const ValueDrivenSavingsCalculator: React.FC<ValueDrivenSavingsCalculator
     return () => window.removeEventListener('resize', updateWindowDimensions);
   }, []);
 
-  useEffect(() => {
-    if (calculations.totalFeeSavings > 250000) {
+  const playSound = (soundType: string) => {
+    try {
+      // Create a simple beep sound since we can't load external audio files
+      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      
+      // Different frequencies for different celebration levels
+      const frequencies: { [key: string]: number } = {
+        'cashregister': 800,
+        'champagne': 1000,
+        'vacation': 1200,
+        'millionaire': 1500
+      };
+      
+      oscillator.frequency.setValueAtTime(frequencies[soundType] || 800, audioContext.currentTime);
+      oscillator.type = 'sine';
+      
+      gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+      
+      oscillator.start(audioContext.currentTime);
+      oscillator.stop(audioContext.currentTime + 0.5);
+    } catch (error) {
+      console.log('Audio not available');
+    }
+  };
+
+  const getAnalogy = (savings: number) => {
+    if (savings >= 1000000) {
+      return "That's generational wealth. You could endow a scholarship or support two generations of healthcare innovation.";
+    } else if (savings >= 500000) {
+      return "That's a lake house, or two full retirements funded!";
+    } else if (savings >= 250000) {
+      return "That's a med school education, or 7 years of premium health insurance for a family of four.";
+    } else if (savings >= 100000) {
+      return "That's a new Tesla Model S, or a 3-year global cruise!";
+    } else {
+      return "Every dollar saved can fund your future health and wellness goals.";
+    }
+  };
+
+  const getCelebrationMessage = (savings: number) => {
+    if (savings >= 1000000) {
+      return "🏆 You've unlocked generational wealth savings!";
+    } else if (savings >= 500000) {
+      return "🏖️ You just funded a legacy gift or a decade of private healthcare!";
+    } else if (savings >= 250000) {
+      return "🍾 That's the cost of a luxury cruise around the world!";
+    } else if (savings >= 100000) {
+      return "🎉 Congrats! That's a new car!";
+    } else {
+      return "💡 Great start on your savings journey!";
+    }
+  };
+
+  const triggerCelebration = (savings: number) => {
+    setCelebrationMessage(getCelebrationMessage(savings));
+    setAnalogy(getAnalogy(savings));
+    
+    if (savings >= 1000000) {
+      setConfettiType('fireworks');
+      playSound('millionaire');
+    } else if (savings >= 500000) {
+      setConfettiType('vacation');
+      playSound('vacation');
+    } else if (savings >= 250000) {
+      setConfettiType('champagne');
+      playSound('champagne');
+    } else if (savings >= 100000) {
+      setConfettiType('basic');
+      playSound('cashregister');
+    }
+    
+    if (savings >= 100000) {
       setShowConfetti(true);
       const timer = setTimeout(() => setShowConfetti(false), 5000);
       return () => clearTimeout(timer);
     }
-  }, [calculations.totalFeeSavings]);
+  };
 
-  const chartData = calculations.traditional.yearlyBalances.map((balance, index) => ({
+  const handleCalculate = async () => {
+    setIsCalculating(true);
+    setShowResults(false);
+    
+    // Simulate calculation time for dramatic effect
+    setTimeout(() => {
+      const calculated = calculateSavings();
+      setResults(calculated);
+      setIsCalculating(false);
+      setShowResults(true);
+      
+      // Trigger celebration based on savings amount
+      triggerCelebration(calculated.totalFeeSavings);
+    }, 1000);
+  };
+
+  const handleShare = () => {
+    const shareText = `I could save ${formatCurrency(results?.totalFeeSavings || 0)} on investment fees over ${timeHorizon} years! That's ${formatNumber(results?.longevityYears || 0)} additional years of funding. ${analogy}`;
+    
+    if (navigator.share) {
+      navigator.share({
+        title: 'My Investment Fee Savings',
+        text: shareText,
+      });
+    } else {
+      navigator.clipboard.writeText(shareText);
+      // Show toast notification here if you have a toast system
+    }
+  };
+
+  const isFormValid = portfolioValue > 0 && growthRate > 0 && timeHorizon > 0 && currentAdvisorFee > 0 && ourFee > 0 && annualWithdrawal > 0;
+
+  const chartData = results ? results.traditional.yearlyBalances.map((balance: number, index: number) => ({
     year: index,
     traditional: balance / 1000000,
-    valueModel: calculations.valueModel.yearlyBalances[index] / 1000000
-  }));
+    valueModel: results.valueModel.yearlyBalances[index] / 1000000
+  })) : [];
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -241,109 +356,146 @@ export const ValueDrivenSavingsCalculator: React.FC<ValueDrivenSavingsCalculator
           </div>
         </DashboardCard>
 
-        {/* Results */}
+        {/* Calculate Button */}
         <div className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <DashboardCard title="Current Advisor" className="text-center">
-              <div className="space-y-2">
-                <TrendingUp className="h-8 w-8 mx-auto text-muted-foreground" />
-                <div className="text-2xl font-bold text-foreground">
-                  <CountUp
-                    start={0}
-                    end={calculations.traditional.finalValue}
-                    duration={2}
-                    formattingFn={formatCurrency}
-                  />
-                </div>
-                <p className="text-sm text-muted-foreground">Final Portfolio Value</p>
-              </div>
-            </DashboardCard>
+          <Button 
+            onClick={handleCalculate} 
+            disabled={!isFormValid || isCalculating}
+            size="lg"
+            className="w-full text-lg py-6"
+          >
+            <Calculator className="h-5 w-5 mr-2" />
+            {isCalculating ? "Crunching the numbers..." : "See My Savings"}
+          </Button>
 
-            <DashboardCard title="Our Value Model" className="text-center">
-              <div className="space-y-2">
-                <TrendingUp className="h-8 w-8 mx-auto text-accent" />
-                <div className="text-2xl font-bold text-accent">
-                  <CountUp
-                    start={0}
-                    end={calculations.valueModel.finalValue}
-                    duration={2}
-                    formattingFn={formatCurrency}
-                  />
-                </div>
-                <p className="text-sm text-muted-foreground">Final Portfolio Value</p>
-              </div>
-            </DashboardCard>
-          </div>
+          {/* Celebration Message */}
+          {showResults && celebrationMessage && (
+            <div className="text-center">
+              <h3 className="text-2xl font-bold text-primary mb-2">{celebrationMessage}</h3>
+              <p className="text-muted-foreground italic">{analogy}</p>
+            </div>
+          )}
 
-          <div className="grid grid-cols-2 gap-4">
-            <DashboardCard title="Total Fee Savings" className="text-center">
-              <div className="space-y-2">
-                <DollarSign className="h-8 w-8 mx-auto text-green-500" />
-                <div className="text-2xl font-bold text-green-500">
-                  <CountUp
-                    start={0}
-                    end={calculations.totalFeeSavings}
-                    duration={2}
-                    formattingFn={formatCurrency}
-                  />
-                </div>
-                <p className="text-sm text-muted-foreground">Over {timeHorizon} Years</p>
-              </div>
-            </DashboardCard>
+          {/* Results Cards */}
+          {showResults && results && (
+            <>
+              <div className="grid grid-cols-2 gap-4">
+                <DashboardCard title="Current Advisor" className="text-center">
+                  <div className="space-y-2">
+                    <TrendingUp className="h-8 w-8 mx-auto text-muted-foreground" />
+                    <div className="text-2xl font-bold text-foreground">
+                      <CountUp
+                        start={0}
+                        end={results.traditional.finalValue}
+                        duration={2}
+                        formattingFn={formatCurrency}
+                      />
+                    </div>
+                    <p className="text-sm text-muted-foreground">Final Portfolio Value</p>
+                  </div>
+                </DashboardCard>
 
-            <DashboardCard title="Longevity Years Gained" className="text-center">
-              <div className="space-y-2">
-                <Heart className="h-8 w-8 mx-auto text-red-500" />
-                <div className="text-2xl font-bold text-red-500">
-                  <CountUp
-                    start={0}
-                    end={calculations.longevityYears}
-                    duration={2}
-                    decimals={1}
-                    formattingFn={(num) => formatNumber(num)}
-                  />
-                </div>
-                <p className="text-sm text-muted-foreground">Additional Years</p>
+                <DashboardCard title="Our Value Model" className="text-center">
+                  <div className="space-y-2">
+                    <TrendingUp className="h-8 w-8 mx-auto text-accent" />
+                    <div className="text-2xl font-bold text-accent">
+                      <CountUp
+                        start={0}
+                        end={results.valueModel.finalValue}
+                        duration={2}
+                        formattingFn={formatCurrency}
+                      />
+                    </div>
+                    <p className="text-sm text-muted-foreground">Final Portfolio Value</p>
+                  </div>
+                </DashboardCard>
               </div>
-            </DashboardCard>
-          </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <DashboardCard title="Total Fee Savings" className="text-center">
+                  <div className="space-y-2">
+                    <DollarSign className="h-8 w-8 mx-auto text-green-500" />
+                    <div className="text-2xl font-bold text-green-500">
+                      <CountUp
+                        start={0}
+                        end={results.totalFeeSavings}
+                        duration={2}
+                        formattingFn={formatCurrency}
+                      />
+                    </div>
+                    <p className="text-sm text-muted-foreground">Over {timeHorizon} Years</p>
+                  </div>
+                </DashboardCard>
+
+                <DashboardCard title="Longevity Years Gained" className="text-center">
+                  <div className="space-y-2">
+                    <Heart className="h-8 w-8 mx-auto text-red-500" />
+                    <div className="text-2xl font-bold text-red-500">
+                      <CountUp
+                        start={0}
+                        end={results.longevityYears}
+                        duration={2}
+                        decimals={1}
+                        formattingFn={(num) => formatNumber(num)}
+                      />
+                    </div>
+                    <p className="text-sm text-muted-foreground">Additional Years</p>
+                  </div>
+                </DashboardCard>
+              </div>
+
+              {/* Call to Action Buttons */}
+              <div className="flex gap-4 justify-center">
+                <Button onClick={handleShare} variant="outline">
+                  <Share className="h-4 w-4 mr-2" />
+                  Share My Savings
+                </Button>
+                <Button variant="outline">
+                  <FileDown className="h-4 w-4 mr-2" />
+                  Download Report
+                </Button>
+              </div>
+            </>
+          )}
         </div>
       </div>
 
-      {/* Chart */}
-      <DashboardCard title="Portfolio Growth Comparison" className="h-80">
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-            <XAxis 
-              dataKey="year" 
-              stroke="hsl(var(--muted-foreground))"
-              label={{ value: 'Years', position: 'insideBottom', offset: -5 }}
-            />
-            <YAxis 
-              stroke="hsl(var(--muted-foreground))"
-              label={{ value: 'Portfolio Value ($M)', angle: -90, position: 'insideLeft' }}
-            />
-            <Legend />
-            <Line
-              type="monotone"
-              dataKey="traditional"
-              stroke="hsl(var(--muted-foreground))"
-              strokeWidth={2}
-              name="Current Advisor"
-              dot={false}
-            />
-            <Line
-              type="monotone"
-              dataKey="valueModel"
-              stroke="hsl(var(--accent))"
-              strokeWidth={3}
-              name="Our Value Model"
-              dot={false}
-            />
-          </LineChart>
-        </ResponsiveContainer>
-      </DashboardCard>
+      {/* Chart - Only show when results are available */}
+      {showResults && results && (
+        <DashboardCard title="Portfolio Growth Comparison" className="h-80">
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={chartData}>
+              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+              <XAxis 
+                dataKey="year" 
+                stroke="hsl(var(--muted-foreground))"
+                label={{ value: 'Years', position: 'insideBottom', offset: -5 }}
+              />
+              <YAxis 
+                stroke="hsl(var(--muted-foreground))"
+                label={{ value: 'Portfolio Value ($M)', angle: -90, position: 'insideLeft' }}
+              />
+              <Legend />
+              <Line
+                type="monotone"
+                dataKey="traditional"
+                stroke="hsl(var(--muted-foreground))"
+                strokeWidth={2}
+                name="Current Advisor"
+                dot={false}
+              />
+              <Line
+                type="monotone"
+                dataKey="valueModel"
+                stroke="hsl(var(--accent))"
+                strokeWidth={3}
+                name="Our Value Model"
+                dot={false}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </DashboardCard>
+      )}
     </div>
   );
 };

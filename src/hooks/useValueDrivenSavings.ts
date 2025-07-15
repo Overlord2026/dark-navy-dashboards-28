@@ -115,6 +115,18 @@ export function useValueDrivenSavings() {
     setAnnualWithdrawal(75000);
   };
 
+  const calculateSavings = () => {
+    return calculateValueDrivenSavings(
+      portfolioValue,
+      growthRate,
+      timeHorizon,
+      currentAdvisorFee,
+      ourFee,
+      ourFeeType,
+      annualWithdrawal
+    );
+  };
+
   return {
     portfolioValue,
     setPortfolioValue,
@@ -132,6 +144,7 @@ export function useValueDrivenSavings() {
     setAnnualWithdrawal,
     calculations,
     timeHorizonOptions,
-    resetToDefaults
+    resetToDefaults,
+    calculateSavings
   };
 }
