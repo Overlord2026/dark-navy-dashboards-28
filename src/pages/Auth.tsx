@@ -98,19 +98,25 @@ export default function Auth() {
         }
       } else {
         const result = await login(email, password);
+        console.log('Login result:', result);
 
         if (result.success) {
           // No 2FA, proceed with normal login
+          console.log('Normal login successful');
           toast.success('Logged in successfully!');
           navigate('/client-dashboard');
         } else if (result.requires2FA) {
           // User has 2FA enabled, show OTP verification
+          console.log('2FA required, showing OTP verification');
+          console.log('User ID from login:', result.userId);
+          
           setLoginUserId(result.userId!);
           setTempCredentials({ email, password });
           setShowOTPVerification(true);
           
           // Send OTP to user's email
           try {
+            console.log('Sending OTP email to:', email);
             const otpResponse = await supabase.functions.invoke('send-otp-email', {
               body: { 
                 email,
@@ -118,6 +124,8 @@ export default function Auth() {
                 userName: 'User'
               }
             });
+
+            console.log('OTP email response:', otpResponse);
 
             if (otpResponse.error) {
               console.error('Failed to send OTP:', otpResponse.error);
@@ -133,6 +141,7 @@ export default function Auth() {
           }
         } else {
           // Handle login errors
+          console.log('Login failed:', result.error);
           if (result.error?.includes('Invalid login credentials')) {
             toast.error('Invalid email or password. Please check your credentials.');
           } else if (result.error?.includes('Email not confirmed')) {
@@ -277,6 +286,7 @@ export default function Auth() {
         {showOTPVerification ? (
           <OTPVerification
             email={email}
+            userId={loginUserId}
             onVerificationSuccess={handleOTPVerificationSuccess}
             onBack={handleBackToLogin}
           />

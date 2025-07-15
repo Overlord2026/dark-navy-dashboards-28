@@ -167,6 +167,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const login = async (email: string, password: string): Promise<{ success: boolean; error?: string; requires2FA?: boolean; userId?: string }> => {
     try {
       setIsLoading(true);
+      console.log('Starting login process for:', email);
       
       // First, verify credentials without creating a session
       const { data, error } = await supabase.auth.signInWithPassword({
@@ -175,8 +176,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       });
       
       if (error) {
+        console.log('Login error:', error);
         return { success: false, error: error.message };
       }
+      
+      console.log('Login successful, checking 2FA status for user:', data.user.id);
       
       // Check if user has 2FA enabled
       const { data: profile } = await supabase
@@ -185,7 +189,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         .eq('id', data.user.id)
         .single();
       
+      console.log('Profile data:', profile);
+      
       if (profile?.two_factor_enabled) {
+        console.log('2FA is enabled for user, signing out and returning 2FA requirement');
         // If 2FA is enabled, sign out immediately and return requires2FA flag
         await supabase.auth.signOut();
         return { 
@@ -196,6 +203,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         };
       }
       
+      console.log('2FA is not enabled, proceeding with normal login');
       // If no 2FA, proceed with normal login
       return { success: true };
     } catch (error) {

@@ -8,11 +8,12 @@ import { supabase } from "@/lib/supabase";
 
 interface OTPVerificationProps {
   email: string;
+  userId?: string | null;
   onVerificationSuccess: () => void;
   onBack: () => void;
 }
 
-export default function OTPVerification({ email, onVerificationSuccess, onBack }: OTPVerificationProps) {
+export default function OTPVerification({ email, userId, onVerificationSuccess, onBack }: OTPVerificationProps) {
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const [resending, setResending] = useState(false);
@@ -28,6 +29,7 @@ export default function OTPVerification({ email, onVerificationSuccess, onBack }
       const response = await supabase.functions.invoke('verify-otp', {
         body: {
           email,
+          userId,
           otpCode: otp,
           isForLogin: true,
         },
@@ -63,6 +65,7 @@ export default function OTPVerification({ email, onVerificationSuccess, onBack }
       const response = await supabase.functions.invoke('send-otp-email', {
         body: {
           email,
+          userId,
           userName: 'User'
         },
       });
