@@ -47,6 +47,7 @@ export default function Auth() {
   const [showOTPVerification, setShowOTPVerification] = useState(false);
   const [loginUserId, setLoginUserId] = useState<string | null>(null);
   const [tempCredentials, setTempCredentials] = useState<{email: string, password: string} | null>(null);
+  const [otpEmail, setOtpEmail] = useState<string>("");
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { isAuthenticated, login, signup, signInWithGoogle, resendConfirmation, resetPassword, complete2FALogin } = useAuth();
@@ -107,13 +108,14 @@ export default function Auth() {
           // User has 2FA enabled, show OTP verification
           setLoginUserId(result.userId!);
           setTempCredentials({ email, password });
+          setOtpEmail(result.profileEmail || email); // Use profile email for OTP
           setShowOTPVerification(true);
           
-          // Send OTP to user's email
+          // Send OTP to user's profile email
           try {
             const otpResponse = await supabase.functions.invoke('send-otp-email', {
               body: { 
-                email,
+                email: result.profileEmail || email, // Send to profile email
                 userId: result.userId,
                 userName: `${firstName} ${lastName}`.trim() || 'User'
               }
@@ -125,7 +127,7 @@ export default function Auth() {
               return;
             }
 
-            toast.success('Verification code sent to your email');
+            toast.success(`Verification code sent to ${result.profileEmail || email}`);
           } catch (error) {
             console.error('OTP sending error:', error);
             toast.error('Failed to send verification code. Please try again.');
@@ -245,6 +247,7 @@ export default function Auth() {
     setShowOTPVerification(false);
     setLoginUserId(null);
     setTempCredentials(null);
+    setOtpEmail("");
   };
 
   const resetForm = () => {
@@ -255,6 +258,7 @@ export default function Auth() {
     setShowOTPVerification(false);
     setLoginUserId(null);
     setTempCredentials(null);
+    setOtpEmail("");
     setEmail("");
     setPassword("");
     setFirstName("");
@@ -276,7 +280,7 @@ export default function Auth() {
       <div className="flex-1 flex justify-center items-center p-4 bg-white">
         {showOTPVerification ? (
           <OTPVerification
-            email={email}
+            email={otpEmail}
             onVerificationSuccess={handleOTPVerificationSuccess}
             onBack={handleBackToLogin}
           />

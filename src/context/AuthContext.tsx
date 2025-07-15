@@ -29,7 +29,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   isEmailConfirmed: boolean;
-  login: (email: string, password: string) => Promise<{ success: boolean; error?: string; requires2FA?: boolean; userId?: string }>;
+  login: (email: string, password: string) => Promise<{ success: boolean; error?: string; requires2FA?: boolean; userId?: string; profileEmail?: string }>;
   signup: (email: string, password: string, userData?: any) => Promise<{ success: boolean; error?: string }>;
   signInWithGoogle: () => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
@@ -164,7 +164,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     return () => subscription.unsubscribe();
   }, []);
 
-  const login = async (email: string, password: string): Promise<{ success: boolean; error?: string; requires2FA?: boolean; userId?: string }> => {
+  const login = async (email: string, password: string): Promise<{ success: boolean; error?: string; requires2FA?: boolean; userId?: string; profileEmail?: string }> => {
     try {
       setIsLoading(true);
       
@@ -178,10 +178,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         return { success: false, error: error.message };
       }
       
-      // Check if user has 2FA enabled
+      // Check if user has 2FA enabled and get profile email
       const { data: profile } = await supabase
         .from('profiles')
-        .select('two_factor_enabled, id')
+        .select('two_factor_enabled, id, email')
         .eq('id', data.user.id)
         .single();
       
@@ -192,6 +192,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           success: false, 
           requires2FA: true, 
           userId: profile.id,
+          profileEmail: profile.email || email, // Use profile email if available, fallback to login email
           error: 'Two-factor authentication required'
         };
       }

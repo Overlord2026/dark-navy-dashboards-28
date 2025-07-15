@@ -37,7 +37,24 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    console.log(`Sending OTP email to: ${email}`);
+    // Determine the target email address
+    let targetEmail = email;
+    
+    // If userId is provided, try to get the user's profile email
+    if (userId) {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('email')
+        .eq('id', userId)
+        .single();
+      
+      if (profile?.email) {
+        targetEmail = profile.email;
+        console.log(`Using profile email: ${targetEmail} instead of login email: ${email}`);
+      }
+    }
+
+    console.log(`Sending OTP email to: ${targetEmail}`);
 
     // First, generate the OTP
     const generateResponse = await supabase.functions.invoke('generate-otp', {
@@ -94,7 +111,7 @@ const handler = async (req: Request): Promise<Response> => {
         user_id: 'chtAi9WR2OnpWeUXo',
         accessToken: privateKey,
         template_params: {
-          to_email: email,
+          to_email: targetEmail,
           to_name: userName || 'User',
           otp_code: otpRecord.otp_code,
           from_name: 'Family Office Security',
@@ -124,11 +141,11 @@ const handler = async (req: Request): Promise<Response> => {
         throw new Error(`EmailJS API error: ${emailResponse.status} ${emailResponse.statusText} - ${responseText}`);
       }
 
-      console.log(`OTP email sent successfully to: ${email}`);
+      console.log(`OTP email sent successfully to: ${targetEmail}`);
     } catch (emailError) {
       console.error('Failed to send OTP email:', emailError);
       // Log the OTP for testing if email fails
-      console.log(`OTP Code for ${email}: ${otpRecord.otp_code} (email failed)`);
+      console.log(`OTP Code for ${targetEmail}: ${otpRecord.otp_code} (email failed)`);
       
       // Re-throw the error to ensure proper error handling
       throw emailError;
