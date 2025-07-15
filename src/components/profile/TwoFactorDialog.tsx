@@ -65,23 +65,34 @@ export function TwoFactorDialog({ open, onOpenChange }: TwoFactorDialogProps) {
     if (open) {
       setProfileLoading(true);
       
-      // Refresh profile to get the latest 2FA status from database
-      await refreshUserProfile();
-      
-      // Give a small delay to ensure state is updated
-      setTimeout(() => {
-        const currentlyEnabled = userProfile?.twoFactorEnabled === true;
-        setMode(currentlyEnabled ? 'disable' : 'enable');
+      try {
+        console.log("Opening TwoFactorDialog, refreshing profile...");
+        
+        // Refresh profile to get the latest 2FA status from database
+        const refreshedProfile = await refreshUserProfile();
+        
+        console.log("Refreshed profile result:", refreshedProfile);
+        console.log("2FA Status from refreshed profile:", refreshedProfile?.twoFactorEnabled);
+        
+        // Use the refreshed profile to determine the mode
+        const currentlyEnabled = refreshedProfile?.twoFactorEnabled === true;
+        const newMode = currentlyEnabled ? 'disable' : 'enable';
+        
+        console.log("Setting mode to:", newMode);
+        setMode(newMode);
+        
+        setStep(0);
+        setEmail(user?.email || "");
+        setOtpValue("");
+        setSuccess(false);
+        setLoading(false);
+        setVerifying(false);
+        setUseCustomEmail(false);
         setProfileLoading(false);
-      }, 100);
-      
-      setStep(0);
-      setEmail(user?.email || "");
-      setOtpValue("");
-      setSuccess(false);
-      setLoading(false);
-      setVerifying(false);
-      setUseCustomEmail(false);
+      } catch (error) {
+        console.error("Error in handleDialogOpen:", error);
+        setProfileLoading(false);
+      }
     }
     onOpenChange(open);
   };

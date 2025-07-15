@@ -30,7 +30,7 @@ interface UserContextType {
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
   updateUserProfile: (profile: Partial<UserProfile>) => void;
-  refreshUserProfile: () => Promise<void>;
+  refreshUserProfile: () => Promise<UserProfile | null>;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -153,7 +153,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const refreshUserProfile = async () => {
+  const refreshUserProfile = async (): Promise<UserProfile | null> => {
     if (user) {
       try {
         console.log("Refreshing user profile from database for user:", user.id);
@@ -166,7 +166,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         if (error && error.code !== 'PGRST116') {
           console.error('Error loading profile during refresh:', error);
-          return;
+          return null;
         }
 
         if (profile) {
@@ -180,7 +180,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
             dateOfBirth = parseDateSafely(profile.date_of_birth);
           }
 
-          setUserProfile({
+          const updatedProfile: UserProfile = {
             id: profile.id,
             name: profile.display_name || `${profile.first_name || ''} ${profile.last_name || ''}`.trim(),
             displayName: profile.display_name,
@@ -198,12 +198,16 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
             role: profile.role || 'client',
             permissions: profile.permissions || [],
             twoFactorEnabled: profile.two_factor_enabled || false
-          });
+          };
+
+          setUserProfile(updatedProfile);
+          return updatedProfile;
         }
       } catch (error) {
         console.error('Error in refreshUserProfile:', error);
       }
     }
+    return null;
   };
 
   return (
