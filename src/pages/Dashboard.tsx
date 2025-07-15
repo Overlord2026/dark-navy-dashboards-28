@@ -6,6 +6,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useSubscription } from "@/context/SubscriptionContext";
 import { WelcomeTrialBanner } from "@/components/dashboard/WelcomeTrialBanner";
 import { usePagePerformance } from "@/hooks/usePagePerformance";
+import { ValueDrivenSavingsCalculator } from "@/components/ValueDrivenSavingsCalculator";
 
 export default function Dashboard() {
   const { userProfile } = useAuth();
@@ -35,6 +36,10 @@ export default function Dashboard() {
         {isInFreeTrial && showWelcomeBanner && (
           <WelcomeTrialBanner onDismiss={handleDismissBanner} />
         )}
+        
+        <div>
+          <ValueDrivenSavingsCalculator isHeroWidget={true} className="mb-8" />
+        </div>
         
         <div>
           <NetWorthSummary />

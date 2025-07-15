@@ -70,6 +70,7 @@ import HealthSettings from "@/pages/health/HealthSettings";
 import HealthcareDashboard from "@/pages/healthcare/HealthcareDashboard";
 import HealthcareSavingsCalculator from "@/pages/healthcare/HealthcareSavingsCalculator";
 import HealthcareSavings from "@/pages/HealthcareSavings";
+import ValueDrivenSavings from "@/pages/ValueDrivenSavings";
 import HealthcareDocuments from "@/pages/healthcare/HealthcareDocuments";
 import MedicalRecords from "@/pages/healthcare/MedicalRecords";
 import HealthMetrics from "@/pages/healthcare/HealthMetrics";
@@ -385,6 +386,10 @@ const routes = createBrowserRouter([
   {
     path: "/health/accounts/hsa/calculator", 
     element: <ProtectedRoute><HealthcareSavings /></ProtectedRoute>
+  },
+  {
+    path: "/value-driven-savings",
+    element: <ProtectedRoute><ValueDrivenSavings /></ProtectedRoute>
   },
   {
     path: "/healthcare-providers",
