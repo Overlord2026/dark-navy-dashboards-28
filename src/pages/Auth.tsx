@@ -60,11 +60,11 @@ export default function Auth() {
       toast.success('Email confirmed successfully! You are now logged in.');
     }
 
-    // Redirect if already authenticated
-    if (isAuthenticated) {
+    // Redirect if already authenticated, but NOT during 2FA verification
+    if (isAuthenticated && !showOTPVerification) {
       navigate('/client-dashboard');
     }
-  }, [isAuthenticated, navigate, searchParams]);
+  }, [isAuthenticated, navigate, searchParams, showOTPVerification]);
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -115,7 +115,7 @@ export default function Auth() {
               body: { 
                 email,
                 userId: result.userId,
-                userName: `${firstName} ${lastName}`.trim() || 'User'
+                userName: 'User'
               }
             });
 
