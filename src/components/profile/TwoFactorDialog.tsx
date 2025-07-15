@@ -43,6 +43,14 @@ export function TwoFactorDialog({ open, onOpenChange }: TwoFactorDialogProps) {
     onOpenChange(open);
   };
 
+  const handleDialogClose = (event?: Event) => {
+    // Prevent closing due to focus loss or visibility change
+    if (event && (event.type === 'blur' || event.type === 'visibilitychange')) {
+      return;
+    }
+    handleDialogOpen(false);
+  };
+
   const handleBackClick = () => {
     setStep(0);
     setVerifying(false);
@@ -179,8 +187,21 @@ export function TwoFactorDialog({ open, onOpenChange }: TwoFactorDialogProps) {
   };
 
   return (
-    <Dialog open={open} onOpenChange={handleDialogOpen}>
-      <DialogContent className="sm:max-w-[425px] bg-background border-border">
+    <Dialog 
+      open={open} 
+      onOpenChange={(open) => {
+        // Only allow closing through explicit user actions, not focus loss
+        if (!open) {
+          handleDialogOpen(false);
+        }
+      }}
+    >
+      <DialogContent 
+        className="sm:max-w-[425px] bg-background border-border"
+        onPointerDownOutside={(e) => e.preventDefault()}
+        onEscapeKeyDown={(e) => e.preventDefault()}
+        onInteractOutside={(e) => e.preventDefault()}
+      >
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             {isEnabled ? (
