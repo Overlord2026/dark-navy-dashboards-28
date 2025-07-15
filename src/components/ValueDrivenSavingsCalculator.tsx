@@ -10,7 +10,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Legend } from 'recharts';
 import { HelpCircle, RotateCcw, TrendingUp, DollarSign, Clock, Heart, Calculator, Share, FileDown, Sparkles } from 'lucide-react';
 import CountUp from 'react-countup';
-import { ConfettiAnimation } from '@/components/ConfettiAnimation';
+import { Celebration } from '@/components/ConfettiAnimation';
 import { PrizeModal } from '@/components/PrizeModal';
 import { playSound } from '@/utils/sounds';
 
@@ -142,7 +142,7 @@ export const ValueDrivenSavingsCalculator: React.FC<ValueDrivenSavingsCalculator
 
   return (
     <div className={`space-y-6 ${className}`}>
-      <ConfettiAnimation trigger={showConfetti} />
+      <Celebration trigger={showConfetti} />
       
       <PrizeModal
         open={!!prize}
