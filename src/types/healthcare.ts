@@ -93,6 +93,7 @@ export interface HealthCardProps {
   changeType?: 'positive' | 'negative' | 'neutral';
   status?: 'success' | 'warning' | 'error' | 'info';
   icon?: React.ReactNode;
+  href?: string;
   className?: string;
 }
 

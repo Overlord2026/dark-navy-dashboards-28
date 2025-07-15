@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
@@ -12,6 +13,7 @@ export const HealthCard: React.FC<HealthCardProps> = ({
   changeType = 'neutral',
   status = 'info',
   icon,
+  href,
   className = ''
 }) => {
   const getChangeIcon = () => {
@@ -62,49 +64,63 @@ export const HealthCard: React.FC<HealthCardProps> = ({
     }
   };
 
+  const CardWrapper = ({ children }: { children: React.ReactNode }) => {
+    if (href) {
+      return (
+        <Link to={href} className="block">
+          {children}
+        </Link>
+      );
+    }
+    return <>{children}</>;
+  };
+
   return (
-    <Card className={cn(
-      "relative overflow-hidden transition-all duration-200 hover:shadow-md hover:scale-[1.02]",
-      getStatusStyles(),
-      className
-    )}>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium text-muted-foreground">
-          {title}
-        </CardTitle>
-        {icon && (
-          <div className="p-2 rounded-lg bg-muted/50">
-            {React.cloneElement(icon as React.ReactElement, {
-              className: "h-4 w-4 text-muted-foreground"
-            })}
-          </div>
-        )}
-      </CardHeader>
-      <CardContent>
-        <div className="flex items-center justify-between">
-          <div className="space-y-1">
-            {value && (
-              <p className="text-2xl font-bold text-foreground leading-none">
-                {value}
-              </p>
-            )}
-            {change && (
-              <div className={cn(
-                "flex items-center space-x-1 text-xs font-medium",
-                getChangeColor()
-              )}>
-                {getChangeIcon()}
-                <span>{change}</span>
+    <CardWrapper>
+      <Card className={cn(
+        "relative overflow-hidden transition-all duration-200 hover:shadow-md hover:scale-[1.02]",
+        href && "cursor-pointer",
+        getStatusStyles(),
+        className
+      )}>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className="text-sm font-medium text-muted-foreground">
+            {title}
+          </CardTitle>
+          {icon && (
+            <div className="p-2 rounded-lg bg-muted/50">
+              {React.cloneElement(icon as React.ReactElement, {
+                className: "h-4 w-4 text-muted-foreground"
+              })}
+            </div>
+          )}
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center justify-between">
+            <div className="space-y-1">
+              {value && (
+                <p className="text-2xl font-bold text-foreground leading-none">
+                  {value}
+                </p>
+              )}
+              {change && (
+                <div className={cn(
+                  "flex items-center space-x-1 text-xs font-medium",
+                  getChangeColor()
+                )}>
+                  {getChangeIcon()}
+                  <span>{change}</span>
+                </div>
+              )}
+            </div>
+            {status !== 'info' && (
+              <div className="flex-shrink-0">
+                {getStatusBadge()}
               </div>
             )}
           </div>
-          {status !== 'info' && (
-            <div className="flex-shrink-0">
-              {getStatusBadge()}
-            </div>
-          )}
-        </div>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </CardWrapper>
   );
 };
