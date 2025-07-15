@@ -168,42 +168,47 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     try {
       setIsLoading(true);
       
-      // Look up user by email to check 2FA status first
-      const { data: profile } = await supabase
+      console.log('Login attempt for email:', email);
+      
+      // First, try to get the user ID by doing a test authentication
+      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      
+      if (authError) {
+        console.log('Authentication failed:', authError.message);
+        return { success: false, error: authError.message };
+      }
+      
+      console.log('Authentication successful for user:', authData.user.id);
+      
+      // Immediately sign out to prevent session persistence
+      await supabase.auth.signOut();
+      
+      // Now look up the user's profile using the user ID
+      const { data: profile, error: profileError } = await supabase
         .from('profiles')
         .select('two_factor_enabled, id, email')
-        .eq('email', email)
+        .eq('id', authData.user.id)
         .single();
       
+      console.log('Profile lookup result:', profile, 'Error:', profileError);
+      
       if (profile?.two_factor_enabled) {
-        // If 2FA is enabled, validate credentials without creating a session
-        try {
-          const { data, error } = await supabase.functions.invoke('validate-credentials', {
-            body: { email, password }
-          });
-          
-          if (error) {
-            console.error('Credential validation error:', error);
-            return { success: false, error: 'Failed to validate credentials' };
-          }
-          
-          if (!data?.valid) {
-            return { success: false, error: data?.error || 'Invalid credentials' };
-          }
-          
-          // Credentials are valid, return 2FA requirement
-          return { 
-            success: false, 
-            requires2FA: true, 
-            userId: profile.id,
-            profileEmail: profile.email || email,
-            error: 'Two-factor authentication required'
-          };
-        } catch (error) {
-          console.error('2FA validation error:', error);
-          return { success: false, error: 'Authentication failed' };
-        }
+        console.log('2FA is enabled for user, showing OTP verification');
+        
+        // Credentials are valid and 2FA is enabled
+        return { 
+          success: false, 
+          requires2FA: true, 
+          userId: profile.id,
+          profileEmail: profile.email || email,
+          error: 'Two-factor authentication required'
+        };
       }
+      
+      console.log('2FA is not enabled, proceeding with normal login');
       
       // If no 2FA, proceed with normal login
       const { data, error } = await supabase.auth.signInWithPassword({
