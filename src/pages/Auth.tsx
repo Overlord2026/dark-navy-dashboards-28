@@ -61,10 +61,11 @@ export default function Auth() {
     }
 
     // Redirect if already authenticated, but NOT during 2FA verification
-    if (isAuthenticated && !showOTPVerification) {
+    // Also check that we're not in the middle of a 2FA flow (tempCredentials would be set)
+    if (isAuthenticated && !showOTPVerification && !tempCredentials) {
       navigate('/client-dashboard');
     }
-  }, [isAuthenticated, navigate, searchParams, showOTPVerification]);
+  }, [isAuthenticated, navigate, searchParams, showOTPVerification, tempCredentials]);
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
