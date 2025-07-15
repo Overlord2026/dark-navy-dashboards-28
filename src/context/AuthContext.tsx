@@ -47,6 +47,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [session, setSession] = useState<Session | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isChecking2FA, setIsChecking2FA] = useState(false);
 
   // Helper function to safely parse date from database
   const parseDateSafely = (dateString: string): Date => {
@@ -167,9 +168,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const login = async (email: string, password: string): Promise<{ success: boolean; error?: string; requires2FA?: boolean; userId?: string }> => {
     try {
       setIsLoading(true);
+      setIsChecking2FA(true); // Set flag to prevent redirect during 2FA check
       console.log('Starting login process for:', email);
       
-      // First, verify credentials without creating a session
+      // First, verify credentials and get user ID
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -182,7 +184,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       
       console.log('Login successful, checking 2FA status for user:', data.user.id);
       
-      // Check if user has 2FA enabled
+      // Check if user has 2FA enabled while still authenticated
       const { data: profile } = await supabase
         .from('profiles')
         .select('two_factor_enabled, id')
@@ -193,7 +195,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       
       if (profile?.two_factor_enabled) {
         console.log('2FA is enabled for user, signing out and returning 2FA requirement');
-        // If 2FA is enabled, sign out immediately and return requires2FA flag
+        // If 2FA is enabled, sign out and return requires2FA flag
         await supabase.auth.signOut();
         return { 
           success: false, 
@@ -204,13 +206,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       }
       
       console.log('2FA is not enabled, proceeding with normal login');
-      // If no 2FA, proceed with normal login
+      // If no 2FA, proceed with normal login (user is already signed in)
       return { success: true };
     } catch (error) {
       console.error('Login error:', error);
       return { success: false, error: 'An unexpected error occurred' };
     } finally {
       setIsLoading(false);
+      setIsChecking2FA(false); // Clear flag regardless of outcome
     }
   };
 
@@ -390,7 +393,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         user,
         session,
         userProfile,
-        isAuthenticated: !!user,
+        isAuthenticated: !!user && !isChecking2FA,
         isLoading,
         isEmailConfirmed,
         login,
