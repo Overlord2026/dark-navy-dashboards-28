@@ -5,10 +5,11 @@ import { useAuth } from '@/context/AuthContext';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
+  requiredRole?: string;
 }
 
-export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-  const { isAuthenticated, isLoading } = useAuth();
+export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requiredRole }) => {
+  const { isAuthenticated, isLoading, userProfile } = useAuth();
 
   if (isLoading) {
     return (
@@ -23,6 +24,12 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
 
   if (!isAuthenticated) {
     return <Navigate to="/auth" replace />;
+  }
+
+  // Check role-based access if requiredRole is specified
+  if (requiredRole && userProfile?.role !== requiredRole) {
+    // You can customize this to redirect to an access denied page
+    return <Navigate to="/client-dashboard" replace />;
   }
 
   return <>{children}</>;
