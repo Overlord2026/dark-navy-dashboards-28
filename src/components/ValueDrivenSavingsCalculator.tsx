@@ -148,6 +148,10 @@ export const ValueDrivenSavingsCalculator: React.FC<ValueDrivenSavingsCalculator
         open={!!prize}
         prizeText={prize?.prizeText || ""}
         analogy={prize?.analogy || ""}
+        cta={{
+          label: "Book My Free Savings Review",
+          onClick: () => window.open("/schedule", "_blank")
+        }}
         onClose={() => setPrize(null)}
       />
       
