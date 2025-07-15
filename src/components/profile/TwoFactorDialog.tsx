@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { ShieldIcon, ShieldCheck, ShieldAlert, CheckCircle, ArrowLeft } from "lucide-react";
+import { ShieldIcon, ShieldCheck, ShieldAlert, CheckCircle, ArrowLeft, Edit3 } from "lucide-react";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { supabase } from "@/lib/supabase";
@@ -25,6 +25,7 @@ export function TwoFactorDialog({ open, onOpenChange }: TwoFactorDialogProps) {
   const [otpValue, setOtpValue] = useState("");
   const [success, setSuccess] = useState(false);
   const [mode, setMode] = useState<'enable' | 'disable'>('enable');
+  const [useCustomEmail, setUseCustomEmail] = useState(false);
 
   const isEnabled = userProfile?.twoFactorEnabled || false;
 
@@ -32,11 +33,12 @@ export function TwoFactorDialog({ open, onOpenChange }: TwoFactorDialogProps) {
     if (open) {
       setMode(isEnabled ? 'disable' : 'enable');
       setStep(0);
-      setEmail("");
+      setEmail(user?.email || "");
       setOtpValue("");
       setSuccess(false);
       setLoading(false);
       setVerifying(false);
+      setUseCustomEmail(false);
     }
     onOpenChange(open);
   };
@@ -197,15 +199,44 @@ export function TwoFactorDialog({ open, onOpenChange }: TwoFactorDialogProps) {
                     </ul>
                   </div>
                   
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Email Address</label>
-                    <Input
-                      type="email"
-                      placeholder="your@email.com"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                    />
-                  </div>
+                   <div className="space-y-2">
+                     <label className="text-sm font-medium">Email Address</label>
+                     {!useCustomEmail ? (
+                       <div className="flex items-center justify-between p-3 border rounded-md bg-muted/50">
+                         <span className="text-sm">{email}</span>
+                         <Button
+                           type="button"
+                           variant="ghost"
+                           size="sm"
+                           onClick={() => setUseCustomEmail(true)}
+                           className="h-auto p-1"
+                         >
+                           <Edit3 className="h-3 w-3" />
+                         </Button>
+                       </div>
+                     ) : (
+                       <div className="space-y-2">
+                         <Input
+                           type="email"
+                           placeholder="your@email.com"
+                           value={email}
+                           onChange={(e) => setEmail(e.target.value)}
+                         />
+                         <Button
+                           type="button"
+                           variant="ghost"
+                           size="sm"
+                           onClick={() => {
+                             setEmail(user?.email || "");
+                             setUseCustomEmail(false);
+                           }}
+                           className="h-auto p-0 text-xs"
+                         >
+                           Use my registered email
+                         </Button>
+                       </div>
+                     )}
+                   </div>
                   
                   <Button 
                     onClick={handleEmailSubmit}
@@ -227,15 +258,44 @@ export function TwoFactorDialog({ open, onOpenChange }: TwoFactorDialogProps) {
                     </p>
                   </div>
                   
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Email Address</label>
-                    <Input
-                      type="email"
-                      placeholder="your@email.com"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                    />
-                  </div>
+                   <div className="space-y-2">
+                     <label className="text-sm font-medium">Email Address</label>
+                     {!useCustomEmail ? (
+                       <div className="flex items-center justify-between p-3 border rounded-md bg-muted/50">
+                         <span className="text-sm">{email}</span>
+                         <Button
+                           type="button"
+                           variant="ghost"
+                           size="sm"
+                           onClick={() => setUseCustomEmail(true)}
+                           className="h-auto p-1"
+                         >
+                           <Edit3 className="h-3 w-3" />
+                         </Button>
+                       </div>
+                     ) : (
+                       <div className="space-y-2">
+                         <Input
+                           type="email"
+                           placeholder="your@email.com"
+                           value={email}
+                           onChange={(e) => setEmail(e.target.value)}
+                         />
+                         <Button
+                           type="button"
+                           variant="ghost"
+                           size="sm"
+                           onClick={() => {
+                             setEmail(user?.email || "");
+                             setUseCustomEmail(false);
+                           }}
+                           className="h-auto p-0 text-xs"
+                         >
+                           Use my registered email
+                         </Button>
+                       </div>
+                     )}
+                   </div>
                   
                   <Button 
                     onClick={handleEmailSubmit}
