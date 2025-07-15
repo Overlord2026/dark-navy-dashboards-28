@@ -24,6 +24,7 @@ import Documents from "@/pages/Documents";
 import ProfessionalSignup from "@/pages/ProfessionalSignup";
 import Help from "@/pages/Help";
 import Settings from "@/pages/Settings";
+import SecuritySettings from "@/pages/SecuritySettings";
 import ProjectIntegration from "@/pages/ProjectIntegration";
 import ClientFamily from "@/pages/ClientFamily";
 import PrivateEquity from "@/pages/investments/PrivateEquity";
@@ -220,6 +221,10 @@ const routes = createBrowserRouter([
   {
     path: "/settings",
     element: <ProtectedRoute><Settings /></ProtectedRoute>
+  },
+  {
+    path: "/security-settings",
+    element: <ProtectedRoute><SecuritySettings /></ProtectedRoute>
   },
   {
     path: "/project-integration",
