@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useHealthDocs } from "@/hooks/healthcare/useHealthDocs";
 import { DocumentUploadModal } from "@/components/healthcare/DocumentUploadModal";
+import { HealthcareDocumentManager } from "@/components/healthcare/HealthcareDocumentManager";
 import { 
   FileTextIcon, 
   DownloadIcon, 

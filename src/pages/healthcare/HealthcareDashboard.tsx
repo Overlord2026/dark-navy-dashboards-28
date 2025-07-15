@@ -13,12 +13,15 @@ import {
   AlertTriangleIcon,
   PillIcon,
   PlusIcon,
-  RefreshCwIcon
+  RefreshCwIcon,
+  UploadIcon
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const HealthcareDashboard: React.FC = () => {
   const { metrics, loading, error, addHealthMetric, refetch } = useHealthData();
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   // Process metrics for display
   const processedMetrics = React.useMemo(() => {
@@ -229,12 +232,12 @@ const HealthcareDashboard: React.FC = () => {
               <Button 
                 className="w-full justify-start h-auto p-3"
                 variant="outline"
-                disabled
+                onClick={() => navigate('/health/documents')}
               >
-                <FileTextIcon className="h-4 w-4 mr-3" />
+                <UploadIcon className="h-4 w-4 mr-3" />
                 <div className="text-left">
-                  <div className="font-medium">Upload Document</div>
-                  <div className="text-sm text-muted-foreground">Add medical records or reports</div>
+                  <div className="font-medium">Manage Documents</div>
+                  <div className="text-sm text-muted-foreground">Upload and organize medical records</div>
                 </div>
               </Button>
             </div>

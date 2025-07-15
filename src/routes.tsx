@@ -401,6 +401,10 @@ const routes = createBrowserRouter([
     element: <ProtectedRoute><HealthcareDocuments /></ProtectedRoute>
   },
   {
+    path: "/health/documents",
+    element: <ProtectedRoute><HealthcareDocuments /></ProtectedRoute>
+  },
+  {
     path: "/healthcare-knowledge",
     element: <ProtectedRoute><div className="p-6 min-h-screen bg-background"><h1 className="text-2xl font-bold">Knowledge & Support - Coming Soon</h1></div></ProtectedRoute>
   },

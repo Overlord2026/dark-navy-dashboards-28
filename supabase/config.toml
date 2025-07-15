@@ -57,3 +57,6 @@ verify_jwt = false
 
 [functions.send-otp-email]
 verify_jwt = false
+
+[functions.healthcare-file-operations]
+verify_jwt = false
