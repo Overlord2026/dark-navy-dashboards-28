@@ -46,7 +46,7 @@ export function useMarketplace() {
             featured: true,
             provider: {
               name: "Elite Investment Advisors",
-              logo: "/lovable-uploads/dc1ba115-9699-414c-b9d0-7521bf7e7224.png"
+              logo: "/lovable-uploads/222b66d7-b7eb-4526-b460-fcfa131b8106.png"
             }
           },
           {

@@ -49,7 +49,7 @@ export const AdvisorSection = ({ onViewProfile, onBookSession, collapsed = false
           <div className="bg-[#1B1B32] p-6 text-white">
             <div className="flex items-start space-x-4 mb-4">
               <Avatar className="h-[70px] w-[70px] border-2 border-gray-600">
-                <AvatarImage src="/lovable-uploads/dc1ba115-9699-414c-b9d0-7521bf7e7224.png" alt={advisorInfo.name} />
+                <AvatarImage src="/lovable-uploads/222b66d7-b7eb-4526-b460-fcfa131b8106.png" alt={advisorInfo.name} />
                 <AvatarFallback className="bg-[#9F9EA1] text-white text-[24px]">
                   {advisorInfo.name.split(' ').map(name => name[0]).join('')}
                 </AvatarFallback>

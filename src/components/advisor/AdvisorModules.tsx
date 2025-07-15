@@ -30,7 +30,7 @@ export function AdvisorModules() {
     {
       id: "catchlight",
       name: "Catchlight",
-      logo: "/lovable-uploads/dc1ba115-9699-414c-b9d0-7521bf7e7224.png",
+      logo: "/lovable-uploads/222b66d7-b7eb-4526-b460-fcfa131b8106.png",
       shortDescription: "AI-powered lead scoring and prioritization",
       longDescription: "Catchlight uses AI to analyze your prospects and identify which leads are most likely to convert. Focus your time on the highest-value opportunities.",
       benefits: [

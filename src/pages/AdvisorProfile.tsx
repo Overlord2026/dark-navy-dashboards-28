@@ -228,7 +228,7 @@ const AdvisorProfile = () => {
                   <div className="flex flex-col lg:flex-row items-center lg:items-start gap-6 flex-1">
                     <div className="rounded-full overflow-hidden w-32 h-32 flex-shrink-0">
                       <img
-                        src="/lovable-uploads/dc1ba115-9699-414c-b9d0-7521bf7e7224.png"
+                        src="/lovable-uploads/222b66d7-b7eb-4526-b460-fcfa131b8106.png"
                         alt="Tony Gomes"
                         className="w-full h-full object-cover"
                       />
@@ -392,7 +392,7 @@ const AdvisorProfile = () => {
                   <div className="text-center mb-6">
                     <div className="mx-auto w-24 h-24 rounded-full overflow-hidden mb-4">
                       <img
-                        src="/lovable-uploads/dc1ba115-9699-414c-b9d0-7521bf7e7224.png"
+                        src="/lovable-uploads/222b66d7-b7eb-4526-b460-fcfa131b8106.png"
                         alt={advisorInfo.name}
                         className="w-full h-full object-cover"
                       />
