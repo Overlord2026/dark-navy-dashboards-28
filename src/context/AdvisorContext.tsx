@@ -34,7 +34,7 @@ const defaultAdvisorInfo: AdvisorInfo = {
   name: "Tony Gomes",
   title: "Certified Financial Planner™",
   location: "Sarasota, FL",
-  email: "Daniel@awmfl.com",
+  email: "tony@awmfl.com",
   serviceEmail: "Service@awmfl.com",
   phone: "(800) 555-1234",
   office: "Sarasota, FL",
