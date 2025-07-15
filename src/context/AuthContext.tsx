@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode, useRef } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
 
@@ -47,7 +47,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [session, setSession] = useState<Session | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const ignoreAuthStateChangeRef = useRef(false);
 
   // Helper function to safely parse date from database
   const parseDateSafely = (dateString: string): Date => {
@@ -119,13 +118,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     // Set up auth state listener first
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        console.log('Auth state changed:', event, session?.user?.id, 'ignoring:', ignoreAuthStateChangeRef.current);
-        
-        // If we're ignoring auth state changes (during 2FA flow), don't process this session
-        if (ignoreAuthStateChangeRef.current) {
-          console.log('Ignoring auth state change during 2FA flow');
-          return;
-        }
+        console.log('Auth state changed:', event, session?.user?.id);
         
         // Handle email confirmation
         if (event === 'TOKEN_REFRESHED' || event === 'SIGNED_IN') {
@@ -183,27 +176,22 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         .single();
       
       if (profile?.two_factor_enabled) {
-        // If 2FA is enabled, ignore auth state changes temporarily
-        ignoreAuthStateChangeRef.current = true;
-        
+        // If 2FA is enabled, validate credentials without creating a session
         try {
-          // Validate credentials but don't maintain session
-          const { data, error: authError } = await supabase.auth.signInWithPassword({
-            email,
-            password,
+          const { data, error } = await supabase.functions.invoke('validate-credentials', {
+            body: { email, password }
           });
           
-          if (authError) {
-            ignoreAuthStateChangeRef.current = false;
-            return { success: false, error: authError.message };
+          if (error) {
+            console.error('Credential validation error:', error);
+            return { success: false, error: 'Failed to validate credentials' };
           }
           
-          // Immediately sign out to prevent session persistence
-          await supabase.auth.signOut();
+          if (!data?.valid) {
+            return { success: false, error: data?.error || 'Invalid credentials' };
+          }
           
-          // Reset the ignore flag
-          ignoreAuthStateChangeRef.current = false;
-          
+          // Credentials are valid, return 2FA requirement
           return { 
             success: false, 
             requires2FA: true, 
@@ -212,7 +200,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             error: 'Two-factor authentication required'
           };
         } catch (error) {
-          ignoreAuthStateChangeRef.current = false;
           console.error('2FA validation error:', error);
           return { success: false, error: 'Authentication failed' };
         }
