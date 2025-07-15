@@ -1,8 +1,75 @@
+import { useState, useCallback } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Share, Upload, Download, Shield } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
+import { Share, Upload, Download, Shield, FileText } from "lucide-react";
+import { useSupabaseDocuments } from "@/hooks/useSupabaseDocuments";
+import { ShareDocumentWithProfessionalsDialog } from "@/components/professionals/ShareDocumentWithProfessionalsDialog";
+import { useDropzone } from "react-dropzone";
+import { toast } from "sonner";
 
 export default function ShareData() {
+  const { documents, loading, uploadDocument, uploading } = useSupabaseDocuments();
+  const [shareDialogOpen, setShareDialogOpen] = useState(false);
+  const [selectedDocument, setSelectedDocument] = useState<string>("");
+  
+  // Filter for health-related documents
+  const healthDocuments = documents.filter(doc => 
+    doc.category === 'health' || doc.category === 'medical' || doc.category === 'healthcare'
+  );
+
+  // Handle file upload
+  const onDrop = useCallback(async (acceptedFiles: File[]) => {
+    const file = acceptedFiles[0];
+    if (!file) return;
+    
+    // Validate file type for CCDA documents
+    if (!file.name.toLowerCase().includes('.xml') && !file.name.toLowerCase().includes('.ccda')) {
+      toast.error("Please upload a valid CCDA file (.xml or .ccda)");
+      return;
+    }
+    
+    const result = await uploadDocument(
+      file,
+      file.name,
+      'health',
+      null,
+      'CCDA document imported from external provider'
+    );
+    
+    if (result) {
+      toast.success("CCDA document uploaded successfully!");
+    }
+  }, [uploadDocument]);
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: {
+      'text/xml': ['.xml'],
+      'application/xml': ['.xml'],
+      'text/plain': ['.ccda']
+    },
+    multiple: false
+  });
+
+  // Handle share button click
+  const handleShareClick = () => {
+    if (healthDocuments.length === 0) {
+      toast.error("No health documents available to share. Please upload a document first.");
+      return;
+    }
+    
+    if (!selectedDocument) {
+      toast.error("Please select a document to share.");
+      return;
+    }
+    
+    setShareDialogOpen(true);
+  };
+
+  const selectedDocumentData = healthDocuments.find(doc => doc.id === selectedDocument);
+
   return (
     <div className="container mx-auto p-6 space-y-6">
       <div>
@@ -22,14 +89,20 @@ export default function ShareData() {
             <CardDescription>Upload CCDA documents from other providers</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="text-center py-6">
+            <div 
+              {...getRootProps()} 
+              className={`text-center py-6 border-2 border-dashed rounded-lg transition-colors cursor-pointer ${
+                isDragActive ? 'border-primary bg-primary/5' : 'border-border'
+              }`}
+            >
+              <input {...getInputProps()} />
               <Upload className="mx-auto h-8 w-8 text-muted-foreground mb-3" />
               <p className="text-sm text-muted-foreground mb-4">
-                Drag & drop CCDA files or browse to upload
+                {isDragActive ? 'Drop the CCDA file here' : 'Drag & drop CCDA files or browse to upload'}
               </p>
-              <Button variant="outline">
+              <Button variant="outline" disabled={uploading}>
                 <Upload className="mr-2 h-4 w-4" />
-                Upload CCDA
+                {uploading ? 'Uploading...' : 'Upload CCDA'}
               </Button>
             </div>
           </CardContent>
@@ -44,15 +117,41 @@ export default function ShareData() {
             <CardDescription>Generate secure links to share your health data</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="text-center py-6">
-              <Share className="mx-auto h-8 w-8 text-muted-foreground mb-3" />
-              <p className="text-sm text-muted-foreground mb-4">
-                Create secure, time-limited access links
-              </p>
-              <Button>
-                <Share className="mr-2 h-4 w-4" />
-                Generate Share Link
-              </Button>
+            <div className="space-y-4">
+              <div className="grid gap-2">
+                <Label htmlFor="document-select">Select Document to Share</Label>
+                <Select value={selectedDocument} onValueChange={setSelectedDocument}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Choose a health document" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {loading ? (
+                      <SelectItem value="loading" disabled>Loading documents...</SelectItem>
+                    ) : healthDocuments.length === 0 ? (
+                      <SelectItem value="no-docs" disabled>No health documents available</SelectItem>
+                    ) : (
+                      healthDocuments.map((doc) => (
+                        <SelectItem key={doc.id} value={doc.id}>
+                          <div className="flex items-center gap-2">
+                            <FileText className="h-4 w-4" />
+                            {doc.name}
+                          </div>
+                        </SelectItem>
+                      ))
+                    )}
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="text-center py-2">
+                <Button 
+                  onClick={handleShareClick}
+                  disabled={!selectedDocument || loading}
+                >
+                  <Share className="mr-2 h-4 w-4" />
+                  Generate Share Link
+                </Button>
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -86,6 +185,12 @@ export default function ShareData() {
           </div>
         </CardContent>
       </Card>
+
+      <ShareDocumentWithProfessionalsDialog
+        open={shareDialogOpen}
+        onOpenChange={setShareDialogOpen}
+        document={selectedDocumentData}
+      />
     </div>
   );
 }
