@@ -2,7 +2,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Settings, DollarSign, TrendingUp, TrendingDown, Wallet, Plus, Receipt } from "lucide-react";
+import { Settings, DollarSign, TrendingUp, TrendingDown, Wallet, Plus, Receipt, Calculator } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function HSAAccounts() {
   return (
@@ -13,6 +14,12 @@ export default function HSAAccounts() {
           <p className="text-muted-foreground">My Family • 1 accounts</p>
         </div>
         <div className="flex gap-2">
+          <Button variant="outline" asChild>
+            <Link to="/health/accounts/hsa/calculator">
+              <Calculator className="mr-2 h-4 w-4" />
+              Contribution Calculator
+            </Link>
+          </Button>
           <Button variant="outline">
             <Receipt className="mr-2 h-4 w-4" />
             Add Expense
