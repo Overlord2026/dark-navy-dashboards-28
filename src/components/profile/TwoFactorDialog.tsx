@@ -94,7 +94,17 @@ export function TwoFactorDialog({ open, onOpenChange }: TwoFactorDialogProps) {
       );
     } catch (error: any) {
       setLoading(false);
-      toast.error(error.message || "Failed to send verification code");
+      console.error('OTP Email Error:', error);
+      console.error('Error Details:', JSON.stringify(error, null, 2));
+      
+      // More specific error handling
+      if (error.message?.includes('Edge function returned a non-2xx status code')) {
+        toast.error("Email service error. Please try again or contact support.");
+      } else if (error.message?.includes('EmailJS')) {
+        toast.error("Email delivery failed. Please check your email address and try again.");
+      } else {
+        toast.error(error.message || "Failed to send verification code");
+      }
     }
   };
 
