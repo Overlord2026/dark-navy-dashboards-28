@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { Resend } from "npm:resend@2.0.0";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -74,41 +75,30 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    // Send OTP via EmailJS
+    // Send OTP via Resend
     try {
-      const emailPayload = {
-        service_id: 'service_cew8n8b',
-        template_id: 'template_xts37ho',
-        user_id: 'chtAi9WR2OnpWeUXo',
-        template_params: {
-          to_email: email,
-          to_name: userName || 'User',
-          otp_code: otpRecord.otp_code,
-          from_name: 'Family Office Security',
-          subject: 'Your Two-Factor Authentication Code',
-          message: `Your verification code is: ${otpRecord.otp_code}. This code will expire in 10 minutes. If you didn't request this code, please ignore this email.`
-        }
-      };
-
-      console.log('EmailJS payload:', JSON.stringify(emailPayload, null, 2));
-
-      const emailResponse = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(emailPayload)
+      const resend = new Resend(Deno.env.get('RESEND_API_KEY'));
+      
+      const emailResponse = await resend.emails.send({
+        from: 'Family Office Security <noreply@your-domain.com>',
+        to: [email],
+        subject: 'Your Two-Factor Authentication Code',
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h2>Two-Factor Authentication Code</h2>
+            <p>Hello ${userName || 'User'},</p>
+            <p>Your verification code is:</p>
+            <div style="background: #f4f4f4; padding: 20px; text-align: center; margin: 20px 0;">
+              <span style="font-size: 32px; font-weight: bold; letter-spacing: 8px;">${otpRecord.otp_code}</span>
+            </div>
+            <p>This code will expire in 10 minutes.</p>
+            <p>If you didn't request this code, please ignore this email.</p>
+            <p>Best regards,<br>Family Office Security Team</p>
+          </div>
+        `
       });
 
-      const responseText = await emailResponse.text();
-      console.log('EmailJS response status:', emailResponse.status);
-      console.log('EmailJS response:', responseText);
-
-      if (!emailResponse.ok) {
-        throw new Error(`EmailJS API error: ${emailResponse.status} ${emailResponse.statusText} - ${responseText}`);
-      }
-
-      console.log(`OTP email sent successfully to: ${email}`);
+      console.log('Email sent successfully:', emailResponse);
     } catch (emailError) {
       console.error('Failed to send OTP email:', emailError);
       // Log the OTP for testing if email fails
