@@ -77,11 +77,22 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send OTP via EmailJS with server-side authentication
     try {
+      const privateKey = Deno.env.get('EMAILJS_PRIVATE_KEY');
+      
+      // Check if private key is available
+      if (!privateKey) {
+        console.error('EMAILJS_PRIVATE_KEY environment variable is not set');
+        return new Response(
+          JSON.stringify({ error: 'Email service configuration error' }),
+          { status: 500, headers: corsHeaders }
+        );
+      }
+
       const emailPayload = {
         service_id: 'service_cew8n8b',
         template_id: 'template_xts37ho',
         user_id: 'chtAi9WR2OnpWeUXo',
-        accessToken: Deno.env.get('EMAILJS_PRIVATE_KEY'), // Use the private key for server-side auth
+        accessToken: privateKey,
         template_params: {
           to_email: email,
           to_name: userName || 'User',
@@ -92,7 +103,10 @@ const handler = async (req: Request): Promise<Response> => {
         }
       };
 
-      console.log('EmailJS payload:', JSON.stringify(emailPayload, null, 2));
+      console.log('EmailJS payload (without private key):', JSON.stringify({
+        ...emailPayload,
+        accessToken: '***REDACTED***'
+      }, null, 2));
 
       const emailResponse = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
         method: 'POST',
