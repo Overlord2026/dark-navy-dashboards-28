@@ -13,25 +13,51 @@ import {
   Shield,
   LogOut,
   ChevronRight,
-  Plus
+  Plus,
+  Activity,
+  LucideIcon
 } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
 import { useUser } from "@/context/UserContext";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 
+interface MobileMenuItem {
+  title: string;
+  href: string;
+  icon: LucideIcon;
+}
+
+interface MobileMenuSection {
+  section: string;
+  items: MobileMenuItem[];
+}
+
 interface MobileLayoutProps {
   children: React.ReactNode;
   title: string;
   showAddButton?: boolean;
   onAddButtonClick?: () => void;
+  mobileMenuItems?: MobileMenuSection[];
 }
+
+// Default mobile menu items
+const defaultMobileMenuItems: MobileMenuSection[] = [
+  {
+    section: "Healthcare",
+    items: [
+      { title: "Health Dashboard", href: "/health", icon: Activity },
+      { title: "Medical Records", href: "/health/records", icon: FileText },
+    ]
+  }
+];
 
 export function MobileLayout({ 
   children, 
   title, 
   showAddButton = false,
-  onAddButtonClick
+  onAddButtonClick,
+  mobileMenuItems = defaultMobileMenuItems
 }: MobileLayoutProps) {
   const location = useLocation();
   const { theme } = useTheme();
@@ -51,7 +77,9 @@ export function MobileLayout({
   // Check if current route is a route that should activate the "More" tab
   const isMoreRoute = () => {
     const moreRoutes = ['/more', '/tax-planning', '/education', '/profile', '/advisor-profile', '/security-settings'];
-    return moreRoutes.some(route => location.pathname.startsWith(route));
+    const healthRoutes = mobileMenuItems.flatMap(section => section.items.map(item => item.href));
+    return moreRoutes.some(route => location.pathname.startsWith(route)) || 
+           healthRoutes.some(route => location.pathname.startsWith(route));
   };
 
   return (
