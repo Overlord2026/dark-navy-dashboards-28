@@ -31,7 +31,7 @@ export const AdvisorDetailView = ({ advisorInfo }: AdvisorDetailViewProps) => {
       <div className="flex flex-col md:flex-row items-center justify-center md:justify-start">
         <div className="rounded-full overflow-hidden w-32 h-32 mb-4 md:mb-0 md:mr-8">
           <img
-            src="/lovable-uploads/b4df25d6-12d7-4c34-874e-804e72335904.png"
+            src="/lovable-uploads/dc1ba115-9699-414c-b9d0-7521bf7e7224.png"
             alt={advisorInfo.name}
             className="w-full h-full object-cover"
           />
