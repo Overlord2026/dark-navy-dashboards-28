@@ -37,6 +37,24 @@ export interface HealthcareMetric {
   updated_at: string;
 }
 
+// Alias for compatibility
+export type HealthMetric = HealthcareMetric;
+
+export interface HealthMetricCardProps {
+  metric: HealthMetric;
+  trend?: 'up' | 'down' | 'stable';
+  className?: string;
+}
+
+export interface DocumentStats {
+  totalDocuments: number;
+  recentDocuments: number;
+  sharedDocuments: number;
+  expiringDocuments: number;
+}
+
+export type HealthDoc = HealthcareDocument;
+
 export interface HealthcareAlert {
   id: string;
   type: 'appointment' | 'medication' | 'test' | 'general';
