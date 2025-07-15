@@ -212,6 +212,12 @@ export const hierarchicalNav: NavItem[] = [
             icon: FolderHeartIcon 
           },
           { 
+            id: 'h-metrics', 
+            title: 'Health Metrics', 
+            href: '/health/metrics', 
+            icon: ActivityIcon 
+          },
+          { 
             id: 'h-knowledge', 
             title: 'Knowledge & Support', 
             href: '/healthcare-knowledge', 

@@ -69,6 +69,8 @@ import HealthSettings from "@/pages/health/HealthSettings";
 // Healthcare Optimization pages
 import HealthcareDashboard from "@/pages/healthcare/HealthcareDashboard";
 import HealthcareDocuments from "@/pages/healthcare/HealthcareDocuments";
+import MedicalRecords from "@/pages/healthcare/MedicalRecords";
+import HealthMetrics from "@/pages/healthcare/HealthMetrics";
 
 // Wealth pages
 import WealthOverview from "@/pages/wealth";
@@ -356,6 +358,14 @@ const routes = createBrowserRouter([
   {
     path: "/health/settings",
     element: <ProtectedRoute><HealthSettings /></ProtectedRoute>
+  },
+  {
+    path: "/health/records",
+    element: <ProtectedRoute><MedicalRecords /></ProtectedRoute>
+  },
+  {
+    path: "/health/metrics",
+    element: <ProtectedRoute><HealthMetrics /></ProtectedRoute>
   },
   // Healthcare Optimization routes (new navigation structure)
   {
