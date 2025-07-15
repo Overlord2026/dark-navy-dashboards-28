@@ -69,6 +69,7 @@ import HealthSettings from "@/pages/health/HealthSettings";
 // Healthcare Optimization pages
 import HealthcareDashboard from "@/pages/healthcare/HealthcareDashboard";
 import HealthcareSavingsCalculator from "@/pages/healthcare/HealthcareSavingsCalculator";
+import HealthcareSavings from "@/pages/HealthcareSavings";
 import HealthcareDocuments from "@/pages/healthcare/HealthcareDocuments";
 import MedicalRecords from "@/pages/healthcare/MedicalRecords";
 import HealthMetrics from "@/pages/healthcare/HealthMetrics";
@@ -379,7 +380,11 @@ const routes = createBrowserRouter([
   },
   {
     path: "/healthcare-savings",
-    element: <ProtectedRoute><HealthcareSavingsCalculator /></ProtectedRoute>
+    element: <ProtectedRoute><HealthcareSavings /></ProtectedRoute>
+  },
+  {
+    path: "/health/accounts/hsa/calculator", 
+    element: <ProtectedRoute><HealthcareSavings /></ProtectedRoute>
   },
   {
     path: "/healthcare-providers",
