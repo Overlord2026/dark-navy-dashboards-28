@@ -393,19 +393,19 @@ const routes = createBrowserRouter([
   },
   {
     path: "/healthcare-providers",
-    element: <ProtectedRoute><div className="p-6 min-h-screen bg-background"><h1 className="text-2xl font-bold">Healthcare Providers - Coming Soon</h1></div></ProtectedRoute>
+    element: <ProtectedRoute><Providers /></ProtectedRoute>
   },
   {
     path: "/healthcare-medications",
-    element: <ProtectedRoute><div className="p-6 min-h-screen bg-background"><h1 className="text-2xl font-bold">Medications - Coming Soon</h1></div></ProtectedRoute>
+    element: <ProtectedRoute><Medications /></ProtectedRoute>
   },
   {
     path: "/healthcare-supplements",
-    element: <ProtectedRoute><div className="p-6 min-h-screen bg-background"><h1 className="text-2xl font-bold">Supplements - Coming Soon</h1></div></ProtectedRoute>
+    element: <ProtectedRoute><Supplements /></ProtectedRoute>
   },
   {
     path: "/healthcare-healthspan",
-    element: <ProtectedRoute><div className="p-6 min-h-screen bg-background"><h1 className="text-2xl font-bold">HealthSpan Expansion - Coming Soon</h1></div></ProtectedRoute>
+    element: <ProtectedRoute><TrendsCoach /></ProtectedRoute>
   },
   {
     path: "/healthcare-documents",
@@ -417,11 +417,43 @@ const routes = createBrowserRouter([
   },
   {
     path: "/healthcare-knowledge",
-    element: <ProtectedRoute><div className="p-6 min-h-screen bg-background"><h1 className="text-2xl font-bold">Knowledge & Support - Coming Soon</h1></div></ProtectedRoute>
+    element: <ProtectedRoute><CoachingKB /></ProtectedRoute>
   },
   {
     path: "/healthcare-share-data",
-    element: <ProtectedRoute><div className="p-6 min-h-screen bg-background"><h1 className="text-2xl font-bold">Share Data - Coming Soon</h1></div></ProtectedRoute>
+    element: <ProtectedRoute><ShareData /></ProtectedRoute>
+  },
+  {
+    path: "/healthcare-coaching",
+    element: <ProtectedRoute><CoachingKB /></ProtectedRoute>
+  },
+  {
+    path: "/healthcare-education",
+    element: <ProtectedRoute><EducationKB /></ProtectedRoute>
+  },
+  {
+    path: "/healthcare-recommendations",
+    element: <ProtectedRoute><RecommendationsKB /></ProtectedRoute>
+  },
+  {
+    path: "/healthcare-settings",
+    element: <ProtectedRoute><HealthSettings /></ProtectedRoute>
+  },
+  {
+    path: "/health/biomarkers",
+    element: <ProtectedRoute><LabBiomarkers /></ProtectedRoute>
+  },
+  {
+    path: "/health/biological-age",
+    element: <ProtectedRoute><Epigenetics /></ProtectedRoute>
+  },
+  {
+    path: "/health/preventive",
+    element: <ProtectedRoute><Screenings /></ProtectedRoute>
+  },
+  {
+    path: "/health/trends",
+    element: <ProtectedRoute><TrendsCoach /></ProtectedRoute>
   },
   // Wealth Management routes
   {
