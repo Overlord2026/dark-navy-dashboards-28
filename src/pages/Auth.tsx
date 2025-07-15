@@ -46,9 +46,10 @@ export default function Auth() {
   const [passwordResetSent, setPasswordResetSent] = useState(false);
   const [showOTPVerification, setShowOTPVerification] = useState(false);
   const [loginUserId, setLoginUserId] = useState<string | null>(null);
+  const [tempCredentials, setTempCredentials] = useState<{email: string, password: string} | null>(null);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { isAuthenticated, login, signup, signInWithGoogle, resendConfirmation, resetPassword } = useAuth();
+  const { isAuthenticated, login, signup, signInWithGoogle, resendConfirmation, resetPassword, complete2FALogin } = useAuth();
 
   useEffect(() => {
     // Check for email confirmation success
@@ -99,46 +100,39 @@ export default function Auth() {
         const result = await login(email, password);
 
         if (result.success) {
-          // Check if user has 2FA enabled
-          const { data: profile } = await supabase
-            .from('profiles')
-            .select('two_factor_enabled, id')
-            .eq('email', email)
-            .single();
-
-          if (profile?.two_factor_enabled) {
-            // User has 2FA enabled, show OTP verification
-            setLoginUserId(profile.id);
-            setShowOTPVerification(true);
-            
-            // Send OTP to user's email
-            try {
-              const otpResponse = await supabase.functions.invoke('send-otp-email', {
-                body: { 
-                  email,
-                  userId: profile.id,
-                  userName: `${firstName} ${lastName}`.trim() || 'User'
-                }
-              });
-
-              if (otpResponse.error) {
-                console.error('Failed to send OTP:', otpResponse.error);
-                toast.error('Failed to send verification code. Please try again.');
-                return;
+          // No 2FA, proceed with normal login
+          toast.success('Logged in successfully!');
+          navigate('/client-dashboard');
+        } else if (result.requires2FA) {
+          // User has 2FA enabled, show OTP verification
+          setLoginUserId(result.userId!);
+          setTempCredentials({ email, password });
+          setShowOTPVerification(true);
+          
+          // Send OTP to user's email
+          try {
+            const otpResponse = await supabase.functions.invoke('send-otp-email', {
+              body: { 
+                email,
+                userId: result.userId,
+                userName: `${firstName} ${lastName}`.trim() || 'User'
               }
+            });
 
-              toast.success('Verification code sent to your email');
-            } catch (error) {
-              console.error('OTP sending error:', error);
+            if (otpResponse.error) {
+              console.error('Failed to send OTP:', otpResponse.error);
               toast.error('Failed to send verification code. Please try again.');
               return;
             }
-          } else {
-            // No 2FA, proceed with normal login
-            toast.success('Logged in successfully!');
-            navigate('/client-dashboard');
+
+            toast.success('Verification code sent to your email');
+          } catch (error) {
+            console.error('OTP sending error:', error);
+            toast.error('Failed to send verification code. Please try again.');
+            return;
           }
         } else {
+          // Handle login errors
           if (result.error?.includes('Invalid login credentials')) {
             toast.error('Invalid email or password. Please check your credentials.');
           } else if (result.error?.includes('Email not confirmed')) {
@@ -219,15 +213,38 @@ export default function Auth() {
     }
   };
 
-  const handleOTPVerificationSuccess = () => {
-    toast.success('Two-factor authentication successful!');
-    setShowOTPVerification(false);
-    navigate('/client-dashboard');
+  const handleOTPVerificationSuccess = async () => {
+    if (!tempCredentials) {
+      toast.error('Authentication error. Please try again.');
+      setShowOTPVerification(false);
+      return;
+    }
+
+    try {
+      const result = await complete2FALogin(tempCredentials.email, tempCredentials.password);
+      
+      if (result.success) {
+        toast.success('Two-factor authentication successful!');
+        setShowOTPVerification(false);
+        setTempCredentials(null);
+        navigate('/client-dashboard');
+      } else {
+        toast.error(result.error || 'Authentication failed. Please try again.');
+        setShowOTPVerification(false);
+        setTempCredentials(null);
+      }
+    } catch (error) {
+      console.error('2FA completion error:', error);
+      toast.error('Authentication failed. Please try again.');
+      setShowOTPVerification(false);
+      setTempCredentials(null);
+    }
   };
 
   const handleBackToLogin = () => {
     setShowOTPVerification(false);
     setLoginUserId(null);
+    setTempCredentials(null);
   };
 
   const resetForm = () => {
@@ -237,6 +254,7 @@ export default function Auth() {
     setPasswordResetSent(false);
     setShowOTPVerification(false);
     setLoginUserId(null);
+    setTempCredentials(null);
     setEmail("");
     setPassword("");
     setFirstName("");

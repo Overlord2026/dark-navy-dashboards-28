@@ -29,6 +29,7 @@ export default function OTPVerification({ email, onVerificationSuccess, onBack }
         body: {
           email,
           otpCode: otp,
+          isForLogin: true,
         },
       });
 

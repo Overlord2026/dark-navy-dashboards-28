@@ -10,6 +10,7 @@ interface VerifyOTPRequest {
   email: string;
   otpCode: string;
   userId?: string;
+  isForLogin?: boolean;
 }
 
 const handler = async (req: Request): Promise<Response> => {
@@ -24,7 +25,7 @@ const handler = async (req: Request): Promise<Response> => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
 
-    const { email, otpCode, userId }: VerifyOTPRequest = await req.json();
+    const { email, otpCode, userId, isForLogin = false }: VerifyOTPRequest = await req.json();
 
     if (!email || !otpCode) {
       return new Response(
@@ -70,35 +71,52 @@ const handler = async (req: Request): Promise<Response> => {
         );
       }
 
-      // Enable 2FA for the user
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .update({ two_factor_enabled: true })
-        .eq('id', userId);
-
-      if (profileError) {
-        console.error('Error updating profile:', profileError);
+      // Handle different types of OTP verification
+      if (isForLogin) {
+        // For login verification, just confirm the OTP is valid
+        console.log(`2FA verification successful for login: ${userId}`);
+        
         return new Response(
-          JSON.stringify({ error: 'Failed to enable 2FA' }),
-          { 
-            status: 500, 
+          JSON.stringify({ 
+            success: true, 
+            message: '2FA verification successful' 
+          }),
+          {
+            status: 200,
+            headers: { 'Content-Type': 'application/json', ...corsHeaders }
+          }
+        );
+      } else {
+        // For enabling 2FA, update the profile
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .update({ two_factor_enabled: true })
+          .eq('id', userId);
+
+        if (profileError) {
+          console.error('Error updating profile:', profileError);
+          return new Response(
+            JSON.stringify({ error: 'Failed to enable 2FA' }),
+            { 
+              status: 500, 
+              headers: { 'Content-Type': 'application/json', ...corsHeaders }
+            }
+          );
+        }
+
+        console.log(`2FA enabled for user: ${userId}`);
+
+        return new Response(
+          JSON.stringify({ 
+            success: true, 
+            message: '2FA enabled successfully' 
+          }),
+          {
+            status: 200,
             headers: { 'Content-Type': 'application/json', ...corsHeaders }
           }
         );
       }
-
-      console.log(`2FA enabled for user: ${userId}`);
-
-      return new Response(
-        JSON.stringify({ 
-          success: true, 
-          message: '2FA enabled successfully' 
-        }),
-        {
-          status: 200,
-          headers: { 'Content-Type': 'application/json', ...corsHeaders }
-        }
-      );
     }
 
     // Fallback verification for cases without userId

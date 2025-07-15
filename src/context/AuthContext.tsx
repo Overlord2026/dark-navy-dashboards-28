@@ -19,6 +19,7 @@ interface UserProfile {
   investorType?: string;
   role: 'client' | 'advisor' | 'admin' | 'system_administrator' | 'developer' | 'consultant' | 'accountant' | 'attorney';
   permissions?: string[];
+  twoFactorEnabled?: boolean;
 }
 
 interface AuthContextType {
@@ -28,7 +29,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   isEmailConfirmed: boolean;
-  login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  login: (email: string, password: string) => Promise<{ success: boolean; error?: string; requires2FA?: boolean; userId?: string }>;
   signup: (email: string, password: string, userData?: any) => Promise<{ success: boolean; error?: string }>;
   signInWithGoogle: () => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
@@ -36,6 +37,7 @@ interface AuthContextType {
   refreshProfile: () => Promise<void>;
   resendConfirmation: (email: string) => Promise<{ success: boolean; error?: string }>;
   resetPassword: (email: string) => Promise<{ success: boolean; error?: string }>;
+  complete2FALogin: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -67,7 +69,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       
       const { data: profile, error } = await supabase
         .from('profiles')
-        .select('*')
+        .select('*, two_factor_enabled')
         .eq('id', userId)
         .single();
 
@@ -103,7 +105,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           phone: profile.phone,
           investorType: profile.investor_type,
           role: profile.role || 'client',
-          permissions: profile.permissions || []
+          permissions: profile.permissions || [],
+          twoFactorEnabled: profile.two_factor_enabled || false
         });
       }
     } catch (error) {
@@ -161,7 +164,49 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     return () => subscription.unsubscribe();
   }, []);
 
-  const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
+  const login = async (email: string, password: string): Promise<{ success: boolean; error?: string; requires2FA?: boolean; userId?: string }> => {
+    try {
+      setIsLoading(true);
+      
+      // First, verify credentials without creating a session
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      
+      if (error) {
+        return { success: false, error: error.message };
+      }
+      
+      // Check if user has 2FA enabled
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('two_factor_enabled, id')
+        .eq('id', data.user.id)
+        .single();
+      
+      if (profile?.two_factor_enabled) {
+        // If 2FA is enabled, sign out immediately and return requires2FA flag
+        await supabase.auth.signOut();
+        return { 
+          success: false, 
+          requires2FA: true, 
+          userId: profile.id,
+          error: 'Two-factor authentication required'
+        };
+      }
+      
+      // If no 2FA, proceed with normal login
+      return { success: true };
+    } catch (error) {
+      console.error('Login error:', error);
+      return { success: false, error: 'An unexpected error occurred' };
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const complete2FALogin = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
     try {
       setIsLoading(true);
       const { data, error } = await supabase.auth.signInWithPassword({
@@ -175,7 +220,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       
       return { success: true };
     } catch (error) {
-      console.error('Login error:', error);
+      console.error('2FA login completion error:', error);
       return { success: false, error: 'An unexpected error occurred' };
     } finally {
       setIsLoading(false);
@@ -347,7 +392,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         updateUserProfile,
         refreshProfile,
         resendConfirmation,
-        resetPassword
+        resetPassword,
+        complete2FALogin
       }}
     >
       {children}
