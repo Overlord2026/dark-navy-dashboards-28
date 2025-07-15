@@ -1,6 +1,5 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { Resend } from "npm:resend@2.0.0";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -75,33 +74,41 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    // Send OTP via Resend
+    // Send OTP via EmailJS
     try {
-      const resend = new Resend(Deno.env.get('RESEND_API_KEY'));
-      
-      console.log(`Sending OTP email to: ${email} with code: ${otpRecord.otp_code}`);
+      const emailPayload = {
+        service_id: 'service_cew8n8b',
+        template_id: 'template_xts37ho',
+        user_id: 'chtAi9WR2OnpWeUXo',
+        template_params: {
+          to_email: email,
+          to_name: userName || 'User',
+          otp_code: otpRecord.otp_code,
+          from_name: 'Family Office Security',
+          subject: 'Your Two-Factor Authentication Code',
+          message: `Your verification code is: ${otpRecord.otp_code}. This code will expire in 10 minutes. If you didn't request this code, please ignore this email.`
+        }
+      };
 
-      const emailResponse = await resend.emails.send({
-        from: 'Family Office Security <noreply@yourdomain.com>', // Replace with your verified domain
-        to: [email],
-        subject: 'Your Two-Factor Authentication Code',
-        html: `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-            <h2 style="color: #333;">Your Verification Code</h2>
-            <p>Hello ${userName || 'User'},</p>
-            <p>Your verification code is:</p>
-            <div style="background-color: #f5f5f5; padding: 20px; text-align: center; font-size: 24px; font-weight: bold; letter-spacing: 3px; margin: 20px 0;">
-              ${otpRecord.otp_code}
-            </div>
-            <p>This code will expire in 10 minutes.</p>
-            <p>If you didn't request this code, please ignore this email.</p>
-            <hr>
-            <p style="color: #666; font-size: 12px;">Family Office Security</p>
-          </div>
-        `,
+      console.log('EmailJS payload:', JSON.stringify(emailPayload, null, 2));
+
+      const emailResponse = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(emailPayload)
       });
 
-      console.log('Resend email sent successfully:', emailResponse);
+      const responseText = await emailResponse.text();
+      console.log('EmailJS response status:', emailResponse.status);
+      console.log('EmailJS response:', responseText);
+
+      if (!emailResponse.ok) {
+        throw new Error(`EmailJS API error: ${emailResponse.status} ${emailResponse.statusText} - ${responseText}`);
+      }
+
+      console.log(`OTP email sent successfully to: ${email}`);
     } catch (emailError) {
       console.error('Failed to send OTP email:', emailError);
       // Log the OTP for testing if email fails
