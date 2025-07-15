@@ -10,8 +10,9 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Legend } from 'recharts';
 import { HelpCircle, RotateCcw, TrendingUp, DollarSign, Clock, Heart, Calculator, Share, FileDown, Sparkles } from 'lucide-react';
 import CountUp from 'react-countup';
-import Confetti from 'react-confetti';
-import { Howl } from 'howler';
+import { ConfettiAnimation } from '@/components/ConfettiAnimation';
+import { PrizeModal } from '@/components/PrizeModal';
+import { playSound } from '@/utils/sounds';
 
 interface ValueDrivenSavingsCalculatorProps {
   isHeroWidget?: boolean;
@@ -46,102 +47,44 @@ export const ValueDrivenSavingsCalculator: React.FC<ValueDrivenSavingsCalculator
   const [isCalculating, setIsCalculating] = useState(false);
   const [results, setResults] = useState<any>(null);
   const [showConfetti, setShowConfetti] = useState(false);
-  const [confettiType, setConfettiType] = useState<'basic' | 'champagne' | 'vacation' | 'fireworks'>('basic');
-  const [windowDimensions, setWindowDimensions] = useState({ width: 0, height: 0 });
-  const [celebrationMessage, setCelebrationMessage] = useState('');
-  const [analogy, setAnalogy] = useState('');
+  const [prize, setPrize] = useState<{
+    prizeText: string;
+    analogy: string;
+  } | null>(null);
 
-  useEffect(() => {
-    const updateWindowDimensions = () => {
-      setWindowDimensions({ width: window.innerWidth, height: window.innerHeight });
-    };
-    updateWindowDimensions();
-    window.addEventListener('resize', updateWindowDimensions);
-    return () => window.removeEventListener('resize', updateWindowDimensions);
-  }, []);
 
-  const playSound = (soundType: string) => {
-    try {
-      // Create a simple beep sound since we can't load external audio files
-      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-      const oscillator = audioContext.createOscillator();
-      const gainNode = audioContext.createGain();
-      
-      oscillator.connect(gainNode);
-      gainNode.connect(audioContext.destination);
-      
-      // Different frequencies for different celebration levels
-      const frequencies: { [key: string]: number } = {
-        'cashregister': 800,
-        'champagne': 1000,
-        'vacation': 1200,
-        'millionaire': 1500
-      };
-      
-      oscillator.frequency.setValueAtTime(frequencies[soundType] || 800, audioContext.currentTime);
-      oscillator.type = 'sine';
-      
-      gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
-      
-      oscillator.start(audioContext.currentTime);
-      oscillator.stop(audioContext.currentTime + 0.5);
-    } catch (error) {
-      console.log('Audio not available');
-    }
-  };
-
-  const getAnalogy = (savings: number) => {
-    if (savings >= 1000000) {
-      return "That's generational wealth. You could endow a scholarship or support two generations of healthcare innovation.";
-    } else if (savings >= 500000) {
-      return "That's a lake house, or two full retirements funded!";
-    } else if (savings >= 250000) {
-      return "That's a med school education, or 7 years of premium health insurance for a family of four.";
-    } else if (savings >= 100000) {
-      return "That's a new Tesla Model S, or a 3-year global cruise!";
-    } else {
-      return "Every dollar saved can fund your future health and wellness goals.";
-    }
-  };
-
-  const getCelebrationMessage = (savings: number) => {
-    if (savings >= 1000000) {
-      return "🏆 You've unlocked generational wealth savings!";
-    } else if (savings >= 500000) {
-      return "🏖️ You just funded a legacy gift or a decade of private healthcare!";
-    } else if (savings >= 250000) {
-      return "🍾 That's the cost of a luxury cruise around the world!";
-    } else if (savings >= 100000) {
-      return "🎉 Congrats! That's a new car!";
-    } else {
-      return "💡 Great start on your savings journey!";
-    }
-  };
 
   const triggerCelebration = (savings: number) => {
-    setCelebrationMessage(getCelebrationMessage(savings));
-    setAnalogy(getAnalogy(savings));
+    setShowConfetti(true);
     
-    if (savings >= 1000000) {
-      setConfettiType('fireworks');
-      playSound('millionaire');
-    } else if (savings >= 500000) {
-      setConfettiType('vacation');
-      playSound('vacation');
-    } else if (savings >= 250000) {
-      setConfettiType('champagne');
-      playSound('champagne');
-    } else if (savings >= 100000) {
-      setConfettiType('basic');
-      playSound('cashregister');
+    let prizeText = "", analogy = "", soundKey: 'cash' | 'champagne' | 'fanfare' | 'fireworks' = 'cash';
+
+    if (savings > 1_000_000) {
+      prizeText = "Generational Wealth!";
+      analogy = "That's enough to buy a second home or endow a family legacy!";
+      soundKey = "fireworks";
+    } else if (savings > 500_000) {
+      prizeText = "Incredible Savings!";
+      analogy = "You could fund a decade of concierge healthcare or two luxury world cruises.";
+      soundKey = "fanfare";
+    } else if (savings > 250_000) {
+      prizeText = "Major Milestone!";
+      analogy = "That's a med school tuition or 8 years of family health insurance.";
+      soundKey = "champagne";
+    } else if (savings > 100_000) {
+      prizeText = "Big Win!";
+      analogy = "That's a new Tesla or a luxury European vacation every 5 years.";
+      soundKey = "cash";
+    }
+
+    if (prizeText) {
+      setPrize({ prizeText, analogy });
+      playSound(soundKey);
     }
     
-    if (savings >= 100000) {
-      setShowConfetti(true);
-      const timer = setTimeout(() => setShowConfetti(false), 5000);
-      return () => clearTimeout(timer);
-    }
+    setTimeout(() => {
+      setShowConfetti(false);
+    }, 5000);
   };
 
   const handleCalculate = async () => {
@@ -161,7 +104,7 @@ export const ValueDrivenSavingsCalculator: React.FC<ValueDrivenSavingsCalculator
   };
 
   const handleShare = () => {
-    const shareText = `I could save ${formatCurrency(results?.totalFeeSavings || 0)} on investment fees over ${timeHorizon} years! That's ${formatNumber(results?.longevityYears || 0)} additional years of funding. ${analogy}`;
+    const shareText = `I could save ${formatCurrency(results?.totalFeeSavings || 0)} on investment fees over ${timeHorizon} years! That's ${formatNumber(results?.longevityYears || 0)} additional years of funding. ${prize?.analogy || "Real savings achieved!"}`;
     
     if (navigator.share) {
       navigator.share({
@@ -170,7 +113,6 @@ export const ValueDrivenSavingsCalculator: React.FC<ValueDrivenSavingsCalculator
       });
     } else {
       navigator.clipboard.writeText(shareText);
-      // Show toast notification here if you have a toast system
     }
   };
 
@@ -200,15 +142,18 @@ export const ValueDrivenSavingsCalculator: React.FC<ValueDrivenSavingsCalculator
 
   return (
     <div className={`space-y-6 ${className}`}>
-      {showConfetti && (
-        <Confetti
-          width={windowDimensions.width}
-          height={windowDimensions.height}
-          recycle={false}
-          numberOfPieces={200}
-          gravity={0.3}
-        />
-      )}
+      <ConfettiAnimation trigger={showConfetti} />
+      
+      <PrizeModal
+        open={!!prize}
+        prizeText={prize?.prizeText || ""}
+        analogy={prize?.analogy || ""}
+        cta={{
+          label: "Book My Free Savings Review",
+          onClick: () => window.open("/schedule", "_blank")
+        }}
+        onClose={() => setPrize(null)}
+      />
       
       <div className="text-center space-y-2">
         <h1 className={`font-bold text-foreground ${isHeroWidget ? 'text-3xl' : 'text-4xl'}`}>
@@ -368,13 +313,6 @@ export const ValueDrivenSavingsCalculator: React.FC<ValueDrivenSavingsCalculator
             {isCalculating ? "Crunching the numbers..." : "See My Savings"}
           </Button>
 
-          {/* Celebration Message */}
-          {showResults && celebrationMessage && (
-            <div className="text-center">
-              <h3 className="text-2xl font-bold text-primary mb-2">{celebrationMessage}</h3>
-              <p className="text-muted-foreground italic">{analogy}</p>
-            </div>
-          )}
 
           {/* Results Cards */}
           {showResults && results && (
