@@ -166,7 +166,7 @@ export const hierarchicalNav: NavItem[] = [
           { 
             id: 'h-dash', 
             title: 'Health Dashboard', 
-            href: '/healthcare-dashboard', 
+            href: '/health', 
             icon: ActivityIcon 
           },
           { 
@@ -207,8 +207,8 @@ export const hierarchicalNav: NavItem[] = [
           },
           { 
             id: 'h-docs', 
-            title: 'Healthcare Documents', 
-            href: '/healthcare-documents', 
+            title: 'Medical Records', 
+            href: '/health/records', 
             icon: FolderHeartIcon 
           },
           { 
