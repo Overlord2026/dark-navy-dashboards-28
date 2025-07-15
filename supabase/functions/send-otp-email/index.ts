@@ -82,7 +82,6 @@ const handler = async (req: Request): Promise<Response> => {
         template_id: 'template_xts37ho',
         user_id: 'chtAi9WR2OnpWeUXo',
         accessToken: Deno.env.get('EMAILJS_PRIVATE_KEY'), // Use the private key for server-side auth
-        to_email: email, // Add recipient email at root level for server-side auth
         template_params: {
           to_email: email,
           to_name: userName || 'User',
