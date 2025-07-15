@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
@@ -28,6 +28,37 @@ export function TwoFactorDialog({ open, onOpenChange }: TwoFactorDialogProps) {
   const [useCustomEmail, setUseCustomEmail] = useState(false);
 
   const isEnabled = userProfile?.twoFactorEnabled || false;
+
+  // Prevent dialog from closing when tab is switched
+  useEffect(() => {
+    if (!open) return;
+
+    const handleVisibilityChange = (e: Event) => {
+      e.preventDefault();
+      e.stopPropagation();
+    };
+
+    const handleWindowBlur = (e: FocusEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+    };
+
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+    };
+
+    // Add event listeners to prevent dialog closing on tab switch
+    document.addEventListener('visibilitychange', handleVisibilityChange, true);
+    window.addEventListener('blur', handleWindowBlur, true);
+    window.addEventListener('beforeunload', handleBeforeUnload, true);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange, true);
+      window.removeEventListener('blur', handleWindowBlur, true);
+      window.removeEventListener('beforeunload', handleBeforeUnload, true);
+    };
+  }, [open]);
 
   const handleDialogOpen = (open: boolean) => {
     if (open) {
@@ -189,18 +220,31 @@ export function TwoFactorDialog({ open, onOpenChange }: TwoFactorDialogProps) {
   return (
     <Dialog 
       open={open} 
-      onOpenChange={(open) => {
-        // Only allow closing through explicit user actions, not focus loss
-        if (!open) {
-          handleDialogOpen(false);
+      onOpenChange={(newOpen) => {
+        // Only allow closing through explicit user actions, not automatic events
+        if (!newOpen) {
+          // Check if this is due to a user action vs automatic event
+          const activeElement = document.activeElement;
+          const isUserAction = activeElement && (
+            activeElement.tagName === 'BUTTON' ||
+            activeElement.getAttribute('role') === 'button' ||
+            activeElement.closest('[role="button"]')
+          );
+          
+          if (isUserAction) {
+            handleDialogOpen(false);
+          }
         }
       }}
+      modal={true}
     >
       <DialogContent 
         className="sm:max-w-[425px] bg-background border-border"
         onPointerDownOutside={(e) => e.preventDefault()}
         onEscapeKeyDown={(e) => e.preventDefault()}
         onInteractOutside={(e) => e.preventDefault()}
+        onFocusOutside={(e) => e.preventDefault()}
+        onCloseAutoFocus={(e) => e.preventDefault()}
       >
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
