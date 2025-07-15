@@ -158,7 +158,7 @@ export const collaborationNavItems: NavItem[] = [
 export const bottomNavItems: NavItem[] = [
   { 
     title: "Help", 
-    href: "/help", 
+    href: "/help-center", 
     icon: HeartHandshakeIcon 
   },
   { 

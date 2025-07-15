@@ -6,7 +6,7 @@ import { NavItem } from "@/types/navigation";
 export const settingsNavItems: NavItem[] = [
   { 
     title: "Help", 
-    href: "/help", 
+    href: "/help-center", 
     icon: HeartHandshakeIcon 
   },
   { 

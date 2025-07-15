@@ -411,7 +411,7 @@ export const hierarchicalNav: NavItem[] = [
       { 
         id: 'help', 
         title: 'Help', 
-        href: '/help', 
+        href: '/help-center', 
         icon: HeartHandshakeIcon 
       },
       { 

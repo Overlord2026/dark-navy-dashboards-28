@@ -47,6 +47,12 @@ import Auth from "@/pages/Auth";
 import ResetPassword from "@/pages/ResetPassword";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 
+// Admin pages
+import AdminDashboard from "@/pages/admin/AdminDashboard";
+import AdminFAQs from "@/pages/admin/AdminFAQs";
+import HelpCenter from "@/pages/HelpCenter";
+import EnhancedSettings from "@/pages/EnhancedSettings";
+
 // Health pages
 import HealthDashboard from "@/pages/health/HealthDashboard";
 import HSAAccounts from "@/pages/health/HSAAccounts";
@@ -219,7 +225,19 @@ const routes = createBrowserRouter([
   },
   {
     path: "/settings",
-    element: <ProtectedRoute><Settings /></ProtectedRoute>
+    element: <ProtectedRoute><EnhancedSettings /></ProtectedRoute>
+  },
+  {
+    path: "/admin",
+    element: <ProtectedRoute requiredRole="admin"><AdminDashboard /></ProtectedRoute>
+  },
+  {
+    path: "/admin/faqs",
+    element: <ProtectedRoute requiredRole="admin"><AdminFAQs /></ProtectedRoute>
+  },
+  {
+    path: "/help-center",
+    element: <ProtectedRoute><HelpCenter /></ProtectedRoute>
   },
   {
     path: "/project-integration",
