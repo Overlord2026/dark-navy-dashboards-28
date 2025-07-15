@@ -20,6 +20,7 @@ interface UserProfile {
   investorType?: string;
   role: 'client' | 'advisor' | 'admin' | 'system_administrator' | 'developer' | 'consultant' | 'accountant' | 'attorney';
   permissions?: string[];
+  twoFactorEnabled?: boolean;
 }
 
 interface UserContextType {
@@ -69,7 +70,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
           
           const { data: profile, error } = await supabase
             .from('profiles')
-            .select('*')
+            .select('*, two_factor_enabled')
             .eq('id', user.id)
             .single();
 
@@ -103,7 +104,8 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
               phone: profile.phone,
               investorType: profile.investor_type,
               role: profile.role || 'client',
-              permissions: profile.permissions || []
+              permissions: profile.permissions || [],
+              twoFactorEnabled: profile.two_factor_enabled || false
             });
           }
         } catch (error) {

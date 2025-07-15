@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ChevronDown, LogOut, UserIcon, PhoneIcon, FileTextIcon, UsersIcon, BuildingIcon, PaletteIcon } from "lucide-react";
+import { ChevronDown, LogOut, UserIcon, PhoneIcon, FileTextIcon, UsersIcon, BuildingIcon, PaletteIcon, ShieldIcon, ShieldCheck, ShieldAlert } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useTheme } from "@/context/ThemeContext";
 import { Button } from "@/components/ui/button";
@@ -14,7 +14,9 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { toast } from "sonner";
 import { ProfileSlidePanel } from "@/components/profile/ProfileSlidePanel";
 import { ThemeDialog } from "@/components/ui/ThemeDialog";
+import { TwoFactorDialog } from "@/components/profile/TwoFactorDialog";
 import { cn } from "@/lib/utils";
+import { useUser } from "@/context/UserContext";
 
 interface UserProfileSectionProps {
   onMenuItemClick?: (itemId: string) => void;
@@ -23,11 +25,13 @@ interface UserProfileSectionProps {
 
 export const UserProfileSection = ({ onMenuItemClick, showLogo = true }: UserProfileSectionProps) => {
   const { userProfile, logout } = useAuth();
+  const { userProfile: userContextProfile } = useUser();
   const { theme } = useTheme();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [activeForm, setActiveForm] = useState<string | null>(null);
   const [isThemeDialogOpen, setIsThemeDialogOpen] = useState(false);
+  const [isTwoFactorDialogOpen, setIsTwoFactorDialogOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const isLightTheme = theme === "light";
@@ -55,6 +59,11 @@ export const UserProfileSection = ({ onMenuItemClick, showLogo = true }: UserPro
     
     if (itemId === "change-theme") {
       setIsThemeDialogOpen(true);
+      return;
+    }
+    
+    if (itemId === "two-factor-auth") {
+      setIsTwoFactorDialogOpen(true);
       return;
     }
     
@@ -267,6 +276,43 @@ export const UserProfileSection = ({ onMenuItemClick, showLogo = true }: UserPro
             )} />
             
             <DropdownMenuItem 
+              onClick={() => handleMenuItemClick('two-factor-auth')}
+              className={cn(
+                "flex items-center px-3 py-3 rounded-md cursor-pointer transition-colors",
+                isLightTheme 
+                  ? "hover:bg-muted focus:bg-muted" 
+                  : "hover:bg-[#2A2A40] focus:bg-[#2A2A40]"
+              )}
+            >
+              <div className="flex items-center justify-between w-full">
+                <div className="flex items-center">
+                  {userContextProfile?.twoFactorEnabled ? (
+                    <ShieldCheck className="h-4 w-4 mr-3 text-green-500" />
+                  ) : (
+                    <ShieldAlert className="h-4 w-4 mr-3 text-orange-500" />
+                  )}
+                  <span className={cn(
+                    "font-medium",
+                    isLightTheme ? "text-foreground" : "text-white"
+                  )}>Two-Factor Authentication</span>
+                </div>
+                <span className={cn(
+                  "text-xs px-2 py-1 rounded-full",
+                  userContextProfile?.twoFactorEnabled
+                    ? "bg-green-100 text-green-700 dark:bg-green-900/20 dark:text-green-400"
+                    : "bg-orange-100 text-orange-700 dark:bg-orange-900/20 dark:text-orange-400"
+                )}>
+                  {userContextProfile?.twoFactorEnabled ? "ON" : "OFF"}
+                </span>
+              </div>
+            </DropdownMenuItem>
+            
+            <DropdownMenuSeparator className={cn(
+              "my-2",
+              isLightTheme ? "bg-border" : "bg-gray-700"
+            )} />
+            
+            <DropdownMenuItem 
               onClick={() => handleMenuItemClick('change-theme')}
               className={cn(
                 "flex items-center px-3 py-3 rounded-md cursor-pointer transition-colors",
@@ -308,6 +354,11 @@ export const UserProfileSection = ({ onMenuItemClick, showLogo = true }: UserPro
       <ThemeDialog
         open={isThemeDialogOpen}
         onOpenChange={setIsThemeDialogOpen}
+      />
+
+      <TwoFactorDialog
+        open={isTwoFactorDialogOpen}
+        onOpenChange={setIsTwoFactorDialogOpen}
       />
     </>
   );
