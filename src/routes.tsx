@@ -3,7 +3,7 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 import Dashboard from "@/pages/Dashboard";
 import PublicCalculator from "@/pages/PublicCalculator";
 import Accounts from "@/pages/Accounts";
-import Education from "@/pages/Education";
+import ResourcesCatalog from "@/pages/ResourcesCatalog";
 import Investments from "@/pages/Investments";
 import TaxPlanning from "@/pages/TaxPlanning";
 import Insurance from "@/pages/Insurance";
@@ -126,7 +126,7 @@ const routes = createBrowserRouter([
   },
   {
     path: "/client-education",
-    element: <ProtectedRoute><Education /></ProtectedRoute>
+    element: <ProtectedRoute><ResourcesCatalog /></ProtectedRoute>
   },
   {
     path: "/client-investments",

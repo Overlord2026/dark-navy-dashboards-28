@@ -1,4 +1,3 @@
-
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { toast } from "sonner";
 import { useSearchParams } from "react-router-dom";
@@ -8,10 +7,10 @@ import { courseCategories } from "@/data/education";
 import { handleCourseAccess } from "@/components/education/courseUtils";
 import { motion } from "framer-motion";
 
-export default function Education() {
+export default function ResourcesCatalog() {
   const [searchParams] = useSearchParams();
   const [activeCategory, setActiveCategory] = useState("all-courses");
-  const [activeSection, setActiveSection] = useState("books");
+  const [activeSection, setActiveSection] = useState("learn-discover");
   
   useEffect(() => {
     const category = searchParams.get("category");
@@ -22,7 +21,7 @@ export default function Education() {
       setActiveSection("courses");
     } else if (section) {
       // Make sure we validate that the section exists
-      const validSections = ["courses", "guides", "books", "whitepapers"];
+      const validSections = ["learn-discover", "solutions-services", "who-we-serve"];
       if (validSections.includes(section)) {
         setActiveSection(section);
       }
@@ -67,15 +66,43 @@ export default function Education() {
 
   return (
     <ThreeColumnLayout 
-      title="SWAG Education Center" 
+      title="Resources & Solutions Catalog" 
       activeMainItem="education"
     >
       <motion.div 
-        className="space-y-6 px-1"
+        className="space-y-8 px-1"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
+        {/* Hero Section */}
+        <motion.div variants={itemVariants} className="text-center bg-gradient-to-r from-primary/5 to-primary/10 rounded-xl p-8 border border-primary/20">
+          <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+            Explore Your Family Office Resources & Solutions
+          </h1>
+          <p className="text-lg text-muted-foreground mb-6 max-w-3xl mx-auto">
+            Discover comprehensive educational resources and advanced solutions designed to optimize your family's wealth management strategy.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <motion.button
+              className="px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors font-medium"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setActiveSection("solutions-services")}
+            >
+              See Everything We Offer
+            </motion.button>
+            <motion.button
+              className="px-6 py-3 border border-primary text-primary rounded-lg hover:bg-primary/5 transition-colors font-medium"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setActiveSection("learn-discover")}
+            >
+              Start Learning
+            </motion.button>
+          </div>
+        </motion.div>
+
         <motion.div variants={itemVariants}>
           <EducationalTabs 
             activeSection={activeSection}

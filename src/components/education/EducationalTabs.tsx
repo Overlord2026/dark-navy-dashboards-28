@@ -11,6 +11,8 @@ import { BookList } from './BookList';
 import { BookManagement } from './BookManagement';
 import { EducationalResource } from "@/types/education";
 import { toast } from 'sonner';
+import { SolutionCards } from '@/components/solutions/SolutionCards';
+import { WhoWeServe } from '@/components/solutions/WhoWeServe';
 
 interface EducationalTabsProps {
   activeSection: string;
@@ -44,11 +46,6 @@ export const EducationalTabs: React.FC<EducationalTabsProps> = ({
   }, [activeSection, activeCategory, setSearchParams]);
 
   const handleTabChange = (value: string) => {
-    // Prevent switching to courses tab
-    if (value === 'courses') {
-      toast.info("Courses section is coming soon!");
-      return;
-    }
     setActiveSection(value);
   };
 
@@ -71,150 +68,233 @@ export const EducationalTabs: React.FC<EducationalTabsProps> = ({
   };
 
   return (
-    <Tabs value={activeSection} onValueChange={handleTabChange} className="w-full mt-6">
-      <div className="flex justify-between items-center mb-4">
-        <TabsList>
-          <TabsTrigger value="books">Books</TabsTrigger>
-          <TabsTrigger value="ebooks">Guides</TabsTrigger>
-          <TabsTrigger value="whitepapers">Whitepapers</TabsTrigger>
-          <TabsTrigger value="resources">Resources</TabsTrigger>
-          <TabsTrigger value="funnel">Funnel</TabsTrigger>
-          <TabsTrigger 
-            value="courses" 
-            className="relative cursor-not-allowed opacity-60 pointer-events-none"
-          >
-            <span className="flex items-center gap-2">
-              Courses
-              <Badge variant="warning" className="text-xs px-1.5 py-0.5">
-                Coming Soon
-              </Badge>
-            </span>
+    <Tabs value={activeSection} onValueChange={handleTabChange} className="w-full">
+      <div className="flex justify-center mb-6">
+        <TabsList className="grid w-full max-w-2xl grid-cols-3 gap-1">
+          <TabsTrigger value="learn-discover" className="text-sm font-medium">
+            Learn & Discover
+          </TabsTrigger>
+          <TabsTrigger value="solutions-services" className="text-sm font-medium">
+            Solutions & Services
+          </TabsTrigger>
+          <TabsTrigger value="who-we-serve" className="text-sm font-medium">
+            Who We Serve
           </TabsTrigger>
         </TabsList>
       </div>
       
-      <TabsContent value="books" className="py-4">
-        <BookList books={books} />
-      </TabsContent>
-
-      <TabsContent value="ebooks" className="py-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {educationalResources.ebooks.map(ebook => (
-            <div
-              key={ebook.id}
-              className="border rounded-lg p-6 hover:shadow-md transition-shadow"
-            >
-              <h3 className="font-semibold text-lg mb-2">{ebook.title}</h3>
-              <p className="text-sm text-muted-foreground mb-4">
-                {ebook.description}
-              </p>
-              <div className="flex justify-between items-center text-xs text-muted-foreground mt-2 mb-4">
-                <span>{ebook.level}</span>
-                <span>{ebook.author}</span>
-              </div>
-              <button
-                onClick={() => handleCourseEnrollment(ebook.id, ebook.title, ebook.isPaid, ebook.ghlUrl)}
-                className="w-full py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
-              >
-                {ebook.isPaid ? 'Purchase Guide' : 'Download Guide'}
-              </button>
+      {/* Learn & Discover Tab */}
+      <TabsContent value="learn-discover" className="py-6">
+        <div className="space-y-8">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-bold text-foreground mb-3">Educational Resources</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Expand your financial knowledge with our comprehensive library of books, guides, tools, and courses.
+            </p>
+          </div>
+          
+          <Tabs defaultValue="books" className="w-full">
+            <div className="flex justify-center mb-6">
+              <TabsList className="grid w-full max-w-3xl grid-cols-5 gap-1">
+                <TabsTrigger value="books">Books</TabsTrigger>
+                <TabsTrigger value="guides-whitepapers">Guides & Whitepapers</TabsTrigger>
+                <TabsTrigger value="videos-webinars">Videos & Webinars</TabsTrigger>
+                <TabsTrigger value="tools-checklists">Tools & Checklists</TabsTrigger>
+                <TabsTrigger value="courses">Courses</TabsTrigger>
+              </TabsList>
             </div>
-          ))}
+            
+            <TabsContent value="books" className="py-4">
+              <BookList books={books} />
+            </TabsContent>
+
+            <TabsContent value="guides-whitepapers" className="py-4">
+              <div className="space-y-8">
+                {/* Guides Section */}
+                <div>
+                  <h3 className="text-xl font-semibold text-foreground mb-4">Comprehensive Guides</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {educationalResources.ebooks.map(ebook => (
+                      <div
+                        key={ebook.id}
+                        className="border rounded-lg p-6 hover:shadow-md transition-shadow bg-card"
+                      >
+                        <h4 className="font-semibold text-lg mb-2">{ebook.title}</h4>
+                        <p className="text-sm text-muted-foreground mb-4">
+                          {ebook.description}
+                        </p>
+                        <div className="flex justify-between items-center text-xs text-muted-foreground mt-2 mb-4">
+                          <span>{ebook.level}</span>
+                          <span>{ebook.author}</span>
+                        </div>
+                        <button
+                          onClick={() => handleCourseEnrollment(ebook.id, ebook.title, ebook.isPaid, ebook.ghlUrl)}
+                          className="w-full py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+                        >
+                          {ebook.isPaid ? 'Purchase Guide' : 'Download Guide'}
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                
+                {/* Whitepapers Section */}
+                <div>
+                  <h3 className="text-xl font-semibold text-foreground mb-4">Research & Whitepapers</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {educationalResources.whitepapers.map(whitepaper => (
+                      <div
+                        key={whitepaper.id}
+                        className="border rounded-lg p-6 hover:shadow-md transition-shadow bg-card"
+                      >
+                        <h4 className="font-semibold text-lg mb-2">{whitepaper.title}</h4>
+                        <p className="text-sm text-muted-foreground mb-4">
+                          {whitepaper.description}
+                        </p>
+                        <div className="flex justify-between items-center text-xs text-muted-foreground mt-2 mb-4">
+                          <span>{whitepaper.level}</span>
+                          <span>PDF Document</span>
+                        </div>
+                        <button
+                          onClick={() => handleWhitepaperAccess(whitepaper)}
+                          className="w-full py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+                        >
+                          View Whitepaper
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="videos-webinars" className="py-4">
+              <div className="space-y-8">
+                {/* Videos Section */}
+                <div>
+                  <h3 className="text-xl font-semibold text-foreground mb-4">Educational Videos</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {educationalResources.resources.filter(r => r.title.includes('Video') || r.title.includes('Watch')).map(resource => (
+                      <div
+                        key={resource.id}
+                        className="border rounded-lg p-6 hover:shadow-md transition-shadow bg-card"
+                      >
+                        <h4 className="font-semibold text-lg mb-2">{resource.title}</h4>
+                        <p className="text-sm text-muted-foreground mb-4">
+                          {resource.description}
+                        </p>
+                        <div className="flex justify-between items-center text-xs text-muted-foreground mt-2 mb-4">
+                          <span>{resource.level}</span>
+                          <span>Video Content</span>
+                        </div>
+                        <button
+                          onClick={() => handleResourceAccess(resource)}
+                          className="w-full py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+                        >
+                          Watch Now
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                
+                {/* Webinars Section */}
+                <div>
+                  <h3 className="text-xl font-semibold text-foreground mb-4">Webinars & Events</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {educationalResources.funnel?.map(funnel => (
+                      <div
+                        key={funnel.id}
+                        className="border rounded-lg p-6 hover:shadow-md transition-shadow bg-card"
+                      >
+                        <h4 className="font-semibold text-lg mb-2">{funnel.title}</h4>
+                        <p className="text-sm text-muted-foreground mb-4">
+                          {funnel.description}
+                        </p>
+                        <div className="flex justify-between items-center text-xs text-muted-foreground mt-2 mb-4">
+                          <span>{funnel.level}</span>
+                          <span>Webinar</span>
+                        </div>
+                        <button
+                          onClick={() => handleFunnelAccess(funnel)}
+                          className="w-full py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+                        >
+                          Register Now
+                        </button>
+                      </div>
+                    )) || (
+                      <div className="col-span-full text-center py-8">
+                        <p className="text-muted-foreground">No webinars available at this time.</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="tools-checklists" className="py-4">
+              <div>
+                <h3 className="text-xl font-semibold text-foreground mb-4">Tools & Checklists</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {educationalResources.resources.filter(r => !r.title.includes('Video') && !r.title.includes('Watch')).map(resource => (
+                    <div
+                      key={resource.id}
+                      className="border rounded-lg p-6 hover:shadow-md transition-shadow bg-card"
+                    >
+                      <h4 className="font-semibold text-lg mb-2">{resource.title}</h4>
+                      <p className="text-sm text-muted-foreground mb-4">
+                        {resource.description}
+                      </p>
+                      <div className="flex justify-between items-center text-xs text-muted-foreground mt-2 mb-4">
+                        <span>{resource.level}</span>
+                        <span>Tool/Resource</span>
+                      </div>
+                      <button
+                        onClick={() => handleResourceAccess(resource)}
+                        className="w-full py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+                      >
+                        Access Tool
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="courses" className="py-4">
+              <div>
+                <h3 className="text-xl font-semibold text-foreground mb-4">Professional Courses</h3>
+                <CourseList
+                  title={activeCategory === "all-courses" ? "All Courses" : "Category Courses"}
+                  courses={
+                    activeCategory === "all-courses"
+                      ? Object.values(coursesByCategory).flat()
+                      : coursesByCategory[activeCategory] || []
+                  }
+                  onCourseEnrollment={handleCourseEnrollment}
+                />
+              </div>
+            </TabsContent>
+          </Tabs>
         </div>
       </TabsContent>
       
-      <TabsContent value="whitepapers" className="py-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {educationalResources.whitepapers.map(whitepaper => (
-            <div
-              key={whitepaper.id}
-              className="border rounded-lg p-6 hover:shadow-md transition-shadow"
-            >
-              <h3 className="font-semibold text-lg mb-2">{whitepaper.title}</h3>
-              <p className="text-sm text-muted-foreground mb-4">
-                {whitepaper.description}
-              </p>
-              <div className="flex justify-between items-center text-xs text-muted-foreground mt-2 mb-4">
-                <span>{whitepaper.level}</span>
-                <span>PDF Document</span>
-              </div>
-              <button
-                onClick={() => handleWhitepaperAccess(whitepaper)}
-                className="w-full py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
-              >
-                View Whitepaper
-              </button>
-            </div>
-          ))}
+      {/* Solutions & Services Tab */}
+      <TabsContent value="solutions-services" className="py-6">
+        <div className="space-y-8">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-bold text-foreground mb-3">Solutions & Services</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Comprehensive family office solutions designed to optimize your wealth management strategy.
+            </p>
+          </div>
+          <SolutionCards />
         </div>
       </TabsContent>
-
-      <TabsContent value="resources" className="py-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {educationalResources.resources.map(resource => (
-            <div
-              key={resource.id}
-              className="border rounded-lg p-6 hover:shadow-md transition-shadow"
-            >
-              <h3 className="font-semibold text-lg mb-2">{resource.title}</h3>
-              <p className="text-sm text-muted-foreground mb-4">
-                {resource.description}
-              </p>
-              <div className="flex justify-between items-center text-xs text-muted-foreground mt-2 mb-4">
-                <span>{resource.level}</span>
-                <span>Tool/Resource</span>
-              </div>
-              <button
-                onClick={() => handleResourceAccess(resource)}
-                className="w-full py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
-              >
-                Access Resource
-              </button>
-            </div>
-          ))}
-        </div>
-      </TabsContent>
-
-      <TabsContent value="funnel" className="py-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {educationalResources.funnel?.map(funnel => (
-            <div
-              key={funnel.id}
-              className="border rounded-lg p-6 hover:shadow-md transition-shadow"
-            >
-              <h3 className="font-semibold text-lg mb-2">{funnel.title}</h3>
-              <p className="text-sm text-muted-foreground mb-4">
-                {funnel.description}
-              </p>
-              <div className="flex justify-between items-center text-xs text-muted-foreground mt-2 mb-4">
-                <span>{funnel.level}</span>
-                <span>Funnel</span>
-              </div>
-              <button
-                onClick={() => handleFunnelAccess(funnel)}
-                className="w-full py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
-              >
-                Access Funnel
-              </button>
-            </div>
-          )) || (
-            <div className="col-span-full text-center py-8">
-              <p className="text-muted-foreground">No funnel content available yet.</p>
-            </div>
-          )}
-        </div>
-      </TabsContent>
-
-      <TabsContent value="courses" className="py-4">
-        <CourseList
-          title={activeCategory === "all-courses" ? "All Courses" : "Category Courses"}
-          courses={
-            activeCategory === "all-courses"
-              ? Object.values(coursesByCategory).flat()
-              : coursesByCategory[activeCategory] || []
-          }
-          onCourseEnrollment={handleCourseEnrollment}
-        />
+      
+      {/* Who We Serve Tab */}
+      <TabsContent value="who-we-serve" className="py-6">
+        <WhoWeServe />
       </TabsContent>
     </Tabs>
   );

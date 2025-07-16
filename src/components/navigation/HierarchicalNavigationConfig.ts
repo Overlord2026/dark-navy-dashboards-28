@@ -62,8 +62,8 @@ export const hierarchicalNav: NavItem[] = [
     children: [
       { 
         id: 'edu', 
-        title: 'Education Center', 
-        href: '/education', 
+        title: 'Resources & Solutions Catalog', 
+        href: '/client-education', 
         icon: GraduationCapIcon 
       },
       { 
