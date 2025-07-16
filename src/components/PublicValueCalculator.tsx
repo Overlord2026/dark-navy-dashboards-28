@@ -149,15 +149,33 @@ export const PublicValueCalculator: React.FC = () => {
       {showResults && (
         <div className="space-y-8 animate-fade-in">
           {/* Dramatic Results Message */}
-          <div className="text-center p-8 bg-gradient-to-r from-red-50 to-green-50 dark:from-red-950/20 dark:to-green-950/20 rounded-lg border">
+          <div className="text-center p-8 bg-gradient-to-r from-destructive/10 to-green-500/10 rounded-lg border">
             <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
-              Here's What Your Current Fees Are Really Costing You
+              You could save over $1.38 million in fees and add nearly $2.8 million to your wealth over 30 years, compared to a typical advisor charging 1.25%.
             </h2>
-            <p className="text-lg text-muted-foreground max-w-4xl mx-auto">
-              If you're paying {currentFee}% on a {formatCurrency(portfolioValue)} portfolio, you'll pay{' '}
-              <span className="font-bold text-red-600">{formatCurrency(results30Year.traditionalTotalFees)}</span>{' '}
-              in fees over 30 years—that's nearly as much as a second portfolio.
-            </p>
+            <div className="max-w-2xl mx-auto space-y-4">
+              <p className="text-lg text-muted-foreground">
+                For that same (or even lower) fee, BFO families receive:
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                {[
+                  'Full investment management',
+                  'Proactive tax planning', 
+                  'Retirement income roadmap',
+                  'Family Legacy Box™',
+                  'Exclusive private market opportunities',
+                  'And more'
+                ].map((feature, index) => (
+                  <div key={index} className="flex items-center gap-2">
+                    <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />
+                    <span className="text-sm text-muted-foreground">{feature}</span>
+                  </div>
+                ))}
+              </div>
+              <p className="text-sm text-muted-foreground italic">
+                Actual pricing and services depend on your unique needs. Schedule a complimentary review to see your custom proposal.
+              </p>
+            </div>
           </div>
 
           {/* Comparison Results */}
