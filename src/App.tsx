@@ -44,29 +44,29 @@ function App() {
                   <BankAccountsProvider>
                     <TransfersProvider>
                       <RetirementPlansProvider>
-                      <InvestmentAccountsProvider>
-                        <PrivateEquityAccountsProvider>
-                          <PublicStocksProvider>
-                            <DigitalAssetsProvider>
-                              <RealEstateProvider>
-                                <OtherAssetsProvider>
-                                  <LiabilitiesProvider>
-                                    <DiagnosticsProvider>
-                                    <AdvisorProvider>
-                                      <RouterProvider router={routes} />
-                                      <Toaster position="top-right" richColors closeButton />
-                                    </AdvisorProvider>
-                                  </DiagnosticsProvider>
-                                  </LiabilitiesProvider>
-                                </OtherAssetsProvider>
-                              </RealEstateProvider>
-                            </DigitalAssetsProvider>
-                          </PublicStocksProvider>
-                        </PrivateEquityAccountsProvider>
-                      </InvestmentAccountsProvider>
-                                      </RetirementPlansProvider>
-                                    </TransfersProvider>
-                                  </BankAccountsProvider>
+                        <InvestmentAccountsProvider>
+                          <PrivateEquityAccountsProvider>
+                            <PublicStocksProvider>
+                              <DigitalAssetsProvider>
+                                <RealEstateProvider>
+                                  <OtherAssetsProvider>
+                                    <LiabilitiesProvider>
+                                      <DiagnosticsProvider>
+                                        <AdvisorProvider>
+                                          <RouterProvider router={routes} />
+                                          <Toaster position="top-right" richColors closeButton />
+                                        </AdvisorProvider>
+                                      </DiagnosticsProvider>
+                                    </LiabilitiesProvider>
+                                  </OtherAssetsProvider>
+                                </RealEstateProvider>
+                              </DigitalAssetsProvider>
+                            </PublicStocksProvider>
+                          </PrivateEquityAccountsProvider>
+                        </InvestmentAccountsProvider>
+                      </RetirementPlansProvider>
+                    </TransfersProvider>
+                  </BankAccountsProvider>
                 </FinancialPlanProvider>
               </NetWorthProvider>
             </SubscriptionProvider>
