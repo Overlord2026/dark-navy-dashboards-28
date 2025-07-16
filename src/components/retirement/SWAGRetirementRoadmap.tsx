@@ -10,39 +10,39 @@ interface SWAGRetirementRoadmapProps {
 export const SWAGRetirementRoadmap: React.FC<SWAGRetirementRoadmapProps> = ({ className }) => {
   const features = [
     {
-      icon: <MapPin className="h-5 w-5" />,
-      title: "SMART Goals-Based Planning",
-      description: "Clarify your Needs, Wants, and Wishes—customized to your lifestyle, legacy, and retirement vision."
+      icon: <TrendingUp className="h-5 w-5" />,
+      title: "Income Now, Later, Growth, Legacy",
+      description: "A year-by-year, tax-smart income forecast for every stage of your financial journey."
     },
     {
-      icon: <TrendingUp className="h-5 w-5" />,
-      title: "4-Phase, Time-Segmented Strategies",
-      description: "Income Now, Income Later, Growth, and Legacy—see where you stand at every phase of your financial journey."
+      icon: <MapPin className="h-5 w-5" />,
+      title: "S.M.A.R.T. Goals",
+      description: "Needs, Wants, Wishes, all planned—so nothing is left out of your family's financial strategy."
     },
     {
       icon: <Users className="h-5 w-5" />,
       title: "Surviving Spouse (Widow's Penalty) Analysis",
-      description: "Plan for your partner's financial security. We model Social Security reductions, tax bracket changes, and portfolio needs if one spouse passes first."
+      description: "We model what happens if one spouse passes first, so your family never faces an avoidable tax shock or income drop."
     },
     {
       icon: <Shield className="h-5 w-5" />,
-      title: "Long-Term Care (LTC) Stress Testing",
-      description: "Can you self-insure, or should you hedge with LTC coverage? We test your plan against real-world costs to protect your lifestyle and your heirs."
+      title: "LTC Stress Test",
+      description: "Know—before it's too late—whether you can self-insure for LTC or should hedge this risk."
     },
     {
       icon: <Calculator className="h-5 w-5" />,
-      title: "Social Security Optimization",
-      description: "Maximize benefits, minimize taxes, and coordinate with your income and legacy goals for optimal claiming strategies."
+      title: "Social Security & Roth Optimization",
+      description: "Make the most of every benefit with coordinated, multi-year planning and integrated strategy."
     },
     {
       icon: <TrendingUp className="h-5 w-5" />,
-      title: "Proactive Tax Planning & Roth Conversions",
-      description: "Model and execute multi-year tax reduction, including Roth conversions, bracket management, and legacy tax minimization."
+      title: "Proactive Tax & Roth Strategy",
+      description: "Model Roth conversions, minimize lifetime taxes, and protect your legacy."
     },
     {
       icon: <Lock className="h-5 w-5" />,
-      title: "Secure SWAG™ Vault",
-      description: "All your planning docs, digital legacy, and recommendations—organized, up-to-date, and always accessible."
+      title: "Ongoing Updates",
+      description: "Your roadmap is a living document, updated as your life changes—just like a business reviews its financials quarterly or annually."
     }
   ];
 
@@ -73,13 +73,10 @@ export const SWAGRetirementRoadmap: React.FC<SWAGRetirementRoadmapProps> = ({ cl
       <Card className="bg-gradient-to-br from-primary/5 to-accent/5 p-8 rounded-2xl border border-primary/20">
         <div className="text-center mb-6">
           <h1 className="text-3xl font-bold text-foreground mb-2">
-            Your Personalized SWAG™ Retirement Roadmap
+            Your Family Office. Your Personal CFO. Your Customized Retirement Roadmap.
           </h1>
-          <p className="text-xl text-muted-foreground">
-            The Family Office Solution for Confident, Tax-Smart, and Secure Retirement
-          </p>
-          <p className="text-base text-muted-foreground mt-2">
-            Protect your family, reduce your taxes, and achieve true peace of mind with our advanced, holistic process—delivered on your terms.
+          <p className="text-lg text-muted-foreground mb-4">
+            Just like every great business has a CFO and a forward-looking plan, your family deserves its own financial GPS. Our SWAG™ Retirement Roadmap is your holistic, living strategy—integrating income, taxes, Social Security, long-term care, and legacy planning.
           </p>
         </div>
 
@@ -98,11 +95,8 @@ export const SWAGRetirementRoadmap: React.FC<SWAGRetirementRoadmapProps> = ({ cl
 
         {/* Call to Action */}
         <div className="text-center">
-          <h3 className="text-xl font-bold text-foreground mb-4">Ready to Take Control?</h3>
-          <p className="text-muted-foreground mb-6">
-            Start with our free scorecard or book your complimentary "Right Fit" call.
-          </p>
-          <div className="flex flex-wrap justify-center gap-4">
+          <h3 className="text-xl font-bold text-foreground mb-4">Ready for True Financial Confidence?</h3>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center mb-2">
             <Button 
               size="lg" 
               className="bg-primary hover:bg-primary/90"
@@ -115,16 +109,19 @@ export const SWAGRetirementRoadmap: React.FC<SWAGRetirementRoadmapProps> = ({ cl
               size="lg"
               onClick={handleBookRightFitCall}
             >
-              Book My Right Fit Call
+              Book Right Fit Call
             </Button>
             <Button 
-              variant="outline" 
+              variant="ghost" 
               size="lg"
               onClick={handleDownloadSample}
             >
-              Download Sample Roadmap
+              See Sample Roadmap
             </Button>
           </div>
+          <p className="text-sm text-muted-foreground mt-2">
+            <strong>Your family deserves a financial forecast—led by your own CFO.</strong> DIY or ongoing support, satisfaction guaranteed.
+          </p>
         </div>
       </Card>
 
@@ -175,14 +172,13 @@ export const SWAGRetirementRoadmap: React.FC<SWAGRetirementRoadmapProps> = ({ cl
       <Card className="bg-gradient-to-r from-accent/10 to-primary/10 p-6 border border-accent/20">
         <div className="text-center">
           <h3 className="text-xl font-bold text-foreground mb-3">
-            Our SWAG™ Roadmap is the ultimate first step
+            Our SWAG™ Roadmap isn't just a one-time "plan"—it's your ongoing financial GPS.
           </h3>
           <p className="text-muted-foreground mb-4">
-            Whether you're a do-it-yourselfer, want a second opinion, or just want a true family office experience. 
-            Secure your future, protect your spouse, and maximize your legacy—all with one, holistic plan.
+            Your family. Your legacy. Your own personal CFO.
           </p>
           <p className="text-sm text-muted-foreground">
-            <strong>DIY or ongoing support—our roadmap is satisfaction guaranteed, with no sales pitch or pressure.</strong>
+            <strong>Whether you're a DIYer, working with another advisor, or want the full family office experience.</strong>
           </p>
         </div>
       </Card>

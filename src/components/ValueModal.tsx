@@ -18,23 +18,23 @@ export function ValueModal({ open, onClose }: ValueModalProps) {
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold mb-4 text-foreground">
-            Ready to See Your Full Value?
+          <DialogTitle className="text-xl font-bold mb-2 text-foreground">
+            Your Customized Retirement Roadmap—Driven by Your Family CFO
           </DialogTitle>
         </DialogHeader>
         
         <div className="space-y-4">
-          <p className="text-muted-foreground">
-            Discover how much you could save—and how much more you could receive—with a Boutique Family Office relationship tailored to your needs.
+          <p className="text-muted-foreground mb-3">
+            You wouldn't run a business without a CFO or a forecast—so why trust your family's future to guesswork? Your SWAG™ Roadmap brings you:
           </p>
           
           <ul className="space-y-2">
             {[
-              'Custom retirement income planning',
-              'Ongoing tax reduction strategies',
-              'Exclusive family legacy tools',
-              'Private Market Alpha investments',
-              'Dedicated concierge support'
+              'Holistic, tax-smart income & legacy planning',
+              'Protection against the "widow\'s penalty"',
+              'Long-term care readiness—stress-tested',
+              'Optimal Social Security and Roth conversion timing',
+              'Clear action steps, updated as your life evolves'
             ].map((item, index) => (
               <li key={index} className="flex items-center gap-2">
                 <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />
@@ -49,7 +49,7 @@ export function ValueModal({ open, onClose }: ValueModalProps) {
               onClick={handleSchedule}
             >
               <Calendar className="h-4 w-4 mr-2" />
-              Book My Complimentary Review
+              Book a Family Office Review
             </Button>
             <Button variant="outline" onClick={onClose} className="w-full">
               Continue Browsing
