@@ -178,8 +178,8 @@ const Accounts = () => {
         )}>
           <div className="space-y-2">
             <p className={cn(
-              "text-muted-foreground",
-              isMobile ? "text-sm" : isTablet ? "text-sm sm:text-base" : "text-base"
+              "text-foreground font-medium",
+              isMobile ? "text-base" : isTablet ? "text-base sm:text-lg" : "text-lg"
             )}>Manage all your financial accounts in one place</p>
           </div>
           <div className={cn(
@@ -217,10 +217,10 @@ const Accounts = () => {
         <div className="grid gap-6">
           {/* Core Accounts Section */}
           <div className="space-y-6">
-            <div className="flex items-center gap-2">
-              <div className="h-0.5 bg-gradient-to-r from-blue-500 to-blue-300 w-8"></div>
-              <h2 className="text-lg font-semibold text-blue-700">Core Accounts</h2>
-              <div className="h-0.5 bg-gradient-to-r from-blue-300 to-transparent flex-1"></div>
+            <div className="flex items-center gap-3 p-4 bg-card border-2 border-primary rounded-lg">
+              <div className="h-1 bg-primary w-12 rounded-full"></div>
+              <h2 className="text-xl font-bold text-foreground">Core Accounts</h2>
+              <div className="h-1 bg-primary/30 flex-1 rounded-full"></div>
             </div>
             
             {/* Banking */}
@@ -282,10 +282,10 @@ const Accounts = () => {
 
           {/* Investments Section */}
           <div className="space-y-6">
-            <div className="flex items-center gap-2">
-              <div className="h-0.5 bg-gradient-to-r from-green-500 to-green-300 w-8"></div>
-              <h2 className="text-lg font-semibold text-green-700">Investments</h2>
-              <div className="h-0.5 bg-gradient-to-r from-green-300 to-transparent flex-1"></div>
+            <div className="flex items-center gap-3 p-4 bg-card border-2 border-success rounded-lg">
+              <div className="h-1 bg-success w-12 rounded-full"></div>
+              <h2 className="text-xl font-bold text-foreground">Investments</h2>
+              <div className="h-1 bg-success/30 flex-1 rounded-full"></div>
             </div>
 
             {/* Investment */}
@@ -399,10 +399,10 @@ const Accounts = () => {
 
           {/* Alternative Assets Section */}
           <div className="space-y-6">
-            <div className="flex items-center gap-2">
-              <div className="h-0.5 bg-gradient-to-r from-purple-500 to-purple-300 w-8"></div>
-              <h2 className="text-lg font-semibold text-purple-700">Alternative Assets</h2>
-              <div className="h-0.5 bg-gradient-to-r from-purple-300 to-transparent flex-1"></div>
+            <div className="flex items-center gap-3 p-4 bg-card border-2 border-accent rounded-lg">
+              <div className="h-1 bg-accent w-12 rounded-full"></div>
+              <h2 className="text-xl font-bold text-foreground">Alternative Assets</h2>
+              <div className="h-1 bg-accent/30 flex-1 rounded-full"></div>
             </div>
 
             {/* Digital Assets */}
@@ -489,10 +489,10 @@ const Accounts = () => {
 
           {/* Liabilities Section */}
           <div className="space-y-6">
-            <div className="flex items-center gap-2">
-              <div className="h-0.5 bg-gradient-to-r from-red-500 to-red-300 w-8"></div>
-              <h2 className="text-lg font-semibold text-red-700">Liabilities</h2>
-              <div className="h-0.5 bg-gradient-to-r from-red-300 to-transparent flex-1"></div>
+            <div className="flex items-center gap-3 p-4 bg-card border-2 border-destructive rounded-lg">
+              <div className="h-1 bg-destructive w-12 rounded-full"></div>
+              <h2 className="text-xl font-bold text-foreground">Liabilities</h2>
+              <div className="h-1 bg-destructive/30 flex-1 rounded-full"></div>
             </div>
 
             {/* Liability */}

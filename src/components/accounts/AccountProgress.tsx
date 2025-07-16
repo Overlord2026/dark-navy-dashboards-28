@@ -32,23 +32,23 @@ export function AccountProgress({
   const allAccountTypes = Object.keys(accountTypeNames);
 
   return (
-    <div className={cn("space-y-4", className)}>
+    <div className={cn("space-y-6", className)}>
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-lg font-semibold text-foreground">Account Setup Progress</h3>
-          <p className="text-sm text-muted-foreground">
+          <h3 className="text-xl font-bold text-foreground">Account Setup Progress</h3>
+          <p className="text-base text-foreground font-medium">
             You've added {completedAccounts.length} of {totalAccounts} account types
           </p>
         </div>
         <div className="text-right">
-          <div className="text-2xl font-bold text-primary">{completionPercentage}%</div>
-          <div className="text-xs text-muted-foreground">Complete</div>
+          <div className="text-4xl font-bold text-foreground">{completionPercentage}%</div>
+          <div className="text-base text-foreground font-medium">Complete</div>
         </div>
       </div>
 
-      <Progress value={completionPercentage} className="h-2" />
+      <Progress value={completionPercentage} className="h-4" />
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {allAccountTypes.map((accountType) => {
           const isCompleted = completedAccounts.includes(accountType);
           const displayName = accountTypeNames[accountType as keyof typeof accountTypeNames];
@@ -57,29 +57,29 @@ export function AccountProgress({
             <div
               key={accountType}
               className={cn(
-                "flex items-center gap-2 p-2 rounded-lg border transition-all duration-200",
+                "flex items-center gap-3 p-4 rounded-lg border-2 transition-all duration-200",
                 isCompleted
-                  ? "bg-green-50 border-green-200 text-green-800"
-                  : "bg-muted/50 border-border text-muted-foreground"
+                  ? "bg-success/20 border-success text-success-foreground"
+                  : "bg-card border-border text-foreground"
               )}
             >
               {isCompleted ? (
-                <CheckCircle className="h-4 w-4 text-green-600" />
+                <CheckCircle className="h-6 w-6 text-success" />
               ) : (
-                <Circle className="h-4 w-4" />
+                <Circle className="h-6 w-6 text-muted-foreground" />
               )}
-              <span className="text-xs font-medium truncate">{displayName}</span>
+              <span className="text-base font-semibold">{displayName}</span>
             </div>
           );
         })}
       </div>
 
       {completedAccounts.length < totalAccounts && (
-        <div className="flex items-start gap-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-          <Info className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
-          <div className="text-sm text-blue-800">
-            <p className="font-medium">Complete your financial picture</p>
-            <p>
+        <div className="flex items-start gap-3 p-6 bg-card border-2 border-warning rounded-lg">
+          <Info className="h-6 w-6 text-warning mt-1 flex-shrink-0" />
+          <div className="text-base text-foreground">
+            <p className="font-bold mb-2">Complete your financial picture</p>
+            <p className="leading-relaxed">
               Adding more account types gives you a comprehensive view of your wealth and 
               enables advanced features like bill pay and expense optimization.
             </p>
