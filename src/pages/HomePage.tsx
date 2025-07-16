@@ -2,19 +2,21 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ChevronRight, CheckCircle, Shield, Users, BarChart3, FileText, CreditCard } from "lucide-react";
+import { ChevronRight, CheckCircle, Shield, Users, BarChart3, FileText, CreditCard, Calculator, ArrowRight } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
+import { PremiumFeaturesGrid } from "@/components/homepage/PremiumFeaturesGrid";
+import { withTrademarks } from "@/utils/trademark";
 
 export default function HomePage() {
   return (
-    <div className="flex flex-col min-h-screen bg-[#F9F7E8]">
+    <div className="flex flex-col min-h-screen bg-background">
       {/* Header */}
-      <header className="w-full flex justify-center items-center py-4 border-b border-[#DCD8C0] bg-[#F9F7E8] sticky top-0 z-50">
+      <header className="w-full flex justify-center items-center py-4 border-b border-border bg-background sticky top-0 z-50">
         <div className="container flex justify-between items-center max-w-7xl px-4">
           <div className="flex items-center">
-            <Logo variant="brand" />
+            <Logo variant="tree" />
           </div>
-          <div className="hidden md:flex gap-8 text-[#222222]">
+          <div className="hidden md:flex gap-8 text-foreground">
             <Link to="/services" className="hover:text-primary font-medium">Services</Link>
             <Link to="/about" className="hover:text-primary font-medium">About Us</Link>
             <Link to="/contact" className="hover:text-primary font-medium">Contact</Link>
@@ -23,7 +25,7 @@ export default function HomePage() {
             <Button variant="outline" asChild>
               <Link to="/advisor/login">Advisor Login</Link>
             </Button>
-            <Button className="bg-black text-white hover:bg-black/80" asChild>
+            <Button className="bg-primary text-primary-foreground hover:bg-primary/90" asChild>
               <Link to="/login">Client Login</Link>
             </Button>
           </div>
@@ -31,35 +33,53 @@ export default function HomePage() {
       </header>
 
       {/* Hero Section */}
-      <section className="py-20 px-4 bg-[#1B1B32] text-white">
+      <section className="py-20 px-4 bg-card text-foreground relative overflow-hidden">
         <div className="max-w-7xl mx-auto">
-          <div className="max-w-2xl">
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">Financial Expertise Tailored for Your Legacy</h1>
-            <p className="text-xl mb-8 text-gray-300">
-              Boutique Family Office provides comprehensive wealth management services designed specifically for high-net-worth individuals and families.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Button size="lg" className="bg-white text-[#1B1B32] hover:bg-white/90" asChild>
-                <Link to="/login">
-                  Client Portal 
-                  <ChevronRight className="ml-2 h-5 w-5" />
-                </Link>
-              </Button>
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10" asChild>
-                <Link to="/services">Explore Services</Link>
-              </Button>
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div className="max-w-2xl">
+              <div className="flex items-center gap-2 mb-4">
+                <h1 className="text-4xl md:text-5xl font-bold">
+                  {withTrademarks("A Boutique Family Office")}
+                </h1>
+                <div className="text-destructive text-2xl">→</div>
+              </div>
+              <h2 className="text-3xl md:text-4xl font-bold mb-2 text-primary">
+                Now for Every Family
+              </h2>
+              <p className="text-xl mb-8 text-muted-foreground">
+                Unlock holistic planning, proactive tax strategy, legacy management, and exclusive investment opportunities—all in one integrated platform.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90" asChild>
+                  <Link to="/contact">
+                    Book My Complimentary Family Office Review
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Link>
+                </Button>
+                <Button size="lg" variant="outline" asChild>
+                  <Link to="/fee-calculator">
+                    <Calculator className="mr-2 h-5 w-5" />
+                    Try the Fee Calculator Now
+                  </Link>
+                </Button>
+              </div>
+            </div>
+            <div className="lg:flex justify-end">
+              <Logo variant="hero" className="opacity-20" />
             </div>
           </div>
         </div>
       </section>
 
       {/* Services Section */}
-      <section id="services" className="py-20 px-4 bg-[#F9F7E8]">
+      <section id="services" className="py-20 px-4 bg-background">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-[#222222]">Comprehensive Financial Services</h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              Our team of experienced professionals provides a wide range of services to help you manage, grow, and protect your wealth.
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              {withTrademarks("Comprehensive Financial Services")}
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+              Our team of experienced professionals provides a wide range of services to help you manage, grow, and protect your wealth through our {withTrademarks("Fiduciary Duty Principles")}.
             </p>
           </div>
 
@@ -67,8 +87,8 @@ export default function HomePage() {
             {[
               {
                 icon: <BarChart3 className="h-12 w-12 mb-4 text-primary" />,
-                title: "Wealth Management",
-                description: "Strategic investment planning and portfolio management tailored to your financial goals."
+                title: withTrademarks("Strategic Wealth Alpha GPS"),
+                description: withTrademarks("Strategic investment planning through our SWAG system—portfolio management tailored to your financial goals.")
               },
               {
                 icon: <FileText className="h-12 w-12 mb-4 text-primary" />,
@@ -96,21 +116,26 @@ export default function HomePage() {
                 description: "Strategic tax planning to optimize your financial position and minimize tax liabilities."
               }
             ].map((service, index) => (
-              <div key={index} className="bg-white p-8 rounded-lg shadow-sm border border-[#DCD8C0] hover:shadow-md transition-all">
+              <div key={index} className="bg-card p-8 rounded-lg shadow-sm border border-border hover:shadow-md transition-all">
                 {service.icon}
-                <h3 className="text-xl font-semibold mb-3 text-[#222222]">{service.title}</h3>
-                <p className="text-gray-600">{service.description}</p>
+                <h3 className="text-xl font-semibold mb-3">{service.title}</h3>
+                <p className="text-muted-foreground">{service.description}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
+      {/* Premium Features Grid */}
+      <PremiumFeaturesGrid />
+
       {/* Why Choose Us Section */}
-      <section id="about" className="py-20 px-4 bg-[#1B1B32] text-white">
+      <section id="about" className="py-20 px-4 bg-card text-foreground">
         <div className="max-w-7xl mx-auto grid md:grid-cols-1 gap-16 items-center">
           <div>
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">Why Choose Boutique Family Office</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">
+              {withTrademarks("Why Choose Boutique Family Office")}
+            </h2>
             <div className="space-y-6">
               {[
                 {
@@ -122,8 +147,8 @@ export default function HomePage() {
                   description: "Our team brings decades of experience in wealth management and financial planning."
                 },
                 {
-                  title: "Fiduciary Responsibility",
-                  description: "We always act in your best interest, providing objective advice and solutions."
+                  title: withTrademarks("Fiduciary Duty Principles"),
+                  description: withTrademarks("We always act in your best interest, following our Fiduciary Duty Principles for objective advice and solutions.")
                 },
                 {
                   title: "Comprehensive Approach",
@@ -134,7 +159,7 @@ export default function HomePage() {
                   <CheckCircle className="h-6 w-6 text-primary flex-shrink-0 mt-1" />
                   <div className="ml-4">
                     <h3 className="text-xl font-semibold mb-1">{point.title}</h3>
-                    <p className="text-gray-300">{point.description}</p>
+                    <p className="text-muted-foreground">{point.description}</p>
                   </div>
                 </div>
               ))}
@@ -144,17 +169,17 @@ export default function HomePage() {
       </section>
 
       {/* Call to Action Section */}
-      <section id="contact" className="py-16 px-4 bg-[#F9F7E8]">
+      <section id="contact" className="py-16 px-4 bg-background">
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-[#222222]">Ready to Secure Your Financial Future?</h2>
-          <p className="text-lg text-gray-600 mb-8">
-            Take the first step towards comprehensive wealth management with Boutique Family Office. Our advisors are ready to help you achieve your financial goals.
+          <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Secure Your Financial Future?</h2>
+          <p className="text-lg text-muted-foreground mb-8">
+            {withTrademarks("Take the first step towards comprehensive wealth management with Boutique Family Office. Our advisors are ready to help you achieve your financial goals.")}
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Button size="lg" className="bg-black text-white hover:bg-black/80" asChild>
+            <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90" asChild>
               <Link to="/login">Access Client Portal</Link>
             </Button>
-            <Button size="lg" className="bg-black text-white hover:bg-black/80" asChild>
+            <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90" asChild>
               <Link to="/contact">Contact an Advisor</Link>
             </Button>
           </div>
@@ -162,19 +187,19 @@ export default function HomePage() {
       </section>
 
       {/* Footer */}
-      <footer className="py-12 px-4 bg-[#1B1B32] text-white">
+      <footer className="py-12 px-4 bg-card text-foreground">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
-              <Logo variant="brand" className="mb-4" />
-              <p className="text-gray-300">
-                Comprehensive wealth management for high-net-worth individuals and families.
+              <Logo variant="tree" className="mb-4" />
+              <p className="text-muted-foreground">
+                {withTrademarks("Comprehensive wealth management for high-net-worth individuals and families.")}
               </p>
             </div>
             <div>
               <h3 className="text-lg font-semibold mb-4">Services</h3>
-              <ul className="space-y-2 text-gray-300">
-                <li><Link to="/services" className="hover:text-primary">Wealth Management</Link></li>
+              <ul className="space-y-2 text-muted-foreground">
+                <li><Link to="/services" className="hover:text-primary">{withTrademarks("Strategic Wealth Alpha GPS")}</Link></li>
                 <li><Link to="/services" className="hover:text-primary">Estate Planning</Link></li>
                 <li><Link to="/services" className="hover:text-primary">Tax Planning</Link></li>
                 <li><Link to="/services" className="hover:text-primary">Risk Management</Link></li>
@@ -182,7 +207,7 @@ export default function HomePage() {
             </div>
             <div>
               <h3 className="text-lg font-semibold mb-4">Company</h3>
-              <ul className="space-y-2 text-gray-300">
+              <ul className="space-y-2 text-muted-foreground">
                 <li><Link to="/about" className="hover:text-primary">About Us</Link></li>
                 <li><Link to="/team" className="hover:text-primary">Our Team</Link></li>
                 <li><Link to="/careers" className="hover:text-primary">Careers</Link></li>
@@ -191,7 +216,7 @@ export default function HomePage() {
             </div>
             <div>
               <h3 className="text-lg font-semibold mb-4">Legal</h3>
-              <ul className="space-y-2 text-gray-300">
+              <ul className="space-y-2 text-muted-foreground">
                 <li><Link to="/privacy-policy" className="hover:text-primary">Privacy Policy</Link></li>
                 <li><Link to="/terms-of-service" className="hover:text-primary">Terms of Service</Link></li>
                 <li><Link to="/disclosures" className="hover:text-primary">Disclosures</Link></li>
@@ -199,8 +224,8 @@ export default function HomePage() {
               </ul>
             </div>
           </div>
-          <div className="border-t border-gray-700 mt-12 pt-8 text-center text-gray-400">
-            <p>&copy; {new Date().getFullYear()} Boutique Family Office. All rights reserved.</p>
+          <div className="border-t border-border mt-12 pt-8 text-center text-muted-foreground">
+            <p>&copy; {new Date().getFullYear()} {withTrademarks("Boutique Family Office")}. All rights reserved.</p>
           </div>
         </div>
       </footer>
