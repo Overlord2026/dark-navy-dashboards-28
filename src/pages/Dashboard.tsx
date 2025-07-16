@@ -8,17 +8,14 @@ import { useAuth } from "@/context/AuthContext";
 import { useSubscription } from "@/context/SubscriptionContext";
 import { WelcomeTrialBanner } from "@/components/dashboard/WelcomeTrialBanner";
 import { usePagePerformance } from "@/hooks/usePagePerformance";
-import { ValueDrivenSavingsCalculator } from "@/components/ValueDrivenSavingsCalculator";
-import { AdvisorCalculatorModal } from "@/components/AdvisorCalculatorModal";
+import { SWAGRetirementRoadmap } from "@/components/retirement/SWAGRetirementRoadmap";
 import { Button } from "@/components/ui/button";
-import { Settings, User, BookOpen, Users, Calendar } from "lucide-react";
+import { BookOpen, Users, Calendar } from "lucide-react";
 
 export default function Dashboard() {
   const { userProfile } = useAuth();
   const { isInFreeTrial } = useSubscription();
   const [showWelcomeBanner, setShowWelcomeBanner] = useState(true);
-  const [advisorMode, setAdvisorMode] = useState(false);
-  const [showAdvisorModal, setShowAdvisorModal] = useState(false);
   
   usePagePerformance('/client-dashboard');
   
@@ -26,10 +23,6 @@ export default function Dashboard() {
 
   const handleDismissBanner = () => {
     setShowWelcomeBanner(false);
-  };
-
-  const handleAdvisorCalculate = (results: any) => {
-    setShowAdvisorModal(true);
   };
 
   useEffect(() => {
@@ -51,35 +44,8 @@ export default function Dashboard() {
         {/* Subscription Tier Display */}
         <SubscriptionTierDisplay />
         
-        <div className="space-y-6">
-          {/* Advisor Mode Toggle */}
-          <div className="flex items-center justify-between p-4 bg-card rounded-lg border">
-            <div className="flex items-center gap-2">
-              <User className="h-5 w-5 text-muted-foreground" />
-              <div>
-                <p className="font-medium">Calculator Mode</p>
-                <p className="text-sm text-muted-foreground">
-                  {advisorMode ? 'Advisor mode enabled for client consultations' : 'Client view - read-only fee summary'}
-                </p>
-              </div>
-            </div>
-            <Button
-              variant={advisorMode ? "default" : "outline"}
-              size="sm"
-              onClick={() => setAdvisorMode(!advisorMode)}
-            >
-              <Settings className="h-4 w-4 mr-2" />
-              {advisorMode ? 'Exit Advisor Mode' : 'Enable Advisor Mode'}
-            </Button>
-          </div>
-
-          <ValueDrivenSavingsCalculator 
-            isHeroWidget={true} 
-            className="mb-8"
-            advisorMode={advisorMode}
-            onAdvisorCalculate={handleAdvisorCalculate}
-          />
-        </div>
+        {/* SWAG™ Retirement Roadmap */}
+        <SWAGRetirementRoadmap className="mb-8" />
         
         <div>
           <NetWorthSummary />
@@ -134,11 +100,6 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Advisor Calculator Modal */}
-      <AdvisorCalculatorModal
-        open={showAdvisorModal}
-        onClose={() => setShowAdvisorModal(false)}
-      />
     </ThreeColumnLayout>
   );
 }
