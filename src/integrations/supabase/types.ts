@@ -3319,6 +3319,7 @@ export type Database = {
       profiles: {
         Row: {
           avatar_url: string | null
+          client_segment: string | null
           created_at: string | null
           date_of_birth: string | null
           date_of_birth_date: string | null
@@ -3341,6 +3342,7 @@ export type Database = {
         }
         Insert: {
           avatar_url?: string | null
+          client_segment?: string | null
           created_at?: string | null
           date_of_birth?: string | null
           date_of_birth_date?: string | null
@@ -3363,6 +3365,7 @@ export type Database = {
         }
         Update: {
           avatar_url?: string | null
+          client_segment?: string | null
           created_at?: string | null
           date_of_birth?: string | null
           date_of_birth_date?: string | null
@@ -4496,6 +4499,102 @@ export type Database = {
         }
         Relationships: []
       }
+      user_content_interactions: {
+        Row: {
+          accessed_at: string | null
+          content_id: string
+          content_type: string
+          created_at: string | null
+          id: string
+          interaction_type: string | null
+          user_id: string
+        }
+        Insert: {
+          accessed_at?: string | null
+          content_id: string
+          content_type: string
+          created_at?: string | null
+          id?: string
+          interaction_type?: string | null
+          user_id: string
+        }
+        Update: {
+          accessed_at?: string | null
+          content_id?: string
+          content_type?: string
+          created_at?: string | null
+          id?: string
+          interaction_type?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_course_progress: {
+        Row: {
+          completed_at: string | null
+          course_id: string
+          created_at: string | null
+          id: string
+          last_accessed_at: string | null
+          lesson_id: string | null
+          progress_percentage: number | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          course_id: string
+          created_at?: string | null
+          id?: string
+          last_accessed_at?: string | null
+          lesson_id?: string | null
+          progress_percentage?: number | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          course_id?: string
+          created_at?: string | null
+          id?: string
+          last_accessed_at?: string | null
+          lesson_id?: string | null
+          progress_percentage?: number | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_downloads: {
+        Row: {
+          created_at: string | null
+          downloaded_at: string | null
+          id: string
+          resource_id: string
+          resource_name: string | null
+          resource_type: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          downloaded_at?: string | null
+          id?: string
+          resource_id: string
+          resource_name?: string | null
+          resource_type?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          downloaded_at?: string | null
+          id?: string
+          resource_id?: string
+          resource_name?: string | null
+          resource_type?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_enabled_metrics: {
         Row: {
           created_at: string | null
@@ -4712,6 +4811,30 @@ export type Database = {
           },
         ]
       }
+      user_saved_content: {
+        Row: {
+          content_id: string
+          content_type: string
+          id: string
+          saved_at: string | null
+          user_id: string
+        }
+        Insert: {
+          content_id: string
+          content_type: string
+          id?: string
+          saved_at?: string | null
+          user_id: string
+        }
+        Update: {
+          content_id?: string
+          content_type?: string
+          id?: string
+          saved_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_trust_documents: {
         Row: {
           content_type: string | null
@@ -4819,6 +4942,42 @@ export type Database = {
           updated_at?: string | null
           user_id?: string
           zip_code?: string | null
+        }
+        Relationships: []
+      }
+      webinar_registrations: {
+        Row: {
+          attendance_duration: number | null
+          attended: boolean | null
+          created_at: string | null
+          id: string
+          registered_at: string | null
+          updated_at: string | null
+          user_id: string
+          webinar_id: string
+          webinar_title: string | null
+        }
+        Insert: {
+          attendance_duration?: number | null
+          attended?: boolean | null
+          created_at?: string | null
+          id?: string
+          registered_at?: string | null
+          updated_at?: string | null
+          user_id: string
+          webinar_id: string
+          webinar_title?: string | null
+        }
+        Update: {
+          attendance_duration?: number | null
+          attended?: boolean | null
+          created_at?: string | null
+          id?: string
+          registered_at?: string | null
+          updated_at?: string | null
+          user_id?: string
+          webinar_id?: string
+          webinar_title?: string | null
         }
         Relationships: []
       }
