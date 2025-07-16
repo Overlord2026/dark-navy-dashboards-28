@@ -3,6 +3,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ChevronRight, CheckCircle, Shield, Users, BarChart3, FileText, CreditCard } from "lucide-react";
+import { Logo } from "@/components/ui/Logo";
 
 export default function HomePage() {
   return (
@@ -11,11 +12,7 @@ export default function HomePage() {
       <header className="w-full flex justify-center items-center py-4 border-b border-[#DCD8C0] bg-[#F9F7E8] sticky top-0 z-50">
         <div className="container flex justify-between items-center max-w-7xl px-4">
           <div className="flex items-center">
-            <img 
-              src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
-              alt="Boutique Family Office Logo" 
-              className="h-16 w-auto"
-            />
+            <Logo variant="brand" />
           </div>
           <div className="hidden md:flex gap-8 text-[#222222]">
             <Link to="/services" className="hover:text-primary font-medium">Services</Link>
@@ -169,11 +166,7 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
-              <img 
-                src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
-                alt="Boutique Family Office Logo" 
-                className="h-16 w-auto mb-4"
-              />
+              <Logo variant="brand" className="mb-4" />
               <p className="text-gray-300">
                 Comprehensive wealth management for high-net-worth individuals and families.
               </p>
