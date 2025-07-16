@@ -8,7 +8,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Slider } from '@/components/ui/slider';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Legend } from 'recharts';
-import { HelpCircle, RotateCcw, TrendingUp, DollarSign, Clock, Heart, Calculator, Share, FileDown, Sparkles } from 'lucide-react';
+import { HelpCircle, RotateCcw, TrendingUp, DollarSign, Clock, Heart, Calculator, Share, FileDown, Sparkles, Settings } from 'lucide-react';
 import CountUp from 'react-countup';
 import { Celebration } from '@/components/ConfettiAnimation';
 import { PrizeModal } from '@/components/PrizeModal';
@@ -18,11 +18,15 @@ import { DiamondTrophy, GoldenTrophy, SilverTrophy, BronzeTrophy } from '@/compo
 interface ValueDrivenSavingsCalculatorProps {
   isHeroWidget?: boolean;
   className?: string;
+  advisorMode?: boolean;
+  onAdvisorCalculate?: (results: any) => void;
 }
 
 export const ValueDrivenSavingsCalculator: React.FC<ValueDrivenSavingsCalculatorProps> = ({ 
   isHeroWidget = false,
-  className = "" 
+  className = "",
+  advisorMode = false,
+  onAdvisorCalculate
 }) => {
   const {
     portfolioValue,
@@ -166,8 +170,13 @@ export const ValueDrivenSavingsCalculator: React.FC<ValueDrivenSavingsCalculator
       setIsCalculating(false);
       setShowResults(true);
       
-      // Trigger celebration based on savings amount
-      triggerCelebration(calculated.totalFeeSavings);
+      // If in advisor mode, call the callback
+      if (advisorMode && onAdvisorCalculate) {
+        onAdvisorCalculate(calculated);
+      } else {
+        // Trigger celebration for regular mode
+        triggerCelebration(calculated.totalFeeSavings);
+      }
     }, 1000);
   };
 
@@ -250,12 +259,22 @@ export const ValueDrivenSavingsCalculator: React.FC<ValueDrivenSavingsCalculator
       />
       
       <div className="text-center space-y-2">
-        <h1 className={`font-bold text-foreground ${isHeroWidget ? 'text-3xl' : 'text-4xl'}`}>
-          Value-Driven Pricing Model Savings Calculator
-        </h1>
-        <p className="text-muted-foreground text-lg">
-          See how our lower fees can extend your wealth and fund your healthspan goals
-        </p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className={`font-bold text-foreground ${isHeroWidget ? 'text-2xl' : 'text-3xl'}`}>
+              {advisorMode ? 'Client Fee Analysis' : 'Value-Driven Pricing Model Calculator'}
+            </h1>
+            <p className="text-muted-foreground">
+              {advisorMode ? 'Calculate actual client savings and value proposition' : 'See how our lower fees can extend your wealth and fund your healthspan goals'}
+            </p>
+          </div>
+          {advisorMode && (
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Settings className="h-4 w-4" />
+              Advisor Mode
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -397,23 +416,24 @@ export const ValueDrivenSavingsCalculator: React.FC<ValueDrivenSavingsCalculator
 
         {/* Calculate Button */}
         <div className="space-y-4">
-          <Button 
-            onClick={() => {
-              trackAnalytics('calculate_clicked', {
-                portfolio_value: portfolioValue,
-                time_horizon: timeHorizon,
-                current_fee: currentAdvisorFee,
-                our_fee: ourFee
-              });
-              handleCalculate();
-            }} 
-            disabled={!isFormValid || isCalculating}
-            size="lg"
-            className="w-full text-lg py-6"
-          >
-            <Calculator className="h-5 w-5 mr-2" />
-            {isCalculating ? "Crunching the numbers..." : "See My Savings"}
-          </Button>
+            <Button 
+              onClick={() => {
+                trackAnalytics('calculate_clicked', {
+                  portfolio_value: portfolioValue,
+                  time_horizon: timeHorizon,
+                  current_fee: currentAdvisorFee,
+                  our_fee: ourFee,
+                  advisor_mode: advisorMode
+                });
+                handleCalculate();
+              }} 
+              disabled={!isFormValid || isCalculating}
+              size="lg"
+              className="w-full text-lg py-6"
+            >
+              <Calculator className="h-5 w-5 mr-2" />
+              {isCalculating ? "Calculating..." : (advisorMode ? "Calculate Client Savings" : "See My Savings")}
+            </Button>
 
 
           {/* Results Cards */}

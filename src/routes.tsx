@@ -1,6 +1,7 @@
 import React from "react";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import Dashboard from "@/pages/Dashboard";
+import PublicCalculator from "@/pages/PublicCalculator";
 import Accounts from "@/pages/Accounts";
 import Education from "@/pages/Education";
 import Investments from "@/pages/Investments";
@@ -97,7 +98,11 @@ import WealthBillPay from "@/pages/wealth/WealthBillPay";
 const routes = createBrowserRouter([
   {
     path: "/",
-    element: <Navigate to="/client-dashboard" replace />
+    element: <Navigate to="/calculator" replace />
+  },
+  {
+    path: "/calculator",
+    element: <PublicCalculator />
   },
   {
     path: "/auth",
