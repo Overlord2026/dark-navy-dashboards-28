@@ -2,7 +2,7 @@ import React from 'react';
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { Users, Building, Briefcase, Trophy } from "lucide-react";
+import { Users, Building, Briefcase, Trophy, Heart, Shield, TrendingUp } from "lucide-react";
 
 interface ClientSegment {
   id: string;
@@ -14,8 +14,8 @@ interface ClientSegment {
 
 const clientSegments: ClientSegment[] = [
   {
-    id: 'retirees-pre-retirees',
-    title: 'Retirees & Pre-Retirees',
+    id: 'pre-retirees-retirees',
+    title: 'Pre-Retirees & Retirees',
     description: 'Comprehensive retirement planning and income strategies for your golden years.',
     icon: Users,
     benefits: [
@@ -38,9 +38,9 @@ const clientSegments: ClientSegment[] = [
     ]
   },
   {
-    id: 'executives-professionals',
-    title: 'Executives & Professionals',
-    description: 'Advanced strategies for high-income earners and corporate executives.',
+    id: 'corporate-executives',
+    title: 'Corporate Executives',
+    description: 'Advanced strategies for high-income earners and corporate leadership.',
     icon: Briefcase,
     benefits: [
       'Executive compensation planning',
@@ -50,15 +50,63 @@ const clientSegments: ClientSegment[] = [
     ]
   },
   {
+    id: 'physicians',
+    title: 'Physicians',
+    description: 'Specialized financial planning for medical professionals and practice owners.',
+    icon: Heart,
+    benefits: [
+      'Medical practice planning',
+      'Malpractice insurance optimization',
+      'Student loan strategies',
+      'Retirement planning for physicians'
+    ]
+  },
+  {
+    id: 'dentists',
+    title: 'Dentists',
+    description: 'Tailored wealth management for dental professionals and practice owners.',
+    icon: Shield,
+    benefits: [
+      'Dental practice valuation',
+      'Equipment financing strategies',
+      'Professional liability coverage',
+      'Practice transition planning'
+    ]
+  },
+  {
+    id: 'independent-women',
+    title: 'Independent Women',
+    description: 'Empowering financial strategies addressing the unique challenges women face.',
+    icon: Users,
+    benefits: [
+      'Gender-specific retirement planning',
+      'Longevity planning strategies',
+      'Career break financial planning',
+      'Divorce financial planning'
+    ]
+  },
+  {
+    id: 'entrepreneurs-founders',
+    title: 'Entrepreneurs & Founders',
+    description: 'Dynamic financial planning for business creators and startup founders.',
+    icon: TrendingUp,
+    benefits: [
+      'Startup equity planning',
+      'Exit strategy optimization',
+      'Risk management for entrepreneurs',
+      'Irregular income planning'
+    ]
+  },
+  {
     id: 'athletes-entertainers',
     title: 'Athletes & Entertainers',
     description: 'Specialized planning for irregular income and unique financial challenges.',
     icon: Trophy,
     benefits: [
-      'Irregular income management',
-      'Career transition planning',
+      'Career earnings optimization',
+      'Post-career transition planning',
       'Asset protection strategies',
-      'Tax optimization'
+      'Performance-based income planning'
     ]
   }
 ];
@@ -80,7 +128,7 @@ export const WhoWeServe: React.FC = () => {
         </p>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {clientSegments.map((segment) => {
           const IconComponent = segment.icon;
           
