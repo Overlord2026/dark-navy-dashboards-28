@@ -12,6 +12,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { DiagnosticsProvider } from "@/context/DiagnosticsContext";
 import { AdvisorProvider } from "@/context/AdvisorContext";
 import { BankAccountsProvider } from "@/context/BankAccountsContext";
+import { CreditCardsProvider } from "@/context/CreditCardsContext";
 import { RetirementPlansProvider } from "@/context/RetirementPlansContext";
 import { InvestmentAccountsProvider } from "@/context/InvestmentAccountsContext";
 import { PrivateEquityAccountsProvider } from "@/context/PrivateEquityAccountsContext";
@@ -42,7 +43,8 @@ function App() {
               <NetWorthProvider>
                 <FinancialPlanProvider>
                   <BankAccountsProvider>
-                    <TransfersProvider>
+                    <CreditCardsProvider>
+                      <TransfersProvider>
                       <RetirementPlansProvider>
                         <InvestmentAccountsProvider>
                           <PrivateEquityAccountsProvider>
@@ -65,7 +67,8 @@ function App() {
                           </PrivateEquityAccountsProvider>
                         </InvestmentAccountsProvider>
                       </RetirementPlansProvider>
-                    </TransfersProvider>
+                      </TransfersProvider>
+                    </CreditCardsProvider>
                   </BankAccountsProvider>
                 </FinancialPlanProvider>
               </NetWorthProvider>

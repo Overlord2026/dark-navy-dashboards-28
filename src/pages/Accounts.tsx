@@ -39,6 +39,9 @@ import { AddBankAccountDialog } from "@/components/accounts/AddBankAccountDialog
 import { BankAccountsList } from "@/components/accounts/BankAccountsList";
 import { EnhancedBankAccountsList } from "@/components/accounts/EnhancedBankAccountsList";
 import { PlaidLinkDialog } from "@/components/accounts/PlaidLinkDialog";
+import { AddCreditCardDialog } from "@/components/accounts/AddCreditCardDialog";
+import { CreditCardsList } from "@/components/accounts/CreditCardsList";
+import { useCreditCards } from "@/context/CreditCardsContext";
 
 
 import { useBankAccounts } from "@/context/BankAccountsContext";
@@ -64,6 +67,7 @@ const Accounts = () => {
     showAddInvestmentAccountDialog,
     showAddRetirementPlanDialog,
     showAddBankAccountDialog,
+    showAddCreditCardDialog,
     setShowAddAccountTypeDialog,
     setShowAccountTypeSelector,
     setShowPlaidDialog,
@@ -74,7 +78,8 @@ const Accounts = () => {
     setShowAddRealEstateDialog,
     setShowAddInvestmentAccountDialog,
     setShowAddRetirementPlanDialog,
-    setShowAddBankAccountDialog
+    setShowAddBankAccountDialog,
+    setShowAddCreditCardDialog
   } = useAccountManagement();
   
   const { getFormattedTotalValue, loading: digitalAssetsLoading } = useDigitalAssets();
@@ -86,6 +91,7 @@ const Accounts = () => {
   const { getFormattedTotalBalance, loading: investmentAccountsLoading } = useInvestmentAccounts();
   const { getFormattedTotalBalance: getFormattedRetirementBalance, loading: retirementPlansLoading } = useRetirementPlans();
   const { getFormattedTotalBalance: getFormattedBankBalance, loading: bankAccountsLoading } = useBankAccounts();
+  const { getFormattedTotalBalance: getFormattedCreditCardBalance, loading: creditCardsLoading } = useCreditCards();
   const { isMobile, isTablet, isSmallScreen, isLargeScreen } = useResponsive();
 
   // Add state for liability dialog
@@ -199,6 +205,33 @@ const Accounts = () => {
                   Add Bank Account
                 </Button>
               </div>
+            </div>
+          </CollapsibleCard>
+
+          {/* Credit Cards */}
+          <CollapsibleCard
+            icon={<CreditCard className={cn("mr-2 h-5 w-5 text-primary", isSmallScreen && "h-4 w-4")} />}
+            title="Credit Cards"
+            amount={getFormattedCreditCardBalance()}
+            description="Track balances, due dates, and spending."
+          >
+            <div className="space-y-4">
+              <CreditCardsList />
+              <Button 
+                onClick={() => handleAccountTypeSelected('credit-card')} 
+                variant="outline" 
+                className={cn(
+                  isSmallScreen ? "w-full text-sm" : 
+                  isTablet ? "w-full md:w-auto" :
+                  "w-auto"
+                )}
+              >
+                <PlusCircle className={cn(
+                  "mr-2", 
+                  isSmallScreen ? "h-3 w-3" : "h-4 w-4"
+                )} />
+                Add Credit Card
+              </Button>
             </div>
           </CollapsibleCard>
 
@@ -513,6 +546,13 @@ const Accounts = () => {
         isOpen={showPlaidDialog}
         onClose={() => setShowPlaidDialog(false)}
         onSuccess={handlePlaidSuccess}
+      />
+
+      {/* Add Credit Card Dialog */}
+      <AddCreditCardDialog
+        open={showAddCreditCardDialog}
+        onOpenChange={setShowAddCreditCardDialog}
+        onComplete={handleBackToAccountTypes}
       />
       
     </ThreeColumnLayout>

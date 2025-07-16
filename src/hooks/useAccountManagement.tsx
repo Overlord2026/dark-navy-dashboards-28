@@ -36,6 +36,7 @@ export function useAccountManagement() {
   const [showAddInvestmentAccountDialog, setShowAddInvestmentAccountDialog] = useState(false);
   const [showAddRetirementPlanDialog, setShowAddRetirementPlanDialog] = useState(false);
   const [showAddBankAccountDialog, setShowAddBankAccountDialog] = useState(false);
+  const [showAddCreditCardDialog, setShowAddCreditCardDialog] = useState(false);
   
   // Sample linked funding accounts - in a real app, this would come from an API
   const fundingAccounts = [
@@ -79,6 +80,9 @@ export function useAccountManagement() {
     } else if (type === 'retirement-plan') {
       setShowAddAccountTypeDialog(false);
       setShowAddRetirementPlanDialog(true);
+    } else if (type === 'credit-card') {
+      setShowAddAccountTypeDialog(false);
+      setShowAddCreditCardDialog(true);
     } else {
       // For other account types, show toast for now
       toast({
@@ -159,6 +163,7 @@ export function useAccountManagement() {
     setShowAddInvestmentAccountDialog(false);
     setShowAddRetirementPlanDialog(false);
     setShowAddBankAccountDialog(false);
+    setShowAddCreditCardDialog(false);
     setShowAddAccountTypeDialog(true);
   };
 
@@ -190,6 +195,7 @@ export function useAccountManagement() {
     showAddInvestmentAccountDialog,
     showAddRetirementPlanDialog,
     showAddBankAccountDialog,
+    showAddCreditCardDialog,
     fundingAccounts,
     
     // Actions
@@ -214,6 +220,7 @@ export function useAccountManagement() {
     setShowAddRealEstateDialog,
     setShowAddInvestmentAccountDialog,
     setShowAddRetirementPlanDialog,
-    setShowAddBankAccountDialog
+    setShowAddBankAccountDialog,
+    setShowAddCreditCardDialog
   };
 }

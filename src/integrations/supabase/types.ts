@@ -323,6 +323,72 @@ export type Database = {
         }
         Relationships: []
       }
+      credit_cards: {
+        Row: {
+          apr: number | null
+          available_credit: number | null
+          created_at: string | null
+          credit_limit: number
+          current_balance: number
+          due_date: string | null
+          id: string
+          is_plaid_linked: boolean | null
+          issuer: string
+          last_four: string
+          minimum_payment: number | null
+          name: string
+          notes: string | null
+          plaid_account_id: string | null
+          plaid_item_id: string | null
+          rewards_program: string | null
+          statement_balance: number | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          apr?: number | null
+          available_credit?: number | null
+          created_at?: string | null
+          credit_limit?: number
+          current_balance?: number
+          due_date?: string | null
+          id?: string
+          is_plaid_linked?: boolean | null
+          issuer: string
+          last_four: string
+          minimum_payment?: number | null
+          name: string
+          notes?: string | null
+          plaid_account_id?: string | null
+          plaid_item_id?: string | null
+          rewards_program?: string | null
+          statement_balance?: number | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          apr?: number | null
+          available_credit?: number | null
+          created_at?: string | null
+          credit_limit?: number
+          current_balance?: number
+          due_date?: string | null
+          id?: string
+          is_plaid_linked?: boolean | null
+          issuer?: string
+          last_four?: string
+          minimum_payment?: number | null
+          name?: string
+          notes?: string | null
+          plaid_account_id?: string | null
+          plaid_item_id?: string | null
+          rewards_program?: string | null
+          statement_balance?: number | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       device_tokens: {
         Row: {
           access_token: string | null

@@ -34,6 +34,12 @@ export function AddAccountTypeDialog({
       icon: <Banknote className="h-6 w-6" />
     },
     {
+      id: "credit-card",
+      name: "Credit Card",
+      description: "Track balances, due dates, and spending",
+      icon: <CreditCard className="h-6 w-6" />
+    },
+    {
       id: "retirement-plan",
       name: "Retirement Plan",
       description: "401K, 457, 403B, and other retirement plans",
