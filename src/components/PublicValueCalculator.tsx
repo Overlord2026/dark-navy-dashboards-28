@@ -229,7 +229,7 @@ export const PublicValueCalculator: React.FC = () => {
                 <Button 
                   size="lg" 
                   className="text-lg px-8 py-6 bg-primary hover:bg-primary/90"
-                  onClick={() => window.open('https://calendly.com/bfo-consultation', '_blank')}
+                  onClick={() => window.open('https://calendly.com/tonygomes/talk-with-tony', '_blank')}
                 >
                   Book My Custom Fee & Service Review
                   <ArrowRight className="h-5 w-5 ml-2" />

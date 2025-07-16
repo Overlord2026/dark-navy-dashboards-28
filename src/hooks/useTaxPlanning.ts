@@ -11,7 +11,7 @@ export const useTaxPlanning = () => {
   }) => {
     try {
       // Open Calendly instead of sending email
-      window.open("https://calendly.com/tonygomes/60min?month=2025-06", "_blank");
+       window.open("https://calendly.com/tonygomes/talk-with-tony", "_blank");
       
       toast.success('Opening scheduling page', {
         description: 'Schedule your tax strategy consultation with your advisor.',
@@ -48,7 +48,7 @@ export const useTaxPlanning = () => {
   const scheduleMeeting = async (itemName: string) => {
     try {
       // Open Calendly instead of sending email
-      window.open("https://calendly.com/tonygomes/60min?month=2025-06", "_blank");
+      window.open("https://calendly.com/tonygomes/talk-with-tony", "_blank");
       
       toast.success('Opening scheduling page', {
         description: `Schedule a meeting to discuss ${itemName} with your advisor.`,

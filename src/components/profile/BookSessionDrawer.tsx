@@ -29,7 +29,7 @@ interface BookSessionDrawerProps {
 export const BookSessionDrawer = ({ isOpen, onOpenChange, advisorInfo }: BookSessionDrawerProps) => {
   const handleContinue = () => {
     // Open the new Calendly link in a new tab
-    window.open("https://calendly.com/tonygomes/60min", "_blank");
+    window.open("https://calendly.com/tonygomes/talk-with-tony", "_blank");
     onOpenChange(false);
   };
   

@@ -31,7 +31,7 @@ export default function PublicCalculator() {
               Client Login
             </Button>
             <Button 
-              onClick={() => window.open('https://calendly.com/bfo-consultation', '_blank')}
+               onClick={() => window.open('https://calendly.com/tonygomes/talk-with-tony', '_blank')}
               className="bg-primary hover:bg-primary/90"
             >
               Book My Complimentary Family Office Review
@@ -55,7 +55,7 @@ export default function PublicCalculator() {
               <Button 
                 size="lg"
                 className="bg-primary hover:bg-primary/90 text-primary-foreground text-lg px-8 py-6"
-                onClick={() => window.open('https://calendly.com/bfo-consultation', '_blank')}
+                 onClick={() => window.open('https://calendly.com/tonygomes/talk-with-tony', '_blank')}
               >
                 Book My Complimentary Family Office Review
               </Button>
@@ -143,7 +143,7 @@ export default function PublicCalculator() {
                 <Button 
                   size="lg"
                   className="bg-primary hover:bg-primary/90 text-primary-foreground text-lg px-8 py-6"
-                  onClick={() => window.open('https://calendly.com/bfo-consultation', '_blank')}
+                   onClick={() => window.open('https://calendly.com/tonygomes/talk-with-tony', '_blank')}
                 >
                   Book My Complimentary Family Office Review
                 </Button>
@@ -163,7 +163,7 @@ export default function PublicCalculator() {
           <p className="mt-2">
             For a custom proposal, please{' '}
             <button 
-              onClick={() => window.open('https://calendly.com/bfo-consultation', '_blank')}
+              onClick={() => window.open('https://calendly.com/tonygomes/talk-with-tony', '_blank')}
               className="text-primary hover:underline"
             >
               schedule a review

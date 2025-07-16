@@ -122,7 +122,7 @@ export const AdvancedTaxStrategies: React.FC = () => {
   };
 
   const handleRequestConsultation = (strategyTitle: string) => {
-    window.open('https://calendly.com/tonygomes/60min?month=2025-05', '_blank');
+    window.open('https://calendly.com/tonygomes/talk-with-tony', '_blank');
   };
 
   return (

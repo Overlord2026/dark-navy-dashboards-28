@@ -198,7 +198,7 @@ export const StockScreener: React.FC = () => {
   };
 
   const handleScheduleAppointment = () => {
-    window.open("https://calendly.com/tonygomes/60min", "_blank");
+    window.open("https://calendly.com/tonygomes/talk-with-tony", "_blank");
     toast.success("Opening scheduling page", {
       description: `Schedule a meeting to discuss ${stockData?.symbol || "stock investments"} with your advisor.`,
     });

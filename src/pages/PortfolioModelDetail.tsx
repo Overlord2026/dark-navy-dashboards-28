@@ -129,7 +129,7 @@ const PortfolioModelDetail = () => {
   };
 
   const handleScheduleConsultation = () => {
-    window.open("https://calendly.com/tonygomes/60min", "_blank");
+    window.open("https://calendly.com/tonygomes/talk-with-tony", "_blank");
     toast.success("Opening scheduling calendar");
   };
 

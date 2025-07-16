@@ -10,7 +10,7 @@ interface ValueModalProps {
 
 export function ValueModal({ open, onClose }: ValueModalProps) {
   const handleSchedule = () => {
-    window.open('https://calendly.com/bfo-consultation', '_blank');
+    window.open('https://calendly.com/tonygomes/talk-with-tony', '_blank');
     onClose();
   };
 

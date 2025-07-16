@@ -113,7 +113,7 @@ export default function Dashboard() {
             </p>
             <Button 
               className="w-full bg-primary hover:bg-primary/90"
-              onClick={() => window.open('https://calendly.com/bfo-consultation', '_blank')}
+              onClick={() => window.open('https://calendly.com/tonygomes/talk-with-tony', '_blank')}
             >
               Schedule a Meeting with Your Advisor
             </Button>

@@ -12,7 +12,7 @@ interface ScheduleMeetingDialogProps {
 export function ScheduleMeetingDialog({ assetName, className = "" }: ScheduleMeetingDialogProps) {
   const handleScheduleMeeting = () => {
     // Open Calendly with Tony Gomes's link
-    window.open("https://calendly.com/tonygomes/60min?month=2025-06", "_blank");
+    window.open("https://calendly.com/tonygomes/talk-with-tony", "_blank");
     
     toast.success("Opening scheduling page", {
       description: `Schedule a meeting to discuss ${assetName} with your advisor.`,

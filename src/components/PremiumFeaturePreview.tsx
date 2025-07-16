@@ -85,7 +85,7 @@ export function PremiumFeaturePreview() {
           <Button 
             size="lg"
             className="bg-primary hover:bg-primary/90 text-primary-foreground"
-            onClick={() => window.open('https://calendly.com/bfo-consultation', '_blank')}
+            onClick={() => window.open('https://calendly.com/tonygomes/talk-with-tony', '_blank')}
           >
             <Star className="h-4 w-4 mr-2" />
             Schedule Premium Review

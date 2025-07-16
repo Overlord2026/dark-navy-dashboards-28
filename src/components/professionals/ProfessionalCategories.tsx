@@ -95,7 +95,7 @@ export function ProfessionalCategories({ activeCategory, onCategoryChange }: Pro
 
   const handleScheduleMeeting = (categoryName: string) => {
     // Open Calendly with scheduling link
-    window.open("https://calendly.com/tonygomes/60min", "_blank");
+    window.open("https://calendly.com/tonygomes/talk-with-tony", "_blank");
     
     toast.success("Opening scheduling page", {
       description: `Schedule a consultation about ${categoryName} services.`,

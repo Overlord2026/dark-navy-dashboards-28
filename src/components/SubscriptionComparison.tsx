@@ -43,7 +43,7 @@ export function SubscriptionComparison() {
         </ul>
         <Button 
           className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
-          onClick={() => window.open('https://calendly.com/bfo-consultation', '_blank')}
+          onClick={() => window.open('https://calendly.com/tonygomes/talk-with-tony', '_blank')}
         >
           <Lock className="inline mr-2 h-4 w-4" />
           Schedule Premium Review

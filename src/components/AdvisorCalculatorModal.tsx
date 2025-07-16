@@ -204,7 +204,7 @@ export const AdvisorCalculatorModal: React.FC<AdvisorCalculatorModalProps> = ({
                   Share Results
                 </Button>
                 <Button 
-                  onClick={() => window.open('https://calendly.com/bfo-next-meeting', '_blank')}
+                  onClick={() => window.open('https://calendly.com/tonygomes/talk-with-tony', '_blank')}
                   variant="outline" 
                   className="w-full"
                 >

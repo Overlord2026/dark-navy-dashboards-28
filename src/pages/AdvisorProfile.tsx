@@ -27,7 +27,7 @@ const AdvisorProfile = () => {
   };
 
   const handleBookSession = () => {
-    window.open("https://calendly.com/tonygomes/60min", "_blank");
+    window.open("https://calendly.com/tonygomes/talk-with-tony", "_blank");
   };
 
   const renderTabContent = () => {
@@ -500,7 +500,7 @@ const AdvisorProfile = () => {
               </div>
               
               <DrawerFooter>
-                <Button onClick={() => window.open("https://calendly.com/tonygomes/60min", "_blank")}>Continue</Button>
+                <Button onClick={() => window.open("https://calendly.com/tonygomes/talk-with-tony", "_blank")}>Continue</Button>
                 <DrawerClose asChild>
                   <Button variant="outline">Cancel</Button>
                 </DrawerClose>

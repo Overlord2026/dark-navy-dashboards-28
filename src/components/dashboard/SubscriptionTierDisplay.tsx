@@ -83,7 +83,7 @@ export function SubscriptionTierDisplay() {
             {currentTier === 'basic' && (
               <Button 
                 className="bg-primary hover:bg-primary/90 flex-1"
-                onClick={() => window.open('https://calendly.com/bfo-consultation', '_blank')}
+                 onClick={() => window.open('https://calendly.com/tonygomes/talk-with-tony', '_blank')}
               >
                 <Star className="h-4 w-4 mr-2" />
                 Upgrade to Premium
@@ -158,7 +158,7 @@ export function SubscriptionTierDisplay() {
                 <div className="flex flex-col sm:flex-row gap-3">
                   <Button 
                     className="bg-primary hover:bg-primary/90"
-                    onClick={() => window.open('https://calendly.com/bfo-consultation', '_blank')}
+                     onClick={() => window.open('https://calendly.com/tonygomes/talk-with-tony', '_blank')}
                   >
                     <Calendar className="h-4 w-4 mr-2" />
                     Schedule Premium Review
@@ -183,7 +183,7 @@ export function SubscriptionTierDisplay() {
                 <Button 
                   variant="outline" 
                   size="sm"
-                  onClick={() => window.open('https://calendly.com/bfo-consultation', '_blank')}
+                  onClick={() => window.open('https://calendly.com/tonygomes/talk-with-tony', '_blank')}
                 >
                   <Calendar className="h-4 w-4 mr-2" />
                   Schedule Meeting

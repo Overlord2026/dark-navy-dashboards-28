@@ -8,7 +8,7 @@ import { toast } from "sonner";
 export const ResourcesCard: React.FC = () => {
   const handleScheduleConsultation = () => {
     // Open Calendly with Tony Gomes's link
-    window.open("https://calendly.com/tonygomes/60min?month=2025-06", "_blank");
+    window.open("https://calendly.com/tonygomes/talk-with-tony", "_blank");
     
     toast.success("Opening scheduling page", {
       description: "Schedule your estate planning consultation with your advisor.",

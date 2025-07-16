@@ -20,7 +20,7 @@ export const AdvisorSection = ({ onViewProfile, onBookSession, collapsed = false
   
   const handleBookSession = () => {
     // Open Calendly directly like on the Client Advisor Profile page
-    window.open("https://calendly.com/tonygomes/60min", "_blank");
+    window.open("https://calendly.com/tonygomes/talk-with-tony", "_blank");
   };
   
   return (
