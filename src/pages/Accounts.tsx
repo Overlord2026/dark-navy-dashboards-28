@@ -42,8 +42,7 @@ import { PlaidLinkDialog } from "@/components/accounts/PlaidLinkDialog";
 import { AddCreditCardDialog } from "@/components/accounts/AddCreditCardDialog";
 import { CreditCardsList } from "@/components/accounts/CreditCardsList";
 import { useCreditCards } from "@/context/CreditCardsContext";
-
-
+import { AccountProgress } from "@/components/accounts/AccountProgress";
 import { useBankAccounts } from "@/context/BankAccountsContext";
 
 const Accounts = () => {
@@ -96,6 +95,36 @@ const Accounts = () => {
 
   // Add state for liability dialog
   const [showAddLiabilityDialog, setShowAddLiabilityDialog] = React.useState(false);
+
+  // Calculate completed accounts for progress tracking
+  const completedAccounts = React.useMemo(() => {
+    const completed: string[] = [];
+    
+    // Check if each account type has any data
+    if (getFormattedBankBalance() !== '$0.00') completed.push('bank');
+    if (getFormattedCreditCardBalance() !== '$0.00') completed.push('credit-card');
+    if (getFormattedTotalBalance() !== '$0.00') completed.push('investment');
+    if (getFormattedRetirementBalance() !== '$0.00') completed.push('retirement-plan');
+    if (getFormattedPublicStockValue() !== '$0.00') completed.push('public-stock');
+    if (getFormattedTotalValuation() !== '$0.00') completed.push('private-equity');
+    if (getFormattedTotalValue() !== '$0.00') completed.push('digital-assets');
+    if (getFormattedRealEstateValue() !== '$0.00') completed.push('property');
+    if (getFormattedOtherAssetsValue() !== '$0.00') completed.push('other-assets');
+    if (getTotalLiabilities() > 0) completed.push('liability');
+    
+    return completed;
+  }, [
+    getFormattedBankBalance,
+    getFormattedCreditCardBalance,
+    getFormattedTotalBalance,
+    getFormattedRetirementBalance,
+    getFormattedPublicStockValue,
+    getFormattedTotalValuation,
+    getFormattedTotalValue,
+    getFormattedRealEstateValue,
+    getFormattedOtherAssetsValue,
+    getTotalLiabilities
+  ]);
 
   const handleAddAccountType = (type: string) => {
     if (type === 'liability' || type === 'Liability') {
@@ -178,19 +207,62 @@ const Accounts = () => {
           </div>
         </div>
         
+        {/* Progress Indicator */}
+        <AccountProgress 
+          completedAccounts={completedAccounts} 
+          totalAccounts={10} 
+          className="mb-6"
+        />
+        
         <div className="grid gap-6">
-          {/* Banking */}
-          <CollapsibleCard
-            icon={<Banknote className={cn("mr-2 h-5 w-5 text-primary", isSmallScreen && "h-4 w-4")} />}
-            title="Banking"
-            amount={getFormattedBankBalance()}
-            description="Manage your checking, savings, and other bank accounts."
-          >
-            <div className="space-y-4">
-              <EnhancedBankAccountsList />
-              <div className="flex flex-wrap gap-3">
+          {/* Core Accounts Section */}
+          <div className="space-y-6">
+            <div className="flex items-center gap-2">
+              <div className="h-0.5 bg-gradient-to-r from-blue-500 to-blue-300 w-8"></div>
+              <h2 className="text-lg font-semibold text-blue-700">Core Accounts</h2>
+              <div className="h-0.5 bg-gradient-to-r from-blue-300 to-transparent flex-1"></div>
+            </div>
+            
+            {/* Banking */}
+            <CollapsibleCard
+              icon={<Banknote className={cn("mr-2 h-5 w-5 text-primary", isSmallScreen && "h-4 w-4")} />}
+              title="Banking"
+              amount={getFormattedBankBalance()}
+              description="Manage your checking, savings, and other bank accounts."
+            >
+              <div className="space-y-4">
+                <EnhancedBankAccountsList />
+                <div className="flex flex-wrap gap-3">
+                  <Button 
+                    onClick={() => handleAccountTypeSelected('bank')} 
+                    variant="outline" 
+                    className={cn(
+                      isSmallScreen ? "w-full text-sm" : 
+                      isTablet ? "w-full md:w-auto" :
+                      "w-auto"
+                    )}
+                  >
+                    <PlusCircle className={cn(
+                      "mr-2", 
+                      isSmallScreen ? "h-3 w-3" : "h-4 w-4"
+                    )} />
+                    Add Bank Account
+                  </Button>
+                </div>
+              </div>
+            </CollapsibleCard>
+
+            {/* Credit Cards */}
+            <CollapsibleCard
+              icon={<CreditCard className={cn("mr-2 h-5 w-5 text-primary", isSmallScreen && "h-4 w-4")} />}
+              title="Credit Cards"
+              amount={getFormattedCreditCardBalance()}
+              description="Track balances, due dates, and spending."
+            >
+              <div className="space-y-4">
+                <CreditCardsList />
                 <Button 
-                  onClick={() => handleAccountTypeSelected('bank')} 
+                  onClick={() => handleAccountTypeSelected('credit-card')} 
                   variant="outline" 
                   className={cn(
                     isSmallScreen ? "w-full text-sm" : 
@@ -202,256 +274,254 @@ const Accounts = () => {
                     "mr-2", 
                     isSmallScreen ? "h-3 w-3" : "h-4 w-4"
                   )} />
-                  Add Bank Account
+                  Add Credit Card
                 </Button>
               </div>
+            </CollapsibleCard>
+          </div>
+
+          {/* Investments Section */}
+          <div className="space-y-6">
+            <div className="flex items-center gap-2">
+              <div className="h-0.5 bg-gradient-to-r from-green-500 to-green-300 w-8"></div>
+              <h2 className="text-lg font-semibold text-green-700">Investments</h2>
+              <div className="h-0.5 bg-gradient-to-r from-green-300 to-transparent flex-1"></div>
             </div>
-          </CollapsibleCard>
 
-          {/* Credit Cards */}
-          <CollapsibleCard
-            icon={<CreditCard className={cn("mr-2 h-5 w-5 text-primary", isSmallScreen && "h-4 w-4")} />}
-            title="Credit Cards"
-            amount={getFormattedCreditCardBalance()}
-            description="Track balances, due dates, and spending."
-          >
-            <div className="space-y-4">
-              <CreditCardsList />
-              <Button 
-                onClick={() => handleAccountTypeSelected('credit-card')} 
-                variant="outline" 
-                className={cn(
-                  isSmallScreen ? "w-full text-sm" : 
-                  isTablet ? "w-full md:w-auto" :
-                  "w-auto"
-                )}
-              >
-                <PlusCircle className={cn(
-                  "mr-2", 
-                  isSmallScreen ? "h-3 w-3" : "h-4 w-4"
-                )} />
-                Add Credit Card
-              </Button>
+            {/* Investment */}
+            <CollapsibleCard
+              icon={<TrendingUp className={cn("mr-2 h-5 w-5 text-primary", isSmallScreen && "h-4 w-4")} />}
+              title="Investment"
+              amount={getFormattedTotalBalance()}
+              description="Track your investment accounts and balances."
+            >
+              <div className="space-y-4">
+                <InvestmentAccountsList />
+                <Button 
+                  onClick={() => handleAccountTypeSelected('investment')} 
+                  variant="outline" 
+                  className={cn(
+                    isSmallScreen ? "w-full text-sm" : 
+                    isTablet ? "w-full md:w-auto" :
+                    "w-full sm:w-auto"
+                  )}
+                >
+                  <PlusCircle className={cn(
+                    "mr-2", 
+                    isSmallScreen ? "h-3 w-3" : "h-4 w-4"
+                  )} />
+                  Add Investment Account
+                </Button>
+              </div>
+            </CollapsibleCard>
+
+            {/* Retirement Plans */}
+            <CollapsibleCard
+              icon={<PiggyBank className={cn("mr-2 h-5 w-5 text-primary", isSmallScreen && "h-4 w-4")} />}
+              title="Retirement Plans"
+              amount={getFormattedRetirementBalance()}
+              description="Track your 401(k), 403(b), and 457(b) retirement plans."
+            >
+              <div className="space-y-4">
+                <RetirementPlansList />
+                <Button 
+                  onClick={() => handleAccountTypeSelected('retirement-plan')} 
+                  variant="outline" 
+                  className={cn(
+                    isSmallScreen ? "w-full text-sm" : 
+                    isTablet ? "w-full md:w-auto" :
+                    "w-full sm:w-auto"
+                  )}
+                >
+                  <PlusCircle className={cn(
+                    "mr-2", 
+                    isSmallScreen ? "h-3 w-3" : "h-4 w-4"
+                  )} />
+                  Add Retirement Plan
+                </Button>
+              </div>
+            </CollapsibleCard>
+
+            {/* Public Stock */}
+            <CollapsibleCard
+              icon={<TrendingUp className={cn("mr-2 h-5 w-5 text-primary", isSmallScreen && "h-4 w-4")} />}
+              title="Public Stock"
+              amount={getFormattedPublicStockValue()}
+              description="Track your individual stock holdings and equity investments."
+            >
+              <div className="space-y-4">
+                <PublicStocksList />
+                <Button 
+                  onClick={() => handleAccountTypeSelected('public-stock')} 
+                  variant="outline" 
+                  className={cn(
+                    isSmallScreen ? "w-full text-sm" : 
+                    isTablet ? "w-full md:w-auto" :
+                    "w-full sm:w-auto"
+                  )}
+                >
+                  <PlusCircle className={cn(
+                    "mr-2", 
+                    isSmallScreen ? "h-3 w-3" : "h-4 w-4"
+                  )} />
+                  Add Public Stock
+                </Button>
+              </div>
+            </CollapsibleCard>
+
+            {/* Private Equity */}
+            <CollapsibleCard
+              icon={<Briefcase className={cn("mr-2 h-5 w-5 text-primary", isSmallScreen && "h-4 w-4")} />}
+              title="Private Equity"
+              amount={getFormattedTotalValuation()}
+              description="Track your private equity investments and holdings."
+            >
+              <div className="space-y-4">
+                <PrivateEquityAccountsList />
+                <Button 
+                  onClick={() => handleAccountTypeSelectedWithLiability('private-equity')} 
+                  variant="outline" 
+                  className={cn(
+                    isSmallScreen ? "w-full text-sm" : 
+                    isTablet ? "w-full md:w-auto" :
+                    "w-full sm:w-auto"
+                  )}
+                >
+                  <PlusCircle className={cn(
+                    "mr-2", 
+                    isSmallScreen ? "h-3 w-3" : "h-4 w-4"
+                  )} />
+                  Add Private Equity
+                </Button>
+              </div>
+            </CollapsibleCard>
+          </div>
+
+          {/* Alternative Assets Section */}
+          <div className="space-y-6">
+            <div className="flex items-center gap-2">
+              <div className="h-0.5 bg-gradient-to-r from-purple-500 to-purple-300 w-8"></div>
+              <h2 className="text-lg font-semibold text-purple-700">Alternative Assets</h2>
+              <div className="h-0.5 bg-gradient-to-r from-purple-300 to-transparent flex-1"></div>
             </div>
-          </CollapsibleCard>
 
-          {/* Retirement Plans */}
-          <CollapsibleCard
-            icon={<PiggyBank className={cn("mr-2 h-5 w-5 text-primary", isSmallScreen && "h-4 w-4")} />}
-            title="Retirement Plans"
-            amount={getFormattedRetirementBalance()}
-            description="Track your 401(k), 403(b), and 457(b) retirement plans."
-          >
-            <div className="space-y-4">
-              <RetirementPlansList />
-              <Button 
-                onClick={() => handleAccountTypeSelected('retirement-plan')} 
-                variant="outline" 
-                className={cn(
-                  isSmallScreen ? "w-full text-sm" : 
-                  isTablet ? "w-full md:w-auto" :
-                  "w-full sm:w-auto"
-                )}
-              >
-                <PlusCircle className={cn(
-                  "mr-2", 
-                  isSmallScreen ? "h-3 w-3" : "h-4 w-4"
-                )} />
-                Add Retirement Plan
-              </Button>
+            {/* Digital Assets */}
+            <CollapsibleCard
+              icon={<Coins className={cn("mr-2 h-5 w-5 text-primary", isSmallScreen && "h-4 w-4")} />}
+              title="Digital Assets"
+              amount={getFormattedTotalValue()}
+              description="Track your cryptocurrency and digital asset holdings."
+            >
+              <div className="space-y-4">
+                <DigitalAssetsTable />
+                <Button 
+                  onClick={() => handleAccountTypeSelected('digital-assets')} 
+                  variant="outline" 
+                  className={cn(
+                    isSmallScreen ? "w-full text-sm" : 
+                    isTablet ? "w-full md:w-auto" :
+                    "w-full sm:w-auto"
+                  )}
+                >
+                  <PlusCircle className={cn(
+                    "mr-2", 
+                    isSmallScreen ? "h-3 w-3" : "h-4 w-4"
+                  )} />
+                  Add Digital Asset
+                </Button>
+              </div>
+            </CollapsibleCard>
+
+            {/* Real Estate */}
+            <CollapsibleCard
+              icon={<Home className={cn("mr-2 h-5 w-5 text-primary", isSmallScreen && "h-4 w-4")} />}
+              title="Real Estate"
+              amount={getFormattedRealEstateValue()}
+              description="Track your real estate properties and their market values."
+            >
+              <div className="space-y-4">
+                <RealEstateList />
+                <Button 
+                  onClick={() => handleAccountTypeSelected('real-estate')} 
+                  variant="outline" 
+                  className={cn(
+                    isSmallScreen ? "w-full text-sm" : 
+                    isTablet ? "w-full md:w-auto" :
+                    "w-full sm:w-auto"
+                  )}
+                >
+                  <PlusCircle className={cn(
+                    "mr-2", 
+                    isSmallScreen ? "h-3 w-3" : "h-4 w-4"
+                  )} />
+                  Add Real Estate
+                </Button>
+              </div>
+            </CollapsibleCard>
+
+            {/* Other Assets */}
+            <CollapsibleCard
+              icon={<Package className={cn("mr-2 h-5 w-5 text-primary", isSmallScreen && "h-4 w-4")} />}
+              title="Other Assets"
+              amount={getFormattedOtherAssetsValue()}
+              description="Track your other valuable assets like vehicles, collectibles, and more."
+            >
+              <div className="space-y-4">
+                <OtherAssetsList />
+                <Button 
+                  onClick={() => handleAccountTypeSelected('other-assets')} 
+                  variant="outline" 
+                  className={cn(
+                    isSmallScreen ? "w-full text-sm" : 
+                    isTablet ? "w-full md:w-auto" :
+                    "w-full sm:w-auto"
+                  )}
+                >
+                  <PlusCircle className={cn(
+                    "mr-2", 
+                    isSmallScreen ? "h-3 w-3" : "h-4 w-4"
+                  )} />
+                  Add Other Asset
+                </Button>
+              </div>
+            </CollapsibleCard>
+          </div>
+
+          {/* Liabilities Section */}
+          <div className="space-y-6">
+            <div className="flex items-center gap-2">
+              <div className="h-0.5 bg-gradient-to-r from-red-500 to-red-300 w-8"></div>
+              <h2 className="text-lg font-semibold text-red-700">Liabilities</h2>
+              <div className="h-0.5 bg-gradient-to-r from-red-300 to-transparent flex-1"></div>
             </div>
-          </CollapsibleCard>
 
-
-          {/* Investment */}
-          <CollapsibleCard
-            icon={<TrendingUp className={cn("mr-2 h-5 w-5 text-primary", isSmallScreen && "h-4 w-4")} />}
-            title="Investment"
-            amount={getFormattedTotalBalance()}
-            description="Track your investment accounts and balances."
-          >
-            <div className="space-y-4">
-              <InvestmentAccountsList />
-              <Button 
-                onClick={() => handleAccountTypeSelected('investment')} 
-                variant="outline" 
-                className={cn(
-                  isSmallScreen ? "w-full text-sm" : 
-                  isTablet ? "w-full md:w-auto" :
-                  "w-full sm:w-auto"
-                )}
-              >
-                <PlusCircle className={cn(
-                  "mr-2", 
-                  isSmallScreen ? "h-3 w-3" : "h-4 w-4"
-                )} />
-                Add Investment Account
-              </Button>
-            </div>
-          </CollapsibleCard>
-
-
-          {/* Private Equity */}
-          <CollapsibleCard
-            icon={<Briefcase className={cn("mr-2 h-5 w-5 text-primary", isSmallScreen && "h-4 w-4")} />}
-            title="Private Equity"
-            amount={getFormattedTotalValuation()}
-            description="Track your private equity investments and holdings."
-          >
-            <div className="space-y-4">
-              <PrivateEquityAccountsList />
-              <Button 
-                onClick={() => handleAccountTypeSelectedWithLiability('private-equity')} 
-                variant="outline" 
-                className={cn(
-                  isSmallScreen ? "w-full text-sm" : 
-                  isTablet ? "w-full md:w-auto" :
-                  "w-full sm:w-auto"
-                )}
-              >
-                <PlusCircle className={cn(
-                  "mr-2", 
-                  isSmallScreen ? "h-3 w-3" : "h-4 w-4"
-                )} />
-                Add Private Equity
-              </Button>
-            </div>
-          </CollapsibleCard>
-
-          {/* Public Stock */}
-          <CollapsibleCard
-            icon={<TrendingUp className={cn("mr-2 h-5 w-5 text-primary", isSmallScreen && "h-4 w-4")} />}
-            title="Public Stock"
-            amount={getFormattedPublicStockValue()}
-            description="Track your individual stock holdings and equity investments."
-          >
-            <div className="space-y-4">
-              <PublicStocksList />
-              <Button 
-                onClick={() => handleAccountTypeSelected('public-stock')} 
-                variant="outline" 
-                className={cn(
-                  isSmallScreen ? "w-full text-sm" : 
-                  isTablet ? "w-full md:w-auto" :
-                  "w-full sm:w-auto"
-                )}
-              >
-                <PlusCircle className={cn(
-                  "mr-2", 
-                  isSmallScreen ? "h-3 w-3" : "h-4 w-4"
-                )} />
-                Add Public Stock
-              </Button>
-            </div>
-          </CollapsibleCard>
-
-          {/* Digital Assets */}
-          <CollapsibleCard
-            icon={<Coins className={cn("mr-2 h-5 w-5 text-primary", isSmallScreen && "h-4 w-4")} />}
-            title="Digital Assets"
-            amount={getFormattedTotalValue()}
-            description="Track your cryptocurrency and digital asset holdings."
-          >
-            <div className="space-y-4">
-              <DigitalAssetsTable />
-              <Button 
-                onClick={() => handleAccountTypeSelected('digital-assets')} 
-                variant="outline" 
-                className={cn(
-                  isSmallScreen ? "w-full text-sm" : 
-                  isTablet ? "w-full md:w-auto" :
-                  "w-full sm:w-auto"
-                )}
-              >
-                <PlusCircle className={cn(
-                  "mr-2", 
-                  isSmallScreen ? "h-3 w-3" : "h-4 w-4"
-                )} />
-                Add Digital Asset
-              </Button>
-            </div>
-          </CollapsibleCard>
-
-          {/* Real Estate */}
-          <CollapsibleCard
-            icon={<Home className={cn("mr-2 h-5 w-5 text-primary", isSmallScreen && "h-4 w-4")} />}
-            title="Real Estate"
-            amount={getFormattedRealEstateValue()}
-            description="Track your real estate properties and their market values."
-          >
-            <div className="space-y-4">
-              <RealEstateList />
-              <Button 
-                onClick={() => handleAccountTypeSelected('real-estate')} 
-                variant="outline" 
-                className={cn(
-                  isSmallScreen ? "w-full text-sm" : 
-                  isTablet ? "w-full md:w-auto" :
-                  "w-full sm:w-auto"
-                )}
-              >
-                <PlusCircle className={cn(
-                  "mr-2", 
-                  isSmallScreen ? "h-3 w-3" : "h-4 w-4"
-                )} />
-                Add Real Estate
-              </Button>
-            </div>
-          </CollapsibleCard>
-
-          {/* Other Assets */}
-          <CollapsibleCard
-            icon={<Package className={cn("mr-2 h-5 w-5 text-primary", isSmallScreen && "h-4 w-4")} />}
-            title="Other Assets"
-            amount={getFormattedOtherAssetsValue()}
-            description="Track your other valuable assets like vehicles, collectibles, and more."
-          >
-            <div className="space-y-4">
-              <OtherAssetsList />
-              <Button 
-                onClick={() => handleAccountTypeSelected('other-assets')} 
-                variant="outline" 
-                className={cn(
-                  isSmallScreen ? "w-full text-sm" : 
-                  isTablet ? "w-full md:w-auto" :
-                  "w-full sm:w-auto"
-                )}
-              >
-                <PlusCircle className={cn(
-                  "mr-2", 
-                  isSmallScreen ? "h-3 w-3" : "h-4 w-4"
-                )} />
-                Add Other Asset
-              </Button>
-            </div>
-          </CollapsibleCard>
-
-          {/* Liability */}
-          <CollapsibleCard
-            icon={<AlertTriangle className={cn("mr-2 h-5 w-5 text-primary", isSmallScreen && "h-4 w-4")} />}
-            title="Liability"
-            amount={formatCurrency(getTotalLiabilities())}
-            description="Track your debts and liabilities."
-          >
-            <div className="space-y-4">
-              <LiabilitiesList />
-              <Button 
-                onClick={() => handleAddAccountType('Liability')} 
-                variant="outline" 
-                className={cn(
-                  isSmallScreen ? "w-full text-sm" : 
-                  isTablet ? "w-full md:w-auto" :
-                  "w-full sm:w-auto"
-                )}
-              >
-                <PlusCircle className={cn(
-                  "mr-2", 
-                  isSmallScreen ? "h-3 w-3" : "h-4 w-4"
-                )} />
-                Add Liability
-              </Button>
-            </div>
-          </CollapsibleCard>
+            {/* Liability */}
+            <CollapsibleCard
+              icon={<AlertTriangle className={cn("mr-2 h-5 w-5 text-primary", isSmallScreen && "h-4 w-4")} />}
+              title="Liability"
+              amount={formatCurrency(getTotalLiabilities())}
+              description="Track your debts and liabilities."
+            >
+              <div className="space-y-4">
+                <LiabilitiesList />
+                <Button 
+                  onClick={() => handleAddAccountType('Liability')} 
+                  variant="outline" 
+                  className={cn(
+                    isSmallScreen ? "w-full text-sm" : 
+                    isTablet ? "w-full md:w-auto" :
+                    "w-full sm:w-auto"
+                  )}
+                >
+                  <PlusCircle className={cn(
+                    "mr-2", 
+                    isSmallScreen ? "h-3 w-3" : "h-4 w-4"
+                  )} />
+                  Add Liability
+                </Button>
+              </div>
+            </CollapsibleCard>
+          </div>
         </div>
       </div>
 
