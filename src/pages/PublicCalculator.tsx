@@ -34,12 +34,6 @@ export default function PublicCalculator() {
             >
               Sign Up
             </Button>
-            <Button 
-               onClick={() => window.open('https://calendly.com/tonygomes/talk-with-tony', '_blank')}
-              className="bg-secondary hover:bg-secondary/90 hidden md:flex"
-            >
-              Book Review
-            </Button>
           </div>
         </div>
       </header>
