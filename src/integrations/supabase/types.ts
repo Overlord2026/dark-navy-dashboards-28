@@ -3480,6 +3480,7 @@ export type Database = {
           phone: string | null
           rating: number | null
           specialties: string[] | null
+          tenant_id: string | null
           type: string
           updated_at: string
           user_id: string
@@ -3497,6 +3498,7 @@ export type Database = {
           phone?: string | null
           rating?: number | null
           specialties?: string[] | null
+          tenant_id?: string | null
           type?: string
           updated_at?: string
           user_id: string
@@ -3514,12 +3516,21 @@ export type Database = {
           phone?: string | null
           rating?: number | null
           specialties?: string[] | null
+          tenant_id?: string | null
           type?: string
           updated_at?: string
           user_id?: string
           website?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "professionals_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
