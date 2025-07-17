@@ -195,21 +195,18 @@ export const IntelligentAllocationTab = () => {
         models={portfolioModels}
         selectedModels={selectedModels}
         onModelRowClick={handleModelRowClick}
-        onViewDetails={handleViewDetails}
       />
 
       <PortfolioTabletTable 
         models={portfolioModels}
         selectedModels={selectedModels}
         onModelRowClick={handleModelRowClick}
-        onViewDetails={handleViewDetails}
       />
 
       <PortfolioMobileCards 
         models={portfolioModels}
         selectedModels={selectedModels}
         onModelRowClick={handleModelRowClick}
-        onViewDetails={handleViewDetails}
       />
 
       {/* Modals */}
@@ -238,7 +235,6 @@ export const IntelligentAllocationTab = () => {
       {scheduleMeetingOpen && (
         <ScheduleMeetingDialog
           assetName={selectedStrategyName}
-          onOpenChange={setScheduleMeetingOpen}
         />
       )}
     </div>

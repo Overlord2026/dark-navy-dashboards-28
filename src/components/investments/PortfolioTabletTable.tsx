@@ -4,11 +4,13 @@ import { Badge } from "@/components/ui/badge";
 import { InterestedButton } from "./InterestedButton";
 import { ScheduleMeetingDialog } from "./ScheduleMeetingDialog";
 import { PortfolioModel } from "./data/portfolioModels";
+import { StrategyDetails } from "./StrategyDetailModal";
 
 interface PortfolioTabletTableProps {
   models: PortfolioModel[];
   selectedModels: string[];
   onModelRowClick: (modelId: string) => void;
+  onViewDetails?: (strategy: StrategyDetails) => void;
 }
 
 export const PortfolioTabletTable = ({ models, selectedModels, onModelRowClick }: PortfolioTabletTableProps) => {
