@@ -6,6 +6,7 @@ import { PremiumFeaturePreview } from '@/components/PremiumFeaturePreview';
 import { ValueModal } from '@/components/ValueModal';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { Logo } from '@/components/ui/Logo';
 import { Calculator, UserPlus, Star, Shield, TrendingUp } from 'lucide-react';
 
 export default function PublicCalculator() {
@@ -17,10 +18,7 @@ export default function PublicCalculator() {
       {/* Header */}
       <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Calculator className="h-8 w-8 text-primary" />
-            <span className="text-xl font-bold text-foreground">BFO</span>
-          </div>
+          <Logo variant="brand" onClick={() => navigate('/')} />
           <div className="flex items-center gap-4">
             <Button 
               variant="outline" 
