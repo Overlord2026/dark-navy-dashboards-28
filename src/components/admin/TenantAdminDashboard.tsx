@@ -9,6 +9,8 @@ import { TenantBrandingPanel } from './TenantBrandingPanel';
 import { TenantUserManagement } from './TenantUserManagement';
 import { TenantBillingPanel } from './TenantBillingPanel';
 import { TenantProjectIntegration } from './TenantProjectIntegration';
+import { TenantResourceManagement } from './TenantResourceManagement';
+import { TenantAboutEditor } from './TenantAboutEditor';
 
 export const TenantAdminDashboard: React.FC = () => {
   const { currentTenant, loading } = useTenant();
@@ -48,10 +50,12 @@ export const TenantAdminDashboard: React.FC = () => {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-        <TabsList className="grid w-full grid-cols-6">
+        <TabsList className="grid w-full grid-cols-8">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="branding">Branding</TabsTrigger>
           <TabsTrigger value="users">Users</TabsTrigger>
+          <TabsTrigger value="resources">Resources</TabsTrigger>
+          <TabsTrigger value="about">About</TabsTrigger>
           <TabsTrigger value="billing">Billing</TabsTrigger>
           <TabsTrigger value="integration">
             <Network className="mr-2 h-4 w-4" />
@@ -165,6 +169,14 @@ export const TenantAdminDashboard: React.FC = () => {
           <TenantUserManagement />
         </TabsContent>
 
+        <TabsContent value="resources">
+          <TenantResourceManagement />
+        </TabsContent>
+
+        <TabsContent value="about">
+          <TenantAboutEditor />
+        </TabsContent>
+
         <TabsContent value="billing">
           <TenantBillingPanel />
         </TabsContent>
@@ -174,15 +186,104 @@ export const TenantAdminDashboard: React.FC = () => {
         </TabsContent>
 
         <TabsContent value="settings">
-          <Card>
-            <CardHeader>
-              <CardTitle>Tenant Settings</CardTitle>
-              <CardDescription>Configure advanced tenant settings</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p>Settings panel coming soon...</p>
-            </CardContent>
-          </Card>
+          <div className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Settings className="h-5 w-5" />
+                  General Settings
+                </CardTitle>
+                <CardDescription>
+                  Configure general tenant settings and preferences
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className="space-y-2">
+                    <h4 className="font-medium">Tenant Status</h4>
+                    <Badge className={
+                      currentTenant.billing_status === 'active' 
+                        ? 'bg-green-100 text-green-800' 
+                        : 'bg-yellow-100 text-yellow-800'
+                    }>
+                      {currentTenant.billing_status.toUpperCase()}
+                    </Badge>
+                  </div>
+                  <div className="space-y-2">
+                    <h4 className="font-medium">License Type</h4>
+                    <Badge className="bg-blue-100 text-blue-800">
+                      {currentTenant.franchisee_status.toUpperCase()}
+                    </Badge>
+                  </div>
+                </div>
+                
+                <div className="border-t pt-4">
+                  <h4 className="font-medium mb-2">Organization Information</h4>
+                  <div className="text-sm text-muted-foreground space-y-1">
+                    <p><strong>Name:</strong> {currentTenant.name}</p>
+                    <p><strong>Domain:</strong> {currentTenant.domain || 'Not configured'}</p>
+                    <p><strong>Created:</strong> {new Date(currentTenant.created_at).toLocaleDateString()}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Data & Privacy</CardTitle>
+                <CardDescription>
+                  Manage data retention and privacy settings
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="font-medium">Data Export</h4>
+                      <p className="text-sm text-muted-foreground">Export all tenant data</p>
+                    </div>
+                    <Button variant="outline">Export Data</Button>
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="font-medium">Audit Logs</h4>
+                      <p className="text-sm text-muted-foreground">View tenant activity logs</p>
+                    </div>
+                    <Button variant="outline">View Logs</Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Danger Zone</CardTitle>
+                <CardDescription>
+                  Irreversible and destructive actions
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="font-medium text-red-600">Reset Tenant</h4>
+                      <p className="text-sm text-muted-foreground">Reset all tenant settings to defaults</p>
+                    </div>
+                    <Button variant="destructive" disabled>Reset</Button>
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="font-medium text-red-600">Delete Tenant</h4>
+                      <p className="text-sm text-muted-foreground">Permanently delete this tenant and all data</p>
+                    </div>
+                    <Button variant="destructive" disabled>Delete</Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </TabsContent>
       </Tabs>
     </div>

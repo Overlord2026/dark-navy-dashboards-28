@@ -30,6 +30,16 @@ export interface TenantSettings {
   feature_flags: any;
   email_templates: any;
   custom_css?: string | null;
+  about_config?: {
+    company_mission?: string;
+    company_values?: string;
+    company_history?: string;
+    team_description?: string;
+    contact_info?: string;
+    office_locations?: string;
+    certifications?: string;
+    investment_philosophy?: string;
+  } | null;
 }
 
 export const useTenant = () => {
