@@ -43,6 +43,7 @@ import AdvisorProfile from "@/pages/AdvisorProfile";
 import NotFound from "@/pages/NotFound";
 import TaxPlanningEducation from "@/pages/TaxPlanningEducation";
 import NavigationDiagnostics from "@/pages/NavigationDiagnostics";
+import DiagnosticsRunner from "@/pages/DiagnosticsRunner";
 import { ProfessionalsRouteWrapper } from "@/components/providers/ProfessionalsRouteWrapper";
 import Auth from "@/pages/Auth";
 import ResetPassword from "@/pages/ResetPassword";
@@ -329,6 +330,10 @@ const routes = createBrowserRouter([
   {
     path: "/navigation-diagnostics",
     element: <ProtectedRoute><NavigationDiagnostics /></ProtectedRoute>
+  },
+  {
+    path: "/diagnostics-runner",
+    element: <ProtectedRoute><DiagnosticsRunner /></ProtectedRoute>
   },
   // Health routes
   {
