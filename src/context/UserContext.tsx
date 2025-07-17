@@ -22,6 +22,17 @@ interface UserProfile {
   permissions?: string[];
   twoFactorEnabled?: boolean;
   client_segment?: string;
+  // Marketing and CRM fields
+  utm_source?: string;
+  utm_medium?: string;
+  utm_campaign?: string;
+  ghl_contact_id?: string;
+  lead_stage?: string;
+  advisor_id?: string;
+  email_opt_in?: boolean;
+  sms_opt_in?: boolean;
+  last_login_at?: Date;
+  last_active_at?: Date;
 }
 
 interface UserContextType {
@@ -108,7 +119,17 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
               role: profile.role || 'client',
               permissions: profile.permissions || [],
               twoFactorEnabled: profile.two_factor_enabled || false,
-              client_segment: profile.client_segment
+              client_segment: profile.client_segment,
+              utm_source: profile.utm_source,
+              utm_medium: profile.utm_medium,
+              utm_campaign: profile.utm_campaign,
+              ghl_contact_id: profile.ghl_contact_id,
+              lead_stage: profile.lead_stage,
+              advisor_id: profile.advisor_id,
+              email_opt_in: profile.email_opt_in,
+              sms_opt_in: profile.sms_opt_in,
+              last_login_at: profile.last_login_at ? new Date(profile.last_login_at) : undefined,
+              last_active_at: profile.last_active_at ? new Date(profile.last_active_at) : undefined
             });
           }
         } catch (error) {
@@ -183,24 +204,34 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
           }
 
           const updatedProfile: UserProfile = {
-            id: profile.id,
-            name: profile.display_name || `${profile.first_name || ''} ${profile.last_name || ''}`.trim(),
-            displayName: profile.display_name,
-            email: profile.email || user.email,
-            firstName: profile.first_name,
-            lastName: profile.last_name,
-            middleName: profile.middle_name,
-            title: profile.title,
-            suffix: profile.suffix,
-            gender: profile.gender,
-            maritalStatus: profile.marital_status,
-            dateOfBirth: dateOfBirth,
-            phone: profile.phone,
-            investorType: profile.investor_type,
+              id: profile.id,
+              name: profile.display_name || `${profile.first_name || ''} ${profile.last_name || ''}`.trim(),
+              displayName: profile.display_name,
+              email: profile.email || user.email,
+              firstName: profile.first_name,
+              lastName: profile.last_name,
+              middleName: profile.middle_name,
+              title: profile.title,
+              suffix: profile.suffix,
+              gender: profile.gender,
+              maritalStatus: profile.marital_status,
+              dateOfBirth: dateOfBirth,
+              phone: profile.phone,
+              investorType: profile.investor_type,
               role: profile.role || 'client',
               permissions: profile.permissions || [],
               twoFactorEnabled: profile.two_factor_enabled || false,
-              client_segment: profile.client_segment
+              client_segment: profile.client_segment,
+              utm_source: profile.utm_source,
+              utm_medium: profile.utm_medium,
+              utm_campaign: profile.utm_campaign,
+              ghl_contact_id: profile.ghl_contact_id,
+              lead_stage: profile.lead_stage,
+              advisor_id: profile.advisor_id,
+              email_opt_in: profile.email_opt_in,
+              sms_opt_in: profile.sms_opt_in,
+              last_login_at: profile.last_login_at ? new Date(profile.last_login_at) : undefined,
+              last_active_at: profile.last_active_at ? new Date(profile.last_active_at) : undefined
           };
 
           setUserProfile(updatedProfile);

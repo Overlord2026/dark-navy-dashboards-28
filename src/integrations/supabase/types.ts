@@ -52,6 +52,33 @@ export type Database = {
           },
         ]
       }
+      advisor_assignments: {
+        Row: {
+          advisor_id: string
+          assigned_at: string | null
+          client_id: string | null
+          id: string
+          notes: string | null
+          status: string | null
+        }
+        Insert: {
+          advisor_id: string
+          assigned_at?: string | null
+          client_id?: string | null
+          id?: string
+          notes?: string | null
+          status?: string | null
+        }
+        Update: {
+          advisor_id?: string
+          assigned_at?: string | null
+          client_id?: string | null
+          id?: string
+          notes?: string | null
+          status?: string | null
+        }
+        Relationships: []
+      }
       appointments: {
         Row: {
           cost: number | null
@@ -3318,6 +3345,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          advisor_id: string | null
           avatar_url: string | null
           client_segment: string | null
           created_at: string | null
@@ -3325,22 +3353,32 @@ export type Database = {
           date_of_birth_date: string | null
           display_name: string | null
           email: string | null
+          email_opt_in: boolean | null
           first_name: string | null
           gender: string | null
+          ghl_contact_id: string | null
           id: string
           investor_type: string | null
+          last_active_at: string | null
+          last_login_at: string | null
           last_name: string | null
+          lead_stage: string | null
           marital_status: string | null
           middle_name: string | null
           permissions: string[] | null
           phone: string | null
           role: string | null
+          sms_opt_in: boolean | null
           suffix: string | null
           title: string | null
           two_factor_enabled: boolean | null
           updated_at: string | null
+          utm_campaign: string | null
+          utm_medium: string | null
+          utm_source: string | null
         }
         Insert: {
+          advisor_id?: string | null
           avatar_url?: string | null
           client_segment?: string | null
           created_at?: string | null
@@ -3348,22 +3386,32 @@ export type Database = {
           date_of_birth_date?: string | null
           display_name?: string | null
           email?: string | null
+          email_opt_in?: boolean | null
           first_name?: string | null
           gender?: string | null
+          ghl_contact_id?: string | null
           id: string
           investor_type?: string | null
+          last_active_at?: string | null
+          last_login_at?: string | null
           last_name?: string | null
+          lead_stage?: string | null
           marital_status?: string | null
           middle_name?: string | null
           permissions?: string[] | null
           phone?: string | null
           role?: string | null
+          sms_opt_in?: boolean | null
           suffix?: string | null
           title?: string | null
           two_factor_enabled?: boolean | null
           updated_at?: string | null
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
         }
         Update: {
+          advisor_id?: string | null
           avatar_url?: string | null
           client_segment?: string | null
           created_at?: string | null
@@ -3371,20 +3419,29 @@ export type Database = {
           date_of_birth_date?: string | null
           display_name?: string | null
           email?: string | null
+          email_opt_in?: boolean | null
           first_name?: string | null
           gender?: string | null
+          ghl_contact_id?: string | null
           id?: string
           investor_type?: string | null
+          last_active_at?: string | null
+          last_login_at?: string | null
           last_name?: string | null
+          lead_stage?: string | null
           marital_status?: string | null
           middle_name?: string | null
           permissions?: string[] | null
           phone?: string | null
           role?: string | null
+          sms_opt_in?: boolean | null
           suffix?: string | null
           title?: string | null
           two_factor_enabled?: boolean | null
           updated_at?: string | null
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
         }
         Relationships: []
       }
@@ -4629,6 +4686,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      user_events: {
+        Row: {
+          created_at: string | null
+          event_data: Json | null
+          event_type: string
+          ghl_synced: boolean | null
+          id: string
+          user_id: string | null
+          utm_data: Json | null
+        }
+        Insert: {
+          created_at?: string | null
+          event_data?: Json | null
+          event_type: string
+          ghl_synced?: boolean | null
+          id?: string
+          user_id?: string | null
+          utm_data?: Json | null
+        }
+        Update: {
+          created_at?: string | null
+          event_data?: Json | null
+          event_type?: string
+          ghl_synced?: boolean | null
+          id?: string
+          user_id?: string | null
+          utm_data?: Json | null
+        }
+        Relationships: []
       }
       user_financial_snapshots: {
         Row: {

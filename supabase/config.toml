@@ -31,6 +31,15 @@ enable_signup = true
 double_confirm_changes = true
 enable_confirmations = false
 
+[functions.leads-invite]
+verify_jwt = false
+
+[functions.events-track]
+verify_jwt = false
+
+[functions.advisors-assign]
+verify_jwt = false
+
 [functions.plaid-create-link-token]
 verify_jwt = true
 
