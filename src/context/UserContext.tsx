@@ -18,10 +18,13 @@ interface UserProfile {
   dateOfBirth?: Date;
   phone?: string;
   investorType?: string;
-  role: 'client' | 'advisor' | 'admin' | 'system_administrator' | 'developer' | 'consultant' | 'accountant' | 'attorney';
+  role: 'client' | 'advisor' | 'admin' | 'tenant_admin' | 'system_administrator' | 'developer' | 'consultant' | 'accountant' | 'attorney';
   permissions?: string[];
   twoFactorEnabled?: boolean;
   client_segment?: string;
+  tenant_id?: string;
+  segments?: string[];
+  advisor_role?: string;
   // Marketing and CRM fields
   utm_source?: string;
   utm_medium?: string;

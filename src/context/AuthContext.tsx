@@ -17,9 +17,12 @@ interface UserProfile {
   dateOfBirth?: Date;
   phone?: string;
   investorType?: string;
-  role: 'client' | 'advisor' | 'admin' | 'system_administrator' | 'developer' | 'consultant' | 'accountant' | 'attorney';
+  role: 'client' | 'advisor' | 'admin' | 'tenant_admin' | 'system_administrator' | 'developer' | 'consultant' | 'accountant' | 'attorney';
   permissions?: string[];
   twoFactorEnabled?: boolean;
+  tenant_id?: string;
+  segments?: string[];
+  advisor_role?: string;
 }
 
 interface AuthContextType {
@@ -107,7 +110,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           investorType: profile.investor_type,
           role: profile.role || 'client',
           permissions: profile.permissions || [],
-          twoFactorEnabled: profile.two_factor_enabled || false
+          twoFactorEnabled: profile.two_factor_enabled || false,
+          tenant_id: profile.tenant_id,
+          segments: profile.segments,
+          advisor_role: profile.advisor_role
         });
       }
     } catch (error) {

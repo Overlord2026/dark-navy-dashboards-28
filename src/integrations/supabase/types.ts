@@ -700,10 +700,15 @@ export type Database = {
         Row: {
           content_type: string
           created_at: string | null
+          created_by: string | null
           description: string | null
           file_path: string | null
           id: string
+          is_global: boolean | null
           is_premium: boolean | null
+          is_visible: boolean | null
+          segments: string[] | null
+          sort_order: number | null
           tenant_id: string | null
           thumbnail_url: string | null
           title: string
@@ -713,10 +718,15 @@ export type Database = {
         Insert: {
           content_type: string
           created_at?: string | null
+          created_by?: string | null
           description?: string | null
           file_path?: string | null
           id?: string
+          is_global?: boolean | null
           is_premium?: boolean | null
+          is_visible?: boolean | null
+          segments?: string[] | null
+          sort_order?: number | null
           tenant_id?: string | null
           thumbnail_url?: string | null
           title: string
@@ -726,10 +736,15 @@ export type Database = {
         Update: {
           content_type?: string
           created_at?: string | null
+          created_by?: string | null
           description?: string | null
           file_path?: string | null
           id?: string
+          is_global?: boolean | null
           is_premium?: boolean | null
+          is_visible?: boolean | null
+          segments?: string[] | null
+          sort_order?: number | null
           tenant_id?: string | null
           thumbnail_url?: string | null
           title?: string
@@ -2529,15 +2544,19 @@ export type Database = {
           allocation: string | null
           benchmark: string | null
           created_at: string | null
+          created_by: string | null
           description: string | null
           featured: boolean | null
           id: string
+          is_global: boolean | null
+          is_visible: boolean | null
           manager: string | null
           minimum_investment: string | null
           name: string
           performance: string | null
           premium_locked: boolean | null
           risk_level: string | null
+          sort_order: number | null
           strategy_type: string
           tags: string[] | null
           tenant_id: string | null
@@ -2548,15 +2567,19 @@ export type Database = {
           allocation?: string | null
           benchmark?: string | null
           created_at?: string | null
+          created_by?: string | null
           description?: string | null
           featured?: boolean | null
           id?: string
+          is_global?: boolean | null
+          is_visible?: boolean | null
           manager?: string | null
           minimum_investment?: string | null
           name: string
           performance?: string | null
           premium_locked?: boolean | null
           risk_level?: string | null
+          sort_order?: number | null
           strategy_type: string
           tags?: string[] | null
           tenant_id?: string | null
@@ -2567,15 +2590,19 @@ export type Database = {
           allocation?: string | null
           benchmark?: string | null
           created_at?: string | null
+          created_by?: string | null
           description?: string | null
           featured?: boolean | null
           id?: string
+          is_global?: boolean | null
+          is_visible?: boolean | null
           manager?: string | null
           minimum_investment?: string | null
           name?: string
           performance?: string | null
           premium_locked?: boolean | null
           risk_level?: string | null
+          sort_order?: number | null
           strategy_type?: string
           tags?: string[] | null
           tenant_id?: string | null
@@ -4631,6 +4658,33 @@ export type Database = {
           },
         ]
       }
+      tenant_feature_flags: {
+        Row: {
+          created_at: string
+          enabled: boolean
+          feature_name: string
+          id: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          enabled?: boolean
+          feature_name: string
+          id?: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          enabled?: boolean
+          feature_name?: string
+          id?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       tenant_licenses: {
         Row: {
           agreement_url: string | null
@@ -4748,6 +4802,66 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      tenant_resources: {
+        Row: {
+          content_type: string
+          created_at: string
+          created_by: string | null
+          description: string | null
+          file_path: string | null
+          id: string
+          is_global: boolean | null
+          is_premium: boolean | null
+          is_visible: boolean | null
+          resource_url: string | null
+          segments: string[] | null
+          sort_order: number | null
+          tags: string[] | null
+          tenant_id: string | null
+          thumbnail_url: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          content_type: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          file_path?: string | null
+          id?: string
+          is_global?: boolean | null
+          is_premium?: boolean | null
+          is_visible?: boolean | null
+          resource_url?: string | null
+          segments?: string[] | null
+          sort_order?: number | null
+          tags?: string[] | null
+          tenant_id?: string | null
+          thumbnail_url?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          content_type?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          file_path?: string | null
+          id?: string
+          is_global?: boolean | null
+          is_premium?: boolean | null
+          is_visible?: boolean | null
+          resource_url?: string | null
+          segments?: string[] | null
+          sort_order?: number | null
+          tags?: string[] | null
+          tenant_id?: string | null
+          thumbnail_url?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       tenant_settings: {
         Row: {
@@ -5673,6 +5787,10 @@ export type Database = {
       get_document_status: {
         Args: { doc_id: string }
         Returns: string
+      }
+      has_premium_access: {
+        Args: { feature_name: string }
+        Returns: boolean
       }
       log_document_access: {
         Args: {
