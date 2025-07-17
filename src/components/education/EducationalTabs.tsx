@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, lazy, Suspense } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { CourseList } from "./CourseList";
@@ -11,8 +11,11 @@ import { BookList } from './BookList';
 import { BookManagement } from './BookManagement';
 import { EducationalResource } from "@/types/education";
 import { toast } from 'sonner';
-import { SolutionCards } from '@/components/solutions/SolutionCards';
-import { WhoWeServe } from '@/components/solutions/WhoWeServe';
+import { SolutionCardSkeleton, ClientSegmentSkeleton } from '@/components/ui/loading-skeletons';
+
+// Lazy load heavy components
+const SolutionCards = lazy(() => import('@/components/solutions/SolutionCards').then(module => ({ default: module.SolutionCards })));
+const WhoWeServe = lazy(() => import('@/components/solutions/WhoWeServe').then(module => ({ default: module.WhoWeServe })));
 
 interface EducationalTabsProps {
   activeSection: string;
@@ -22,7 +25,7 @@ interface EducationalTabsProps {
   handleCourseEnrollment: (id: string | number, title: string, isPaid: boolean, ghlUrl?: string) => void;
 }
 
-export const EducationalTabs: React.FC<EducationalTabsProps> = ({ 
+export const EducationalTabs: React.FC<EducationalTabsProps> = React.memo(({ 
   activeSection, 
   activeCategory, 
   setActiveSection, 
@@ -45,27 +48,34 @@ export const EducationalTabs: React.FC<EducationalTabsProps> = ({
     setSearchParams(newParams);
   }, [activeSection, activeCategory, setSearchParams]);
 
-  const handleTabChange = (value: string) => {
+  const handleTabChange = useCallback((value: string) => {
     setActiveSection(value);
-  };
+  }, [setActiveSection]);
 
-  const handleUpdateBooks = (updatedBooks: EducationalResource[]) => {
+  const handleUpdateBooks = useCallback((updatedBooks: EducationalResource[]) => {
     setBooks(updatedBooks);
     // In a real app, you would save to an API or local storage here
     toast.success("Books list updated");
-  };
+  }, []);
 
-  const handleWhitepaperAccess = (whitepaper: EducationalResource) => {
+  const handleWhitepaperAccess = useCallback((whitepaper: EducationalResource) => {
     window.open(whitepaper.ghlUrl, '_blank');
-  };
+  }, []);
 
-  const handleResourceAccess = (resource: EducationalResource) => {
+  const handleResourceAccess = useCallback((resource: EducationalResource) => {
     window.open(resource.ghlUrl, '_blank');
-  };
+  }, []);
 
-  const handleFunnelAccess = (funnel: EducationalResource) => {
+  const handleFunnelAccess = useCallback((funnel: EducationalResource) => {
     window.open(funnel.ghlUrl, '_blank');
-  };
+  }, []);
+
+  // Memoize course data to prevent unnecessary recalculations
+  const coursesData = useMemo(() => {
+    return activeCategory === "all-courses"
+      ? Object.values(coursesByCategory).flat()
+      : coursesByCategory[activeCategory] || [];
+  }, [activeCategory]);
 
   return (
     <Tabs value={activeSection} onValueChange={handleTabChange} className="w-full">
@@ -266,11 +276,7 @@ export const EducationalTabs: React.FC<EducationalTabsProps> = ({
                 <h3 className="text-xl font-semibold text-foreground mb-4">Professional Courses</h3>
                 <CourseList
                   title={activeCategory === "all-courses" ? "All Courses" : "Category Courses"}
-                  courses={
-                    activeCategory === "all-courses"
-                      ? Object.values(coursesByCategory).flat()
-                      : coursesByCategory[activeCategory] || []
-                  }
+                  courses={coursesData}
                   onCourseEnrollment={handleCourseEnrollment}
                 />
               </div>
@@ -288,14 +294,26 @@ export const EducationalTabs: React.FC<EducationalTabsProps> = ({
               Comprehensive family office solutions designed to optimize your wealth management strategy.
             </p>
           </div>
-          <SolutionCards />
+          <Suspense fallback={
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {[...Array(8)].map((_, i) => <SolutionCardSkeleton key={i} />)}
+            </div>
+          }>
+            <SolutionCards />
+          </Suspense>
         </div>
       </TabsContent>
       
       {/* Who We Serve Tab */}
       <TabsContent value="who-we-serve" className="py-6">
-        <WhoWeServe />
+        <Suspense fallback={
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {[...Array(8)].map((_, i) => <ClientSegmentSkeleton key={i} />)}
+          </div>
+        }>
+          <WhoWeServe />
+        </Suspense>
       </TabsContent>
     </Tabs>
   );
-};
+});

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -100,21 +100,21 @@ const solutionCards: SolutionCard[] = [
   }
 ];
 
-export const SolutionCards: React.FC = () => {
+export const SolutionCards: React.FC = React.memo(() => {
   const navigate = useNavigate();
 
-  const handleLearnMore = (solution: SolutionCard) => {
+  const handleLearnMore = useCallback((solution: SolutionCard) => {
     if (solution.route) {
       navigate(solution.route);
     }
-  };
+  }, [navigate]);
 
-  const handleBookCall = () => {
+  const handleBookCall = useCallback(() => {
     // Navigate to booking or contact page
     navigate('/contact');
-  };
+  }, [navigate]);
 
-  const renderSolutionCard = (solution: SolutionCard) => {
+  const renderSolutionCard = useCallback((solution: SolutionCard) => {
     const IconComponent = solution.icon;
     
     const cardContent = (
@@ -174,11 +174,16 @@ export const SolutionCards: React.FC = () => {
     }
 
     return <div key={solution.id}>{cardContent}</div>;
-  };
+  }, [handleLearnMore, handleBookCall]);
+
+  const renderedCards = useMemo(() => 
+    solutionCards.map(renderSolutionCard), 
+    [renderSolutionCard]
+  );
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-      {solutionCards.map(renderSolutionCard)}
+      {renderedCards}
     </div>
   );
-};
+});
