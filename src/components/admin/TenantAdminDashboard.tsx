@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
 import { useTenant } from '@/hooks/useTenant';
-import { Users, FileText, Settings, CreditCard, Building, UserPlus } from 'lucide-react';
+import { Users, FileText, Settings, CreditCard, Building, UserPlus, Network, Layers, Share2, Plug } from 'lucide-react';
 import { TenantBrandingPanel } from './TenantBrandingPanel';
 import { TenantUserManagement } from './TenantUserManagement';
 import { TenantBillingPanel } from './TenantBillingPanel';
+import { TenantProjectIntegration } from './TenantProjectIntegration';
 
 export const TenantAdminDashboard: React.FC = () => {
   const { currentTenant, loading } = useTenant();
@@ -38,15 +40,23 @@ export const TenantAdminDashboard: React.FC = () => {
           <span className="px-2 py-1 rounded text-xs font-medium bg-blue-100 text-blue-800">
             {currentTenant.franchisee_status.toUpperCase()}
           </span>
+          <Badge variant="outline" className="flex items-center gap-1.5 bg-green-50 text-green-700 border-green-200">
+            <Network className="h-3 w-3" />
+            <span>Connected</span>
+          </Badge>
         </div>
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-        <TabsList className="grid w-full grid-cols-5">
+        <TabsList className="grid w-full grid-cols-6">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="branding">Branding</TabsTrigger>
           <TabsTrigger value="users">Users</TabsTrigger>
           <TabsTrigger value="billing">Billing</TabsTrigger>
+          <TabsTrigger value="integration">
+            <Network className="mr-2 h-4 w-4" />
+            Integration
+          </TabsTrigger>
           <TabsTrigger value="settings">Settings</TabsTrigger>
         </TabsList>
 
@@ -157,6 +167,10 @@ export const TenantAdminDashboard: React.FC = () => {
 
         <TabsContent value="billing">
           <TenantBillingPanel />
+        </TabsContent>
+        
+        <TabsContent value="integration">
+          <TenantProjectIntegration />
         </TabsContent>
 
         <TabsContent value="settings">
