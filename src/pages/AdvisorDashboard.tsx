@@ -2,9 +2,10 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { BellIcon, DollarSignIcon, UsersIcon, LogOutIcon, BarChart4Icon, XIcon } from "lucide-react";
+import { BellIcon, DollarSignIcon, UsersIcon, LogOutIcon, BarChart4Icon, XIcon, UserPlus } from "lucide-react";
 import { Header } from "@/components/ui/Header";
 import { useAuth } from "@/context/AuthContext";
+import { useUser } from "@/context/UserContext";
 import { 
   Dialog, 
   DialogContent, 
@@ -14,13 +15,17 @@ import {
   DialogFooter
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
+import { InviteProspectModal } from "@/components/advisor/InviteProspectModal";
+import { ProspectsList } from "@/components/advisor/ProspectsList";
 
 export default function AdvisorDashboard() {
   const { isAuthenticated, logout } = useAuth();
+  const { userProfile } = useUser();
   const navigate = useNavigate();
   
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [clientsOpen, setClientsOpen] = useState(false);
+  const [inviteProspectOpen, setInviteProspectOpen] = useState(false);
   const [showNotificationBadge, setShowNotificationBadge] = useState(true);
   
   // Mock data for demonstration
@@ -76,6 +81,9 @@ export default function AdvisorDashboard() {
     setClientsOpen(false);
   };
 
+  // Check if user has advisor or admin role
+  const canInviteProspects = userProfile?.role === 'advisor' || userProfile?.role === 'admin';
+
   return (
     <div className="flex flex-col min-h-screen bg-[#F9F7E8]">
       <header className="w-full flex justify-center items-center py-4 border-b border-[#DCD8C0] bg-[#F9F7E8] sticky top-0 z-50">
@@ -96,6 +104,15 @@ export default function AdvisorDashboard() {
             <Link to="/advisor/calendar" className="hover:text-primary font-medium">Calendar</Link>
           </div>
           <div className="flex gap-4 items-center">
+            {canInviteProspects && (
+              <Button 
+                onClick={() => setInviteProspectOpen(true)}
+                className="flex items-center gap-2"
+              >
+                <UserPlus className="h-4 w-4" />
+                Invite Prospect
+              </Button>
+            )}
             <Button 
               variant="ghost" 
               size="icon" 
@@ -148,7 +165,7 @@ export default function AdvisorDashboard() {
             </div>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="bg-white p-6 rounded-lg shadow-sm border border-[#DCD8C0]">
               <h2 className="text-xl font-semibold mb-4 text-[#222222]">Recent Notifications</h2>
               <div className="space-y-4">
@@ -197,6 +214,13 @@ export default function AdvisorDashboard() {
               </Button>
             </div>
           </div>
+
+          {/* Prospects Management Section */}
+          {canInviteProspects && (
+            <div className="mt-8">
+              <ProspectsList onInviteClick={() => setInviteProspectOpen(true)} />
+            </div>
+          )}
         </div>
       </main>
 
@@ -273,6 +297,12 @@ export default function AdvisorDashboard() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Invite Prospect Modal */}
+      <InviteProspectModal 
+        open={inviteProspectOpen} 
+        onOpenChange={setInviteProspectOpen} 
+      />
 
       <footer className="py-6 px-4 bg-[#1B1B32] text-white text-center">
         <p>&copy; {new Date().getFullYear()} Boutique Family Office. All rights reserved.</p>

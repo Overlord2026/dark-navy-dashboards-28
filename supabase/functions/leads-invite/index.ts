@@ -30,6 +30,7 @@ interface InviteRequest {
   sms_opt_in?: boolean;
   send_invite?: boolean;
   redirect_url?: string;
+  personal_note?: string;
 }
 
 serve(async (req) => {
