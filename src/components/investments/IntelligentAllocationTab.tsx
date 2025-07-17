@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { toast } from "sonner";
 import { PortfolioFilterDialog } from "./PortfolioFilterDialog";
@@ -13,7 +12,7 @@ import { useInvestmentStrategies } from "@/hooks/useInvestmentStrategies";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScheduleMeetingDialog } from "./ScheduleMeetingDialog";
-import { Compare, Award } from "lucide-react";
+import { GanttChart, Award } from "lucide-react";
 import { useUser } from "@/context/UserContext";
 
 export const IntelligentAllocationTab = () => {
@@ -46,6 +45,16 @@ export const IntelligentAllocationTab = () => {
     trackEngagement,
     educationalContent
   } = useInvestmentStrategies(userProfile?.client_segment);
+
+  // Convert strategies to portfolio models format
+  const convertToPortfolioModel = (strategy: any) => ({
+    ...strategy,
+    type: strategy.strategy_type,
+    createdDate: strategy.created_at,
+    updatedDate: strategy.updated_at
+  });
+
+  const portfolioModels = filteredStrategies.map(convertToPortfolioModel);
 
   const handleFindPortfolios = () => {
     setFilterDialogOpen(true);
@@ -175,29 +184,29 @@ export const IntelligentAllocationTab = () => {
             onClick={handleCompare}
             className="bg-primary hover:bg-primary/90"
           >
-            <Compare className="h-4 w-4 mr-2" />
+            <GanttChart className="h-4 w-4 mr-2" />
             Compare Selected ({selectedModels.length})
           </Button>
         </div>
       )}
 
-      {/* Tables - Using portfolio models data for now */}
+      {/* Tables */}
       <PortfolioDesktopTable 
-        models={filteredStrategies}
+        models={portfolioModels}
         selectedModels={selectedModels}
         onModelRowClick={handleModelRowClick}
         onViewDetails={handleViewDetails}
       />
 
       <PortfolioTabletTable 
-        models={filteredStrategies}
+        models={portfolioModels}
         selectedModels={selectedModels}
         onModelRowClick={handleModelRowClick}
         onViewDetails={handleViewDetails}
       />
 
       <PortfolioMobileCards 
-        models={filteredStrategies}
+        models={portfolioModels}
         selectedModels={selectedModels}
         onModelRowClick={handleModelRowClick}
         onViewDetails={handleViewDetails}
@@ -229,7 +238,6 @@ export const IntelligentAllocationTab = () => {
       {scheduleMeetingOpen && (
         <ScheduleMeetingDialog
           assetName={selectedStrategyName}
-          open={scheduleMeetingOpen}
           onOpenChange={setScheduleMeetingOpen}
         />
       )}
