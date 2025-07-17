@@ -19,20 +19,26 @@ export default function PublicCalculator() {
       <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <Logo variant="tree" onClick={() => navigate('/')} />
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             <Button 
               variant="outline" 
               onClick={() => navigate('/auth')}
-              className="hidden sm:flex"
+              size="sm"
             >
-              <UserPlus className="h-4 w-4 mr-2" />
-              Client Login
+              Sign In
+            </Button>
+            <Button 
+              onClick={() => navigate('/auth')}
+              size="sm"
+              className="bg-primary hover:bg-primary/90"
+            >
+              Sign Up
             </Button>
             <Button 
                onClick={() => window.open('https://calendly.com/tonygomes/talk-with-tony', '_blank')}
-              className="bg-primary hover:bg-primary/90"
+              className="bg-secondary hover:bg-secondary/90 hidden md:flex"
             >
-              Book My Complimentary Family Office Review
+              Book Review
             </Button>
           </div>
         </div>
