@@ -3146,6 +3146,47 @@ export type Database = {
         }
         Relationships: []
       }
+      onboarding_workflow_steps: {
+        Row: {
+          application_id: string
+          completed_at: string | null
+          created_at: string
+          id: string
+          notes: string | null
+          status: string
+          step_name: string
+          step_order: number
+        }
+        Insert: {
+          application_id: string
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          notes?: string | null
+          status?: string
+          step_name: string
+          step_order: number
+        }
+        Update: {
+          application_id?: string
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          notes?: string | null
+          status?: string
+          step_name?: string
+          step_order?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "onboarding_workflow_steps_application_id_fkey"
+            columns: ["application_id"]
+            isOneToOne: false
+            referencedRelation: "tenant_onboarding_applications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       other_assets: {
         Row: {
           created_at: string
@@ -4539,6 +4580,57 @@ export type Database = {
         }
         Relationships: []
       }
+      tenant_admin_credentials: {
+        Row: {
+          application_id: string
+          created_at: string
+          expires_at: string
+          id: string
+          setup_token: string
+          temp_email: string
+          temp_password: string
+          tenant_id: string
+          used_at: string | null
+        }
+        Insert: {
+          application_id: string
+          created_at?: string
+          expires_at?: string
+          id?: string
+          setup_token: string
+          temp_email: string
+          temp_password: string
+          tenant_id: string
+          used_at?: string | null
+        }
+        Update: {
+          application_id?: string
+          created_at?: string
+          expires_at?: string
+          id?: string
+          setup_token?: string
+          temp_email?: string
+          temp_password?: string
+          tenant_id?: string
+          used_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tenant_admin_credentials_application_id_fkey"
+            columns: ["application_id"]
+            isOneToOne: false
+            referencedRelation: "tenant_onboarding_applications"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tenant_admin_credentials_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tenant_licenses: {
         Row: {
           agreement_url: string | null
@@ -4576,6 +4668,80 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "tenant_licenses_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tenant_onboarding_applications: {
+        Row: {
+          admin_credentials_sent: boolean | null
+          applicant_email: string
+          applicant_name: string
+          application_data: Json | null
+          billing_setup_complete: boolean | null
+          company_name: string
+          created_at: string
+          esign_status: string | null
+          esign_url: string | null
+          franchise_type: string
+          id: string
+          phone: string | null
+          rejection_reason: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          stripe_customer_id: string | null
+          tenant_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          admin_credentials_sent?: boolean | null
+          applicant_email: string
+          applicant_name: string
+          application_data?: Json | null
+          billing_setup_complete?: boolean | null
+          company_name: string
+          created_at?: string
+          esign_status?: string | null
+          esign_url?: string | null
+          franchise_type: string
+          id?: string
+          phone?: string | null
+          rejection_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          stripe_customer_id?: string | null
+          tenant_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          admin_credentials_sent?: boolean | null
+          applicant_email?: string
+          applicant_name?: string
+          application_data?: Json | null
+          billing_setup_complete?: boolean | null
+          company_name?: string
+          created_at?: string
+          esign_status?: string | null
+          esign_url?: string | null
+          franchise_type?: string
+          id?: string
+          phone?: string | null
+          rejection_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          stripe_customer_id?: string | null
+          tenant_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tenant_onboarding_applications_tenant_id_fkey"
             columns: ["tenant_id"]
             isOneToOne: false
             referencedRelation: "tenants"
@@ -5498,6 +5664,10 @@ export type Database = {
       }
       cleanup_expired_otp_codes: {
         Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      create_default_onboarding_steps: {
+        Args: { app_id: string }
         Returns: undefined
       }
       get_document_status: {
