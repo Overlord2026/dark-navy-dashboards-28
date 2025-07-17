@@ -636,6 +636,45 @@ export type Database = {
           },
         ]
       }
+      educational_content: {
+        Row: {
+          content_type: string
+          created_at: string | null
+          description: string | null
+          file_path: string | null
+          id: string
+          is_premium: boolean | null
+          thumbnail_url: string | null
+          title: string
+          updated_at: string | null
+          url: string | null
+        }
+        Insert: {
+          content_type: string
+          created_at?: string | null
+          description?: string | null
+          file_path?: string | null
+          id?: string
+          is_premium?: boolean | null
+          thumbnail_url?: string | null
+          title: string
+          updated_at?: string | null
+          url?: string | null
+        }
+        Update: {
+          content_type?: string
+          created_at?: string | null
+          description?: string | null
+          file_path?: string | null
+          id?: string
+          is_premium?: boolean | null
+          thumbnail_url?: string | null
+          title?: string
+          updated_at?: string | null
+          url?: string | null
+        }
+        Relationships: []
+      }
       epigenetic_tests: {
         Row: {
           biological_age: number
@@ -2414,6 +2453,63 @@ export type Database = {
           },
         ]
       }
+      investment_strategies: {
+        Row: {
+          allocation: string | null
+          benchmark: string | null
+          created_at: string | null
+          description: string | null
+          featured: boolean | null
+          id: string
+          manager: string | null
+          minimum_investment: string | null
+          name: string
+          performance: string | null
+          premium_locked: boolean | null
+          risk_level: string | null
+          strategy_type: string
+          tags: string[] | null
+          updated_at: string | null
+          visibility_rules: Json | null
+        }
+        Insert: {
+          allocation?: string | null
+          benchmark?: string | null
+          created_at?: string | null
+          description?: string | null
+          featured?: boolean | null
+          id?: string
+          manager?: string | null
+          minimum_investment?: string | null
+          name: string
+          performance?: string | null
+          premium_locked?: boolean | null
+          risk_level?: string | null
+          strategy_type: string
+          tags?: string[] | null
+          updated_at?: string | null
+          visibility_rules?: Json | null
+        }
+        Update: {
+          allocation?: string | null
+          benchmark?: string | null
+          created_at?: string | null
+          description?: string | null
+          featured?: boolean | null
+          id?: string
+          manager?: string | null
+          minimum_investment?: string | null
+          name?: string
+          performance?: string | null
+          premium_locked?: boolean | null
+          risk_level?: string | null
+          strategy_type?: string
+          tags?: string[] | null
+          updated_at?: string | null
+          visibility_rules?: Json | null
+        }
+        Relationships: []
+      }
       med_adherence: {
         Row: {
           created_at: string
@@ -3925,6 +4021,98 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      strategy_comparisons: {
+        Row: {
+          created_at: string | null
+          id: string
+          strategies: string[]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          strategies: string[]
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          strategies?: string[]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      strategy_educational_content: {
+        Row: {
+          content_id: string
+          created_at: string | null
+          id: string
+          strategy_id: string
+        }
+        Insert: {
+          content_id: string
+          created_at?: string | null
+          id?: string
+          strategy_id: string
+        }
+        Update: {
+          content_id?: string
+          created_at?: string | null
+          id?: string
+          strategy_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "strategy_educational_content_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "educational_content"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "strategy_educational_content_strategy_id_fkey"
+            columns: ["strategy_id"]
+            isOneToOne: false
+            referencedRelation: "investment_strategies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      strategy_engagement_tracking: {
+        Row: {
+          event_type: string
+          id: string
+          metadata: Json | null
+          occurred_at: string | null
+          strategy_id: string
+          user_id: string
+        }
+        Insert: {
+          event_type: string
+          id?: string
+          metadata?: Json | null
+          occurred_at?: string | null
+          strategy_id: string
+          user_id: string
+        }
+        Update: {
+          event_type?: string
+          id?: string
+          metadata?: Json | null
+          occurred_at?: string | null
+          strategy_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "strategy_engagement_tracking_strategy_id_fkey"
+            columns: ["strategy_id"]
+            isOneToOne: false
+            referencedRelation: "investment_strategies"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       subscribers: {
         Row: {
