@@ -13,7 +13,7 @@ import { Mail, Clock, CheckCircle, XCircle } from 'lucide-react';
 
 interface Invitation {
   id: string;
-  invited_email: string;
+  email: string;
   role: string;
   advisor_role?: string;
   segments?: string[];
@@ -32,14 +32,14 @@ export function InvitationManagement() {
     if (!currentTenant) return;
 
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('tenant_invitations')
         .select('*')
         .eq('tenant_id', currentTenant.id)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setInvitations(data || []);
+      setInvitations((data as Invitation[]) || []);
     } catch (error) {
       console.error('Error fetching invitations:', error);
       toast.error('Failed to load invitations');
@@ -54,7 +54,7 @@ export function InvitationManagement() {
 
   const cancelInvitation = async (invitationId: string) => {
     try {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('tenant_invitations')
         .update({ status: 'cancelled' })
         .eq('id', invitationId);
@@ -144,7 +144,7 @@ export function InvitationManagement() {
                       <div className="flex items-center gap-3">
                         {getStatusIcon(invitation.status)}
                         <div>
-                          <p className="font-medium">{invitation.invited_email}</p>
+                          <p className="font-medium">{invitation.email}</p>
                           <p className="text-sm text-muted-foreground">
                             {invitation.advisor_role}
                           </p>
@@ -197,7 +197,7 @@ export function InvitationManagement() {
                       <div className="flex items-center gap-3">
                         {getStatusIcon(invitation.status)}
                         <div>
-                          <p className="font-medium">{invitation.invited_email}</p>
+                          <p className="font-medium">{invitation.email}</p>
                           <p className="text-sm text-muted-foreground">Client</p>
                         </div>
                       </div>

@@ -50,12 +50,12 @@ export function InviteClientDialog({ onInviteSuccess }: InviteClientDialogProps)
 
     setIsLoading(true);
     try {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('tenant_invitations')
         .insert({
           tenant_id: currentTenant.id,
-          invited_email: email,
-          inviter_user_id: user.id,
+          email: email,
+          invited_by: user.id,
           role: 'client',
           segments,
           notes
