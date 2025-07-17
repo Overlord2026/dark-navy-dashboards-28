@@ -52,6 +52,56 @@ export type Database = {
           },
         ]
       }
+      advisor_applications: {
+        Row: {
+          application_form_url: string | null
+          applied_at: string | null
+          email: string
+          id: string
+          name: string
+          notes: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          specialty: string | null
+          status: string | null
+          tenant_id: string | null
+        }
+        Insert: {
+          application_form_url?: string | null
+          applied_at?: string | null
+          email: string
+          id?: string
+          name: string
+          notes?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          specialty?: string | null
+          status?: string | null
+          tenant_id?: string | null
+        }
+        Update: {
+          application_form_url?: string | null
+          applied_at?: string | null
+          email?: string
+          id?: string
+          name?: string
+          notes?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          specialty?: string | null
+          status?: string | null
+          tenant_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "advisor_applications_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       advisor_assignments: {
         Row: {
           advisor_id: string
@@ -579,6 +629,7 @@ export type Database = {
           shared: boolean | null
           size: number | null
           tags: string[] | null
+          tenant_id: string | null
           type: string
           updated_at: string
           uploaded_by: string | null
@@ -600,6 +651,7 @@ export type Database = {
           shared?: boolean | null
           size?: number | null
           tags?: string[] | null
+          tenant_id?: string | null
           type: string
           updated_at?: string
           uploaded_by?: string | null
@@ -621,6 +673,7 @@ export type Database = {
           shared?: boolean | null
           size?: number | null
           tags?: string[] | null
+          tenant_id?: string | null
           type?: string
           updated_at?: string
           uploaded_by?: string | null
@@ -634,6 +687,13 @@ export type Database = {
             referencedRelation: "documents"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "documents_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
         ]
       }
       educational_content: {
@@ -644,6 +704,7 @@ export type Database = {
           file_path: string | null
           id: string
           is_premium: boolean | null
+          tenant_id: string | null
           thumbnail_url: string | null
           title: string
           updated_at: string | null
@@ -656,6 +717,7 @@ export type Database = {
           file_path?: string | null
           id?: string
           is_premium?: boolean | null
+          tenant_id?: string | null
           thumbnail_url?: string | null
           title: string
           updated_at?: string | null
@@ -668,12 +730,21 @@ export type Database = {
           file_path?: string | null
           id?: string
           is_premium?: boolean | null
+          tenant_id?: string | null
           thumbnail_url?: string | null
           title?: string
           updated_at?: string | null
           url?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "educational_content_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       epigenetic_tests: {
         Row: {
@@ -2469,6 +2540,7 @@ export type Database = {
           risk_level: string | null
           strategy_type: string
           tags: string[] | null
+          tenant_id: string | null
           updated_at: string | null
           visibility_rules: Json | null
         }
@@ -2487,6 +2559,7 @@ export type Database = {
           risk_level?: string | null
           strategy_type: string
           tags?: string[] | null
+          tenant_id?: string | null
           updated_at?: string | null
           visibility_rules?: Json | null
         }
@@ -2505,10 +2578,19 @@ export type Database = {
           risk_level?: string | null
           strategy_type?: string
           tags?: string[] | null
+          tenant_id?: string | null
           updated_at?: string | null
           visibility_rules?: Json | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "investment_strategies_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       med_adherence: {
         Row: {
@@ -3466,6 +3548,7 @@ export type Database = {
           role: string | null
           sms_opt_in: boolean | null
           suffix: string | null
+          tenant_id: string | null
           title: string | null
           two_factor_enabled: boolean | null
           updated_at: string | null
@@ -3499,6 +3582,7 @@ export type Database = {
           role?: string | null
           sms_opt_in?: boolean | null
           suffix?: string | null
+          tenant_id?: string | null
           title?: string | null
           two_factor_enabled?: boolean | null
           updated_at?: string | null
@@ -3532,6 +3616,7 @@ export type Database = {
           role?: string | null
           sms_opt_in?: boolean | null
           suffix?: string | null
+          tenant_id?: string | null
           title?: string | null
           two_factor_enabled?: boolean | null
           updated_at?: string | null
@@ -3539,7 +3624,15 @@ export type Database = {
           utm_medium?: string | null
           utm_source?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "profiles_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       properties: {
         Row: {
@@ -4432,6 +4525,133 @@ export type Database = {
           title?: string
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      tenant_licenses: {
+        Row: {
+          agreement_url: string | null
+          created_at: string | null
+          end_date: string | null
+          id: string
+          license_type: string | null
+          start_date: string | null
+          status: string | null
+          tenant_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          agreement_url?: string | null
+          created_at?: string | null
+          end_date?: string | null
+          id?: string
+          license_type?: string | null
+          start_date?: string | null
+          status?: string | null
+          tenant_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          agreement_url?: string | null
+          created_at?: string | null
+          end_date?: string | null
+          id?: string
+          license_type?: string | null
+          start_date?: string | null
+          status?: string | null
+          tenant_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tenant_licenses_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tenant_settings: {
+        Row: {
+          branding_config: Json | null
+          created_at: string | null
+          custom_css: string | null
+          email_templates: Json | null
+          feature_flags: Json | null
+          id: string
+          tenant_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          branding_config?: Json | null
+          created_at?: string | null
+          custom_css?: string | null
+          email_templates?: Json | null
+          feature_flags?: Json | null
+          id?: string
+          tenant_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          branding_config?: Json | null
+          created_at?: string | null
+          custom_css?: string | null
+          email_templates?: Json | null
+          feature_flags?: Json | null
+          id?: string
+          tenant_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tenant_settings_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: true
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tenants: {
+        Row: {
+          billing_status: string | null
+          brand_logo_url: string | null
+          color_palette: Json | null
+          created_at: string | null
+          domain: string | null
+          franchisee_status: string | null
+          id: string
+          name: string
+          owner_id: string | null
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          billing_status?: string | null
+          brand_logo_url?: string | null
+          color_palette?: Json | null
+          created_at?: string | null
+          domain?: string | null
+          franchisee_status?: string | null
+          id?: string
+          name: string
+          owner_id?: string | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          billing_status?: string | null
+          brand_logo_url?: string | null
+          color_palette?: Json | null
+          created_at?: string | null
+          domain?: string | null
+          franchisee_status?: string | null
+          id?: string
+          name?: string
+          owner_id?: string | null
+          status?: string | null
+          updated_at?: string | null
         }
         Relationships: []
       }
