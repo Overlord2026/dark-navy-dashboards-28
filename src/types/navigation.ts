@@ -21,6 +21,8 @@ export interface NavItem {
   permissions?: string[]; // Required permissions
   metadata?: Record<string, any>; // Additional metadata
   loadComponent?: () => Promise<React.ComponentType>; // Dynamic component loading
+  featureId?: string; // Feature ID for subscription gating
+  isPremium?: boolean; // Mark item as premium feature
 }
 
 export interface NavCategory {

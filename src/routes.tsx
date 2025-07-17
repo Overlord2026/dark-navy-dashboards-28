@@ -95,6 +95,20 @@ import WealthSocialSecurity from "@/pages/wealth/WealthSocialSecurity";
 import WealthBusinessFilings from "@/pages/wealth/WealthBusinessFilings";
 import WealthBillPay from "@/pages/wealth/WealthBillPay";
 
+// Premium wealth pages
+import HighNetWorthTax from "@/pages/wealth/premium/HighNetWorthTax";
+import AppreciatedStock from "@/pages/wealth/premium/AppreciatedStock";
+import CharitableGifting from "@/pages/wealth/premium/CharitableGifting";
+import NuaEsppRsu from "@/pages/wealth/premium/NuaEsppRsu";
+import RothConversion from "@/pages/wealth/premium/RothConversion";
+import StateResidency from "@/pages/wealth/premium/StateResidency";
+import TrustEntityTax from "@/pages/wealth/premium/TrustEntityTax";
+import AdvancedProperty from "@/pages/wealth/premium/AdvancedProperty";
+import FamilyLegacyBox from "@/pages/wealth/premium/FamilyLegacyBox";
+import PrivateMarket from "@/pages/wealth/premium/PrivateMarket";
+import BusinessConcierge from "@/pages/wealth/premium/BusinessConcierge";
+import HealthPremium from "@/pages/health/HealthPremium";
+
 const routes = createBrowserRouter([
   {
     path: "/",
@@ -534,6 +548,55 @@ const routes = createBrowserRouter([
   {
     path: "/wealth/bill-pay",
     element: <ProtectedRoute><WealthBillPay /></ProtectedRoute>
+  },
+  // Premium wealth routes
+  {
+    path: "/wealth/premium/tax/high-net-worth",
+    element: <ProtectedRoute><HighNetWorthTax /></ProtectedRoute>
+  },
+  {
+    path: "/wealth/premium/tax/appreciated-stock",
+    element: <ProtectedRoute><AppreciatedStock /></ProtectedRoute>
+  },
+  {
+    path: "/wealth/premium/tax/charitable-gifting",
+    element: <ProtectedRoute><CharitableGifting /></ProtectedRoute>
+  },
+  {
+    path: "/wealth/premium/tax/nua-espp-rsu",
+    element: <ProtectedRoute><NuaEsppRsu /></ProtectedRoute>
+  },
+  {
+    path: "/wealth/premium/tax/roth-conversion",
+    element: <ProtectedRoute><RothConversion /></ProtectedRoute>
+  },
+  {
+    path: "/wealth/premium/tax/state-residency",
+    element: <ProtectedRoute><StateResidency /></ProtectedRoute>
+  },
+  {
+    path: "/wealth/premium/tax/trust-entity",
+    element: <ProtectedRoute><TrustEntityTax /></ProtectedRoute>
+  },
+  {
+    path: "/wealth/premium/properties",
+    element: <ProtectedRoute><AdvancedProperty /></ProtectedRoute>
+  },
+  {
+    path: "/wealth/premium/legacy-box",
+    element: <ProtectedRoute><FamilyLegacyBox /></ProtectedRoute>
+  },
+  {
+    path: "/wealth/premium/private-market",
+    element: <ProtectedRoute><PrivateMarket /></ProtectedRoute>
+  },
+  {
+    path: "/wealth/premium/business-concierge",
+    element: <ProtectedRoute><BusinessConcierge /></ProtectedRoute>
+  },
+  {
+    path: "/health/premium",
+    element: <ProtectedRoute><HealthPremium /></ProtectedRoute>
   },
   // Legacy redirects
   {
