@@ -21,6 +21,7 @@ interface UserProfile {
   role: 'client' | 'advisor' | 'admin' | 'system_administrator' | 'developer' | 'consultant' | 'accountant' | 'attorney';
   permissions?: string[];
   twoFactorEnabled?: boolean;
+  client_segment?: string;
 }
 
 interface UserContextType {
@@ -106,7 +107,8 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
               investorType: profile.investor_type,
               role: profile.role || 'client',
               permissions: profile.permissions || [],
-              twoFactorEnabled: profile.two_factor_enabled || false
+              twoFactorEnabled: profile.two_factor_enabled || false,
+              client_segment: profile.client_segment
             });
           }
         } catch (error) {
@@ -195,9 +197,10 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
             dateOfBirth: dateOfBirth,
             phone: profile.phone,
             investorType: profile.investor_type,
-            role: profile.role || 'client',
-            permissions: profile.permissions || [],
-            twoFactorEnabled: profile.two_factor_enabled || false
+              role: profile.role || 'client',
+              permissions: profile.permissions || [],
+              twoFactorEnabled: profile.two_factor_enabled || false,
+              client_segment: profile.client_segment
           };
 
           setUserProfile(updatedProfile);

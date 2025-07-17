@@ -12,7 +12,7 @@ interface ClientSegment {
   benefits: string[];
 }
 
-const clientSegments: ClientSegment[] = [
+export const clientSegments: ClientSegment[] = [
   {
     id: 'pre-retirees-retirees',
     title: 'Pre-Retirees & Retirees',
