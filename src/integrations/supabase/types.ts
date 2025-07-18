@@ -6280,6 +6280,7 @@ export type Database = {
           name: string
           retry_attempts: number | null
           secret_key: string | null
+          status: string | null
           tenant_id: string | null
           timeout_seconds: number | null
           updated_at: string
@@ -6295,6 +6296,7 @@ export type Database = {
           name: string
           retry_attempts?: number | null
           secret_key?: string | null
+          status?: string | null
           tenant_id?: string | null
           timeout_seconds?: number | null
           updated_at?: string
@@ -6310,6 +6312,7 @@ export type Database = {
           name?: string
           retry_attempts?: number | null
           secret_key?: string | null
+          status?: string | null
           tenant_id?: string | null
           timeout_seconds?: number | null
           updated_at?: string
@@ -6337,6 +6340,7 @@ export type Database = {
           payload: Json
           response_body: string | null
           response_status: number | null
+          status: string | null
           webhook_config_id: string | null
         }
         Insert: {
@@ -6350,6 +6354,7 @@ export type Database = {
           payload: Json
           response_body?: string | null
           response_status?: number | null
+          status?: string | null
           webhook_config_id?: string | null
         }
         Update: {
@@ -6363,6 +6368,7 @@ export type Database = {
           payload?: Json
           response_body?: string | null
           response_status?: number | null
+          status?: string | null
           webhook_config_id?: string | null
         }
         Relationships: [
