@@ -43,47 +43,36 @@ export function AdminPortalLayout({ children }: AdminPortalLayoutProps) {
       title: 'Overview',
       items: [
         { href: '/admin-portal', icon: Home, label: 'Dashboard', roles: ['all'] },
-        { href: '/admin-portal/analytics', icon: BarChart3, label: 'Analytics', roles: ['all'] },
       ]
     },
     {
-      title: 'User Management',
+      title: 'Manage',
       items: [
         { href: '/admin-portal/advisors', icon: Users, label: 'Advisors/Teams', roles: ['all'] },
         { href: '/admin-portal/clients', icon: UserCheck, label: 'Clients/Prospects', roles: ['all'] },
-        { href: '/admin-portal/tenants', icon: Building, label: 'Tenants', roles: ['system_administrator'] },
-      ]
-    },
-    {
-      title: 'Content & Platform',
-      items: [
         { href: '/admin-portal/resources', icon: FileText, label: 'Resources', roles: ['all'] },
         { href: '/admin-portal/marketplace', icon: ShoppingCart, label: 'Marketplace', roles: ['all'] },
         { href: '/admin-portal/premium-features', icon: Crown, label: 'Premium Features', roles: ['all'] },
       ]
     },
     {
-      title: 'Financial Management',
+      title: 'Business',
       items: [
         { href: '/admin-portal/billing', icon: CreditCard, label: 'Billing & Licensing', roles: ['all'] },
+        { href: '/admin-portal/branding', icon: Palette, label: 'Branding', roles: ['all'] },
         { href: '/admin-portal/referrals', icon: TrendingUp, label: 'Referrals & Compensation', roles: ['all'] },
-        { href: '/admin-portal/payouts', icon: CreditCard, label: 'Payout Management', roles: ['all'] },
       ]
     },
     {
-      title: 'Customization',
+      title: 'Help & Security',
       items: [
-        { href: '/admin-portal/branding', icon: Palette, label: 'Branding & Customization', roles: ['all'] },
         { href: '/admin-portal/training', icon: GraduationCap, label: 'Training & Support', roles: ['all'] },
-      ]
-    },
-    {
-      title: 'Compliance & System',
-      items: [
-        { href: '/admin-portal/compliance', icon: ClipboardCheck, label: 'Compliance & Audit Logs', roles: ['all'] },
+        { href: '/admin-portal/compliance', icon: ClipboardCheck, label: 'Compliance', roles: ['all'] },
+        { href: '/admin-portal/audit-logs', icon: FileSearch, label: 'Audit Logs', roles: ['all'] },
+        { href: '/admin-portal/settings', icon: Settings, label: 'Settings', roles: ['all'] },
+        { href: '/admin-portal/tenants', icon: Building, label: 'Tenants', roles: ['system_administrator'] },
         { href: '/admin-portal/webhooks', icon: Webhook, label: 'Webhooks', roles: ['system_administrator'] },
         { href: '/admin-portal/database', icon: Database, label: 'Database Health', roles: ['system_administrator'] },
-        { href: '/admin-portal/settings', icon: Settings, label: 'Settings', roles: ['all'] },
       ]
     }
   ];
