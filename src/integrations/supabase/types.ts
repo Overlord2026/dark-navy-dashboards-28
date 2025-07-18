@@ -6626,6 +6626,17 @@ export type Database = {
       }
     }
     Views: {
+      audit_summary: {
+        Row: {
+          audit_date: string | null
+          event_type: string | null
+          operation_count: number | null
+          table_name: string | null
+          unique_tenants: number | null
+          unique_users: number | null
+        }
+        Relationships: []
+      }
       backup_summary: {
         Row: {
           avg_backup_duration_seconds: number | null
@@ -6753,6 +6764,14 @@ export type Database = {
           p_cache_hit?: boolean
         }
         Returns: string
+      }
+      test_audit_logging: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          test_name: string
+          result: string
+          details: string
+        }[]
       }
       test_hsa_compliance: {
         Args: Record<PropertyKey, never>

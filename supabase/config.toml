@@ -84,3 +84,6 @@ verify_jwt = false
 
 [functions.disaster-recovery-runbook]
 verify_jwt = false
+
+[functions.test-audit-triggers]
+verify_jwt = false
