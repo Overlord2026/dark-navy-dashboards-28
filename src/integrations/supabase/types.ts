@@ -267,6 +267,54 @@ export type Database = {
         }
         Relationships: []
       }
+      backup_operations: {
+        Row: {
+          backup_location: string | null
+          bucket_name: string
+          completed_at: string | null
+          created_at: string
+          error_message: string | null
+          file_count: number | null
+          id: string
+          initiated_by: string | null
+          metadata: Json | null
+          operation_type: string
+          started_at: string
+          status: string
+          total_size_bytes: number | null
+        }
+        Insert: {
+          backup_location?: string | null
+          bucket_name: string
+          completed_at?: string | null
+          created_at?: string
+          error_message?: string | null
+          file_count?: number | null
+          id?: string
+          initiated_by?: string | null
+          metadata?: Json | null
+          operation_type: string
+          started_at?: string
+          status?: string
+          total_size_bytes?: number | null
+        }
+        Update: {
+          backup_location?: string | null
+          bucket_name?: string
+          completed_at?: string | null
+          created_at?: string
+          error_message?: string | null
+          file_count?: number | null
+          id?: string
+          initiated_by?: string | null
+          metadata?: Json | null
+          operation_type?: string
+          started_at?: string
+          status?: string
+          total_size_bytes?: number | null
+        }
+        Relationships: []
+      }
       bank_accounts: {
         Row: {
           account_number_last4: string | null
@@ -709,6 +757,60 @@ export type Database = {
           total_value?: number
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      disaster_recovery_checklist: {
+        Row: {
+          actual_data_loss: unknown | null
+          assigned_to: string | null
+          checklist_items: Json
+          created_at: string
+          estimated_data_loss: unknown | null
+          id: string
+          incident_id: string
+          incident_type: string
+          lessons_learned: string | null
+          recovery_actions: Json | null
+          resolved_at: string | null
+          severity: string
+          started_at: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          actual_data_loss?: unknown | null
+          assigned_to?: string | null
+          checklist_items: Json
+          created_at?: string
+          estimated_data_loss?: unknown | null
+          id?: string
+          incident_id: string
+          incident_type: string
+          lessons_learned?: string | null
+          recovery_actions?: Json | null
+          resolved_at?: string | null
+          severity: string
+          started_at?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          actual_data_loss?: unknown | null
+          assigned_to?: string | null
+          checklist_items?: Json
+          created_at?: string
+          estimated_data_loss?: unknown | null
+          id?: string
+          incident_id?: string
+          incident_type?: string
+          lessons_learned?: string | null
+          recovery_actions?: Json | null
+          resolved_at?: string | null
+          severity?: string
+          started_at?: string
+          status?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -1272,6 +1374,56 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      file_backup_registry: {
+        Row: {
+          backed_up_at: string
+          backup_file_path: string
+          backup_operation_id: string
+          bucket_name: string
+          checksum: string | null
+          created_at: string
+          file_size_bytes: number | null
+          id: string
+          is_verified: boolean | null
+          original_file_path: string
+          verified_at: string | null
+        }
+        Insert: {
+          backed_up_at?: string
+          backup_file_path: string
+          backup_operation_id: string
+          bucket_name: string
+          checksum?: string | null
+          created_at?: string
+          file_size_bytes?: number | null
+          id?: string
+          is_verified?: boolean | null
+          original_file_path: string
+          verified_at?: string | null
+        }
+        Update: {
+          backed_up_at?: string
+          backup_file_path?: string
+          backup_operation_id?: string
+          bucket_name?: string
+          checksum?: string | null
+          created_at?: string
+          file_size_bytes?: number | null
+          id?: string
+          is_verified?: boolean | null
+          original_file_path?: string
+          verified_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "file_backup_registry_backup_operation_id_fkey"
+            columns: ["backup_operation_id"]
+            isOneToOne: false
+            referencedRelation: "backup_operations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       financial_accounts: {
         Row: {
@@ -6474,6 +6626,19 @@ export type Database = {
       }
     }
     Views: {
+      backup_summary: {
+        Row: {
+          avg_backup_duration_seconds: number | null
+          bucket_name: string | null
+          failed_backups: number | null
+          last_successful_backup: string | null
+          successful_backups: number | null
+          total_files_backed_up: number | null
+          total_operations: number | null
+          total_size_backed_up: number | null
+        }
+        Relationships: []
+      }
       critical_table_performance: {
         Row: {
           avg_execution_time_ms: number | null
@@ -6552,6 +6717,15 @@ export type Database = {
         Args: { required_role: string }
         Returns: boolean
       }
+      initiate_disaster_recovery: {
+        Args: {
+          p_incident_type: string
+          p_severity: string
+          p_description: string
+          p_affected_buckets?: string[]
+        }
+        Returns: string
+      }
       is_tenant_admin: {
         Args: Record<PropertyKey, never>
         Returns: boolean
@@ -6596,6 +6770,15 @@ export type Database = {
           details: string
         }[]
       }
+      update_disaster_recovery_progress: {
+        Args: {
+          p_recovery_id: string
+          p_checklist_item_index: number
+          p_completed: boolean
+          p_notes?: string
+        }
+        Returns: boolean
+      }
       upsert_daily_financial_snapshot: {
         Args: {
           p_user_id: string
@@ -6608,6 +6791,14 @@ export type Database = {
       validate_otp_code: {
         Args: { p_user_id: string; p_otp_code: string }
         Returns: boolean
+      }
+      verify_file_backup_integrity: {
+        Args: { p_backup_operation_id: string }
+        Returns: {
+          file_path: string
+          is_valid: boolean
+          error_message: string
+        }[]
       }
     }
     Enums: {
