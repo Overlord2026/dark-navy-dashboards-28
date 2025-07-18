@@ -6785,6 +6785,30 @@ export type Database = {
           details: string
         }[]
       }
+      test_basic_functionality: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          test_number: number
+          area_feature: string
+          test_case: string
+          expected_result: string
+          actual_result: string
+          pass_fail: string
+          notes: string
+        }[]
+      }
+      test_edge_functions: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          test_number: number
+          area_feature: string
+          test_case: string
+          expected_result: string
+          actual_result: string
+          pass_fail: string
+          notes: string
+        }[]
+      }
       test_fk_constraints_cascade: {
         Args: Record<PropertyKey, never>
         Returns: {
