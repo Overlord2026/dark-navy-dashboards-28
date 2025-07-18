@@ -18,6 +18,7 @@ import { toast } from "sonner";
 import { InviteProspectModal } from "@/components/advisor/InviteProspectModal";
 import { ProspectsList } from "@/components/advisor/ProspectsList";
 import { ReferralCard } from "@/components/referrals/ReferralCard";
+import { AdvisorReferralManagement } from "@/components/referrals/AdvisorReferralManagement";
 
 export default function AdvisorDashboard() {
   const { isAuthenticated, logout } = useAuth();
@@ -220,6 +221,13 @@ export default function AdvisorDashboard() {
               <ReferralCard userRole={userProfile?.role || 'advisor'} />
             </div>
           </div>
+
+          {/* Advisor Referral Program Section */}
+          {canInviteProspects && (
+            <div className="mt-8">
+              <AdvisorReferralManagement userRole={userProfile?.role || 'advisor'} />
+            </div>
+          )}
 
           {/* Prospects Management Section */}
           {canInviteProspects && (

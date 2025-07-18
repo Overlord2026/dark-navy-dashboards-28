@@ -93,3 +93,6 @@ verify_jwt = false
 
 [functions.track-referral-signup]
 verify_jwt = false
+
+[functions.calculate-advisor-overrides]
+verify_jwt = false

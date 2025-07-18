@@ -185,6 +185,59 @@ export type Database = {
           },
         ]
       }
+      advisor_production: {
+        Row: {
+          advisor_id: string
+          aum_fees: number | null
+          client_fees: number | null
+          commission: number | null
+          created_at: string | null
+          gross_revenue: number | null
+          id: string
+          net_revenue: number | null
+          period_end: string
+          period_start: string
+          tenant_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          advisor_id: string
+          aum_fees?: number | null
+          client_fees?: number | null
+          commission?: number | null
+          created_at?: string | null
+          gross_revenue?: number | null
+          id?: string
+          net_revenue?: number | null
+          period_end: string
+          period_start: string
+          tenant_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          advisor_id?: string
+          aum_fees?: number | null
+          client_fees?: number | null
+          commission?: number | null
+          created_at?: string | null
+          gross_revenue?: number | null
+          id?: string
+          net_revenue?: number | null
+          period_end?: string
+          period_start?: string
+          tenant_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "advisor_production_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       analytics_events: {
         Row: {
           created_at: string
@@ -4157,6 +4210,8 @@ export type Database = {
           middle_name: string | null
           permissions: string[] | null
           phone: string | null
+          recruited_at: string | null
+          referring_advisor_id: string | null
           role: string | null
           sms_opt_in: boolean | null
           suffix: string | null
@@ -4191,6 +4246,8 @@ export type Database = {
           middle_name?: string | null
           permissions?: string[] | null
           phone?: string | null
+          recruited_at?: string | null
+          referring_advisor_id?: string | null
           role?: string | null
           sms_opt_in?: boolean | null
           suffix?: string | null
@@ -4225,6 +4282,8 @@ export type Database = {
           middle_name?: string | null
           permissions?: string[] | null
           phone?: string | null
+          recruited_at?: string | null
+          referring_advisor_id?: string | null
           role?: string | null
           sms_opt_in?: boolean | null
           suffix?: string | null
@@ -6913,6 +6972,17 @@ export type Database = {
         Args: { p_referee_id: string }
         Returns: boolean
       }
+      calculate_advisor_overrides: {
+        Args: { p_period_start: string; p_period_end: string }
+        Returns: {
+          override_id: string
+          referring_advisor_id: string
+          recruited_advisor_id: string
+          production_amount: number
+          override_amount: number
+          updated: boolean
+        }[]
+      }
       calculate_provider_rating: {
         Args: { provider_id: string }
         Returns: number
@@ -7025,6 +7095,10 @@ export type Database = {
           p_cache_hit?: boolean
         }
         Returns: string
+      }
+      process_advisor_referral: {
+        Args: { p_referral_code: string; p_new_advisor_id: string }
+        Returns: boolean
       }
       run_database_review_tests: {
         Args: Record<PropertyKey, never>
