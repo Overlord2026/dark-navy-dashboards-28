@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
+
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '@/lib/supabase';
 import { toast } from '@/hooks/use-toast';
 
@@ -48,7 +49,10 @@ export const useHealthDocs = () => {
     sharedDocuments: 0,
     emergencyAccessible: 0
   });
-  const [retryCount, setRetryCount] = useState(0);
+  
+  const retryCountRef = useRef(0);
+  const maxRetries = 3;
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   const clearError = useCallback(() => setError(null), []);
 
@@ -67,6 +71,13 @@ export const useHealthDocs = () => {
   }, []);
 
   const fetchDocuments = useCallback(async (showLoading = true) => {
+    // Cancel previous request if still pending
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    
+    abortControllerRef.current = new AbortController();
+    
     try {
       if (showLoading) setIsLoading(true);
       setError(null);
@@ -74,24 +85,30 @@ export const useHealthDocs = () => {
       const { data, error } = await supabase
         .from('health_docs')
         .select('*')
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
+        .abortSignal(abortControllerRef.current.signal);
 
       if (error) throw error;
 
       const docs = data || [];
       setDocuments(docs);
       setStats(calculateStats(docs));
-      setRetryCount(0);
-    } catch (err) {
+      retryCountRef.current = 0; // Reset retry count on success
+    } catch (err: any) {
+      // Don't handle AbortError as it's intentional
+      if (err.name === 'AbortError') return;
+      
       const errorMessage = err instanceof Error ? err.message : 'Failed to fetch documents';
       setError(errorMessage);
       
-      // Auto-retry up to 3 times with exponential backoff
-      if (retryCount < 3) {
+      // Auto-retry up to maxRetries with exponential backoff
+      if (retryCountRef.current < maxRetries) {
+        const retryDelay = Math.pow(2, retryCountRef.current) * 1000;
+        retryCountRef.current++;
+        
         setTimeout(() => {
-          setRetryCount(prev => prev + 1);
           fetchDocuments(false);
-        }, Math.pow(2, retryCount) * 1000);
+        }, retryDelay);
       } else {
         toast({
           title: "Error fetching documents",
@@ -102,7 +119,7 @@ export const useHealthDocs = () => {
     } finally {
       if (showLoading) setIsLoading(false);
     }
-  }, [calculateStats, retryCount]);
+  }, [calculateStats]);
 
   const createDocument = useCallback(async (docData: Partial<HealthDoc> & { file?: File }) => {
     try {
@@ -354,13 +371,20 @@ export const useHealthDocs = () => {
   }, []);
 
   const refetch = useCallback(() => {
-    setRetryCount(0);
+    retryCountRef.current = 0; // Reset retry count when manually refetching
     return fetchDocuments(true);
   }, [fetchDocuments]);
 
   useEffect(() => {
     fetchDocuments();
-  }, [fetchDocuments]);
+    
+    // Cleanup function to abort any pending requests
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+    };
+  }, []); // Remove fetchDocuments from dependency array to prevent infinite loop
 
   return {
     documents,

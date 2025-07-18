@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+
+import React, { useState, useMemo } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useHealthDocs } from "@/hooks/healthcare/useHealthDocs";
 import { DocumentUploadModal } from "@/components/healthcare/DocumentUploadModal";
-import { HealthcareDocumentManager } from "@/components/healthcare/HealthcareDocumentManager";
 import { 
   FileTextIcon, 
   DownloadIcon, 
@@ -21,13 +21,14 @@ const HealthcareDocuments: React.FC = () => {
   const handleDocumentUpload = async (documentData: any, file?: File) => {
     try {
       await createDocument({ ...documentData, file });
+      setIsUploadModalOpen(false);
     } catch (error) {
       console.error('Error uploading document:', error);
       throw error; // Re-throw to let modal handle the error
     }
   };
 
-  const getStatusBadge = (status: string) => {
+  const getStatusBadge = useMemo(() => (status: string) => {
     switch (status) {
       case 'expired':
         return <Badge variant="destructive">Expired</Badge>;
@@ -38,9 +39,9 @@ const HealthcareDocuments: React.FC = () => {
       default:
         return <Badge variant="outline">Current</Badge>;
     }
-  };
+  }, []);
 
-  const getStatusColor = (status: string) => {
+  const getStatusColor = useMemo(() => (status: string) => {
     switch (status) {
       case 'expired':
         return 'border-l-red-500';
@@ -51,7 +52,15 @@ const HealthcareDocuments: React.FC = () => {
       default:
         return 'border-l-green-500';
     }
-  };
+  }, []);
+
+  // Memoize the documents list to prevent unnecessary re-renders
+  const documentsList = useMemo(() => {
+    return documents.map((doc) => {
+      const status = getDocumentStatus(doc);
+      return { ...doc, status };
+    });
+  }, [documents, getDocumentStatus]);
 
   if (isLoading) {
     return (
@@ -87,7 +96,7 @@ const HealthcareDocuments: React.FC = () => {
               </p>
             </div>
             <div className="flex gap-2">
-              <Button onClick={refetch} variant="outline" size="sm">
+              <Button onClick={refetch} variant="outline" size="sm" disabled={isLoading}>
                 <RefreshCwIcon className="h-4 w-4 mr-2" />
                 Refresh
               </Button>
@@ -146,7 +155,7 @@ const HealthcareDocuments: React.FC = () => {
         <div className="space-y-4">
           <h2 className="text-xl font-semibold text-foreground mb-4">Recent Documents</h2>
           
-          {documents.length === 0 ? (
+          {documentsList.length === 0 ? (
             <Card className="p-8 text-center">
               <FileTextIcon className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
               <h3 className="text-lg font-medium text-foreground mb-2">No documents yet</h3>
@@ -159,48 +168,45 @@ const HealthcareDocuments: React.FC = () => {
               </Button>
             </Card>
           ) : (
-            documents.map((doc) => {
-              const status = getDocumentStatus(doc);
-              return (
-                <Card key={doc.id} className={`p-6 border-l-4 ${getStatusColor(status)}`}>
-                  <div className="flex items-center justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
-                        <h3 className="font-medium text-foreground">{doc.document_name}</h3>
-                        {getStatusBadge(status)}
-                        {doc.is_emergency_accessible && (
-                          <Badge variant="outline" className="text-xs">
-                            <ShieldIcon className="h-3 w-3 mr-1" />
-                            Emergency Access
-                          </Badge>
-                        )}
-                      </div>
-                      <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                        <span className="capitalize">{doc.doc_type.replace('_', ' ')}</span>
-                        {doc.signed_date && (
-                          <span>Signed: {new Date(doc.signed_date).toLocaleDateString()}</span>
-                        )}
-                        {doc.expires_on && (
-                          <span>Expires: {new Date(doc.expires_on).toLocaleDateString()}</span>
-                        )}
-                      </div>
+            documentsList.map((doc) => (
+              <Card key={doc.id} className={`p-6 border-l-4 ${getStatusColor(doc.status)}`}>
+                <div className="flex items-center justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-2">
+                      <h3 className="font-medium text-foreground">{doc.document_name}</h3>
+                      {getStatusBadge(doc.status)}
+                      {doc.is_emergency_accessible && (
+                        <Badge variant="outline" className="text-xs">
+                          <ShieldIcon className="h-3 w-3 mr-1" />
+                          Emergency Access
+                        </Badge>
+                      )}
                     </div>
-                    <div className="flex items-center gap-2">
-                      {doc.file_path && (
-                        <Button
-                          onClick={() => downloadDocument(doc)}
-                          size="sm"
-                          variant="outline"
-                        >
-                          <DownloadIcon className="h-4 w-4 mr-2" />
-                          Download
-                        </Button>
+                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                      <span className="capitalize">{doc.doc_type.replace('_', ' ')}</span>
+                      {doc.signed_date && (
+                        <span>Signed: {new Date(doc.signed_date).toLocaleDateString()}</span>
+                      )}
+                      {doc.expires_on && (
+                        <span>Expires: {new Date(doc.expires_on).toLocaleDateString()}</span>
                       )}
                     </div>
                   </div>
-                </Card>
-              );
-            })
+                  <div className="flex items-center gap-2">
+                    {doc.file_path && (
+                      <Button
+                        onClick={() => downloadDocument(doc)}
+                        size="sm"
+                        variant="outline"
+                      >
+                        <DownloadIcon className="h-4 w-4 mr-2" />
+                        Download
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              </Card>
+            ))
           )}
         </div>
 
