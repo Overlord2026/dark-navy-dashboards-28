@@ -800,7 +800,7 @@ export type Database = {
           shared: boolean | null
           size: number | null
           tags: string[] | null
-          tenant_id: string | null
+          tenant_id: string
           type: string
           updated_at: string
           uploaded_by: string | null
@@ -822,7 +822,7 @@ export type Database = {
           shared?: boolean | null
           size?: number | null
           tags?: string[] | null
-          tenant_id?: string | null
+          tenant_id: string
           type: string
           updated_at?: string
           uploaded_by?: string | null
@@ -844,7 +844,7 @@ export type Database = {
           shared?: boolean | null
           size?: number | null
           tags?: string[] | null
-          tenant_id?: string | null
+          tenant_id?: string
           type?: string
           updated_at?: string
           uploaded_by?: string | null
@@ -880,7 +880,7 @@ export type Database = {
           is_visible: boolean | null
           segments: string[] | null
           sort_order: number | null
-          tenant_id: string | null
+          tenant_id: string
           thumbnail_url: string | null
           title: string
           updated_at: string | null
@@ -898,7 +898,7 @@ export type Database = {
           is_visible?: boolean | null
           segments?: string[] | null
           sort_order?: number | null
-          tenant_id?: string | null
+          tenant_id: string
           thumbnail_url?: string | null
           title: string
           updated_at?: string | null
@@ -916,7 +916,7 @@ export type Database = {
           is_visible?: boolean | null
           segments?: string[] | null
           sort_order?: number | null
-          tenant_id?: string | null
+          tenant_id?: string
           thumbnail_url?: string | null
           title?: string
           updated_at?: string | null
@@ -2730,7 +2730,7 @@ export type Database = {
           sort_order: number | null
           strategy_type: string
           tags: string[] | null
-          tenant_id: string | null
+          tenant_id: string
           updated_at: string | null
           visibility_rules: Json | null
         }
@@ -2753,7 +2753,7 @@ export type Database = {
           sort_order?: number | null
           strategy_type: string
           tags?: string[] | null
-          tenant_id?: string | null
+          tenant_id: string
           updated_at?: string | null
           visibility_rules?: Json | null
         }
@@ -2776,7 +2776,7 @@ export type Database = {
           sort_order?: number | null
           strategy_type?: string
           tags?: string[] | null
-          tenant_id?: string | null
+          tenant_id?: string
           updated_at?: string | null
           visibility_rules?: Json | null
         }
@@ -3819,7 +3819,7 @@ export type Database = {
           phone: string | null
           rating: number | null
           specialties: string[] | null
-          tenant_id: string | null
+          tenant_id: string
           type: string
           updated_at: string
           user_id: string
@@ -3837,7 +3837,7 @@ export type Database = {
           phone?: string | null
           rating?: number | null
           specialties?: string[] | null
-          tenant_id?: string | null
+          tenant_id: string
           type?: string
           updated_at?: string
           user_id: string
@@ -3855,7 +3855,7 @@ export type Database = {
           phone?: string | null
           rating?: number | null
           specialties?: string[] | null
-          tenant_id?: string | null
+          tenant_id?: string
           type?: string
           updated_at?: string
           user_id?: string
