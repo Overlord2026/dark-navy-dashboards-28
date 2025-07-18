@@ -66,7 +66,7 @@ export const useReferrals = () => {
     }
   };
 
-  const generateReferralCode = async (type: 'client' | 'advisor' | 'franchise', rewardAmount: number = 100, rewardType: string = 'credit') => {
+  const generateReferralCode = async (type: 'client' | 'advisor' | 'franchise', rewardAmount: number = 100, rewardType: string = 'credit', refereeEmail?: string) => {
     try {
       // Get current user and tenant ID
       const { data: { user } } = await supabase.auth.getUser();
@@ -81,6 +81,17 @@ export const useReferrals = () => {
       if (!profile?.tenant_id) {
         throw new Error('No tenant found');
       }
+
+      // Validate referral creation (prevent duplicates, self-referral, rate limiting)
+      const { error: validationError } = await supabase
+        .rpc('validate_referral_creation', {
+          p_referrer_id: user.id,
+          p_referee_email: refereeEmail,
+          p_referral_type: type,
+          p_tenant_id: profile.tenant_id
+        });
+
+      if (validationError) throw validationError;
 
       // Generate unique code
       const { data: codeData, error: codeError } = await supabase
@@ -114,11 +125,24 @@ export const useReferrals = () => {
 
       await fetchReferrals();
       return data;
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error generating referral code:', error);
+      
+      // Handle specific validation errors
+      let errorMessage = "Failed to generate referral code";
+      if (error.message?.includes('Self-referral not allowed')) {
+        errorMessage = "You cannot refer yourself";
+      } else if (error.message?.includes('Duplicate referral detected')) {
+        errorMessage = "This email has already been referred";
+      } else if (error.message?.includes('Daily referral limit exceeded')) {
+        errorMessage = "Daily referral limit reached (10 per day)";
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+
       toast({
         title: "Error",
-        description: "Failed to generate referral code",
+        description: errorMessage,
         variant: "destructive",
       });
       throw error;

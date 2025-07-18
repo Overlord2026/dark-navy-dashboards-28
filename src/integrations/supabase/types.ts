@@ -7374,6 +7374,18 @@ export type Database = {
         }
         Returns: string
       }
+      log_referral_audit: {
+        Args: {
+          p_event_type: string
+          p_referral_type: string
+          p_referral_id: string
+          p_old_status?: string
+          p_new_status?: string
+          p_user_id?: string
+          p_details?: Json
+        }
+        Returns: string
+      }
       process_advisor_referral: {
         Args: { p_referral_code: string; p_new_advisor_id: string }
         Returns: boolean
@@ -7486,8 +7498,25 @@ export type Database = {
         }
         Returns: undefined
       }
+      validate_franchise_referral_creation: {
+        Args: {
+          p_referring_tenant_id: string
+          p_contact_email: string
+          p_firm_name: string
+        }
+        Returns: boolean
+      }
       validate_otp_code: {
         Args: { p_user_id: string; p_otp_code: string }
+        Returns: boolean
+      }
+      validate_referral_creation: {
+        Args: {
+          p_referrer_id: string
+          p_referee_email?: string
+          p_referral_type?: string
+          p_tenant_id?: string
+        }
         Returns: boolean
       }
       verify_file_backup_integrity: {

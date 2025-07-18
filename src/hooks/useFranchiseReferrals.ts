@@ -113,6 +113,16 @@ export const useFranchiseReferrals = () => {
     if (!currentTenant) return;
 
     try {
+      // Validate franchise referral creation (prevent duplicates, self-referral, rate limiting)
+      const { error: validationError } = await supabase
+        .rpc('validate_franchise_referral_creation', {
+          p_referring_tenant_id: currentTenant.id,
+          p_contact_email: referralData.referred_contact_email || '',
+          p_firm_name: referralData.referred_firm_name || ''
+        });
+
+      if (validationError) throw validationError;
+
       // Generate referral code
       const { data: codeData, error: codeError } = await supabase
         .rpc('generate_franchise_referral_code');
@@ -144,9 +154,23 @@ export const useFranchiseReferrals = () => {
       await fetchReferrals();
       toast.success('Franchise referral created successfully');
       return data;
-    } catch (err) {
+    } catch (err: any) {
       console.error('Failed to create franchise referral:', err);
-      toast.error('Failed to create franchise referral');
+      
+      // Handle specific validation errors
+      let errorMessage = 'Failed to create franchise referral';
+      if (err.message?.includes('Self-referral not allowed')) {
+        errorMessage = 'You cannot refer your own firm';
+      } else if (err.message?.includes('Duplicate franchise referral detected')) {
+        errorMessage = 'This firm or contact has already been referred';
+      } else if (err.message?.includes('Daily franchise referral limit exceeded')) {
+        errorMessage = 'Daily franchise referral limit reached (5 per day)';
+      } else if (err.message) {
+        errorMessage = err.message;
+      }
+
+      toast.error(errorMessage);
+      throw err;
     }
   };
 
