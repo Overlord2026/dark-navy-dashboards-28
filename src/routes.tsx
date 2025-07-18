@@ -58,6 +58,9 @@ import { TenantAdmin } from "@/pages/TenantAdmin";
 import { AnalyticsPage } from "@/pages/AnalyticsPage";
 import { WebhooksPage } from "@/pages/WebhooksPage";
 import { ReferralAnalytics } from "@/pages/ReferralAnalytics";
+import { AdminPortal } from "@/pages/AdminPortal";
+import { AdminUsers } from "@/pages/admin/AdminUsers";
+import { AdminPayouts } from "@/pages/admin/AdminPayouts";
 
 // Health pages
 import HealthDashboard from "@/pages/health/HealthDashboard";
@@ -274,6 +277,63 @@ const routes = createBrowserRouter([
   {
     path: "/webhooks",
     element: <ProtectedRoute requiredRole="admin"><WebhooksPage /></ProtectedRoute>
+  },
+  // Admin Portal Routes
+  {
+    path: "/admin-portal",
+    element: <ProtectedRoute><AdminPortal /></ProtectedRoute>
+  },
+  {
+    path: "/admin-portal/users",
+    element: <ProtectedRoute><AdminUsers /></ProtectedRoute>
+  },
+  {
+    path: "/admin-portal/payouts",
+    element: <ProtectedRoute><AdminPayouts /></ProtectedRoute>
+  },
+  {
+    path: "/admin-portal/analytics",
+    element: <ProtectedRoute><AnalyticsPage /></ProtectedRoute>
+  },
+  {
+    path: "/admin-portal/resources",
+    element: <ProtectedRoute><ResourcesCatalog /></ProtectedRoute>
+  },
+  {
+    path: "/admin-portal/education",
+    element: <ProtectedRoute><ResourcesCatalog /></ProtectedRoute>
+  },
+  {
+    path: "/admin-portal/strategies",
+    element: <ProtectedRoute><ModelPortfolios /></ProtectedRoute>
+  },
+  {
+    path: "/admin-portal/referrals",
+    element: <ProtectedRoute><ReferralAnalytics /></ProtectedRoute>
+  },
+  {
+    path: "/admin-portal/webhooks",
+    element: <ProtectedRoute requiredRole="system_administrator"><WebhooksPage /></ProtectedRoute>
+  },
+  {
+    path: "/admin-portal/database",
+    element: <ProtectedRoute requiredRole="system_administrator"><DiagnosticsRunner /></ProtectedRoute>
+  },
+  {
+    path: "/admin-portal/security",
+    element: <ProtectedRoute requiredRole="system_administrator"><NavigationDiagnostics /></ProtectedRoute>
+  },
+  {
+    path: "/admin-portal/settings",
+    element: <ProtectedRoute><EnhancedSettings /></ProtectedRoute>
+  },
+  {
+    path: "/admin-portal/tenants",
+    element: <ProtectedRoute requiredRole="system_administrator"><TenantAdmin /></ProtectedRoute>
+  },
+  {
+    path: "/admin-portal/roles",
+    element: <ProtectedRoute requiredRole="system_administrator"><AdminUsers /></ProtectedRoute>
   },
   {
     path: "/help-center",
