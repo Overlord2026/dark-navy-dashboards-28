@@ -96,3 +96,6 @@ verify_jwt = false
 
 [functions.calculate-advisor-overrides]
 verify_jwt = false
+
+[functions.send-payout-notifications]
+verify_jwt = false

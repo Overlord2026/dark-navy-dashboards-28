@@ -5,8 +5,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Copy, DollarSign, TrendingUp, Users } from "lucide-react";
 import { useReferrals } from "@/hooks/useReferrals";
+import { PayoutManagement } from "@/components/referrals/PayoutManagement";
+import { PayoutHistory } from "@/components/referrals/PayoutHistory";
 import { useState } from "react";
 
 export const ReferralManagement = () => {
@@ -39,8 +42,15 @@ export const ReferralManagement = () => {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Stats Overview */}
+    <Tabs defaultValue="overview" className="space-y-6">
+      <TabsList>
+        <TabsTrigger value="overview">Overview</TabsTrigger>
+        <TabsTrigger value="payouts">Payout Management</TabsTrigger>
+        <TabsTrigger value="history">Payout History</TabsTrigger>
+      </TabsList>
+
+      <TabsContent value="overview" className="space-y-6">
+        {/* Stats Overview */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card>
           <CardContent className="flex items-center p-6">
@@ -244,6 +254,15 @@ export const ReferralManagement = () => {
           </CardContent>
         </Card>
       )}
-    </div>
+      </TabsContent>
+
+      <TabsContent value="payouts">
+        <PayoutManagement />
+      </TabsContent>
+
+      <TabsContent value="history">
+        <PayoutHistory />
+      </TabsContent>
+    </Tabs>
   );
 };

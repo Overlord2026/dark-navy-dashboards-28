@@ -3780,6 +3780,47 @@ export type Database = {
         }
         Relationships: []
       }
+      payout_notifications: {
+        Row: {
+          created_at: string
+          email_sent: boolean | null
+          id: string
+          notification_type: string
+          payout_id: string
+          push_sent: boolean | null
+          sent_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email_sent?: boolean | null
+          id?: string
+          notification_type: string
+          payout_id: string
+          push_sent?: boolean | null
+          sent_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email_sent?: boolean | null
+          id?: string
+          notification_type?: string
+          payout_id?: string
+          push_sent?: boolean | null
+          sent_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payout_notifications_payout_id_fkey"
+            columns: ["payout_id"]
+            isOneToOne: false
+            referencedRelation: "referral_payouts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       physicians: {
         Row: {
           created_at: string
@@ -4672,6 +4713,75 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      referral_payouts: {
+        Row: {
+          advisor_override_id: string | null
+          amount: number
+          approved_at: string | null
+          approved_by: string | null
+          created_at: string
+          id: string
+          notes: string | null
+          paid_at: string | null
+          payment_method: string | null
+          payment_reference: string | null
+          payout_type: string
+          referral_id: string | null
+          status: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          advisor_override_id?: string | null
+          amount: number
+          approved_at?: string | null
+          approved_by?: string | null
+          created_at?: string
+          id?: string
+          notes?: string | null
+          paid_at?: string | null
+          payment_method?: string | null
+          payment_reference?: string | null
+          payout_type: string
+          referral_id?: string | null
+          status?: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          advisor_override_id?: string | null
+          amount?: number
+          approved_at?: string | null
+          approved_by?: string | null
+          created_at?: string
+          id?: string
+          notes?: string | null
+          paid_at?: string | null
+          payment_method?: string | null
+          payment_reference?: string | null
+          payout_type?: string
+          referral_id?: string | null
+          status?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referral_payouts_advisor_override_id_fkey"
+            columns: ["advisor_override_id"]
+            isOneToOne: false
+            referencedRelation: "advisor_overrides"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "referral_payouts_referral_id_fkey"
+            columns: ["referral_id"]
+            isOneToOne: false
+            referencedRelation: "referrals"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       referral_rewards: {
         Row: {
@@ -6998,6 +7108,14 @@ export type Database = {
       create_default_onboarding_steps: {
         Args: { app_id: string }
         Returns: undefined
+      }
+      create_override_payout: {
+        Args: { p_override_id: string }
+        Returns: string
+      }
+      create_referral_payout: {
+        Args: { p_referral_id: string }
+        Returns: string
       }
       generate_referral_code: {
         Args: Record<PropertyKey, never>
