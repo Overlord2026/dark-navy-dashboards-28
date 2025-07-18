@@ -6765,12 +6765,34 @@ export type Database = {
         }
         Returns: string
       }
+      run_database_review_tests: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          test_number: number
+          area_feature: string
+          test_case: string
+          expected_result: string
+          actual_result: string
+          pass_fail: string
+          notes: string
+        }[]
+      }
       test_audit_logging: {
         Args: Record<PropertyKey, never>
         Returns: {
           test_name: string
           result: string
           details: string
+        }[]
+      }
+      test_fk_constraints_cascade: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          test_case: string
+          expected_result: string
+          actual_result: string
+          pass_fail: string
+          notes: string
         }[]
       }
       test_hsa_compliance: {
@@ -6781,12 +6803,32 @@ export type Database = {
           details: string
         }[]
       }
+      test_rls_and_tenant_isolation: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          test_case: string
+          expected_result: string
+          actual_result: string
+          pass_fail: string
+          notes: string
+        }[]
+      }
       test_transfer_validation: {
         Args: Record<PropertyKey, never>
         Returns: {
           test_name: string
           result: string
           details: string
+        }[]
+      }
+      test_webhook_constraints: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          test_case: string
+          expected_result: string
+          actual_result: string
+          pass_fail: string
+          notes: string
         }[]
       }
       update_disaster_recovery_progress: {
