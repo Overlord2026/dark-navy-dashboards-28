@@ -1,51 +1,74 @@
+
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { toast } from "sonner";
 import { useSearchParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { EducationalTabs } from "@/components/education/EducationalTabs";
 import { courseCategories } from "@/data/education";
 import { handleCourseAccess } from "@/components/education/courseUtils";
 import { motion } from "framer-motion";
 
 export default function ResourcesCatalog() {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [activeCategory, setActiveCategory] = useState("all-courses");
   const [activeSection, setActiveSection] = useState("learn-discover");
+  const [isInitialized, setIsInitialized] = useState(false);
   
+  // Initialize state from URL parameters once
   useEffect(() => {
-    const category = searchParams.get("category");
-    const section = searchParams.get("section");
-    
-    if (category) {
-      setActiveCategory(category);
-      setActiveSection("courses");
-    } else if (section) {
-      // Make sure we validate that the section exists
-      const validSections = ["learn-discover", "solutions-services", "who-we-serve"];
-      if (validSections.includes(section)) {
-        setActiveSection(section);
+    if (!isInitialized) {
+      const category = searchParams.get("category");
+      const section = searchParams.get("section");
+      
+      if (category) {
+        setActiveCategory(category);
+        setActiveSection("courses");
+      } else if (section) {
+        const validSections = ["learn-discover", "solutions-services", "who-we-serve"];
+        if (validSections.includes(section)) {
+          setActiveSection(section);
+        }
       }
+      setIsInitialized(true);
     }
-  }, [searchParams]);
+  }, [searchParams, isInitialized]);
 
-  const handleCourseEnrollment = (courseId: string | number, title: string, isPaid: boolean, ghlUrl?: string) => {
+  // Memoize course enrollment handler
+  const handleCourseEnrollment = useCallback((courseId: string | number, title: string, isPaid: boolean, ghlUrl?: string) => {
     if (ghlUrl) {
-      // Use the handleCourseAccess utility for proper course access flow
       handleCourseAccess(courseId, title, isPaid, ghlUrl);
     } else {
-      // Fallback for if we somehow get here without a URL
       if (isPaid) {
         toast.info(`Redirecting to payment page for ${title}`);
       } else {
         toast.success(`Successfully enrolled in ${title}`);
       }
     }
-  };
+  }, []);
 
-  const handleCategoryChange = (categoryId: string) => {
+  // Memoize category change handler
+  const handleCategoryChange = useCallback((categoryId: string) => {
     setActiveCategory(categoryId);
     setActiveSection("courses");
-  };
+    
+    // Update URL without causing re-renders
+    const newSearchParams = new URLSearchParams(searchParams);
+    newSearchParams.set("category", categoryId);
+    setSearchParams(newSearchParams, { replace: true });
+  }, [searchParams, setSearchParams]);
+
+  // Memoize section change handler
+  const handleSectionChange = useCallback((section: string) => {
+    setActiveSection(section);
+    
+    // Update URL without causing re-renders
+    const newSearchParams = new URLSearchParams(searchParams);
+    newSearchParams.set("section", section);
+    if (newSearchParams.has("category")) {
+      newSearchParams.delete("category");
+    }
+    setSearchParams(newSearchParams, { replace: true });
+  }, [searchParams, setSearchParams]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -63,6 +86,18 @@ export default function ResourcesCatalog() {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0 }
   };
+
+  if (!isInitialized) {
+    return (
+      <ThreeColumnLayout title="Resources & Solutions Catalog" activeMainItem="education">
+        <div className="flex items-center justify-center min-h-64">
+          <div className="text-center">
+            <div className="animate-pulse">Loading...</div>
+          </div>
+        </div>
+      </ThreeColumnLayout>
+    );
+  }
 
   return (
     <ThreeColumnLayout 
@@ -88,7 +123,7 @@ export default function ResourcesCatalog() {
               className="px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors font-medium"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => setActiveSection("solutions-services")}
+              onClick={() => handleSectionChange("solutions-services")}
             >
               See Everything We Offer
             </motion.button>
@@ -96,7 +131,7 @@ export default function ResourcesCatalog() {
               className="px-6 py-3 border border-primary text-primary rounded-lg hover:bg-primary/5 transition-colors font-medium"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => setActiveSection("learn-discover")}
+              onClick={() => handleSectionChange("learn-discover")}
             >
               Start Learning
             </motion.button>
@@ -107,8 +142,8 @@ export default function ResourcesCatalog() {
           <EducationalTabs 
             activeSection={activeSection}
             activeCategory={activeCategory}
-            setActiveSection={setActiveSection}
-            setActiveCategory={setActiveCategory}
+            setActiveSection={handleSectionChange}
+            setActiveCategory={handleCategoryChange}
             handleCourseEnrollment={handleCourseEnrollment}
           />
         </motion.div>
