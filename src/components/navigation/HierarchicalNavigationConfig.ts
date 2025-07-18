@@ -548,6 +548,12 @@ export const hierarchicalNav: NavItem[] = [
     collapsible: true,
     children: [
       { 
+        id: 'analytics', 
+        title: 'Analytics', 
+        href: '/analytics', 
+        icon: BarChart3Icon 
+      },
+      { 
         id: 'help', 
         title: 'Help', 
         href: '/help-center', 

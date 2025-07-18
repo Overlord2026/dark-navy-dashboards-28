@@ -55,6 +55,7 @@ import AdminFAQs from "@/pages/admin/AdminFAQs";
 import HelpCenter from "@/pages/HelpCenter";
 import EnhancedSettings from "@/pages/EnhancedSettings";
 import { TenantAdmin } from "@/pages/TenantAdmin";
+import { AnalyticsPage } from "@/pages/AnalyticsPage";
 
 // Health pages
 import HealthDashboard from "@/pages/health/HealthDashboard";
@@ -259,6 +260,10 @@ const routes = createBrowserRouter([
   {
     path: "/tenant-admin",
     element: <ProtectedRoute><TenantAdmin /></ProtectedRoute>
+  },
+  {
+    path: "/analytics",
+    element: <ProtectedRoute><AnalyticsPage /></ProtectedRoute>
   },
   {
     path: "/help-center",

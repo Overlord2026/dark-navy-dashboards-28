@@ -129,6 +129,53 @@ export type Database = {
         }
         Relationships: []
       }
+      analytics_events: {
+        Row: {
+          created_at: string
+          event_category: string
+          event_data: Json | null
+          event_type: string
+          id: string
+          ip_address: unknown | null
+          session_id: string | null
+          tenant_id: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          event_category: string
+          event_data?: Json | null
+          event_type: string
+          id?: string
+          ip_address?: unknown | null
+          session_id?: string | null
+          tenant_id?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          event_category?: string
+          event_data?: Json | null
+          event_type?: string
+          id?: string
+          ip_address?: unknown | null
+          session_id?: string | null
+          tenant_id?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "analytics_events_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       appointments: {
         Row: {
           cost: number | null
@@ -465,6 +512,77 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      daily_analytics: {
+        Row: {
+          active_users: number | null
+          advisor_logins: number | null
+          advisor_onboarding_completed: number | null
+          avg_session_duration: number | null
+          client_logins: number | null
+          client_onboarding_completed: number | null
+          conversion_rate: number | null
+          created_at: string
+          date: string
+          id: string
+          new_advisors: number | null
+          new_clients: number | null
+          new_users: number | null
+          page_views: number | null
+          tenant_id: string | null
+          total_sessions: number | null
+          total_users: number | null
+          updated_at: string
+        }
+        Insert: {
+          active_users?: number | null
+          advisor_logins?: number | null
+          advisor_onboarding_completed?: number | null
+          avg_session_duration?: number | null
+          client_logins?: number | null
+          client_onboarding_completed?: number | null
+          conversion_rate?: number | null
+          created_at?: string
+          date: string
+          id?: string
+          new_advisors?: number | null
+          new_clients?: number | null
+          new_users?: number | null
+          page_views?: number | null
+          tenant_id?: string | null
+          total_sessions?: number | null
+          total_users?: number | null
+          updated_at?: string
+        }
+        Update: {
+          active_users?: number | null
+          advisor_logins?: number | null
+          advisor_onboarding_completed?: number | null
+          avg_session_duration?: number | null
+          client_logins?: number | null
+          client_onboarding_completed?: number | null
+          conversion_rate?: number | null
+          created_at?: string
+          date?: string
+          id?: string
+          new_advisors?: number | null
+          new_clients?: number | null
+          new_users?: number | null
+          page_views?: number | null
+          tenant_id?: string | null
+          total_sessions?: number | null
+          total_users?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "daily_analytics_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       device_tokens: {
         Row: {
@@ -3173,6 +3291,53 @@ export type Database = {
         }
         Relationships: []
       }
+      onboarding_checklists: {
+        Row: {
+          checklist_type: string
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          is_template: boolean | null
+          items: Json
+          tenant_id: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          checklist_type: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_template?: boolean | null
+          items?: Json
+          tenant_id?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          checklist_type?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_template?: boolean | null
+          items?: Json
+          tenant_id?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "onboarding_checklists_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       onboarding_workflow_steps: {
         Row: {
           application_id: string
@@ -3456,6 +3621,59 @@ export type Database = {
             columns: ["plan_id"]
             isOneToOne: false
             referencedRelation: "financial_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      playbooks: {
+        Row: {
+          content: string
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          is_published: boolean | null
+          playbook_type: string
+          tags: string[] | null
+          target_audience: string[] | null
+          tenant_id: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_published?: boolean | null
+          playbook_type: string
+          tags?: string[] | null
+          target_audience?: string[] | null
+          tenant_id?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_published?: boolean | null
+          playbook_type?: string
+          tags?: string[] | null
+          target_audience?: string[] | null
+          tenant_id?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "playbooks_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
             referencedColumns: ["id"]
           },
         ]
@@ -4946,6 +5164,71 @@ export type Database = {
         }
         Relationships: []
       }
+      training_modules: {
+        Row: {
+          category: string
+          content: string
+          created_at: string
+          created_by: string | null
+          description: string | null
+          difficulty_level: string | null
+          duration_minutes: number | null
+          id: string
+          is_published: boolean | null
+          is_required: boolean | null
+          module_type: string
+          sort_order: number | null
+          tags: string[] | null
+          tenant_id: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          content: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          difficulty_level?: string | null
+          duration_minutes?: number | null
+          id?: string
+          is_published?: boolean | null
+          is_required?: boolean | null
+          module_type: string
+          sort_order?: number | null
+          tags?: string[] | null
+          tenant_id?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          content?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          difficulty_level?: string | null
+          duration_minutes?: number | null
+          id?: string
+          is_published?: boolean | null
+          is_required?: boolean | null
+          module_type?: string
+          sort_order?: number | null
+          tags?: string[] | null
+          tenant_id?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "training_modules_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       transfers: {
         Row: {
           ach_credit_status: string | null
@@ -5212,6 +5495,60 @@ export type Database = {
           zip_code?: string | null
         }
         Relationships: []
+      }
+      user_checklist_progress: {
+        Row: {
+          checklist_id: string | null
+          completed_at: string | null
+          completed_items: Json | null
+          created_at: string
+          id: string
+          started_at: string | null
+          status: string
+          tenant_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          checklist_id?: string | null
+          completed_at?: string | null
+          completed_items?: Json | null
+          created_at?: string
+          id?: string
+          started_at?: string | null
+          status: string
+          tenant_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          checklist_id?: string | null
+          completed_at?: string | null
+          completed_items?: Json | null
+          created_at?: string
+          id?: string
+          started_at?: string | null
+          status?: string
+          tenant_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_checklist_progress_checklist_id_fkey"
+            columns: ["checklist_id"]
+            isOneToOne: false
+            referencedRelation: "onboarding_checklists"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_checklist_progress_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_contact_info: {
         Row: {
@@ -5523,6 +5860,50 @@ export type Database = {
         }
         Relationships: []
       }
+      user_onboarding_progress: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          id: string
+          is_completed: boolean | null
+          step_name: string
+          tenant_id: string | null
+          updated_at: string
+          user_id: string
+          user_type: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          is_completed?: boolean | null
+          step_name: string
+          tenant_id?: string | null
+          updated_at?: string
+          user_id: string
+          user_type: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          is_completed?: boolean | null
+          step_name?: string
+          tenant_id?: string | null
+          updated_at?: string
+          user_id?: string
+          user_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_onboarding_progress_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_otp_codes: {
         Row: {
           attempts: number
@@ -5620,6 +6001,60 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      user_training_progress: {
+        Row: {
+          completed_at: string | null
+          completion_percentage: number | null
+          created_at: string
+          id: string
+          module_id: string | null
+          started_at: string | null
+          status: string
+          tenant_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          completion_percentage?: number | null
+          created_at?: string
+          id?: string
+          module_id?: string | null
+          started_at?: string | null
+          status: string
+          tenant_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          completion_percentage?: number | null
+          created_at?: string
+          id?: string
+          module_id?: string | null
+          started_at?: string | null
+          status?: string
+          tenant_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_training_progress_module_id_fkey"
+            columns: ["module_id"]
+            isOneToOne: false
+            referencedRelation: "training_modules"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_training_progress_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_trust_documents: {
         Row: {
