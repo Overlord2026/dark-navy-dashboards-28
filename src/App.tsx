@@ -3,6 +3,7 @@ import { RouterProvider } from "react-router-dom";
 import routes from "./routes";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { AuthProvider } from "@/context/AuthContext";
+import { TenantProvider } from "@/context/TenantContext";
 import { UserProvider } from "@/context/UserContext";
 import { NetWorthProvider } from "@/context/NetWorthContext";
 import { SubscriptionProvider } from "@/context/SubscriptionContext";
@@ -22,6 +23,7 @@ import { RealEstateProvider } from "@/context/RealEstateContext";
 import { OtherAssetsProvider } from "@/context/OtherAssetsContext";
 import { LiabilitiesProvider } from "@/context/LiabilitiesContext";
 import { TransfersProvider } from "@/context/TransfersContext";
+import { TenantBrandingWrapper } from "@/components/tenant/TenantBrandingWrapper";
 
 // Create a Query Client
 const queryClient = new QueryClient({
@@ -38,42 +40,46 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         <AuthProvider>
-          <UserProvider>
-            <SubscriptionProvider>
-              <NetWorthProvider>
-                <FinancialPlanProvider>
-                  <BankAccountsProvider>
-                    <CreditCardsProvider>
-                      <TransfersProvider>
-                      <RetirementPlansProvider>
-                        <InvestmentAccountsProvider>
-                          <PrivateEquityAccountsProvider>
-                            <PublicStocksProvider>
-                              <DigitalAssetsProvider>
-                                <RealEstateProvider>
-                                  <OtherAssetsProvider>
-                                    <LiabilitiesProvider>
-                                      <DiagnosticsProvider>
-                                        <AdvisorProvider>
-                                          <RouterProvider router={routes} />
-                                          <Toaster position="top-right" richColors closeButton />
-                                        </AdvisorProvider>
-                                      </DiagnosticsProvider>
-                                    </LiabilitiesProvider>
-                                  </OtherAssetsProvider>
-                                </RealEstateProvider>
-                              </DigitalAssetsProvider>
-                            </PublicStocksProvider>
-                          </PrivateEquityAccountsProvider>
-                        </InvestmentAccountsProvider>
-                      </RetirementPlansProvider>
-                      </TransfersProvider>
-                    </CreditCardsProvider>
-                  </BankAccountsProvider>
-                </FinancialPlanProvider>
-              </NetWorthProvider>
-            </SubscriptionProvider>
-          </UserProvider>
+          <TenantProvider>
+            <TenantBrandingWrapper>
+              <UserProvider>
+                <SubscriptionProvider>
+                  <NetWorthProvider>
+                    <FinancialPlanProvider>
+                      <BankAccountsProvider>
+                        <CreditCardsProvider>
+                          <TransfersProvider>
+                          <RetirementPlansProvider>
+                            <InvestmentAccountsProvider>
+                              <PrivateEquityAccountsProvider>
+                                <PublicStocksProvider>
+                                  <DigitalAssetsProvider>
+                                    <RealEstateProvider>
+                                      <OtherAssetsProvider>
+                                        <LiabilitiesProvider>
+                                          <DiagnosticsProvider>
+                                            <AdvisorProvider>
+                                              <RouterProvider router={routes} />
+                                              <Toaster position="top-right" richColors closeButton />
+                                            </AdvisorProvider>
+                                          </DiagnosticsProvider>
+                                        </LiabilitiesProvider>
+                                      </OtherAssetsProvider>
+                                    </RealEstateProvider>
+                                  </DigitalAssetsProvider>
+                                </PublicStocksProvider>
+                              </PrivateEquityAccountsProvider>
+                            </InvestmentAccountsProvider>
+                          </RetirementPlansProvider>
+                          </TransfersProvider>
+                        </CreditCardsProvider>
+                      </BankAccountsProvider>
+                    </FinancialPlanProvider>
+                  </NetWorthProvider>
+                </SubscriptionProvider>
+              </UserProvider>
+            </TenantBrandingWrapper>
+          </TenantProvider>
         </AuthProvider>
       </ThemeProvider>
     </QueryClientProvider>
