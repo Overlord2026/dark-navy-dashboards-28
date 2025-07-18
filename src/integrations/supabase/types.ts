@@ -6478,6 +6478,22 @@ export type Database = {
         }
         Returns: string
       }
+      test_hsa_compliance: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          test_name: string
+          result: string
+          details: string
+        }[]
+      }
+      test_transfer_validation: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          test_name: string
+          result: string
+          details: string
+        }[]
+      }
       upsert_daily_financial_snapshot: {
         Args: {
           p_user_id: string
