@@ -15,7 +15,15 @@ import {
   TrendingUp,
   CreditCard,
   Home,
-  LogOut
+  LogOut,
+  Crown,
+  ShoppingCart,
+  GraduationCap,
+  Palette,
+  BookOpen,
+  HeadphonesIcon,
+  ClipboardCheck,
+  FileSearch
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -41,33 +49,40 @@ export function AdminPortalLayout({ children }: AdminPortalLayoutProps) {
     {
       title: 'User Management',
       items: [
-        { href: '/admin-portal/users', icon: Users, label: 'Users', roles: ['all'] },
-        { href: '/admin-portal/roles', icon: UserCheck, label: 'Roles & Permissions', roles: ['system_administrator'] },
+        { href: '/admin-portal/advisors', icon: Users, label: 'Advisors/Teams', roles: ['all'] },
+        { href: '/admin-portal/clients', icon: UserCheck, label: 'Clients/Prospects', roles: ['all'] },
         { href: '/admin-portal/tenants', icon: Building, label: 'Tenants', roles: ['system_administrator'] },
       ]
     },
     {
-      title: 'Content & Resources',
+      title: 'Content & Platform',
       items: [
         { href: '/admin-portal/resources', icon: FileText, label: 'Resources', roles: ['all'] },
-        { href: '/admin-portal/education', icon: FileText, label: 'Education Content', roles: ['all'] },
-        { href: '/admin-portal/strategies', icon: TrendingUp, label: 'Investment Strategies', roles: ['all'] },
+        { href: '/admin-portal/marketplace', icon: ShoppingCart, label: 'Marketplace', roles: ['all'] },
+        { href: '/admin-portal/premium-features', icon: Crown, label: 'Premium Features', roles: ['all'] },
       ]
     },
     {
-      title: 'Referrals & Payouts',
+      title: 'Financial Management',
       items: [
-        { href: '/admin-portal/referrals', icon: Users, label: 'Referral Management', roles: ['all'] },
+        { href: '/admin-portal/billing', icon: CreditCard, label: 'Billing & Licensing', roles: ['all'] },
+        { href: '/admin-portal/referrals', icon: TrendingUp, label: 'Referrals & Compensation', roles: ['all'] },
         { href: '/admin-portal/payouts', icon: CreditCard, label: 'Payout Management', roles: ['all'] },
-        { href: '/referral-analytics', icon: BarChart3, label: 'Referral Analytics', roles: ['all'] },
       ]
     },
     {
-      title: 'System',
+      title: 'Customization',
       items: [
+        { href: '/admin-portal/branding', icon: Palette, label: 'Branding & Customization', roles: ['all'] },
+        { href: '/admin-portal/training', icon: GraduationCap, label: 'Training & Support', roles: ['all'] },
+      ]
+    },
+    {
+      title: 'Compliance & System',
+      items: [
+        { href: '/admin-portal/compliance', icon: ClipboardCheck, label: 'Compliance & Audit Logs', roles: ['all'] },
         { href: '/admin-portal/webhooks', icon: Webhook, label: 'Webhooks', roles: ['system_administrator'] },
         { href: '/admin-portal/database', icon: Database, label: 'Database Health', roles: ['system_administrator'] },
-        { href: '/admin-portal/security', icon: Shield, label: 'Security Audit', roles: ['system_administrator'] },
         { href: '/admin-portal/settings', icon: Settings, label: 'Settings', roles: ['all'] },
       ]
     }

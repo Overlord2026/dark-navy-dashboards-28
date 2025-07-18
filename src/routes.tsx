@@ -61,6 +61,10 @@ import { ReferralAnalytics } from "@/pages/ReferralAnalytics";
 import { AdminPortal } from "@/pages/AdminPortal";
 import { AdminUsers } from "@/pages/admin/AdminUsers";
 import { AdminPayouts } from "@/pages/admin/AdminPayouts";
+import { AdminAdvisors } from "@/pages/admin/AdminAdvisors";
+import { AdminClients } from "@/pages/admin/AdminClients";
+import { AdminMarketplace } from "@/pages/admin/AdminMarketplace";
+import { AdminBranding } from "@/pages/admin/AdminBranding";
 
 // Health pages
 import HealthDashboard from "@/pages/health/HealthDashboard";
@@ -284,8 +288,20 @@ const routes = createBrowserRouter([
     element: <ProtectedRoute><AdminPortal /></ProtectedRoute>
   },
   {
-    path: "/admin-portal/users",
-    element: <ProtectedRoute><AdminUsers /></ProtectedRoute>
+    path: "/admin-portal/advisors",
+    element: <ProtectedRoute><AdminAdvisors /></ProtectedRoute>
+  },
+  {
+    path: "/admin-portal/clients",
+    element: <ProtectedRoute><AdminClients /></ProtectedRoute>
+  },
+  {
+    path: "/admin-portal/marketplace",
+    element: <ProtectedRoute><AdminMarketplace /></ProtectedRoute>
+  },
+  {
+    path: "/admin-portal/branding",
+    element: <ProtectedRoute><AdminBranding /></ProtectedRoute>
   },
   {
     path: "/admin-portal/payouts",
@@ -300,16 +316,24 @@ const routes = createBrowserRouter([
     element: <ProtectedRoute><ResourcesCatalog /></ProtectedRoute>
   },
   {
-    path: "/admin-portal/education",
+    path: "/admin-portal/premium-features",
     element: <ProtectedRoute><ResourcesCatalog /></ProtectedRoute>
   },
   {
-    path: "/admin-portal/strategies",
-    element: <ProtectedRoute><ModelPortfolios /></ProtectedRoute>
+    path: "/admin-portal/billing",
+    element: <ProtectedRoute><AdminPayouts /></ProtectedRoute>
   },
   {
     path: "/admin-portal/referrals",
     element: <ProtectedRoute><ReferralAnalytics /></ProtectedRoute>
+  },
+  {
+    path: "/admin-portal/training",
+    element: <ProtectedRoute><ResourcesCatalog /></ProtectedRoute>
+  },
+  {
+    path: "/admin-portal/compliance",
+    element: <ProtectedRoute><NavigationDiagnostics /></ProtectedRoute>
   },
   {
     path: "/admin-portal/webhooks",
@@ -320,20 +344,12 @@ const routes = createBrowserRouter([
     element: <ProtectedRoute requiredRole="system_administrator"><DiagnosticsRunner /></ProtectedRoute>
   },
   {
-    path: "/admin-portal/security",
-    element: <ProtectedRoute requiredRole="system_administrator"><NavigationDiagnostics /></ProtectedRoute>
-  },
-  {
     path: "/admin-portal/settings",
     element: <ProtectedRoute><EnhancedSettings /></ProtectedRoute>
   },
   {
     path: "/admin-portal/tenants",
     element: <ProtectedRoute requiredRole="system_administrator"><TenantAdmin /></ProtectedRoute>
-  },
-  {
-    path: "/admin-portal/roles",
-    element: <ProtectedRoute requiredRole="system_administrator"><AdminUsers /></ProtectedRoute>
   },
   {
     path: "/help-center",
