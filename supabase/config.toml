@@ -69,3 +69,12 @@ verify_jwt = false
 
 [functions.healthcare-file-operations]
 verify_jwt = false
+
+[functions.test-triggers]
+verify_jwt = false
+
+[functions.query-performance-monitor]
+verify_jwt = false
+
+[functions.error-simulation-test]
+verify_jwt = false

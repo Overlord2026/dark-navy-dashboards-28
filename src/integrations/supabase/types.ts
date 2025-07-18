@@ -4271,6 +4271,54 @@ export type Database = {
         }
         Relationships: []
       }
+      query_performance_logs: {
+        Row: {
+          cache_hit: boolean | null
+          created_at: string
+          execution_time_ms: number
+          function_name: string | null
+          id: string
+          index_usage: Json | null
+          operation_type: string
+          query_hash: string
+          query_plan: Json | null
+          rows_affected: number | null
+          slow_query_threshold_exceeded: boolean | null
+          table_name: string
+          user_id: string | null
+        }
+        Insert: {
+          cache_hit?: boolean | null
+          created_at?: string
+          execution_time_ms: number
+          function_name?: string | null
+          id?: string
+          index_usage?: Json | null
+          operation_type: string
+          query_hash: string
+          query_plan?: Json | null
+          rows_affected?: number | null
+          slow_query_threshold_exceeded?: boolean | null
+          table_name: string
+          user_id?: string | null
+        }
+        Update: {
+          cache_hit?: boolean | null
+          created_at?: string
+          execution_time_ms?: number
+          function_name?: string | null
+          id?: string
+          index_usage?: Json | null
+          operation_type?: string
+          query_hash?: string
+          query_plan?: Json | null
+          rows_affected?: number | null
+          slow_query_threshold_exceeded?: boolean | null
+          table_name?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       real_estate_properties: {
         Row: {
           address: string
@@ -6426,7 +6474,34 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      critical_table_performance: {
+        Row: {
+          avg_execution_time_ms: number | null
+          cache_hit_count: number | null
+          cache_hit_rate_percent: number | null
+          hour_bucket: string | null
+          max_execution_time_ms: number | null
+          operation_type: string | null
+          query_count: number | null
+          slow_query_count: number | null
+          table_name: string | null
+        }
+        Relationships: []
+      }
+      query_performance_summary: {
+        Row: {
+          avg_execution_time_ms: number | null
+          hour_bucket: string | null
+          max_execution_time_ms: number | null
+          min_execution_time_ms: number | null
+          operation_type: string | null
+          p95_execution_time_ms: number | null
+          query_count: number | null
+          slow_query_count: number | null
+          table_name: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       calculate_provider_rating: {
@@ -6453,6 +6528,18 @@ export type Database = {
         Args: { doc_id: string }
         Returns: string
       }
+      get_top_slow_queries: {
+        Args: { p_hours_back?: number; p_limit?: number }
+        Returns: {
+          table_name: string
+          operation_type: string
+          query_hash: string
+          avg_execution_time_ms: number
+          max_execution_time_ms: number
+          query_count: number
+          function_name: string
+        }[]
+      }
       has_any_role: {
         Args: { roles: string[] }
         Returns: boolean
@@ -6475,6 +6562,21 @@ export type Database = {
           p_access_type: string
           p_access_method?: string
           p_emergency_token?: string
+        }
+        Returns: string
+      }
+      log_query_performance: {
+        Args: {
+          p_table_name: string
+          p_operation_type: string
+          p_query_hash: string
+          p_execution_time_ms: number
+          p_rows_affected?: number
+          p_function_name?: string
+          p_user_id?: string
+          p_query_plan?: Json
+          p_index_usage?: Json
+          p_cache_hit?: boolean
         }
         Returns: string
       }
