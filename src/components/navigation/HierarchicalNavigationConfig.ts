@@ -554,6 +554,12 @@ export const hierarchicalNav: NavItem[] = [
         icon: BarChart3Icon 
       },
       { 
+        id: 'webhooks', 
+        title: 'Webhooks & CRM', 
+        href: '/webhooks', 
+        icon: ZapIcon 
+      },
+      { 
         id: 'help', 
         title: 'Help', 
         href: '/help-center', 

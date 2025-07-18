@@ -513,6 +513,59 @@ export type Database = {
         }
         Relationships: []
       }
+      crm_integrations: {
+        Row: {
+          api_endpoint: string | null
+          api_key_encrypted: string | null
+          created_at: string
+          field_mappings: Json | null
+          id: string
+          integration_type: string
+          is_active: boolean | null
+          last_sync_at: string | null
+          settings: Json | null
+          sync_frequency: string | null
+          tenant_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          api_endpoint?: string | null
+          api_key_encrypted?: string | null
+          created_at?: string
+          field_mappings?: Json | null
+          id?: string
+          integration_type: string
+          is_active?: boolean | null
+          last_sync_at?: string | null
+          settings?: Json | null
+          sync_frequency?: string | null
+          tenant_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          api_endpoint?: string | null
+          api_key_encrypted?: string | null
+          created_at?: string
+          field_mappings?: Json | null
+          id?: string
+          integration_type?: string
+          is_active?: boolean | null
+          last_sync_at?: string | null
+          settings?: Json | null
+          sync_frequency?: string | null
+          tenant_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crm_integrations_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       daily_analytics: {
         Row: {
           active_users: number | null
@@ -5164,6 +5217,56 @@ export type Database = {
         }
         Relationships: []
       }
+      tracked_events: {
+        Row: {
+          created_at: string
+          event_data: Json | null
+          event_name: string
+          event_type: string
+          id: string
+          ip_address: unknown | null
+          referrer: string | null
+          source: string | null
+          tenant_id: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          event_data?: Json | null
+          event_name: string
+          event_type: string
+          id?: string
+          ip_address?: unknown | null
+          referrer?: string | null
+          source?: string | null
+          tenant_id?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          event_data?: Json | null
+          event_name?: string
+          event_type?: string
+          id?: string
+          ip_address?: unknown | null
+          referrer?: string | null
+          source?: string | null
+          tenant_id?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tracked_events_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       training_modules: {
         Row: {
           category: string
@@ -6165,6 +6268,119 @@ export type Database = {
           zip_code?: string | null
         }
         Relationships: []
+      }
+      webhook_configs: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          events: string[]
+          headers: Json | null
+          id: string
+          is_active: boolean | null
+          name: string
+          retry_attempts: number | null
+          secret_key: string | null
+          tenant_id: string | null
+          timeout_seconds: number | null
+          updated_at: string
+          url: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          events?: string[]
+          headers?: Json | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          retry_attempts?: number | null
+          secret_key?: string | null
+          tenant_id?: string | null
+          timeout_seconds?: number | null
+          updated_at?: string
+          url: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          events?: string[]
+          headers?: Json | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          retry_attempts?: number | null
+          secret_key?: string | null
+          tenant_id?: string | null
+          timeout_seconds?: number | null
+          updated_at?: string
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "webhook_configs_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      webhook_deliveries: {
+        Row: {
+          attempt_number: number | null
+          created_at: string
+          delivered_at: string | null
+          error_message: string | null
+          event_id: string | null
+          event_type: string
+          id: string
+          payload: Json
+          response_body: string | null
+          response_status: number | null
+          webhook_config_id: string | null
+        }
+        Insert: {
+          attempt_number?: number | null
+          created_at?: string
+          delivered_at?: string | null
+          error_message?: string | null
+          event_id?: string | null
+          event_type: string
+          id?: string
+          payload: Json
+          response_body?: string | null
+          response_status?: number | null
+          webhook_config_id?: string | null
+        }
+        Update: {
+          attempt_number?: number | null
+          created_at?: string
+          delivered_at?: string | null
+          error_message?: string | null
+          event_id?: string | null
+          event_type?: string
+          id?: string
+          payload?: Json
+          response_body?: string | null
+          response_status?: number | null
+          webhook_config_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "webhook_deliveries_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "analytics_events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "webhook_deliveries_webhook_config_id_fkey"
+            columns: ["webhook_config_id"]
+            isOneToOne: false
+            referencedRelation: "webhook_configs"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       webinar_registrations: {
         Row: {
