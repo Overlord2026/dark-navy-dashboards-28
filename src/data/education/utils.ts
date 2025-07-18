@@ -1,6 +1,7 @@
 
 import { Course, EducationalResources } from "@/types/education";
-import { educationalResources, featuredCourses, popularCourses } from "./index";
+import { educationalResources } from "./resources";
+import { featuredCourses, popularCourses } from "./courses";
 
 export const getResourcesByCategory = (categoryId: string): EducationalResources => {
   if (categoryId === "all-courses") {
@@ -23,7 +24,10 @@ export const getResourcesByCategory = (categoryId: string): EducationalResources
     ),
     resources: educationalResources.resources.filter(resource => 
       resource.id.includes(categoryId) || categoryId === "all-courses"
-    )
+    ),
+    funnel: educationalResources.funnel?.filter(resource => 
+      resource.id.includes(categoryId) || categoryId === "all-courses"
+    ) || []
   };
   
   return filteredResources;
@@ -56,7 +60,8 @@ export const getResourceById = (resourceId: string): any => {
     ...educationalResources.books,
     ...educationalResources.whitepapers,
     ...educationalResources.ebooks,
-    ...educationalResources.resources
+    ...educationalResources.resources,
+    ...(educationalResources.funnel || [])
   ];
   return allResources.find(resource => resource.id === resourceId);
 };
