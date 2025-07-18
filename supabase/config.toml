@@ -90,3 +90,6 @@ verify_jwt = false
 
 [functions.database-review-tests]
 verify_jwt = false
+
+[functions.track-referral-signup]
+verify_jwt = false

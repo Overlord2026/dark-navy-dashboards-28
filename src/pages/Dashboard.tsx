@@ -11,6 +11,7 @@ import { usePagePerformance } from "@/hooks/usePagePerformance";
 import { SWAGRetirementRoadmap } from "@/components/retirement/SWAGRetirementRoadmap";
 import { Button } from "@/components/ui/button";
 import { BookOpen, Users, Calendar } from "lucide-react";
+import { ReferralCard } from "@/components/referrals/ReferralCard";
 
 export default function Dashboard() {
   const { userProfile } = useAuth();
@@ -51,20 +52,25 @@ export default function Dashboard() {
           <NetWorthSummary />
         </div>
 
-        {/* Educational Resources for Clients */}
-        <div className="bg-card/30 rounded-lg p-6">
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h3 className="text-xl font-bold text-foreground flex items-center gap-2">
-                <BookOpen className="h-5 w-5 text-primary" />
-                Your Expert Resource Library
-              </h3>
-              <p className="text-muted-foreground">
-                Complimentary guides and resources—always available to our clients
-              </p>
+        <div className="grid md:grid-cols-3 gap-6">
+          {/* Educational Resources for Clients */}
+          <div className="md:col-span-2 bg-card/30 rounded-lg p-6">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h3 className="text-xl font-bold text-foreground flex items-center gap-2">
+                  <BookOpen className="h-5 w-5 text-primary" />
+                  Your Expert Resource Library
+                </h3>
+                <p className="text-muted-foreground">
+                  Complimentary guides and resources—always available to our clients
+                </p>
+              </div>
             </div>
+            <EducationalResources />
           </div>
-          <EducationalResources />
+
+          {/* Referral Program */}
+          <ReferralCard userRole={userProfile?.role || 'client'} />
         </div>
 
         {/* Support & Advisor Contact */}

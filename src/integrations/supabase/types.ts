@@ -129,6 +129,62 @@ export type Database = {
         }
         Relationships: []
       }
+      advisor_overrides: {
+        Row: {
+          created_at: string | null
+          id: string
+          override_amount: number | null
+          override_percent: number
+          payment_frequency: string | null
+          production_amount: number | null
+          production_period_end: string | null
+          production_period_start: string
+          recruited_advisor_id: string
+          referring_advisor_id: string
+          status: string
+          tenant_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          override_amount?: number | null
+          override_percent: number
+          payment_frequency?: string | null
+          production_amount?: number | null
+          production_period_end?: string | null
+          production_period_start: string
+          recruited_advisor_id: string
+          referring_advisor_id: string
+          status?: string
+          tenant_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          override_amount?: number | null
+          override_percent?: number
+          payment_frequency?: string | null
+          production_amount?: number | null
+          production_period_end?: string | null
+          production_period_start?: string
+          recruited_advisor_id?: string
+          referring_advisor_id?: string
+          status?: string
+          tenant_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "advisor_overrides_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       analytics_events: {
         Row: {
           created_at: string
@@ -4558,6 +4614,115 @@ export type Database = {
         }
         Relationships: []
       }
+      referral_rewards: {
+        Row: {
+          amount: number
+          created_at: string | null
+          id: string
+          notes: string | null
+          paid_at: string | null
+          payment_method: string | null
+          referral_id: string
+          reward_type: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string | null
+          id?: string
+          notes?: string | null
+          paid_at?: string | null
+          payment_method?: string | null
+          referral_id: string
+          reward_type: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string | null
+          id?: string
+          notes?: string | null
+          paid_at?: string | null
+          payment_method?: string | null
+          referral_id?: string
+          reward_type?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referral_rewards_referral_id_fkey"
+            columns: ["referral_id"]
+            isOneToOne: false
+            referencedRelation: "referrals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      referrals: {
+        Row: {
+          activated_at: string | null
+          created_at: string | null
+          expires_at: string | null
+          id: string
+          notes: string | null
+          paid_at: string | null
+          referee_id: string | null
+          referral_code: string
+          referral_type: string
+          referrer_id: string
+          reward_amount: number | null
+          reward_type: string | null
+          status: string
+          tenant_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          activated_at?: string | null
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          notes?: string | null
+          paid_at?: string | null
+          referee_id?: string | null
+          referral_code: string
+          referral_type: string
+          referrer_id: string
+          reward_amount?: number | null
+          reward_type?: string | null
+          status?: string
+          tenant_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          activated_at?: string | null
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          notes?: string | null
+          paid_at?: string | null
+          referee_id?: string | null
+          referral_code?: string
+          referral_type?: string
+          referrer_id?: string
+          reward_amount?: number | null
+          reward_type?: string | null
+          status?: string
+          tenant_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referrals_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       retirement_plans: {
         Row: {
           balance: number
@@ -6744,6 +6909,10 @@ export type Database = {
       }
     }
     Functions: {
+      activate_referral: {
+        Args: { p_referee_id: string }
+        Returns: boolean
+      }
       calculate_provider_rating: {
         Args: { provider_id: string }
         Returns: number
@@ -6759,6 +6928,10 @@ export type Database = {
       create_default_onboarding_steps: {
         Args: { app_id: string }
         Returns: undefined
+      }
+      generate_referral_code: {
+        Args: Record<PropertyKey, never>
+        Returns: string
       }
       get_current_user_role: {
         Args: Record<PropertyKey, never>
