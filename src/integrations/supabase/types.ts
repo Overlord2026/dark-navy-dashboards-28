@@ -1724,6 +1724,152 @@ export type Database = {
         }
         Relationships: []
       }
+      franchise_referral_payouts: {
+        Row: {
+          amount: number
+          approved_at: string | null
+          approved_by: string | null
+          created_at: string
+          currency: string
+          franchise_referral_id: string
+          id: string
+          notes: string | null
+          paid_at: string | null
+          payment_method: string | null
+          payment_reference: string | null
+          payout_type: string
+          period_end: string | null
+          period_start: string | null
+          referring_tenant_id: string
+          status: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          amount: number
+          approved_at?: string | null
+          approved_by?: string | null
+          created_at?: string
+          currency?: string
+          franchise_referral_id: string
+          id?: string
+          notes?: string | null
+          paid_at?: string | null
+          payment_method?: string | null
+          payment_reference?: string | null
+          payout_type: string
+          period_end?: string | null
+          period_start?: string | null
+          referring_tenant_id: string
+          status?: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          approved_at?: string | null
+          approved_by?: string | null
+          created_at?: string
+          currency?: string
+          franchise_referral_id?: string
+          id?: string
+          notes?: string | null
+          paid_at?: string | null
+          payment_method?: string | null
+          payment_reference?: string | null
+          payout_type?: string
+          period_end?: string | null
+          period_start?: string | null
+          referring_tenant_id?: string
+          status?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "franchise_referral_payouts_franchise_referral_id_fkey"
+            columns: ["franchise_referral_id"]
+            isOneToOne: false
+            referencedRelation: "franchise_referrals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      franchise_referrals: {
+        Row: {
+          contacted_at: string | null
+          created_at: string
+          demo_scheduled_at: string | null
+          expected_aum: number | null
+          expires_at: string | null
+          firm_size: number | null
+          id: string
+          notes: string | null
+          referral_code: string
+          referral_reward_amount: number
+          referral_reward_type: string
+          referred_contact_email: string
+          referred_contact_name: string
+          referred_contact_phone: string | null
+          referred_firm_name: string
+          referring_tenant_id: string
+          reward_status: string
+          royalty_period_months: number | null
+          signed_at: string | null
+          status: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          contacted_at?: string | null
+          created_at?: string
+          demo_scheduled_at?: string | null
+          expected_aum?: number | null
+          expires_at?: string | null
+          firm_size?: number | null
+          id?: string
+          notes?: string | null
+          referral_code: string
+          referral_reward_amount?: number
+          referral_reward_type?: string
+          referred_contact_email: string
+          referred_contact_name: string
+          referred_contact_phone?: string | null
+          referred_firm_name: string
+          referring_tenant_id: string
+          reward_status?: string
+          royalty_period_months?: number | null
+          signed_at?: string | null
+          status?: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          contacted_at?: string | null
+          created_at?: string
+          demo_scheduled_at?: string | null
+          expected_aum?: number | null
+          expires_at?: string | null
+          firm_size?: number | null
+          id?: string
+          notes?: string | null
+          referral_code?: string
+          referral_reward_amount?: number
+          referral_reward_type?: string
+          referred_contact_email?: string
+          referred_contact_name?: string
+          referred_contact_phone?: string | null
+          referred_firm_name?: string
+          referring_tenant_id?: string
+          reward_status?: string
+          royalty_period_months?: number | null
+          signed_at?: string | null
+          status?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       health_alerts: {
         Row: {
           created_at: string | null
@@ -7109,12 +7255,26 @@ export type Database = {
         Args: { app_id: string }
         Returns: undefined
       }
+      create_franchise_referral_payout: {
+        Args: {
+          p_franchise_referral_id: string
+          p_payout_type: string
+          p_amount: number
+          p_period_start?: string
+          p_period_end?: string
+        }
+        Returns: string
+      }
       create_override_payout: {
         Args: { p_override_id: string }
         Returns: string
       }
       create_referral_payout: {
         Args: { p_referral_id: string }
+        Returns: string
+      }
+      generate_franchise_referral_code: {
+        Args: Record<PropertyKey, never>
         Returns: string
       }
       generate_referral_code: {

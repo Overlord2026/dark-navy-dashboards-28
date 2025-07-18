@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useTenant } from '@/hooks/useTenant';
 import { supabase } from '@/integrations/supabase/client';
-import { CreditCard, FileText, AlertCircle, CheckCircle } from 'lucide-react';
+import { CreditCard, FileText, AlertCircle, CheckCircle, Building2 } from 'lucide-react';
 
 interface TenantLicense {
   id: string;
@@ -129,6 +129,38 @@ export const TenantBillingPanel: React.FC = () => {
             <Button variant="outline">
               View Billing History
             </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Franchise Referral Revenue */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Building2 className="h-5 w-5" />
+            Franchise Referral Revenue
+          </CardTitle>
+          <CardDescription>
+            Revenue and royalties from franchise referrals
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-4 md:grid-cols-3">
+            <div className="space-y-2">
+              <h3 className="font-medium">Total Earnings</h3>
+              <div className="text-2xl font-bold">$24,500</div>
+              <p className="text-sm text-muted-foreground">From 3 referrals</p>
+            </div>
+            <div className="space-y-2">
+              <h3 className="font-medium">This Month</h3>
+              <div className="text-2xl font-bold">$2,800</div>
+              <p className="text-sm text-muted-foreground">Royalty payments</p>
+            </div>
+            <div className="space-y-2">
+              <h3 className="font-medium">Pending</h3>
+              <div className="text-2xl font-bold">$5,200</div>
+              <p className="text-sm text-muted-foreground">Awaiting approval</p>
+            </div>
           </div>
         </CardContent>
       </Card>

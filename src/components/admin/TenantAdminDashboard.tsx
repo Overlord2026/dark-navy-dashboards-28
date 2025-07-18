@@ -4,13 +4,14 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { useTenant } from '@/hooks/useTenant';
-import { Users, FileText, Settings, CreditCard, Building, UserPlus, Network, Layers, Share2, Plug } from 'lucide-react';
+import { Users, FileText, Settings, CreditCard, Building, UserPlus, Network, Layers, Share2, Plug, Building2 } from 'lucide-react';
 import { TenantBrandingPanel } from './TenantBrandingPanel';
 import { TenantUserManagement } from './TenantUserManagement';
 import { TenantBillingPanel } from './TenantBillingPanel';
 import { TenantProjectIntegration } from './TenantProjectIntegration';
 import { TenantResourceManagement } from './TenantResourceManagement';
 import { TenantAboutEditor } from './TenantAboutEditor';
+import { FranchiseReferralManagement } from '../referrals/FranchiseReferralManagement';
 
 export const TenantAdminDashboard: React.FC = () => {
   const { currentTenant, loading } = useTenant();
@@ -50,13 +51,17 @@ export const TenantAdminDashboard: React.FC = () => {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-        <TabsList className="grid w-full grid-cols-8">
+        <TabsList className="grid w-full grid-cols-9">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="branding">Branding</TabsTrigger>
           <TabsTrigger value="users">Users</TabsTrigger>
           <TabsTrigger value="resources">Resources</TabsTrigger>
           <TabsTrigger value="about">About</TabsTrigger>
           <TabsTrigger value="billing">Billing</TabsTrigger>
+          <TabsTrigger value="referrals">
+            <Building2 className="mr-2 h-4 w-4" />
+            Referrals
+          </TabsTrigger>
           <TabsTrigger value="integration">
             <Network className="mr-2 h-4 w-4" />
             Integration
@@ -130,6 +135,10 @@ export const TenantAdminDashboard: React.FC = () => {
                   <FileText className="mr-2 h-4 w-4" />
                   Add Resource
                 </Button>
+                <Button className="w-full justify-start" variant="outline">
+                  <Building2 className="mr-2 h-4 w-4" />
+                  Refer a Firm
+                </Button>
               </CardContent>
             </Card>
 
@@ -179,6 +188,10 @@ export const TenantAdminDashboard: React.FC = () => {
 
         <TabsContent value="billing">
           <TenantBillingPanel />
+        </TabsContent>
+
+        <TabsContent value="referrals">
+          <FranchiseReferralManagement />
         </TabsContent>
         
         <TabsContent value="integration">
