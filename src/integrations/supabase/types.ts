@@ -724,6 +724,60 @@ export type Database = {
         }
         Relationships: []
       }
+      diagnostic_test_runs: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          environment: string
+          error_details: Json | null
+          execution_time_ms: number | null
+          failed_tests: number
+          git_branch: string | null
+          git_commit_hash: string | null
+          id: string
+          overall_status: string
+          passed_tests: number
+          run_timestamp: string
+          test_results: Json
+          total_tests: number
+          warnings_count: number
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          environment?: string
+          error_details?: Json | null
+          execution_time_ms?: number | null
+          failed_tests?: number
+          git_branch?: string | null
+          git_commit_hash?: string | null
+          id?: string
+          overall_status: string
+          passed_tests?: number
+          run_timestamp?: string
+          test_results?: Json
+          total_tests?: number
+          warnings_count?: number
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          environment?: string
+          error_details?: Json | null
+          execution_time_ms?: number | null
+          failed_tests?: number
+          git_branch?: string | null
+          git_commit_hash?: string | null
+          id?: string
+          overall_status?: string
+          passed_tests?: number
+          run_timestamp?: string
+          test_results?: Json
+          total_tests?: number
+          warnings_count?: number
+        }
+        Relationships: []
+      }
       digital_assets: {
         Row: {
           asset_type: string
@@ -6688,6 +6742,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
+      cleanup_old_diagnostic_runs: {
+        Args: { p_retention_days?: number }
+        Returns: number
+      }
       create_default_onboarding_steps: {
         Args: { app_id: string }
         Returns: undefined
@@ -6699,6 +6757,10 @@ export type Database = {
       get_current_user_tenant_id: {
         Args: Record<PropertyKey, never>
         Returns: string
+      }
+      get_diagnostic_test_stats: {
+        Args: { p_environment?: string; p_days_back?: number }
+        Returns: Json
       }
       get_document_status: {
         Args: { doc_id: string }
@@ -6740,6 +6802,22 @@ export type Database = {
       is_tenant_admin: {
         Args: Record<PropertyKey, never>
         Returns: boolean
+      }
+      log_diagnostic_test_run: {
+        Args: {
+          p_environment?: string
+          p_git_commit_hash?: string
+          p_git_branch?: string
+          p_total_tests?: number
+          p_passed_tests?: number
+          p_failed_tests?: number
+          p_warnings_count?: number
+          p_execution_time_ms?: number
+          p_overall_status?: string
+          p_test_results?: Json
+          p_error_details?: Json
+        }
+        Returns: string
       }
       log_document_access: {
         Args: {
