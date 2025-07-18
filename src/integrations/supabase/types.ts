@@ -6435,12 +6435,32 @@ export type Database = {
         Args: { app_id: string }
         Returns: undefined
       }
+      get_current_user_role: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      get_current_user_tenant_id: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
       get_document_status: {
         Args: { doc_id: string }
         Returns: string
       }
+      has_any_role: {
+        Args: { roles: string[] }
+        Returns: boolean
+      }
       has_premium_access: {
         Args: { feature_name: string }
+        Returns: boolean
+      }
+      has_role: {
+        Args: { required_role: string }
+        Returns: boolean
+      }
+      is_tenant_admin: {
+        Args: Record<PropertyKey, never>
         Returns: boolean
       }
       log_document_access: {
