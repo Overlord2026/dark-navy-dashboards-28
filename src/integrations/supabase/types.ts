@@ -6595,6 +6595,7 @@ export type Database = {
           response_body: string | null
           response_status: number | null
           status: string | null
+          tenant_id: string | null
           webhook_config_id: string | null
         }
         Insert: {
@@ -6609,6 +6610,7 @@ export type Database = {
           response_body?: string | null
           response_status?: number | null
           status?: string | null
+          tenant_id?: string | null
           webhook_config_id?: string | null
         }
         Update: {
@@ -6623,6 +6625,7 @@ export type Database = {
           response_body?: string | null
           response_status?: number | null
           status?: string | null
+          tenant_id?: string | null
           webhook_config_id?: string | null
         }
         Relationships: [
@@ -6631,6 +6634,13 @@ export type Database = {
             columns: ["event_id"]
             isOneToOne: false
             referencedRelation: "analytics_events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "webhook_deliveries_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
             referencedColumns: ["id"]
           },
           {
