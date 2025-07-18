@@ -109,7 +109,16 @@ export const useFranchiseReferrals = () => {
     }
   };
 
-  const generateReferralCode = async (referralData: Partial<FranchiseReferral>) => {
+  const generateReferralCode = async (
+    referralData: Partial<FranchiseReferral> & {
+      utm_source?: string;
+      utm_medium?: string;
+      utm_campaign?: string;
+      utm_term?: string;
+      utm_content?: string;
+      campaign_data?: any;
+    }
+  ) => {
     if (!currentTenant) return;
 
     try {
@@ -144,7 +153,13 @@ export const useFranchiseReferrals = () => {
           referral_reward_type: referralData.referral_reward_type || 'percentage',
           referral_reward_amount: referralData.referral_reward_amount || 0,
           royalty_period_months: referralData.royalty_period_months,
-          notes: referralData.notes
+          notes: referralData.notes,
+          utm_source: referralData.utm_source,
+          utm_medium: referralData.utm_medium,
+          utm_campaign: referralData.utm_campaign,
+          utm_term: referralData.utm_term,
+          utm_content: referralData.utm_content,
+          campaign_data: referralData.campaign_data,
         })
         .select()
         .single();

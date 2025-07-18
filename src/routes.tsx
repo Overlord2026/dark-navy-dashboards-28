@@ -57,6 +57,7 @@ import EnhancedSettings from "@/pages/EnhancedSettings";
 import { TenantAdmin } from "@/pages/TenantAdmin";
 import { AnalyticsPage } from "@/pages/AnalyticsPage";
 import { WebhooksPage } from "@/pages/WebhooksPage";
+import { ReferralAnalytics } from "@/pages/ReferralAnalytics";
 
 // Health pages
 import HealthDashboard from "@/pages/health/HealthDashboard";
@@ -265,6 +266,10 @@ const routes = createBrowserRouter([
   {
     path: "/analytics",
     element: <ProtectedRoute><AnalyticsPage /></ProtectedRoute>
+  },
+  {
+    path: "/referral-analytics",
+    element: <ProtectedRoute><ReferralAnalytics /></ProtectedRoute>
   },
   {
     path: "/webhooks",

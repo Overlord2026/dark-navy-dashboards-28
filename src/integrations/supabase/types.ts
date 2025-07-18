@@ -1797,6 +1797,7 @@ export type Database = {
       }
       franchise_referrals: {
         Row: {
+          campaign_data: Json | null
           contacted_at: string | null
           created_at: string
           demo_scheduled_at: string | null
@@ -1819,8 +1820,14 @@ export type Database = {
           status: string
           tenant_id: string
           updated_at: string
+          utm_campaign: string | null
+          utm_content: string | null
+          utm_medium: string | null
+          utm_source: string | null
+          utm_term: string | null
         }
         Insert: {
+          campaign_data?: Json | null
           contacted_at?: string | null
           created_at?: string
           demo_scheduled_at?: string | null
@@ -1843,8 +1850,14 @@ export type Database = {
           status?: string
           tenant_id: string
           updated_at?: string
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          utm_term?: string | null
         }
         Update: {
+          campaign_data?: Json | null
           contacted_at?: string | null
           created_at?: string
           demo_scheduled_at?: string | null
@@ -1867,6 +1880,11 @@ export type Database = {
           status?: string
           tenant_id?: string
           updated_at?: string
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          utm_term?: string | null
         }
         Relationships: []
       }
@@ -4979,6 +4997,7 @@ export type Database = {
       referrals: {
         Row: {
           activated_at: string | null
+          campaign_data: Json | null
           created_at: string | null
           expires_at: string | null
           id: string
@@ -4993,9 +5012,15 @@ export type Database = {
           status: string
           tenant_id: string
           updated_at: string | null
+          utm_campaign: string | null
+          utm_content: string | null
+          utm_medium: string | null
+          utm_source: string | null
+          utm_term: string | null
         }
         Insert: {
           activated_at?: string | null
+          campaign_data?: Json | null
           created_at?: string | null
           expires_at?: string | null
           id?: string
@@ -5010,9 +5035,15 @@ export type Database = {
           status?: string
           tenant_id: string
           updated_at?: string | null
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          utm_term?: string | null
         }
         Update: {
           activated_at?: string | null
+          campaign_data?: Json | null
           created_at?: string | null
           expires_at?: string | null
           id?: string
@@ -5027,6 +5058,11 @@ export type Database = {
           status?: string
           tenant_id?: string
           updated_at?: string | null
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          utm_term?: string | null
         }
         Relationships: [
           {
@@ -7281,6 +7317,18 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: string
       }
+      get_campaign_analytics: {
+        Args: { p_tenant_id: string; p_period_days?: number }
+        Returns: {
+          utm_source: string
+          utm_medium: string
+          utm_campaign: string
+          total_referrals: number
+          active_referrals: number
+          conversion_rate: number
+          total_rewards: number
+        }[]
+      }
       get_current_user_role: {
         Args: Record<PropertyKey, never>
         Returns: string
@@ -7296,6 +7344,43 @@ export type Database = {
       get_document_status: {
         Args: { doc_id: string }
         Returns: string
+      }
+      get_referral_conversion_analytics: {
+        Args: { p_tenant_id: string; p_period_days?: number }
+        Returns: {
+          referral_type: string
+          total_referrals: number
+          pending_referrals: number
+          active_referrals: number
+          expired_referrals: number
+          conversion_rate: number
+          avg_time_to_activation_days: number
+        }[]
+      }
+      get_reward_analytics: {
+        Args: { p_tenant_id: string; p_period_days?: number }
+        Returns: {
+          reward_type: string
+          total_amount: number
+          paid_amount: number
+          pending_amount: number
+          count_total: number
+          count_paid: number
+          count_pending: number
+        }[]
+      }
+      get_top_referrers: {
+        Args: { p_tenant_id: string; p_period_days?: number; p_limit?: number }
+        Returns: {
+          referrer_id: string
+          referrer_email: string
+          referrer_name: string
+          referrer_type: string
+          total_referrals: number
+          active_referrals: number
+          total_rewards: number
+          conversion_rate: number
+        }[]
       }
       get_top_slow_queries: {
         Args: { p_hours_back?: number; p_limit?: number }

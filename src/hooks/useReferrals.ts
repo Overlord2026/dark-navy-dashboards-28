@@ -66,7 +66,20 @@ export const useReferrals = () => {
     }
   };
 
-  const generateReferralCode = async (type: 'client' | 'advisor' | 'franchise', rewardAmount: number = 100, rewardType: string = 'credit', refereeEmail?: string) => {
+  const generateReferralCode = async (
+    type: 'client' | 'advisor' | 'franchise', 
+    rewardAmount: number = 100, 
+    rewardType: string = 'credit', 
+    refereeEmail?: string,
+    utmData?: {
+      utm_source?: string;
+      utm_medium?: string;
+      utm_campaign?: string;
+      utm_term?: string;
+      utm_content?: string;
+      campaign_data?: any;
+    }
+  ) => {
     try {
       // Get current user and tenant ID
       const { data: { user } } = await supabase.auth.getUser();
@@ -112,6 +125,12 @@ export const useReferrals = () => {
           reward_amount: rewardAmount,
           reward_type: rewardType,
           expires_at: expiresAt.toISOString(),
+          utm_source: utmData?.utm_source,
+          utm_medium: utmData?.utm_medium,
+          utm_campaign: utmData?.utm_campaign,
+          utm_term: utmData?.utm_term,
+          utm_content: utmData?.utm_content,
+          campaign_data: utmData?.campaign_data,
         })
         .select()
         .single();

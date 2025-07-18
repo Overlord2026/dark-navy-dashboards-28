@@ -6,7 +6,8 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Copy, DollarSign, TrendingUp, Users } from "lucide-react";
+import { Copy, DollarSign, TrendingUp, Users, BarChart3 } from "lucide-react";
+import { Link } from "react-router-dom";
 import { useReferrals } from "@/hooks/useReferrals";
 import { PayoutManagement } from "@/components/referrals/PayoutManagement";
 import { PayoutHistory } from "@/components/referrals/PayoutHistory";
@@ -42,12 +43,27 @@ export const ReferralManagement = () => {
   };
 
   return (
-    <Tabs defaultValue="overview" className="space-y-6">
-      <TabsList>
-        <TabsTrigger value="overview">Overview</TabsTrigger>
-        <TabsTrigger value="payouts">Payout Management</TabsTrigger>
-        <TabsTrigger value="history">Payout History</TabsTrigger>
-      </TabsList>
+    <div className="space-y-6">
+      {/* Header with Analytics Link */}
+      <div className="flex justify-between items-center">
+        <div>
+          <h2 className="text-2xl font-bold">Referral Management</h2>
+          <p className="text-muted-foreground">Manage your referral codes and track performance</p>
+        </div>
+        <Link to="/referral-analytics">
+          <Button variant="outline" className="flex items-center gap-2">
+            <BarChart3 className="h-4 w-4" />
+            View Analytics
+          </Button>
+        </Link>
+      </div>
+
+      <Tabs defaultValue="overview" className="space-y-6">
+        <TabsList>
+          <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="payouts">Payout Management</TabsTrigger>
+          <TabsTrigger value="history">Payout History</TabsTrigger>
+        </TabsList>
 
       <TabsContent value="overview" className="space-y-6">
         {/* Stats Overview */}
@@ -263,6 +279,7 @@ export const ReferralManagement = () => {
       <TabsContent value="history">
         <PayoutHistory />
       </TabsContent>
-    </Tabs>
+      </Tabs>
+    </div>
   );
 };
