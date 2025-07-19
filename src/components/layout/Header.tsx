@@ -22,6 +22,12 @@ export function Header() {
           {userProfile && (
             <>
               <AdminPortalLink />
+              {/* Temporary DEV link - remove in production */}
+              {userProfile?.role !== 'client' && (
+                <Button variant="outline" size="sm" asChild>
+                  <Link to="/admin-portal">Admin Portal</Link>
+                </Button>
+              )}
               <div className="flex items-center space-x-2 text-sm">
                 <User className="h-4 w-4" />
                 <span>{userProfile.name || userProfile.email}</span>

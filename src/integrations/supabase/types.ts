@@ -7287,6 +7287,30 @@ export type Database = {
         Args: { p_retention_days?: number }
         Returns: number
       }
+      count_advisors: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
+      count_clients: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
+      count_fee_reports: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
+      count_health_reports: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
+      count_ltc_tests: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
+      count_open_tickets: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
       create_default_onboarding_steps: {
         Args: { app_id: string }
         Returns: undefined
@@ -7474,6 +7498,14 @@ export type Database = {
       process_advisor_referral: {
         Args: { p_referral_code: string; p_new_advisor_id: string }
         Returns: boolean
+      }
+      rpc_backup_status: {
+        Args: Record<PropertyKey, never>
+        Returns: Json
+      }
+      rpc_database_health: {
+        Args: Record<PropertyKey, never>
+        Returns: Json
       }
       run_database_review_tests: {
         Args: Record<PropertyKey, never>
