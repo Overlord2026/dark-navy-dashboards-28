@@ -28,6 +28,12 @@ export function Header() {
                   <Link to="/admin-portal">Admin Portal</Link>
                 </Button>
               )}
+              {/* Preview-only admin link for testing */}
+              {process.env.NODE_ENV !== 'production' && userProfile?.role !== 'client' && (
+                <Button variant="ghost" size="sm" asChild>
+                  <Link to="/admin-portal">🧪 Admin</Link>
+                </Button>
+              )}
               <div className="flex items-center space-x-2 text-sm">
                 <User className="h-4 w-4" />
                 <span>{userProfile.name || userProfile.email}</span>
