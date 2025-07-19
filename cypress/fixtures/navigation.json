@@ -1,0 +1,73 @@
+{
+  "system_administrator": [
+    {
+      "path": "/admin-portal",
+      "label": "Dashboard",
+      "description": "Admin console overview with KPIs and system status"
+    },
+    {
+      "path": "/admin-portal/users",
+      "label": "Users & Advisors", 
+      "description": "Manage user accounts and advisor assignments"
+    },
+    {
+      "path": "/admin-portal/clients",
+      "label": "Clients & Prospects",
+      "description": "Client relationship management and prospect tracking"
+    },
+    {
+      "path": "/admin-portal/tenants",
+      "label": "Tenants",
+      "description": "Multi-tenant configuration and management"
+    },
+    {
+      "path": "/admin-portal/health",
+      "label": "Health & LTC Module",
+      "description": "Healthcare and long-term care module configuration"
+    },
+    {
+      "path": "/admin-portal/billing",
+      "label": "Billing & Licensing",
+      "description": "Subscription management and license tracking"
+    },
+    {
+      "path": "/admin-portal/referrals",
+      "label": "Referrals & Overrides",
+      "description": "Referral program and commission override management"
+    },
+    {
+      "path": "/admin-portal/compliance",
+      "label": "Compliance & Audit",
+      "description": "Regulatory compliance and audit trail management"
+    },
+    {
+      "path": "/admin-portal/system-health",
+      "label": "System Diagnostics",
+      "description": "Comprehensive system health monitoring and diagnostics"
+    }
+  ],
+  "advisor": [
+    {
+      "path": "/admin-portal",
+      "label": "Dashboard",
+      "description": "Advisor dashboard with client overview"
+    },
+    {
+      "path": "/admin-portal/clients",
+      "label": "Clients & Prospects",
+      "description": "Client management for assigned accounts"
+    },
+    {
+      "path": "/admin-portal/referrals",
+      "label": "Referrals & Overrides",
+      "description": "Referral tracking and commission reports"
+    }
+  ],
+  "client": [
+    {
+      "path": "/",
+      "label": "Home",
+      "description": "Client portal home page"
+    }
+  ]
+}
