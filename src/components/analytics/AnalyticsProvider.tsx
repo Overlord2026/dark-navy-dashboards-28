@@ -33,8 +33,8 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
         role: userProfile.role,
         first_name: userProfile.firstName,
         last_name: userProfile.lastName,
-        client_segment: userProfile.clientSegment,
-        tenant_id: userProfile.tenantId
+        client_segment: userProfile.client_segment,
+        tenant_id: userProfile.tenant_id
       });
     }
   }, [initialized, user, userProfile]);
