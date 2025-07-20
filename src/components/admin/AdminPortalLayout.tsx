@@ -34,7 +34,7 @@ export function AdminPortalLayout({ children }: AdminPortalLayoutProps) {
           <h1 className="text-2xl font-bold text-destructive mb-2">Access Denied</h1>
           <p className="text-muted-foreground mb-4">You don't have permission to access this area.</p>
           <Button asChild>
-            <Link to="/client-dashboard">Return to Dashboard</Link>
+            <Link to="/login">Return to Login</Link>
           </Button>
         </div>
       </div>
@@ -59,10 +59,10 @@ export function AdminPortalLayout({ children }: AdminPortalLayoutProps) {
           <div className="flex items-center space-x-4">
             <h1 className="text-xl font-bold text-foreground">Admin Portal</h1>
             <div className="h-6 w-px bg-border" />
-            <span className="text-sm text-muted-foreground">Welcome, {userProfile.display_name || userProfile.email}</span>
+            <span className="text-sm text-muted-foreground">Welcome, {userProfile.displayName || userProfile.email}</span>
           </div>
           <Button variant="outline" size="sm" asChild>
-            <Link to="/client-dashboard">Exit Admin</Link>
+            <Link to="/login">Exit Admin</Link>
           </Button>
         </div>
       </header>

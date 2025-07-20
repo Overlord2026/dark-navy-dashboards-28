@@ -26,7 +26,7 @@ export function TestDataResetCard() {
         backupBeforeReset: true
       });
 
-      if (result.success) {
+      if (result?.success) {
         setLastResetAt(new Date().toISOString());
         toast.success('Test data reset completed successfully');
       } else {
@@ -112,7 +112,7 @@ export function TestDataResetCard() {
           {/* Action Button */}
           <div className="flex justify-end">
             <Button
-              variant="warning"
+              variant="destructive"
               onClick={handleResetClick}
               disabled={isResetting}
               className="min-w-[140px]"

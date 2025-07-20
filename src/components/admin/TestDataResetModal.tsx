@@ -63,6 +63,12 @@ export function TestDataResetModal({ open, onClose, onConfirm, isLoading }: Test
   const canProceedStep1 = acknowledgeWarning && acknowledgeBackup && acknowledgeLoss;
   const canProceedStep3 = confirmText.toUpperCase() === 'RESET';
 
+  const handleCheckboxChange = (setter: React.Dispatch<React.SetStateAction<boolean>>) => {
+    return (checked: boolean | 'indeterminate') => {
+      setter(checked === true);
+    };
+  };
+
   const renderStep1 = () => (
     <div className="space-y-6">
       <div className="flex items-center space-x-3 p-4 bg-red-50 rounded-lg border border-red-200">
@@ -105,7 +111,7 @@ export function TestDataResetModal({ open, onClose, onConfirm, isLoading }: Test
           <Checkbox
             id="acknowledge-warning"
             checked={acknowledgeWarning}
-            onCheckedChange={setAcknowledgeWarning}
+            onCheckedChange={handleCheckboxChange(setAcknowledgeWarning)}
           />
           <Label htmlFor="acknowledge-warning" className="text-sm">
             I understand this will permanently delete current test data
@@ -115,7 +121,7 @@ export function TestDataResetModal({ open, onClose, onConfirm, isLoading }: Test
           <Checkbox
             id="acknowledge-backup"
             checked={acknowledgeBackup}
-            onCheckedChange={setAcknowledgeBackup}
+            onCheckedChange={handleCheckboxChange(setAcknowledgeBackup)}
           />
           <Label htmlFor="acknowledge-backup" className="text-sm">
             I acknowledge that a backup will be created automatically
@@ -125,7 +131,7 @@ export function TestDataResetModal({ open, onClose, onConfirm, isLoading }: Test
           <Checkbox
             id="acknowledge-loss"
             checked={acknowledgeLoss}
-            onCheckedChange={setAcknowledgeLoss}
+            onCheckedChange={handleCheckboxChange(setAcknowledgeLoss)}
           />
           <Label htmlFor="acknowledge-loss" className="text-sm">
             I accept responsibility for any data loss
