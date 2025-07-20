@@ -1,3 +1,4 @@
+
 // Enhanced logging service with Supabase persistence
 import { supabase } from '@/integrations/supabase/client';
 
@@ -130,22 +131,22 @@ class LoggingService {
     }
   }
   
-  debug(message: string, data?: any, source?: string, correlationId?: string): LogEntry {
+  async debug(message: string, data?: any, source?: string, correlationId?: string): Promise<LogEntry> {
     console.debug(`[${source || 'App'}] ${message}`, data);
     return this.addEntry('debug', message, data, source, correlationId);
   }
   
-  info(message: string, data?: any, source?: string, correlationId?: string): LogEntry {
+  async info(message: string, data?: any, source?: string, correlationId?: string): Promise<LogEntry> {
     console.info(`[${source || 'App'}] ${message}`, data);
     return this.addEntry('info', message, data, source, correlationId);
   }
   
-  warning(message: string, data?: any, source?: string, correlationId?: string): LogEntry {
+  async warning(message: string, data?: any, source?: string, correlationId?: string): Promise<LogEntry> {
     console.warn(`[${source || 'App'}] ${message}`, data);
     return this.addEntry('warning', message, data, source, correlationId);
   }
   
-  error(message: string, error?: any, source?: string, correlationId?: string): LogEntry {
+  async error(message: string, error?: any, source?: string, correlationId?: string): Promise<LogEntry> {
     console.error(`[${source || 'App'}] ${message}`, error);
     return this.addEntry('error', message, {
       error: error instanceof Error ? { 
@@ -156,7 +157,7 @@ class LoggingService {
     }, source, correlationId);
   }
   
-  critical(message: string, error?: any, source?: string, correlationId?: string): LogEntry {
+  async critical(message: string, error?: any, source?: string, correlationId?: string): Promise<LogEntry> {
     console.error(`[${source || 'App'}] CRITICAL: ${message}`, error);
     return this.addEntry('critical', message, {
       error: error instanceof Error ? { 

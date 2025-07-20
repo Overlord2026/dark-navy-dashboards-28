@@ -9,20 +9,24 @@ import { supabase } from '@/integrations/supabase/client';
 import { AlertTriangle, TrendingUp, Users, Clock, RefreshCw, Search } from 'lucide-react';
 import { format } from 'date-fns';
 
+interface ErrorDetails {
+  function_name?: string;
+  error_code?: string;
+  error_message?: string;
+  error_category?: string;
+  correlation_id?: string;
+  user_message?: string;
+  retryable?: boolean;
+  [key: string]: any;
+}
+
 interface ErrorLogEntry {
   id: string;
   event_type: string;
   status: string;
   created_at: string;
-  details: {
-    function_name: string;
-    error_code: string;
-    error_message: string;
-    error_category: string;
-    correlation_id: string;
-    user_message: string;
-    retryable: boolean;
-  };
+  details: ErrorDetails;
+  user_id?: string;
 }
 
 interface ErrorStats {
@@ -82,34 +86,38 @@ export function ErrorDashboard() {
         return;
       }
 
-      let filteredData = data || [];
+      // Transform and filter data with proper type checking
+      let transformedData: ErrorLogEntry[] = (data || []).map(log => ({
+        ...log,
+        details: (typeof log.details === 'object' && log.details !== null) ? log.details as ErrorDetails : {}
+      }));
 
       // Apply category filter
       if (categoryFilter !== 'all') {
-        filteredData = filteredData.filter(log => 
+        transformedData = transformedData.filter(log => 
           log.details?.error_category === categoryFilter
         );
       }
 
       // Apply search filter
       if (searchTerm) {
-        filteredData = filteredData.filter(log =>
+        transformedData = transformedData.filter(log =>
           log.details?.function_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
           log.details?.error_message?.toLowerCase().includes(searchTerm.toLowerCase()) ||
           log.details?.correlation_id?.toLowerCase().includes(searchTerm.toLowerCase())
         );
       }
 
-      setErrorLogs(filteredData);
+      setErrorLogs(transformedData);
 
       // Calculate stats
       const stats: ErrorStats = {
-        totalErrors: filteredData.length,
-        criticalErrors: filteredData.filter(log => 
+        totalErrors: transformedData.length,
+        criticalErrors: transformedData.filter(log => 
           log.details?.error_category === 'server' || 
           log.details?.error_category === 'external_api'
         ).length,
-        affectedUsers: new Set(filteredData.map(log => log.user_id).filter(Boolean)).size,
+        affectedUsers: new Set(transformedData.map(log => log.user_id).filter(Boolean)).size,
         avgResolutionTime: 0 // Would need resolution tracking to calculate
       };
 
@@ -125,7 +133,7 @@ export function ErrorDashboard() {
     fetchErrorLogs();
   }, [timeRange, categoryFilter, searchTerm]);
 
-  const getCategoryColor = (category: string) => {
+  const getCategoryColor = (category?: string) => {
     const colors = {
       authentication: 'bg-yellow-100 text-yellow-800',
       validation: 'bg-blue-100 text-blue-800',
@@ -266,10 +274,10 @@ export function ErrorDashboard() {
                 <div key={log.id} className="border rounded-lg p-4 space-y-2">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <Badge className={getCategoryColor(log.details?.error_category || 'unknown')}>
+                      <Badge className={getCategoryColor(log.details?.error_category)}>
                         {log.details?.error_category || 'Unknown'}
                       </Badge>
-                      <span className="font-medium">{log.details?.function_name}</span>
+                      <span className="font-medium">{log.details?.function_name || 'Unknown Function'}</span>
                     </div>
                     <span className="text-sm text-gray-500">
                       {format(new Date(log.created_at), 'MMM dd, HH:mm:ss')}
@@ -277,13 +285,13 @@ export function ErrorDashboard() {
                   </div>
                   
                   <div className="text-sm">
-                    <p className="font-medium text-red-600">{log.details?.error_message}</p>
-                    <p className="text-gray-600">{log.details?.user_message}</p>
+                    <p className="font-medium text-red-600">{log.details?.error_message || 'Unknown error'}</p>
+                    <p className="text-gray-600">{log.details?.user_message || 'No user message available'}</p>
                   </div>
                   
                   <div className="flex items-center justify-between text-xs text-gray-500">
-                    <span>Correlation ID: {log.details?.correlation_id}</span>
-                    <span>Code: {log.details?.error_code}</span>
+                    <span>Correlation ID: {log.details?.correlation_id || 'N/A'}</span>
+                    <span>Code: {log.details?.error_code || 'N/A'}</span>
                     {log.details?.retryable && (
                       <Badge variant="outline" className="text-xs">Retryable</Badge>
                     )}
