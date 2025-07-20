@@ -4713,6 +4713,60 @@ export type Database = {
           },
         ]
       }
+      prospect_invitations: {
+        Row: {
+          activated_at: string | null
+          advisor_id: string
+          client_segment: string
+          created_at: string
+          email: string
+          expires_at: string
+          id: string
+          magic_token: string
+          personal_note: string | null
+          sent_at: string
+          status: string
+          updated_at: string
+          utm_campaign: string | null
+          utm_medium: string | null
+          utm_source: string | null
+        }
+        Insert: {
+          activated_at?: string | null
+          advisor_id: string
+          client_segment?: string
+          created_at?: string
+          email: string
+          expires_at?: string
+          id?: string
+          magic_token: string
+          personal_note?: string | null
+          sent_at?: string
+          status?: string
+          updated_at?: string
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Update: {
+          activated_at?: string | null
+          advisor_id?: string
+          client_segment?: string
+          created_at?: string
+          email?: string
+          expires_at?: string
+          id?: string
+          magic_token?: string
+          personal_note?: string | null
+          sent_at?: string
+          status?: string
+          updated_at?: string
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Relationships: []
+      }
       provider_reviews: {
         Row: {
           comment: string | null

@@ -17,6 +17,7 @@ import {
 import { toast } from "sonner";
 import { InviteProspectModal } from "@/components/advisor/InviteProspectModal";
 import { ProspectsList } from "@/components/advisor/ProspectsList";
+import { PendingInvitationsList } from "@/components/advisor/PendingInvitationsList";
 import { ReferralCard } from "@/components/referrals/ReferralCard";
 import { AdvisorReferralManagement } from "@/components/referrals/AdvisorReferralManagement";
 
@@ -233,6 +234,13 @@ export default function AdvisorDashboard() {
           {canInviteProspects && (
             <div className="mt-8">
               <ProspectsList onInviteClick={() => setInviteProspectOpen(true)} />
+            </div>
+          )}
+          
+          {/* Pending Invitations Section */}
+          {canInviteProspects && (
+            <div className="mt-8">
+              <PendingInvitationsList />
             </div>
           )}
         </div>

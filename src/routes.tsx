@@ -10,6 +10,7 @@ import { AdminPortalDashboard } from '@/components/admin/AdminPortalDashboard';
 import { SystemHealthPage } from '@/pages/admin/SystemHealthPage';
 import { AdminUsers } from '@/pages/admin/AdminUsers';
 import { AdminClients } from '@/pages/admin/AdminClients';
+import InviteRedeem from '@/pages/InviteRedeem';
 
 const routes = createBrowserRouter([
   {
@@ -23,6 +24,10 @@ const routes = createBrowserRouter([
   {
     path: '/auth',
     element: <AuthPage />,
+  },
+  {
+    path: '/invite/:token',
+    element: <InviteRedeem />,
   },
   {
     path: '/admin-portal',

@@ -94,26 +94,20 @@ export function InviteProspectModal({ open, onOpenChange }: InviteProspectModalP
     try {
       const { data, error } = await supabase.functions.invoke('leads-invite', {
         body: {
-          name: `${formData.firstName} ${formData.lastName}`.trim(),
+          firstName: formData.firstName,
+          lastName: formData.lastName,
           email: formData.email,
-          phone: "",
-          segment: formData.clientSegment,
-          utm_source: formData.utmSource || "advisor_invite",
-          utm_medium: formData.utmMedium,
-          utm_campaign: formData.utmCampaign || `advisor_${userProfile?.id}`,
-          lead_stage: "invited",
-          advisor_id: formData.assignedAdvisorId || userProfile?.id,
-          email_opt_in: true,
-          sms_opt_in: false,
-          send_invite: true,
-          redirect_url: `${window.location.origin}/auth`,
-          personal_note: formData.personalNote
+          clientSegment: formData.clientSegment,
+          personalNote: formData.personalNote,
+          utmSource: formData.utmSource,
+          utmMedium: formData.utmMedium || "advisor_invite",
+          utmCampaign: formData.utmCampaign
         }
       });
 
       if (error) throw error;
 
-      toast.success("Invitation sent successfully!");
+      toast.success("Invitation sent! Your prospect will receive an email with a magic link to join.");
       
       // Reset form
       setFormData({
