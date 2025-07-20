@@ -1,0 +1,92 @@
+
+{
+  "testUsers": {
+    "superadmin": {
+      "email": "jet_superadmin@bfocfo.com",
+      "password": "Passw0rd!",
+      "role": "system_administrator",
+      "firstName": "Super",
+      "lastName": "Admin"
+    },
+    "tenantAdmin": {
+      "email": "jet_tenant_admin@bfocfo.com", 
+      "password": "Passw0rd!",
+      "role": "tenant_admin",
+      "firstName": "Tenant",
+      "lastName": "Admin"
+    },
+    "seniorAdvisor": {
+      "email": "jet_senior_advisor@bfocfo.com",
+      "password": "Passw0rd!",
+      "role": "advisor",
+      "advisorRole": "senior_advisor",
+      "firstName": "Senior",
+      "lastName": "Advisor"
+    },
+    "juniorAdvisor": {
+      "email": "jet_junior_advisor@bfocfo.com",
+      "password": "Passw0rd!",
+      "role": "advisor", 
+      "advisorRole": "junior_advisor",
+      "firstName": "Junior",
+      "lastName": "Advisor"
+    },
+    "premiumClient": {
+      "email": "jet_premium_client@bfocfo.com",
+      "password": "Passw0rd!",
+      "role": "client",
+      "clientSegment": "premium",
+      "firstName": "Premium",
+      "lastName": "Client"
+    },
+    "basicClient": {
+      "email": "jet_basic_client@bfocfo.com",
+      "password": "Passw0rd!",
+      "role": "client",
+      "clientSegment": "basic", 
+      "firstName": "Basic",
+      "lastName": "Client"
+    }
+  },
+  "invitationTestData": {
+    "validProspects": [
+      {
+        "email": "test.prospect1@example.com",
+        "firstName": "Test",
+        "lastName": "Prospect",
+        "segment": "premium"
+      },
+      {
+        "email": "test.prospect2@example.com", 
+        "firstName": "Another",
+        "lastName": "Prospect",
+        "segment": "executive"
+      }
+    ],
+    "validAdvisors": [
+      {
+        "email": "new.advisor@example.com",
+        "firstName": "New",
+        "lastName": "Advisor",
+        "role": "senior_advisor",
+        "segments": ["premium", "executive"]
+      }
+    ]
+  },
+  "mockEmailContent": {
+    "prospectInvite": "<html><body><h1>You're Invited!</h1><p>Click the link below:</p><a href=\"{{MAGIC_LINK}}\">Accept Invitation</a></body></html>",
+    "advisorInvite": "<html><body><h1>Join Our Team!</h1><p>Complete your advisor setup:</p><a href=\"{{INVITE_LINK}}\">Get Started</a></body></html>"
+  },
+  "performanceThresholds": {
+    "pageLoadTimeMs": 10000,
+    "searchResponseTimeMs": 3000,
+    "invitationSendTimeMs": 5000,
+    "dataResetTimeMs": 30000
+  },
+  "testConfiguration": {
+    "retryAttempts": 3,
+    "flakinessTolerance": 0.8,
+    "concurrentOperations": 5,
+    "mockEmailDelay": 2000
+  }
+}

@@ -22,6 +22,14 @@ declare global {
       setupTestData(): Chainable<void>
       verifyUserRole(expectedRole: string): Chainable<void>
       verifyClientSegment(expectedSegment: string): Chainable<void>
+      resetTestData(): Chainable<void>
+      verifyMultiTenantIsolation(tenantId?: string): Chainable<void>
+      completeAdvisorInviteFlow(prospectEmail: string, advisorEmail: string): Chainable<void>
+      completeProspectInviteFlow(inviteToken: string): Chainable<void>
+      completeRIAAdvisorFlow(inviteToken: string): Chainable<void>
+      verifyEmailNotification(emailType: string, recipient: string): Chainable<void>
+      waitForInviteEmail(email: string): Chainable<string>
+      extractMagicLinkFromEmail(emailContent: string): Chainable<string>
     }
   }
 }
@@ -90,6 +98,198 @@ Cypress.Commands.add('loginAsScenario', (scenario: TestUserScenario) => {
     // Wait for successful login redirect
     cy.url().should('not.include', '/auth');
     cy.wait(2000); // Allow time for auth state to settle
+  });
+});
+
+// Test Data Reset Command
+Cypress.Commands.add('resetTestData', () => {
+  cy.log('Initiating test data reset...');
+  
+  // Login as superadmin to perform reset
+  cy.loginAsScenario('superadmin');
+  cy.visit('/admin-portal');
+  
+  // Navigate to system health or test data section
+  cy.get('[data-testid="reset-test-data-button"]', { timeout: 10000 })
+    .should('be.visible')
+    .click();
+  
+  // Confirm reset action
+  cy.get('[data-testid="confirm-reset-button"]')
+    .should('be.visible')
+    .click();
+  
+  // Wait for reset completion
+  cy.get('[data-testid="reset-success-message"]', { timeout: 30000 })
+    .should('be.visible')
+    .and('contain', 'Test data reset completed');
+  
+  cy.log('Test data reset completed successfully');
+});
+
+// Multi-Tenant Isolation Verification
+Cypress.Commands.add('verifyMultiTenantIsolation', (tenantId?: string) => {
+  cy.log('Verifying multi-tenant data isolation...');
+  
+  // Get current user's tenant context
+  cy.window().its('localStorage').then((localStorage) => {
+    const userProfile = JSON.parse(localStorage.getItem('supabase.auth.token') || '{}');
+    const currentTenantId = tenantId || userProfile.user?.tenant_id;
+    
+    if (!currentTenantId) {
+      throw new Error('No tenant ID found for isolation test');
+    }
+    
+    // Verify user can only see their tenant's data
+    cy.request({
+      method: 'GET',
+      url: '/api/test-tenant-isolation',
+      headers: {
+        'Authorization': `Bearer ${userProfile.access_token}`
+      },
+      body: { tenantId: currentTenantId }
+    }).then((response) => {
+      expect(response.status).to.eq(200);
+      expect(response.body.isolationVerified).to.be.true;
+      expect(response.body.accessibleTenants).to.have.length(1);
+      expect(response.body.accessibleTenants[0]).to.eq(currentTenantId);
+    });
+  });
+});
+
+// Complete Advisor Invite Flow
+Cypress.Commands.add('completeAdvisorInviteFlow', (prospectEmail: string, advisorEmail: string) => {
+  cy.log(`Starting advisor invite flow: ${advisorEmail} inviting ${prospectEmail}`);
+  
+  // Step 1: Login as advisor and send invite
+  cy.loginAsScenario('senior_advisor');
+  cy.visit('/advisor-dashboard');
+  
+  // Open invite prospect modal
+  cy.get('[data-testid="invite-prospect-button"]').click();
+  
+  // Fill invite form
+  cy.get('[data-testid="prospect-email-input"]').type(prospectEmail);
+  cy.get('[data-testid="prospect-first-name-input"]').type('Test');
+  cy.get('[data-testid="prospect-last-name-input"]').type('Prospect');
+  cy.get('[data-testid="client-segment-select"]').select('premium');
+  cy.get('[data-testid="personal-note-textarea"]').type('Welcome to our platform!');
+  
+  // Send invitation
+  cy.get('[data-testid="send-invitation-button"]').click();
+  
+  // Verify success message
+  cy.get('[data-testid="invitation-success-message"]')
+    .should('be.visible')
+    .and('contain', 'Invitation sent successfully');
+  
+  // Step 2: Extract magic link from email
+  cy.waitForInviteEmail(prospectEmail).then((emailContent) => {
+    cy.extractMagicLinkFromEmail(emailContent).then((magicLink) => {
+      // Step 3: Complete prospect onboarding
+      cy.completeProspectInviteFlow(magicLink);
+    });
+  });
+});
+
+// Complete Prospect Invite Flow
+Cypress.Commands.add('completeProspectInviteFlow', (magicLink: string) => {
+  cy.log(`Completing prospect onboarding with magic link: ${magicLink}`);
+  
+  // Visit magic link
+  cy.visit(magicLink);
+  
+  // Should be on invite redemption page
+  cy.url().should('include', '/invite/');
+  
+  // Fill onboarding form
+  cy.get('[data-testid="prospect-password-input"]').type('NewPassword123!');
+  cy.get('[data-testid="confirm-password-input"]').type('NewPassword123!');
+  cy.get('[data-testid="phone-input"]').type('(555) 123-4567');
+  cy.get('[data-testid="complete-onboarding-button"]').click();
+  
+  // Verify successful onboarding
+  cy.url().should('include', '/client-dashboard');
+  cy.get('[data-testid="welcome-message"]')
+    .should('be.visible')
+    .and('contain', 'Welcome to Boutique Family Office');
+});
+
+// Complete RIA-Advisor Flow
+Cypress.Commands.add('completeRIAAdvisorFlow', (inviteToken: string) => {
+  cy.log(`Completing RIA advisor onboarding with token: ${inviteToken}`);
+  
+  // Visit advisor invite link
+  cy.visit(`/advisor-invite/${inviteToken}`);
+  
+  // Should be on advisor invite redemption page
+  cy.url().should('include', '/advisor-invite/');
+  
+  // Fill advisor onboarding form
+  cy.get('[data-testid="advisor-password-input"]').type('AdvisorPass123!');
+  cy.get('[data-testid="confirm-password-input"]').type('AdvisorPass123!');
+  cy.get('[data-testid="phone-input"]').type('(555) 987-6543');
+  cy.get('[data-testid="license-number-input"]').type('ADV-12345');
+  cy.get('[data-testid="accept-compliance-checkbox"]').check();
+  cy.get('[data-testid="complete-advisor-setup-button"]').click();
+  
+  // Verify successful advisor setup
+  cy.url().should('include', '/advisor-dashboard');
+  cy.get('[data-testid="advisor-welcome-message"]')
+    .should('be.visible')
+    .and('contain', 'Welcome to your advisor dashboard');
+});
+
+// Wait for and retrieve invite email
+Cypress.Commands.add('waitForInviteEmail', (email: string) => {
+  cy.log(`Waiting for invite email to: ${email}`);
+  
+  // Poll for email using test email service or mock
+  return cy.wrap(null).then(() => {
+    return new Cypress.Promise((resolve) => {
+      // In a real implementation, this would poll a test email service
+      // For now, we'll simulate with a timeout and mock email content
+      setTimeout(() => {
+        const mockEmailContent = `
+          <html>
+            <body>
+              <h1>You're Invited!</h1>
+              <p>Click the link below to accept your invitation:</p>
+              <a href="http://localhost:3000/invite/mock-token-123">Accept Invitation</a>
+            </body>
+          </html>
+        `;
+        resolve(mockEmailContent);
+      }, 2000);
+    });
+  });
+});
+
+// Extract magic link from email content
+Cypress.Commands.add('extractMagicLinkFromEmail', (emailContent: string) => {
+  const linkRegex = /href="([^"]*\/invite\/[^"]*)"/;
+  const match = emailContent.match(linkRegex);
+  
+  if (!match || !match[1]) {
+    throw new Error('Could not extract magic link from email content');
+  }
+  
+  return cy.wrap(match[1]);
+});
+
+// Verify email notification
+Cypress.Commands.add('verifyEmailNotification', (emailType: string, recipient: string) => {
+  cy.log(`Verifying ${emailType} email notification to: ${recipient}`);
+  
+  // This would integrate with a test email service in a real implementation
+  cy.request({
+    method: 'GET',
+    url: `/api/test-emails/${emailType}/${encodeURIComponent(recipient)}`,
+    failOnStatusCode: false
+  }).then((response) => {
+    expect(response.status).to.eq(200);
+    expect(response.body.emailSent).to.be.true;
+    expect(response.body.recipient).to.eq(recipient);
   });
 });
 
