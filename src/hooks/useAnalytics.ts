@@ -1,207 +1,91 @@
-import { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+
+import { useCallback } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import { analytics } from '@/lib/analytics';
 
-export interface AnalyticsData {
-  totalUsers: number;
-  activeUsers: number;
-  newUsers: number;
-  totalSessions: number;
-  avgSessionDuration: number;
-  pageViews: number;
-  advisorLogins: number;
-  clientLogins: number;
-  newAdvisors: number;
-  newClients: number;
-  advisorOnboardingCompleted: number;
-  clientOnboardingCompleted: number;
-  conversionRate: number;
-  date: string;
-}
+export const useAnalytics = () => {
+  const { userProfile } = useAuth();
 
-export interface OnboardingProgress {
-  userType: 'advisor' | 'client';
-  stepName: string;
-  completedCount: number;
-  totalCount: number;
-  completionRate: number;
-}
+  const trackPageView = useCallback((pageName: string, additionalProperties?: Record<string, any>) => {
+    analytics.trackPageView(pageName, {
+      user_role: userProfile?.role,
+      user_id: userProfile?.id,
+      ...additionalProperties
+    });
+  }, [userProfile]);
 
-export const useAnalytics = (tenantId?: string, dateRange: { from: Date; to: Date } = {
-  from: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
-  to: new Date()
-}) => {
-  const { user } = useAuth();
-  const [analytics, setAnalytics] = useState<AnalyticsData[]>([]);
-  const [onboardingProgress, setOnboardingProgress] = useState<OnboardingProgress[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const trackFeatureUsage = useCallback((featureName: string, additionalProperties?: Record<string, any>) => {
+    analytics.trackFeatureUsage(featureName, {
+      user_role: userProfile?.role,
+      user_id: userProfile?.id,
+      timestamp: new Date().toISOString(),
+      ...additionalProperties
+    });
+  }, [userProfile]);
 
-  useEffect(() => {
-    if (!user) return;
-    fetchAnalytics();
-  }, [user, tenantId, dateRange]);
+  const trackConversion = useCallback((conversionType: string, additionalProperties?: Record<string, any>) => {
+    analytics.trackConversion(conversionType, {
+      user_role: userProfile?.role,
+      user_id: userProfile?.id,
+      timestamp: new Date().toISOString(),
+      ...additionalProperties
+    });
+  }, [userProfile]);
 
-  const fetchAnalytics = async () => {
-    try {
-      setLoading(true);
-      setError(null);
+  const trackEvent = useCallback((eventName: string, properties?: Record<string, any>) => {
+    analytics.track(eventName, {
+      user_role: userProfile?.role,
+      user_id: userProfile?.id,
+      timestamp: new Date().toISOString(),
+      ...properties
+    });
+  }, [userProfile]);
 
-      // Build analytics query
-      let analyticsQuery = supabase
-        .from('daily_analytics')
-        .select('*')
-        .gte('date', dateRange.from.toISOString().split('T')[0])
-        .lte('date', dateRange.to.toISOString().split('T')[0])
-        .order('date', { ascending: true });
+  const trackInviteSent = useCallback((inviteType: string, recipientEmail?: string) => {
+    trackFeatureUsage('invite_sent', {
+      invite_type: inviteType,
+      recipient_email: recipientEmail ? 'provided' : 'not_provided'
+    });
+  }, [trackFeatureUsage]);
 
-      if (tenantId) {
-        analyticsQuery = analyticsQuery.eq('tenant_id', tenantId);
-      }
+  const trackOnboardingStep = useCallback((step: string, completed: boolean = false) => {
+    trackEvent('onboarding_step', {
+      step,
+      completed,
+      event_type: completed ? 'onboarding_step_completed' : 'onboarding_step_started'
+    });
+  }, [trackEvent]);
 
-      const { data: analyticsData, error: analyticsError } = await analyticsQuery;
-      
-      if (analyticsError) throw analyticsError;
+  const trackTestDataReset = useCallback((success: boolean, resetType?: string) => {
+    trackFeatureUsage('test_data_reset', {
+      success,
+      reset_type: resetType || 'full_reset'
+    });
+  }, [trackFeatureUsage]);
 
-      // Build onboarding query
-      let onboardingQuery = supabase
-        .from('user_onboarding_progress')
-        .select('user_type, step_name, is_completed')
-        .gte('created_at', dateRange.from.toISOString())
-        .lte('created_at', dateRange.to.toISOString());
+  const trackDocumentAction = useCallback((action: string, documentType?: string) => {
+    trackFeatureUsage('document_action', {
+      action,
+      document_type: documentType
+    });
+  }, [trackFeatureUsage]);
 
-      if (tenantId) {
-        onboardingQuery = onboardingQuery.eq('tenant_id', tenantId);
-      }
-
-      const { data: onboardingData, error: onboardingError } = await onboardingQuery;
-      
-      if (onboardingError) throw onboardingError;
-
-      // Transform analytics data
-      const transformedAnalytics = (analyticsData || []).map(item => ({
-        totalUsers: item.total_users || 0,
-        activeUsers: item.active_users || 0,
-        newUsers: item.new_users || 0,
-        totalSessions: item.total_sessions || 0,
-        avgSessionDuration: item.avg_session_duration || 0,
-        pageViews: item.page_views || 0,
-        advisorLogins: item.advisor_logins || 0,
-        clientLogins: item.client_logins || 0,
-        newAdvisors: item.new_advisors || 0,
-        newClients: item.new_clients || 0,
-        advisorOnboardingCompleted: item.advisor_onboarding_completed || 0,
-        clientOnboardingCompleted: item.client_onboarding_completed || 0,
-        conversionRate: item.conversion_rate || 0,
-        date: item.date
-      }));
-
-      // Transform onboarding data
-      const onboardingMap = new Map<string, { completed: number; total: number }>();
-      
-      (onboardingData || []).forEach(item => {
-        const key = `${item.user_type}-${item.step_name}`;
-        if (!onboardingMap.has(key)) {
-          onboardingMap.set(key, { completed: 0, total: 0 });
-        }
-        const current = onboardingMap.get(key)!;
-        current.total++;
-        if (item.is_completed) {
-          current.completed++;
-        }
-      });
-
-      const transformedOnboarding = Array.from(onboardingMap.entries()).map(([key, data]) => {
-        const [userType, stepName] = key.split('-');
-        return {
-          userType: userType as 'advisor' | 'client',
-          stepName,
-          completedCount: data.completed,
-          totalCount: data.total,
-          completionRate: data.total > 0 ? (data.completed / data.total) * 100 : 0
-        };
-      });
-
-      setAnalytics(transformedAnalytics);
-      setOnboardingProgress(transformedOnboarding);
-    } catch (err) {
-      console.error('Error fetching analytics:', err);
-      setError(err instanceof Error ? err.message : 'An error occurred');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const exportReport = async (format: 'csv' | 'json' = 'csv') => {
-    try {
-      const reportData = {
-        analytics,
-        onboardingProgress,
-        generatedAt: new Date().toISOString(),
-        dateRange,
-        tenantId
-      };
-
-      if (format === 'json') {
-        const blob = new Blob([JSON.stringify(reportData, null, 2)], {
-          type: 'application/json'
-        });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `analytics-report-${Date.now()}.json`;
-        a.click();
-        URL.revokeObjectURL(url);
-      } else {
-        // CSV format
-        const csvHeaders = [
-          'Date', 'Total Users', 'Active Users', 'New Users', 'Total Sessions',
-          'Avg Session Duration', 'Page Views', 'Advisor Logins', 'Client Logins',
-          'New Advisors', 'New Clients', 'Advisor Onboarding Completed',
-          'Client Onboarding Completed', 'Conversion Rate'
-        ];
-
-        const csvRows = analytics.map(row => [
-          row.date,
-          row.totalUsers,
-          row.activeUsers,
-          row.newUsers,
-          row.totalSessions,
-          row.avgSessionDuration,
-          row.pageViews,
-          row.advisorLogins,
-          row.clientLogins,
-          row.newAdvisors,
-          row.newClients,
-          row.advisorOnboardingCompleted,
-          row.clientOnboardingCompleted,
-          row.conversionRate
-        ]);
-
-        const csvContent = [csvHeaders, ...csvRows]
-          .map(row => row.map(cell => `"${cell}"`).join(','))
-          .join('\n');
-
-        const blob = new Blob([csvContent], { type: 'text/csv' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `analytics-report-${Date.now()}.csv`;
-        a.click();
-        URL.revokeObjectURL(url);
-      }
-    } catch (err) {
-      console.error('Error exporting report:', err);
-      throw err;
-    }
-  };
+  const trackCalculatorUsage = useCallback((calculatorType: string, completed: boolean = false) => {
+    trackFeatureUsage('calculator_used', {
+      calculator_type: calculatorType,
+      completed
+    });
+  }, [trackFeatureUsage]);
 
   return {
-    analytics,
-    onboardingProgress,
-    loading,
-    error,
-    refetch: fetchAnalytics,
-    exportReport
+    trackPageView,
+    trackFeatureUsage,
+    trackConversion,
+    trackEvent,
+    trackInviteSent,
+    trackOnboardingStep,
+    trackTestDataReset,
+    trackDocumentAction,
+    trackCalculatorUsage
   };
 };

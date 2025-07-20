@@ -1,15 +1,16 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { TestDataResetModal } from './TestDataResetModal';
 import { useEdgeFunction } from '@/hooks/useEdgeFunction';
+import { useAnalytics } from '@/hooks/useAnalytics';
 import { Database, AlertTriangle, CheckCircle, XCircle } from 'lucide-react';
 import { toast } from 'sonner';
 
 export function TestDataResetCard() {
   const [showModal, setShowModal] = useState(false);
   const [lastResetAt, setLastResetAt] = useState<string | null>(null);
+  const { trackTestDataReset, trackFeatureUsage } = useAnalytics();
   
   const {
     data: resetResult,
@@ -21,6 +22,9 @@ export function TestDataResetCard() {
 
   const handleResetConfirm = async () => {
     try {
+      // Track test data reset start
+      trackFeatureUsage('test_data_reset_started');
+      
       const result = await triggerReset({
         confirmReset: true,
         backupBeforeReset: true
@@ -29,11 +33,20 @@ export function TestDataResetCard() {
       if (result?.success) {
         setLastResetAt(new Date().toISOString());
         toast.success('Test data reset completed successfully');
+        
+        // Track successful reset
+        trackTestDataReset(true, 'full_reset');
       } else {
         toast.error('Test data reset failed');
+        
+        // Track failed reset
+        trackTestDataReset(false, 'full_reset');
       }
     } catch (error) {
       toast.error('Failed to reset test data');
+      
+      // Track error
+      trackTestDataReset(false, 'full_reset');
     } finally {
       setShowModal(false);
     }
@@ -42,6 +55,9 @@ export function TestDataResetCard() {
   const handleResetClick = () => {
     clearResult();
     setShowModal(true);
+    
+    // Track modal open
+    trackFeatureUsage('test_data_reset_modal_opened');
   };
 
   const formatLastReset = (timestamp: string) => {

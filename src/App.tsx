@@ -7,6 +7,7 @@ import { Toaster as Sonner } from "sonner";
 import { AuthProvider } from '@/context/AuthContext';
 import { UserProvider } from '@/context/UserContext';
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { AnalyticsProvider } from '@/components/analytics/AnalyticsProvider';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { AdminRoute } from '@/components/auth/AdminRoute';
 import { RouteTransition } from '@/components/animations/RouteTransition';
@@ -65,13 +66,15 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <UserProvider>
-            <Router>
-              <div className="min-h-screen bg-background font-sans antialiased">
-                <AnimatedRoutes />
-                <Toaster />
-                <Sonner />
-              </div>
-            </Router>
+            <AnalyticsProvider>
+              <Router>
+                <div className="min-h-screen bg-background font-sans antialiased">
+                  <AnimatedRoutes />
+                  <Toaster />
+                  <Sonner />
+                </div>
+              </Router>
+            </AnalyticsProvider>
           </UserProvider>
         </AuthProvider>
       </QueryClientProvider>

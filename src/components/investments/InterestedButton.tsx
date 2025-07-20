@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Heart } from "lucide-react";
 import { useTaxPlanning } from "@/hooks/useTaxPlanning";
+import { useAnalytics } from "@/hooks/useAnalytics";
 
 interface InterestedButtonProps {
   assetName: string;
@@ -19,9 +20,18 @@ export function InterestedButton({
 }: InterestedButtonProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { createInterest } = useTaxPlanning();
+  const { trackFeatureUsage, trackConversion } = useAnalytics();
 
   const handleInterest = async () => {
     setIsSubmitting(true);
+    
+    // Track interest expression start
+    trackFeatureUsage('interest_expressed', {
+      asset_name: assetName,
+      item_type: itemType,
+      page_context: pageContext
+    });
+    
     try {
       // Only call createInterest which handles the email sending
       await createInterest({
@@ -29,8 +39,22 @@ export function InterestedButton({
         asset_name: assetName,
         notes: `Expressed interest in ${assetName}`
       });
+      
+      // Track successful interest submission
+      trackConversion('interest_submission', {
+        asset_name: assetName,
+        item_type: itemType,
+        page_context: pageContext
+      });
     } catch (error) {
       console.error('Error submitting interest:', error);
+      
+      // Track failed interest submission
+      trackFeatureUsage('interest_submission_failed', {
+        asset_name: assetName,
+        item_type: itemType,
+        error: error instanceof Error ? error.message : 'Unknown error'
+      });
     } finally {
       setIsSubmitting(false);
     }

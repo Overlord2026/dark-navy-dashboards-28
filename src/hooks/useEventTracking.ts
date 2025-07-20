@@ -1,7 +1,9 @@
+
 import { useState, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/context/AuthContext';
 import { useTenant } from '@/context/TenantContext';
+import { useAnalytics } from './useAnalytics';
 
 export interface EventTrackingOptions {
   userId?: string;
@@ -12,9 +14,10 @@ export interface EventTrackingOptions {
 export const useEventTracking = () => {
   const { user } = useAuth();
   const { currentTenant } = useTenant();
+  const { trackEvent, trackFeatureUsage, trackConversion } = useAnalytics();
   const [isTracking, setIsTracking] = useState(false);
 
-  const trackEvent = useCallback(async (
+  const trackEventDual = useCallback(async (
     eventType: string,
     eventName: string,
     eventData: Record<string, any> = {},
@@ -34,6 +37,16 @@ export const useEventTracking = () => {
 
       console.log('Tracking event:', payload);
 
+      // Track in PostHog
+      trackEvent(eventName, {
+        event_type: eventType,
+        ...eventData,
+        user_id: payload.userId,
+        tenant_id: payload.tenantId,
+        source: payload.source
+      });
+
+      // Also track in Supabase if edge function exists
       const { data, error } = await supabase.functions.invoke('track-event', {
         body: payload
       });
@@ -51,55 +64,66 @@ export const useEventTracking = () => {
     } finally {
       setIsTracking(false);
     }
-  }, [user?.id, currentTenant?.id]);
+  }, [user?.id, currentTenant?.id, trackEvent]);
 
-  // Predefined event tracking functions
+  // Predefined event tracking functions with PostHog integration
   const trackUserRegistration = useCallback((userData: Record<string, any>) => {
-    return trackEvent('user.registered', 'User Registration', userData);
-  }, [trackEvent]);
+    trackConversion('user_registration', userData);
+    return trackEventDual('user.registered', 'User Registration', userData);
+  }, [trackEventDual, trackConversion]);
 
   const trackUserOnboarding = useCallback((step: string, stepData: Record<string, any> = {}) => {
-    return trackEvent('user.onboarded', `Onboarding Step: ${step}`, { step, ...stepData });
-  }, [trackEvent]);
+    trackFeatureUsage('onboarding_step', { step, ...stepData });
+    return trackEventDual('user.onboarded', `Onboarding Step: ${step}`, { step, ...stepData });
+  }, [trackEventDual, trackFeatureUsage]);
 
   const trackLeadCreated = useCallback((leadData: Record<string, any>) => {
-    return trackEvent('lead.created', 'Lead Created', leadData);
-  }, [trackEvent]);
+    trackFeatureUsage('lead_created', leadData);
+    return trackEventDual('lead.created', 'Lead Created', leadData);
+  }, [trackEventDual, trackFeatureUsage]);
 
   const trackLeadConverted = useCallback((leadData: Record<string, any>) => {
-    return trackEvent('lead.converted', 'Lead Converted', leadData);
-  }, [trackEvent]);
+    trackConversion('lead_conversion', leadData);
+    return trackEventDual('lead.converted', 'Lead Converted', leadData);
+  }, [trackEventDual, trackConversion]);
 
   const trackAppointmentBooked = useCallback((appointmentData: Record<string, any>) => {
-    return trackEvent('appointment.booked', 'Appointment Booked', appointmentData);
-  }, [trackEvent]);
+    trackFeatureUsage('appointment_booked', appointmentData);
+    return trackEventDual('appointment.booked', 'Appointment Booked', appointmentData);
+  }, [trackEventDual, trackFeatureUsage]);
 
   const trackResourceDownload = useCallback((resourceData: Record<string, any>) => {
-    return trackEvent('resource.downloaded', 'Resource Downloaded', resourceData);
-  }, [trackEvent]);
+    trackFeatureUsage('resource_download', resourceData);
+    return trackEventDual('resource.downloaded', 'Resource Downloaded', resourceData);
+  }, [trackEventDual, trackFeatureUsage]);
 
   const trackPageView = useCallback((page: string, additionalData: Record<string, any> = {}) => {
-    return trackEvent('page.viewed', 'Page View', { page, ...additionalData });
-  }, [trackEvent]);
+    // PostHog handles page views automatically, but we can track additional data
+    return trackEventDual('page.viewed', 'Page View', { page, ...additionalData });
+  }, [trackEventDual]);
 
   const trackFeatureUsed = useCallback((feature: string, featureData: Record<string, any> = {}) => {
-    return trackEvent('feature.used', `Feature Used: ${feature}`, { feature, ...featureData });
-  }, [trackEvent]);
+    trackFeatureUsage(feature, featureData);
+    return trackEventDual('feature.used', `Feature Used: ${feature}`, { feature, ...featureData });
+  }, [trackEventDual, trackFeatureUsage]);
 
   const trackProfileUpdated = useCallback((profileData: Record<string, any>) => {
-    return trackEvent('profile.updated', 'Profile Updated', profileData);
-  }, [trackEvent]);
+    trackFeatureUsage('profile_updated', profileData);
+    return trackEventDual('profile.updated', 'Profile Updated', profileData);
+  }, [trackEventDual, trackFeatureUsage]);
 
   const trackDocumentUploaded = useCallback((documentData: Record<string, any>) => {
-    return trackEvent('document.uploaded', 'Document Uploaded', documentData);
-  }, [trackEvent]);
+    trackFeatureUsage('document_uploaded', documentData);
+    return trackEventDual('document.uploaded', 'Document Uploaded', documentData);
+  }, [trackEventDual, trackFeatureUsage]);
 
   const trackCalculatorUsed = useCallback((calculatorType: string, calculatorData: Record<string, any> = {}) => {
-    return trackEvent('calculator.used', `Calculator Used: ${calculatorType}`, { calculatorType, ...calculatorData });
-  }, [trackEvent]);
+    trackFeatureUsage('calculator_used', { calculatorType, ...calculatorData });
+    return trackEventDual('calculator.used', `Calculator Used: ${calculatorType}`, { calculatorType, ...calculatorData });
+  }, [trackEventDual, trackFeatureUsage]);
 
   return {
-    trackEvent,
+    trackEvent: trackEventDual,
     isTracking,
     // Predefined tracking functions
     trackUserRegistration,
