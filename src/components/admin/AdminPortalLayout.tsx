@@ -27,7 +27,7 @@ export function AdminPortalLayout({ children }: AdminPortalLayoutProps) {
   const location = useLocation();
 
   // Check if user has admin role
-  if (!userProfile || !['admin', 'system_administrator', 'tenant_admin'].includes(userProfile.role || '')) {
+  if (!userProfile || !['admin', 'system_administrator', 'tenant_admin', 'superadmin'].includes(userProfile.role || '')) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center p-8 bg-card rounded-lg border">
@@ -59,7 +59,7 @@ export function AdminPortalLayout({ children }: AdminPortalLayoutProps) {
           <div className="flex items-center space-x-4">
             <h1 className="text-xl font-bold text-foreground">Admin Portal</h1>
             <div className="h-6 w-px bg-border" />
-            <span className="text-sm text-muted-foreground">Welcome, {userProfile.name || userProfile.email}</span>
+            <span className="text-sm text-muted-foreground">Welcome, {userProfile.display_name || userProfile.email}</span>
           </div>
           <Button variant="outline" size="sm" asChild>
             <Link to="/client-dashboard">Exit Admin</Link>
