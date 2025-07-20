@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
 import { useToast } from '@/hooks/use-toast';
+import { edgeFunctionClient } from '@/services/edgeFunction/EdgeFunctionClient';
+import { supabase } from '@/lib/supabase';
 
 export interface Transfer {
   id: string;
@@ -117,75 +118,19 @@ export function TransfersProvider({ children }: { children: React.ReactNode }) {
     amount: number;
     description?: string;
   }) => {
-    try {
-      setProcessing(true);
-      console.log('TransfersContext: Creating transfer:', transferData);
-      
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        toast({
-          title: "Error",
-          description: "You must be logged in to create a transfer",
-          variant: "destructive"
-        });
-        return false;
-      }
-
-      // Call the edge function to process the transfer
-      const { data, error } = await supabase.functions.invoke('process-transfer', {
-        body: transferData
-      });
-
-      console.log('TransfersContext: Transfer response:', { data, error });
-
-      if (error) {
-        console.error('Error creating transfer:', error);
-        const errorMessage = typeof error === 'string' 
-          ? error 
-          : error?.message || "Failed to process transfer";
-        
-        toast({
-          title: "Transfer Failed",
-          description: errorMessage,
-          variant: "destructive"
-        });
-        return false;
-      }
-
-      if (!data?.success) {
-        console.error('Transfer failed:', data);
-        toast({
-          title: "Transfer Failed",
-          description: data?.error || "Transfer could not be completed",
-          variant: "destructive"
-        });
-        return false;
-      }
-
-      // Add the new transfer to our state
-      if (data.transfer) {
-        setTransfers(prev => [data.transfer, ...prev]);
-      }
-
-      toast({
-        title: "Transfer Successful",
-        description: `Transfer of $${transferData.amount.toFixed(2)} completed successfully`,
-      });
-
-      // Refresh transfers to get the latest state
+    setProcessing(true);
+    
+    const response = await edgeFunctionClient.invokeTransferFunction('process-transfer', transferData);
+    
+    if (response.success && response.data?.transfer) {
+      setTransfers(prev => [response.data.transfer, ...prev]);
       await fetchTransfers();
-      return true;
-    } catch (error) {
-      console.error('Error creating transfer:', error);
-      toast({
-        title: "Transfer Error",
-        description: "An unexpected error occurred during transfer",
-        variant: "destructive"
-      });
-      return false;
-    } finally {
       setProcessing(false);
+      return true;
     }
+    
+    setProcessing(false);
+    return false;
   };
 
   const createACHTransfer = async (transferData: {
@@ -194,75 +139,19 @@ export function TransfersProvider({ children }: { children: React.ReactNode }) {
     amount: number;
     description?: string;
   }) => {
-    try {
-      setProcessing(true);
-      console.log('TransfersContext: Creating ACH transfer:', transferData);
-      
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        toast({
-          title: "Error",
-          description: "You must be logged in to create an ACH transfer",
-          variant: "destructive"
-        });
-        return false;
-      }
-
-      // Call the edge function to process the ACH transfer
-      const { data, error } = await supabase.functions.invoke('stripe-ach-transfer', {
-        body: transferData
-      });
-
-      console.log('TransfersContext: ACH Transfer response:', { data, error });
-
-      if (error) {
-        console.error('Error creating ACH transfer:', error);
-        const errorMessage = typeof error === 'string' 
-          ? error 
-          : error?.message || "Failed to process ACH transfer";
-        
-        toast({
-          title: "ACH Transfer Failed",
-          description: errorMessage,
-          variant: "destructive"
-        });
-        return false;
-      }
-
-      if (!data?.success) {
-        console.error('ACH Transfer failed:', data);
-        toast({
-          title: "ACH Transfer Failed",
-          description: data?.error || "ACH transfer could not be completed",
-          variant: "destructive"
-        });
-        return false;
-      }
-
-      // Add the new transfer to our state
-      if (data.transfer) {
-        setTransfers(prev => [data.transfer, ...prev]);
-      }
-
-      toast({
-        title: "ACH Transfer Initiated",
-        description: data.message || `ACH transfer of $${transferData.amount.toFixed(2)} initiated successfully`,
-      });
-
-      // Refresh transfers to get the latest state
+    setProcessing(true);
+    
+    const response = await edgeFunctionClient.invokeTransferFunction('stripe-ach-transfer', transferData);
+    
+    if (response.success && response.data?.transfer) {
+      setTransfers(prev => [response.data.transfer, ...prev]);
       await fetchTransfers();
-      return true;
-    } catch (error) {
-      console.error('Error creating ACH transfer:', error);
-      toast({
-        title: "ACH Transfer Error",
-        description: "An unexpected error occurred during ACH transfer",
-        variant: "destructive"
-      });
-      return false;
-    } finally {
       setProcessing(false);
+      return true;
     }
+    
+    setProcessing(false);
+    return false;
   };
 
   const getTransferHistory = (limit = 10) => {

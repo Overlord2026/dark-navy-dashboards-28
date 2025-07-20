@@ -1,5 +1,7 @@
 import { useState, useCallback } from 'react';
 import { toast } from 'sonner';
+import { logger } from '@/services/logging/loggingService';
+import { edgeFunctionClient } from '@/services/edgeFunction/EdgeFunctionClient';
 
 export interface ErrorDetails {
   message: string;
@@ -10,6 +12,7 @@ export interface ErrorDetails {
   component?: string;
   action?: string;
   retryable?: boolean;
+  correlationId?: string;
 }
 
 export interface RetryConfig {
@@ -31,16 +34,11 @@ export const useEnhancedErrorHandling = () => {
   const logError = useCallback((error: ErrorDetails) => {
     setErrors(prev => [...prev, error]);
     
-    // Log to console for debugging
-    console.error('Enhanced Error:', {
+    // Enhanced logging with correlation ID
+    logger.error('Enhanced Error Handler', {
       ...error,
       stack: error instanceof Error ? error.stack : undefined
-    });
-
-    // Send to analytics/monitoring service (placeholder)
-    if (process.env.NODE_ENV === 'production') {
-      // analytics.track('error_occurred', error);
-    }
+    }, 'useEnhancedErrorHandling');
   }, []);
 
   const handleError = useCallback((
@@ -50,6 +48,8 @@ export const useEnhancedErrorHandling = () => {
     action?: string,
     retryable = true
   ) => {
+    const correlationId = `error_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    
     const errorDetails: ErrorDetails = {
       message: error instanceof Error ? error.message : 'Unknown error',
       code: error instanceof Error && 'code' in error ? String(error.code) : undefined,
@@ -57,24 +57,34 @@ export const useEnhancedErrorHandling = () => {
       timestamp: new Date(),
       component,
       action,
-      retryable
+      retryable,
+      correlationId
     };
 
     logError(errorDetails);
 
-    // Show appropriate toast based on error type
-    if (errorDetails.retryable) {
+    // Use the EdgeFunctionClient's error display logic for consistency
+    if (retryable) {
       toast.error(errorDetails.message, {
+        description: `Error ID: ${correlationId}`,
         action: {
           label: 'Retry',
           onClick: () => {
-            // Retry logic would be implemented by the consuming component
-            toast.info('Retrying...');
+            toast.info('Please try your action again');
           }
         }
       });
     } else {
-      toast.error(errorDetails.message);
+      toast.error(errorDetails.message, {
+        description: `Error ID: ${correlationId}`,
+        action: {
+          label: 'Contact Support',
+          onClick: () => {
+            navigator.clipboard.writeText(correlationId);
+            toast.info('Error ID copied to clipboard');
+          }
+        }
+      });
     }
 
     return errorDetails;
@@ -129,6 +139,48 @@ export const useEnhancedErrorHandling = () => {
     }
   }, [retryCount, handleError]);
 
+  // Enhanced edge function handling
+  const handleEdgeFunction = useCallback(async (
+    functionName: string,
+    payload?: any,
+    options?: {
+      context?: string;
+      retryConfig?: Partial<RetryConfig>;
+      showSuccessMessage?: boolean;
+      successMessage?: string;
+    }
+  ) => {
+    const context = options?.context || `Edge Function: ${functionName}`;
+    
+    try {
+      // Use the centralized EdgeFunctionClient
+      const response = await edgeFunctionClient.invoke(functionName, payload, {
+        retryConfig: options?.retryConfig,
+        showSuccessMessage: options?.showSuccessMessage,
+        successMessage: options?.successMessage
+      });
+
+      if (!response.success && response.error) {
+        // Error already handled by EdgeFunctionClient, just log locally
+        const errorDetails: ErrorDetails = {
+          message: response.error.message,
+          code: response.error.code,
+          context,
+          timestamp: new Date(),
+          retryable: response.error.retryable,
+          correlationId: response.error.correlationId
+        };
+        
+        logError(errorDetails);
+      }
+
+      return response;
+    } catch (error) {
+      // Fallback error handling
+      return handleError(error, context, 'EdgeFunction', functionName, true);
+    }
+  }, [logError, handleError]);
+
   const handleAddButtonError = useCallback((
     error: unknown,
     buttonType: string,
@@ -140,7 +192,6 @@ export const useEnhancedErrorHandling = () => {
     let retryable = true;
 
     if (error instanceof Error) {
-      // Handle specific error types
       if (error.message.includes('network')) {
         userMessage = `Network error while adding ${buttonType}. Please check your connection.`;
       } else if (error.message.includes('permission')) {
@@ -172,7 +223,6 @@ export const useEnhancedErrorHandling = () => {
     let retryable = true;
 
     if (error instanceof Error) {
-      // Handle specific error types
       if (error.message.includes('no documents')) {
         userMessage = `No documents available to share. Please add documents first.`;
         retryable = false;
@@ -212,6 +262,7 @@ export const useEnhancedErrorHandling = () => {
     retryCount,
     handleError,
     withRetry,
+    handleEdgeFunction,
     handleAddButtonError,
     handleShareButtonError,
     clearErrors,

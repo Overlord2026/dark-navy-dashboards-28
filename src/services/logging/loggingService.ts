@@ -1,6 +1,5 @@
-
-// Simple in-memory logging service
-// In a real app, this would persist to a database or external service
+// Enhanced logging service with Supabase persistence
+import { supabase } from '@/integrations/supabase/client';
 
 export type LogLevel = 'debug' | 'info' | 'warning' | 'error' | 'critical';
 
@@ -11,22 +10,32 @@ export interface LogEntry {
   data?: any;
   source?: string;
   id: string;
+  correlationId?: string;
+  userId?: string;
+  sessionId?: string;
 }
 
 export interface LoggingConfig {
   minLevel: LogLevel;
-  retentionPeriod: number; // in days
+  retentionPeriod: number;
   enableRealTimeAlerts: boolean;
+  persistToSupabase: boolean;
 }
 
 class LoggingService {
   private logs: LogEntry[] = [];
-  private maxEntries = 1000; // Limit to prevent memory issues
+  private maxEntries = 1000;
   private config: LoggingConfig = {
     minLevel: 'info',
     retentionPeriod: 7,
-    enableRealTimeAlerts: false
+    enableRealTimeAlerts: false,
+    persistToSupabase: true
   };
+  private sessionId: string;
+  
+  constructor() {
+    this.sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  }
   
   initialize(config: Partial<LoggingConfig>): void {
     this.config = { ...this.config, ...config };
@@ -41,9 +50,48 @@ class LoggingService {
     return currentLevelIndex >= configLevelIndex;
   }
   
-  private addEntry(level: LogLevel, message: string, data?: any, source?: string): LogEntry {
+  private async persistToSupabase(entry: LogEntry): Promise<void> {
+    if (!this.config.persistToSupabase) return;
+    
+    try {
+      await supabase.from('audit_logs').insert({
+        event_type: `log_${entry.level}`,
+        status: entry.level === 'error' || entry.level === 'critical' ? 'error' : 'success',
+        details: {
+          log_id: entry.id,
+          message: entry.message,
+          source: entry.source,
+          data: entry.data,
+          correlation_id: entry.correlationId,
+          session_id: entry.sessionId,
+          timestamp: entry.timestamp,
+          level: entry.level
+        },
+        user_id: entry.userId
+      });
+    } catch (error) {
+      console.error('Failed to persist log to Supabase:', error);
+    }
+  }
+  
+  private async addEntry(
+    level: LogLevel, 
+    message: string, 
+    data?: any, 
+    source?: string,
+    correlationId?: string
+  ): Promise<LogEntry> {
     if (!this.shouldLog(level)) {
       return null as unknown as LogEntry;
+    }
+    
+    // Get current user ID if available
+    let userId: string | undefined;
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      userId = user?.id;
+    } catch {
+      // Ignore auth errors in logging
     }
     
     const entry: LogEntry = {
@@ -52,15 +100,21 @@ class LoggingService {
       message,
       data,
       source,
-      id: crypto.randomUUID()
+      id: crypto.randomUUID(),
+      correlationId,
+      userId,
+      sessionId: this.sessionId
     };
     
-    this.logs.unshift(entry); // Add to beginning for chronological order
+    this.logs.unshift(entry);
     
     // Trim if too many entries
     if (this.logs.length > this.maxEntries) {
       this.logs = this.logs.slice(0, this.maxEntries);
     }
+    
+    // Persist to Supabase asynchronously
+    this.persistToSupabase(entry).catch(console.error);
     
     if (level === 'error' || level === 'critical') {
       this.handleCriticalLog(entry);
@@ -76,22 +130,22 @@ class LoggingService {
     }
   }
   
-  debug(message: string, data?: any, source?: string): LogEntry {
+  debug(message: string, data?: any, source?: string, correlationId?: string): LogEntry {
     console.debug(`[${source || 'App'}] ${message}`, data);
-    return this.addEntry('debug', message, data, source);
+    return this.addEntry('debug', message, data, source, correlationId);
   }
   
-  info(message: string, data?: any, source?: string): LogEntry {
+  info(message: string, data?: any, source?: string, correlationId?: string): LogEntry {
     console.info(`[${source || 'App'}] ${message}`, data);
-    return this.addEntry('info', message, data, source);
+    return this.addEntry('info', message, data, source, correlationId);
   }
   
-  warning(message: string, data?: any, source?: string): LogEntry {
+  warning(message: string, data?: any, source?: string, correlationId?: string): LogEntry {
     console.warn(`[${source || 'App'}] ${message}`, data);
-    return this.addEntry('warning', message, data, source);
+    return this.addEntry('warning', message, data, source, correlationId);
   }
   
-  error(message: string, error?: any, source?: string): LogEntry {
+  error(message: string, error?: any, source?: string, correlationId?: string): LogEntry {
     console.error(`[${source || 'App'}] ${message}`, error);
     return this.addEntry('error', message, {
       error: error instanceof Error ? { 
@@ -99,10 +153,10 @@ class LoggingService {
         stack: error.stack,
         name: error.name
       } : error
-    }, source);
+    }, source, correlationId);
   }
   
-  critical(message: string, error?: any, source?: string): LogEntry {
+  critical(message: string, error?: any, source?: string, correlationId?: string): LogEntry {
     console.error(`[${source || 'App'}] CRITICAL: ${message}`, error);
     return this.addEntry('critical', message, {
       error: error instanceof Error ? { 
@@ -110,7 +164,7 @@ class LoggingService {
         stack: error.stack,
         name: error.name
       } : error
-    }, source);
+    }, source, correlationId);
   }
   
   getRecentLogs(limit: number = 100): LogEntry[] {
