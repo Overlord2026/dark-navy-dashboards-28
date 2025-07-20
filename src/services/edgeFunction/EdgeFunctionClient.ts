@@ -18,6 +18,8 @@ export interface EdgeFunctionResponse<T = any> {
   success: boolean;
   data?: T;
   error?: EdgeFunctionError;
+  executionTime?: number;
+  correlationId: string;
 }
 
 export interface RetryConfig {
@@ -78,38 +80,66 @@ class EdgeFunctionClient {
     return messageMap[category] || messageMap.unknown;
   }
 
-  private async logError(error: EdgeFunctionError, functionName: string, requestData?: any): Promise<void> {
-    // Log to local logging service
-    logger.error(
-      `Edge Function Error: ${functionName}`,
-      {
-        error: error,
-        requestData: requestData ? JSON.stringify(requestData) : undefined,
-        timestamp: new Date().toISOString(),
-        correlationId: error.correlationId
-      },
-      'EdgeFunctionClient'
-    );
-
-    // Log to Supabase audit_logs for admin dashboard
+  private async logFunctionCall(
+    functionName: string,
+    correlationId: string,
+    success: boolean,
+    executionTime: number,
+    requestData?: any,
+    responseData?: any,
+    error?: EdgeFunctionError
+  ): Promise<void> {
     try {
+      // Log to application logging service
+      if (success) {
+        await logger.info(
+          `Edge Function Success: ${functionName}`,
+          {
+            correlationId,
+            executionTime,
+            requestData: requestData ? JSON.stringify(requestData) : undefined,
+            responseData: responseData ? JSON.stringify(responseData) : undefined,
+            timestamp: new Date().toISOString()
+          },
+          'EdgeFunctionClient'
+        );
+      } else {
+        await logger.error(
+          `Edge Function Error: ${functionName}`,
+          {
+            error: error,
+            requestData: requestData ? JSON.stringify(requestData) : undefined,
+            timestamp: new Date().toISOString(),
+            correlationId: correlationId
+          },
+          'EdgeFunctionClient'
+        );
+      }
+
+      // Log to Supabase audit_logs for admin dashboard
       await supabase.from('audit_logs').insert({
-        event_type: 'edge_function_error',
-        status: 'error',
+        event_type: success ? 'edge_function_success' : 'edge_function_error',
+        status: success ? 'success' : 'error',
         details: {
           function_name: functionName,
-          error_code: error.code,
-          error_message: error.message,
-          error_category: error.category,
-          correlation_id: error.correlationId,
-          user_message: error.userMessage,
-          retryable: error.retryable,
-          request_data: requestData,
+          execution_time_ms: executionTime,
+          correlation_id: correlationId,
+          success: success,
+          ...(success ? {
+            response_size: responseData ? JSON.stringify(responseData).length : 0,
+            request_data: requestData
+          } : {
+            error_code: error?.code,
+            error_message: error?.message,
+            error_category: error?.category,
+            user_message: error?.userMessage,
+            retryable: error?.retryable
+          }),
           timestamp: new Date().toISOString()
         }
       });
     } catch (logError) {
-      console.error('Failed to log error to audit_logs:', logError);
+      console.error('Failed to log function call:', logError);
     }
   }
 
@@ -134,26 +164,33 @@ class EdgeFunctionClient {
   ): Promise<EdgeFunctionResponse<T>> {
     const correlationId = this.generateCorrelationId();
     const retryConfig = { ...this.defaultRetryConfig, ...options?.retryConfig };
-    const showUserError = options?.showUserError !== false; // Default to true
+    const showUserError = options?.showUserError !== false;
+    const startTime = Date.now();
     
     logger.info(`Invoking edge function: ${functionName}`, { correlationId, payload }, 'EdgeFunctionClient');
 
     for (let attempt = 1; attempt <= retryConfig.maxAttempts; attempt++) {
       try {
+        const attemptStartTime = Date.now();
         const { data, error } = await supabase.functions.invoke(functionName, {
           body: payload
         });
+
+        const executionTime = Date.now() - attemptStartTime;
 
         if (error) {
           throw error;
         }
 
         // Log successful call
-        logger.info(`Edge function success: ${functionName}`, { 
-          correlationId, 
-          attempt,
-          responseData: data 
-        }, 'EdgeFunctionClient');
+        await this.logFunctionCall(
+          functionName,
+          correlationId,
+          true,
+          executionTime,
+          payload,
+          data
+        );
 
         // Show success message if requested
         if (options?.showSuccessMessage && options?.successMessage) {
@@ -162,10 +199,13 @@ class EdgeFunctionClient {
 
         return {
           success: true,
-          data: data
+          data: data,
+          executionTime,
+          correlationId
         };
 
       } catch (rawError: any) {
+        const executionTime = Date.now() - startTime;
         const category = this.categorizeError(rawError);
         const edgeError: EdgeFunctionError = {
           code: rawError.code || `EDGE_${category.toUpperCase()}_ERROR`,
@@ -178,18 +218,27 @@ class EdgeFunctionClient {
           correlationId
         };
 
-        // Log the error
-        await this.logError(edgeError, functionName, payload);
-
-        // If this is the last attempt or error is not retryable, return error
+        // If this is the last attempt or error is not retryable, log and return error
         if (attempt >= retryConfig.maxAttempts || !edgeError.retryable) {
+          await this.logFunctionCall(
+            functionName,
+            correlationId,
+            false,
+            executionTime,
+            payload,
+            undefined,
+            edgeError
+          );
+
           if (showUserError) {
             this.showUserError(edgeError, functionName);
           }
 
           return {
             success: false,
-            error: edgeError
+            error: edgeError,
+            executionTime,
+            correlationId
           };
         }
 
@@ -215,7 +264,9 @@ class EdgeFunctionClient {
 
     return {
       success: false,
-      error: fallbackError
+      error: fallbackError,
+      executionTime: Date.now() - startTime,
+      correlationId
     };
   }
 

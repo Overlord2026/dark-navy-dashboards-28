@@ -1,158 +1,102 @@
+
 import React from 'react';
-import { Link, useLocation, Outlet } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useUser } from '@/context/UserContext';
 import { Button } from '@/components/ui/button';
 import { 
   Settings, 
+  MessageSquare, 
+  Home, 
   Users, 
-  BarChart3, 
-  Database, 
-  Shield, 
-  FileText, 
-  Webhook,
-  Building,
-  UserCheck,
-  TrendingUp,
-  CreditCard,
-  Home,
-  LogOut,
-  Crown,
-  ShoppingCart,
-  GraduationCap,
-  Palette,
-  BookOpen,
-  HeadphonesIcon,
-  ClipboardCheck,
-  FileSearch
+  HelpCircle, 
+  Shield,
+  Monitor,
+  Activity,
+  Zap,
+  AlertTriangle,
+  BarChart3
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface AdminPortalLayoutProps {
-  children?: React.ReactNode;
+  children: React.ReactNode;
 }
 
 export function AdminPortalLayout({ children }: AdminPortalLayoutProps) {
   const { userProfile } = useUser();
   const location = useLocation();
 
-  const isSuperAdmin = userProfile?.role === 'system_administrator';
-  const isTenantAdmin = ['admin', 'tenant_admin'].includes(userProfile?.role || '');
+  // Check if user has admin role
+  if (!userProfile || !['admin', 'system_administrator', 'tenant_admin'].includes(userProfile.role || '')) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-center p-8 bg-card rounded-lg border">
+          <h1 className="text-2xl font-bold text-destructive mb-2">Access Denied</h1>
+          <p className="text-muted-foreground mb-4">You don't have permission to access this area.</p>
+          <Button asChild>
+            <Link to="/client-dashboard">Return to Dashboard</Link>
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
-  const adminNavSections = [
-    {
-      title: 'Overview',
-      items: [
-        { href: '/admin-portal', icon: Home, label: 'Dashboard', roles: ['admin', 'tenant_admin', 'system_administrator', 'advisor'] },
-      ]
-    },
-    {
-      title: 'Manage',
-      items: [
-        { href: '/admin-portal/advisors', icon: Users, label: 'Advisors/Teams', roles: ['admin', 'tenant_admin', 'system_administrator'] },
-        { href: '/admin-portal/clients', icon: UserCheck, label: 'Clients/Prospects', roles: ['admin', 'tenant_admin', 'system_administrator', 'advisor'] },
-        { href: '/admin-portal/resources', icon: FileText, label: 'Resources', roles: ['admin', 'tenant_admin', 'system_administrator'] },
-        { href: '/admin-portal/marketplace', icon: ShoppingCart, label: 'Marketplace', roles: ['admin', 'tenant_admin', 'system_administrator'] },
-        { href: '/admin-portal/premium-features', icon: Crown, label: 'Premium Features', roles: ['admin', 'tenant_admin', 'system_administrator'] },
-      ]
-    },
-    {
-      title: 'Business',
-      items: [
-        { href: '/admin-portal/billing', icon: CreditCard, label: 'Billing & Licensing', roles: ['admin', 'tenant_admin', 'system_administrator'] },
-        { href: '/admin-portal/branding', icon: Palette, label: 'Branding', roles: ['admin', 'tenant_admin', 'system_administrator'] },
-        { href: '/admin-portal/referrals', icon: TrendingUp, label: 'Referrals & Compensation', roles: ['admin', 'tenant_admin', 'system_administrator', 'advisor'] },
-      ]
-    },
-    {
-      title: 'Help & Security',
-      items: [
-        { href: '/admin-portal/training', icon: GraduationCap, label: 'Training & Support', roles: ['admin', 'tenant_admin', 'system_administrator', 'advisor'] },
-        { href: '/admin-portal/compliance', icon: ClipboardCheck, label: 'Compliance', roles: ['admin', 'tenant_admin', 'system_administrator'] },
-        { href: '/admin-portal/audit-logs', icon: FileSearch, label: 'Audit Logs', roles: ['admin', 'tenant_admin', 'system_administrator'] },
-        { href: '/admin-portal/settings', icon: Settings, label: 'Settings', roles: ['admin', 'tenant_admin', 'system_administrator'] },
-        { href: '/admin-portal/tenants', icon: Building, label: 'Tenants', roles: ['system_administrator'] },
-        { href: '/admin-portal/webhooks', icon: Webhook, label: 'Webhooks', roles: ['system_administrator'] },
-        { href: '/admin-portal/database', icon: Database, label: 'Database Health', roles: ['system_administrator'] },
-      ]
-    }
+  const adminNavItems = [
+    { href: '/admin-portal', icon: Home, label: 'Dashboard' },
+    { href: '/admin-portal/edge-functions', icon: Zap, label: 'Edge Functions' },
+    { href: '/admin-portal/system-health', icon: Monitor, label: 'System Health' },
+    { href: '/admin-portal/analytics', icon: BarChart3, label: 'Analytics' },
+    { href: '/admin-portal/compliance', icon: Shield, label: 'Compliance' },
+    { href: '/admin-portal/users', icon: Users, label: 'Users' },
+    { href: '/admin-portal/faqs', icon: HelpCircle, label: 'Manage FAQs' },
+    { href: '/admin-portal/settings', icon: Settings, label: 'Settings' },
   ];
 
-  const canAccessItem = (item: { roles: string[] }) => {
-    if (item.roles.includes('all')) return true;
-    if (isSuperAdmin) return true;
-    return item.roles.includes(userProfile?.role || '');
-  };
-
   return (
-    <div className="min-h-screen bg-muted/30">
-      <header className="bg-card border-b sticky top-0 z-50 shadow-sm">
+    <div className="min-h-screen bg-background">
+      <header className="bg-card border-b sticky top-0 z-50">
         <div className="flex items-center justify-between px-6 py-4">
           <div className="flex items-center space-x-4">
             <h1 className="text-xl font-bold text-foreground">Admin Portal</h1>
             <div className="h-6 w-px bg-border" />
-            <div className="flex items-center space-x-2">
-              <div className="h-2 w-2 bg-green-500 rounded-full"></div>
-               <span className="text-sm text-muted-foreground">
-                 {userProfile?.role === 'system_administrator' ? 'Super Admin' : 
-                  userProfile?.role === 'tenant_admin' ? 'Tenant Admin' :
-                  userProfile?.role === 'advisor' ? 'Advisor' : 'Admin'} - {userProfile?.name || userProfile?.email}
-               </span>
-            </div>
+            <span className="text-sm text-muted-foreground">Welcome, {userProfile.name || userProfile.email}</span>
           </div>
-          <div className="flex items-center space-x-2">
-            <Button variant="outline" size="sm" asChild>
-              <Link to="/client-dashboard">
-                <LogOut className="h-4 w-4 mr-2" />
-                Exit Portal
-              </Link>
-            </Button>
-          </div>
+          <Button variant="outline" size="sm" asChild>
+            <Link to="/client-dashboard">Exit Admin</Link>
+          </Button>
         </div>
       </header>
 
       <div className="flex h-[calc(100vh-73px)]">
         {/* Sidebar */}
-        <aside className="w-72 bg-card border-r overflow-auto">
-          <div className="p-4">
-            <nav className="space-y-6">
-              {adminNavSections.map((section) => (
-                <div key={section.title}>
-                  <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
-                    {section.title}
-                  </h3>
-                  <div className="space-y-1">
-                    {section.items
-                      .filter(canAccessItem)
-                      .map((item) => {
-                        const Icon = item.icon;
-                        const isActive = location.pathname === item.href;
-                        return (
-                          <Link
-                            key={item.href}
-                            to={item.href}
-                            className={cn(
-                              "flex items-center space-x-3 px-3 py-2 rounded-md transition-colors text-sm",
-                              isActive 
-                                ? "bg-primary text-primary-foreground shadow-sm" 
-                                : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-                            )}
-                          >
-                            <Icon className="h-4 w-4 flex-shrink-0" />
-                            <span className="truncate">{item.label}</span>
-                          </Link>
-                        );
-                      })}
-                  </div>
-                </div>
-              ))}
-            </nav>
-          </div>
+        <aside className="w-64 bg-card border-r p-4">
+          <nav className="space-y-2">
+            {adminNavItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = location.pathname === item.href;
+              return (
+                <Link
+                  key={item.href}
+                  to={item.href}
+                  className={cn(
+                    "flex items-center space-x-3 px-3 py-2 rounded-md transition-colors",
+                    isActive 
+                      ? "bg-primary text-primary-foreground" 
+                      : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                  )}
+                >
+                  <Icon className="h-4 w-4" />
+                  <span>{item.label}</span>
+                </Link>
+              );
+            })}
+          </nav>
         </aside>
 
         {/* Main content */}
-        <main className="flex-1 overflow-auto bg-background">
+        <main className="flex-1 overflow-auto">
           <div className="p-6">
-            {children || <Outlet />}
+            {children}
           </div>
         </main>
       </div>
