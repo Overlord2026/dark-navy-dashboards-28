@@ -31,10 +31,10 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
       analytics.identify(user.id, {
         email: userProfile.email,
         role: userProfile.role,
-        first_name: userProfile.first_name,
-        last_name: userProfile.last_name,
-        client_segment: userProfile.client_segment,
-        tenant_id: userProfile.tenant_id
+        first_name: userProfile.firstName,
+        last_name: userProfile.lastName,
+        client_segment: userProfile.clientSegment,
+        tenant_id: userProfile.tenantId
       });
     }
   }, [initialized, user, userProfile]);

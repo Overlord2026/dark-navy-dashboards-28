@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Heart } from "lucide-react";
 import { useTaxPlanning } from "@/hooks/useTaxPlanning";
-import { useAnalytics } from "@/hooks/useAnalytics";
+import { useAnalyticsTracking } from "@/hooks/useAnalytics";
 
 interface InterestedButtonProps {
   assetName: string;
@@ -20,7 +20,7 @@ export function InterestedButton({
 }: InterestedButtonProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { createInterest } = useTaxPlanning();
-  const { trackFeatureUsage, trackConversion } = useAnalytics();
+  const { trackFeatureUsage, trackConversion } = useAnalyticsTracking();
 
   const handleInterest = async () => {
     setIsSubmitting(true);

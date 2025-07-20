@@ -1,7 +1,7 @@
 
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { useAnalytics } from './useAnalytics';
+import { useAnalyticsTracking } from './useAnalytics';
 
 // Page name mapping for cleaner analytics
 const PAGE_NAMES: Record<string, string> = {
@@ -23,7 +23,7 @@ const PAGE_NAMES: Record<string, string> = {
 
 export const usePageTracking = () => {
   const location = useLocation();
-  const { trackPageView } = useAnalytics();
+  const { trackPageView } = useAnalyticsTracking();
 
   useEffect(() => {
     const pageName = PAGE_NAMES[location.pathname] || location.pathname;

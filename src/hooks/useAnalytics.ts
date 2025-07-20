@@ -1,9 +1,122 @@
 
-import { useCallback } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { analytics } from '@/lib/analytics';
 
-export const useAnalytics = () => {
+// Export the missing types that components expect
+export interface AnalyticsData {
+  date: string;
+  totalUsers: number;
+  activeUsers: number;
+  newUsers: number;
+  totalSessions: number;
+  avgSessionDuration: number;
+  pageViews: number;
+  advisorLogins: number;
+  clientLogins: number;
+  newAdvisors: number;
+  advisorOnboardingCompleted: number;
+  clientOnboardingCompleted: number;
+  conversionRate: number;
+}
+
+export interface OnboardingProgress {
+  stepName: string;
+  userType: 'advisor' | 'client';
+  completedCount: number;
+  totalCount: number;
+  completionRate: number;
+}
+
+// Hook for data fetching (used by dashboard components)
+export const useAnalytics = (tenantId?: string, dateRange?: { from: Date; to: Date }) => {
+  const [analytics, setAnalytics] = useState<AnalyticsData[]>([]);
+  const [onboardingProgress, setOnboardingProgress] = useState<OnboardingProgress[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchAnalytics = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    
+    try {
+      // Mock data for now - in a real implementation, this would fetch from your analytics API
+      const mockAnalytics: AnalyticsData[] = [
+        {
+          date: new Date().toISOString(),
+          totalUsers: 150,
+          activeUsers: 45,
+          newUsers: 12,
+          totalSessions: 320,
+          avgSessionDuration: 8.5,
+          pageViews: 1250,
+          advisorLogins: 25,
+          clientLogins: 20,
+          newAdvisors: 3,
+          advisorOnboardingCompleted: 8,
+          clientOnboardingCompleted: 15,
+          conversionRate: 12.5
+        }
+      ];
+
+      const mockOnboardingProgress: OnboardingProgress[] = [
+        {
+          stepName: 'Profile Setup',
+          userType: 'advisor',
+          completedCount: 8,
+          totalCount: 10,
+          completionRate: 80
+        },
+        {
+          stepName: 'Document Upload',
+          userType: 'client',
+          completedCount: 15,
+          totalCount: 20,
+          completionRate: 75
+        }
+      ];
+
+      setAnalytics(mockAnalytics);
+      setOnboardingProgress(mockOnboardingProgress);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to fetch analytics');
+    } finally {
+      setLoading(false);
+    }
+  }, [tenantId, dateRange]);
+
+  useEffect(() => {
+    fetchAnalytics();
+  }, [fetchAnalytics]);
+
+  const exportReport = useCallback(async (format: 'csv' | 'json') => {
+    // Mock export functionality
+    console.log(`Exporting analytics report in ${format} format`);
+    
+    if (format === 'json') {
+      const data = { analytics, onboardingProgress };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `analytics-report-${new Date().toISOString().split('T')[0]}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+  }, [analytics, onboardingProgress]);
+
+  return {
+    analytics,
+    onboardingProgress,
+    loading,
+    error,
+    refetch: fetchAnalytics,
+    exportReport
+  };
+};
+
+// Hook for event tracking (existing functionality)
+export const useAnalyticsTracking = () => {
   const { userProfile } = useAuth();
 
   const trackPageView = useCallback((pageName: string, additionalProperties?: Record<string, any>) => {

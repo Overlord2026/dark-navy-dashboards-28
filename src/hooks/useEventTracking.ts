@@ -3,7 +3,7 @@ import { useState, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/context/AuthContext';
 import { useTenant } from '@/context/TenantContext';
-import { useAnalytics } from './useAnalytics';
+import { useAnalyticsTracking } from './useAnalytics';
 
 export interface EventTrackingOptions {
   userId?: string;
@@ -14,7 +14,7 @@ export interface EventTrackingOptions {
 export const useEventTracking = () => {
   const { user } = useAuth();
   const { currentTenant } = useTenant();
-  const { trackEvent, trackFeatureUsage, trackConversion } = useAnalytics();
+  const { trackEvent, trackFeatureUsage, trackConversion } = useAnalyticsTracking();
   const [isTracking, setIsTracking] = useState(false);
 
   const trackEventDual = useCallback(async (
