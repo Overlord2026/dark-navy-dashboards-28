@@ -8,6 +8,7 @@ import { SupabaseDocument } from "@/hooks/useSupabaseDocuments";
 import { useProfessionals } from "@/context/ProfessionalsContext";
 import { useSupabaseSharedDocuments } from "@/hooks/useSupabaseSharedDocuments";
 import { toast } from "sonner";
+import { StaggeredTable, StaggeredTableRow } from "@/components/animations/StaggeredTable";
 
 export interface SupabaseDocumentsTableProps {
   documents: SupabaseDocument[];
@@ -78,85 +79,86 @@ export const SupabaseDocumentsTable: React.FC<SupabaseDocumentsTableProps> = ({
   }
 
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Name</TableHead>
-          <TableHead>Type</TableHead>
-          <TableHead>Size</TableHead>
-          <TableHead>Modified</TableHead>
-          <TableHead className="text-right">Actions</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {documents.map(document => (
-          <TableRow key={document.id}>
-            <TableCell className="font-medium">
-              <div className="flex items-center">
-                <span className="mr-2" aria-hidden="true">
-                  {getDocumentIcon(document.type)}
-                </span>
-                {document.name}
-              </div>
-            </TableCell>
-            <TableCell className="capitalize">{document.type}</TableCell>
-            <TableCell>{formatFileSize(document.size)}</TableCell>
-            <TableCell>
-              {document.modified 
-                ? new Date(document.modified).toLocaleDateString() 
-                : new Date(document.created_at).toLocaleDateString()
-              }
-            </TableCell>
-            <TableCell className="text-right">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="h-8 w-8 p-0">
-                    <span className="sr-only">Open menu</span>
-                    <MoreHorizontal className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  {document.is_folder && onViewDocument && (
-                    <DropdownMenuItem onClick={() => onViewDocument(document)}>
-                      <FolderOpen className="mr-2 h-4 w-4" />
-                      Open Folder
-                    </DropdownMenuItem>
-                  )}
-                  
-                  {!document.is_folder && (
-                    <>
-                      {onDownloadDocument && (
-                        <DropdownMenuItem onClick={() => onDownloadDocument(document)}>
-                          <Download className="mr-2 h-4 w-4" />
-                          Download
-                        </DropdownMenuItem>
-                      )}
-                      
-                      <DropdownMenuItem 
-                        onClick={() => handleShareDocument(document)}
-                        disabled={sharing || professionals.length === 0}
-                      >
-                        <Share className="mr-2 h-4 w-4" />
-                        {sharing ? 'Sharing...' : professionals.length === 0 ? 'No Professionals Available' : 'Share with Professional'}
-                      </DropdownMenuItem>
-                    </>
-                  )}
-                  
-                  {onDeleteDocument && (
-                    <DropdownMenuItem 
-                      onClick={() => onDeleteDocument(document)}
-                      className="text-destructive"
-                    >
-                      <Trash2 className="mr-2 h-4 w-4" />
-                      Delete
-                    </DropdownMenuItem>
-                  )}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </TableCell>
+    <StaggeredTable 
+      headers={
+        <TableHeader>
+          <TableRow>
+            <TableHead>Name</TableHead>
+            <TableHead>Type</TableHead>
+            <TableHead>Size</TableHead>
+            <TableHead>Modified</TableHead>
+            <TableHead className="text-right">Actions</TableHead>
           </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+        </TableHeader>
+      }
+    >
+      {documents.map(document => (
+        <StaggeredTableRow key={document.id}>
+          <TableCell className="font-medium">
+            <div className="flex items-center">
+              <span className="mr-2" aria-hidden="true">
+                {getDocumentIcon(document.type)}
+              </span>
+              {document.name}
+            </div>
+          </TableCell>
+          <TableCell className="capitalize">{document.type}</TableCell>
+          <TableCell>{formatFileSize(document.size)}</TableCell>
+          <TableCell>
+            {document.modified 
+              ? new Date(document.modified).toLocaleDateString() 
+              : new Date(document.created_at).toLocaleDateString()
+            }
+          </TableCell>
+          <TableCell className="text-right">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="h-8 w-8 p-0">
+                  <span className="sr-only">Open menu</span>
+                  <MoreHorizontal className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {document.is_folder && onViewDocument && (
+                  <DropdownMenuItem onClick={() => onViewDocument(document)}>
+                    <FolderOpen className="mr-2 h-4 w-4" />
+                    Open Folder
+                  </DropdownMenuItem>
+                )}
+                
+                {!document.is_folder && (
+                  <>
+                    {onDownloadDocument && (
+                      <DropdownMenuItem onClick={() => onDownloadDocument(document)}>
+                        <Download className="mr-2 h-4 w-4" />
+                        Download
+                      </DropdownMenuItem>
+                    )}
+                    
+                    <DropdownMenuItem 
+                      onClick={() => handleShareDocument(document)}
+                      disabled={sharing || professionals.length === 0}
+                    >
+                      <Share className="mr-2 h-4 w-4" />
+                      {sharing ? 'Sharing...' : professionals.length === 0 ? 'No Professionals Available' : 'Share with Professional'}
+                    </DropdownMenuItem>
+                  </>
+                )}
+                
+                {onDeleteDocument && (
+                  <DropdownMenuItem 
+                    onClick={() => onDeleteDocument(document)}
+                    className="text-destructive"
+                  >
+                    <Trash2 className="mr-2 h-4 w-4" />
+                    Delete
+                  </DropdownMenuItem>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </TableCell>
+        </StaggeredTableRow>
+      ))}
+    </StaggeredTable>
   );
 };

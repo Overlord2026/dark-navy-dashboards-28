@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Phone, Mail, Building, User, Loader2 } from "lucide-react";
 import { Professional } from "@/types/professional";
+import { StaggeredList, StaggeredItem } from "@/components/animations/StaggeredList";
 
 export function ProfessionalsDirectory() {
   const { professionals, loading } = useProfessionals();
@@ -58,65 +59,66 @@ export function ProfessionalsDirectory() {
         </h2>
 
         {filteredProfessionals.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <StaggeredList className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredProfessionals.map((professional) => (
-              <Card 
-                key={professional.id} 
-                className="hover:border-primary transition-colors cursor-pointer"
-                onClick={() => handleOpenDetails(professional)}
-              >
-                <CardContent className="p-4">
-                  <div className="flex flex-col h-full">
-                    <div className="mb-2 flex items-start justify-between">
-                      <div>
-                        <h3 className="font-medium line-clamp-1">{professional.name}</h3>
-                        <Badge variant="outline" className="mt-1">
-                          {professional.type}
-                        </Badge>
+              <StaggeredItem key={professional.id}>
+                <Card 
+                  className="hover:border-primary transition-colors cursor-pointer"
+                  onClick={() => handleOpenDetails(professional)}
+                >
+                  <CardContent className="p-4">
+                    <div className="flex flex-col h-full">
+                      <div className="mb-2 flex items-start justify-between">
+                        <div>
+                          <h3 className="font-medium line-clamp-1">{professional.name}</h3>
+                          <Badge variant="outline" className="mt-1">
+                            {professional.type}
+                          </Badge>
+                        </div>
+                      </div>
+                      
+                      <div className="mt-2 text-sm space-y-1">
+                        {professional.company && (
+                          <div className="flex items-center text-muted-foreground">
+                            <Building className="h-3.5 w-3.5 mr-2 flex-shrink-0" />
+                            <span className="line-clamp-1">{professional.company}</span>
+                          </div>
+                        )}
+                        
+                        {professional.phone && (
+                          <div className="flex items-center text-muted-foreground">
+                            <Phone className="h-3.5 w-3.5 mr-2 flex-shrink-0" />
+                            <span className="line-clamp-1">{professional.phone}</span>
+                          </div>
+                        )}
+                        
+                        {professional.email && (
+                          <div className="flex items-center text-muted-foreground">
+                            <Mail className="h-3.5 w-3.5 mr-2 flex-shrink-0" />
+                            <span className="line-clamp-1">{professional.email}</span>
+                          </div>
+                        )}
+                      </div>
+                      
+                      <div className="mt-auto pt-3">
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="w-full text-xs border border-input hover:bg-secondary"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleOpenDetails(professional);
+                          }}
+                        >
+                          View Details
+                        </Button>
                       </div>
                     </div>
-                    
-                    <div className="mt-2 text-sm space-y-1">
-                      {professional.company && (
-                        <div className="flex items-center text-muted-foreground">
-                          <Building className="h-3.5 w-3.5 mr-2 flex-shrink-0" />
-                          <span className="line-clamp-1">{professional.company}</span>
-                        </div>
-                      )}
-                      
-                      {professional.phone && (
-                        <div className="flex items-center text-muted-foreground">
-                          <Phone className="h-3.5 w-3.5 mr-2 flex-shrink-0" />
-                          <span className="line-clamp-1">{professional.phone}</span>
-                        </div>
-                      )}
-                      
-                      {professional.email && (
-                        <div className="flex items-center text-muted-foreground">
-                          <Mail className="h-3.5 w-3.5 mr-2 flex-shrink-0" />
-                          <span className="line-clamp-1">{professional.email}</span>
-                        </div>
-                      )}
-                    </div>
-                    
-                    <div className="mt-auto pt-3">
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        className="w-full text-xs border border-input hover:bg-secondary"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleOpenDetails(professional);
-                        }}
-                      >
-                        View Details
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              </StaggeredItem>
             ))}
-          </div>
+          </StaggeredList>
         ) : (
           <div className="flex flex-col items-center justify-center py-10 text-center">
             <User className="h-12 w-12 text-muted-foreground mb-4" />

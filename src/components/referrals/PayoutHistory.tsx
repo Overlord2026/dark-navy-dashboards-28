@@ -1,8 +1,10 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { DollarSign, TrendingUp, Clock, CheckCircle } from "lucide-react";
 import { usePayouts } from "@/hooks/usePayouts";
+import { StaggeredTable, StaggeredTableRow } from "@/components/animations/StaggeredTable";
 
 export const PayoutHistory = () => {
   const { userPayouts, loading } = usePayouts();
@@ -97,65 +99,66 @@ export const PayoutHistory = () => {
               No payouts found. Start referring to earn rewards!
             </div>
           ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Amount</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Created</TableHead>
-                  <TableHead>Approved</TableHead>
-                  <TableHead>Paid</TableHead>
-                  <TableHead>Payment Method</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {userPayouts.map((payout) => (
-                  <TableRow key={payout.id}>
-                    <TableCell>
+            <StaggeredTable
+              headers={
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Type</TableHead>
+                    <TableHead>Amount</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Created</TableHead>
+                    <TableHead>Approved</TableHead>
+                    <TableHead>Paid</TableHead>
+                    <TableHead>Payment Method</TableHead>
+                  </TableRow>
+                </TableHeader>
+              }
+            >
+              {userPayouts.map((payout) => (
+                <StaggeredTableRow key={payout.id}>
+                  <TableCell>
+                    <div>
+                      <div className="font-medium">{getPayoutTypeLabel(payout.payout_type)}</div>
+                      {payout.referral && (
+                        <div className="text-sm text-muted-foreground">
+                          Code: {payout.referral.referral_code}
+                        </div>
+                      )}
+                      {payout.advisor_override && (
+                        <div className="text-sm text-muted-foreground">
+                          Override: {(payout.advisor_override.override_percent * 100).toFixed(1)}%
+                        </div>
+                      )}
+                    </div>
+                  </TableCell>
+                  <TableCell className="font-medium">${payout.amount.toLocaleString()}</TableCell>
+                  <TableCell>
+                    <Badge className={getStatusColor(payout.status)}>
+                      {payout.status}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    {new Date(payout.created_at).toLocaleDateString()}
+                  </TableCell>
+                  <TableCell>
+                    {payout.approved_at ? new Date(payout.approved_at).toLocaleDateString() : '-'}
+                  </TableCell>
+                  <TableCell>
+                    {payout.paid_at ? new Date(payout.paid_at).toLocaleDateString() : '-'}
+                  </TableCell>
+                  <TableCell>
+                    {payout.payment_method ? (
                       <div>
-                        <div className="font-medium">{getPayoutTypeLabel(payout.payout_type)}</div>
-                        {payout.referral && (
-                          <div className="text-sm text-muted-foreground">
-                            Code: {payout.referral.referral_code}
-                          </div>
-                        )}
-                        {payout.advisor_override && (
-                          <div className="text-sm text-muted-foreground">
-                            Override: {(payout.advisor_override.override_percent * 100).toFixed(1)}%
-                          </div>
+                        <div className="font-medium capitalize">{payout.payment_method.replace('_', ' ')}</div>
+                        {payout.payment_reference && (
+                          <div className="text-sm text-muted-foreground">{payout.payment_reference}</div>
                         )}
                       </div>
-                    </TableCell>
-                    <TableCell className="font-medium">${payout.amount.toLocaleString()}</TableCell>
-                    <TableCell>
-                      <Badge className={getStatusColor(payout.status)}>
-                        {payout.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      {new Date(payout.created_at).toLocaleDateString()}
-                    </TableCell>
-                    <TableCell>
-                      {payout.approved_at ? new Date(payout.approved_at).toLocaleDateString() : '-'}
-                    </TableCell>
-                    <TableCell>
-                      {payout.paid_at ? new Date(payout.paid_at).toLocaleDateString() : '-'}
-                    </TableCell>
-                    <TableCell>
-                      {payout.payment_method ? (
-                        <div>
-                          <div className="font-medium capitalize">{payout.payment_method.replace('_', ' ')}</div>
-                          {payout.payment_reference && (
-                            <div className="text-sm text-muted-foreground">{payout.payment_reference}</div>
-                          )}
-                        </div>
-                      ) : '-'}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                    ) : '-'}
+                  </TableCell>
+                </StaggeredTableRow>
+              ))}
+            </StaggeredTable>
           )}
         </CardContent>
       </Card>

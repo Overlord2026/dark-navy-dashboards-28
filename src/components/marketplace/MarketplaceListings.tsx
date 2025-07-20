@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowDownUp } from "lucide-react";
+import { StaggeredList, StaggeredItem } from "@/components/animations/StaggeredList";
 
 interface MarketplaceListingsProps {
   listings: MarketplaceListing[];
@@ -20,19 +21,21 @@ export function MarketplaceListings({ listings, isLoading }: MarketplaceListings
           <Skeleton className="h-8 w-40" />
           <Skeleton className="h-10 w-32" />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <StaggeredList className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {Array(6).fill(0).map((_, i) => (
-            <Card key={i} className="overflow-hidden">
-              <Skeleton className="h-48 w-full" />
-              <div className="p-6 space-y-4">
-                <Skeleton className="h-6 w-3/4" />
-                <Skeleton className="h-4 w-full" />
-                <Skeleton className="h-4 w-full" />
-                <Skeleton className="h-10 w-full" />
-              </div>
-            </Card>
+            <StaggeredItem key={i}>
+              <Card className="overflow-hidden">
+                <Skeleton className="h-48 w-full" />
+                <div className="p-6 space-y-4">
+                  <Skeleton className="h-6 w-3/4" />
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-10 w-full" />
+                </div>
+              </Card>
+            </StaggeredItem>
           ))}
-        </div>
+        </StaggeredList>
       </div>
     );
   }
@@ -68,21 +71,25 @@ export function MarketplaceListings({ listings, isLoading }: MarketplaceListings
       {featuredListings.length > 0 && (
         <div className="space-y-4">
           <h2 className="text-xl font-medium">Featured Listings</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <StaggeredList className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {featuredListings.map(listing => (
-              <MarketplaceListingCard key={listing.id} listing={listing} />
+              <StaggeredItem key={listing.id}>
+                <MarketplaceListingCard listing={listing} />
+              </StaggeredItem>
             ))}
-          </div>
+          </StaggeredList>
         </div>
       )}
       
       <div className="space-y-4">
         {featuredListings.length > 0 && <h2 className="text-xl font-medium">All Listings</h2>}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <StaggeredList className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {regularListings.map(listing => (
-            <MarketplaceListingCard key={listing.id} listing={listing} />
+            <StaggeredItem key={listing.id}>
+              <MarketplaceListingCard listing={listing} />
+            </StaggeredItem>
           ))}
-        </div>
+        </StaggeredList>
       </div>
     </div>
   );

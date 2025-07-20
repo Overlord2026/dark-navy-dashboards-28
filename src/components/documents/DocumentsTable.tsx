@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
+import { StaggeredTable, StaggeredTableRow } from "@/components/animations/StaggeredTable";
 
 export interface DocumentsTableProps {
   documents: DocumentItem[];
@@ -151,44 +152,45 @@ export const DocumentsTable: React.FC<DocumentsTableProps> = ({
   );
   
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Name</TableHead>
-          <TableHead>Date</TableHead>
-          <TableHead>Size</TableHead>
-          {extraColumns?.map((col, index) => (
-            <TableHead key={`extra-col-${index}`}>{col.header}</TableHead>
-          ))}
-          <TableHead className="text-right">Actions</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {documents.map(document => (
-          <TableRow key={document.id}>
-            <TableCell className="font-medium">
-              <div className="flex items-center">
-                <span className="mr-2" aria-hidden="true">
-                  {getDocumentIcon(document.type)}
-                </span>
-                {document.name}
-              </div>
-            </TableCell>
-            <TableCell>{document.created ? new Date(document.created).toLocaleDateString() : '-'}</TableCell>
-            <TableCell>{typeof document.size === 'number' ? `${(document.size / (1024 * 1024)).toFixed(2)} MB` : document.size || '-'}</TableCell>
-            
+    <StaggeredTable
+      headers={
+        <TableHeader>
+          <TableRow>
+            <TableHead>Name</TableHead>
+            <TableHead>Date</TableHead>
+            <TableHead>Size</TableHead>
             {extraColumns?.map((col, index) => (
-              <TableCell key={`document-${document.id}-col-${index}`}>
-                {col.cell(document)}
-              </TableCell>
+              <TableHead key={`extra-col-${index}`}>{col.header}</TableHead>
             ))}
-            
-            <TableCell className="text-right">
-              {useDropdownActions ? renderDropdownActions(document) : renderRegularActions(document)}
-            </TableCell>
+            <TableHead className="text-right">Actions</TableHead>
           </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+        </TableHeader>
+      }
+    >
+      {documents.map(document => (
+        <StaggeredTableRow key={document.id}>
+          <TableCell className="font-medium">
+            <div className="flex items-center">
+              <span className="mr-2" aria-hidden="true">
+                {getDocumentIcon(document.type)}
+              </span>
+              {document.name}
+            </div>
+          </TableCell>
+          <TableCell>{document.created ? new Date(document.created).toLocaleDateString() : '-'}</TableCell>
+          <TableCell>{typeof document.size === 'number' ? `${(document.size / (1024 * 1024)).toFixed(2)} MB` : document.size || '-'}</TableCell>
+          
+          {extraColumns?.map((col, index) => (
+            <TableCell key={`document-${document.id}-col-${index}`}>
+              {col.cell(document)}
+            </TableCell>
+          ))}
+          
+          <TableCell className="text-right">
+            {useDropdownActions ? renderDropdownActions(document) : renderRegularActions(document)}
+          </TableCell>
+        </StaggeredTableRow>
+      ))}
+    </StaggeredTable>
   );
 };

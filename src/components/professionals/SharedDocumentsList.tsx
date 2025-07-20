@@ -16,6 +16,7 @@ import { toast } from "sonner";
 import { DocumentIcon } from "./DocumentIcon";
 import { PermissionBadge } from "./PermissionBadge";
 import { EmptySharedDocuments } from "./EmptySharedDocuments";
+import { StaggeredTable, StaggeredTableRow } from "@/components/animations/StaggeredTable";
 
 export function SharedDocumentsList() {
   const { professionals } = useProfessionals();
@@ -43,59 +44,60 @@ export function SharedDocumentsList() {
 
   return (
     <div>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Document</TableHead>
-            <TableHead>Shared With</TableHead>
-            <TableHead>Date Shared</TableHead>
-            <TableHead>Permission</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {sharedDocuments.map((sharedDoc) => {
-            const professional = professionals.find(p => p.id === sharedDoc.professional_id);
-            
-            return (
-              <TableRow key={sharedDoc.id}>
-                <TableCell>
-                  <div className="flex items-center gap-2">
-                    <DocumentIcon type={sharedDoc.document_type || 'document'} />
-                    <span className="font-medium">{sharedDoc.document_name}</span>
+      <StaggeredTable
+        headers={
+          <TableHeader>
+            <TableRow>
+              <TableHead>Document</TableHead>
+              <TableHead>Shared With</TableHead>
+              <TableHead>Date Shared</TableHead>
+              <TableHead>Permission</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+        }
+      >
+        {sharedDocuments.map((sharedDoc) => {
+          const professional = professionals.find(p => p.id === sharedDoc.professional_id);
+          
+          return (
+            <StaggeredTableRow key={sharedDoc.id}>
+              <TableCell>
+                <div className="flex items-center gap-2">
+                  <DocumentIcon type={sharedDoc.document_type || 'document'} />
+                  <span className="font-medium">{sharedDoc.document_name}</span>
+                </div>
+              </TableCell>
+              <TableCell>
+                {professional ? (
+                  <div className="flex items-center gap-1">
+                    <User className="h-3.5 w-3.5 text-muted-foreground" />
+                    <span>{professional.name}</span>
                   </div>
-                </TableCell>
-                <TableCell>
-                  {professional ? (
-                    <div className="flex items-center gap-1">
-                      <User className="h-3.5 w-3.5 text-muted-foreground" />
-                      <span>{professional.name}</span>
-                    </div>
-                  ) : (
-                    <span className="text-muted-foreground">Professional Not Found</span>
-                  )}
-                </TableCell>
-                <TableCell>
-                  {new Date(sharedDoc.shared_at).toLocaleDateString()}
-                </TableCell>
-                <TableCell>
-                  <PermissionBadge accessLevel={sharedDoc.permission_level} />
-                </TableCell>
-                <TableCell className="text-right">
-                  <Button 
-                    variant="ghost" 
-                    size="sm"
-                    onClick={() => handleRemoveAccess(sharedDoc.id, sharedDoc.document_name || 'Document')}
-                    className="text-destructive hover:text-destructive"
-                  >
-                    Remove Access
-                  </Button>
-                </TableCell>
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
+                ) : (
+                  <span className="text-muted-foreground">Professional Not Found</span>
+                )}
+              </TableCell>
+              <TableCell>
+                {new Date(sharedDoc.shared_at).toLocaleDateString()}
+              </TableCell>
+              <TableCell>
+                <PermissionBadge accessLevel={sharedDoc.permission_level} />
+              </TableCell>
+              <TableCell className="text-right">
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                  onClick={() => handleRemoveAccess(sharedDoc.id, sharedDoc.document_name || 'Document')}
+                  className="text-destructive hover:text-destructive"
+                >
+                  Remove Access
+                </Button>
+              </TableCell>
+            </StaggeredTableRow>
+          );
+        })}
+      </StaggeredTable>
     </div>
   );
 }
