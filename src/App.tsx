@@ -13,10 +13,13 @@ import { AdminRoute } from '@/components/auth/AdminRoute';
 import { RouteTransition } from '@/components/animations/RouteTransition';
 import { ErrorBoundary } from '@/components/ui/error-boundary';
 
-// Page imports - using existing pages from the current codebase
-import LoginPage from '@/pages/LoginPage';
+// Page imports
+import { AuthPage } from '@/pages/AuthPage';
+import { HomePage } from '@/pages/HomePage';
 import { AdminPortal } from '@/pages/AdminPortal';
 import { AdminSettings } from '@/pages/admin/AdminSettings';
+import InviteRedeem from '@/pages/InviteRedeem';
+import { AdvisorInviteRedeem } from '@/pages/AdvisorInviteRedeem';
 
 const queryClient = new QueryClient();
 
@@ -26,42 +29,66 @@ function AnimatedRoutes() {
   return (
     <AnimatePresence mode="wait" initial={false}>
       <Routes location={location} key={location.pathname}>
-        {/* Public routes */}
-        <Route path="/login" element={
-          <ErrorBoundary>
-            <RouteTransition>
-              <LoginPage />
-            </RouteTransition>
-          </ErrorBoundary>
-        } />
+        {/* Auth route */}
         <Route path="/auth" element={
           <ErrorBoundary>
             <RouteTransition>
-              <LoginPage />
+              <AuthPage />
             </RouteTransition>
           </ErrorBoundary>
         } />
         
-        {/* Protected routes */}
-        <Route path="/" element={<Navigate to="/login" replace />} />
+        {/* Invite routes */}
+        <Route path="/invite/:token" element={
+          <ErrorBoundary>
+            <RouteTransition>
+              <InviteRedeem />
+            </RouteTransition>
+          </ErrorBoundary>
+        } />
+        <Route path="/advisor-invite/:token" element={
+          <ErrorBoundary>
+            <RouteTransition>
+              <AdvisorInviteRedeem />
+            </RouteTransition>
+          </ErrorBoundary>
+        } />
+        
+        {/* Protected main route */}
+        <Route path="/" element={
+          <ErrorBoundary>
+            <ProtectedRoute>
+              <RouteTransition>
+                <HomePage />
+              </RouteTransition>
+            </ProtectedRoute>
+          </ErrorBoundary>
+        } />
+        
+        {/* Legacy login routes - redirect to auth */}
+        <Route path="/login" element={<Navigate to="/auth" replace />} />
         
         {/* Admin routes */}
         <Route path="/admin-portal" element={
           <ErrorBoundary>
-            <AdminRoute roles={['admin', 'system_administrator', 'tenant_admin', 'superadmin']}>
-              <RouteTransition>
-                <AdminPortal />
-              </RouteTransition>
-            </AdminRoute>
+            <ProtectedRoute>
+              <AdminRoute roles={['admin', 'system_administrator', 'tenant_admin', 'superadmin']}>
+                <RouteTransition>
+                  <AdminPortal />
+                </RouteTransition>
+              </AdminRoute>
+            </ProtectedRoute>
           </ErrorBoundary>
         } />
         <Route path="/admin-portal/settings" element={
           <ErrorBoundary>
-            <AdminRoute roles={['admin', 'system_administrator', 'tenant_admin', 'superadmin']}>
-              <RouteTransition>
-                <AdminSettings />
-              </RouteTransition>
-            </AdminRoute>
+            <ProtectedRoute>
+              <AdminRoute roles={['admin', 'system_administrator', 'tenant_admin', 'superadmin']}>
+                <RouteTransition>
+                  <AdminSettings />
+                </RouteTransition>
+              </AdminRoute>
+            </ProtectedRoute>
           </ErrorBoundary>
         } />
       </Routes>
