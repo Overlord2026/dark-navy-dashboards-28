@@ -1,10 +1,10 @@
-
 import * as React from "react";
 import * as AlertDialogPrimitive from "@radix-ui/react-alert-dialog";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { alertDialogVariants, backdropVariants, mobileDialogVariants } from "@/components/animations/modal-variants";
+import { ErrorBoundary } from "./error-boundary";
 
 const AlertDialog = AlertDialogPrimitive.Root;
 const AlertDialogTrigger = AlertDialogPrimitive.Trigger;
@@ -36,7 +36,7 @@ AlertDialogOverlay.displayName = AlertDialogPrimitive.Overlay.displayName;
 const AlertDialogContent = React.forwardRef<
   React.ElementRef<typeof AlertDialogPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Content>
->(({ className, ...props }, ref) => {
+>(({ className, children, ...props }, ref) => {
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
   
   return (
@@ -57,7 +57,11 @@ const AlertDialogContent = React.forwardRef<
             initial="hidden"
             animate="visible"
             exit="exit"
-          />
+          >
+            <ErrorBoundary>
+              {children}
+            </ErrorBoundary>
+          </motion.div>
         </AlertDialogPrimitive.Content>
       </AnimatePresence>
     </AlertDialogPortal>

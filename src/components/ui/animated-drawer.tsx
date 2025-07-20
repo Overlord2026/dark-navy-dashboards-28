@@ -1,9 +1,9 @@
-
 import * as React from "react";
 import { Drawer as DrawerPrimitive } from "vaul";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { drawerVariants, backdropVariants } from "@/components/animations/modal-variants";
+import { ErrorBoundary } from "./error-boundary";
 
 const Drawer = ({
   shouldScaleBackground = true,
@@ -63,7 +63,9 @@ const DrawerContent = React.forwardRef<
           exit="exit"
         >
           <div className="mx-auto mt-4 h-2 w-[100px] rounded-full bg-muted" />
-          {children}
+          <ErrorBoundary>
+            {children}
+          </ErrorBoundary>
         </motion.div>
       </DrawerPrimitive.Content>
     </AnimatePresence>

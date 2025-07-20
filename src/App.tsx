@@ -11,6 +11,7 @@ import { AnalyticsProvider } from '@/components/analytics/AnalyticsProvider';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { AdminRoute } from '@/components/auth/AdminRoute';
 import { RouteTransition } from '@/components/animations/RouteTransition';
+import { ErrorBoundary } from '@/components/ui/error-boundary';
 
 // Page imports - using existing pages from the current codebase
 import LoginPage from '@/pages/LoginPage';
@@ -27,14 +28,18 @@ function AnimatedRoutes() {
       <Routes location={location} key={location.pathname}>
         {/* Public routes */}
         <Route path="/login" element={
-          <RouteTransition>
-            <LoginPage />
-          </RouteTransition>
+          <ErrorBoundary>
+            <RouteTransition>
+              <LoginPage />
+            </RouteTransition>
+          </ErrorBoundary>
         } />
         <Route path="/auth" element={
-          <RouteTransition>
-            <LoginPage />
-          </RouteTransition>
+          <ErrorBoundary>
+            <RouteTransition>
+              <LoginPage />
+            </RouteTransition>
+          </ErrorBoundary>
         } />
         
         {/* Protected routes */}
@@ -42,18 +47,22 @@ function AnimatedRoutes() {
         
         {/* Admin routes */}
         <Route path="/admin-portal" element={
-          <AdminRoute roles={['admin', 'system_administrator', 'tenant_admin', 'superadmin']}>
-            <RouteTransition>
-              <AdminPortal />
-            </RouteTransition>
-          </AdminRoute>
+          <ErrorBoundary>
+            <AdminRoute roles={['admin', 'system_administrator', 'tenant_admin', 'superadmin']}>
+              <RouteTransition>
+                <AdminPortal />
+              </RouteTransition>
+            </AdminRoute>
+          </ErrorBoundary>
         } />
         <Route path="/admin-portal/settings" element={
-          <AdminRoute roles={['admin', 'system_administrator', 'tenant_admin', 'superadmin']}>
-            <RouteTransition>
-              <AdminSettings />
-            </RouteTransition>
-          </AdminRoute>
+          <ErrorBoundary>
+            <AdminRoute roles={['admin', 'system_administrator', 'tenant_admin', 'superadmin']}>
+              <RouteTransition>
+                <AdminSettings />
+              </RouteTransition>
+            </AdminRoute>
+          </ErrorBoundary>
         } />
       </Routes>
     </AnimatePresence>
@@ -62,23 +71,31 @@ function AnimatedRoutes() {
 
 function App() {
   return (
-    <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <UserProvider>
-            <AnalyticsProvider>
-              <Router>
-                <div className="min-h-screen bg-background font-sans antialiased">
-                  <AnimatedRoutes />
-                  <Toaster />
-                  <Sonner />
-                </div>
-              </Router>
-            </AnalyticsProvider>
-          </UserProvider>
-        </AuthProvider>
-      </QueryClientProvider>
-    </ThemeProvider>
+    <ErrorBoundary>
+      <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+        <QueryClientProvider client={queryClient}>
+          <ErrorBoundary>
+            <AuthProvider>
+              <ErrorBoundary>
+                <UserProvider>
+                  <ErrorBoundary>
+                    <AnalyticsProvider>
+                      <Router>
+                        <div className="min-h-screen bg-background font-sans antialiased">
+                          <AnimatedRoutes />
+                          <Toaster />
+                          <Sonner />
+                        </div>
+                      </Router>
+                    </AnalyticsProvider>
+                  </ErrorBoundary>
+                </UserProvider>
+              </ErrorBoundary>
+            </AuthProvider>
+          </ErrorBoundary>
+        </QueryClientProvider>
+      </ThemeProvider>
+    </ErrorBoundary>
   );
 }
 

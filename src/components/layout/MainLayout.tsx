@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Header } from './Header';
+import { ErrorBoundary } from '@/components/ui/error-boundary';
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -8,9 +9,17 @@ interface MainLayoutProps {
 
 export function MainLayout({ children }: MainLayoutProps) {
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      <main>{children}</main>
-    </div>
+    <ErrorBoundary>
+      <div className="min-h-screen bg-background">
+        <ErrorBoundary>
+          <Header />
+        </ErrorBoundary>
+        <main>
+          <ErrorBoundary>
+            {children}
+          </ErrorBoundary>
+        </main>
+      </div>
+    </ErrorBoundary>
   );
 }
