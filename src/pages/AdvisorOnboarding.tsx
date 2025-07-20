@@ -1,9 +1,11 @@
 
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { AdvisorWelcomeModal } from "@/components/advisor/AdvisorWelcomeModal";
 import { AdvisorSetupFlow } from "@/components/advisor/AdvisorSetupFlow";
+import { PageTransition, StaggerContainer } from "@/components/animations/PageTransition";
 
 export default function AdvisorOnboarding() {
   const navigate = useNavigate();
@@ -30,16 +32,42 @@ export default function AdvisorOnboarding() {
           />
         )}
         
-        {setupStarted && <AdvisorSetupFlow />}
+        {setupStarted && (
+          <PageTransition delay={0.2}>
+            <AdvisorSetupFlow />
+          </PageTransition>
+        )}
         
         {!showWelcomeModal && !setupStarted && (
-          <div className="flex flex-col items-center justify-center h-[60vh] space-y-6">
-            <h2 className="text-2xl font-semibold">Advisor Onboarding</h2>
-            <p className="text-muted-foreground text-center max-w-md">
-              You've skipped the initial setup. You can configure your practice details 
-              and portal branding anytime from the Advisor Settings page.
-            </p>
-          </div>
+          <StaggerContainer>
+            <motion.div 
+              className="flex flex-col items-center justify-center h-[60vh] space-y-6"
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                visible: { opacity: 1, y: 0 }
+              }}
+            >
+              <motion.h2 
+                className="text-2xl font-semibold"
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: { opacity: 1, y: 0 }
+                }}
+              >
+                Advisor Onboarding
+              </motion.h2>
+              <motion.p 
+                className="text-muted-foreground text-center max-w-md"
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: { opacity: 1, y: 0 }
+                }}
+              >
+                You've skipped the initial setup. You can configure your practice details 
+                and portal branding anytime from the Advisor Settings page.
+              </motion.p>
+            </motion.div>
+          </StaggerContainer>
         )}
       </div>
     </ThreeColumnLayout>

@@ -1,5 +1,6 @@
 
 import { createBrowserRouter } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
 import { HomePage } from '@/pages/HomePage';
 import { AdminPortal } from '@/pages/AdminPortal';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
@@ -12,36 +13,53 @@ import { AdminUsers } from '@/pages/admin/AdminUsers';
 import { AdminClients } from '@/pages/admin/AdminClients';
 import InviteRedeem from '@/pages/InviteRedeem';
 import { AdvisorInviteRedeem } from '@/pages/AdvisorInviteRedeem';
+import { RouteTransition } from '@/components/animations/RouteTransition';
 
 const routes = createBrowserRouter([
   {
     path: '/',
     element: (
       <ProtectedRoute>
-        <HomePage />
+        <RouteTransition>
+          <HomePage />
+        </RouteTransition>
       </ProtectedRoute>
     ),
   },
   {
     path: '/auth',
-    element: <AuthPage />,
+    element: (
+      <RouteTransition>
+        <AuthPage />
+      </RouteTransition>
+    ),
   },
   {
     path: '/invite/:token',
-    element: <InviteRedeem />,
+    element: (
+      <RouteTransition>
+        <InviteRedeem />
+      </RouteTransition>
+    ),
   },
   {
     path: '/advisor-invite/:token',
-    element: <AdvisorInviteRedeem />,
+    element: (
+      <RouteTransition>
+        <AdvisorInviteRedeem />
+      </RouteTransition>
+    ),
   },
   {
     path: '/admin-portal',
     element: (
       <ProtectedRoute>
         <AdminRoute roles={['admin', 'system_administrator', 'tenant_admin', 'superadmin']}>
-          <AdminLayout>
-            <AdminPortalDashboard />
-          </AdminLayout>
+          <RouteTransition>
+            <AdminLayout>
+              <AdminPortalDashboard />
+            </AdminLayout>
+          </RouteTransition>
         </AdminRoute>
       </ProtectedRoute>
     ),
@@ -51,9 +69,11 @@ const routes = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <AdminRoute roles={['admin', 'system_administrator', 'tenant_admin', 'superadmin']}>
-          <AdminLayout>
-            <AdminUsers />
-          </AdminLayout>
+          <RouteTransition>
+            <AdminLayout>
+              <AdminUsers />
+            </AdminLayout>
+          </RouteTransition>
         </AdminRoute>
       </ProtectedRoute>
     ),
@@ -63,9 +83,11 @@ const routes = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <AdminRoute roles={['admin', 'system_administrator', 'tenant_admin', 'superadmin']}>
-          <AdminLayout>
-            <AdminClients />
-          </AdminLayout>
+          <RouteTransition>
+            <AdminLayout>
+              <AdminClients />
+            </AdminLayout>
+          </RouteTransition>
         </AdminRoute>
       </ProtectedRoute>
     ),
@@ -75,9 +97,11 @@ const routes = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <AdminRoute roles={['admin', 'system_administrator', 'tenant_admin', 'superadmin']}>
-          <AdminLayout>
-            <SystemHealthPage />
-          </AdminLayout>
+          <RouteTransition>
+            <AdminLayout>
+              <SystemHealthPage />
+            </AdminLayout>
+          </RouteTransition>
         </AdminRoute>
       </ProtectedRoute>
     ),

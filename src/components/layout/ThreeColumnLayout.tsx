@@ -1,6 +1,7 @@
 
 import { ReactNode, useState, useEffect } from "react";
 import { useParams, useLocation } from "react-router-dom";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { UserProfileSection } from "@/components/sidebar/UserProfileSection";
 import { Header } from "@/components/ui/Header";
@@ -124,6 +125,9 @@ export function ThreeColumnLayout({
     console.log(`Profile menu item clicked in layout: ${itemId}`);
   };
 
+  // Check if user prefers reduced motion
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   // Sidebar Content Component
   const SidebarContent = () => (
     <div className="flex flex-col h-full">
@@ -224,12 +228,17 @@ export function ThreeColumnLayout({
             isMobile ? "p-4" : "p-3"
           )}>
             {!isDashboardPage && !isLegacyVaultPage && title && (
-              <div className="flex justify-between items-center mb-4">
+              <motion.div 
+                className="flex justify-between items-center mb-4"
+                initial={prefersReducedMotion ? {} : { opacity: 0, y: -10 }}
+                animate={prefersReducedMotion ? {} : { opacity: 1, y: 0 }}
+                transition={prefersReducedMotion ? {} : { duration: 0.3, delay: 0.1 }}
+              >
                 <h1 className={cn(
                   "font-bold text-foreground",
                   isMobile ? "text-xl" : "text-2xl"
                 )}>{title}</h1>
-              </div>
+              </motion.div>
             )}
             {children}
           </main>
