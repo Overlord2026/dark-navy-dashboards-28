@@ -7,7 +7,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
+} from '@/components/ui/animated-dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -217,7 +217,11 @@ export function TestDataResetModal({ open, onClose, onConfirm, isLoading }: Test
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-[500px]" onPointerDownOutside={(e) => isLoading && e.preventDefault()}>
+      <DialogContent 
+        className="sm:max-w-[500px]" 
+        showCloseButton={false}
+        onPointerDownOutside={(e) => isLoading && e.preventDefault()}
+      >
         <DialogHeader>
           <DialogTitle className="flex items-center space-x-2">
             <Database className="h-5 w-5 text-red-600" />

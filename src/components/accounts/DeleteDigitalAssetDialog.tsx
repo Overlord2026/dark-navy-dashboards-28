@@ -1,4 +1,3 @@
-
 import React from "react";
 import { DigitalAsset } from "@/hooks/useDigitalAssets";
 import {
@@ -10,7 +9,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+} from "@/components/ui/animated-alert-dialog";
 
 interface DeleteDigitalAssetDialogProps {
   open: boolean;

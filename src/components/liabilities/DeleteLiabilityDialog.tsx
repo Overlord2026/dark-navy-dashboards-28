@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Liability } from "@/context/LiabilitiesContext";
 import {
@@ -10,7 +9,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+} from "@/components/ui/animated-alert-dialog";
 
 interface DeleteLiabilityDialogProps {
   open: boolean;
