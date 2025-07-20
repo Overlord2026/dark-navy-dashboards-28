@@ -59,21 +59,21 @@ export function InviteAdvisorDialog({ onInviteSuccess }: InviteAdvisorDialogProp
 
     setIsLoading(true);
     try {
-      const { error } = await (supabase as any)
-        .from('tenant_invitations')
-        .insert({
-          tenant_id: currentTenant.id,
-          email: email,
-          invited_by: user.id,
-          role: 'advisor',
-          advisor_role: advisorRole,
+      const { data, error } = await supabase.functions.invoke('advisor-invite', {
+        body: {
+          email,
+          advisorRole,
           segments,
-          notes
-        });
+          notes,
+          tenantId: currentTenant.id,
+          invitedBy: user.id
+        }
+      });
 
       if (error) throw error;
+      if (data.error) throw new Error(data.error);
 
-      toast.success('Advisor invitation sent successfully');
+      toast.success('Invitation sent! The advisor will receive an onboarding link.');
       setOpen(false);
       setEmail('');
       setAdvisorRole('');

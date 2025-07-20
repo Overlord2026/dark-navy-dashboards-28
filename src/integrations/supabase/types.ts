@@ -5780,6 +5780,60 @@ export type Database = {
         }
         Relationships: []
       }
+      tenant_invitations: {
+        Row: {
+          accepted_at: string | null
+          advisor_role: string | null
+          created_at: string
+          email: string
+          expires_at: string
+          id: string
+          invitation_token: string
+          invited_by: string
+          notes: string | null
+          role: string
+          segments: string[] | null
+          sent_at: string
+          status: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          accepted_at?: string | null
+          advisor_role?: string | null
+          created_at?: string
+          email: string
+          expires_at?: string
+          id?: string
+          invitation_token: string
+          invited_by: string
+          notes?: string | null
+          role?: string
+          segments?: string[] | null
+          sent_at?: string
+          status?: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          accepted_at?: string | null
+          advisor_role?: string | null
+          created_at?: string
+          email?: string
+          expires_at?: string
+          id?: string
+          invitation_token?: string
+          invited_by?: string
+          notes?: string | null
+          role?: string
+          segments?: string[] | null
+          sent_at?: string
+          status?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       tenant_licenses: {
         Row: {
           agreement_url: string | null

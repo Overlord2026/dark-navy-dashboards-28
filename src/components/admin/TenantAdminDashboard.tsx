@@ -12,6 +12,8 @@ import { TenantProjectIntegration } from './TenantProjectIntegration';
 import { TenantResourceManagement } from './TenantResourceManagement';
 import { TenantAboutEditor } from './TenantAboutEditor';
 import { FranchiseReferralManagement } from '../referrals/FranchiseReferralManagement';
+import { InviteAdvisorDialog } from './InviteAdvisorDialog';
+import { PendingAdvisorsList } from './PendingAdvisorsList';
 
 export const TenantAdminDashboard: React.FC = () => {
   const { currentTenant, loading } = useTenant();
@@ -123,10 +125,7 @@ export const TenantAdminDashboard: React.FC = () => {
                 <CardDescription>Common tenant management tasks</CardDescription>
               </CardHeader>
               <CardContent className="space-y-2">
-                <Button className="w-full justify-start" variant="outline">
-                  <UserPlus className="mr-2 h-4 w-4" />
-                  Invite Advisor
-                </Button>
+                <InviteAdvisorDialog onInviteSuccess={() => {}} />
                 <Button className="w-full justify-start" variant="outline">
                   <Users className="mr-2 h-4 w-4" />
                   Invite Client
@@ -175,7 +174,10 @@ export const TenantAdminDashboard: React.FC = () => {
         </TabsContent>
 
         <TabsContent value="users">
-          <TenantUserManagement />
+          <div className="space-y-6">
+            <PendingAdvisorsList />
+            <TenantUserManagement />
+          </div>
         </TabsContent>
 
         <TabsContent value="resources">

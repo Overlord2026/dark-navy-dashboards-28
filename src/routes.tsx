@@ -11,6 +11,7 @@ import { SystemHealthPage } from '@/pages/admin/SystemHealthPage';
 import { AdminUsers } from '@/pages/admin/AdminUsers';
 import { AdminClients } from '@/pages/admin/AdminClients';
 import InviteRedeem from '@/pages/InviteRedeem';
+import { AdvisorInviteRedeem } from '@/pages/AdvisorInviteRedeem';
 
 const routes = createBrowserRouter([
   {
@@ -28,6 +29,10 @@ const routes = createBrowserRouter([
   {
     path: '/invite/:token',
     element: <InviteRedeem />,
+  },
+  {
+    path: '/advisor-invite/:token',
+    element: <AdvisorInviteRedeem />,
   },
   {
     path: '/admin-portal',
