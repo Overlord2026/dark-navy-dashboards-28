@@ -8,12 +8,20 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { ErrorBoundary } from '@/components/ui/error-boundary';
+import { PasswordStrengthIndicator } from '@/components/auth/PasswordStrengthIndicator';
+import { authSecurityService } from '@/services/security/authSecurity';
+import { PasswordValidationResult } from '@/services/security/passwordPolicy';
+import { supabase } from '@/lib/supabase';
+import { Shield } from 'lucide-react';
 
 export function AuthPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [passwordValidation, setPasswordValidation] = useState<PasswordValidationResult | null>(null);
+  const [isSignUp, setIsSignUp] = useState(false);
   const { login, isAuthenticated } = useUser();
   const navigate = useNavigate();
 
@@ -22,6 +30,26 @@ export function AuthPage() {
       navigate('/', { replace: true });
     }
   }, [isAuthenticated, navigate]);
+
+  useEffect(() => {
+    if (password && isSignUp) {
+      validatePassword();
+    }
+  }, [password, isSignUp]);
+
+  const validatePassword = async () => {
+    if (!password) {
+      setPasswordValidation(null);
+      return;
+    }
+
+    try {
+      const validation = await authSecurityService.validatePasswordStrength(password);
+      setPasswordValidation(validation);
+    } catch (error) {
+      console.error('Password validation error:', error);
+    }
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,16 +72,70 @@ export function AuthPage() {
     setLoading(false);
   };
 
+  const handleSignUp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    // Password validation
+    if (!passwordValidation?.isValid) {
+      setError('Please fix the password issues before continuing.');
+      setLoading(false);
+      return;
+    }
+
+    // Confirm password match
+    if (password !== confirmPassword) {
+      setError('Passwords do not match.');
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const redirectUrl = `${window.location.origin}/`;
+      
+      const { error: signUpError } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: redirectUrl
+        }
+      });
+
+      if (signUpError) {
+        setError(signUpError.message);
+      } else {
+        setError(null);
+        // Show success message
+        setError('Sign up successful! Please check your email to verify your account.');
+      }
+    } catch (err) {
+      console.error('Sign up error:', err);
+      setError('An unexpected error occurred during sign up.');
+    }
+
+    setLoading(false);
+  };
+
   return (
     <ErrorBoundary>
       <div className="min-h-screen flex items-center justify-center bg-background px-4">
         <Card className="w-full max-w-md">
           <CardHeader>
-            <CardTitle>Welcome to Family Office</CardTitle>
-            <CardDescription>Sign in to access your account</CardDescription>
+            <div className="flex items-center gap-2">
+              <Shield className="h-5 w-5 text-primary" />
+              <CardTitle>Welcome to Family Office</CardTitle>
+            </div>
+            <CardDescription>
+              {isSignUp ? 'Create your secure account' : 'Sign in to access your account'}
+            </CardDescription>
           </CardHeader>
           <CardContent>
-            <Tabs defaultValue="login">
+            <Tabs value={isSignUp ? 'signup' : 'login'} onValueChange={(value) => {
+              setIsSignUp(value === 'signup');
+              setError(null);
+              setPasswordValidation(null);
+            }}>
               <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="login">Login</TabsTrigger>
                 <TabsTrigger value="signup">Sign Up</TabsTrigger>
@@ -62,15 +144,15 @@ export function AuthPage() {
               <TabsContent value="login">
                 <form onSubmit={handleLogin} className="space-y-4">
                   {error && (
-                    <Alert variant="destructive">
+                    <Alert variant={error.includes('successful') ? 'default' : 'destructive'}>
                       <AlertDescription>{error}</AlertDescription>
                     </Alert>
                   )}
                   
                   <div className="space-y-2">
-                    <label htmlFor="email" className="text-sm font-medium">Email</label>
+                    <label htmlFor="login-email" className="text-sm font-medium">Email</label>
                     <Input
-                      id="email"
+                      id="login-email"
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
@@ -80,9 +162,9 @@ export function AuthPage() {
                   </div>
                   
                   <div className="space-y-2">
-                    <label htmlFor="password" className="text-sm font-medium">Password</label>
+                    <label htmlFor="login-password" className="text-sm font-medium">Password</label>
                     <Input
-                      id="password"
+                      id="login-password"
                       type="password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
@@ -98,10 +180,72 @@ export function AuthPage() {
               </TabsContent>
               
               <TabsContent value="signup">
-                <div className="text-center text-muted-foreground py-8">
-                  <p className="mb-4">Sign up functionality coming soon.</p>
-                  <p>Please contact your administrator for account creation.</p>
-                </div>
+                <form onSubmit={handleSignUp} className="space-y-4">
+                  {error && (
+                    <Alert variant={error.includes('successful') ? 'default' : 'destructive'}>
+                      <AlertDescription>{error}</AlertDescription>
+                    </Alert>
+                  )}
+                  
+                  <div className="space-y-2">
+                    <label htmlFor="signup-email" className="text-sm font-medium">Email</label>
+                    <Input
+                      id="signup-email"
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="Enter your email"
+                      required
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <label htmlFor="signup-password" className="text-sm font-medium">Password</label>
+                    <Input
+                      id="signup-password"
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="Create a strong password"
+                      required
+                    />
+                    <PasswordStrengthIndicator 
+                      validation={passwordValidation}
+                      password={password}
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <label htmlFor="confirm-password" className="text-sm font-medium">Confirm Password</label>
+                    <Input
+                      id="confirm-password"
+                      type="password"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      placeholder="Confirm your password"
+                      required
+                    />
+                    {confirmPassword && password !== confirmPassword && (
+                      <p className="text-sm text-red-600">Passwords do not match</p>
+                    )}
+                  </div>
+
+                  <Alert>
+                    <Shield className="h-4 w-4" />
+                    <AlertDescription className="text-sm">
+                      Password must be at least 12 characters with uppercase, lowercase, numbers, 
+                      and special characters. We enforce strong security for your protection.
+                    </AlertDescription>
+                  </Alert>
+                  
+                  <Button 
+                    type="submit" 
+                    className="w-full" 
+                    disabled={loading || !passwordValidation?.isValid || password !== confirmPassword}
+                  >
+                    {loading ? 'Creating account...' : 'Create Account'}
+                  </Button>
+                </form>
               </TabsContent>
             </Tabs>
           </CardContent>
