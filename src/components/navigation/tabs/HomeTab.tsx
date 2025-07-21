@@ -2,6 +2,7 @@
 import React from "react";
 import { HomeIcon } from "lucide-react";
 import { NavItem } from "@/types/navigation";
+import { ComprehensiveDashboard } from "@/components/dashboard/ComprehensiveDashboard";
 
 export const homeNavItems: NavItem[] = [
   { 
@@ -14,7 +15,7 @@ export const homeNavItems: NavItem[] = [
 const HomeTab = () => {
   return (
     <div className="home-tab">
-      {/* Additional home tab specific UI can be added here */}
+      <ComprehensiveDashboard />
     </div>
   );
 };
