@@ -5,6 +5,9 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Separator } from "@/components/ui/separator";
+import { Label } from "@/components/ui/label";
 import { 
   Search, 
   Star, 
@@ -17,11 +20,16 @@ import {
   Phone,
   Globe,
   Filter,
-  ChevronDown
+  ChevronDown,
+  TrendingUp,
+  Clock,
+  Award,
+  Users
 } from "lucide-react";
-import { EnhancedProfessional, PROFESSIONAL_RELATIONSHIPS } from "@/types/professionalTeam";
+import { EnhancedProfessional, PROFESSIONAL_RELATIONSHIPS, ProfessionalRelationship } from "@/types/professionalTeam";
 import { useProfessionalTeam } from "@/hooks/useProfessionalTeam";
 import { ProfessionalType } from "@/types/professional";
+import { ProfessionalAssignmentDialog } from "./ProfessionalAssignmentDialog";
 
 interface MarketplaceDashboardProps {
   onViewTeam: () => void;
@@ -33,43 +41,76 @@ export function MarketplaceDashboard({ onViewTeam, onViewProfile }: MarketplaceD
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedType, setSelectedType] = useState<string>("all");
   const [selectedLocation, setSelectedLocation] = useState<string>("all");
+  const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
+  const [selectedFeeModel, setSelectedFeeModel] = useState<string>("all");
+  const [minRating, setMinRating] = useState<number>(0);
+  const [acceptingNewClients, setAcceptingNewClients] = useState<boolean | null>(null);
+  const [verifiedOnly, setVerifiedOnly] = useState<boolean>(false);
   const [sortBy, setSortBy] = useState<string>("rating");
+  const [selectedProfessional, setSelectedProfessional] = useState<EnhancedProfessional | null>(null);
+  const [showAssignmentDialog, setShowAssignmentDialog] = useState(false);
 
-  // Get unique locations and types for filters
-  const uniqueLocations = useMemo(() => {
-    const locations = allProfessionals
-      .map(p => p.location)
-      .filter(Boolean)
-      .filter((location, index, array) => array.indexOf(location) === index);
-    return locations;
+  // Get unique values for filters
+  const { uniqueLocations, uniqueTypes, uniqueLanguages, uniqueFeeModels } = useMemo(() => {
+    const locations = [...new Set(allProfessionals.map(p => p.location).filter(Boolean))];
+    const types = [...new Set(allProfessionals.map(p => p.type))];
+    const languages = [...new Set(allProfessionals.flatMap(p => p.languages || []))];
+    const feeModels = [...new Set(allProfessionals.map(p => p.fee_model).filter(Boolean))];
+    
+    return { uniqueLocations: locations, uniqueTypes: types, uniqueLanguages: languages, uniqueFeeModels: feeModels };
   }, [allProfessionals]);
 
-  const uniqueTypes = useMemo(() => {
-    const types = allProfessionals
-      .map(p => p.type)
-      .filter((type, index, array) => array.indexOf(type) === index);
-    return types;
-  }, [allProfessionals]);
+  // Helper function to check if professional has special badges
+  const getBadges = (professional: EnhancedProfessional) => {
+    const badges = [];
+    if (professional.ratings_average >= 4.5 && professional.reviews_count >= 10) {
+      badges.push({ type: "top-rated", label: "Top Rated", icon: Award });
+    }
+    if (professional.accepting_new_clients) {
+      badges.push({ type: "available", label: "Available Now", icon: Clock });
+    }
+    if (professional.verified && professional.reviews_count >= 5) {
+      badges.push({ type: "featured", label: "Featured", icon: TrendingUp });
+    }
+    return badges;
+  };
 
-  // Filter and sort professionals
+  // Advanced filtering logic
   const filteredProfessionals = useMemo(() => {
     let filtered = allProfessionals.filter(professional => {
+      // Basic search
       const matchesSearch = searchQuery === "" || 
         professional.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         professional.firm?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         professional.bio?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         professional.specialties.some(s => s.toLowerCase().includes(searchQuery.toLowerCase()));
 
+      // Type and location filters
       const matchesType = selectedType === "all" || professional.type === selectedType;
       const matchesLocation = selectedLocation === "all" || professional.location === selectedLocation;
 
-      return matchesSearch && matchesType && matchesLocation;
+      // Advanced filters
+      const matchesFeeModel = selectedFeeModel === "all" || professional.fee_model === selectedFeeModel;
+      const matchesRating = professional.ratings_average >= minRating;
+      const matchesAccepting = acceptingNewClients === null || professional.accepting_new_clients === acceptingNewClients;
+      const matchesVerified = !verifiedOnly || professional.verified;
+      
+      // Language filter
+      const matchesLanguages = selectedLanguages.length === 0 || 
+        selectedLanguages.every(lang => professional.languages?.includes(lang));
+
+      return matchesSearch && matchesType && matchesLocation && matchesFeeModel && 
+             matchesRating && matchesAccepting && matchesVerified && matchesLanguages;
     });
 
-    // Sort professionals
+    // Enhanced sorting
     filtered.sort((a, b) => {
       switch (sortBy) {
         case "rating":
+          // Featured professionals first, then by rating
+          const aFeatured = getBadges(a).some(badge => badge.type === "featured");
+          const bFeatured = getBadges(b).some(badge => badge.type === "featured");
+          if (aFeatured !== bFeatured) return aFeatured ? -1 : 1;
           return b.ratings_average - a.ratings_average;
         case "reviews":
           return b.reviews_count - a.reviews_count;
@@ -77,13 +118,16 @@ export function MarketplaceDashboard({ onViewTeam, onViewProfile }: MarketplaceD
           return a.name.localeCompare(b.name);
         case "verified":
           return Number(b.verified) - Number(a.verified);
+        case "availability":
+          return Number(b.accepting_new_clients) - Number(a.accepting_new_clients);
         default:
           return 0;
       }
     });
 
     return filtered;
-  }, [allProfessionals, searchQuery, selectedType, selectedLocation, sortBy]);
+  }, [allProfessionals, searchQuery, selectedType, selectedLocation, selectedLanguages, 
+      selectedFeeModel, minRating, acceptingNewClients, verifiedOnly, sortBy]);
 
   const handleAssign = async (professional: EnhancedProfessional, relationship: string) => {
     await assignProfessional(professional.id, relationship);
@@ -125,24 +169,25 @@ export function MarketplaceDashboard({ onViewTeam, onViewProfile }: MarketplaceD
 
       {/* Search and Filters */}
       <Card>
-        <CardContent className="p-4">
-          <div className="flex flex-col lg:flex-row gap-4">
-            {/* Search */}
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search by name, firm, specialties..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
-              />
-            </div>
+        <CardContent className="p-6">
+          {/* Search Bar */}
+          <div className="relative mb-6">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search by name, firm, specialties, or type..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 h-12 text-base"
+            />
+          </div>
 
-            {/* Filters */}
-            <div className="flex flex-col sm:flex-row gap-2">
+          {/* Filter Sections */}
+          <div className="space-y-4">
+            {/* Primary Filters */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <Select value={selectedType} onValueChange={setSelectedType}>
-                <SelectTrigger className="w-full sm:w-48">
-                  <SelectValue placeholder="All Types" />
+                <SelectTrigger>
+                  <SelectValue placeholder="All Professional Types" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Types</SelectItem>
@@ -153,7 +198,7 @@ export function MarketplaceDashboard({ onViewTeam, onViewProfile }: MarketplaceD
               </Select>
 
               <Select value={selectedLocation} onValueChange={setSelectedLocation}>
-                <SelectTrigger className="w-full sm:w-48">
+                <SelectTrigger>
                   <SelectValue placeholder="All Locations" />
                 </SelectTrigger>
                 <SelectContent>
@@ -164,17 +209,104 @@ export function MarketplaceDashboard({ onViewTeam, onViewProfile }: MarketplaceD
                 </SelectContent>
               </Select>
 
+              <Select value={selectedFeeModel} onValueChange={setSelectedFeeModel}>
+                <SelectTrigger>
+                  <SelectValue placeholder="All Fee Models" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Fee Models</SelectItem>
+                  {uniqueFeeModels.map(feeModel => (
+                    <SelectItem key={feeModel} value={feeModel}>{feeModel}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
               <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="w-full sm:w-48">
+                <SelectTrigger>
                   <SelectValue placeholder="Sort by" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="rating">Highest Rated</SelectItem>
                   <SelectItem value="reviews">Most Reviews</SelectItem>
                   <SelectItem value="verified">Verified First</SelectItem>
+                  <SelectItem value="availability">Available Now</SelectItem>
                   <SelectItem value="name">Name A-Z</SelectItem>
                 </SelectContent>
               </Select>
+            </div>
+
+            <Separator />
+
+            {/* Advanced Filters */}
+            <div className="space-y-4">
+              <h4 className="text-sm font-medium flex items-center gap-2">
+                <Filter className="h-4 w-4" />
+                Advanced Filters
+              </h4>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {/* Quality Filters */}
+                <div className="space-y-3">
+                  <Label className="text-sm font-medium">Quality & Status</Label>
+                  <div className="space-y-2">
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id="verified"
+                        checked={verifiedOnly}
+                        onCheckedChange={(checked) => setVerifiedOnly(checked as boolean)}
+                      />
+                      <Label htmlFor="verified" className="text-sm">Verified professionals only</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id="accepting"
+                        checked={acceptingNewClients === true}
+                        onCheckedChange={(checked) => 
+                          setAcceptingNewClients(checked ? true : null)
+                        }
+                      />
+                      <Label htmlFor="accepting" className="text-sm">Accepting new clients</Label>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Rating Filter */}
+                <div className="space-y-3">
+                  <Label className="text-sm font-medium">Minimum Rating</Label>
+                  <Select value={minRating.toString()} onValueChange={(value) => setMinRating(Number(value))}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Any rating" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="0">Any rating</SelectItem>
+                      <SelectItem value="3">3+ stars</SelectItem>
+                      <SelectItem value="4">4+ stars</SelectItem>
+                      <SelectItem value="4.5">4.5+ stars</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Languages Filter */}
+                <div className="space-y-3">
+                  <Label className="text-sm font-medium">Languages</Label>
+                  <Select 
+                    value={selectedLanguages[0] || "all"} 
+                    onValueChange={(value) => 
+                      setSelectedLanguages(value === "all" ? [] : [value])
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="All languages" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All languages</SelectItem>
+                      {uniqueLanguages.map(language => (
+                        <SelectItem key={language} value={language}>{language}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
             </div>
           </div>
         </CardContent>
@@ -213,11 +345,21 @@ export function MarketplaceDashboard({ onViewTeam, onViewProfile }: MarketplaceD
                     <CardDescription>{professional.firm || professional.company}</CardDescription>
                   </div>
                 </div>
-                {professional.accepting_new_clients && (
-                  <Badge variant="outline" className="text-xs">
-                    Accepting Clients
-                  </Badge>
-                )}
+                <div className="flex flex-col gap-1">
+                  {getBadges(professional).map((badge, idx) => {
+                    const IconComponent = badge.icon;
+                    return (
+                      <Badge 
+                        key={idx} 
+                        variant={badge.type === "featured" ? "default" : "outline"} 
+                        className="text-xs flex items-center gap-1"
+                      >
+                        <IconComponent className="h-3 w-3" />
+                        {badge.label}
+                      </Badge>
+                    );
+                  })}
+                </div>
               </div>
             </CardHeader>
 
@@ -299,12 +441,15 @@ export function MarketplaceDashboard({ onViewTeam, onViewProfile }: MarketplaceD
                 </Button>
                 <Button
                   size="sm"
-                  onClick={() => handleAssign(professional, 'other')}
+                  onClick={() => {
+                    setSelectedProfessional(professional);
+                    setShowAssignmentDialog(true);
+                  }}
                   disabled={saving}
                   className="flex-1"
                 >
                   <UserPlus className="h-3 w-3 mr-1" />
-                  {saving ? 'Adding...' : 'Add to Team'}
+                  Assign to Team
                 </Button>
               </div>
 
@@ -360,6 +505,16 @@ export function MarketplaceDashboard({ onViewTeam, onViewProfile }: MarketplaceD
           </CardContent>
         </Card>
       )}
+
+      {/* Assignment Dialog */}
+      <ProfessionalAssignmentDialog
+        professional={selectedProfessional}
+        isOpen={showAssignmentDialog}
+        onOpenChange={setShowAssignmentDialog}
+        onSuccess={() => {
+          // Optionally refresh team data or show success message
+        }}
+      />
     </div>
   );
 }
