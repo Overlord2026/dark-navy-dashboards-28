@@ -2,7 +2,7 @@
 import React from "react";
 import { HomeIcon } from "lucide-react";
 import { NavItem } from "@/types/navigation";
-import { ComprehensiveDashboard } from "@/components/dashboard/ComprehensiveDashboard";
+import { BoutiqueFamilyOfficeDashboard } from "@/components/dashboard/BoutiqueFamilyOfficeDashboard";
 
 export const homeNavItems: NavItem[] = [
   { 
@@ -15,7 +15,7 @@ export const homeNavItems: NavItem[] = [
 const HomeTab = () => {
   return (
     <div className="home-tab">
-      <ComprehensiveDashboard />
+      <BoutiqueFamilyOfficeDashboard />
     </div>
   );
 };
