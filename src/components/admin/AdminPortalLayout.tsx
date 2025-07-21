@@ -14,7 +14,9 @@ import {
   Activity,
   Zap,
   AlertTriangle,
-  BarChart3
+  BarChart3,
+  ArrowLeft,
+  Target
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -61,9 +63,23 @@ export function AdminPortalLayout({ children }: AdminPortalLayoutProps) {
             <div className="h-6 w-px bg-border" />
             <span className="text-sm text-muted-foreground">Welcome, {userProfile.displayName || userProfile.email}</span>
           </div>
-          <Button variant="outline" size="sm" asChild>
-            <Link to="/login">Exit Admin</Link>
-          </Button>
+          <div className="flex items-center space-x-3">
+            <Button variant="outline" size="sm" asChild>
+              <Link to="/" className="flex items-center gap-2">
+                <ArrowLeft className="h-4 w-4" />
+                Back to Main App
+              </Link>
+            </Button>
+            <Button variant="outline" size="sm" asChild>
+              <Link to="/" className="flex items-center gap-2">
+                <Target className="h-4 w-4" />
+                Goals & Aspirations
+              </Link>
+            </Button>
+            <Button variant="outline" size="sm" asChild>
+              <Link to="/login">Exit Admin</Link>
+            </Button>
+          </div>
         </div>
       </header>
 
