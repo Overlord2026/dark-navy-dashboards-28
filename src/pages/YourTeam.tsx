@@ -1,25 +1,25 @@
 import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
-import { TeamDashboard } from "@/components/professional-team/TeamDashboard";
+import { CentralizedTeamDashboard } from "@/components/professional-team/CentralizedTeamDashboard";
 import { MarketplaceDashboard } from "@/components/professional-team/MarketplaceDashboard";
 import { ProfessionalProfile } from "@/components/professional-team/ProfessionalProfile";
-import { EnhancedProfessional } from "@/types/professionalTeam";
+import { EnhancedProfessional, TeamMember } from "@/types/professionalTeam";
 
-type ViewMode = 'team' | 'marketplace' | 'profile';
+type ViewMode = 'dashboard' | 'marketplace' | 'profile';
 
 export default function YourTeam() {
-  const [currentView, setCurrentView] = useState<ViewMode>('team');
-  const [selectedProfessional, setSelectedProfessional] = useState<EnhancedProfessional | null>(null);
+  const [currentView, setCurrentView] = useState<ViewMode>('dashboard');
+  const [selectedProfessional, setSelectedProfessional] = useState<EnhancedProfessional | TeamMember | null>(null);
 
   const handleViewMarketplace = () => {
     setCurrentView('marketplace');
   };
 
   const handleViewTeam = () => {
-    setCurrentView('team');
+    setCurrentView('dashboard');
   };
 
-  const handleViewProfile = (professional: EnhancedProfessional) => {
+  const handleViewProfile = (professional: EnhancedProfessional | TeamMember) => {
     setSelectedProfessional(professional);
     setCurrentView('profile');
   };
@@ -30,16 +30,17 @@ export default function YourTeam() {
 
   const handleBackFromProfile = () => {
     setSelectedProfessional(null);
-    setCurrentView('marketplace');
+    setCurrentView('dashboard');
   };
 
   const renderContent = () => {
     switch (currentView) {
-      case 'team':
+      case 'dashboard':
         return (
-          <TeamDashboard
+          <CentralizedTeamDashboard
             onAddProfessional={handleAddProfessional}
             onViewMarketplace={handleViewMarketplace}
+            onViewProfile={handleViewProfile}
           />
         );
       case 'marketplace':
