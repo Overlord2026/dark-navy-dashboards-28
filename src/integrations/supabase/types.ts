@@ -574,6 +574,70 @@ export type Database = {
         }
         Relationships: []
       }
+      client_assignments: {
+        Row: {
+          assigned_at: string
+          assigned_by: string | null
+          client_user_id: string
+          created_at: string
+          firm_id: string
+          id: string
+          is_active: boolean
+          notes: string | null
+          professional_user_id: string
+          relationship_type: string
+          updated_at: string
+        }
+        Insert: {
+          assigned_at?: string
+          assigned_by?: string | null
+          client_user_id: string
+          created_at?: string
+          firm_id: string
+          id?: string
+          is_active?: boolean
+          notes?: string | null
+          professional_user_id: string
+          relationship_type?: string
+          updated_at?: string
+        }
+        Update: {
+          assigned_at?: string
+          assigned_by?: string | null
+          client_user_id?: string
+          created_at?: string
+          firm_id?: string
+          id?: string
+          is_active?: boolean
+          notes?: string | null
+          professional_user_id?: string
+          relationship_type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_assignments_assigned_by_fkey"
+            columns: ["assigned_by"]
+            isOneToOne: false
+            referencedRelation: "professional_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "client_assignments_firm_id_fkey"
+            columns: ["firm_id"]
+            isOneToOne: false
+            referencedRelation: "firms"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "client_assignments_professional_user_id_fkey"
+            columns: ["professional_user_id"]
+            isOneToOne: false
+            referencedRelation: "professional_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       coach_insights: {
         Row: {
           context_data: Json | null
@@ -1721,6 +1785,105 @@ export type Database = {
           success_rate?: number | null
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      firm_invitations: {
+        Row: {
+          accepted_at: string | null
+          admin_email: string
+          admin_name: string
+          created_at: string
+          expires_at: string
+          firm_name: string
+          firm_type: string
+          id: string
+          invite_token: string
+          invited_by: string | null
+          seats_requested: number
+          status: string
+        }
+        Insert: {
+          accepted_at?: string | null
+          admin_email: string
+          admin_name: string
+          created_at?: string
+          expires_at?: string
+          firm_name: string
+          firm_type: string
+          id?: string
+          invite_token?: string
+          invited_by?: string | null
+          seats_requested?: number
+          status?: string
+        }
+        Update: {
+          accepted_at?: string | null
+          admin_email?: string
+          admin_name?: string
+          created_at?: string
+          expires_at?: string
+          firm_name?: string
+          firm_type?: string
+          id?: string
+          invite_token?: string
+          invited_by?: string | null
+          seats_requested?: number
+          status?: string
+        }
+        Relationships: []
+      }
+      firms: {
+        Row: {
+          billing_email: string
+          branding_enabled: boolean
+          created_at: string
+          custom_domain: string | null
+          id: string
+          logo_url: string | null
+          marketplace_visibility: boolean
+          name: string
+          primary_color: string | null
+          seats_in_use: number
+          seats_purchased: number
+          secondary_color: string | null
+          subscription_status: string
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          billing_email: string
+          branding_enabled?: boolean
+          created_at?: string
+          custom_domain?: string | null
+          id?: string
+          logo_url?: string | null
+          marketplace_visibility?: boolean
+          name: string
+          primary_color?: string | null
+          seats_in_use?: number
+          seats_purchased?: number
+          secondary_color?: string | null
+          subscription_status?: string
+          type?: string
+          updated_at?: string
+        }
+        Update: {
+          billing_email?: string
+          branding_enabled?: boolean
+          created_at?: string
+          custom_domain?: string | null
+          id?: string
+          logo_url?: string | null
+          marketplace_visibility?: boolean
+          name?: string
+          primary_color?: string | null
+          seats_in_use?: number
+          seats_purchased?: number
+          secondary_color?: string | null
+          subscription_status?: string
+          type?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -4636,6 +4799,74 @@ export type Database = {
           },
         ]
       }
+      professional_users: {
+        Row: {
+          assigned_clients: number
+          bio: string | null
+          certifications: string[] | null
+          created_at: string
+          email: string
+          firm_id: string
+          id: string
+          last_active_at: string | null
+          name: string
+          onboarded_at: string | null
+          phone: string | null
+          profile_url: string | null
+          role: string
+          specialties: string[] | null
+          status: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          assigned_clients?: number
+          bio?: string | null
+          certifications?: string[] | null
+          created_at?: string
+          email: string
+          firm_id: string
+          id?: string
+          last_active_at?: string | null
+          name: string
+          onboarded_at?: string | null
+          phone?: string | null
+          profile_url?: string | null
+          role?: string
+          specialties?: string[] | null
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          assigned_clients?: number
+          bio?: string | null
+          certifications?: string[] | null
+          created_at?: string
+          email?: string
+          firm_id?: string
+          id?: string
+          last_active_at?: string | null
+          name?: string
+          onboarded_at?: string | null
+          phone?: string | null
+          profile_url?: string | null
+          role?: string
+          specialties?: string[] | null
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "professional_users_firm_id_fkey"
+            columns: ["firm_id"]
+            isOneToOne: false
+            referencedRelation: "firms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       professionals: {
         Row: {
           accepting_new_clients: boolean | null
@@ -5513,6 +5744,61 @@ export type Database = {
         }
         Relationships: []
       }
+      seat_assignments: {
+        Row: {
+          assigned_by: string | null
+          created_at: string
+          ended_at: string | null
+          firm_id: string
+          id: string
+          professional_user_id: string
+          started_at: string
+          status: string
+        }
+        Insert: {
+          assigned_by?: string | null
+          created_at?: string
+          ended_at?: string | null
+          firm_id: string
+          id?: string
+          professional_user_id: string
+          started_at?: string
+          status?: string
+        }
+        Update: {
+          assigned_by?: string | null
+          created_at?: string
+          ended_at?: string | null
+          firm_id?: string
+          id?: string
+          professional_user_id?: string
+          started_at?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "seat_assignments_assigned_by_fkey"
+            columns: ["assigned_by"]
+            isOneToOne: false
+            referencedRelation: "professional_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "seat_assignments_firm_id_fkey"
+            columns: ["firm_id"]
+            isOneToOne: false
+            referencedRelation: "firms"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "seat_assignments_professional_user_id_fkey"
+            columns: ["professional_user_id"]
+            isOneToOne: false
+            referencedRelation: "professional_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       shared_documents: {
         Row: {
           created_at: string
@@ -5762,6 +6048,62 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: []
+      }
+      subscriptions: {
+        Row: {
+          billing_cycle: string
+          created_at: string
+          end_date: string | null
+          firm_id: string
+          id: string
+          next_billing_date: string
+          plan_name: string
+          price_per_seat: number
+          seats: number
+          start_date: string
+          status: string
+          stripe_subscription_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          billing_cycle?: string
+          created_at?: string
+          end_date?: string | null
+          firm_id: string
+          id?: string
+          next_billing_date?: string
+          plan_name?: string
+          price_per_seat?: number
+          seats?: number
+          start_date?: string
+          status?: string
+          stripe_subscription_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          billing_cycle?: string
+          created_at?: string
+          end_date?: string | null
+          firm_id?: string
+          id?: string
+          next_billing_date?: string
+          plan_name?: string
+          price_per_seat?: number
+          seats?: number
+          start_date?: string
+          status?: string
+          stripe_subscription_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subscriptions_firm_id_fkey"
+            columns: ["firm_id"]
+            isOneToOne: false
+            referencedRelation: "firms"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       supplement_education: {
         Row: {
@@ -7898,6 +8240,10 @@ export type Database = {
           total_rewards: number
         }[]
       }
+      get_current_user_firm_id: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
       get_current_user_role: {
         Args: Record<PropertyKey, never>
         Returns: string
@@ -7983,6 +8329,10 @@ export type Database = {
           p_affected_buckets?: string[]
         }
         Returns: string
+      }
+      is_firm_admin: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
       }
       is_tenant_admin: {
         Args: Record<PropertyKey, never>

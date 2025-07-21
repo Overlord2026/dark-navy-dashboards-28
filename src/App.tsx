@@ -43,6 +43,7 @@ import YourTeam from '@/pages/YourTeam';
 import Marketplace from '@/pages/Marketplace';
 import Professionals from '@/pages/Professionals';
 import ProfessionalOnboarding from '@/pages/ProfessionalOnboarding';
+import { FirmAdmin } from '@/pages/FirmAdmin';
 
 const queryClient = new QueryClient();
 
@@ -214,6 +215,17 @@ function AnimatedRoutes() {
             <RouteTransition>
               <ProfessionalOnboarding />
             </RouteTransition>
+          </ErrorBoundary>
+        } />
+        
+        {/* Firm Admin route */}
+        <Route path="/firm-admin" element={
+          <ErrorBoundary>
+            <ProtectedRoute>
+              <RouteTransition>
+                <FirmAdmin />
+              </RouteTransition>
+            </ProtectedRoute>
           </ErrorBoundary>
         } />
         
