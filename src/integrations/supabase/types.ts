@@ -327,6 +327,99 @@ export type Database = {
           },
         ]
       }
+      api_integrations: {
+        Row: {
+          auth_config: Json
+          auth_type: string
+          base_url: string
+          created_at: string
+          created_by: string
+          data_mapping: Json
+          error_count: number
+          field_mappings: Json
+          headers: Json
+          health_status: string | null
+          id: string
+          last_error: string | null
+          last_error_at: string | null
+          last_health_check: string | null
+          last_sync_at: string | null
+          name: string
+          next_sync_at: string | null
+          provider: string
+          rate_limit_per_minute: number | null
+          status: string
+          sync_direction: string | null
+          sync_enabled: boolean
+          sync_frequency: string | null
+          tenant_id: string
+          timeout_seconds: number | null
+          transformation_rules: Json
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          auth_config?: Json
+          auth_type?: string
+          base_url: string
+          created_at?: string
+          created_by: string
+          data_mapping?: Json
+          error_count?: number
+          field_mappings?: Json
+          headers?: Json
+          health_status?: string | null
+          id?: string
+          last_error?: string | null
+          last_error_at?: string | null
+          last_health_check?: string | null
+          last_sync_at?: string | null
+          name: string
+          next_sync_at?: string | null
+          provider: string
+          rate_limit_per_minute?: number | null
+          status?: string
+          sync_direction?: string | null
+          sync_enabled?: boolean
+          sync_frequency?: string | null
+          tenant_id: string
+          timeout_seconds?: number | null
+          transformation_rules?: Json
+          type: string
+          updated_at?: string
+        }
+        Update: {
+          auth_config?: Json
+          auth_type?: string
+          base_url?: string
+          created_at?: string
+          created_by?: string
+          data_mapping?: Json
+          error_count?: number
+          field_mappings?: Json
+          headers?: Json
+          health_status?: string | null
+          id?: string
+          last_error?: string | null
+          last_error_at?: string | null
+          last_health_check?: string | null
+          last_sync_at?: string | null
+          name?: string
+          next_sync_at?: string | null
+          provider?: string
+          rate_limit_per_minute?: number | null
+          status?: string
+          sync_direction?: string | null
+          sync_enabled?: boolean
+          sync_frequency?: string | null
+          tenant_id?: string
+          timeout_seconds?: number | null
+          transformation_rules?: Json
+          type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       appointments: {
         Row: {
           cost: number | null
@@ -3381,6 +3474,125 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      integration_templates: {
+        Row: {
+          category: string
+          created_at: string
+          created_by: string | null
+          default_mappings: Json
+          description: string | null
+          documentation_url: string | null
+          id: string
+          install_count: number | null
+          is_featured: boolean
+          is_verified: boolean
+          name: string
+          provider: string
+          rating: number | null
+          required_credentials: string[]
+          setup_instructions: string | null
+          support_url: string | null
+          supported_features: string[]
+          template_config: Json
+          updated_at: string
+          version: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          created_by?: string | null
+          default_mappings?: Json
+          description?: string | null
+          documentation_url?: string | null
+          id?: string
+          install_count?: number | null
+          is_featured?: boolean
+          is_verified?: boolean
+          name: string
+          provider: string
+          rating?: number | null
+          required_credentials?: string[]
+          setup_instructions?: string | null
+          support_url?: string | null
+          supported_features?: string[]
+          template_config: Json
+          updated_at?: string
+          version?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          created_by?: string | null
+          default_mappings?: Json
+          description?: string | null
+          documentation_url?: string | null
+          id?: string
+          install_count?: number | null
+          is_featured?: boolean
+          is_verified?: boolean
+          name?: string
+          provider?: string
+          rating?: number | null
+          required_credentials?: string[]
+          setup_instructions?: string | null
+          support_url?: string | null
+          supported_features?: string[]
+          template_config?: Json
+          updated_at?: string
+          version?: string
+        }
+        Relationships: []
+      }
+      integration_usage: {
+        Row: {
+          api_calls_count: number
+          avg_response_time_ms: number | null
+          created_at: string
+          data_synced_kb: number
+          date: string
+          error_rate_percentage: number | null
+          id: string
+          integration_id: string
+          sync_jobs_run: number
+          tenant_id: string
+          webhooks_received: number
+        }
+        Insert: {
+          api_calls_count?: number
+          avg_response_time_ms?: number | null
+          created_at?: string
+          data_synced_kb?: number
+          date: string
+          error_rate_percentage?: number | null
+          id?: string
+          integration_id: string
+          sync_jobs_run?: number
+          tenant_id: string
+          webhooks_received?: number
+        }
+        Update: {
+          api_calls_count?: number
+          avg_response_time_ms?: number | null
+          created_at?: string
+          data_synced_kb?: number
+          date?: string
+          error_rate_percentage?: number | null
+          id?: string
+          integration_id?: string
+          sync_jobs_run?: number
+          tenant_id?: string
+          webhooks_received?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "integration_usage_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: false
+            referencedRelation: "api_integrations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       investment_accounts: {
         Row: {
@@ -6910,6 +7122,157 @@ export type Database = {
           },
         ]
       }
+      sync_conflicts: {
+        Row: {
+          conflicting_fields: string[]
+          created_at: string
+          entity_id: string
+          entity_type: string
+          external_data: Json
+          external_entity_id: string | null
+          id: string
+          local_data: Json
+          resolution_strategy: string | null
+          resolved_at: string | null
+          resolved_by: string | null
+          resolved_data: Json | null
+          status: string
+          sync_job_id: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          conflicting_fields: string[]
+          created_at?: string
+          entity_id: string
+          entity_type: string
+          external_data: Json
+          external_entity_id?: string | null
+          id?: string
+          local_data: Json
+          resolution_strategy?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          resolved_data?: Json | null
+          status?: string
+          sync_job_id: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          conflicting_fields?: string[]
+          created_at?: string
+          entity_id?: string
+          entity_type?: string
+          external_data?: Json
+          external_entity_id?: string | null
+          id?: string
+          local_data?: Json
+          resolution_strategy?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          resolved_data?: Json | null
+          status?: string
+          sync_job_id?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sync_conflicts_sync_job_id_fkey"
+            columns: ["sync_job_id"]
+            isOneToOne: false
+            referencedRelation: "sync_jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sync_jobs: {
+        Row: {
+          batch_size: number | null
+          completed_at: string | null
+          conflicts_resolved: Json | null
+          created_at: string
+          created_by: string | null
+          direction: string
+          duration_ms: number | null
+          entity_type: string
+          error_details: Json | null
+          filters: Json
+          id: string
+          integration_id: string | null
+          job_type: string
+          progress_percentage: number | null
+          records_failed: number | null
+          records_processed: number | null
+          records_success: number | null
+          records_total: number | null
+          result_summary: Json | null
+          started_at: string | null
+          status: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          batch_size?: number | null
+          completed_at?: string | null
+          conflicts_resolved?: Json | null
+          created_at?: string
+          created_by?: string | null
+          direction: string
+          duration_ms?: number | null
+          entity_type: string
+          error_details?: Json | null
+          filters?: Json
+          id?: string
+          integration_id?: string | null
+          job_type: string
+          progress_percentage?: number | null
+          records_failed?: number | null
+          records_processed?: number | null
+          records_success?: number | null
+          records_total?: number | null
+          result_summary?: Json | null
+          started_at?: string | null
+          status?: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          batch_size?: number | null
+          completed_at?: string | null
+          conflicts_resolved?: Json | null
+          created_at?: string
+          created_by?: string | null
+          direction?: string
+          duration_ms?: number | null
+          entity_type?: string
+          error_details?: Json | null
+          filters?: Json
+          id?: string
+          integration_id?: string | null
+          job_type?: string
+          progress_percentage?: number | null
+          records_failed?: number | null
+          records_processed?: number | null
+          records_success?: number | null
+          records_total?: number | null
+          result_summary?: Json | null
+          started_at?: string | null
+          status?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sync_jobs_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: false
+            referencedRelation: "api_integrations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tax_planning_consultations: {
         Row: {
           advisor_notes: string | null
@@ -7483,6 +7846,81 @@ export type Database = {
           owner_id?: string | null
           status?: string | null
           updated_at?: string | null
+        }
+        Relationships: []
+      }
+      tool_connectors: {
+        Row: {
+          connection_config: Json
+          connection_status: string
+          connector_version: string
+          created_at: string
+          created_by: string
+          credentials_encrypted: string | null
+          id: string
+          last_sync_at: string | null
+          project_field_map: Json
+          sync_comments: boolean
+          sync_errors: Json | null
+          sync_files: boolean
+          sync_in_progress: boolean
+          sync_projects: boolean
+          sync_tasks: boolean
+          sync_users: boolean
+          task_field_map: Json
+          tenant_id: string
+          tool_name: string
+          tool_type: string
+          updated_at: string
+          user_field_map: Json
+        }
+        Insert: {
+          connection_config?: Json
+          connection_status?: string
+          connector_version?: string
+          created_at?: string
+          created_by: string
+          credentials_encrypted?: string | null
+          id?: string
+          last_sync_at?: string | null
+          project_field_map?: Json
+          sync_comments?: boolean
+          sync_errors?: Json | null
+          sync_files?: boolean
+          sync_in_progress?: boolean
+          sync_projects?: boolean
+          sync_tasks?: boolean
+          sync_users?: boolean
+          task_field_map?: Json
+          tenant_id: string
+          tool_name: string
+          tool_type: string
+          updated_at?: string
+          user_field_map?: Json
+        }
+        Update: {
+          connection_config?: Json
+          connection_status?: string
+          connector_version?: string
+          created_at?: string
+          created_by?: string
+          credentials_encrypted?: string | null
+          id?: string
+          last_sync_at?: string | null
+          project_field_map?: Json
+          sync_comments?: boolean
+          sync_errors?: Json | null
+          sync_files?: boolean
+          sync_in_progress?: boolean
+          sync_projects?: boolean
+          sync_tasks?: boolean
+          sync_users?: boolean
+          task_field_map?: Json
+          tenant_id?: string
+          tool_name?: string
+          tool_type?: string
+          updated_at?: string
+          user_field_map?: Json
         }
         Relationships: []
       }
