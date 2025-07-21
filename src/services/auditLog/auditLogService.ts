@@ -5,7 +5,8 @@ export type AuditEventType = 'login' | 'logout' | 'document_access' | 'document_
   'system_change' | 'diagnostics_access' | 'api_access' | 'mfa_enabled' |
   'document_creation' | 'document_share' | 'document_notification' |
   'appointment_reminder' | 'medication_reminder' | 'insurance_reminder' |
-  'prescription_add' | 'prescription_update' | 'prescription_delete';
+  'prescription_add' | 'prescription_update' | 'prescription_delete' |
+  'mfa_enforcement_check' | 'session_rotation';
 
 export interface AuditLogEntry {
   id: string;
@@ -54,6 +55,9 @@ class AuditLogService {
       resourceType?: string;
       details?: Record<string, any>;
       reason?: string;
+      requiresMFA?: boolean;
+      timestamp?: string;
+      error?: string;
     }
   ) {
     const logEntry: AuditLogEntry = {

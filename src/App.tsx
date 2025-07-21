@@ -11,7 +11,7 @@ import Index from "./pages/Index";
 import { AuthPage } from "./pages/AuthPage";
 import { SecuritySettingsPage } from "./pages/SecuritySettingsPage";
 import { ClientDashboard } from "./pages/ClientDashboard";
-import { AdvisorDashboard } from "./pages/AdvisorDashboard";
+import AdvisorDashboard from "./pages/AdvisorDashboard";
 import { AdminDashboard } from "./pages/AdminDashboard";
 import { AdminRoute } from "@/components/auth/AdminRoute";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";

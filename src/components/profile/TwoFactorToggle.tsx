@@ -10,9 +10,10 @@ import { supabase } from "@/lib/supabase";
 
 interface TwoFactorToggleProps {
   className?: string;
+  onMFAEnabled?: () => void;
 }
 
-export function TwoFactorToggle({ className }: TwoFactorToggleProps) {
+export function TwoFactorToggle({ className, onMFAEnabled }: TwoFactorToggleProps) {
   const { user, refreshProfile } = useAuth();
   const { userProfile } = useUser();
   const [showEnableDialog, setShowEnableDialog] = useState(false);
@@ -58,6 +59,10 @@ export function TwoFactorToggle({ className }: TwoFactorToggleProps) {
     if (!open) {
       // Refresh profile after dialog closes to update the toggle state
       await refreshProfile();
+      // Call onMFAEnabled callback if MFA was just enabled
+      if (onMFAEnabled && userProfile?.twoFactorEnabled) {
+        onMFAEnabled();
+      }
     }
   };
 
