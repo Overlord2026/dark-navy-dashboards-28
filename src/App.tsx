@@ -26,6 +26,20 @@ import { AdminEdgeFunctions } from '@/pages/admin/AdminEdgeFunctions';
 import InviteRedeem from '@/pages/InviteRedeem';
 import { AdvisorInviteRedeem } from '@/pages/AdvisorInviteRedeem';
 
+// Import tab pages and goals
+import { 
+  HomePage as HomeTabPage, 
+  AccountsPage, 
+  EducationPage, 
+  FamilyWealthPage, 
+  CollaborationPage, 
+  SettingsPage 
+} from '@/pages/TabPages';
+import GoalsPage from '@/pages/GoalsPage';
+import CreateGoalPage from '@/pages/CreateGoalPage';
+import GoalFormPage from '@/pages/GoalFormPage';
+import GoalDetailPage from '@/pages/GoalDetailPage';
+
 const queryClient = new QueryClient();
 
 function AnimatedRoutes() {
@@ -72,6 +86,98 @@ function AnimatedRoutes() {
         
         {/* Legacy login routes - redirect to auth */}
         <Route path="/login" element={<Navigate to="/auth" replace />} />
+        
+        {/* Main app navigation routes */}
+        <Route path="/home-tab" element={
+          <ErrorBoundary>
+            <ProtectedRoute>
+              <RouteTransition>
+                <HomeTabPage />
+              </RouteTransition>
+            </ProtectedRoute>
+          </ErrorBoundary>
+        } />
+        <Route path="/goals" element={
+          <ErrorBoundary>
+            <ProtectedRoute>
+              <RouteTransition>
+                <GoalsPage />
+              </RouteTransition>
+            </ProtectedRoute>
+          </ErrorBoundary>
+        } />
+        <Route path="/goals/create" element={
+          <ErrorBoundary>
+            <ProtectedRoute>
+              <RouteTransition>
+                <CreateGoalPage />
+              </RouteTransition>
+            </ProtectedRoute>
+          </ErrorBoundary>
+        } />
+        <Route path="/goals/create/:category" element={
+          <ErrorBoundary>
+            <ProtectedRoute>
+              <RouteTransition>
+                <GoalFormPage />
+              </RouteTransition>
+            </ProtectedRoute>
+          </ErrorBoundary>
+        } />
+        <Route path="/goals/:id" element={
+          <ErrorBoundary>
+            <ProtectedRoute>
+              <RouteTransition>
+                <GoalDetailPage />
+              </RouteTransition>
+            </ProtectedRoute>
+          </ErrorBoundary>
+        } />
+        <Route path="/accounts-tab" element={
+          <ErrorBoundary>
+            <ProtectedRoute>
+              <RouteTransition>
+                <AccountsPage />
+              </RouteTransition>
+            </ProtectedRoute>
+          </ErrorBoundary>
+        } />
+        <Route path="/education-tab" element={
+          <ErrorBoundary>
+            <ProtectedRoute>
+              <RouteTransition>
+                <EducationPage />
+              </RouteTransition>
+            </ProtectedRoute>
+          </ErrorBoundary>
+        } />
+        <Route path="/family-wealth-tab" element={
+          <ErrorBoundary>
+            <ProtectedRoute>
+              <RouteTransition>
+                <FamilyWealthPage />
+              </RouteTransition>
+            </ProtectedRoute>
+          </ErrorBoundary>
+        } />
+        <Route path="/collaboration-tab" element={
+          <ErrorBoundary>
+            <ProtectedRoute>
+              <RouteTransition>
+                <CollaborationPage />
+              </RouteTransition>
+            </ProtectedRoute>
+          </ErrorBoundary>
+        } />
+        <Route path="/settings-tab" element={
+          <ErrorBoundary>
+            <ProtectedRoute>
+              <RouteTransition>
+                <SettingsPage />
+              </RouteTransition>
+            </ProtectedRoute>
+          </ErrorBoundary>
+        } />
         
         {/* Admin routes */}
         <Route path="/admin-portal" element={
