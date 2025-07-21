@@ -1888,6 +1888,148 @@ export type Database = {
         }
         Relationships: []
       }
+      goal_attachments: {
+        Row: {
+          attachment_type: string | null
+          created_at: string
+          description: string | null
+          file_name: string
+          file_path: string
+          file_size: number | null
+          file_type: string
+          goal_id: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          attachment_type?: string | null
+          created_at?: string
+          description?: string | null
+          file_name: string
+          file_path: string
+          file_size?: number | null
+          file_type: string
+          goal_id: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          attachment_type?: string | null
+          created_at?: string
+          description?: string | null
+          file_name?: string
+          file_path?: string
+          file_size?: number | null
+          file_type?: string
+          goal_id?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "goal_attachments_goal_id_fkey"
+            columns: ["goal_id"]
+            isOneToOne: false
+            referencedRelation: "user_goals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      goal_category_templates: {
+        Row: {
+          aspirational_prompt: string | null
+          category: Database["public"]["Enums"]["goal_category"]
+          created_at: string
+          default_fields: Json | null
+          description: string
+          display_name: string
+          icon_name: string | null
+          id: string
+          image_url: string | null
+          required_fields: string[] | null
+          success_story_example: string | null
+          suggested_amounts: number[] | null
+          updated_at: string
+        }
+        Insert: {
+          aspirational_prompt?: string | null
+          category: Database["public"]["Enums"]["goal_category"]
+          created_at?: string
+          default_fields?: Json | null
+          description: string
+          display_name: string
+          icon_name?: string | null
+          id?: string
+          image_url?: string | null
+          required_fields?: string[] | null
+          success_story_example?: string | null
+          suggested_amounts?: number[] | null
+          updated_at?: string
+        }
+        Update: {
+          aspirational_prompt?: string | null
+          category?: Database["public"]["Enums"]["goal_category"]
+          created_at?: string
+          default_fields?: Json | null
+          description?: string
+          display_name?: string
+          icon_name?: string | null
+          id?: string
+          image_url?: string | null
+          required_fields?: string[] | null
+          success_story_example?: string | null
+          suggested_amounts?: number[] | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      goal_milestones: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          description: string | null
+          goal_id: string
+          id: string
+          is_completed: boolean | null
+          target_amount: number
+          target_date: string | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          description?: string | null
+          goal_id: string
+          id?: string
+          is_completed?: boolean | null
+          target_amount: number
+          target_date?: string | null
+          title: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          description?: string | null
+          goal_id?: string
+          id?: string
+          is_completed?: boolean | null
+          target_amount?: number
+          target_date?: string | null
+          title?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "goal_milestones_goal_id_fkey"
+            columns: ["goal_id"]
+            isOneToOne: false
+            referencedRelation: "user_goals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       health_alerts: {
         Row: {
           created_at: string | null
@@ -6767,6 +6909,93 @@ export type Database = {
         }
         Relationships: []
       }
+      user_goals: {
+        Row: {
+          aspirational_description: string | null
+          category: Database["public"]["Enums"]["goal_category"]
+          completed_at: string | null
+          created_at: string
+          current_amount: number
+          description: string | null
+          experience_story: string | null
+          family_member_ids: string[] | null
+          funding_frequency:
+            | Database["public"]["Enums"]["funding_frequency"]
+            | null
+          goal_metadata: Json | null
+          id: string
+          image_url: string | null
+          linked_account_ids: string[] | null
+          monthly_contribution: number | null
+          name: string
+          priority: Database["public"]["Enums"]["goal_priority"] | null
+          sort_order: number | null
+          status: Database["public"]["Enums"]["goal_status"] | null
+          target_amount: number
+          target_date: string | null
+          tenant_id: string
+          updated_at: string
+          user_id: string
+          why_important: string | null
+        }
+        Insert: {
+          aspirational_description?: string | null
+          category: Database["public"]["Enums"]["goal_category"]
+          completed_at?: string | null
+          created_at?: string
+          current_amount?: number
+          description?: string | null
+          experience_story?: string | null
+          family_member_ids?: string[] | null
+          funding_frequency?:
+            | Database["public"]["Enums"]["funding_frequency"]
+            | null
+          goal_metadata?: Json | null
+          id?: string
+          image_url?: string | null
+          linked_account_ids?: string[] | null
+          monthly_contribution?: number | null
+          name: string
+          priority?: Database["public"]["Enums"]["goal_priority"] | null
+          sort_order?: number | null
+          status?: Database["public"]["Enums"]["goal_status"] | null
+          target_amount?: number
+          target_date?: string | null
+          tenant_id?: string
+          updated_at?: string
+          user_id: string
+          why_important?: string | null
+        }
+        Update: {
+          aspirational_description?: string | null
+          category?: Database["public"]["Enums"]["goal_category"]
+          completed_at?: string | null
+          created_at?: string
+          current_amount?: number
+          description?: string | null
+          experience_story?: string | null
+          family_member_ids?: string[] | null
+          funding_frequency?:
+            | Database["public"]["Enums"]["funding_frequency"]
+            | null
+          goal_metadata?: Json | null
+          id?: string
+          image_url?: string | null
+          linked_account_ids?: string[] | null
+          monthly_contribution?: number | null
+          name?: string
+          priority?: Database["public"]["Enums"]["goal_priority"] | null
+          sort_order?: number | null
+          status?: Database["public"]["Enums"]["goal_status"] | null
+          target_amount?: number
+          target_date?: string | null
+          tenant_id?: string
+          updated_at?: string
+          user_id?: string
+          why_important?: string | null
+        }
+        Relationships: []
+      }
       user_investment_interests: {
         Row: {
           created_at: string | null
@@ -7383,6 +7612,10 @@ export type Database = {
           updated: boolean
         }[]
       }
+      calculate_goal_progress: {
+        Args: { goal_id: string }
+        Returns: number
+      }
       calculate_provider_rating: {
         Args: { provider_id: string }
         Returns: number
@@ -7754,7 +7987,25 @@ export type Database = {
       }
     }
     Enums: {
-      [_ in never]: never
+      funding_frequency: "monthly" | "quarterly" | "annually" | "one_time"
+      goal_category:
+        | "retirement"
+        | "healthcare_healthspan"
+        | "travel_bucket_list"
+        | "family_experience"
+        | "charitable_giving"
+        | "education"
+        | "real_estate"
+        | "wedding"
+        | "vehicle"
+        | "emergency_fund"
+        | "debt_paydown"
+        | "lifetime_gifting"
+        | "legacy_inheritance"
+        | "life_insurance"
+        | "other"
+      goal_priority: "low" | "medium" | "high" | "top_aspiration"
+      goal_status: "active" | "completed" | "paused" | "archived"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -7881,6 +8132,27 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      funding_frequency: ["monthly", "quarterly", "annually", "one_time"],
+      goal_category: [
+        "retirement",
+        "healthcare_healthspan",
+        "travel_bucket_list",
+        "family_experience",
+        "charitable_giving",
+        "education",
+        "real_estate",
+        "wedding",
+        "vehicle",
+        "emergency_fund",
+        "debt_paydown",
+        "lifetime_gifting",
+        "legacy_inheritance",
+        "life_insurance",
+        "other",
+      ],
+      goal_priority: ["low", "medium", "high", "top_aspiration"],
+      goal_status: ["active", "completed", "paused", "archived"],
+    },
   },
 } as const

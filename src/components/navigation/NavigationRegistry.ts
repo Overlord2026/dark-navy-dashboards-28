@@ -1,6 +1,7 @@
 
 // Import all navigation tabs
 import { homeNavItems } from "./tabs/HomeTab";
+import { goalsNavItems } from "./tabs/GoalsTab";
 import { accountsNavItems } from "./tabs/AccountsTab";
 import { educationNavItems } from "./tabs/EducationTab";
 import { healthcareOptimizationNavItems } from "./tabs/HealthcareOptimizationTab";
@@ -17,6 +18,13 @@ export const navigationCategories: NavCategory[] = [
     title: "HOME",
     label: "HOME",
     items: homeNavItems,
+    defaultExpanded: true
+  },
+  {
+    id: "goals",
+    title: "GOALS & ASPIRATIONS",
+    label: "GOALS & ASPIRATIONS",
+    items: goalsNavItems,
     defaultExpanded: true
   },
   {
@@ -62,6 +70,7 @@ export const bottomNavItems = settingsNavItems;
 
 // Export all tab components
 export { default as HomeTab } from "./tabs/HomeTab";
+export { default as GoalsTab } from "./tabs/GoalsTab";
 export { default as AccountsTab } from "./tabs/AccountsTab";
 export { default as EducationTab } from "./tabs/EducationTab";
 export { default as HealthcareOptimizationTab } from "./tabs/HealthcareOptimizationTab";
@@ -72,6 +81,7 @@ export { default as SettingsTab } from "./tabs/SettingsTab";
 // Re-export individual nav items for specific usage
 export {
   homeNavItems,
+  goalsNavItems,
   accountsNavItems,
   educationNavItems,
   healthcareOptimizationNavItems,
