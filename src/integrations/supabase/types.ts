@@ -5087,6 +5087,428 @@ export type Database = {
           },
         ]
       }
+      project_activity_log: {
+        Row: {
+          activity_type: string
+          created_at: string
+          created_by: string
+          description: string
+          entity_id: string | null
+          entity_type: string | null
+          id: string
+          new_values: Json | null
+          old_values: Json | null
+          project_id: string
+        }
+        Insert: {
+          activity_type: string
+          created_at?: string
+          created_by: string
+          description: string
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          new_values?: Json | null
+          old_values?: Json | null
+          project_id: string
+        }
+        Update: {
+          activity_type?: string
+          created_at?: string
+          created_by?: string
+          description?: string
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          new_values?: Json | null
+          old_values?: Json | null
+          project_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_activity_log_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      project_communications: {
+        Row: {
+          attachments: string[] | null
+          content: string
+          created_at: string
+          created_by: string
+          id: string
+          is_pinned: boolean | null
+          mentions: string[] | null
+          parent_id: string | null
+          participants: string[] | null
+          project_id: string
+          subject: string | null
+          tags: string[] | null
+          thread_count: number | null
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          attachments?: string[] | null
+          content: string
+          created_at?: string
+          created_by: string
+          id?: string
+          is_pinned?: boolean | null
+          mentions?: string[] | null
+          parent_id?: string | null
+          participants?: string[] | null
+          project_id: string
+          subject?: string | null
+          tags?: string[] | null
+          thread_count?: number | null
+          type?: string
+          updated_at?: string
+        }
+        Update: {
+          attachments?: string[] | null
+          content?: string
+          created_at?: string
+          created_by?: string
+          id?: string
+          is_pinned?: boolean | null
+          mentions?: string[] | null
+          parent_id?: string | null
+          participants?: string[] | null
+          project_id?: string
+          subject?: string | null
+          tags?: string[] | null
+          thread_count?: number | null
+          type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_communications_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "project_communications"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "project_communications_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      project_documents: {
+        Row: {
+          access_level: string
+          created_at: string
+          file_name: string
+          file_size: number
+          file_type: string
+          file_url: string
+          folder_path: string | null
+          id: string
+          is_confidential: boolean | null
+          project_id: string
+          tags: string[] | null
+          updated_at: string
+          uploaded_by: string
+          version: number | null
+        }
+        Insert: {
+          access_level?: string
+          created_at?: string
+          file_name: string
+          file_size: number
+          file_type: string
+          file_url: string
+          folder_path?: string | null
+          id?: string
+          is_confidential?: boolean | null
+          project_id: string
+          tags?: string[] | null
+          updated_at?: string
+          uploaded_by: string
+          version?: number | null
+        }
+        Update: {
+          access_level?: string
+          created_at?: string
+          file_name?: string
+          file_size?: number
+          file_type?: string
+          file_url?: string
+          folder_path?: string | null
+          id?: string
+          is_confidential?: boolean | null
+          project_id?: string
+          tags?: string[] | null
+          updated_at?: string
+          uploaded_by?: string
+          version?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_documents_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      project_milestones: {
+        Row: {
+          assigned_team: string[] | null
+          completed: boolean
+          completed_date: string | null
+          created_at: string
+          deliverables: string[] | null
+          dependencies: string[] | null
+          description: string | null
+          due_date: string
+          id: string
+          priority: string
+          project_id: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          assigned_team?: string[] | null
+          completed?: boolean
+          completed_date?: string | null
+          created_at?: string
+          deliverables?: string[] | null
+          dependencies?: string[] | null
+          description?: string | null
+          due_date: string
+          id?: string
+          priority?: string
+          project_id: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          assigned_team?: string[] | null
+          completed?: boolean
+          completed_date?: string | null
+          created_at?: string
+          deliverables?: string[] | null
+          dependencies?: string[] | null
+          description?: string | null
+          due_date?: string
+          id?: string
+          priority?: string
+          project_id?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_milestones_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      project_tasks: {
+        Row: {
+          actual_hours: number | null
+          assigned_to: string | null
+          created_at: string
+          created_by: string
+          description: string | null
+          due_date: string | null
+          estimated_hours: number | null
+          id: string
+          milestone_id: string | null
+          priority: string
+          project_id: string
+          status: string
+          tags: string[] | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          actual_hours?: number | null
+          assigned_to?: string | null
+          created_at?: string
+          created_by: string
+          description?: string | null
+          due_date?: string | null
+          estimated_hours?: number | null
+          id?: string
+          milestone_id?: string | null
+          priority?: string
+          project_id: string
+          status?: string
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          actual_hours?: number | null
+          assigned_to?: string | null
+          created_at?: string
+          created_by?: string
+          description?: string | null
+          due_date?: string | null
+          estimated_hours?: number | null
+          id?: string
+          milestone_id?: string | null
+          priority?: string
+          project_id?: string
+          status?: string
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_tasks_milestone_id_fkey"
+            columns: ["milestone_id"]
+            isOneToOne: false
+            referencedRelation: "project_milestones"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "project_tasks_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      project_team_assignments: {
+        Row: {
+          assigned_at: string
+          assigned_by: string
+          created_at: string
+          id: string
+          is_active: boolean | null
+          notes: string | null
+          permissions: string[] | null
+          professional_id: string
+          project_id: string
+          role: string
+          updated_at: string
+        }
+        Insert: {
+          assigned_at?: string
+          assigned_by: string
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          notes?: string | null
+          permissions?: string[] | null
+          professional_id: string
+          project_id: string
+          role?: string
+          updated_at?: string
+        }
+        Update: {
+          assigned_at?: string
+          assigned_by?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          notes?: string | null
+          permissions?: string[] | null
+          professional_id?: string
+          project_id?: string
+          role?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_team_assignments_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      projects: {
+        Row: {
+          actual_hours: number | null
+          budget: number | null
+          client_id: string
+          completed_date: string | null
+          created_at: string
+          created_by: string
+          description: string | null
+          due_date: string | null
+          estimated_hours: number | null
+          family_id: string | null
+          id: string
+          name: string
+          priority: string
+          progress: number | null
+          project_lead_id: string | null
+          start_date: string | null
+          status: string
+          tags: string[] | null
+          tenant_id: string
+          updated_at: string
+          vertical: string
+        }
+        Insert: {
+          actual_hours?: number | null
+          budget?: number | null
+          client_id: string
+          completed_date?: string | null
+          created_at?: string
+          created_by: string
+          description?: string | null
+          due_date?: string | null
+          estimated_hours?: number | null
+          family_id?: string | null
+          id?: string
+          name: string
+          priority?: string
+          progress?: number | null
+          project_lead_id?: string | null
+          start_date?: string | null
+          status?: string
+          tags?: string[] | null
+          tenant_id?: string
+          updated_at?: string
+          vertical?: string
+        }
+        Update: {
+          actual_hours?: number | null
+          budget?: number | null
+          client_id?: string
+          completed_date?: string | null
+          created_at?: string
+          created_by?: string
+          description?: string | null
+          due_date?: string | null
+          estimated_hours?: number | null
+          family_id?: string | null
+          id?: string
+          name?: string
+          priority?: string
+          progress?: number | null
+          project_lead_id?: string | null
+          start_date?: string | null
+          status?: string
+          tags?: string[] | null
+          tenant_id?: string
+          updated_at?: string
+          vertical?: string
+        }
+        Relationships: []
+      }
       properties: {
         Row: {
           address: string
