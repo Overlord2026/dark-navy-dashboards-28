@@ -238,6 +238,48 @@ export type Database = {
           },
         ]
       }
+      analytics_dashboards: {
+        Row: {
+          created_at: string
+          dashboard_name: string
+          dashboard_type: string
+          id: string
+          is_shared: boolean
+          layout_config: Json
+          shared_with: string[] | null
+          tenant_id: string
+          updated_at: string
+          user_id: string
+          widgets_config: Json
+        }
+        Insert: {
+          created_at?: string
+          dashboard_name: string
+          dashboard_type?: string
+          id?: string
+          is_shared?: boolean
+          layout_config?: Json
+          shared_with?: string[] | null
+          tenant_id: string
+          updated_at?: string
+          user_id: string
+          widgets_config?: Json
+        }
+        Update: {
+          created_at?: string
+          dashboard_name?: string
+          dashboard_type?: string
+          id?: string
+          is_shared?: boolean
+          layout_config?: Json
+          shared_with?: string[] | null
+          tenant_id?: string
+          updated_at?: string
+          user_id?: string
+          widgets_config?: Json
+        }
+        Relationships: []
+      }
       analytics_events: {
         Row: {
           created_at: string
@@ -5134,6 +5176,98 @@ export type Database = {
           },
         ]
       }
+      project_analytics: {
+        Row: {
+          active_team_members: number
+          actual_budget: number | null
+          actual_hours: number | null
+          budget_variance: number | null
+          calculated_at: string
+          client_satisfaction_score: number | null
+          communication_frequency: number | null
+          completion_percentage: number
+          created_at: string
+          days_elapsed: number
+          days_remaining: number | null
+          estimated_budget: number | null
+          estimated_hours: number | null
+          hours_variance: number | null
+          id: string
+          milestones_completed: number
+          milestones_total: number
+          project_id: string
+          schedule_variance: number | null
+          task_revision_rate: number | null
+          tasks_completed: number
+          tasks_total: number
+          team_size: number
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          active_team_members?: number
+          actual_budget?: number | null
+          actual_hours?: number | null
+          budget_variance?: number | null
+          calculated_at?: string
+          client_satisfaction_score?: number | null
+          communication_frequency?: number | null
+          completion_percentage?: number
+          created_at?: string
+          days_elapsed?: number
+          days_remaining?: number | null
+          estimated_budget?: number | null
+          estimated_hours?: number | null
+          hours_variance?: number | null
+          id?: string
+          milestones_completed?: number
+          milestones_total?: number
+          project_id: string
+          schedule_variance?: number | null
+          task_revision_rate?: number | null
+          tasks_completed?: number
+          tasks_total?: number
+          team_size?: number
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          active_team_members?: number
+          actual_budget?: number | null
+          actual_hours?: number | null
+          budget_variance?: number | null
+          calculated_at?: string
+          client_satisfaction_score?: number | null
+          communication_frequency?: number | null
+          completion_percentage?: number
+          created_at?: string
+          days_elapsed?: number
+          days_remaining?: number | null
+          estimated_budget?: number | null
+          estimated_hours?: number | null
+          hours_variance?: number | null
+          id?: string
+          milestones_completed?: number
+          milestones_total?: number
+          project_id?: string
+          schedule_variance?: number | null
+          task_revision_rate?: number | null
+          tasks_completed?: number
+          tasks_total?: number
+          team_size?: number
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_analytics_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: true
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       project_communications: {
         Row: {
           attachments: string[] | null
@@ -6127,6 +6261,81 @@ export type Database = {
           },
         ]
       }
+      resource_utilization_analytics: {
+        Row: {
+          active_projects: number
+          active_team_members: number
+          average_completion_rate: number | null
+          average_project_satisfaction: number | null
+          budget_utilization: number | null
+          calculated_at: string
+          capacity_utilization: number | null
+          completed_projects: number
+          created_at: string
+          id: string
+          overdue_projects: number
+          period_end: string
+          period_start: string
+          tenant_id: string
+          total_budget_allocated: number
+          total_budget_spent: number
+          total_hours_allocated: number
+          total_hours_available: number
+          total_hours_logged: number
+          total_team_members: number
+          updated_at: string
+          utilization_rate: number | null
+        }
+        Insert: {
+          active_projects?: number
+          active_team_members?: number
+          average_completion_rate?: number | null
+          average_project_satisfaction?: number | null
+          budget_utilization?: number | null
+          calculated_at?: string
+          capacity_utilization?: number | null
+          completed_projects?: number
+          created_at?: string
+          id?: string
+          overdue_projects?: number
+          period_end: string
+          period_start: string
+          tenant_id: string
+          total_budget_allocated?: number
+          total_budget_spent?: number
+          total_hours_allocated?: number
+          total_hours_available?: number
+          total_hours_logged?: number
+          total_team_members?: number
+          updated_at?: string
+          utilization_rate?: number | null
+        }
+        Update: {
+          active_projects?: number
+          active_team_members?: number
+          average_completion_rate?: number | null
+          average_project_satisfaction?: number | null
+          budget_utilization?: number | null
+          calculated_at?: string
+          capacity_utilization?: number | null
+          completed_projects?: number
+          created_at?: string
+          id?: string
+          overdue_projects?: number
+          period_end?: string
+          period_start?: string
+          tenant_id?: string
+          total_budget_allocated?: number
+          total_budget_spent?: number
+          total_hours_allocated?: number
+          total_hours_available?: number
+          total_hours_logged?: number
+          total_team_members?: number
+          updated_at?: string
+          utilization_rate?: number | null
+        }
+        Relationships: []
+      }
       retirement_plans: {
         Row: {
           balance: number
@@ -6807,6 +7016,78 @@ export type Database = {
           status?: string
           strategy_type?: string
           title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      team_productivity_analytics: {
+        Row: {
+          active_projects: number
+          average_task_duration: number | null
+          calculated_at: string
+          client_feedback_score: number | null
+          created_at: string
+          documents_shared: number
+          hours_logged: number
+          id: string
+          meetings_attended: number
+          messages_sent: number
+          period_end: string
+          period_start: string
+          productivity_score: number | null
+          projects_completed: number
+          task_revision_count: number
+          tasks_assigned: number
+          tasks_completed: number
+          tasks_completion_rate: number | null
+          tenant_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          active_projects?: number
+          average_task_duration?: number | null
+          calculated_at?: string
+          client_feedback_score?: number | null
+          created_at?: string
+          documents_shared?: number
+          hours_logged?: number
+          id?: string
+          meetings_attended?: number
+          messages_sent?: number
+          period_end: string
+          period_start: string
+          productivity_score?: number | null
+          projects_completed?: number
+          task_revision_count?: number
+          tasks_assigned?: number
+          tasks_completed?: number
+          tasks_completion_rate?: number | null
+          tenant_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          active_projects?: number
+          average_task_duration?: number | null
+          calculated_at?: string
+          client_feedback_score?: number | null
+          created_at?: string
+          documents_shared?: number
+          hours_logged?: number
+          id?: string
+          meetings_attended?: number
+          messages_sent?: number
+          period_end?: string
+          period_start?: string
+          productivity_score?: number | null
+          projects_completed?: number
+          task_revision_count?: number
+          tasks_assigned?: number
+          tasks_completed?: number
+          tasks_completion_rate?: number | null
+          tenant_id?: string
           updated_at?: string
           user_id?: string
         }
@@ -8583,6 +8864,10 @@ export type Database = {
       calculate_goal_progress: {
         Args: { goal_id: string }
         Returns: number
+      }
+      calculate_project_analytics: {
+        Args: { p_project_id: string }
+        Returns: undefined
       }
       calculate_provider_rating: {
         Args: { provider_id: string }
