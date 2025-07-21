@@ -124,6 +124,8 @@ export interface ProjectActivity {
 
 export const useProjects = () => {
   const [projects, setProjects] = useState<Project[]>([]);
+  const [milestones, setMilestones] = useState<ProjectMilestone[]>([]);
+  const [tasks, setTasks] = useState<ProjectTask[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const { toast } = useToast();
@@ -149,6 +151,43 @@ export const useProjects = () => {
         description: "Failed to load your projects",
         variant: "destructive"
       });
+    }
+  };
+
+  // Fetch milestones
+  const fetchMilestones = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('project_milestones')
+        .select('*')
+        .order('due_date', { ascending: true });
+
+      if (error) throw error;
+      setMilestones((data || []).map(m => ({
+        ...m,
+        priority: m.priority as ProjectMilestone['priority']
+      })));
+    } catch (error) {
+      console.error('Error fetching milestones:', error);
+    }
+  };
+
+  // Fetch tasks
+  const fetchTasks = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('project_tasks')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setTasks((data || []).map(t => ({
+        ...t,
+        status: t.status as ProjectTask['status'],
+        priority: t.priority as ProjectTask['priority']
+      })));
+    } catch (error) {
+      console.error('Error fetching tasks:', error);
     }
   };
 
@@ -262,27 +301,59 @@ export const useProjects = () => {
 
   // Real-time subscription setup
   useEffect(() => {
-    fetchProjects();
+    const fetchAll = async () => {
+      setLoading(true);
+      await Promise.all([fetchProjects(), fetchMilestones(), fetchTasks()]);
+      setLoading(false);
+    };
 
-    // Set up real-time subscription
-    const channel = supabase
+    fetchAll();
+
+    // Set up real-time subscriptions
+    const projectsChannel = supabase
       .channel('projects-changes')
       .on('postgres_changes', 
           { event: '*', schema: 'public', table: 'projects' }, 
           (payload) => {
             console.log('Project change received:', payload);
-            fetchProjects(); // Refresh projects on any change
+            fetchProjects();
+          }
+      )
+      .subscribe();
+
+    const milestonesChannel = supabase
+      .channel('milestones-changes')
+      .on('postgres_changes', 
+          { event: '*', schema: 'public', table: 'project_milestones' }, 
+          (payload) => {
+            console.log('Milestone change received:', payload);
+            fetchMilestones();
+          }
+      )
+      .subscribe();
+
+    const tasksChannel = supabase
+      .channel('tasks-changes')
+      .on('postgres_changes', 
+          { event: '*', schema: 'public', table: 'project_tasks' }, 
+          (payload) => {
+            console.log('Task change received:', payload);
+            fetchTasks();
           }
       )
       .subscribe();
 
     return () => {
-      supabase.removeChannel(channel);
+      supabase.removeChannel(projectsChannel);
+      supabase.removeChannel(milestonesChannel);
+      supabase.removeChannel(tasksChannel);
     };
   }, []);
 
   return {
     projects,
+    milestones,
+    tasks,
     loading,
     saving,
     createProject,

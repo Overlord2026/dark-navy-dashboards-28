@@ -46,6 +46,8 @@ import {
   ProjectTask
 } from "@/hooks/useProjects";
 import { ProjectChat } from "./ProjectChat";
+import { ProjectCalendar } from "./ProjectCalendar";
+import { ProjectDocuments } from "./ProjectDocuments";
 
 interface ProjectManagerProps {
   projectId: string;
@@ -360,11 +362,13 @@ export function ProjectManager({ projectId, onClose }: ProjectManagerProps) {
 
       {/* Main Content Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-6">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="tasks">Tasks</TabsTrigger>
           <TabsTrigger value="team">Team</TabsTrigger>
           <TabsTrigger value="chat">Chat</TabsTrigger>
+          <TabsTrigger value="calendar">Calendar</TabsTrigger>
+          <TabsTrigger value="documents">Documents</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6">
@@ -618,6 +622,14 @@ export function ProjectManager({ projectId, onClose }: ProjectManagerProps) {
             projectName={project.name}
             teamMembers={[]} // TODO: Pass actual team members
           />
+        </TabsContent>
+
+        <TabsContent value="calendar" className="space-y-4">
+          <ProjectCalendar projectId={projectId} />
+        </TabsContent>
+
+        <TabsContent value="documents" className="space-y-4">
+          <ProjectDocuments projectId={projectId} />
         </TabsContent>
       </Tabs>
 
