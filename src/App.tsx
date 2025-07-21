@@ -5,7 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "sonner";
 import { AuthProvider } from '@/context/AuthContext';
 import { UserProvider } from '@/context/UserContext';
-import { ThemeProvider } from "@/components/ThemeProvider";
+import { ThemeProvider } from "@/components/ui/ThemeProvider";
 import { AnalyticsProvider } from '@/components/analytics/AnalyticsProvider';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { AdminRoute } from '@/components/auth/AdminRoute';
