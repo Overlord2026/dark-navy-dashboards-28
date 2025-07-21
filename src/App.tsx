@@ -42,6 +42,7 @@ import GoalDetailPage from '@/pages/GoalDetailPage';
 import YourTeam from '@/pages/YourTeam';
 import Marketplace from '@/pages/Marketplace';
 import Professionals from '@/pages/Professionals';
+import ProfessionalOnboarding from '@/pages/ProfessionalOnboarding';
 
 const queryClient = new QueryClient();
 
@@ -206,6 +207,13 @@ function AnimatedRoutes() {
                 <Professionals />
               </RouteTransition>
             </ProtectedRoute>
+          </ErrorBoundary>
+        } />
+        <Route path="/professional-onboarding/:token" element={
+          <ErrorBoundary>
+            <RouteTransition>
+              <ProfessionalOnboarding />
+            </RouteTransition>
           </ErrorBoundary>
         } />
         
