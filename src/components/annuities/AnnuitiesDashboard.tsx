@@ -10,6 +10,7 @@ import { EducationCenter } from "./EducationCenter";
 import { ProductComparison } from "./ProductComparison";
 import { ContractAnalyzer } from "./ContractAnalyzer";
 import { AnnuityCalculators } from "./calculators/AnnuityCalculators";
+import { AnnuityMarketplace } from "./marketplace/AnnuityMarketplace";
 
 export const AnnuitiesDashboard = () => {
   const navigate = useNavigate();
@@ -19,7 +20,8 @@ export const AnnuitiesDashboard = () => {
     { id: "learn", label: "Education", icon: Book },
     { id: "compare", label: "Compare", icon: Search },
     { id: "analyze", label: "Analyze", icon: Upload },
-    { id: "calculators", label: "Calculators", icon: Calculator }
+    { id: "calculators", label: "Calculators", icon: Calculator },
+    { id: "marketplace", label: "Marketplace", icon: Award }
   ];
 
   const products = [
@@ -71,7 +73,7 @@ export const AnnuitiesDashboard = () => {
   return (
     <div className="space-y-6">
       <Tabs defaultValue="overview" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-5">
+        <TabsList className="grid w-full grid-cols-6">
           {dashboardTabs.map((tab) => {
             const IconComponent = tab.icon;
             return (
@@ -409,6 +411,10 @@ export const AnnuitiesDashboard = () => {
 
         <TabsContent value="calculators" className="space-y-6">
           <AnnuityCalculators />
+        </TabsContent>
+
+        <TabsContent value="marketplace" className="space-y-6">
+          <AnnuityMarketplace />
         </TabsContent>
       </Tabs>
     </div>
