@@ -6642,6 +6642,63 @@ export type Database = {
           },
         ]
       }
+      security_audit_logs: {
+        Row: {
+          changed_fields: string[] | null
+          compliance_flags: string[] | null
+          id: string
+          ip_address: unknown | null
+          new_data: Json | null
+          old_data: Json | null
+          operation: string
+          record_id: string | null
+          retention_date: string | null
+          session_id: string | null
+          severity: string | null
+          table_name: string
+          tenant_id: string | null
+          timestamp: string
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          changed_fields?: string[] | null
+          compliance_flags?: string[] | null
+          id?: string
+          ip_address?: unknown | null
+          new_data?: Json | null
+          old_data?: Json | null
+          operation: string
+          record_id?: string | null
+          retention_date?: string | null
+          session_id?: string | null
+          severity?: string | null
+          table_name: string
+          tenant_id?: string | null
+          timestamp?: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          changed_fields?: string[] | null
+          compliance_flags?: string[] | null
+          id?: string
+          ip_address?: unknown | null
+          new_data?: Json | null
+          old_data?: Json | null
+          operation?: string
+          record_id?: string | null
+          retention_date?: string | null
+          session_id?: string | null
+          severity?: string | null
+          table_name?: string
+          tenant_id?: string | null
+          timestamp?: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       shared_documents: {
         Row: {
           created_at: string
@@ -9365,6 +9422,17 @@ export type Database = {
         Args: { p_referral_id: string }
         Returns: string
       }
+      detect_suspicious_activities: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          alert_type: string
+          description: string
+          severity: string
+          count: number
+          first_occurrence: string
+          last_occurrence: string
+        }[]
+      }
       generate_franchise_referral_code: {
         Args: Record<PropertyKey, never>
         Returns: string
@@ -9427,6 +9495,15 @@ export type Database = {
           count_total: number
           count_paid: number
           count_pending: number
+        }[]
+      }
+      get_security_metrics: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          metric_name: string
+          metric_value: number
+          status: string
+          last_updated: string
         }[]
       }
       get_top_referrers: {
