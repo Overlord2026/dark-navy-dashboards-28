@@ -1,328 +1,424 @@
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Book, Calculator, Search, Upload, Users, Award, Video, MessageCircle, TrendingUp, Shield, FileText } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Book, Calculator, Search, Upload, Users, Award, Video, MessageCircle, TrendingUp, Shield, FileText, Star, Share2, Heart, CheckCircle2, AlertTriangle, DollarSign, Camera, FileUp, Calendar } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 export const AnnuitiesDashboard = () => {
   const navigate = useNavigate();
 
-  const quickActions = [
+  const products = [
     {
-      title: "Learn Before You Buy",
-      description: "Start with education—understand annuities before making decisions",
-      icon: Book,
-      href: "/annuities/learn",
-      color: "bg-blue-500"
+      name: "Secure Income Plus",
+      carrier: "American General",
+      rate: "5.25%",
+      term: "10 Year",
+      badges: ["Fee Only", "RIA Approved", "Top Value"],
+      rating: 4.8,
+      type: "Fixed Immediate"
     },
     {
-      title: "Compare Live Products",
-      description: "Real-time rates and fiduciary scoring from top providers",
-      icon: Search,
-      href: "/annuities/compare",
-      color: "bg-green-500"
+      name: "Lifetime Guarantee",
+      carrier: "New York Life",
+      rate: "4.90%",
+      term: "Lifetime",
+      badges: ["Guaranteed No Surrender", "A+ Rated"],
+      rating: 4.6,
+      type: "SPIA"
     },
     {
-      title: "Analyze Your Annuity",
-      description: "Upload your contract for AI-powered analysis and recommendations",
-      icon: Upload,
-      href: "/annuities/analyze",
-      color: "bg-purple-500"
+      name: "Growth Protector",
+      carrier: "Allianz",
+      rate: "6.10%",
+      term: "7 Year",
+      badges: ["Growth Potential", "Principal Protected"],
+      rating: 4.4,
+      type: "Fixed Indexed"
     }
   ];
 
-  const features = [
-    {
-      title: "Education Center",
-      description: "Book chapters, videos, and AI-powered Q&A",
-      icon: Book,
-      href: "/annuities/learn"
-    },
-    {
-      title: "Product Marketplace",
-      description: "Live rates with fiduciary scorecard badges",
-      icon: Award,
-      href: "/annuities/marketplace"
-    },
-    {
-      title: "Contract Analyzer",
-      description: "AI analysis of existing contracts",
-      icon: Upload,
-      href: "/annuities/analyze"
-    },
-    {
-      title: "Calculators",
-      description: "Income, withdrawal, death benefit tools",
-      icon: Calculator,
-      href: "/annuities/calculators"
-    },
-    {
-      title: "Fiduciary Review",
-      description: "Transparent advisor referral process",
-      icon: Users,
-      href: "/annuities/review"
-    },
-    {
-      title: "AI Assistant",
-      description: "Chat about annuity questions",
-      icon: MessageCircle,
-      href: "/annuities/chat"
-    }
+  const educationContent = [
+    { title: "Annuity Basics", type: "Chapter", duration: "15 min read", icon: FileText },
+    { title: "Types of Annuities", type: "Chapter", duration: "20 min read", icon: FileText },
+    { title: "Understanding Fees", type: "Chapter", duration: "18 min read", icon: FileText },
+    { title: "Introduction to Annuities", type: "Video", duration: "12 min", icon: Video },
+    { title: "Fixed vs Variable", type: "Video", duration: "8 min", icon: Video },
+    { title: "Hidden Fees Explained", type: "Video", duration: "15 min", icon: Video }
+  ];
+
+  const calculatorTypes = [
+    { name: "Guaranteed Income", description: "Calculate monthly income potential", icon: DollarSign },
+    { name: "Withdrawal Rider", description: "Optimize withdrawal strategies", icon: TrendingUp },
+    { name: "Payout Projection", description: "Compare payout scenarios", icon: Calculator },
+    { name: "Death Benefit", description: "Estimate beneficiary payouts", icon: Shield }
   ];
 
   return (
-    <div className="space-y-6">
-      {/* Hero Section */}
-      <div className="bg-gradient-to-r from-primary/10 via-primary/5 to-background rounded-lg p-8">
-        <div className="max-w-4xl">
-          <h2 className="text-2xl font-bold mb-4">Welcome to Annuity Clarity</h2>
-          <p className="text-muted-foreground mb-6">
-            Empower yourself with education, transparent comparisons, and fiduciary guidance. 
-            Make informed annuity decisions with consumer-first tools and unbiased analysis.
+    <div className="space-y-8">
+      {/* Hero Banner */}
+      <div className="bg-gradient-to-r from-primary/10 via-primary/5 to-background rounded-lg p-8 lg:p-12">
+        <div className="text-center max-w-4xl mx-auto">
+          <h2 className="text-4xl font-bold mb-4">Learn. Compare. Decide.</h2>
+          <p className="text-xl text-muted-foreground mb-8">
+            Explore annuities with the clarity and transparency you deserve.
           </p>
-          <div className="grid md:grid-cols-3 gap-4">
-            {quickActions.map((action, index) => (
-              <Card key={index} className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => navigate(action.href)}>
-                <CardHeader className="pb-3">
-                  <div className={`w-12 h-12 rounded-lg ${action.color} flex items-center justify-center mb-3`}>
-                    <action.icon className="h-6 w-6 text-white" />
-                  </div>
-                  <CardTitle className="text-lg">{action.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription>{action.description}</CardDescription>
-                </CardContent>
-              </Card>
-            ))}
+          <div className="grid md:grid-cols-3 gap-6">
+            <Button size="lg" className="h-auto p-6 flex-col gap-3" onClick={() => navigate("/annuities/learn")}>
+              <Book className="h-8 w-8" />
+              <div>
+                <div className="font-semibold">Learn Before You Buy</div>
+                <div className="text-sm opacity-90">Education-first approach</div>
+              </div>
+            </Button>
+            <Button size="lg" className="h-auto p-6 flex-col gap-3" variant="outline" onClick={() => navigate("/annuities/compare")}>
+              <Search className="h-8 w-8" />
+              <div>
+                <div className="font-semibold">Compare Live Rates</div>
+                <div className="text-sm opacity-90">Real-time marketplace</div>
+              </div>
+            </Button>
+            <Button size="lg" className="h-auto p-6 flex-col gap-3" variant="outline" onClick={() => navigate("/annuities/analyze")}>
+              <Upload className="h-8 w-8" />
+              <div>
+                <div className="font-semibold">Analyze My Contract</div>
+                <div className="text-sm opacity-90">AI-powered review</div>
+              </div>
+            </Button>
           </div>
         </div>
       </div>
 
-      {/* Main Content Tabs */}
-      <Tabs defaultValue="overview" className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="education">Education</TabsTrigger>
-          <TabsTrigger value="tools">Tools</TabsTrigger>
-          <TabsTrigger value="marketplace">Marketplace</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="overview" className="space-y-6">
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {features.map((feature, index) => (
-              <Card key={index} className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => navigate(feature.href)}>
-                <CardHeader>
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                      <feature.icon className="h-5 w-5 text-primary" />
-                    </div>
-                    <CardTitle className="text-lg">{feature.title}</CardTitle>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription>{feature.description}</CardDescription>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
-
-        <TabsContent value="education" className="space-y-6">
-          <div className="grid md:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <div className="flex items-center gap-3">
-                  <Book className="h-6 w-6 text-primary" />
-                  <CardTitle>Book Chapters</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="space-y-2">
-                  <Button variant="ghost" className="w-full justify-start" onClick={() => navigate("/annuities/learn/basics")}>
-                    <FileText className="h-4 w-4 mr-2" />
-                    Chapter 1: Annuity Basics
-                  </Button>
-                  <Button variant="ghost" className="w-full justify-start" onClick={() => navigate("/annuities/learn/types")}>
-                    <FileText className="h-4 w-4 mr-2" />
-                    Chapter 2: Types of Annuities
-                  </Button>
-                  <Button variant="ghost" className="w-full justify-start" onClick={() => navigate("/annuities/learn/fees")}>
-                    <FileText className="h-4 w-4 mr-2" />
-                    Chapter 3: Understanding Fees
-                  </Button>
-                  <Button variant="ghost" className="w-full justify-start" onClick={() => navigate("/annuities/learn/riders")}>
-                    <FileText className="h-4 w-4 mr-2" />
-                    Chapter 4: Riders and Benefits
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <div className="flex items-center gap-3">
-                  <Video className="h-6 w-6 text-primary" />
-                  <CardTitle>Video Library</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="space-y-2">
-                  <Button variant="ghost" className="w-full justify-start" onClick={() => navigate("/annuities/videos/intro")}>
-                    <Video className="h-4 w-4 mr-2" />
-                    Introduction to Annuities (12 min)
-                  </Button>
-                  <Button variant="ghost" className="w-full justify-start" onClick={() => navigate("/annuities/videos/comparison")}>
-                    <Video className="h-4 w-4 mr-2" />
-                    Fixed vs Variable (8 min)
-                  </Button>
-                  <Button variant="ghost" className="w-full justify-start" onClick={() => navigate("/annuities/videos/fees")}>
-                    <Video className="h-4 w-4 mr-2" />
-                    Hidden Fees Explained (15 min)
-                  </Button>
-                  <Button variant="ghost" className="w-full justify-start" onClick={() => navigate("/annuities/videos/reviews")}>
-                    <Video className="h-4 w-4 mr-2" />
-                    Real Contract Reviews (20 min)
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
+      {/* Main Content Grid */}
+      <div className="grid lg:grid-cols-3 gap-8">
+        {/* Left Column: Education Center */}
+        <div className="space-y-6">
           <Card>
             <CardHeader>
-              <div className="flex items-center gap-3">
-                <MessageCircle className="h-6 w-6 text-primary" />
-                <CardTitle>AI-Powered Q&A</CardTitle>
-              </div>
+              <CardTitle className="flex items-center gap-2">
+                <Book className="h-5 w-5" />
+                Education Center
+              </CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground mb-4">
-                Get instant answers to your annuity questions from our AI assistant trained on consumer-first principles.
-              </p>
-              <Button onClick={() => navigate("/annuities/chat")}>
-                Start AI Chat
+            <CardContent className="space-y-4">
+              <div className="space-y-3">
+                {educationContent.slice(0, 3).map((item, index) => (
+                  <div key={index} className="flex items-center justify-between p-3 rounded-lg border hover:bg-muted/50 cursor-pointer">
+                    <div className="flex items-center gap-3">
+                      <item.icon className="h-4 w-4 text-muted-foreground" />
+                      <div>
+                        <div className="font-medium text-sm">{item.title}</div>
+                        <div className="text-xs text-muted-foreground">{item.type}</div>
+                      </div>
+                    </div>
+                    <Badge variant="secondary" className="text-xs">{item.duration}</Badge>
+                  </div>
+                ))}
+              </div>
+              <Button variant="outline" className="w-full" onClick={() => navigate("/annuities/learn")}>
+                View All Content
               </Button>
             </CardContent>
           </Card>
-        </TabsContent>
 
-        <TabsContent value="tools" className="space-y-6">
+          {/* Quick Actions */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Quick Actions</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <Button className="w-full justify-start" onClick={() => navigate("/annuities/analyze")}>
+                <Upload className="h-4 w-4 mr-2" />
+                Analyze My Contract
+              </Button>
+              <Button variant="outline" className="w-full justify-start" onClick={() => navigate("/annuities/compare")}>
+                <TrendingUp className="h-4 w-4 mr-2" />
+                Compare Live Rates
+              </Button>
+              <Button variant="outline" className="w-full justify-start" onClick={() => navigate("/annuities/marketplace")}>
+                <Award className="h-4 w-4 mr-2" />
+                Fiduciary Product Scorecard
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Center Column: Product Comparison & Marketplace */}
+        <div className="space-y-6">
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center gap-2">
+                  <Award className="h-5 w-5" />
+                  Live Product Marketplace
+                </CardTitle>
+                <Button variant="ghost" size="sm">
+                  <Search className="h-4 w-4" />
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-3">
+                {products.map((product, index) => (
+                  <div key={index} className="border rounded-lg p-4 space-y-3">
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <div className="font-semibold">{product.name}</div>
+                        <div className="text-sm text-muted-foreground">{product.carrier}</div>
+                        <div className="text-xs text-muted-foreground">{product.type}</div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-lg font-bold text-primary">{product.rate}</div>
+                        <div className="text-sm text-muted-foreground">{product.term}</div>
+                        <div className="flex items-center gap-1 mt-1">
+                          <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                          <span className="text-xs">{product.rating}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex flex-wrap gap-1">
+                      {product.badges.map((badge, badgeIndex) => (
+                        <Badge key={badgeIndex} variant="secondary" className="text-xs">
+                          {badge}
+                        </Badge>
+                      ))}
+                    </div>
+                    <Button size="sm" variant="outline" className="w-full">
+                      See Full Product Sheet
+                    </Button>
+                  </div>
+                ))}
+              </div>
+              <Button className="w-full" onClick={() => navigate("/annuities/marketplace")}>
+                View All Products
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Right Column: Contract Analyzer & Tools */}
+        <div className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Upload className="h-5 w-5" />
+                Contract Analyzer
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="border-2 border-dashed border-muted rounded-lg p-6 text-center space-y-4">
+                <div className="flex justify-center gap-4">
+                  <Button size="sm" variant="outline">
+                    <FileUp className="h-4 w-4 mr-2" />
+                    Upload PDF
+                  </Button>
+                  <Button size="sm" variant="outline">
+                    <Camera className="h-4 w-4 mr-2" />
+                    Take Photo
+                  </Button>
+                </div>
+                <div className="text-center">
+                  <div className="text-sm font-medium">Upload or photograph your contract</div>
+                  <div className="text-xs text-muted-foreground">Get AI analysis in seconds</div>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 text-sm">
+                  <CheckCircle2 className="h-4 w-4 text-green-500" />
+                  Features, Fees, Surrender Analysis
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <CheckCircle2 className="h-4 w-4 text-green-500" />
+                  Income Stream Projections
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <Award className="h-4 w-4 text-blue-500" />
+                  "Is this fiduciary-friendly?" Badge
+                </div>
+              </div>
+              <Button className="w-full" onClick={() => navigate("/annuities/analyze")}>
+                Start Analyzer
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* Calculators */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center justify-between">
+                <span className="flex items-center gap-2">
+                  <Calculator className="h-5 w-5" />
+                  Calculators
+                </span>
+                <Button variant="ghost" size="sm">
+                  <Share2 className="h-4 w-4" />
+                </Button>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 gap-3">
+                {calculatorTypes.map((calc, index) => (
+                  <Button
+                    key={index}
+                    variant="outline"
+                    className="h-auto p-3 flex-col gap-2"
+                    onClick={() => navigate(`/annuities/calculators/${calc.name.toLowerCase().replace(/\s+/g, '-')}`)}
+                  >
+                    <calc.icon className="h-5 w-5" />
+                    <div className="text-center">
+                      <div className="font-medium text-xs">{calc.name}</div>
+                    </div>
+                  </Button>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+
+      {/* Fiduciary Review & Referral */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Users className="h-5 w-5" />
+            Fiduciary Review & Referral
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
           <div className="grid md:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <div className="flex items-center gap-3">
-                  <Upload className="h-6 w-6 text-primary" />
-                  <CardTitle>Contract Analyzer</CardTitle>
+            <div className="space-y-4">
+              <p className="text-muted-foreground">
+                Schedule call/meeting with fiduciary or submit for unbiased review
+              </p>
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 text-sm">
+                  <Shield className="h-4 w-4 text-green-500" />
+                  Fee-only advisors only
                 </div>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <p className="text-muted-foreground">
-                  Upload your annuity contract for AI-powered analysis and recommendations.
-                </p>
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Shield className="h-4 w-4" />
-                    Secure document processing
-                  </div>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <TrendingUp className="h-4 w-4" />
-                    Fee analysis and comparison
-                  </div>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Award className="h-4 w-4" />
-                    Fiduciary assessment
-                  </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <Award className="h-4 w-4 text-blue-500" />
+                  Fiduciary standard
                 </div>
-                <Button onClick={() => navigate("/annuities/analyze")}>
-                  Upload Contract
+                <div className="flex items-center gap-2 text-sm">
+                  <FileText className="h-4 w-4 text-purple-500" />
+                  Transparent pricing
+                </div>
+              </div>
+              <Button className="w-full" onClick={() => navigate("/annuities/review")}>
+                <Calendar className="h-4 w-4 mr-2" />
+                Schedule Review
+              </Button>
+            </div>
+            <div className="space-y-4">
+              <div className="p-4 border rounded-lg bg-muted/50">
+                <div className="font-semibold mb-2">Submit for Review</div>
+                <div className="text-sm text-muted-foreground mb-3">
+                  Get unbiased analysis without commitment
+                </div>
+                <Button variant="outline" className="w-full">
+                  Submit Contract
                 </Button>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <div className="flex items-center gap-3">
-                  <Calculator className="h-6 w-6 text-primary" />
-                  <CardTitle>Calculators</CardTitle>
+              </div>
+              <div className="p-4 border rounded-lg">
+                <div className="font-semibold mb-2">Invite Your Advisor</div>
+                <div className="text-sm text-muted-foreground mb-3">
+                  Collaborative review workflow
                 </div>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="space-y-2">
-                  <Button variant="ghost" className="w-full justify-start" onClick={() => navigate("/annuities/calculators/income")}>
-                    <Calculator className="h-4 w-4 mr-2" />
-                    Income Calculator
-                  </Button>
-                  <Button variant="ghost" className="w-full justify-start" onClick={() => navigate("/annuities/calculators/withdrawal")}>
-                    <Calculator className="h-4 w-4 mr-2" />
-                    Withdrawal Calculator
-                  </Button>
-                  <Button variant="ghost" className="w-full justify-start" onClick={() => navigate("/annuities/calculators/death-benefit")}>
-                    <Calculator className="h-4 w-4 mr-2" />
-                    Death Benefit Calculator
-                  </Button>
-                  <Button variant="ghost" className="w-full justify-start" onClick={() => navigate("/annuities/calculators/comparison")}>
-                    <Calculator className="h-4 w-4 mr-2" />
-                    Product Comparison Tool
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+                <Button variant="outline" className="w-full">
+                  Send Invitation
+                </Button>
+              </div>
+            </div>
           </div>
-        </TabsContent>
+        </CardContent>
+      </Card>
 
-        <TabsContent value="marketplace" className="space-y-6">
-          <div className="grid gap-6">
-            <Card>
-              <CardHeader>
-                <div className="flex items-center gap-3">
-                  <Award className="h-6 w-6 text-primary" />
-                  <CardTitle>Fiduciary Marketplace</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground mb-4">
-                  Best-in-class products only, with transparent fiduciary scorecard badges.
-                </p>
-                <Button onClick={() => navigate("/annuities/marketplace")}>
-                  View Products
-                </Button>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <div className="flex items-center gap-3">
-                  <Users className="h-6 w-6 text-primary" />
-                  <CardTitle>Get Fiduciary Review</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground mb-4">
-                  Request a transparent review from fee-only, fiduciary advisors.
-                </p>
-                <div className="space-y-2 mb-4">
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Shield className="h-4 w-4" />
-                    Fee-only advisors only
-                  </div>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Award className="h-4 w-4" />
-                    Fiduciary standard
-                  </div>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <FileText className="h-4 w-4" />
-                    Transparent pricing
-                  </div>
-                </div>
-                <Button onClick={() => navigate("/annuities/review")}>
-                  Request Review
-                </Button>
-              </CardContent>
-            </Card>
+      {/* Viral/Social Callouts */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center justify-between">
+            <span>Share Your Results</span>
+            <Share2 className="h-5 w-5" />
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid md:grid-cols-3 gap-4">
+            <Button variant="outline" className="w-full">
+              <Share2 className="h-4 w-4 mr-2" />
+              Share this lesson
+            </Button>
+            <Button variant="outline" className="w-full">
+              <FileText className="h-4 w-4 mr-2" />
+              Export to PDF
+            </Button>
+            <Button variant="outline" className="w-full">
+              <Heart className="h-4 w-4 mr-2" />
+              Invite family/friend
+            </Button>
           </div>
-        </TabsContent>
-      </Tabs>
+          <div className="mt-4 text-center">
+            <p className="text-sm text-muted-foreground">
+              Help others make informed annuity decisions
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Community Feedback */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Community Feedback</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between p-4 border rounded-lg">
+              <div>
+                <div className="font-medium">Was this easy to understand?</div>
+                <div className="text-sm text-muted-foreground">Help us improve the experience</div>
+              </div>
+              <div className="flex gap-2">
+                <Button size="sm" variant="outline">👍 Yes</Button>
+                <Button size="sm" variant="outline">👎 No</Button>
+              </div>
+            </div>
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="p-4 border rounded-lg">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center text-sm font-medium">JS</div>
+                  <div>
+                    <div className="font-medium text-sm">John S.</div>
+                    <div className="flex items-center gap-1">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  "Finally found a platform that explains annuities clearly without the sales pitch."
+                </p>
+              </div>
+              <div className="p-4 border rounded-lg">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center text-sm font-medium">ML</div>
+                  <div>
+                    <div className="font-medium text-sm">Maria L.</div>
+                    <div className="flex items-center gap-1">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  "The contract analyzer saved me from a bad annuity purchase. Highly recommend!"
+                </p>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };
