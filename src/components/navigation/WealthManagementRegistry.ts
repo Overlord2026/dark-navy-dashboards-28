@@ -106,6 +106,16 @@ export const clientToolsNavItems: NavItem[] = [
     icon: BriefcaseIcon,
     children: wealthManagementNavItems,
   },
+  {
+    title: "Your Team",
+    href: "/your-team",
+    icon: UserCheckIcon,
+  },
+  {
+    title: "Marketplace",
+    href: "/marketplace",
+    icon: LayoutGridIcon,
+  },
   // TODO: Add other client tools sections like Health Optimization, etc.
 ];
 

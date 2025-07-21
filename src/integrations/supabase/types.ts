@@ -4468,59 +4468,263 @@ export type Database = {
         }
         Relationships: []
       }
+      professional_assignments: {
+        Row: {
+          assigned_by: string
+          client_id: string
+          created_at: string | null
+          end_date: string | null
+          id: string
+          notes: string | null
+          professional_id: string | null
+          relationship: string
+          start_date: string | null
+          status: string
+          updated_at: string | null
+        }
+        Insert: {
+          assigned_by: string
+          client_id: string
+          created_at?: string | null
+          end_date?: string | null
+          id?: string
+          notes?: string | null
+          professional_id?: string | null
+          relationship: string
+          start_date?: string | null
+          status?: string
+          updated_at?: string | null
+        }
+        Update: {
+          assigned_by?: string
+          client_id?: string
+          created_at?: string | null
+          end_date?: string | null
+          id?: string
+          notes?: string | null
+          professional_id?: string | null
+          relationship?: string
+          start_date?: string | null
+          status?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "professional_assignments_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      professional_compliance: {
+        Row: {
+          created_at: string | null
+          doc_type: string
+          doc_url: string | null
+          id: string
+          last_reviewed: string | null
+          professional_id: string | null
+          status: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          doc_type: string
+          doc_url?: string | null
+          id?: string
+          last_reviewed?: string | null
+          professional_id?: string | null
+          status?: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          doc_type?: string
+          doc_url?: string | null
+          id?: string
+          last_reviewed?: string | null
+          professional_id?: string | null
+          status?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "professional_compliance_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      professional_invitations: {
+        Row: {
+          created_at: string | null
+          email: string
+          expires_at: string | null
+          id: string
+          invite_token: string
+          invited_as: string
+          invited_by: string
+          status: string
+          tenant_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          expires_at?: string | null
+          id?: string
+          invite_token?: string
+          invited_as: string
+          invited_by: string
+          status?: string
+          tenant_id?: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          expires_at?: string | null
+          id?: string
+          invite_token?: string
+          invited_as?: string
+          invited_by?: string
+          status?: string
+          tenant_id?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      professional_reviews: {
+        Row: {
+          comment: string | null
+          created_at: string | null
+          id: string
+          professional_id: string | null
+          rating: number | null
+          reviewer_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          comment?: string | null
+          created_at?: string | null
+          id?: string
+          professional_id?: string | null
+          rating?: number | null
+          reviewer_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          comment?: string | null
+          created_at?: string | null
+          id?: string
+          professional_id?: string | null
+          rating?: number | null
+          reviewer_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "professional_reviews_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       professionals: {
         Row: {
+          accepting_new_clients: boolean | null
           address: string | null
+          availability: Json | null
+          bio: string | null
           certifications: string[] | null
           company: string | null
           created_at: string
           email: string
+          fee_model: string | null
+          firm: string | null
           id: string
+          languages: string[] | null
+          location: string | null
           name: string
           notes: string | null
           phone: string | null
+          photo_url: string | null
           rating: number | null
+          ratings_average: number | null
+          reviews_count: number | null
           specialties: string[] | null
+          status: string | null
           tenant_id: string
           type: string
           updated_at: string
           user_id: string
+          verified: boolean | null
           website: string | null
         }
         Insert: {
+          accepting_new_clients?: boolean | null
           address?: string | null
+          availability?: Json | null
+          bio?: string | null
           certifications?: string[] | null
           company?: string | null
           created_at?: string
           email: string
+          fee_model?: string | null
+          firm?: string | null
           id?: string
+          languages?: string[] | null
+          location?: string | null
           name: string
           notes?: string | null
           phone?: string | null
+          photo_url?: string | null
           rating?: number | null
+          ratings_average?: number | null
+          reviews_count?: number | null
           specialties?: string[] | null
+          status?: string | null
           tenant_id: string
           type?: string
           updated_at?: string
           user_id: string
+          verified?: boolean | null
           website?: string | null
         }
         Update: {
+          accepting_new_clients?: boolean | null
           address?: string | null
+          availability?: Json | null
+          bio?: string | null
           certifications?: string[] | null
           company?: string | null
           created_at?: string
           email?: string
+          fee_model?: string | null
+          firm?: string | null
           id?: string
+          languages?: string[] | null
+          location?: string | null
           name?: string
           notes?: string | null
           phone?: string | null
+          photo_url?: string | null
           rating?: number | null
+          ratings_average?: number | null
+          reviews_count?: number | null
           specialties?: string[] | null
+          status?: string | null
           tenant_id?: string
           type?: string
           updated_at?: string
           user_id?: string
+          verified?: boolean | null
           website?: string | null
         }
         Relationships: [

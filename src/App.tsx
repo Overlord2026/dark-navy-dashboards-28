@@ -39,6 +39,9 @@ import GoalsPage from '@/pages/GoalsPage';
 import CreateGoalPage from '@/pages/CreateGoalPage';
 import GoalFormPage from '@/pages/GoalFormPage';
 import GoalDetailPage from '@/pages/GoalDetailPage';
+import YourTeam from '@/pages/YourTeam';
+import Marketplace from '@/pages/Marketplace';
+import Professionals from '@/pages/Professionals';
 
 const queryClient = new QueryClient();
 
@@ -174,6 +177,33 @@ function AnimatedRoutes() {
             <ProtectedRoute>
               <RouteTransition>
                 <SettingsPage />
+              </RouteTransition>
+            </ProtectedRoute>
+          </ErrorBoundary>
+        } />
+        <Route path="/your-team" element={
+          <ErrorBoundary>
+            <ProtectedRoute>
+              <RouteTransition>
+                <YourTeam />
+              </RouteTransition>
+            </ProtectedRoute>
+          </ErrorBoundary>
+        } />
+        <Route path="/marketplace" element={
+          <ErrorBoundary>
+            <ProtectedRoute>
+              <RouteTransition>
+                <Marketplace />
+              </RouteTransition>
+            </ProtectedRoute>
+          </ErrorBoundary>
+        } />
+        <Route path="/professionals" element={
+          <ErrorBoundary>
+            <ProtectedRoute>
+              <RouteTransition>
+                <Professionals />
               </RouteTransition>
             </ProtectedRoute>
           </ErrorBoundary>
