@@ -72,6 +72,8 @@ class AuditLogService {
       action?: string;
     }
   ) {
+    const { timestamp: additionalTimestamp, ...restAdditionalInfo } = additionalInfo || {};
+    
     const logEntry: AuditLogEntry = {
       id: crypto.randomUUID(),
       userId,
@@ -79,7 +81,7 @@ class AuditLogService {
       timestamp: new Date(),
       status,
       result: status, // For backward compatibility
-      ...additionalInfo,
+      ...restAdditionalInfo,
       metadata: additionalInfo // Also store in metadata for compatibility
     };
 
