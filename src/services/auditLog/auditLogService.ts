@@ -35,6 +35,13 @@ export interface AuditLogEntry {
       [key: string]: any;
     };
     reason?: string;
+    mfaEnabled?: boolean;
+    shouldBlock?: boolean;
+    gracePeriodExpired?: boolean;
+    accountAgeHours?: number;
+    requiresMFA?: boolean;
+    timestamp?: string;
+    error?: string;
     [key: string]: any;
   };
   action?: string;
@@ -58,6 +65,11 @@ class AuditLogService {
       requiresMFA?: boolean;
       timestamp?: string;
       error?: string;
+      mfaEnabled?: boolean;
+      shouldBlock?: boolean;
+      gracePeriodExpired?: boolean;
+      accountAgeHours?: number;
+      action?: string;
     }
   ) {
     const logEntry: AuditLogEntry = {
