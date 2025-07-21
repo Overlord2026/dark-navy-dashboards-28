@@ -7,6 +7,10 @@ import {
   CollaborationPage, 
   SettingsPage 
 } from '@/pages/TabPages';
+import { AnnuitiesPage } from '@/pages/AnnuitiesPage';
+import { EducationCenter } from '@/components/annuities/EducationCenter';
+import { ProductComparison } from '@/components/annuities/ProductComparison';
+import { ContractAnalyzer } from '@/components/annuities/ContractAnalyzer';
 import GoalsPage from '@/pages/GoalsPage';
 import CreateGoalPage from '@/pages/CreateGoalPage';
 import GoalFormPage from '@/pages/GoalFormPage';
@@ -53,6 +57,22 @@ const additionalRoutes = [
   {
     path: '/settings-tab',
     element: <SettingsPage />
+  },
+  {
+    path: '/annuities',
+    element: <AnnuitiesPage />
+  },
+  {
+    path: '/annuities/learn',
+    element: <EducationCenter />
+  },
+  {
+    path: '/annuities/compare',
+    element: <ProductComparison />
+  },
+  {
+    path: '/annuities/analyze',
+    element: <ContractAnalyzer />
   }
 ];
 

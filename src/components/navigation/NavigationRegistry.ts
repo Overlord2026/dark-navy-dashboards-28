@@ -5,6 +5,7 @@ import { goalsNavItems } from "./tabs/GoalsTab";
 import { accountsNavItems } from "./tabs/AccountsTab";
 import { educationNavItems } from "./tabs/EducationTab";
 import { healthcareOptimizationNavItems } from "./tabs/HealthcareOptimizationTab";
+import { annuitiesNavItems } from "./tabs/AnnuitiesTab";
 // DEPRECATED: import { familyWealthNavItems } from "./tabs/FamilyWealthTab";
 import { collaborationNavItems } from "./tabs/CollaborationTab";
 import { settingsNavItems } from "./tabs/SettingsTab";
@@ -32,6 +33,13 @@ export const navigationCategories: NavCategory[] = [
     title: "EDUCATION & SOLUTIONS",
     label: "EDUCATION & SOLUTIONS",
     items: educationNavItems,
+    defaultExpanded: true
+  },
+  {
+    id: "annuities",
+    title: "ANNUITIES",
+    label: "ANNUITIES",
+    items: annuitiesNavItems,
     defaultExpanded: true
   },
   {
