@@ -6,87 +6,142 @@ import {
   TabsList, 
   TabsTrigger 
 } from "@/components/ui/tabs";
-import { Card, CardContent } from "@/components/ui/card";
 import { 
   User, 
+  Shield, 
+  Users, 
+  UserCheck, 
   Bell, 
-  Lock, 
-  Globe, 
-  Palette
+  CreditCard, 
+  Link as LinkIcon,
+  Database,
+  HelpCircle,
+  AlertTriangle
 } from "lucide-react";
-import { ThemeSwitcher } from "@/components/ui/ThemeSwitcher";
+import { useUser } from "@/context/UserContext";
+import { ProfileIdentitySection } from "@/components/settings/ProfileIdentitySection";
+import { SecurityLoginSection } from "@/components/settings/SecurityLoginSection";
+import { FamilyRelationshipsSection } from "@/components/settings/FamilyRelationshipsSection";
+import { ProfessionalsPermissionsSection } from "@/components/settings/ProfessionalsPermissionsSection";
+import { NotificationsAlertsSection } from "@/components/settings/NotificationsAlertsSection";
+import { BillingSubscriptionsSection } from "@/components/settings/BillingSubscriptionsSection";
+import { IntegrationsAccountsSection } from "@/components/settings/IntegrationsAccountsSection";
+import { DataPrivacySection } from "@/components/settings/DataPrivacySection";
+import { SupportHelpSection } from "@/components/settings/SupportHelpSection";
+import { DangerZoneSection } from "@/components/settings/DangerZoneSection";
 
 const Settings = () => {
+  const { userProfile } = useUser();
+  
+  // Determine which tabs to show based on user role
+  const isClient = userProfile?.role === 'client';
+  const isProfessional = ['advisor', 'accountant', 'attorney', 'consultant'].includes(userProfile?.role || '');
+  const isAdmin = ['admin', 'tenant_admin', 'system_administrator'].includes(userProfile?.role || '');
+
   return (
-    <div className="container mx-auto py-8">
-      <h1 className="text-3xl font-bold mb-8">Settings</h1>
+    <div className="container mx-auto py-8 max-w-6xl">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold">Settings</h1>
+        <p className="text-muted-foreground mt-2">
+          Manage your account, privacy, and preferences
+        </p>
+      </div>
       
-      <Tabs defaultValue="profile" className="space-y-4">
-        <TabsList className="grid w-full md:w-auto md:inline-grid grid-cols-5 h-auto">
-          <TabsTrigger value="profile" className="flex flex-col md:flex-row items-center gap-2 py-2">
+      <Tabs defaultValue="profile" className="space-y-6">
+        <TabsList className="grid w-full grid-cols-2 md:grid-cols-5 lg:grid-cols-10 h-auto gap-2">
+          <TabsTrigger value="profile" className="flex flex-col items-center gap-1 py-3 px-2">
             <User className="h-4 w-4" />
-            <span>Profile</span>
+            <span className="text-xs">Profile</span>
           </TabsTrigger>
-          <TabsTrigger value="notifications" className="flex flex-col md:flex-row items-center gap-2 py-2">
+          
+          <TabsTrigger value="security" className="flex flex-col items-center gap-1 py-3 px-2">
+            <Shield className="h-4 w-4" />
+            <span className="text-xs">Security</span>
+          </TabsTrigger>
+          
+          <TabsTrigger value="family" className="flex flex-col items-center gap-1 py-3 px-2">
+            <Users className="h-4 w-4" />
+            <span className="text-xs">Family</span>
+          </TabsTrigger>
+          
+          <TabsTrigger value="professionals" className="flex flex-col items-center gap-1 py-3 px-2">
+            <UserCheck className="h-4 w-4" />
+            <span className="text-xs">Team</span>
+          </TabsTrigger>
+          
+          <TabsTrigger value="notifications" className="flex flex-col items-center gap-1 py-3 px-2">
             <Bell className="h-4 w-4" />
-            <span>Notifications</span>
+            <span className="text-xs">Alerts</span>
           </TabsTrigger>
-          <TabsTrigger value="security" className="flex flex-col md:flex-row items-center gap-2 py-2">
-            <Lock className="h-4 w-4" />
-            <span>Security</span>
+          
+          {(isProfessional || isAdmin) && (
+            <TabsTrigger value="billing" className="flex flex-col items-center gap-1 py-3 px-2">
+              <CreditCard className="h-4 w-4" />
+              <span className="text-xs">Billing</span>
+            </TabsTrigger>
+          )}
+          
+          <TabsTrigger value="integrations" className="flex flex-col items-center gap-1 py-3 px-2">
+            <LinkIcon className="h-4 w-4" />
+            <span className="text-xs">Accounts</span>
           </TabsTrigger>
-          <TabsTrigger value="appearance" className="flex flex-col md:flex-row items-center gap-2 py-2">
-            <Palette className="h-4 w-4" />
-            <span>Appearance</span>
+          
+          <TabsTrigger value="privacy" className="flex flex-col items-center gap-1 py-3 px-2">
+            <Database className="h-4 w-4" />
+            <span className="text-xs">Privacy</span>
           </TabsTrigger>
-          <TabsTrigger value="language" className="flex flex-col md:flex-row items-center gap-2 py-2">
-            <Globe className="h-4 w-4" />
-            <span>Language</span>
+          
+          <TabsTrigger value="support" className="flex flex-col items-center gap-1 py-3 px-2">
+            <HelpCircle className="h-4 w-4" />
+            <span className="text-xs">Support</span>
+          </TabsTrigger>
+          
+          <TabsTrigger value="danger" className="flex flex-col items-center gap-1 py-3 px-2 text-destructive">
+            <AlertTriangle className="h-4 w-4" />
+            <span className="text-xs">Danger</span>
           </TabsTrigger>
         </TabsList>
         
         <TabsContent value="profile">
-          <Card>
-            <CardContent className="pt-6">
-              <p>Profile settings will be displayed here.</p>
-            </CardContent>
-          </Card>
-        </TabsContent>
-        
-        <TabsContent value="notifications">
-          <Card>
-            <CardContent className="pt-6">
-              <p>Notification preferences will be displayed here.</p>
-            </CardContent>
-          </Card>
+          <ProfileIdentitySection />
         </TabsContent>
         
         <TabsContent value="security">
-          <Card>
-            <CardContent className="pt-6">
-              <p>Security settings will be displayed here.</p>
-            </CardContent>
-          </Card>
+          <SecurityLoginSection />
         </TabsContent>
         
-        <TabsContent value="appearance">
-          <Card>
-            <CardContent className="pt-6">
-              <div className="space-y-4">
-                <h3 className="font-medium text-lg">Theme</h3>
-                <p className="text-muted-foreground mb-4">Select your preferred theme for the application.</p>
-                <ThemeSwitcher />
-              </div>
-            </CardContent>
-          </Card>
+        <TabsContent value="family">
+          <FamilyRelationshipsSection />
         </TabsContent>
         
-        <TabsContent value="language">
-          <Card>
-            <CardContent className="pt-6">
-              <p>Language settings will be displayed here.</p>
-            </CardContent>
-          </Card>
+        <TabsContent value="professionals">
+          <ProfessionalsPermissionsSection />
+        </TabsContent>
+        
+        <TabsContent value="notifications">
+          <NotificationsAlertsSection />
+        </TabsContent>
+        
+        {(isProfessional || isAdmin) && (
+          <TabsContent value="billing">
+            <BillingSubscriptionsSection />
+          </TabsContent>
+        )}
+        
+        <TabsContent value="integrations">
+          <IntegrationsAccountsSection />
+        </TabsContent>
+        
+        <TabsContent value="privacy">
+          <DataPrivacySection />
+        </TabsContent>
+        
+        <TabsContent value="support">
+          <SupportHelpSection />
+        </TabsContent>
+        
+        <TabsContent value="danger">
+          <DangerZoneSection />
         </TabsContent>
       </Tabs>
     </div>
