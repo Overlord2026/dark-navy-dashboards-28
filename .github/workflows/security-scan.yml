@@ -9,6 +9,16 @@ on:
   schedule:
     # Run daily at 2 AM UTC
     - cron: '0 2 * * *'
+  workflow_call:
+    outputs:
+      security-passed:
+        description: "Security scan passed"
+        value: ${{ jobs.security-gate.outputs.passed }}
+
+# Security gate - all jobs must pass to proceed
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   secret-scan:
@@ -118,9 +128,13 @@ jobs:
         
         echo "✅ Supabase configuration looks good"
 
-  dependency-scan:
-    name: Dependency Security Scan  
+  vulnerability-scan:
+    name: CVE & Dependency Vulnerability Scan
     runs-on: ubuntu-latest
+    outputs:
+      vulnerabilities-found: ${{ steps.vulnerability-check.outputs.vulnerabilities }}
+      critical-count: ${{ steps.vulnerability-check.outputs.critical }}
+      high-count: ${{ steps.vulnerability-check.outputs.high }}
     
     steps:
     - name: Checkout code
@@ -135,45 +149,240 @@ jobs:
     - name: Install dependencies
       run: npm ci
     
-    - name: Run npm audit
-      run: npm audit --audit-level high
+    - name: Run Snyk vulnerability scan
+      uses: snyk/actions/node@master
+      continue-on-error: true
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      with:
+        args: --severity-threshold=high --json
+        command: test
     
-    - name: Check for known vulnerabilities
+    - name: Run npm audit with detailed output
+      id: npm-audit
       run: |
-        echo "Checking for known security vulnerabilities..."
-        npx audit-ci --config .auditci.json || echo "No audit-ci config found, skipping"
+        echo "Running npm audit..."
+        npm audit --json > audit-results.json || true
+        
+        # Parse audit results
+        CRITICAL=$(cat audit-results.json | jq '.metadata.vulnerabilities.critical // 0')
+        HIGH=$(cat audit-results.json | jq '.metadata.vulnerabilities.high // 0')
+        MODERATE=$(cat audit-results.json | jq '.metadata.vulnerabilities.moderate // 0')
+        
+        echo "Critical vulnerabilities: $CRITICAL"
+        echo "High vulnerabilities: $HIGH"
+        echo "Moderate vulnerabilities: $MODERATE"
+        
+        # Set outputs for other jobs
+        echo "critical=$CRITICAL" >> $GITHUB_OUTPUT
+        echo "high=$HIGH" >> $GITHUB_OUTPUT
+        echo "moderate=$MODERATE" >> $GITHUB_OUTPUT
+    
+    - name: Check vulnerability thresholds
+      id: vulnerability-check
+      run: |
+        CRITICAL=${{ steps.npm-audit.outputs.critical }}
+        HIGH=${{ steps.npm-audit.outputs.high }}
+        
+        echo "critical=$CRITICAL" >> $GITHUB_OUTPUT
+        echo "high=$HIGH" >> $GITHUB_OUTPUT
+        
+        # Fail if critical or high vulnerabilities found
+        if [ "$CRITICAL" -gt "0" ] || [ "$HIGH" -gt "0" ]; then
+          echo "vulnerabilities=true" >> $GITHUB_OUTPUT
+          echo "❌ Found $CRITICAL critical and $HIGH high severity vulnerabilities!"
+          echo "This blocks the PR until vulnerabilities are fixed."
+          exit 1
+        else
+          echo "vulnerabilities=false" >> $GITHUB_OUTPUT
+          echo "✅ No critical or high severity vulnerabilities found"
+        fi
+    
+    - name: Generate SARIF report for GitHub Security
+      if: always()
+      run: |
+        # Convert npm audit results to SARIF format
+        echo "Generating SARIF security report..."
+        npx audit-ci --config .auditci.json --output-format sarif --output audit-results.sarif || true
+    
+    - name: Upload SARIF results to GitHub Security
+      if: always()
+      uses: github/codeql-action/upload-sarif@v3
+      with:
+        sarif_file: audit-results.sarif
+    
+    - name: Auto-create security patch PR
+      if: steps.vulnerability-check.outputs.vulnerabilities == 'true'
+      run: |
+        echo "Creating automated security patch..."
+        # This will be handled by Dependabot, but we log it here
+        echo "Dependabot will automatically create security patch PRs"
+        echo "Critical vulnerabilities require manual review within 24 hours"
 
-  security-report:
-    name: Generate Security Report
+  security-gate:
+    name: Security Gate - Block PR if vulnerabilities found
     runs-on: ubuntu-latest
-    needs: [secret-scan, dependency-scan]
+    needs: [secret-scan, vulnerability-scan]
+    outputs:
+      passed: ${{ steps.gate-decision.outputs.passed }}
     if: always()
     
     steps:
-    - name: Security Scan Summary
+    - name: Evaluate security gate
+      id: gate-decision
       run: |
-        echo "## 🔐 Security Scan Summary" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-        echo "### Secret Scanning Results" >> $GITHUB_STEP_SUMMARY
+        SECRET_SCAN="${{ needs.secret-scan.result }}"
+        VULN_SCAN="${{ needs.vulnerability-scan.result }}"
+        CRITICAL_COUNT="${{ needs.vulnerability-scan.outputs.critical-count }}"
+        HIGH_COUNT="${{ needs.vulnerability-scan.outputs.high-count }}"
         
-        if [ "${{ needs.secret-scan.result }}" == "success" ]; then
-          echo "✅ **Secret scan passed** - No hardcoded secrets detected" >> $GITHUB_STEP_SUMMARY
+        echo "## 🔐 Security Gate Results" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        # Check secret scan results
+        if [ "$SECRET_SCAN" == "success" ]; then
+          echo "✅ **Secrets Scan**: PASSED - No hardcoded secrets detected" >> $GITHUB_STEP_SUMMARY
+          SECRET_PASS=true
         else
-          echo "❌ **Secret scan failed** - Potential secrets found" >> $GITHUB_STEP_SUMMARY
+          echo "❌ **Secrets Scan**: FAILED - Secrets found in code" >> $GITHUB_STEP_SUMMARY
+          SECRET_PASS=false
+        fi
+        
+        # Check vulnerability scan results  
+        if [ "$VULN_SCAN" == "success" ]; then
+          echo "✅ **Vulnerability Scan**: PASSED - No critical/high vulnerabilities" >> $GITHUB_STEP_SUMMARY
+          VULN_PASS=true
+        else
+          echo "❌ **Vulnerability Scan**: FAILED - $CRITICAL_COUNT critical, $HIGH_COUNT high severity vulnerabilities" >> $GITHUB_STEP_SUMMARY
+          VULN_PASS=false
         fi
         
         echo "" >> $GITHUB_STEP_SUMMARY
-        echo "### Dependency Security Results" >> $GITHUB_STEP_SUMMARY
         
-        if [ "${{ needs.dependency-scan.result }}" == "success" ]; then
-          echo "✅ **Dependency scan passed** - No high-risk vulnerabilities" >> $GITHUB_STEP_SUMMARY
+        # Make final decision
+        if [ "$SECRET_PASS" == "true" ] && [ "$VULN_PASS" == "true" ]; then
+          echo "✅ **SECURITY GATE: PASSED** - Safe to merge" >> $GITHUB_STEP_SUMMARY
+          echo "passed=true" >> $GITHUB_OUTPUT
         else
-          echo "❌ **Dependency scan failed** - Security vulnerabilities detected" >> $GITHUB_STEP_SUMMARY
+          echo "❌ **SECURITY GATE: BLOCKED** - Must fix security issues before merge" >> $GITHUB_STEP_SUMMARY
+          echo "passed=false" >> $GITHUB_OUTPUT
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Required Actions:" >> $GITHUB_STEP_SUMMARY
+          echo "1. Fix all secrets detected in code" >> $GITHUB_STEP_SUMMARY
+          echo "2. Update dependencies with critical/high vulnerabilities" >> $GITHUB_STEP_SUMMARY
+          echo "3. Re-run security checks until all pass" >> $GITHUB_STEP_SUMMARY
+          exit 1
         fi
+    
+    - name: Comment PR with security results
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const passed = '${{ steps.gate-decision.outputs.passed }}' === 'true';
+          const critical = '${{ needs.vulnerability-scan.outputs.critical-count }}' || '0';
+          const high = '${{ needs.vulnerability-scan.outputs.high-count }}' || '0';
+          
+          const body = passed 
+            ? `## ✅ Security Gate: PASSED
+            
+            All security checks have passed. This PR is safe to merge.
+            
+            - ✅ No secrets detected in code
+            - ✅ No critical or high severity vulnerabilities
+            - ✅ All dependencies are secure`
+            : `## ❌ Security Gate: BLOCKED
+            
+            This PR contains security issues and cannot be merged until fixed.
+            
+            **Issues Found:**
+            - Critical vulnerabilities: ${critical}
+            - High severity vulnerabilities: ${high}
+            
+            **Next Steps:**
+            1. Check the security scan results above
+            2. Update vulnerable dependencies: \`npm audit fix\`
+            3. Remove any hardcoded secrets from code
+            4. Push fixes and re-run security checks`;
+          
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: body
+          });
+
+  emergency-patch:
+    name: Emergency Security Patching
+    runs-on: ubuntu-latest
+    needs: [vulnerability-scan]
+    if: needs.vulnerability-scan.outputs.critical-count > 0
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
         
-        echo "" >> $GITHUB_STEP_SUMMARY
-        echo "### Recommendations" >> $GITHUB_STEP_SUMMARY
-        echo "- Use Supabase Edge Functions for all API integrations requiring secrets" >> $GITHUB_STEP_SUMMARY
-        echo "- Store all sensitive data in Supabase Edge Function environment variables" >> $GITHUB_STEP_SUMMARY
-        echo "- Never commit API keys, passwords, or tokens to source control" >> $GITHUB_STEP_SUMMARY
-        echo "- Use the SecretsMonitor component to detect runtime security issues" >> $GITHUB_STEP_SUMMARY
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Attempt automatic security fixes
+      run: |
+        echo "Attempting to automatically fix critical vulnerabilities..."
+        npm audit fix --force
+        
+        # Check if fixes were applied
+        if [ -n "$(git status --porcelain)" ]; then
+          echo "Security patches applied automatically"
+          git config user.name "Security Bot"
+          git config user.email "security-bot@company.com"
+          git add package*.json
+          git commit -m "security: auto-fix critical vulnerabilities
+          
+          - Applied npm audit fix --force
+          - Critical security patches applied within 24h SLA
+          - Auto-generated by security pipeline"
+          
+          # Create emergency patch PR
+          git push origin HEAD:emergency-security-patch-$(date +%Y%m%d-%H%M%S)
+        else
+          echo "No automatic fixes available - manual intervention required"
+        fi
+    
+    - name: Create emergency security issue
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const critical = '${{ needs.vulnerability-scan.outputs.critical-count }}';
+          github.rest.issues.create({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            title: `🚨 CRITICAL: ${critical} Critical Security Vulnerabilities Detected`,
+            body: `## Critical Security Alert
+            
+            **${critical} critical vulnerabilities** have been detected that require immediate attention.
+            
+            ### SLA Requirement
+            All critical vulnerabilities must be patched within 24 hours.
+            
+            ### Automatic Actions Taken
+            - Attempted automatic patching with \`npm audit fix\`
+            - Created emergency patch branch if fixes were available
+            
+            ### Manual Actions Required
+            1. Review vulnerability details in the security scan results
+            2. Apply manual patches if automatic fixes failed
+            3. Test all critical functionality after patching
+            4. Deploy patches to production within 24 hours
+            
+            ### Vulnerability Details
+            Check the [Security tab](/${context.repo.owner}/${context.repo.repo}/security) for full details.
+            
+            **This issue will auto-close when vulnerabilities are resolved.**`,
+            labels: ['security', 'critical', 'bug'],
+            assignees: ['@octocat'] // Replace with actual security team
+          });

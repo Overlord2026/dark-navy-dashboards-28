@@ -1,0 +1,52 @@
+version: 2
+updates:
+  # Enable version updates for npm
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "daily"
+      time: "02:00"
+      timezone: "UTC"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "@octocat"
+    assignees:
+      - "@octocat"
+    commit-message:
+      prefix: "security"
+      prefix-development: "chore"
+      include: "scope"
+    # Automatically merge security patches for critical vulnerabilities
+    auto-merge:
+      enabled: true
+    # Group security updates together
+    groups:
+      security-patches:
+        patterns:
+          - "*"
+        update-types:
+          - "security-update"
+      minor-updates:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+    # Configure vulnerability alerts
+    vulnerability-alerts:
+      enabled: true
+    # Priority for security updates
+    priority: 5
+    
+  # Enable security updates for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "daily"
+      time: "02:00"
+      timezone: "UTC"
+    auto-merge:
+      enabled: true
+    commit-message:
+      prefix: "ci"
+      include: "scope"

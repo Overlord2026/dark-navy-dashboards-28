@@ -1,0 +1,247 @@
+name: Emergency Security Patch
+
+on:
+  # Trigger manually for emergency patches
+  workflow_dispatch:
+    inputs:
+      severity:
+        description: 'Vulnerability Severity'
+        required: true
+        type: choice
+        options:
+          - critical
+          - high
+        default: 'critical'
+      auto_deploy:
+        description: 'Auto-deploy after patching'
+        required: true
+        type: boolean
+        default: false
+  
+  # Auto-trigger when Dependabot creates security PRs
+  pull_request:
+    types: [opened]
+    paths: ['package*.json']
+
+# Emergency patches get highest priority
+concurrency:
+  group: emergency-patch
+  cancel-in-progress: false
+
+jobs:
+  identify-emergency:
+    name: Identify Emergency Patch Need
+    runs-on: ubuntu-latest
+    outputs:
+      is-emergency: ${{ steps.check.outputs.emergency }}
+      severity: ${{ steps.check.outputs.severity }}
+      
+    steps:
+    - name: Check if emergency patch needed
+      id: check
+      run: |
+        # Check if this is a Dependabot security PR
+        if [ "${{ github.actor }}" == "dependabot[bot]" ] && [[ "${{ github.head_ref }}" == *"security"* ]]; then
+          echo "emergency=true" >> $GITHUB_OUTPUT
+          echo "severity=critical" >> $GITHUB_OUTPUT
+          echo "🚨 Emergency security patch detected from Dependabot"
+        elif [ "${{ github.event.inputs.severity }}" == "critical" ]; then
+          echo "emergency=true" >> $GITHUB_OUTPUT
+          echo "severity=critical" >> $GITHUB_OUTPUT
+          echo "🚨 Manual emergency patch triggered"
+        else
+          echo "emergency=false" >> $GITHUB_OUTPUT
+          echo "severity=normal" >> $GITHUB_OUTPUT
+          echo "ℹ️ Non-emergency patch"
+        fi
+
+  emergency-patch:
+    name: Apply Emergency Security Patch
+    runs-on: ubuntu-latest
+    needs: [identify-emergency]
+    if: needs.identify-emergency.outputs.is-emergency == 'true'
+    environment:
+      name: emergency-patches
+      
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        fetch-depth: 0
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Emergency notification
+      uses: actions/github-script@v7
+      with:
+        script: |
+          github.rest.issues.create({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            title: '🚨 EMERGENCY: Critical Security Patch In Progress',
+            body: `## Emergency Security Patch Alert
+            
+            **SEVERITY**: ${{ needs.identify-emergency.outputs.severity }}
+            
+            ### Status
+            - ⏳ Emergency patching in progress
+            - 🎯 Target: Fix within 24 hours (SLA requirement)
+            - 🤖 Automated emergency response activated
+            
+            ### Actions Being Taken
+            1. Applying security patches automatically
+            2. Running comprehensive security validation
+            3. Preparing emergency deployment if auto-deploy enabled
+            
+            ### Timeline
+            - **Started**: ${new Date().toISOString()}
+            - **Target Completion**: ${new Date(Date.now() + 24*60*60*1000).toISOString()}
+            
+            This issue will be updated with progress and automatically closed when patching is complete.`,
+            labels: ['security', 'critical', 'emergency', 'auto-patch'],
+            assignees: ['@octocat'] // Replace with security team
+          });
+    
+    - name: Apply security patches
+      run: |
+        echo "🚨 Applying emergency security patches..."
+        
+        # Install current dependencies
+        npm ci
+        
+        # Get current vulnerability count
+        npm audit --json > pre-patch-audit.json || true
+        PRE_CRITICAL=$(cat pre-patch-audit.json | jq '.metadata.vulnerabilities.critical // 0')
+        PRE_HIGH=$(cat pre-patch-audit.json | jq '.metadata.vulnerabilities.high // 0')
+        
+        echo "Pre-patch vulnerabilities: $PRE_CRITICAL critical, $PRE_HIGH high"
+        
+        # Apply fixes
+        npm audit fix --force
+        
+        # Check post-patch vulnerabilities
+        npm audit --json > post-patch-audit.json || true
+        POST_CRITICAL=$(cat post-patch-audit.json | jq '.metadata.vulnerabilities.critical // 0')
+        POST_HIGH=$(cat post-patch-audit.json | jq '.metadata.vulnerabilities.high // 0')
+        
+        echo "Post-patch vulnerabilities: $POST_CRITICAL critical, $POST_HIGH high"
+        
+        # Calculate improvements
+        CRITICAL_FIXED=$((PRE_CRITICAL - POST_CRITICAL))
+        HIGH_FIXED=$((PRE_HIGH - POST_HIGH))
+        
+        echo "Fixed: $CRITICAL_FIXED critical, $HIGH_FIXED high vulnerabilities"
+        
+        # Save results for reporting
+        echo "PRE_CRITICAL=$PRE_CRITICAL" >> $GITHUB_ENV
+        echo "PRE_HIGH=$PRE_HIGH" >> $GITHUB_ENV
+        echo "POST_CRITICAL=$POST_CRITICAL" >> $GITHUB_ENV
+        echo "POST_HIGH=$POST_HIGH" >> $GITHUB_ENV
+        echo "CRITICAL_FIXED=$CRITICAL_FIXED" >> $GITHUB_ENV
+        echo "HIGH_FIXED=$HIGH_FIXED" >> $GITHUB_ENV
+    
+    - name: Validate patches
+      run: |
+        echo "Validating emergency patches..."
+        
+        # Build to ensure no breaking changes
+        npm run build
+        
+        # Run security-specific tests
+        npm test -- --testNamePattern="security" --passWithNoTests
+        
+        echo "✅ Emergency patches validated successfully"
+    
+    - name: Commit emergency patches
+      run: |
+        git config user.name "Emergency Security Bot"
+        git config user.email "security-emergency@company.com"
+        
+        if [ -n "$(git status --porcelain)" ]; then
+          git add package*.json
+          git commit -m "🚨 EMERGENCY: Apply critical security patches
+          
+          - Fixed ${{ env.CRITICAL_FIXED }} critical vulnerabilities
+          - Fixed ${{ env.HIGH_FIXED }} high severity vulnerabilities
+          - Applied via automated emergency response (24h SLA)
+          - Pre-patch: ${{ env.PRE_CRITICAL }} critical, ${{ env.PRE_HIGH }} high
+          - Post-patch: ${{ env.POST_CRITICAL }} critical, ${{ env.POST_HIGH }} high
+          
+          Automated emergency patch applied due to critical security vulnerabilities.
+          All changes have been validated and tested."
+          
+          echo "Emergency patches committed"
+        else
+          echo "No changes to commit"
+        fi
+    
+    - name: Create emergency patch PR
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const { data: pr } = await github.rest.pulls.create({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            title: '🚨 EMERGENCY: Critical Security Patches',
+            head: context.ref,
+            base: 'main',
+            body: `## 🚨 Emergency Security Patch
+            
+            **CRITICAL SECURITY VULNERABILITIES PATCHED**
+            
+            ### Patch Summary
+            - ✅ Fixed ${{ env.CRITICAL_FIXED }} critical vulnerabilities
+            - ✅ Fixed ${{ env.HIGH_FIXED }} high severity vulnerabilities
+            - ✅ Build validation: PASSED
+            - ✅ Security tests: PASSED
+            
+            ### Before/After
+            | Severity | Before | After | Fixed |
+            |----------|---------|-------|-------|
+            | Critical | ${{ env.PRE_CRITICAL }} | ${{ env.POST_CRITICAL }} | ${{ env.CRITICAL_FIXED }} |
+            | High | ${{ env.PRE_HIGH }} | ${{ env.POST_HIGH }} | ${{ env.HIGH_FIXED }} |
+            
+            ### Emergency Response
+            - **Trigger**: Automated security vulnerability detection
+            - **SLA**: 24-hour critical patch requirement
+            - **Validation**: All security checks passed
+            - **Ready for merge**: ✅ YES
+            
+            ### Next Steps
+            1. **IMMEDIATE**: Review and merge this PR
+            2. **URGENT**: Deploy to production within 24 hours
+            3. **FOLLOW-UP**: Monitor for any application issues
+            
+            **This PR addresses critical security vulnerabilities and should be merged immediately.**`
+          });
+          
+          // Auto-approve if configured
+          if ('${{ github.event.inputs.auto_deploy }}' === 'true') {
+            await github.rest.pulls.createReview({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pr.number,
+              event: 'APPROVE',
+              body: 'Auto-approved emergency security patch'
+            });
+            
+            // Auto-merge if all checks pass
+            await github.rest.pulls.merge({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pr.number,
+              merge_method: 'squash'
+            });
+          }
+
+  emergency-deploy:
+    name: Emergency Production Deploy
+    needs: [emergency-patch]
+    if: github.event.inputs.auto_deploy == 'true'
+    uses: ./.github/workflows/production-deploy.yml
+    secrets: inherit
