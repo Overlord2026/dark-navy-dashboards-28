@@ -1,4 +1,3 @@
-
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
@@ -18,6 +17,12 @@ import { AuthPage } from '@/pages/AuthPage';
 import { HomePage } from '@/pages/HomePage';
 import { AdminPortal } from '@/pages/AdminPortal';
 import { AdminSettings } from '@/pages/admin/AdminSettings';
+import { AdminUsers } from '@/pages/admin/AdminUsers';
+import { AdminFAQs } from '@/pages/admin/AdminFAQs';
+import { AdminAnalytics } from '@/pages/admin/AdminAnalytics';
+import { AdminCompliance } from '@/pages/admin/AdminCompliance';
+import { AdminSystemHealth } from '@/pages/admin/AdminSystemHealth';
+import { AdminEdgeFunctions } from '@/pages/admin/AdminEdgeFunctions';
 import InviteRedeem from '@/pages/InviteRedeem';
 import { AdvisorInviteRedeem } from '@/pages/AdvisorInviteRedeem';
 
@@ -86,6 +91,72 @@ function AnimatedRoutes() {
               <AdminRoute roles={['admin', 'system_administrator', 'tenant_admin', 'superadmin']}>
                 <RouteTransition>
                   <AdminSettings />
+                </RouteTransition>
+              </AdminRoute>
+            </ProtectedRoute>
+          </ErrorBoundary>
+        } />
+        <Route path="/admin-portal/users" element={
+          <ErrorBoundary>
+            <ProtectedRoute>
+              <AdminRoute roles={['admin', 'system_administrator', 'tenant_admin', 'superadmin']}>
+                <RouteTransition>
+                  <AdminUsers />
+                </RouteTransition>
+              </AdminRoute>
+            </ProtectedRoute>
+          </ErrorBoundary>
+        } />
+        <Route path="/admin-portal/faqs" element={
+          <ErrorBoundary>
+            <ProtectedRoute>
+              <AdminRoute roles={['admin', 'system_administrator', 'tenant_admin', 'superadmin']}>
+                <RouteTransition>
+                  <AdminFAQs />
+                </RouteTransition>
+              </AdminRoute>
+            </ProtectedRoute>
+          </ErrorBoundary>
+        } />
+        <Route path="/admin-portal/analytics" element={
+          <ErrorBoundary>
+            <ProtectedRoute>
+              <AdminRoute roles={['admin', 'system_administrator', 'tenant_admin', 'superadmin']}>
+                <RouteTransition>
+                  <AdminAnalytics />
+                </RouteTransition>
+              </AdminRoute>
+            </ProtectedRoute>
+          </ErrorBoundary>
+        } />
+        <Route path="/admin-portal/compliance" element={
+          <ErrorBoundary>
+            <ProtectedRoute>
+              <AdminRoute roles={['admin', 'system_administrator', 'tenant_admin', 'superadmin']}>
+                <RouteTransition>
+                  <AdminCompliance />
+                </RouteTransition>
+              </AdminRoute>
+            </ProtectedRoute>
+          </ErrorBoundary>
+        } />
+        <Route path="/admin-portal/system-health" element={
+          <ErrorBoundary>
+            <ProtectedRoute>
+              <AdminRoute roles={['admin', 'system_administrator', 'tenant_admin', 'superadmin']}>
+                <RouteTransition>
+                  <AdminSystemHealth />
+                </RouteTransition>
+              </AdminRoute>
+            </ProtectedRoute>
+          </ErrorBoundary>
+        } />
+        <Route path="/admin-portal/edge-functions" element={
+          <ErrorBoundary>
+            <ProtectedRoute>
+              <AdminRoute roles={['admin', 'system_administrator', 'tenant_admin', 'superadmin']}>
+                <RouteTransition>
+                  <AdminEdgeFunctions />
                 </RouteTransition>
               </AdminRoute>
             </ProtectedRoute>

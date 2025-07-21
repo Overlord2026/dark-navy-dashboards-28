@@ -2,94 +2,122 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { TestDataResetModal } from './TestDataResetModal';
-import { useAnalyticsTracking } from '@/hooks/useAnalytics';
-import { Database, AlertTriangle, CheckCircle } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { 
+  RotateCcw, 
+  AlertTriangle, 
+  CheckCircle, 
+  Database,
+  Trash2,
+  RefreshCw
+} from 'lucide-react';
 import { toast } from 'sonner';
 
 export function TestDataResetCard() {
-  const [showModal, setShowModal] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
-  const { trackTestDataReset } = useAnalyticsTracking();
 
-  const handleReset = async () => {
+  const handleResetTestData = async () => {
     setIsResetting(true);
     
     try {
-      // Simulate reset process
-      await new Promise(resolve => setTimeout(resolve, 3000));
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 2000));
       
-      // Track successful reset
-      trackTestDataReset(true, 'full_reset');
-      
-      toast.success('Test data has been successfully reset');
-      setShowModal(false);
+      toast.success("Test data has been reset successfully");
     } catch (error) {
-      console.error('Reset failed:', error);
-      
-      // Track failed reset
-      trackTestDataReset(false, 'full_reset');
-      
-      toast.error('Failed to reset test data. Please try again.');
+      toast.error("Failed to reset test data");
     } finally {
       setIsResetting(false);
     }
   };
 
   return (
-    <>
-      <Card className="border-amber-200 bg-amber-50/50">
-        <CardHeader>
-          <CardTitle className="flex items-center text-amber-800">
-            <Database className="mr-2 h-5 w-5" />
-            Test Data Reset
-          </CardTitle>
-          <CardDescription className="text-amber-700">
-            Reset all test data to initial seed state for development and testing purposes.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-start space-x-3 p-3 bg-amber-100 rounded-lg">
-            <AlertTriangle className="h-5 w-5 text-amber-600 mt-0.5 flex-shrink-0" />
-            <div className="text-sm text-amber-800">
-              <p className="font-medium">Warning: This action cannot be undone</p>
-              <p className="mt-1">All current test data will be permanently deleted and replaced with seed data.</p>
+    <Card className="bg-card border-border shadow-md">
+      <CardHeader className="pb-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-destructive/10 border border-destructive/20">
+              <Database className="h-5 w-5 text-destructive" />
             </div>
+            <div>
+              <CardTitle className="text-foreground">Test Data Management</CardTitle>
+              <CardDescription className="text-muted-foreground">
+                Reset test environment data and restore default settings
+              </CardDescription>
+            </div>
+          </div>
+          <Badge variant="secondary" className="bg-warning/10 text-warning border-warning/20">
+            DEV ONLY
+          </Badge>
+        </div>
+      </CardHeader>
+      <CardContent className="space-y-6">
+        <div className="p-4 bg-destructive/5 border border-destructive/20 rounded-lg">
+          <div className="flex items-start space-x-3">
+            <AlertTriangle className="h-5 w-5 text-destructive mt-0.5" />
+            <div className="flex-1">
+              <h4 className="font-medium text-foreground mb-2">Destructive Action Warning</h4>
+              <p className="text-sm text-muted-foreground mb-4">
+                This action will permanently delete all test data and restore the database to its initial state. 
+                This cannot be undone and should only be used in development environments.
+              </p>
+              <div className="space-y-2">
+                <div className="flex items-center space-x-2 text-sm">
+                  <Trash2 className="h-3 w-3 text-destructive" />
+                  <span className="text-muted-foreground">Removes all test user accounts</span>
+                </div>
+                <div className="flex items-center space-x-2 text-sm">
+                  <Trash2 className="h-3 w-3 text-destructive" />
+                  <span className="text-muted-foreground">Clears all prospect invitations</span>
+                </div>
+                <div className="flex items-center space-x-2 text-sm">
+                  <RefreshCw className="h-3 w-3 text-success" />
+                  <span className="text-muted-foreground">Restores default admin users</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="space-y-4">
+          <div className="flex items-center justify-between py-3 px-4 bg-muted/30 rounded-lg border border-border/50">
+            <div className="flex items-center space-x-3">
+              <CheckCircle className="h-4 w-4 text-success" />
+              <span className="text-sm font-medium text-foreground">Last Reset</span>
+            </div>
+            <span className="text-sm text-muted-foreground">2 days ago</span>
           </div>
           
-          <div className="space-y-2">
-            <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-              <CheckCircle className="h-4 w-4 text-green-600" />
-              <span>Automatic backup created before reset</span>
+          <div className="flex items-center justify-between py-3 px-4 bg-muted/30 rounded-lg border border-border/50">
+            <div className="flex items-center space-x-3">
+              <Database className="h-4 w-4 text-primary" />
+              <span className="text-sm font-medium text-foreground">Test Records</span>
             </div>
-            <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-              <CheckCircle className="h-4 w-4 text-green-600" />
-              <span>System administrators preserved</span>
-            </div>
-            <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-              <CheckCircle className="h-4 w-4 text-green-600" />
-              <span>Fresh seed data restored</span>
-            </div>
+            <span className="text-sm text-muted-foreground">1,247 entries</span>
           </div>
+        </div>
 
+        <div className="pt-4 border-t border-border/50">
           <Button 
-            onClick={() => setShowModal(true)} 
-            variant="destructive" 
-            className="w-full"
+            onClick={handleResetTestData}
             disabled={isResetting}
+            variant="destructive"
+            className="w-full"
           >
-            <Database className="mr-2 h-4 w-4" />
-            {isResetting ? 'Resetting...' : 'Reset Test Data'}
+            {isResetting ? (
+              <>
+                <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                Resetting Test Data...
+              </>
+            ) : (
+              <>
+                <RotateCcw className="h-4 w-4 mr-2" />
+                Reset Test Data
+              </>
+            )}
           </Button>
-        </CardContent>
-      </Card>
-
-      <TestDataResetModal
-        open={showModal}
-        onClose={() => setShowModal(false)}
-        onConfirm={handleReset}
-        isLoading={isResetting}
-      />
-    </>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
