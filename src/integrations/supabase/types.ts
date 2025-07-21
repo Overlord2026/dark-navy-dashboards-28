@@ -1038,6 +1038,51 @@ export type Database = {
         }
         Relationships: []
       }
+      data_classification: {
+        Row: {
+          access_logging_required: boolean | null
+          classification_level: string
+          column_name: string
+          compliance_requirements: string[] | null
+          created_at: string
+          data_category: string[] | null
+          encryption_required: boolean | null
+          geographic_restrictions: string[] | null
+          id: string
+          retention_period: unknown | null
+          table_name: string
+          updated_at: string
+        }
+        Insert: {
+          access_logging_required?: boolean | null
+          classification_level: string
+          column_name: string
+          compliance_requirements?: string[] | null
+          created_at?: string
+          data_category?: string[] | null
+          encryption_required?: boolean | null
+          geographic_restrictions?: string[] | null
+          id?: string
+          retention_period?: unknown | null
+          table_name: string
+          updated_at?: string
+        }
+        Update: {
+          access_logging_required?: boolean | null
+          classification_level?: string
+          column_name?: string
+          compliance_requirements?: string[] | null
+          created_at?: string
+          data_category?: string[] | null
+          encryption_required?: boolean | null
+          geographic_restrictions?: string[] | null
+          id?: string
+          retention_period?: unknown | null
+          table_name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       device_tokens: {
         Row: {
           access_token: string | null
@@ -6744,6 +6789,117 @@ export type Database = {
         }
         Relationships: []
       }
+      security_incidents: {
+        Row: {
+          affected_resources: Json | null
+          assigned_to: string | null
+          auto_remediation_applied: boolean | null
+          compliance_impact: string[] | null
+          created_at: string
+          description: string
+          evidence: Json | null
+          id: string
+          incident_type: string
+          remediation_actions: Json | null
+          resolved_at: string | null
+          risk_score: number | null
+          severity: string
+          status: string
+          tenant_id: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          affected_resources?: Json | null
+          assigned_to?: string | null
+          auto_remediation_applied?: boolean | null
+          compliance_impact?: string[] | null
+          created_at?: string
+          description: string
+          evidence?: Json | null
+          id?: string
+          incident_type: string
+          remediation_actions?: Json | null
+          resolved_at?: string | null
+          risk_score?: number | null
+          severity: string
+          status?: string
+          tenant_id?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          affected_resources?: Json | null
+          assigned_to?: string | null
+          auto_remediation_applied?: boolean | null
+          compliance_impact?: string[] | null
+          created_at?: string
+          description?: string
+          evidence?: Json | null
+          id?: string
+          incident_type?: string
+          remediation_actions?: Json | null
+          resolved_at?: string | null
+          risk_score?: number | null
+          severity?: string
+          status?: string
+          tenant_id?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      security_remediation_rules: {
+        Row: {
+          applications_count: number | null
+          auto_apply: boolean | null
+          cooldown_minutes: number | null
+          created_at: string
+          created_by: string | null
+          id: string
+          incident_pattern: Json
+          is_active: boolean | null
+          last_applied_at: string | null
+          max_applications: number | null
+          remediation_actions: Json
+          rule_name: string
+          success_rate: number | null
+          updated_at: string
+        }
+        Insert: {
+          applications_count?: number | null
+          auto_apply?: boolean | null
+          cooldown_minutes?: number | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          incident_pattern: Json
+          is_active?: boolean | null
+          last_applied_at?: string | null
+          max_applications?: number | null
+          remediation_actions: Json
+          rule_name: string
+          success_rate?: number | null
+          updated_at?: string
+        }
+        Update: {
+          applications_count?: number | null
+          auto_apply?: boolean | null
+          cooldown_minutes?: number | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          incident_pattern?: Json
+          is_active?: boolean | null
+          last_applied_at?: string | null
+          max_applications?: number | null
+          remediation_actions?: Json
+          rule_name?: string
+          success_rate?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       service_role_audit_logs: {
         Row: {
           compliance_flags: string[] | null
@@ -9530,6 +9686,18 @@ export type Database = {
         Args: { p_referral_id: string }
         Returns: string
       }
+      create_security_incident: {
+        Args: {
+          p_incident_type: string
+          p_severity: string
+          p_title: string
+          p_description: string
+          p_affected_resources?: Json
+          p_evidence?: Json
+          p_tenant_id?: string
+        }
+        Returns: string
+      }
       detect_service_role_abuse: {
         Args: Record<PropertyKey, never>
         Returns: {
@@ -9551,6 +9719,10 @@ export type Database = {
           first_occurrence: string
           last_occurrence: string
         }[]
+      }
+      generate_compliance_report: {
+        Args: { p_compliance_framework?: string }
+        Returns: Json
       }
       generate_franchise_referral_code: {
         Args: Record<PropertyKey, never>
@@ -9626,6 +9798,10 @@ export type Database = {
           count_paid: number
           count_pending: number
         }[]
+      }
+      get_security_dashboard: {
+        Args: Record<PropertyKey, never>
+        Returns: Json
       }
       get_security_metrics: {
         Args: Record<PropertyKey, never>
