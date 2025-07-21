@@ -993,6 +993,51 @@ export type Database = {
           },
         ]
       }
+      dashboard_access_logs: {
+        Row: {
+          access_type: string
+          actions_performed: string[] | null
+          compliance_flags: string[] | null
+          geolocation: Json | null
+          id: string
+          ip_address: unknown | null
+          mfa_verified: boolean | null
+          session_duration_minutes: number | null
+          severity: string | null
+          timestamp: string
+          user_agent: string | null
+          user_email: string
+        }
+        Insert: {
+          access_type: string
+          actions_performed?: string[] | null
+          compliance_flags?: string[] | null
+          geolocation?: Json | null
+          id?: string
+          ip_address?: unknown | null
+          mfa_verified?: boolean | null
+          session_duration_minutes?: number | null
+          severity?: string | null
+          timestamp?: string
+          user_agent?: string | null
+          user_email: string
+        }
+        Update: {
+          access_type?: string
+          actions_performed?: string[] | null
+          compliance_flags?: string[] | null
+          geolocation?: Json | null
+          id?: string
+          ip_address?: unknown | null
+          mfa_verified?: boolean | null
+          session_duration_minutes?: number | null
+          severity?: string | null
+          timestamp?: string
+          user_agent?: string | null
+          user_email?: string
+        }
+        Relationships: []
+      }
       device_tokens: {
         Row: {
           access_token: string | null
@@ -6699,6 +6744,54 @@ export type Database = {
         }
         Relationships: []
       }
+      service_role_audit_logs: {
+        Row: {
+          compliance_flags: string[] | null
+          error_message: string | null
+          execution_context: string | null
+          execution_time_ms: number | null
+          function_name: string
+          id: string
+          operation_type: string
+          request_metadata: Json | null
+          severity: string | null
+          success: boolean
+          tenant_context: string | null
+          timestamp: string
+          user_context: string | null
+        }
+        Insert: {
+          compliance_flags?: string[] | null
+          error_message?: string | null
+          execution_context?: string | null
+          execution_time_ms?: number | null
+          function_name: string
+          id?: string
+          operation_type: string
+          request_metadata?: Json | null
+          severity?: string | null
+          success?: boolean
+          tenant_context?: string | null
+          timestamp?: string
+          user_context?: string | null
+        }
+        Update: {
+          compliance_flags?: string[] | null
+          error_message?: string | null
+          execution_context?: string | null
+          execution_time_ms?: number | null
+          function_name?: string
+          id?: string
+          operation_type?: string
+          request_metadata?: Json | null
+          severity?: string | null
+          success?: boolean
+          tenant_context?: string | null
+          timestamp?: string
+          user_context?: string | null
+        }
+        Relationships: []
+      }
       shared_documents: {
         Row: {
           created_at: string
@@ -9345,6 +9438,17 @@ export type Database = {
         Args: { p_referee_id: string }
         Returns: boolean
       }
+      audit_rls_coverage: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          table_name: string
+          rls_enabled: boolean
+          policy_count: number
+          missing_operations: string[]
+          security_score: number
+          recommendations: string[]
+        }[]
+      }
       calculate_advisor_overrides: {
         Args: { p_period_start: string; p_period_end: string }
         Returns: {
@@ -9367,6 +9471,10 @@ export type Database = {
       calculate_provider_rating: {
         Args: { provider_id: string }
         Returns: number
+      }
+      check_security_alerts: {
+        Args: Record<PropertyKey, never>
+        Returns: Json
       }
       cleanup_expired_otp_codes: {
         Args: Record<PropertyKey, never>
@@ -9422,6 +9530,17 @@ export type Database = {
         Args: { p_referral_id: string }
         Returns: string
       }
+      detect_service_role_abuse: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          alert_type: string
+          description: string
+          severity: string
+          count: number
+          first_occurrence: string
+          last_occurrence: string
+        }[]
+      }
       detect_suspicious_activities: {
         Args: Record<PropertyKey, never>
         Returns: {
@@ -9472,6 +9591,17 @@ export type Database = {
       get_document_status: {
         Args: { doc_id: string }
         Returns: string
+      }
+      get_enhanced_security_metrics: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          metric_category: string
+          metric_name: string
+          metric_value: number
+          status: string
+          last_updated: string
+          details: Json
+        }[]
       }
       get_referral_conversion_analytics: {
         Args: { p_tenant_id: string; p_period_days?: number }
@@ -9609,6 +9739,20 @@ export type Database = {
           p_new_status?: string
           p_user_id?: string
           p_details?: Json
+        }
+        Returns: string
+      }
+      log_service_role_usage: {
+        Args: {
+          p_function_name: string
+          p_operation_type: string
+          p_execution_context?: string
+          p_user_context?: string
+          p_tenant_context?: string
+          p_execution_time_ms?: number
+          p_success?: boolean
+          p_error_message?: string
+          p_request_metadata?: Json
         }
         Returns: string
       }
