@@ -5,7 +5,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SecurityAuditDashboard } from '@/components/security/SecurityAuditDashboard';
 import { SecurityLoginSection } from '@/components/settings/SecurityLoginSection';
 import { MFAEnforcement } from '@/components/security/MFAEnforcement';
-import { Shield, Users, Key, AlertTriangle } from 'lucide-react';
+import { SecurityIssueReportForm, SecurityTrainingDashboard, SecurityReviewChecklist } from '@/services/security';
+import { Shield, Users, Key, AlertTriangle, BookOpen, ClipboardCheck } from 'lucide-react';
 
 export function SecuritySettingsPage() {
   return (
@@ -21,22 +22,30 @@ export function SecuritySettingsPage() {
       </div>
 
       <Tabs defaultValue="overview" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-6">
           <TabsTrigger value="overview" className="flex items-center gap-2">
             <Shield className="h-4 w-4" />
             Overview
+          </TabsTrigger>
+          <TabsTrigger value="training" className="flex items-center gap-2">
+            <BookOpen className="h-4 w-4" />
+            Training
+          </TabsTrigger>
+          <TabsTrigger value="report" className="flex items-center gap-2">
+            <AlertTriangle className="h-4 w-4" />
+            Report Issue
+          </TabsTrigger>
+          <TabsTrigger value="review" className="flex items-center gap-2">
+            <ClipboardCheck className="h-4 w-4" />
+            Reviews
           </TabsTrigger>
           <TabsTrigger value="authentication" className="flex items-center gap-2">
             <Key className="h-4 w-4" />
             Authentication
           </TabsTrigger>
-          <TabsTrigger value="users" className="flex items-center gap-2">
-            <Users className="h-4 w-4" />
-            User Management
-          </TabsTrigger>
           <TabsTrigger value="audit" className="flex items-center gap-2">
-            <AlertTriangle className="h-4 w-4" />
-            Security Audit
+            <Users className="h-4 w-4" />
+            Audit
           </TabsTrigger>
         </TabsList>
 
@@ -113,26 +122,23 @@ export function SecuritySettingsPage() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="authentication" className="space-y-6">
-          <SecurityLoginSection />
+        <TabsContent value="training" className="space-y-6">
+          <SecurityTrainingDashboard />
         </TabsContent>
 
-        <TabsContent value="users" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>User Account Management</CardTitle>
-              <CardDescription>
-                Manage user permissions, roles, and account lifecycle
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="text-center py-8 text-muted-foreground">
-                <Users className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                <p>User management features will be implemented in Phase 2</p>
-                <p className="text-sm">Including role management, account deactivation, and permission audits</p>
-              </div>
-            </CardContent>
-          </Card>
+        <TabsContent value="report" className="space-y-6">
+          <SecurityIssueReportForm />
+        </TabsContent>
+
+        <TabsContent value="review" className="space-y-6">
+          <SecurityReviewChecklist 
+            checklistType="code_review"
+            reviewSubject="Security Review Template"
+          />
+        </TabsContent>
+
+        <TabsContent value="authentication" className="space-y-6">
+          <SecurityLoginSection />
         </TabsContent>
 
         <TabsContent value="audit" className="space-y-6">

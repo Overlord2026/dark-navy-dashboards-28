@@ -4634,6 +4634,119 @@ export type Database = {
           },
         ]
       }
+      phishing_simulation_results: {
+        Row: {
+          clicked_at: string | null
+          created_at: string
+          data_entered: boolean | null
+          email_opened: boolean | null
+          id: string
+          ip_address: unknown | null
+          link_clicked: boolean | null
+          opened_at: string | null
+          reported_at: string | null
+          reported_suspicious: boolean | null
+          simulation_id: string
+          tenant_id: string | null
+          time_to_report_minutes: number | null
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          clicked_at?: string | null
+          created_at?: string
+          data_entered?: boolean | null
+          email_opened?: boolean | null
+          id?: string
+          ip_address?: unknown | null
+          link_clicked?: boolean | null
+          opened_at?: string | null
+          reported_at?: string | null
+          reported_suspicious?: boolean | null
+          simulation_id: string
+          tenant_id?: string | null
+          time_to_report_minutes?: number | null
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          clicked_at?: string | null
+          created_at?: string
+          data_entered?: boolean | null
+          email_opened?: boolean | null
+          id?: string
+          ip_address?: unknown | null
+          link_clicked?: boolean | null
+          opened_at?: string | null
+          reported_at?: string | null
+          reported_suspicious?: boolean | null
+          simulation_id?: string
+          tenant_id?: string | null
+          time_to_report_minutes?: number | null
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "phishing_simulation_results_simulation_id_fkey"
+            columns: ["simulation_id"]
+            isOneToOne: false
+            referencedRelation: "phishing_simulations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      phishing_simulations: {
+        Row: {
+          campaign_name: string
+          campaign_type: string
+          created_at: string
+          created_by: string | null
+          end_date: string | null
+          id: string
+          launch_date: string
+          results_summary: Json | null
+          status: string
+          success_criteria: Json | null
+          target_users: string[]
+          template_content: Json
+          tenant_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          campaign_name: string
+          campaign_type: string
+          created_at?: string
+          created_by?: string | null
+          end_date?: string | null
+          id?: string
+          launch_date: string
+          results_summary?: Json | null
+          status?: string
+          success_criteria?: Json | null
+          target_users?: string[]
+          template_content?: Json
+          tenant_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          campaign_name?: string
+          campaign_type?: string
+          created_at?: string
+          created_by?: string | null
+          end_date?: string | null
+          id?: string
+          launch_date?: string
+          results_summary?: Json | null
+          status?: string
+          success_criteria?: Json | null
+          target_users?: string[]
+          template_content?: Json
+          tenant_id?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       physicians: {
         Row: {
           created_at: string
@@ -6849,6 +6962,90 @@ export type Database = {
         }
         Relationships: []
       }
+      security_issue_reports: {
+        Row: {
+          affected_systems: string[] | null
+          anonymized: boolean | null
+          assigned_to: string | null
+          created_at: string
+          description: string
+          evidence_urls: string[] | null
+          follow_up_date: string | null
+          follow_up_required: boolean | null
+          id: string
+          immediate_actions_taken: string | null
+          incident_datetime: string | null
+          issue_type: string
+          location: string | null
+          reported_by_user_id: string | null
+          reporter_email: string
+          reporter_name: string | null
+          reporter_phone: string | null
+          resolution_notes: string | null
+          resolved_at: string | null
+          severity: string
+          status: string
+          tenant_id: string | null
+          title: string
+          updated_at: string
+          witnesses: string[] | null
+        }
+        Insert: {
+          affected_systems?: string[] | null
+          anonymized?: boolean | null
+          assigned_to?: string | null
+          created_at?: string
+          description: string
+          evidence_urls?: string[] | null
+          follow_up_date?: string | null
+          follow_up_required?: boolean | null
+          id?: string
+          immediate_actions_taken?: string | null
+          incident_datetime?: string | null
+          issue_type: string
+          location?: string | null
+          reported_by_user_id?: string | null
+          reporter_email: string
+          reporter_name?: string | null
+          reporter_phone?: string | null
+          resolution_notes?: string | null
+          resolved_at?: string | null
+          severity?: string
+          status?: string
+          tenant_id?: string | null
+          title: string
+          updated_at?: string
+          witnesses?: string[] | null
+        }
+        Update: {
+          affected_systems?: string[] | null
+          anonymized?: boolean | null
+          assigned_to?: string | null
+          created_at?: string
+          description?: string
+          evidence_urls?: string[] | null
+          follow_up_date?: string | null
+          follow_up_required?: boolean | null
+          id?: string
+          immediate_actions_taken?: string | null
+          incident_datetime?: string | null
+          issue_type?: string
+          location?: string | null
+          reported_by_user_id?: string | null
+          reporter_email?: string
+          reporter_name?: string | null
+          reporter_phone?: string | null
+          resolution_notes?: string | null
+          resolved_at?: string | null
+          severity?: string
+          status?: string
+          tenant_id?: string | null
+          title?: string
+          updated_at?: string
+          witnesses?: string[] | null
+        }
+        Relationships: []
+      }
       security_remediation_rules: {
         Row: {
           applications_count: number | null
@@ -6899,6 +7096,292 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      security_review_checklists: {
+        Row: {
+          checklist_items: Json
+          checklist_name: string
+          checklist_type: string
+          created_at: string
+          created_by: string | null
+          id: string
+          is_active: boolean
+          mandatory_items: string[] | null
+          tenant_id: string | null
+          updated_at: string
+          version: number | null
+        }
+        Insert: {
+          checklist_items?: Json
+          checklist_name: string
+          checklist_type: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_active?: boolean
+          mandatory_items?: string[] | null
+          tenant_id?: string | null
+          updated_at?: string
+          version?: number | null
+        }
+        Update: {
+          checklist_items?: Json
+          checklist_name?: string
+          checklist_type?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_active?: boolean
+          mandatory_items?: string[] | null
+          tenant_id?: string | null
+          updated_at?: string
+          version?: number | null
+        }
+        Relationships: []
+      }
+      security_review_completions: {
+        Row: {
+          approved_for_production: boolean | null
+          blocking_issues: string[] | null
+          checklist_id: string
+          checklist_responses: Json
+          created_at: string
+          id: string
+          notes: string | null
+          overall_status: string
+          recommendations: string[] | null
+          review_date: string
+          review_subject: string
+          review_type: string
+          reviewed_by: string
+          security_concerns: string[] | null
+          tenant_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          approved_for_production?: boolean | null
+          blocking_issues?: string[] | null
+          checklist_id: string
+          checklist_responses?: Json
+          created_at?: string
+          id?: string
+          notes?: string | null
+          overall_status: string
+          recommendations?: string[] | null
+          review_date?: string
+          review_subject: string
+          review_type: string
+          reviewed_by: string
+          security_concerns?: string[] | null
+          tenant_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          approved_for_production?: boolean | null
+          blocking_issues?: string[] | null
+          checklist_id?: string
+          checklist_responses?: Json
+          created_at?: string
+          id?: string
+          notes?: string | null
+          overall_status?: string
+          recommendations?: string[] | null
+          review_date?: string
+          review_subject?: string
+          review_type?: string
+          reviewed_by?: string
+          security_concerns?: string[] | null
+          tenant_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "security_review_completions_checklist_id_fkey"
+            columns: ["checklist_id"]
+            isOneToOne: false
+            referencedRelation: "security_review_checklists"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      security_training_completions: {
+        Row: {
+          attempts: number | null
+          certificate_issued: boolean | null
+          certificate_url: string | null
+          completed_at: string | null
+          created_at: string
+          id: string
+          notes: string | null
+          passed: boolean | null
+          program_id: string
+          schedule_id: string | null
+          score: number | null
+          started_at: string | null
+          tenant_id: string | null
+          time_spent_minutes: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          attempts?: number | null
+          certificate_issued?: boolean | null
+          certificate_url?: string | null
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          notes?: string | null
+          passed?: boolean | null
+          program_id: string
+          schedule_id?: string | null
+          score?: number | null
+          started_at?: string | null
+          tenant_id?: string | null
+          time_spent_minutes?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          attempts?: number | null
+          certificate_issued?: boolean | null
+          certificate_url?: string | null
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          notes?: string | null
+          passed?: boolean | null
+          program_id?: string
+          schedule_id?: string | null
+          score?: number | null
+          started_at?: string | null
+          tenant_id?: string | null
+          time_spent_minutes?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "security_training_completions_program_id_fkey"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "security_training_programs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "security_training_completions_schedule_id_fkey"
+            columns: ["schedule_id"]
+            isOneToOne: false
+            referencedRelation: "security_training_schedules"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      security_training_programs: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          description: string | null
+          duration_minutes: number
+          id: string
+          is_active: boolean
+          passing_score: number | null
+          program_name: string
+          program_type: string
+          quiz_questions: Json | null
+          required_for_roles: string[] | null
+          tenant_id: string | null
+          training_materials: Json | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          duration_minutes?: number
+          id?: string
+          is_active?: boolean
+          passing_score?: number | null
+          program_name: string
+          program_type: string
+          quiz_questions?: Json | null
+          required_for_roles?: string[] | null
+          tenant_id?: string | null
+          training_materials?: Json | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          duration_minutes?: number
+          id?: string
+          is_active?: boolean
+          passing_score?: number | null
+          program_name?: string
+          program_type?: string
+          quiz_questions?: Json | null
+          required_for_roles?: string[] | null
+          tenant_id?: string | null
+          training_materials?: Json | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      security_training_schedules: {
+        Row: {
+          created_at: string
+          escalation_days_after: number | null
+          frequency: string
+          id: string
+          last_completed_date: string | null
+          mandatory: boolean
+          next_due_date: string
+          program_id: string
+          reminder_days_before: number | null
+          schedule_name: string
+          target_audience: string[] | null
+          tenant_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          escalation_days_after?: number | null
+          frequency: string
+          id?: string
+          last_completed_date?: string | null
+          mandatory?: boolean
+          next_due_date: string
+          program_id: string
+          reminder_days_before?: number | null
+          schedule_name: string
+          target_audience?: string[] | null
+          tenant_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          escalation_days_after?: number | null
+          frequency?: string
+          id?: string
+          last_completed_date?: string | null
+          mandatory?: boolean
+          next_due_date?: string
+          program_id?: string
+          reminder_days_before?: number | null
+          schedule_name?: string
+          target_audience?: string[] | null
+          tenant_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "security_training_schedules_program_id_fkey"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "security_training_programs"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       service_role_audit_logs: {
         Row: {
@@ -9619,6 +10102,10 @@ export type Database = {
       calculate_goal_progress: {
         Args: { goal_id: string }
         Returns: number
+      }
+      calculate_next_training_due_date: {
+        Args: { p_frequency: string; p_last_completed?: string }
+        Returns: string
       }
       calculate_project_analytics: {
         Args: { p_project_id: string }

@@ -9,3 +9,8 @@ export type { SecretValidationResult } from './secretsValidator';
 
 // Re-export security monitoring component
 export { default as SecretsMonitor } from '@/components/security/SecretsMonitor';
+
+// Re-export security training and reporting components
+export { SecurityIssueReportForm } from '@/components/security/SecurityIssueReportForm';
+export { SecurityTrainingDashboard } from '@/components/security/SecurityTrainingDashboard';
+export { SecurityReviewChecklist } from '@/components/security/SecurityReviewChecklist';
