@@ -6,8 +6,10 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/context/AuthContext";
 import { UserProvider } from "@/context/UserContext";
 import { AuthWrapper } from "@/components/auth/AuthWrapper";
+import { DynamicLandingController } from "@/components/auth/DynamicLandingController";
 import { Navigation } from "@/components/Navigation";
 import Index from "./pages/Index";
+import Dashboard from "./pages/Dashboard";
 import { AuthPage } from "./pages/AuthPage";
 import { SecuritySettingsPage } from "./pages/SecuritySettingsPage";
 import { ClientDashboard } from "./pages/ClientDashboard";
@@ -40,18 +42,19 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
-            <div className="min-h-screen bg-background">
-              <Navigation />
-              <Routes>
-                <Route path="/auth" element={<AuthPage />} />
-                <Route
-                  path="/"
-                  element={
-                    <AuthWrapper requireAuth={true}>
-                      <Index />
-                    </AuthWrapper>
-                  }
-                />
+            <DynamicLandingController>
+              <div className="min-h-screen bg-background">
+                <Navigation />
+                <Routes>
+                  <Route path="/auth" element={<AuthPage />} />
+                  <Route
+                    path="/"
+                    element={
+                      <AuthWrapper requireAuth={true}>
+                        <Dashboard />
+                      </AuthWrapper>
+                    }
+                  />
                 <Route
                   path="/security"
                   element={
@@ -67,7 +70,7 @@ const App = () => (
                   path="/client-dashboard"
                   element={
                     <AuthWrapper requireAuth={true}>
-                      <ClientDashboard />
+                      <Dashboard />
                     </AuthWrapper>
                   }
                 />
@@ -195,7 +198,8 @@ const App = () => (
                 <Route path="/access-denied" element={<AccessDeniedPage />} />
                 <Route path="*" element={<NotFoundPage />} />
               </Routes>
-            </div>
+              </div>
+            </DynamicLandingController>
           </BrowserRouter>
         </TooltipProvider>
       </UserProvider>
