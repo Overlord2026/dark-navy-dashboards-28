@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/context/AuthContext";
 import { UserProvider } from "@/context/UserContext";
+import { SubscriptionProvider } from "@/context/SubscriptionContext";
 import { AuthWrapper } from "@/components/auth/AuthWrapper";
 import { DynamicLandingController } from "@/components/auth/DynamicLandingController";
 import { Navigation } from "@/components/Navigation";
@@ -39,7 +40,8 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
       <UserProvider>
-        <TooltipProvider>
+        <SubscriptionProvider>
+          <TooltipProvider>
           <Toaster />
           <Sonner />
           <BrowserRouter>
@@ -202,7 +204,8 @@ const App = () => (
               </div>
             </DynamicLandingController>
           </BrowserRouter>
-        </TooltipProvider>
+          </TooltipProvider>
+        </SubscriptionProvider>
       </UserProvider>
     </AuthProvider>
   </QueryClientProvider>
