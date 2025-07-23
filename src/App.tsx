@@ -9,6 +9,7 @@ import { AuthWrapper } from "@/components/auth/AuthWrapper";
 import { DynamicLandingController } from "@/components/auth/DynamicLandingController";
 import { Navigation } from "@/components/Navigation";
 import Index from "./pages/Index";
+// Dashboard default export
 import Dashboard from "./pages/Dashboard";
 import { AuthPage } from "./pages/AuthPage";
 import { SecuritySettingsPage } from "./pages/SecuritySettingsPage";
