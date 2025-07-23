@@ -8,6 +8,7 @@ import { AuthProvider } from "@/context/AuthContext";
 import { UserProvider } from "@/context/UserContext";
 import { SubscriptionProvider } from "@/context/SubscriptionContext";
 import { ThemeProvider } from "@/context/ThemeContext";
+import { TenantProvider } from "@/context/TenantContext";
 import { AuthWrapper } from "@/components/auth/AuthWrapper";
 import { DynamicLandingController } from "@/components/auth/DynamicLandingController";
 import { Navigation } from "@/components/Navigation";
@@ -41,7 +42,8 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider>
-      <AuthProvider>
+      <TenantProvider>
+        <AuthProvider>
         <UserProvider>
           <SubscriptionProvider>
             <TooltipProvider>
@@ -211,6 +213,7 @@ const App = () => (
           </SubscriptionProvider>
         </UserProvider>
       </AuthProvider>
+      </TenantProvider>
     </ThemeProvider>
   </QueryClientProvider>
 );
