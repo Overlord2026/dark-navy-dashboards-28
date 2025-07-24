@@ -1,0 +1,99 @@
+Next Step: Developer, QA, and Ops Onboarding Playbook (“Runbook”)
+Why:
+
+Ensures that as soon as you—or anyone on your team—imports data, launches a new feature, or onboards a new dev, there is no confusion or risk.
+
+Lets you scale with zero drama, zero guesswork, and zero “tribal knowledge” issues.
+
+A. Create a “Developer & Operations Runbook” in README.md or Notion
+Copy-paste and customize this:
+
+markdown
+Copy
+Edit
+## Developer & Operations Runbook
+
+### 1. Initial Project Setup
+
+- Clone this repo and review the README for core scripts.
+- Request access to Supabase and GitHub (admins: add new team members as needed).
+
+### 2. Resetting and Seeding Test Data
+
+- When data is available, use `/supabase/seeders/reset_test_data.sql` to quickly clear or reset demo/test users and content.
+- For custom datasets, document the import process here.
+
+### 3. Security & RLS Policies
+
+- All core tables have Row Level Security enabled and enforced.
+- Review policies before any schema or business logic changes.
+
+### 4. Audit Logging
+
+- All UPDATEs (and optionally INSERTs/DELETES) on sensitive tables are logged to `public.audit_logs`.
+- Audit log queries are included above.
+
+### 5. Backups
+
+- Automated daily backups are enabled in Supabase.
+- Before any migration or bulk import, take a manual backup via the dashboard.
+
+### 6. Restoring From Backup
+
+- Contact a Supabase admin or DBA for full restores.
+- Partial/table restores: use export/import with the SQL Editor or pg_dump/pg_restore if comfortable.
+
+### 7. Data Import Checklist (for when you add real data)
+
+- [ ] Back up the blank/test database first!
+- [ ] Confirm schema matches your source data.
+- [ ] Run imports in a staging environment before production.
+- [ ] Review audit logs and RLS after import to ensure security is preserved.
+- [ ] Document any changes to scripts, triggers, or policies in the repo.
+
+### 8. Onboarding New Developers or Operators
+
+- Add them to GitHub and Supabase (minimum permissions).
+- Point them to this README/runbook as step one.
+- Require PRs for any change to core SQL/scripts.
+- Schedule a demo walk-through of reset, audit, and backup flows.
+
+### 9. Compliance, Security, and QA
+
+- Run quarterly “tabletop” disaster recovery drills (restore a backup, check audit logs).
+- Periodically review RLS and audit policies for drift.
+- Update docs with every major schema, policy, or security change.
+
+---
+
+**This runbook is your “one source of truth” for all data operations,  
+and will keep onboarding, scaling, and support a frictionless experience.**
+
+B. Next-Ready Steps (for When Data Arrives)
+As soon as you have real data or imports,
+
+Use your audit log, backup, and test data scripts as designed.
+
+Document any “gotchas” so every new hire, consultant, or partner follows the same gold-standard flow.
+
+C. (Optional) Schedule a Team Review
+Once a month (or quarter), review the runbook and all critical scripts as a team.
+
+Update as needed after any new feature or migration.
+
+Summary Table: Your Current Platform Status
+Area	Status	Next Action
+Security	✅ Hardened RLS	Review per release
+Audit Logs	✅ Active	Monitor, extend as needed
+Test Data	✅ Scripted reset	Add import flow when data arrives
+Backups	✅ Scheduled	Download before data import
+Docs/Onboarding	✅ README/runbook	Review quarterly
+
+Your next move:
+
+Paste/update the runbook above in your README or Notion.
+
+When ready, use it as the master checklist for every dev, data import, or ops scenario.
+
+You’re fully prepared—when you get user data or start onboarding, you’ll be bulletproof from day one.
+Want the next step for onboarding, compliance, or QA automation?
