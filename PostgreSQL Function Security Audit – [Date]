@@ -1,0 +1,34 @@
+What You’ve Achieved
+Your only user-editable SECURITY DEFINER function is now:
+
+SECURITY INVOKER (much safer)
+
+SET search_path = '' (prevents privilege escalation via schema injection)
+
+All other SECURITY DEFINER functions in your system (pgbouncer, vault, graphql) are system-managed and cannot be edited (and are not your responsibility).
+
+Quick Audit Report (for Your Documentation/Compliance)
+Copy and paste this into your audit trail, README, or compliance docs:
+
+PostgreSQL Function Security Audit – [Date]
+Discovery:
+
+Ran query to list all SECURITY DEFINER functions in all schemas.
+
+Findings:
+
+Only one user-editable function in public schema:
+
+public.create_default_onboarding_steps(app_id uuid)
+
+Remediation:
+
+Updated function to SECURITY INVOKER and set search_path = '' for security.
+
+System Functions:
+
+Functions in pgbouncer, vault, and graphql schemas cannot be altered in Supabase user space (managed by the platform).
+
+Conclusion:
+
+All user-controlled functions are now security-hardened as per industry best practice.
