@@ -1,0 +1,59 @@
+## Background History Samples
+
+### What Are Background History Samples?
+
+Background history samples are anonymized (or permissioned) example profiles, scenarios, or audit logs that show how the MyBFOCFO platform tracks, manages, and secures data changes over time.
+
+These samples are used for:
+- **Demonstrating audit/compliance capabilities**
+- **Training new team members or advisors**
+- **Giving customers and prospects confidence in data transparency**
+- **Testing workflows and operational scripts in a sandbox environment**
+
+### Sample Background History Entries
+
+- **Sample 1: Audit Log Entry**
+    ```json
+    {
+      "table_name": "profiles",
+      "record_id": "a123-4567-89ab-cdef",
+      "changed_columns": ["display_name", "email"],
+      "old_row": {"display_name": "Jane Doe", "email": "jane@old.com"},
+      "new_row": {"display_name": "Jane D.", "email": "jane@new.com"},
+      "changed_at": "2024-07-24T14:23:05Z"
+    }
+    ```
+
+- **Sample 2: Data Reset Event**
+    - Test user `jet_superadmin@bfocfo.com` was reset to default settings.
+    - Demo document “Test Document A” seeded for onboarding demo.
+
+- **Sample 3: RLS Policy Enforcement**
+    - User `bob@client.com` attempts to access another client’s profile: **Denied by RLS policy.**
+
+### Who Benefits from These Samples?
+
+**Our Ideal Customers:**
+- **Family Offices and RIAs:**  
+  Want proof that sensitive client data and document histories are fully auditable and locked down by user and tenant.
+- **Wealth Advisors and Their Teams:**  
+  Need to demonstrate to clients and compliance officers that every change, access, and update is tracked.
+- **High Net-Worth Individuals and Families:**  
+  Value privacy, want to see a real history of who accessed or changed what in their accounts or vaults.
+- **Corporate HR or CFOs:**  
+  Want to audit all benefit, insurance, or financial changes for their team in a compliant system.
+
+**Use Cases:**
+- Due diligence and security reviews during the sales process.
+- Training/onboarding for advisors or support teams.
+- Proving compliance with internal or external audits.
+
+### How to Request or Review Samples
+
+- Ask the MyBFOCFO support or onboarding team for a live demo with history samples.
+- For enterprise or compliance reviews, anonymized export samples are available on request.
+
+---
+
+**For more info or to see a live workflow with history and audit trail samples,  
+contact support@mybfocfo.com or book a demo at [your URL].**
