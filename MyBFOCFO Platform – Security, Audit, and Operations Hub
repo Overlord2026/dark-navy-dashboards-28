@@ -1,0 +1,70 @@
+ Here’s a customized README.md section you can copy and paste—designed to clearly link your security, audit, onboarding, and operations documentation for any new developer, QA, auditor, or stakeholder.
+
+markdown
+Copy
+Edit
+# MyBFOCFO Platform – Security, Audit, and Operations Hub
+
+Welcome to the dark-navy-dashboards repository for MyBFOCFO. This codebase and knowledge base power our secure, auditable, and scalable platform for clients, advisors, and partners.
+
+---
+
+## 📖 Documentation Index
+
+- [README.md](./README.md) – Quick Start, Platform Overview
+- [Background History Samples](./Background%20History%20Samples) – Example audit logs, user journeys, and compliance history
+- [Developer, QA, and Ops Onboarding Playbook ("Runbook")](./Developer,%20QA,%20and%20Ops%20Onboarding%20Playbook%20(%22Runbook%22)) – Step-by-step onboarding, QA, and ops runbook
+- [SECURITY.md](./SECURITY.md) – Security policies, RLS patterns, and role management
+- [PostgreSQL Function Security Audit – [Date]](./PostgreSQL%20Function%20Security%20Audit%20%E2%80%93%20%5BDate%5D) – Latest security audit for all Postgres functions
+- [HEALTHCARE_INTEGRATION_GUIDE.md](./HEALTHCARE_INTEGRATION_GUIDE.md) – Healthcare module and export docs
+
+## 🚦 Core Operations
+
+- **Test Data Reset:**  
+  SQL scripts for resetting demo and test data are in `/supabase/seeders/` and `/scripts/`.
+- **Audit Logging:**  
+  Every update to sensitive tables is tracked in `public.audit_logs`.  
+  View recent logs with:
+    ```sql
+    SELECT * FROM public.audit_logs ORDER BY changed_at DESC LIMIT 10;
+    ```
+- **RLS Policies:**  
+  Row Level Security is enabled and versioned in `/supabase/policies/`.
+- **Backups:**  
+  Daily backups are enabled in Supabase. See the runbook for restore procedures.
+
+## 🛡️ Security & Compliance
+
+- Strict RLS on all sensitive/user-facing tables.
+- Tamper-evident audit logs and audit trigger code in `/supabase/functions/`.
+- All policies, audits, and operational scripts are versioned and peer-reviewed.
+
+## 🚀 Quick Start for Developers/Operators
+
+1. **Clone the repo and review the README.**
+2. **Review the Runbook and Security docs.**
+3. **Use `/supabase/seeders/reset_test_data.sql` to reset the testbed.**
+4. **Check audit logs after any update or migration.**
+5. **For questions, see docs or contact the ops/security lead.**
+
+---
+
+## 🤝 Contributing & Onboarding
+
+- All new devs and partners: Start with the Runbook, and update documentation for any new feature, schema, or process.
+- Use PRs for any change to `/supabase/`, `/scripts/`, or core policies.
+- All code and operational changes must pass QA and audit review.
+
+---
+
+**For live support or audit requests, email [your team contact here].**
+How to use:
+
+Paste this in your README.md (or as an “index” at the top).
+
+Update the contact email/links as needed.
+
+Point new devs, operators, or auditors to this page first!
+
+Let me know if you want:
+
