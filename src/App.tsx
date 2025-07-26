@@ -45,6 +45,9 @@ import { DocumentUploadPage } from "./pages/DocumentUploadPage";
 import { DocumentViewPage } from "./pages/DocumentViewPage";
 import { NotFoundPage } from "./pages/NotFoundPage";
 import { AccessDeniedPage } from "./pages/AccessDeniedPage";
+import AdvisorInvitePage from "./pages/AdvisorInvitePage";
+import ClientOnboardingPage from "./pages/ClientOnboardingPage";
+import OnboardingDashboardPage from "./pages/OnboardingDashboardPage";
 
 const queryClient = new QueryClient();
 
@@ -225,6 +228,29 @@ const App = () => (
                       </AuthWrapper>
                     }
                   />
+                  <Route
+                    path="/invite-client"
+                    element={
+                      <AuthWrapper 
+                        requireAuth={true}
+                        allowedRoles={getAdvisorAccessRoles()}
+                      >
+                        <AdvisorInvitePage />
+                      </AuthWrapper>
+                    }
+                  />
+                  <Route
+                    path="/onboarding-dashboard"
+                    element={
+                      <AuthWrapper 
+                        requireAuth={true}
+                        allowedRoles={getAdvisorAccessRoles()}
+                      >
+                        <OnboardingDashboardPage />
+                      </AuthWrapper>
+                    }
+                  />
+                  <Route path="/onboard/:token" element={<ClientOnboardingPage />} />
                   <Route path="/access-denied" element={<AccessDeniedPage />} />
                   <Route path="*" element={<NotFoundPage />} />
                 </Routes>
