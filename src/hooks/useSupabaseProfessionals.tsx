@@ -67,7 +67,8 @@ export const useSupabaseProfessionals = () => {
         notes: prof.notes,
         rating: prof.rating,
         specialties: prof.specialties,
-        certifications: prof.certifications
+        certifications: prof.certifications,
+        custom_fields: prof.custom_fields || {}
       }));
 
       setProfessionals(transformedProfessionals);
@@ -109,7 +110,8 @@ export const useSupabaseProfessionals = () => {
           notes: professional.notes,
           rating: professional.rating,
           specialties: professional.specialties,
-          certifications: professional.certifications
+          certifications: professional.certifications,
+          custom_fields: professional.custom_fields || {}
         })
         .select()
         .single();
@@ -172,7 +174,8 @@ export const useSupabaseProfessionals = () => {
           notes: professional.notes,
           rating: professional.rating,
           specialties: professional.specialties,
-          certifications: professional.certifications
+          certifications: professional.certifications,
+          custom_fields: professional.custom_fields || {}
         })
         .eq('id', professional.id)
         .eq('user_id', user.id)

@@ -5927,6 +5927,7 @@ export type Database = {
           certifications: string[] | null
           company: string | null
           created_at: string
+          custom_fields: Json | null
           email: string
           external_review_score: number | null
           external_verification_id: string | null
@@ -5959,6 +5960,7 @@ export type Database = {
           certifications?: string[] | null
           company?: string | null
           created_at?: string
+          custom_fields?: Json | null
           email: string
           external_review_score?: number | null
           external_verification_id?: string | null
@@ -5991,6 +5993,7 @@ export type Database = {
           certifications?: string[] | null
           company?: string | null
           created_at?: string
+          custom_fields?: Json | null
           email?: string
           external_review_score?: number | null
           external_verification_id?: string | null

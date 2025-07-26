@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useProfessionals } from "@/hooks/useProfessionals";
 import { useToast } from "@/hooks/use-toast";
+import { CustomFieldsEditor } from "./CustomFieldsEditor";
 
 interface ProfessionalEditFormProps {
   professional: Professional;
@@ -31,6 +32,10 @@ export function ProfessionalEditForm({ professional, onSave, onCancel }: Profess
 
   const handleTypeChange = (value: ProfessionalType) => {
     setFormData(prev => ({ ...prev, type: value }));
+  };
+
+  const handleCustomFieldsChange = (customFields: Record<string, any>) => {
+    setFormData(prev => ({ ...prev, custom_fields: customFields }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -159,6 +164,12 @@ export function ProfessionalEditForm({ professional, onSave, onCancel }: Profess
           className="min-h-[100px]"
         />
       </div>
+      
+      <CustomFieldsEditor
+        customFields={formData.custom_fields || {}}
+        onChange={handleCustomFieldsChange}
+        editable={true}
+      />
       
       <div className="flex justify-end space-x-2">
         <Button type="button" variant="outline" onClick={onCancel}>

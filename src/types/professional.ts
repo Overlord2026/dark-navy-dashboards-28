@@ -27,4 +27,5 @@ export interface Professional {
   rating?: number;
   specialties?: string[];
   certifications?: string[];
+  custom_fields?: Record<string, any>;
 }
