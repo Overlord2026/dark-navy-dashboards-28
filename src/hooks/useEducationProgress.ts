@@ -85,9 +85,8 @@ export function useEducationProgress() {
         completed: false,
         progress: 0,
         bookmarked: false,
-        timeSpent: 0,
-        ...prev[moduleId],
-        timeSpent: (prev[moduleId]?.timeSpent || 0) + minutes
+        timeSpent: (prev[moduleId]?.timeSpent || 0) + minutes,
+        ...prev[moduleId]
       }
     }));
   }, []);
