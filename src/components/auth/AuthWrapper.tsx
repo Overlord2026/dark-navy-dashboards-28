@@ -6,6 +6,7 @@ import { useMFAEnforcement } from '@/hooks/useMFAEnforcement';
 import { MFAEnforcement } from '@/components/security/MFAEnforcement';
 import { Card, CardContent } from "@/components/ui/card";
 import { hasRoleAccess, getRoleDisplayName } from '@/utils/roleHierarchy';
+import { useRoleContext } from '@/context/RoleContext';
 import type { UserRole } from '@/utils/roleHierarchy';
 
 interface AuthWrapperProps {
@@ -21,6 +22,7 @@ export function AuthWrapper({
 }: AuthWrapperProps) {
   const { isAuthenticated, isLoading } = useAuth();
   const { userProfile } = useUser();
+  const { getCurrentRole } = useRoleContext();
   const mfaEnforcement = useMFAEnforcement(false); // Don't auto-redirect, we'll handle it here
 
   // Show loading state
@@ -56,13 +58,16 @@ export function AuthWrapper({
   }
 
   // Check role-based access using hierarchy system
-  if (allowedRoles.length > 0 && userProfile && !hasRoleAccess(userProfile.role, allowedRoles)) {
-    console.warn('Access denied for user:', {
-      userId: userProfile.id,
-      userRole: userProfile.role,
-      requiredRoles: allowedRoles,
-      page: window.location.pathname
-    });
+  if (allowedRoles.length > 0 && userProfile) {
+    const currentRole = getCurrentRole();
+    if (!hasRoleAccess(currentRole, allowedRoles)) {
+      console.warn('Access denied for user:', {
+        userId: userProfile.id,
+        actualRole: userProfile.role,
+        currentRole: currentRole,
+        requiredRoles: allowedRoles,
+        page: window.location.pathname
+      });
     
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -73,13 +78,14 @@ export function AuthWrapper({
               You don't have permission to access this page.
             </p>
             <div className="text-sm text-muted-foreground bg-muted p-3 rounded">
-              <p><strong>Your Role:</strong> {getRoleDisplayName(userProfile.role)}</p>
+              <p><strong>Your Role:</strong> {getRoleDisplayName(currentRole)}</p>
               <p><strong>Required Roles:</strong> {allowedRoles.map(getRoleDisplayName).join(', ')}</p>
             </div>
           </CardContent>
         </Card>
       </div>
     );
+    }
   }
 
   // Check MFA enforcement for authenticated users

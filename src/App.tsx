@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/context/AuthContext";
 import { UserProvider } from "@/context/UserContext";
+import { RoleProvider } from "@/context/RoleContext";
 import { SubscriptionProvider } from "@/context/SubscriptionContext";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { TenantProvider } from "@/context/TenantContext";
@@ -47,8 +48,9 @@ const App = () => (
       <AuthProvider>
         <TenantProvider>
           <UserProvider>
-            <AdvisorProvider>
-              <SubscriptionProvider>
+            <RoleProvider>
+              <AdvisorProvider>
+                <SubscriptionProvider>
             <TooltipProvider>
             <Toaster />
             <Sonner />
@@ -216,8 +218,9 @@ const App = () => (
               </DynamicLandingController>
             </BrowserRouter>
               </TooltipProvider>
-              </SubscriptionProvider>
-            </AdvisorProvider>
+                </SubscriptionProvider>
+              </AdvisorProvider>
+            </RoleProvider>
           </UserProvider>
         </TenantProvider>
       </AuthProvider>
