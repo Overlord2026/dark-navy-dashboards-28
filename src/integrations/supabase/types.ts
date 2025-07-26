@@ -5928,6 +5928,8 @@ export type Database = {
           company: string | null
           created_at: string
           email: string
+          external_review_score: number | null
+          external_verification_id: string | null
           fee_model: string | null
           firm: string | null
           id: string
@@ -5958,6 +5960,8 @@ export type Database = {
           company?: string | null
           created_at?: string
           email: string
+          external_review_score?: number | null
+          external_verification_id?: string | null
           fee_model?: string | null
           firm?: string | null
           id?: string
@@ -5988,6 +5992,8 @@ export type Database = {
           company?: string | null
           created_at?: string
           email?: string
+          external_review_score?: number | null
+          external_verification_id?: string | null
           fee_model?: string | null
           firm?: string | null
           id?: string

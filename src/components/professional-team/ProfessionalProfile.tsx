@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import { EnhancedProfessional, PROFESSIONAL_RELATIONSHIPS } from "@/types/professionalTeam";
 import { useProfessionalTeam } from "@/hooks/useProfessionalTeam";
+import { VerificationBadges } from "./VerificationBadges";
 
 interface ProfessionalProfileProps {
   professional: EnhancedProfessional;
@@ -82,6 +83,11 @@ export function ProfessionalProfile({ professional, onBack }: ProfessionalProfil
                     </Badge>
                   )}
                 </div>
+                <VerificationBadges 
+                  externalVerificationId={professional.external_verification_id}
+                  externalReviewScore={professional.external_review_score}
+                  certifications={professional.certifications}
+                />
                 <CardDescription className="text-lg">
                   {professional.firm || professional.company}
                 </CardDescription>

@@ -74,6 +74,9 @@ export interface EnhancedProfessional {
   user_id: string;
   created_at: string;
   updated_at: string;
+  // External verification fields
+  external_verification_id?: string | null;
+  external_review_score?: number | null;
   // Related data
   assignments?: ProfessionalAssignment[];
   reviews?: ProfessionalReview[];
