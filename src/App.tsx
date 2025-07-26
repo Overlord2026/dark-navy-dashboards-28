@@ -9,6 +9,7 @@ import { UserProvider } from "@/context/UserContext";
 import { SubscriptionProvider } from "@/context/SubscriptionContext";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { TenantProvider } from "@/context/TenantContext";
+import { AdvisorProvider } from "@/context/AdvisorContext";
 import { AuthWrapper } from "@/components/auth/AuthWrapper";
 import { DynamicLandingController } from "@/components/auth/DynamicLandingController";
 import { Navigation } from "@/components/Navigation";
@@ -45,7 +46,8 @@ const App = () => (
       <AuthProvider>
         <TenantProvider>
           <UserProvider>
-            <SubscriptionProvider>
+            <AdvisorProvider>
+              <SubscriptionProvider>
             <TooltipProvider>
             <Toaster />
             <Sonner />
@@ -209,8 +211,9 @@ const App = () => (
                 </div>
               </DynamicLandingController>
             </BrowserRouter>
-            </TooltipProvider>
-            </SubscriptionProvider>
+              </TooltipProvider>
+              </SubscriptionProvider>
+            </AdvisorProvider>
           </UserProvider>
         </TenantProvider>
       </AuthProvider>
