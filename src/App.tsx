@@ -42,10 +42,10 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider>
-      <TenantProvider>
-        <AuthProvider>
-        <UserProvider>
-          <SubscriptionProvider>
+      <AuthProvider>
+        <TenantProvider>
+          <UserProvider>
+            <SubscriptionProvider>
             <TooltipProvider>
             <Toaster />
             <Sonner />
@@ -210,10 +210,10 @@ const App = () => (
               </DynamicLandingController>
             </BrowserRouter>
             </TooltipProvider>
-          </SubscriptionProvider>
-        </UserProvider>
+            </SubscriptionProvider>
+          </UserProvider>
+        </TenantProvider>
       </AuthProvider>
-      </TenantProvider>
     </ThemeProvider>
   </QueryClientProvider>
 );
