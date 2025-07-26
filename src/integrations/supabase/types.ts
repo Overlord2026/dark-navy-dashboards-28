@@ -4207,6 +4207,107 @@ export type Database = {
           },
         ]
       }
+      investment_products: {
+        Row: {
+          asset_allocation: Json | null
+          category_id: string | null
+          compliance_approved: boolean | null
+          compliance_approved_at: string | null
+          compliance_approved_by: string | null
+          created_at: string | null
+          created_by: string
+          custom_fields: Json | null
+          deep_link: string | null
+          description: string | null
+          eligibility_requirements: Json | null
+          external_product_id: string | null
+          external_provider: string | null
+          fee_structure: Json | null
+          id: string
+          is_archived: boolean | null
+          is_featured: boolean | null
+          last_compliance_check: string | null
+          marketing_info: Json | null
+          maximum_investment: number | null
+          minimum_investment: number | null
+          name: string
+          product_type: string
+          ria_id: string
+          risk_level: string | null
+          status: string | null
+          tenant_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          asset_allocation?: Json | null
+          category_id?: string | null
+          compliance_approved?: boolean | null
+          compliance_approved_at?: string | null
+          compliance_approved_by?: string | null
+          created_at?: string | null
+          created_by: string
+          custom_fields?: Json | null
+          deep_link?: string | null
+          description?: string | null
+          eligibility_requirements?: Json | null
+          external_product_id?: string | null
+          external_provider?: string | null
+          fee_structure?: Json | null
+          id?: string
+          is_archived?: boolean | null
+          is_featured?: boolean | null
+          last_compliance_check?: string | null
+          marketing_info?: Json | null
+          maximum_investment?: number | null
+          minimum_investment?: number | null
+          name: string
+          product_type: string
+          ria_id: string
+          risk_level?: string | null
+          status?: string | null
+          tenant_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          asset_allocation?: Json | null
+          category_id?: string | null
+          compliance_approved?: boolean | null
+          compliance_approved_at?: string | null
+          compliance_approved_by?: string | null
+          created_at?: string | null
+          created_by?: string
+          custom_fields?: Json | null
+          deep_link?: string | null
+          description?: string | null
+          eligibility_requirements?: Json | null
+          external_product_id?: string | null
+          external_provider?: string | null
+          fee_structure?: Json | null
+          id?: string
+          is_archived?: boolean | null
+          is_featured?: boolean | null
+          last_compliance_check?: string | null
+          marketing_info?: Json | null
+          maximum_investment?: number | null
+          minimum_investment?: number | null
+          name?: string
+          product_type?: string
+          ria_id?: string
+          risk_level?: string | null
+          status?: string | null
+          tenant_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "investment_products_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "investment_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       investment_strategies: {
         Row: {
           allocation: string | null
@@ -5681,6 +5782,210 @@ export type Database = {
           valuation?: number
         }
         Relationships: []
+      }
+      product_audit_log: {
+        Row: {
+          action_type: string
+          change_summary: string | null
+          created_at: string | null
+          field_name: string | null
+          id: string
+          ip_address: unknown | null
+          new_value: string | null
+          old_value: string | null
+          product_id: string
+          record_id: string
+          table_name: string
+          tenant_id: string
+          user_agent: string | null
+          user_id: string | null
+          user_role: string | null
+        }
+        Insert: {
+          action_type: string
+          change_summary?: string | null
+          created_at?: string | null
+          field_name?: string | null
+          id?: string
+          ip_address?: unknown | null
+          new_value?: string | null
+          old_value?: string | null
+          product_id: string
+          record_id: string
+          table_name: string
+          tenant_id: string
+          user_agent?: string | null
+          user_id?: string | null
+          user_role?: string | null
+        }
+        Update: {
+          action_type?: string
+          change_summary?: string | null
+          created_at?: string | null
+          field_name?: string | null
+          id?: string
+          ip_address?: unknown | null
+          new_value?: string | null
+          old_value?: string | null
+          product_id?: string
+          record_id?: string
+          table_name?: string
+          tenant_id?: string
+          user_agent?: string | null
+          user_id?: string | null
+          user_role?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_audit_log_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "investment_products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      product_compliance_tracking: {
+        Row: {
+          assigned_to: string | null
+          compliance_checklist: Json | null
+          conditions_or_requirements: string | null
+          created_at: string | null
+          created_by: string
+          decision: string | null
+          decision_reason: string | null
+          escalated_at: string | null
+          id: string
+          priority: string | null
+          product_id: string
+          required_documents: Json | null
+          review_completed_at: string | null
+          review_started_at: string | null
+          review_type: string
+          reviewer_notes: string | null
+          status: string | null
+          submitted_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          assigned_to?: string | null
+          compliance_checklist?: Json | null
+          conditions_or_requirements?: string | null
+          created_at?: string | null
+          created_by: string
+          decision?: string | null
+          decision_reason?: string | null
+          escalated_at?: string | null
+          id?: string
+          priority?: string | null
+          product_id: string
+          required_documents?: Json | null
+          review_completed_at?: string | null
+          review_started_at?: string | null
+          review_type: string
+          reviewer_notes?: string | null
+          status?: string | null
+          submitted_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          assigned_to?: string | null
+          compliance_checklist?: Json | null
+          conditions_or_requirements?: string | null
+          created_at?: string | null
+          created_by?: string
+          decision?: string | null
+          decision_reason?: string | null
+          escalated_at?: string | null
+          id?: string
+          priority?: string | null
+          product_id?: string
+          required_documents?: Json | null
+          review_completed_at?: string | null
+          review_started_at?: string | null
+          review_type?: string
+          reviewer_notes?: string | null
+          status?: string | null
+          submitted_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_compliance_tracking_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "investment_products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      product_documents: {
+        Row: {
+          access_level: string | null
+          compliance_approved: boolean | null
+          compliance_notes: string | null
+          created_at: string | null
+          description: string | null
+          document_type: string
+          file_size: number | null
+          file_url: string | null
+          id: string
+          is_current_version: boolean | null
+          mime_type: string | null
+          name: string
+          product_id: string
+          requires_compliance_review: boolean | null
+          updated_at: string | null
+          uploaded_by: string
+          version_number: number | null
+        }
+        Insert: {
+          access_level?: string | null
+          compliance_approved?: boolean | null
+          compliance_notes?: string | null
+          created_at?: string | null
+          description?: string | null
+          document_type: string
+          file_size?: number | null
+          file_url?: string | null
+          id?: string
+          is_current_version?: boolean | null
+          mime_type?: string | null
+          name: string
+          product_id: string
+          requires_compliance_review?: boolean | null
+          updated_at?: string | null
+          uploaded_by: string
+          version_number?: number | null
+        }
+        Update: {
+          access_level?: string | null
+          compliance_approved?: boolean | null
+          compliance_notes?: string | null
+          created_at?: string | null
+          description?: string | null
+          document_type?: string
+          file_size?: number | null
+          file_url?: string | null
+          id?: string
+          is_current_version?: boolean | null
+          mime_type?: string | null
+          name?: string
+          product_id?: string
+          requires_compliance_review?: boolean | null
+          updated_at?: string | null
+          uploaded_by?: string
+          version_number?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_documents_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "investment_products"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       professional_assignments: {
         Row: {
@@ -10450,6 +10755,59 @@ export type Database = {
             columns: ["model_portfolio_id"]
             isOneToOne: false
             referencedRelation: "model_portfolios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_product_interests_marketplace: {
+        Row: {
+          advisor_response: string | null
+          advisor_response_at: string | null
+          created_at: string | null
+          id: string
+          interest_type: string
+          notes: string | null
+          product_id: string
+          request_details: Json | null
+          status: string | null
+          tenant_id: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          advisor_response?: string | null
+          advisor_response_at?: string | null
+          created_at?: string | null
+          id?: string
+          interest_type: string
+          notes?: string | null
+          product_id: string
+          request_details?: Json | null
+          status?: string | null
+          tenant_id: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          advisor_response?: string | null
+          advisor_response_at?: string | null
+          created_at?: string | null
+          id?: string
+          interest_type?: string
+          notes?: string | null
+          product_id?: string
+          request_details?: Json | null
+          status?: string | null
+          tenant_id?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_product_interests_marketplace_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "investment_products"
             referencedColumns: ["id"]
           },
         ]
