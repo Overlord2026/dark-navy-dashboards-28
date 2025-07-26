@@ -9,7 +9,8 @@ export const educationalResources: EducationalResources = {
       isPaid: false,
       level: "All Levels",
       duration: "Self-paced",
-      ghlUrl: "https://ghl.example.com/guides/retirement-planning"
+      ghlUrl: "https://ghl.example.com/guides/retirement-planning",
+      persona: "all"
     },
     {
       id: "guide-estate",
@@ -18,7 +19,8 @@ export const educationalResources: EducationalResources = {
       isPaid: false,
       level: "All Levels",
       duration: "Self-paced",
-      ghlUrl: "https://ghl.example.com/guides/estate-planning-checklist"
+      ghlUrl: "https://ghl.example.com/guides/estate-planning-checklist",
+      persona: "multi_gen_family"
     }
   ],
   "books": [
@@ -30,7 +32,8 @@ export const educationalResources: EducationalResources = {
       level: "All Levels",
       author: "Tony Gomes",
       coverImage: "/lovable-uploads/290d88b2-f2a5-4de6-af7c-5b69a764664f.png",
-      ghlUrl: "https://www.amazon.com/dp/B0BVSXBBXW/ref=sr_1_fkmr3_1?crid=2259RAWCJ16EH&keywords=life+integrated+toney+gomes&qid=1676472181&sprefix=life+integrated+toney+gomes%2Caps%2C145&sr=8-1-fkmr3"
+      ghlUrl: "https://www.amazon.com/dp/B0BVSXBBXW/ref=sr_1_fkmr3_1?crid=2259RAWCJ16EH&keywords=life+integrated+toney+gomes&qid=1676472181&sprefix=life+integrated+toney+gomes%2Caps%2C145&sr=8-1-fkmr3",
+      persona: "pre_retiree"
     }
   ],
   "whitepapers": [
@@ -40,7 +43,8 @@ export const educationalResources: EducationalResources = {
       description: "Research study on the value advisors provide to their clients through portfolio construction, behavioral coaching, and other services.",
       isPaid: false,
       level: "All Levels",
-      ghlUrl: "https://boutiquefamilyofficecfo.com/wp-content/uploads/2024/01/Vanguard-Quantifyiing-Advisors-Alpha.pdf"
+      ghlUrl: "https://boutiquefamilyofficecfo.com/wp-content/uploads/2024/01/Vanguard-Quantifyiing-Advisors-Alpha.pdf",
+      persona: "all"
     },
     {
       id: "whitepaper-russell-advisor",
@@ -48,7 +52,8 @@ export const educationalResources: EducationalResources = {
       description: "Comprehensive analysis of the quantifiable benefits that financial advisors provide to their clients.",
       isPaid: false,
       level: "All Levels",
-      ghlUrl: "https://boutiquefamilyofficecfo.com/wp-content/uploads/2024/01/Value_of_an_Advisor_Study-Russell-Inv.pdf"
+      ghlUrl: "https://boutiquefamilyofficecfo.com/wp-content/uploads/2024/01/Value_of_an_Advisor_Study-Russell-Inv.pdf",
+      persona: "all"
     },
     {
       id: "whitepaper-vanguard-value",
@@ -56,7 +61,8 @@ export const educationalResources: EducationalResources = {
       description: "Research on how financial advisors add value through various advisory services and client relationship management.",
       isPaid: false,
       level: "All Levels",
-      ghlUrl: "https://boutiquefamilyofficecfo.com/wp-content/uploads/2024/01/Advisor-Value-Vanguard.pdf"
+      ghlUrl: "https://boutiquefamilyofficecfo.com/wp-content/uploads/2024/01/Advisor-Value-Vanguard.pdf",
+      persona: "all"
     },
     {
       id: "whitepaper-morningstar",
@@ -64,7 +70,8 @@ export const educationalResources: EducationalResources = {
       description: "Study examining the various ways financial advisors create value for their clients beyond investment management.",
       isPaid: false,
       level: "All Levels",
-      ghlUrl: "https://boutiquefamilyofficecfo.com/wp-content/uploads/2024/01/Advisor-Value-Morningstar.pdf"
+      ghlUrl: "https://boutiquefamilyofficecfo.com/wp-content/uploads/2024/01/Advisor-Value-Morningstar.pdf",
+      persona: "all"
     },
     {
       id: "whitepaper-kitces",
@@ -72,7 +79,8 @@ export const educationalResources: EducationalResources = {
       description: "Research paper exploring the comprehensive value that financial planning provides to clients.",
       isPaid: false,
       level: "All Levels",
-      ghlUrl: "https://boutiquefamilyofficecfo.com/wp-content/uploads/2025/01/Kitces-Value-of-Financial-Planning-2.pdf"
+      ghlUrl: "https://boutiquefamilyofficecfo.com/wp-content/uploads/2025/01/Kitces-Value-of-Financial-Planning-2.pdf",
+      persona: "all"
     },
     {
       id: "whitepaper-bitcoin",
@@ -80,7 +88,8 @@ export const educationalResources: EducationalResources = {
       description: "The original Bitcoin whitepaper by Satoshi Nakamoto - a peer-to-peer electronic cash system.",
       isPaid: false,
       level: "All Levels",
-      ghlUrl: "https://boutiquefamilyofficecfo.com/wp-content/uploads/2024/12/Bitcoin-Whitepaper-10.31.2008.pdf"
+      ghlUrl: "https://boutiquefamilyofficecfo.com/wp-content/uploads/2024/12/Bitcoin-Whitepaper-10.31.2008.pdf",
+      persona: "business_owner"
     }
   ],
   "ebooks": [
@@ -91,7 +100,8 @@ export const educationalResources: EducationalResources = {
       isPaid: false,
       level: "All Levels",
       author: "Financial Experts",
-      ghlUrl: "https://designrr.page/?id=421221&token=3489244185&type=FP&h=7325"
+      ghlUrl: "https://designrr.page/?id=421221&token=3489244185&type=FP&h=7325",
+      persona: "multi_gen_family"
     },
     {
       id: "ebook-social-security-guide",
@@ -100,7 +110,8 @@ export const educationalResources: EducationalResources = {
       isPaid: false,
       level: "All Levels",
       author: "Financial Experts",
-      ghlUrl: "https://designrr.page/?id=421232&token=2644925433&type=FP&h=5341"
+      ghlUrl: "https://designrr.page/?id=421232&token=2644925433&type=FP&h=5341",
+      persona: "pre_retiree"
     },
     {
       id: "ebook-when-to-retire",
@@ -109,7 +120,8 @@ export const educationalResources: EducationalResources = {
       isPaid: false,
       level: "All Levels",
       author: "Financial Experts",
-      ghlUrl: "https://designrr.page/?id=421496&token=3223578452&type=FP&h=3153"
+      ghlUrl: "https://designrr.page/?id=421496&token=3223578452&type=FP&h=3153",
+      persona: "pre_retiree"
     },
     {
       id: "ebook-15-retirement-risks",
@@ -118,7 +130,8 @@ export const educationalResources: EducationalResources = {
       isPaid: false,
       level: "All Levels",
       author: "Financial Experts",
-      ghlUrl: "https://designrr.page/?id=421495&token=2446712157&type=FP&h=5015"
+      ghlUrl: "https://designrr.page/?id=421495&token=2446712157&type=FP&h=5015",
+      persona: "pre_retiree"
     },
     {
       id: "ebook-13-investment-blunders",
@@ -127,7 +140,8 @@ export const educationalResources: EducationalResources = {
       isPaid: false,
       level: "All Levels",
       author: "Financial Experts",
-      ghlUrl: "https://designrr.page/?id=421497&token=1423331746&type=FP&h=4447"
+      ghlUrl: "https://designrr.page/?id=421497&token=1423331746&type=FP&h=4447",
+      persona: "all"
     },
     {
       id: "ebook-physicians-retirement",
@@ -136,7 +150,8 @@ export const educationalResources: EducationalResources = {
       isPaid: false,
       level: "All Levels",
       author: "Financial Experts",
-      ghlUrl: "https://designrr.page/?id=422894&token=840011724&type=FP&h=2693"
+      ghlUrl: "https://designrr.page/?id=422894&token=840011724&type=FP&h=2693",
+      persona: "business_owner"
     },
     {
       id: "ebook-fees",
@@ -145,7 +160,8 @@ export const educationalResources: EducationalResources = {
       isPaid: false,
       level: "All Levels",
       author: "Financial Experts",
-      ghlUrl: "https://designrr.page/?id=422905&token=1112294897&type=FP&h=9731"
+      ghlUrl: "https://designrr.page/?id=422905&token=1112294897&type=FP&h=9731",
+      persona: "all"
     },
     {
       id: "ebook-gps-retirement-income",
@@ -154,7 +170,8 @@ export const educationalResources: EducationalResources = {
       isPaid: false,
       level: "All Levels",
       author: "Financial Experts",
-      ghlUrl: "https://designrr.page/?id=425954&token=1041938451&type=FP&h=6915"
+      ghlUrl: "https://designrr.page/?id=425954&token=1041938451&type=FP&h=6915",
+      persona: "pre_retiree"
     },
     {
       id: "ebook-retirement-guide-women",
@@ -163,7 +180,8 @@ export const educationalResources: EducationalResources = {
       isPaid: false,
       level: "All Levels",
       author: "Financial Experts",
-      ghlUrl: "https://designrr.page/?id=425955&token=4063210481&type=FP&h=9519"
+      ghlUrl: "https://designrr.page/?id=425955&token=4063210481&type=FP&h=9519",
+      persona: "pre_retiree"
     }
   ],
   "resources": [
@@ -173,7 +191,8 @@ export const educationalResources: EducationalResources = {
       description: "Read the comprehensive review of 'Life Integrated Financial Freedom' on Amazon.",
       isPaid: false,
       level: "All Levels",
-      ghlUrl: "https://www.amazon.com/Life-Integrated-Financial-Freedom-Retirement/dp/B0BVSXBBXW"
+      ghlUrl: "https://www.amazon.com/Life-Integrated-Financial-Freedom-Retirement/dp/B0BVSXBBXW",
+      persona: "all"
     },
     {
       id: "resource-client-testimonial",
@@ -181,7 +200,8 @@ export const educationalResources: EducationalResources = {
       description: "Hear from our satisfied clients about their experience with our services.",
       isPaid: false,
       level: "All Levels",
-      ghlUrl: "https://planning.bfocfo.com/learning-vault-page"
+      ghlUrl: "https://planning.bfocfo.com/learning-vault-page",
+      persona: "all"
     },
     {
       id: "resource-2025-outlook",
@@ -189,7 +209,8 @@ export const educationalResources: EducationalResources = {
       description: "Watch our exclusive 2025 market outlook and financial planning insights.",
       isPaid: false,
       level: "All Levels",
-      ghlUrl: "https://planning.bfocfo.com/2025-exclusive-outlook-page"
+      ghlUrl: "https://planning.bfocfo.com/2025-exclusive-outlook-page",
+      persona: "all"
     },
     {
       id: "resource-youtube-video-1",
@@ -197,7 +218,8 @@ export const educationalResources: EducationalResources = {
       description: "Educational video content to enhance your financial knowledge.",
       isPaid: false,
       level: "All Levels",
-      ghlUrl: "https://www.youtube.com/watch?v=vHxEScjieWQ"
+      ghlUrl: "https://www.youtube.com/watch?v=vHxEScjieWQ",
+      persona: "all"
     },
     {
       id: "resource-fiduciary-duty",
@@ -205,7 +227,8 @@ export const educationalResources: EducationalResources = {
       description: "Understanding the principles of fiduciary duty in financial planning.",
       isPaid: false,
       level: "All Levels",
-      ghlUrl: "https://boutiquefamilyofficecfo.com/fiduciary-duty-principles/"
+      ghlUrl: "https://boutiquefamilyofficecfo.com/fiduciary-duty-principles/",
+      persona: "all"
     },
     {
       id: "resource-fees-portfolio",
@@ -213,7 +236,8 @@ export const educationalResources: EducationalResources = {
       description: "Learn how seemingly small fees can have a massive impact on your investment returns.",
       isPaid: false,
       level: "All Levels",
-      ghlUrl: "https://www.youtube.com/watch?v=oV9mtiQAZ0Q"
+      ghlUrl: "https://www.youtube.com/watch?v=oV9mtiQAZ0Q",
+      persona: "all"
     },
     {
       id: "resource-orange-tail-video",
@@ -221,7 +245,8 @@ export const educationalResources: EducationalResources = {
       description: "Educational video content about investment strategies and market insights.",
       isPaid: false,
       level: "All Levels",
-      ghlUrl: "https://vimeo.com/999395033"
+      ghlUrl: "https://vimeo.com/999395033",
+      persona: "all"
     }
   ],
   "funnel": [
@@ -231,7 +256,8 @@ export const educationalResources: EducationalResources = {
       description: "Learn about the benefits and process of establishing Florida residency for your financial planning.",
       isPaid: false,
       level: "All Levels",
-      ghlUrl: "https://planning.bfocfo.com/florida-residency"
+      ghlUrl: "https://planning.bfocfo.com/florida-residency",
+      persona: "multi_gen_family"
     }
   ]
 };

@@ -23,7 +23,8 @@ import { EducationalResource } from "@/types/education";
 import { toast } from "sonner";
 
 interface InteractiveModuleCardProps {
-  resource: EducationalResource;
+  resource?: EducationalResource;
+  module?: EducationalResource;
   progress?: number;
   isCompleted?: boolean;
   testimonial?: {
@@ -34,29 +35,38 @@ interface InteractiveModuleCardProps {
   };
   onEnroll?: () => void;
   onSaveByEmail?: () => void;
+  onComplete?: (quizScore?: number) => void;
+  onBookmark?: (bookmarked: boolean) => void;
   showInteractiveElements?: boolean;
 }
 
 export const InteractiveModuleCard = ({
   resource,
+  module,
   progress = 0,
   isCompleted = false,
   testimonial,
   onEnroll,
   onSaveByEmail,
+  onComplete,
+  onBookmark,
   showInteractiveElements = true
 }: InteractiveModuleCardProps) => {
+  // Use either resource or module prop for backward compatibility
+  const currentResource = resource || module;
   const [isHovered, setIsHovered] = useState(false);
   const [showKnowledgeCheck, setShowKnowledgeCheck] = useState(false);
   const [knowledgeScore, setKnowledgeScore] = useState<number | null>(null);
 
   const handleStartModule = () => {
+    if (!currentResource) return;
+    
     if (onEnroll) {
       onEnroll();
     } else {
-      window.open(resource.ghlUrl, '_blank');
+      window.open(currentResource.ghlUrl, '_blank');
     }
-    toast.success(`Starting: ${resource.title}`);
+    toast.success(`Starting: ${currentResource.title}`);
   };
 
   const handleSaveByEmail = () => {
@@ -74,6 +84,7 @@ export const InteractiveModuleCard = ({
   const completeKnowledgeCheck = (score: number) => {
     setKnowledgeScore(score);
     setShowKnowledgeCheck(false);
+    if (onComplete) onComplete(score);
     toast.success(`Great job! You scored ${score}% on the knowledge check.`);
   };
 
@@ -93,11 +104,11 @@ export const InteractiveModuleCard = ({
           {/* Status and Level Badges */}
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-2">
-              <Badge variant={resource.isPaid ? "default" : "secondary"}>
-                {resource.isPaid ? "Premium" : "Free"}
+              <Badge variant={currentResource?.isPaid ? "default" : "secondary"}>
+                {currentResource?.isPaid ? "Premium" : "Free"}
               </Badge>
               <Badge variant="outline" className="text-xs">
-                {resource.level}
+                {currentResource?.level}
               </Badge>
             </div>
             <div className="flex items-center gap-1">
@@ -112,9 +123,9 @@ export const InteractiveModuleCard = ({
 
           {/* Title and Description */}
           <div className="space-y-2">
-            <CardTitle className="text-lg leading-tight">{resource.title}</CardTitle>
+            <CardTitle className="text-lg leading-tight">{currentResource?.title}</CardTitle>
             <CardDescription className="line-clamp-2">
-              {resource.description}
+              {currentResource?.description}
             </CardDescription>
           </div>
 
@@ -135,12 +146,12 @@ export const InteractiveModuleCard = ({
           <div className="flex items-center gap-4 text-sm text-muted-foreground">
             <div className="flex items-center gap-1">
               <Clock className="h-4 w-4" />
-              {resource.duration}
+              {currentResource?.duration}
             </div>
-            {resource.author && (
+            {currentResource?.author && (
               <div className="flex items-center gap-1">
                 <Award className="h-4 w-4" />
-                {resource.author}
+                {currentResource.author}
               </div>
             )}
           </div>
@@ -218,7 +229,7 @@ export const InteractiveModuleCard = ({
                         </DialogDescription>
                       </DialogHeader>
                       <KnowledgeCheckComponent 
-                        moduleTitle={resource.title}
+                        moduleTitle={currentResource?.title || "Module"}
                         onComplete={completeKnowledgeCheck}
                       />
                     </DialogContent>

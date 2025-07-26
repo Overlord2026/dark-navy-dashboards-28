@@ -30,6 +30,7 @@ export interface EducationalResource {
   ghlUrl: string;
   series?: string;
   track?: string;
+  persona?: 'business_owner' | 'multi_gen_family' | 'pre_retiree' | 'all';
 }
 
 export interface EducationalResources {
