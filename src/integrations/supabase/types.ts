@@ -486,27 +486,45 @@ export type Database = {
       }
       audit_logs: {
         Row: {
+          changed_at: string | null
+          changed_columns: string[] | null
           created_at: string | null
           details: Json | null
           event_type: string
           id: string
+          new_row: Json | null
+          old_row: Json | null
+          record_id: string | null
           status: string
+          table_name: string
           user_id: string | null
         }
         Insert: {
+          changed_at?: string | null
+          changed_columns?: string[] | null
           created_at?: string | null
           details?: Json | null
           event_type: string
           id?: string
+          new_row?: Json | null
+          old_row?: Json | null
+          record_id?: string | null
           status: string
+          table_name?: string
           user_id?: string | null
         }
         Update: {
+          changed_at?: string | null
+          changed_columns?: string[] | null
           created_at?: string | null
           details?: Json | null
           event_type?: string
           id?: string
+          new_row?: Json | null
+          old_row?: Json | null
+          record_id?: string | null
           status?: string
+          table_name?: string
           user_id?: string | null
         }
         Relationships: []
@@ -769,6 +787,68 @@ export type Database = {
             columns: ["professional_user_id"]
             isOneToOne: false
             referencedRelation: "professional_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      client_invitations: {
+        Row: {
+          advisor_id: string | null
+          created_at: string | null
+          custom_message: string | null
+          email: string
+          expires_at: string | null
+          fee_structure: string | null
+          first_name: string
+          id: string
+          invite_link: string | null
+          last_name: string
+          onboarding_template: string | null
+          premium_modules: string[] | null
+          status: string | null
+          tenant_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          advisor_id?: string | null
+          created_at?: string | null
+          custom_message?: string | null
+          email: string
+          expires_at?: string | null
+          fee_structure?: string | null
+          first_name: string
+          id?: string
+          invite_link?: string | null
+          last_name: string
+          onboarding_template?: string | null
+          premium_modules?: string[] | null
+          status?: string | null
+          tenant_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          advisor_id?: string | null
+          created_at?: string | null
+          custom_message?: string | null
+          email?: string
+          expires_at?: string | null
+          fee_structure?: string | null
+          first_name?: string
+          id?: string
+          invite_link?: string | null
+          last_name?: string
+          onboarding_template?: string | null
+          premium_modules?: string[] | null
+          status?: string | null
+          tenant_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_invitations_advisor_id_fkey"
+            columns: ["advisor_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -4519,6 +4599,183 @@ export type Database = {
           },
         ]
       }
+      onboarding_documents: {
+        Row: {
+          created_at: string | null
+          document_type: string
+          file_name: string
+          file_path: string
+          file_size: number | null
+          id: string
+          mime_type: string | null
+          session_id: string | null
+          status: string | null
+          tenant_id: string
+          updated_at: string | null
+          uploaded_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          document_type: string
+          file_name: string
+          file_path: string
+          file_size?: number | null
+          id?: string
+          mime_type?: string | null
+          session_id?: string | null
+          status?: string | null
+          tenant_id: string
+          updated_at?: string | null
+          uploaded_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          document_type?: string
+          file_name?: string
+          file_path?: string
+          file_size?: number | null
+          id?: string
+          mime_type?: string | null
+          session_id?: string | null
+          status?: string | null
+          tenant_id?: string
+          updated_at?: string | null
+          uploaded_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "onboarding_documents_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "onboarding_sessions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "onboarding_documents_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      onboarding_sessions: {
+        Row: {
+          completed_at: string | null
+          completed_steps: string[] | null
+          created_at: string | null
+          current_step: string | null
+          id: string
+          invitation_id: string | null
+          session_data: Json | null
+          started_at: string | null
+          status: string | null
+          tenant_id: string
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          completed_steps?: string[] | null
+          created_at?: string | null
+          current_step?: string | null
+          id?: string
+          invitation_id?: string | null
+          session_data?: Json | null
+          started_at?: string | null
+          status?: string | null
+          tenant_id: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          completed_steps?: string[] | null
+          created_at?: string | null
+          current_step?: string | null
+          id?: string
+          invitation_id?: string | null
+          session_data?: Json | null
+          started_at?: string | null
+          status?: string | null
+          tenant_id?: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "onboarding_sessions_invitation_id_fkey"
+            columns: ["invitation_id"]
+            isOneToOne: false
+            referencedRelation: "client_invitations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "onboarding_sessions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      onboarding_step_completions: {
+        Row: {
+          completed_at: string
+          created_at: string | null
+          id: string
+          is_completed: boolean | null
+          session_id: string | null
+          step_name: string
+          tenant_id: string
+          updated_at: string | null
+          user_id: string
+          user_type: string
+        }
+        Insert: {
+          completed_at?: string
+          created_at?: string | null
+          id?: string
+          is_completed?: boolean | null
+          session_id?: string | null
+          step_name: string
+          tenant_id: string
+          updated_at?: string | null
+          user_id: string
+          user_type: string
+        }
+        Update: {
+          completed_at?: string
+          created_at?: string | null
+          id?: string
+          is_completed?: boolean | null
+          session_id?: string | null
+          step_name?: string
+          tenant_id?: string
+          updated_at?: string | null
+          user_id?: string
+          user_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "onboarding_step_completions_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "onboarding_sessions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "onboarding_step_completions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       onboarding_workflow_steps: {
         Row: {
           application_id: string
@@ -6787,6 +7044,63 @@ export type Database = {
           updated_at?: string
           user_id?: string
           vesting_schedule?: string | null
+        }
+        Relationships: []
+      }
+      ria_onboarding_configs: {
+        Row: {
+          created_at: string | null
+          custom_agreements: string[] | null
+          firm_name: string
+          id: string
+          logo_url: string | null
+          optional_steps: string[] | null
+          payment_amount: number | null
+          payment_frequency: string | null
+          payment_required: boolean | null
+          primary_color: string | null
+          required_steps: string[] | null
+          secondary_color: string | null
+          tenant_id: string
+          updated_at: string | null
+          welcome_message: string | null
+          welcome_video_url: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          custom_agreements?: string[] | null
+          firm_name: string
+          id?: string
+          logo_url?: string | null
+          optional_steps?: string[] | null
+          payment_amount?: number | null
+          payment_frequency?: string | null
+          payment_required?: boolean | null
+          primary_color?: string | null
+          required_steps?: string[] | null
+          secondary_color?: string | null
+          tenant_id: string
+          updated_at?: string | null
+          welcome_message?: string | null
+          welcome_video_url?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          custom_agreements?: string[] | null
+          firm_name?: string
+          id?: string
+          logo_url?: string | null
+          optional_steps?: string[] | null
+          payment_amount?: number | null
+          payment_frequency?: string | null
+          payment_required?: boolean | null
+          primary_color?: string | null
+          required_steps?: string[] | null
+          secondary_color?: string | null
+          tenant_id?: string
+          updated_at?: string | null
+          welcome_message?: string | null
+          welcome_video_url?: string | null
         }
         Relationships: []
       }
