@@ -18,6 +18,12 @@ import { Navigation } from "@/components/Navigation";
 import Index from "./pages/Index";
 // Dashboard default export
 import Dashboard from "./pages/Dashboard";
+// Public pages
+import WelcomePage from "./pages/WelcomePage";
+import RetirementConfidenceScorecard from "./pages/RetirementConfidenceScorecard";
+import PublicFeeCalculator from "./pages/PublicFeeCalculator";
+import RetirementIncomeGapAnalyzer from "./pages/RetirementIncomeGapAnalyzer";
+import RetirementRoadmapInfo from "./pages/RetirementRoadmapInfo";
 import { AuthPage } from "./pages/AuthPage";
 import { SecuritySettingsPage } from "./pages/SecuritySettingsPage";
 import { ClientDashboard } from "./pages/ClientDashboard";
@@ -59,12 +65,20 @@ const App = () => (
                 <div className="min-h-screen bg-background">
                   <Navigation />
                   <Routes>
-                    <Route path="/auth" element={<AuthPage />} />
+                  <Route path="/auth" element={<AuthPage />} />
+                    
+                    {/* Public routes - no authentication required */}
+                    <Route path="/welcome" element={<WelcomePage />} />
+                    <Route path="/scorecard" element={<RetirementConfidenceScorecard />} />
+                    <Route path="/calculator" element={<PublicFeeCalculator />} />
+                    <Route path="/gap-analyzer" element={<RetirementIncomeGapAnalyzer />} />
+                    <Route path="/roadmap-info" element={<RetirementRoadmapInfo />} />
+                    
                     <Route
                       path="/"
                       element={
-                        <AuthWrapper requireAuth={true}>
-                          <Dashboard />
+                        <AuthWrapper requireAuth={false}>
+                          <WelcomePage />
                         </AuthWrapper>
                       }
                     />
