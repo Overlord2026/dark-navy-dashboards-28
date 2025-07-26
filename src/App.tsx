@@ -1,9 +1,12 @@
 
+import React, { useEffect } from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { initializeAnalytics } from "@/lib/analytics";
+import { setupErrorMonitoring, monitorAuthEvents } from "@/lib/monitoring";
 import { AuthProvider } from "@/context/AuthContext";
 import { UserProvider } from "@/context/UserContext";
 import { RoleProvider } from "@/context/RoleContext";
@@ -56,15 +59,23 @@ import PortfolioPage from "./pages/PortfolioPage";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <ThemeProvider>
-      <AuthProvider>
-        <TenantProvider>
-          <UserProvider>
-            <RoleProvider>
-              <AdvisorProvider>
-                <SubscriptionProvider>
+const App = () => {
+  useEffect(() => {
+    // Initialize analytics and monitoring
+    initializeAnalytics();
+    setupErrorMonitoring();
+    monitorAuthEvents();
+  }, []);
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <AuthProvider>
+          <TenantProvider>
+            <UserProvider>
+              <RoleProvider>
+                <AdvisorProvider>
+                  <SubscriptionProvider>
             <TooltipProvider>
             <Toaster />
             <Sonner />
@@ -320,6 +331,7 @@ const App = () => (
       </AuthProvider>
     </ThemeProvider>
   </QueryClientProvider>
-);
+  );
+};
 
 export default App;

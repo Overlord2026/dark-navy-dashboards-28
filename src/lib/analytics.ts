@@ -60,6 +60,35 @@ export const analytics = {
     posthog.capture(eventName, properties);
   },
 
+  // Error tracking
+  trackError: (error: Error, context?: Record<string, any>) => {
+    posthog.capture('error', {
+      error_message: error.message,
+      error_stack: error.stack,
+      error_name: error.name,
+      ...context
+    });
+  },
+
+  // Performance tracking
+  trackPerformance: (metric: string, value: number, context?: Record<string, any>) => {
+    posthog.capture('performance_metric', {
+      metric_name: metric,
+      metric_value: value,
+      ...context
+    });
+  },
+
+  // Security event tracking
+  trackSecurityEvent: (eventType: string, severity: 'low' | 'medium' | 'high' | 'critical', details?: Record<string, any>) => {
+    posthog.capture('security_event', {
+      event_type: eventType,
+      severity,
+      timestamp: new Date().toISOString(),
+      ...details
+    });
+  },
+
   // User properties
   setUserProperties: (properties: Record<string, any>) => {
     posthog.setPersonProperties(properties);
