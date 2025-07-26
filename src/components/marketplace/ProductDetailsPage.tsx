@@ -14,7 +14,7 @@ interface Product {
   name: string;
   description: string;
   category_id: string;
-  ria_firm: string;
+  ria_id: string; // Changed from ria_firm to match database
   minimum_investment: number;
   maximum_investment?: number;
   risk_level: string;
@@ -22,7 +22,7 @@ interface Product {
   compliance_approved: boolean;
   fee_structure?: any;
   asset_allocation?: any;
-  eligibility_requirements?: string;
+  eligibility_requirements?: any; // Changed to any to match Json type
   performance_data?: any;
   investment_categories?: {
     id: string;
@@ -280,7 +280,7 @@ export function ProductDetailsPage() {
         </Button>
         <div className="flex-1">
           <h1 className="text-3xl font-bold text-foreground">{product.name}</h1>
-          <p className="text-muted-foreground">by {product.ria_firm}</p>
+          <p className="text-muted-foreground">by {product.ria_id}</p>
         </div>
         <div className="flex gap-2">
           <Button
