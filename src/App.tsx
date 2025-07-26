@@ -80,8 +80,11 @@ const App = () => (
                   <Route
                     path="/client-dashboard"
                     element={
-                      <AuthWrapper requireAuth={true}>
-                        <Dashboard />
+                      <AuthWrapper 
+                        requireAuth={true}
+                        allowedRoles={['client', 'advisor', 'admin', 'system_administrator', 'tenant_admin']}
+                      >
+                        <ClientDashboard />
                       </AuthWrapper>
                     }
                   />
