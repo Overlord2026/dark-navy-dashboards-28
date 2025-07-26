@@ -11,6 +11,7 @@ import { ThemeProvider } from "@/context/ThemeContext";
 import { TenantProvider } from "@/context/TenantContext";
 import { AdvisorProvider } from "@/context/AdvisorContext";
 import { AuthWrapper } from "@/components/auth/AuthWrapper";
+import { getAdvisorAccessRoles } from "@/utils/roleHierarchy";
 import { DynamicLandingController } from "@/components/auth/DynamicLandingController";
 import { Navigation } from "@/components/Navigation";
 import Index from "./pages/Index";
@@ -89,7 +90,7 @@ const App = () => (
                     element={
                       <AuthWrapper
                         requireAuth={true}
-                        allowedRoles={['advisor']}
+                        allowedRoles={getAdvisorAccessRoles()}
                       >
                         <AdvisorDashboard />
                       </AuthWrapper>

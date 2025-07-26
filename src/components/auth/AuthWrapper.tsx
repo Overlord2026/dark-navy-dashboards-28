@@ -5,11 +5,13 @@ import { useUser } from '@/context/UserContext';
 import { useMFAEnforcement } from '@/hooks/useMFAEnforcement';
 import { MFAEnforcement } from '@/components/security/MFAEnforcement';
 import { Card, CardContent } from "@/components/ui/card";
+import { hasRoleAccess, getRoleDisplayName } from '@/utils/roleHierarchy';
+import type { UserRole } from '@/utils/roleHierarchy';
 
 interface AuthWrapperProps {
   children: React.ReactNode;
   requireAuth?: boolean;
-  allowedRoles?: string[];
+  allowedRoles?: UserRole[];
 }
 
 export function AuthWrapper({ 
@@ -53,16 +55,27 @@ export function AuthWrapper({
     );
   }
 
-  // Check role-based access
-  if (allowedRoles.length > 0 && userProfile && !allowedRoles.includes(userProfile.role)) {
+  // Check role-based access using hierarchy system
+  if (allowedRoles.length > 0 && userProfile && !hasRoleAccess(userProfile.role, allowedRoles)) {
+    console.warn('Access denied for user:', {
+      userId: userProfile.id,
+      userRole: userProfile.role,
+      requiredRoles: allowedRoles,
+      page: window.location.pathname
+    });
+    
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Card className="w-full max-w-md">
           <CardContent className="p-6 text-center">
             <h2 className="text-lg font-semibold mb-2">Access Denied</h2>
-            <p className="text-muted-foreground">
+            <p className="text-muted-foreground mb-4">
               You don't have permission to access this page.
             </p>
+            <div className="text-sm text-muted-foreground bg-muted p-3 rounded">
+              <p><strong>Your Role:</strong> {getRoleDisplayName(userProfile.role)}</p>
+              <p><strong>Required Roles:</strong> {allowedRoles.map(getRoleDisplayName).join(', ')}</p>
+            </div>
           </CardContent>
         </Card>
       </div>
