@@ -28,6 +28,8 @@ export interface EducationalResource {
   author?: string;
   coverImage?: string;
   ghlUrl: string;
+  series?: string;
+  track?: string;
 }
 
 export interface EducationalResources {

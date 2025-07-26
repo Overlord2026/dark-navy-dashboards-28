@@ -1,6 +1,7 @@
 
-import React, { useMemo } from "react";
-import { GraduationCapIcon, BarChart3Icon, PieChart, ShieldIcon, BanknoteIcon, ArchiveIcon } from "lucide-react";
+import React from "react";
+import { EnhancedEducationHub } from "@/components/education/EnhancedEducationHub";
+import { GraduationCapIcon } from "lucide-react";
 import { NavItem } from "@/types/navigation";
 
 export const educationNavItems: NavItem[] = [
@@ -8,53 +9,13 @@ export const educationNavItems: NavItem[] = [
     title: "Education Center", 
     href: "/client-education", 
     icon: GraduationCapIcon 
-  },
-  { 
-    title: "Investments", 
-    href: "/client-investments", 
-    icon: BarChart3Icon 
-  },
-  { 
-    title: "Tax Planning", 
-    href: "/tax-planning", 
-    icon: PieChart 
-  },
-  { 
-    title: "Insurance", 
-    href: "/client-insurance", 
-    icon: ShieldIcon 
-  },
-  { 
-    title: "Lending", 
-    href: "/client-lending", 
-    icon: BanknoteIcon 
-  },
-  { 
-    title: "Estate Planning", 
-    href: "/estate-planning", 
-    icon: ArchiveIcon 
   }
 ];
 
 const EducationTab = React.memo(() => {
-  const renderedItems = useMemo(() => 
-    educationNavItems.map((item) => (
-      <a 
-        key={item.href} 
-        href={item.href}
-        className="p-4 border rounded-lg hover:bg-muted/50 transition-colors flex items-center gap-3"
-      >
-        {item.icon && <item.icon className="h-5 w-5 text-primary" />}
-        <span>{item.title}</span>
-      </a>
-    )), []);
-
   return (
-    <div className="education-tab">
-      <h2 className="text-xl font-semibold mb-4">Education & Solutions</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {renderedItems}
-      </div>
+    <div className="education-tab space-y-6">
+      <EnhancedEducationHub />
     </div>
   );
 });
