@@ -48,6 +48,11 @@ import { AccessDeniedPage } from "./pages/AccessDeniedPage";
 import AdvisorInvitePage from "./pages/AdvisorInvitePage";
 import ClientOnboardingPage from "./pages/ClientOnboardingPage";
 import OnboardingDashboardPage from "./pages/OnboardingDashboardPage";
+import MarketplacePage from "./pages/MarketplacePage";
+import ProductDetailsPage from "./pages/ProductDetailsPage";
+import MarketplaceAdminPage from "./pages/MarketplaceAdminPage";
+import CompliancePage from "./pages/CompliancePage";
+import PortfolioPage from "./pages/PortfolioPage";
 
 const queryClient = new QueryClient();
 
@@ -251,6 +256,55 @@ const App = () => (
                     }
                   />
                   <Route path="/onboard/:token" element={<ClientOnboardingPage />} />
+                  
+                  {/* Investment Marketplace Routes */}
+                  <Route
+                    path="/marketplace"
+                    element={
+                      <AuthWrapper requireAuth={true}>
+                        <MarketplacePage />
+                      </AuthWrapper>
+                    }
+                  />
+                  <Route
+                    path="/marketplace/product/:id"
+                    element={
+                      <AuthWrapper requireAuth={true}>
+                        <ProductDetailsPage />
+                      </AuthWrapper>
+                    }
+                  />
+                  <Route
+                    path="/marketplace/admin"
+                    element={
+                      <AuthWrapper 
+                        requireAuth={true}
+                        allowedRoles={['admin', 'advisor', 'system_administrator', 'tenant_admin']}
+                      >
+                        <MarketplaceAdminPage />
+                      </AuthWrapper>
+                    }
+                  />
+                  <Route
+                    path="/compliance"
+                    element={
+                      <AuthWrapper 
+                        requireAuth={true}
+                        allowedRoles={['admin', 'system_administrator', 'tenant_admin']}
+                      >
+                        <CompliancePage />
+                      </AuthWrapper>
+                    }
+                  />
+                  <Route
+                    path="/portfolio"
+                    element={
+                      <AuthWrapper requireAuth={true}>
+                        <PortfolioPage />
+                      </AuthWrapper>
+                    }
+                  />
+                  
                   <Route path="/access-denied" element={<AccessDeniedPage />} />
                   <Route path="*" element={<NotFoundPage />} />
                 </Routes>
