@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { BookOpen, Users, Calendar } from "lucide-react";
 import { ReferralCard } from "@/components/referrals/ReferralCard";
 import { PageTransition, StaggerContainer } from "@/components/animations/PageTransition";
+import { ForTheGreaterGood } from "@/components/dashboard/ForTheGreaterGood";
 import { motion } from "framer-motion";
 
 export default function Dashboard() {
@@ -79,6 +80,16 @@ export default function Dashboard() {
             }}
           >
             <NetWorthSummary />
+          </motion.div>
+
+          {/* For the Greater Good Module */}
+          <motion.div
+            variants={{
+              hidden: { opacity: 0, y: 20 },
+              visible: { opacity: 1, y: 0 }
+            }}
+          >
+            <ForTheGreaterGood />
           </motion.div>
 
           <motion.div 
