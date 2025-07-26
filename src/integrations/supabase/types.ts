@@ -3705,6 +3705,131 @@ export type Database = {
           },
         ]
       }
+      impact_milestones: {
+        Row: {
+          achieved_at: string | null
+          created_at: string
+          id: string
+          is_celebrated: boolean | null
+          milestone_data: Json | null
+          milestone_type: string
+          milestone_value: number
+          user_id: string
+        }
+        Insert: {
+          achieved_at?: string | null
+          created_at?: string
+          id?: string
+          is_celebrated?: boolean | null
+          milestone_data?: Json | null
+          milestone_type: string
+          milestone_value: number
+          user_id: string
+        }
+        Update: {
+          achieved_at?: string | null
+          created_at?: string
+          id?: string
+          is_celebrated?: boolean | null
+          milestone_data?: Json | null
+          milestone_type?: string
+          milestone_value?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      impact_notifications: {
+        Row: {
+          created_at: string
+          error_message: string | null
+          id: string
+          notification_type: string
+          report_id: string | null
+          sent_at: string | null
+          status: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          notification_type: string
+          report_id?: string | null
+          sent_at?: string | null
+          status?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          notification_type?: string
+          report_id?: string | null
+          sent_at?: string | null
+          status?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "impact_notifications_report_id_fkey"
+            columns: ["report_id"]
+            isOneToOne: false
+            referencedRelation: "impact_reports"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      impact_reports: {
+        Row: {
+          charities_supported: number | null
+          created_at: string
+          file_url: string | null
+          id: string
+          projects_supported: number | null
+          report_data: Json
+          report_period_end: string
+          report_period_start: string
+          report_type: string
+          status: string | null
+          tenant_id: string | null
+          total_donated: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          charities_supported?: number | null
+          created_at?: string
+          file_url?: string | null
+          id?: string
+          projects_supported?: number | null
+          report_data?: Json
+          report_period_end: string
+          report_period_start: string
+          report_type: string
+          status?: string | null
+          tenant_id?: string | null
+          total_donated?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          charities_supported?: number | null
+          created_at?: string
+          file_url?: string | null
+          id?: string
+          projects_supported?: number | null
+          report_data?: Json
+          report_period_end?: string
+          report_period_start?: string
+          report_type?: string
+          status?: string | null
+          tenant_id?: string | null
+          total_donated?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       impact_stories: {
         Row: {
           charity_id: string | null
@@ -4560,6 +4685,54 @@ export type Database = {
           series_type?: string | null
           tax_status?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      network_impact_summary: {
+        Row: {
+          calculated_at: string | null
+          created_at: string
+          id: string
+          impact_stories: Json | null
+          period_end: string
+          period_start: string
+          period_type: string
+          tenant_id: string | null
+          top_charities: Json | null
+          total_charities: number | null
+          total_donated: number | null
+          total_families: number | null
+          total_projects: number | null
+        }
+        Insert: {
+          calculated_at?: string | null
+          created_at?: string
+          id?: string
+          impact_stories?: Json | null
+          period_end: string
+          period_start: string
+          period_type: string
+          tenant_id?: string | null
+          top_charities?: Json | null
+          total_charities?: number | null
+          total_donated?: number | null
+          total_families?: number | null
+          total_projects?: number | null
+        }
+        Update: {
+          calculated_at?: string | null
+          created_at?: string
+          id?: string
+          impact_stories?: Json | null
+          period_end?: string
+          period_start?: string
+          period_type?: string
+          tenant_id?: string | null
+          top_charities?: Json | null
+          total_charities?: number | null
+          total_donated?: number | null
+          total_families?: number | null
+          total_projects?: number | null
         }
         Relationships: []
       }
@@ -10029,6 +10202,42 @@ export type Database = {
         }
         Relationships: []
       }
+      user_impact_preferences: {
+        Row: {
+          allow_public_recognition: boolean | null
+          annual_reports: boolean | null
+          created_at: string
+          email_notifications: boolean | null
+          id: string
+          quarterly_reports: boolean | null
+          report_format: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          allow_public_recognition?: boolean | null
+          annual_reports?: boolean | null
+          created_at?: string
+          email_notifications?: boolean | null
+          id?: string
+          quarterly_reports?: boolean | null
+          report_format?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          allow_public_recognition?: boolean | null
+          annual_reports?: boolean | null
+          created_at?: string
+          email_notifications?: boolean | null
+          id?: string
+          quarterly_reports?: boolean | null
+          report_format?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_investment_interests: {
         Row: {
           created_at: string | null
@@ -10660,6 +10869,15 @@ export type Database = {
         Args: { goal_id: string }
         Returns: number
       }
+      calculate_network_impact_summary: {
+        Args: {
+          p_tenant_id: string
+          p_period_type: string
+          p_period_start: string
+          p_period_end: string
+        }
+        Returns: undefined
+      }
       calculate_next_training_due_date: {
         Args: { p_frequency: string; p_last_completed?: string }
         Returns: string
@@ -10671,6 +10889,10 @@ export type Database = {
       calculate_provider_rating: {
         Args: { provider_id: string }
         Returns: number
+      }
+      check_impact_milestones: {
+        Args: { p_user_id: string }
+        Returns: undefined
       }
       check_security_alerts: {
         Args: Record<PropertyKey, never>
@@ -10774,6 +10996,15 @@ export type Database = {
       }
       generate_referral_code: {
         Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      generate_user_impact_report: {
+        Args: {
+          p_user_id: string
+          p_report_type: string
+          p_period_start: string
+          p_period_end: string
+        }
         Returns: string
       }
       get_campaign_analytics: {
