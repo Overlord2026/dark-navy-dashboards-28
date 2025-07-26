@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { useUser } from '@/context/UserContext';
+import { OnboardingAnalytics } from './OnboardingAnalytics';
 import { 
   Users, 
   UserPlus, 
@@ -364,40 +365,7 @@ export function OnboardingDashboard() {
         </TabsContent>
 
         <TabsContent value="analytics" className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Onboarding Funnel</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center">
-                    <span>Invitations Sent</span>
-                    <span className="font-semibold">{stats.totalInvites}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span>Started Onboarding</span>
-                    <span className="font-semibold">{stats.activeOnboarding + stats.completedOnboarding}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span>Completed Onboarding</span>
-                    <span className="font-semibold">{stats.completedOnboarding}</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Completion Trends</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-center py-8 text-muted-foreground">
-                  Charts and analytics will be implemented here
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+          <OnboardingAnalytics />
         </TabsContent>
 
         <TabsContent value="config" className="space-y-4">
