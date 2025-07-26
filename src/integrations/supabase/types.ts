@@ -5931,6 +5931,7 @@ export type Database = {
           email: string
           external_review_score: number | null
           external_verification_id: string | null
+          featured: boolean | null
           fee_model: string | null
           firm: string | null
           id: string
@@ -5943,7 +5944,11 @@ export type Database = {
           rating: number | null
           ratings_average: number | null
           reviews_count: number | null
+          scheduling_url: string | null
+          show_email: boolean | null
+          show_phone: boolean | null
           specialties: string[] | null
+          sponsored: boolean | null
           status: string | null
           tenant_id: string
           type: string
@@ -5964,6 +5969,7 @@ export type Database = {
           email: string
           external_review_score?: number | null
           external_verification_id?: string | null
+          featured?: boolean | null
           fee_model?: string | null
           firm?: string | null
           id?: string
@@ -5976,7 +5982,11 @@ export type Database = {
           rating?: number | null
           ratings_average?: number | null
           reviews_count?: number | null
+          scheduling_url?: string | null
+          show_email?: boolean | null
+          show_phone?: boolean | null
           specialties?: string[] | null
+          sponsored?: boolean | null
           status?: string | null
           tenant_id: string
           type?: string
@@ -5997,6 +6007,7 @@ export type Database = {
           email?: string
           external_review_score?: number | null
           external_verification_id?: string | null
+          featured?: boolean | null
           fee_model?: string | null
           firm?: string | null
           id?: string
@@ -6009,7 +6020,11 @@ export type Database = {
           rating?: number | null
           ratings_average?: number | null
           reviews_count?: number | null
+          scheduling_url?: string | null
+          show_email?: boolean | null
+          show_phone?: boolean | null
           specialties?: string[] | null
+          sponsored?: boolean | null
           status?: string | null
           tenant_id?: string
           type?: string

@@ -28,4 +28,11 @@ export interface Professional {
   specialties?: string[];
   certifications?: string[];
   custom_fields?: Record<string, any>;
+  external_verification_id?: string;
+  external_review_score?: number;
+  featured?: boolean;
+  sponsored?: boolean;
+  show_email?: boolean;
+  show_phone?: boolean;
+  scheduling_url?: string;
 }
