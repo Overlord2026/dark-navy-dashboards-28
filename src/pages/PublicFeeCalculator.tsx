@@ -4,9 +4,20 @@ import { Logo } from '@/components/ui/Logo';
 import { PublicValueCalculator } from '@/components/PublicValueCalculator';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
+import { useEventTracking } from '@/hooks/useEventTracking';
 
 export default function PublicFeeCalculator() {
   const navigate = useNavigate();
+  const { trackCalculatorUsed, trackFeatureUsed } = useEventTracking();
+
+  React.useEffect(() => {
+    trackCalculatorUsed('fee_impact_calculator', { source: 'public_page' });
+  }, [trackCalculatorUsed]);
+
+  const handleScheduleReview = () => {
+    trackFeatureUsed('schedule_consultation', { source: 'fee_calculator' });
+    window.open('https://calendly.com/tonygomes/talk-with-tony', '_blank');
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -28,7 +39,7 @@ export default function PublicFeeCalculator() {
             Fee Impact Calculator
           </h1>
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-            See exactly what you're paying in advisory fees and how much you could save with our value-driven approach.
+            See exactly what you're paying in advisory fees and how much you could save with our transparent, fee-only approach. No commissions. No hidden costs.
           </p>
         </div>
         
@@ -47,7 +58,7 @@ export default function PublicFeeCalculator() {
               <Button 
                 size="lg"
                 className="bg-primary hover:bg-primary/90"
-                onClick={() => window.open('https://calendly.com/tonygomes/talk-with-tony', '_blank')}
+                onClick={handleScheduleReview}
               >
                 Schedule My Complimentary Review
               </Button>

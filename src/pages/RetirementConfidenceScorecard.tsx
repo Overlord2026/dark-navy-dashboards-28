@@ -8,6 +8,7 @@ import { Logo } from '@/components/ui/Logo';
 import { useNavigate } from 'react-router-dom';
 import { Trophy, Calendar, ArrowRight, ArrowLeft, Shield, CheckCircle } from 'lucide-react';
 import { withTrademarks } from '@/utils/trademark';
+import { useEventTracking } from '@/hooks/useEventTracking';
 
 interface Question {
   id: number;
@@ -124,6 +125,7 @@ const questions: Question[] = [
 
 export default function RetirementConfidenceScorecard() {
   const navigate = useNavigate();
+  const { trackCalculatorUsed, trackLeadConverted, trackFeatureUsed } = useEventTracking();
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [showResults, setShowResults] = useState(false);
@@ -136,7 +138,21 @@ export default function RetirementConfidenceScorecard() {
     if (currentQuestion < questions.length - 1) {
       setCurrentQuestion(prev => prev + 1);
     } else {
+      const score = calculateScore();
       setShowResults(true);
+      
+      // Track scorecard completion
+      trackCalculatorUsed('retirement_confidence_scorecard', {
+        score,
+        total_questions: questions.length,
+        completion_time: Date.now()
+      });
+      
+      // Track potential lead conversion opportunity
+      trackLeadConverted({ score, source: 'scorecard_completion' });
+      
+      // Trigger email automation
+      triggerScorecardEmail(score);
     }
   };
 
@@ -166,7 +182,19 @@ export default function RetirementConfidenceScorecard() {
   const currentAnswer = answers[currentQ?.id];
 
   const handleScheduleReview = () => {
+    trackFeatureUsed('schedule_consultation', { source: 'scorecard_results' });
     window.open('https://calendly.com/tonygomes/talk-with-tony', '_blank');
+  };
+
+  const triggerScorecardEmail = async (score: number) => {
+    try {
+      // This would trigger the scorecard completion email
+      // For now, we'll use a placeholder
+      console.log('Triggering scorecard completion email for score:', score);
+      // TODO: Implement Resend email automation
+    } catch (error) {
+      console.error('Failed to trigger scorecard email:', error);
+    }
   };
 
   if (showResults) {

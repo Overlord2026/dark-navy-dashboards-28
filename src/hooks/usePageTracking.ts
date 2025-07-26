@@ -5,9 +5,14 @@ import { useAnalyticsTracking } from './useAnalytics';
 
 // Page name mapping for cleaner analytics
 const PAGE_NAMES: Record<string, string> = {
-  '/': 'Home',
+  '/': 'Welcome Page',
+  '/welcome': 'Welcome Page',
   '/login': 'Login',
   '/auth': 'Authentication',
+  '/scorecard': 'Retirement Confidence Scorecard',
+  '/calculator': 'Fee Impact Calculator',
+  '/gap-analyzer': 'Income Gap Analyzer',
+  '/roadmap-info': 'Retirement Roadmap Info',
   '/dashboard': 'Client Dashboard',
   '/advisor-dashboard': 'Advisor Dashboard',
   '/admin-portal': 'Admin Portal',

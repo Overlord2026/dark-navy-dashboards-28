@@ -5,16 +5,21 @@ import { Logo } from '@/components/ui/Logo';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, CheckCircle, Calendar, DollarSign, Shield, Star, Clock, Users, TrendingUp } from 'lucide-react';
 import { withTrademarks } from '@/utils/trademark';
+import { useEventTracking } from '@/hooks/useEventTracking';
 
 export default function RetirementRoadmapInfo() {
   const navigate = useNavigate();
+  const { trackFeatureUsed, trackLeadConverted } = useEventTracking();
 
   const handleScheduleReview = () => {
+    trackFeatureUsed('schedule_consultation', { source: 'roadmap_info' });
     window.open('https://calendly.com/tonygomes/talk-with-tony', '_blank');
   };
 
   const handlePurchaseRoadmap = () => {
-    // This would integrate with Stripe checkout
+    trackLeadConverted({ source: 'roadmap_info', price: 497, type: 'roadmap_purchase_intent' });
+    // TODO: Implement Stripe checkout integration
+    console.log('Roadmap purchase initiated');
     alert('Stripe checkout integration needed for roadmap purchase');
   };
 
@@ -39,13 +44,13 @@ export default function RetirementRoadmapInfo() {
           </h1>
           
           <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto">
-            Get expert-guided, personalized retirement strategy—one-time fee, no ongoing obligation
+            Get fiduciary-guided, personalized retirement strategy—transparent, one-time fee with no ongoing obligations or hidden costs
           </p>
 
           <div className="inline-flex items-center gap-2 bg-primary/10 px-6 py-3 rounded-full border border-primary/20">
             <Shield className="h-5 w-5 text-primary" />
             <span className="font-medium text-foreground">
-              {withTrademarks("Boutique Family Office expertise without the minimums")}
+              {withTrademarks("Boutique Family Office expertise without the $5M+ minimums")}
             </span>
           </div>
 

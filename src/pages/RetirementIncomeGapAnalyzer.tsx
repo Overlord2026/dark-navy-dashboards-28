@@ -7,9 +7,11 @@ import { Logo } from '@/components/ui/Logo';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, TrendingUp, AlertTriangle, CheckCircle, Calculator, DollarSign } from 'lucide-react';
 import CountUp from 'react-countup';
+import { useEventTracking } from '@/hooks/useEventTracking';
 
 export default function RetirementIncomeGapAnalyzer() {
   const navigate = useNavigate();
+  const { trackCalculatorUsed, trackFeatureUsed } = useEventTracking();
   const [currentAge, setCurrentAge] = useState(45);
   const [retirementAge, setRetirementAge] = useState(65);
   const [currentIncome, setCurrentIncome] = useState(150000);
@@ -51,7 +53,18 @@ export default function RetirementIncomeGapAnalyzer() {
   };
 
   const handleAnalyze = () => {
+    const results = calculateGap();
     setShowResults(true);
+    
+    // Track calculator usage
+    trackCalculatorUsed('income_gap_analyzer', {
+      currentAge,
+      retirementAge,
+      currentIncome,
+      projectedSavings: results.totalSavingsAtRetirement,
+      gap: results.gap,
+      isOnTrack: results.isOnTrack
+    });
   };
 
   const formatCurrency = (amount: number) => {
@@ -66,12 +79,24 @@ export default function RetirementIncomeGapAnalyzer() {
   const results = showResults ? calculateGap() : null;
 
   const handleScheduleReview = () => {
+    trackFeatureUsed('schedule_consultation', { source: 'gap_analyzer' });
     window.open('https://calendly.com/tonygomes/talk-with-tony', '_blank');
   };
 
   const handleEmailResults = () => {
-    // This would integrate with lead capture system
-    alert('Lead capture integration needed - save results feature');
+    // Track lead capture attempt
+    trackFeatureUsed('save_results_request', { 
+      source: 'gap_analyzer', 
+      tool: 'income_gap_analyzer' 
+    });
+    
+    // Show lead capture form (placeholder for now)
+    const email = prompt('Enter your email to save your results:');
+    if (email) {
+      console.log('Lead captured:', email);
+      // TODO: Implement proper lead capture integration
+      alert('Results saved! Check your email for details.');
+    }
   };
 
   return (
