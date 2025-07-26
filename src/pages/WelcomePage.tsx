@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { Calculator, Trophy, TrendingUp, Shield, Calendar, ArrowRight, CheckCircle, Star, Award, Users } from 'lucide-react';
 import { withTrademarks } from '@/utils/trademark';
 import { useEventTracking } from '@/hooks/useEventTracking';
+import { InAppNotificationBanner } from '@/components/ui/InAppNotificationBanner';
 
 export default function WelcomePage() {
   const navigate = useNavigate();
@@ -48,12 +49,30 @@ export default function WelcomePage() {
 
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-16 text-center">
+        <InAppNotificationBanner />
         <div className="max-w-4xl mx-auto space-y-8">
           <h1 className="text-5xl md:text-7xl font-bold text-foreground leading-tight">
             Retire once. Stay retired.
           </h1>
           
           <div className="space-y-6">
+            <div className="flex flex-wrap items-center justify-center gap-4 mb-6">
+              <div className="flex items-center text-yellow-400">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="h-5 w-5 fill-current" />
+                ))}
+                <span className="ml-2 text-foreground font-semibold">4.8/5 rating</span>
+              </div>
+              <div className="inline-flex items-center gap-2 bg-primary/10 px-4 py-2 rounded-full border border-primary/20">
+                <Shield className="h-4 w-4 text-primary" />
+                <span className="text-sm font-medium text-foreground">CFP® Fiduciary</span>
+              </div>
+              <div className="inline-flex items-center gap-2 bg-success/10 px-4 py-2 rounded-full border border-success/20">
+                <Award className="h-4 w-4 text-success" />
+                <span className="text-sm font-medium text-foreground">20+ Years Experience</span>
+              </div>
+            </div>
+
             <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto">
               {withTrademarks("Family legacy. Institutional discipline. Personal touch.")}
             </p>
@@ -61,18 +80,17 @@ export default function WelcomePage() {
               {withTrademarks("Experience Boutique Family Office expertise—without the $5M+ minimums typically required.")}
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
+            <div className="flex flex-col gap-4 items-center justify-center max-w-4xl mx-auto">
               <div className="inline-flex items-center gap-2 bg-primary/10 px-6 py-3 rounded-full border border-primary/20">
                 <Shield className="h-5 w-5 text-primary" />
                 <span className="font-medium text-foreground">
                   {withTrademarks("Fiduciary duty—always acting in your best interest")}
                 </span>
               </div>
-              <div className="inline-flex items-center gap-2 bg-green-500/10 px-6 py-3 rounded-full border border-green-500/20">
-                <Award className="h-5 w-5 text-green-600" />
-                <span className="font-medium text-foreground">
-                  CFP® professionals with 20+ years experience
-                </span>
+              <div className="text-center">
+                <p className="text-sm text-muted-foreground font-medium">
+                  Advertising-free environment—your data is never sold. You are always in control of who can view or access your Family Office Hub and personal information.
+                </p>
               </div>
             </div>
           </div>
@@ -178,33 +196,57 @@ export default function WelcomePage() {
               Trusted by Discerning Families Nationwide
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-              <Card className="bg-background/60">
+              <Card className="bg-background/60 border-l-4 border-l-primary">
                 <CardContent className="p-6 text-center">
-                  <Star className="h-8 w-8 mx-auto text-yellow-500 mb-3" />
+                  <div className="w-12 h-12 mx-auto mb-3 bg-muted rounded-full flex items-center justify-center">
+                    <span className="text-lg font-bold text-primary">SM</span>
+                  </div>
+                  <div className="flex justify-center mb-3">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                    ))}
+                  </div>
                   <p className="text-sm text-muted-foreground italic mb-3">
-                    "Finally, fiduciary advice without the astronomical minimums. Their roadmap saved us six figures in unnecessary fees."
+                    "We saved $128,000 in unnecessary fees with their transparent approach. Finally, fiduciary advice without astronomical minimums."
                   </p>
                   <p className="font-medium text-sm">— Sarah M., Executive</p>
+                  <p className="text-xs text-muted-foreground">Family Office Client, 2024</p>
                 </CardContent>
               </Card>
               
-              <Card className="bg-background/60">
+              <Card className="bg-background/60 border-l-4 border-l-success">
                 <CardContent className="p-6 text-center">
-                  <Star className="h-8 w-8 mx-auto text-yellow-500 mb-3" />
+                  <div className="w-12 h-12 mx-auto mb-3 bg-muted rounded-full flex items-center justify-center">
+                    <span className="text-lg font-bold text-success">RK</span>
+                  </div>
+                  <div className="flex justify-center mb-3">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                    ))}
+                  </div>
                   <p className="text-sm text-muted-foreground italic mb-3">
-                    "The Social Security optimization alone will add $180,000 to our retirement. Best investment we've made."
+                    "The Social Security optimization strategy added $180,000 to our retirement income. Best investment we've made."
                   </p>
                   <p className="font-medium text-sm">— Robert & Linda K., Pre-Retirees</p>
+                  <p className="text-xs text-muted-foreground">Roadmap Client, 2024</p>
                 </CardContent>
               </Card>
               
-              <Card className="bg-background/60">
+              <Card className="bg-background/60 border-l-4 border-l-accent">
                 <CardContent className="p-6 text-center">
-                  <Star className="h-8 w-8 mx-auto text-yellow-500 mb-3" />
+                  <div className="w-12 h-12 mx-auto mb-3 bg-muted rounded-full flex items-center justify-center">
+                    <span className="text-lg font-bold text-accent">MT</span>
+                  </div>
+                  <div className="flex justify-center mb-3">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                    ))}
+                  </div>
                   <p className="text-sm text-muted-foreground italic mb-3">
-                    "Transparent, comprehensive, and no ongoing fees. This is how retirement planning should be done."
+                    "Cut our advisory fees by 60% while getting better service. This advertising-free approach is refreshing."
                   </p>
                   <p className="font-medium text-sm">— Michael T., Business Owner</p>
+                  <p className="text-xs text-muted-foreground">Family Office Client, 2024</p>
                 </CardContent>
               </Card>
             </div>

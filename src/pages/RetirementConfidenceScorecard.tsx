@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { Trophy, Calendar, ArrowRight, ArrowLeft, Shield, CheckCircle } from 'lucide-react';
 import { withTrademarks } from '@/utils/trademark';
 import { useEventTracking } from '@/hooks/useEventTracking';
+import { supabase } from '@/integrations/supabase/client';
 
 interface Question {
   id: number;
@@ -188,10 +189,25 @@ export default function RetirementConfidenceScorecard() {
 
   const triggerScorecardEmail = async (score: number) => {
     try {
-      // This would trigger the scorecard completion email
-      // For now, we'll use a placeholder
-      console.log('Triggering scorecard completion email for score:', score);
-      // TODO: Implement Resend email automation
+      const email = prompt('Enter your email to receive your scorecard:');
+      if (!email) return;
+      
+      const scoreLevel = getScoreLevel(score);
+      
+      const { error } = await supabase.functions.invoke('send-scorecard-email', {
+        body: {
+          email,
+          firstName: '',
+          score,
+          scoreLevel: scoreLevel.level
+        }
+      });
+      
+      if (error) {
+        console.error('Failed to send scorecard email:', error);
+      } else {
+        console.log('Scorecard email sent successfully');
+      }
     } catch (error) {
       console.error('Failed to trigger scorecard email:', error);
     }
@@ -303,7 +319,7 @@ export default function RetirementConfidenceScorecard() {
                   </Card>
                 </div>
 
-                <div className="bg-muted/30 rounded-lg p-4 border">
+                <div className="bg-muted/30 rounded-lg p-6 border space-y-4">
                   <div className="flex items-center gap-2 mb-2">
                     <Shield className="h-5 w-5 text-primary" />
                     <span className="font-medium">
@@ -313,6 +329,21 @@ export default function RetirementConfidenceScorecard() {
                   <p className="text-sm text-muted-foreground">
                     {withTrademarks("Fiduciary duty. No commissions. No conflicts. Your interests first.")}
                   </p>
+                  
+                  <div className="space-y-2 text-xs text-muted-foreground">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="h-3 w-3 text-success" />
+                      <span>We respect your privacy and will never share your information.</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="h-3 w-3 text-success" />
+                      <span>Your data is secure and advertising-free environment.</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="h-3 w-3 text-success" />
+                      <span>You always control who can access your Family Office Hub.</span>
+                    </div>
+                  </div>
                 </div>
               </CardContent>
             </Card>

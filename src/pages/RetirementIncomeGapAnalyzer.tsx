@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Logo } from '@/components/ui/Logo';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, TrendingUp, AlertTriangle, CheckCircle, Calculator, DollarSign } from 'lucide-react';
+import { ArrowLeft, TrendingUp, AlertTriangle, CheckCircle, Calculator, DollarSign, Star } from 'lucide-react';
 import CountUp from 'react-countup';
 import { useEventTracking } from '@/hooks/useEventTracking';
 

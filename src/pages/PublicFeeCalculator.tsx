@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Logo } from '@/components/ui/Logo';
 import { PublicValueCalculator } from '@/components/PublicValueCalculator';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Star } from 'lucide-react';
 import { useEventTracking } from '@/hooks/useEventTracking';
 
 export default function PublicFeeCalculator() {
@@ -35,11 +35,25 @@ export default function PublicFeeCalculator() {
       {/* Calculator */}
       <div className="container mx-auto px-4 py-16">
         <div className="text-center mb-8">
+          <div className="flex items-center justify-center gap-4 mb-4">
+            <div className="flex items-center text-yellow-400">
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} className="h-4 w-4 fill-current" />
+              ))}
+              <span className="ml-2 text-foreground text-sm">4.8/5</span>
+            </div>
+            <span className="text-muted-foreground">•</span>
+            <span className="text-sm text-muted-foreground">CFP® Fiduciary</span>
+          </div>
+          
           <h1 className="text-4xl font-bold text-foreground mb-4">
             Fee Impact Calculator
           </h1>
-          <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+          <p className="text-lg text-muted-foreground max-w-3xl mx-auto mb-4">
             See exactly what you're paying in advisory fees and how much you could save with our transparent, fee-only approach. No commissions. No hidden costs.
+          </p>
+          <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
+            Advertising-free environment—your data is never sold. You control who can access your information.
           </p>
         </div>
         

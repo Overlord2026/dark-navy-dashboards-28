@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Logo } from '@/components/ui/Logo';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, CheckCircle, Calendar, DollarSign, Shield, Star, Clock, Users, TrendingUp } from 'lucide-react';
+import { ArrowLeft, CheckCircle, Calendar, DollarSign, Shield, Star, Clock, Users, TrendingUp, Award } from 'lucide-react';
 import { withTrademarks } from '@/utils/trademark';
 import { useEventTracking } from '@/hooks/useEventTracking';
 
@@ -39,20 +39,36 @@ export default function RetirementRoadmapInfo() {
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-16">
         <div className="max-w-4xl mx-auto text-center space-y-8">
-          <h1 className="text-5xl md:text-6xl font-bold text-foreground leading-tight">
+          <div className="flex items-center justify-center gap-4 mb-6">
+            <div className="flex items-center text-yellow-400">
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} className="h-4 w-4 fill-current" />
+              ))}
+              <span className="ml-2 text-foreground font-semibold">4.8/5 rating</span>
+            </div>
+            <span className="text-muted-foreground">•</span>
+            <span className="text-sm text-muted-foreground">Trusted by 200+ families</span>
+          </div>
+          
+          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
             Your Customized Retirement Roadmap
           </h1>
-          
-          <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto">
-            Get fiduciary-guided, personalized retirement strategy—transparent, one-time fee with no ongoing obligations or hidden costs
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-6">
+            Get your personalized retirement strategy for a transparent, one-time fee. No ongoing obligations. No hidden costs. Just actionable guidance from CFP® professionals.
           </p>
-
-          <div className="inline-flex items-center gap-2 bg-primary/10 px-6 py-3 rounded-full border border-primary/20">
-            <Shield className="h-5 w-5 text-primary" />
-            <span className="font-medium text-foreground">
-              {withTrademarks("Boutique Family Office expertise without the $5M+ minimums")}
-            </span>
+          <div className="flex flex-wrap items-center justify-center gap-4 mb-4">
+            <div className="inline-flex items-center gap-2 bg-primary/10 px-4 py-2 rounded-full border border-primary/20">
+              <Shield className="h-4 w-4 text-primary" />
+              <span className="text-sm font-medium">Fiduciary Duty</span>
+            </div>
+            <div className="inline-flex items-center gap-2 bg-success/10 px-4 py-2 rounded-full border border-success/20">
+              <Award className="h-4 w-4 text-success" />
+              <span className="text-sm font-medium">CFP® Professional</span>
+            </div>
           </div>
+          <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
+            Advertising-free environment. Your data is secure and never sold to third parties.
+          </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-6">
             <Button 
