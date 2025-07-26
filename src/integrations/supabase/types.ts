@@ -727,6 +727,90 @@ export type Database = {
         }
         Relationships: []
       }
+      charities: {
+        Row: {
+          annual_goal: number | null
+          annual_raised: number | null
+          category: string
+          created_at: string
+          description: string | null
+          id: string
+          is_featured: boolean | null
+          is_verified: boolean | null
+          logo_url: string | null
+          name: string
+          updated_at: string
+          website_url: string | null
+        }
+        Insert: {
+          annual_goal?: number | null
+          annual_raised?: number | null
+          category: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_featured?: boolean | null
+          is_verified?: boolean | null
+          logo_url?: string | null
+          name: string
+          updated_at?: string
+          website_url?: string | null
+        }
+        Update: {
+          annual_goal?: number | null
+          annual_raised?: number | null
+          category?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_featured?: boolean | null
+          is_verified?: boolean | null
+          logo_url?: string | null
+          name?: string
+          updated_at?: string
+          website_url?: string | null
+        }
+        Relationships: []
+      }
+      charity_suggestions: {
+        Row: {
+          charity_name: string
+          created_at: string
+          description: string | null
+          id: string
+          reason: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string | null
+          user_id: string
+          website_url: string | null
+        }
+        Insert: {
+          charity_name: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string | null
+          user_id: string
+          website_url?: string | null
+        }
+        Update: {
+          charity_name?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string | null
+          user_id?: string
+          website_url?: string | null
+        }
+        Relationships: []
+      }
       client_assignments: {
         Row: {
           assigned_at: string
@@ -880,6 +964,39 @@ export type Database = {
           insight_1?: string | null
           insight_2?: string | null
           user_id?: string
+        }
+        Relationships: []
+      }
+      community_giving_metrics: {
+        Row: {
+          calculated_at: string | null
+          community_projects: number | null
+          families_helped: number | null
+          id: string
+          scholarships_funded: number | null
+          total_donations: number | null
+          unique_donors: number | null
+          year: number
+        }
+        Insert: {
+          calculated_at?: string | null
+          community_projects?: number | null
+          families_helped?: number | null
+          id?: string
+          scholarships_funded?: number | null
+          total_donations?: number | null
+          unique_donors?: number | null
+          year: number
+        }
+        Update: {
+          calculated_at?: string | null
+          community_projects?: number | null
+          families_helped?: number | null
+          id?: string
+          scholarships_funded?: number | null
+          total_donations?: number | null
+          unique_donors?: number | null
+          year?: number
         }
         Relationships: []
       }
@@ -3584,6 +3701,53 @@ export type Database = {
             columns: ["hsa_account_id"]
             isOneToOne: false
             referencedRelation: "hsa_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      impact_stories: {
+        Row: {
+          charity_id: string | null
+          created_at: string
+          id: string
+          is_anonymous: boolean | null
+          is_featured: boolean | null
+          status: string | null
+          story: string
+          title: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          charity_id?: string | null
+          created_at?: string
+          id?: string
+          is_anonymous?: boolean | null
+          is_featured?: boolean | null
+          status?: string | null
+          story: string
+          title: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          charity_id?: string | null
+          created_at?: string
+          id?: string
+          is_anonymous?: boolean | null
+          is_featured?: boolean | null
+          status?: string | null
+          story?: string
+          title?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "impact_stories_charity_id_fkey"
+            columns: ["charity_id"]
+            isOneToOne: false
+            referencedRelation: "charities"
             referencedColumns: ["id"]
           },
         ]
@@ -9409,6 +9573,41 @@ export type Database = {
         }
         Relationships: []
       }
+      user_charities: {
+        Row: {
+          charity_id: string | null
+          created_at: string
+          date_selected: string | null
+          id: string
+          is_primary: boolean | null
+          user_id: string
+        }
+        Insert: {
+          charity_id?: string | null
+          created_at?: string
+          date_selected?: string | null
+          id?: string
+          is_primary?: boolean | null
+          user_id: string
+        }
+        Update: {
+          charity_id?: string | null
+          created_at?: string
+          date_selected?: string | null
+          id?: string
+          is_primary?: boolean | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_charities_charity_id_fkey"
+            columns: ["charity_id"]
+            isOneToOne: false
+            referencedRelation: "charities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_checklist_progress: {
         Row: {
           checklist_id: string | null
@@ -9570,6 +9769,50 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      user_donations: {
+        Row: {
+          amount: number
+          charity_id: string | null
+          created_at: string
+          description: string | null
+          donation_date: string
+          id: string
+          is_verified: boolean | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          charity_id?: string | null
+          created_at?: string
+          description?: string | null
+          donation_date: string
+          id?: string
+          is_verified?: boolean | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          charity_id?: string | null
+          created_at?: string
+          description?: string | null
+          donation_date?: string
+          id?: string
+          is_verified?: boolean | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_donations_charity_id_fkey"
+            columns: ["charity_id"]
+            isOneToOne: false
+            referencedRelation: "charities"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_downloads: {
         Row: {
