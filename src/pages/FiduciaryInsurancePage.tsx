@@ -89,9 +89,9 @@ export default function FiduciaryInsurancePage() {
     <ThreeColumnLayout 
       title={education.title}
       breadcrumbs={[
-        { label: 'Insurance', href: '/insurance' },
-        { label: 'Fiduciary Education', href: '/insurance/education' },
-        { label: getBreadcrumbLabel() }
+        { name: 'Insurance', href: '/insurance' },
+        { name: 'Fiduciary Education', href: '/insurance/education' },
+        { name: getBreadcrumbLabel() || '', href: '#' }
       ]}
     >
       <div className="space-y-6">

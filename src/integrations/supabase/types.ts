@@ -1000,6 +1000,42 @@ export type Database = {
         }
         Relationships: []
       }
+      compliance_audit_trail: {
+        Row: {
+          action_type: string
+          details: Json | null
+          entity_id: string
+          entity_type: string
+          id: string
+          ip_address: unknown | null
+          performed_by: string
+          timestamp: string
+          user_agent: string | null
+        }
+        Insert: {
+          action_type: string
+          details?: Json | null
+          entity_id: string
+          entity_type: string
+          id?: string
+          ip_address?: unknown | null
+          performed_by: string
+          timestamp?: string
+          user_agent?: string | null
+        }
+        Update: {
+          action_type?: string
+          details?: Json | null
+          entity_id?: string
+          entity_type?: string
+          id?: string
+          ip_address?: unknown | null
+          performed_by?: string
+          timestamp?: string
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       credit_cards: {
         Row: {
           apr: number | null
@@ -4107,6 +4143,54 @@ export type Database = {
         }
         Relationships: []
       }
+      investment_compliance: {
+        Row: {
+          compliance_status: string
+          created_at: string
+          documents_verified: boolean
+          due_diligence_status: string
+          finra_status: string
+          id: string
+          last_reviewed_at: string | null
+          notes: string | null
+          offering_id: string
+          reviewed_by: string | null
+          risk_assessment: Json | null
+          sec_status: string
+          updated_at: string
+        }
+        Insert: {
+          compliance_status?: string
+          created_at?: string
+          documents_verified?: boolean
+          due_diligence_status?: string
+          finra_status?: string
+          id?: string
+          last_reviewed_at?: string | null
+          notes?: string | null
+          offering_id: string
+          reviewed_by?: string | null
+          risk_assessment?: Json | null
+          sec_status?: string
+          updated_at?: string
+        }
+        Update: {
+          compliance_status?: string
+          created_at?: string
+          documents_verified?: boolean
+          due_diligence_status?: string
+          finra_status?: string
+          id?: string
+          last_reviewed_at?: string | null
+          notes?: string | null
+          offering_id?: string
+          reviewed_by?: string | null
+          risk_assessment?: Json | null
+          sec_status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       investment_meetings: {
         Row: {
           consultation_type: string
@@ -4384,6 +4468,80 @@ export type Database = {
             columns: ["tenant_id"]
             isOneToOne: false
             referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lending_partners: {
+        Row: {
+          category: string
+          compliance_status: string
+          contact_info: Json | null
+          created_at: string
+          id: string
+          is_active: boolean
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          compliance_status?: string
+          contact_info?: Json | null
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          compliance_status?: string
+          contact_info?: Json | null
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      loan_requests: {
+        Row: {
+          id: string
+          loan_type: string
+          partner_id: string | null
+          requested_amount: number
+          status: string
+          submitted_at: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          loan_type: string
+          partner_id?: string | null
+          requested_amount: number
+          status?: string
+          submitted_at?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          loan_type?: string
+          partner_id?: string | null
+          requested_amount?: number
+          status?: string
+          submitted_at?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "loan_requests_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "lending_partners"
             referencedColumns: ["id"]
           },
         ]
