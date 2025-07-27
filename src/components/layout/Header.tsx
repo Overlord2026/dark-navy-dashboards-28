@@ -3,20 +3,33 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useUser } from '@/context/UserContext';
 import { useRoleContext, RoleSwitcher } from '@/context/RoleContext';
+import { getRoleDisplayName } from '@/utils/roleHierarchy';
 import { AdminPortalLink } from '@/components/navigation/AdminPortalLink';
 import { ClientTierToggle } from '@/components/dev/ClientTierToggle';
 import { Button } from '@/components/ui/button';
-import { LogOut, User, HomeIcon } from 'lucide-react';
+import { LogOut, User, Home } from 'lucide-react';
 
 export function Header() {
   const { userProfile, logout } = useUser();
-  const { isDevMode, getCurrentRole, getCurrentClientTier, getRoleDashboard } = useRoleContext();
+  const { getCurrentRole, getRoleDashboard, emulatedRole, getCurrentClientTier } = useRoleContext();
   
-  // Only show dev tools for specific email
   const isDevUser = userProfile?.email === 'tonygomes88@gmail.com';
+  const currentRole = getCurrentRole();
+  const currentTier = getCurrentClientTier();
+  const dashboardPath = getRoleDashboard();
+  
+  // Check if in QA mode (emulating a different role)
+  const isInQAMode = isDevUser && emulatedRole;
 
   return (
     <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      {/* QA Mode Banner */}
+      {isInQAMode && (
+        <div className="bg-amber-500 text-amber-950 px-4 py-2 text-center text-sm font-medium">
+          🔧 QA MODE: Emulating {getRoleDisplayName(currentRole)} {currentRole === 'client' && currentTier === 'premium' ? 'Premium' : ''}
+        </div>
+      )}
+      
       <div className="container flex h-14 items-center justify-between px-4">
         <div className="flex items-center space-x-4">
           <Link to="/" className="flex items-center space-x-2">
@@ -27,10 +40,6 @@ export function Header() {
         <div className="flex items-center space-x-4">
           {userProfile && (
             <>
-              {/* Only show dev tools for specific developer email */}
-              {isDevUser && <RoleSwitcher />}
-              {isDevUser && <ClientTierToggle />}
-              
               {/* Dashboard link based on current role */}
               <Button
                 variant="ghost"
@@ -38,11 +47,15 @@ export function Header() {
                 asChild
                 className="text-foreground hover:text-foreground/80"
               >
-                <Link to={getRoleDashboard()}>
-                  <HomeIcon className="h-4 w-4 mr-2" />
+                <Link to={dashboardPath}>
+                  <Home className="h-4 w-4 mr-2" />
                   Dashboard
                 </Link>
               </Button>
+              
+              {/* Only show dev tools for specific developer email */}
+              {isDevUser && <RoleSwitcher />}
+              {isDevUser && <ClientTierToggle />}
               
               <AdminPortalLink />
               
@@ -50,7 +63,7 @@ export function Header() {
                 <User className="h-4 w-4" />
                 <span>{userProfile.name || userProfile.email}</span>
                 <span className="text-muted-foreground">
-                  ({getCurrentRole()}{getCurrentRole() === 'client' ? ` ${getCurrentClientTier()}` : ''})
+                  ({getRoleDisplayName(currentRole)}{currentRole === 'client' && currentTier === 'premium' ? ' Premium' : ''})
                 </span>
               </div>
               

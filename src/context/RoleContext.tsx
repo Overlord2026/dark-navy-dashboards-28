@@ -110,6 +110,11 @@ export const RoleSwitcher = () => {
   const currentRole = getCurrentRole();
   const displayRole = currentRole === 'client' && clientTier === 'premium' ? 'client_premium' : currentRole;
 
+  const resetToOwner = () => {
+    setEmulatedRole(null);
+    setClientTier('basic');
+  };
+
   return (
     <div className="flex items-center gap-4 text-sm">
       <div className="flex items-center gap-2">
@@ -141,6 +146,16 @@ export const RoleSwitcher = () => {
             </option>
           ))}
         </select>
+        
+        {emulatedRole && (
+          <button
+            onClick={resetToOwner}
+            className="ml-2 px-2 py-1 text-xs bg-red-100 hover:bg-red-200 text-red-800 border border-red-300 rounded transition-colors"
+            title="Reset to Owner Role"
+          >
+            Reset QA
+          </button>
+        )}
       </div>
       
       {(currentRole === 'client' || currentRole === 'client_premium') && (
