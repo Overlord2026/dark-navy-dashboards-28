@@ -7,15 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 
-interface GoalTemplate {
-  id: string;
-  category: string;
-  display_name: string;
-  description: string;
-  icon_name: string;
-  aspirational_prompt: string;
-  suggested_amounts: number[];
-}
+import { GoalTemplate } from '@/types/goal';
 
 const CreateGoalPage = () => {
   const [templates, setTemplates] = useState<GoalTemplate[]>([]);

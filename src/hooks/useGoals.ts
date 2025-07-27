@@ -1,49 +1,11 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useToast } from '@/hooks/use-toast';
+import { Goal, GoalTemplate } from '@/types/goal';
 
-export interface Goal {
-  id: string;
-  user_id: string;
-  tenant_id: string;
-  name: string;
-  category: string;
-  description: string;
-  aspirational_description: string;
-  target_amount: number;
-  current_amount: number;
-  target_date: string | null;
-  monthly_contribution: number;
-  funding_frequency: string;
-  image_url: string | null;
-  priority: string;
-  status: string;
-  family_member_ids: string[] | null;
-  experience_story: string | null;
-  why_important: string | null;
-  linked_account_ids: string[] | null;
-  goal_metadata: Record<string, any>;
-  sort_order: number;
-  completed_at: string | null;
-  created_at: string;
-  updated_at: string;
-}
+export { Goal };
 
-export interface GoalTemplate {
-  id: string;
-  category: string;
-  display_name: string;
-  description: string;
-  icon_name: string;
-  image_url: string | null;
-  default_fields: Record<string, any>;
-  required_fields: string[];
-  suggested_amounts: number[];
-  aspirational_prompt: string;
-  success_story_example: string | null;
-  created_at: string;
-  updated_at: string;
-}
+
 
 export const useGoals = () => {
   const [goals, setGoals] = useState<Goal[]>([]);

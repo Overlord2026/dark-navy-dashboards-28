@@ -56,6 +56,9 @@ import ProductDetailsPage from "./pages/ProductDetailsPage";
 import MarketplaceAdminPage from "./pages/MarketplaceAdminPage";
 import CompliancePage from "./pages/CompliancePage";
 import PortfolioPage from "./pages/PortfolioPage";
+import GoalsDashboard from "./pages/GoalsDashboard";
+import GoalDetailPage from "./pages/GoalDetailPage";
+import CreateGoalPage from "./pages/CreateGoalPage";
 
 const queryClient = new QueryClient();
 
@@ -312,6 +315,32 @@ const App = () => {
                     element={
                       <AuthWrapper requireAuth={true}>
                         <PortfolioPage />
+                      </AuthWrapper>
+                    }
+                  />
+
+                  {/* Goals & Aspirations Routes */}
+                  <Route
+                    path="/goals"
+                    element={
+                      <AuthWrapper requireAuth={true}>
+                        <GoalsDashboard />
+                      </AuthWrapper>
+                    }
+                  />
+                  <Route
+                    path="/goals/create"
+                    element={
+                      <AuthWrapper requireAuth={true}>
+                        <CreateGoalPage />
+                      </AuthWrapper>
+                    }
+                  />
+                  <Route
+                    path="/goals/:id"
+                    element={
+                      <AuthWrapper requireAuth={true}>
+                        <GoalDetailPage />
                       </AuthWrapper>
                     }
                   />
