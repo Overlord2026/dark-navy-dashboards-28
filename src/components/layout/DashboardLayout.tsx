@@ -4,6 +4,7 @@ import { Header } from './Header';
 import { Sidebar } from '@/components/ui/Sidebar';
 import { ErrorBoundary } from '@/components/ui/error-boundary';
 import { useTheme } from 'next-themes';
+import { PersonaDebugSession } from '@/components/debug/PersonaDebugSession';
 
 export function DashboardLayout() {
   const { theme } = useTheme();
@@ -57,6 +58,8 @@ export function DashboardLayout() {
             </ErrorBoundary>
           </main>
         </div>
+        
+        <PersonaDebugSession />
       </div>
     </ErrorBoundary>
   );

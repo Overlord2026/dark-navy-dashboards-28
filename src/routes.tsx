@@ -60,8 +60,14 @@ export const router = createBrowserRouter([
     ]
   },
   {
-    path: "/advisor-dashboard", 
-    element: <AdvisorDashboard />,
+    path: "/advisor-dashboard",
+    element: <DashboardLayout />,
+    children: [
+      {
+        index: true,
+        element: <AdvisorDashboard />,
+      }
+    ]
   },
   {
     path: "/admin-dashboard",
