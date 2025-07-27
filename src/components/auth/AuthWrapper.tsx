@@ -7,6 +7,8 @@ import { MFAEnforcement } from '@/components/security/MFAEnforcement';
 import { Card, CardContent } from "@/components/ui/card";
 import { hasRoleAccess, getRoleDisplayName } from '@/utils/roleHierarchy';
 import { useRoleContext } from '@/context/RoleContext';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { AlertTriangle } from 'lucide-react';
 import type { UserRole } from '@/utils/roleHierarchy';
 
 interface AuthWrapperProps {
@@ -22,7 +24,7 @@ export function AuthWrapper({
 }: AuthWrapperProps) {
   const { isAuthenticated, isLoading } = useAuth();
   const { userProfile } = useUser();
-  const { getCurrentRole } = useRoleContext();
+  const { getCurrentRole, isDevMode } = useRoleContext();
   const mfaEnforcement = useMFAEnforcement(false); // Don't auto-redirect, we'll handle it here
 
   // Show loading state
@@ -66,25 +68,56 @@ export function AuthWrapper({
         actualRole: userProfile.role,
         currentRole: currentRole,
         requiredRoles: allowedRoles,
-        page: window.location.pathname
+        page: window.location.pathname,
+        isEmulated: isDevMode && currentRole !== userProfile.role
       });
     
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Card className="w-full max-w-md">
-          <CardContent className="p-6 text-center">
-            <h2 className="text-lg font-semibold mb-2">Access Denied</h2>
-            <p className="text-muted-foreground mb-4">
-              You don't have permission to access this page.
-            </p>
-            <div className="text-sm text-muted-foreground bg-muted p-3 rounded">
-              <p><strong>Your Role:</strong> {getRoleDisplayName(currentRole)}</p>
-              <p><strong>Required Roles:</strong> {allowedRoles.map(getRoleDisplayName).join(', ')}</p>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
+      return (
+        <div className="min-h-screen flex items-center justify-center p-4">
+          <Card className="w-full max-w-lg">
+            <CardContent className="p-6 text-center">
+              <div className="mb-4">
+                <AlertTriangle className="h-12 w-12 text-destructive mx-auto mb-2" />
+                <h2 className="text-lg font-semibold">Access Denied</h2>
+              </div>
+              
+              <p className="text-muted-foreground mb-4">
+                You don't have permission to access this page.
+              </p>
+              
+              <Alert className="text-left">
+                <AlertDescription className="space-y-2">
+                  <div>
+                    <strong>Current Role:</strong> {getRoleDisplayName(currentRole)}
+                    {isDevMode && currentRole !== userProfile.role && (
+                      <span className="text-muted-foreground ml-1">
+                        (emulated from {getRoleDisplayName(userProfile.role)})
+                      </span>
+                    )}
+                  </div>
+                  <div>
+                    <strong>Required Roles:</strong> {allowedRoles.map(getRoleDisplayName).join(', ')}
+                  </div>
+                  {isDevMode && (
+                    <div className="text-xs text-muted-foreground pt-2 border-t">
+                      <strong>Dev Mode:</strong> Use the Role Switcher in the header to test different roles
+                    </div>
+                  )}
+                </AlertDescription>
+              </Alert>
+              
+              <div className="mt-4">
+                <a 
+                  href="/"
+                  className="inline-flex items-center justify-center px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
+                >
+                  Return Home
+                </a>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      );
     }
   }
 

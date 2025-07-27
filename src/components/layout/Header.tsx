@@ -3,6 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useUser } from '@/context/UserContext';
 import { AdminPortalLink } from '@/components/navigation/AdminPortalLink';
+import { RoleSwitcher } from '@/context/RoleContext';
 import { Button } from '@/components/ui/button';
 import { LogOut, User } from 'lucide-react';
 
@@ -21,6 +22,7 @@ export function Header() {
         <div className="flex items-center space-x-4">
           {userProfile && (
             <>
+              <RoleSwitcher />
               <AdminPortalLink />
               {/* Temporary DEV link - remove in production */}
               {userProfile?.role !== 'client' && (

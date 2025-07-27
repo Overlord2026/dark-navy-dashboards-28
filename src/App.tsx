@@ -33,6 +33,9 @@ import { SecuritySettingsPage } from "./pages/SecuritySettingsPage";
 import { ClientDashboard } from "./pages/ClientDashboard";
 import AdvisorDashboard from "./pages/AdvisorDashboard";
 import { AdminDashboard } from "./pages/AdminDashboard";
+import { AccountantDashboard } from "./pages/AccountantDashboard";
+import { ConsultantDashboard } from "./pages/ConsultantDashboard";
+import { AttorneyDashboard } from "./pages/AttorneyDashboard";
 import { AdminRoute } from "@/components/auth/AdminRoute";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { DiagnosticsPage } from "./pages/DiagnosticsPage";
@@ -147,6 +150,39 @@ const App = () => {
                         allowedRoles={['admin', 'tenant_admin', 'system_administrator']}
                       >
                         <AdminDashboard />
+                      </AuthWrapper>
+                    }
+                  />
+                  <Route
+                    path="/accountant-dashboard"
+                    element={
+                      <AuthWrapper
+                        requireAuth={true}
+                        allowedRoles={['accountant', 'admin', 'tenant_admin', 'system_administrator']}
+                      >
+                        <AccountantDashboard />
+                      </AuthWrapper>
+                    }
+                  />
+                  <Route
+                    path="/consultant-dashboard"
+                    element={
+                      <AuthWrapper
+                        requireAuth={true}
+                        allowedRoles={['consultant', 'admin', 'tenant_admin', 'system_administrator']}
+                      >
+                        <ConsultantDashboard />
+                      </AuthWrapper>
+                    }
+                  />
+                  <Route
+                    path="/attorney-dashboard"
+                    element={
+                      <AuthWrapper
+                        requireAuth={true}
+                        allowedRoles={['attorney', 'admin', 'tenant_admin', 'system_administrator']}
+                      >
+                        <AttorneyDashboard />
                       </AuthWrapper>
                     }
                   />

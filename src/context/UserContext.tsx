@@ -22,6 +22,7 @@ interface UserProfile {
   permissions?: string[];
   twoFactorEnabled?: boolean;
   client_segment?: string;
+  client_tier?: 'basic' | 'premium';
   tenant_id?: string;
   segments?: string[];
   advisor_role?: string;
@@ -123,6 +124,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
               permissions: profile.permissions || [],
               twoFactorEnabled: profile.two_factor_enabled || false,
               client_segment: profile.client_segment,
+              client_tier: profile.client_tier || 'basic',
               utm_source: profile.utm_source,
               utm_medium: profile.utm_medium,
               utm_campaign: profile.utm_campaign,
@@ -224,8 +226,9 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
               role: profile.role || 'client',
               permissions: profile.permissions || [],
               twoFactorEnabled: profile.two_factor_enabled || false,
-              client_segment: profile.client_segment,
-              utm_source: profile.utm_source,
+               client_segment: profile.client_segment,
+               client_tier: profile.client_tier || 'basic',
+               utm_source: profile.utm_source,
               utm_medium: profile.utm_medium,
               utm_campaign: profile.utm_campaign,
               ghl_contact_id: profile.ghl_contact_id,
