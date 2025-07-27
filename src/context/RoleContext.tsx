@@ -49,18 +49,19 @@ export const RoleProvider = ({ children }: { children: React.ReactNode }) => {
   const isDevMode = userProfile?.email ? DEV_EMAILS.includes(userProfile.email) : false;
   
   const getCurrentRole = () => {
-    if (emulatedRole && isDevMode) {
+    // For dev users, always use emulated role if set
+    if (isDevMode && emulatedRole) {
       return emulatedRole;
     }
     return userProfile?.role || 'client';
   };
 
   const getCurrentClientTier = () => {
-    // If in dev mode and emulating client, use the tier setting
+    // For dev users emulating client roles, always use the tier setting
     if (isDevMode && (getCurrentRole() === 'client' || getCurrentRole() === 'client_premium')) {
       return clientTier;
     }
-    // Otherwise use actual profile tier or default to basic
+    // For non-dev users or non-client roles, use actual profile tier
     return userProfile?.client_tier as 'basic' | 'premium' || 'basic';
   };
 

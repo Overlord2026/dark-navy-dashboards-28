@@ -9,7 +9,7 @@ export const ClientTierToggle = () => {
   const { getCurrentRole, getCurrentClientTier, setClientTier, isDevMode } = useRoleContext();
   const { userProfile } = useUser();
 
-  // Only show for dev user when emulating client roles
+  // Only show for dev user
   const isDevUser = userProfile?.email === 'tonygomes88@gmail.com';
   const currentRole = getCurrentRole();
   const isClientRole = currentRole === 'client' || currentRole === 'client_premium';

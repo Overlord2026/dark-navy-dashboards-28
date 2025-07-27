@@ -219,10 +219,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const pathname = location.pathname;
   const { getCurrentRole, getCurrentClientTier, isDevMode } = useRoleContext();
   
-  // Get role-specific navigation or fallback to full navigation for dev users
+  // Always use role-specific navigation - dev users see emulated role navigation
   const currentRole = getCurrentRole();
   const currentTier = getCurrentClientTier();
-  const navigationItems = isDevMode ? hierarchicalNav : getRoleNavigation(currentRole, currentTier);
+  const navigationItems = getRoleNavigation(currentRole, currentTier);
 
   const isActive = (href: string) => {
     return pathname === href || (href !== "/" && pathname.startsWith(href));
