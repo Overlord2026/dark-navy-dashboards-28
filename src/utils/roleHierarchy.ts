@@ -80,3 +80,15 @@ export function getRoleDisplayName(role: string): string {
   
   return roleMap[role] || role;
 }
+
+export const getRoleHierarchy = (): string[] => [
+  'client',
+  'advisor', 
+  'accountant',
+  'consultant',
+  'attorney',
+  'admin',
+  'tenant_admin',
+  'system_administrator',
+  'superadmin'
+];
