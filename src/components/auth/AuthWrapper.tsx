@@ -70,7 +70,12 @@ export function AuthWrapper({
       effectiveRole = 'client_premium';
     }
     
-    if (!hasRoleAccess(effectiveRole, allowedRoles)) {
+    // In dev mode, emulation should fully override access control
+    const shouldAllowAccess = isDevMode && userProfile?.email === 'tonygomes88@gmail.com' 
+      ? true 
+      : hasRoleAccess(effectiveRole, allowedRoles);
+    
+    if (!shouldAllowAccess) {
       console.warn('Access denied for user:', {
         userId: userProfile?.id || 'anonymous',
         actualRole: userProfile?.role || 'none',
@@ -105,7 +110,7 @@ export function AuthWrapper({
                       </span>
                     )}
                   </div>
-                  {isDevMode && (
+                  {isDevMode && userProfile?.email === 'tonygomes88@gmail.com' && (
                     <div>
                       <strong>Actual Role:</strong> {getRoleDisplayName(userProfile?.role || 'none')}
                       {emulatedRole && (
@@ -120,7 +125,7 @@ export function AuthWrapper({
                       role === 'client_premium' ? 'Client Premium' : getRoleDisplayName(role)
                     ).join(', ')}
                   </div>
-                  {isDevMode && (
+                  {isDevMode && userProfile?.email === 'tonygomes88@gmail.com' && (
                     <div className="text-xs text-amber-600 pt-2 border-t">
                       <strong>QA Mode:</strong> Use the Role Switcher in the header to test access as different personas
                     </div>

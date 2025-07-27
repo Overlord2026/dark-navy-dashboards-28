@@ -4,6 +4,8 @@ import { useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
 import { hierarchicalNav } from "@/components/navigation/HierarchicalNavigationConfig";
+import { getRoleNavigation } from "@/utils/roleNavigation";
+import { useRoleContext } from "@/context/RoleContext";
 import { NavItem } from "@/types/navigation";
 import {
   Collapsible,
@@ -215,6 +217,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const location = useLocation();
   const pathname = location.pathname;
+  const { getCurrentRole, getCurrentClientTier, isDevMode } = useRoleContext();
+  
+  // Get role-specific navigation or fallback to full navigation for dev users
+  const currentRole = getCurrentRole();
+  const currentTier = getCurrentClientTier();
+  const navigationItems = isDevMode ? hierarchicalNav : getRoleNavigation(currentRole, currentTier);
 
   const isActive = (href: string) => {
     return pathname === href || (href !== "/" && pathname.startsWith(href));
@@ -235,7 +243,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </Link>
         </div>
         <div className="space-y-1 overflow-y-auto px-3">
-          {hierarchicalNav.map((item) => (
+          {navigationItems.map((item) => (
             <HierarchicalNavItem
               key={item.id || item.title}
               item={item}

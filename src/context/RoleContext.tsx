@@ -2,7 +2,22 @@ import React, { createContext, useContext, useState } from 'react';
 import { useUser } from './UserContext';
 import { getRoleDisplayName } from '@/utils/roleHierarchy';
 
+// Only show QA/Dev tools to specific email addresses
 const DEV_EMAILS = ['tonygomes88@gmail.com'];
+
+// Role-specific navigation configuration
+const ROLE_DASHBOARDS: Record<string, string> = {
+  'client': '/client-dashboard',
+  'client_premium': '/client-dashboard',
+  'advisor': '/advisor-dashboard',
+  'admin': '/admin-dashboard',
+  'tenant_admin': '/admin-dashboard',
+  'system_administrator': '/admin-dashboard',
+  'accountant': '/accountant-dashboard',
+  'consultant': '/consultant-dashboard',
+  'attorney': '/attorney-dashboard',
+  'developer': '/advisor-dashboard' // Default to advisor for dev access
+};
 
 interface RoleContextType {
   emulatedRole: string | null;
@@ -12,6 +27,7 @@ interface RoleContextType {
   clientTier: 'basic' | 'premium';
   setClientTier: (tier: 'basic' | 'premium') => void;
   getCurrentClientTier: () => 'basic' | 'premium';
+  getRoleDashboard: (role?: string) => string;
 }
 
 const RoleContext = createContext<RoleContextType>({ 
@@ -21,7 +37,8 @@ const RoleContext = createContext<RoleContextType>({
   isDevMode: false,
   clientTier: 'basic',
   setClientTier: () => {},
-  getCurrentClientTier: () => 'basic'
+  getCurrentClientTier: () => 'basic',
+  getRoleDashboard: () => '/'
 });
 
 export const RoleProvider = ({ children }: { children: React.ReactNode }) => {
@@ -47,6 +64,11 @@ export const RoleProvider = ({ children }: { children: React.ReactNode }) => {
     return userProfile?.client_tier as 'basic' | 'premium' || 'basic';
   };
 
+  const getRoleDashboard = (role?: string) => {
+    const targetRole = role || getCurrentRole();
+    return ROLE_DASHBOARDS[targetRole] || '/';
+  };
+
   return (
     <RoleContext.Provider value={{ 
       emulatedRole, 
@@ -55,7 +77,8 @@ export const RoleProvider = ({ children }: { children: React.ReactNode }) => {
       isDevMode,
       clientTier,
       setClientTier,
-      getCurrentClientTier
+      getCurrentClientTier,
+      getRoleDashboard
     }}>
       {children}
     </RoleContext.Provider>
