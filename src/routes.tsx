@@ -3,6 +3,9 @@ import { HomePage } from "./pages/TabPages";
 import { AnnuitiesPage } from "./pages/AnnuitiesPage";
 import NoticesPage from "./pages/NoticesPage";
 import InsurancePage from "./pages/InsurancePage";
+import LendingDashboard from "./pages/LendingDashboard";
+import ProfessionalNetworkPage from "./pages/ProfessionalNetworkPage";
+import ComplianceAuditPage from "./pages/ComplianceAuditPage";
 
 export const router = createBrowserRouter([
   {
@@ -20,5 +23,17 @@ export const router = createBrowserRouter([
   {
     path: "/insurance",
     element: <InsurancePage />,
+  },
+  {
+    path: "/lending",
+    element: <LendingDashboard />,
+  },
+  {
+    path: "/professional-network",
+    element: <ProfessionalNetworkPage />,
+  },
+  {
+    path: "/compliance-audit",
+    element: <ComplianceAuditPage />,
   },
 ]);
