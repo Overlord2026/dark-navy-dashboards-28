@@ -14,7 +14,7 @@ import type { UserRole } from '@/utils/roleHierarchy';
 interface AuthWrapperProps {
   children: React.ReactNode;
   requireAuth?: boolean;
-  allowedRoles?: UserRole[];
+  allowedRoles?: (UserRole | string)[];
 }
 
 export function AuthWrapper({ 
@@ -24,7 +24,7 @@ export function AuthWrapper({
 }: AuthWrapperProps) {
   const { isAuthenticated, isLoading } = useAuth();
   const { userProfile } = useUser();
-  const { getCurrentRole, isDevMode } = useRoleContext();
+  const { getCurrentRole, getCurrentClientTier, isDevMode, emulatedRole } = useRoleContext();
   const mfaEnforcement = useMFAEnforcement(false); // Don't auto-redirect, we'll handle it here
 
   // Show loading state
@@ -60,16 +60,26 @@ export function AuthWrapper({
   }
 
   // Check role-based access using hierarchy system
-  if (allowedRoles.length > 0 && userProfile) {
+  if (allowedRoles.length > 0) {
     const currentRole = getCurrentRole();
-    if (!hasRoleAccess(currentRole, allowedRoles)) {
+    const currentTier = getCurrentClientTier();
+    
+    // For client premium, check if the role is client and tier is premium
+    let effectiveRole = currentRole;
+    if (currentRole === 'client' && currentTier === 'premium') {
+      effectiveRole = 'client_premium';
+    }
+    
+    if (!hasRoleAccess(effectiveRole, allowedRoles)) {
       console.warn('Access denied for user:', {
-        userId: userProfile.id,
-        actualRole: userProfile.role,
+        userId: userProfile?.id || 'anonymous',
+        actualRole: userProfile?.role || 'none',
         currentRole: currentRole,
+        effectiveRole: effectiveRole,
+        clientTier: currentTier,
         requiredRoles: allowedRoles,
         page: window.location.pathname,
-        isEmulated: isDevMode && currentRole !== userProfile.role
+        isEmulated: isDevMode && (emulatedRole !== null || currentRole !== userProfile?.role)
       });
     
       return (
@@ -88,19 +98,31 @@ export function AuthWrapper({
               <Alert className="text-left">
                 <AlertDescription className="space-y-2">
                   <div>
-                    <strong>Current Role:</strong> {getRoleDisplayName(currentRole)}
-                    {isDevMode && currentRole !== userProfile.role && (
+                    <strong>Current Role:</strong> {effectiveRole === 'client_premium' ? 'Client Premium' : getRoleDisplayName(currentRole)}
+                    {currentRole === 'client' && currentTier && (
                       <span className="text-muted-foreground ml-1">
-                        (emulated from {getRoleDisplayName(userProfile.role)})
+                        ({currentTier} tier)
                       </span>
                     )}
                   </div>
+                  {isDevMode && (
+                    <div>
+                      <strong>Actual Role:</strong> {getRoleDisplayName(userProfile?.role || 'none')}
+                      {emulatedRole && (
+                        <span className="text-amber-600 ml-1">
+                          (QA emulating: {effectiveRole === 'client_premium' ? 'Client Premium' : getRoleDisplayName(currentRole)})
+                        </span>
+                      )}
+                    </div>
+                  )}
                   <div>
-                    <strong>Required Roles:</strong> {allowedRoles.map(getRoleDisplayName).join(', ')}
+                    <strong>Required Roles:</strong> {allowedRoles.map(role => 
+                      role === 'client_premium' ? 'Client Premium' : getRoleDisplayName(role)
+                    ).join(', ')}
                   </div>
                   {isDevMode && (
-                    <div className="text-xs text-muted-foreground pt-2 border-t">
-                      <strong>Dev Mode:</strong> Use the Role Switcher in the header to test different roles
+                    <div className="text-xs text-amber-600 pt-2 border-t">
+                      <strong>QA Mode:</strong> Use the Role Switcher in the header to test access as different personas
                     </div>
                   )}
                 </AlertDescription>

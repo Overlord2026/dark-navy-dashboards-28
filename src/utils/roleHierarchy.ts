@@ -5,6 +5,7 @@ export type UserRole =
   | 'tenant_admin'
   | 'advisor'
   | 'client'
+  | 'client_premium'
   | 'consultant'
   | 'accountant'
   | 'attorney'
@@ -20,6 +21,7 @@ const ROLE_LEVELS: Record<UserRole, number> = {
   consultant: 50,
   accountant: 40,
   attorney: 30,
+  client_premium: 15,
   client: 10,
 };
 
@@ -27,17 +29,17 @@ const ROLE_LEVELS: Record<UserRole, number> = {
 export const ROLE_GROUPS = {
   ADVISOR_ACCESS: ['system_administrator', 'admin', 'tenant_admin', 'advisor'] as UserRole[],
   ADMIN_ACCESS: ['system_administrator', 'admin', 'tenant_admin'] as UserRole[],
-  CLIENT_ACCESS: ['system_administrator', 'admin', 'tenant_admin', 'advisor', 'client'] as UserRole[],
+  CLIENT_ACCESS: ['system_administrator', 'admin', 'tenant_admin', 'advisor', 'client', 'client_premium'] as UserRole[],
   PROFESSIONAL_ACCESS: ['system_administrator', 'admin', 'tenant_admin', 'advisor', 'consultant', 'accountant', 'attorney'] as UserRole[],
 };
 
 /**
  * Check if a user role has access to a specific feature group
  */
-export function hasRoleAccess(userRole: string | undefined, allowedRoles: UserRole[]): boolean {
+export function hasRoleAccess(userRole: string | undefined, allowedRoles: (UserRole | string)[]): boolean {
   if (!userRole) return false;
   
-  return allowedRoles.includes(userRole as UserRole);
+  return allowedRoles.includes(userRole);
 }
 
 /**
@@ -69,6 +71,7 @@ export function getRoleDisplayName(role: string): string {
     tenant_admin: 'Tenant Administrator',
     advisor: 'Financial Advisor',
     client: 'Client',
+    client_premium: 'Client Premium',
     consultant: 'Consultant',
     accountant: 'Accountant',
     attorney: 'Attorney',

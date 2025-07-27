@@ -125,7 +125,7 @@ const App = () => {
                     element={
                       <AuthWrapper 
                         requireAuth={true}
-                        allowedRoles={['client', 'advisor', 'admin', 'system_administrator', 'tenant_admin']}
+                        allowedRoles={['client', 'client_premium', 'advisor', 'admin', 'system_administrator', 'tenant_admin']}
                       >
                         <ClientDashboard />
                       </AuthWrapper>
@@ -136,7 +136,7 @@ const App = () => {
                     element={
                       <AuthWrapper
                         requireAuth={true}
-                        allowedRoles={getAdvisorAccessRoles()}
+                        allowedRoles={['advisor', 'admin', 'tenant_admin', 'system_administrator']}
                       >
                         <AdvisorDashboard />
                       </AuthWrapper>
