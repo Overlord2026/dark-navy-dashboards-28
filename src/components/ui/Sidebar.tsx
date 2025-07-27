@@ -12,7 +12,8 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { ChevronDown, ChevronRight } from "lucide-react";
+import { ChevronDown, ChevronRight, Crown } from "lucide-react";
+import { PremiumBadge } from "@/components/ui/premium-badge";
 
 // Recursive component for rendering hierarchical navigation
 interface HierarchicalNavItemProps {
@@ -86,6 +87,9 @@ const HierarchicalNavItem: React.FC<HierarchicalNavItemProps> = ({
                 )} />
               )}
               <span className="flex-1 truncate">{item.title}</span>
+              {!collapsed && item.isPremium && (
+                <Crown className="h-3 w-3 text-amber-500 flex-shrink-0 ml-2" />
+              )}
               {!collapsed && (
                 <div className="flex-shrink-0 ml-2">
                   {itemExpanded ? (
@@ -136,6 +140,9 @@ const HierarchicalNavItem: React.FC<HierarchicalNavItemProps> = ({
           )} />
         )}
         <span className="flex-1 truncate">{item.title}</span>
+        {!collapsed && item.isPremium && (
+          <Crown className="h-3 w-3 text-amber-500 flex-shrink-0 ml-2" />
+        )}
         {!collapsed && item.comingSoon && (
           <span className="text-xs text-muted-foreground flex-shrink-0 ml-2">(Coming Soon)</span>
         )}
@@ -162,6 +169,9 @@ const HierarchicalNavItem: React.FC<HierarchicalNavItemProps> = ({
           )} />
         )}
         <span className="flex-1 truncate">{item.title}</span>
+        {!collapsed && item.isPremium && (
+          <Crown className="h-3 w-3 text-amber-500 flex-shrink-0 ml-2" />
+        )}
       </div>
     );
   }
@@ -190,6 +200,9 @@ const HierarchicalNavItem: React.FC<HierarchicalNavItemProps> = ({
         )} />
       )}
       <span className="truncate">{item.title}</span>
+      {!collapsed && item.isPremium && (
+        <Crown className="h-3 w-3 text-amber-500 flex-shrink-0 ml-2" />
+      )}
     </Link>
   );
 };

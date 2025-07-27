@@ -68,7 +68,7 @@ export function ClientDashboard() {
       </div>
 
       {/* Portfolio Overview */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Portfolio Value</CardTitle>
@@ -122,7 +122,7 @@ export function ClientDashboard() {
         </Card>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
+      <div className="grid gap-4 sm:gap-6 grid-cols-1 lg:grid-cols-2">
         {/* Asset Allocation */}
         <Card>
           <CardHeader>
@@ -218,7 +218,7 @@ export function ClientDashboard() {
         </Card>
       )}
 
-      <div className="grid gap-6 md:grid-cols-2">
+      <div className="grid gap-4 sm:gap-6 grid-cols-1 lg:grid-cols-2">
         {/* Recent Transactions */}
         <Card>
           <CardHeader>
@@ -279,22 +279,22 @@ export function ClientDashboard() {
           <CardTitle>Quick Actions</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-3 md:grid-cols-4">
-            <Button className="h-20 flex-col gap-2" variant="outline">
-              <DollarSign className="h-6 w-6" />
-              <span className="text-xs">Make Investment</span>
+          <div className="grid gap-2 sm:gap-3 grid-cols-2 sm:grid-cols-4">
+            <Button className="h-16 sm:h-20 flex-col gap-1 sm:gap-2 text-xs sm:text-sm" variant="outline">
+              <DollarSign className="h-5 w-5 sm:h-6 sm:w-6" />
+              <span>Make Investment</span>
             </Button>
-            <Button className="h-20 flex-col gap-2" variant="outline">
-              <BarChart3 className="h-6 w-6" />
-              <span className="text-xs">View Reports</span>
+            <Button className="h-16 sm:h-20 flex-col gap-1 sm:gap-2 text-xs sm:text-sm" variant="outline">
+              <BarChart3 className="h-5 w-5 sm:h-6 sm:w-6" />
+              <span>View Reports</span>
             </Button>
-            <Button className="h-20 flex-col gap-2" variant="outline">
-              <PieChart className="h-6 w-6" />
-              <span className="text-xs">Rebalance Portfolio</span>
+            <Button className="h-16 sm:h-20 flex-col gap-1 sm:gap-2 text-xs sm:text-sm" variant="outline">
+              <PieChart className="h-5 w-5 sm:h-6 sm:w-6" />
+              <span>Rebalance Portfolio</span>
             </Button>
-            <Button className="h-20 flex-col gap-2" variant="outline">
-              <Target className="h-6 w-6" />
-              <span className="text-xs">Update Goals</span>
+            <Button className="h-16 sm:h-20 flex-col gap-1 sm:gap-2 text-xs sm:text-sm" variant="outline">
+              <Target className="h-5 w-5 sm:h-6 sm:w-6" />
+              <span>Update Goals</span>
             </Button>
           </div>
         </CardContent>

@@ -5,6 +5,10 @@ import { Sidebar } from '@/components/ui/Sidebar';
 import { ErrorBoundary } from '@/components/ui/error-boundary';
 import { useTheme } from 'next-themes';
 import { PersonaDebugSession } from '@/components/debug/PersonaDebugSession';
+import { QAModeHeader } from '@/components/debug/QAModeHeader';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Button } from '@/components/ui/button';
+import { Menu } from 'lucide-react';
 
 export function DashboardLayout() {
   const { theme } = useTheme();
@@ -34,29 +38,66 @@ export function DashboardLayout() {
 
   return (
     <ErrorBoundary>
-      <div className="min-h-screen bg-background flex w-full">
-        <ErrorBoundary>
-          <Sidebar
-            isLightTheme={isLightTheme}
-            collapsed={sidebarCollapsed}
-            expandedSubmenus={expandedSubmenus}
-            toggleSubmenu={toggleSubmenu}
-            toggleTheme={toggleTheme}
-            onExpand={onExpand}
-            onCollapse={onCollapse}
-          />
-        </ErrorBoundary>
+      <div className="min-h-screen bg-background flex flex-col w-full">
+        <QAModeHeader />
         
-        <div className="flex-1 flex flex-col min-h-screen">
-          <ErrorBoundary>
-            <Header />
-          </ErrorBoundary>
-          
-          <main className="flex-1 p-6">
+        <div className="flex flex-1">
+          {/* Desktop Sidebar */}
+          <div className="hidden lg:flex">
             <ErrorBoundary>
-              <Outlet />
+              <Sidebar
+                isLightTheme={isLightTheme}
+                collapsed={sidebarCollapsed}
+                expandedSubmenus={expandedSubmenus}
+                toggleSubmenu={toggleSubmenu}
+                toggleTheme={toggleTheme}
+                onExpand={onExpand}
+                onCollapse={onCollapse}
+              />
             </ErrorBoundary>
-          </main>
+          </div>
+          
+          <div className="flex-1 flex flex-col min-h-screen">
+            {/* Mobile Header with Hamburger */}
+            <div className="lg:hidden flex items-center justify-between p-4 border-b border-border bg-background">
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button variant="ghost" size="sm" className="lg:hidden">
+                    <Menu className="h-5 w-5" />
+                    <span className="sr-only">Toggle navigation menu</span>
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="left" className="w-[240px] sm:w-[280px] p-0">
+                  <ErrorBoundary>
+                    <Sidebar
+                      isLightTheme={isLightTheme}
+                      collapsed={false}
+                      expandedSubmenus={expandedSubmenus}
+                      toggleSubmenu={toggleSubmenu}
+                      toggleTheme={toggleTheme}
+                      onExpand={onExpand}
+                      onCollapse={onCollapse}
+                    />
+                  </ErrorBoundary>
+                </SheetContent>
+              </Sheet>
+              <h1 className="font-bold text-xl">LOV</h1>
+              <div /> {/* Spacer for center alignment */}
+            </div>
+
+            {/* Desktop Header */}
+            <div className="hidden lg:block">
+              <ErrorBoundary>
+                <Header />
+              </ErrorBoundary>
+            </div>
+            
+            <main className="flex-1 p-3 sm:p-4 lg:p-6">
+              <ErrorBoundary>
+                <Outlet />
+              </ErrorBoundary>
+            </main>
+          </div>
         </div>
         
         <PersonaDebugSession />
