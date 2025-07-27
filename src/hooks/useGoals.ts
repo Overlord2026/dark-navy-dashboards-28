@@ -3,7 +3,7 @@ import { supabase } from '@/lib/supabase';
 import { useToast } from '@/hooks/use-toast';
 import { Goal, GoalTemplate } from '@/types/goal';
 
-export { Goal };
+export type { Goal };
 
 
 

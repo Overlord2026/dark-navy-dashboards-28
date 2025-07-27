@@ -49,7 +49,10 @@ export const BoutiqueFamilyOfficeDashboard: React.FC = () => {
       <PersonalizedWelcome familyData={familyData} />
 
       {/* B. Goals & Milestones: Experience-Centric */}
-      <GoalsAndMilestones goals={familyData.goals} />
+      {/* <GoalsAndMilestones goals={familyData.goals} /> */}
+      <div className="p-6 text-center text-muted-foreground">
+        Goals integration coming soon - visit <a href="/goals" className="text-primary underline">/goals</a> for full functionality
+      </div>
 
       {/* C. Asset Map & Income Streams */}
       <AssetMap incomeStreams={familyData.incomeStreams} />
