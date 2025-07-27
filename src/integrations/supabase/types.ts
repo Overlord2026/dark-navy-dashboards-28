@@ -6195,6 +6195,50 @@ export type Database = {
           },
         ]
       }
+      professional_client_connections: {
+        Row: {
+          client_id: string
+          connection_type: string
+          created_at: string
+          id: string
+          initial_message: string | null
+          professional_id: string
+          professional_response: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          client_id: string
+          connection_type?: string
+          created_at?: string
+          id?: string
+          initial_message?: string | null
+          professional_id: string
+          professional_response?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          client_id?: string
+          connection_type?: string
+          created_at?: string
+          id?: string
+          initial_message?: string | null
+          professional_id?: string
+          professional_response?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "professional_client_connections_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "tax_professionals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       professional_compliance: {
         Row: {
           created_at: string | null
@@ -9200,6 +9244,93 @@ export type Database = {
           },
         ]
       }
+      tax_documents: {
+        Row: {
+          category: string
+          created_at: string
+          encrypted_key: string | null
+          file_name: string
+          file_size: number
+          file_type: string
+          id: string
+          professional_id: string | null
+          shared_at: string | null
+          shared_with_professional: boolean | null
+          storage_path: string
+          updated_at: string
+          upload_status: string
+          user_id: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          encrypted_key?: string | null
+          file_name: string
+          file_size: number
+          file_type: string
+          id?: string
+          professional_id?: string | null
+          shared_at?: string | null
+          shared_with_professional?: boolean | null
+          storage_path: string
+          updated_at?: string
+          upload_status?: string
+          user_id: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          encrypted_key?: string | null
+          file_name?: string
+          file_size?: number
+          file_type?: string
+          id?: string
+          professional_id?: string | null
+          shared_at?: string | null
+          shared_with_professional?: boolean | null
+          storage_path?: string
+          updated_at?: string
+          upload_status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      tax_planning_analytics: {
+        Row: {
+          created_at: string
+          event_data: Json | null
+          event_type: string
+          id: string
+          ip_address: unknown | null
+          page_context: string | null
+          session_id: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          event_data?: Json | null
+          event_type: string
+          id?: string
+          ip_address?: unknown | null
+          page_context?: string | null
+          session_id?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          event_data?: Json | null
+          event_type?: string
+          id?: string
+          ip_address?: unknown | null
+          page_context?: string | null
+          session_id?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       tax_planning_consultations: {
         Row: {
           advisor_notes: string | null
@@ -9308,6 +9439,63 @@ export type Database = {
           title?: string
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      tax_professionals: {
+        Row: {
+          available_for_new_clients: boolean | null
+          bio: string | null
+          created_at: string
+          credentials: string[]
+          hourly_rate: number | null
+          id: string
+          location: string | null
+          professional_name: string
+          rating: number | null
+          review_count: number | null
+          scheduling_url: string | null
+          specialties: string[]
+          updated_at: string
+          user_id: string
+          verified: boolean | null
+          years_experience: number | null
+        }
+        Insert: {
+          available_for_new_clients?: boolean | null
+          bio?: string | null
+          created_at?: string
+          credentials?: string[]
+          hourly_rate?: number | null
+          id?: string
+          location?: string | null
+          professional_name: string
+          rating?: number | null
+          review_count?: number | null
+          scheduling_url?: string | null
+          specialties?: string[]
+          updated_at?: string
+          user_id: string
+          verified?: boolean | null
+          years_experience?: number | null
+        }
+        Update: {
+          available_for_new_clients?: boolean | null
+          bio?: string | null
+          created_at?: string
+          credentials?: string[]
+          hourly_rate?: number | null
+          id?: string
+          location?: string | null
+          professional_name?: string
+          rating?: number | null
+          review_count?: number | null
+          scheduling_url?: string | null
+          specialties?: string[]
+          updated_at?: string
+          user_id?: string
+          verified?: boolean | null
+          years_experience?: number | null
         }
         Relationships: []
       }

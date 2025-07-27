@@ -26,6 +26,9 @@ import { LearnMoreButton } from "@/components/investments/LearnMoreButton";
 import { Link } from "react-router-dom";
 import { SecureTaxReturnAnalysis } from "@/components/estate-planning/SecureTaxReturnAnalysis";
 import { AccountingSoftwareIntegration } from "@/components/tax-planning/AccountingSoftwareIntegration";
+import { TaxReadinessAssessment } from "@/components/tax-planning/TaxReadinessAssessment";
+import { CPAMarketplace } from "@/components/tax-planning/CPAMarketplace";
+import { TaxDocumentUpload } from "@/components/tax-planning/TaxDocumentUpload";
 import { useTaxPlanning } from "@/hooks/useTaxPlanning";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -138,6 +141,16 @@ export default function TaxPlanning() {
               </div>
             </CardContent>
           </Card>
+        </motion.div>
+
+        {/* Tax Readiness Assessment */}
+        <motion.div variants={itemVariants}>
+          <TaxReadinessAssessment />
+        </motion.div>
+
+        {/* Tax Document Upload */}
+        <motion.div variants={itemVariants}>
+          <TaxDocumentUpload />
         </motion.div>
 
         {/* Secure Tax Return Analysis */}
@@ -298,75 +311,20 @@ export default function TaxPlanning() {
         </motion.div>
 
         <motion.div variants={itemVariants}>
-          <div className="relative">
-            <div className="absolute top-4 right-4 z-10">
-              <Badge variant="warning">Coming Soon</Badge>
-            </div>
-            <div className="opacity-60 pointer-events-none">
-              <Card>
-                <CardHeader className={isMobile ? 'p-4 pb-3' : ''}>
-                  <CardTitle className={`flex items-center ${isMobile ? 'text-lg' : ''}`}>
-                    <UserSquare className={`mr-2 text-primary ${isMobile ? 'h-4 w-4' : 'h-5 w-5'}`} />
-                    Tax Planning Professionals
-                  </CardTitle>
-                  <CardDescription className={isMobile ? 'text-sm' : ''}>
-                    Connect with certified tax professionals in our network
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className={isMobile ? 'p-4 pt-0' : ''}>
-                  <div className={`grid gap-6 ${isMobile ? 'grid-cols-1' : 'md:grid-cols-3'}`}>
-                    <Card className="border shadow-sm">
-                      <CardHeader className={isMobile ? 'p-3' : 'p-4'}>
-                        <CardTitle className={isMobile ? 'text-base' : 'text-lg'}>CPAs</CardTitle>
-                        <CardDescription className={isMobile ? 'text-xs' : ''}>Certified Public Accountants</CardDescription>
-                      </CardHeader>
-                      <CardContent className={`pt-0 ${isMobile ? 'p-3' : 'p-4'}`}>
-                        <p className={`text-muted-foreground ${isMobile ? 'text-xs leading-relaxed' : 'text-sm'}`}>
-                          Experts in tax preparation, planning, and compliance who can handle complex tax situations.
-                        </p>
-                      </CardContent>
-                      <CardFooter className={`pt-0 ${isMobile ? 'p-3' : 'p-4'}`}>
-                        <Button variant="outline" size="sm" className={`w-full ${isMobile ? 'text-xs py-1' : ''}`}>Find a CPA</Button>
-                      </CardFooter>
-                    </Card>
-                    
-                    <Card className="border shadow-sm">
-                      <CardHeader className={isMobile ? 'p-3' : 'p-4'}>
-                        <CardTitle className={isMobile ? 'text-base' : 'text-lg'}>Tax Attorneys</CardTitle>
-                        <CardDescription className={isMobile ? 'text-xs' : ''}>Legal Tax Experts</CardDescription>
-                      </CardHeader>
-                      <CardContent className={`pt-0 ${isMobile ? 'p-3' : 'p-4'}`}>
-                        <p className={`text-muted-foreground ${isMobile ? 'text-xs leading-relaxed' : 'text-sm'}`}>
-                          Specialized attorneys who can handle complex tax matters, disputes, and legal tax planning.
-                        </p>
-                      </CardContent>
-                      <CardFooter className={`pt-0 ${isMobile ? 'p-3' : 'p-4'}`}>
-                        <Button variant="outline" size="sm" className={`w-full ${isMobile ? 'text-xs py-1' : ''}`}>Find a Tax Attorney</Button>
-                      </CardFooter>
-                    </Card>
-                    
-                    <Card className="border shadow-sm">
-                      <CardHeader className={isMobile ? 'p-3' : 'p-4'}>
-                        <CardTitle className={isMobile ? 'text-base' : 'text-lg'}>Enrolled Agents</CardTitle>
-                        <CardDescription className={isMobile ? 'text-xs' : ''}>IRS-Certified Specialists</CardDescription>
-                      </CardHeader>
-                      <CardContent className={`pt-0 ${isMobile ? 'p-3' : 'p-4'}`}>
-                        <p className={`text-muted-foreground ${isMobile ? 'text-xs leading-relaxed' : 'text-sm'}`}>
-                          Federally-licensed tax practitioners who can represent taxpayers before the IRS.
-                        </p>
-                      </CardContent>
-                      <CardFooter className={`pt-0 ${isMobile ? 'p-3' : 'p-4'}`}>
-                        <Button variant="outline" size="sm" className={`w-full ${isMobile ? 'text-xs py-1' : ''}`}>Find an Enrolled Agent</Button>
-                      </CardFooter>
-                    </Card>
-                  </div>
-                  <div className={`flex justify-center ${isMobile ? 'mt-4' : 'mt-6'}`}>
-                    <Button className={isMobile ? 'text-sm py-2' : ''}>View All Tax Professionals</Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
+          <Card>
+            <CardHeader className={isMobile ? 'p-4 pb-3' : ''}>
+              <CardTitle className={`flex items-center ${isMobile ? 'text-lg' : ''}`}>
+                <UserSquare className={`mr-2 text-primary ${isMobile ? 'h-4 w-4' : 'h-5 w-5'}`} />
+                Tax Planning Professionals
+              </CardTitle>
+              <CardDescription className={isMobile ? 'text-sm' : ''}>
+                Connect with certified tax professionals in our network
+              </CardDescription>
+            </CardHeader>
+            <CardContent className={isMobile ? 'p-4 pt-0' : ''}>
+              <CPAMarketplace />
+            </CardContent>
+          </Card>
         </motion.div>
 
         <motion.div variants={itemVariants}>

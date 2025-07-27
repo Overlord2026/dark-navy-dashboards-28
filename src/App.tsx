@@ -27,6 +27,7 @@ import RetirementConfidenceScorecard from "./pages/RetirementConfidenceScorecard
 import PublicFeeCalculator from "./pages/PublicFeeCalculator";
 import RetirementIncomeGapAnalyzer from "./pages/RetirementIncomeGapAnalyzer";
 import RetirementRoadmapInfo from "./pages/RetirementRoadmapInfo";
+import PublicTaxCenter from "./pages/PublicTaxCenter";
 import { AuthPage } from "./pages/AuthPage";
 import { SecuritySettingsPage } from "./pages/SecuritySettingsPage";
 import { ClientDashboard } from "./pages/ClientDashboard";
@@ -95,6 +96,7 @@ const App = () => {
                     <Route path="/calculator" element={<PublicFeeCalculator />} />
                     <Route path="/gap-analyzer" element={<RetirementIncomeGapAnalyzer />} />
                     <Route path="/roadmap-info" element={<RetirementRoadmapInfo />} />
+                    <Route path="/tax-center" element={<PublicTaxCenter />} />
                     
                     <Route
                       path="/"
