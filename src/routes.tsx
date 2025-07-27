@@ -7,6 +7,12 @@ import LendingDashboard from "./pages/LendingDashboard";
 import ProfessionalNetworkPage from "./pages/ProfessionalNetworkPage";
 import ComplianceAuditPage from "./pages/ComplianceAuditPage";
 import FiduciaryInsurancePage from "./pages/FiduciaryInsurancePage";
+import { ClientDashboard } from "./pages/ClientDashboard";
+import { AdminDashboard } from "./pages/AdminDashboard";
+import AdvisorDashboard from "./pages/AdvisorDashboard";
+import { AccountantDashboard } from "./pages/AccountantDashboard";
+import { ConsultantDashboard } from "./pages/ConsultantDashboard";
+import { AttorneyDashboard } from "./pages/AttorneyDashboard";
 
 export const router = createBrowserRouter([
   {
@@ -40,5 +46,30 @@ export const router = createBrowserRouter([
   {
     path: "/insurance/education/:productType",
     element: <FiduciaryInsurancePage />,
+  },
+  // Dashboard routes
+  {
+    path: "/client-dashboard",
+    element: <ClientDashboard />,
+  },
+  {
+    path: "/advisor-dashboard", 
+    element: <AdvisorDashboard />,
+  },
+  {
+    path: "/admin-dashboard",
+    element: <AdminDashboard />,
+  },
+  {
+    path: "/accountant-dashboard",
+    element: <AccountantDashboard />,
+  },
+  {
+    path: "/consultant-dashboard",
+    element: <ConsultantDashboard />,
+  },
+  {
+    path: "/attorney-dashboard",
+    element: <AttorneyDashboard />,
   },
 ]);
