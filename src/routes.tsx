@@ -6,6 +6,7 @@ import InsurancePage from "./pages/InsurancePage";
 import LendingDashboard from "./pages/LendingDashboard";
 import ProfessionalNetworkPage from "./pages/ProfessionalNetworkPage";
 import ComplianceAuditPage from "./pages/ComplianceAuditPage";
+import FiduciaryInsurancePage from "./pages/FiduciaryInsurancePage";
 
 export const router = createBrowserRouter([
   {
@@ -35,5 +36,9 @@ export const router = createBrowserRouter([
   {
     path: "/compliance-audit",
     element: <ComplianceAuditPage />,
+  },
+  {
+    path: "/insurance/education/:productType",
+    element: <FiduciaryInsurancePage />,
   },
 ]);

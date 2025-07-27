@@ -278,27 +278,86 @@ export default function InsurancePage() {
             <Card>
               <CardContent className="text-center py-12">
                 <Building className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                <h3 className="text-lg font-semibold mb-2">Insurance Marketplace</h3>
-                <p className="text-muted-foreground mb-4">
-                  Discover new insurance products and compare quotes from top providers.
+                <h3 className="text-lg font-semibold mb-2">Fiduciary Insurance Education</h3>
+                <p className="text-muted-foreground mb-6">
+                  Get unbiased education and fiduciary advice on complex insurance products.
                 </p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-2xl mx-auto">
-                  <Button variant="outline" className="flex flex-col h-20 gap-2">
-                    <Car className="h-5 w-5" />
-                    <span className="text-xs">Auto Insurance</span>
-                  </Button>
-                  <Button variant="outline" className="flex flex-col h-20 gap-2">
-                    <Home className="h-5 w-5" />
-                    <span className="text-xs">Home Insurance</span>
-                  </Button>
-                  <Button variant="outline" className="flex flex-col h-20 gap-2">
-                    <Shield className="h-5 w-5" />
-                    <span className="text-xs">Life Insurance</span>
-                  </Button>
-                  <Button variant="outline" className="flex flex-col h-20 gap-2">
-                    <Heart className="h-5 w-5" />
-                    <span className="text-xs">Health Insurance</span>
-                  </Button>
+                
+                {/* Fiduciary Products */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl mx-auto mb-8">
+                  <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => window.location.href = '/insurance/education/ltc'}>
+                    <CardContent className="p-6 text-center">
+                      <Heart className="h-8 w-8 mx-auto mb-3 text-red-600" />
+                      <h4 className="font-semibold mb-2">Long-Term Care</h4>
+                      <p className="text-sm text-muted-foreground mb-3">
+                        Protect your family from catastrophic care costs
+                      </p>
+                      <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 mb-3">
+                        <Shield className="h-3 w-3 mr-1" />
+                        Fiduciary Education
+                      </Badge>
+                      <Button variant="outline" size="sm" className="w-full">
+                        Learn More
+                      </Button>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => window.location.href = '/insurance/education/medicare'}>
+                    <CardContent className="p-6 text-center">
+                      <Shield className="h-8 w-8 mx-auto mb-3 text-blue-600" />
+                      <h4 className="font-semibold mb-2">Medicare Supplement</h4>
+                      <p className="text-sm text-muted-foreground mb-3">
+                        Navigate Medicare options without sales pressure
+                      </p>
+                      <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 mb-3">
+                        <Shield className="h-3 w-3 mr-1" />
+                        Fiduciary Education
+                      </Badge>
+                      <Button variant="outline" size="sm" className="w-full">
+                        Learn More
+                      </Button>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => window.location.href = '/insurance/education/iul'}>
+                    <CardContent className="p-6 text-center">
+                      <Calendar className="h-8 w-8 mx-auto mb-3 text-purple-600" />
+                      <h4 className="font-semibold mb-2">Indexed Universal Life</h4>
+                      <p className="text-sm text-muted-foreground mb-3">
+                        The truth about IUL vs. term + investing
+                      </p>
+                      <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 mb-3">
+                        <Shield className="h-3 w-3 mr-1" />
+                        Fiduciary Education
+                      </Badge>
+                      <Button variant="outline" size="sm" className="w-full">
+                        Learn More
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                {/* Traditional Products */}
+                <div className="border-t pt-6">
+                  <h4 className="font-semibold mb-4">Traditional Insurance Products</h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-2xl mx-auto">
+                    <Button variant="outline" className="flex flex-col h-20 gap-2">
+                      <Car className="h-5 w-5" />
+                      <span className="text-xs">Auto Insurance</span>
+                    </Button>
+                    <Button variant="outline" className="flex flex-col h-20 gap-2">
+                      <Home className="h-5 w-5" />
+                      <span className="text-xs">Home Insurance</span>
+                    </Button>
+                    <Button variant="outline" className="flex flex-col h-20 gap-2">
+                      <Shield className="h-5 w-5" />
+                      <span className="text-xs">Term Life</span>
+                    </Button>
+                    <Button variant="outline" className="flex flex-col h-20 gap-2">
+                      <Umbrella className="h-5 w-5" />
+                      <span className="text-xs">Umbrella Policy</span>
+                    </Button>
+                  </div>
                 </div>
               </CardContent>
             </Card>
