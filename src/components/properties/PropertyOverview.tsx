@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo, useCallback } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -15,6 +15,8 @@ import {
   FileText
 } from "lucide-react";
 import { useSubscriptionAccess } from "@/hooks/useSubscriptionAccess";
+import { PropertyOverviewStatsSkeleton, PropertyActivitySkeleton, PropertyRemindersSkeleton, PropertyQuickActionsSkeleton } from "@/components/ui/skeletons/PropertiesSkeletons";
+import PropertiesErrorBoundary from "./PropertiesErrorBoundary";
 
 interface PropertyOverviewProps {
   initialFilter?: string | null;
@@ -24,30 +26,42 @@ export const PropertyOverview: React.FC<PropertyOverviewProps> = ({ initialFilte
   const { subscriptionPlan, checkFeatureAccess } = useSubscriptionAccess();
   const hasPremiumAccess = checkFeatureAccess('premium');
 
-  // Mock data - in real implementation, this would come from your property management system
-  const portfolioStats = {
+  // Memoized portfolio stats to prevent unnecessary recalculations
+  const portfolioStats = useMemo(() => ({
     totalProperties: 3,
     totalValue: 2450000,
     monthlyIncome: hasPremiumAccess ? 8500 : 0,
     totalEquity: 1850000,
     occupancyRate: hasPremiumAccess ? 95 : 0,
     propertyLimit: hasPremiumAccess ? null : 3
-  };
+  }), [hasPremiumAccess]);
 
-  const recentActivities = [
+  // Memoized activities to prevent array recreation
+  const recentActivities = useMemo(() => [
     { id: 1, type: "rent_received", property: "Sunset Apartment", amount: 2800, date: "2024-02-15" },
     { id: 2, type: "maintenance", property: "Downtown Condo", description: "HVAC servicing", date: "2024-02-14" },
     { id: 3, type: "lease_renewal", property: "Beach House", description: "Lease renewed for 1 year", date: "2024-02-12" }
-  ];
+  ], []);
 
-  const upcomingReminders = [
+  // Memoized reminders to prevent array recreation
+  const upcomingReminders = useMemo(() => [
     { id: 1, type: "insurance", property: "Sunset Apartment", dueDate: "2024-03-15", priority: "high" },
     { id: 2, type: "tax", property: "Downtown Condo", dueDate: "2024-03-20", priority: "medium" },
     { id: 3, type: "lease", property: "Beach House", dueDate: "2024-04-01", priority: "low" }
-  ];
+  ], []);
+
+  // Memoized format function
+  const formatCurrency = useCallback((amount: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      maximumFractionDigits: 0
+    }).format(amount);
+  }, []);
 
   return (
-    <div className="space-y-6">
+    <PropertiesErrorBoundary>
+      <div className="space-y-6">
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card>
@@ -69,7 +83,7 @@ export const PropertyOverview: React.FC<PropertyOverviewProps> = ({ initialFilte
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${portfolioStats.totalValue.toLocaleString()}</div>
+            <div className="text-2xl font-bold">{formatCurrency(portfolioStats.totalValue)}</div>
             <p className="text-xs text-muted-foreground">
               +5.2% from last quarter
             </p>
@@ -83,7 +97,7 @@ export const PropertyOverview: React.FC<PropertyOverviewProps> = ({ initialFilte
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              ${hasPremiumAccess ? portfolioStats.monthlyIncome.toLocaleString() : "0"}
+              {hasPremiumAccess ? formatCurrency(portfolioStats.monthlyIncome) : "$0"}
             </div>
             <p className="text-xs text-muted-foreground">
               {hasPremiumAccess ? "Active rental tracking" : "Upgrade for rental analytics"}
@@ -97,7 +111,7 @@ export const PropertyOverview: React.FC<PropertyOverviewProps> = ({ initialFilte
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${portfolioStats.totalEquity.toLocaleString()}</div>
+            <div className="text-2xl font-bold">{formatCurrency(portfolioStats.totalEquity)}</div>
             <p className="text-xs text-muted-foreground">
               75% loan-to-value ratio
             </p>
@@ -148,8 +162,8 @@ export const PropertyOverview: React.FC<PropertyOverviewProps> = ({ initialFilte
                     </div>
                     <div>
                       <p className="font-medium">{activity.property}</p>
-                      <p className="text-sm text-muted-foreground">
-                        {activity.amount ? `$${activity.amount}` : activity.description}
+                       <p className="text-sm text-muted-foreground">
+                        {activity.amount ? formatCurrency(activity.amount) : activity.description}
                       </p>
                     </div>
                   </div>
@@ -241,6 +255,7 @@ export const PropertyOverview: React.FC<PropertyOverviewProps> = ({ initialFilte
           </CardContent>
         </Card>
       </div>
-    </div>
+      </div>
+    </PropertiesErrorBoundary>
   );
 };
