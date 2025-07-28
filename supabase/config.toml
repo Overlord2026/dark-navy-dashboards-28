@@ -103,3 +103,6 @@ verify_jwt = false
 
 [functions.send-payout-notifications]
 verify_jwt = false
+
+[functions.partner-onboarding]
+verify_jwt = false
