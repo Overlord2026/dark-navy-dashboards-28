@@ -3,7 +3,7 @@ import { Outlet } from 'react-router-dom';
 import { Header } from './Header';
 import { Sidebar } from '@/components/ui/Sidebar';
 import { ErrorBoundary } from '@/components/ui/error-boundary';
-import { useTheme } from 'next-themes';
+import { useTheme } from "@/context/ThemeContext";
 import { PersonaDebugSession } from '@/components/debug/PersonaDebugSession';
 import { QAModeHeader } from '@/components/debug/QAModeHeader';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
