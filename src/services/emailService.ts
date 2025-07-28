@@ -1,22 +1,19 @@
 
 import emailjs from '@emailjs/browser';
 
-// EmailJS configuration
-const EMAILJS_SERVICE_ID = 'service_9eb6z0x';
-const EMAILJS_TEMPLATE_ID = 'template_0ttdq0e';
-const EMAILJS_LEARN_MORE_TEMPLATE_ID = 'template_hg3d85z';
-const EMAILJS_OTP_TEMPLATE_ID = 'template_xts37ho';
-const EMAILJS_PUBLIC_KEY = 'rfbjUYJ8iPHEZaQvx';
-const EMAILJS_OTP_SERVICE_ID = 'service_cew8n8b';
-const EMAILJS_OTP_PUBLIC_KEY = 'chtAi9WR2OnpWeUXo';
+// EmailJS configuration - using environment variables for security
+const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID || 'service_9eb6z0x';
+const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || 'template_0ttdq0e';
+const EMAILJS_LEARN_MORE_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_LEARN_MORE_TEMPLATE_ID || 'template_hg3d85z';
+const EMAILJS_OTP_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_OTP_TEMPLATE_ID || 'template_xts37ho';
+const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'rfbjUYJ8iPHEZaQvx';
+const EMAILJS_OTP_SERVICE_ID = import.meta.env.VITE_EMAILJS_OTP_SERVICE_ID || 'service_cew8n8b';
+const EMAILJS_OTP_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_OTP_PUBLIC_KEY || 'chtAi9WR2OnpWeUXo';
 
 // Onboarding email template IDs
-const EMAILJS_CLIENT_ONBOARDING_TEMPLATE = 'template_client_onboard';
-const EMAILJS_PROFESSIONAL_ONBOARDING_TEMPLATE = 'template_professional_onboard';
-const EMAILJS_ADMIN_ONBOARDING_TEMPLATE = 'template_admin_onboard';
-
-// Initialize EmailJS
-emailjs.init(EMAILJS_PUBLIC_KEY);
+const EMAILJS_CLIENT_ONBOARDING_TEMPLATE = import.meta.env.VITE_EMAILJS_CLIENT_ONBOARDING_TEMPLATE || 'template_client_onboard';
+const EMAILJS_PROFESSIONAL_ONBOARDING_TEMPLATE = import.meta.env.VITE_EMAILJS_PROFESSIONAL_ONBOARDING_TEMPLATE || 'template_professional_onboard';
+const EMAILJS_ADMIN_ONBOARDING_TEMPLATE = import.meta.env.VITE_EMAILJS_ADMIN_ONBOARDING_TEMPLATE || 'template_admin_onboard';
 
 export interface InterestEmailData {
   userName: string;
