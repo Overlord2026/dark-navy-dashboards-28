@@ -92,3 +92,11 @@ export const getRoleHierarchy = (): string[] => [
   'system_administrator',
   'superadmin'
 ];
+
+/**
+ * Get current user's role (placeholder for missing function)
+ */
+export function getCurrentUserRole(): string | null {
+  // This would typically be implemented in the context
+  return null;
+}
