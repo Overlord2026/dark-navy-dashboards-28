@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
+import { useOnboardingEmail } from '@/hooks/useOnboardingEmail';
 
 interface AuthContextType {
   user: User | null;
@@ -15,6 +16,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const { handleNewUserSignup } = useOnboardingEmail();
 
   useEffect(() => {
     // Set up auth state listener FIRST
@@ -23,6 +25,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setSession(session);
         setUser(session?.user ?? null);
         setIsLoading(false);
+        
+        // Handle onboarding email for new users
+        if (session?.user && (event === 'SIGNED_IN')) {
+          handleNewUserSignup(session.user, event);
+        }
         
         // Sync subscription data when user signs in
         if (session?.user && event === 'SIGNED_IN') {

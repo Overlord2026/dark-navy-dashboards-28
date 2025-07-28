@@ -5,10 +5,15 @@ import emailjs from '@emailjs/browser';
 const EMAILJS_SERVICE_ID = 'service_9eb6z0x';
 const EMAILJS_TEMPLATE_ID = 'template_0ttdq0e';
 const EMAILJS_LEARN_MORE_TEMPLATE_ID = 'template_hg3d85z';
-const EMAILJS_OTP_TEMPLATE_ID = 'template_xts37ho'; // Updated OTP template
+const EMAILJS_OTP_TEMPLATE_ID = 'template_xts37ho';
 const EMAILJS_PUBLIC_KEY = 'rfbjUYJ8iPHEZaQvx';
-const EMAILJS_OTP_SERVICE_ID = 'service_cew8n8b'; // New service for OTP
-const EMAILJS_OTP_PUBLIC_KEY = 'chtAi9WR2OnpWeUXo'; // New public key for OTP
+const EMAILJS_OTP_SERVICE_ID = 'service_cew8n8b';
+const EMAILJS_OTP_PUBLIC_KEY = 'chtAi9WR2OnpWeUXo';
+
+// Onboarding email template IDs
+const EMAILJS_CLIENT_ONBOARDING_TEMPLATE = 'template_client_onboard';
+const EMAILJS_PROFESSIONAL_ONBOARDING_TEMPLATE = 'template_professional_onboard';
+const EMAILJS_ADMIN_ONBOARDING_TEMPLATE = 'template_admin_onboard';
 
 // Initialize EmailJS
 emailjs.init(EMAILJS_PUBLIC_KEY);
@@ -34,6 +39,13 @@ export interface OTPEmailData {
   userEmail: string;
   otpCode: string;
   userName?: string;
+}
+
+export interface OnboardingEmailData {
+  userEmail: string;
+  userName: string;
+  userRole: string;
+  loginLink?: string;
 }
 
 export const sendInterestNotification = async (data: InterestEmailData): Promise<boolean> => {
@@ -162,6 +174,56 @@ export const sendOTPEmail = async (data: OTPEmailData): Promise<boolean> => {
     return true;
   } catch (error) {
     console.error('Failed to send OTP email:', error);
+    return false;
+  }
+};
+
+export const sendOnboardingEmail = async (data: OnboardingEmailData): Promise<boolean> => {
+  try {
+    const { userEmail, userName, userRole, loginLink = 'https://my.bfocfo.com' } = data;
+    let templateId = '';
+    let emailSubject = '';
+
+    // Determine template based on role
+    if (userRole === 'client') {
+      templateId = EMAILJS_CLIENT_ONBOARDING_TEMPLATE;
+      emailSubject = 'Welcome to Your Family Office Platform';
+    } else if (['advisor', 'accountant', 'attorney', 'consultant'].includes(userRole)) {
+      templateId = EMAILJS_PROFESSIONAL_ONBOARDING_TEMPLATE;
+      emailSubject = 'Welcome to the Family Office Professional Platform';
+    } else if (['admin', 'system_administrator', 'tenant_admin'].includes(userRole)) {
+      templateId = EMAILJS_ADMIN_ONBOARDING_TEMPLATE;
+      emailSubject = 'Administrator Access - Family Office Platform';
+    }
+
+    if (!templateId) {
+      console.warn('No onboarding template found for role:', userRole);
+      return false;
+    }
+
+    const templateParams = {
+      to_email: userEmail,
+      to_name: userName,
+      user_role: userRole,
+      login_link: loginLink,
+      from_name: 'Family Office Platform',
+      subject: emailSubject,
+      platform_name: 'MyBFOCFO'
+    };
+
+    console.log('Sending onboarding email:', { email: userEmail, role: userRole, template: templateId });
+
+    const result = await emailjs.send(
+      EMAILJS_SERVICE_ID,
+      templateId,
+      templateParams,
+      EMAILJS_PUBLIC_KEY
+    );
+
+    console.log('Onboarding email sent successfully:', result);
+    return true;
+  } catch (error) {
+    console.error('Failed to send onboarding email:', error);
     return false;
   }
 };
