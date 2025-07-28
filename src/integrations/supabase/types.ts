@@ -4659,6 +4659,7 @@ export type Database = {
         Row: {
           application_data: Json | null
           compliance_status: string | null
+          created_at: string | null
           eligibility_result: Json | null
           id: string
           loan_type: string
@@ -4672,6 +4673,7 @@ export type Database = {
         Insert: {
           application_data?: Json | null
           compliance_status?: string | null
+          created_at?: string | null
           eligibility_result?: Json | null
           id?: string
           loan_type: string
@@ -4685,6 +4687,7 @@ export type Database = {
         Update: {
           application_data?: Json | null
           compliance_status?: string | null
+          created_at?: string | null
           eligibility_result?: Json | null
           id?: string
           loan_type?: string

@@ -17,6 +17,10 @@ import { AttorneyDashboard } from "./pages/dashboard/AttorneyDashboard";
 import { TenantAdminDashboard } from "./pages/dashboard/TenantAdminDashboard";
 import { SystemAdministratorDashboard } from "./pages/dashboard/SystemAdministratorDashboard";
 import { ComingSoonPage } from "./pages/ComingSoonPage";
+import { LoanApplicationPage } from "./pages/lending/LoanApplicationPage";
+import { LoanStatusPage } from "./pages/lending/LoanStatusPage";
+import { PartnerComparisonPage } from "./pages/lending/PartnerComparisonPage";
+import { AdvisorLendingDashboard } from "./pages/lending/AdvisorLendingDashboard";
 
 export const router = createBrowserRouter([
   {
@@ -38,6 +42,22 @@ export const router = createBrowserRouter([
   {
     path: "/lending",
     element: <LendingDashboard />,
+  },
+  {
+    path: "/lending/apply",
+    element: <LoanApplicationPage />,
+  },
+  {
+    path: "/lending/status/:loanId",
+    element: <LoanStatusPage />,
+  },
+  {
+    path: "/lending/partners",
+    element: <PartnerComparisonPage />,
+  },
+  {
+    path: "/advisor/lending",
+    element: <AdvisorLendingDashboard />,
   },
   {
     path: "/professional-network",

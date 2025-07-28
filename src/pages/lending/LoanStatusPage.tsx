@@ -83,7 +83,7 @@ export const LoanStatusPage: React.FC = () => {
       // Transform data to match interface
       const transformedData: LoanStatus = {
         ...data,
-        created_at: data.created_at || data.submitted_at || new Date().toISOString(),
+        created_at: data.submitted_at || new Date().toISOString(),
         matched_partners: [],
         messages_count: 0,
         documents_count: 0,
