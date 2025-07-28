@@ -1,11 +1,13 @@
 
-import React, { useState } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FileText, BarChart3, PieChart, Download, FileSpreadsheet, Clock, ListFilter } from "lucide-react";
-import { toast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 import { useNetWorth } from "@/context/NetWorthContext";
+import { ReportsErrorBoundary } from "@/components/reports/ReportsErrorBoundary";
+import { ReportGeneratorSkeleton } from "@/components/ui/skeletons/ReportsSkeletons";
 import {
   Table,
   TableBody,
@@ -36,8 +38,9 @@ export function ReportsGenerator() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedReport, setGeneratedReport] = useState<boolean>(false);
 
-  // Available report configurations
-  const reportConfigs: ReportConfig[] = [
+  // Memoized report configurations
+  const reportConfigs = useMemo(() => [
+
     {
       id: 'assets-report',
       name: 'Assets Report',
@@ -73,7 +76,7 @@ export function ReportsGenerator() {
       type: 'custom',
       icon: <ListFilter className="h-5 w-5 text-amber-500" />
     }
-  ];
+  ], []);
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -91,25 +94,16 @@ export function ReportsGenerator() {
       setIsGenerating(false);
       setGeneratedReport(true);
       
-      toast({
-        title: "Report Generated",
-        description: `Your ${getSelectedReportConfig().name} has been successfully generated.`
-      });
+      toast.success(`Your ${getSelectedReportConfig().name} has been successfully generated.`);
     }, 1500);
   };
 
   const handleDownload = (format: 'pdf' | 'csv' | 'excel') => {
-    toast({
-      title: "Download Started",
-      description: `Your report is being prepared in ${format.toUpperCase()} format.`
-    });
+    toast.success(`Your report is being prepared in ${format.toUpperCase()} format.`);
     
     // Simulate download delay
     setTimeout(() => {
-      toast({
-        title: "Download Complete",
-        description: `Your ${getSelectedReportConfig().name} has been downloaded.`
-      });
+      toast.success(`Your ${getSelectedReportConfig().name} has been downloaded.`);
     }, 1000);
   };
 
@@ -140,7 +134,8 @@ export function ReportsGenerator() {
   };
 
   return (
-    <Card className="mb-6 shadow-sm">
+    <ReportsErrorBoundary>
+      <Card className="mb-6 shadow-sm">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <FileText className="h-5 w-5 text-primary" />
@@ -291,7 +286,8 @@ export function ReportsGenerator() {
           </TabsContent>
         </Tabs>
       </CardContent>
-    </Card>
+      </Card>
+    </ReportsErrorBoundary>
   );
 }
 
