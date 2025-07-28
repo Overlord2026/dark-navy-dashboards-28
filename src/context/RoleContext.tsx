@@ -49,19 +49,12 @@ export const RoleProvider = ({ children }: { children: React.ReactNode }) => {
   const isDevMode = userProfile?.email ? DEV_EMAILS.includes(userProfile.email) : false;
   
   const getCurrentRole = () => {
-    // For dev users, always use emulated role if set
-    if (isDevMode && emulatedRole) {
-      return emulatedRole;
-    }
+    // REFACTORED: Always use actual userProfile.role - no session bypass
     return userProfile?.role || 'client';
   };
 
   const getCurrentClientTier = () => {
-    // For dev users emulating client roles, always use the tier setting
-    if (isDevMode && (getCurrentRole() === 'client' || getCurrentRole() === 'client_premium')) {
-      return clientTier;
-    }
-    // For non-dev users or non-client roles, use actual profile tier
+    // REFACTORED: Always use actual profile tier - no session bypass
     return userProfile?.client_tier as 'basic' | 'premium' || 'basic';
   };
 
@@ -108,7 +101,7 @@ export const RoleSwitcher = () => {
   ];
 
   const currentRole = getCurrentRole();
-  const displayRole = currentRole === 'client' && clientTier === 'premium' ? 'client_premium' : currentRole;
+  const displayRole = currentRole === 'client' && userProfile?.client_tier === 'premium' ? 'client_premium' : currentRole;
 
   const resetToOwner = () => {
     setEmulatedRole(null);
@@ -118,13 +111,16 @@ export const RoleSwitcher = () => {
   return (
     <div className="flex items-center gap-4 text-sm">
       <div className="flex items-center gap-2">
-        <span className="text-muted-foreground">Viewing as:</span>
+        <span className="text-muted-foreground">Session Role:</span>
         <span className="font-medium text-primary">
           {displayRole === 'client_premium' ? 'Client Premium' : getRoleDisplayName(currentRole)}
         </span>
+        
+        {/* REFACTORED: Visual-only selector for debugging UI states */}
         <select
-          value={displayRole === 'client_premium' ? 'client_premium' : (emulatedRole || userProfile.role)}
+          value={displayRole === 'client_premium' ? 'client_premium' : userProfile.role}
           onChange={(e) => {
+            // UI-only emulation for visual debugging
             if (e.target.value === 'client_premium') {
               setEmulatedRole('client');
               setClientTier('premium');
@@ -139,6 +135,8 @@ export const RoleSwitcher = () => {
             }
           }}
           className="ml-2 px-2 py-1 text-xs border border-border rounded bg-background text-foreground"
+          disabled
+          title="UI-only debugging - does not affect auth or RLS"
         >
           {ALL_ROLES.map((role) => (
             <option key={role} value={role}>
@@ -147,30 +145,17 @@ export const RoleSwitcher = () => {
           ))}
         </select>
         
-        {emulatedRole && (
-          <button
-            onClick={resetToOwner}
-            className="ml-2 px-2 py-1 text-xs bg-red-100 hover:bg-red-200 text-red-800 border border-red-300 rounded transition-colors"
-            title="Reset to Owner Role"
-          >
-            Reset QA
-          </button>
-        )}
+        <span className="text-xs text-muted-foreground ml-2">
+          (UI Debug Only)
+        </span>
       </div>
       
-      {(currentRole === 'client' || currentRole === 'client_premium') && (
-        <div className="flex items-center gap-2 border-l pl-4">
-          <span className="text-muted-foreground">Tier:</span>
-          <select
-            value={clientTier}
-            onChange={(e) => setClientTier(e.target.value as 'basic' | 'premium')}
-            className="px-2 py-1 text-xs border border-border rounded bg-background text-foreground"
-          >
-            <option value="basic">Basic</option>
-            <option value="premium">Premium</option>
-          </select>
-        </div>
-      )}
+      <div className="flex items-center gap-2 border-l pl-4">
+        <span className="text-muted-foreground">Session Tier:</span>
+        <span className="font-medium">
+          {userProfile?.client_tier || 'basic'}
+        </span>
+      </div>
     </div>
   );
 };

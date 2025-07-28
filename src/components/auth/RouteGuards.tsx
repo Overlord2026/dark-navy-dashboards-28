@@ -17,12 +17,11 @@ export function ProtectedRoute({
   requiredTier,
   fallbackPath = '/client-dashboard' 
 }: ProtectedRouteProps) {
-  const { getCurrentRole, getCurrentClientTier, isDevMode } = useRoleContext();
   const { userProfile } = useUser();
 
-  // In dev mode, always use the emulated role and tier
-  const currentRole = isDevMode ? getCurrentRole() : (userProfile?.role || 'client');
-  const currentTier = isDevMode ? getCurrentClientTier() : (userProfile?.client_tier || 'basic');
+  // REFACTORED: Always use actual userProfile - no dev bypass
+  const currentRole = userProfile?.role || 'client';
+  const currentTier = userProfile?.client_tier || 'basic';
 
   // Check role access
   const hasRole = hasRoleAccess(currentRole, allowedRoles);
@@ -45,12 +44,11 @@ interface ClientTierGuardProps {
 }
 
 export function ClientTierGuard({ children, requiredTier, fallback }: ClientTierGuardProps) {
-  const { getCurrentClientTier, getCurrentRole, isDevMode } = useRoleContext();
   const { userProfile } = useUser();
 
-  // In dev mode, always use the emulated tier
-  const currentTier = isDevMode ? getCurrentClientTier() : (userProfile?.client_tier || 'basic');
-  const currentRole = isDevMode ? getCurrentRole() : (userProfile?.role || 'client');
+  // REFACTORED: Always use actual userProfile - no dev bypass
+  const currentTier = userProfile?.client_tier || 'basic';
+  const currentRole = userProfile?.role || 'client';
 
   // Only apply tier restrictions to client roles
   if (!currentRole.includes('client')) {
@@ -71,11 +69,10 @@ interface RoleGuardProps {
 }
 
 export function RoleGuard({ children, allowedRoles, fallback }: RoleGuardProps) {
-  const { getCurrentRole, isDevMode } = useRoleContext();
   const { userProfile } = useUser();
 
-  // In dev mode, always use the emulated role
-  const currentRole = isDevMode ? getCurrentRole() : (userProfile?.role || 'client');
+  // REFACTORED: Always use actual userProfile - no dev bypass
+  const currentRole = userProfile?.role || 'client';
 
   const hasAccess = hasRoleAccess(currentRole, allowedRoles);
 

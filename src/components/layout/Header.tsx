@@ -13,16 +13,17 @@ import { LogOut, User, Home } from 'lucide-react';
 
 export function Header() {
   const { userProfile, logout } = useUser();
-  const { getCurrentRole, getRoleDashboard, emulatedRole, getCurrentClientTier } = useRoleContext();
+  const { getRoleDashboard } = useRoleContext();
   const [debugPanelOpen, setDebugPanelOpen] = useState(false);
   
   const isDevUser = userProfile?.email === 'tonygomes88@gmail.com';
-  const currentRole = getCurrentRole();
-  const currentTier = getCurrentClientTier();
+  // REFACTORED: Always use actual userProfile - no dev bypass
+  const currentRole = userProfile?.role || 'client';
+  const currentTier = userProfile?.client_tier || 'basic';
   const dashboardPath = getRoleDashboard();
   
-  // Check if in QA mode (emulating a different role)
-  const isInQAMode = isDevUser && emulatedRole;
+  // REFACTORED: Disabled QA mode emulation
+  const isInQAMode = false;
 
   return (
     <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">

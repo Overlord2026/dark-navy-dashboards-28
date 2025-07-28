@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { CheckCircle, Circle, ArrowRight, Star, Target, Trophy } from 'lucide-react';
-import { useRoleContext } from '@/context/RoleContext';
+import { useUser } from '@/context/UserContext';
 import { toast } from 'sonner';
 
 interface OnboardingStep {
@@ -21,9 +21,9 @@ interface PersonaOnboardingProps {
 }
 
 export const PersonaOnboardingFlow: React.FC<PersonaOnboardingProps> = ({ onComplete }) => {
-  const { getCurrentRole, getCurrentClientTier } = useRoleContext();
-  const role = getCurrentRole();
-  const tier = getCurrentClientTier();
+  const { userProfile } = useUser();
+  const role = userProfile?.role || 'client';
+  const tier = userProfile?.client_tier || 'basic';
   
   const [currentStep, setCurrentStep] = useState(0);
   const [steps, setSteps] = useState<OnboardingStep[]>([]);

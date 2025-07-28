@@ -6,47 +6,35 @@ import { Button } from '@/components/ui/button';
 import { Crown, User } from 'lucide-react';
 
 export const ClientTierToggle = () => {
-  const { getCurrentRole, getCurrentClientTier, setClientTier, isDevMode } = useRoleContext();
+  const { isDevMode } = useRoleContext();
   const { userProfile } = useUser();
 
   // Only show for dev user
   const isDevUser = userProfile?.email === 'tonygomes88@gmail.com';
-  const currentRole = getCurrentRole();
-  const isClientRole = currentRole === 'client' || currentRole === 'client_premium';
+  // REFACTORED: Always use actual userProfile - no emulation
+  const currentRole = userProfile?.role || 'client';
+  const isClientRole = currentRole === 'client';
   
   if (!isDevUser || !isDevMode || !isClientRole) {
     return null;
   }
 
-  const currentTier = getCurrentClientTier();
+  // REFACTORED: Show actual session tier only
+  const currentTier = userProfile?.client_tier || 'basic';
 
   return (
-    <div className="flex items-center gap-2 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-md px-3 py-1">
-      <span className="text-xs font-medium text-amber-800 dark:text-amber-200">
-        Client Tier:
+    <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-md px-3 py-1">
+      <span className="text-xs font-medium text-blue-800 dark:text-blue-200">
+        Session Tier:
       </span>
-      <div className="flex gap-1">
-        <Button
-          size="sm"
-          variant={currentTier === 'basic' ? 'default' : 'ghost'}
-          className="h-6 px-2 text-xs"
-          onClick={() => setClientTier('basic')}
-        >
-          <User className="h-3 w-3 mr-1" />
-          Basic
-        </Button>
-        <Button
-          size="sm"
-          variant={currentTier === 'premium' ? 'default' : 'ghost'}
-          className="h-6 px-2 text-xs"
-          onClick={() => setClientTier('premium')}
-        >
-          <Crown className="h-3 w-3 mr-1" />
-          Premium
-        </Button>
+      <div className="flex items-center gap-2">
+        <span className="text-xs font-semibold">
+          {currentTier === 'basic' ? 'Basic' : 'Premium'}
+        </span>
+        {currentTier === 'premium' && <Crown className="h-3 w-3 text-yellow-500" />}
       </div>
       <Badge variant="outline" className="text-xs">
-        QA Mode
+        Read-Only
       </Badge>
     </div>
   );

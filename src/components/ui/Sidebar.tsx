@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
 import { hierarchicalNav } from "@/components/navigation/HierarchicalNavigationConfig";
 import { getRoleNavigation } from "@/utils/roleNavigation";
-import { useRoleContext } from "@/context/RoleContext";
+import { useUser } from "@/context/UserContext";
 import { NavItem } from "@/types/navigation";
 import {
   Collapsible,
@@ -230,11 +230,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const location = useLocation();
   const pathname = location.pathname;
-  const { getCurrentRole, getCurrentClientTier, isDevMode } = useRoleContext();
+  const { userProfile } = useUser();
   
-  // Always use role-specific navigation - dev users see emulated role navigation
-  const currentRole = getCurrentRole();
-  const currentTier = getCurrentClientTier();
+  // REFACTORED: Always use actual userProfile - no dev bypass
+  const currentRole = userProfile?.role || 'client';
+  const currentTier = userProfile?.client_tier || 'basic';
   const navigationItems = getRoleNavigation(currentRole, currentTier);
 
   const isActive = (href: string) => {

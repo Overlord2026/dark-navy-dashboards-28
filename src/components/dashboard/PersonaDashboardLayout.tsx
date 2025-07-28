@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { PersonaOnboardingFlow } from '@/components/onboarding/PersonaOnboardingFlow';
-import { useRoleContext } from '@/context/RoleContext';
+import { useUser } from '@/context/UserContext';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { 
   TrendingUp, 
@@ -41,9 +41,9 @@ interface PersonaDashboardLayoutProps {
 }
 
 export const PersonaDashboardLayout: React.FC<PersonaDashboardLayoutProps> = ({ children }) => {
-  const { getCurrentRole, getCurrentClientTier } = useRoleContext();
-  const role = getCurrentRole();
-  const tier = getCurrentClientTier();
+  const { userProfile } = useUser();
+  const role = userProfile?.role || 'client';
+  const tier = userProfile?.client_tier || 'basic';
   
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [collapsedSections, setCollapsedSections] = useState<Set<string>>(new Set());

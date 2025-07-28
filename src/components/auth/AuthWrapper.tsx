@@ -61,19 +61,18 @@ export function AuthWrapper({
 
   // Check role-based access using hierarchy system
   if (allowedRoles.length > 0) {
-    const currentRole = getCurrentRole();
-    const currentTier = getCurrentClientTier();
+    // REFACTORED: Always use actual userProfile - no dev bypass
+    const currentRole = userProfile?.role || 'client';
+    const currentTier = userProfile?.client_tier || 'basic';
     
     // For client premium, check if the role is client and tier is premium
-    let effectiveRole = currentRole;
+    let effectiveRole: string = currentRole;
     if (currentRole === 'client' && currentTier === 'premium') {
       effectiveRole = 'client_premium';
     }
     
-    // In dev mode, emulation should fully override access control
-    const shouldAllowAccess = isDevMode && userProfile?.email === 'tonygomes88@gmail.com' 
-      ? true 
-      : hasRoleAccess(effectiveRole, allowedRoles);
+    // REFACTORED: Removed dev mode bypass - always enforce access control
+    const shouldAllowAccess = hasRoleAccess(effectiveRole, allowedRoles);
     
     if (!shouldAllowAccess) {
       console.warn('Access denied for user:', {
@@ -84,7 +83,7 @@ export function AuthWrapper({
         clientTier: currentTier,
         requiredRoles: allowedRoles,
         page: window.location.pathname,
-        isEmulated: isDevMode && (emulatedRole !== null || currentRole !== userProfile?.role)
+        isProductionMode: true
       });
     
       return (
@@ -103,33 +102,21 @@ export function AuthWrapper({
               <Alert className="text-left">
                 <AlertDescription className="space-y-2">
                   <div>
-                    <strong>Current Role:</strong> {effectiveRole === 'client_premium' ? 'Client Premium' : getRoleDisplayName(currentRole)}
+                    <strong>Session Role:</strong> {effectiveRole === 'client_premium' ? 'Client Premium' : getRoleDisplayName(currentRole as UserRole)}
                     {currentRole === 'client' && currentTier && (
                       <span className="text-muted-foreground ml-1">
                         ({currentTier} tier)
                       </span>
                     )}
                   </div>
-                  {isDevMode && userProfile?.email === 'tonygomes88@gmail.com' && (
-                    <div>
-                      <strong>Actual Role:</strong> {getRoleDisplayName(userProfile?.role || 'none')}
-                      {emulatedRole && (
-                        <span className="text-amber-600 ml-1">
-                          (QA emulating: {effectiveRole === 'client_premium' ? 'Client Premium' : getRoleDisplayName(currentRole)})
-                        </span>
-                      )}
-                    </div>
-                  )}
                   <div>
                     <strong>Required Roles:</strong> {allowedRoles.map(role => 
-                      role === 'client_premium' ? 'Client Premium' : getRoleDisplayName(role)
+                      role === 'client_premium' ? 'Client Premium' : getRoleDisplayName(role as UserRole)
                     ).join(', ')}
                   </div>
-                  {isDevMode && userProfile?.email === 'tonygomes88@gmail.com' && (
-                    <div className="text-xs text-amber-600 pt-2 border-t">
-                      <strong>QA Mode:</strong> Use the Role Switcher in the header to test access as different personas
-                    </div>
-                  )}
+                  <div className="text-xs text-muted-foreground pt-2 border-t">
+                    <strong>Production Mode:</strong> Access controlled by actual user session role
+                  </div>
                 </AlertDescription>
               </Alert>
               
