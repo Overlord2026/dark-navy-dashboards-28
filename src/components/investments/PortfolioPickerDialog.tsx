@@ -16,12 +16,10 @@ export const PortfolioPickerDialog: React.FC<PortfolioPickerDialogProps> = ({
   open,
   onOpenChange,
 }) => {
-  const { filteredPortfolios, assignPortfolio, loading, filterPortfolios, getFilterOptions } = useBFOModels();
+  const { filteredPortfolios, assignPortfolio, loading, filterPortfolios, filterOptions } = useBFOModels();
   const [selectedPortfolio, setSelectedPortfolio] = useState("");
   const [isAssigning, setIsAssigning] = useState(false);
   const [filters, setFilters] = useState<PortfolioFilters>({});
-
-  const filterOptions = getFilterOptions();
 
   const handleFilterChange = (key: keyof PortfolioFilters, value: string) => {
     const newFilters = { ...filters, [key]: value === "all" ? undefined : value };

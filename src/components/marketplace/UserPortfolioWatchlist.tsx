@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Bookmark, Star, TrendingUp, Eye, Trash2, Plus, MessageSquare } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -12,6 +12,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
+import { PortfolioErrorBoundary } from '@/components/portfolio/PortfolioErrorBoundary';
+import { PortfolioPageSkeleton, PortfolioCardSkeleton, SummaryCardSkeleton, InfoRequestDialogSkeleton } from '@/components/ui/skeletons/PortfolioSkeletons';
+import { PortfolioPerformanceMonitor } from '@/components/debug/PortfolioPerformanceMonitor';
 
 interface UserInterest {
   id: string;
@@ -41,6 +44,12 @@ export function UserPortfolioWatchlist() {
   const [activeTab, setActiveTab] = useState('watchlist');
   const [isRequestDialogOpen, setIsRequestDialogOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
+  const [renderCount, setRenderCount] = useState(0);
+
+  // Performance tracking
+  React.useEffect(() => {
+    setRenderCount(prev => prev + 1);
+  });
 
   // Info request form state
   const [requestData, setRequestData] = useState({
@@ -58,7 +67,21 @@ export function UserPortfolioWatchlist() {
     fetchUserInterests();
   }, []);
 
-  const fetchUserInterests = async () => {
+  // Memoized categorized interests for performance
+  const categorizedInterests = useMemo(() => {
+    const watchlistItems = interests.filter(i => i.interest_type === 'watchlist');
+    const portfolioItems = interests.filter(i => i.interest_type === 'portfolio');
+    const infoRequests = interests.filter(i => i.interest_type === 'info_request');
+
+    return {
+      watchlistItems,
+      portfolioItems,
+      infoRequests,
+      totalInterests: interests.length
+    };
+  }, [interests]);
+
+  const fetchUserInterests = useCallback(async () => {
     try {
       const { data, error } = await supabase.functions.invoke('user-interests', {
         method: 'GET'
@@ -67,7 +90,9 @@ export function UserPortfolioWatchlist() {
       if (error) throw error;
       setInterests(data.interests || []);
     } catch (error) {
-      console.error('Error fetching user interests:', error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Error fetching user interests:', error);
+      }
       toast({
         title: "Error",
         description: "Failed to fetch your interests",
@@ -76,9 +101,9 @@ export function UserPortfolioWatchlist() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
 
-  const removeFromWatchlist = async (interestId: string) => {
+  const removeFromWatchlist = useCallback(async (interestId: string) => {
     try {
       const { error } = await supabase.functions.invoke('user-interests', {
         method: 'DELETE',
@@ -96,16 +121,18 @@ export function UserPortfolioWatchlist() {
 
       fetchUserInterests();
     } catch (error) {
-      console.error('Error removing from watchlist:', error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Error removing from watchlist:', error);
+      }
       toast({
         title: "Error",
         description: "Failed to remove from watchlist",
         variant: "destructive",
       });
     }
-  };
+  }, [fetchUserInterests, toast]);
 
-  const submitInfoRequest = async () => {
+  const submitInfoRequest = useCallback(async () => {
     if (!selectedProduct) return;
 
     try {
@@ -132,16 +159,18 @@ export function UserPortfolioWatchlist() {
       resetRequestForm();
       fetchUserInterests();
     } catch (error) {
-      console.error('Error submitting info request:', error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Error submitting info request:', error);
+      }
       toast({
         title: "Error",
         description: "Failed to submit information request",
         variant: "destructive",
       });
     }
-  };
+  }, [selectedProduct, requestData, fetchUserInterests, toast]);
 
-  const resetRequestForm = () => {
+  const resetRequestForm = useCallback(() => {
     setRequestData({
       notes: '',
       investment_amount: '',
@@ -152,54 +181,69 @@ export function UserPortfolioWatchlist() {
         preferred_time: ''
       }
     });
-  };
+  }, []);
 
-  const openRequestDialog = (product: any) => {
+  const openRequestDialog = useCallback((product: any) => {
     setSelectedProduct(product);
     setIsRequestDialogOpen(true);
-  };
+  }, []);
 
-  const getInterestTypeIcon = (type: string) => {
+  // Memoized helper functions for performance
+  const getInterestTypeIcon = useCallback((type: string) => {
     switch (type) {
       case 'watchlist': return <Bookmark className="h-4 w-4" />;
       case 'portfolio': return <Star className="h-4 w-4" />;
       case 'info_request': return <MessageSquare className="h-4 w-4" />;
       default: return <Eye className="h-4 w-4" />;
     }
-  };
+  }, []);
 
-  const getInterestTypeColor = (type: string) => {
+  const getInterestTypeColor = useCallback((type: string) => {
     switch (type) {
       case 'watchlist': return 'bg-blue-100 text-blue-800';
       case 'portfolio': return 'bg-green-100 text-green-800';
       case 'info_request': return 'bg-purple-100 text-purple-800';
       default: return 'bg-gray-100 text-gray-800';
     }
-  };
+  }, []);
 
-  const getStatusColor = (status: string) => {
+  const getStatusColor = useCallback((status: string) => {
     switch (status) {
       case 'approved': return 'bg-green-100 text-green-800';
       case 'pending_approval': return 'bg-yellow-100 text-yellow-800';
       case 'rejected': return 'bg-red-100 text-red-800';
       default: return 'bg-gray-100 text-gray-800';
     }
-  };
+  }, []);
 
-  const formatCurrency = (amount: number) => {
+  const formatCurrency = useCallback((amount: number) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
       minimumFractionDigits: 0,
     }).format(amount);
-  };
+  }, []);
 
-  const watchlistItems = interests.filter(i => i.interest_type === 'watchlist');
-  const portfolioItems = interests.filter(i => i.interest_type === 'portfolio');
-  const infoRequests = interests.filter(i => i.interest_type === 'info_request');
+  // Show loading skeleton immediately
+  if (loading) {
+    return <PortfolioPageSkeleton />;
+  }
 
   return (
     <div className="container mx-auto p-6 space-y-6">
+      {/* Performance Monitor - Development Only */}
+      {process.env.NODE_ENV === 'development' && (
+        <div className="mb-4">
+          <PortfolioPerformanceMonitor
+            componentName="UserPortfolioWatchlist"
+            renderCount={renderCount}
+            cacheHits={categorizedInterests.totalInterests}
+            memoizedCalculations={7}
+            interestCount={categorizedInterests.totalInterests}
+          />
+        </div>
+      )}
+      
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold text-foreground">My Portfolio & Watchlist</h1>
@@ -213,40 +257,42 @@ export function UserPortfolioWatchlist() {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Watchlist Items</CardTitle>
-            <Bookmark className="h-4 w-4 text-blue-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-blue-600">{watchlistItems.length}</div>
-            <p className="text-xs text-muted-foreground">Products you're tracking</p>
-          </CardContent>
-        </Card>
+      <PortfolioErrorBoundary componentName="Summary Cards">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Watchlist Items</CardTitle>
+              <Bookmark className="h-4 w-4 text-blue-600" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-blue-600">{categorizedInterests.watchlistItems.length}</div>
+              <p className="text-xs text-muted-foreground">Products you're tracking</p>
+            </CardContent>
+          </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Portfolio Additions</CardTitle>
-            <Star className="h-4 w-4 text-green-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-green-600">{portfolioItems.length}</div>
-            <p className="text-xs text-muted-foreground">Added to portfolio</p>
-          </CardContent>
-        </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Portfolio Additions</CardTitle>
+              <Star className="h-4 w-4 text-green-600" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-green-600">{categorizedInterests.portfolioItems.length}</div>
+              <p className="text-xs text-muted-foreground">Added to portfolio</p>
+            </CardContent>
+          </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Info Requests</CardTitle>
-            <MessageSquare className="h-4 w-4 text-purple-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-purple-600">{infoRequests.length}</div>
-            <p className="text-xs text-muted-foreground">Information requested</p>
-          </CardContent>
-        </Card>
-      </div>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Info Requests</CardTitle>
+              <MessageSquare className="h-4 w-4 text-purple-600" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-purple-600">{categorizedInterests.infoRequests.length}</div>
+              <p className="text-xs text-muted-foreground">Information requested</p>
+            </CardContent>
+          </Card>
+        </div>
+      </PortfolioErrorBoundary>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="grid w-full grid-cols-3">
@@ -256,11 +302,8 @@ export function UserPortfolioWatchlist() {
         </TabsList>
 
         <TabsContent value="watchlist" className="space-y-4">
-          {loading ? (
-            <div className="text-center py-8">
-              <p className="text-muted-foreground">Loading watchlist...</p>
-            </div>
-          ) : watchlistItems.length === 0 ? (
+          <PortfolioErrorBoundary componentName="Watchlist Tab">
+            {categorizedInterests.watchlistItems.length === 0 ? (
             <Card>
               <CardContent className="text-center py-8">
                 <Bookmark className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
@@ -270,9 +313,9 @@ export function UserPortfolioWatchlist() {
                 </Button>
               </CardContent>
             </Card>
-          ) : (
-            <div className="grid grid-cols-1 gap-4">
-              {watchlistItems.map((interest) => (
+            ) : (
+              <div className="grid grid-cols-1 gap-4">
+                {categorizedInterests.watchlistItems.map((interest) => (
                 <Card key={interest.id} className="hover:shadow-md transition-shadow">
                   <CardHeader>
                     <div className="flex justify-between items-start">
@@ -340,13 +383,15 @@ export function UserPortfolioWatchlist() {
                     </div>
                   </CardContent>
                 </Card>
-              ))}
-            </div>
-          )}
+                ))}
+              </div>
+            )}
+          </PortfolioErrorBoundary>
         </TabsContent>
 
         <TabsContent value="portfolio" className="space-y-4">
-          {portfolioItems.length === 0 ? (
+          <PortfolioErrorBoundary componentName="Portfolio Tab">
+            {categorizedInterests.portfolioItems.length === 0 ? (
             <Card>
               <CardContent className="text-center py-8">
                 <Star className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
@@ -356,9 +401,9 @@ export function UserPortfolioWatchlist() {
                 </Button>
               </CardContent>
             </Card>
-          ) : (
-            <div className="grid grid-cols-1 gap-4">
-              {portfolioItems.map((interest) => (
+            ) : (
+              <div className="grid grid-cols-1 gap-4">
+                {categorizedInterests.portfolioItems.map((interest) => (
                 <Card key={interest.id} className="border-green-200">
                   <CardHeader>
                     <div className="flex justify-between items-start">
@@ -390,22 +435,24 @@ export function UserPortfolioWatchlist() {
                     </Button>
                   </CardContent>
                 </Card>
-              ))}
-            </div>
-          )}
+                ))}
+              </div>
+            )}
+          </PortfolioErrorBoundary>
         </TabsContent>
 
         <TabsContent value="requests" className="space-y-4">
-          {infoRequests.length === 0 ? (
+          <PortfolioErrorBoundary componentName="Info Requests Tab">
+            {categorizedInterests.infoRequests.length === 0 ? (
             <Card>
               <CardContent className="text-center py-8">
                 <MessageSquare className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
                 <p className="text-muted-foreground">No information requests submitted</p>
               </CardContent>
             </Card>
-          ) : (
-            <div className="grid grid-cols-1 gap-4">
-              {infoRequests.map((request) => (
+            ) : (
+              <div className="grid grid-cols-1 gap-4">
+                {categorizedInterests.infoRequests.map((request) => (
                 <Card key={request.id}>
                   <CardHeader>
                     <div className="flex justify-between items-start">
@@ -460,21 +507,23 @@ export function UserPortfolioWatchlist() {
                     </div>
                   </CardContent>
                 </Card>
-              ))}
-            </div>
-          )}
+                ))}
+              </div>
+            )}
+          </PortfolioErrorBoundary>
         </TabsContent>
       </Tabs>
 
       {/* Information Request Dialog */}
-      <Dialog open={isRequestDialogOpen} onOpenChange={setIsRequestDialogOpen}>
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>Request Information: {selectedProduct?.name}</DialogTitle>
-            <DialogDescription>
-              Submit an information request to the RIA firm for this investment product
-            </DialogDescription>
-          </DialogHeader>
+      <PortfolioErrorBoundary componentName="Info Request Dialog">
+        <Dialog open={isRequestDialogOpen} onOpenChange={setIsRequestDialogOpen}>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>Request Information: {selectedProduct?.name}</DialogTitle>
+              <DialogDescription>
+                Submit an information request to the RIA firm for this investment product
+              </DialogDescription>
+            </DialogHeader>
           
           <div className="space-y-4">
             <div className="space-y-2">
@@ -587,6 +636,7 @@ export function UserPortfolioWatchlist() {
           </div>
         </DialogContent>
       </Dialog>
+      </PortfolioErrorBoundary>
     </div>
   );
 }

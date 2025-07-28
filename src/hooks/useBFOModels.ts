@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 import { toast } from 'sonner';
 
@@ -46,8 +46,46 @@ export const useBFOModels = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch all model portfolios
-  const fetchModelPortfolios = async () => {
+  // Memoized computed values for performance
+  const portfolioStats = useMemo(() => {
+    const assignedIds = userAssignments.map(assignment => assignment.model_portfolio_id);
+    const totalAssignedAccounts = userAssignments.reduce((sum, assignment) => sum + assignment.assigned_accounts, 0);
+    const totalTradingGroups = userAssignments.reduce((sum, assignment) => sum + assignment.trading_groups, 0);
+    
+    return {
+      totalPortfolios: modelPortfolios.length,
+      assignedPortfolios: userAssignments.length,
+      availableCount: modelPortfolios.length - userAssignments.length,
+      totalAssignedAccounts,
+      totalTradingGroups,
+      assignedIds
+    };
+  }, [modelPortfolios, userAssignments]);
+
+  const filterOptions = useMemo(() => {
+    const providers = [...new Set(availablePortfolios.map(p => p.provider))].filter(Boolean);
+    const seriesTypes = [...new Set(availablePortfolios.map(p => p.series_type))].filter(Boolean);
+    const assetAllocations = [...new Set(availablePortfolios.map(p => p.asset_allocation))].filter(Boolean);
+    const taxStatuses = [...new Set(availablePortfolios.map(p => p.tax_status))].filter(Boolean);
+
+    return {
+      providers,
+      seriesTypes,
+      assetAllocations,
+      taxStatuses
+    };
+  }, [availablePortfolios]);
+
+  const portfoliosByProvider = useMemo(() => {
+    return modelPortfolios.reduce((acc, portfolio) => {
+      if (!acc[portfolio.provider]) acc[portfolio.provider] = [];
+      acc[portfolio.provider].push(portfolio);
+      return acc;
+    }, {} as Record<string, ModelPortfolio[]>);
+  }, [modelPortfolios]);
+
+  // Fetch all model portfolios with useCallback for performance
+  const fetchModelPortfolios = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from('model_portfolios')
@@ -58,13 +96,15 @@ export const useBFOModels = () => {
       if (error) throw error;
       setModelPortfolios(data || []);
     } catch (err) {
-      console.error('Error fetching model portfolios:', err);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Error fetching model portfolios:', err);
+      }
       setError('Failed to load model portfolios');
     }
-  };
+  }, []);
 
-  // Fetch user's portfolio assignments
-  const fetchUserAssignments = async () => {
+  // Fetch user's portfolio assignments with useCallback
+  const fetchUserAssignments = useCallback(async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
@@ -82,21 +122,22 @@ export const useBFOModels = () => {
       if (error) throw error;
       setUserAssignments(data || []);
     } catch (err) {
-      console.error('Error fetching user assignments:', err);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Error fetching user assignments:', err);
+      }
       setError('Failed to load portfolio assignments');
     }
-  };
+  }, []);
 
-  // Get available portfolios (not assigned to user)
-  const getAvailablePortfolios = () => {
-    const assignedIds = userAssignments.map(assignment => assignment.model_portfolio_id);
-    const available = modelPortfolios.filter(portfolio => !assignedIds.includes(portfolio.id));
+  // Get available portfolios (not assigned to user) with useCallback
+  const getAvailablePortfolios = useCallback(() => {
+    const available = modelPortfolios.filter(portfolio => !portfolioStats.assignedIds.includes(portfolio.id));
     setAvailablePortfolios(available);
     setFilteredPortfolios(available);
-  };
+  }, [modelPortfolios, portfolioStats.assignedIds]);
 
-  // Filter portfolios based on criteria
-  const filterPortfolios = (filters: PortfolioFilters) => {
+  // Filter portfolios based on criteria with useCallback
+  const filterPortfolios = useCallback((filters: PortfolioFilters) => {
     let filtered = [...availablePortfolios];
 
     if (filters.provider) {
@@ -113,25 +154,10 @@ export const useBFOModels = () => {
     }
 
     setFilteredPortfolios(filtered);
-  };
+  }, [availablePortfolios]);
 
-  // Get unique filter options
-  const getFilterOptions = () => {
-    const providers = [...new Set(availablePortfolios.map(p => p.provider))].filter(Boolean);
-    const seriesTypes = [...new Set(availablePortfolios.map(p => p.series_type))].filter(Boolean);
-    const assetAllocations = [...new Set(availablePortfolios.map(p => p.asset_allocation))].filter(Boolean);
-    const taxStatuses = [...new Set(availablePortfolios.map(p => p.tax_status))].filter(Boolean);
-
-    return {
-      providers,
-      seriesTypes,
-      assetAllocations,
-      taxStatuses
-    };
-  };
-
-  // Assign a portfolio to user
-  const assignPortfolio = async (portfolioId: string) => {
+  // Assign a portfolio to user with useCallback
+  const assignPortfolio = useCallback(async (portfolioId: string) => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
@@ -154,14 +180,16 @@ export const useBFOModels = () => {
       await fetchUserAssignments();
       return true;
     } catch (err) {
-      console.error('Error assigning portfolio:', err);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Error assigning portfolio:', err);
+      }
       toast.error('Failed to assign portfolio');
       return false;
     }
-  };
+  }, [fetchUserAssignments]);
 
-  // Remove portfolio assignment
-  const removePortfolioAssignment = async (assignmentId: string) => {
+  // Remove portfolio assignment with useCallback
+  const removePortfolioAssignment = useCallback(async (assignmentId: string) => {
     try {
       const { error } = await supabase
         .from('user_portfolio_assignments')
@@ -174,14 +202,16 @@ export const useBFOModels = () => {
       await fetchUserAssignments();
       return true;
     } catch (err) {
-      console.error('Error removing portfolio assignment:', err);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Error removing portfolio assignment:', err);
+      }
       toast.error('Failed to remove portfolio');
       return false;
     }
-  };
+  }, [fetchUserAssignments]);
 
-  // Update portfolio assignment details
-  const updatePortfolioAssignment = async (
+  // Update portfolio assignment details with useCallback
+  const updatePortfolioAssignment = useCallback(async (
     assignmentId: string, 
     updates: { assigned_accounts?: number; trading_groups?: number }
   ) => {
@@ -197,11 +227,13 @@ export const useBFOModels = () => {
       await fetchUserAssignments();
       return true;
     } catch (err) {
-      console.error('Error updating portfolio assignment:', err);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Error updating portfolio assignment:', err);
+      }
       toast.error('Failed to update portfolio');
       return false;
     }
-  };
+  }, [fetchUserAssignments]);
 
   useEffect(() => {
     const loadData = async () => {
@@ -220,10 +252,15 @@ export const useBFOModels = () => {
   }, []);
 
   useEffect(() => {
-    if (modelPortfolios.length > 0 || userAssignments.length > 0) {
+    if (modelPortfolios.length > 0) {
       getAvailablePortfolios();
     }
-  }, [modelPortfolios, userAssignments]);
+  }, [modelPortfolios, getAvailablePortfolios]);
+
+  const refetch = useCallback(() => {
+    fetchModelPortfolios();
+    fetchUserAssignments();
+  }, [fetchModelPortfolios, fetchUserAssignments]);
 
   return {
     modelPortfolios,
@@ -236,10 +273,10 @@ export const useBFOModels = () => {
     removePortfolioAssignment,
     updatePortfolioAssignment,
     filterPortfolios,
-    getFilterOptions,
-    refetch: () => {
-      fetchModelPortfolios();
-      fetchUserAssignments();
-    }
+    // Memoized computed values
+    portfolioStats,
+    filterOptions,
+    portfoliosByProvider,
+    refetch
   };
 };
