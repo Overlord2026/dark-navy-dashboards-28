@@ -1,10 +1,12 @@
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Wallet, TrendingUp, Target, Shield, PieChart, BarChart3, DollarSign, Star } from 'lucide-react';
+import { Wallet, TrendingUp, Target, Shield, PieChart, BarChart3, DollarSign, Star, Crown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { useRoleContext } from '@/context/RoleContext';
+import { PremiumBadge, PremiumWrapper } from '@/components/ui/premium-badge';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 export function ClientDashboard() {
   const { getCurrentClientTier } = useRoleContext();
@@ -53,17 +55,32 @@ export function ClientDashboard() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
             Welcome to Your Wealth Dashboard
-            {isPremium && <Badge className="ml-3" variant="secondary"><Star className="h-3 w-3 mr-1" />Premium</Badge>}
+            {isPremium && (
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Badge className="ml-2 sm:ml-3 bg-gradient-to-r from-amber-500 to-orange-500" variant="default">
+                      <Crown className="h-3 w-3 mr-1" />
+                      Premium
+                    </Badge>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Premium features enabled - Access to advanced wealth management tools</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            )}
           </h1>
-          <p className="text-muted-foreground">
+          <p className="text-sm sm:text-base text-muted-foreground">
             Monitor your portfolio performance and financial goals
           </p>
         </div>
-        <Button className="gap-2">
+        <Button className="gap-2 text-sm sm:text-base">
           <Target className="h-4 w-4" />
-          Schedule Consultation
+          <span className="hidden sm:inline">Schedule Consultation</span>
+          <span className="sm:hidden">Schedule</span>
         </Button>
       </div>
 
@@ -280,22 +297,70 @@ export function ClientDashboard() {
         </CardHeader>
         <CardContent>
           <div className="grid gap-2 sm:gap-3 grid-cols-2 sm:grid-cols-4">
-            <Button className="h-16 sm:h-20 flex-col gap-1 sm:gap-2 text-xs sm:text-sm" variant="outline">
-              <DollarSign className="h-5 w-5 sm:h-6 sm:w-6" />
-              <span>Make Investment</span>
-            </Button>
-            <Button className="h-16 sm:h-20 flex-col gap-1 sm:gap-2 text-xs sm:text-sm" variant="outline">
-              <BarChart3 className="h-5 w-5 sm:h-6 sm:w-6" />
-              <span>View Reports</span>
-            </Button>
-            <Button className="h-16 sm:h-20 flex-col gap-1 sm:gap-2 text-xs sm:text-sm" variant="outline">
-              <PieChart className="h-5 w-5 sm:h-6 sm:w-6" />
-              <span>Rebalance Portfolio</span>
-            </Button>
-            <Button className="h-16 sm:h-20 flex-col gap-1 sm:gap-2 text-xs sm:text-sm" variant="outline">
-              <Target className="h-5 w-5 sm:h-6 sm:w-6" />
-              <span>Update Goals</span>
-            </Button>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button className="h-16 sm:h-20 flex-col gap-1 sm:gap-2 text-xs sm:text-sm" variant="outline">
+                    <DollarSign className="h-5 w-5 sm:h-6 sm:w-6" />
+                    <span>Make Investment</span>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Add funds to your investment portfolio</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button className="h-16 sm:h-20 flex-col gap-1 sm:gap-2 text-xs sm:text-sm" variant="outline">
+                    <BarChart3 className="h-5 w-5 sm:h-6 sm:w-6" />
+                    <span>View Reports</span>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Access detailed portfolio performance reports</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            
+            <PremiumWrapper isPremium={isPremium} showBadge={false}>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button 
+                      className={`h-16 sm:h-20 flex-col gap-1 sm:gap-2 text-xs sm:text-sm ${
+                        isPremium ? 'border-amber-200 bg-gradient-to-br from-amber-50/30 to-orange-50/30' : ''
+                      }`} 
+                      variant="outline"
+                      disabled={!isPremium}
+                    >
+                      <PieChart className="h-5 w-5 sm:h-6 sm:w-6" />
+                      <span>Rebalance Portfolio</span>
+                      {isPremium && <PremiumBadge size="sm" className="absolute -top-1 -right-1" />}
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{isPremium ? 'Advanced portfolio rebalancing tools' : 'Premium: Advanced rebalancing available with premium subscription'}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </PremiumWrapper>
+            
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button className="h-16 sm:h-20 flex-col gap-1 sm:gap-2 text-xs sm:text-sm" variant="outline">
+                    <Target className="h-5 w-5 sm:h-6 sm:w-6" />
+                    <span>Update Goals</span>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Modify your financial goals and targets</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
         </CardContent>
       </Card>

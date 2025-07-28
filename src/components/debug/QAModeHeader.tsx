@@ -38,13 +38,16 @@ export function QAModeHeader() {
   };
 
   return (
-    <div className="bg-gradient-to-r from-orange-500/90 to-red-500/90 text-white border-b border-orange-600/50 shadow-lg">
+    <div className="bg-gradient-to-r from-orange-500/95 to-red-500/95 text-white border-b border-orange-600/50 shadow-xl backdrop-blur-sm">
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
-              <Eye className="h-5 w-5" />
-              <span className="font-semibold">QA MODE ACTIVE</span>
+              <Eye className="h-5 w-5 animate-pulse" />
+              <span className="font-semibold tracking-wide">QA MODE ACTIVE</span>
+              <Badge variant="secondary" className="bg-white/20 text-white border-white/30 text-xs">
+                DEV
+              </Badge>
             </div>
             
             <div className="hidden sm:flex items-center gap-4 text-sm">

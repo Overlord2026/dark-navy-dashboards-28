@@ -103,6 +103,7 @@ export function PremiumWrapper({
       'relative',
       isPremium && 'ring-2 ring-amber-500/30 rounded-lg',
       isPremium && 'bg-gradient-to-br from-amber-50/50 to-orange-50/50 dark:from-amber-950/20 dark:to-orange-950/20',
+      isPremium && 'before:absolute before:inset-0 before:bg-gradient-to-br before:from-amber-500/5 before:to-orange-500/5 before:rounded-lg before:pointer-events-none',
       disabled && 'opacity-60 pointer-events-none',
       className
     )}>
@@ -112,8 +113,13 @@ export function PremiumWrapper({
           <PremiumBadge size="sm" />
         </div>
       )}
+      {/* Premium watermark */}
       {isPremium && (
-        <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-orange-500/5 rounded-lg pointer-events-none" />
+        <div className="absolute top-0 right-0 w-32 h-32 pointer-events-none overflow-hidden">
+          <div className="absolute top-4 right-[-32px] bg-amber-500/10 text-amber-600/30 text-xs font-bold px-8 py-1 rotate-45 transform origin-center">
+            PREMIUM
+          </div>
+        </div>
       )}
     </div>
   );
