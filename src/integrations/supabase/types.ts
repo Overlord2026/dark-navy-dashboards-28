@@ -1424,6 +1424,42 @@ export type Database = {
         }
         Relationships: []
       }
+      data_export_requests: {
+        Row: {
+          download_url: string | null
+          expires_at: string
+          export_format: string
+          file_size: number | null
+          id: string
+          processed_at: string | null
+          requested_at: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          download_url?: string | null
+          expires_at?: string
+          export_format?: string
+          file_size?: number | null
+          id?: string
+          processed_at?: string | null
+          requested_at?: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          download_url?: string | null
+          expires_at?: string
+          export_format?: string
+          file_size?: number | null
+          id?: string
+          processed_at?: string | null
+          requested_at?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       device_tokens: {
         Row: {
           access_token: string | null
@@ -7089,13 +7125,16 @@ export type Database = {
       }
       profiles: {
         Row: {
+          account_locked_until: string | null
           advisor_id: string | null
           ai_features_access: boolean | null
           ai_queries_limit: number | null
           ai_queries_used: number | null
           avatar_url: string | null
+          bio: string | null
           client_segment: string | null
           created_at: string | null
+          date_format: string | null
           date_of_birth: string | null
           date_of_birth_date: string | null
           display_name: string | null
@@ -7103,11 +7142,13 @@ export type Database = {
           document_uploads_used: number | null
           email: string | null
           email_opt_in: boolean | null
+          failed_login_attempts: number | null
           first_name: string | null
           gender: string | null
           ghl_contact_id: string | null
           id: string
           investor_type: string | null
+          language: string | null
           last_active_at: string | null
           last_login_at: string | null
           last_name: string | null
@@ -7115,11 +7156,15 @@ export type Database = {
           lending_access: boolean | null
           lending_applications_limit: number | null
           lending_applications_used: number | null
+          location: string | null
           marital_status: string | null
           middle_name: string | null
+          notification_preferences: Json | null
           permissions: string[] | null
+          personalization_settings: Json | null
           phone: string | null
           premium_analytics_access: boolean | null
+          privacy_settings: Json | null
           recruited_at: string | null
           referring_advisor_id: string | null
           role: string | null
@@ -7133,6 +7178,7 @@ export type Database = {
           tax_analyses_limit: number | null
           tax_analyses_used: number | null
           tenant_id: string | null
+          timezone: string | null
           title: string | null
           two_factor_enabled: boolean | null
           updated_at: string | null
@@ -7141,13 +7187,16 @@ export type Database = {
           utm_source: string | null
         }
         Insert: {
+          account_locked_until?: string | null
           advisor_id?: string | null
           ai_features_access?: boolean | null
           ai_queries_limit?: number | null
           ai_queries_used?: number | null
           avatar_url?: string | null
+          bio?: string | null
           client_segment?: string | null
           created_at?: string | null
+          date_format?: string | null
           date_of_birth?: string | null
           date_of_birth_date?: string | null
           display_name?: string | null
@@ -7155,11 +7204,13 @@ export type Database = {
           document_uploads_used?: number | null
           email?: string | null
           email_opt_in?: boolean | null
+          failed_login_attempts?: number | null
           first_name?: string | null
           gender?: string | null
           ghl_contact_id?: string | null
           id: string
           investor_type?: string | null
+          language?: string | null
           last_active_at?: string | null
           last_login_at?: string | null
           last_name?: string | null
@@ -7167,11 +7218,15 @@ export type Database = {
           lending_access?: boolean | null
           lending_applications_limit?: number | null
           lending_applications_used?: number | null
+          location?: string | null
           marital_status?: string | null
           middle_name?: string | null
+          notification_preferences?: Json | null
           permissions?: string[] | null
+          personalization_settings?: Json | null
           phone?: string | null
           premium_analytics_access?: boolean | null
+          privacy_settings?: Json | null
           recruited_at?: string | null
           referring_advisor_id?: string | null
           role?: string | null
@@ -7185,6 +7240,7 @@ export type Database = {
           tax_analyses_limit?: number | null
           tax_analyses_used?: number | null
           tenant_id?: string | null
+          timezone?: string | null
           title?: string | null
           two_factor_enabled?: boolean | null
           updated_at?: string | null
@@ -7193,13 +7249,16 @@ export type Database = {
           utm_source?: string | null
         }
         Update: {
+          account_locked_until?: string | null
           advisor_id?: string | null
           ai_features_access?: boolean | null
           ai_queries_limit?: number | null
           ai_queries_used?: number | null
           avatar_url?: string | null
+          bio?: string | null
           client_segment?: string | null
           created_at?: string | null
+          date_format?: string | null
           date_of_birth?: string | null
           date_of_birth_date?: string | null
           display_name?: string | null
@@ -7207,11 +7266,13 @@ export type Database = {
           document_uploads_used?: number | null
           email?: string | null
           email_opt_in?: boolean | null
+          failed_login_attempts?: number | null
           first_name?: string | null
           gender?: string | null
           ghl_contact_id?: string | null
           id?: string
           investor_type?: string | null
+          language?: string | null
           last_active_at?: string | null
           last_login_at?: string | null
           last_name?: string | null
@@ -7219,11 +7280,15 @@ export type Database = {
           lending_access?: boolean | null
           lending_applications_limit?: number | null
           lending_applications_used?: number | null
+          location?: string | null
           marital_status?: string | null
           middle_name?: string | null
+          notification_preferences?: Json | null
           permissions?: string[] | null
+          personalization_settings?: Json | null
           phone?: string | null
           premium_analytics_access?: boolean | null
+          privacy_settings?: Json | null
           recruited_at?: string | null
           referring_advisor_id?: string | null
           role?: string | null
@@ -7237,6 +7302,7 @@ export type Database = {
           tax_analyses_limit?: number | null
           tax_analyses_used?: number | null
           tenant_id?: string | null
+          timezone?: string | null
           title?: string | null
           two_factor_enabled?: boolean | null
           updated_at?: string | null
@@ -9716,6 +9782,48 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      support_tickets: {
+        Row: {
+          category: string
+          created_at: string
+          description: string
+          id: string
+          last_updated: string
+          priority: string
+          resolved_at: string | null
+          resolved_by: string | null
+          status: string
+          subject: string
+          user_id: string
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          description: string
+          id?: string
+          last_updated?: string
+          priority?: string
+          resolved_at?: string | null
+          resolved_by?: string | null
+          status?: string
+          subject: string
+          user_id: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string
+          id?: string
+          last_updated?: string
+          priority?: string
+          resolved_at?: string | null
+          resolved_by?: string | null
+          status?: string
+          subject?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       sync_conflicts: {
         Row: {
@@ -12249,6 +12357,10 @@ export type Database = {
       check_security_alerts: {
         Args: Record<PropertyKey, never>
         Returns: Json
+      }
+      cleanup_expired_export_requests: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
       }
       cleanup_expired_otp_codes: {
         Args: Record<PropertyKey, never>
