@@ -68,6 +68,7 @@ import { PersonaTestPage } from "./pages/qa/PersonaTestPage";
 import { BrandAuditPage } from "./pages/qa/BrandAuditPage";
 import { ComplianceReportingPage } from "./pages/ComplianceReportingPage";
 import Reports from "./pages/Reports";
+import BusinessCenter from "./pages/BusinessCenter";
 
 const queryClient = new QueryClient();
 
@@ -406,6 +407,16 @@ const App = () => {
                     element={
                       <AuthWrapper requireAuth={true}>
                         <Reports />
+                      </AuthWrapper>
+                    }
+                  />
+
+                  {/* Business Center Route */}
+                  <Route
+                    path="/business-center"
+                    element={
+                      <AuthWrapper requireAuth={true}>
+                        <BusinessCenter />
                       </AuthWrapper>
                     }
                   />
