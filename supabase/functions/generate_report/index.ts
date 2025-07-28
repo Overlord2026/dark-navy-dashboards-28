@@ -86,23 +86,75 @@ Deno.serve(async (req) => {
     let reportData: any;
     let reportTitle = '';
 
+    // Validate role-based access to report types
+    const allowedReports = getRoleAllowedReports(profile.role);
+    if (!allowedReports.includes(report_type)) {
+      throw new Error(`Unauthorized: Role "${profile.role}" cannot access report type "${report_type}"`);
+    }
+
     switch (report_type) {
+      // Client reports
       case 'net_worth':
         reportData = await generateNetWorthReport(supabase, user.id);
         reportTitle = 'Net Worth Report';
+        break;
+      case 'income_roadmap':
+        reportData = await generateIncomeRoadmapReport(supabase, user.id);
+        reportTitle = 'Income Roadmap Report';
         break;
       case 'vault_activity':
         reportData = await generateVaultActivityReport(supabase, user.id, filters);
         reportTitle = 'Vault Activity Report';
         break;
-      case 'tax_activity':
-        reportData = await generateTaxActivityReport(supabase, user.id, filters);
-        reportTitle = 'Tax Activity Report';
+      
+      // Advisor reports
+      case 'client_summary':
+        reportData = await generateClientSummaryReport(supabase, user.id);
+        reportTitle = 'Client Summary Report';
         break;
-      case 'goals_summary':
-        reportData = await generateGoalsSummaryReport(supabase, user.id);
-        reportTitle = 'Goals Summary Report';
+      case 'deliverables_due':
+        reportData = await generateDeliverablesDueReport(supabase, user.id);
+        reportTitle = 'Deliverables Due Report';
         break;
+      case 'vault_analytics':
+        reportData = await generateVaultAnalyticsReport(supabase, user.id);
+        reportTitle = 'Vault Analytics Report';
+        break;
+      
+      // Accountant reports
+      case 'tax_uploads':
+        reportData = await generateTaxUploadsReport(supabase, user.id, filters);
+        reportTitle = 'Tax Uploads Report';
+        break;
+      case 'report_export':
+        reportData = await generateReportExportReport(supabase, user.id);
+        reportTitle = 'Report Export';
+        break;
+      
+      // Attorney reports
+      case 'estate_docs':
+        reportData = await generateEstateDocsReport(supabase, user.id);
+        reportTitle = 'Estate Documents Report';
+        break;
+      case 'legal_history':
+        reportData = await generateLegalHistoryReport(supabase, user.id);
+        reportTitle = 'Legal History Report';
+        break;
+      
+      // Admin reports
+      case 'audit_log':
+        reportData = await generateAuditLogReport(supabase, user.id);
+        reportTitle = 'Audit Log Report';
+        break;
+      case 'subscription_summary':
+        reportData = await generateSubscriptionSummaryReport(supabase, user.id);
+        reportTitle = 'Subscription Summary Report';
+        break;
+      case 'system_snapshot':
+        reportData = await generateSystemSnapshotReport(supabase, user.id);
+        reportTitle = 'System Snapshot Report';
+        break;
+      
       default:
         throw new Error(`Unsupported report type: ${report_type}`);
     }
@@ -211,6 +263,21 @@ Deno.serve(async (req) => {
   }
 });
 
+// Role-based report access control
+function getRoleAllowedReports(role: string): string[] {
+  const roleReportMap: Record<string, string[]> = {
+    client: ['net_worth', 'income_roadmap', 'vault_activity'],
+    advisor: ['client_summary', 'deliverables_due', 'vault_analytics'],
+    accountant: ['tax_uploads', 'report_export'],
+    attorney: ['estate_docs', 'legal_history'],
+    admin: ['audit_log', 'subscription_summary', 'system_snapshot'],
+    tenant_admin: ['audit_log', 'subscription_summary', 'system_snapshot'],
+    system_administrator: ['audit_log', 'subscription_summary', 'system_snapshot']
+  };
+  
+  return roleReportMap[role] || [];
+}
+
 // Helper function to generate net worth report data
 async function generateNetWorthReport(supabase: any, userId: string) {
   const [accounts, goals, assets] = await Promise.all([
@@ -297,26 +364,187 @@ async function generateTaxActivityReport(supabase: any, userId: string, filters:
   };
 }
 
-// Helper function to generate goals summary report data
-async function generateGoalsSummaryReport(supabase: any, userId: string) {
+// Client report generators
+async function generateIncomeRoadmapReport(supabase: any, userId: string) {
   const { data: goals } = await supabase
     .from('budget_goals')
     .select('*')
     .eq('user_id', userId)
-    .order('created_at', { ascending: false });
-
-  const activeGoals = goals?.filter((goal: any) => new Date(goal.target_date) > new Date()) || [];
-  const completedGoals = goals?.filter((goal: any) => goal.current_amount >= goal.target_amount) || [];
+    .order('target_date', { ascending: true });
 
   return {
-    goals: goals || [],
+    income_projections: goals?.map((goal: any) => ({
+      goal: goal.title,
+      target_amount: goal.target_amount,
+      current_progress: goal.current_amount,
+      target_date: goal.target_date
+    })) || [],
     summary: {
-      total_goals: goals?.length || 0,
-      active_goals: activeGoals.length,
-      completed_goals: completedGoals.length,
-      total_target_amount: goals?.reduce((sum: number, goal: any) => sum + goal.target_amount, 0) || 0,
-      total_current_amount: goals?.reduce((sum: number, goal: any) => sum + goal.current_amount, 0) || 0
+      total_income_goals: goals?.length || 0,
+      projected_annual_income: goals?.reduce((sum: number, goal: any) => sum + goal.target_amount, 0) || 0
     }
+  };
+}
+
+// Advisor report generators
+async function generateClientSummaryReport(supabase: any, advisorId: string) {
+  const { data: assignments } = await supabase
+    .from('client_assignments')
+    .select(`
+      client_user_id,
+      profiles!client_user_id(first_name, last_name)
+    `)
+    .eq('professional_user_id', advisorId);
+
+  return {
+    clients: assignments?.map((assignment: any) => ({
+      client_name: `${assignment.profiles?.first_name || ''} ${assignment.profiles?.last_name || ''}`.trim(),
+      client_id: assignment.client_user_id
+    })) || [],
+    summary: {
+      total_clients: assignments?.length || 0
+    }
+  };
+}
+
+async function generateDeliverablesDueReport(supabase: any, advisorId: string) {
+  // Mock data - replace with actual deliverables table
+  return {
+    deliverables: [
+      { client: 'Sample Client', deliverable: 'Portfolio Review', due_date: new Date().toISOString() }
+    ],
+    summary: {
+      total_deliverables: 1,
+      overdue: 0
+    }
+  };
+}
+
+async function generateVaultAnalyticsReport(supabase: any, advisorId: string) {
+  const { data: activities } = await supabase
+    .from('audit_logs')
+    .select('*')
+    .eq('user_id', advisorId)
+    .order('created_at', { ascending: false })
+    .limit(50);
+
+  return {
+    activities: activities || [],
+    summary: {
+      total_activities: activities?.length || 0
+    }
+  };
+}
+
+// Accountant report generators
+async function generateTaxUploadsReport(supabase: any, userId: string, filters: any) {
+  const year = filters.tax_year || new Date().getFullYear();
+  
+  // Mock data - replace with actual tax documents table
+  return {
+    tax_year: year,
+    uploads: [
+      { document: 'W-2 Form', upload_date: new Date().toISOString(), status: 'processed' }
+    ],
+    summary: {
+      total_uploads: 1
+    }
+  };
+}
+
+async function generateReportExportReport(supabase: any, userId: string) {
+  const { data: reports } = await supabase
+    .from('reports')
+    .select('*')
+    .eq('user_id', userId)
+    .order('generated_at', { ascending: false });
+
+  return {
+    reports: reports || [],
+    summary: {
+      total_reports: reports?.length || 0
+    }
+  };
+}
+
+// Attorney report generators
+async function generateEstateDocsReport(supabase: any, userId: string) {
+  // Mock data - replace with actual estate documents table
+  return {
+    estate_documents: [
+      { document_type: 'Will', last_updated: new Date().toISOString(), status: 'current' }
+    ],
+    summary: {
+      total_documents: 1
+    }
+  };
+}
+
+async function generateLegalHistoryReport(supabase: any, userId: string) {
+  const { data: activities } = await supabase
+    .from('audit_logs')
+    .select('*')
+    .eq('user_id', userId)
+    .ilike('table_name', '%legal%')
+    .order('created_at', { ascending: false });
+
+  return {
+    legal_activities: activities || [],
+    summary: {
+      total_activities: activities?.length || 0
+    }
+  };
+}
+
+// Admin report generators
+async function generateAuditLogReport(supabase: any, userId: string) {
+  const { data: logs } = await supabase
+    .from('audit_logs')
+    .select('*')
+    .order('created_at', { ascending: false })
+    .limit(100);
+
+  return {
+    audit_logs: logs || [],
+    summary: {
+      total_logs: logs?.length || 0
+    }
+  };
+}
+
+async function generateSubscriptionSummaryReport(supabase: any, userId: string) {
+  const { data: profiles } = await supabase
+    .from('profiles')
+    .select('role, created_at')
+    .order('created_at', { ascending: false });
+
+  return {
+    subscriptions: profiles?.map((profile: any) => ({
+      role: profile.role,
+      created_at: profile.created_at
+    })) || [],
+    summary: {
+      total_users: profiles?.length || 0
+    }
+  };
+}
+
+async function generateSystemSnapshotReport(supabase: any, userId: string) {
+  const [users, reports, activities] = await Promise.all([
+    supabase.from('profiles').select('role').order('created_at', { ascending: false }),
+    supabase.from('reports').select('report_type').order('generated_at', { ascending: false }),
+    supabase.from('audit_logs').select('event_type').order('created_at', { ascending: false }).limit(50)
+  ]);
+
+  return {
+    system_overview: {
+      total_users: users.data?.length || 0,
+      total_reports: reports.data?.length || 0,
+      recent_activities: activities.data?.length || 0
+    },
+    user_breakdown: users.data || [],
+    recent_reports: reports.data || [],
+    recent_activities: activities.data || []
   };
 }
 

@@ -55,45 +55,45 @@ const Reports = () => {
   const [showGenerateModal, setShowGenerateModal] = useState(false);
   const [activeTab, setActiveTab] = useState("all");
 
-  // Role-based report types
+  // Role-based report types mapping
   const getAvailableReportTypes = (role: string) => {
-    const baseReports = [
-      { 
-        key: 'net_worth', 
-        label: 'Net Worth', 
-        description: 'Complete financial overview',
-        icon: DollarSign,
-        roles: ['client', 'advisor', 'admin', 'tenant_admin', 'system_administrator']
-      },
-      { 
-        key: 'goals_summary', 
-        label: 'Goals Summary', 
-        description: 'Financial goals progress',
-        icon: Target,
-        roles: ['client', 'advisor', 'admin', 'tenant_admin', 'system_administrator']
-      }
-    ];
+    const roleReportMap: Record<string, Array<{key: string, label: string, description: string, icon: any, roles: string[]}>> = {
+      client: [
+        { key: 'net_worth', label: 'Net Worth', description: 'Complete financial overview', icon: DollarSign, roles: ['client'] },
+        { key: 'income_roadmap', label: 'Income Roadmap', description: 'Income planning and projections', icon: TrendingUp, roles: ['client'] },
+        { key: 'vault_activity', label: 'Vault Activity', description: 'Document access logs', icon: Archive, roles: ['client'] }
+      ],
+      advisor: [
+        { key: 'client_summary', label: 'Client Summary', description: 'Overview of all client portfolios', icon: FileText, roles: ['advisor'] },
+        { key: 'deliverables_due', label: 'Deliverables Due', description: 'Upcoming client deliverables', icon: Calendar, roles: ['advisor'] },
+        { key: 'vault_analytics', label: 'Vault Analytics', description: 'Document usage analytics', icon: Archive, roles: ['advisor'] }
+      ],
+      accountant: [
+        { key: 'tax_uploads', label: 'Tax Uploads', description: 'Tax document management', icon: FileText, roles: ['accountant'] },
+        { key: 'report_export', label: 'Report Export', description: 'Comprehensive data export', icon: Download, roles: ['accountant'] }
+      ],
+      attorney: [
+        { key: 'estate_docs', label: 'Estate Documents', description: 'Estate planning documentation', icon: FileText, roles: ['attorney'] },
+        { key: 'legal_history', label: 'Legal History', description: 'Legal document history', icon: Archive, roles: ['attorney'] }
+      ],
+      admin: [
+        { key: 'audit_log', label: 'Audit Log', description: 'System audit trail', icon: FileText, roles: ['admin'] },
+        { key: 'subscription_summary', label: 'Subscription Summary', description: 'User subscription overview', icon: DollarSign, roles: ['admin'] },
+        { key: 'system_snapshot', label: 'System Snapshot', description: 'Complete system overview', icon: Archive, roles: ['admin'] }
+      ],
+      tenant_admin: [
+        { key: 'audit_log', label: 'Audit Log', description: 'System audit trail', icon: FileText, roles: ['tenant_admin'] },
+        { key: 'subscription_summary', label: 'Subscription Summary', description: 'User subscription overview', icon: DollarSign, roles: ['tenant_admin'] },
+        { key: 'system_snapshot', label: 'System Snapshot', description: 'Complete system overview', icon: Archive, roles: ['tenant_admin'] }
+      ],
+      system_administrator: [
+        { key: 'audit_log', label: 'Audit Log', description: 'System audit trail', icon: FileText, roles: ['system_administrator'] },
+        { key: 'subscription_summary', label: 'Subscription Summary', description: 'User subscription overview', icon: DollarSign, roles: ['system_administrator'] },
+        { key: 'system_snapshot', label: 'System Snapshot', description: 'Complete system overview', icon: Archive, roles: ['system_administrator'] }
+      ]
+    };
 
-    const advancedReports = [
-      { 
-        key: 'vault_activity', 
-        label: 'Vault Activity', 
-        description: 'Document access logs',
-        icon: Archive,
-        roles: ['advisor', 'admin', 'tenant_admin', 'system_administrator']
-      },
-      { 
-        key: 'tax_activity', 
-        label: 'Tax Activity', 
-        description: 'Tax document management',
-        icon: FileText,
-        roles: ['advisor', 'admin', 'tenant_admin', 'system_administrator']
-      }
-    ];
-
-    return [...baseReports, ...advancedReports].filter(report => 
-      report.roles.includes(role)
-    );
+    return roleReportMap[role] || [];
   };
 
   useEffect(() => {
