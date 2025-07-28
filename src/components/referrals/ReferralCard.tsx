@@ -1,15 +1,21 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Copy, Share2, Gift, DollarSign } from "lucide-react";
+import { Copy, Share2, Gift, DollarSign, Sparkles, TrendingUp } from "lucide-react";
 import { useReferrals } from "@/hooks/useReferrals";
+import { ReferralGameification } from "./ReferralGameification";
 
 interface ReferralCardProps {
   userRole: string;
+  enhanced?: boolean;
 }
 
-export const ReferralCard = ({ userRole }: ReferralCardProps) => {
+export const ReferralCard = ({ userRole, enhanced = false }: ReferralCardProps) => {
   const { referrals, generateReferralCode, copyReferralLink, loading } = useReferrals();
+
+  if (enhanced) {
+    return <ReferralGameification userRole={userRole} />;
+  }
 
   const getStatusColor = (status: string) => {
     switch (status) {
