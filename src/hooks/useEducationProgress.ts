@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 
 export interface ModuleProgress {
   id: string;
@@ -17,12 +17,45 @@ export interface LearningPath {
   modules: string[];
   completedModules: string[];
   totalProgress: number;
+  progress: number;
+  isActive: boolean;
 }
 
 export function useEducationProgress() {
   const [moduleProgress, setModuleProgress] = useState<Record<string, ModuleProgress>>({});
   const [learningPaths, setLearningPaths] = useState<LearningPath[]>([]);
   const [selectedPersona, setSelectedPersona] = useState<string>("");
+
+  // Memoized computed values for performance
+  const progressStats = useMemo(() => {
+    const totalModules = Object.keys(moduleProgress).length;
+    const completedModules = Object.values(moduleProgress).filter(p => p.completed).length;
+    const totalProgress = totalModules > 0 ? Math.round((completedModules / totalModules) * 100) : 0;
+    
+    const activePaths = learningPaths.filter(path => path.isActive);
+    const completedPaths = learningPaths.filter(path => path.progress === 100);
+    
+    return {
+      totalModules,
+      completedModules,
+      totalProgress,
+      activePaths: activePaths.length,
+      completedPaths: completedPaths.length,
+      hasActivePersona: !!selectedPersona
+    };
+  }, [moduleProgress, learningPaths, selectedPersona]);
+
+  const modulesByStatus = useMemo(() => {
+    const completed = Object.entries(moduleProgress).filter(([, progress]) => progress.completed);
+    const inProgress = Object.entries(moduleProgress).filter(([, progress]) => !progress.completed && progress.timeSpent > 0);
+    const notStarted = Object.entries(moduleProgress).filter(([, progress]) => progress.timeSpent === 0);
+    
+    return {
+      completed,
+      inProgress,
+      notStarted
+    };
+  }, [moduleProgress]);
 
   // Load progress from localStorage on mount
   useEffect(() => {
@@ -34,7 +67,9 @@ export function useEducationProgress() {
         setLearningPaths(data.learningPaths || []);
         setSelectedPersona(data.selectedPersona || "");
       } catch (error) {
-        console.error('Failed to parse education progress:', error);
+        if (process.env.NODE_ENV === 'development') {
+          console.error('Failed to parse education progress:', error);
+        }
       }
     }
   }, []);
@@ -132,7 +167,9 @@ export function useEducationProgress() {
         description: `Curated learning path for ${persona.replace('-', ' ')}`,
         modules,
         completedModules: [],
-        totalProgress: 0
+        totalProgress: 0,
+        progress: 0,
+        isActive: true
       };
       
       setLearningPaths(prev => [...prev, newPath]);
@@ -189,6 +226,9 @@ export function useEducationProgress() {
     getTotalTimeSpent,
     getOverallProgress,
     createLearningPath,
-    resetProgress
+    resetProgress,
+    // Memoized computed values
+    progressStats,
+    modulesByStatus,
   };
 }

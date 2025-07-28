@@ -6,6 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Clock, Star, Users, BookOpen, FileText, Download, Play, Award, TrendingUp, DollarSign, Shield } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { EducationErrorBoundary } from '@/components/education/EducationErrorBoundary';
+import { EducationTabsSkeleton } from '@/components/ui/skeletons/EducationSkeletons';
 import { 
   educationalResources, 
   featuredCourses, 
@@ -47,6 +49,12 @@ export const EducationalTabs = React.memo(({
   handleCourseEnrollment 
 }: EducationalTabsProps) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [renderCount, setRenderCount] = useState(0);
+
+  // Performance tracking
+  React.useEffect(() => {
+    setRenderCount(prev => prev + 1);
+  });
 
   // Memoize filtered data to prevent unnecessary recalculations
   const filteredResources = useMemo(() => {
@@ -80,10 +88,16 @@ export const EducationalTabs = React.memo(({
   // Memoize category options to prevent re-renders
   const categoryOptions = useMemo(() => courseCategories, []);
 
+  // Show loading skeleton while transitioning
+  if (isLoading) {
+    return <EducationTabsSkeleton />;
+  }
+
   return (
-    <div className="w-full space-y-6">
-      {/* Main Section Tabs */}
-      <Tabs value={activeSection} onValueChange={handleSectionChange} className="w-full">
+    <EducationErrorBoundary componentName="Educational Tabs">
+      <div className="w-full space-y-6">
+        {/* Main Section Tabs */}
+        <Tabs value={activeSection} onValueChange={handleSectionChange} className="w-full">
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="learn-discover">Learn & Discover</TabsTrigger>
           <TabsTrigger value="solutions-services">Solutions & Services</TabsTrigger>
@@ -118,7 +132,8 @@ export const EducationalTabs = React.memo(({
           </TabsContent>
         </AnimatePresence>
       </Tabs>
-    </div>
+      </div>
+    </EducationErrorBoundary>
   );
 });
 
@@ -240,7 +255,7 @@ const WhoWeServeSection = React.memo(({ isLoading }: { isLoading: boolean }) => 
 
 // Memoized grid components
 const CoursesGrid = React.memo(({ courses, onEnrollment, isLoading }: any) => {
-  if (isLoading) return <div className="text-center py-8">Loading courses...</div>;
+  if (isLoading) return <EducationTabsSkeleton />;
   
   const allCourses = [...(courses.featured || []), ...(courses.popular || [])];
   
@@ -258,7 +273,7 @@ const CoursesGrid = React.memo(({ courses, onEnrollment, isLoading }: any) => {
 });
 
 const ResourcesGrid = React.memo(({ resources, type, isLoading }: any) => {
-  if (isLoading) return <div className="text-center py-8">Loading resources...</div>;
+  if (isLoading) return <EducationTabsSkeleton />;
   
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

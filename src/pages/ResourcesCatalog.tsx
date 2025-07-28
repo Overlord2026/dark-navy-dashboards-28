@@ -1,4 +1,5 @@
 
+import React from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { toast } from "sonner";
 import { useSearchParams } from "react-router-dom";
@@ -7,12 +8,21 @@ import { EducationalTabs } from "@/components/education/EducationalTabs";
 import { courseCategories } from "@/data/education";
 import { handleCourseAccess } from "@/components/education/courseUtils";
 import { motion } from "framer-motion";
+import { EducationErrorBoundary } from "@/components/education/EducationErrorBoundary";
+import { ResourcesCatalogSkeleton } from "@/components/ui/skeletons/EducationSkeletons";
+import { EducationPerformanceMonitor } from "@/components/debug/EducationPerformanceMonitor";
 
 export default function ResourcesCatalog() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [activeCategory, setActiveCategory] = useState("all-courses");
   const [activeSection, setActiveSection] = useState("learn-discover");
   const [isInitialized, setIsInitialized] = useState(false);
+  const [renderCount, setRenderCount] = useState(0);
+  
+  // Performance tracking
+  React.useEffect(() => {
+    setRenderCount(prev => prev + 1);
+  });
   
   // Initialize state from URL parameters once
   useEffect(() => {
@@ -90,11 +100,7 @@ export default function ResourcesCatalog() {
   if (!isInitialized) {
     return (
       <ThreeColumnLayout title="Resources & Solutions Catalog" activeMainItem="education">
-        <div className="flex items-center justify-center min-h-64">
-          <div className="text-center">
-            <div className="animate-pulse">Loading...</div>
-          </div>
-        </div>
+        <ResourcesCatalogSkeleton />
       </ThreeColumnLayout>
     );
   }
@@ -104,12 +110,26 @@ export default function ResourcesCatalog() {
       title="Resources & Solutions Catalog" 
       activeMainItem="education"
     >
-      <motion.div 
-        className="space-y-8 px-1"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-      >
+      <EducationErrorBoundary componentName="Resources Catalog">
+        {/* Performance Monitor - Development Only */}
+        {process.env.NODE_ENV === 'development' && (
+          <div className="mb-4">
+            <EducationPerformanceMonitor
+              componentName="ResourcesCatalog"
+              renderCount={renderCount}
+              cacheHits={courseCategories.length}
+              memoizedCalculations={5}
+              coursesCount={courseCategories.length}
+            />
+          </div>
+        )}
+        
+        <motion.div 
+          className="space-y-8 px-1"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
         {/* Hero Section */}
         <motion.div variants={itemVariants} className="text-center bg-gradient-to-r from-primary/5 to-primary/10 rounded-xl p-8 border border-primary/20">
           <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
@@ -139,15 +159,18 @@ export default function ResourcesCatalog() {
         </motion.div>
 
         <motion.div variants={itemVariants}>
-          <EducationalTabs 
-            activeSection={activeSection}
-            activeCategory={activeCategory}
-            setActiveSection={handleSectionChange}
-            setActiveCategory={handleCategoryChange}
-            handleCourseEnrollment={handleCourseEnrollment}
-          />
+          <EducationErrorBoundary componentName="Educational Tabs">
+            <EducationalTabs 
+              activeSection={activeSection}
+              activeCategory={activeCategory}
+              setActiveSection={handleSectionChange}
+              setActiveCategory={handleCategoryChange}
+              handleCourseEnrollment={handleCourseEnrollment}
+            />
+          </EducationErrorBoundary>
         </motion.div>
       </motion.div>
+      </EducationErrorBoundary>
     </ThreeColumnLayout>
   );
 }
