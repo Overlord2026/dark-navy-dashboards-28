@@ -5,6 +5,7 @@ interface ResponsiveBreakpoints {
   isTablet: boolean;
   isDesktop: boolean;
   isSmallScreen: boolean;
+  isLargeScreen: boolean;
   screenWidth: number;
 }
 
@@ -29,6 +30,7 @@ export function useResponsive(): ResponsiveBreakpoints {
     isTablet: screenWidth >= 640 && screenWidth < 1024,
     isDesktop: screenWidth >= 1024,
     isSmallScreen: screenWidth < 1024,
+    isLargeScreen: screenWidth >= 1024,
     screenWidth
   };
 }

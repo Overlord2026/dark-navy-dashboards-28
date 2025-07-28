@@ -3,7 +3,7 @@ import { ResponsiveContainer } from 'recharts';
 import { useResponsive } from '@/hooks/use-responsive';
 
 interface ResponsiveChartProps {
-  children: React.ReactNode;
+  children: React.ReactElement;
   height?: number | string;
   minHeight?: number;
   className?: string;

@@ -21,7 +21,7 @@ export function PerformanceMonitor() {
           const performanceObserver = new PerformanceObserver((list) => {
             list.getEntries().forEach((entry) => {
               if (entry.entryType === 'first-input') {
-                const fid = entry.processingStart - entry.startTime;
+                const fid = (entry as any).processingStart - entry.startTime;
                 logger.info('FID Measurement', {
                   metric: 'fid',
                   value: fid,
@@ -117,10 +117,10 @@ export const measurePageLoad = (pageName: string) => {
   };
 };
 
-export const measureAsyncOperation = async <T>(
+export const measureAsyncOperation = async function<T>(
   operation: () => Promise<T>,
   operationName: string
-): Promise<T> => {
+): Promise<T> {
   const startTime = performance.now();
   
   try {

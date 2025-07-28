@@ -48,7 +48,7 @@ export class GlobalErrorBoundary extends Component<Props, State> {
         message: error.message,
         stack: error.stack,
         name: error.name,
-        cause: error.cause
+        cause: (error as any).cause
       },
       errorInfo: {
         componentStack: errorInfo.componentStack
