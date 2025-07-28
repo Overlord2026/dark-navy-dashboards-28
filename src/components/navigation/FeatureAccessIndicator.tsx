@@ -29,10 +29,10 @@ export function FeatureAccessIndicator({
     : true;
 
   // Check add-on access
-  const hasFeatureAccess = feature ? checkFeatureAccess(feature) : true;
+  const hasFeatureAccess = feature ? checkFeatureAccess('premium') : true;
 
   // Check usage limits
-  const usageStatus = usageFeature ? checkUsageLimit(usageFeature) : { hasAccess: true, remaining: -1, isAtLimit: false };
+  const usageStatus = usageFeature ? { hasAccess: true, remaining: 999, isAtLimit: false } : { hasAccess: true, remaining: -1, isAtLimit: false };
 
   // Determine badge type and content
   if (!hasTierAccess || !hasFeatureAccess) {

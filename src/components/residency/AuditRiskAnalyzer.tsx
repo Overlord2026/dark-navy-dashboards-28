@@ -75,7 +75,7 @@ export function AuditRiskAnalyzer() {
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [showResults, setShowResults] = useState(false);
   
-  const hasAccess = checkFeatureAccess('audit_risk_analyzer');
+  const hasAccess = checkFeatureAccess('elite');
 
   if (!hasAccess) {
     return (

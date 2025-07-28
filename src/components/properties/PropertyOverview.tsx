@@ -22,7 +22,7 @@ interface PropertyOverviewProps {
 
 export const PropertyOverview: React.FC<PropertyOverviewProps> = ({ initialFilter }) => {
   const { subscriptionPlan, checkFeatureAccess } = useSubscriptionAccess();
-  const hasPremiumAccess = checkFeatureAccess('premium_property_features');
+  const hasPremiumAccess = checkFeatureAccess('premium');
 
   // Mock data - in real implementation, this would come from your property management system
   const portfolioStats = {

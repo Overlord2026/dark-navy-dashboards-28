@@ -17,7 +17,7 @@ import {
 
 export const BillAnalytics: React.FC = () => {
   const { checkFeatureAccess } = useSubscriptionAccess();
-  const hasPremiumAccess = checkFeatureAccess('bill_pay_premium');
+  const hasPremiumAccess = checkFeatureAccess('premium');
 
   if (!hasPremiumAccess) {
     return (

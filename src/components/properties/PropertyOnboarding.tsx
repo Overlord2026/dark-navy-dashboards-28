@@ -14,7 +14,7 @@ export const PropertyOnboarding: React.FC<PropertyOnboardingProps> = ({ onComple
   const [currentStep, setCurrentStep] = useState(0);
   const { subscriptionPlan, checkFeatureAccess } = useSubscriptionAccess();
   
-  const hasPremiumAccess = checkFeatureAccess('premium_property_features');
+  const hasPremiumAccess = checkFeatureAccess('premium');
   
   const steps = [
     {

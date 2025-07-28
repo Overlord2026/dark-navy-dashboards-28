@@ -25,7 +25,7 @@ export const AutomatedPayments: React.FC = () => {
   const { openPortal, isLoading } = useStripePortal();
   const [selectedTab, setSelectedTab] = useState("setup");
   
-  const hasPremiumAccess = checkFeatureAccess('bill_pay_premium');
+  const hasPremiumAccess = checkFeatureAccess('premium');
 
   if (!hasPremiumAccess) {
     return (

@@ -11,7 +11,7 @@ export const BillPayDashboard: React.FC = () => {
   const { checkFeatureAccess } = useSubscriptionAccess();
   const [activeTab, setActiveTab] = useState("overview");
   
-  const hasPremiumAccess = checkFeatureAccess('bill_pay_premium');
+  const hasPremiumAccess = checkFeatureAccess('premium');
   
   return (
     <div className="container mx-auto p-6 space-y-6">

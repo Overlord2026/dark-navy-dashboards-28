@@ -34,7 +34,7 @@ interface Property {
 export const PropertyManualEntry: React.FC = () => {
   const { toast } = useToast();
   const { checkFeatureAccess } = useSubscriptionAccess();
-  const hasPremiumAccess = checkFeatureAccess('premium_property_features');
+  const hasPremiumAccess = checkFeatureAccess('premium');
 
   const [properties, setProperties] = useState<Property[]>([
     {

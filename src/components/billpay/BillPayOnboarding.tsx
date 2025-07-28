@@ -14,7 +14,7 @@ export const BillPayOnboarding: React.FC<BillPayOnboardingProps> = ({ onComplete
   const [currentStep, setCurrentStep] = useState(0);
   const { subscriptionPlan, checkFeatureAccess } = useSubscriptionAccess();
   
-  const hasPremiumAccess = checkFeatureAccess('bill_pay_premium');
+  const hasPremiumAccess = checkFeatureAccess('premium');
   
   const steps = [
     {

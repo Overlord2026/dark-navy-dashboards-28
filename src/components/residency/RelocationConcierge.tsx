@@ -316,7 +316,7 @@ function RequestForm({ onSubmit }: RequestFormProps) {
 export function RelocationConcierge() {
   const { checkFeatureAccess } = useSubscriptionAccess();
   
-  const hasAccess = checkFeatureAccess('relocation_concierge');
+  const hasAccess = checkFeatureAccess('elite');
 
   if (!hasAccess) {
     return (

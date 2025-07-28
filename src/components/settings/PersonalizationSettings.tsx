@@ -75,7 +75,7 @@ export const PersonalizationSettings: React.FC = () => {
     animation_level: 'full'
   });
 
-  const isPremium = checkFeatureAccess('premium_analytics_access');
+  const isPremium = checkFeatureAccess('premium');
   const isWhiteLabelEnabled = checkFeatureAccess('white_label_access' as any);
 
   useEffect(() => {

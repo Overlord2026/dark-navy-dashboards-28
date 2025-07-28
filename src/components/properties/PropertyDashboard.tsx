@@ -16,7 +16,7 @@ export const PropertyDashboard: React.FC<PropertyDashboardProps> = ({ initialFil
   const { checkFeatureAccess } = useSubscriptionAccess();
   const [activeTab, setActiveTab] = useState("overview");
   
-  const hasPremiumAccess = checkFeatureAccess('premium_property_features');
+  const hasPremiumAccess = checkFeatureAccess('premium');
   
   return (
     <div className="container mx-auto p-6 space-y-6">

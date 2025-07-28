@@ -78,7 +78,7 @@ export function CollaborationTools() {
   const [inviteRole, setInviteRole] = useState('');
 
   // Check premium access
-  const hasCollaborationAccess = checkFeatureAccess('premium_analytics_access') || subscriptionPlan?.tier === 'premium' || subscriptionPlan?.tier === 'elite';
+  const hasCollaborationAccess = checkFeatureAccess('premium') || subscriptionPlan?.tier === 'premium' || subscriptionPlan?.tier === 'elite';
 
   // Sample data
   const [teamMembers] = useState<TeamMember[]>([

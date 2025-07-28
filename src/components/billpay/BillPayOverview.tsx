@@ -17,7 +17,7 @@ import { useSubscriptionAccess } from "@/hooks/useSubscriptionAccess";
 
 export const BillPayOverview: React.FC = () => {
   const { subscriptionPlan, checkFeatureAccess } = useSubscriptionAccess();
-  const hasPremiumAccess = checkFeatureAccess('bill_pay_premium');
+  const hasPremiumAccess = checkFeatureAccess('premium');
 
   const upcomingBills = [
     { id: 1, name: "Electric Bill", amount: 165.23, dueDate: "2024-02-15", status: "pending" },

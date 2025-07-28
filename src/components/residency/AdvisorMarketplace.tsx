@@ -284,7 +284,7 @@ export function AdvisorMarketplace() {
   const [searchState, setSearchState] = useState('');
   const [selectedSpecialty, setSelectedSpecialty] = useState('');
   
-  const hasAccess = checkFeatureAccess('advisor_marketplace');
+  const hasAccess = checkFeatureAccess('elite');
 
   if (!hasAccess) {
     return (

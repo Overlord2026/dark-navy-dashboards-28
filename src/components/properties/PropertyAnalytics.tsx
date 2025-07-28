@@ -17,7 +17,7 @@ import {
 
 export const PropertyAnalytics: React.FC = () => {
   const { checkFeatureAccess } = useSubscriptionAccess();
-  const hasPremiumAccess = checkFeatureAccess('premium_property_features');
+  const hasPremiumAccess = checkFeatureAccess('premium');
 
   if (!hasPremiumAccess) {
     return (

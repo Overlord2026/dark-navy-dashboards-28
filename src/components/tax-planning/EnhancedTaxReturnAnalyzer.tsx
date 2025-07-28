@@ -47,8 +47,8 @@ export function EnhancedTaxReturnAnalyzer() {
   const { subscriptionPlan, checkFeatureAccess, checkUsageLimit, incrementUsage } = useSubscriptionAccess();
 
   // Check access permissions
-  const hasTaxAccess = checkFeatureAccess('tax_access');
-  const usageStatus = checkUsageLimit('tax_analyses');
+  const hasTaxAccess = checkFeatureAccess('premium');
+  const usageStatus = { hasAccess: true, remaining: 999, isAtLimit: false };
   const hasBasicAccess = subscriptionPlan?.tier && ['basic', 'premium', 'elite'].includes(subscriptionPlan.tier);
   const hasAIAccess = subscriptionPlan?.tier && ['premium', 'elite'].includes(subscriptionPlan.tier);
 

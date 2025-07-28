@@ -71,7 +71,7 @@ export const SupportHelpSettings: React.FC = () => {
     attachments: [] as File[]
   });
 
-  const isPremium = checkFeatureAccess('premium_analytics_access');
+  const isPremium = checkFeatureAccess('premium');
   const hasPrioritySupport = isPremium || user?.user_metadata?.role === 'advisor';
 
   useEffect(() => {
