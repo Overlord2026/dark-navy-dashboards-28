@@ -1,85 +1,73 @@
 import React from 'react';
-import { MainLayout } from '@/components/layout/MainLayout';
+import { PersonaDashboardLayout } from '@/components/dashboard/PersonaDashboardLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Calculator, FileSpreadsheet, DollarSign, Calendar } from 'lucide-react';
 
 export function AccountantDashboard() {
   return (
-    <MainLayout>
-      <div className="container mx-auto p-6">
-        <h1 className="text-3xl font-bold mb-6">Accountant Dashboard</h1>
-        <p className="text-muted-foreground mb-8">Manage client accounting, tax preparation, and financial reporting.</p>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Calculator className="h-5 w-5" />
-                Tax Preparation
-              </CardTitle>
-              <CardDescription>
-                Prepare and review client tax returns
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">
-                Access client tax documents and prepare comprehensive tax returns.
-              </p>
-            </CardContent>
-          </Card>
+    <PersonaDashboardLayout>
+      {/* Accountant-specific content */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium flex items-center gap-2">
+              <FileSpreadsheet className="h-4 w-4" />
+              Returns Filed
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">127</div>
+            <p className="text-xs text-muted-foreground">
+              This tax season
+            </p>
+          </CardContent>
+        </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <FileSpreadsheet className="h-5 w-5" />
-                Financial Reports
-              </CardTitle>
-              <CardDescription>
-                Generate client financial statements
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">
-                Create detailed financial reports and analysis for clients.
-              </p>
-            </CardContent>
-          </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium flex items-center gap-2">
+              <Calendar className="h-4 w-4" />
+              Pending Deadlines
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-orange-600">7</div>
+            <p className="text-xs text-muted-foreground">
+              Next 30 days
+            </p>
+          </CardContent>
+        </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <DollarSign className="h-5 w-5" />
-                Bookkeeping
-              </CardTitle>
-              <CardDescription>
-                Manage client books and records
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">
-                Maintain accurate financial records and reconciliations.
-              </p>
-            </CardContent>
-          </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium flex items-center gap-2">
+              <DollarSign className="h-4 w-4" />
+              Avg. Refund
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-green-600">$3,247</div>
+            <p className="text-xs text-muted-foreground">
+              Per client return
+            </p>
+          </CardContent>
+        </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Calendar className="h-5 w-5" />
-                Tax Calendar
-              </CardTitle>
-              <CardDescription>
-                Important tax deadlines and reminders
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">
-                Stay on top of critical tax filing deadlines and compliance requirements.
-              </p>
-            </CardContent>
-          </Card>
-        </div>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium flex items-center gap-2">
+              <Calculator className="h-4 w-4" />
+              Active Clients
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">89</div>
+            <p className="text-xs text-muted-foreground">
+              Tax prep clients
+            </p>
+          </CardContent>
+        </Card>
       </div>
-    </MainLayout>
+    </PersonaDashboardLayout>
   );
 }

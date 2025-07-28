@@ -1,85 +1,73 @@
 import React from 'react';
-import { MainLayout } from '@/components/layout/MainLayout';
+import { PersonaDashboardLayout } from '@/components/dashboard/PersonaDashboardLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Scale, FileText, Shield, Gavel } from 'lucide-react';
 
 export function AttorneyDashboard() {
   return (
-    <MainLayout>
-      <div className="container mx-auto p-6">
-        <h1 className="text-3xl font-bold mb-6">Attorney Dashboard</h1>
-        <p className="text-muted-foreground mb-8">Provide legal services and estate planning for family office clients.</p>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Scale className="h-5 w-5" />
-                Estate Planning
-              </CardTitle>
-              <CardDescription>
-                Comprehensive estate planning services
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">
-                Create wills, trusts, and estate planning documents for clients.
-              </p>
-            </CardContent>
-          </Card>
+    <PersonaDashboardLayout>
+      {/* Attorney-specific content */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium flex items-center gap-2">
+              <Scale className="h-4 w-4" />
+              Active Cases
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">23</div>
+            <p className="text-xs text-muted-foreground">
+              Estate planning cases
+            </p>
+          </CardContent>
+        </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <FileText className="h-5 w-5" />
-                Legal Documents
-              </CardTitle>
-              <CardDescription>
-                Draft and review legal documents
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">
-                Prepare contracts, agreements, and other legal documentation.
-              </p>
-            </CardContent>
-          </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium flex items-center gap-2">
+              <FileText className="h-4 w-4" />
+              Documents Drafted
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">187</div>
+            <p className="text-xs text-muted-foreground">
+              This quarter
+            </p>
+          </CardContent>
+        </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Shield className="h-5 w-5" />
-                Compliance
-              </CardTitle>
-              <CardDescription>
-                Regulatory compliance and risk management
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">
-                Ensure client compliance with applicable laws and regulations.
-              </p>
-            </CardContent>
-          </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium flex items-center gap-2">
+              <Shield className="h-4 w-4" />
+              Compliance Score
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-green-600">96%</div>
+            <p className="text-xs text-muted-foreground">
+              Excellent standing
+            </p>
+          </CardContent>
+        </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Gavel className="h-5 w-5" />
-                Legal Counsel
-              </CardTitle>
-              <CardDescription>
-                Strategic legal advisory services
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">
-                Provide expert legal advice and representation for complex matters.
-              </p>
-            </CardContent>
-          </Card>
-        </div>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium flex items-center gap-2">
+              <Gavel className="h-4 w-4" />
+              Billable Hours
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">142.5</div>
+            <p className="text-xs text-muted-foreground">
+              This month
+            </p>
+          </CardContent>
+        </Card>
       </div>
-    </MainLayout>
+    </PersonaDashboardLayout>
   );
 }
