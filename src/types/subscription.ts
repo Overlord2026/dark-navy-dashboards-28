@@ -16,7 +16,7 @@ export interface SubscriptionTier {
   color?: string;
 }
 
-export type SubscriptionTierType = 'basic' | 'premium' | 'elite';
+export type SubscriptionTierType = 'free' | 'basic' | 'premium' | 'elite';
 
 // New types for add-on access and metered usage
 export interface AddOnAccess {

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { SubscriptionPlan, AddOnAccess, UsageCounters } from '@/types/subscription';
+import { SubscriptionPlan, AddOnAccess, UsageCounters, SubscriptionTierType } from '@/types/subscription';
 
 export function useSubscriptionAccess() {
   const { user } = useAuth();
@@ -33,7 +33,7 @@ export function useSubscriptionAccess() {
 
       // Set subscription plan from profile data
       const plan: SubscriptionPlan = {
-        tier: profile?.subscription_tier || 'basic',
+        tier: (profile?.subscription_tier || 'basic') as SubscriptionTierType,
         add_ons: {
           lending_access: profile?.lending_access || false,
           tax_access: profile?.tax_access || false,
@@ -47,10 +47,10 @@ export function useSubscriptionAccess() {
           document_uploads: profile?.document_uploads_used || 0,
         },
         usage_limits: {
-          lending_applications_limit: profile?.lending_applications_limit || getTierLimits(profile?.subscription_tier || 'basic').lending_applications_limit,
-          tax_analyses_limit: profile?.tax_analyses_limit || getTierLimits(profile?.subscription_tier || 'basic').tax_analyses_limit,
-          ai_queries_limit: profile?.ai_queries_limit || getTierLimits(profile?.subscription_tier || 'basic').ai_queries_limit,
-          document_uploads_limit: profile?.document_uploads_limit || getTierLimits(profile?.subscription_tier || 'basic').document_uploads_limit,
+          lending_applications_limit: profile?.lending_applications_limit || getTierLimits((profile?.subscription_tier || 'basic') as SubscriptionTierType).lending_applications_limit,
+          tax_analyses_limit: profile?.tax_analyses_limit || getTierLimits((profile?.subscription_tier || 'basic') as SubscriptionTierType).tax_analyses_limit,
+          ai_queries_limit: profile?.ai_queries_limit || getTierLimits((profile?.subscription_tier || 'basic') as SubscriptionTierType).ai_queries_limit,
+          document_uploads_limit: profile?.document_uploads_limit || getTierLimits((profile?.subscription_tier || 'basic') as SubscriptionTierType).document_uploads_limit,
         },
         stripe_subscription_id: profile?.stripe_subscription_id,
         stripe_customer_id: profile?.stripe_customer_id,
@@ -70,8 +70,14 @@ export function useSubscriptionAccess() {
     }
   };
 
-  const getTierLimits = (tier: string) => {
+  const getTierLimits = (tier: SubscriptionTierType) => {
     const limits = {
+      free: {
+        lending_applications_limit: 0,
+        tax_analyses_limit: 1,
+        ai_queries_limit: 5,
+        document_uploads_limit: 3,
+      },
       basic: {
         lending_applications_limit: 3,
         tax_analyses_limit: 5,
@@ -92,7 +98,7 @@ export function useSubscriptionAccess() {
       },
     };
     
-    return limits[tier as keyof typeof limits] || limits.basic;
+    return limits[tier] || limits.basic;
   };
 
   const checkFeatureAccess = (feature: keyof AddOnAccess): boolean => {

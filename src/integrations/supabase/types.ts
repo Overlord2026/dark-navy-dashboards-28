@@ -7090,12 +7090,17 @@ export type Database = {
       profiles: {
         Row: {
           advisor_id: string | null
+          ai_features_access: boolean | null
+          ai_queries_limit: number | null
+          ai_queries_used: number | null
           avatar_url: string | null
           client_segment: string | null
           created_at: string | null
           date_of_birth: string | null
           date_of_birth_date: string | null
           display_name: string | null
+          document_uploads_limit: number | null
+          document_uploads_used: number | null
           email: string | null
           email_opt_in: boolean | null
           first_name: string | null
@@ -7107,15 +7112,26 @@ export type Database = {
           last_login_at: string | null
           last_name: string | null
           lead_stage: string | null
+          lending_access: boolean | null
+          lending_applications_limit: number | null
+          lending_applications_used: number | null
           marital_status: string | null
           middle_name: string | null
           permissions: string[] | null
           phone: string | null
+          premium_analytics_access: boolean | null
           recruited_at: string | null
           referring_advisor_id: string | null
           role: string | null
           sms_opt_in: boolean | null
+          stripe_customer_id: string | null
+          stripe_subscription_id: string | null
+          subscription_active: boolean | null
+          subscription_tier: string | null
           suffix: string | null
+          tax_access: boolean | null
+          tax_analyses_limit: number | null
+          tax_analyses_used: number | null
           tenant_id: string | null
           title: string | null
           two_factor_enabled: boolean | null
@@ -7126,12 +7142,17 @@ export type Database = {
         }
         Insert: {
           advisor_id?: string | null
+          ai_features_access?: boolean | null
+          ai_queries_limit?: number | null
+          ai_queries_used?: number | null
           avatar_url?: string | null
           client_segment?: string | null
           created_at?: string | null
           date_of_birth?: string | null
           date_of_birth_date?: string | null
           display_name?: string | null
+          document_uploads_limit?: number | null
+          document_uploads_used?: number | null
           email?: string | null
           email_opt_in?: boolean | null
           first_name?: string | null
@@ -7143,15 +7164,26 @@ export type Database = {
           last_login_at?: string | null
           last_name?: string | null
           lead_stage?: string | null
+          lending_access?: boolean | null
+          lending_applications_limit?: number | null
+          lending_applications_used?: number | null
           marital_status?: string | null
           middle_name?: string | null
           permissions?: string[] | null
           phone?: string | null
+          premium_analytics_access?: boolean | null
           recruited_at?: string | null
           referring_advisor_id?: string | null
           role?: string | null
           sms_opt_in?: boolean | null
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          subscription_active?: boolean | null
+          subscription_tier?: string | null
           suffix?: string | null
+          tax_access?: boolean | null
+          tax_analyses_limit?: number | null
+          tax_analyses_used?: number | null
           tenant_id?: string | null
           title?: string | null
           two_factor_enabled?: boolean | null
@@ -7162,12 +7194,17 @@ export type Database = {
         }
         Update: {
           advisor_id?: string | null
+          ai_features_access?: boolean | null
+          ai_queries_limit?: number | null
+          ai_queries_used?: number | null
           avatar_url?: string | null
           client_segment?: string | null
           created_at?: string | null
           date_of_birth?: string | null
           date_of_birth_date?: string | null
           display_name?: string | null
+          document_uploads_limit?: number | null
+          document_uploads_used?: number | null
           email?: string | null
           email_opt_in?: boolean | null
           first_name?: string | null
@@ -7179,15 +7216,26 @@ export type Database = {
           last_login_at?: string | null
           last_name?: string | null
           lead_stage?: string | null
+          lending_access?: boolean | null
+          lending_applications_limit?: number | null
+          lending_applications_used?: number | null
           marital_status?: string | null
           middle_name?: string | null
           permissions?: string[] | null
           phone?: string | null
+          premium_analytics_access?: boolean | null
           recruited_at?: string | null
           referring_advisor_id?: string | null
           role?: string | null
           sms_opt_in?: boolean | null
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          subscription_active?: boolean | null
+          subscription_tier?: string | null
           suffix?: string | null
+          tax_access?: boolean | null
+          tax_analyses_limit?: number | null
+          tax_analyses_used?: number | null
           tenant_id?: string | null
           title?: string | null
           two_factor_enabled?: boolean | null
@@ -9396,6 +9444,45 @@ export type Database = {
           subscription_end?: string | null
           subscription_tier?: string | null
           updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      subscription_analytics: {
+        Row: {
+          add_on_type: string | null
+          created_at: string | null
+          event_type: string
+          feature_name: string | null
+          id: string
+          metadata: Json | null
+          revenue_impact: number | null
+          subscription_tier: string | null
+          usage_count: number | null
+          user_id: string | null
+        }
+        Insert: {
+          add_on_type?: string | null
+          created_at?: string | null
+          event_type: string
+          feature_name?: string | null
+          id?: string
+          metadata?: Json | null
+          revenue_impact?: number | null
+          subscription_tier?: string | null
+          usage_count?: number | null
+          user_id?: string | null
+        }
+        Update: {
+          add_on_type?: string | null
+          created_at?: string | null
+          event_type?: string
+          feature_name?: string | null
+          id?: string
+          metadata?: Json | null
+          revenue_impact?: number | null
+          subscription_tier?: string | null
+          usage_count?: number | null
           user_id?: string | null
         }
         Relationships: []
@@ -12577,6 +12664,19 @@ export type Database = {
           pass_fail: string
           notes: string
         }[]
+      }
+      track_subscription_event: {
+        Args: {
+          p_user_id: string
+          p_event_type: string
+          p_feature_name?: string
+          p_subscription_tier?: string
+          p_add_on_type?: string
+          p_usage_count?: number
+          p_revenue_impact?: number
+          p_metadata?: Json
+        }
+        Returns: string
       }
       update_disaster_recovery_progress: {
         Args: {

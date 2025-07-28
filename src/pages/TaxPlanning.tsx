@@ -37,7 +37,7 @@ export default function TaxPlanning() {
   const isMobile = useIsMobile();
   
   // Mock subscription tier - in production this would come from user context
-  const subscriptionTier = 'free'; // 'free', 'basic', 'premium'
+  const subscriptionTier = 'free' as const; // 'free', 'basic', 'premium'
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -173,7 +173,7 @@ export default function TaxPlanning() {
               <CardTitle className={`flex items-center ${isMobile ? 'text-lg' : ''}`}>
                 <UserSquare className={`mr-2 text-primary ${isMobile ? 'h-4 w-4' : 'h-5 w-5'}`} />
                 Tax Planning Professionals
-                {subscriptionTier === 'premium' && <Crown className="h-4 w-4 text-yellow-500 ml-2" />}
+                {(subscriptionTier !== 'free' && subscriptionTier !== 'basic') ? <Crown className="h-4 w-4 text-yellow-500 ml-2" /> : null}
               </CardTitle>
               <CardDescription className={isMobile ? 'text-sm' : ''}>
                 Connect with certified tax professionals in our network
