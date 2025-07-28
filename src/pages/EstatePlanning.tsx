@@ -176,11 +176,12 @@ export default function EstatePlanning() {
         </div>
 
         {/* Main Content Tabs */}
-        <Tabs defaultValue="services" className="w-full">
+        <Tabs defaultValue="education" className="w-full">
           <TabsList className="w-full mb-6 h-auto flex-col sm:flex-row">
-            <TabsTrigger value="services" className="flex-1 w-full sm:w-auto">Our Services</TabsTrigger>
-            <TabsTrigger value="process" className="flex-1 w-full sm:w-auto">Our Process</TabsTrigger>
-            <TabsTrigger value="resources" className="flex-1 w-full sm:w-auto">Resources</TabsTrigger>
+            <TabsTrigger value="education" className="flex-1 w-full sm:w-auto">Education Hub</TabsTrigger>
+            <TabsTrigger value="vault" className="flex-1 w-full sm:w-auto">Secure Vault</TabsTrigger>
+            <TabsTrigger value="calculators" className="flex-1 w-full sm:w-auto">Calculators</TabsTrigger>
+            <TabsTrigger value="collaboration" className="flex-1 w-full sm:w-auto">Collaboration</TabsTrigger>
           </TabsList>
 
           <TabsContent value="services" className="space-y-6">
