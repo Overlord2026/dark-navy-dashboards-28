@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo, useCallback } from "react";
 import { useNetWorth } from "@/context/NetWorthContext";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -14,6 +14,9 @@ import {
 } from "recharts";
 import { useSupabaseAssets } from "@/hooks/useSupabaseAssets";
 import { useLiabilities } from "@/context/LiabilitiesContext";
+import { FamilyWealthErrorBoundary } from "@/components/wealth/FamilyWealthErrorBoundary";
+import { ComprehensiveAssetsSkeleton } from "@/components/ui/skeletons/FamilyWealthSkeletons";
+import { FamilyWealthPerformanceMonitor } from "@/components/debug/FamilyWealthPerformanceMonitor";
 
 interface ComprehensiveAssetsSummaryProps {
   showTabs?: boolean;
@@ -34,84 +37,94 @@ export const ComprehensiveAssetsSummary: React.FC<ComprehensiveAssetsSummaryProp
   
   const loading = contextLoading || assetsLoading || liabilitiesLoading;
   
-  if (loading) {
-    return (
-      <div className="space-y-6">
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-center py-8">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-              <span className="ml-3 text-muted-foreground">Loading asset data...</span>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-  
-  // Calculate totals using real Supabase data
-  const totalAssetValue = supabaseAssets.reduce((total, asset) => total + Number(asset.value), 0);
-  const totalLiabilityValue = getTotalLiabilities();
-  const totalNetWorth = totalAssetValue - totalLiabilityValue;
-  
-  // Calculate asset values by type using Supabase data
-  const getAssetValueByType = (type: string) => {
+  // Memoize expensive calculations
+  const totalAssetValue = useMemo(() => {
+    return supabaseAssets.reduce((total, asset) => total + Number(asset.value), 0);
+  }, [supabaseAssets]);
+
+  const totalLiabilityValue = useMemo(() => {
+    return getTotalLiabilities();
+  }, [getTotalLiabilities]);
+
+  const totalNetWorth = useMemo(() => {
+    return totalAssetValue - totalLiabilityValue;
+  }, [totalAssetValue, totalLiabilityValue]);
+
+  // Memoize asset value calculation function
+  const getAssetValueByType = useCallback((type: string) => {
     return supabaseAssets
       .filter(asset => asset.type === type)
       .reduce((total, asset) => total + Number(asset.value), 0);
-  };
+  }, [supabaseAssets]);
 
-  const realEstateValue = getAssetValueByType('property');
-  const vehiclesValue = getAssetValueByType('vehicle') + getAssetValueByType('boat');
-  const investmentsValue = getAssetValueByType('investment');
-  const cashValue = getAssetValueByType('cash');
-  const retirementValue = getAssetValueByType('retirement');
-  const collectiblesValue = 
-    getAssetValueByType('art') + 
-    getAssetValueByType('antique') + 
-    getAssetValueByType('jewelry') + 
-    getAssetValueByType('collectible');
-  const digitalValue = getAssetValueByType('digital');
-  const otherValue = getAssetValueByType('other');
-  
-  // Calculate percentages
-  const calculatePercentage = (value: number) => {
+  // Memoize asset values by type
+  const assetValuesByType = useMemo(() => ({
+    realEstate: getAssetValueByType('property'),
+    vehicles: getAssetValueByType('vehicle') + getAssetValueByType('boat'),
+    investments: getAssetValueByType('investment'),
+    cash: getAssetValueByType('cash'),
+    retirement: getAssetValueByType('retirement'),
+    collectibles: getAssetValueByType('art') + getAssetValueByType('antique') + 
+                  getAssetValueByType('jewelry') + getAssetValueByType('collectible'),
+    digital: getAssetValueByType('digital'),
+    other: getAssetValueByType('other')
+  }), [getAssetValueByType]);
+
+  // Memoize percentage calculation
+  const calculatePercentage = useCallback((value: number) => {
     return totalAssetValue > 0 ? Math.round((value / totalAssetValue) * 100) : 0;
-  };
-  
-  const realEstatePercentage = calculatePercentage(realEstateValue);
-  const vehiclesPercentage = calculatePercentage(vehiclesValue);
-  const investmentsPercentage = calculatePercentage(investmentsValue);
-  const cashPercentage = calculatePercentage(cashValue);
-  const retirementPercentage = calculatePercentage(retirementValue);
-  const collectiblesPercentage = calculatePercentage(collectiblesValue);
-  const digitalPercentage = calculatePercentage(digitalValue);
-  const otherPercentage = calculatePercentage(otherValue);
-  
-  const assetCategories = [
-    { name: "Real Estate", value: realEstateValue, percentage: realEstatePercentage, color: "#3b82f6" },
-    { name: "Vehicles & Boats", value: vehiclesValue, percentage: vehiclesPercentage, color: "#22c55e" },
-    { name: "Investments", value: investmentsValue, percentage: investmentsPercentage, color: "#a855f7" },
-    { name: "Cash", value: cashValue, percentage: cashPercentage, color: "#f59e0b" },
-    { name: "Retirement", value: retirementValue, percentage: retirementPercentage, color: "#ec4899" },
-    { name: "Collectibles & Art", value: collectiblesValue, percentage: collectiblesPercentage, color: "#6366f1" },
-    { name: "Digital Assets", value: digitalValue, percentage: digitalPercentage, color: "#06b6d4" },
-    { name: "Other", value: otherValue, percentage: otherPercentage, color: "#6b7280" }
-  ].filter(category => category.value > 0);
-  
-  // Financial overview stats using real data
-  const propertyCount = supabaseAssets.filter(asset => asset.type === 'property').length;
-  const vehicleCount = supabaseAssets.filter(asset => asset.type === 'vehicle' || asset.type === 'boat').length;
-  const accountCount = accounts.length;
-  
-  // Prepare data for pie chart
-  const pieChartData = assetCategories.map(category => ({
-    name: category.name,
-    value: category.value
-  }));
+  }, [totalAssetValue]);
 
-  // Custom tooltip component with proper styling
-  const CustomTooltip = ({ active, payload }: any) => {
+  // Memoize asset categories
+  const assetCategories = useMemo(() => {
+    const categories = [
+      { name: "Real Estate", value: assetValuesByType.realEstate, color: "#3b82f6" },
+      { name: "Vehicles & Boats", value: assetValuesByType.vehicles, color: "#22c55e" },
+      { name: "Investments", value: assetValuesByType.investments, color: "#a855f7" },
+      { name: "Cash", value: assetValuesByType.cash, color: "#f59e0b" },
+      { name: "Retirement", value: assetValuesByType.retirement, color: "#ec4899" },
+      { name: "Collectibles & Art", value: assetValuesByType.collectibles, color: "#6366f1" },
+      { name: "Digital Assets", value: assetValuesByType.digital, color: "#06b6d4" },
+      { name: "Other", value: assetValuesByType.other, color: "#6b7280" }
+    ]
+      .filter(category => category.value > 0)
+      .map(category => ({
+        ...category,
+        percentage: calculatePercentage(category.value)
+      }));
+    
+    return categories;
+  }, [assetValuesByType, calculatePercentage]);
+
+  // Memoize counts
+  const counts = useMemo(() => ({
+    property: supabaseAssets.filter(asset => asset.type === 'property').length,
+    vehicle: supabaseAssets.filter(asset => asset.type === 'vehicle' || asset.type === 'boat').length,
+    account: accounts.length
+  }), [supabaseAssets, accounts.length]);
+
+  // Memoize pie chart data
+  const pieChartData = useMemo(() => {
+    return assetCategories.map(category => ({
+      name: category.name,
+      value: category.value
+    }));
+  }, [assetCategories]);
+
+  if (loading) {
+    return (
+      <FamilyWealthErrorBoundary>
+        <ComprehensiveAssetsSkeleton />
+        {process.env.NODE_ENV === 'development' && (
+          <FamilyWealthPerformanceMonitor componentName="ComprehensiveAssetsSummary" />
+        )}
+      </FamilyWealthErrorBoundary>
+    );
+  }
+  
+
+  // Memoized custom tooltip component
+  const CustomTooltip = useCallback(({ active, payload }: any) => {
     if (active && payload && payload.length) {
       const data = payload[0];
       return (
@@ -127,7 +140,7 @@ export const ComprehensiveAssetsSummary: React.FC<ComprehensiveAssetsSummaryProp
       );
     }
     return null;
-  };
+  }, [totalAssetValue]);
 
   const SummaryContent = () => (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -145,11 +158,11 @@ export const ComprehensiveAssetsSummary: React.FC<ComprehensiveAssetsSummaryProp
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Properties</p>
-              <p className="text-xl font-medium">{propertyCount}</p>
+              <p className="text-xl font-medium">{counts.property}</p>
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Vehicles</p>
-              <p className="text-xl font-medium">{vehicleCount}</p>
+              <p className="text-xl font-medium">{counts.vehicle}</p>
             </div>
           </div>
         </CardContent>
@@ -161,11 +174,11 @@ export const ComprehensiveAssetsSummary: React.FC<ComprehensiveAssetsSummaryProp
           <div className="grid grid-cols-2 gap-4">
             <div>
               <p className="text-sm text-muted-foreground">Count</p>
-              <p className="text-2xl font-bold">{accountCount}</p>
+              <p className="text-2xl font-bold">{counts.account}</p>
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Balance</p>
-              <p className="text-2xl font-bold">{formatCurrency(cashValue + investmentsValue + retirementValue)}</p>
+              <p className="text-2xl font-bold">{formatCurrency(assetValuesByType.cash + assetValuesByType.investments + assetValuesByType.retirement)}</p>
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Cash Accounts</p>
@@ -395,33 +408,44 @@ export const ComprehensiveAssetsSummary: React.FC<ComprehensiveAssetsSummaryProp
 
   if (!showTabs || hideInternalTabs) {
     return (
-      <div className="space-y-6">
-        <AllocationContent />
-      </div>
+      <FamilyWealthErrorBoundary>
+        <div className="space-y-6">
+          <AllocationContent />
+          {process.env.NODE_ENV === 'development' && (
+            <FamilyWealthPerformanceMonitor componentName="ComprehensiveAssetsSummary" />
+          )}
+        </div>
+      </FamilyWealthErrorBoundary>
     );
   }
 
   return (
-    <div className="space-y-6">
-      <Tabs defaultValue="summary" className="w-full">
-        <TabsList className="w-full grid grid-cols-3">
-          <TabsTrigger value="summary">Asset Summary</TabsTrigger>
-          <TabsTrigger value="allocation">Asset Allocation</TabsTrigger>
-          <TabsTrigger value="networth">Net Worth</TabsTrigger>
-        </TabsList>
+    <FamilyWealthErrorBoundary>
+      <div className="space-y-6">
+        <Tabs defaultValue="summary" className="w-full">
+          <TabsList className="w-full grid grid-cols-3">
+            <TabsTrigger value="summary">Asset Summary</TabsTrigger>
+            <TabsTrigger value="allocation">Asset Allocation</TabsTrigger>
+            <TabsTrigger value="networth">Net Worth</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="summary" className="pt-4">
+            <SummaryContent />
+          </TabsContent>
+          
+          <TabsContent value="allocation" className="pt-4">
+            <AllocationContent />
+          </TabsContent>
+          
+          <TabsContent value="networth" className="pt-4">
+            <NetWorthContent />
+          </TabsContent>
+        </Tabs>
         
-        <TabsContent value="summary" className="pt-4">
-          <SummaryContent />
-        </TabsContent>
-        
-        <TabsContent value="allocation" className="pt-4">
-          <AllocationContent />
-        </TabsContent>
-        
-        <TabsContent value="networth" className="pt-4">
-          <NetWorthContent />
-        </TabsContent>
-      </Tabs>
-    </div>
+        {process.env.NODE_ENV === 'development' && (
+          <FamilyWealthPerformanceMonitor componentName="ComprehensiveAssetsSummary" />
+        )}
+      </div>
+    </FamilyWealthErrorBoundary>
   );
 };
