@@ -29,6 +29,7 @@ export interface AddOnAccess {
   audit_risk_analyzer: boolean;
   relocation_concierge: boolean;
   bill_pay_premium: boolean;
+  premium_property_features: boolean;
 }
 
 export interface UsageCounters {
