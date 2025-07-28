@@ -40,7 +40,6 @@ interface AuditScore {
 }
 
 const TEST_PAGES = [
-  { path: '/dashboard', name: 'Main Dashboard' },
   { path: '/client-dashboard', name: 'Client Dashboard' },
   { path: '/advisor-dashboard', name: 'Advisor Dashboard' },
   { path: '/admin-dashboard', name: 'Admin Dashboard' },

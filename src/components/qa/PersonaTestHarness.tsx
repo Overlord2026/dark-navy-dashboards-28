@@ -28,13 +28,13 @@ interface PersonaTest {
 }
 
 const PERSONA_CONFIGS: Omit<PersonaTest, 'tests'>[] = [
-  { role: 'client', email: 'persona.client@qa.local', password: 'Test1234!', expectedRoute: '/dashboard', dashboardTitle: 'Dashboard' },
-  { role: 'client_premium', email: 'persona.client_premium@qa.local', password: 'Test1234!', expectedRoute: '/dashboard', dashboardTitle: 'Dashboard' },
+  { role: 'client', email: 'persona.client@qa.local', password: 'Test1234!', expectedRoute: '/client-dashboard', dashboardTitle: 'Dashboard' },
+  { role: 'client_premium', email: 'persona.client_premium@qa.local', password: 'Test1234!', expectedRoute: '/client-dashboard', dashboardTitle: 'Dashboard' },
   { role: 'advisor', email: 'persona.advisor@qa.local', password: 'Test1234!', expectedRoute: '/advisor-dashboard', dashboardTitle: 'Advisor Dashboard' },
-  { role: 'accountant', email: 'persona.accountant@qa.local', password: 'Test1234!', expectedRoute: '/dashboard', dashboardTitle: 'Dashboard' },
-  { role: 'attorney', email: 'persona.attorney@qa.local', password: 'Test1234!', expectedRoute: '/dashboard', dashboardTitle: 'Dashboard' },
-  { role: 'consultant', email: 'persona.consultant@qa.local', password: 'Test1234!', expectedRoute: '/dashboard', dashboardTitle: 'Dashboard' },
-  { role: 'developer', email: 'persona.developer@qa.local', password: 'Test1234!', expectedRoute: '/dashboard', dashboardTitle: 'Dashboard' },
+  { role: 'accountant', email: 'persona.accountant@qa.local', password: 'Test1234!', expectedRoute: '/accountant-dashboard', dashboardTitle: 'Dashboard' },
+  { role: 'attorney', email: 'persona.attorney@qa.local', password: 'Test1234!', expectedRoute: '/attorney-dashboard', dashboardTitle: 'Dashboard' },
+  { role: 'consultant', email: 'persona.consultant@qa.local', password: 'Test1234!', expectedRoute: '/consultant-dashboard', dashboardTitle: 'Dashboard' },
+  { role: 'developer', email: 'persona.developer@qa.local', password: 'Test1234!', expectedRoute: '/advisor-dashboard', dashboardTitle: 'Dashboard' },
   { role: 'admin', email: 'persona.admin@qa.local', password: 'Test1234!', expectedRoute: '/admin-dashboard', dashboardTitle: 'Administration' },
   { role: 'tenant_admin', email: 'persona.tenant_admin@qa.local', password: 'Test1234!', expectedRoute: '/admin-dashboard', dashboardTitle: 'Tenant Administration' },
   { role: 'system_administrator', email: 'persona.system_administrator@qa.local', password: 'Test1234!', expectedRoute: '/admin-dashboard', dashboardTitle: 'Administration' }

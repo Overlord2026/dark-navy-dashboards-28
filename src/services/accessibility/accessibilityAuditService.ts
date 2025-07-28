@@ -5,7 +5,7 @@ import { AccessibilityAuditResult, AccessibilityAuditSummary } from "@/types/acc
 const mockAuditResults: AccessibilityAuditResult[] = [
   {
     id: "aria-required-attr",
-    url: "/dashboard",
+    url: "/client-dashboard",
     element: "button.dropdown-toggle",
     rule: "aria-required-attributes",
     message: "ARIA button missing required attribute aria-pressed",

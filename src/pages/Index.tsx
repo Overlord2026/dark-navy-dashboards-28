@@ -12,9 +12,7 @@ export default function Index() {
     if (isAuthenticated) {
       // Redirect to role-appropriate dashboard
       const dashboardPath = getRoleDashboard();
-      if (dashboardPath !== '/') {
-        navigate(dashboardPath);
-      }
+      navigate(dashboardPath, { replace: true });
     }
   }, [isAuthenticated, getRoleDashboard, navigate]);
 

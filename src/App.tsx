@@ -113,7 +113,7 @@ const App = () => {
                     <Route
                       path="/"
                       element={
-                        <AuthWrapper requireAuth={false}>
+                        <AuthWrapper requireAuth={false} redirectAuthenticatedTo="/client-dashboard">
                           <WelcomePage />
                         </AuthWrapper>
                       }

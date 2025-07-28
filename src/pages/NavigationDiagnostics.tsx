@@ -26,7 +26,7 @@ const NavigationDiagnostics: React.FC = () => {
   // If not admin, redirect to dashboard with error message
   if (!isAdmin) {
     toast.error("You don't have permission to access Navigation Diagnostics");
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to="/client-dashboard" replace />;
   }
 
   return (

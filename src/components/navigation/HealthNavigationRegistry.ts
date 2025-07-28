@@ -38,7 +38,7 @@ export const healthNavigationCategories: NavCategory[] = [
     items: [
       { 
         title: "Dashboard", 
-        href: "/dashboard", 
+        href: "/client-dashboard", 
         icon: Home 
       }
     ],

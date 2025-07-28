@@ -1,5 +1,6 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useUser } from '@/context/UserContext';
 import { useMFAEnforcement } from '@/hooks/useMFAEnforcement';
@@ -15,17 +16,27 @@ interface AuthWrapperProps {
   children: React.ReactNode;
   requireAuth?: boolean;
   allowedRoles?: (UserRole | string)[];
+  redirectAuthenticatedTo?: string;
 }
 
 export function AuthWrapper({ 
   children, 
   requireAuth = false,
-  allowedRoles = []
+  allowedRoles = [],
+  redirectAuthenticatedTo
 }: AuthWrapperProps) {
+  const navigate = useNavigate();
   const { isAuthenticated, isLoading } = useAuth();
   const { userProfile } = useUser();
   const { getCurrentRole, getCurrentClientTier, isDevMode, emulatedRole } = useRoleContext();
   const mfaEnforcement = useMFAEnforcement(false); // Don't auto-redirect, we'll handle it here
+
+  // Handle redirect for authenticated users when on public pages
+  useEffect(() => {
+    if (!requireAuth && isAuthenticated && redirectAuthenticatedTo && !isLoading) {
+      navigate(redirectAuthenticatedTo, { replace: true });
+    }
+  }, [isAuthenticated, redirectAuthenticatedTo, requireAuth, isLoading, navigate]);
 
   // Show loading state
   if (isLoading || mfaEnforcement.loading) {

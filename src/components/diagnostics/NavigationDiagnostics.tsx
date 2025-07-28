@@ -26,7 +26,7 @@ export function NavigationDiagnostics() {
   // If not admin, redirect to dashboard
   useEffect(() => {
     if (!isAdmin) {
-      navigate('/dashboard');
+      navigate('/client-dashboard');
       toast.error("You don't have permission to access diagnostics");
     }
   }, [isAdmin, navigate]);

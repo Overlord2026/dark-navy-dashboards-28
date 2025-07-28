@@ -71,7 +71,7 @@ export function VisualTestingRunner() {
     
     // List of pages to test
     const pagesToTest = [
-      { name: 'Dashboard', url: '/dashboard' },
+      { name: 'Dashboard', url: '/client-dashboard' },
       { name: 'Accounts', url: '/accounts' },
       { name: 'Investments', url: '/investments' }
     ];

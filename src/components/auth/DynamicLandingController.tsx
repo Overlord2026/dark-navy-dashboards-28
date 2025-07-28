@@ -17,8 +17,7 @@ export const DynamicLandingController: React.FC<{ children: React.ReactNode }> =
       const params = new URLSearchParams(location.search);
       
       // Check if we're on a landing page that requires segment-specific routing
-      const needsRouting = location.pathname === "/" || 
-                           location.pathname === "/dashboard" || 
+      const needsRouting = location.pathname === "/" ||
                            location.pathname === "/login" || 
                            location.pathname === "/onboarding";
 
@@ -72,13 +71,13 @@ export const DynamicLandingController: React.FC<{ children: React.ReactNode }> =
           "athlete": "/wealth-dashboard"
         };
 
-        const targetRoute = segmentRoutes[segment] || "/dashboard";
+        const targetRoute = segmentRoutes[segment] || "/client-dashboard";
         navigate(targetRoute, { replace: true });
         return;
       }
 
       // Default landing for authenticated users without specific routing needs
-      navigate("/dashboard", { replace: true });
+      navigate("/client-dashboard", { replace: true });
     }
   }, [isLoading, isAuthenticated, userProfile, location.pathname, navigate, location.search]);
 

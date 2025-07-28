@@ -60,7 +60,7 @@ export const RoleProvider = ({ children }: { children: React.ReactNode }) => {
 
   const getRoleDashboard = (role?: string) => {
     const targetRole = role || getCurrentRole();
-    return ROLE_DASHBOARDS[targetRole] || '/';
+    return ROLE_DASHBOARDS[targetRole] || '/client-dashboard';
   };
 
   return (
