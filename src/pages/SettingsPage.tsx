@@ -1,10 +1,31 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { SettingsLayout } from '@/components/settings/SettingsLayout';
+import { AccountSettings } from '@/components/settings/AccountSettings';
+import { SubscriptionSettings } from '@/components/settings/SubscriptionSettings';
+import { SecuritySettings } from '@/components/settings/SecuritySettings';
+import { NotificationSettings } from '@/components/settings/NotificationSettings';
 
 export function SettingsPage() {
+  const [activeTab, setActiveTab] = useState('account');
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'account':
+        return <AccountSettings />;
+      case 'subscription':
+        return <SubscriptionSettings />;
+      case 'security':
+        return <SecuritySettings />;
+      case 'notifications':
+        return <NotificationSettings />;
+      default:
+        return <AccountSettings />;
+    }
+  };
+
   return (
-    <div className="container mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-4">Settings</h1>
-      <p className="text-muted-foreground">Application settings and preferences.</p>
-    </div>
+    <SettingsLayout activeTab={activeTab} onTabChange={setActiveTab}>
+      {renderContent()}
+    </SettingsLayout>
   );
 }
