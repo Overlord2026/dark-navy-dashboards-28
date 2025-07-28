@@ -66,6 +66,7 @@ import GoalDetailPage from "./pages/GoalDetailPage";
 import CreateGoalPage from "./pages/CreateGoalPage";
 import { PersonaTestPage } from "./pages/qa/PersonaTestPage";
 import { BrandAuditPage } from "./pages/qa/BrandAuditPage";
+import { ComplianceReportingPage } from "./pages/ComplianceReportingPage";
 
 const queryClient = new QueryClient();
 
@@ -349,6 +350,17 @@ const App = () => {
                         allowedRoles={['admin', 'system_administrator', 'tenant_admin']}
                       >
                         <CompliancePage />
+                      </AuthWrapper>
+                    }
+                  />
+                  <Route
+                    path="/compliance/reporting"
+                    element={
+                      <AuthWrapper 
+                        requireAuth={true}
+                        allowedRoles={['admin', 'system_administrator', 'tenant_admin']}
+                      >
+                        <ComplianceReportingPage />
                       </AuthWrapper>
                     }
                   />

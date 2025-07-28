@@ -9,5 +9,8 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     storage: typeof window !== 'undefined' ? window.localStorage : undefined,
     persistSession: true,
     autoRefreshToken: true,
+    // Enhanced security settings
+    detectSessionInUrl: true,
+    flowType: 'pkce'
   }
 })
