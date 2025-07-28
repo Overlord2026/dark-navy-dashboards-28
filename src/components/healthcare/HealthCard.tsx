@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -6,7 +6,7 @@ import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { HealthCardProps } from '@/types/healthcare';
 import { cn } from '@/lib/utils';
 
-export const HealthCard: React.FC<HealthCardProps> = ({
+export const HealthCard = memo<HealthCardProps>(({
   title,
   value,
   change,
@@ -123,4 +123,15 @@ export const HealthCard: React.FC<HealthCardProps> = ({
       </Card>
     </CardWrapper>
   );
-};
+}, (prevProps, nextProps) => {
+  // Custom comparison to prevent unnecessary re-renders
+  return prevProps.title === nextProps.title &&
+         prevProps.value === nextProps.value &&
+         prevProps.change === nextProps.change &&
+         prevProps.changeType === nextProps.changeType &&
+         prevProps.status === nextProps.status &&
+         prevProps.href === nextProps.href &&
+         prevProps.className === nextProps.className;
+});
+
+HealthCard.displayName = 'HealthCard';

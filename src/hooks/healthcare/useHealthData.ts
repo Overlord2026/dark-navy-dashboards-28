@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { supabase } from '@/lib/supabase';
 import { toast } from '@/components/ui/use-toast';
 
@@ -21,6 +21,45 @@ export function useHealthData() {
   const [retryCount, setRetryCount] = useState(0);
 
   const clearError = useCallback(() => setError(null), []);
+  
+  // Memoized computed values for performance
+  const processedMetrics = useMemo(() => {
+    const latest = metrics.reduce((acc, metric) => {
+      if (!acc[metric.type] || new Date(metric.date) > new Date(acc[metric.type].date)) {
+        acc[metric.type] = metric;
+      }
+      return acc;
+    }, {} as Record<string, HealthMetric>);
+
+    return {
+      latest,
+      totalCount: metrics.length,
+      typeCount: Object.keys(latest).length,
+      lastUpdateDate: metrics.length > 0 ? Math.max(...metrics.map(m => new Date(m.date).getTime())) : null
+    };
+  }, [metrics]);
+
+  const metricsByType = useMemo(() => {
+    return metrics.reduce((acc, metric) => {
+      if (!acc[metric.type]) acc[metric.type] = [];
+      acc[metric.type].push(metric);
+      return acc;
+    }, {} as Record<string, HealthMetric[]>);
+  }, [metrics]);
+
+  const healthStats = useMemo(() => {
+    const stats = {
+      bloodPressureReadings: metricsByType.blood_pressure?.length || 0,
+      heartRateReadings: metricsByType.heart_rate?.length || 0,
+      weightReadings: metricsByType.weight?.length || 0,
+      recentActivity: metrics.filter(m => {
+        const metricDate = new Date(m.date);
+        const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+        return metricDate >= sevenDaysAgo;
+      }).length
+    };
+    return stats;
+  }, [metrics, metricsByType]);
 
   const fetchHealthMetrics = useCallback(async (showLoading = true) => {
     try {
@@ -206,5 +245,9 @@ export function useHealthData() {
     deleteMetric,
     refetch,
     clearError,
+    // Memoized computed values
+    processedMetrics,
+    metricsByType,
+    healthStats,
   };
 }
