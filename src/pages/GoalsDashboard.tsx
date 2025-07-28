@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -31,6 +31,10 @@ import { formatCurrency } from '@/lib/formatters';
 import { useGoals } from '@/hooks/useGoals';
 import { Goal, GoalCategory, GoalStatus } from '@/types/goal';
 import { calculateGoalProgress } from '@/lib/goalHelpers';
+import { GoalsDashboardSkeleton } from '@/components/ui/skeletons/GoalsSkeletons';
+import { GoalsErrorBoundaryWrapper } from '@/components/goals/GoalsErrorBoundary';
+import { GoalsPerformanceMonitor } from '@/components/debug/GoalsPerformanceMonitor';
+import { measureRouteLoad } from '@/utils/performance';
 
 const GoalsDashboard = () => {
   const navigate = useNavigate();
@@ -38,8 +42,24 @@ const GoalsDashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<GoalCategory | 'all'>('all');
   const [statusFilter, setStatusFilter] = useState<GoalStatus | 'all'>('all');
+  const [renderCount, setRenderCount] = useState(0);
+  const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
 
-  const getGoalIcon = (category: GoalCategory) => {
+  // Performance measurement
+  useEffect(() => {
+    const cleanup = measureRouteLoad('/goals');
+    setRenderCount(prev => prev + 1);
+    return () => {
+      cleanup();
+    };
+  }, []);
+
+  useEffect(() => {
+    setLastUpdate(new Date());
+  }, [goals]);
+
+  // Memoized icon mapping for performance
+  const getGoalIcon = useCallback((category: GoalCategory) => {
     const iconMap = {
       'retirement': Target,
       'healthcare_healthspan': Heart,
@@ -53,9 +73,9 @@ const GoalsDashboard = () => {
     };
     const IconComponent = iconMap[category] || Target;
     return <IconComponent className="h-5 w-5" />;
-  };
+  }, []);
 
-  const getStatusColor = (status: GoalStatus) => {
+  const getStatusColor = useCallback((status: GoalStatus) => {
     switch (status) {
       case 'completed':
       case 'achieved':
@@ -69,9 +89,9 @@ const GoalsDashboard = () => {
       default:
         return 'bg-slate-500';
     }
-  };
+  }, []);
 
-  const getStatusText = (status: GoalStatus) => {
+  const getStatusText = useCallback((status: GoalStatus) => {
     switch (status) {
       case 'completed':
       case 'achieved':
@@ -85,49 +105,50 @@ const GoalsDashboard = () => {
       default:
         return 'Active';
     }
-  };
+  }, []);
 
-  const filteredGoals = goals.filter(goal => {
-    const matchesSearch = goal.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         goal.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = categoryFilter === 'all' || goal.category === categoryFilter;
-    const matchesStatus = statusFilter === 'all' || goal.status === statusFilter;
-    
-    return matchesSearch && matchesCategory && matchesStatus;
-  });
+  // Memoized filtered goals for performance
+  const filteredGoals = useMemo(() => {
+    const startTime = performance.now();
+    const filtered = goals.filter(goal => {
+      const matchesSearch = goal.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           goal.description.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesCategory = categoryFilter === 'all' || goal.category === categoryFilter;
+      const matchesStatus = statusFilter === 'all' || goal.status === statusFilter;
+      
+      return matchesSearch && matchesCategory && matchesStatus;
+    });
+    const endTime = performance.now();
+    return filtered;
+  }, [goals, searchTerm, categoryFilter, statusFilter]);
 
-  const topAspirations = goals.filter(g => g.priority === 'top_aspiration');
-  const recentlyCompleted = completedGoals.slice(0, 3);
+  const topAspirations = useMemo(() => goals.filter(g => g.priority === 'top_aspiration'), [goals]);
+  const recentlyCompleted = useMemo(() => completedGoals.slice(0, 3), [completedGoals]);
 
   if (loading) {
-    return (
-      <div className="container mx-auto p-6">
-        <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
-        </div>
-      </div>
-    );
+    return <GoalsDashboardSkeleton />;
   }
 
   return (
-    <div className="container mx-auto p-6 space-y-8">
-      {/* Header Section */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div>
-          <h1 className="text-3xl font-bold text-foreground">Goals & Aspirations</h1>
-          <p className="text-lg text-muted-foreground mt-2">
-            Your journey to meaningful wealth and life experiences
-          </p>
+    <GoalsErrorBoundaryWrapper>
+      <div className="container mx-auto p-6 space-y-8">
+        {/* Header Section */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div>
+            <h1 className="text-3xl font-bold text-foreground">Goals & Aspirations</h1>
+            <p className="text-lg text-muted-foreground mt-2">
+              Your journey to meaningful wealth and life experiences
+            </p>
+          </div>
+          <Button 
+            onClick={() => navigate('/goals/create')} 
+            className="flex items-center space-x-2"
+            size="lg"
+          >
+            <Plus className="h-4 w-4" />
+            <span>Create New Goal</span>
+          </Button>
         </div>
-        <Button 
-          onClick={() => navigate('/goals/create')} 
-          className="flex items-center space-x-2"
-          size="lg"
-        >
-          <Plus className="h-4 w-4" />
-          <span>Create New Goal</span>
-        </Button>
-      </div>
 
       {/* Family Office Messaging */}
       <div className="bg-gradient-to-r from-primary/10 to-secondary/10 p-6 rounded-lg">
@@ -299,7 +320,15 @@ const GoalsDashboard = () => {
           )}
         </TabsContent>
       </Tabs>
+
+      {/* Performance Monitor (Dev Only) */}
+      <GoalsPerformanceMonitor
+        renderCount={renderCount}
+        goalCount={goals.length}
+        lastUpdate={lastUpdate}
+      />
     </div>
+    </GoalsErrorBoundaryWrapper>
   );
 };
 

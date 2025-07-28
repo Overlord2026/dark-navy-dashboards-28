@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useToast } from '@/hooks/use-toast';
 import { Goal, GoalTemplate } from '@/types/goal';
@@ -12,7 +12,7 @@ export const useGoals = () => {
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
-  const fetchGoals = async () => {
+  const fetchGoals = useCallback(async () => {
     try {
       setLoading(true);
       const { data, error } = await supabase
@@ -23,7 +23,6 @@ export const useGoals = () => {
       if (error) throw error;
       setGoals(data || []);
     } catch (error) {
-      console.error('Error fetching goals:', error);
       toast({
         title: "Error",
         description: "Failed to load goals. Please try again.",
@@ -32,9 +31,9 @@ export const useGoals = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
 
-  const createGoal = async (goalData: Partial<Goal>) => {
+  const createGoal = useCallback(async (goalData: Partial<Goal>) => {
     try {
       const { data: user } = await supabase.auth.getUser();
       if (!user.user) throw new Error('User not authenticated');
@@ -59,7 +58,6 @@ export const useGoals = () => {
 
       return data;
     } catch (error) {
-      console.error('Error creating goal:', error);
       toast({
         title: "Error",
         description: "Failed to create goal. Please try again.",
@@ -67,9 +65,9 @@ export const useGoals = () => {
       });
       throw error;
     }
-  };
+  }, [toast]);
 
-  const updateGoal = async (id: string, updates: Partial<Goal>) => {
+  const updateGoal = useCallback(async (id: string, updates: Partial<Goal>) => {
     try {
       const { data, error } = await supabase
         .from('user_goals')
@@ -88,7 +86,6 @@ export const useGoals = () => {
 
       return data;
     } catch (error) {
-      console.error('Error updating goal:', error);
       toast({
         title: "Error",
         description: "Failed to update goal. Please try again.",
@@ -96,9 +93,9 @@ export const useGoals = () => {
       });
       throw error;
     }
-  };
+  }, [toast]);
 
-  const deleteGoal = async (id: string) => {
+  const deleteGoal = useCallback(async (id: string) => {
     try {
       const { error } = await supabase
         .from('user_goals')
@@ -113,7 +110,6 @@ export const useGoals = () => {
         description: "Your goal has been deleted successfully.",
       });
     } catch (error) {
-      console.error('Error deleting goal:', error);
       toast({
         title: "Error",
         description: "Failed to delete goal. Please try again.",
@@ -121,9 +117,9 @@ export const useGoals = () => {
       });
       throw error;
     }
-  };
+  }, [toast]);
 
-  const markGoalComplete = async (id: string) => {
+  const markGoalComplete = useCallback(async (id: string) => {
     try {
       const { data, error } = await supabase
         .from('user_goals')
@@ -146,7 +142,6 @@ export const useGoals = () => {
 
       return data;
     } catch (error) {
-      console.error('Error marking goal complete:', error);
       toast({
         title: "Error",
         description: "Failed to mark goal as complete. Please try again.",
@@ -154,9 +149,9 @@ export const useGoals = () => {
       });
       throw error;
     }
-  };
+  }, [goals, toast]);
 
-  const updateGoalProgress = async (id: string, newAmount: number) => {
+  const updateGoalProgress = useCallback(async (id: string, newAmount: number) => {
     try {
       const { data, error } = await supabase
         .from('user_goals')
@@ -170,7 +165,6 @@ export const useGoals = () => {
       setGoals(prev => prev.map(goal => goal.id === id ? data : goal));
       return data;
     } catch (error) {
-      console.error('Error updating goal progress:', error);
       toast({
         title: "Error",
         description: "Failed to update progress. Please try again.",
@@ -178,24 +172,27 @@ export const useGoals = () => {
       });
       throw error;
     }
-  };
+  }, [toast]);
 
   useEffect(() => {
     fetchGoals();
   }, []);
 
-  const activeGoals = goals.filter(g => g.status === 'active');
-  const completedGoals = goals.filter(g => g.status === 'completed');
-  const topAspirations = goals.filter(g => g.priority === 'top_aspiration');
+  // Memoized calculations for performance
+  const activeGoals = useMemo(() => goals.filter(g => g.status === 'active'), [goals]);
+  const completedGoals = useMemo(() => goals.filter(g => g.status === 'completed'), [goals]);
+  const topAspirations = useMemo(() => goals.filter(g => g.priority === 'top_aspiration'), [goals]);
 
-  const totalSaved = goals.reduce((sum, goal) => sum + goal.current_amount, 0);
-  const totalTarget = goals.reduce((sum, goal) => sum + goal.target_amount, 0);
-  const averageProgress = goals.length > 0 
-    ? goals.reduce((sum, goal) => {
-        const progress = goal.target_amount > 0 ? (goal.current_amount / goal.target_amount) * 100 : 0;
-        return sum + Math.min(progress, 100);
-      }, 0) / goals.length
-    : 0;
+  const totalSaved = useMemo(() => goals.reduce((sum, goal) => sum + goal.current_amount, 0), [goals]);
+  const totalTarget = useMemo(() => goals.reduce((sum, goal) => sum + goal.target_amount, 0), [goals]);
+  
+  const averageProgress = useMemo(() => {
+    if (goals.length === 0) return 0;
+    return goals.reduce((sum, goal) => {
+      const progress = goal.target_amount > 0 ? (goal.current_amount / goal.target_amount) * 100 : 0;
+      return sum + Math.min(progress, 100);
+    }, 0) / goals.length;
+  }, [goals]);
 
   return {
     goals,
@@ -220,7 +217,7 @@ export const useGoalTemplates = () => {
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
-  const fetchTemplates = async () => {
+  const fetchTemplates = useCallback(async () => {
     try {
       setLoading(true);
       const { data, error } = await supabase
@@ -231,7 +228,6 @@ export const useGoalTemplates = () => {
       if (error) throw error;
       setTemplates(data || []);
     } catch (error) {
-      console.error('Error fetching goal templates:', error);
       toast({
         title: "Error",
         description: "Failed to load goal templates. Please try again.",
@@ -240,7 +236,7 @@ export const useGoalTemplates = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
 
   useEffect(() => {
     fetchTemplates();
