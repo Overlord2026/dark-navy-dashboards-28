@@ -16,7 +16,7 @@
     --popover: 240 20% 14%;
     --popover-foreground: 0 0% 89%;
 
-    --primary: 45 100% 50%;
+    --primary: 45 75% 55%;
     --primary-foreground: 240 10% 10%;
 
     --secondary: 240 20% 20%;
@@ -25,8 +25,19 @@
     --muted: 240 20% 20%;
     --muted-foreground: 240 10% 70%;
 
-    --accent: 45 100% 50%;
-    --accent-foreground: 240 10% 10%;
+    --accent: 162 90% 24%;
+    --accent-foreground: 0 0% 98%;
+
+    /* Metallic Gold System */
+    --gold-primary: 45 75% 55%;
+    --gold-premium: 42 85% 45%;
+    --gold-light: 48 65% 70%;
+    --gold-dark: 38 90% 35%;
+    
+    /* Metallic Gradients */
+    --gradient-gold: linear-gradient(135deg, hsl(45 75% 55%), hsl(42 85% 45%));
+    --gradient-premium: linear-gradient(135deg, hsl(42 85% 45%), hsl(38 90% 35%));
+    --gradient-shine: linear-gradient(135deg, hsl(48 65% 70%), hsl(45 75% 55%), hsl(42 85% 45%));
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
@@ -39,18 +50,18 @@
 
     --sidebar-background: 240 30% 15%; /* #1B1B32 */
     --sidebar-foreground: 0 0% 89%; /* #E2E2E2 */
-    --sidebar-primary: 45 100% 50%;
+    --sidebar-primary: 45 75% 55%;
     --sidebar-primary-foreground: 240 10% 10%;
     --sidebar-accent: 240 20% 20%;
-    --sidebar-accent-foreground: 45 100% 50%;
+    --sidebar-accent-foreground: 45 75% 55%;
     --sidebar-border: 240 20% 20%;
-    --sidebar-ring: 45 100% 50%;
+    --sidebar-ring: 45 75% 55%;
 
     --success: 142 76% 36%;
     --success-foreground: 0 0% 98%;
     
-    --warning: 45 93% 47%;
-    --warning-foreground: 0 0% 98%;
+    --warning: 38 90% 35%;
+    --warning-foreground: 48 65% 95%;
   }
 
   .light-theme {
@@ -63,7 +74,7 @@
     --popover: 48 30% 95%;
     --popover-foreground: 240 10% 13%; /* #222222 */
 
-    --primary: 45 70% 50%; /* Softer yellow primary */
+    --primary: 45 75% 55%; /* Metallic gold primary */
     --primary-foreground: 240 10% 13%;
 
     --secondary: 48 30% 90%; /* Light secondary */
@@ -72,8 +83,19 @@
     --muted: 48 30% 90%;
     --muted-foreground: 240 10% 40%;
 
-    --accent: 45 70% 50%;
-    --accent-foreground: 240 10% 13%;
+    --accent: 162 90% 24%; /* Money green accent */
+    --accent-foreground: 0 0% 98%;
+
+    /* Metallic Gold System */
+    --gold-primary: 45 75% 55%;
+    --gold-premium: 42 85% 45%;
+    --gold-light: 48 65% 70%;
+    --gold-dark: 38 90% 35%;
+    
+    /* Metallic Gradients */
+    --gradient-gold: linear-gradient(135deg, hsl(45 75% 55%), hsl(42 85% 45%));
+    --gradient-premium: linear-gradient(135deg, hsl(42 85% 45%), hsl(38 90% 35%));
+    --gradient-shine: linear-gradient(135deg, hsl(48 65% 70%), hsl(45 75% 55%), hsl(42 85% 45%));
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
@@ -86,18 +108,18 @@
 
     --sidebar-background: 48 33% 97%; /* Light sidebar #F9F7E8 */
     --sidebar-foreground: 240 10% 13%; /* Dark text #222222 */
-    --sidebar-primary: 45 70% 50%;
+    --sidebar-primary: 45 75% 55%;
     --sidebar-primary-foreground: 240 10% 13%;
     --sidebar-accent: 48 30% 90%; /* Light sidebar accent */
     --sidebar-accent-foreground: 240 10% 13%; /* Dark text on accent */
     --sidebar-border: 48 30% 86%; /* Light border */
-    --sidebar-ring: 45 70% 50%;
+    --sidebar-ring: 45 75% 55%;
 
     --success: 142 76% 36%;
     --success-foreground: 0 0% 98%;
     
-    --warning: 45 93% 47%;
-    --warning-foreground: 0 0% 98%;
+    --warning: 38 90% 35%;
+    --warning-foreground: 48 65% 95%;
   }
 }
 
@@ -159,6 +181,24 @@
   
   .dashboard-card {
     @apply bg-card rounded-lg p-6 border border-border/50 transition-all duration-300 hover:border-accent/30 hover:shadow-md hover:shadow-accent/5;
+  }
+  
+  .dashboard-card-premium {
+    @apply bg-card rounded-lg p-6 border transition-all duration-300 shadow-lg;
+    border-image: linear-gradient(135deg, hsl(var(--gold-light)), hsl(var(--gold-primary))) 1;
+    box-shadow: 0 4px 20px -2px hsl(var(--gold-primary) / 0.1);
+  }
+  
+  .premium-glow {
+    box-shadow: 0 0 20px hsl(var(--gold-light) / 0.4), 0 0 40px hsl(var(--gold-primary) / 0.2);
+  }
+  
+  .metallic-gradient {
+    background: var(--gradient-gold);
+  }
+  
+  .premium-gradient {
+    background: var(--gradient-premium);
   }
   
   .dashboard-card-header {

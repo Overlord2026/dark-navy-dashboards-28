@@ -4,9 +4,9 @@ export const DiamondTrophy = ({ className = "w-20 h-20" }: { className?: string 
   <svg className={className} viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <linearGradient id="diamondGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#FFD700" />
-        <stop offset="50%" stopColor="#FFA500" />
-        <stop offset="100%" stopColor="#FF8C00" />
+        <stop offset="0%" stopColor="hsl(48, 65%, 70%)" />
+        <stop offset="50%" stopColor="hsl(45, 75%, 55%)" />
+        <stop offset="100%" stopColor="hsl(42, 85%, 45%)" />
       </linearGradient>
       <filter id="glow">
         <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
@@ -34,8 +34,9 @@ export const GoldenTrophy = ({ className = "w-20 h-20" }: { className?: string }
   <svg className={className} viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#FFD700" />
-        <stop offset="100%" stopColor="#B8860B" />
+        <stop offset="0%" stopColor="hsl(48, 65%, 70%)" />
+        <stop offset="50%" stopColor="hsl(45, 75%, 55%)" />
+        <stop offset="100%" stopColor="hsl(38, 90%, 35%)" />
       </linearGradient>
     </defs>
     {/* Trophy Base */}
@@ -56,8 +57,9 @@ export const SilverTrophy = ({ className = "w-20 h-20" }: { className?: string }
   <svg className={className} viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <linearGradient id="silverGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#C0C0C0" />
-        <stop offset="100%" stopColor="#808080" />
+        <stop offset="0%" stopColor="hsl(162, 70%, 85%)" />
+        <stop offset="50%" stopColor="hsl(162, 90%, 60%)" />
+        <stop offset="100%" stopColor="hsl(162, 90%, 24%)" />
       </linearGradient>
     </defs>
     {/* Trophy Base */}
@@ -80,8 +82,9 @@ export const BronzeTrophy = ({ className = "w-20 h-20" }: { className?: string }
   <svg className={className} viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <linearGradient id="bronzeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#CD7F32" />
-        <stop offset="100%" stopColor="#8B4513" />
+        <stop offset="0%" stopColor="hsl(38, 75%, 60%)" />
+        <stop offset="50%" stopColor="hsl(38, 90%, 35%)" />
+        <stop offset="100%" stopColor="hsl(35, 85%, 45%)" />
       </linearGradient>
     </defs>
     {/* Trophy Base */}
