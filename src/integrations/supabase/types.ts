@@ -8593,6 +8593,39 @@ export type Database = {
           },
         ]
       }
+      reports: {
+        Row: {
+          download_url: string | null
+          format: string
+          generated_at: string
+          id: string
+          metadata: Json | null
+          report_type: string
+          role: string
+          user_id: string
+        }
+        Insert: {
+          download_url?: string | null
+          format: string
+          generated_at?: string
+          id?: string
+          metadata?: Json | null
+          report_type: string
+          role: string
+          user_id: string
+        }
+        Update: {
+          download_url?: string | null
+          format?: string
+          generated_at?: string
+          id?: string
+          metadata?: Json | null
+          report_type?: string
+          role?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       resource_utilization_analytics: {
         Row: {
           active_projects: number
