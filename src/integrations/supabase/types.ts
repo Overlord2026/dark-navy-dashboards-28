@@ -1980,6 +1980,62 @@ export type Database = {
           },
         ]
       }
+      draft_proposals: {
+        Row: {
+          advisor_id: string
+          advisor_overrides: Json | null
+          created_at: string | null
+          current_holdings: Json
+          id: string
+          model_scores: Json | null
+          proposal_data: Json
+          prospect_email: string | null
+          prospect_name: string
+          recommended_model_id: string | null
+          status: string | null
+          tenant_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          advisor_id: string
+          advisor_overrides?: Json | null
+          created_at?: string | null
+          current_holdings: Json
+          id?: string
+          model_scores?: Json | null
+          proposal_data: Json
+          prospect_email?: string | null
+          prospect_name: string
+          recommended_model_id?: string | null
+          status?: string | null
+          tenant_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          advisor_id?: string
+          advisor_overrides?: Json | null
+          created_at?: string | null
+          current_holdings?: Json
+          id?: string
+          model_scores?: Json | null
+          proposal_data?: Json
+          prospect_email?: string | null
+          prospect_name?: string
+          recommended_model_id?: string | null
+          status?: string | null
+          tenant_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "draft_proposals_recommended_model_id_fkey"
+            columns: ["recommended_model_id"]
+            isOneToOne: false
+            referencedRelation: "investment_models"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       educational_content: {
         Row: {
           content_type: string
@@ -4853,6 +4909,54 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      investment_models: {
+        Row: {
+          created_at: string | null
+          created_by: string
+          description: string | null
+          fee_structure: Json | null
+          id: string
+          is_active: boolean | null
+          model_securities: Json
+          name: string
+          risk_level: number | null
+          target_allocation: Json
+          tax_efficiency_score: number | null
+          tenant_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by: string
+          description?: string | null
+          fee_structure?: Json | null
+          id?: string
+          is_active?: boolean | null
+          model_securities: Json
+          name: string
+          risk_level?: number | null
+          target_allocation: Json
+          tax_efficiency_score?: number | null
+          tenant_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string
+          description?: string | null
+          fee_structure?: Json | null
+          id?: string
+          is_active?: boolean | null
+          model_securities?: Json
+          name?: string
+          risk_level?: number | null
+          target_allocation?: Json
+          tax_efficiency_score?: number | null
+          tenant_id?: string
+          updated_at?: string | null
+        }
+        Relationships: []
       }
       investment_offerings: {
         Row: {
@@ -8653,6 +8757,88 @@ export type Database = {
           },
         ]
       }
+      proposal_audit: {
+        Row: {
+          action: string
+          details: Json | null
+          id: string
+          ip_address: unknown | null
+          proposal_id: string | null
+          timestamp: string | null
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          action: string
+          details?: Json | null
+          id?: string
+          ip_address?: unknown | null
+          proposal_id?: string | null
+          timestamp?: string | null
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          action?: string
+          details?: Json | null
+          id?: string
+          ip_address?: unknown | null
+          proposal_id?: string | null
+          timestamp?: string | null
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "proposal_audit_proposal_id_fkey"
+            columns: ["proposal_id"]
+            isOneToOne: false
+            referencedRelation: "draft_proposals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      proposal_overrides: {
+        Row: {
+          created_at: string | null
+          created_by: string
+          id: string
+          new_value: Json
+          original_value: Json
+          override_type: string
+          proposal_id: string | null
+          reason: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by: string
+          id?: string
+          new_value: Json
+          original_value: Json
+          override_type: string
+          proposal_id?: string | null
+          reason?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string
+          id?: string
+          new_value?: Json
+          original_value?: Json
+          override_type?: string
+          proposal_id?: string | null
+          reason?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "proposal_overrides_proposal_id_fkey"
+            columns: ["proposal_id"]
+            isOneToOne: false
+            referencedRelation: "draft_proposals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       prospect_invitations: {
         Row: {
           activated_at: string | null
@@ -9326,6 +9512,45 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      securities: {
+        Row: {
+          asset_class: string
+          created_at: string | null
+          expense_ratio: number | null
+          id: string
+          market_cap_category: string | null
+          metadata: Json | null
+          name: string
+          sector: string | null
+          ticker: string
+          updated_at: string | null
+        }
+        Insert: {
+          asset_class: string
+          created_at?: string | null
+          expense_ratio?: number | null
+          id?: string
+          market_cap_category?: string | null
+          metadata?: Json | null
+          name: string
+          sector?: string | null
+          ticker: string
+          updated_at?: string | null
+        }
+        Update: {
+          asset_class?: string
+          created_at?: string | null
+          expense_ratio?: number | null
+          id?: string
+          market_cap_category?: string | null
+          metadata?: Json | null
+          name?: string
+          sector?: string | null
+          ticker?: string
+          updated_at?: string | null
+        }
+        Relationships: []
       }
       security_audit_logs: {
         Row: {
@@ -13047,6 +13272,14 @@ export type Database = {
           recommendations: string[]
         }[]
       }
+      best_model_for_holdings: {
+        Args: { holdings: Json }
+        Returns: {
+          model_id: string
+          score: number
+          model_name: string
+        }[]
+      }
       calculate_advisor_overrides: {
         Args: { p_period_start: string; p_period_end: string }
         Returns: {
@@ -13369,6 +13602,15 @@ export type Database = {
           p_bucket_name: string
           p_access_type: string
           p_file_size?: number
+        }
+        Returns: string
+      }
+      log_proposal_action: {
+        Args: {
+          p_proposal_id: string
+          p_action: string
+          p_details?: Json
+          p_user_id?: string
         }
         Returns: string
       }

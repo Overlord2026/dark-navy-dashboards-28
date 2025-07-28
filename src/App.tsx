@@ -69,6 +69,8 @@ import { BrandAuditPage } from "./pages/qa/BrandAuditPage";
 import { ComplianceReportingPage } from "./pages/ComplianceReportingPage";
 import Reports from "./pages/Reports";
 import BusinessCenter from "./pages/BusinessCenter";
+import { ProposalWizard } from "./pages/advisor/ProposalWizard";
+import { ProposalList } from "./pages/advisor/ProposalList";
 
 const queryClient = new QueryClient();
 
@@ -417,6 +419,30 @@ const App = () => {
                     element={
                       <AuthWrapper requireAuth={true}>
                         <BusinessCenter />
+                      </AuthWrapper>
+                    }
+                  />
+
+                  {/* Advisor Proposal Routes */}
+                  <Route
+                    path="/advisor/proposals"
+                    element={
+                      <AuthWrapper
+                        requireAuth={true}
+                        allowedRoles={['advisor', 'admin', 'tenant_admin', 'system_administrator']}
+                      >
+                        <ProposalList />
+                      </AuthWrapper>
+                    }
+                  />
+                  <Route
+                    path="/advisor/proposals/new"
+                    element={
+                      <AuthWrapper
+                        requireAuth={true}
+                        allowedRoles={['advisor', 'admin', 'tenant_admin', 'system_administrator']}
+                      >
+                        <ProposalWizard />
                       </AuthWrapper>
                     }
                   />

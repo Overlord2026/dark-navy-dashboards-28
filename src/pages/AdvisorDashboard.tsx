@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { BellIcon, DollarSignIcon, UsersIcon, LogOutIcon, BarChart4Icon, XIcon, UserPlus } from "lucide-react";
+import { BellIcon, DollarSignIcon, UsersIcon, LogOutIcon, BarChart4Icon, XIcon, UserPlus, FileText, Plus } from "lucide-react";
 import { Header } from "@/components/ui/Header";
 import { useAuth } from "@/context/AuthContext";
 import { useUser } from "@/context/UserContext";
@@ -101,12 +101,19 @@ export default function AdvisorDashboard() {
             </Link>
           </div>
           <div className="hidden md:flex gap-8 text-[#222222]">
-            <Link to="/advisor/dashboard" className="font-medium">Dashboard</Link>
+            <Link to="/advisor-dashboard" className="font-medium">Dashboard</Link>
+            <Link to="/advisor/proposals" className="hover:text-primary font-medium">Proposals</Link>
             <Link to="/advisor/clients" className="hover:text-primary font-medium">Clients</Link>
             <Link to="/advisor/documents" className="hover:text-primary font-medium">Documents</Link>
             <Link to="/advisor/calendar" className="hover:text-primary font-medium">Calendar</Link>
           </div>
           <div className="flex gap-4 items-center">
+            <Button asChild variant="outline">
+              <Link to="/advisor/proposals/new" className="flex items-center gap-2">
+                <Plus className="h-4 w-4" />
+                New Proposal
+              </Link>
+            </Button>
             {canInviteProspects && (
               <Button 
                 onClick={() => setInviteProspectOpen(true)}
