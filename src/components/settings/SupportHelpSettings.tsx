@@ -118,10 +118,11 @@ export const SupportHelpSettings: React.FC = () => {
       };
 
       // Mock ticket creation - in real app would save to database
-      const data = {
+      const data: SupportTicket = {
         ...ticketData,
         id: Date.now().toString(),
-        status: 'open' as const,
+        status: 'open',
+        priority: ticketForm.priority as 'low' | 'medium' | 'high' | 'urgent',
         last_updated: new Date().toISOString()
       };
 
