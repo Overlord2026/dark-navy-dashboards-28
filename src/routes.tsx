@@ -34,6 +34,10 @@ import { VideosPage } from "./pages/help/VideosPage";
 import { APIPage } from "./pages/help/APIPage";
 import { WebinarsPage } from "./pages/help/WebinarsPage";
 
+// QA pages
+import { UATChecklistPage } from "./pages/qa/UATChecklistPage";
+import { LaunchReportPage } from "./pages/qa/LaunchReportPage";
+
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -250,5 +254,14 @@ export const router = createBrowserRouter([
   {
     path: "/help/webinars",
     element: <WebinarsPage />
+  },
+  // QA routes
+  {
+    path: "/qa/uat-checklist",
+    element: <UATChecklistPage />
+  },
+  {
+    path: "/qa/launch-report",
+    element: <LaunchReportPage />
   }
 ]);

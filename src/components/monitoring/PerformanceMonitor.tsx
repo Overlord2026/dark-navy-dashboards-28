@@ -1,15 +1,10 @@
 import { useEffect } from 'react';
 import { logger } from '@/services/logging/loggingService';
 
-interface PerformanceMetrics {
-  [key: string]: number;
-}
-
 export function PerformanceMonitor() {
   useEffect(() => {
     // Monitor Core Web Vitals
     const observeWebVitals = () => {
-      // Largest Contentful Paint (LCP)
       if ('PerformanceObserver' in window) {
         try {
           const lcpObserver = new PerformanceObserver((list) => {
@@ -23,7 +18,6 @@ export function PerformanceMonitor() {
           });
           lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
 
-          // First Input Delay (FID) and Cumulative Layout Shift (CLS)
           const performanceObserver = new PerformanceObserver((list) => {
             list.getEntries().forEach((entry) => {
               if (entry.entryType === 'first-input') {
@@ -49,7 +43,6 @@ export function PerformanceMonitor() {
             entryTypes: ['first-input', 'layout-shift'] 
           });
 
-          // Long Task Observer
           const longTaskObserver = new PerformanceObserver((list) => {
             list.getEntries().forEach((entry) => {
               logger.warning('Long Task Detected', {
@@ -67,7 +60,6 @@ export function PerformanceMonitor() {
       }
     };
 
-    // Monitor Memory Usage (if available)
     const monitorMemory = () => {
       if ('memory' in performance) {
         const memoryInfo = (performance as any).memory;
@@ -80,7 +72,6 @@ export function PerformanceMonitor() {
       }
     };
 
-    // Monitor Network Information
     const monitorNetwork = () => {
       if ('connection' in navigator) {
         const connection = (navigator as any).connection;
@@ -93,12 +84,10 @@ export function PerformanceMonitor() {
       }
     };
 
-    // Run monitoring
     observeWebVitals();
     monitorMemory();
     monitorNetwork();
 
-    // Monitor every 30 seconds
     const interval = setInterval(() => {
       monitorMemory();
     }, 30000);
@@ -108,10 +97,9 @@ export function PerformanceMonitor() {
     };
   }, []);
 
-  return null; // This is a monitoring component, no UI
+  return null;
 }
 
-// Performance utility functions
 export const measurePageLoad = (pageName: string) => {
   const startTime = performance.now();
   
