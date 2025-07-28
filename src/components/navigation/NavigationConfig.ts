@@ -85,6 +85,11 @@ export const educationSolutionsNavItems: NavItem[] = [
     title: "Estate Planning", 
     href: "/estate-planning", 
     icon: ArchiveIcon 
+  },
+  { 
+    title: "Residency & Relocation", 
+    href: "/residency-optimization", 
+    icon: MapPin 
   }
 ];
 
