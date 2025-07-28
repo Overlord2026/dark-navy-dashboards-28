@@ -736,6 +736,57 @@ export type Database = {
         }
         Relationships: []
       }
+      business_entities: {
+        Row: {
+          created_at: string
+          description: string | null
+          ein: string | null
+          entity_name: string
+          entity_type: string
+          formation_date: string | null
+          id: string
+          jurisdiction: string
+          mailing_address: Json | null
+          registered_address: Json | null
+          status: string | null
+          tenant_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          ein?: string | null
+          entity_name: string
+          entity_type: string
+          formation_date?: string | null
+          id?: string
+          jurisdiction: string
+          mailing_address?: Json | null
+          registered_address?: Json | null
+          status?: string | null
+          tenant_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          ein?: string | null
+          entity_name?: string
+          entity_type?: string
+          formation_date?: string | null
+          id?: string
+          jurisdiction?: string
+          mailing_address?: Json | null
+          registered_address?: Json | null
+          status?: string | null
+          tenant_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       business_filings: {
         Row: {
           business_name: string
@@ -1056,6 +1107,65 @@ export type Database = {
           year?: number
         }
         Relationships: []
+      }
+      compliance_alerts: {
+        Row: {
+          alert_type: string
+          created_at: string
+          description: string | null
+          due_date: string | null
+          entity_id: string | null
+          escalation_level: number | null
+          id: string
+          metadata: Json | null
+          notification_sent: boolean | null
+          professional_id: string | null
+          severity: string | null
+          status: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          alert_type: string
+          created_at?: string
+          description?: string | null
+          due_date?: string | null
+          entity_id?: string | null
+          escalation_level?: number | null
+          id?: string
+          metadata?: Json | null
+          notification_sent?: boolean | null
+          professional_id?: string | null
+          severity?: string | null
+          status?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          alert_type?: string
+          created_at?: string
+          description?: string | null
+          due_date?: string | null
+          entity_id?: string | null
+          escalation_level?: number | null
+          id?: string
+          metadata?: Json | null
+          notification_sent?: boolean | null
+          professional_id?: string | null
+          severity?: string | null
+          status?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "compliance_alerts_entity_id_fkey"
+            columns: ["entity_id"]
+            isOneToOne: false
+            referencedRelation: "business_entities"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       compliance_audit_trail: {
         Row: {
@@ -1905,6 +2015,162 @@ export type Database = {
           },
         ]
       }
+      entity_documents: {
+        Row: {
+          compliance_related: boolean | null
+          created_at: string
+          document_name: string
+          document_type: string
+          entity_id: string
+          expiration_date: string | null
+          file_path: string | null
+          file_size: number | null
+          id: string
+          is_required: boolean | null
+          metadata: Json | null
+          status: string | null
+          updated_at: string
+          uploaded_by: string
+        }
+        Insert: {
+          compliance_related?: boolean | null
+          created_at?: string
+          document_name: string
+          document_type: string
+          entity_id: string
+          expiration_date?: string | null
+          file_path?: string | null
+          file_size?: number | null
+          id?: string
+          is_required?: boolean | null
+          metadata?: Json | null
+          status?: string | null
+          updated_at?: string
+          uploaded_by: string
+        }
+        Update: {
+          compliance_related?: boolean | null
+          created_at?: string
+          document_name?: string
+          document_type?: string
+          entity_id?: string
+          expiration_date?: string | null
+          file_path?: string | null
+          file_size?: number | null
+          id?: string
+          is_required?: boolean | null
+          metadata?: Json | null
+          status?: string | null
+          updated_at?: string
+          uploaded_by?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "entity_documents_entity_id_fkey"
+            columns: ["entity_id"]
+            isOneToOne: false
+            referencedRelation: "business_entities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      entity_ownership: {
+        Row: {
+          capital_contribution: number | null
+          created_at: string
+          entity_id: string
+          id: string
+          management_rights: boolean | null
+          owner_email: string | null
+          owner_name: string
+          ownership_percentage: number | null
+          ownership_type: string | null
+          updated_at: string
+          voting_rights: boolean | null
+        }
+        Insert: {
+          capital_contribution?: number | null
+          created_at?: string
+          entity_id: string
+          id?: string
+          management_rights?: boolean | null
+          owner_email?: string | null
+          owner_name: string
+          ownership_percentage?: number | null
+          ownership_type?: string | null
+          updated_at?: string
+          voting_rights?: boolean | null
+        }
+        Update: {
+          capital_contribution?: number | null
+          created_at?: string
+          entity_id?: string
+          id?: string
+          management_rights?: boolean | null
+          owner_email?: string | null
+          owner_name?: string
+          ownership_percentage?: number | null
+          ownership_type?: string | null
+          updated_at?: string
+          voting_rights?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "entity_ownership_entity_id_fkey"
+            columns: ["entity_id"]
+            isOneToOne: false
+            referencedRelation: "business_entities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      entity_professionals: {
+        Row: {
+          created_at: string
+          engagement_date: string | null
+          entity_id: string
+          fee_structure: string | null
+          id: string
+          is_primary: boolean | null
+          professional_id: string
+          professional_type: string
+          role: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          engagement_date?: string | null
+          entity_id: string
+          fee_structure?: string | null
+          id?: string
+          is_primary?: boolean | null
+          professional_id: string
+          professional_type: string
+          role: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          engagement_date?: string | null
+          entity_id?: string
+          fee_structure?: string | null
+          id?: string
+          is_primary?: boolean | null
+          professional_id?: string
+          professional_type?: string
+          role?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "entity_professionals_entity_id_fkey"
+            columns: ["entity_id"]
+            isOneToOne: false
+            referencedRelation: "business_entities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       epigenetic_tests: {
         Row: {
           biological_age: number
@@ -2367,6 +2633,65 @@ export type Database = {
             columns: ["backup_operation_id"]
             isOneToOne: false
             referencedRelation: "backup_operations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      filing_schedules: {
+        Row: {
+          assigned_professional_id: string | null
+          created_at: string
+          due_date: string
+          entity_id: string
+          estimated_cost: number | null
+          estimated_hours: number | null
+          filing_name: string
+          filing_type: string
+          frequency: string | null
+          id: string
+          jurisdiction: string
+          notes: string | null
+          status: string | null
+          updated_at: string
+        }
+        Insert: {
+          assigned_professional_id?: string | null
+          created_at?: string
+          due_date: string
+          entity_id: string
+          estimated_cost?: number | null
+          estimated_hours?: number | null
+          filing_name: string
+          filing_type: string
+          frequency?: string | null
+          id?: string
+          jurisdiction: string
+          notes?: string | null
+          status?: string | null
+          updated_at?: string
+        }
+        Update: {
+          assigned_professional_id?: string | null
+          created_at?: string
+          due_date?: string
+          entity_id?: string
+          estimated_cost?: number | null
+          estimated_hours?: number | null
+          filing_name?: string
+          filing_type?: string
+          frequency?: string | null
+          id?: string
+          jurisdiction?: string
+          notes?: string | null
+          status?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "filing_schedules_entity_id_fkey"
+            columns: ["entity_id"]
+            isOneToOne: false
+            referencedRelation: "business_entities"
             referencedColumns: ["id"]
           },
         ]
@@ -6993,6 +7318,60 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      professional_credentials: {
+        Row: {
+          created_at: string
+          credential_name: string
+          credential_type: string
+          current_hours: number | null
+          documents: Json | null
+          expiration_date: string | null
+          id: string
+          issue_date: string | null
+          issuing_authority: string | null
+          license_number: string | null
+          professional_id: string
+          renewal_period: string | null
+          required_hours: number | null
+          status: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          credential_name: string
+          credential_type: string
+          current_hours?: number | null
+          documents?: Json | null
+          expiration_date?: string | null
+          id?: string
+          issue_date?: string | null
+          issuing_authority?: string | null
+          license_number?: string | null
+          professional_id: string
+          renewal_period?: string | null
+          required_hours?: number | null
+          status?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          credential_name?: string
+          credential_type?: string
+          current_hours?: number | null
+          documents?: Json | null
+          expiration_date?: string | null
+          id?: string
+          issue_date?: string | null
+          issuing_authority?: string | null
+          license_number?: string | null
+          professional_id?: string
+          renewal_period?: string | null
+          required_hours?: number | null
+          status?: string | null
+          updated_at?: string
+        }
+        Relationships: []
       }
       professional_invitations: {
         Row: {
