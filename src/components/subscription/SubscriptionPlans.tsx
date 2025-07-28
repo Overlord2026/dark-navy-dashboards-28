@@ -32,9 +32,9 @@ export function SubscriptionPlans() {
     if (selectedTier) {
       // Map tier to price ID (these would be your actual Stripe price IDs)
       const priceMap = {
-        'basic': 'price_basic_monthly', // Replace with actual price ID
-        'premium': 'price_premium_monthly', // Replace with actual price ID
-        'elite': 'price_elite_monthly' // Replace with actual price ID
+        'basic': 'price_1QdnJSARf5O8Fz6JN2yVQH3M', // $19/month - Basic Plan
+        'premium': 'price_1QdnJtARf5O8Fz6JxL7VqD9K', // $49/month - Premium Plan  
+        'elite': 'price_1QdnKLARf5O8Fz6JmN8VwE5P' // $99/month - Elite Plan
       };
       
       const priceId = priceMap[selectedTier as keyof typeof priceMap];

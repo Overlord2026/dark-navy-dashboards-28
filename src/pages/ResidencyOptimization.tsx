@@ -115,7 +115,7 @@ export default function ResidencyOptimization() {
         <TabsList className="grid w-full grid-cols-3 lg:grid-cols-6">
           {features.map((feature) => {
             const Icon = feature.icon;
-            const hasAccess = feature.free || checkFeatureAccess('residency_optimization');
+            const hasAccess = feature.free || checkFeatureAccess('premium');
             
             return (
               <TabsTrigger 

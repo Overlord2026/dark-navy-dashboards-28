@@ -85,8 +85,9 @@ serve(async (req) => {
           for (const profile of profiles) {
             // Update subscription status
             const subscriptionTier = event.type === 'customer.subscription.deleted' ? 'free' : 
-              subscription.items.data[0]?.price.unit_amount <= 999 ? 'basic' :
-              subscription.items.data[0]?.price.unit_amount <= 2999 ? 'premium' : 'elite';
+              subscription.items.data[0]?.price.id === 'price_1QdnJSARf5O8Fz6JN2yVQH3M' ? 'basic' :
+              subscription.items.data[0]?.price.id === 'price_1QdnJtARf5O8Fz6JxL7VqD9K' ? 'premium' : 
+              subscription.items.data[0]?.price.id === 'price_1QdnKLARf5O8Fz6JmN8VwE5P' ? 'elite' : 'free';
               
             await supabaseClient
               .from('profiles')
