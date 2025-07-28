@@ -29,7 +29,7 @@ interface CalculationResult {
 }
 
 export function AdvancedEstateCalculators() {
-  const { subscriptionPlan, hasAccess } = useSubscriptionAccess();
+  const { subscriptionPlan, checkFeatureAccess } = useSubscriptionAccess();
   const [estateValue, setEstateValue] = useState('');
   const [maritalStatus, setMaritalStatus] = useState('');
   const [charitableGiving, setCharitableGiving] = useState('');
@@ -37,7 +37,7 @@ export function AdvancedEstateCalculators() {
   const [results, setResults] = useState<CalculationResult | null>(null);
 
   // Check premium access
-  const hasCalculatorAccess = hasAccess('premium_analytics_access') || subscriptionPlan?.tier === 'premium' || subscriptionPlan?.tier === 'elite';
+  const hasCalculatorAccess = checkFeatureAccess('premium_analytics_access') || subscriptionPlan?.tier === 'premium' || subscriptionPlan?.tier === 'elite';
 
   if (!hasCalculatorAccess) {
     return (

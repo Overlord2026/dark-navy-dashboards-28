@@ -70,7 +70,7 @@ interface MarketplaceProfessional {
 }
 
 export function CollaborationTools() {
-  const { subscriptionPlan, hasAccess } = useSubscriptionAccess();
+  const { subscriptionPlan, checkFeatureAccess } = useSubscriptionAccess();
   const [activeChat, setActiveChat] = useState<string | null>(null);
   const [newMessage, setNewMessage] = useState('');
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
@@ -78,7 +78,7 @@ export function CollaborationTools() {
   const [inviteRole, setInviteRole] = useState('');
 
   // Check premium access
-  const hasCollaborationAccess = hasAccess('premium_analytics_access') || subscriptionPlan?.tier === 'premium' || subscriptionPlan?.tier === 'elite';
+  const hasCollaborationAccess = checkFeatureAccess('premium_analytics_access') || subscriptionPlan?.tier === 'premium' || subscriptionPlan?.tier === 'elite';
 
   // Sample data
   const [teamMembers] = useState<TeamMember[]>([

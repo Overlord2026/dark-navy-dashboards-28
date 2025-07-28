@@ -79,7 +79,7 @@ interface AccessLog {
 }
 
 export function SecureFamilyVault() {
-  const { subscriptionPlan, hasAccess, incrementUsage } = useSubscriptionAccess();
+  const { subscriptionPlan, checkFeatureAccess, incrementUsage } = useSubscriptionAccess();
   const [documents, setDocuments] = useState<VaultDocument[]>([]);
   const [folders, setFolders] = useState<VaultFolder[]>([]);
   const [accessLogs, setAccessLogs] = useState<AccessLog[]>([]);
@@ -90,7 +90,7 @@ export function SecureFamilyVault() {
   const [vaultSummaryDialogOpen, setVaultSummaryDialogOpen] = useState(false);
 
   // Check premium access
-  const hasVaultAccess = hasAccess('premium_analytics_access') || subscriptionPlan?.tier === 'premium' || subscriptionPlan?.tier === 'elite';
+  const hasVaultAccess = checkFeatureAccess('premium_analytics_access') || subscriptionPlan?.tier === 'premium' || subscriptionPlan?.tier === 'elite';
 
   // Simulated data
   useEffect(() => {

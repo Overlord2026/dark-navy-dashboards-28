@@ -9,31 +9,26 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { LearnMoreDialog } from "@/components/ui/learn-more-dialog";
 import { useLearnMoreNotification } from "@/hooks/useLearnMoreNotification";
+import { useEstatePlanning } from "@/hooks/useEstatePlanning";
+import { EstateEducationHub } from "@/components/estate-planning/EstateEducationHub";
+import { SecureFamilyVault } from "@/components/estate-planning/SecureFamilyVault";
+import { AdvancedEstateCalculators } from "@/components/estate-planning/AdvancedEstateCalculators";
+import { CollaborationTools } from "@/components/estate-planning/CollaborationTools";
 import { 
-  ArchiveIcon, 
-  CheckCircle2, 
-  Clock, 
   FileText, 
-  List, 
   Shield, 
   Users2, 
-  ExternalLink,
-  Upload,
-  Lock,
-  FileCheck,
-  CheckCircle,
-  Circle,
-  Calendar,
-  ArrowRight,
-  MessageSquare,
-  PenTool,
-  FileSignature,
-  Settings,
-  RefreshCw
+  List, 
+  Clock, 
+  MessageSquare, 
+  PenTool, 
+  FileSignature, 
+  Settings, 
+  RefreshCw, 
+  Calendar, 
+  CheckCircle2 
 } from "lucide-react";
 import { toast } from "sonner";
-// import { SecureTaxReturnAnalysis } from "@/components/estate-planning/SecureTaxReturnAnalysis";
-import { useEstatePlanning } from "@/hooks/useEstatePlanning";
 
 export default function EstatePlanning() {
   const [showAdvisorDialog, setShowAdvisorDialog] = useState(false);
@@ -79,89 +74,6 @@ export default function EstatePlanning() {
     }
   };
 
-  const services = [
-    {
-      title: "Will & Trust Creation",
-      icon: FileText,
-      description: "Professional drafting of legally binding wills and trusts tailored to your specific wishes and circumstances."
-    },
-    {
-      title: "Estate Tax Planning",
-      icon: Shield,
-      description: "Strategic planning to minimize tax burdens on your estate and maximize the wealth passed to your beneficiaries."
-    },
-    {
-      title: "Succession Planning",
-      icon: Users2,
-      description: "Structured approach to transitioning business ownership and management to ensure continuity."
-    },
-    {
-      title: "Estate Administration",
-      icon: List,
-      description: "Professional management of estate settlement processes, including probate navigation and asset distribution."
-    },
-    {
-      title: "Regular Review Services",
-      icon: Clock,
-      description: "Scheduled reviews of your estate plan to ensure it remains aligned with your goals as laws and circumstances change."
-    }
-  ];
-
-  const processSteps = [
-    {
-      step: 1,
-      title: "Initial Consultation",
-      description: "Meet with our estate planning expert to discuss your goals, concerns, and family situation.",
-      icon: MessageSquare,
-      duration: "1-2 hours",
-      color: "bg-blue-500"
-    },
-    {
-      step: 2,
-      title: "Plan Design",
-      description: "Our team creates a tailored estate plan addressing your specific needs and objectives.",
-      icon: PenTool,
-      duration: "1-2 weeks",
-      color: "bg-purple-500"
-    },
-    {
-      step: 3,
-      title: "Document Preparation",
-      description: "Legal documents are drafted, including wills, trusts, powers of attorney, and healthcare directives.",
-      icon: FileText,
-      duration: "2-3 weeks",
-      color: "bg-green-500"
-    },
-    {
-      step: 4,
-      title: "Review & Execution",
-      description: "Review all documents, make necessary adjustments, and formally execute the estate plan.",
-      icon: FileSignature,
-      duration: "1 week",
-      color: "bg-orange-500"
-    },
-    {
-      step: 5,
-      title: "Implementation & Funding",
-      description: "Transfer assets to trusts and update beneficiary designations as needed.",
-      icon: Settings,
-      duration: "2-4 weeks",
-      color: "bg-red-500"
-    },
-    {
-      step: 6,
-      title: "Ongoing Support",
-      description: "Regular reviews to keep your plan current with life changes and law updates.",
-      icon: RefreshCw,
-      duration: "Annual",
-      color: "bg-indigo-500"
-    }
-  ];
-
-  const handleDownloadGuides = () => {
-    window.open('https://designrr.page/?id=421221&token=3489244185&type=FP&h=7325', '_blank');
-  };
-
   return (
     <ThreeColumnLayout activeMainItem="estate-planning" title="">
       <div className="space-y-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -184,292 +96,85 @@ export default function EstatePlanning() {
             <TabsTrigger value="collaboration" className="flex-1 w-full sm:w-auto">Collaboration</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="services" className="space-y-6">
-            {/* Secure Tax Return Analysis - COMMENTED OUT */}
-            {/* <div className="mb-8">
-              <SecureTaxReturnAnalysis />
-            </div> */}
-            
-            {/* Services Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-              {services.map((service) => (
-                <Card key={service.title} className="h-full flex flex-col">
-                  <CardHeader className="pb-3">
-                    <div className="flex items-center gap-3 mb-2">
-                      <div className="flex-shrink-0">
-                        <service.icon className="h-5 w-5 text-primary" />
-                      </div>
-                      <CardTitle className="text-lg leading-tight">{service.title}</CardTitle>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="flex-1">
-                    <p className="text-sm text-muted-foreground leading-relaxed">{service.description}</p>
-                  </CardContent>
-                  <CardFooter className="pt-4">
-                    <Button 
-                      variant="outline" 
-                      className="w-full" 
-                      onClick={() => handleLearnMoreClick(service.title)}
-                    >
-                      Learn More
-                    </Button>
-                  </CardFooter>
-                </Card>
-              ))}
-            </div>
-
-            {/* Why Choose Section - Only in Services Tab */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-xl">Why Choose Our Estate Planning Services</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {[
-                    {
-                      title: "Personalized Approach",
-                      description: "We take the time to understand your unique situation and create customized solutions."
-                    },
-                    {
-                      title: "Comprehensive Protection",
-                      description: "Our holistic approach ensures all aspects of your estate and legacy are protected."
-                    },
-                    {
-                      title: "Expert Guidance",
-                      description: "Work with experienced professionals who specialize in estate planning and wealth preservation."
-                    }
-                  ].map((item, i) => (
-                    <div key={i} className="space-y-3">
-                      <h3 className="font-semibold text-base">{item.title}</h3>
-                      <p className="text-sm text-muted-foreground leading-relaxed">{item.description}</p>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+          <TabsContent value="education" className="space-y-6">
+            <EstateEducationHub />
           </TabsContent>
 
-          <TabsContent value="process" className="space-y-6">
-            <div className="space-y-8">
-              <div className="text-center space-y-4">
-                <h2 className="text-3xl font-bold">Our Estate Planning Process</h2>
-                <p className="text-muted-foreground max-w-2xl mx-auto">
-                  A comprehensive, step-by-step approach to securing your legacy and protecting what matters most
-                </p>
-              </div>
-
-              {/* Timeline Layout */}
-              <div className="relative">
-                {/* Vertical line for desktop */}
-                <div className="hidden lg:block absolute left-1/2 transform -translate-x-1/2 w-0.5 bg-gradient-to-b from-primary/20 via-primary/60 to-primary/20 h-full"></div>
-                
-                <div className="space-y-8">
-                  {processSteps.map((step, index) => (
-                    <div key={step.step} className="relative">
-                      {/* Desktop Layout */}
-                      <div className="hidden lg:flex items-center">
-                        {/* Left side content (odd indexes: 0, 2, 4) */}
-                        {index % 2 === 0 ? (
-                          <div className="w-1/2 pr-8 text-right">
-                            <Card className="ml-auto max-w-md hover:shadow-lg transition-shadow">
-                              <CardContent className="p-6">
-                                <div className="flex items-center justify-end gap-3 mb-3">
-                                  <div>
-                                    <h3 className="font-semibold text-lg">{step.title}</h3>
-                                    <p className="text-sm text-muted-foreground">{step.duration}</p>
-                                  </div>
-                                  <div className={`p-3 rounded-full ${step.color} text-white`}>
-                                    <step.icon className="h-5 w-5" />
-                                  </div>
-                                </div>
-                                <p className="text-sm text-muted-foreground leading-relaxed">{step.description}</p>
-                              </CardContent>
-                            </Card>
-                          </div>
-                        ) : (
-                          <div className="w-1/2 pl-8"></div>
-                        )}
-
-                        {/* Center timeline node */}
-                        <div className="relative z-10 flex items-center justify-center">
-                          <div className={`w-12 h-12 rounded-full ${step.color} text-white flex items-center justify-center font-bold shadow-lg`}>
-                            {step.step}
-                          </div>
-                        </div>
-
-                        {/* Right side content (even indexes: 1, 3, 5) */}
-                        {index % 2 === 1 ? (
-                          <div className="w-1/2 pl-8">
-                            <Card className="mr-auto max-w-md hover:shadow-lg transition-shadow">
-                              <CardContent className="p-6">
-                                <div className="flex items-center gap-3 mb-3">
-                                  <div className={`p-3 rounded-full ${step.color} text-white`}>
-                                    <step.icon className="h-5 w-5" />
-                                  </div>
-                                  <div>
-                                    <h3 className="font-semibold text-lg">{step.title}</h3>
-                                    <p className="text-sm text-muted-foreground">{step.duration}</p>
-                                  </div>
-                                </div>
-                                <p className="text-sm text-muted-foreground leading-relaxed">{step.description}</p>
-                              </CardContent>
-                            </Card>
-                          </div>
-                        ) : (
-                          <div className="w-1/2 pr-8"></div>
-                        )}
-                      </div>
-
-                      {/* Mobile Layout */}
-                      <div className="lg:hidden">
-                        <Card className="hover:shadow-lg transition-shadow">
-                          <CardContent className="p-6">
-                            <div className="flex items-start gap-4">
-                              <div className={`p-3 rounded-full ${step.color} text-white flex-shrink-0`}>
-                                <step.icon className="h-5 w-5" />
-                              </div>
-                              <div className="flex-1 min-w-0">
-                                <div className="flex items-center gap-2 mb-2">
-                                  <span className={`w-6 h-6 rounded-full ${step.color} text-white text-xs flex items-center justify-center font-bold`}>
-                                    {step.step}
-                                  </span>
-                                  <h3 className="font-semibold text-lg">{step.title}</h3>
-                                </div>
-                                <p className="text-sm text-muted-foreground mb-2">{step.duration}</p>
-                                <p className="text-sm text-muted-foreground leading-relaxed">{step.description}</p>
-                              </div>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Call to Action */}
-              <div className="text-center pt-8">
-                <Card className="max-w-2xl mx-auto">
-                  <CardContent className="p-8">
-                    <h3 className="text-xl font-semibold mb-4">Ready to Start Your Estate Planning Journey?</h3>
-                    <p className="text-muted-foreground mb-6">
-                      Our experienced team is here to guide you through every step of the process
-                    </p>
-                    <Button onClick={() => setShowAdvisorDialog(true)} size="lg">
-                      <Calendar className="mr-2 h-5 w-5" />
-                      Schedule Your Consultation
-                    </Button>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
+          <TabsContent value="vault" className="space-y-6">
+            <SecureFamilyVault />
           </TabsContent>
 
-          <TabsContent value="resources" className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <Card className="h-full">
-                <CardHeader>
-                  <CardTitle className="text-lg">Estate Planning Guides</CardTitle>
-                  <CardDescription>Free resources to help you understand estate planning</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  {[
-                    "Estate Planning 101: The Basics",
-                    "Understanding Wills vs. Trusts",
-                    "How to Choose an Executor",
-                    "Estate Tax Planning Strategies",
-                    "Digital Asset Protection Guide"
-                  ].map((guide) => (
-                    <div key={guide} className="flex items-center gap-3">
-                      <FileText className="h-4 w-4 text-primary flex-shrink-0" />
-                      <span className="text-sm">{guide}</span>
-                    </div>
-                  ))}
-                </CardContent>
-                <CardFooter>
-                  <Button variant="outline" className="w-full" onClick={handleDownloadGuides}>
-                    Download Guides
-                  </Button>
-                </CardFooter>
-              </Card>
+          <TabsContent value="calculators" className="space-y-6">
+            <AdvancedEstateCalculators />
+          </TabsContent>
 
-              <Card className="h-full">
-                <CardHeader>
-                  <CardTitle className="text-lg">Family Legacy Box</CardTitle>
-                  <CardDescription>Preserve your family history and values</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    Our Family Legacy Box is a comprehensive digital solution that helps you preserve important memories, 
-                    documents, and personal messages for future generations. It includes:
-                  </p>
-                  <ul className="space-y-2">
-                    {[
-                      "Digital storage of important documents",
-                      "Family history preservation",
-                      "Video and audio recording capabilities",
-                      "Ethical will creation tools",
-                      "Secure access for designated family members"
-                    ].map((feature) => (
-                      <li key={feature} className="flex items-start gap-2">
-                        <CheckCircle2 className="h-4 w-4 text-green-500 flex-shrink-0 mt-0.5" />
-                        <span className="text-sm">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-                <CardFooter>
-                  <Button 
-                    className="w-full" 
-                    onClick={() => handleLearnMoreClick("Family Legacy Box")}
-                  >
-                    Learn More About Legacy Box
-                  </Button>
-                </CardFooter>
-              </Card>
-            </div>
+          <TabsContent value="collaboration" className="space-y-6">
+            <CollaborationTools />
           </TabsContent>
         </Tabs>
 
         {/* Dialogs */}
         <Dialog open={showAdvisorDialog} onOpenChange={setShowAdvisorDialog}>
-          <DialogContent className="sm:max-w-[425px]">
+          <DialogContent>
             <DialogHeader>
-              <DialogTitle>Schedule a Meeting</DialogTitle>
+              <DialogTitle>Schedule Your Consultation</DialogTitle>
               <DialogDescription>
-                Schedule a meeting with our estate planning expert to discuss your needs.
+                Book a complimentary consultation with our estate planning experts
               </DialogDescription>
             </DialogHeader>
-            <div className="space-y-4 py-4">
-              <div className="space-y-2">
+            <div className="space-y-4">
+              <div>
                 <Label htmlFor="name">Full Name</Label>
-                <Input id="name" name="name" value={formData.name} onChange={handleInputChange} placeholder="John Doe" />
+                <Input
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  placeholder="Your full name"
+                />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input id="email" name="email" type="email" value={formData.email} onChange={handleInputChange} placeholder="john@example.com" />
+              <div>
+                <Label htmlFor="email">Email Address</Label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  placeholder="your.email@example.com"
+                />
               </div>
-              <div className="space-y-2">
+              <div>
                 <Label htmlFor="phone">Phone Number</Label>
-                <Input id="phone" name="phone" value={formData.phone} onChange={handleInputChange} placeholder="(555) 123-4567" />
+                <Input
+                  id="phone"
+                  name="phone"
+                  type="tel"
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                  placeholder="(555) 123-4567"
+                />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="preferred-time">Preferred Time</Label>
-                <div className="flex flex-wrap gap-2">
-                  {["Morning", "Afternoon", "Evening"].map((time) => (
-                    <Button key={time} variant="outline" size="sm" onClick={() => toast.info(`${time} selected`)}>
-                      {time}
-                    </Button>
-                  ))}
-                </div>
+              <div>
+                <Label htmlFor="message">Additional Information (Optional)</Label>
+                <Textarea
+                  id="message"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleInputChange}
+                  placeholder="Tell us about your estate planning needs..."
+                />
               </div>
             </div>
-            <DialogFooter className="flex-col sm:flex-row gap-2">
-              <Button variant="outline" onClick={() => setShowAdvisorDialog(false)} className="w-full sm:w-auto">
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => setShowAdvisorDialog(false)}
+              >
                 Cancel
               </Button>
-              <Button onClick={handleScheduleAppointment} className="w-full sm:w-auto">
-                Schedule
+              <Button onClick={handleScheduleAppointment}>
+                Schedule Consultation
               </Button>
             </DialogFooter>
           </DialogContent>
