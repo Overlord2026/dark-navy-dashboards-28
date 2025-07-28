@@ -1,13 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { CheckCircle, Shield, Calculator, Users, MapPin, TrendingUp, Lock } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { CheckCircle, Shield, Calculator, Users, MapPin, TrendingUp, Lock, Heart } from "lucide-react";
+import { SurvivingSpouseModule } from "@/components/shared/SurvivingSpouseModule";
 
 interface SWAGRetirementRoadmapProps {
   className?: string;
 }
 
 export const SWAGRetirementRoadmap: React.FC<SWAGRetirementRoadmapProps> = ({ className }) => {
+  const [showSurvivingSpouseModule, setShowSurvivingSpouseModule] = useState(false);
   const features = [
     {
       icon: <TrendingUp className="h-5 w-5" />,
@@ -145,9 +148,12 @@ export const SWAGRetirementRoadmap: React.FC<SWAGRetirementRoadmapProps> = ({ cl
       {/* Value Proposition */}
       <Card className="bg-muted/30 p-6">
         <div className="text-center">
-          <h3 className="text-xl font-bold text-foreground mb-3">
-            Find out if your family is at risk for the widow's penalty
-          </h3>
+          <div className="flex items-center justify-center gap-2 mb-3">
+            <Heart className="h-6 w-6 text-pink-600" />
+            <h3 className="text-xl font-bold text-foreground">
+              Find out if your family is at risk for the widow's penalty
+            </h3>
+          </div>
           <div className="grid md:grid-cols-3 gap-4 text-center mb-6">
             <div>
               <CheckCircle className="h-6 w-6 text-primary mx-auto mb-2" />
@@ -162,9 +168,23 @@ export const SWAGRetirementRoadmap: React.FC<SWAGRetirementRoadmapProps> = ({ cl
               <p className="text-sm text-muted-foreground">Get clear, actionable steps—no pressure, just peace of mind</p>
             </div>
           </div>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-muted-foreground mb-4">
             <strong>Most "retirement plans" miss these critical risks—don't let that be your family's story.</strong> Our fiduciary process stress-tests for what matters most, so you can retire (and stay retired) with confidence.
           </p>
+          <Dialog open={showSurvivingSpouseModule} onOpenChange={setShowSurvivingSpouseModule}>
+            <DialogTrigger asChild>
+              <Button variant="outline" className="mx-auto">
+                <Heart className="h-4 w-4 mr-2" />
+                Take the Surviving Spouse Stress Test
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle>Surviving Spouse & Widow's Penalty Analysis</DialogTitle>
+              </DialogHeader>
+              <SurvivingSpouseModule />
+            </DialogContent>
+          </Dialog>
         </div>
       </Card>
 

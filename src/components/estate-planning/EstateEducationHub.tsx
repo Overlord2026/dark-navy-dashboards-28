@@ -20,8 +20,10 @@ import {
   HelpCircle,
   Calendar,
   Phone,
-  Mail
+  Mail,
+  Heart
 } from 'lucide-react';
+import { SurvivingSpouseModule } from '@/components/shared/SurvivingSpouseModule';
 import { toast } from 'sonner';
 
 interface ReadinessChecklistItem {
@@ -36,6 +38,7 @@ export function EstateEducationHub() {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSurvivingSpouseModule, setShowSurvivingSpouseModule] = useState(false);
   const [readinessItems, setReadinessItems] = useState<ReadinessChecklistItem[]>([
     {
       id: '1',
@@ -281,10 +284,11 @@ export function EstateEducationHub() {
 
       {/* Educational Content Tabs */}
       <Tabs defaultValue="guides" className="w-full">
-        <TabsList className="w-full grid grid-cols-4">
+        <TabsList className="w-full grid grid-cols-5">
           <TabsTrigger value="guides">Guides</TabsTrigger>
           <TabsTrigger value="videos">Videos</TabsTrigger>
           <TabsTrigger value="faqs">FAQs</TabsTrigger>
+          <TabsTrigger value="surviving-spouse">Surviving Spouse</TabsTrigger>
           <TabsTrigger value="services">Services</TabsTrigger>
         </TabsList>
 
@@ -419,6 +423,10 @@ export function EstateEducationHub() {
               </Card>
             ))}
           </div>
+        </TabsContent>
+
+        <TabsContent value="surviving-spouse">
+          <SurvivingSpouseModule />
         </TabsContent>
 
         <TabsContent value="services" className="space-y-4">
