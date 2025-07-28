@@ -7,6 +7,9 @@ import { Badge } from "@/components/ui/badge";
 import { TargetIcon, CalendarIcon, StarIcon, PlusIcon, DollarSignIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useFinancialPlans } from "@/hooks/useFinancialPlans";
+import { BudgetCategoryManager } from "@/components/budget/BudgetCategoryManager";
+import { MonthlyBudgetPlanner } from "@/components/budget/MonthlyBudgetPlanner";
+import { SpendingAnalysis } from "@/components/budget/SpendingAnalysis";
 
 const GoalsBudgets = () => {
   const { plans, activePlan, summary, loading } = useFinancialPlans();
@@ -54,7 +57,8 @@ const GoalsBudgets = () => {
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="retirement">Retirement Goals</TabsTrigger>
           <TabsTrigger value="bucket-list">Bucket-List Goals</TabsTrigger>
-          <TabsTrigger value="budgets" disabled>Budgets (Coming Soon)</TabsTrigger>
+          <TabsTrigger value="budgets">Budgets</TabsTrigger>
+          <TabsTrigger value="spending">Spending Analysis</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6">
@@ -253,17 +257,17 @@ const GoalsBudgets = () => {
               </CardContent>
             </Card>
 
-            <Card className="opacity-60">
+            <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <TargetIcon className="h-5 w-5" />
-                  Budgets
+                  Budgets & Spending
                 </CardTitle>
-                <CardDescription>Coming Soon</CardDescription>
+                <CardDescription>Track expenses and manage budgets</CardDescription>
               </CardHeader>
               <CardContent>
-                <Button disabled className="w-full">
-                  Coming Soon
+                <Button asChild className="w-full">
+                  <Link to="/wealth/goals?tab=budgets">Manage Budgets</Link>
                 </Button>
               </CardContent>
             </Card>
@@ -295,15 +299,24 @@ const GoalsBudgets = () => {
         </TabsContent>
 
         <TabsContent value="budgets" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Budget Management</CardTitle>
-              <CardDescription>Coming Soon - Comprehensive budget tracking</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p>Budget management features are in development.</p>
-            </CardContent>
-          </Card>
+          <Tabs defaultValue="planner" className="space-y-6">
+            <TabsList>
+              <TabsTrigger value="planner">Monthly Planner</TabsTrigger>
+              <TabsTrigger value="categories">Categories</TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="planner">
+              <MonthlyBudgetPlanner />
+            </TabsContent>
+            
+            <TabsContent value="categories">
+              <BudgetCategoryManager />
+            </TabsContent>
+          </Tabs>
+        </TabsContent>
+
+        <TabsContent value="spending" className="space-y-6">
+          <SpendingAnalysis />
         </TabsContent>
       </Tabs>
     </div>

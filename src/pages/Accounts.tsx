@@ -44,6 +44,7 @@ import { CreditCardsList } from "@/components/accounts/CreditCardsList";
 import { useCreditCards } from "@/context/CreditCardsContext";
 import { AccountProgress } from "@/components/accounts/AccountProgress";
 import { useBankAccounts } from "@/context/BankAccountsContext";
+import { NetWorthSummary } from "@/components/accounts/NetWorthSummary";
 
 const Accounts = () => {
   const { 
@@ -206,6 +207,9 @@ const Accounts = () => {
             </Button>
           </div>
         </div>
+        
+        {/* Net Worth Summary */}
+        <NetWorthSummary />
         
         {/* Progress Indicator */}
         <AccountProgress 
