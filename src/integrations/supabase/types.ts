@@ -327,6 +327,63 @@ export type Database = {
           },
         ]
       }
+      api_integration_configs: {
+        Row: {
+          api_endpoints: Json | null
+          authentication_method: string | null
+          config_data: Json
+          created_at: string
+          created_by: string
+          credentials_encrypted: string | null
+          health_status: string | null
+          id: string
+          integration_name: string
+          integration_type: string
+          is_active: boolean | null
+          is_sandbox: boolean | null
+          last_health_check: string | null
+          rate_limits: Json | null
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          api_endpoints?: Json | null
+          authentication_method?: string | null
+          config_data: Json
+          created_at?: string
+          created_by: string
+          credentials_encrypted?: string | null
+          health_status?: string | null
+          id?: string
+          integration_name: string
+          integration_type: string
+          is_active?: boolean | null
+          is_sandbox?: boolean | null
+          last_health_check?: string | null
+          rate_limits?: Json | null
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          api_endpoints?: Json | null
+          authentication_method?: string | null
+          config_data?: Json
+          created_at?: string
+          created_by?: string
+          credentials_encrypted?: string | null
+          health_status?: string | null
+          id?: string
+          integration_name?: string
+          integration_type?: string
+          is_active?: boolean | null
+          is_sandbox?: boolean | null
+          last_health_check?: string | null
+          rate_limits?: Json | null
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       api_integrations: {
         Row: {
           auth_config: Json
@@ -4523,6 +4580,177 @@ export type Database = {
           },
         ]
       }
+      kyc_verifications: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          entity_id: string
+          entity_type: string
+          expires_at: string | null
+          id: string
+          notes: string | null
+          provider: string | null
+          retry_count: number | null
+          risk_score: number | null
+          status: string
+          updated_at: string
+          verification_data: Json | null
+          verification_type: string
+          verified_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          entity_id: string
+          entity_type: string
+          expires_at?: string | null
+          id?: string
+          notes?: string | null
+          provider?: string | null
+          retry_count?: number | null
+          risk_score?: number | null
+          status?: string
+          updated_at?: string
+          verification_data?: Json | null
+          verification_type: string
+          verified_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          entity_id?: string
+          entity_type?: string
+          expires_at?: string | null
+          id?: string
+          notes?: string | null
+          provider?: string | null
+          retry_count?: number | null
+          risk_score?: number | null
+          status?: string
+          updated_at?: string
+          verification_data?: Json | null
+          verification_type?: string
+          verified_at?: string | null
+        }
+        Relationships: []
+      }
+      lead_routing_decisions: {
+        Row: {
+          created_at: string
+          decision_factors: Json | null
+          id: string
+          loan_request_id: string
+          reasoning: Json | null
+          recommended_partner_id: string | null
+          rule_id: string | null
+          score: number | null
+        }
+        Insert: {
+          created_at?: string
+          decision_factors?: Json | null
+          id?: string
+          loan_request_id: string
+          reasoning?: Json | null
+          recommended_partner_id?: string | null
+          rule_id?: string | null
+          score?: number | null
+        }
+        Update: {
+          created_at?: string
+          decision_factors?: Json | null
+          id?: string
+          loan_request_id?: string
+          reasoning?: Json | null
+          recommended_partner_id?: string | null
+          rule_id?: string | null
+          score?: number | null
+        }
+        Relationships: []
+      }
+      lead_routing_rules: {
+        Row: {
+          created_at: string
+          created_by: string
+          criteria: Json
+          id: string
+          is_active: boolean | null
+          preferred_partners: string[] | null
+          rule_name: string
+          tenant_id: string
+          updated_at: string
+          weight_score: number | null
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          criteria: Json
+          id?: string
+          is_active?: boolean | null
+          preferred_partners?: string[] | null
+          rule_name: string
+          tenant_id: string
+          updated_at?: string
+          weight_score?: number | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          criteria?: Json
+          id?: string
+          is_active?: boolean | null
+          preferred_partners?: string[] | null
+          rule_name?: string
+          tenant_id?: string
+          updated_at?: string
+          weight_score?: number | null
+        }
+        Relationships: []
+      }
+      lending_analytics: {
+        Row: {
+          avg_approval_time_hours: number | null
+          conversion_rate: number | null
+          created_at: string
+          id: string
+          loan_volume: number | null
+          metric_type: string
+          partner_performance: Json | null
+          period_end: string
+          period_start: string
+          tenant_id: string
+          total_loan_amount: number | null
+          updated_at: string
+        }
+        Insert: {
+          avg_approval_time_hours?: number | null
+          conversion_rate?: number | null
+          created_at?: string
+          id?: string
+          loan_volume?: number | null
+          metric_type: string
+          partner_performance?: Json | null
+          period_end: string
+          period_start: string
+          tenant_id: string
+          total_loan_amount?: number | null
+          updated_at?: string
+        }
+        Update: {
+          avg_approval_time_hours?: number | null
+          conversion_rate?: number | null
+          created_at?: string
+          id?: string
+          loan_volume?: number | null
+          metric_type?: string
+          partner_performance?: Json | null
+          period_end?: string
+          period_start?: string
+          tenant_id?: string
+          total_loan_amount?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       lending_partners: {
         Row: {
           category: string
@@ -5704,6 +5932,54 @@ export type Database = {
           tenant_id?: string | null
           updated_at?: string
           website_url?: string | null
+        }
+        Relationships: []
+      }
+      partner_metrics: {
+        Row: {
+          approval_rate: number | null
+          avg_approval_time_hours: number | null
+          avg_funding_time_hours: number | null
+          calculated_at: string
+          client_satisfaction_score: number | null
+          funding_rate: number | null
+          id: string
+          loans_approved: number | null
+          loans_funded: number | null
+          loans_received: number | null
+          metric_period: string
+          partner_id: string
+          total_volume: number | null
+        }
+        Insert: {
+          approval_rate?: number | null
+          avg_approval_time_hours?: number | null
+          avg_funding_time_hours?: number | null
+          calculated_at?: string
+          client_satisfaction_score?: number | null
+          funding_rate?: number | null
+          id?: string
+          loans_approved?: number | null
+          loans_funded?: number | null
+          loans_received?: number | null
+          metric_period: string
+          partner_id: string
+          total_volume?: number | null
+        }
+        Update: {
+          approval_rate?: number | null
+          avg_approval_time_hours?: number | null
+          avg_funding_time_hours?: number | null
+          calculated_at?: string
+          client_satisfaction_score?: number | null
+          funding_rate?: number | null
+          id?: string
+          loans_approved?: number | null
+          loans_funded?: number | null
+          loans_received?: number | null
+          metric_period?: string
+          partner_id?: string
+          total_volume?: number | null
         }
         Relationships: []
       }
