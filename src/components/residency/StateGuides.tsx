@@ -17,6 +17,16 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 
+const getGuideTypeIcon = (type: string) => {
+  switch (type) {
+    case 'checklist': return CheckCircle;
+    case 'timeline': return Calendar;
+    case 'tax': return DollarSign;
+    case 'legal': return FileText;
+    default: return FileText;
+  }
+};
+
 interface StateGuide {
   state: string;
   icon: string;
@@ -165,15 +175,6 @@ export function StateGuides() {
     console.log('Lead captured:', { email, name, state, guideType, timestamp: new Date() });
   };
 
-  const getGuideTypeIcon = (type: string) => {
-    switch (type) {
-      case 'checklist': return <CheckCircle className="h-4 w-4" />;
-      case 'timeline': return <Calendar className="h-4 w-4" />;
-      case 'tax': return <DollarSign className="h-4 w-4" />;
-      case 'legal': return <FileText className="h-4 w-4" />;
-      default: return <FileText className="h-4 w-4" />;
-    }
-  };
 
   return (
     <div className="space-y-8">
@@ -293,7 +294,10 @@ function StateGuideCard({ guide, onDownload }: StateGuideCardProps) {
                     size="sm" 
                     className="flex items-center gap-2 text-xs"
                   >
-                    {getGuideTypeIcon(type)}
+                    {(() => {
+                      const IconComponent = getGuideTypeIcon(type);
+                      return <IconComponent className="h-3 w-3" />;
+                    })()}
                     {type.charAt(0).toUpperCase() + type.slice(1)}
                   </Button>
                 </DialogTrigger>

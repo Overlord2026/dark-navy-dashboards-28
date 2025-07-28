@@ -39,6 +39,10 @@ export function useSubscriptionAccess() {
           tax_access: profile?.tax_access || false,
           ai_features_access: profile?.ai_features_access || false,
           premium_analytics_access: profile?.premium_analytics_access || false,
+          residency_optimization: true, // Default to true for now since no DB column
+          advisor_marketplace: true, // Default to true for now since no DB column
+          audit_risk_analyzer: true, // Default to true for now since no DB column
+          relocation_concierge: true, // Default to true for now since no DB column
         },
         usage_counters: {
           lending_applications: profile?.lending_applications_used || 0,

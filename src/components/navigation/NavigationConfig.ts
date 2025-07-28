@@ -35,7 +35,8 @@ import {
   TrendingUpIcon,
   FolderHeartIcon,
   BookHeartIcon,
-  ShareIcon as ShareDataIcon
+  ShareIcon as ShareDataIcon,
+  MapPin
 } from "lucide-react";
 
 import { NavItem } from "@/types/navigation";

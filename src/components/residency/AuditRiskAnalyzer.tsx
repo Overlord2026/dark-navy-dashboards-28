@@ -266,7 +266,33 @@ function RiskAnalysisForm({
                 <h3 className="font-semibold text-lg">Key Risk Factors</h3>
                 {riskFactors.map(factor => {
                   const answer = answers[factor.id];
-                  const factorRisk = answer ? 'medium' : 'low'; // Simplified for demo
+                  // Calculate risk based on the answer and factor characteristics
+                  let factorRisk: 'low' | 'medium' | 'high' = 'low';
+                  
+                  if (answer) {
+                    // Determine risk based on the specific factor and answer
+                    switch (factor.id) {
+                      case 'former_state_taxes':
+                        const taxAmount = parseInt(answer);
+                        factorRisk = taxAmount > 25000 ? 'high' : taxAmount > 10000 ? 'medium' : 'low';
+                        break;
+                      case 'income_level':
+                        factorRisk = ['500k-1m', '1m+'].includes(answer) ? 'high' : 'medium';
+                        break;
+                      case 'ties_to_former_state':
+                        const ties = parseInt(answer);
+                        factorRisk = ties > 3 ? 'high' : ties > 1 ? 'medium' : 'low';
+                        break;
+                      case 'documentation_completeness':
+                        factorRisk = answer === 'minimal' ? 'high' : answer === 'partial' ? 'medium' : 'low';
+                        break;
+                      case 'days_in_states':
+                        factorRisk = ['50-50', '60-40'].includes(answer) ? 'high' : answer === '70-30' ? 'medium' : 'low';
+                        break;
+                      default:
+                        factorRisk = 'medium';
+                    }
+                  }
                   
                   return (
                     <div key={factor.id} className="flex items-center gap-3 p-3 rounded-lg border">

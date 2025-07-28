@@ -24,6 +24,10 @@ export interface AddOnAccess {
   tax_access: boolean;
   ai_features_access: boolean;
   premium_analytics_access: boolean;
+  residency_optimization: boolean;
+  advisor_marketplace: boolean;
+  audit_risk_analyzer: boolean;
+  relocation_concierge: boolean;
 }
 
 export interface UsageCounters {
