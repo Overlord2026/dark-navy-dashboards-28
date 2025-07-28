@@ -23,7 +23,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 
 // Import new tax planning calculators
 import RothConversionAnalyzer from "@/components/tax-planning/RothConversionAnalyzer";
-import TaxReturnAnalyzer from "@/components/tax-planning/TaxReturnAnalyzer";
+import { EnhancedTaxReturnAnalyzer } from "@/components/tax-planning/EnhancedTaxReturnAnalyzer";
 import MultiYearTaxProjector from "@/components/tax-planning/MultiYearTaxProjector";
 import WithdrawalSequencingSimulator from "@/components/tax-planning/WithdrawalSequencingSimulator";
 import TaxBracketProjector from "@/components/tax-planning/TaxBracketProjector";
@@ -136,9 +136,9 @@ export default function TaxPlanning() {
           <RothConversionAnalyzer subscriptionTier={subscriptionTier} />
         </motion.div>
 
-        {/* Tax Return Analyzer */}
+        {/* Enhanced Tax Return Analyzer */}
         <motion.div variants={itemVariants}>
-          <TaxReturnAnalyzer subscriptionTier={subscriptionTier} />
+          <EnhancedTaxReturnAnalyzer />
         </motion.div>
 
         {/* Multi-Year Tax Projector */}
