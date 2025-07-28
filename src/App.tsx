@@ -67,6 +67,7 @@ import CreateGoalPage from "./pages/CreateGoalPage";
 import { PersonaTestPage } from "./pages/qa/PersonaTestPage";
 import { BrandAuditPage } from "./pages/qa/BrandAuditPage";
 import { ComplianceReportingPage } from "./pages/ComplianceReportingPage";
+import Reports from "./pages/Reports";
 
 const queryClient = new QueryClient();
 
@@ -395,6 +396,16 @@ const App = () => {
                     element={
                       <AuthWrapper requireAuth={true}>
                         <GoalDetailPage />
+                      </AuthWrapper>
+                    }
+                  />
+
+                  {/* Reports Route */}
+                  <Route
+                    path="/reports"
+                    element={
+                      <AuthWrapper requireAuth={true}>
+                        <Reports />
                       </AuthWrapper>
                     }
                   />
