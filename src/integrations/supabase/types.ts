@@ -1045,6 +1045,36 @@ export type Database = {
           },
         ]
       }
+      client_storage_audit: {
+        Row: {
+          error_message: string | null
+          id: string
+          operation: string
+          storage_key: string
+          success: boolean | null
+          timestamp: string | null
+          user_id: string
+        }
+        Insert: {
+          error_message?: string | null
+          id?: string
+          operation: string
+          storage_key: string
+          success?: boolean | null
+          timestamp?: string | null
+          user_id: string
+        }
+        Update: {
+          error_message?: string | null
+          id?: string
+          operation?: string
+          storage_key?: string
+          success?: boolean | null
+          timestamp?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       coach_insights: {
         Row: {
           context_data: Json | null
@@ -5794,6 +5824,39 @@ export type Database = {
         }
         Relationships: []
       }
+      mfa_bypass_audit: {
+        Row: {
+          bypass_reason: string
+          created_at: string | null
+          expires_at: string | null
+          id: string
+          initiated_by: string | null
+          is_active: boolean | null
+          user_id: string
+          user_role: string
+        }
+        Insert: {
+          bypass_reason: string
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          initiated_by?: string | null
+          is_active?: boolean | null
+          user_id: string
+          user_role: string
+        }
+        Update: {
+          bypass_reason?: string
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          initiated_by?: string | null
+          is_active?: boolean | null
+          user_id?: string
+          user_role?: string
+        }
+        Relationships: []
+      }
       model_portfolios: {
         Row: {
           asset_allocation: string | null
@@ -6904,6 +6967,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      policy_version_history: {
+        Row: {
+          action_type: string
+          change_reason: string | null
+          changed_at: string | null
+          changed_by: string | null
+          id: string
+          policy_definition: string | null
+          policy_name: string
+          table_name: string
+        }
+        Insert: {
+          action_type: string
+          change_reason?: string | null
+          changed_at?: string | null
+          changed_by?: string | null
+          id?: string
+          policy_definition?: string | null
+          policy_name: string
+          table_name: string
+        }
+        Update: {
+          action_type?: string
+          change_reason?: string | null
+          changed_at?: string | null
+          changed_by?: string | null
+          id?: string
+          policy_definition?: string | null
+          policy_name?: string
+          table_name?: string
+        }
+        Relationships: []
       }
       prescriptions: {
         Row: {

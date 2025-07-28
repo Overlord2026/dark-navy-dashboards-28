@@ -2,6 +2,7 @@
 import { supabase } from '@/lib/supabase';
 import { PasswordPolicyValidator, PasswordValidationResult } from './passwordPolicy';
 import { auditLog } from '@/services/auditLog/auditLogService';
+import { mfaBypassService } from './mfaBypassService';
 
 export interface PrivilegedRole {
   role: string;
@@ -12,8 +13,8 @@ export interface PrivilegedRole {
 export const PRIVILEGED_ROLES: PrivilegedRole[] = [
   { role: 'admin', requiresMFA: true, maxSessionDuration: 8 },
   { role: 'tenant_admin', requiresMFA: true, maxSessionDuration: 8 },
-  { role: 'system_administrator', requiresMFA: false, maxSessionDuration: 4 }, // Temporarily disabled for development
-  { role: 'developer', requiresMFA: false, maxSessionDuration: 12 }, // Temporarily disabled for development
+  { role: 'system_administrator', requiresMFA: true, maxSessionDuration: 4 }, // MFA enforced for security
+  { role: 'developer', requiresMFA: true, maxSessionDuration: 12 }, // MFA enforced for security
   { role: 'consultant', requiresMFA: false, maxSessionDuration: 24 },
   { role: 'accountant', requiresMFA: false, maxSessionDuration: 24 },
   { role: 'attorney', requiresMFA: false, maxSessionDuration: 24 }
@@ -79,14 +80,17 @@ export class AuthSecurityService {
 
     const mfaEnabled = profile.two_factor_enabled || false;
     
-    // Calculate grace period (7 days from account creation)
-    const gracePeriodDays = 7;
+    // Check for active MFA bypass first
+    const hasActiveBypass = await mfaBypassService.hasActiveMFABypass(userId);
+    
+    // Calculate grace period (24 hours from account creation)
+    const gracePeriodHours = 24;
     const accountAge = Date.now() - new Date(profile.created_at).getTime();
-    const gracePeriodMs = gracePeriodDays * 24 * 60 * 60 * 1000;
+    const gracePeriodMs = gracePeriodHours * 60 * 60 * 1000;
     const gracePeriodExpired = accountAge > gracePeriodMs;
 
-    // Block access if MFA is required but not enabled and grace period expired
-    const shouldBlock = !mfaEnabled && gracePeriodExpired;
+    // Block access if MFA is required but not enabled, grace period expired, and no active bypass
+    const shouldBlock = !mfaEnabled && gracePeriodExpired && !hasActiveBypass;
 
     // Log security event
     auditLog.log(

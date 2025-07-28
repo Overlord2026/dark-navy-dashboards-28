@@ -1,0 +1,144 @@
+name: Security Audit
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    # Run security audit daily at 2 AM UTC
+    - cron: '0 2 * * *'
+
+jobs:
+  security-audit:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Setup Supabase CLI
+      run: |
+        curl -sL https://github.com/supabase/cli/releases/latest/download/supabase_linux_amd64.tar.gz | tar xz
+        sudo mv supabase /usr/local/bin/
+
+    - name: Run Supabase Security Linter
+      env:
+        SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        SUPABASE_PROJECT_ID: ${{ vars.SUPABASE_PROJECT_ID }}
+      run: |
+        # Run the security linter and capture output
+        echo "Running Supabase Security Linter..."
+        
+        # Create a temporary file for the linter output
+        LINTER_OUTPUT=$(mktemp)
+        
+        # Run linter and capture both stdout and stderr
+        supabase db lint --project-ref $SUPABASE_PROJECT_ID --schema public > $LINTER_OUTPUT 2>&1 || true
+        
+        # Display the output
+        cat $LINTER_OUTPUT
+        
+        # Check for any ERROR level issues
+        ERROR_COUNT=$(grep -c "Level: ERROR" $LINTER_OUTPUT || true)
+        
+        echo "Found $ERROR_COUNT critical security errors"
+        
+        # Fail the CI if any critical errors are found
+        if [ $ERROR_COUNT -gt 0 ]; then
+          echo "❌ Security audit failed: $ERROR_COUNT critical errors found"
+          echo "Please fix all ERROR level security issues before merging"
+          exit 1
+        else
+          echo "✅ Security audit passed: No critical errors found"
+        fi
+
+    - name: Run npm audit
+      run: |
+        echo "Running npm security audit..."
+        npm audit --audit-level=high
+
+    - name: Check for hardcoded secrets
+      run: |
+        echo "Scanning for potential hardcoded secrets..."
+        
+        # Check for common patterns of hardcoded secrets
+        SECRET_PATTERNS=(
+          "password\s*=\s*['\"][^'\"]{8,}['\"]"
+          "api[_-]?key\s*=\s*['\"][^'\"]{10,}['\"]"
+          "secret\s*=\s*['\"][^'\"]{8,}['\"]"
+          "token\s*=\s*['\"][^'\"]{10,}['\"]"
+          "['\"][A-Za-z0-9]{32,}['\"]"
+        )
+        
+        SECRETS_FOUND=false
+        
+        for pattern in "${SECRET_PATTERNS[@]}"; do
+          if grep -r -E "$pattern" src/ --exclude-dir=node_modules || true; then
+            SECRETS_FOUND=true
+          fi
+        done
+        
+        if [ "$SECRETS_FOUND" = true ]; then
+          echo "❌ Potential hardcoded secrets detected!"
+          echo "Please review the matches above and ensure no secrets are committed"
+          exit 1
+        else
+          echo "✅ No hardcoded secrets detected"
+        fi
+
+    - name: Security Summary
+      if: always()
+      run: |
+        echo "## Security Audit Summary" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        if [ "${{ job.status }}" == "success" ]; then
+          echo "✅ All security checks passed" >> $GITHUB_STEP_SUMMARY
+          echo "- Supabase Security Linter: PASSED" >> $GITHUB_STEP_SUMMARY
+          echo "- NPM Audit: PASSED" >> $GITHUB_STEP_SUMMARY
+          echo "- Secret Scanning: PASSED" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "❌ Security audit failed" >> $GITHUB_STEP_SUMMARY
+          echo "Please review the errors above and fix all security issues" >> $GITHUB_STEP_SUMMARY
+        fi
+        
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### Next Steps" >> $GITHUB_STEP_SUMMARY
+        echo "1. Fix any ERROR level issues in Supabase Security Linter" >> $GITHUB_STEP_SUMMARY
+        echo "2. Address any high-severity npm audit findings" >> $GITHUB_STEP_SUMMARY
+        echo "3. Remove any hardcoded secrets detected" >> $GITHUB_STEP_SUMMARY
+        echo "4. Re-run this workflow to verify fixes" >> $GITHUB_STEP_SUMMARY
+
+    - name: Comment PR with Security Status
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const status = '${{ job.status }}' === 'success' ? '✅ PASSED' : '❌ FAILED';
+          const body = `## 🔒 Security Audit ${status}
+          
+          The automated security audit has completed with status: **${status}**
+          
+          ${status === '✅ PASSED' ? 
+            '- All security checks passed\n- No critical vulnerabilities detected\n- Safe to merge' : 
+            '- Critical security issues detected\n- Please review the workflow logs\n- **DO NOT MERGE** until issues are resolved'
+          }
+          
+          View the full [security audit results](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details.`;
+          
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: body
+          });

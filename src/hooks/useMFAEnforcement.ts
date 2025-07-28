@@ -48,7 +48,7 @@ export function useMFAEnforcement(redirectOnBlock: boolean = true) {
       let gracePeriodHours = 0;
       if (status.requiresMFA && !status.mfaEnabled && !status.gracePeriodExpired) {
         const accountAge = Date.now() - new Date(user.created_at).getTime();
-        const gracePeriodMs = 7 * 24 * 60 * 60 * 1000; // 7 days
+        const gracePeriodMs = 24 * 60 * 60 * 1000; // 24 hours
         const remainingMs = gracePeriodMs - accountAge;
         gracePeriodHours = Math.max(0, Math.floor(remainingMs / (1000 * 60 * 60)));
       }
