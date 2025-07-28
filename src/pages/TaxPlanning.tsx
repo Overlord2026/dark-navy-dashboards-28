@@ -1,4 +1,3 @@
-
 import React from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
@@ -39,17 +38,6 @@ export default function TaxPlanning() {
   
   // Mock subscription tier - in production this would come from user context
   const subscriptionTier = 'free'; // 'free', 'basic', 'premium'
-
-  const handleTaxStrategyConsultation = async () => {
-    try {
-      await createConsultation({
-        consultation_type: 'tax_strategy',
-        notes: 'Requested consultation for advanced tax planning strategies'
-      });
-    } catch (error) {
-      console.error('Error scheduling consultation:', error);
-    }
-  };
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -196,10 +184,6 @@ export default function TaxPlanning() {
             </CardContent>
           </Card>
         </motion.div>
-      </motion.div>
-    </ThreeColumnLayout>
-  );
-}
       </motion.div>
     </ThreeColumnLayout>
   );
