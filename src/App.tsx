@@ -64,6 +64,7 @@ import PortfolioPage from "./pages/PortfolioPage";
 import GoalsDashboard from "./pages/GoalsDashboard";
 import GoalDetailPage from "./pages/GoalDetailPage";
 import CreateGoalPage from "./pages/CreateGoalPage";
+import { PersonaTestPage } from "./pages/qa/PersonaTestPage";
 
 const queryClient = new QueryClient();
 
@@ -381,6 +382,19 @@ const App = () => {
                     element={
                       <AuthWrapper requireAuth={true}>
                         <GoalDetailPage />
+                      </AuthWrapper>
+                    }
+                  />
+
+                  {/* QA Testing Routes */}
+                  <Route
+                    path="/qa/persona-test"
+                    element={
+                      <AuthWrapper 
+                        requireAuth={true}
+                        allowedRoles={['developer', 'admin', 'system_administrator']}
+                      >
+                        <PersonaTestPage />
                       </AuthWrapper>
                     }
                   />
