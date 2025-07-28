@@ -1036,6 +1036,57 @@ export type Database = {
         }
         Relationships: []
       }
+      compliance_checks: {
+        Row: {
+          check_type: string
+          compliance_data: Json | null
+          created_at: string
+          entity_id: string
+          entity_type: string
+          expiry_date: string | null
+          id: string
+          notes: string | null
+          performed_at: string
+          performed_by: string | null
+          risk_score: number | null
+          status: string
+          tenant_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          check_type: string
+          compliance_data?: Json | null
+          created_at?: string
+          entity_id: string
+          entity_type: string
+          expiry_date?: string | null
+          id?: string
+          notes?: string | null
+          performed_at?: string
+          performed_by?: string | null
+          risk_score?: number | null
+          status?: string
+          tenant_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          check_type?: string
+          compliance_data?: Json | null
+          created_at?: string
+          entity_id?: string
+          entity_type?: string
+          expiry_date?: string | null
+          id?: string
+          notes?: string | null
+          performed_at?: string
+          performed_by?: string | null
+          risk_score?: number | null
+          status?: string
+          tenant_id?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       credit_cards: {
         Row: {
           apr: number | null
@@ -4505,6 +4556,63 @@ export type Database = {
         }
         Relationships: []
       }
+      loan_documents: {
+        Row: {
+          created_at: string
+          doc_type: string
+          expiry_date: string | null
+          file_name: string | null
+          file_size: number | null
+          file_url: string
+          id: string
+          loan_id: string | null
+          notes: string | null
+          status: string
+          tenant_id: string | null
+          updated_at: string
+          uploaded_at: string
+          user_id: string
+          verified_at: string | null
+          verified_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          doc_type: string
+          expiry_date?: string | null
+          file_name?: string | null
+          file_size?: number | null
+          file_url: string
+          id?: string
+          loan_id?: string | null
+          notes?: string | null
+          status?: string
+          tenant_id?: string | null
+          updated_at?: string
+          uploaded_at?: string
+          user_id: string
+          verified_at?: string | null
+          verified_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          doc_type?: string
+          expiry_date?: string | null
+          file_name?: string | null
+          file_size?: number | null
+          file_url?: string
+          id?: string
+          loan_id?: string | null
+          notes?: string | null
+          status?: string
+          tenant_id?: string | null
+          updated_at?: string
+          uploaded_at?: string
+          user_id?: string
+          verified_at?: string | null
+          verified_by?: string | null
+        }
+        Relationships: []
+      }
       loan_requests: {
         Row: {
           id: string
@@ -5443,6 +5551,75 @@ export type Database = {
           updated_at?: string
           user_id?: string
           value?: number
+        }
+        Relationships: []
+      }
+      partner_applications: {
+        Row: {
+          address: Json | null
+          approved_at: string | null
+          business_type: string | null
+          compliance_status: string
+          contact_person: string | null
+          created_at: string
+          email: string
+          id: string
+          license_number: string | null
+          loan_products: string[] | null
+          maximum_loan_amount: number | null
+          minimum_loan_amount: number | null
+          onboarding_docs: string[] | null
+          partner_name: string
+          phone: string | null
+          status: string
+          submitted_at: string
+          tenant_id: string | null
+          updated_at: string
+          website_url: string | null
+        }
+        Insert: {
+          address?: Json | null
+          approved_at?: string | null
+          business_type?: string | null
+          compliance_status?: string
+          contact_person?: string | null
+          created_at?: string
+          email: string
+          id?: string
+          license_number?: string | null
+          loan_products?: string[] | null
+          maximum_loan_amount?: number | null
+          minimum_loan_amount?: number | null
+          onboarding_docs?: string[] | null
+          partner_name: string
+          phone?: string | null
+          status?: string
+          submitted_at?: string
+          tenant_id?: string | null
+          updated_at?: string
+          website_url?: string | null
+        }
+        Update: {
+          address?: Json | null
+          approved_at?: string | null
+          business_type?: string | null
+          compliance_status?: string
+          contact_person?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          license_number?: string | null
+          loan_products?: string[] | null
+          maximum_loan_amount?: number | null
+          minimum_loan_amount?: number | null
+          onboarding_docs?: string[] | null
+          partner_name?: string
+          phone?: string | null
+          status?: string
+          submitted_at?: string
+          tenant_id?: string | null
+          updated_at?: string
+          website_url?: string | null
         }
         Relationships: []
       }
@@ -11937,6 +12114,10 @@ export type Database = {
       }
       process_advisor_referral: {
         Args: { p_referral_code: string; p_new_advisor_id: string }
+        Returns: boolean
+      }
+      process_partner_application: {
+        Args: { p_application_id: string; p_action: string; p_notes?: string }
         Returns: boolean
       }
       rpc_backup_status: {
