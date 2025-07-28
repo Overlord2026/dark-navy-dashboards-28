@@ -43,6 +43,7 @@ export function useSubscriptionAccess() {
           advisor_marketplace: true, // Default to true for now since no DB column
           audit_risk_analyzer: true, // Default to true for now since no DB column
           relocation_concierge: true, // Default to true for now since no DB column
+          bill_pay_premium: (profile?.subscription_tier === 'premium' || profile?.subscription_tier === 'elite') || false,
         },
         usage_counters: {
           lending_applications: profile?.lending_applications_used || 0,
