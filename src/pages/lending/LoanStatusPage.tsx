@@ -74,17 +74,23 @@ export const LoanStatusPage: React.FC = () => {
     try {
       const { data, error } = await supabase
         .from('loan_requests')
-        .select(`
-          *,
-          assigned_advisor:advisor_assignments(advisor_id),
-          documents_count:loan_documents(count),
-          messages_count:loan_messages(count)
-        `)
+        .select('*')
         .eq('id', loanId)
         .single();
 
       if (error) throw error;
-      setLoanStatus(data);
+      
+      // Transform data to match interface
+      const transformedData: LoanStatus = {
+        ...data,
+        created_at: data.created_at || data.submitted_at || new Date().toISOString(),
+        matched_partners: [],
+        messages_count: 0,
+        documents_count: 0,
+        compliance_status: data.compliance_status || 'pending'
+      };
+      
+      setLoanStatus(transformedData);
     } catch (error) {
       console.error('Error fetching loan status:', error);
       toast.error('Failed to load loan status');

@@ -4613,8 +4613,53 @@ export type Database = {
         }
         Relationships: []
       }
+      loan_messages: {
+        Row: {
+          attachments: string[] | null
+          content: string
+          created_at: string
+          id: string
+          is_read: boolean | null
+          loan_id: string
+          message_type: string
+          recipient_id: string | null
+          sender_id: string
+          thread_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          attachments?: string[] | null
+          content: string
+          created_at?: string
+          id?: string
+          is_read?: boolean | null
+          loan_id: string
+          message_type?: string
+          recipient_id?: string | null
+          sender_id: string
+          thread_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          attachments?: string[] | null
+          content?: string
+          created_at?: string
+          id?: string
+          is_read?: boolean | null
+          loan_id?: string
+          message_type?: string
+          recipient_id?: string | null
+          sender_id?: string
+          thread_id?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       loan_requests: {
         Row: {
+          application_data: Json | null
+          compliance_status: string | null
+          eligibility_result: Json | null
           id: string
           loan_type: string
           partner_id: string | null
@@ -4625,6 +4670,9 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          application_data?: Json | null
+          compliance_status?: string | null
+          eligibility_result?: Json | null
           id?: string
           loan_type: string
           partner_id?: string | null
@@ -4635,6 +4683,9 @@ export type Database = {
           user_id: string
         }
         Update: {
+          application_data?: Json | null
+          compliance_status?: string | null
+          eligibility_result?: Json | null
           id?: string
           loan_type?: string
           partner_id?: string | null
@@ -4653,6 +4704,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      loan_status_updates: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          loan_id: string
+          message: string | null
+          metadata: Json | null
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          loan_id: string
+          message?: string | null
+          metadata?: Json | null
+          status: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          loan_id?: string
+          message?: string | null
+          metadata?: Json | null
+          status?: string
+        }
+        Relationships: []
       }
       med_adherence: {
         Row: {

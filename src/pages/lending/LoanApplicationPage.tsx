@@ -147,8 +147,9 @@ export const LoanApplicationPage: React.FC = () => {
             creditScore: application.creditScore,
             downPayment: application.downPayment,
             propertyValue: application.propertyValue
-          },
-          eligibility_result: eligibility
+          } as any,
+          eligibility_result: eligibility as any,
+          compliance_status: 'pending'
         })
         .select()
         .single();
