@@ -10,18 +10,19 @@ import { LongevityInputForm } from '@/components/longevity-scorecard/LongevityIn
 import { BucketVisualization } from '@/components/longevity-scorecard/BucketVisualization';
 import { ScenarioResults } from '@/components/longevity-scorecard/ScenarioResults';
 import { LongevityScoreDisplay } from '@/components/longevity-scorecard/LongevityScoreDisplay';
+import { QuickStartPrompt } from '@/components/longevity-scorecard/QuickStartPrompt';
 import { useEventTracking } from '@/hooks/useEventTracking';
 import { useSubscriptionAccess } from '@/hooks/useSubscriptionAccess';
 import { useToast } from '@/hooks/use-toast';
 
-type Step = 'inputs' | 'buckets' | 'scenarios' | 'score';
+type Step = 'quickstart' | 'inputs' | 'buckets' | 'scenarios' | 'score';
 
 export default function LongevityScorecard() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { trackFeatureUsed } = useEventTracking();
   const { subscriptionPlan } = useSubscriptionAccess();
-  const [currentStep, setCurrentStep] = useState<Step>('inputs');
+  const [currentStep, setCurrentStep] = useState<Step>('quickstart');
   
   const {
     inputs,
@@ -32,8 +33,18 @@ export default function LongevityScorecard() {
     longevityScore,
     calculateScore,
     resetToDefaults,
-    isCalculating
+    startQuickStart,
+    isCalculating,
+    isQuickStart,
+    hasReturnedUser
   } = useLongevityScorecard();
+
+  // Skip quickstart if user has returned
+  React.useEffect(() => {
+    if (hasReturnedUser && currentStep === 'quickstart') {
+      setCurrentStep('inputs');
+    }
+  }, [hasReturnedUser, currentStep]);
 
   const steps: { key: Step; title: string; description: string }[] = [
     { key: 'inputs', title: 'Your Information', description: 'Basic financial and personal details' },
@@ -113,12 +124,24 @@ export default function LongevityScorecard() {
 
   const renderStepContent = () => {
     switch (currentStep) {
+      case 'quickstart':
+        return (
+          <QuickStartPrompt
+            onQuickStart={() => {
+              startQuickStart();
+              setCurrentStep('inputs');
+            }}
+            onFullAssessment={() => setCurrentStep('inputs')}
+          />
+        );
       case 'inputs':
         return (
           <LongevityInputForm
             inputs={inputs}
             onUpdateInput={updateInput}
             onUpdateBucketAllocation={updateBucketAllocation}
+            isQuickStart={isQuickStart}
+            hasReturnedUser={hasReturnedUser}
           />
         );
       case 'buckets':

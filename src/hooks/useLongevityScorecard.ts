@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useEventTracking } from '@/hooks/useEventTracking';
 
 export interface LongevityInputs {
@@ -10,6 +10,9 @@ export interface LongevityInputs {
   healthspanYears: number;
   projectedLifespan: number;
   inflationRate: number;
+  includeSSI: boolean;
+  socialSecurityAmount: number;
+  marketScenario: 'conservative' | 'moderate' | 'historical';
   bucketAllocations: {
     incomeNow: number; // Years 1-5
     incomeLater: number; // Years 6-15
@@ -79,6 +82,9 @@ const defaultInputs: LongevityInputs = {
   healthspanYears: 25,
   projectedLifespan: 90,
   inflationRate: 3,
+  includeSSI: false,
+  socialSecurityAmount: 35000,
+  marketScenario: 'moderate',
   bucketAllocations: {
     incomeNow: 20,
     incomeLater: 30,
@@ -87,10 +93,51 @@ const defaultInputs: LongevityInputs = {
   }
 };
 
+const quickStartInputs: LongevityInputs = {
+  age: 55,
+  currentAssets: 500000,
+  annualIncome: 100000,
+  expectedRetirementAge: 67,
+  annualSpending: 60000,
+  healthspanYears: 20,
+  projectedLifespan: 85,
+  inflationRate: 3,
+  includeSSI: true,
+  socialSecurityAmount: 30000,
+  marketScenario: 'moderate',
+  bucketAllocations: {
+    incomeNow: 25,
+    incomeLater: 35,
+    growth: 30,
+    legacy: 10
+  }
+};
+
 export function useLongevityScorecard() {
   const { trackFeatureUsed } = useEventTracking();
   const [inputs, setInputs] = useState<LongevityInputs>(defaultInputs);
   const [isCalculating, setIsCalculating] = useState(false);
+  const [isQuickStart, setIsQuickStart] = useState(false);
+
+  // Load saved data on mount
+  useEffect(() => {
+    const savedData = localStorage.getItem('longevity_scorecard_data');
+    if (savedData) {
+      try {
+        const parsed = JSON.parse(savedData);
+        setInputs(parsed);
+      } catch (error) {
+        console.warn('Failed to load saved scorecard data:', error);
+      }
+    }
+  }, []);
+
+  // Save data when inputs change
+  useEffect(() => {
+    if (inputs !== defaultInputs) {
+      localStorage.setItem('longevity_scorecard_data', JSON.stringify(inputs));
+    }
+  }, [inputs]);
 
   const updateInput = (field: keyof LongevityInputs, value: any) => {
     setInputs(prev => ({ ...prev, [field]: value }));
@@ -317,7 +364,22 @@ export function useLongevityScorecard() {
 
   const resetToDefaults = () => {
     setInputs(defaultInputs);
+    setIsQuickStart(false);
+    localStorage.removeItem('longevity_scorecard_data');
   };
+
+  const startQuickStart = () => {
+    setInputs(quickStartInputs);
+    setIsQuickStart(true);
+    trackFeatureUsed('longevity_scorecard_quick_start');
+  };
+
+  const upgradeFromQuickStart = () => {
+    setIsQuickStart(false);
+    trackFeatureUsed('longevity_scorecard_upgrade_from_quick');
+  };
+
+  const hasReturnedUser = localStorage.getItem('longevity_scorecard_data') !== null;
 
   return {
     inputs,
@@ -328,6 +390,10 @@ export function useLongevityScorecard() {
     longevityScore,
     calculateScore,
     resetToDefaults,
-    isCalculating
+    startQuickStart,
+    upgradeFromQuickStart,
+    isCalculating,
+    isQuickStart,
+    hasReturnedUser
   };
 }
