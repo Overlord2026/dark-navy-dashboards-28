@@ -12,7 +12,6 @@ import { DashboardCard } from "@/components/ui/DashboardCard";
 import { Separator } from "@/components/ui/separator";
 
 export const NetWorthSummary = () => {
-  console.log('NetWorthSummary rendering with real-time data');
   const { theme } = useTheme();
   const isLightTheme = theme === "light";
   const navigate = useNavigate();

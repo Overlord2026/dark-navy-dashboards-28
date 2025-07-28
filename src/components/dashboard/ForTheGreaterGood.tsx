@@ -125,7 +125,6 @@ export const ForTheGreaterGood = () => {
       setCommunityMetrics(metricsData);
       setImpactStories(storiesData || []);
     } catch (error) {
-      console.error('Error fetching data:', error);
       toast.error('Failed to load giving data');
     } finally {
       setLoading(false);
@@ -154,7 +153,6 @@ export const ForTheGreaterGood = () => {
       setPrimaryCharity(charity);
       toast.success(`Selected ${charity.name} as your primary charity`);
     } catch (error) {
-      console.error('Error selecting charity:', error);
       toast.error('Failed to select charity');
     }
   };
@@ -177,7 +175,6 @@ export const ForTheGreaterGood = () => {
       setNewCharity({ name: '', description: '', website: '', reason: '' });
       setShowSuggestModal(false);
     } catch (error) {
-      console.error('Error suggesting charity:', error);
       toast.error('Failed to suggest charity');
     }
   };
@@ -200,7 +197,6 @@ export const ForTheGreaterGood = () => {
       setNewStory({ title: '', story: '', isAnonymous: false });
       setShowStoryModal(false);
     } catch (error) {
-      console.error('Error sharing story:', error);
       toast.error('Failed to share story');
     }
   };

@@ -73,13 +73,11 @@ export const useDashboardData = () => {
         .single();
 
       if (error && error.code !== 'PGRST116') {
-        console.error('Error fetching previous snapshot:', error);
         return null;
       }
 
       return data;
     } catch (error) {
-      console.error('Error:', error);
       return null;
     }
   };
@@ -96,12 +94,10 @@ export const useDashboardData = () => {
       });
 
       if (error) {
-        console.error('Error creating daily snapshot:', error);
-      } else {
-        console.log('Daily financial snapshot updated successfully');
+        // Silent fail for daily snapshot creation
       }
     } catch (error) {
-      console.error('Error creating snapshot:', error);
+      // Silent fail for snapshot creation
     }
   };
 
@@ -140,7 +136,6 @@ export const useDashboardData = () => {
         .eq('user_id', user.id);
 
       if (assetsError) {
-        console.error('Error fetching assets:', assetsError);
         toast.error('Failed to load assets');
         return;
       }
@@ -152,7 +147,6 @@ export const useDashboardData = () => {
         .eq('user_id', user.id);
 
       if (liabilitiesError) {
-        console.error('Error fetching liabilities:', liabilitiesError);
         toast.error('Failed to load liabilities');
         return;
       }
@@ -244,7 +238,6 @@ export const useDashboardData = () => {
       setAssetBreakdown(breakdown);
 
     } catch (error) {
-      console.error('Error calculating metrics:', error);
       toast.error('Failed to calculate dashboard metrics');
     } finally {
       setLoading(false);
@@ -267,7 +260,6 @@ export const useDashboardData = () => {
             filter: `user_id=eq.${user.id}`
           },
           () => {
-            console.log('Assets changed, recalculating metrics');
             calculateMetrics();
           }
         )
@@ -284,7 +276,6 @@ export const useDashboardData = () => {
             filter: `user_id=eq.${user.id}`
           },
           () => {
-            console.log('Liabilities changed, recalculating metrics');
             calculateMetrics();
           }
         )

@@ -26,11 +26,6 @@ export function FeedbackSurveyBanner({ onDismiss }: FeedbackSurveyBannerProps) {
   
   const handleFeedbackSubmit = () => {
     // In a real application, you would send this data to your backend
-    console.log('Submitting feedback:', { 
-      rating, 
-      advancedToolsFeedback, 
-      improvementsFeedback 
-    });
     setStep('thankyou');
     
     // Simulate API call
