@@ -1,7 +1,8 @@
 
 import React from 'react';
 import { Header } from './Header';
-import { ErrorBoundary } from '@/components/ui/error-boundary';
+import { GlobalErrorBoundary } from '@/components/monitoring/GlobalErrorBoundary';
+import { PerformanceMonitor } from '@/components/monitoring/PerformanceMonitor';
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -9,17 +10,18 @@ interface MainLayoutProps {
 
 export function MainLayout({ children }: MainLayoutProps) {
   return (
-    <ErrorBoundary>
+    <GlobalErrorBoundary showDetailedError={process.env.NODE_ENV === 'development'}>
+      <PerformanceMonitor />
       <div className="min-h-screen bg-background">
-        <ErrorBoundary>
+        <GlobalErrorBoundary>
           <Header />
-        </ErrorBoundary>
+        </GlobalErrorBoundary>
         <main>
-          <ErrorBoundary>
+          <GlobalErrorBoundary>
             {children}
-          </ErrorBoundary>
+          </GlobalErrorBoundary>
         </main>
       </div>
-    </ErrorBoundary>
+    </GlobalErrorBoundary>
   );
 }

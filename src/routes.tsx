@@ -22,6 +22,18 @@ import { LoanStatusPage } from "./pages/lending/LoanStatusPage";
 import { PartnerComparisonPage } from "./pages/lending/PartnerComparisonPage";
 import { AdvisorLendingDashboard } from "./pages/lending/AdvisorLendingDashboard";
 
+// Legal pages
+import { PrivacyPolicyPage } from "./pages/legal/PrivacyPolicyPage";
+import { TermsOfServicePage } from "./pages/legal/TermsOfServicePage";
+import { DataProcessingPage } from "./pages/legal/DataProcessingPage";
+import { CookiePolicyPage } from "./pages/legal/CookiePolicyPage";
+
+// Help pages
+import { GettingStartedPage } from "./pages/help/GettingStartedPage";
+import { VideosPage } from "./pages/help/VideosPage";
+import { APIPage } from "./pages/help/APIPage";
+import { WebinarsPage } from "./pages/help/WebinarsPage";
+
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -204,5 +216,39 @@ export const router = createBrowserRouter([
   {
     path: "/admin/*",
     element: <ComingSoonPage featureName="Administrative Tools" description="Platform administration and user management tools." />
+  },
+  // Legal routes
+  {
+    path: "/legal/privacy-policy",
+    element: <PrivacyPolicyPage />
+  },
+  {
+    path: "/legal/terms-of-service", 
+    element: <TermsOfServicePage />
+  },
+  {
+    path: "/legal/data-processing",
+    element: <DataProcessingPage />
+  },
+  {
+    path: "/legal/cookie-policy",
+    element: <CookiePolicyPage />
+  },
+  // Help routes
+  {
+    path: "/help/getting-started",
+    element: <GettingStartedPage />
+  },
+  {
+    path: "/help/videos",
+    element: <VideosPage />
+  },
+  {
+    path: "/help/api",
+    element: <APIPage />
+  },
+  {
+    path: "/help/webinars",
+    element: <WebinarsPage />
   }
 ]);
