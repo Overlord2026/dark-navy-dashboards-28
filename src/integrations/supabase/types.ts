@@ -1424,6 +1424,48 @@ export type Database = {
         }
         Relationships: []
       }
+      data_export_audit: {
+        Row: {
+          completed_at: string | null
+          download_count: number | null
+          expiry_date: string | null
+          export_type: string
+          file_path: string | null
+          gdpr_request: boolean | null
+          id: string
+          ip_address: unknown | null
+          requested_at: string | null
+          status: string | null
+          user_id: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          download_count?: number | null
+          expiry_date?: string | null
+          export_type: string
+          file_path?: string | null
+          gdpr_request?: boolean | null
+          id?: string
+          ip_address?: unknown | null
+          requested_at?: string | null
+          status?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          download_count?: number | null
+          expiry_date?: string | null
+          export_type?: string
+          file_path?: string | null
+          gdpr_request?: boolean | null
+          id?: string
+          ip_address?: unknown | null
+          requested_at?: string | null
+          status?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       data_export_requests: {
         Row: {
           download_url: string | null
@@ -2040,6 +2082,36 @@ export type Database = {
         }
         Relationships: []
       }
+      failed_login_attempts: {
+        Row: {
+          attempted_at: string | null
+          blocked_until: string | null
+          email: string
+          failure_reason: string | null
+          id: string
+          ip_address: unknown | null
+          user_agent: string | null
+        }
+        Insert: {
+          attempted_at?: string | null
+          blocked_until?: string | null
+          email: string
+          failure_reason?: string | null
+          id?: string
+          ip_address?: unknown | null
+          user_agent?: string | null
+        }
+        Update: {
+          attempted_at?: string | null
+          blocked_until?: string | null
+          email?: string
+          failure_reason?: string | null
+          id?: string
+          ip_address?: unknown | null
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       families: {
         Row: {
           created_at: string | null
@@ -2201,6 +2273,51 @@ export type Database = {
           time_horizon?: number
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      file_access_log: {
+        Row: {
+          access_type: string
+          bucket_name: string
+          download_duration_ms: number | null
+          file_path: string
+          file_size: number | null
+          id: string
+          ip_address: unknown | null
+          success: boolean | null
+          tenant_id: string | null
+          timestamp: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          access_type: string
+          bucket_name: string
+          download_duration_ms?: number | null
+          file_path: string
+          file_size?: number | null
+          id?: string
+          ip_address?: unknown | null
+          success?: boolean | null
+          tenant_id?: string | null
+          timestamp?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          access_type?: string
+          bucket_name?: string
+          download_duration_ms?: number | null
+          file_path?: string
+          file_size?: number | null
+          id?: string
+          ip_address?: unknown | null
+          success?: boolean | null
+          tenant_id?: string | null
+          timestamp?: string | null
+          user_agent?: string | null
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -6016,6 +6133,30 @@ export type Database = {
           metric_period?: string
           partner_id?: string
           total_volume?: number | null
+        }
+        Relationships: []
+      }
+      password_history: {
+        Row: {
+          created_at: string | null
+          id: string
+          password_hash: string
+          tenant_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          password_hash: string
+          tenant_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          password_hash?: string
+          tenant_id?: string | null
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -11242,6 +11383,42 @@ export type Database = {
           },
         ]
       }
+      user_consent: {
+        Row: {
+          consent_type: string
+          given_at: string | null
+          id: string
+          ip_address: unknown | null
+          is_active: boolean | null
+          user_agent: string | null
+          user_id: string | null
+          version: string
+          withdrawn_at: string | null
+        }
+        Insert: {
+          consent_type: string
+          given_at?: string | null
+          id?: string
+          ip_address?: unknown | null
+          is_active?: boolean | null
+          user_agent?: string | null
+          user_id?: string | null
+          version: string
+          withdrawn_at?: string | null
+        }
+        Update: {
+          consent_type?: string
+          given_at?: string | null
+          id?: string
+          ip_address?: unknown | null
+          is_active?: boolean | null
+          user_agent?: string | null
+          user_id?: string | null
+          version?: string
+          withdrawn_at?: string | null
+        }
+        Relationships: []
+      }
       user_contact_info: {
         Row: {
           address1: string | null
@@ -11911,6 +12088,54 @@ export type Database = {
           id?: string
           saved_at?: string | null
           user_id?: string
+        }
+        Relationships: []
+      }
+      user_sessions: {
+        Row: {
+          created_at: string | null
+          device_fingerprint: string | null
+          expires_at: string | null
+          id: string
+          ip_address: unknown | null
+          is_active: boolean | null
+          last_activity: string | null
+          location_data: Json | null
+          revoked_at: string | null
+          revoked_by: string | null
+          session_token: string
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          device_fingerprint?: string | null
+          expires_at?: string | null
+          id?: string
+          ip_address?: unknown | null
+          is_active?: boolean | null
+          last_activity?: string | null
+          location_data?: Json | null
+          revoked_at?: string | null
+          revoked_by?: string | null
+          session_token: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          device_fingerprint?: string | null
+          expires_at?: string | null
+          id?: string
+          ip_address?: unknown | null
+          is_active?: boolean | null
+          last_activity?: string | null
+          location_data?: Json | null
+          revoked_at?: string | null
+          revoked_by?: string | null
+          session_token?: string
+          user_agent?: string | null
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -12630,6 +12855,15 @@ export type Database = {
         }
         Returns: string
       }
+      log_file_access: {
+        Args: {
+          p_file_path: string
+          p_bucket_name: string
+          p_access_type: string
+          p_file_size?: number
+        }
+        Returns: string
+      }
       log_query_performance: {
         Args: {
           p_table_name: string
@@ -12654,6 +12888,18 @@ export type Database = {
           p_new_status?: string
           p_user_id?: string
           p_details?: Json
+        }
+        Returns: string
+      }
+      log_security_event: {
+        Args: {
+          p_event_type: string
+          p_severity: string
+          p_resource_type?: string
+          p_resource_id?: string
+          p_action_performed?: string
+          p_outcome?: string
+          p_metadata?: Json
         }
         Returns: string
       }
