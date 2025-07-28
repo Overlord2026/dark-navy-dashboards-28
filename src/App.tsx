@@ -65,6 +65,7 @@ import GoalsDashboard from "./pages/GoalsDashboard";
 import GoalDetailPage from "./pages/GoalDetailPage";
 import CreateGoalPage from "./pages/CreateGoalPage";
 import { PersonaTestPage } from "./pages/qa/PersonaTestPage";
+import { BrandAuditPage } from "./pages/qa/BrandAuditPage";
 
 const queryClient = new QueryClient();
 
@@ -395,6 +396,17 @@ const App = () => {
                         allowedRoles={['developer', 'admin', 'system_administrator']}
                       >
                         <PersonaTestPage />
+                      </AuthWrapper>
+                    }
+                  />
+                  <Route
+                    path="/qa/brand-audit"
+                    element={
+                      <AuthWrapper 
+                        requireAuth={true}
+                        allowedRoles={['developer', 'admin', 'system_administrator']}
+                      >
+                        <BrandAuditPage />
                       </AuthWrapper>
                     }
                   />
