@@ -15,12 +15,14 @@ export function useStripePortal() {
       
       if (data?.url) {
         window.open(data.url, '_blank');
+      } else {
+        throw new Error('No portal URL received');
       }
     } catch (error) {
       console.error('Error opening customer portal:', error);
       toast({
         title: "Error",
-        description: "Failed to open billing portal",
+        description: "Failed to open billing portal. Please try again.",
         variant: "destructive",
       });
     } finally {

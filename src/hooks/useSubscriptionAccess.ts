@@ -1,187 +1,107 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from '@/context/AuthContext';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/lib/supabase';
 import { useToast } from '@/hooks/use-toast';
-import { SubscriptionPlan, AddOnAccess, UsageCounters, SubscriptionTierType } from '@/types/subscription';
+import { SubscriptionTierType } from '@/types/subscription';
+
+interface UserProfile {
+  subscription_tier: SubscriptionTierType;
+  subscription_status: string;
+  subscription_end_date: string | null;
+  stripe_customer_id: string | null;
+  stripe_subscription_id: string | null;
+}
 
 export function useSubscriptionAccess() {
-  const { user } = useAuth();
-  const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(true);
-  const [subscriptionPlan, setSubscriptionPlan] = useState<SubscriptionPlan | null>(null);
+  const [subscriptionPlan, setSubscriptionPlan] = useState<UserProfile | null>(null);
+  const { toast } = useToast();
 
   useEffect(() => {
-    if (user) {
-      fetchSubscriptionData();
-    }
-  }, [user]);
+    const fetchUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        await fetchSubscriptionData();
+      } else {
+        setIsLoading(false);
+      }
+    };
+    
+    fetchUser();
+  }, []);
 
   const fetchSubscriptionData = async () => {
-    if (!user) return;
-
     try {
-      setIsLoading(true);
-      
-      // Fetch user profile with subscription data
       const { data: profile, error } = await supabase
         .from('profiles')
-        .select('*')
-        .eq('id', user.id)
+        .select(`
+          subscription_tier,
+          subscription_status,
+          subscription_end_date,
+          stripe_customer_id,
+          stripe_subscription_id
+        `)
+        .eq('id', (await supabase.auth.getUser()).data.user?.id)
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching subscription data:', error);
+        return;
+      }
 
-      // Set subscription plan from profile data
-      const plan: SubscriptionPlan = {
-        tier: (profile?.subscription_tier || 'basic') as SubscriptionTierType,
-        add_ons: {
-          lending_access: profile?.lending_access || false,
-          tax_access: profile?.tax_access || false,
-          ai_features_access: profile?.ai_features_access || false,
-          premium_analytics_access: profile?.premium_analytics_access || false,
-          residency_optimization: true, // Default to true for now since no DB column
-          advisor_marketplace: true, // Default to true for now since no DB column
-          audit_risk_analyzer: true, // Default to true for now since no DB column
-          relocation_concierge: true, // Default to true for now since no DB column
-          bill_pay_premium: (profile?.subscription_tier === 'premium' || profile?.subscription_tier === 'elite') || false,
-          premium_property_features: (profile?.subscription_tier === 'premium' || profile?.subscription_tier === 'elite') || false,
-        },
-        usage_counters: {
-          lending_applications: profile?.lending_applications_used || 0,
-          tax_analyses: profile?.tax_analyses_used || 0,
-          ai_queries: profile?.ai_queries_used || 0,
-          document_uploads: profile?.document_uploads_used || 0,
-        },
-        usage_limits: {
-          lending_applications_limit: profile?.lending_applications_limit || getTierLimits((profile?.subscription_tier || 'basic') as SubscriptionTierType).lending_applications_limit,
-          tax_analyses_limit: profile?.tax_analyses_limit || getTierLimits((profile?.subscription_tier || 'basic') as SubscriptionTierType).tax_analyses_limit,
-          ai_queries_limit: profile?.ai_queries_limit || getTierLimits((profile?.subscription_tier || 'basic') as SubscriptionTierType).ai_queries_limit,
-          document_uploads_limit: profile?.document_uploads_limit || getTierLimits((profile?.subscription_tier || 'basic') as SubscriptionTierType).document_uploads_limit,
-        },
-        stripe_subscription_id: profile?.stripe_subscription_id,
-        stripe_customer_id: profile?.stripe_customer_id,
-        is_active: profile?.subscription_active || false,
-      };
-
-      setSubscriptionPlan(plan);
+      if (profile) {
+        setSubscriptionPlan({
+          subscription_tier: profile.subscription_tier || 'free',
+          subscription_status: profile.subscription_status || 'inactive',
+          subscription_end_date: profile.subscription_end_date,
+          stripe_customer_id: profile.stripe_customer_id,
+          stripe_subscription_id: profile.stripe_subscription_id,
+        });
+      }
     } catch (error) {
       console.error('Error fetching subscription data:', error);
-      toast({
-        title: "Error",
-        description: "Failed to load subscription information",
-        variant: "destructive",
-      });
     } finally {
       setIsLoading(false);
     }
   };
 
-  const getTierLimits = (tier: SubscriptionTierType) => {
-    const limits = {
-      free: {
-        lending_applications_limit: 0,
-        tax_analyses_limit: 1,
-        ai_queries_limit: 5,
-        document_uploads_limit: 3,
-      },
-      basic: {
-        lending_applications_limit: 3,
-        tax_analyses_limit: 5,
-        ai_queries_limit: 20,
-        document_uploads_limit: 10,
-      },
-      premium: {
-        lending_applications_limit: 10,
-        tax_analyses_limit: 20,
-        ai_queries_limit: 100,
-        document_uploads_limit: 50,
-      },
-      elite: {
-        lending_applications_limit: -1, // unlimited
-        tax_analyses_limit: -1,
-        ai_queries_limit: -1,
-        document_uploads_limit: -1,
-      },
+  const checkFeatureAccess = (tier: SubscriptionTierType): boolean => {
+    if (!subscriptionPlan) return false;
+    
+    const tierHierarchy = {
+      'free': 0,
+      'basic': 1,
+      'premium': 2,
+      'elite': 3
     };
     
-    return limits[tier] || limits.basic;
-  };
-
-  const checkFeatureAccess = (feature: keyof AddOnAccess): boolean => {
-    if (!subscriptionPlan || !subscriptionPlan.is_active) return false;
-    return subscriptionPlan.add_ons[feature];
-  };
-
-  const checkUsageLimit = (feature: keyof UsageCounters): { hasAccess: boolean; remaining: number; isAtLimit: boolean } => {
-    if (!subscriptionPlan) {
-      return { hasAccess: false, remaining: 0, isAtLimit: true };
-    }
-
-    const currentUsage = subscriptionPlan.usage_counters[feature];
-    const limit = subscriptionPlan.usage_limits[`${feature}_limit` as keyof typeof subscriptionPlan.usage_limits];
+    const currentTierLevel = tierHierarchy[subscriptionPlan.subscription_tier] || 0;
+    const requiredTierLevel = tierHierarchy[tier] || 0;
     
-    // -1 means unlimited
-    if (limit === -1) {
-      return { hasAccess: true, remaining: -1, isAtLimit: false };
-    }
-
-    const remaining = Math.max(0, limit - currentUsage);
-    const isAtLimit = currentUsage >= limit;
-    
-    return { hasAccess: !isAtLimit, remaining, isAtLimit };
+    return currentTierLevel >= requiredTierLevel && subscriptionPlan.subscription_status === 'active';
   };
 
-  const incrementUsage = async (feature: keyof UsageCounters) => {
-    if (!user || !subscriptionPlan) return false;
-
-    try {
-      const { error } = await supabase
-        .from('profiles')
-        .update({
-          [`${feature}_used`]: subscriptionPlan.usage_counters[feature] + 1
-        })
-        .eq('id', user.id);
-
-      if (error) throw error;
-
-      // Update local state
-      setSubscriptionPlan(prev => prev ? {
-        ...prev,
-        usage_counters: {
-          ...prev.usage_counters,
-          [feature]: prev.usage_counters[feature] + 1
-        }
-      } : null);
-
-      return true;
-    } catch (error) {
-      console.error('Error incrementing usage:', error);
-      return false;
-    }
+  const isSubscriptionActive = (): boolean => {
+    return subscriptionPlan?.subscription_status === 'active';
   };
 
   const syncWithStripe = async () => {
-    if (!user) return;
-
     try {
-      const { data, error } = await supabase.functions.invoke('sync-subscription-stripe', {
-        body: { user_id: user.id }
-      });
-
+      const { data, error } = await supabase.functions.invoke('check-subscription');
+      
       if (error) throw error;
-
-      // Refresh subscription data
+      
+      // Refresh subscription data after sync
       await fetchSubscriptionData();
       
       toast({
         title: "Success",
-        description: "Subscription synced with Stripe",
+        description: "Subscription status synchronized with Stripe",
       });
     } catch (error) {
       console.error('Error syncing with Stripe:', error);
       toast({
         title: "Error",
-        description: "Failed to sync subscription",
+        description: "Failed to sync subscription status",
         variant: "destructive",
       });
     }
@@ -191,9 +111,8 @@ export function useSubscriptionAccess() {
     subscriptionPlan,
     isLoading,
     checkFeatureAccess,
-    checkUsageLimit,
-    incrementUsage,
+    isSubscriptionActive,
     syncWithStripe,
-    refetch: fetchSubscriptionData,
+    fetchSubscriptionData
   };
 }

@@ -1,34 +1,49 @@
 
 import React, { useState } from 'react';
-import { SubscriptionTierCard } from './SubscriptionTierCard';
-import { subscriptionTiers } from '@/data/subscriptionTiers';
-import { SubscriptionTierType } from '@/types/subscription';
-import { useSubscription } from '@/context/SubscriptionContext';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { useSubscriptionAccess } from '@/hooks/useSubscriptionAccess';
+import { useCheckout } from '@/hooks/useCheckout';
+import { SubscriptionTierCard } from './SubscriptionTierCard';
+import { subscriptionTiers } from '@/data/subscriptionTiers';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 export function SubscriptionPlans() {
-  const { upgradeTier, isInFreeTrial, daysRemainingInTrial, startFreeTrial } = useSubscription();
-  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
-  const [confirmTrialDialogOpen, setConfirmTrialDialogOpen] = useState(false);
-  const [selectedTier, setSelectedTier] = useState<SubscriptionTierType | null>(null);
+  const { subscriptionPlan, isLoading, syncWithStripe } = useSubscriptionAccess();
+  const { createCheckoutSession, isLoading: checkoutLoading } = useCheckout();
+  
+  const [selectedTier, setSelectedTier] = useState<string>('');
+  const [showUpgradeDialog, setShowUpgradeDialog] = useState(false);
 
   const handleSelectTier = (tierId: string) => {
-    setSelectedTier(tierId as SubscriptionTierType);
-    setConfirmDialogOpen(true);
+    setSelectedTier(tierId);
+    setShowUpgradeDialog(true);
   };
 
   const handleConfirmUpgrade = () => {
     if (selectedTier) {
-      upgradeTier(selectedTier);
-      setConfirmDialogOpen(false);
+      // Map tier to price ID (these would be your actual Stripe price IDs)
+      const priceMap = {
+        'basic': 'price_basic_monthly', // Replace with actual price ID
+        'premium': 'price_premium_monthly', // Replace with actual price ID
+        'elite': 'price_elite_monthly' // Replace with actual price ID
+      };
+      
+      const priceId = priceMap[selectedTier as keyof typeof priceMap];
+      if (priceId) {
+        createCheckoutSession(priceId);
+      }
+      setShowUpgradeDialog(false);
+      setSelectedTier('');
     }
-  };
-
-  const handleStartFreeTrial = () => {
-    startFreeTrial();
-    setConfirmTrialDialogOpen(false);
   };
 
   return (
@@ -38,26 +53,54 @@ export function SubscriptionPlans() {
         <p className="text-muted-foreground max-w-md mx-auto">
           Select the plan that best suits your financial goals and needs
         </p>
-        
-        {!isInFreeTrial && (
-          <div className="mt-4">
+      </div>
+
+      <div className="flex flex-col sm:flex-row gap-4 mb-8">
+        <Card className="flex-1">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-lg">Current Plan</CardTitle>
+            <CardDescription>
+              Your active subscription tier
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center gap-2">
+              <Badge variant="secondary" className="text-sm font-medium">
+                {subscriptionPlan?.subscription_tier?.charAt(0).toUpperCase() + 
+                 subscriptionPlan?.subscription_tier?.slice(1) || 'Free'}
+              </Badge>
+              {subscriptionPlan?.subscription_status === 'active' && (
+                <Badge variant="outline" className="text-xs text-green-600">
+                  Active
+                </Badge>
+              )}
+            </div>
+            {subscriptionPlan?.subscription_end_date && (
+              <p className="text-sm text-muted-foreground mt-2">
+                Next billing: {new Date(subscriptionPlan.subscription_end_date).toLocaleDateString()}
+              </p>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card className="flex-1">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-lg">Quick Actions</CardTitle>
+            <CardDescription>
+              Manage your subscription
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
             <Button 
-              onClick={() => setConfirmTrialDialogOpen(true)}
-              variant="outline"
-              className="mx-auto"
+              onClick={syncWithStripe}
+              variant="outline" 
+              className="w-full"
+              disabled={isLoading}
             >
-              Start 90-Day Free Trial <Badge className="ml-2 bg-primary">Premium Features</Badge>
+              {isLoading ? 'Syncing...' : 'Refresh Status'}
             </Button>
-          </div>
-        )}
-        
-        {isInFreeTrial && daysRemainingInTrial !== null && (
-          <div className="mt-4 p-2 bg-primary/10 rounded-md inline-block">
-            <Badge variant="outline" className="text-primary border-primary">
-              Trial Active: {daysRemainingInTrial} days remaining
-            </Badge>
-          </div>
-        )}
+          </CardContent>
+        </Card>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -71,55 +114,28 @@ export function SubscriptionPlans() {
       </div>
 
       {/* Confirm Upgrade Dialog */}
-      <Dialog open={confirmDialogOpen} onOpenChange={setConfirmDialogOpen}>
+      <Dialog open={showUpgradeDialog} onOpenChange={setShowUpgradeDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Confirm Subscription Change</DialogTitle>
+            <DialogTitle>Confirm Subscription Upgrade</DialogTitle>
             <DialogDescription>
               {selectedTier === 'elite' 
                 ? "Our team will contact you shortly to discuss Elite tier options and pricing." 
-                : `Are you sure you want to upgrade to the ${selectedTier?.charAt(0).toUpperCase()}${selectedTier?.slice(1)} tier?`}
+                : `You'll be redirected to Stripe to complete your ${selectedTier} subscription.`}
             </DialogDescription>
           </DialogHeader>
-          {isInFreeTrial && (
-            <div className="bg-yellow-50 p-3 rounded-md text-sm text-yellow-800 my-2">
-              Note: Upgrading now will end your free trial period.
-            </div>
-          )}
           <DialogFooter>
-            <Button variant="outline" onClick={() => setConfirmDialogOpen(false)}>Cancel</Button>
-            <Button onClick={handleConfirmUpgrade}>
-              {selectedTier === 'elite' ? 'Request Contact' : 'Confirm Upgrade'}
+            <Button 
+              variant="outline" 
+              onClick={() => setShowUpgradeDialog(false)}
+            >
+              Cancel
             </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Confirm Free Trial Dialog */}
-      <Dialog open={confirmTrialDialogOpen} onOpenChange={setConfirmTrialDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Start Your 90-Day Free Trial</DialogTitle>
-            <DialogDescription>
-              Experience premium features for 90 days at no cost. You'll have access to all Basic and Premium features.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-3 my-4">
-            <h4 className="font-medium">During your trial, you'll get:</h4>
-            <ul className="list-disc pl-5 space-y-1.5">
-              <li>Full access to all Basic features</li>
-              <li>Complete access to Premium features</li>
-              <li>No credit card required</li>
-              <li>Cancel anytime</li>
-            </ul>
-            <p className="text-sm text-muted-foreground pt-2">
-              We'll notify you before your trial ends, and you can choose to upgrade or return to the Basic plan.
-            </p>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setConfirmTrialDialogOpen(false)}>Not Now</Button>
-            <Button onClick={handleStartFreeTrial}>
-              Start Free Trial
+            <Button 
+              onClick={handleConfirmUpgrade}
+              disabled={checkoutLoading}
+            >
+              {checkoutLoading ? 'Loading...' : selectedTier === 'elite' ? 'Request Contact' : 'Continue to Checkout'}
             </Button>
           </DialogFooter>
         </DialogContent>
