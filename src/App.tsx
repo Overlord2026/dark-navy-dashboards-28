@@ -24,6 +24,7 @@ import Dashboard from "./pages/Dashboard";
 // Public pages
 import WelcomePage from "./pages/WelcomePage";
 import RetirementConfidenceScorecard from "./pages/RetirementConfidenceScorecard";
+import LongevityScorecard from "./pages/LongevityScorecard";
 import PublicFeeCalculator from "./pages/PublicFeeCalculator";
 import RetirementIncomeGapAnalyzer from "./pages/RetirementIncomeGapAnalyzer";
 import RetirementRoadmapInfo from "./pages/RetirementRoadmapInfo";
@@ -96,6 +97,7 @@ const App = () => {
                     {/* Public routes - no authentication required */}
                     <Route path="/welcome" element={<WelcomePage />} />
                     <Route path="/scorecard" element={<RetirementConfidenceScorecard />} />
+                    <Route path="/longevity-scorecard" element={<LongevityScorecard />} />
                     <Route path="/calculator" element={<PublicFeeCalculator />} />
                     <Route path="/gap-analyzer" element={<RetirementIncomeGapAnalyzer />} />
                     <Route path="/roadmap-info" element={<RetirementRoadmapInfo />} />

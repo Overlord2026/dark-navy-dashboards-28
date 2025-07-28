@@ -5,6 +5,7 @@ import { GoalsAndMilestones } from "./sections/GoalsAndMilestones";
 import { AssetMap } from "./sections/AssetMap";
 import { CashFlowSnapshot } from "./sections/CashFlowSnapshot";
 import { HealthspanWidget } from "./sections/HealthspanWidget";
+import { LongevityScorecardWidget } from "./sections/LongevityScorecardWidget";
 import { GiftingLegacy } from "./sections/GiftingLegacy";
 import { ExperienceReturn } from "./sections/ExperienceReturn";
 import { QuickActions } from "./sections/QuickActions";
@@ -61,7 +62,14 @@ export const BoutiqueFamilyOfficeDashboard: React.FC = () => {
       <CashFlowSnapshot incomeStreams={familyData.incomeStreams} />
 
       {/* E. Healthspan & Longevity Widget */}
-      <HealthspanWidget healthData={familyData.health} />
+      <div className="md:col-span-1">
+        <HealthspanWidget healthData={familyData.health} />
+      </div>
+
+      {/* F. Longevity Scorecard Widget */}
+      <div className="md:col-span-1">
+        <LongevityScorecardWidget />
+      </div>
 
       {/* F. Gifting & Legacy */}
       <GiftingLegacy giftingGoals={familyData.gifting} />
