@@ -12,6 +12,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
+import { DashboardSkeleton } from '@/components/ui/dashboard-skeleton';
 
 interface Charity {
   id: string;
@@ -219,13 +220,11 @@ export const ForTheGreaterGood = () => {
   if (loading) {
     return (
       <div className="space-y-6">
-        <div className="animate-pulse">
-          <div className="h-8 bg-muted rounded w-1/3 mb-4"></div>
-          <div className="grid md:grid-cols-3 gap-6">
-            {[...Array(6)].map((_, i) => (
-              <div key={i} className="h-32 bg-muted rounded"></div>
-            ))}
-          </div>
+        <DashboardSkeleton variant="wide" />
+        <div className="grid md:grid-cols-3 gap-6">
+          <DashboardSkeleton variant="compact" />
+          <DashboardSkeleton variant="compact" />
+          <DashboardSkeleton variant="compact" />
         </div>
       </div>
     );

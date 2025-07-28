@@ -1,4 +1,4 @@
-
+import { useMemo, useCallback } from 'react';
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/context/AuthContext';
@@ -27,39 +27,151 @@ export interface AssetBreakdown {
   other: number;
 }
 
+interface Asset {
+  id: string;
+  type: string;
+  value: number;
+  [key: string]: any;
+}
+
+interface Liability {
+  id: string;
+  amount: number;
+  [key: string]: any;
+}
+
 export const useDashboardData = () => {
-  const [metrics, setMetrics] = useState<DashboardMetrics>({
-    totalAssets: 0,
-    totalLiabilities: 0,
-    netWorth: 0,
-    assetGrowth: 0,
-    liabilityGrowth: 0,
-    netWorthGrowth: 0,
-    assetCount: 0,
-    propertyCount: 0,
-    vehicleCount: 0,
-  });
-  
-  const [assetBreakdown, setAssetBreakdown] = useState<AssetBreakdown>({
-    realEstate: 0,
-    vehicles: 0,
-    investments: 0,
-    cash: 0,
-    retirement: 0,
-    collectibles: 0,
-    digital: 0,
-    other: 0,
-  });
-  
+  const [assets, setAssets] = useState<Asset[]>([]);
+  const [liabilities, setLiabilities] = useState<Liability[]>([]);
+  const [previousSnapshot, setPreviousSnapshot] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
 
-  const calculateGrowthPercentage = (current: number, previous: number): number => {
+  // Memoized calculation functions
+  const calculateGrowthPercentage = useCallback((current: number, previous: number): number => {
     if (previous === 0) return current > 0 ? 100 : 0;
     return Number(((current - previous) / previous * 100).toFixed(1));
-  };
+  }, []);
 
-  const getPreviousSnapshot = async () => {
+  // Memoized asset totals calculation
+  const assetTotals = useMemo(() => {
+    const totalAssets = assets.reduce((sum, asset) => sum + Number(asset.value || 0), 0);
+    const assetCount = assets.length;
+    const propertyCount = assets.filter(asset => asset.type === 'property').length;
+    const vehicleCount = assets.filter(asset => 
+      asset.type === 'vehicle' || asset.type === 'boat'
+    ).length;
+
+    return {
+      totalAssets,
+      assetCount,
+      propertyCount,
+      vehicleCount
+    };
+  }, [assets]);
+
+  // Memoized liability totals calculation  
+  const liabilityTotals = useMemo(() => {
+    return {
+      totalLiabilities: liabilities.reduce((sum, liability) => sum + Number(liability.amount || 0), 0)
+    };
+  }, [liabilities]);
+
+  // Memoized net worth calculation
+  const netWorth = useMemo(() => {
+    return assetTotals.totalAssets - liabilityTotals.totalLiabilities;
+  }, [assetTotals.totalAssets, liabilityTotals.totalLiabilities]);
+
+  // Memoized growth calculations
+  const growthMetrics = useMemo(() => {
+    if (!previousSnapshot) {
+      return {
+        assetGrowth: 0,
+        liabilityGrowth: 0,
+        netWorthGrowth: 0
+      };
+    }
+
+    return {
+      assetGrowth: calculateGrowthPercentage(
+        assetTotals.totalAssets, 
+        Number(previousSnapshot.total_assets || 0)
+      ),
+      liabilityGrowth: calculateGrowthPercentage(
+        liabilityTotals.totalLiabilities, 
+        Number(previousSnapshot.total_liabilities || 0)
+      ),
+      netWorthGrowth: calculateGrowthPercentage(
+        netWorth, 
+        Number(previousSnapshot.net_worth || 0)
+      )
+    };
+  }, [
+    assetTotals.totalAssets, 
+    liabilityTotals.totalLiabilities, 
+    netWorth, 
+    previousSnapshot, 
+    calculateGrowthPercentage
+  ]);
+
+  // Memoized asset breakdown calculation
+  const assetBreakdown = useMemo<AssetBreakdown>(() => {
+    const breakdown: AssetBreakdown = {
+      realEstate: 0,
+      vehicles: 0,
+      investments: 0,
+      cash: 0,
+      retirement: 0,
+      collectibles: 0,
+      digital: 0,
+      other: 0,
+    };
+
+    assets.forEach(asset => {
+      const value = Number(asset.value || 0);
+      switch (asset.type) {
+        case 'property':
+          breakdown.realEstate += value;
+          break;
+        case 'vehicle':
+        case 'boat':
+          breakdown.vehicles += value;
+          break;
+        case 'investment':
+          breakdown.investments += value;
+          break;
+        case 'cash':
+          breakdown.cash += value;
+          break;
+        case 'retirement':
+          breakdown.retirement += value;
+          break;
+        case 'art':
+        case 'antique':
+        case 'jewelry':
+        case 'collectible':
+          breakdown.collectibles += value;
+          break;
+        case 'digital':
+          breakdown.digital += value;
+          break;
+        default:
+          breakdown.other += value;
+      }
+    });
+
+    return breakdown;
+  }, [assets]);
+
+  // Memoized final metrics object
+  const metrics = useMemo<DashboardMetrics>(() => ({
+    ...assetTotals,
+    ...liabilityTotals,
+    netWorth,
+    ...growthMetrics,
+  }), [assetTotals, liabilityTotals, netWorth, growthMetrics]);
+
+  const getPreviousSnapshot = useCallback(async () => {
     if (!user) return null;
 
     try {
@@ -67,7 +179,7 @@ export const useDashboardData = () => {
         .from('user_financial_snapshots')
         .select('*')
         .eq('user_id', user.id)
-        .lt('snapshot_date', new Date().toISOString().split('T')[0]) // Previous days only
+        .lt('snapshot_date', new Date().toISOString().split('T')[0])
         .order('snapshot_date', { ascending: false })
         .limit(1)
         .single();
@@ -80,9 +192,9 @@ export const useDashboardData = () => {
     } catch (error) {
       return null;
     }
-  };
+  }, [user]);
 
-  const createDailySnapshot = async (totalAssets: number, totalLiabilities: number, netWorth: number) => {
+  const createDailySnapshot = useCallback(async (totalAssets: number, totalLiabilities: number, netWorth: number) => {
     if (!user) return;
 
     try {
@@ -99,153 +211,67 @@ export const useDashboardData = () => {
     } catch (error) {
       // Silent fail for snapshot creation
     }
-  };
+  }, [user]);
 
-  const calculateMetrics = async () => {
+  const fetchData = useCallback(async () => {
     if (!user) {
-      setMetrics({
-        totalAssets: 0,
-        totalLiabilities: 0,
-        netWorth: 0,
-        assetGrowth: 0,
-        liabilityGrowth: 0,
-        netWorthGrowth: 0,
-        assetCount: 0,
-        propertyCount: 0,
-        vehicleCount: 0,
-      });
-      setAssetBreakdown({
-        realEstate: 0,
-        vehicles: 0,
-        investments: 0,
-        cash: 0,
-        retirement: 0,
-        collectibles: 0,
-        digital: 0,
-        other: 0,
-      });
+      setAssets([]);
+      setLiabilities([]);
+      setPreviousSnapshot(null);
       setLoading(false);
       return;
     }
 
     try {
-      // Fetch current assets
-      const { data: assets, error: assetsError } = await supabase
-        .from('user_assets')
-        .select('*')
-        .eq('user_id', user.id);
+      setLoading(true);
 
-      if (assetsError) {
+      // Fetch all data in parallel
+      const [assetsResult, liabilitiesResult, snapshotResult] = await Promise.all([
+        supabase
+          .from('user_assets')
+          .select('*')
+          .eq('user_id', user.id),
+        supabase
+          .from('user_liabilities')
+          .select('*')
+          .eq('user_id', user.id),
+        getPreviousSnapshot()
+      ]);
+
+      if (assetsResult.error) {
         toast.error('Failed to load assets');
         return;
       }
 
-      // Fetch current liabilities
-      const { data: liabilities, error: liabilitiesError } = await supabase
-        .from('user_liabilities')
-        .select('*')
-        .eq('user_id', user.id);
-
-      if (liabilitiesError) {
+      if (liabilitiesResult.error) {
         toast.error('Failed to load liabilities');
         return;
       }
 
-      // Calculate totals
-      const totalAssets = assets?.reduce((sum, asset) => sum + Number(asset.value), 0) || 0;
-      const totalLiabilities = liabilities?.reduce((sum, liability) => sum + Number(liability.amount), 0) || 0;
-      const netWorth = totalAssets - totalLiabilities;
+      setAssets(assetsResult.data || []);
+      setLiabilities(liabilitiesResult.data || []);
+      setPreviousSnapshot(snapshotResult);
 
-      // Get previous snapshot for growth calculation
-      const previousSnapshot = await getPreviousSnapshot();
+      // Create snapshot with current totals (will be calculated by memoized values)
+      const currentAssets = (assetsResult.data || []).reduce((sum, asset) => sum + Number(asset.value || 0), 0);
+      const currentLiabilities = (liabilitiesResult.data || []).reduce((sum, liability) => sum + Number(liability.amount || 0), 0);
+      const currentNetWorth = currentAssets - currentLiabilities;
 
-      // Calculate real growth percentages
-      let assetGrowth = 0;
-      let liabilityGrowth = 0;
-      let netWorthGrowth = 0;
-
-      if (previousSnapshot) {
-        assetGrowth = calculateGrowthPercentage(totalAssets, Number(previousSnapshot.total_assets));
-        liabilityGrowth = calculateGrowthPercentage(totalLiabilities, Number(previousSnapshot.total_liabilities));
-        netWorthGrowth = calculateGrowthPercentage(netWorth, Number(previousSnapshot.net_worth));
-      }
-
-      // Create/update today's snapshot for future calculations
-      await createDailySnapshot(totalAssets, totalLiabilities, netWorth);
-
-      // Calculate asset breakdown
-      const breakdown: AssetBreakdown = {
-        realEstate: 0,
-        vehicles: 0,
-        investments: 0,
-        cash: 0,
-        retirement: 0,
-        collectibles: 0,
-        digital: 0,
-        other: 0,
-      };
-
-      assets?.forEach(asset => {
-        const value = Number(asset.value);
-        switch (asset.type) {
-          case 'property':
-            breakdown.realEstate += value;
-            break;
-          case 'vehicle':
-          case 'boat':
-            breakdown.vehicles += value;
-            break;
-          case 'investment':
-            breakdown.investments += value;
-            break;
-          case 'cash':
-            breakdown.cash += value;
-            break;
-          case 'retirement':
-            breakdown.retirement += value;
-            break;
-          case 'art':
-          case 'antique':
-          case 'jewelry':
-          case 'collectible':
-            breakdown.collectibles += value;
-            break;
-          case 'digital':
-            breakdown.digital += value;
-            break;
-          default:
-            breakdown.other += value;
-        }
-      });
-
-      // Calculate counts
-      const assetCount = assets?.length || 0;
-      const propertyCount = assets?.filter(asset => asset.type === 'property').length || 0;
-      const vehicleCount = assets?.filter(asset => asset.type === 'vehicle' || asset.type === 'boat').length || 0;
-
-      setMetrics({
-        totalAssets,
-        totalLiabilities,
-        netWorth,
-        assetGrowth,
-        liabilityGrowth,
-        netWorthGrowth,
-        assetCount,
-        propertyCount,
-        vehicleCount,
-      });
-
-      setAssetBreakdown(breakdown);
+      await createDailySnapshot(currentAssets, currentLiabilities, currentNetWorth);
 
     } catch (error) {
       toast.error('Failed to calculate dashboard metrics');
     } finally {
       setLoading(false);
     }
-  };
+  }, [user, getPreviousSnapshot, createDailySnapshot]);
+
+  const refreshData = useCallback(() => {
+    fetchData();
+  }, [fetchData]);
 
   useEffect(() => {
-    calculateMetrics();
+    fetchData();
 
     // Set up real-time subscriptions
     if (user) {
@@ -260,7 +286,7 @@ export const useDashboardData = () => {
             filter: `user_id=eq.${user.id}`
           },
           () => {
-            calculateMetrics();
+            fetchData();
           }
         )
         .subscribe();
@@ -276,7 +302,7 @@ export const useDashboardData = () => {
             filter: `user_id=eq.${user.id}`
           },
           () => {
-            calculateMetrics();
+            fetchData();
           }
         )
         .subscribe();
@@ -286,12 +312,12 @@ export const useDashboardData = () => {
         supabase.removeChannel(liabilitiesChannel);
       };
     }
-  }, [user]);
+  }, [user, fetchData]);
 
   return {
     metrics,
     assetBreakdown,
     loading,
-    refreshData: calculateMetrics
+    refreshData
   };
 };

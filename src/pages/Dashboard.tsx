@@ -15,6 +15,11 @@ import { ReferralCard } from "@/components/referrals/ReferralCard";
 import { PageTransition, StaggerContainer } from "@/components/animations/PageTransition";
 import { ForTheGreaterGood } from "@/components/dashboard/ForTheGreaterGood";
 import { DashboardErrorBoundary } from "@/components/dashboard/DashboardErrorBoundary";
+import { 
+  DashboardSkeleton, 
+  WelcomeBannerSkeleton, 
+  ReferralCardSkeleton 
+} from "@/components/ui/dashboard-skeleton";
 import { motion } from "framer-motion";
 
 export default function Dashboard() {

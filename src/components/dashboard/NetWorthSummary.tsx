@@ -10,6 +10,7 @@ import { AssetAllocationChart } from "./AssetAllocationChart";
 import { PropertySection } from "./PropertySection";
 import { DashboardCard } from "@/components/ui/DashboardCard";
 import { Separator } from "@/components/ui/separator";
+import { MetricsCardsSkeleton, ChartSkeleton, DashboardSkeleton } from "@/components/ui/dashboard-skeleton";
 
 export const NetWorthSummary = () => {
   const { theme } = useTheme();
@@ -20,11 +21,10 @@ export const NetWorthSummary = () => {
 
   if (loading) {
     return (
-      <div className="dashboard-card animate-fade-in min-h-[640px]">
-        <div className="flex items-center justify-center h-full">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-          <span className="ml-3">Loading dashboard data...</span>
-        </div>
+      <div className="dashboard-card animate-fade-in min-h-[640px] space-y-6">
+        <MetricsCardsSkeleton />
+        <ChartSkeleton />
+        <DashboardSkeleton variant="compact" />
       </div>
     );
   }
