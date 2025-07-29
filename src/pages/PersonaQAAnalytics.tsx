@@ -20,7 +20,7 @@ import {
   Archive,
   Share,
   FileSpreadsheet,
-  FilePdf
+  File
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -65,7 +65,7 @@ export function PersonaQAAnalytics() {
       failedTests: 0,
       lastTested: '2024-01-29',
       status: 'complete',
-      checklist: '/qa/client-basic'
+      checklist: '/qa/client-basic-checklist'
     },
     {
       id: 'client-premium',
@@ -79,7 +79,7 @@ export function PersonaQAAnalytics() {
       failedTests: 1,
       lastTested: '2024-01-29',
       status: 'complete',
-      checklist: '/qa/client-premium'
+      checklist: '/qa/client-premium-checklist'
     },
     {
       id: 'advisor',
@@ -93,7 +93,7 @@ export function PersonaQAAnalytics() {
       failedTests: 0,
       lastTested: '2024-01-29',
       status: 'complete',
-      checklist: '/qa/advisor'
+      checklist: '/qa/advisor-checklist'
     },
     {
       id: 'accountant',
@@ -107,7 +107,7 @@ export function PersonaQAAnalytics() {
       failedTests: 0,
       lastTested: '2024-01-29',
       status: 'complete',
-      checklist: '/qa/cpa'
+      checklist: '/qa/cpa-checklist'
     },
     {
       id: 'attorney',
@@ -121,7 +121,7 @@ export function PersonaQAAnalytics() {
       failedTests: 0,
       lastTested: '2024-01-29',
       status: 'complete',
-      checklist: '/qa/attorney'
+      checklist: '/qa/attorney-checklist'
     },
     {
       id: 'consultant',
@@ -135,7 +135,7 @@ export function PersonaQAAnalytics() {
       failedTests: 0,
       lastTested: '2024-01-29',
       status: 'complete',
-      checklist: '/qa/consultant'
+      checklist: '/qa/consultant-checklist'
     },
     {
       id: 'administration',
@@ -149,7 +149,7 @@ export function PersonaQAAnalytics() {
       failedTests: 0,
       lastTested: '2024-01-29',
       status: 'complete',
-      checklist: '/qa/administration'
+      checklist: '/qa/administration-checklist'
     }
   ]);
 
@@ -314,7 +314,7 @@ export function PersonaQAAnalytics() {
     autoTable(doc, {
       head: [['Test Category', 'Pass Rate', 'Total', 'Passed', 'Warnings', 'Failed']],
       body: categoryData,
-      startY: doc.lastAutoTable?.finalY ? doc.lastAutoTable.finalY + 20 : 150,
+      startY: 150,
       theme: 'grid',
       headStyles: { fillColor: [34, 197, 94] },
       styles: { fontSize: 8 }
@@ -396,7 +396,7 @@ export function PersonaQAAnalytics() {
               Export CSV
             </Button>
             <Button variant="outline" onClick={exportToPDF} className="flex items-center gap-2">
-              <FilePdf className="h-4 w-4" />
+              <File className="h-4 w-4" />
               Export PDF
             </Button>
             <Button variant="outline" onClick={archiveResults} className="flex items-center gap-2">
@@ -691,7 +691,7 @@ export function PersonaQAAnalytics() {
                           Export as CSV
                         </Button>
                         <Button onClick={exportToPDF} className="w-full justify-start" variant="outline">
-                          <FilePdf className="h-4 w-4 mr-2" />
+                          <File className="h-4 w-4 mr-2" />
                           Export as PDF
                         </Button>
                         <Button onClick={archiveResults} className="w-full justify-start" variant="outline">

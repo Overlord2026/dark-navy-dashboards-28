@@ -51,6 +51,7 @@ import { CPAQAChecklist } from "./pages/CPAQAChecklist";
 import { AttorneyQAChecklist } from "./pages/AttorneyQAChecklist";
 import { ConsultantQAChecklist } from "./pages/ConsultantQAChecklist";
 import { AdministrationQAChecklist } from "./pages/AdministrationQAChecklist";
+import { QAIssueTracker } from "./pages/QAIssueTracker";
 
 export const router = createBrowserRouter([
   {
@@ -325,5 +326,9 @@ export const router = createBrowserRouter([
   {
     path: "/qa/launch-report",
     element: <LaunchReportPage />
+  },
+  {
+    path: "/qa/issues",
+    element: <QAIssueTracker />
   }
 ]);
