@@ -412,7 +412,7 @@ export const ClientBasicQAReport = () => {
     if (!stats[testResult.category]) {
       stats[testResult.category] = { pass: 0, fail: 0, warning: 0, blocked: 0, total: 0 };
     }
-    stats[testResult.category][testResult.status as keyof typeof stats[testResult.category]]++;
+    (stats[testResult.category] as any)[testResult.status]++;
     stats[testResult.category].total++;
     return stats;
   }, {} as Record<string, Record<string, number>>);
