@@ -6,120 +6,56 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-interface SecurityEventRequest {
-  event_type: string;
-  severity: 'low' | 'medium' | 'high' | 'critical';
-  resource_type?: string;
-  resource_id?: string;
-  action_performed?: string;
-  outcome?: 'success' | 'failure' | 'blocked';
-  metadata?: Record<string, any>;
-}
-
 const handler = async (req: Request): Promise<Response> => {
-  // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
+  if (req.method !== 'POST') {
+    return new Response(JSON.stringify({ error: 'Method not allowed' }), { 
+      status: 405, headers: { 'Content-Type': 'application/json', ...corsHeaders }
+    });
+  }
+
   try {
-    const supabaseClient = createClient(
+    const supabase = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
-      {
-        global: {
-          headers: { Authorization: req.headers.get('Authorization')! },
-        },
-      }
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
 
-    // Get the current user
-    const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
-    
-    if (authError || !user) {
-      console.error('Authentication error:', authError);
-      return new Response(
-        JSON.stringify({ error: 'Unauthorized' }),
-        { 
-          status: 401, 
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-        }
-      );
-    }
+    const { events } = await req.json();
+    const clientIP = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
 
-    const eventData: SecurityEventRequest = await req.json();
-
-    // Get client IP and user agent
-    const clientIP = req.headers.get('x-forwarded-for') || 
-                    req.headers.get('x-real-ip') || 
-                    'unknown';
-    const userAgent = req.headers.get('user-agent') || 'unknown';
-
-    // Get user's tenant
-    const { data: profile } = await supabaseClient
-      .from('profiles')
-      .select('tenant_id')
-      .eq('id', user.id)
-      .single();
-
-    // Insert security event log
-    const { data, error } = await supabaseClient
-      .from('security_audit_logs')
-      .insert({
-        user_id: user.id,
-        event_type: eventData.event_type,
-        severity: eventData.severity,
-        ip_address: clientIP,
-        user_agent: userAgent,
-        resource_type: eventData.resource_type,
-        resource_id: eventData.resource_id,
-        action_performed: eventData.action_performed,
-        outcome: eventData.outcome || 'success',
-        metadata: eventData.metadata || {},
-        tenant_id: profile?.tenant_id
-      });
-
-    if (error) {
-      console.error('Database error:', error);
-      return new Response(
-        JSON.stringify({ error: 'Failed to log security event' }),
-        { 
-          status: 500, 
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-        }
-      );
-    }
-
-    // Log critical events to console for immediate attention
-    if (eventData.severity === 'critical') {
-      console.log(`CRITICAL SECURITY EVENT: ${eventData.event_type}`, {
-        user_id: user.id,
-        event_type: eventData.event_type,
-        resource_type: eventData.resource_type,
-        action: eventData.action_performed,
-        outcome: eventData.outcome,
-        timestamp: new Date().toISOString(),
-        metadata: eventData.metadata
+    if (!events || !Array.isArray(events)) {
+      return new Response(JSON.stringify({ error: 'Invalid events data' }), {
+        status: 400, headers: { 'Content-Type': 'application/json', ...corsHeaders }
       });
     }
 
-    return new Response(
-      JSON.stringify({ success: true, event_id: data?.id }),
-      { 
-        status: 200, 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-      }
-    );
+    const results = [];
+    for (const event of events) {
+      const { data, error } = await supabase.rpc('log_security_event', {
+        p_event_type: event.eventType,
+        p_severity: event.severity,
+        p_resource_type: event.resourceType,
+        p_resource_id: event.resourceId,
+        p_action_performed: event.action,
+        p_outcome: event.outcome || 'success',
+        p_metadata: { ...event.metadata, ip_address: clientIP }
+      });
 
-  } catch (error) {
-    console.error('Error in log-security-event function:', error);
-    return new Response(
-      JSON.stringify({ error: 'Internal server error' }),
-      { 
-        status: 500, 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-      }
-    );
+      if (!error) results.push(data);
+    }
+
+    return new Response(JSON.stringify({ success: true, processed: results.length }), {
+      status: 200, headers: { 'Content-Type': 'application/json', ...corsHeaders }
+    });
+
+  } catch (error: any) {
+    console.error('Security event logging error:', error);
+    return new Response(JSON.stringify({ error: 'Internal server error' }), {
+      status: 500, headers: { 'Content-Type': 'application/json', ...corsHeaders }
+    });
   }
 };
 

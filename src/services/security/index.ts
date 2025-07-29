@@ -3,9 +3,11 @@ export { PasswordPolicyValidator, DEFAULT_PASSWORD_POLICY } from './passwordPoli
 export { AuthSecurityService, authSecurityService, PRIVILEGED_ROLES } from './authSecurity';
 export { SecretsAuditService, secretsAuditService } from './secretsAudit';
 export { SecretsValidator, secretsValidator } from './secretsValidator';
+export { securityMonitoringService, cleanupSecurityMonitoring } from './securityMonitoringService';
 export type { PasswordValidationResult, PasswordPolicyConfig } from './passwordPolicy';
 export type { PrivilegedRole } from './authSecurity';
 export type { SecretValidationResult } from './secretsValidator';
+export type { SecurityEvent, SecurityMetrics } from './securityMonitoringService';
 
 // Re-export security monitoring component
 export { default as SecretsMonitor } from '@/components/security/SecretsMonitor';

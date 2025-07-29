@@ -586,6 +586,39 @@ export type Database = {
         }
         Relationships: []
       }
+      auth_rate_limits: {
+        Row: {
+          attempt_count: number | null
+          blocked_until: string | null
+          created_at: string | null
+          id: string
+          identifier: string
+          limit_type: string
+          updated_at: string | null
+          window_start: string | null
+        }
+        Insert: {
+          attempt_count?: number | null
+          blocked_until?: string | null
+          created_at?: string | null
+          id?: string
+          identifier: string
+          limit_type: string
+          updated_at?: string | null
+          window_start?: string | null
+        }
+        Update: {
+          attempt_count?: number | null
+          blocked_until?: string | null
+          created_at?: string | null
+          id?: string
+          identifier?: string
+          limit_type?: string
+          updated_at?: string | null
+          window_start?: string | null
+        }
+        Relationships: []
+      }
       backup_operations: {
         Row: {
           backup_location: string | null
@@ -13320,6 +13353,16 @@ export type Database = {
         Args: { p_user_id: string }
         Returns: undefined
       }
+      check_rate_limit: {
+        Args: {
+          p_identifier: string
+          p_limit_type: string
+          p_max_attempts?: number
+          p_window_minutes?: number
+          p_block_minutes?: number
+        }
+        Returns: Json
+      }
       check_security_alerts: {
         Args: Record<PropertyKey, never>
         Returns: Json
@@ -13641,6 +13684,15 @@ export type Database = {
         }
         Returns: string
       }
+      log_rls_violation: {
+        Args: {
+          p_table_name: string
+          p_operation: string
+          p_user_id?: string
+          p_additional_context?: Json
+        }
+        Returns: undefined
+      }
       log_security_event: {
         Args: {
           p_event_type: string
@@ -13822,6 +13874,14 @@ export type Database = {
           p_referee_email?: string
           p_referral_type?: string
           p_tenant_id?: string
+        }
+        Returns: boolean
+      }
+      validate_user_role_access: {
+        Args: {
+          p_required_roles: string[]
+          p_resource_type?: string
+          p_resource_id?: string
         }
         Returns: boolean
       }
