@@ -16,13 +16,12 @@ export function Header() {
   const { getRoleDashboard } = useRoleContext();
   const [debugPanelOpen, setDebugPanelOpen] = useState(false);
   
-  const isDevUser = userProfile?.email === 'tonygomes88@gmail.com';
-  // REFACTORED: Always use actual userProfile - no dev bypass
+  // Dev tools disabled for production security
   const currentRole = userProfile?.role || 'client';
   const currentTier = userProfile?.client_tier || 'basic';
   const dashboardPath = getRoleDashboard();
   
-  // REFACTORED: Disabled QA mode emulation
+  // QA mode disabled for production security
   const isInQAMode = false;
 
   return (
@@ -57,9 +56,7 @@ export function Header() {
                 </Link>
               </Button>
               
-              {/* Only show dev tools for specific developer email */}
-              {isDevUser && <RoleSwitcher />}
-              {isDevUser && <ClientTierToggle />}
+              {/* Dev tools disabled for production security */}
               
               <AdminPortalLink />
               

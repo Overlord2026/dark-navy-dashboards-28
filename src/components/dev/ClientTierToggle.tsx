@@ -9,15 +9,8 @@ export const ClientTierToggle = () => {
   const { isDevMode } = useRoleContext();
   const { userProfile } = useUser();
 
-  // Only show for dev user
-  const isDevUser = userProfile?.email === 'tonygomes88@gmail.com';
-  // REFACTORED: Always use actual userProfile - no emulation
-  const currentRole = userProfile?.role || 'client';
-  const isClientRole = currentRole === 'client';
-  
-  if (!isDevUser || !isDevMode || !isClientRole) {
-    return null;
-  }
+  // Dev component disabled for production security
+  return null;
 
   // REFACTORED: Show actual session tier only
   const currentTier = userProfile?.client_tier || 'basic';

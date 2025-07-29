@@ -2,8 +2,8 @@ import React, { createContext, useContext, useState } from 'react';
 import { useUser } from './UserContext';
 import { getRoleDisplayName } from '@/utils/roleHierarchy';
 
-// Only show QA/Dev tools to specific email addresses
-const DEV_EMAILS = ['tonygomes88@gmail.com'];
+// Dev mode disabled for production security
+const DEV_EMAILS: string[] = [];
 
 // Role-specific navigation configuration
 const ROLE_DASHBOARDS: Record<string, string> = {

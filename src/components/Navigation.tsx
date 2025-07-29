@@ -5,9 +5,6 @@ import { useUser } from '@/context/UserContext';
 export function Navigation() {
   const { userProfile } = useUser();
   
-  // Only show dev tools for specific developer email
-  const isDevUser = userProfile?.email === 'tonygomes88@gmail.com';
-  
   return (
     <nav className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-14 items-center justify-between">
@@ -19,8 +16,7 @@ export function Navigation() {
           </a>
         </div>
         <div className="flex items-center">
-          {/* Only show RoleSwitcher for dev user */}
-          {isDevUser && <RoleSwitcher />}
+          {/* Dev tools disabled for production security */}
         </div>
       </div>
     </nav>
