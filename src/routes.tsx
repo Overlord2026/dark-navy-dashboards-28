@@ -41,6 +41,7 @@ import { WebinarsPage } from "./pages/help/WebinarsPage";
 // QA pages
 import { UATChecklistPage } from "./pages/qa/UATChecklistPage";
 import { LaunchReportPage } from "./pages/qa/LaunchReportPage";
+import { PersonaQAEmulator } from "./pages/PersonaQAEmulator";
 
 export const router = createBrowserRouter([
   {
@@ -271,6 +272,10 @@ export const router = createBrowserRouter([
   {
     path: "/qa/uat-checklist",
     element: <UATChecklistPage />
+  },
+  {
+    path: "/qa/persona-emulator",
+    element: <PersonaQAEmulator />
   },
   {
     path: "/qa/launch-report",
