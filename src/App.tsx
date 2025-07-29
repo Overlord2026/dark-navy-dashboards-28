@@ -64,7 +64,7 @@ import PortfolioPage from "./pages/PortfolioPage";
 import GoalsDashboard from "./pages/GoalsDashboard";
 import GoalDetailPage from "./pages/GoalDetailPage";
 import CreateGoalPage from "./pages/CreateGoalPage";
-import { PersonaTestPage } from "./pages/qa/PersonaTestPage";
+// Removed QA test pages for production
 import { BrandAuditPage } from "./pages/qa/BrandAuditPage";
 import { ComplianceReportingPage } from "./pages/ComplianceReportingPage";
 import Reports from "./pages/Reports";
@@ -463,18 +463,7 @@ const App = () => {
                     }
                   />
 
-                  {/* QA Testing Routes */}
-                  <Route
-                    path="/qa/persona-test"
-                    element={
-                      <AuthWrapper 
-                        requireAuth={true}
-                        allowedRoles={['developer', 'admin', 'system_administrator']}
-                      >
-                        <PersonaTestPage />
-                      </AuthWrapper>
-                    }
-                  />
+                  {/* QA Testing Routes removed for production */}
                   <Route
                     path="/qa/brand-audit"
                     element={
