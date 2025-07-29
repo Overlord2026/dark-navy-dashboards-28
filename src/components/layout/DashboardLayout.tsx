@@ -4,8 +4,7 @@ import { Header } from './Header';
 import { Sidebar } from '@/components/ui/Sidebar';
 import { ErrorBoundary } from '@/components/ui/error-boundary';
 import { useTheme } from "@/context/ThemeContext";
-import { PersonaDebugSession } from '@/components/debug/PersonaDebugSession';
-import { QAModeHeader } from '@/components/debug/QAModeHeader';
+// Debug components removed for production
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Menu } from 'lucide-react';
@@ -39,7 +38,7 @@ export function DashboardLayout() {
   return (
     <ErrorBoundary>
       <div className="min-h-screen bg-background flex flex-col w-full">
-        <QAModeHeader />
+        {/* QA mode header removed for production */}
         
         <div className="flex flex-1">
           {/* Desktop Sidebar */}
@@ -100,7 +99,7 @@ export function DashboardLayout() {
           </div>
         </div>
         
-        <PersonaDebugSession />
+        {/* Debug components removed for production */}
       </div>
     </ErrorBoundary>
   );

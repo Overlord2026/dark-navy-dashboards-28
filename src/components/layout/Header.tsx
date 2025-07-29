@@ -6,15 +6,14 @@ import { useRoleContext, RoleSwitcher } from '@/context/RoleContext';
 import { getRoleDisplayName } from '@/utils/roleHierarchy';
 import { AdminPortalLink } from '@/components/navigation/AdminPortalLink';
 import { ClientTierToggle } from '@/components/dev/ClientTierToggle';
-import { DebugPanel } from '@/components/debug/DebugPanel';
-import { ImpersonationLog } from '@/components/debug/ImpersonationLog';
+// Debug components removed for production
 import { Button } from '@/components/ui/button';
 import { LogOut, User, Home } from 'lucide-react';
 
 export function Header() {
   const { userProfile, logout } = useUser();
   const { getRoleDashboard } = useRoleContext();
-  const [debugPanelOpen, setDebugPanelOpen] = useState(false);
+  // Debug panel removed for production
   
   // Dev tools disabled for production security
   const currentRole = userProfile?.role || 'client';
@@ -77,14 +76,7 @@ export function Header() {
         </div>
       </div>
       
-      {/* Debug Panel - only visible to dev users */}
-      <DebugPanel 
-        isOpen={debugPanelOpen}
-        onToggle={() => setDebugPanelOpen(!debugPanelOpen)}
-      />
-      
-      {/* Impersonation Log - only visible to dev users */}
-      <ImpersonationLog />
+      {/* Debug components removed for production */}
     </header>
   );
 }

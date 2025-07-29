@@ -43,7 +43,7 @@ export function PlaidDebugDialog({ isOpen, onClose }: PlaidDebugDialogProps) {
       }
       
     } catch (error) {
-      console.error("PlaidDebugDialog: Test failed:", error);
+      // Error logging removed for production security
       toast({
         title: "Test Failed",
         description: `Error: ${error}`,

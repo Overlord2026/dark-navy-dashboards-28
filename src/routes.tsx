@@ -39,21 +39,7 @@ import { APIPage } from "./pages/help/APIPage";
 import { WebinarsPage } from "./pages/help/WebinarsPage";
 
 // QA pages removed for production
-// import { UATChecklistPage } from "./pages/qa/UATChecklistPage";
-// import { LaunchReportPage } from "./pages/qa/LaunchReportPage";
-import { PersonaQAEmulator } from "./pages/PersonaQAEmulator";
-import { PersonaQAAnalytics } from "./pages/PersonaQAAnalytics";
-import { ClientBasicQAReport } from "./pages/ClientBasicQAReport";
-import { ClientBasicQAChecklist } from "./pages/ClientBasicQAChecklist";
-import { ClientPremiumQAChecklist } from "./pages/ClientPremiumQAChecklist";
-import { AdvisorQAChecklist } from "./pages/AdvisorQAChecklist";
-import { CPAQAChecklist } from "./pages/CPAQAChecklist";
-import { AttorneyQAChecklist } from "./pages/AttorneyQAChecklist";
-import { ConsultantQAChecklist } from "./pages/ConsultantQAChecklist";
-import { AdministrationQAChecklist } from "./pages/AdministrationQAChecklist";
-import { QAIssueTracker } from "./pages/QAIssueTracker";
-import { RegressionTestRunner } from "./pages/RegressionTestRunner";
-import { PreLaunchChecklist } from "./pages/PreLaunchChecklist";
+// All QA routes, checklists, and testing components removed for production security
 
 export const router = createBrowserRouter([
   {
@@ -280,65 +266,5 @@ export const router = createBrowserRouter([
     path: "/help/webinars",
     element: <WebinarsPage />
   },
-  // QA routes removed for production
-  // {
-  //   path: "/qa/uat-checklist", 
-  //   element: <UATChecklistPage />
-  // },
-  {
-    path: "/qa/persona-emulator",
-    element: <PersonaQAEmulator />
-  },
-  {
-    path: "/qa/analytics",
-    element: <PersonaQAAnalytics />
-  },
-    {
-      path: "/qa/client-basic",
-      element: <ClientBasicQAReport />
-    },
-    {
-      path: "/qa/client-basic-checklist",
-      element: <ClientBasicQAChecklist />
-    },
-    {
-      path: "/qa/client-premium-checklist",
-      element: <ClientPremiumQAChecklist />
-    },
-    {
-      path: "/qa/advisor-checklist",
-      element: <AdvisorQAChecklist />
-    },
-    {
-      path: "/qa/cpa-checklist",
-      element: <CPAQAChecklist />
-    },
-    {
-      path: "/qa/attorney-checklist",
-      element: <AttorneyQAChecklist />
-    },
-    {
-      path: "/qa/consultant-checklist",
-      element: <ConsultantQAChecklist />
-    },
-    {
-      path: "/qa/administration-checklist",
-      element: <AdministrationQAChecklist />
-    },
-  // {
-  //   path: "/qa/launch-report",
-  //   element: <LaunchReportPage />
-  // },
-  {
-    path: "/qa/issues",
-    element: <QAIssueTracker />
-  },
-  {
-    path: "/qa/regression",
-    element: <RegressionTestRunner />
-  },
-  {
-    path: "/qa/launch",
-    element: <PreLaunchChecklist />
-  }
+  // QA routes removed for production security
 ]);

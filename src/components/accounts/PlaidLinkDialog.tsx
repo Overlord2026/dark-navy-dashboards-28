@@ -25,12 +25,12 @@ export function PlaidLinkDialog({ isOpen, onClose, onSuccess }: PlaidLinkDialogP
   const [error, setError] = useState<string | null>(null);
   const [isRetrying, setIsRetrying] = useState(false);
 
-  console.log("PlaidLinkDialog: Rendering with state", { isOpen, linkToken, isConnecting, error });
+  // Render state logging removed for production security
   
   // Fetch link token when dialog opens
   useEffect(() => {
     if (isOpen && !linkToken && !error) {
-      console.log("PlaidLinkDialog: Dialog opened, fetching link token");
+      // Dialog state logging removed for production security
       fetchLinkToken();
     }
   }, [isOpen]);
@@ -40,14 +40,10 @@ export function PlaidLinkDialog({ isOpen, onClose, onSuccess }: PlaidLinkDialogP
       setError(null);
       if (isRetry) setIsRetrying(true);
       
-      console.log("PlaidLinkDialog: Starting fetchLinkToken", { isRetry });
+      // Token fetch logging removed for production security
       const response = await supabase.functions.invoke('plaid-create-link-token');
       
-      console.log("PlaidLinkDialog: Full response", response);
-      console.log("PlaidLinkDialog: Link token response", { data: response.data, error: response.error });
-      
       if (response.error) {
-        console.error('Error creating link token:', response.error);
         const errorMessage = typeof response.error === 'string' 
           ? response.error 
           : response.error?.message || response.error?.details || "Unknown error occurred";
@@ -66,17 +62,17 @@ export function PlaidLinkDialog({ isOpen, onClose, onSuccess }: PlaidLinkDialogP
       
       if (!response.data?.link_token) {
         const errorMsg = "No link token received from server";
-        console.error('PlaidLinkDialog:', errorMsg);
+        // Error logging removed for production security
         setError(errorMsg);
         return;
       }
       
-      console.log("PlaidLinkDialog: Setting link token successfully");
+      // Success logging removed for production security
       setLinkToken(response.data.link_token);
       setError(null);
       
     } catch (error) {
-      console.error('Error fetching link token:', error);
+      // Error logging removed for production security
       const errorMsg = "Network error. Please check your connection and try again.";
       setError(errorMsg);
       
@@ -95,19 +91,16 @@ export function PlaidLinkDialog({ isOpen, onClose, onSuccess }: PlaidLinkDialogP
   const { open: openPlaidLink, ready } = usePlaidLink({
     token: linkToken,
     onSuccess: (public_token: string, metadata: any) => {
-      console.log('PlaidLinkDialog: Plaid Link success callback triggered');
-      console.log('PlaidLinkDialog: Public token received:', public_token?.substring(0, 20) + '...');
-      console.log('PlaidLinkDialog: Metadata:', metadata);
+      // Success callback logging removed for production security
       
       // Don't reopen our dialog on success - let the parent handle the success flow
       onSuccess(public_token);
     },
     onExit: (err: any, metadata: any) => {
-      console.log('PlaidLinkDialog: Plaid Link exit callback triggered');
+      // Exit callback logging removed for production security
       
       if (err != null) {
-        console.error('PlaidLinkDialog: Plaid Link error:', err);
-        // Reopen our dialog to show the error and retry option
+        // Error logging removed for production security
         setError("Failed to link your accounts. Please try again.");
         toast({
           title: "Connection Error",
@@ -115,42 +108,39 @@ export function PlaidLinkDialog({ isOpen, onClose, onSuccess }: PlaidLinkDialogP
           variant: "destructive"
         });
       } else {
-        console.log('PlaidLinkDialog: User exited Plaid Link without error - closing dialog');
-        // User cancelled, close our dialog too
+        // Exit logging removed for production security
         onClose();
       }
-      console.log('PlaidLinkDialog: Exit metadata:', metadata);
+      // Metadata logging removed for production security
       setIsConnecting(false);
     },
     onEvent: (eventName: string, metadata: any) => {
-      console.log('PlaidLinkDialog: Plaid Link event:', eventName, metadata);
+      // Event logging removed for production security
     },
   });
 
   // Clear loading state when Plaid is ready
   useEffect(() => {
     if (ready && linkToken && isConnecting) {
-      console.log("PlaidLinkDialog: Plaid is ready, clearing loading state");
+      // Ready state logging removed for production security
       setIsConnecting(false);
     }
   }, [ready, linkToken, isConnecting]);
 
   const handleConnect = () => {
-    console.log("PlaidLinkDialog: handleConnect called", { ready, linkToken });
+    // Connection logging removed for production security
     if (ready && linkToken) {
-      console.log("PlaidLinkDialog: Opening Plaid Link and closing our dialog");
-      // Close our dialog immediately when Plaid opens to prevent conflicts
+      // Connection logging removed for production security
       onClose();
       openPlaidLink();
     } else {
-      console.log("PlaidLinkDialog: Not ready, showing loading state");
+      // Loading logging removed for production security
       setIsConnecting(true);
-      // The token fetch is already in progress, just wait for it
     }
   };
 
   const handleDialogClose = () => {
-    console.log("PlaidLinkDialog: Dialog close requested");
+    // Close logging removed for production security
     onClose();
   };
 
