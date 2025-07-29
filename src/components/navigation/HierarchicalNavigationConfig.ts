@@ -179,11 +179,10 @@ export const hierarchicalNav: NavItem[] = [
           },
           { 
             id: 'goals-budgets', 
-            title: 'Budgets (Soon)', 
+            title: 'Budgets', 
             href: '/wealth/goals/budgets', 
             icon: ArchiveIcon,
-            featureId: 'goals-budgets',
-            comingSoon: true
+            featureId: 'goals-budgets'
           },
         ],
       },
@@ -217,11 +216,10 @@ export const hierarchicalNav: NavItem[] = [
       },
       { 
         id: 'wealth-bill-pay', 
-        title: 'Bill Pay (Basic)', 
+        title: 'Bill Pay', 
         href: '/wealth/bill-pay', 
         icon: CreditCardIcon,
-        featureId: 'bill-pay-basic',
-        comingSoon: true
+        featureId: 'bill-pay-basic'
       },
 
       // PREMIUM FEATURES - Clearly marked and gated
