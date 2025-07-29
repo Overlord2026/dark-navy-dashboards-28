@@ -15,9 +15,17 @@ import {
   Monitor,
   FileText,
   Target,
-  Calendar
+  Calendar,
+  Download,
+  Archive,
+  Share,
+  FileSpreadsheet,
+  FilePdf
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { toast } from 'sonner';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 interface PersonaMetrics {
   id: string;
@@ -227,6 +235,127 @@ export function PersonaQAAnalytics() {
   const totalFailed = personas.reduce((sum, p) => sum + p.failedTests, 0);
   const overallCompletionRate = Math.round((totalPassed / totalTests) * 100);
 
+  // Export Functions
+  const exportToCSV = () => {
+    const csvData = [
+      ['Persona', 'Role', 'Tier', 'Completion Rate', 'Total Tests', 'Passed', 'Warnings', 'Failed', 'Last Tested'],
+      ...personas.map(p => [
+        p.name,
+        p.role,
+        p.tier,
+        `${p.completionRate}%`,
+        p.totalTests.toString(),
+        p.passedTests.toString(),
+        p.warningTests.toString(),
+        p.failedTests.toString(),
+        p.lastTested
+      ])
+    ];
+
+    const csvContent = csvData.map(row => row.join(',')).join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `persona-qa-results-${new Date().toISOString().split('T')[0]}.csv`;
+    link.click();
+    
+    toast.success('CSV export completed successfully');
+  };
+
+  const exportToPDF = () => {
+    const doc = new jsPDF();
+    const currentDate = new Date().toLocaleDateString();
+    
+    // Header
+    doc.setFontSize(20);
+    doc.text('Persona QA Analytics Report', 20, 20);
+    doc.setFontSize(12);
+    doc.text(`Generated on: ${currentDate}`, 20, 30);
+    
+    // Executive Summary
+    doc.setFontSize(16);
+    doc.text('Executive Summary', 20, 50);
+    doc.setFontSize(10);
+    doc.text(`Overall Completion Rate: ${overallCompletionRate}%`, 20, 60);
+    doc.text(`Total Tests: ${totalTests}`, 20, 68);
+    doc.text(`Passed: ${totalPassed} | Warnings: ${totalWarnings} | Failed: ${totalFailed}`, 20, 76);
+    
+    // Persona Results Table
+    const tableData = personas.map(p => [
+      p.name,
+      p.role,
+      p.tier,
+      `${p.completionRate}%`,
+      p.totalTests,
+      p.passedTests,
+      p.warningTests,
+      p.failedTests
+    ]);
+
+    autoTable(doc, {
+      head: [['Persona', 'Role', 'Tier', 'Completion', 'Total', 'Passed', 'Warnings', 'Failed']],
+      body: tableData,
+      startY: 90,
+      theme: 'grid',
+      headStyles: { fillColor: [59, 130, 246] },
+      styles: { fontSize: 8 }
+    });
+
+    // Category Performance Table
+    const categoryData = categories.map(c => [
+      c.category,
+      `${Math.round((c.passedTests / c.totalTests) * 100)}%`,
+      c.totalTests,
+      c.passedTests,
+      c.warningTests,
+      c.failedTests
+    ]);
+
+    autoTable(doc, {
+      head: [['Test Category', 'Pass Rate', 'Total', 'Passed', 'Warnings', 'Failed']],
+      body: categoryData,
+      startY: doc.lastAutoTable?.finalY ? doc.lastAutoTable.finalY + 20 : 150,
+      theme: 'grid',
+      headStyles: { fillColor: [34, 197, 94] },
+      styles: { fontSize: 8 }
+    });
+
+    doc.save(`persona-qa-report-${new Date().toISOString().split('T')[0]}.pdf`);
+    toast.success('PDF report generated successfully');
+  };
+
+  const archiveResults = () => {
+    const archiveData = {
+      timestamp: new Date().toISOString(),
+      overallMetrics: {
+        totalTests,
+        totalPassed,
+        totalWarnings,
+        totalFailed,
+        overallCompletionRate
+      },
+      personas: personas,
+      categories: categories
+    };
+
+    const jsonContent = JSON.stringify(archiveData, null, 2);
+    const blob = new Blob([jsonContent], { type: 'application/json' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `qa-archive-${new Date().toISOString().split('T')[0]}.json`;
+    link.click();
+    
+    // Also save to localStorage for historical tracking
+    const existingArchives = JSON.parse(localStorage.getItem('qaArchives') || '[]');
+    existingArchives.push({
+      date: new Date().toISOString().split('T')[0],
+      ...archiveData
+    });
+    localStorage.setItem('qaArchives', JSON.stringify(existingArchives));
+    
+    toast.success('Results archived successfully');
+  };
+
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'complete': return <CheckCircle className="h-4 w-4 text-green-500" />;
@@ -261,10 +390,24 @@ export function PersonaQAAnalytics() {
               Comprehensive testing results across all user personas
             </p>
           </div>
-          <Badge variant="outline" className="flex items-center gap-2">
-            <Calendar className="h-4 w-4" />
-            Last Updated: {new Date().toLocaleDateString()}
-          </Badge>
+          <div className="flex items-center gap-3">
+            <Button variant="outline" onClick={exportToCSV} className="flex items-center gap-2">
+              <FileSpreadsheet className="h-4 w-4" />
+              Export CSV
+            </Button>
+            <Button variant="outline" onClick={exportToPDF} className="flex items-center gap-2">
+              <FilePdf className="h-4 w-4" />
+              Export PDF
+            </Button>
+            <Button variant="outline" onClick={archiveResults} className="flex items-center gap-2">
+              <Archive className="h-4 w-4" />
+              Archive
+            </Button>
+            <Badge variant="outline" className="flex items-center gap-2">
+              <Calendar className="h-4 w-4" />
+              Last Updated: {new Date().toLocaleDateString()}
+            </Badge>
+          </div>
         </div>
 
         {/* Overall Metrics */}
@@ -512,28 +655,61 @@ export function PersonaQAAnalytics() {
 
               <Card>
                 <CardHeader>
-                  <CardTitle>Quick Access Links</CardTitle>
+                  <CardTitle>Quick Access & Export</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid md:grid-cols-3 gap-4">
-                    <Link to="/qa/persona-test">
-                      <Button variant="outline" className="w-full justify-start">
-                        <Monitor className="h-4 w-4 mr-2" />
-                        Persona Test Runner
-                      </Button>
-                    </Link>
-                    <Link to="/qa/persona-emulator">
-                      <Button variant="outline" className="w-full justify-start">
-                        <Users className="h-4 w-4 mr-2" />
-                        Persona Emulator
-                      </Button>
-                    </Link>
-                    <Link to="/qa/uat-checklist">
-                      <Button variant="outline" className="w-full justify-start">
-                        <FileText className="h-4 w-4 mr-2" />
-                        UAT Checklist
-                      </Button>
-                    </Link>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div className="space-y-3">
+                      <h4 className="font-medium">Navigation Links</h4>
+                      <div className="space-y-2">
+                        <Link to="/qa/persona-test">
+                          <Button variant="outline" className="w-full justify-start">
+                            <Monitor className="h-4 w-4 mr-2" />
+                            Persona Test Runner
+                          </Button>
+                        </Link>
+                        <Link to="/qa/persona-emulator">
+                          <Button variant="outline" className="w-full justify-start">
+                            <Users className="h-4 w-4 mr-2" />
+                            Persona Emulator
+                          </Button>
+                        </Link>
+                        <Link to="/qa/uat-checklist">
+                          <Button variant="outline" className="w-full justify-start">
+                            <FileText className="h-4 w-4 mr-2" />
+                            UAT Checklist
+                          </Button>
+                        </Link>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-3">
+                      <h4 className="font-medium">Export & Archive</h4>
+                      <div className="space-y-2">
+                        <Button onClick={exportToCSV} className="w-full justify-start" variant="outline">
+                          <FileSpreadsheet className="h-4 w-4 mr-2" />
+                          Export as CSV
+                        </Button>
+                        <Button onClick={exportToPDF} className="w-full justify-start" variant="outline">
+                          <FilePdf className="h-4 w-4 mr-2" />
+                          Export as PDF
+                        </Button>
+                        <Button onClick={archiveResults} className="w-full justify-start" variant="outline">
+                          <Archive className="h-4 w-4 mr-2" />
+                          Archive Results
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-6 p-4 bg-muted/50 rounded-lg">
+                    <h4 className="font-medium mb-2">📋 Export Information</h4>
+                    <ul className="text-sm text-muted-foreground space-y-1">
+                      <li>• <strong>CSV:</strong> Spreadsheet format for analysis and data processing</li>
+                      <li>• <strong>PDF:</strong> Professional report for stakeholders and documentation</li>
+                      <li>• <strong>Archive:</strong> JSON backup with complete historical data</li>
+                      <li>• All exports include timestamp and comprehensive test results</li>
+                    </ul>
                   </div>
                 </CardContent>
               </Card>
