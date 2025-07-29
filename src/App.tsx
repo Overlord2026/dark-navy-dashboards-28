@@ -71,6 +71,13 @@ import Reports from "./pages/Reports";
 import BusinessCenter from "./pages/BusinessCenter";
 import { ProposalWizard } from "./pages/advisor/ProposalWizard";
 import { ProposalList } from "./pages/advisor/ProposalList";
+import { AnnuitiesPage } from "./pages/AnnuitiesPage";
+import { EducationCenter } from "./components/annuities/EducationCenter";
+import { ProductComparison } from "./components/annuities/ProductComparison";
+import { ContractAnalyzer } from "./components/annuities/ContractAnalyzer";
+import { AnnuityCalculators } from "./components/annuities/calculators/AnnuityCalculators";
+import { AnnuityMarketplace } from "./components/annuities/marketplace/AnnuityMarketplace";
+import { FiduciaryReview } from "./components/annuities/FiduciaryReview";
 
 const queryClient = new QueryClient();
 
