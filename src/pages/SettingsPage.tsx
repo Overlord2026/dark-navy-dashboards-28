@@ -7,6 +7,7 @@ import { NotificationSettings } from '@/components/settings/NotificationSettings
 import { PersonalizationSettings } from '@/components/settings/PersonalizationSettings';
 import { SupportHelpSettings } from '@/components/settings/SupportHelpSettings';
 import { PrivacyDataSettings } from '@/components/settings/PrivacyDataSettings';
+import { IntegrationManagement } from '@/components/settings/IntegrationManagement';
 
 export function SettingsPage() {
   const [activeTab, setActiveTab] = useState('account');
@@ -23,6 +24,8 @@ export function SettingsPage() {
         return <NotificationSettings />;
       case 'personalization':
         return <PersonalizationSettings />;
+      case 'integrations':
+        return <IntegrationManagement />;
       case 'support':
         return <SupportHelpSettings />;
       case 'legal':

@@ -8,6 +8,7 @@ import CollaborationTab from "@/components/navigation/tabs/CollaborationTab";
 import SettingsTab from "@/components/navigation/tabs/SettingsTab";
 import FamilyWealthTab from "@/components/navigation/tabs/FamilyWealthTab";
 import { Card, CardContent } from "@/components/ui/card";
+import { IntegrationsPanel } from "@/components/integrations/IntegrationsPanel";
 
 // This file implements the tab page components referenced in routes-addition.tsx
 
@@ -57,11 +58,17 @@ export const FamilyWealthPage = () => {
     <ThreeColumnLayout title="Family Wealth" activeMainItem="family-wealth">
       <div className="container p-6">
         <h1 className="text-2xl font-bold mb-6">Family Wealth Management</h1>
-        <Card>
-          <CardContent className="p-6">
-            <FamilyWealthTab />
-          </CardContent>
-        </Card>
+        <div className="space-y-6">
+          <Card>
+            <CardContent className="p-6">
+              <FamilyWealthTab />
+            </CardContent>
+          </Card>
+          <IntegrationsPanel 
+            title="Wealth Management Integrations"
+            description="Connect with custodians and portfolio management platforms"
+          />
+        </div>
       </div>
     </ThreeColumnLayout>
   );
@@ -87,11 +94,17 @@ export const SettingsPage = () => {
     <ThreeColumnLayout title="Settings" activeMainItem="settings">
       <div className="container p-6">
         <h1 className="text-2xl font-bold mb-6">Account Settings</h1>
-        <Card>
-          <CardContent className="p-6">
-            <SettingsTab />
-          </CardContent>
-        </Card>
+        <div className="space-y-6">
+          <Card>
+            <CardContent className="p-6">
+              <SettingsTab />
+            </CardContent>
+          </Card>
+          <IntegrationsPanel 
+            title="Professional Service Integrations"
+            description="Connect with your CPA, attorney, and other professional service providers"
+          />
+        </div>
       </div>
     </ThreeColumnLayout>
   );

@@ -14,7 +14,8 @@ import {
   Settings,
   ChevronLeft,
   Users,
-  Building
+  Building,
+  ExternalLink
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { useSubscriptionAccess } from '@/hooks/useSubscriptionAccess';
@@ -76,6 +77,12 @@ export const SettingsLayout: React.FC<SettingsLayoutProps> = ({
       label: 'Team Management',
       icon: Users,
       description: 'Manage team members and permissions'
+    }] : []),
+    ...(userRole === 'system_administrator' ? [{
+      id: 'integrations',
+      label: 'Integration Management',
+      icon: ExternalLink,
+      description: 'Manage external partner integrations'
     }] : []),
     ...(isAdmin ? [{
       id: 'admin',

@@ -6,7 +6,8 @@ export type AuditEventType = 'login' | 'logout' | 'document_access' | 'document_
   'document_creation' | 'document_share' | 'document_notification' |
   'appointment_reminder' | 'medication_reminder' | 'insurance_reminder' |
   'prescription_add' | 'prescription_update' | 'prescription_delete' |
-  'mfa_enforcement_check' | 'session_rotation';
+  'mfa_enforcement_check' | 'session_rotation' | 'integration_connect_attempt' |
+  'integration_connected' | 'integration_connect_failed' | 'integration_disconnect';
 
 export interface AuditLogEntry {
   id: string;

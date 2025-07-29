@@ -50,6 +50,34 @@ const AVAILABLE_FEATURES = [
     description: 'Priority support and dedicated account management',
     icon: Zap,
     category: 'Support'
+  },
+  {
+    name: 'integration_schwab',
+    label: 'Schwab Integration',
+    description: 'Connect to Charles Schwab custodial accounts',
+    icon: Settings,
+    category: 'Integrations'
+  },
+  {
+    name: 'integration_advyzon',
+    label: 'Advyzon Integration',
+    description: 'Sync with Advyzon CRM and portfolio management',
+    icon: Settings,
+    category: 'Integrations'
+  },
+  {
+    name: 'integration_cpa',
+    label: 'CPA Portal Integration',
+    description: 'Share data with CPA for tax planning',
+    icon: Settings,
+    category: 'Integrations'
+  },
+  {
+    name: 'integration_attorney',
+    label: 'Attorney Portal Integration',
+    description: 'Collaborate on estate planning documents',
+    icon: Settings,
+    category: 'Integrations'
   }
 ];
 
