@@ -38,9 +38,9 @@ import { VideosPage } from "./pages/help/VideosPage";
 import { APIPage } from "./pages/help/APIPage";
 import { WebinarsPage } from "./pages/help/WebinarsPage";
 
-// QA pages
-import { UATChecklistPage } from "./pages/qa/UATChecklistPage";
-import { LaunchReportPage } from "./pages/qa/LaunchReportPage";
+// QA pages removed for production
+// import { UATChecklistPage } from "./pages/qa/UATChecklistPage";
+// import { LaunchReportPage } from "./pages/qa/LaunchReportPage";
 import { PersonaQAEmulator } from "./pages/PersonaQAEmulator";
 import { PersonaQAAnalytics } from "./pages/PersonaQAAnalytics";
 import { ClientBasicQAReport } from "./pages/ClientBasicQAReport";
@@ -280,11 +280,11 @@ export const router = createBrowserRouter([
     path: "/help/webinars",
     element: <WebinarsPage />
   },
-  // QA routes
-  {
-    path: "/qa/uat-checklist",
-    element: <UATChecklistPage />
-  },
+  // QA routes removed for production
+  // {
+  //   path: "/qa/uat-checklist", 
+  //   element: <UATChecklistPage />
+  // },
   {
     path: "/qa/persona-emulator",
     element: <PersonaQAEmulator />
@@ -325,10 +325,10 @@ export const router = createBrowserRouter([
       path: "/qa/administration-checklist",
       element: <AdministrationQAChecklist />
     },
-  {
-    path: "/qa/launch-report",
-    element: <LaunchReportPage />
-  },
+  // {
+  //   path: "/qa/launch-report",
+  //   element: <LaunchReportPage />
+  // },
   {
     path: "/qa/issues",
     element: <QAIssueTracker />

@@ -65,7 +65,7 @@ import GoalsDashboard from "./pages/GoalsDashboard";
 import GoalDetailPage from "./pages/GoalDetailPage";
 import CreateGoalPage from "./pages/CreateGoalPage";
 // Removed QA test pages for production
-import { BrandAuditPage } from "./pages/qa/BrandAuditPage";
+// Removed QA pages for production
 import { ComplianceReportingPage } from "./pages/ComplianceReportingPage";
 import Reports from "./pages/Reports";
 import BusinessCenter from "./pages/BusinessCenter";
@@ -464,17 +464,7 @@ const App = () => {
                   />
 
                   {/* QA Testing Routes removed for production */}
-                  <Route
-                    path="/qa/brand-audit"
-                    element={
-                      <AuthWrapper 
-                        requireAuth={true}
-                        allowedRoles={['developer', 'admin', 'system_administrator']}
-                      >
-                        <BrandAuditPage />
-                      </AuthWrapper>
-                    }
-                  />
+                  {/* QA brand audit route removed for production */}
                   
                   <Route path="/access-denied" element={<AccessDeniedPage />} />
                   <Route path="*" element={<NotFoundPage />} />
