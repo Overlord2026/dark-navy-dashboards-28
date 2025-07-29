@@ -45,6 +45,7 @@ import { PersonaQAEmulator } from "./pages/PersonaQAEmulator";
 import { ClientBasicQAReport } from "./pages/ClientBasicQAReport";
 import { ClientBasicQAChecklist } from "./pages/ClientBasicQAChecklist";
 import { ClientPremiumQAChecklist } from "./pages/ClientPremiumQAChecklist";
+import { AdvisorQAChecklist } from "./pages/AdvisorQAChecklist";
 
 export const router = createBrowserRouter([
   {
@@ -291,6 +292,10 @@ export const router = createBrowserRouter([
     {
       path: "/qa/client-premium-checklist",
       element: <ClientPremiumQAChecklist />
+    },
+    {
+      path: "/qa/advisor-checklist",
+      element: <AdvisorQAChecklist />
     },
   {
     path: "/qa/launch-report",
