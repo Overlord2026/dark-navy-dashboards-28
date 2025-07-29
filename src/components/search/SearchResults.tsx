@@ -6,6 +6,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { FileText, Download, Eye, Share2, Loader2 } from 'lucide-react';
 import { SearchResult } from '@/services/searchIndex';
 import { cn } from '@/lib/utils';
+import { renderSafeHighlight } from '@/lib/sanitize';
 
 interface SearchResultsProps {
   results: SearchResult[];
@@ -96,7 +97,7 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
 
     return (
       <span
-        dangerouslySetInnerHTML={{ __html: highlights }}
+        dangerouslySetInnerHTML={renderSafeHighlight(text, highlights)}
         className="search-highlighted-text"
       />
     );

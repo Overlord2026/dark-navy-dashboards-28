@@ -11,6 +11,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/animated-alert-dialog";
 import { Mail, HelpCircle, Users } from "lucide-react";
+import { sanitizeHtml } from '@/lib/sanitize';
 
 interface LearnMoreDialogProps {
   open: boolean;
@@ -86,7 +87,7 @@ export function LearnMoreDialog({
             </div>
             <AlertDialogTitle>{getTitle()}</AlertDialogTitle>
           </div>
-          <AlertDialogDescription className="text-left" dangerouslySetInnerHTML={{ __html: getDescription() }} />
+          <AlertDialogDescription className="text-left" dangerouslySetInnerHTML={{ __html: sanitizeHtml(getDescription()) }} />
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
