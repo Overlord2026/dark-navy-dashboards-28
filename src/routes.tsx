@@ -53,6 +53,7 @@ import { ConsultantQAChecklist } from "./pages/ConsultantQAChecklist";
 import { AdministrationQAChecklist } from "./pages/AdministrationQAChecklist";
 import { QAIssueTracker } from "./pages/QAIssueTracker";
 import { RegressionTestRunner } from "./pages/RegressionTestRunner";
+import { PreLaunchChecklist } from "./pages/PreLaunchChecklist";
 
 export const router = createBrowserRouter([
   {
@@ -335,5 +336,9 @@ export const router = createBrowserRouter([
   {
     path: "/qa/regression",
     element: <RegressionTestRunner />
+  },
+  {
+    path: "/qa/launch",
+    element: <PreLaunchChecklist />
   }
 ]);

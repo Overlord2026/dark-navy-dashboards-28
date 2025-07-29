@@ -18,6 +18,7 @@ import {
   Calendar,
   Download,
   Archive,
+  Shield,
   Zap,
   FileSpreadsheet,
   File
@@ -678,6 +679,12 @@ export function PersonaQAAnalytics() {
                             <Button variant="outline" className="w-full justify-start">
                               <Zap className="h-4 w-4 mr-2" />
                               Regression Tests
+                            </Button>
+                          </Link>
+                          <Link to="/qa/launch">
+                            <Button variant="outline" className="w-full justify-start">
+                              <Shield className="h-4 w-4 mr-2" />
+                              Go/No-Go Checklist
                             </Button>
                           </Link>
                           <Link to="/qa/uat-checklist">
