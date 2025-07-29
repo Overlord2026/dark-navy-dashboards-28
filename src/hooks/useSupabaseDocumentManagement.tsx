@@ -1,6 +1,7 @@
 
 import { useState } from "react";
-import { useSupabaseDocuments, SupabaseDocument } from "./useSupabaseDocuments";
+import { useSupabaseRealtimeDocuments } from "./useSupabaseRealtimeDocuments";
+import { SupabaseDocument } from "./useSupabaseDocuments";
 import { useToast } from "@/hooks/use-toast";
 
 export const useSupabaseDocumentManagement = () => {
@@ -13,12 +14,14 @@ export const useSupabaseDocumentManagement = () => {
     categories,
     loading,
     uploading,
+    syncStatus,
+    lastSyncTime,
     uploadDocument,
     createFolder,
     deleteDocument,
     getDocumentUrl,
     refreshDocuments
-  } = useSupabaseDocuments();
+  } = useSupabaseRealtimeDocuments();
 
   const handleCreateFolder = async (folderName: string, category?: string, parentFolderId?: string | null) => {
     if (!folderName.trim()) {
@@ -106,6 +109,8 @@ export const useSupabaseDocumentManagement = () => {
     isUploadDialogOpen,
     loading,
     uploading,
+    syncStatus,
+    lastSyncTime,
     setActiveCategory,
     setIsUploadDialogOpen,
     handleCreateFolder,

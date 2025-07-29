@@ -43,9 +43,26 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { format, addDays, isBefore, isAfter } from "date-fns";
 import { AlertTriangle, Calendar, CheckCircle, Clock, FileText, Plus, Trash2 } from "lucide-react";
-import { useBusinessFilings, BusinessFiling } from "@/hooks/useBusinessFilings";
+import { useSupabaseRealtimeBusinessFilings } from "@/hooks/useSupabaseRealtimeBusinessFilings";
+import { SyncStatusIndicator } from "@/components/ui/sync-status-indicator";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
+
+interface BusinessFiling {
+  id?: string;
+  user_id?: string;
+  name: string;
+  description?: string;
+  business_name: string;
+  due_date: Date;
+  reminder_days: number;
+  filing_type: string;
+  recurring: boolean;
+  recurring_period?: string;
+  completed: boolean;
+  created_at?: string;
+  updated_at?: string;
+}
 
 // Define the form schema for business filing
 const businessFilingSchema = z.object({
@@ -86,7 +103,15 @@ const recurringPeriods = [
 export const BusinessFilingsTracker = () => {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [filterStatus, setFilterStatus] = useState<"all" | "upcoming" | "overdue" | "completed">("all");
-  const { filings, isLoading, addFiling, deleteFiling, toggleComplete } = useBusinessFilings();
+  const { 
+    filings, 
+    isLoading, 
+    syncStatus, 
+    lastSyncTime, 
+    addFiling, 
+    deleteFiling, 
+    toggleComplete 
+  } = useSupabaseRealtimeBusinessFilings();
   const isMobile = useIsMobile();
   
   const form = useForm<BusinessFilingForm>({
@@ -392,10 +417,19 @@ export const BusinessFilingsTracker = () => {
       
       <Card>
         <CardHeader>
-          <CardTitle className={cn(isMobile && "text-lg")}>Your Business Filings</CardTitle>
-          <CardDescription className={cn(isMobile && "text-sm")}>
-            Track important business filings, deadlines, and compliance requirements.
-          </CardDescription>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className={cn(isMobile && "text-lg")}>Your Business Filings</CardTitle>
+              <CardDescription className={cn(isMobile && "text-sm")}>
+                Track important business filings, deadlines, and compliance requirements.
+              </CardDescription>
+            </div>
+            <SyncStatusIndicator 
+              status={syncStatus} 
+              lastSyncTime={lastSyncTime}
+              className="ml-2"
+            />
+          </div>
           <div className={cn(
             "flex space-x-2 mt-2",
             isMobile && "flex-wrap gap-2"

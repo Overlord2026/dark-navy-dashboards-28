@@ -34,6 +34,8 @@ import { Progress } from '@/components/ui/progress';
 import { toast } from 'sonner';
 import { useSubscriptionAccess } from '@/hooks/useSubscriptionAccess';
 import { UpgradePaywall } from '@/components/subscription/UpgradePaywall';
+import { useSupabaseDocumentManagement } from '@/hooks/useSupabaseDocumentManagement';
+import { SyncStatusIndicator } from '@/components/ui/sync-status-indicator';
 
 interface VaultDocument {
   id: string;
@@ -80,6 +82,18 @@ interface AccessLog {
 
 export function SecureFamilyVault() {
   const { subscriptionPlan, checkFeatureAccess, incrementUsage } = useSubscriptionAccess();
+  const {
+    documents: supabaseDocuments,
+    loading,
+    uploading,
+    syncStatus,
+    lastSyncTime,
+    handleFileUpload,
+    handleCreateFolder,
+    handleDownloadDocument,
+    deleteDocument
+  } = useSupabaseDocumentManagement();
+  
   const [documents, setDocuments] = useState<VaultDocument[]>([]);
   const [folders, setFolders] = useState<VaultFolder[]>([]);
   const [accessLogs, setAccessLogs] = useState<AccessLog[]>([]);
@@ -299,6 +313,11 @@ export function SecureFamilyVault() {
                 <Shield className="h-5 w-5 text-green-600" />
                 Secure Family Vault
                 <Badge variant="secondary" className="ml-2">Premium</Badge>
+                <SyncStatusIndicator 
+                  status={syncStatus} 
+                  lastSyncTime={lastSyncTime}
+                  className="ml-2"
+                />
               </CardTitle>
               <CardDescription>
                 Encrypted storage for your most important estate planning documents
@@ -350,9 +369,12 @@ export function SecureFamilyVault() {
                 }}
                 multiple
               />
-              <Button onClick={() => document.getElementById('document-upload')?.click()}>
-                <Upload className="h-4 w-4 mr-2" />
-                Upload Document
+              <Button 
+                onClick={() => document.getElementById('document-upload')?.click()}
+                disabled={uploading}
+              >
+                <Upload className={`h-4 w-4 mr-2 ${uploading ? 'animate-spin' : ''}`} />
+                {uploading ? 'Uploading...' : 'Upload Document'}
               </Button>
             </div>
           </div>

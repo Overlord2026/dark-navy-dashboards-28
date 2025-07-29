@@ -22,6 +22,8 @@ interface BankAccountsContextType {
   accounts: BankAccount[];
   loading: boolean;
   saving: boolean;
+  syncStatus: 'idle' | 'syncing' | 'error';
+  lastSyncTime: Date | null;
   addAccount: (accountData: {
     name: string;
     account_type: string;
@@ -31,7 +33,7 @@ interface BankAccountsContextType {
   syncPlaidAccount: (accountId: string) => Promise<boolean>;
   deleteAccount: (id: string) => Promise<boolean>;
   getFormattedTotalBalance: () => string;
-        refreshAccounts: () => Promise<void>;
+  refreshAccounts: () => Promise<void>;
 }
 
 const BankAccountsContext = createContext<BankAccountsContextType | undefined>(undefined);
@@ -40,6 +42,8 @@ export function BankAccountsProvider({ children }: { children: React.ReactNode }
   const [accounts, setAccounts] = useState<BankAccount[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [syncStatus, setSyncStatus] = useState<'idle' | 'syncing' | 'error'>('idle');
+  const [lastSyncTime, setLastSyncTime] = useState<Date | null>(null);
   const { toast } = useToast();
 
   const fetchAccounts = useCallback(async () => {
@@ -320,15 +324,32 @@ export function BankAccountsProvider({ children }: { children: React.ReactNode }
           table: 'bank_accounts'
         },
         (payload) => {
+          setSyncStatus('syncing');
+          
           if (payload.eventType === 'INSERT') {
             setAccounts(prev => [payload.new as BankAccount, ...prev]);
+            toast({
+              title: "Account Added",
+              description: `New account "${payload.new.name}" has been added.`,
+            });
           } else if (payload.eventType === 'UPDATE') {
             setAccounts(prev => prev.map(acc => 
               acc.id === payload.new.id ? payload.new as BankAccount : acc
             ));
+            toast({
+              title: "Account Updated",
+              description: `Account "${payload.new.name}" has been updated.`,
+            });
           } else if (payload.eventType === 'DELETE') {
             setAccounts(prev => prev.filter(acc => acc.id !== payload.old.id));
+            toast({
+              title: "Account Deleted",
+              description: `Account has been removed.`,
+            });
           }
+          
+          setSyncStatus('idle');
+          setLastSyncTime(new Date());
         }
       )
       .subscribe();
@@ -343,6 +364,8 @@ export function BankAccountsProvider({ children }: { children: React.ReactNode }
     accounts,
     loading,
     saving,
+    syncStatus,
+    lastSyncTime,
     addAccount,
     addPlaidAccounts,
     syncPlaidAccount,
@@ -353,6 +376,8 @@ export function BankAccountsProvider({ children }: { children: React.ReactNode }
     accounts,
     loading,
     saving,
+    syncStatus,
+    lastSyncTime,
     addAccount,
     addPlaidAccounts,
     syncPlaidAccount,
