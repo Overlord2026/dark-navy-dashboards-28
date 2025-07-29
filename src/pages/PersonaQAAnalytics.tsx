@@ -18,7 +18,7 @@ import {
   Calendar,
   Download,
   Archive,
-  Share,
+  Zap,
   FileSpreadsheet,
   File
 } from 'lucide-react';
@@ -659,29 +659,35 @@ export function PersonaQAAnalytics() {
                 </CardHeader>
                 <CardContent>
                   <div className="grid md:grid-cols-2 gap-4">
-                    <div className="space-y-3">
-                      <h4 className="font-medium">Navigation Links</h4>
-                      <div className="space-y-2">
-                        <Link to="/qa/persona-test">
-                          <Button variant="outline" className="w-full justify-start">
-                            <Monitor className="h-4 w-4 mr-2" />
-                            Persona Test Runner
-                          </Button>
-                        </Link>
-                        <Link to="/qa/persona-emulator">
-                          <Button variant="outline" className="w-full justify-start">
-                            <Users className="h-4 w-4 mr-2" />
-                            Persona Emulator
-                          </Button>
-                        </Link>
-                        <Link to="/qa/uat-checklist">
-                          <Button variant="outline" className="w-full justify-start">
-                            <FileText className="h-4 w-4 mr-2" />
-                            UAT Checklist
-                          </Button>
-                        </Link>
+                      <div className="space-y-3">
+                        <h4 className="font-medium">Navigation Links</h4>
+                        <div className="space-y-2">
+                          <Link to="/qa/persona-test">
+                            <Button variant="outline" className="w-full justify-start">
+                              <Monitor className="h-4 w-4 mr-2" />
+                              Persona Test Runner
+                            </Button>
+                          </Link>
+                          <Link to="/qa/persona-emulator">
+                            <Button variant="outline" className="w-full justify-start">
+                              <Users className="h-4 w-4 mr-2" />
+                              Persona Emulator
+                            </Button>
+                          </Link>
+                          <Link to="/qa/regression">
+                            <Button variant="outline" className="w-full justify-start">
+                              <Zap className="h-4 w-4 mr-2" />
+                              Regression Tests
+                            </Button>
+                          </Link>
+                          <Link to="/qa/uat-checklist">
+                            <Button variant="outline" className="w-full justify-start">
+                              <FileText className="h-4 w-4 mr-2" />
+                              UAT Checklist
+                            </Button>
+                          </Link>
+                        </div>
                       </div>
-                    </div>
                     
                     <div className="space-y-3">
                       <h4 className="font-medium">Export & Archive</h4>
