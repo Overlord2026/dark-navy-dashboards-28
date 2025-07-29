@@ -423,6 +423,15 @@ const App = () => {
                     }
                   />
 
+                  {/* Annuities Routes */}
+                  <Route path="/annuities" element={<AnnuitiesPage />} />
+                  <Route path="/annuities/learn" element={<EducationCenter />} />
+                  <Route path="/annuities/compare" element={<ProductComparison />} />
+                  <Route path="/annuities/analyze" element={<ContractAnalyzer />} />
+                  <Route path="/annuities/calculators" element={<AnnuityCalculators />} />
+                  <Route path="/annuities/marketplace" element={<AnnuityMarketplace />} />
+                  <Route path="/annuities/review" element={<FiduciaryReview />} />
+
                   {/* Advisor Proposal Routes */}
                   <Route
                     path="/advisor/proposals"

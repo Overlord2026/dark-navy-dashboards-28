@@ -1,245 +1,314 @@
-import React, { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Slider } from "@/components/ui/slider";
+import React, { useState, useMemo } from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-import { TrendingDown, Calendar, Percent, AlertTriangle } from "lucide-react";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Progress } from "@/components/ui/progress";
+import { TrendingDown, AlertTriangle, Calculator, DollarSign } from "lucide-react";
 
-interface WithdrawalResult {
-  yearsUntilDepletion: number;
-  totalWithdrawn: number;
-  finalBalance: number;
-  chartData: Array<{ year: number; balance: number; withdrawn: number }>;
-  sustainabilityRating: 'high' | 'medium' | 'low';
+interface WithdrawalInputs {
+  currentValue: string;
+  withdrawalAmount: string;
+  withdrawalType: string;
+  currentAge: string;
+  expectedReturn: string;
+  inflationRate: string;
 }
 
 export const WithdrawalCalculator = () => {
-  const [inputs, setInputs] = useState({
-    accountBalance: 500000,
-    annualWithdrawal: 25000,
-    expectedReturn: 5.0,
-    inflationRate: 2.5,
-    withdrawalStrategy: 'fixed' // 'fixed', 'percentage', 'flexible'
+  const [inputs, setInputs] = useState<WithdrawalInputs>({
+    currentValue: "",
+    withdrawalAmount: "",
+    withdrawalType: "percentage",
+    currentAge: "",
+    expectedReturn: "5.0",
+    inflationRate: "3.0"
   });
 
-  const [results, setResults] = useState<WithdrawalResult | null>(null);
+  const [results, setResults] = useState<any>(null);
+  const [isCalculating, setIsCalculating] = useState(false);
 
-  const calculateWithdrawal = () => {
-    const { accountBalance, annualWithdrawal, expectedReturn, inflationRate } = inputs;
-    let balance = accountBalance;
+  const calculateWithdrawal = useMemo(() => {
+    if (!inputs.currentValue || !inputs.withdrawalAmount || !inputs.currentAge) return null;
+
+    const currentValue = parseFloat(inputs.currentValue);
+    const currentAge = parseInt(inputs.currentAge);
+    const annualReturn = parseFloat(inputs.expectedReturn) / 100;
+    const inflation = parseFloat(inputs.inflationRate) / 100;
+
+    let annualWithdrawal: number;
+    if (inputs.withdrawalType === "percentage") {
+      annualWithdrawal = currentValue * (parseFloat(inputs.withdrawalAmount) / 100);
+    } else {
+      annualWithdrawal = parseFloat(inputs.withdrawalAmount);
+    }
+
+    // Calculate how long money will last
+    let balance = currentValue;
     let year = 0;
-    let totalWithdrawn = 0;
-    const chartData = [];
-    let currentWithdrawal = annualWithdrawal;
+    const yearlyData = [];
 
     while (balance > 0 && year < 50) {
-      // Apply growth
-      balance = balance * (1 + expectedReturn / 100);
+      const withdrawalThisYear = annualWithdrawal * Math.pow(1 + inflation, year);
+      const beginningBalance = balance;
       
-      // Apply withdrawal
-      if (balance >= currentWithdrawal) {
-        balance -= currentWithdrawal;
-        totalWithdrawn += currentWithdrawal;
-      } else {
-        totalWithdrawn += balance;
-        balance = 0;
-      }
-
-      chartData.push({
+      // Apply return
+      balance = balance * (1 + annualReturn);
+      
+      // Subtract withdrawal
+      balance = Math.max(0, balance - withdrawalThisYear);
+      
+      yearlyData.push({
         year: year + 1,
-        balance: Math.max(0, balance),
-        withdrawn: totalWithdrawn
+        age: currentAge + year,
+        beginningBalance,
+        withdrawal: withdrawalThisYear,
+        endingBalance: balance
       });
 
-      // Adjust for inflation
-      currentWithdrawal *= (1 + inflationRate / 100);
       year++;
-
-      if (balance <= 0) break;
     }
 
-    const withdrawalRate = (annualWithdrawal / accountBalance) * 100;
-    let sustainabilityRating: 'high' | 'medium' | 'low' = 'high';
-    
-    if (withdrawalRate > 5) sustainabilityRating = 'low';
-    else if (withdrawalRate > 4) sustainabilityRating = 'medium';
+    const withdrawalRate = (annualWithdrawal / currentValue) * 100;
+    const sustainabilityScore = withdrawalRate <= 4 ? 100 : Math.max(0, 100 - (withdrawalRate - 4) * 10);
 
-    setResults({
-      yearsUntilDepletion: year,
-      totalWithdrawn,
-      finalBalance: balance,
-      chartData,
-      sustainabilityRating
-    });
-  };
-
-  useEffect(() => {
-    calculateWithdrawal();
+    return {
+      annualWithdrawal,
+      monthlyWithdrawal: annualWithdrawal / 12,
+      withdrawalRate,
+      yearsUntilDepletion: balance > 0 ? null : year,
+      sustainabilityScore,
+      yearlyProjections: yearlyData.slice(0, 10), // First 10 years
+      totalYears: yearlyData.length
+    };
   }, [inputs]);
 
-  const updateInput = (key: keyof typeof inputs, value: number | string) => {
-    setInputs(prev => ({ ...prev, [key]: value }));
+  const handleCalculate = () => {
+    setIsCalculating(true);
+    setTimeout(() => {
+      setResults(calculateWithdrawal);
+      setIsCalculating(false);
+    }, 1000);
   };
 
-  const getSustainabilityColor = (rating: string) => {
-    switch (rating) {
-      case 'high': return 'text-green-600';
-      case 'medium': return 'text-yellow-600';
-      case 'low': return 'text-red-600';
-      default: return 'text-muted-foreground';
-    }
+  const updateInput = (field: keyof WithdrawalInputs, value: string) => {
+    setInputs(prev => ({ ...prev, [field]: value }));
+    setResults(null);
   };
 
-  const withdrawalRate = (inputs.annualWithdrawal / inputs.accountBalance) * 100;
+  const getSustainabilityColor = (score: number) => {
+    if (score >= 80) return "text-green-600";
+    if (score >= 60) return "text-yellow-600";
+    return "text-red-600";
+  };
 
   return (
-    <div className="grid gap-6 lg:grid-cols-2">
+    <div className="grid lg:grid-cols-2 gap-6">
+      {/* Input Form */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <TrendingDown className="h-5 w-5" />
-            Withdrawal Strategy Inputs
+            Withdrawal Strategy
           </CardTitle>
+          <CardDescription>
+            Plan your withdrawal strategy to make your money last
+          </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="space-y-2">
-            <Label htmlFor="accountBalance">Current Account Balance</Label>
-            <Input
-              id="accountBalance"
-              type="number"
-              value={inputs.accountBalance}
-              onChange={(e) => updateInput('accountBalance', Number(e.target.value))}
-              className="text-lg"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="annualWithdrawal">Annual Withdrawal Amount</Label>
-            <Input
-              id="annualWithdrawal"
-              type="number"
-              value={inputs.annualWithdrawal}
-              onChange={(e) => updateInput('annualWithdrawal', Number(e.target.value))}
-              className="text-lg"
-            />
-            <div className="text-sm text-muted-foreground">
-              Withdrawal Rate: {withdrawalRate.toFixed(1)}%
+        <CardContent className="space-y-4">
+          <div className="grid md:grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="currentValue">Current Annuity Value ($)</Label>
+              <Input
+                id="currentValue"
+                value={inputs.currentValue}
+                onChange={(e) => updateInput('currentValue', e.target.value)}
+                placeholder="500000"
+                type="number"
+              />
+            </div>
+            <div>
+              <Label htmlFor="currentAge">Current Age</Label>
+              <Input
+                id="currentAge"
+                value={inputs.currentAge}
+                onChange={(e) => updateInput('currentAge', e.target.value)}
+                placeholder="65"
+                type="number"
+              />
             </div>
           </div>
 
-          <div className="space-y-2">
-            <Label>Expected Annual Return: {inputs.expectedReturn}%</Label>
-            <Slider
-              value={[inputs.expectedReturn]}
-              onValueChange={([value]) => updateInput('expectedReturn', value)}
-              min={0}
-              max={12}
-              step={0.1}
-              className="w-full"
+          <div>
+            <Label htmlFor="withdrawalType">Withdrawal Method</Label>
+            <Select value={inputs.withdrawalType} onValueChange={(value) => updateInput('withdrawalType', value)}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="percentage">Percentage of Balance</SelectItem>
+                <SelectItem value="fixed">Fixed Dollar Amount</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div>
+            <Label htmlFor="withdrawalAmount">
+              {inputs.withdrawalType === "percentage" ? "Annual Withdrawal (%)" : "Annual Withdrawal ($)"}
+            </Label>
+            <Input
+              id="withdrawalAmount"
+              value={inputs.withdrawalAmount}
+              onChange={(e) => updateInput('withdrawalAmount', e.target.value)}
+              placeholder={inputs.withdrawalType === "percentage" ? "4.0" : "20000"}
+              type="number"
+              step={inputs.withdrawalType === "percentage" ? "0.1" : "1000"}
             />
           </div>
 
-          <div className="space-y-2">
-            <Label>Inflation Rate: {inputs.inflationRate}%</Label>
-            <Slider
-              value={[inputs.inflationRate]}
-              onValueChange={([value]) => updateInput('inflationRate', value)}
-              min={0}
-              max={6}
-              step={0.1}
-              className="w-full"
-            />
+          <div className="grid md:grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="expectedReturn">Expected Annual Return (%)</Label>
+              <Input
+                id="expectedReturn"
+                value={inputs.expectedReturn}
+                onChange={(e) => updateInput('expectedReturn', e.target.value)}
+                placeholder="5.0"
+                type="number"
+                step="0.1"
+              />
+            </div>
+            <div>
+              <Label htmlFor="inflationRate">Inflation Rate (%)</Label>
+              <Input
+                id="inflationRate"
+                value={inputs.inflationRate}
+                onChange={(e) => updateInput('inflationRate', e.target.value)}
+                placeholder="3.0"
+                type="number"
+                step="0.1"
+              />
+            </div>
           </div>
 
-          {withdrawalRate > 4 && (
-            <Alert>
-              <AlertTriangle className="h-4 w-4" />
-              <AlertDescription>
-                {withdrawalRate > 5 
-                  ? "High withdrawal rate may lead to early depletion of funds."
-                  : "Moderate withdrawal rate - monitor portfolio performance regularly."
-                }
-              </AlertDescription>
-            </Alert>
-          )}
-
-          <Button onClick={calculateWithdrawal} className="w-full">
-            Recalculate Strategy
+          <Button 
+            onClick={handleCalculate} 
+            disabled={isCalculating || !inputs.currentValue || !inputs.withdrawalAmount || !inputs.currentAge}
+            className="w-full"
+          >
+            {isCalculating ? (
+              <>
+                <Calculator className="h-4 w-4 mr-2 animate-pulse" />
+                Calculating...
+              </>
+            ) : (
+              <>
+                <Calculator className="h-4 w-4 mr-2" />
+                Calculate Withdrawal Strategy
+              </>
+            )}
           </Button>
         </CardContent>
       </Card>
 
+      {/* Results */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Calendar className="h-5 w-5" />
-            Withdrawal Projections
+            <DollarSign className="h-5 w-5" />
+            Withdrawal Analysis
           </CardTitle>
+          <CardDescription>
+            Your withdrawal strategy sustainability
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          {results && (
-            <div className="space-y-4">
+          {results ? (
+            <div className="space-y-6">
               <div className="grid grid-cols-2 gap-4">
                 <div className="text-center p-4 bg-primary/5 rounded-lg">
-                  <div className="text-2xl font-bold text-primary">
-                    {results.yearsUntilDepletion === 50 ? '50+' : results.yearsUntilDepletion}
+                  <div className="text-xl font-bold text-primary">
+                    ${results.monthlyWithdrawal.toLocaleString()}
                   </div>
-                  <div className="text-sm text-muted-foreground">Years Until Depletion</div>
+                  <div className="text-sm text-muted-foreground">Monthly Withdrawal</div>
                 </div>
                 <div className="text-center p-4 bg-secondary/5 rounded-lg">
-                  <div className="text-2xl font-bold text-secondary">
-                    ${results.totalWithdrawn.toLocaleString('en-US', { maximumFractionDigits: 0 })}
+                  <div className="text-xl font-bold text-secondary">
+                    {results.withdrawalRate.toFixed(1)}%
                   </div>
-                  <div className="text-sm text-muted-foreground">Total Withdrawn</div>
+                  <div className="text-sm text-muted-foreground">Withdrawal Rate</div>
                 </div>
               </div>
 
-              <div className="flex items-center justify-between p-3 bg-accent/5 rounded-lg">
-                <span className="text-sm">Sustainability Rating:</span>
-                <Badge 
-                  variant="outline" 
-                  className={getSustainabilityColor(results.sustainabilityRating)}
-                >
-                  {results.sustainabilityRating.toUpperCase()}
-                </Badge>
+              {/* Sustainability Score */}
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-medium">Sustainability Score</span>
+                  <span className={`font-bold ${getSustainabilityColor(results.sustainabilityScore)}`}>
+                    {results.sustainabilityScore}/100
+                  </span>
+                </div>
+                <Progress value={results.sustainabilityScore} className="h-2" />
+                {results.sustainabilityScore < 60 && (
+                  <div className="flex items-center gap-2 text-red-600 text-sm">
+                    <AlertTriangle className="h-4 w-4" />
+                    <span>High risk of depleting funds early</span>
+                  </div>
+                )}
               </div>
 
-              <div className="h-64">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={results.chartData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="year" />
-                    <YAxis tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`} />
-                    <Tooltip 
-                      formatter={(value: number, name: string) => [
-                        `$${value.toLocaleString()}`,
-                        name === 'balance' ? 'Remaining Balance' : 'Total Withdrawn'
-                      ]}
-                    />
-                    <Line 
-                      type="monotone" 
-                      dataKey="balance" 
-                      stroke="hsl(var(--primary))" 
-                      strokeWidth={2}
-                    />
-                    <Line 
-                      type="monotone" 
-                      dataKey="withdrawn" 
-                      stroke="hsl(var(--secondary))" 
-                      strokeDasharray="5 5"
-                      strokeWidth={2}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
+              {/* Duration Analysis */}
+              <div className="p-4 bg-muted/30 rounded-lg">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-sm font-medium">Fund Duration</span>
+                  <span className="font-bold">
+                    {results.yearsUntilDepletion ? `${results.yearsUntilDepletion} years` : "30+ years"}
+                  </span>
+                </div>
+                {results.yearsUntilDepletion && (
+                  <div className="text-sm text-muted-foreground">
+                    Funds projected to be depleted at age {parseInt(inputs.currentAge) + results.yearsUntilDepletion}
+                  </div>
+                )}
               </div>
 
-              <div className="text-xs text-muted-foreground text-center">
-                * Assumes constant withdrawal adjusted for inflation and consistent returns
+              {/* Yearly Projections */}
+              <div className="space-y-2">
+                <h4 className="font-medium text-sm">10-Year Projection</h4>
+                <div className="max-h-48 overflow-y-auto">
+                  <table className="w-full text-xs">
+                    <thead>
+                      <tr className="border-b">
+                        <th className="text-left p-1">Year</th>
+                        <th className="text-left p-1">Age</th>
+                        <th className="text-right p-1">Withdrawal</th>
+                        <th className="text-right p-1">Balance</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {results.yearlyProjections.map((projection: any, index: number) => (
+                        <tr key={index} className="border-b border-muted/50">
+                          <td className="p-1">{projection.year}</td>
+                          <td className="p-1">{projection.age}</td>
+                          <td className="text-right p-1">${projection.withdrawal.toLocaleString()}</td>
+                          <td className="text-right p-1">${projection.endingBalance.toLocaleString()}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
+
+              <div className="flex gap-2">
+                <Button variant="outline" className="flex-1">Save Strategy</Button>
+                <Button variant="outline" className="flex-1">Compare Scenarios</Button>
+              </div>
+            </div>
+          ) : (
+            <div className="text-center py-8 text-muted-foreground">
+              <TrendingDown className="h-12 w-12 mx-auto mb-4 opacity-50" />
+              <p>Enter your details to analyze withdrawal sustainability</p>
             </div>
           )}
         </CardContent>
