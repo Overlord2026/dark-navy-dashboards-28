@@ -35,7 +35,8 @@ import { toast } from 'sonner';
 import { useSubscriptionAccess } from '@/hooks/useSubscriptionAccess';
 import { UpgradePaywall } from '@/components/subscription/UpgradePaywall';
 import { useSupabaseDocumentManagement } from '@/hooks/useSupabaseDocumentManagement';
-import { SyncStatusIndicator } from '@/components/ui/sync-status-indicator';
+import { CacheStatusIndicator } from '@/components/ui/cache-status-indicator';
+import { RefreshButton } from '@/components/ui/refresh-button';
 
 interface VaultDocument {
   id: string;
@@ -85,13 +86,17 @@ export function SecureFamilyVault() {
   const {
     documents: supabaseDocuments,
     loading,
-    uploading,
-    syncStatus,
-    lastSyncTime,
+    refreshing,
+    cacheMetadata,
+    lastRefresh,
+    cacheHitRate,
+    forceRefresh,
+    clearCache,
+    optimizeCache,
     handleFileUpload,
     handleCreateFolder,
     handleDownloadDocument,
-    deleteDocument
+    deleteDocument: handleDeleteDocument
   } = useSupabaseDocumentManagement();
   
   const [documents, setDocuments] = useState<VaultDocument[]>([]);
@@ -308,20 +313,34 @@ export function SecureFamilyVault() {
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between">
             <div>
-              <CardTitle className="flex items-center gap-2">
-                <Shield className="h-5 w-5 text-green-600" />
-                Secure Family Vault
-                <Badge variant="secondary" className="ml-2">Premium</Badge>
-                <SyncStatusIndicator 
-                  status={syncStatus} 
-                  lastSyncTime={lastSyncTime}
-                  className="ml-2"
+                <CardTitle className="flex items-center gap-2">
+                  <Shield className="h-5 w-5 text-green-600" />
+                  Secure Family Vault
+                  <Badge variant="secondary" className="ml-2">Premium</Badge>
+                </CardTitle>
+                <CardDescription>
+                  Encrypted storage for your most important estate planning documents
+                </CardDescription>
+              </div>
+              <div className="flex items-center gap-2">
+                <CacheStatusIndicator 
+                  cacheMetadata={cacheMetadata}
+                  loading={loading}
+                  hitRate={cacheHitRate}
+                  lastRefresh={lastRefresh}
                 />
-              </CardTitle>
-              <CardDescription>
-                Encrypted storage for your most important estate planning documents
-              </CardDescription>
+                <RefreshButton
+                  onRefresh={forceRefresh}
+                  onOptimizeCache={optimizeCache}
+                  onClearCache={clearCache}
+                  refreshing={refreshing}
+                  lastRefresh={lastRefresh}
+                  showDropdown={true}
+                  size="sm"
+                />
+              </div>
             </div>
             <div className="flex gap-2">
               <Dialog open={vaultSummaryDialogOpen} onOpenChange={setVaultSummaryDialogOpen}>
@@ -371,10 +390,10 @@ export function SecureFamilyVault() {
               />
               <Button 
                 onClick={() => document.getElementById('document-upload')?.click()}
-                disabled={uploading}
+                disabled={refreshing}
               >
-                <Upload className={`h-4 w-4 mr-2 ${uploading ? 'animate-spin' : ''}`} />
-                {uploading ? 'Uploading...' : 'Upload Document'}
+                <Upload className={`h-4 w-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
+                {refreshing ? 'Processing...' : 'Upload Document'}
               </Button>
             </div>
           </div>

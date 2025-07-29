@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useToast } from '@/hooks/use-toast';
 import { useSupabaseDocuments, SupabaseDocument } from './useSupabaseDocuments';
+import { documentCache } from '@/services/documentCache';
 
 interface RealtimeDocumentsState {
   documents: SupabaseDocument[];
@@ -68,7 +69,12 @@ export const useSupabaseRealtimeDocuments = () => {
         },
         (payload) => {
           handleSyncStart();
-          refreshDocuments().then(() => {
+          refreshDocuments().then(async () => {
+            // Invalidate cache for real-time updates
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user && payload.new?.id) {
+              await documentCache.removeCachedDocument(payload.new.id);
+            }
             handleSyncComplete();
             toast({
               title: "Document Added",
@@ -87,7 +93,12 @@ export const useSupabaseRealtimeDocuments = () => {
         },
         (payload) => {
           handleSyncStart();
-          refreshDocuments().then(() => {
+          refreshDocuments().then(async () => {
+            // Invalidate cache for updates
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user && payload.new?.id) {
+              await documentCache.removeCachedDocument(payload.new.id);
+            }
             handleSyncComplete();
             toast({
               title: "Document Updated",
@@ -106,7 +117,11 @@ export const useSupabaseRealtimeDocuments = () => {
         },
         (payload) => {
           handleSyncStart();
-          refreshDocuments().then(() => {
+          refreshDocuments().then(async () => {
+            // Remove from cache on delete
+            if (payload.old?.id) {
+              await documentCache.removeCachedDocument(payload.old.id);
+            }
             handleSyncComplete();
             toast({
               title: "Document Deleted",
