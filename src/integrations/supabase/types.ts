@@ -5845,6 +5845,170 @@ export type Database = {
           },
         ]
       }
+      message_audit_trail: {
+        Row: {
+          action_type: string
+          compliance_metadata: Json | null
+          id: string
+          ip_address: unknown | null
+          message_id: string | null
+          participant_context: Json | null
+          performed_by: string
+          tenant_id: string | null
+          thread_id: string
+          timestamp: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          action_type: string
+          compliance_metadata?: Json | null
+          id?: string
+          ip_address?: unknown | null
+          message_id?: string | null
+          participant_context?: Json | null
+          performed_by: string
+          tenant_id?: string | null
+          thread_id: string
+          timestamp?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          action_type?: string
+          compliance_metadata?: Json | null
+          id?: string
+          ip_address?: unknown | null
+          message_id?: string | null
+          participant_context?: Json | null
+          performed_by?: string
+          tenant_id?: string | null
+          thread_id?: string
+          timestamp?: string | null
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "message_audit_trail_message_id_fkey"
+            columns: ["message_id"]
+            isOneToOne: false
+            referencedRelation: "secure_messages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "message_audit_trail_thread_id_fkey"
+            columns: ["thread_id"]
+            isOneToOne: false
+            referencedRelation: "message_threads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      message_compliance_settings: {
+        Row: {
+          auto_archive_enabled: boolean | null
+          compliance_officer_email: string | null
+          created_at: string | null
+          encryption_enabled: boolean | null
+          export_format: string | null
+          external_messaging_allowed: boolean | null
+          id: string
+          retention_period_days: number | null
+          tenant_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          auto_archive_enabled?: boolean | null
+          compliance_officer_email?: string | null
+          created_at?: string | null
+          encryption_enabled?: boolean | null
+          export_format?: string | null
+          external_messaging_allowed?: boolean | null
+          id?: string
+          retention_period_days?: number | null
+          tenant_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          auto_archive_enabled?: boolean | null
+          compliance_officer_email?: string | null
+          created_at?: string | null
+          encryption_enabled?: boolean | null
+          export_format?: string | null
+          external_messaging_allowed?: boolean | null
+          id?: string
+          retention_period_days?: number | null
+          tenant_id?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      message_thread_participants: {
+        Row: {
+          id: string
+          joined_at: string | null
+          last_read_at: string | null
+          role: string | null
+          thread_id: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          joined_at?: string | null
+          last_read_at?: string | null
+          role?: string | null
+          thread_id: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          joined_at?: string | null
+          last_read_at?: string | null
+          role?: string | null
+          thread_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "message_thread_participants_thread_id_fkey"
+            columns: ["thread_id"]
+            isOneToOne: false
+            referencedRelation: "message_threads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      message_threads: {
+        Row: {
+          created_at: string | null
+          created_by: string
+          id: string
+          is_archived: boolean | null
+          tenant_id: string | null
+          thread_name: string | null
+          thread_type: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by: string
+          id?: string
+          is_archived?: boolean | null
+          tenant_id?: string | null
+          thread_name?: string | null
+          thread_type?: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string
+          id?: string
+          is_archived?: boolean | null
+          tenant_id?: string | null
+          thread_name?: string | null
+          thread_type?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       methylation_markers: {
         Row: {
           category: string
@@ -9542,6 +9706,66 @@ export type Database = {
             columns: ["professional_user_id"]
             isOneToOne: false
             referencedRelation: "professional_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      secure_messages: {
+        Row: {
+          created_at: string | null
+          edited_at: string | null
+          encryption_key_id: string
+          id: string
+          is_edited: boolean | null
+          message_content: string
+          message_hash: string
+          message_type: string | null
+          reply_to_id: string | null
+          sender_id: string
+          tenant_id: string | null
+          thread_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          edited_at?: string | null
+          encryption_key_id: string
+          id?: string
+          is_edited?: boolean | null
+          message_content: string
+          message_hash: string
+          message_type?: string | null
+          reply_to_id?: string | null
+          sender_id: string
+          tenant_id?: string | null
+          thread_id: string
+        }
+        Update: {
+          created_at?: string | null
+          edited_at?: string | null
+          encryption_key_id?: string
+          id?: string
+          is_edited?: boolean | null
+          message_content?: string
+          message_hash?: string
+          message_type?: string | null
+          reply_to_id?: string | null
+          sender_id?: string
+          tenant_id?: string | null
+          thread_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "secure_messages_reply_to_id_fkey"
+            columns: ["reply_to_id"]
+            isOneToOne: false
+            referencedRelation: "secure_messages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "secure_messages_thread_id_fkey"
+            columns: ["thread_id"]
+            isOneToOne: false
+            referencedRelation: "message_threads"
             referencedColumns: ["id"]
           },
         ]
