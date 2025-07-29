@@ -1,4 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
+import { SecureMessagesPage } from "./pages/SecureMessagesPage";
 import { HomePage } from "./pages/TabPages";
 import { AnnuitiesPage } from "./pages/AnnuitiesPage";
 import NoticesPage from "./pages/NoticesPage";
@@ -265,6 +266,10 @@ export const router = createBrowserRouter([
   {
     path: "/help/webinars",
     element: <WebinarsPage />
+  },
+  {
+    path: "/secure-messages",
+    element: <SecureMessagesPage />
   },
   // QA routes removed for production security
 ]);
