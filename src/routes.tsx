@@ -42,6 +42,7 @@ import { WebinarsPage } from "./pages/help/WebinarsPage";
 import { UATChecklistPage } from "./pages/qa/UATChecklistPage";
 import { LaunchReportPage } from "./pages/qa/LaunchReportPage";
 import { PersonaQAEmulator } from "./pages/PersonaQAEmulator";
+import { PersonaQAAnalytics } from "./pages/PersonaQAAnalytics";
 import { ClientBasicQAReport } from "./pages/ClientBasicQAReport";
 import { ClientBasicQAChecklist } from "./pages/ClientBasicQAChecklist";
 import { ClientPremiumQAChecklist } from "./pages/ClientPremiumQAChecklist";
@@ -284,6 +285,10 @@ export const router = createBrowserRouter([
   {
     path: "/qa/persona-emulator",
     element: <PersonaQAEmulator />
+  },
+  {
+    path: "/qa/analytics",
+    element: <PersonaQAAnalytics />
   },
     {
       path: "/qa/client-basic",
