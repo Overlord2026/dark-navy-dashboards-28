@@ -191,11 +191,19 @@ export const router = createBrowserRouter([
   },
   {
     path: "/wealth",
-    element: <ComingSoonPage featureName="Family Wealth Dashboard" description="Comprehensive wealth management and family office tools." />
+    element: <WealthDashboardPage />
   },
   {
-    path: "/wealth/accounts",
-    element: <ComingSoonPage featureName="Accounts Overview" description="Centralized view and management of all your financial accounts." />
+    path: "/wealth/accounts", 
+    element: <AccountsOverviewPage />
+  },
+  {
+    path: "/wealth/goals/budgets",
+    element: <BudgetsPage />
+  },
+  {
+    path: "/wealth/bill-pay",
+    element: <BillPayPage />
   },
   {
     path: "/health",

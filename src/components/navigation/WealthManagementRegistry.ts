@@ -66,11 +66,9 @@ export const wealthManagementNavItems: NavItem[] = [
         icon: StarIcon,
       },
       {
-        title: "Budgets (Coming Soon)",
+        title: "Budgets",
         href: "/wealth/goals/budgets",
         icon: ArchiveIcon,
-        disabled: true,
-        comingSoon: true,
       },
     ],
   },
@@ -90,11 +88,9 @@ export const wealthManagementNavItems: NavItem[] = [
     icon: BriefcaseIcon,
   },
   {
-    title: "Bill Pay (Coming Soon)",
+    title: "Bill Pay",
     href: "/wealth/bill-pay",
     icon: CreditCardIcon,
-    disabled: true,
-    comingSoon: true,
   },
 ];
 
