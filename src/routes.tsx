@@ -47,6 +47,7 @@ import { ClientBasicQAChecklist } from "./pages/ClientBasicQAChecklist";
 import { ClientPremiumQAChecklist } from "./pages/ClientPremiumQAChecklist";
 import { AdvisorQAChecklist } from "./pages/AdvisorQAChecklist";
 import { CPAQAChecklist } from "./pages/CPAQAChecklist";
+import { AttorneyQAChecklist } from "./pages/AttorneyQAChecklist";
 
 export const router = createBrowserRouter([
   {
@@ -301,6 +302,10 @@ export const router = createBrowserRouter([
     {
       path: "/qa/cpa-checklist",
       element: <CPAQAChecklist />
+    },
+    {
+      path: "/qa/attorney-checklist",
+      element: <AttorneyQAChecklist />
     },
   {
     path: "/qa/launch-report",
