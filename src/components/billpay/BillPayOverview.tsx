@@ -1,201 +1,263 @@
-import React from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { 
-  CreditCard, 
-  Calendar, 
-  DollarSign, 
-  TrendingUp, 
-  Clock, 
-  AlertTriangle,
-  Plus,
-  Zap
-} from "lucide-react";
+import { Plus, DollarSign, Calendar, Zap, TrendingUp, CreditCard, Building, Repeat } from "lucide-react";
+import { AddBillDialog } from "./AddBillDialog";
 import { useSubscriptionAccess } from "@/hooks/useSubscriptionAccess";
+import { useBillPayData } from "@/hooks/useBillPayData";
+import { BillPayOverviewSkeleton } from "@/components/ui/skeletons/BillPaySkeletons";
+import { BillPayErrorBoundary } from "./BillPayErrorBoundary";
 
 export const BillPayOverview: React.FC = () => {
-  const { subscriptionPlan, checkFeatureAccess } = useSubscriptionAccess();
+  const { checkFeatureAccess } = useSubscriptionAccess();
+  const [isAddBillOpen, setIsAddBillOpen] = useState(false);
+  const { 
+    analytics, 
+    upcomingBills, 
+    addBill, 
+    isLoading, 
+    error,
+    hasAutomatedPayments,
+    hasAdvancedAnalytics 
+  } = useBillPayData();
+  
   const hasPremiumAccess = checkFeatureAccess('premium');
 
-  const upcomingBills = [
-    { id: 1, name: "Electric Bill", amount: 165.23, dueDate: "2024-02-15", status: "pending" },
-    { id: 2, name: "Internet", amount: 89.99, dueDate: "2024-02-18", status: "scheduled" },
-    { id: 3, name: "Car Insurance", amount: 245.67, dueDate: "2024-02-20", status: "overdue" }
-  ];
+  // Memoized calculations
+  const monthlyStats = useMemo(() => ({
+    monthlyTotal: analytics.monthlyTotal,
+    activeBills: analytics.activeBills,
+    automatedPayments: analytics.automatedPayments,
+    potentialSavings: analytics.potentialSavings
+  }), [analytics]);
 
-  const monthlyStats = {
-    totalSpent: 1234.56,
-    billsCount: 12,
-    automatedCount: hasPremiumAccess ? 8 : 0,
-    savings: hasPremiumAccess ? 45.67 : 0
-  };
+  const formattedUpcomingBills = useMemo(() => 
+    upcomingBills.map(bill => ({
+      ...bill,
+      dueDate: bill.dueDate.toLocaleDateString('en-US', { 
+        month: 'short', 
+        day: 'numeric' 
+      })
+    })), [upcomingBills]
+  );
+
+  // Callback handlers
+  const handleAddBill = useCallback((billData: any) => {
+    addBill(billData);
+  }, [addBill]);
+
+  const handleQuickAction = useCallback((action: string) => {
+    console.info(`Quick action: ${action}`);
+  }, []);
+
+  if (isLoading) {
+    return (
+      <BillPayErrorBoundary>
+        <BillPayOverviewSkeleton />
+      </BillPayErrorBoundary>
+    );
+  }
+
+  if (error) {
+    throw error;
+  }
 
   return (
-    <div className="space-y-6">
-      {/* Quick Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Monthly Total</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">${monthlyStats.totalSpent.toFixed(2)}</div>
-            <p className="text-xs text-muted-foreground">
-              +2.1% from last month
-            </p>
-          </CardContent>
-        </Card>
+    <BillPayErrorBoundary>
+      <div className="space-y-6">
+        {/* Premium upgrade alert */}
+        {!hasPremiumAccess && (
+          <Alert>
+            <Zap className="h-4 w-4" />
+            <AlertDescription>
+              Upgrade to Premium to unlock automated payments, advanced analytics, and bank account connections.
+            </AlertDescription>
+          </Alert>
+        )}
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active Bills</CardTitle>
-            <Calendar className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{monthlyStats.billsCount}</div>
-            <p className="text-xs text-muted-foreground">
-              {upcomingBills.filter(b => b.status === "overdue").length} overdue
-            </p>
-          </CardContent>
-        </Card>
+        {/* Quick Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Monthly Total</CardTitle>
+              <DollarSign className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">${monthlyStats.monthlyTotal.toFixed(2)}</div>
+              <p className="text-xs text-muted-foreground">
+                Current month estimate
+              </p>
+            </CardContent>
+          </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Automated</CardTitle>
-            <Zap className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{monthlyStats.automatedCount}</div>
-            <p className="text-xs text-muted-foreground">
-              {hasPremiumAccess ? "67% automated" : "Upgrade for automation"}
-            </p>
-          </CardContent>
-        </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Active Bills</CardTitle>
+              <Calendar className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{monthlyStats.activeBills}</div>
+              <p className="text-xs text-muted-foreground">
+                Bills tracked
+              </p>
+            </CardContent>
+          </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Savings</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              ${hasPremiumAccess ? monthlyStats.savings.toFixed(2) : "0.00"}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              {hasPremiumAccess ? "From negotiations" : "Upgrade for savings"}
-            </p>
-          </CardContent>
-        </Card>
-      </div>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Automated</CardTitle>
+              <Zap className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{monthlyStats.automatedPayments}</div>
+              <p className="text-xs text-muted-foreground">
+                {hasAutomatedPayments ? "Auto payments" : "Upgrade for automation"}
+              </p>
+            </CardContent>
+          </Card>
 
-      {/* Premium Upgrade CTA */}
-      {!hasPremiumAccess && (
-        <Alert>
-          <Zap className="h-4 w-4" />
-          <AlertDescription className="flex items-center justify-between">
-            <div>
-              <strong>Upgrade to Premium</strong> for automated payments, bank sync, and AI-powered bill analysis.
-            </div>
-            <Button size="sm">Upgrade Now</Button>
-          </AlertDescription>
-        </Alert>
-      )}
-
-      {/* Upcoming Bills */}
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
-          <div>
-            <CardTitle>Upcoming Bills</CardTitle>
-            <CardDescription>Bills due in the next 30 days</CardDescription>
-          </div>
-          <Button size="sm">
-            <Plus className="h-4 w-4 mr-2" />
-            Add Bill
-          </Button>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {upcomingBills.map((bill) => (
-              <div key={bill.id} className="flex items-center justify-between p-4 border rounded-lg">
-                <div className="flex items-center gap-4">
-                  <div className="p-2 bg-primary/10 rounded-full">
-                    <CreditCard className="h-4 w-4 text-primary" />
-                  </div>
-                  <div>
-                    <p className="font-medium">{bill.name}</p>
-                    <p className="text-sm text-muted-foreground">Due {bill.dueDate}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-4">
-                  <div className="text-right">
-                    <p className="font-medium">${bill.amount}</p>
-                    <Badge 
-                      variant={
-                        bill.status === "overdue" ? "destructive" : 
-                        bill.status === "scheduled" ? "secondary" : "outline"
-                      }
-                      className="text-xs"
-                    >
-                      {bill.status}
-                    </Badge>
-                  </div>
-                  <Button size="sm" variant="outline">
-                    {bill.status === "overdue" ? "Pay Now" : "View"}
-                  </Button>
-                </div>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Savings</CardTitle>
+              <TrendingUp className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                ${hasAdvancedAnalytics ? monthlyStats.potentialSavings.toFixed(2) : "0.00"}
               </div>
+              <p className="text-xs text-muted-foreground">
+                {hasAdvancedAnalytics ? "Potential monthly" : "Upgrade for insights"}
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Upcoming Bills */}
+        <div className="space-y-4">
+          <div className="flex justify-between items-center">
+            <h2 className="text-xl font-semibold">Upcoming Bills</h2>
+            <Button onClick={() => setIsAddBillOpen(true)} size="sm">
+              <Plus className="h-4 w-4 mr-2" />
+              Add Bill
+            </Button>
+          </div>
+          
+          <div className="space-y-3">
+            {formattedUpcomingBills.map((bill) => (
+              <Card key={bill.id}>
+                <CardContent className="p-4">
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <h3 className="font-medium">{bill.name}</h3>
+                      <p className="text-sm text-muted-foreground">Due {bill.dueDate}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-semibold">${bill.amount.toFixed(2)}</p>
+                      <Badge variant={bill.status === 'scheduled' ? 'default' : 'secondary'}>
+                        {bill.status}
+                      </Badge>
+                    </div>
+                  </div>
+                  <div className="flex justify-end mt-3 space-x-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => handleQuickAction(`edit-${bill.id}`)}
+                    >
+                      Edit
+                    </Button>
+                    <Button 
+                      size="sm"
+                      onClick={() => handleQuickAction(`pay-${bill.id}`)}
+                    >
+                      Pay Now
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
             ))}
           </div>
-        </CardContent>
-      </Card>
+        </div>
 
-      {/* Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <Card className="cursor-pointer hover:shadow-md transition-shadow">
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-4">
-              <Plus className="h-8 w-8 text-primary" />
-              <div>
-                <h3 className="font-semibold">Add New Bill</h3>
-                <p className="text-sm text-muted-foreground">Set up a new recurring bill</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        {/* Quick Actions */}
+        <div className="space-y-4">
+          <h2 className="text-xl font-semibold">Quick Actions</h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Card className="cursor-pointer hover:shadow-md transition-shadow">
+              <CardContent className="p-6">
+                <div className="flex items-center space-x-4">
+                  <div className="p-2 bg-primary/10 rounded-lg">
+                    <Plus className="h-6 w-6 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold">Add New Bill</h3>
+                    <p className="text-sm text-muted-foreground">Set up a new bill payment</p>
+                  </div>
+                </div>
+                <Button 
+                  className="w-full mt-4" 
+                  onClick={() => setIsAddBillOpen(true)}
+                >
+                  Add Bill
+                </Button>
+              </CardContent>
+            </Card>
 
-        <Card className={`cursor-pointer hover:shadow-md transition-shadow ${!hasPremiumAccess ? 'opacity-50' : ''}`}>
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-4">
-              <Zap className="h-8 w-8 text-accent" />
-              <div>
-                <h3 className="font-semibold">
-                  Connect Bank Account
-                  {!hasPremiumAccess && <Badge variant="secondary" className="ml-2">Premium</Badge>}
-                </h3>
-                <p className="text-sm text-muted-foreground">Sync bills automatically</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            <Card className={`cursor-pointer transition-shadow ${!hasAutomatedPayments ? 'opacity-60' : 'hover:shadow-md'}`}>
+              <CardContent className="p-6">
+                <div className="flex items-center space-x-4">
+                  <div className="p-2 bg-blue-100 rounded-lg">
+                    <Building className="h-6 w-6 text-blue-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold">Connect Bank Account</h3>
+                    <p className="text-sm text-muted-foreground">Link your bank for easy payments</p>
+                  </div>
+                </div>
+                <Button 
+                  className="w-full mt-4" 
+                  variant={hasAutomatedPayments ? "default" : "secondary"}
+                  disabled={!hasAutomatedPayments}
+                  onClick={() => handleQuickAction('connect-bank')}
+                >
+                  {hasAutomatedPayments ? "Connect Account" : "Premium Feature 🔒"}
+                </Button>
+              </CardContent>
+            </Card>
 
-        <Card className={`cursor-pointer hover:shadow-md transition-shadow ${!hasPremiumAccess ? 'opacity-50' : ''}`}>
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-4">
-              <Clock className="h-8 w-8 text-purple-500" />
-              <div>
-                <h3 className="font-semibold">
-                  Setup Autopay
-                  {!hasPremiumAccess && <Badge variant="secondary" className="ml-2">Premium</Badge>}
-                </h3>
-                <p className="text-sm text-muted-foreground">Automate your payments</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            <Card className={`cursor-pointer transition-shadow ${!hasAutomatedPayments ? 'opacity-60' : 'hover:shadow-md'}`}>
+              <CardContent className="p-6">
+                <div className="flex items-center space-x-4">
+                  <div className="p-2 bg-green-100 rounded-lg">
+                    <Repeat className="h-6 w-6 text-green-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold">Setup Autopay</h3>
+                    <p className="text-sm text-muted-foreground">Automate your bill payments</p>
+                  </div>
+                </div>
+                <Button 
+                  className="w-full mt-4" 
+                  variant={hasAutomatedPayments ? "default" : "secondary"}
+                  disabled={!hasAutomatedPayments}
+                  onClick={() => handleQuickAction('setup-autopay')}
+                >
+                  {hasAutomatedPayments ? "Setup Autopay" : "Premium Feature 🔒"}
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+
+        <AddBillDialog 
+          isOpen={isAddBillOpen}
+          onClose={() => setIsAddBillOpen(false)}
+          onAddBill={handleAddBill}
+        />
       </div>
-    </div>
+    </BillPayErrorBoundary>
   );
 };
