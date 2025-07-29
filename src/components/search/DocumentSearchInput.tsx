@@ -27,7 +27,9 @@ export const DocumentSearchInput: React.FC<DocumentSearchInputProps> = ({
 }) => {
   const [inputValue, setInputValue] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(-1);
   const inputRef = useRef<HTMLInputElement>(null);
+  const suggestionRefs = useRef<(HTMLDivElement | null)[]>([]);
   
   const {
     query,
@@ -50,6 +52,7 @@ export const DocumentSearchInput: React.FC<DocumentSearchInputProps> = ({
 
   const handleInputChange = (value: string) => {
     setInputValue(value);
+    setActiveSuggestionIndex(-1);
     
     if (value.length >= 2) {
       getSuggestions(value);
@@ -62,23 +65,45 @@ export const DocumentSearchInput: React.FC<DocumentSearchInputProps> = ({
   const handleSearch = (searchQuery: string) => {
     setInputValue(searchQuery);
     setShowSuggestions(false);
+    setActiveSuggestionIndex(-1);
     onSearch(searchQuery);
   };
 
   const handleClear = () => {
     setInputValue('');
     setShowSuggestions(false);
+    setActiveSuggestionIndex(-1);
     clearSearch();
     inputRef.current?.focus();
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
+    const allSuggestions = [...suggestions, ...searchHistory.slice(0, 5)];
+    
     if (e.key === 'Enter') {
       e.preventDefault();
-      handleSearch(inputValue);
+      if (activeSuggestionIndex >= 0 && allSuggestions[activeSuggestionIndex]) {
+        handleSearch(allSuggestions[activeSuggestionIndex]);
+      } else {
+        handleSearch(inputValue);
+      }
     } else if (e.key === 'Escape') {
       setShowSuggestions(false);
+      setActiveSuggestionIndex(-1);
       inputRef.current?.blur();
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (!showSuggestions && inputValue.length >= 2) {
+        setShowSuggestions(true);
+      }
+      const nextIndex = activeSuggestionIndex < allSuggestions.length - 1 ? activeSuggestionIndex + 1 : 0;
+      setActiveSuggestionIndex(nextIndex);
+      suggestionRefs.current[nextIndex]?.scrollIntoView({ block: 'nearest' });
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      const prevIndex = activeSuggestionIndex > 0 ? activeSuggestionIndex - 1 : allSuggestions.length - 1;
+      setActiveSuggestionIndex(prevIndex);
+      suggestionRefs.current[prevIndex]?.scrollIntoView({ block: 'nearest' });
     }
   };
 
@@ -86,7 +111,7 @@ export const DocumentSearchInput: React.FC<DocumentSearchInputProps> = ({
     <div className={cn("relative w-full max-w-2xl", className)}>
       {/* Search Input */}
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" aria-hidden="true" />
         
         <Input
           ref={inputRef}
@@ -102,6 +127,15 @@ export const DocumentSearchInput: React.FC<DocumentSearchInputProps> = ({
           placeholder={placeholder}
           className="pl-10 pr-20 h-11"
           disabled={isSearching}
+          aria-label="Search documents"
+          aria-expanded={showSuggestions}
+          aria-haspopup="listbox"
+          aria-describedby={showStats && query ? "search-stats" : undefined}
+          aria-activedescendant={
+            activeSuggestionIndex >= 0 ? `suggestion-${activeSuggestionIndex}` : undefined
+          }
+          autoComplete="off"
+          role="combobox"
         />
 
         <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center gap-1">
@@ -111,6 +145,7 @@ export const DocumentSearchInput: React.FC<DocumentSearchInputProps> = ({
               size="sm"
               onClick={handleClear}
               className="h-6 w-6 p-0"
+              aria-label="Clear search"
             >
               <X className="h-3 w-3" />
             </Button>
@@ -122,6 +157,7 @@ export const DocumentSearchInput: React.FC<DocumentSearchInputProps> = ({
               size="sm"
               onClick={onFilterClick}
               className="h-6 w-6 p-0"
+              aria-label="Open search filters"
             >
               <Filter className="h-3 w-3" />
             </Button>
@@ -131,16 +167,20 @@ export const DocumentSearchInput: React.FC<DocumentSearchInputProps> = ({
         {/* Loading indicator */}
         {isSearching && (
           <div className="absolute right-10 top-1/2 transform -translate-y-1/2">
-            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>
+            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary" aria-label="Searching..."></div>
           </div>
         )}
       </div>
 
       {/* Search Stats */}
       {showStats && query && (
-        <div className="flex items-center justify-between mt-2 text-xs text-muted-foreground">
+        <div 
+          id="search-stats"
+          className="flex items-center justify-between mt-2 text-xs text-muted-foreground"
+          aria-live="polite"
+        >
           <span>
-            {totalResults} results in {searchTime.toFixed(1)}ms
+            {totalResults} results found in {searchTime.toFixed(1)} milliseconds
           </span>
           <div className="flex items-center gap-2">
             {isServerSearchEnabled && (
@@ -149,7 +189,7 @@ export const DocumentSearchInput: React.FC<DocumentSearchInputProps> = ({
               </Badge>
             )}
             <span>
-              {searchStats.totalDocuments} docs indexed
+              {searchStats.totalDocuments} documents indexed
             </span>
           </div>
         </div>
@@ -157,49 +197,76 @@ export const DocumentSearchInput: React.FC<DocumentSearchInputProps> = ({
 
       {/* Suggestions Dropdown */}
       {showSuggestions && (
-        <div className="absolute top-full left-0 right-0 z-50 mt-1 bg-popover border rounded-md shadow-lg max-h-96 overflow-hidden">
-          <Command>
-            <CommandList>
-              {/* Search Suggestions */}
-              {suggestions.length > 0 && (
-                <CommandGroup heading="Suggestions">
-                  {suggestions.map((suggestion, index) => (
-                    <CommandItem
-                      key={index}
-                      onSelect={() => handleSearch(suggestion)}
-                      className="cursor-pointer"
-                    >
-                      <TrendingUp className="h-4 w-4 mr-2 text-muted-foreground" />
-                      {suggestion}
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              )}
+        <div 
+          className="absolute top-full left-0 right-0 z-50 mt-1 bg-popover border rounded-md shadow-lg max-h-96 overflow-hidden"
+          role="listbox"
+          aria-label="Search suggestions"
+        >
+          <ul className="max-h-96 overflow-auto">
+            {/* Search Suggestions */}
+            {suggestions.length > 0 && (
+              <li role="group" aria-labelledby="suggestions-heading">
+                <div id="suggestions-heading" className="px-2 py-1.5 text-xs font-medium text-muted-foreground bg-muted/50">
+                  Suggestions
+                </div>
+                {suggestions.map((suggestion, index) => (
+                  <div
+                    key={index}
+                    ref={(el) => (suggestionRefs.current[index] = el)}
+                    id={`suggestion-${index}`}
+                    role="option"
+                    aria-selected={activeSuggestionIndex === index}
+                    className={cn(
+                      "px-2 py-2 text-sm cursor-pointer flex items-center gap-2 hover:bg-accent focus:bg-accent",
+                      activeSuggestionIndex === index && "bg-accent"
+                    )}
+                    onClick={() => handleSearch(suggestion)}
+                    onMouseEnter={() => setActiveSuggestionIndex(index)}
+                  >
+                    <TrendingUp className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                    {suggestion}
+                  </div>
+                ))}
+              </li>
+            )}
 
-              {/* Search History */}
-              {searchHistory.length > 0 && (
-                <CommandGroup heading="Recent Searches">
-                  {searchHistory.slice(0, 5).map((historyItem, index) => (
-                    <CommandItem
+            {/* Search History */}
+            {searchHistory.length > 0 && (
+              <li role="group" aria-labelledby="history-heading">
+                <div id="history-heading" className="px-2 py-1.5 text-xs font-medium text-muted-foreground bg-muted/50">
+                  Recent Searches
+                </div>
+                {searchHistory.slice(0, 5).map((historyItem, index) => {
+                  const adjustedIndex = suggestions.length + index;
+                  return (
+                    <div
                       key={index}
-                      onSelect={() => handleSearch(historyItem)}
-                      className="cursor-pointer"
+                      ref={(el) => (suggestionRefs.current[adjustedIndex] = el)}
+                      id={`suggestion-${adjustedIndex}`}
+                      role="option"
+                      aria-selected={activeSuggestionIndex === adjustedIndex}
+                      className={cn(
+                        "px-2 py-2 text-sm cursor-pointer flex items-center gap-2 hover:bg-accent focus:bg-accent",
+                        activeSuggestionIndex === adjustedIndex && "bg-accent"
+                      )}
+                      onClick={() => handleSearch(historyItem)}
+                      onMouseEnter={() => setActiveSuggestionIndex(adjustedIndex)}
                     >
-                      <Clock className="h-4 w-4 mr-2 text-muted-foreground" />
+                      <Clock className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
                       {historyItem}
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              )}
+                    </div>
+                  );
+                })}
+              </li>
+            )}
 
-              {/* No suggestions */}
-              {suggestions.length === 0 && searchHistory.length === 0 && (
-                <CommandEmpty>
-                  No suggestions available
-                </CommandEmpty>
-              )}
-            </CommandList>
-          </Command>
+            {/* No suggestions */}
+            {suggestions.length === 0 && searchHistory.length === 0 && (
+              <li className="px-2 py-8 text-center text-sm text-muted-foreground">
+                No suggestions available
+              </li>
+            )}
+          </ul>
         </div>
       )}
 
@@ -207,7 +274,10 @@ export const DocumentSearchInput: React.FC<DocumentSearchInputProps> = ({
       {showSuggestions && (
         <div
           className="fixed inset-0 z-40"
-          onClick={() => setShowSuggestions(false)}
+          onClick={() => {
+            setShowSuggestions(false);
+            setActiveSuggestionIndex(-1);
+          }}
         />
       )}
     </div>

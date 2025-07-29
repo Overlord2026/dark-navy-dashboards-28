@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useCallback } from 'react';
+import React, { useEffect, useRef, useCallback, useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -28,8 +28,10 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
   onShare,
   className
 }) => {
+  const [focusedIndex, setFocusedIndex] = useState(-1);
   const observerRef = useRef<HTMLDivElement>(null);
   const loadMoreRef = useRef<HTMLDivElement>(null);
+  const resultRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   // Intersection Observer for infinite scroll
   useEffect(() => {
@@ -100,10 +102,32 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
     );
   };
 
+  // Keyboard navigation for results
+  const handleResultKeyDown = (e: React.KeyboardEvent, index: number) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      onDocumentClick?.(results[index].document.id);
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      const nextIndex = index < results.length - 1 ? index + 1 : 0;
+      resultRefs.current[nextIndex]?.focus();
+      setFocusedIndex(nextIndex);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      const prevIndex = index > 0 ? index - 1 : results.length - 1;
+      resultRefs.current[prevIndex]?.focus();
+      setFocusedIndex(prevIndex);
+    }
+  };
+
   if (results.length === 0 && !loading) {
     return (
-      <div className="text-center py-12">
-        <FileText className="mx-auto h-12 w-12 text-muted-foreground opacity-50" />
+      <div 
+        className="text-center py-12"
+        role="status"
+        aria-live="polite"
+      >
+        <FileText className="mx-auto h-12 w-12 text-muted-foreground opacity-50" aria-hidden="true" />
         <h3 className="mt-4 text-lg font-medium">No documents found</h3>
         <p className="mt-2 text-muted-foreground">
           Try adjusting your search terms or filters
@@ -114,107 +138,147 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
 
   return (
     <div className={cn("space-y-4", className)}>
+      {/* Skip to content link for keyboard navigation */}
+      <a 
+        href="#search-results-end" 
+        className="sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 z-50 bg-primary text-primary-foreground px-4 py-2 rounded"
+      >
+        Skip to end of search results
+      </a>
+
       {/* Search Results */}
-      {results.map((result, index) => (
-        <Card
-          key={`${result.document.id}-${index}`}
-          className="hover:shadow-md transition-shadow cursor-pointer"
-          onClick={() => onDocumentClick?.(result.document.id)}
-        >
-          <CardContent className="p-4">
-            <div className="flex items-start justify-between">
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-lg">{getTypeIcon(result.document.type)}</span>
-                  <h3 className="font-medium truncate">
-                    {renderHighlightedText(
-                      result.document.name,
-                      result.highlights.name
-                    )}
-                  </h3>
-                  <Badge variant="outline" className="text-xs">
-                    {result.document.type}
-                  </Badge>
-                  {result.score > 0 && (
-                    <Badge variant="secondary" className="text-xs">
-                      {Math.round((1 - result.score) * 100)}% match
-                    </Badge>
-                  )}
-                </div>
-
-                {result.document.description && (
-                  <p className="text-sm text-muted-foreground mb-2 line-clamp-2">
-                    {renderHighlightedText(
-                      result.document.description,
-                      result.highlights.description
-                    )}
-                  </p>
-                )}
-
-                <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                  <span>{formatFileSize(result.document.size)}</span>
-                  <span>{formatDate(result.document.created_at)}</span>
-                  <span className="capitalize">{result.document.category}</span>
-                </div>
-
-                {result.document.tags && result.document.tags.length > 0 && (
-                  <div className="mt-2 flex flex-wrap gap-1">
-                    {result.document.tags.slice(0, 3).map((tag, tagIndex) => (
-                      <Badge key={tagIndex} variant="outline" className="text-xs">
-                        {renderHighlightedText(tag, result.highlights.tags)}
-                      </Badge>
-                    ))}
-                    {result.document.tags.length > 3 && (
+      <ul 
+        role="list" 
+        aria-label={`Search results: ${results.length} documents found`}
+        className="space-y-4"
+      >
+        {results.map((result, index) => (
+          <li key={`${result.document.id}-${index}`} role="listitem">
+            <Card
+              ref={(el) => (resultRefs.current[index] = el)}
+              className={cn(
+                "hover:shadow-md transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2",
+                focusedIndex === index && "ring-2 ring-primary ring-offset-2"
+              )}
+              onClick={() => onDocumentClick?.(result.document.id)}
+              onKeyDown={(e) => handleResultKeyDown(e, index)}
+              onFocus={() => setFocusedIndex(index)}
+              onBlur={() => setFocusedIndex(-1)}
+              tabIndex={0}
+              role="button"
+              aria-label={`Document: ${result.document.name}. ${result.document.description || 'No description'}. Type: ${result.document.type}. Size: ${formatFileSize(result.document.size)}. Press Enter to open.`}
+            >
+              <CardContent className="p-4">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span 
+                        className="text-lg" 
+                        aria-label={`File type: ${result.document.type}`}
+                        role="img"
+                      >
+                        {getTypeIcon(result.document.type)}
+                      </span>
+                      <h3 className="font-medium truncate">
+                        {renderHighlightedText(
+                          result.document.name,
+                          result.highlights.name
+                        )}
+                      </h3>
                       <Badge variant="outline" className="text-xs">
-                        +{result.document.tags.length - 3} more
+                        {result.document.type}
                       </Badge>
+                      {result.score > 0 && (
+                        <Badge variant="secondary" className="text-xs">
+                          {Math.round((1 - result.score) * 100)}% match
+                        </Badge>
+                      )}
+                    </div>
+
+                    {result.document.description && (
+                      <p className="text-sm text-muted-foreground mb-2 line-clamp-2">
+                        {renderHighlightedText(
+                          result.document.description,
+                          result.highlights.description
+                        )}
+                      </p>
+                    )}
+
+                    <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                      <span aria-label={`File size: ${formatFileSize(result.document.size)}`}>
+                        {formatFileSize(result.document.size)}
+                      </span>
+                      <span aria-label={`Created on: ${formatDate(result.document.created_at)}`}>
+                        {formatDate(result.document.created_at)}
+                      </span>
+                      <span className="capitalize" aria-label={`Category: ${result.document.category}`}>
+                        {result.document.category}
+                      </span>
+                    </div>
+
+                    {result.document.tags && result.document.tags.length > 0 && (
+                      <div className="mt-2 flex flex-wrap gap-1" role="list" aria-label="Document tags">
+                        {result.document.tags.slice(0, 3).map((tag, tagIndex) => (
+                          <Badge key={tagIndex} variant="outline" className="text-xs" role="listitem">
+                            {renderHighlightedText(tag, result.highlights.tags)}
+                          </Badge>
+                        ))}
+                        {result.document.tags.length > 3 && (
+                          <Badge variant="outline" className="text-xs" role="listitem">
+                            +{result.document.tags.length - 3} more
+                          </Badge>
+                        )}
+                      </div>
                     )}
                   </div>
-                )}
-              </div>
 
-              <div className="flex items-center gap-1 ml-4">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onDocumentClick?.(result.document.id);
-                  }}
-                >
-                  <Eye className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onDownload?.(result.document.id);
-                  }}
-                >
-                  <Download className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onShare?.(result.document.id);
-                  }}
-                >
-                  <Share2 className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      ))}
+                  <div className="flex items-center gap-1 ml-4" role="group" aria-label="Document actions">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onDocumentClick?.(result.document.id);
+                      }}
+                      aria-label={`View ${result.document.name}`}
+                    >
+                      <Eye className="h-4 w-4" aria-hidden="true" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onDownload?.(result.document.id);
+                      }}
+                      aria-label={`Download ${result.document.name}`}
+                    >
+                      <Download className="h-4 w-4" aria-hidden="true" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onShare?.(result.document.id);
+                      }}
+                      aria-label={`Share ${result.document.name}`}
+                    >
+                      <Share2 className="h-4 w-4" aria-hidden="true" />
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </li>
+        ))}
+      </ul>
 
       {/* Loading Skeletons */}
       {loading && (
-        <div className="space-y-4">
+        <div className="space-y-4" role="status" aria-label="Loading search results">
           {Array.from({ length: 3 }).map((_, index) => (
-            <Card key={index}>
+            <Card key={index} aria-hidden="true">
               <CardContent className="p-4">
                 <div className="flex items-start justify-between">
                   <div className="flex-1 space-y-2">
@@ -239,6 +303,7 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
               </CardContent>
             </Card>
           ))}
+          <span className="sr-only">Loading more search results...</span>
         </div>
       )}
 
@@ -246,8 +311,12 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
       {hasMore && (
         <div ref={loadMoreRef} className="flex justify-center py-4">
           {loading ? (
-            <div className="flex items-center gap-2 text-muted-foreground">
-              <Loader2 className="h-4 w-4 animate-spin" />
+            <div 
+              className="flex items-center gap-2 text-muted-foreground"
+              role="status"
+              aria-live="polite"
+            >
+              <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
               Loading more results...
             </div>
           ) : (
@@ -255,6 +324,7 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
               variant="outline"
               onClick={onLoadMore}
               className="w-full max-w-xs"
+              aria-label="Load more search results"
             >
               Load More Results
             </Button>
@@ -264,8 +334,13 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
 
       {/* End of Results */}
       {!hasMore && results.length > 0 && (
-        <div className="text-center py-4 text-sm text-muted-foreground">
-          End of search results
+        <div 
+          id="search-results-end"
+          className="text-center py-4 text-sm text-muted-foreground"
+          role="status"
+          aria-live="polite"
+        >
+          End of search results ({results.length} total)
         </div>
       )}
     </div>
