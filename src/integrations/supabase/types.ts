@@ -13484,20 +13484,6 @@ export type Database = {
         }
         Relationships: []
       }
-      critical_table_performance: {
-        Row: {
-          avg_execution_time_ms: number | null
-          cache_hit_count: number | null
-          cache_hit_rate_percent: number | null
-          hour_bucket: string | null
-          max_execution_time_ms: number | null
-          operation_type: string | null
-          query_count: number | null
-          slow_query_count: number | null
-          table_name: string | null
-        }
-        Relationships: []
-      }
       query_performance_summary: {
         Row: {
           avg_execution_time_ms: number | null
@@ -13517,6 +13503,17 @@ export type Database = {
       activate_referral: {
         Args: { p_referee_id: string }
         Returns: boolean
+      }
+      audit_public_schema_extensions: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          extension_name: string
+          version: string
+          schema_name: string
+          is_essential: boolean
+          security_risk: string
+          recommendation: string
+        }[]
       }
       audit_rls_coverage: {
         Args: Record<PropertyKey, never>
@@ -13572,6 +13569,16 @@ export type Database = {
       calculate_provider_rating: {
         Args: { provider_id: string }
         Returns: number
+      }
+      calculate_security_score: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          category: string
+          score: number
+          max_score: number
+          issues: string[]
+          status: string
+        }[]
       }
       check_impact_milestones: {
         Args: { p_user_id: string }
@@ -13693,6 +13700,10 @@ export type Database = {
       }
       generate_referral_code: {
         Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      generate_secure_otp: {
+        Args: { p_user_id: string; p_otp_type?: string }
         Returns: string
       }
       generate_user_impact_report: {
