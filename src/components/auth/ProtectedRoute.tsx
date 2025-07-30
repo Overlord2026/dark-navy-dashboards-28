@@ -1,7 +1,8 @@
 
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from './AuthContextWrapper';
+import { shouldEnforceAuthentication } from '@/utils/environment';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -9,7 +10,8 @@ interface ProtectedRouteProps {
 }
 
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requiredRole }) => {
-  const { isAuthenticated, isLoading, userProfile } = useAuth();
+  const { user, session, isLoading, userProfile, isQABypassActive } = useAuth();
+  const isAuthenticated = !!(user && session);
 
   if (isLoading) {
     return (
@@ -22,8 +24,16 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requir
     );
   }
 
-  if (!isAuthenticated) {
+  // Check if authentication should be enforced for this user
+  const enforceAuth = shouldEnforceAuthentication(userProfile?.email);
+  
+  if (!isAuthenticated && enforceAuth) {
     return <Navigate to="/auth" replace />;
+  }
+  
+  // Allow QA bypass user to access without authentication in sandbox
+  if (isQABypassActive && !enforceAuth) {
+    // Continue to render children for QA testing
   }
 
   // Check role-based access if requiredRole is specified

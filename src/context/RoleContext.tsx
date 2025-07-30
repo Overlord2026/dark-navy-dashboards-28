@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useState } from 'react';
 import { useUser } from './UserContext';
+import { useAuth } from './AuthContext';
+import { isQABypassAllowed } from '@/utils/environment';
 import { getRoleDisplayName } from '@/utils/roleHierarchy';
 
 // Dev mode disabled for production security

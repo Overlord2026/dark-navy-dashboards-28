@@ -18,6 +18,7 @@ import { AuthWrapper } from "@/components/auth/AuthWrapper";
 import { getAdvisorAccessRoles } from "@/utils/roleHierarchy";
 import { DynamicLandingController } from "@/components/auth/DynamicLandingController";
 import { Navigation } from "@/components/Navigation";
+import { QABypassIndicator } from "@/components/security/QABypassIndicator";
 import Index from "./pages/Index";
 // Dashboard default export
 import Dashboard from "./pages/Dashboard";
@@ -104,6 +105,7 @@ const App = () => {
             <BrowserRouter>
               <DynamicLandingController>
                 <div className="min-h-screen bg-background">
+                  <QABypassIndicator />
                   <Navigation />
                   <Routes>
                   <Route path="/auth" element={<AuthPage />} />

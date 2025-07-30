@@ -4,6 +4,8 @@
  */
 
 import { supabase } from '@/lib/supabase';
+import { auditLog } from '@/services/auditLog/auditLogService';
+import { getEnvironmentConfig, isQABypassAllowed } from '@/utils/environment';
 
 export interface MFABypassRecord {
   id: string;
@@ -69,6 +71,22 @@ export class MFABypassService {
    */
   async hasActiveMFABypass(userId: string): Promise<boolean> {
     try {
+      // First check for sandbox QA bypass
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('email')
+        .eq('id', userId)
+        .single();
+
+      if (profile && isQABypassAllowed(profile.email)) {
+        const env = getEnvironmentConfig();
+        if (env.qaBypassEnabled) {
+          // Auto-create sandbox bypass for QA user
+          await this.ensureSandboxBypass(userId, profile.email);
+          return true;
+        }
+      }
+
       const { data, error } = await supabase
         .from('mfa_bypass_audit')
         .select('id')
@@ -195,6 +213,61 @@ export class MFABypassService {
       });
     } catch (error) {
       console.error('Failed to log security event:', error);
+    }
+  }
+
+  /**
+   * Ensures sandbox bypass exists for QA user
+   */
+  private async ensureSandboxBypass(userId: string, userEmail: string): Promise<void> {
+    const env = getEnvironmentConfig();
+    
+    if (!env.qaBypassEnabled || !isQABypassAllowed(userEmail)) {
+      return;
+    }
+
+    // Check if bypass already exists
+    const { data: existing } = await supabase
+      .from('mfa_bypass_audit')
+      .select('*')
+      .eq('user_id', userId)
+      .eq('is_active', true)
+      .gt('expires_at', new Date().toISOString())
+      .limit(1);
+
+    if (existing && existing.length > 0) {
+      return; // Bypass already exists
+    }
+
+    // Create sandbox bypass with extended duration
+    const expiresAt = new Date();
+    expiresAt.setHours(expiresAt.getHours() + 168); // 7 days for QA testing
+
+    const { error } = await supabase
+      .from('mfa_bypass_audit')
+      .insert({
+        user_id: userId,
+        user_role: 'system_administrator', // Assume admin for bypass
+        bypass_reason: 'Sandbox QA Testing - Automated Bypass',
+        initiated_by: userId,
+        expires_at: expiresAt.toISOString(),
+        is_active: true
+      });
+
+    if (!error) {
+      auditLog.log(
+        userId,
+        'sandbox_qa_bypass_created',
+        'success',
+        {
+          details: {
+            userEmail,
+            environment: env.isSandbox ? 'sandbox' : env.isStaging ? 'staging' : 'development',
+            bypassDuration: '7 days',
+            automated: true
+          }
+        }
+      );
     }
   }
 }
