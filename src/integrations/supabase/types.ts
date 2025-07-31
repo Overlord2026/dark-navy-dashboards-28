@@ -13690,6 +13690,14 @@ export type Database = {
           last_occurrence: string
         }[]
       }
+      final_security_validation: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          category: string
+          status: string
+          remaining_issues: string[]
+        }[]
+      }
       generate_compliance_report: {
         Args: { p_compliance_framework?: string }
         Returns: Json
