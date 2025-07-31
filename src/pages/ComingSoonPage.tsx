@@ -54,8 +54,9 @@ export function ComingSoonPage({
           <p className="text-sm text-muted-foreground mb-4">
             We'll keep you updated on the progress of this feature.
           </p>
-          <Button disabled className="w-full">
-            Notify Me When Available
+          <Button disabled className="w-full opacity-50 cursor-not-allowed">
+            <Clock className="h-4 w-4 mr-2" />
+            Feature Coming Soon
           </Button>
         </div>
       </div>

@@ -27,6 +27,7 @@ import { LoanApplicationPage } from "./pages/lending/LoanApplicationPage";
 import { LoanStatusPage } from "./pages/lending/LoanStatusPage";
 import { PartnerComparisonPage } from "./pages/lending/PartnerComparisonPage";
 import { AdvisorLendingDashboard } from "./pages/lending/AdvisorLendingDashboard";
+import { AdminRoute } from "./components/auth/AdminRoute";
 
 // Legal pages
 import { PrivacyPolicyPage } from "./pages/legal/PrivacyPolicyPage";
@@ -232,7 +233,11 @@ export const router = createBrowserRouter([
   },
   {
     path: "/admin/*",
-    element: <ComingSoonPage featureName="Administrative Tools" description="Platform administration and user management tools." />
+    element: (
+      <AdminRoute roles={['admin', 'tenant_admin', 'system_administrator']}>
+        <ComingSoonPage featureName="Administrative Tools" description="Platform administration and user management tools." />
+      </AdminRoute>
+    )
   },
   // Legal routes
   {

@@ -22,6 +22,8 @@ import {
 
 // Navigation configurations for different roles
 export const getRoleNavigation = (role: string, tier?: 'basic' | 'premium'): NavItem[] => {
+  // Normalize role for consistent navigation
+  const effectiveRole = role === 'client' && tier === 'premium' ? 'client_premium' : role;
   const baseNavigation: NavItem[] = [
     { 
       id: 'home', 
@@ -31,7 +33,7 @@ export const getRoleNavigation = (role: string, tier?: 'basic' | 'premium'): Nav
     }
   ];
 
-  switch (role) {
+  switch (effectiveRole) {
     case 'client':
     case 'client_premium':
       return [

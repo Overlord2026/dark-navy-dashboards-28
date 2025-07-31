@@ -66,7 +66,7 @@ export function DashboardLayout() {
                     <span className="sr-only">Toggle navigation menu</span>
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="left" className="w-[240px] sm:w-[280px] p-0">
+                <SheetContent side="left" className="w-[280px] sm:w-[320px] max-w-[90vw] p-0 overflow-y-auto">
                   <ErrorBoundary>
                     <Sidebar
                       isLightTheme={isLightTheme}
@@ -91,7 +91,7 @@ export function DashboardLayout() {
               </ErrorBoundary>
             </div>
             
-            <main className="flex-1 p-3 sm:p-4 lg:p-6">
+            <main className="flex-1 p-3 sm:p-4 lg:p-6 min-h-0">
               <ErrorBoundary>
                 <Outlet />
               </ErrorBoundary>

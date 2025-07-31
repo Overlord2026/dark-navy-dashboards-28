@@ -3,7 +3,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useAuth } from './AuthContext';
 import { supabase } from '@/lib/supabase';
 
-interface UserProfile {
+export interface UserProfile {
   id: string;
   name?: string;
   displayName?: string;

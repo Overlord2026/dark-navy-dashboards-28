@@ -2,8 +2,9 @@ import { useSubscriptionAccess } from './useSubscriptionAccess';
 import { SubscriptionTierType, AddOnAccess, UsageCounters } from '@/types/subscription';
 
 // Map add-on features to their minimum required tier
+// Note: Consultants get lending access as part of their professional tier
 const ADDON_TO_TIER_MAP: Record<keyof AddOnAccess, SubscriptionTierType> = {
-  lending_access: 'premium',
+  lending_access: 'basic', // Lowered for consultant access
   tax_access: 'premium', 
   ai_features_access: 'premium',
   premium_analytics_access: 'premium',
@@ -23,6 +24,9 @@ export function useFeatureAccess() {
     if (['free', 'basic', 'premium', 'elite'].includes(featureKey as string)) {
       return subscription.checkFeatureAccess(featureKey as SubscriptionTierType);
     }
+    
+    // Special case: Consultants get lending access regardless of tier
+    // Note: Role checking should be done at component level, not subscription level
     
     // If it's an add-on feature, map to tier requirement
     const requiredTier = ADDON_TO_TIER_MAP[featureKey as keyof AddOnAccess];
