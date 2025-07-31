@@ -3,6 +3,7 @@ import { DashboardHeader } from "@/components/ui/DashboardHeader";
 import ComprehensiveQATestSuite from "@/components/qa/ComprehensiveQATestSuite";
 import ComprehensiveNavigationAudit from "@/components/diagnostics/ComprehensiveNavigationAudit";
 import ErrorHandlingTestSuite from "@/components/qa/ErrorHandlingTestSuite";
+import QASummaryReport from "@/components/qa/QASummaryReport";
 import { measureRoutePerformance } from "@/services/performance/performanceMonitorService";
 import { useAuth } from "@/context/AuthContext";
 import { Navigate } from "react-router-dom";
@@ -35,6 +36,7 @@ const NavigationQATest: React.FC = () => {
       />
       
       <div className="grid grid-cols-1 gap-6">
+        <QASummaryReport />
         <ComprehensiveNavigationAudit />
         <ErrorHandlingTestSuite />
         <ComprehensiveQATestSuite />
