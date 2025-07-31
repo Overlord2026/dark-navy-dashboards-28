@@ -14112,6 +14112,14 @@ export type Database = {
         }
         Returns: boolean
       }
+      validate_security_status: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          check_name: string
+          status: string
+          details: string
+        }[]
+      }
       validate_user_role_access: {
         Args: {
           p_required_roles: string[]
