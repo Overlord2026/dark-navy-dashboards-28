@@ -82,6 +82,41 @@ import { FiduciaryReview } from "./components/annuities/FiduciaryReview";
 import ClientsPage from "./pages/advisor/ClientsPage";
 import ProspectsPage from "./pages/advisor/ProspectsPage";
 import WealthOverviewPage from "./pages/WealthOverviewPage";
+// Client pages
+import ClientEducationPage from "./pages/client/ClientEducationPage";
+import InvestmentsPage from "./pages/client/InvestmentsPage";
+import TaxPlanningPage from "./pages/client/TaxPlanningPage";
+import InsurancePage from "./pages/client/InsurancePage";
+// Wealth pages
+import AccountsOverviewPage from "./pages/wealth/AccountsOverviewPage";
+import PremiumTaxPage from "./pages/wealth/PremiumTaxPage";
+// Health pages
+import HealthOverviewPage from "./pages/health/HealthOverviewPage";
+// Advisor pages
+import AdvisorPortfolioPage from "./pages/advisor/PortfolioPage";
+import PerformancePage from "./pages/advisor/PerformancePage";
+import BillingPage from "./pages/advisor/BillingPage";
+import AdvisorCompliancePage from "./pages/advisor/CompliancePage";
+// Accountant pages
+import TaxPrepPage from "./pages/accountant/TaxPrepPage";
+import AccountantTaxPlanningPage from "./pages/accountant/TaxPlanningPage";
+import LedgerPage from "./pages/accountant/LedgerPage";
+import StatementsPage from "./pages/accountant/StatementsPage";
+// Consultant pages
+import ProjectsPage from "./pages/consultant/ProjectsPage";
+import AssessmentsPage from "./pages/consultant/AssessmentsPage";
+import MethodologiesPage from "./pages/consultant/MethodologiesPage";
+import BestPracticesPage from "./pages/consultant/BestPracticesPage";
+// Attorney pages
+import EstatePlanningPage from "./pages/attorney/EstatePlanningPage";
+import BusinessLawPage from "./pages/attorney/BusinessLawPage";
+import ContractsPage from "./pages/attorney/ContractsPage";
+import ResearchPage from "./pages/attorney/ResearchPage";
+// Admin pages
+import UsersPage from "./pages/admin/UsersPage";
+import RolesPage from "./pages/admin/RolesPage";
+import AdminSettingsPage from "./pages/admin/AdminSettingsPage";
+import MonitoringPage from "./pages/admin/MonitoringPage";
 
 const queryClient = new QueryClient();
 
@@ -491,20 +526,333 @@ const App = () => {
                        </AuthWrapper>
                      }
                    />
-                   <Route
-                     path="/wealth"
-                     element={
-                       <AuthWrapper requireAuth={true}>
-                         <WealthOverviewPage />
-                       </AuthWrapper>
-                     }
-                   />
+                    <Route
+                      path="/wealth"
+                      element={
+                        <AuthWrapper requireAuth={true}>
+                          <WealthOverviewPage />
+                        </AuthWrapper>
+                      }
+                    />
 
-                   {/* QA Testing Routes removed for production */}
-                   {/* QA brand audit route removed for production */}
-                   
-                   <Route path="/access-denied" element={<AccessDeniedPage />} />
-                  <Route path="*" element={<NotFoundPage />} />
+                    {/* Client Education & Solutions Routes */}
+                    <Route
+                      path="/client-education"
+                      element={
+                        <AuthWrapper
+                          requireAuth={true}
+                          allowedRoles={['client', 'client_premium', 'advisor', 'admin', 'tenant_admin', 'system_administrator']}
+                        >
+                          <ClientEducationPage />
+                        </AuthWrapper>
+                      }
+                    />
+                    <Route
+                      path="/investments"
+                      element={
+                        <AuthWrapper
+                          requireAuth={true}
+                          allowedRoles={['client', 'client_premium', 'advisor', 'admin', 'tenant_admin', 'system_administrator']}
+                        >
+                          <InvestmentsPage />
+                        </AuthWrapper>
+                      }
+                    />
+                    <Route
+                      path="/tax-planning"
+                      element={
+                        <AuthWrapper
+                          requireAuth={true}
+                          allowedRoles={['client', 'client_premium', 'advisor', 'admin', 'tenant_admin', 'system_administrator']}
+                        >
+                          <TaxPlanningPage />
+                        </AuthWrapper>
+                      }
+                    />
+                    <Route
+                      path="/insurance"
+                      element={
+                        <AuthWrapper
+                          requireAuth={true}
+                          allowedRoles={['client', 'client_premium', 'advisor', 'admin', 'tenant_admin', 'system_administrator']}
+                        >
+                          <InsurancePage />
+                        </AuthWrapper>
+                      }
+                    />
+
+                    {/* Wealth Management Routes */}
+                    <Route
+                      path="/wealth/accounts"
+                      element={
+                        <AuthWrapper
+                          requireAuth={true}
+                          allowedRoles={['client', 'client_premium', 'advisor', 'admin', 'tenant_admin', 'system_administrator']}
+                        >
+                          <AccountsOverviewPage />
+                        </AuthWrapper>
+                      }
+                    />
+                    <Route
+                      path="/wealth/premium/tax"
+                      element={
+                        <AuthWrapper
+                          requireAuth={true}
+                          allowedRoles={['client_premium', 'advisor', 'admin', 'tenant_admin', 'system_administrator']}
+                        >
+                          <PremiumTaxPage />
+                        </AuthWrapper>
+                      }
+                    />
+
+                    {/* Health Optimization Routes */}
+                    <Route
+                      path="/health"
+                      element={
+                        <AuthWrapper
+                          requireAuth={true}
+                          allowedRoles={['client', 'client_premium', 'advisor', 'admin', 'tenant_admin', 'system_administrator']}
+                        >
+                          <HealthOverviewPage />
+                        </AuthWrapper>
+                      }
+                    />
+
+                    {/* Advisor Portfolio Management Routes */}
+                    <Route
+                      path="/advisor/portfolio"
+                      element={
+                        <AuthWrapper
+                          requireAuth={true}
+                          allowedRoles={['advisor', 'admin', 'tenant_admin', 'system_administrator']}
+                        >
+                          <AdvisorPortfolioPage />
+                        </AuthWrapper>
+                      }
+                    />
+                    <Route
+                      path="/advisor/performance"
+                      element={
+                        <AuthWrapper
+                          requireAuth={true}
+                          allowedRoles={['advisor', 'admin', 'tenant_admin', 'system_administrator']}
+                        >
+                          <PerformancePage />
+                        </AuthWrapper>
+                      }
+                    />
+                    <Route
+                      path="/advisor/billing"
+                      element={
+                        <AuthWrapper
+                          requireAuth={true}
+                          allowedRoles={['advisor', 'admin', 'tenant_admin', 'system_administrator']}
+                        >
+                          <BillingPage />
+                        </AuthWrapper>
+                      }
+                    />
+                    <Route
+                      path="/advisor/compliance"
+                      element={
+                        <AuthWrapper
+                          requireAuth={true}
+                          allowedRoles={['advisor', 'admin', 'tenant_admin', 'system_administrator']}
+                        >
+                          <AdvisorCompliancePage />
+                        </AuthWrapper>
+                      }
+                    />
+
+                    {/* Accountant Routes */}
+                    <Route
+                      path="/accountant/tax-prep"
+                      element={
+                        <AuthWrapper
+                          requireAuth={true}
+                          allowedRoles={['accountant', 'admin', 'tenant_admin', 'system_administrator']}
+                        >
+                          <TaxPrepPage />
+                        </AuthWrapper>
+                      }
+                    />
+                    <Route
+                      path="/accountant/tax-planning"
+                      element={
+                        <AuthWrapper
+                          requireAuth={true}
+                          allowedRoles={['accountant', 'admin', 'tenant_admin', 'system_administrator']}
+                        >
+                          <AccountantTaxPlanningPage />
+                        </AuthWrapper>
+                      }
+                    />
+                    <Route
+                      path="/accountant/ledger"
+                      element={
+                        <AuthWrapper
+                          requireAuth={true}
+                          allowedRoles={['accountant', 'admin', 'tenant_admin', 'system_administrator']}
+                        >
+                          <LedgerPage />
+                        </AuthWrapper>
+                      }
+                    />
+                    <Route
+                      path="/accountant/statements"
+                      element={
+                        <AuthWrapper
+                          requireAuth={true}
+                          allowedRoles={['accountant', 'admin', 'tenant_admin', 'system_administrator']}
+                        >
+                          <StatementsPage />
+                        </AuthWrapper>
+                      }
+                    />
+
+                    {/* Consultant Routes */}
+                    <Route
+                      path="/consultant/projects"
+                      element={
+                        <AuthWrapper
+                          requireAuth={true}
+                          allowedRoles={['consultant', 'admin', 'tenant_admin', 'system_administrator']}
+                        >
+                          <ProjectsPage />
+                        </AuthWrapper>
+                      }
+                    />
+                    <Route
+                      path="/consultant/assessments"
+                      element={
+                        <AuthWrapper
+                          requireAuth={true}
+                          allowedRoles={['consultant', 'admin', 'tenant_admin', 'system_administrator']}
+                        >
+                          <AssessmentsPage />
+                        </AuthWrapper>
+                      }
+                    />
+                    <Route
+                      path="/consultant/methodologies"
+                      element={
+                        <AuthWrapper
+                          requireAuth={true}
+                          allowedRoles={['consultant', 'admin', 'tenant_admin', 'system_administrator']}
+                        >
+                          <MethodologiesPage />
+                        </AuthWrapper>
+                      }
+                    />
+                    <Route
+                      path="/consultant/best-practices"
+                      element={
+                        <AuthWrapper
+                          requireAuth={true}
+                          allowedRoles={['consultant', 'admin', 'tenant_admin', 'system_administrator']}
+                        >
+                          <BestPracticesPage />
+                        </AuthWrapper>
+                      }
+                    />
+
+                    {/* Attorney Routes */}
+                    <Route
+                      path="/attorney/estate-planning"
+                      element={
+                        <AuthWrapper
+                          requireAuth={true}
+                          allowedRoles={['attorney', 'admin', 'tenant_admin', 'system_administrator']}
+                        >
+                          <EstatePlanningPage />
+                        </AuthWrapper>
+                      }
+                    />
+                    <Route
+                      path="/attorney/business-law"
+                      element={
+                        <AuthWrapper
+                          requireAuth={true}
+                          allowedRoles={['attorney', 'admin', 'tenant_admin', 'system_administrator']}
+                        >
+                          <BusinessLawPage />
+                        </AuthWrapper>
+                      }
+                    />
+                    <Route
+                      path="/attorney/contracts"
+                      element={
+                        <AuthWrapper
+                          requireAuth={true}
+                          allowedRoles={['attorney', 'admin', 'tenant_admin', 'system_administrator']}
+                        >
+                          <ContractsPage />
+                        </AuthWrapper>
+                      }
+                    />
+                    <Route
+                      path="/attorney/research"
+                      element={
+                        <AuthWrapper
+                          requireAuth={true}
+                          allowedRoles={['attorney', 'admin', 'tenant_admin', 'system_administrator']}
+                        >
+                          <ResearchPage />
+                        </AuthWrapper>
+                      }
+                    />
+
+                    {/* Admin Routes */}
+                    <Route
+                      path="/admin/users"
+                      element={
+                        <AuthWrapper
+                          requireAuth={true}
+                          allowedRoles={['admin', 'tenant_admin', 'system_administrator']}
+                        >
+                          <UsersPage />
+                        </AuthWrapper>
+                      }
+                    />
+                    <Route
+                      path="/admin/roles"
+                      element={
+                        <AuthWrapper
+                          requireAuth={true}
+                          allowedRoles={['admin', 'tenant_admin', 'system_administrator']}
+                        >
+                          <RolesPage />
+                        </AuthWrapper>
+                      }
+                    />
+                    <Route
+                      path="/admin/settings"
+                      element={
+                        <AuthWrapper
+                          requireAuth={true}
+                          allowedRoles={['admin', 'tenant_admin', 'system_administrator']}
+                        >
+                          <AdminSettingsPage />
+                        </AuthWrapper>
+                      }
+                    />
+                    <Route
+                      path="/admin/monitoring"
+                      element={
+                        <AuthWrapper
+                          requireAuth={true}
+                          allowedRoles={['admin', 'tenant_admin', 'system_administrator']}
+                        >
+                          <MonitoringPage />
+                        </AuthWrapper>
+                      }
+                    />
+
+                    {/* QA Testing Routes removed for production */}
+                    {/* QA brand audit route removed for production */}
+                    
+                    <Route path="/access-denied" element={<AccessDeniedPage />} />
+                   <Route path="*" element={<NotFoundPage />} />
                 </Routes>
                 </div>
               </DynamicLandingController>
