@@ -147,7 +147,7 @@ export const ProposalWizard: React.FC = () => {
       const { error } = await supabase
         .from('draft_proposals')
         .update({
-          current_holdings: parsedHoldings,
+          current_holdings: parsedHoldings as any,
           recommended_model_id: selectedModelId,
           advisor_overrides: {},
           status: 'finalized'

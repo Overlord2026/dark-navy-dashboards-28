@@ -389,8 +389,8 @@ export class SupabaseFinancialPlanService implements FinancialPlanService {
         id: data.id,
         name: data.name,
         amount: data.amount,
-        type: data.expense_type,
-        period: data.period,
+        type: data.expense_type as any,
+        period: data.period as any,
         owner: data.owner
       };
     } catch (error) {
@@ -423,8 +423,8 @@ export class SupabaseFinancialPlanService implements FinancialPlanService {
         id: expense.id,
         name: expense.name,
         amount: expense.amount,
-        type: expense.expense_type,
-        period: expense.period,
+        type: expense.expense_type as any,
+        period: expense.period as any,
         owner: expense.owner
       };
     } catch (error) {

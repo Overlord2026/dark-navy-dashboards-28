@@ -87,9 +87,9 @@ export const useSettings = () => {
 
       // Load user preferences
       const { data: preferencesData, error: preferencesError } = await supabase
-        .from('user_preferences')
+        .from('profiles')
         .select('*')
-        .eq('user_id', user.id)
+        .eq('id', user.id)
         .single();
 
       setApiCallsCount(prev => prev + 1);
@@ -120,11 +120,11 @@ export const useSettings = () => {
         },
         notifications: {
           ...defaultSettings.notifications,
-          ...preferencesData?.notifications
+          ...(preferencesData as any)?.notifications
         },
         security: {
           ...defaultSettings.security,
-          two_factor_enabled: preferencesData?.two_factor_enabled || false
+          two_factor_enabled: (preferencesData as any)?.two_factor_enabled || false
         }
       };
 
@@ -197,11 +197,11 @@ export const useSettings = () => {
       if (!user) return false;
 
       const { error } = await supabase
-        .from('user_preferences')
-        .upsert({
-          user_id: user.id,
+        .from('profiles')
+        .update({
           notifications: notificationData
-        });
+        } as any)
+        .eq('id', user.id);
 
       setApiCallsCount(prev => prev + 1);
 
@@ -243,11 +243,11 @@ export const useSettings = () => {
       if (!user) return false;
 
       const { error } = await supabase
-        .from('user_preferences')
-        .upsert({
-          user_id: user.id,
+        .from('profiles')
+        .update({
           two_factor_enabled: securityData.two_factor_enabled
-        });
+        } as any)
+        .eq('id', user.id);
 
       setApiCallsCount(prev => prev + 1);
 

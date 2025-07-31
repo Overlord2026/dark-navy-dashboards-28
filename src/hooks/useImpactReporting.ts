@@ -79,7 +79,7 @@ export const useImpactReporting = () => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setReports(data || []);
+      setReports((data as any) || []);
     } catch (error) {
       console.error('Error fetching impact reports:', error);
       toast({
@@ -156,7 +156,7 @@ export const useImpactReporting = () => {
         .limit(4); // Last 4 periods
 
       if (error) throw error;
-      setNetworkSummary(data || []);
+      setNetworkSummary((data as any) || []);
     } catch (error) {
       console.error('Error fetching network summary:', error);
     }

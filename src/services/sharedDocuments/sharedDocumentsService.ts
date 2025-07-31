@@ -44,7 +44,7 @@ export const fetchSharedDocuments = async (userId: string): Promise<SharedDocume
   console.log('Professionals data:', professionalsData);
 
   // Transform the data to flatten the joined fields
-  const transformedData: SharedDocument[] = (sharedDocsWithDocuments || []).map(item => {
+  const transformedData: SharedDocument[] = ((sharedDocsWithDocuments as any) || []).map((item: any) => {
     const professional = professionalsData.find(p => p.id === item.professional_id);
     
     return {

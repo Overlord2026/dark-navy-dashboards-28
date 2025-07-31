@@ -56,8 +56,9 @@ export const useProfessionalManagement = () => {
             .from('professionals')
             .insert([{
               ...professional,
-              user_id: user.user.id
-            }])
+              user_id: user.user.id,
+              tenant_id: 'default'
+            } as any])
             .select()
             .single();
 

@@ -28,7 +28,7 @@ const CreateGoalPage = () => {
         .order('display_name');
 
       if (error) throw error;
-      setTemplates(data || []);
+      setTemplates((data as any) || []);
     } catch (error) {
       console.error('Error fetching goal templates:', error);
       toast({

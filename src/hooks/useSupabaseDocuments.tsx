@@ -63,7 +63,7 @@ export const useSupabaseDocuments = () => {
         return;
       }
 
-      setDocuments(data || []);
+      setDocuments((data as any) || []);
     } catch (error) {
       console.error('Error:', error);
       toast({
@@ -164,8 +164,9 @@ export const useSupabaseDocuments = () => {
           size: file.size,
           is_folder: false,
           parent_folder_id: parentFolderId,
-          uploaded_by: user.email || 'Unknown'
-        })
+          uploaded_by: user.email || 'Unknown',
+          tenant_id: 'default'
+        } as any)
         .select()
         .single();
 
@@ -188,7 +189,7 @@ export const useSupabaseDocuments = () => {
 
       // Refresh documents
       fetchDocuments();
-      return documentData;
+      return documentData as any;
 
     } catch (error) {
       console.error('Upload error:', error);
@@ -225,8 +226,9 @@ export const useSupabaseDocuments = () => {
           category,
           is_folder: true,
           parent_folder_id: parentFolderId,
-          size: 0
-        })
+          size: 0,
+          tenant_id: 'default'
+        } as any)
         .select()
         .single();
 
@@ -246,7 +248,7 @@ export const useSupabaseDocuments = () => {
       });
 
       fetchDocuments();
-      return data;
+      return data as any;
     } catch (error) {
       console.error('Error:', error);
       toast({

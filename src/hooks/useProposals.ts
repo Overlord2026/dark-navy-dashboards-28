@@ -61,7 +61,7 @@ export const useProposals = () => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setProposals(data || []);
+      setProposals((data as any) || []);
     } catch (error) {
       console.error('Error fetching proposals:', error);
       toast.error('Failed to load proposals');
@@ -74,7 +74,7 @@ export const useProposals = () => {
     try {
       const { data, error } = await supabase
         .from('draft_proposals')
-        .insert(proposalData)
+        .insert(proposalData as any)
         .select()
         .single();
 
@@ -94,7 +94,7 @@ export const useProposals = () => {
     try {
       const { data, error } = await supabase
         .from('draft_proposals')
-        .update(updates)
+        .update(updates as any)
         .eq('id', id)
         .select()
         .single();
@@ -138,7 +138,7 @@ export const useProposals = () => {
         .single();
 
       if (error) throw error;
-      return data;
+      return data as any;
     } catch (error) {
       console.error('Error fetching proposal:', error);
       toast.error('Failed to load proposal');
@@ -175,7 +175,7 @@ export const useInvestmentModels = () => {
         .order('name');
 
       if (error) throw error;
-      setModels(data || []);
+      setModels((data as any) || []);
     } catch (error) {
       console.error('Error fetching investment models:', error);
       toast.error('Failed to load investment models');
@@ -188,7 +188,7 @@ export const useInvestmentModels = () => {
     try {
       const { data, error } = await supabase
         .from('investment_models')
-        .insert(modelData)
+        .insert(modelData as any)
         .select()
         .single();
 

@@ -55,7 +55,7 @@ export const useSupabaseProfessionals = () => {
       }
 
       // Transform Supabase data to match frontend interface
-      const transformedProfessionals: Professional[] = (data || []).map(prof => ({
+      const transformedProfessionals: Professional[] = ((data as any) || []).map((prof: any) => ({
         id: prof.id,
         name: prof.name,
         email: prof.email,
@@ -102,7 +102,8 @@ export const useSupabaseProfessionals = () => {
           user_id: user.id,
           name: professional.name,
           email: professional.email,
-          type: professional.type,
+          professional_type: professional.type,
+          tenant_id: 'default',
           company: professional.company,
           phone: professional.phone,
           website: professional.website,

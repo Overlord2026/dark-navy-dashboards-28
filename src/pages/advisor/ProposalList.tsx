@@ -42,7 +42,7 @@ export const ProposalList: React.FC = () => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setProposals(data || []);
+      setProposals((data as any) || []);
     } catch (error) {
       console.error('Error fetching proposals:', error);
       toast.error('Failed to load proposals');

@@ -76,7 +76,7 @@ const GoalFormPage = () => {
           ...formData,
           user_id: (await supabase.auth.getUser()).data.user?.id,
           status: 'active'
-        }])
+        } as any])
         .select()
         .single();
 

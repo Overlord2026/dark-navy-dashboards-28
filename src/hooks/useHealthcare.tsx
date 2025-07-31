@@ -103,7 +103,7 @@ export const useHealthcare = () => {
           variant: "destructive"
         });
       } else {
-        setDocuments(documentsData || []);
+        setDocuments((documentsData as any) || []);
       }
 
       // Fetch prescriptions
@@ -156,7 +156,7 @@ export const useHealthcare = () => {
           document_name: item.healthcare_documents?.name,
           document_type: item.healthcare_documents?.type,
         }));
-        setSharedDocuments(formattedSharedDocs);
+        setSharedDocuments(formattedSharedDocs as any);
       }
 
     } catch (error) {
@@ -255,7 +255,7 @@ export const useHealthcare = () => {
 
       // Refresh documents
       fetchHealthcareData();
-      return documentData;
+      return documentData as any;
 
     } catch (error) {
       console.error('Upload error:', error);

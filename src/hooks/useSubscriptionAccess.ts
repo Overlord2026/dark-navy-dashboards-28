@@ -54,13 +54,13 @@ export function useSubscriptionAccess() {
       }
 
       if (profile) {
-        const tier = profile.subscription_tier || 'free';
+        const tier = (profile as any).subscription_tier || 'free';
         setSubscriptionPlan({
           subscription_tier: tier,
-          subscription_status: profile.subscription_status || 'inactive',
-          subscription_end_date: profile.subscription_end_date,
-          stripe_customer_id: profile.stripe_customer_id,
-          stripe_subscription_id: profile.stripe_subscription_id,
+          subscription_status: (profile as any).subscription_status || 'inactive',
+          subscription_end_date: (profile as any).subscription_end_date,
+          stripe_customer_id: (profile as any).stripe_customer_id,
+          stripe_subscription_id: (profile as any).stripe_subscription_id,
           tier: tier, // Alias for backward compatibility
           add_ons: {
             lending_access: tier === 'premium' || tier === 'elite',
@@ -86,7 +86,7 @@ export function useSubscriptionAccess() {
             ai_queries_limit: tier === 'free' ? 10 : tier === 'basic' ? 100 : 999,
             document_uploads_limit: tier === 'free' ? 5 : tier === 'basic' ? 25 : 999,
           },
-          is_active: profile.subscription_status === 'active',
+          is_active: (profile as any).subscription_status === 'active',
         });
       }
     } catch (error) {

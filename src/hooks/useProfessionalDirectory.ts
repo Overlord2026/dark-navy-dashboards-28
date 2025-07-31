@@ -61,38 +61,26 @@ export const useProfessionalDirectory = () => {
     try {
       const { data, error } = await supabase
         .from('professionals')
-        .select(`
-          *,
-          professional_users!inner(
-            user_id,
-            profiles!inner(
-              first_name,
-              last_name,
-              email,
-              phone
-            )
-          )
-        `)
-        .eq('status', 'active');
+        .select('*');
 
       if (error) throw error;
       
-      const formattedData = data?.map(prof => ({
+      const formattedData = data?.map((prof: any) => ({
         id: prof.id,
-        user_id: prof.professional_users.user_id,
-        name: `${prof.professional_users.profiles.first_name} ${prof.professional_users.profiles.last_name}`,
-        email: prof.professional_users.profiles.email,
-        phone: prof.professional_users.profiles.phone,
-        specialty: prof.specialty,
-        business_name: prof.business_name,
+        user_id: prof.professional_users?.user_id || prof.user_id,
+        name: prof.professional_users?.profiles ? `${prof.professional_users.profiles.first_name} ${prof.professional_users.profiles.last_name}` : prof.name,
+        email: prof.professional_users?.profiles?.email || prof.email,
+        phone: prof.professional_users?.profiles?.phone || prof.phone,
+        specialty: prof.professional_type || prof.specialty,
+        business_name: prof.company || prof.business_name,
         bio: prof.bio,
-        website_url: prof.website,
-        office_address: prof.office_address,
-        is_verified: prof.is_verified,
-        years_experience: prof.years_experience,
+        website_url: prof.website_url || prof.website,
+        office_address: prof.address || prof.office_address,
+        is_verified: prof.verified || prof.is_verified || false,
+        years_experience: prof.experience_years || prof.years_experience,
         hourly_rate: prof.hourly_rate,
         rating: prof.rating,
-        total_reviews: prof.review_count,
+        total_reviews: prof.reviews_count || prof.review_count || 0,
         availability_status: prof.availability_status || 'available',
         created_at: prof.created_at
       })) || [];
@@ -114,52 +102,38 @@ export const useProfessionalDirectory = () => {
     try {
       const { data, error } = await supabase
         .from('professional_assignments')
-        .select(`
-          *,
-          professionals!inner(
-            *,
-            professional_users!inner(
-              user_id,
-              profiles!inner(
-                first_name,
-                last_name,
-                email,
-                phone
-              )
-            )
-          )
-        `)
-        .eq('client_user_id', user.id);
+        .select('*')
+        .eq('client_id', user.id);
 
       if (error) throw error;
 
-      const formattedRelationships = data?.map(rel => ({
+      const formattedRelationships = data?.map((rel: any) => ({
         id: rel.id,
-        client_user_id: rel.client_user_id,
-        professional_user_id: rel.professional_user_id,
-        professional: {
+        client_user_id: rel.client_id || rel.client_user_id,
+        professional_user_id: rel.professional_id || rel.professional_user_id,
+        professional: rel.professionals ? {
           id: rel.professionals.id,
-          user_id: rel.professionals.professional_users.user_id,
-          name: `${rel.professionals.professional_users.profiles.first_name} ${rel.professionals.professional_users.profiles.last_name}`,
-          email: rel.professionals.professional_users.profiles.email,
-          phone: rel.professionals.professional_users.profiles.phone,
-          specialty: rel.professionals.specialty,
-          business_name: rel.professionals.business_name,
+          user_id: rel.professionals.professional_users?.user_id || rel.professionals.user_id,
+          name: rel.professionals.professional_users?.profiles ? `${rel.professionals.professional_users.profiles.first_name} ${rel.professionals.professional_users.profiles.last_name}` : rel.professionals.name,
+          email: rel.professionals.professional_users?.profiles?.email || rel.professionals.email,
+          phone: rel.professionals.professional_users?.profiles?.phone || rel.professionals.phone,
+          specialty: rel.professionals.professional_type || rel.professionals.specialty,
+          business_name: rel.professionals.company || rel.professionals.business_name,
           bio: rel.professionals.bio,
-          website_url: rel.professionals.website,
-          office_address: rel.professionals.office_address,
-          is_verified: rel.professionals.is_verified,
-          years_experience: rel.professionals.years_experience,
+          website_url: rel.professionals.website_url || rel.professionals.website,
+          office_address: rel.professionals.address || rel.professionals.office_address,
+          is_verified: rel.professionals.verified || rel.professionals.is_verified || false,
+          years_experience: rel.professionals.experience_years || rel.professionals.years_experience,
           hourly_rate: rel.professionals.hourly_rate,
           rating: rel.professionals.rating,
-          total_reviews: rel.professionals.review_count,
+          total_reviews: rel.professionals.reviews_count || rel.professionals.review_count || 0,
           availability_status: rel.professionals.availability_status || 'available',
           created_at: rel.professionals.created_at
-        },
-        relationship_type: rel.relationship_type || 'primary',
+        } : undefined,
+        relationship_type: rel.relationship || rel.relationship_type || 'primary',
         status: rel.status,
         invited_by: rel.assigned_by,
-        accepted_at: rel.created_at,
+        accepted_at: rel.start_date || rel.created_at,
         notes: rel.notes,
         created_at: rel.created_at
       })) || [];
@@ -182,11 +156,11 @@ export const useProfessionalDirectory = () => {
       const { data, error } = await supabase
         .from('professional_invitations')
         .select('*')
-        .eq('invited_by_user_id', user.id)
+        .eq('invited_by', user.id)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setInvitations(data || []);
+      setInvitations((data as any) || []);
     } catch (error) {
       console.error('Error fetching invitations:', error);
     }
@@ -204,13 +178,12 @@ export const useProfessionalDirectory = () => {
         .from('professional_invitations')
         .insert({
           email,
-          invited_by_user_id: user.id,
-          professional_type: specialty,
-          invitation_token,
-          custom_message: message,
+          invited_by: user.id,
+          invited_as: specialty,
+          invite_token: invitation_token,
           expires_at: expires_at.toISOString(),
           status: 'pending'
-        })
+        } as any)
         .select()
         .single();
 
@@ -242,12 +215,12 @@ export const useProfessionalDirectory = () => {
       const { data, error } = await supabase
         .from('professional_assignments')
         .insert({
-          client_user_id: user.id,
-          professional_user_id: professionalUserId,
-          relationship_type: relationshipType,
+          client_id: user.id,
+          professional_id: professionalUserId,
+          relationship: relationshipType,
           status: 'active',
           assigned_by: user.id
-        })
+        } as any)
         .select()
         .single();
 

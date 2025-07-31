@@ -40,7 +40,7 @@ const GoalDetailPage = () => {
         .single();
 
       if (error) throw error;
-      setGoal(data);
+        setGoal(data as any);
       setProgressAmount(data.current_amount);
     } catch (error) {
       console.error('Error fetching goal:', error);
@@ -67,7 +67,7 @@ const GoalDetailPage = () => {
         .single();
 
       if (error) throw error;
-      setGoal(data);
+        setGoal(data as any);
       toast({
         title: "Progress Updated!",
         description: "Your goal progress has been updated successfully.",
@@ -98,7 +98,7 @@ const GoalDetailPage = () => {
         .single();
 
       if (error) throw error;
-      setGoal(data);
+        setGoal(data as any);
       toast({
         title: "Congratulations! 🎉",
         description: "You've achieved your goal! Time to celebrate!",
@@ -151,7 +151,7 @@ const GoalDetailPage = () => {
         .single();
 
       if (error) throw error;
-      setGoal(data);
+      setGoal(data as any);
       setExperienceUpdate("");
       toast({
         title: "Experience Story Updated!",
