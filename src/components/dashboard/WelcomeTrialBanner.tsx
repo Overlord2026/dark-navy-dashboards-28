@@ -84,11 +84,11 @@ export function WelcomeTrialBanner({ onDismiss }: WelcomeTrialBannerProps) {
           </div>
         </div>
         
-        <div className="flex justify-between items-center mt-2">
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-3 mt-2">
           <p className="text-sm text-muted-foreground">
             Ready to begin?
           </p>
-          <Button size="sm" onClick={onDismiss} variant="outline">
+          <Button size="sm" onClick={onDismiss} variant="outline" className="w-full sm:w-auto whitespace-nowrap">
             Get Started
           </Button>
         </div>
