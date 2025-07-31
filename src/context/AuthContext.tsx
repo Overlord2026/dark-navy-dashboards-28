@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
+import { shouldEnforceAuthentication, isQABypassAllowed } from '@/utils/environment';
 
 interface UserProfile {
   id: string;
@@ -32,6 +33,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   isEmailConfirmed: boolean;
+  isQABypassActive: boolean;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string; requires2FA?: boolean; userId?: string }>;
   signup: (email: string, password: string, userData?: any) => Promise<{ success: boolean; error?: string }>;
   signInWithGoogle: () => Promise<{ success: boolean; error?: string }>;
@@ -51,6 +53,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isChecking2FA, setIsChecking2FA] = useState(false);
+  const [isQABypassActive, setIsQABypassActive] = useState(false);
 
   // Helper function to safely parse date from database
   const parseDateSafely = (dateString: string): Date => {
@@ -93,7 +96,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           dateOfBirth = parseDateSafely(profile.date_of_birth);
         }
 
-        setUserProfile({
+        const userProfileData = {
           id: profile.id,
           name: profile.display_name || `${profile.first_name || ''} ${profile.last_name || ''}`.trim(),
           displayName: profile.display_name,
@@ -114,7 +117,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           tenant_id: profile.tenant_id,
           segments: profile.segments,
           advisor_role: profile.advisor_role
-        });
+        };
+        
+        setUserProfile(userProfileData);
+        setIsQABypassActive(isQABypassAllowed(profile.email));
       }
     } catch (error) {
       console.error('Error in loadUserProfile:', error);
@@ -148,6 +154,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           }, 0);
         } else {
           setUserProfile(null);
+          setIsQABypassActive(false);
         }
         
         setIsLoading(false);
@@ -402,6 +409,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         isAuthenticated: !!user && !isChecking2FA,
         isLoading,
         isEmailConfirmed,
+        isQABypassActive,
         login,
         signup,
         signInWithGoogle,

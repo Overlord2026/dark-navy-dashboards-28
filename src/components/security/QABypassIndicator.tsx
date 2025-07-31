@@ -1,16 +1,14 @@
 import React from 'react';
+import { useAuth } from '@/context/AuthContext';
 import { Shield, AlertTriangle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { getEnvironmentConfig, isQABypassAllowed } from '@/utils/environment';
+import { getEnvironmentConfig } from '@/utils/environment';
 
 export const QABypassIndicator: React.FC = () => {
+  const { isQABypassActive, userProfile } = useAuth();
   const env = getEnvironmentConfig();
-  
-  // Simple check for QA bypass without requiring auth context
-  const showBypass = !env.isProduction && isQABypassAllowed() && 
-    (typeof window !== 'undefined' && window.location.hostname.includes('lovableproject.com'));
 
-  if (!showBypass) {
+  if (!isQABypassActive || env.isProduction) {
     return null;
   }
 
