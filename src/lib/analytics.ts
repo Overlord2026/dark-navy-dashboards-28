@@ -2,7 +2,7 @@
 import posthog from 'posthog-js';
 
 // PostHog configuration
-const POSTHOG_KEY = 'phc_your_posthog_key_here'; // Replace with actual key
+const POSTHOG_KEY = 'phc_Yc8jTGjpIN3vMS0YSvT6ZpOZ7UhEwnyBaUhI2i8ec46'; // Replace with actual key
 const POSTHOG_HOST = 'https://us.i.posthog.com'; // US instance
 
 export const initializeAnalytics = () => {
