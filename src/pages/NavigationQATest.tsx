@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { DashboardHeader } from "@/components/ui/DashboardHeader";
-import NavigationQATestSuite from "@/components/qa/NavigationQATestSuite";
+import ComprehensiveQATestSuite from "@/components/qa/ComprehensiveQATestSuite";
 import { measureRoutePerformance } from "@/services/performance/performanceMonitorService";
 import { useAuth } from "@/context/AuthContext";
 import { Navigate } from "react-router-dom";
@@ -33,7 +33,7 @@ const NavigationQATest: React.FC = () => {
       />
       
       <div className="grid grid-cols-1 gap-6">
-        <NavigationQATestSuite />
+        <ComprehensiveQATestSuite />
       </div>
     </div>
   );
