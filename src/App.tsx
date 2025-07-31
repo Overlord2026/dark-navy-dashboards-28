@@ -51,6 +51,7 @@ import { LegalDocumentsPage } from "./pages/LegalDocumentsPage";
 import { InsurancePoliciesPage } from "./pages/InsurancePoliciesPage";
 import { InvestmentStrategiesPage } from "./pages/InvestmentStrategiesPage";
 import { EducationalContentPage } from "./pages/EducationalContentPage";
+import EducationHub from "./pages/EducationHub";
 import { TrainingModulesPage } from "./pages/TrainingModulesPage";
 import { ProfessionalsDirectoryPage } from "./pages/ProfessionalsDirectoryPage";
 import { DocumentUploadPage } from "./pages/DocumentUploadPage";
@@ -317,6 +318,14 @@ const App = () => {
                     element={
                       <AuthWrapper requireAuth={true}>
                         <EducationalContentPage />
+                      </AuthWrapper>
+                    }
+                  />
+                  <Route
+                    path="/education"
+                    element={
+                      <AuthWrapper requireAuth={true}>
+                        <EducationHub />
                       </AuthWrapper>
                     }
                   />
