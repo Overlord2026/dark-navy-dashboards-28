@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, Link, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,6 +9,7 @@ import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
 import { Chrome } from "lucide-react";
 import OTPVerification from "@/components/auth/OTPVerification";
+import { HCaptchaComponent, HCaptchaRef } from "@/components/auth/HCaptcha";
 import { supabase } from "@/lib/supabase";
 
 // Google Logo Component
@@ -47,6 +48,9 @@ export default function Auth() {
   const [showOTPVerification, setShowOTPVerification] = useState(false);
   const [loginUserId, setLoginUserId] = useState<string | null>(null);
   const [tempCredentials, setTempCredentials] = useState<{email: string, password: string} | null>(null);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const signInCaptchaRef = useRef<HCaptchaRef>(null);
+  const signUpCaptchaRef = useRef<HCaptchaRef>(null);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { isAuthenticated, login, signup, signInWithGoogle, resendConfirmation, resetPassword, complete2FALogin } = useAuth();
@@ -72,11 +76,26 @@ export default function Auth() {
     setLoading(true);
 
     try {
+      // Get CAPTCHA token before proceeding
+      let captchaResponse: string | null = null;
+      
+      if (isSignUp && signUpCaptchaRef.current) {
+        captchaResponse = await signUpCaptchaRef.current.executeAsync();
+      } else if (!isSignUp && signInCaptchaRef.current) {
+        captchaResponse = await signInCaptchaRef.current.executeAsync();
+      }
+
+      if (!captchaResponse) {
+        toast.error('Please complete the CAPTCHA verification');
+        setLoading(false);
+        return;
+      }
       if (isSignUp) {
         const result = await signup(email, password, {
           first_name: firstName,
           last_name: lastName,
           display_name: `${firstName} ${lastName}`,
+          captcha_token: captchaResponse,
         });
 
         if (result.success) {
@@ -98,7 +117,7 @@ export default function Auth() {
           }
         }
       } else {
-        const result = await login(email, password);
+        const result = await login(email, password, captchaResponse);
         console.log('Login result:', result);
 
         if (result.success) {
@@ -158,6 +177,12 @@ export default function Auth() {
       console.error('Auth error:', error);
     } finally {
       setLoading(false);
+      // Reset CAPTCHA on error
+      if (isSignUp && signUpCaptchaRef.current) {
+        signUpCaptchaRef.current.resetCaptcha();
+      } else if (!isSignUp && signInCaptchaRef.current) {
+        signInCaptchaRef.current.resetCaptcha();
+      }
     }
   };
 
@@ -486,8 +511,18 @@ export default function Auth() {
                     >
                       Forgot Password?
                     </button>
-                  </div>
+                </div>
                 )}
+                
+                <HCaptchaComponent 
+                  ref={isSignUp ? signUpCaptchaRef : signInCaptchaRef}
+                  onVerify={(token) => setCaptchaToken(token)}
+                  onExpire={() => setCaptchaToken(null)}
+                  onError={(error) => {
+                    toast.error('CAPTCHA error. Please refresh and try again.');
+                    console.error('CAPTCHA error:', error);
+                  }}
+                />
                 
                 <Button 
                   type="submit" 
