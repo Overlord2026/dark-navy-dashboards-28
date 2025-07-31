@@ -41,6 +41,8 @@ import { AttorneyDashboard } from "./pages/AttorneyDashboard";
 import { AdminRoute } from "@/components/auth/AdminRoute";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { DiagnosticsPage } from "./pages/DiagnosticsPage";
+import NavigationDiagnostics from "./pages/NavigationDiagnostics";
+import NavigationQATest from "./pages/NavigationQATest";
 import { AuthTestSuite } from "./components/test/AuthTestSuite";
 import { SettingsPage } from "./pages/SettingsPage";
 import { HealthRecordsPage } from "./pages/HealthRecordsPage";
@@ -857,8 +859,20 @@ const App = () => {
                       }
                     />
 
-                    {/* QA Testing Routes removed for production */}
-                    {/* QA brand audit route removed for production */}
+                     {/* Navigation & QA Testing Routes */}
+                     <Route path="/navigation-diagnostics" element={
+                       <ProtectedRoute>
+                         <NavigationDiagnostics />
+                       </ProtectedRoute>
+                     } />
+                     <Route path="/navigation-qa-test" element={
+                       <ProtectedRoute>
+                         <NavigationQATest />
+                       </ProtectedRoute>
+                     } />
+                     
+                     {/* QA Testing Routes removed for production */}
+                     {/* QA brand audit route removed for production */}
                     
                     <Route path="/access-denied" element={<AccessDeniedPage />} />
                    <Route path="*" element={<NotFoundPage />} />
