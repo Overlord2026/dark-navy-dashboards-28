@@ -41,6 +41,7 @@ import { AttorneyDashboard } from "./pages/AttorneyDashboard";
 import { AdminRoute } from "@/components/auth/AdminRoute";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { DiagnosticsPage } from "./pages/DiagnosticsPage";
+import { AuthTestSuite } from "./components/test/AuthTestSuite";
 import { SettingsPage } from "./pages/SettingsPage";
 import { HealthRecordsPage } from "./pages/HealthRecordsPage";
 import { FinancialPlanningPage } from "./pages/FinancialPlanningPage";
@@ -250,6 +251,14 @@ const App = () => {
                         allowedRoles={['developer', 'consultant']}
                       >
                         <DiagnosticsPage />
+                      </AuthWrapper>
+                    }
+                  />
+                  <Route
+                    path="/auth-test"
+                    element={
+                      <AuthWrapper requireAuth={false}>
+                        <AuthTestSuite />
                       </AuthWrapper>
                     }
                   />

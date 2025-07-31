@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User, Session } from '@supabase/supabase-js';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
 import { shouldEnforceAuthentication, isQABypassAllowed } from '@/utils/environment';
 
 interface UserProfile {
@@ -111,12 +111,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           dateOfBirth: dateOfBirth,
           phone: profile.phone,
           investorType: profile.investor_type,
-          role: profile.role || 'client',
+          role: (profile.role as UserProfile['role']) || 'client',
           permissions: profile.permissions || [],
           twoFactorEnabled: profile.two_factor_enabled || false,
           tenant_id: profile.tenant_id,
-          segments: profile.segments,
-          advisor_role: profile.advisor_role
+          segments: profile.client_segment ? [profile.client_segment] : [],
+          advisor_role: profile.role === 'advisor' ? profile.role : undefined
         };
         
         setUserProfile(userProfileData);
