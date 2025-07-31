@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import { SecureMessagesPage } from "./pages/SecureMessagesPage";
 import { HomePage } from "./pages/TabPages";
 import { AnnuitiesPage } from "./pages/AnnuitiesPage";
+import NotFoundPage from "./components/errors/404Page";
 import NoticesPage from "./pages/NoticesPage";
 import InsurancePage from "./pages/InsurancePage";
 import LendingDashboard from "./pages/LendingDashboard";
@@ -272,4 +273,9 @@ export const router = createBrowserRouter([
     element: <SecureMessagesPage />
   },
   // QA routes removed for production security
+  // 404 catch-all route
+  {
+    path: "*",
+    element: <NotFoundPage />
+  }
 ]);
