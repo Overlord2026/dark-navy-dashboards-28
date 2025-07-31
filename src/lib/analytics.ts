@@ -3,7 +3,7 @@ import posthog from 'posthog-js';
 
 // PostHog configuration
 const POSTHOG_KEY = 'phc_your_posthog_key_here'; // Replace with actual key
-const POSTHOG_HOST = 'https://app.posthog.com'; // Or your self-hosted instance
+const POSTHOG_HOST = 'https://us.i.posthog.com'; // US instance
 
 export const initializeAnalytics = () => {
   if (typeof window !== 'undefined') {
