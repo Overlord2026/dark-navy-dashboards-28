@@ -79,6 +79,9 @@ import { ContractAnalyzer } from "./components/annuities/ContractAnalyzer";
 import { AnnuityCalculators } from "./components/annuities/calculators/AnnuityCalculators";
 import { AnnuityMarketplace } from "./components/annuities/marketplace/AnnuityMarketplace";
 import { FiduciaryReview } from "./components/annuities/FiduciaryReview";
+import ClientsPage from "./pages/advisor/ClientsPage";
+import ProspectsPage from "./pages/advisor/ProspectsPage";
+import WealthOverviewPage from "./pages/WealthOverviewPage";
 
 const queryClient = new QueryClient();
 
@@ -463,12 +466,44 @@ const App = () => {
                         <ProposalWizard />
                       </AuthWrapper>
                     }
-                  />
+                   />
 
-                  {/* QA Testing Routes removed for production */}
-                  {/* QA brand audit route removed for production */}
-                  
-                  <Route path="/access-denied" element={<AccessDeniedPage />} />
+                   {/* Additional Pages for Missing Routes */}
+                   <Route
+                     path="/advisor/clients"
+                     element={
+                       <AuthWrapper
+                         requireAuth={true}
+                         allowedRoles={['advisor', 'admin', 'tenant_admin', 'system_administrator']}
+                       >
+                         <ClientsPage />
+                       </AuthWrapper>
+                     }
+                   />
+                   <Route
+                     path="/advisor/prospects" 
+                     element={
+                       <AuthWrapper
+                         requireAuth={true}
+                         allowedRoles={['advisor', 'admin', 'tenant_admin', 'system_administrator']}
+                       >
+                         <ProspectsPage />
+                       </AuthWrapper>
+                     }
+                   />
+                   <Route
+                     path="/wealth"
+                     element={
+                       <AuthWrapper requireAuth={true}>
+                         <WealthOverviewPage />
+                       </AuthWrapper>
+                     }
+                   />
+
+                   {/* QA Testing Routes removed for production */}
+                   {/* QA brand audit route removed for production */}
+                   
+                   <Route path="/access-denied" element={<AccessDeniedPage />} />
                   <Route path="*" element={<NotFoundPage />} />
                 </Routes>
                 </div>
