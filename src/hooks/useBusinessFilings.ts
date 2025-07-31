@@ -89,12 +89,12 @@ export const useBusinessFilings = () => {
     try {
       const updateData = { ...updates };
       if (updateData.due_date) {
-        updateData.due_date = updateData.due_date.toISOString().split('T')[0] as any;
+        (updateData as any).due_date = updateData.due_date.toISOString().split('T')[0];
       }
 
       const { data, error } = await supabase
         .from('business_filings')
-        .update(updateData)
+        .update(updateData as any)
         .eq('id', id)
         .eq('user_id', user.id)
         .select()

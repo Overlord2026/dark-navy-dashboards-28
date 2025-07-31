@@ -65,7 +65,7 @@ export function RetirementPlansProvider({ children }: { children: React.ReactNod
         return;
       }
 
-      setPlans(data || []);
+      setPlans((data || []) as any);
     } catch (error) {
       console.error('Error:', error);
       toast.error('An unexpected error occurred');
@@ -100,9 +100,9 @@ export function RetirementPlansProvider({ children }: { children: React.ReactNod
         return null;
       }
 
-      setPlans(prev => [data, ...prev]);
+      setPlans(prev => [data as any, ...prev]);
       toast.success('Retirement plan added successfully');
-      return data;
+      return data as any;
     } catch (error) {
       console.error('Error:', error);
       toast.error('An unexpected error occurred');

@@ -59,7 +59,7 @@ export function InvestmentAccountsProvider({ children }: { children: React.React
         return;
       }
 
-      setAccounts(data || []);
+      setAccounts((data || []) as any);
     } catch (error) {
       console.error('Error:', error);
       toast.error('An unexpected error occurred');
@@ -94,9 +94,9 @@ export function InvestmentAccountsProvider({ children }: { children: React.React
         return null;
       }
 
-      setAccounts(prev => [data, ...prev]);
+      setAccounts(prev => [data as any, ...prev]);
       toast.success('Investment account added successfully');
-      return data;
+      return data as any;
     } catch (error) {
       console.error('Error:', error);
       toast.error('An unexpected error occurred');

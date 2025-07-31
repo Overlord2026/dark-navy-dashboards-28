@@ -96,7 +96,8 @@ export const HealthcareDocumentManager: React.FC = () => {
           type: uploadForm.type,
           file_path: uploadResult.filePath,
           content_type: uploadResult.contentType,
-          size: uploadResult.size
+          size: uploadResult.size,
+          user_id: 'temp-user-id'
         })
         .select()
         .single();

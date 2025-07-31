@@ -99,7 +99,7 @@ export function TransfersProvider({ children }: { children: React.ReactNode }) {
       }
 
       console.log('TransfersContext: Successfully loaded transfers:', data?.length || 0);
-      setTransfers(data || []);
+      setTransfers((data || []) as any);
     } catch (error) {
       console.error('Unexpected error fetching transfers:', error);
       toast({

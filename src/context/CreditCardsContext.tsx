@@ -90,9 +90,9 @@ export const CreditCardsProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
   const addCreditCard = async (data: CreditCardFormData) => {
     try {
-      const { data: newCard, error } = await supabase
+    const { data: newCard, error } = await supabase
         .from('credit_cards')
-        .insert([data])
+        .insert([{ ...data, user_id: 'temp-user-id' }])
         .select()
         .single();
 

@@ -141,7 +141,8 @@ export const ProjectCalendar: React.FC<ProjectCalendarProps> = ({ projectId }) =
             description: newEvent.description,
             due_date: newEvent.start,
             priority: 'medium',
-            status: 'todo'
+            status: 'todo',
+            created_by: 'temp-user-id'
           });
 
         if (error) throw error;

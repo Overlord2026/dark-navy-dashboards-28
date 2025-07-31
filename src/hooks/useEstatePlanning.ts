@@ -78,7 +78,7 @@ export const useEstatePlanning = () => {
         return;
       }
 
-      setDocuments(data || []);
+      setDocuments((data || []) as any);
     } catch (error) {
       console.error('Error fetching documents:', error);
     }
@@ -132,7 +132,7 @@ export const useEstatePlanning = () => {
         throw error;
       }
 
-      setDocuments(prev => [newDocument, ...prev]);
+      setDocuments(prev => [newDocument as any, ...prev]);
       toast.success('Document created successfully');
     } catch (error) {
       console.error('Error creating document:', error);
@@ -159,7 +159,7 @@ export const useEstatePlanning = () => {
       }
 
       setDocuments(prev => 
-        prev.map(doc => doc.id === id ? updatedDocument : doc)
+        prev.map(doc => doc.id === id ? updatedDocument as any : doc)
       );
       toast.success('Document updated successfully');
     } catch (error) {

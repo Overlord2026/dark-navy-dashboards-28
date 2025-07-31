@@ -21,7 +21,7 @@ export const useGoals = () => {
         .order('sort_order', { ascending: true });
 
       if (error) throw error;
-      setGoals(data || []);
+      setGoals((data || []) as any);
     } catch (error) {
       toast({
         title: "Error",
@@ -41,7 +41,7 @@ export const useGoals = () => {
       const { data, error } = await supabase
         .from('user_goals')
         .insert([{
-          ...goalData,
+          ...goalData as any,
           user_id: user.user.id,
           status: 'active'
         }])
@@ -50,7 +50,7 @@ export const useGoals = () => {
 
       if (error) throw error;
 
-      setGoals(prev => [...prev, data]);
+      setGoals(prev => [...prev, data as any]);
       toast({
         title: "Success!",
         description: "Your goal has been created successfully.",
@@ -71,14 +71,14 @@ export const useGoals = () => {
     try {
       const { data, error } = await supabase
         .from('user_goals')
-        .update(updates)
+        .update(updates as any)
         .eq('id', id)
         .select()
         .single();
 
       if (error) throw error;
 
-      setGoals(prev => prev.map(goal => goal.id === id ? data : goal));
+      setGoals(prev => prev.map(goal => goal.id === id ? data as any : goal));
       toast({
         title: "Updated!",
         description: "Your goal has been updated successfully.",
@@ -134,7 +134,7 @@ export const useGoals = () => {
 
       if (error) throw error;
 
-      setGoals(prev => prev.map(goal => goal.id === id ? data : goal));
+      setGoals(prev => prev.map(goal => goal.id === id ? data as any : goal));
       toast({
         title: "Congratulations! 🎉",
         description: "You've achieved your goal! Time to celebrate!",
@@ -162,7 +162,7 @@ export const useGoals = () => {
 
       if (error) throw error;
 
-      setGoals(prev => prev.map(goal => goal.id === id ? data : goal));
+      setGoals(prev => prev.map(goal => goal.id === id ? data as any : goal));
       return data;
     } catch (error) {
       toast({
@@ -226,7 +226,7 @@ export const useGoalTemplates = () => {
         .order('display_name');
 
       if (error) throw error;
-      setTemplates(data || []);
+      setTemplates((data || []) as any);
     } catch (error) {
       toast({
         title: "Error",

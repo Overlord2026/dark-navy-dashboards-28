@@ -82,7 +82,7 @@ export const useEntityManagement = () => {
         .order('entity_name');
 
       if (error) throw error;
-      setEntities(data || []);
+      setEntities((data || []) as any);
     } catch (error) {
       console.error('Error fetching entities:', error);
       toast.error('Failed to load business entities');
@@ -109,7 +109,7 @@ export const useEntityManagement = () => {
       const { data, error } = await query;
 
       if (error) throw error;
-      setFilings(data || []);
+      setFilings((data || []) as any);
     } catch (error) {
       console.error('Error fetching filings:', error);
       toast.error('Failed to load filing schedules');
@@ -132,7 +132,7 @@ export const useEntityManagement = () => {
         .order('due_date');
 
       if (error) throw error;
-      setAlerts(data || []);
+      setAlerts((data || []) as any);
     } catch (error) {
       console.error('Error fetching alerts:', error);
       toast.error('Failed to load compliance alerts');
@@ -154,7 +154,7 @@ export const useEntityManagement = () => {
 
       if (error) throw error;
 
-      setEntities(prev => [...prev, data]);
+      setEntities(prev => [...prev, data as any]);
       toast.success('Business entity created successfully');
       return data;
     } catch (error) {
@@ -176,7 +176,7 @@ export const useEntityManagement = () => {
       if (error) throw error;
 
       setEntities(prev => prev.map(entity => 
-        entity.id === id ? { ...entity, ...data } : entity
+        entity.id === id ? { ...entity, ...data as any } : entity
       ));
       toast.success('Entity updated successfully');
       return data;
@@ -214,7 +214,7 @@ export const useEntityManagement = () => {
 
       if (error) throw error;
 
-      setFilings(prev => [...prev, data]);
+      setFilings(prev => [...prev, data as any]);
       toast.success('Filing schedule created successfully');
       return data;
     } catch (error) {
@@ -236,7 +236,7 @@ export const useEntityManagement = () => {
       if (error) throw error;
 
       setFilings(prev => prev.map(filing => 
-        filing.id === id ? { ...filing, ...data } : filing
+        filing.id === id ? { ...filing, ...data as any } : filing
       ));
       toast.success('Filing updated successfully');
       return data;

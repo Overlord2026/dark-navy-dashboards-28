@@ -43,7 +43,7 @@ export const ProfessionalComplianceDashboard = () => {
         .order('expiration_date');
 
       if (error) throw error;
-      setCredentials(data || []);
+      setCredentials((data || []) as any);
     } catch (error) {
       console.error('Error fetching credentials:', error);
       toast.error('Failed to load professional credentials');

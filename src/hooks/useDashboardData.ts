@@ -249,12 +249,12 @@ export const useDashboardData = () => {
       }
 
       setAssets(assetsResult.data || []);
-      setLiabilities(liabilitiesResult.data || []);
+      setLiabilities((liabilitiesResult.data || []) as any);
       setPreviousSnapshot(snapshotResult);
 
       // Create snapshot with current totals (will be calculated by memoized values)
       const currentAssets = (assetsResult.data || []).reduce((sum, asset) => sum + Number(asset.value || 0), 0);
-      const currentLiabilities = (liabilitiesResult.data || []).reduce((sum, liability) => sum + Number(liability.amount || 0), 0);
+      const currentLiabilities = (liabilitiesResult.data || []).reduce((sum, liability) => sum + Number((liability as any).amount || (liability as any).current_balance || 0), 0);
       const currentNetWorth = currentAssets - currentLiabilities;
 
       await createDailySnapshot(currentAssets, currentLiabilities, currentNetWorth);

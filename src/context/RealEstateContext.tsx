@@ -61,7 +61,7 @@ export function RealEstateProvider({ children }: { children: React.ReactNode }) 
         return;
       }
 
-      setProperties(data || []);
+      setProperties((data || []) as any);
     } catch (error) {
       console.error('Error:', error);
       toast.error('An unexpected error occurred');
@@ -96,9 +96,9 @@ export function RealEstateProvider({ children }: { children: React.ReactNode }) 
         return null;
       }
 
-      setProperties(prev => [data, ...prev]);
+      setProperties(prev => [data as any, ...prev]);
       toast.success('Real estate property added successfully');
-      return data;
+      return data as any;
     } catch (error) {
       console.error('Error:', error);
       toast.error('An unexpected error occurred');

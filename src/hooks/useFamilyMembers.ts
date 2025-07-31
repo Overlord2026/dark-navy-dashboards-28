@@ -46,7 +46,7 @@ export const useFamilyMembers = () => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setFamilyMembers(data || []);
+      setFamilyMembers((data || []) as any);
     } catch (error) {
       console.error('Error fetching family members:', error);
       toast.error('Failed to load family members');
@@ -77,7 +77,7 @@ export const useFamilyMembers = () => {
 
       if (error) throw error;
 
-      setFamilyMembers(prev => [data, ...prev]);
+      setFamilyMembers(prev => [data as any, ...prev]);
       
       // TODO: Implement email invitation logic here
       if (memberData.has_app_access && memberData.email) {
@@ -107,7 +107,7 @@ export const useFamilyMembers = () => {
       if (error) throw error;
 
       setFamilyMembers(prev => 
-        prev.map(member => member.id === id ? data : member)
+        prev.map(member => member.id === id ? data as any : member)
       );
       
       toast.success('Family member updated successfully');
