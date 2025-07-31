@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Loader2, Eye, EyeOff } from 'lucide-react';
+import { HCaptchaComponent, HCaptchaRef } from './HCaptcha';
 
 export function AuthPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -18,6 +19,9 @@ export function AuthPage() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const signInCaptchaRef = useRef<HCaptchaRef>(null);
+  const signUpCaptchaRef = useRef<HCaptchaRef>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -45,9 +49,24 @@ export function AuthPage() {
 
     setIsLoading(true);
     try {
+      // Get CAPTCHA token
+      const captchaToken = await signInCaptchaRef.current?.executeAsync();
+      if (!captchaToken) {
+        toast({
+          title: "Error",
+          description: "Please complete the CAPTCHA verification",
+          variant: "destructive",
+        });
+        setIsLoading(false);
+        return;
+      }
+
       const { error } = await supabase.auth.signInWithPassword({
         email: email.trim(),
         password,
+        options: {
+          captchaToken
+        }
       });
 
       if (error) {
@@ -121,11 +140,24 @@ export function AuthPage() {
 
     setIsLoading(true);
     try {
+      // Get CAPTCHA token
+      const captchaToken = await signUpCaptchaRef.current?.executeAsync();
+      if (!captchaToken) {
+        toast({
+          title: "Error",
+          description: "Please complete the CAPTCHA verification",
+          variant: "destructive",
+        });
+        setIsLoading(false);
+        return;
+      }
+
       const { error } = await supabase.auth.signUp({
         email: email.trim(),
         password,
         options: {
           emailRedirectTo: `${window.location.origin}/`,
+          captchaToken,
           data: {
             first_name: firstName.trim(),
             last_name: lastName.trim(),
@@ -276,6 +308,18 @@ export function AuthPage() {
                     </Button>
                   </div>
                 </div>
+                
+                <HCaptchaComponent 
+                  ref={signInCaptchaRef}
+                  onError={(error) => {
+                    toast({
+                      title: "CAPTCHA Error",
+                      description: "Please refresh and try again",
+                      variant: "destructive",
+                    });
+                  }}
+                />
+                
                 <Button type="submit" className="w-full" disabled={isLoading}>
                   {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   Sign In
@@ -388,6 +432,18 @@ export function AuthPage() {
                     </Button>
                   </div>
                 </div>
+                
+                <HCaptchaComponent 
+                  ref={signUpCaptchaRef}
+                  onError={(error) => {
+                    toast({
+                      title: "CAPTCHA Error",
+                      description: "Please refresh and try again",
+                      variant: "destructive",
+                    });
+                  }}
+                />
+                
                 <Button type="submit" className="w-full" disabled={isLoading}>
                   {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   Create Account
