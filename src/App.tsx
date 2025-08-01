@@ -131,6 +131,15 @@ import AdminSettingsPage from "./pages/admin/AdminSettingsPage";
 import MonitoringPage from "./pages/admin/MonitoringPage";
 import AdvisorResourceCenterPage from "./pages/advisor/AdvisorResourceCenterPage";
 import { MeetingAnalyticsPage } from "./pages/MeetingAnalyticsPage";
+// Healthcare pages
+import { HealthcareKnowledgePage } from "./pages/HealthcareKnowledgePage";
+import { HealthcareShareDataPage } from "./pages/HealthcareShareDataPage";
+// Annuities pages
+import { AnnuitiesVideosPage } from "./pages/AnnuitiesVideosPage";
+// Wealth management pages
+import { WealthCashManagementPage } from "./pages/WealthCashManagementPage";
+import { WealthPropertiesPage } from "./pages/WealthPropertiesPage";
+import { WealthDocsPage } from "./pages/WealthDocsPage";
 
 const queryClient = new QueryClient();
 
@@ -957,18 +966,72 @@ const App = () => {
                        }
                       />
 
-                      {/* Meeting Analytics Dashboard */}
-                      <Route
-                        path="/meeting-analytics"
-                        element={
-                          <AuthWrapper
-                            requireAuth={true}
-                            allowedRoles={['advisor', 'admin', 'tenant_admin', 'system_administrator']}
-                          >
-                            <MeetingAnalyticsPage />
-                          </AuthWrapper>
-                        }
-                      />
+                       {/* Meeting Analytics Dashboard */}
+                       <Route
+                         path="/meeting-analytics"
+                         element={
+                           <AuthWrapper
+                             requireAuth={true}
+                             allowedRoles={['advisor', 'admin', 'tenant_admin', 'system_administrator']}
+                           >
+                             <MeetingAnalyticsPage />
+                           </AuthWrapper>
+                         }
+                       />
+
+                       {/* Healthcare Routes */}
+                       <Route
+                         path="/healthcare-knowledge"
+                         element={
+                           <AuthWrapper requireAuth={true}>
+                             <HealthcareKnowledgePage />
+                           </AuthWrapper>
+                         }
+                       />
+                       <Route
+                         path="/healthcare-share-data"
+                         element={
+                           <AuthWrapper requireAuth={true}>
+                             <HealthcareShareDataPage />
+                           </AuthWrapper>
+                         }
+                       />
+
+                       {/* Annuities Video Library */}
+                       <Route
+                         path="/annuities/videos"
+                         element={
+                           <AuthWrapper requireAuth={true}>
+                             <AnnuitiesVideosPage />
+                           </AuthWrapper>
+                         }
+                       />
+
+                       {/* Wealth Management Routes */}
+                       <Route
+                         path="/wealth/cash/management"
+                         element={
+                           <AuthWrapper requireAuth={true}>
+                             <WealthCashManagementPage />
+                           </AuthWrapper>
+                         }
+                       />
+                       <Route
+                         path="/wealth/properties"
+                         element={
+                           <AuthWrapper requireAuth={true}>
+                             <WealthPropertiesPage />
+                           </AuthWrapper>
+                         }
+                       />
+                       <Route
+                         path="/wealth/docs"
+                         element={
+                           <AuthWrapper requireAuth={true}>
+                             <WealthDocsPage />
+                           </AuthWrapper>
+                         }
+                       />
 
                      {/* Navigation & QA Testing Routes */}
                      <Route path="/navigation-diagnostics" element={

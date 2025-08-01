@@ -321,10 +321,17 @@ export const ProductComparison = () => {
                 </Tabs>
 
                 <div className="flex gap-3 mt-4">
-                  <Button variant="outline" className="flex-1">
+                  <Button 
+                    variant="outline" 
+                    className="flex-1"
+                    onClick={() => window.open(`/annuities/product/${product.id}`, '_blank')}
+                  >
                     View Details
                   </Button>
-                  <Button className="flex-1">
+                  <Button 
+                    className="flex-1"
+                    onClick={() => window.open(`mailto:support@mybfocfo.com?subject=Information Request: ${product.name}`, '_blank')}
+                  >
                     Request Information
                   </Button>
                 </div>
