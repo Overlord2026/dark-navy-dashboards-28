@@ -9,6 +9,7 @@ import {
   IncomeChart 
 } from './PortfolioCharts';
 import CompetitorComparison from './CompetitorComparison';
+import { FeeExpenseComparison } from './FeeExpenseComparison';
 
 // Enhanced styles for professional PDF
 const styles = StyleSheet.create({
@@ -401,6 +402,21 @@ export default function PortfolioReportPDF({
           </div>
         )}
 
+        {/* Fee Expense Comparison */}
+        {sections.includes('fees') && (
+          <div className="mb-8">
+            <FeeExpenseComparison 
+              data={{
+                portfolioValue: portfolio.totalValue,
+                valueBasedFee: 15000, // $15k fixed annual fee
+                aumBasedFee: 1.25, // 1.25% AUM fee
+                timeHorizonYears: 10
+              }}
+              previewMode={true}
+            />
+          </div>
+        )}
+
         {/* Competitor Comparison */}
         {sections.includes('comparison') && (
           <CompetitorComparison 
@@ -496,6 +512,37 @@ export default function PortfolioReportPDF({
               {currentMetrics.beta > 1 ? 'more' : 'less'} volatile than the market. 
               With a risk score of {currentMetrics.riskScore}/100 and {formatPercentage(currentMetrics.volatility)} annualized volatility,
               this portfolio demonstrates {currentMetrics.beta < 0.8 ? 'conservative' : currentMetrics.beta > 1.2 ? 'aggressive' : 'moderate'} risk characteristics.
+            </Text>
+          </View>
+        )}
+
+        {/* Fee Expense Comparison - PDF Version */}
+        {sections.includes('fees') && (
+          <View style={styles.section}>
+            <Text style={styles.heading}>Fee Structure Comparison</Text>
+            <View style={styles.summaryGrid}>
+              <View style={styles.summaryItem}>
+                <Text style={styles.summaryLabel}>Value-Based Annual Fee</Text>
+                <Text style={styles.summaryValue}>{formatCurrency(15000)}</Text>
+                <Text style={{ fontSize: 8, color: '#666' }}>Fixed annual fee</Text>
+              </View>
+              <View style={styles.summaryItem}>
+                <Text style={styles.summaryLabel}>Traditional AUM Fee</Text>
+                <Text style={styles.summaryValue}>{formatCurrency(portfolio.totalValue * 0.0125)}</Text>
+                <Text style={{ fontSize: 8, color: '#666' }}>1.25% of portfolio</Text>
+              </View>
+              <View style={styles.summaryItem}>
+                <Text style={styles.summaryLabel}>Annual Savings</Text>
+                <Text style={[styles.summaryValue, { color: '#059669' }]}>
+                  {formatCurrency((portfolio.totalValue * 0.0125) - 15000)}
+                </Text>
+                <Text style={{ fontSize: 8, color: '#059669' }}>With value-based model</Text>
+              </View>
+            </View>
+            
+            <Text style={{ fontSize: 10, marginTop: 12, lineHeight: 1.4 }}>
+              Our value-based pricing model provides transparent, fixed annual fees rather than percentage-based charges that increase with your portfolio growth. 
+              Over 10 years, this approach can save substantial amounts while ensuring your wealth growth benefits you directly.
             </Text>
           </View>
         )}

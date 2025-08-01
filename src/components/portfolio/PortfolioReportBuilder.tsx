@@ -73,6 +73,12 @@ const DEFAULT_SECTIONS: ReportSection[] = [
     description: 'Sector concentration and diversification analysis'
   },
   { 
+    id: 'fees', 
+    label: 'Fee Expense Comparison', 
+    checked: true,
+    description: 'Value-based vs. traditional AUM fee structure analysis'
+  },
+  { 
     id: 'notes', 
     label: 'Advisor Notes', 
     checked: true,
