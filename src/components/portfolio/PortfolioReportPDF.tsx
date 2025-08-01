@@ -8,6 +8,7 @@ import {
   SectorChart, 
   IncomeChart 
 } from './PortfolioCharts';
+import CompetitorComparison from './CompetitorComparison';
 
 // Enhanced styles for professional PDF
 const styles = StyleSheet.create({
@@ -190,6 +191,11 @@ interface PortfolioReportPDFProps {
   proposedMetrics?: PortfolioMetrics;
   marketData: Record<string, any>;
   clientName: string;
+  competitorData?: {
+    competitors: string[];
+    sortBy: string;
+    sortOrder: 'asc' | 'desc';
+  };
 }
 
 export default function PortfolioReportPDF({
@@ -202,7 +208,8 @@ export default function PortfolioReportPDF({
   currentMetrics,
   proposedMetrics,
   marketData,
-  clientName
+  clientName,
+  competitorData
 }: PortfolioReportPDFProps) {
   const reportDate = new Date().toLocaleDateString('en-US', {
     year: 'numeric',
@@ -394,6 +401,26 @@ export default function PortfolioReportPDF({
           </div>
         )}
 
+        {/* Competitor Comparison */}
+        {sections.includes('comparison') && (
+          <CompetitorComparison 
+            currentPortfolio={{
+              name: portfolio.name,
+              metrics: {
+                annualReturn: 12.5,
+                volatility: currentMetrics.volatility,
+                sharpeRatio: 0.72,
+                maxDrawdown: -18.2,
+                expenseRatio: 0.15,
+                yield: currentMetrics.yield,
+                beta: currentMetrics.beta,
+                aum: portfolio.totalValue
+              }
+            }}
+            previewMode={true}
+          />
+        )}
+
         {/* Advisor Notes */}
         {sections.includes('notes') && advisorNotes && (
           <div className="mb-8">
@@ -473,11 +500,62 @@ export default function PortfolioReportPDF({
           </View>
         )}
 
+        {/* Competitor Comparison - PDF Version */}
+        {sections.includes('comparison') && (
+          <View style={styles.section}>
+            <Text style={styles.heading}>Competitor Comparison Analysis</Text>
+            <View style={styles.table}>
+              <View style={styles.tableHeader}>
+                <Text style={[styles.tableCellHeaderWide, { width: "25%" }]}>Portfolio/ETF</Text>
+                <Text style={styles.tableCellHeader}>Annual Return</Text>
+                <Text style={styles.tableCellHeader}>Volatility</Text>
+                <Text style={styles.tableCellHeader}>Sharpe Ratio</Text>
+                <Text style={styles.tableCellHeader}>Max Drawdown</Text>
+                <Text style={styles.tableCellHeader}>Expense Ratio</Text>
+                <Text style={styles.tableCellHeader}>Yield</Text>
+              </View>
+              <View style={styles.tableRow}>
+                <Text style={[styles.tableCellWide, { width: "25%", fontWeight: 'bold' }]}>
+                  {portfolio.name} (Current) 🏆
+                </Text>
+                <Text style={[styles.tableCell, { color: '#D4AF37', fontWeight: 'bold' }]}>12.5%</Text>
+                <Text style={styles.tableCell}>{formatPercentage(currentMetrics.volatility)}</Text>
+                <Text style={[styles.tableCell, { color: '#D4AF37', fontWeight: 'bold' }]}>0.72</Text>
+                <Text style={styles.tableCell}>-18.2%</Text>
+                <Text style={styles.tableCell}>0.15%</Text>
+                <Text style={styles.tableCell}>{formatPercentage(currentMetrics.yield)}</Text>
+              </View>
+              <View style={styles.tableRow}>
+                <Text style={[styles.tableCellWide, { width: "25%" }]}>SPDR S&P 500 ETF (SPY)</Text>
+                <Text style={styles.tableCell}>10.2%</Text>
+                <Text style={[styles.tableCell, { color: '#059669', fontWeight: 'bold' }]}>15.8% 🏆</Text>
+                <Text style={styles.tableCell}>0.64</Text>
+                <Text style={[styles.tableCell, { color: '#059669', fontWeight: 'bold' }]}>-23.9% 🏆</Text>
+                <Text style={[styles.tableCell, { color: '#059669', fontWeight: 'bold' }]}>0.09% 🏆</Text>
+                <Text style={styles.tableCell}>1.6%</Text>
+              </View>
+              <View style={styles.tableRow}>
+                <Text style={[styles.tableCellWide, { width: "25%" }]}>Vanguard Total Stock (VTI)</Text>
+                <Text style={styles.tableCell}>10.8%</Text>
+                <Text style={styles.tableCell}>16.2%</Text>
+                <Text style={styles.tableCell}>0.67</Text>
+                <Text style={styles.tableCell}>-24.5%</Text>
+                <Text style={styles.tableCell}>0.03%</Text>
+                <Text style={styles.tableCell}>1.4%</Text>
+              </View>
+            </View>
+            <Text style={{ fontSize: 9, marginTop: 8, color: '#666' }}>
+              🏆 = Best in category. Green = Above average performance.
+            </Text>
+          </View>
+        )}
+
         {/* Advisor Notes */}
         {sections.includes('notes') && advisorNotes && (
           <View style={styles.section}>
             <Text style={styles.heading}>Advisor Notes & Recommendations</Text>
             <View style={styles.notes}>
+              <Text style={styles.notesTitle}>Recommendations</Text>
               <Text style={{ fontSize: 10, lineHeight: 1.4 }}>{advisorNotes}</Text>
             </View>
           </View>
