@@ -88,32 +88,32 @@ export function LeadAnalyticsDashboard() {
     try {
       // Fetch advisors
       const { data: advisorData } = await supabase
-        .from('advisor_profiles')
+        .from('advisor_profiles' as any)
         .select('id, name');
       
       if (advisorData) {
-        setAdvisors(advisorData);
+        setAdvisors(advisorData as any);
       }
 
       // Fetch unique sources
       const { data: sourceData } = await supabase
-        .from('leads')
+        .from('leads' as any)
         .select('source')
         .not('source', 'is', null);
       
       if (sourceData) {
-        const uniqueSources = [...new Set(sourceData.map(item => item.source))];
+        const uniqueSources = [...new Set((sourceData as any).map((item: any) => item.source))].filter(Boolean) as string[];
         setSources(uniqueSources);
       }
 
       // Fetch unique campaigns
       const { data: campaignData } = await supabase
-        .from('leads')
+        .from('leads' as any)
         .select('campaign_source')
         .not('campaign_source', 'is', null);
       
       if (campaignData) {
-        const uniqueCampaigns = [...new Set(campaignData.map(item => item.campaign_source))];
+        const uniqueCampaigns = [...new Set((campaignData as any).map((item: any) => item.campaign_source))].filter(Boolean) as string[];
         setCampaigns(uniqueCampaigns);
       }
     } catch (error) {
@@ -126,7 +126,7 @@ export function LeadAnalyticsDashboard() {
       setLoading(true);
       
       // Build query filters
-      let query = supabase.from('leads').select(`
+      let query = supabase.from('leads' as any).select(`
         id,
         source,
         campaign_source,

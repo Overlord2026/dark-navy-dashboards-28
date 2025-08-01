@@ -100,10 +100,10 @@ export function MyLeadsPanel() {
 
       // Get current user's advisor profile
       const { data: advisorProfile } = await supabase
-        .from('advisor_profiles')
+        .from('advisor_profiles' as any)
         .select('id')
         .eq('user_id', user.id)
-        .single();
+        .maybeSingle();
 
       if (!advisorProfile) {
         toast.error('Advisor profile not found');
@@ -112,7 +112,7 @@ export function MyLeadsPanel() {
 
       // Fetch assigned leads
       const { data: assignments, error } = await supabase
-        .from('lead_assignments')
+        .from('lead_assignments' as any)
         .select(`
           id,
           assigned_at,
@@ -134,7 +134,7 @@ export function MyLeadsPanel() {
             lead_score
           )
         `)
-        .eq('advisor_id', advisorProfile.id)
+        .eq('advisor_id', (advisorProfile as any)?.id)
         .eq('is_active', true)
         .order('assigned_at', { ascending: false });
 
@@ -198,7 +198,7 @@ export function MyLeadsPanel() {
   const updateLastContact = async (leadId: string) => {
     try {
       const { error } = await supabase
-        .from('leads')
+        .from('leads' as any)
         .update({ last_contact_at: new Date().toISOString() })
         .eq('id', leadId);
 
@@ -230,7 +230,7 @@ export function MyLeadsPanel() {
   const updateLeadStatus = async (leadId: string, newStatus: string) => {
     try {
       const { error } = await supabase
-        .from('leads')
+        .from('leads' as any)
         .update({ status: newStatus })
         .eq('id', leadId);
 
