@@ -1,0 +1,14 @@
+{
+  "appId": "app.lovable.00a954941379485c9fca9a2135238b56",
+  "appName": "dark-navy-dashboards",
+  "webDir": "dist",
+  "server": {
+    "url": "https://00a95494-1379-485c-9fca-9a2135238b56.lovableproject.com?forceHideBadge=true",
+    "cleartext": true
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0
+    }
+  }
+}
