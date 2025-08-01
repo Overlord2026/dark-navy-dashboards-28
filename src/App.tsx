@@ -120,7 +120,7 @@ import AssessmentsPage from "./pages/consultant/AssessmentsPage";
 import MethodologiesPage from "./pages/consultant/MethodologiesPage";
 import BestPracticesPage from "./pages/consultant/BestPracticesPage";
 // Attorney pages
-import EstatePlanningPage from "./pages/attorney/EstatePlanningPage";
+import EstatePlanningPageOld from "./pages/attorney/EstatePlanningPage";
 import BusinessLawPage from "./pages/attorney/BusinessLawPage";
 import ContractsPage from "./pages/attorney/ContractsPage";
 import ResearchPage from "./pages/attorney/ResearchPage";
@@ -134,20 +134,32 @@ import { MeetingAnalyticsPage } from "./pages/MeetingAnalyticsPage";
 // Healthcare pages
 import { HealthcareKnowledgePage } from "./pages/HealthcareKnowledgePage";
 import { HealthcareShareDataPage } from "./pages/HealthcareShareDataPage";
+import { HealthcareSavingsPage } from "./pages/healthcare/HealthcareSavingsPage";
+import { HealthcareProvidersPage } from "./pages/healthcare/HealthcareProvidersPage";
+import { HealthcareMedicationsPage } from "./pages/healthcare/HealthcareMedicationsPage";
 // Annuities pages
 import { AnnuitiesVideosPage } from "./pages/AnnuitiesVideosPage";
+import { AnnuitiesChatPage } from "./pages/annuities/AnnuitiesChatPage";
 // Wealth management pages
 import { WealthCashManagementPage } from "./pages/WealthCashManagementPage";
 import { WealthPropertiesPage } from "./pages/WealthPropertiesPage";
 import { WealthDocsPage } from "./pages/WealthDocsPage";
 import { WealthCashTransfersPage } from "./pages/wealth/WealthCashTransfersPage";
 import { WealthGoalsPage } from "./pages/wealth/WealthGoalsPage";
-// Healthcare pages
-import { HealthcareSavingsPage } from "./pages/healthcare/HealthcareSavingsPage";
-import { HealthcareProvidersPage } from "./pages/healthcare/HealthcareProvidersPage";
-import { HealthcareMedicationsPage } from "./pages/healthcare/HealthcareMedicationsPage";
-// Annuities pages
-import { AnnuitiesChatPage } from "./pages/annuities/AnnuitiesChatPage";
+import { WealthBillPayPage } from "./pages/wealth/WealthBillPayPage";
+import { WealthBusinessFilingsPage } from "./pages/wealth/WealthBusinessFilingsPage";
+// Education pages
+import { EducationGuidesPage } from "./pages/education/EducationGuidesPage";
+import { EducationVideosPage } from "./pages/education/EducationVideosPage";
+// Solutions pages
+import { SolutionsPage } from "./pages/solutions/SolutionsPage";
+import { SolutionsInvestmentsPage } from "./pages/solutions/SolutionsInvestmentsPage";
+// Lending pages
+import { LendingPage } from "./pages/lending/LendingPage";
+// Estate planning pages
+import { EstatePlanningPage as NewEstatePlanningPage } from "./pages/estate-planning/EstatePlanningPage";
+// Collaboration pages
+import { CollaborationFamilyPage } from "./pages/collaboration/CollaborationFamilyPage";
 // Help page
 import { HelpPage } from "./pages/HelpPage";
 
@@ -866,7 +878,7 @@ const App = () => {
                           requireAuth={true}
                           allowedRoles={['attorney', 'admin', 'tenant_admin', 'system_administrator']}
                         >
-                          <EstatePlanningPage />
+                          <EstatePlanningPageOld />
                         </AuthWrapper>
                       }
                     />
@@ -1095,17 +1107,101 @@ const App = () => {
                           }
                         />
 
-                        {/* Help & Support */}
+                        {/* Additional Wealth Management Routes */}
                         <Route
-                          path="/help"
+                          path="/wealth/bill-pay"
                           element={
                             <AuthWrapper requireAuth={true}>
-                              <HelpPage />
+                              <WealthBillPayPage />
+                            </AuthWrapper>
+                          }
+                        />
+                        <Route
+                          path="/wealth/business-filings"
+                          element={
+                            <AuthWrapper requireAuth={true}>
+                              <WealthBusinessFilingsPage />
                             </AuthWrapper>
                           }
                         />
 
-                     {/* Navigation & QA Testing Routes */}
+                        {/* Education Routes */}
+                        <Route
+                          path="/education/guides"
+                          element={
+                            <AuthWrapper requireAuth={true}>
+                              <EducationGuidesPage />
+                            </AuthWrapper>
+                          }
+                        />
+                        <Route
+                          path="/education/videos"
+                          element={
+                            <AuthWrapper requireAuth={true}>
+                              <EducationVideosPage />
+                            </AuthWrapper>
+                          }
+                        />
+
+                        {/* Solutions Routes */}
+                        <Route
+                          path="/solutions"
+                          element={
+                            <AuthWrapper requireAuth={true}>
+                              <SolutionsPage />
+                            </AuthWrapper>
+                          }
+                        />
+                        <Route
+                          path="/solutions/investments"
+                          element={
+                            <AuthWrapper requireAuth={true}>
+                              <SolutionsInvestmentsPage />
+                            </AuthWrapper>
+                          }
+                        />
+
+                        {/* Lending Routes */}
+                        <Route
+                          path="/lending"
+                          element={
+                            <AuthWrapper requireAuth={true}>
+                              <LendingPage />
+                            </AuthWrapper>
+                          }
+                        />
+
+                        {/* Estate Planning Routes */}
+                        <Route
+                          path="/estate-planning"
+                          element={
+                            <AuthWrapper requireAuth={true}>
+                              <NewEstatePlanningPage />
+                            </AuthWrapper>
+                          }
+                        />
+
+                        {/* Collaboration Routes */}
+                        <Route
+                          path="/collab/family"
+                          element={
+                            <AuthWrapper requireAuth={true}>
+                              <CollaborationFamilyPage />
+                            </AuthWrapper>
+                          }
+                        />
+
+                        {/* Health Parent Route */}
+                        <Route
+                          path="/health"
+                          element={
+                            <AuthWrapper requireAuth={true}>
+                              <HealthOverviewPage />
+                            </AuthWrapper>
+                          }
+                        />
+
+                      {/* Navigation & QA Testing Routes */}
                      <Route path="/navigation-diagnostics" element={
                        <ProtectedRoute>
                          <NavigationDiagnostics />

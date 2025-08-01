@@ -1,12 +1,20 @@
 import React from 'react';
-import { ComingSoonPage } from '@/pages/ComingSoonPage';
+import { UnderConstructionPage } from '@/components/ui/UnderConstructionPage';
 
 export default function HealthOverviewPage() {
   return (
-    <ComingSoonPage
-      featureName="Health Optimization"
-      description="Comprehensive health and wellness management platform for high-net-worth families."
-      expectedDate="Q3 2024"
+    <UnderConstructionPage
+      featureName="Health Optimization Dashboard"
+      expectedDate="Q1 2024"
+      description="Comprehensive health management platform with HSA optimization, medical tracking, and wellness insights."
+      roadmapItems={[
+        'Health metrics dashboard',
+        'HSA contribution optimizer',
+        'Medical expense tracking',
+        'Provider network integration',
+        'Health goal tracking'
+      ]}
+      showNotificationSignup={true}
     />
   );
 }
