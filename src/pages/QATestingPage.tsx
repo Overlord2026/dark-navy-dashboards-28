@@ -4,6 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PreLaunchQARunner } from '@/components/qa/PreLaunchQARunner';
 import { AccessibilityQARunner } from '@/components/qa/AccessibilityQARunner';
 import { ComprehensiveQATestSuite } from '@/components/qa/ComprehensiveQATestSuite';
+import { FullSystemQARunner } from '@/components/qa/FullSystemQARunner';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { 
@@ -113,18 +114,22 @@ export default function QATestingPage() {
         </Card>
 
         {/* Testing Suites */}
-        <Tabs defaultValue="pre-launch" className="w-full">
-          <TabsList className="grid w-full grid-cols-4">
+        <Tabs defaultValue="full-system" className="w-full">
+          <TabsList className="grid w-full grid-cols-5">
+            <TabsTrigger value="full-system" className="flex items-center gap-2">
+              <TestTube className="h-4 w-4" />
+              Full System
+            </TabsTrigger>
             <TabsTrigger value="pre-launch" className="flex items-center gap-2">
               <Shield className="h-4 w-4" />
-              Pre-Launch QA
+              Pre-Launch
             </TabsTrigger>
             <TabsTrigger value="accessibility" className="flex items-center gap-2">
               <Accessibility className="h-4 w-4" />
               Accessibility
             </TabsTrigger>
             <TabsTrigger value="comprehensive" className="flex items-center gap-2">
-              <TestTube className="h-4 w-4" />
+              <CheckSquare className="h-4 w-4" />
               Comprehensive
             </TabsTrigger>
             <TabsTrigger value="performance" className="flex items-center gap-2">
@@ -133,8 +138,8 @@ export default function QATestingPage() {
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="pre-launch">
-            <PreLaunchQARunner />
+          <TabsContent value="full-system">
+            <FullSystemQARunner />
           </TabsContent>
 
           <TabsContent value="accessibility">
