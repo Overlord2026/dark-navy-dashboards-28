@@ -1,6 +1,6 @@
 import React from 'react';
-import { UserPortfolioWatchlist } from '@/components/marketplace/UserPortfolioWatchlist';
+import { EnhancedPortfolioReviewGenerator } from '@/components/portfolio/EnhancedPortfolioReviewGenerator';
 
 export default function PortfolioPage() {
-  return <UserPortfolioWatchlist />;
+  return <EnhancedPortfolioReviewGenerator />;
 }
