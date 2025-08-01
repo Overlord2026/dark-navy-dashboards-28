@@ -1706,6 +1706,68 @@ export type Database = {
           },
         ]
       }
+      client_document_requests: {
+        Row: {
+          created_at: string
+          deadline: string | null
+          description: string | null
+          document_name: string
+          document_type: string
+          id: string
+          is_required: boolean | null
+          onboarding_id: string
+          review_notes: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          updated_at: string
+          uploaded_at: string | null
+          uploaded_document_url: string | null
+        }
+        Insert: {
+          created_at?: string
+          deadline?: string | null
+          description?: string | null
+          document_name: string
+          document_type: string
+          id?: string
+          is_required?: boolean | null
+          onboarding_id: string
+          review_notes?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          updated_at?: string
+          uploaded_at?: string | null
+          uploaded_document_url?: string | null
+        }
+        Update: {
+          created_at?: string
+          deadline?: string | null
+          description?: string | null
+          document_name?: string
+          document_type?: string
+          id?: string
+          is_required?: boolean | null
+          onboarding_id?: string
+          review_notes?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          updated_at?: string
+          uploaded_at?: string | null
+          uploaded_document_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_document_requests_onboarding_id_fkey"
+            columns: ["onboarding_id"]
+            isOneToOne: false
+            referencedRelation: "client_onboarding"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       client_engagement_history: {
         Row: {
           clicked_at: string | null
@@ -1970,6 +2032,60 @@ export type Database = {
           scheduled_for?: string | null
           status?: string | null
           updated_at?: string | null
+        }
+        Relationships: []
+      }
+      client_onboarding: {
+        Row: {
+          attorney_id: string
+          case_type: string
+          client_email: string
+          client_name: string | null
+          client_phone: string | null
+          communication_preferences: Json | null
+          created_at: string
+          deadlines: Json | null
+          engagement_letter_signed_at: string | null
+          id: string
+          intake_token: string | null
+          nda_signed_at: string | null
+          notes: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          attorney_id: string
+          case_type: string
+          client_email: string
+          client_name?: string | null
+          client_phone?: string | null
+          communication_preferences?: Json | null
+          created_at?: string
+          deadlines?: Json | null
+          engagement_letter_signed_at?: string | null
+          id?: string
+          intake_token?: string | null
+          nda_signed_at?: string | null
+          notes?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          attorney_id?: string
+          case_type?: string
+          client_email?: string
+          client_name?: string | null
+          client_phone?: string | null
+          communication_preferences?: Json | null
+          created_at?: string
+          deadlines?: Json | null
+          engagement_letter_signed_at?: string | null
+          id?: string
+          intake_token?: string | null
+          nda_signed_at?: string | null
+          notes?: string | null
+          status?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -3960,6 +4076,48 @@ export type Database = {
         }
         Relationships: []
       }
+      document_collaborations: {
+        Row: {
+          access_token: string | null
+          accessed_at: string | null
+          created_at: string
+          document_id: string
+          expires_at: string | null
+          id: string
+          message: string | null
+          permission_level: string
+          shared_by: string
+          shared_with_email: string
+          shared_with_role: string
+        }
+        Insert: {
+          access_token?: string | null
+          accessed_at?: string | null
+          created_at?: string
+          document_id: string
+          expires_at?: string | null
+          id?: string
+          message?: string | null
+          permission_level?: string
+          shared_by: string
+          shared_with_email: string
+          shared_with_role: string
+        }
+        Update: {
+          access_token?: string | null
+          accessed_at?: string | null
+          created_at?: string
+          document_id?: string
+          expires_at?: string | null
+          id?: string
+          message?: string | null
+          permission_level?: string
+          shared_by?: string
+          shared_with_email?: string
+          shared_with_role?: string
+        }
+        Relationships: []
+      }
       document_comments: {
         Row: {
           comment_text: string
@@ -4135,6 +4293,45 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      document_request_templates: {
+        Row: {
+          attorney_id: string
+          case_type: string
+          created_at: string
+          deadline_days: number | null
+          id: string
+          instructions: string | null
+          is_default: boolean | null
+          required_documents: Json
+          template_name: string
+          updated_at: string
+        }
+        Insert: {
+          attorney_id: string
+          case_type: string
+          created_at?: string
+          deadline_days?: number | null
+          id?: string
+          instructions?: string | null
+          is_default?: boolean | null
+          required_documents?: Json
+          template_name: string
+          updated_at?: string
+        }
+        Update: {
+          attorney_id?: string
+          case_type?: string
+          created_at?: string
+          deadline_days?: number | null
+          id?: string
+          instructions?: string | null
+          is_default?: boolean | null
+          required_documents?: Json
+          template_name?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       document_requests: {
         Row: {
@@ -8208,6 +8405,48 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      legal_document_templates: {
+        Row: {
+          attorney_id: string | null
+          created_at: string
+          id: string
+          is_default: boolean | null
+          practice_area: string | null
+          state_jurisdiction: string | null
+          template_content: string
+          template_name: string
+          template_type: string
+          updated_at: string
+          variables: Json | null
+        }
+        Insert: {
+          attorney_id?: string | null
+          created_at?: string
+          id?: string
+          is_default?: boolean | null
+          practice_area?: string | null
+          state_jurisdiction?: string | null
+          template_content: string
+          template_name: string
+          template_type: string
+          updated_at?: string
+          variables?: Json | null
+        }
+        Update: {
+          attorney_id?: string | null
+          created_at?: string
+          id?: string
+          is_default?: boolean | null
+          practice_area?: string | null
+          state_jurisdiction?: string | null
+          template_content?: string
+          template_name?: string
+          template_type?: string
+          updated_at?: string
+          variables?: Json | null
+        }
+        Relationships: []
       }
       lending_analytics: {
         Row: {
@@ -18178,6 +18417,10 @@ export type Database = {
         Returns: Json
       }
       generate_franchise_referral_code: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      generate_intake_token: {
         Args: Record<PropertyKey, never>
         Returns: string
       }
