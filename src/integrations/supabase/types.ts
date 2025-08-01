@@ -827,6 +827,60 @@ export type Database = {
           },
         ]
       }
+      bookkeeping_reports: {
+        Row: {
+          anomalies_found: number | null
+          auto_classified_count: number | null
+          category_breakdown: Json | null
+          created_at: string | null
+          id: string
+          manual_review_count: number | null
+          report_data: Json | null
+          report_period_end: string
+          report_period_start: string
+          report_type: string | null
+          status: string | null
+          tenant_id: string | null
+          total_transactions: number | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          anomalies_found?: number | null
+          auto_classified_count?: number | null
+          category_breakdown?: Json | null
+          created_at?: string | null
+          id?: string
+          manual_review_count?: number | null
+          report_data?: Json | null
+          report_period_end: string
+          report_period_start: string
+          report_type?: string | null
+          status?: string | null
+          tenant_id?: string | null
+          total_transactions?: number | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          anomalies_found?: number | null
+          auto_classified_count?: number | null
+          category_breakdown?: Json | null
+          created_at?: string | null
+          id?: string
+          manual_review_count?: number | null
+          report_data?: Json | null
+          report_period_end?: string
+          report_period_start?: string
+          report_type?: string | null
+          status?: string | null
+          tenant_id?: string | null
+          total_transactions?: number | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       budget_goals: {
         Row: {
           category: string
@@ -14384,6 +14438,114 @@ export type Database = {
           },
         ]
       }
+      transaction_categories: {
+        Row: {
+          amount_ranges: Json | null
+          category_name: string
+          confidence_score: number | null
+          created_at: string | null
+          id: string
+          is_system_generated: boolean | null
+          keywords: string[] | null
+          parent_category: string | null
+          tenant_id: string | null
+          updated_at: string | null
+          user_id: string
+          vendor_patterns: string[] | null
+        }
+        Insert: {
+          amount_ranges?: Json | null
+          category_name: string
+          confidence_score?: number | null
+          created_at?: string | null
+          id?: string
+          is_system_generated?: boolean | null
+          keywords?: string[] | null
+          parent_category?: string | null
+          tenant_id?: string | null
+          updated_at?: string | null
+          user_id: string
+          vendor_patterns?: string[] | null
+        }
+        Update: {
+          amount_ranges?: Json | null
+          category_name?: string
+          confidence_score?: number | null
+          created_at?: string | null
+          id?: string
+          is_system_generated?: boolean | null
+          keywords?: string[] | null
+          parent_category?: string | null
+          tenant_id?: string | null
+          updated_at?: string | null
+          user_id?: string
+          vendor_patterns?: string[] | null
+        }
+        Relationships: []
+      }
+      transaction_classifications: {
+        Row: {
+          ai_model_used: string | null
+          anomaly_reasons: string[] | null
+          cleaned_description: string | null
+          confidence_score: number | null
+          created_at: string | null
+          final_category: string | null
+          id: string
+          is_anomaly: boolean | null
+          is_recurring: boolean | null
+          learning_data: Json | null
+          manual_override: boolean | null
+          original_description: string
+          suggested_category: string | null
+          tenant_id: string | null
+          transaction_id: string | null
+          updated_at: string | null
+          user_id: string
+          vendor_name: string | null
+        }
+        Insert: {
+          ai_model_used?: string | null
+          anomaly_reasons?: string[] | null
+          cleaned_description?: string | null
+          confidence_score?: number | null
+          created_at?: string | null
+          final_category?: string | null
+          id?: string
+          is_anomaly?: boolean | null
+          is_recurring?: boolean | null
+          learning_data?: Json | null
+          manual_override?: boolean | null
+          original_description: string
+          suggested_category?: string | null
+          tenant_id?: string | null
+          transaction_id?: string | null
+          updated_at?: string | null
+          user_id: string
+          vendor_name?: string | null
+        }
+        Update: {
+          ai_model_used?: string | null
+          anomaly_reasons?: string[] | null
+          cleaned_description?: string | null
+          confidence_score?: number | null
+          created_at?: string | null
+          final_category?: string | null
+          id?: string
+          is_anomaly?: boolean | null
+          is_recurring?: boolean | null
+          learning_data?: Json | null
+          manual_override?: boolean | null
+          original_description?: string
+          suggested_category?: string | null
+          tenant_id?: string | null
+          transaction_id?: string | null
+          updated_at?: string | null
+          user_id?: string
+          vendor_name?: string | null
+        }
+        Relationships: []
+      }
       transfers: {
         Row: {
           ach_credit_status: string | null
@@ -15660,6 +15822,54 @@ export type Database = {
         }
         Relationships: []
       }
+      vendor_learning: {
+        Row: {
+          confidence_level: number | null
+          created_at: string | null
+          default_category: string | null
+          frequency_pattern: string | null
+          id: string
+          last_seen_at: string | null
+          tenant_id: string | null
+          transaction_count: number | null
+          typical_amounts: Json | null
+          updated_at: string | null
+          user_id: string
+          vendor_aliases: string[] | null
+          vendor_name: string
+        }
+        Insert: {
+          confidence_level?: number | null
+          created_at?: string | null
+          default_category?: string | null
+          frequency_pattern?: string | null
+          id?: string
+          last_seen_at?: string | null
+          tenant_id?: string | null
+          transaction_count?: number | null
+          typical_amounts?: Json | null
+          updated_at?: string | null
+          user_id: string
+          vendor_aliases?: string[] | null
+          vendor_name: string
+        }
+        Update: {
+          confidence_level?: number | null
+          created_at?: string | null
+          default_category?: string | null
+          frequency_pattern?: string | null
+          id?: string
+          last_seen_at?: string | null
+          tenant_id?: string | null
+          transaction_count?: number | null
+          typical_amounts?: Json | null
+          updated_at?: string | null
+          user_id?: string
+          vendor_aliases?: string[] | null
+          vendor_name?: string
+        }
+        Relationships: []
+      }
       webhook_configs: {
         Row: {
           created_at: string
@@ -16153,6 +16363,15 @@ export type Database = {
           first_occurrence: string
           last_occurrence: string
         }[]
+      }
+      detect_transaction_anomalies: {
+        Args: {
+          p_user_id: string
+          p_vendor_name: string
+          p_amount: number
+          p_description: string
+        }
+        Returns: Json
       }
       final_security_validation: {
         Args: Record<PropertyKey, never>
