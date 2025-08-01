@@ -79,6 +79,18 @@ const DEFAULT_SECTIONS: ReportSection[] = [
     description: 'Value-based vs. traditional AUM fee structure analysis'
   },
   { 
+    id: 'montecarlo', 
+    label: 'Monte Carlo Simulation', 
+    checked: true,
+    description: 'Wealth projection with probability bands and health score'
+  },
+  { 
+    id: 'comparison', 
+    label: 'Competitor Benchmarking', 
+    checked: true,
+    description: 'Compare against major providers and ETF portfolios'
+  },
+  { 
     id: 'notes', 
     label: 'Advisor Notes', 
     checked: true,
