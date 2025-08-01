@@ -10,6 +10,7 @@ import { ESignatureWorkflow } from '@/components/cpa/ESignatureWorkflow';
 import { PracticeAnalytics } from '@/components/cpa/PracticeAnalytics';
 import { DataImportMapper } from '@/components/cpa/DataImportMapper';
 import { ClientMappingEngine } from '@/components/cpa/ClientMappingEngine';
+import { WhiteLabelPortalActivation } from '@/components/cpa/WhiteLabelPortalActivation';
 
 export default function CPADashboard() {
   return (
@@ -20,8 +21,9 @@ export default function CPADashboard() {
       />
 
       <Tabs defaultValue="onboarding" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-9 text-xs">
+        <TabsList className="grid w-full grid-cols-10 text-xs">
           <TabsTrigger value="onboarding">Onboarding</TabsTrigger>
+          <TabsTrigger value="portal">Portal Setup</TabsTrigger>
           <TabsTrigger value="import">Data Import</TabsTrigger>
           <TabsTrigger value="mapping">Client Mapping</TabsTrigger>
           <TabsTrigger value="organizers">Organizers</TabsTrigger>
@@ -34,6 +36,10 @@ export default function CPADashboard() {
 
         <TabsContent value="onboarding">
           <CPAOnboardingModule />
+        </TabsContent>
+
+        <TabsContent value="portal">
+          <WhiteLabelPortalActivation />
         </TabsContent>
 
         <TabsContent value="import">
