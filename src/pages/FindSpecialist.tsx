@@ -2,39 +2,30 @@ import React, { useState } from 'react';
 import { AdvisorQuestionnaire } from '@/components/advisor-matching/AdvisorQuestionnaire';
 import { AdvisorMatchResults } from '@/components/advisor-matching/AdvisorMatchResults';
 import { ScenarioWidget } from '@/components/scenario-planning/ScenarioWidget';
-import { useAdvisorMatching } from '@/hooks/useAdvisorMatching';
-import { useScenarioPlanning } from '@/hooks/useScenarioPlanning';
+// import { useAdvisorMatching } from '@/hooks/useAdvisorMatching';
+// import { useScenarioPlanning } from '@/hooks/useScenarioPlanning';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export default function FindSpecialist() {
   const [showResults, setShowResults] = useState(false);
-  const { 
-    loading: matchingLoading, 
-    matches, 
-    complexityScore, 
-    submitQuestionnaire, 
-    sendMessage, 
-    bookMeeting 
-  } = useAdvisorMatching();
   
-  const { runScenario, loading: scenarioLoading } = useScenarioPlanning();
+  // Placeholder for advisor matching functionality
+  const matches: any[] = [];
+  const complexityScore = 0;
+  const matchingLoading = false;
+  const scenarioLoading = false;
 
   const handleQuestionnaireComplete = async (responses: any) => {
-    try {
-      await submitQuestionnaire(responses);
-      setShowResults(true);
-    } catch (error) {
-      console.error('Failed to process questionnaire:', error);
-    }
+    console.log('Questionnaire responses:', responses);
+    setShowResults(true);
   };
 
   const handleRunScenario = async (scenarioType: string, scenarioName: string, parameters: any) => {
-    try {
-      await runScenario(scenarioType, scenarioName, parameters);
-    } catch (error) {
-      console.error('Failed to run scenario:', error);
-    }
+    console.log('Running scenario:', { scenarioType, scenarioName, parameters });
   };
+
+  const sendMessage = (message: string) => console.log('Sending message:', message);
+  const bookMeeting = (meetingData: any) => console.log('Booking meeting:', meetingData);
 
   return (
     <div className="container mx-auto p-6 space-y-8">

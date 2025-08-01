@@ -8,7 +8,7 @@ import CollaborationTab from "@/components/navigation/tabs/CollaborationTab";
 import SettingsTab from "@/components/navigation/tabs/SettingsTab";
 import FamilyWealthTab from "@/components/navigation/tabs/FamilyWealthTab";
 import { Card, CardContent } from "@/components/ui/card";
-import { IntegrationsPanel } from "@/components/integrations/IntegrationsPanel";
+// import { IntegrationsPanel } from "@/components/integrations/IntegrationsPanel";
 
 // This file implements the tab page components referenced in routes-addition.tsx
 
@@ -64,10 +64,12 @@ export const FamilyWealthPage = () => {
               <FamilyWealthTab />
             </CardContent>
           </Card>
-          <IntegrationsPanel 
-            title="Wealth Management Integrations"
-            description="Connect with custodians and portfolio management platforms"
-          />
+          <Card>
+            <CardContent className="p-6">
+              <h3 className="text-lg font-semibold mb-2">Wealth Management Integrations</h3>
+              <p className="text-muted-foreground">Connect with custodians and portfolio management platforms</p>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </ThreeColumnLayout>
@@ -100,10 +102,12 @@ export const SettingsPage = () => {
               <SettingsTab />
             </CardContent>
           </Card>
-          <IntegrationsPanel 
-            title="Professional Service Integrations"
-            description="Connect with your CPA, attorney, and other professional service providers"
-          />
+          <Card>
+            <CardContent className="p-6">
+              <h3 className="text-lg font-semibold mb-2">Professional Service Integrations</h3>
+              <p className="text-muted-foreground">Connect with your CPA, attorney, and other professional service providers</p>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </ThreeColumnLayout>

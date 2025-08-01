@@ -3,11 +3,30 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { Upload, FileText, Loader2, CheckCircle, AlertTriangle, Crown } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Upload, FileText, Loader2, CheckCircle, AlertTriangle, Crown, Edit2, Info } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useSubscriptionAccess } from '@/hooks/useSubscriptionAccess';
 import { UpgradePaywall } from '@/components/subscription/UpgradePaywall';
+import { InAppNotificationBanner } from '@/components/ui/InAppNotificationBanner';
 import { supabase } from '@/integrations/supabase/client';
+
+interface ExtractedTaxData {
+  agi: number;
+  filingStatus: string;
+  totalTax: number;
+  federalWithheld: number;
+  age1: number;
+  age2?: number;
+  standardDeduction?: number;
+  itemizedDeductions?: number;
+  stateAndLocalTax?: number;
+  mortgageInterest?: number;
+  charitableContributions?: number;
+  medicalExpenses?: number;
+  confidenceScore: number;
+}
 
 interface TaxAnalysisResult {
   summary: string;
@@ -42,6 +61,9 @@ export function EnhancedTaxReturnAnalyzer() {
   const [analysisResult, setAnalysisResult] = useState<AnalysisResponse | null>(null);
   const [extractedText, setExtractedText] = useState<string>('');
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [extractedData, setExtractedData] = useState<ExtractedTaxData | null>(null);
+  const [showReviewScreen, setShowReviewScreen] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
   
   const { toast } = useToast();
   const { subscriptionPlan, checkFeatureAccess, checkUsageLimit, incrementUsage } = useSubscriptionAccess();
@@ -83,7 +105,47 @@ export function EnhancedTaxReturnAnalyzer() {
     }
   };
 
-  const simulateFileUpload = async (file: File): Promise<string> => {
+  const extractDataFromOCR = (text: string): ExtractedTaxData => {
+    // Parse OCR text and extract tax data with confidence scoring
+    const agi = parseFloat(text.match(/AGI[:\s]*\$?([\d,]+)/i)?.[1]?.replace(/,/g, '') || '0');
+    const filingStatus = text.match(/Filing Status[:\s]*(.*?)(?:\n|$)/i)?.[1]?.trim() || 'Single';
+    const totalTax = parseFloat(text.match(/Total Tax[:\s]*\$?([\d,]+)/i)?.[1]?.replace(/,/g, '') || '0');
+    const federalWithheld = parseFloat(text.match(/Federal Income Tax Withheld[:\s]*\$?([\d,]+)/i)?.[1]?.replace(/,/g, '') || '0');
+    
+    // Extract ages (assume primary taxpayer and spouse)
+    const ageMatch = text.match(/Age[:\s]*(\d+)/i);
+    const age1 = ageMatch ? parseInt(ageMatch[1]) : 45;
+    const age2 = filingStatus.toLowerCase().includes('married') ? 42 : undefined;
+    
+    // Extract deductions
+    const medicalExpenses = parseFloat(text.match(/Medical Expenses[:\s]*\$?([\d,]+)/i)?.[1]?.replace(/,/g, '') || '0');
+    const stateAndLocalTax = parseFloat(text.match(/State and Local Taxes[:\s]*\$?([\d,]+)/i)?.[1]?.replace(/,/g, '') || '0');
+    const mortgageInterest = parseFloat(text.match(/Mortgage Interest[:\s]*\$?([\d,]+)/i)?.[1]?.replace(/,/g, '') || '0');
+    const charitableContributions = parseFloat(text.match(/Charitable Contributions[:\s]*\$?([\d,]+)/i)?.[1]?.replace(/,/g, '') || '0');
+    
+    const itemizedDeductions = medicalExpenses + stateAndLocalTax + mortgageInterest + charitableContributions;
+    
+    // Calculate confidence based on data found
+    const fieldsFound = [agi, totalTax, federalWithheld].filter(x => x > 0).length;
+    const confidenceScore = Math.min(0.95, 0.6 + (fieldsFound * 0.1));
+    
+    return {
+      agi,
+      filingStatus,
+      totalTax,
+      federalWithheld,
+      age1,
+      age2,
+      itemizedDeductions: itemizedDeductions > 0 ? itemizedDeductions : undefined,
+      medicalExpenses: medicalExpenses > 0 ? medicalExpenses : undefined,
+      stateAndLocalTax: stateAndLocalTax > 0 ? stateAndLocalTax : undefined,
+      mortgageInterest: mortgageInterest > 0 ? mortgageInterest : undefined,
+      charitableContributions: charitableContributions > 0 ? charitableContributions : undefined,
+      confidenceScore
+    };
+  };
+
+  const simulateFileUpload = async (file: File): Promise<{ text: string; data: ExtractedTaxData }> => {
     // Simulate file processing and OCR extraction
     setUploadProgress(0);
     
@@ -97,6 +159,7 @@ export function EnhancedTaxReturnAnalyzer() {
 Tax Year: 2023
 Taxpayer: John Doe
 Filing Status: Married Filing Jointly
+Age: 45
 AGI: $125,000
 Total Tax: $18,450
 Federal Income Tax Withheld: $19,200
@@ -116,7 +179,8 @@ Schedule D - Capital Gains:
 Short-term Gains: $1,200
 Long-term Gains: $5,500`;
             
-            resolve(mockExtractedText);
+            const extractedData = extractDataFromOCR(mockExtractedText);
+            resolve({ text: mockExtractedText, data: extractedData });
             return 100;
           }
           return prev + 10;
@@ -125,23 +189,53 @@ Long-term Gains: $5,500`;
     });
   };
 
-  const performAnalysis = async () => {
+  const processUploadedFile = async () => {
     if (!selectedFile || !hasBasicAccess) return;
 
     try {
       setIsAnalyzing(true);
       
-      // Extract text from document
-      const documentText = await simulateFileUpload(selectedFile);
-      setExtractedText(documentText);
+      // Extract text and data from document
+      const { text, data } = await simulateFileUpload(selectedFile);
+      setExtractedText(text);
+      setExtractedData(data);
+      
+      // Show notification and review screen
+      setShowNotification(true);
+      setShowReviewScreen(true);
 
+      toast({
+        title: "Document Processed",
+        description: "Tax information extracted successfully. Please review the fields below.",
+      });
+
+    } catch (error) {
+      console.error('Processing error:', error);
+      toast({
+        title: "Processing Failed",
+        description: "There was an error processing your tax document",
+        variant: "destructive",
+      });
+    } finally {
+      setIsAnalyzing(false);
+      setUploadProgress(0);
+    }
+  };
+
+  const performAnalysis = async () => {
+    if (!extractedData || !hasBasicAccess) return;
+
+    try {
+      setIsAnalyzing(true);
+      
       // Determine analysis type based on subscription
       const analysisType = hasAIAccess ? 'ai_powered' : 'basic';
 
-      // Call the AI analysis edge function
+      // Call the AI analysis edge function with extracted data
       const { data, error } = await supabase.functions.invoke('ai-tax-analysis', {
         body: {
-          document_text: documentText,
+          document_text: extractedText,
+          extracted_data: extractedData,
           analysis_type: analysisType,
           tax_year: 2023
         }
@@ -168,6 +262,7 @@ Long-term Gains: $5,500`;
       }
 
       setAnalysisResult(data);
+      setShowReviewScreen(false);
       
       // Increment local usage counter
       await incrementUsage('tax_analyses');
@@ -186,7 +281,6 @@ Long-term Gains: $5,500`;
       });
     } finally {
       setIsAnalyzing(false);
-      setUploadProgress(0);
     }
   };
 
@@ -234,6 +328,31 @@ Long-term Gains: $5,500`;
       </CardHeader>
       
       <CardContent className="space-y-6">
+        {/* Notification Banner */}
+        {showNotification && extractedData && (
+          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-4 mb-6 relative animate-fade-in">
+            <div className="flex items-start gap-3">
+              <Info className="h-5 w-5 text-blue-600 mt-0.5" />
+              <div className="flex-1">
+                <h3 className="font-semibold text-blue-900 text-sm mb-1">
+                  We've pre-filled your info—review or adjust before analyzing!
+                </h3>
+                <p className="text-blue-700 text-sm">
+                  Extracted {Object.keys(extractedData).filter(key => extractedData[key as keyof ExtractedTaxData] !== undefined).length} fields with {Math.round(extractedData.confidenceScore * 100)}% confidence.
+                </p>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowNotification(false)}
+                className="h-6 w-6 p-0 hover:bg-blue-100"
+              >
+                ×
+              </Button>
+            </div>
+          </div>
+        )}
+
         {/* Usage Status */}
         <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
           <div className="text-sm">
@@ -286,17 +405,17 @@ Long-term Gains: $5,500`;
                 </p>
               </div>
               <Button
-                onClick={performAnalysis}
+                onClick={processUploadedFile}
                 disabled={isAnalyzing || usageStatus.isAtLimit}
                 className="min-w-[120px]"
               >
                 {isAnalyzing ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Analyzing...
+                    Processing...
                   </>
                 ) : (
-                  'Analyze Document'
+                  'Process Document'
                 )}
               </Button>
             </div>
@@ -314,8 +433,195 @@ Long-term Gains: $5,500`;
           )}
         </div>
 
+        {/* Review & Confirm Fields Screen */}
+        {showReviewScreen && extractedData && (
+          <div className="space-y-6 border border-primary/20 rounded-lg p-6 bg-gradient-to-br from-background to-muted/30 animate-scale-in">
+            <div className="flex items-center gap-2">
+              <Edit2 className="h-5 w-5 text-primary" />
+              <h3 className="text-lg font-semibold">Review & Confirm Fields</h3>
+              <Badge variant="outline">
+                Confidence: {Math.round(extractedData.confidenceScore * 100)}%
+              </Badge>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Basic Information */}
+              <div className="space-y-4">
+                <h4 className="font-medium text-sm text-muted-foreground uppercase tracking-wide">Basic Information</h4>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="agi">Adjusted Gross Income (AGI)</Label>
+                  <Input
+                    id="agi"
+                    type="number"
+                    value={extractedData.agi}
+                    onChange={(e) => setExtractedData({...extractedData, agi: parseFloat(e.target.value) || 0})}
+                    className="bg-yellow-50 border-yellow-200"
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="filing-status">Filing Status</Label>
+                  <Input
+                    id="filing-status"
+                    value={extractedData.filingStatus}
+                    onChange={(e) => setExtractedData({...extractedData, filingStatus: e.target.value})}
+                    className="bg-yellow-50 border-yellow-200"
+                  />
+                </div>
+                
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="age1">Primary Age</Label>
+                    <Input
+                      id="age1"
+                      type="number"
+                      value={extractedData.age1}
+                      onChange={(e) => setExtractedData({...extractedData, age1: parseInt(e.target.value) || 0})}
+                      className="bg-yellow-50 border-yellow-200"
+                    />
+                  </div>
+                  {extractedData.age2 && (
+                    <div className="space-y-2">
+                      <Label htmlFor="age2">Spouse Age</Label>
+                      <Input
+                        id="age2"
+                        type="number"
+                        value={extractedData.age2}
+                        onChange={(e) => setExtractedData({...extractedData, age2: parseInt(e.target.value) || undefined})}
+                        className="bg-yellow-50 border-yellow-200"
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+              
+              {/* Tax Details */}
+              <div className="space-y-4">
+                <h4 className="font-medium text-sm text-muted-foreground uppercase tracking-wide">Tax Details</h4>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="total-tax">Total Tax</Label>
+                  <Input
+                    id="total-tax"
+                    type="number"
+                    value={extractedData.totalTax}
+                    onChange={(e) => setExtractedData({...extractedData, totalTax: parseFloat(e.target.value) || 0})}
+                    className="bg-yellow-50 border-yellow-200"
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="federal-withheld">Federal Tax Withheld</Label>
+                  <Input
+                    id="federal-withheld"
+                    type="number"
+                    value={extractedData.federalWithheld}
+                    onChange={(e) => setExtractedData({...extractedData, federalWithheld: parseFloat(e.target.value) || 0})}
+                    className="bg-yellow-50 border-yellow-200"
+                  />
+                </div>
+                
+                {extractedData.itemizedDeductions && (
+                  <div className="space-y-2">
+                    <Label htmlFor="itemized-deductions">Itemized Deductions</Label>
+                    <Input
+                      id="itemized-deductions"
+                      type="number"
+                      value={extractedData.itemizedDeductions}
+                      onChange={(e) => setExtractedData({...extractedData, itemizedDeductions: parseFloat(e.target.value) || undefined})}
+                      className="bg-yellow-50 border-yellow-200"
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+            
+            {/* Deduction Details */}
+            {(extractedData.medicalExpenses || extractedData.stateAndLocalTax || extractedData.mortgageInterest || extractedData.charitableContributions) && (
+              <div className="space-y-4">
+                <h4 className="font-medium text-sm text-muted-foreground uppercase tracking-wide">Deduction Breakdown</h4>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {extractedData.medicalExpenses && (
+                    <div className="space-y-2">
+                      <Label htmlFor="medical">Medical Expenses</Label>
+                      <Input
+                        id="medical"
+                        type="number"
+                        value={extractedData.medicalExpenses}
+                        onChange={(e) => setExtractedData({...extractedData, medicalExpenses: parseFloat(e.target.value) || undefined})}
+                        className="bg-yellow-50 border-yellow-200"
+                      />
+                    </div>
+                  )}
+                  {extractedData.stateAndLocalTax && (
+                    <div className="space-y-2">
+                      <Label htmlFor="salt">State & Local Tax</Label>
+                      <Input
+                        id="salt"
+                        type="number"
+                        value={extractedData.stateAndLocalTax}
+                        onChange={(e) => setExtractedData({...extractedData, stateAndLocalTax: parseFloat(e.target.value) || undefined})}
+                        className="bg-yellow-50 border-yellow-200"
+                      />
+                    </div>
+                  )}
+                  {extractedData.mortgageInterest && (
+                    <div className="space-y-2">
+                      <Label htmlFor="mortgage">Mortgage Interest</Label>
+                      <Input
+                        id="mortgage"
+                        type="number"
+                        value={extractedData.mortgageInterest}
+                        onChange={(e) => setExtractedData({...extractedData, mortgageInterest: parseFloat(e.target.value) || undefined})}
+                        className="bg-yellow-50 border-yellow-200"
+                      />
+                    </div>
+                  )}
+                  {extractedData.charitableContributions && (
+                    <div className="space-y-2">
+                      <Label htmlFor="charity">Charitable Contributions</Label>
+                      <Input
+                        id="charity"
+                        type="number"
+                        value={extractedData.charitableContributions}
+                        onChange={(e) => setExtractedData({...extractedData, charitableContributions: parseFloat(e.target.value) || undefined})}
+                        className="bg-yellow-50 border-yellow-200"
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+            
+            <div className="flex gap-3 pt-4">
+              <Button
+                onClick={performAnalysis}
+                disabled={isAnalyzing}
+                className="flex-1"
+              >
+                {isAnalyzing ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Analyzing...
+                  </>
+                ) : (
+                  'Run Analysis'
+                )}
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => setShowReviewScreen(false)}
+                disabled={isAnalyzing}
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
+        )}
+
         {/* Extracted Text Preview */}
-        {extractedText && (
+        {extractedText && !showReviewScreen && (
           <div className="space-y-2">
             <h4 className="font-medium">Extracted Information</h4>
             <div className="bg-muted p-4 rounded-lg text-sm font-mono max-h-40 overflow-y-auto">

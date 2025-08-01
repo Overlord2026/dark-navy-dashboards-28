@@ -482,7 +482,7 @@ export const EnhancedTaxBracketWizard: React.FC<WizardCalculatorProps> = ({ subs
                             <Tooltip formatter={(value: any) => formatCurrency(value)} />
                             <Bar 
                               dataKey="taxInBracket" 
-                              fill={(entry: any) => entry.inBracket ? "#22c55e" : "#e5e7eb"}
+                              fill="hsl(var(--primary))"
                               name="Tax in Bracket"
                             />
                           </BarChart>

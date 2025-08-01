@@ -14,7 +14,7 @@ import { EstateEducationHub } from "@/components/estate-planning/EstateEducation
 import { SecureFamilyVault } from "@/components/estate-planning/SecureFamilyVault";
 import { AdvancedEstateCalculators } from "@/components/estate-planning/AdvancedEstateCalculators";
 import { CollaborationTools } from "@/components/estate-planning/CollaborationTools";
-import { IntegrationsPanel } from "@/components/integrations/IntegrationsPanel";
+// import { IntegrationsPanel } from "@/components/integrations/IntegrationsPanel";
 import { 
   FileText, 
   Shield, 
@@ -103,10 +103,6 @@ export default function EstatePlanning() {
 
           <TabsContent value="vault" className="space-y-6">
             <SecureFamilyVault />
-            <IntegrationsPanel 
-              title="Estate Planning Integrations"
-              description="Connect with your attorney and other estate planning professionals"
-            />
           </TabsContent>
 
           <TabsContent value="calculators" className="space-y-6">
