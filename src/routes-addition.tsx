@@ -16,6 +16,7 @@ import CreateGoalPage from '@/pages/CreateGoalPage';
 import GoalFormPage from '@/pages/GoalFormPage';
 import GoalDetailPage from '@/pages/GoalDetailPage';
 import TaxCenter from '@/pages/TaxCenter';
+import AdvisorROIDashboard from '@/pages/AdvisorROIDashboard';
 
 // These routes should be added to your existing routes.tsx file
 const additionalRoutes = [
@@ -78,6 +79,10 @@ const additionalRoutes = [
   {
     path: '/tax-center',
     element: <TaxCenter />
+  },
+  {
+    path: '/advisor-roi',
+    element: <AdvisorROIDashboard />
   }
 ];
 
