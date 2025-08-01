@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Shield, AlertTriangle, Clock, CheckCircle } from "lucide-react";
 import { TwoFactorToggle } from "@/components/profile/TwoFactorToggle";
+import { getEnvironmentConfig } from '@/utils/environment';
 
 interface MFAEnforcementProps {
   onMFAEnabled?: () => void;
@@ -19,6 +20,31 @@ interface MFAEnforcementProps {
 export function MFAEnforcement({ onMFAEnabled, onAccessBlocked }: MFAEnforcementProps) {
   const { user, logout } = useAuth();
   const { userProfile } = useUser();
+  const env = getEnvironmentConfig();
+  
+  // Skip MFA enforcement entirely in non-production environments
+  if (!env.isProduction) {
+    return (
+      <Card className="bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800">
+        <CardHeader className="pb-3">
+          <div className="flex items-center gap-2">
+            <Shield className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+            <CardTitle className="text-blue-800 dark:text-blue-200">Development Mode</CardTitle>
+            <Badge variant="secondary" className="bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-200">
+              MFA Disabled
+            </Badge>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <p className="text-blue-700 dark:text-blue-300 text-sm">
+            Multi-Factor Authentication enforcement is disabled in development/QA environments. 
+            MFA will be enforced automatically when deployed to production.
+          </p>
+        </CardContent>
+      </Card>
+    );
+  }
+
   const [mfaStatus, setMfaStatus] = useState<{
     requiresMFA: boolean;
     mfaEnabled: boolean;

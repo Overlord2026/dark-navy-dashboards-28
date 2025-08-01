@@ -2,7 +2,7 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
-import { shouldEnforceAuthentication } from '@/utils/environment';
+import { shouldEnforceAuthentication, getEnvironmentConfig } from '@/utils/environment';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -27,13 +27,15 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requir
   // Check if authentication should be enforced for this user
   const enforceAuth = shouldEnforceAuthentication(userProfile?.email);
   
-  if (!isAuthenticated && enforceAuth) {
-    return <Navigate to="/auth" replace />;
+  // In non-production environments, allow access without authentication for development
+  const env = getEnvironmentConfig();
+  if (!env.isProduction && !enforceAuth) {
+    // Allow QA bypass and development access
+    return <>{children}</>;
   }
   
-  // Allow QA bypass user to access without authentication in sandbox
-  if (isQABypassActive && !enforceAuth) {
-    // Continue to render children for QA testing
+  if (!isAuthenticated && enforceAuth) {
+    return <Navigate to="/auth" replace />;
   }
 
   // Check role-based access if requiredRole is specified

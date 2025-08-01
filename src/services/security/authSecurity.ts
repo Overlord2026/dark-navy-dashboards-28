@@ -3,6 +3,7 @@ import { supabase } from '@/lib/supabase';
 import { PasswordPolicyValidator, PasswordValidationResult } from './passwordPolicy';
 import { auditLog } from '@/services/auditLog/auditLogService';
 import { mfaBypassService } from './mfaBypassService';
+import { getEnvironmentConfig } from '@/utils/environment';
 
 export interface PrivilegedRole {
   role: string;
@@ -50,6 +51,18 @@ export class AuthSecurityService {
     shouldBlock: boolean;
     gracePeriodExpired: boolean;
   }> {
+    // Check environment - disable MFA enforcement in non-production environments
+    const env = getEnvironmentConfig();
+    if (!env.isProduction) {
+      console.log('MFA enforcement disabled in non-production environment');
+      return {
+        requiresMFA: false,
+        mfaEnabled: true, // Pretend MFA is enabled to avoid UI issues
+        shouldBlock: false,
+        gracePeriodExpired: false
+      };
+    }
+
     const requiresMFA = await this.checkMFARequirement(userRole);
     
     if (!requiresMFA) {

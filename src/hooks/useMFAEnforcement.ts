@@ -4,6 +4,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useUser } from '@/context/UserContext';
 import { authSecurityService } from '@/services/security/authSecurity';
 import { useNavigate } from 'react-router-dom';
+import { getEnvironmentConfig } from '@/utils/environment';
 
 interface MFAEnforcementState {
   requiresMFA: boolean;
@@ -33,6 +34,21 @@ export function useMFAEnforcement(redirectOnBlock: boolean = true) {
   }, [user, userProfile]);
 
   const checkMFAStatus = async () => {
+    const env = getEnvironmentConfig();
+    
+    // Skip MFA enforcement entirely in non-production environments
+    if (!env.isProduction) {
+      setState({
+        requiresMFA: false,
+        mfaEnabled: true, // Pretend MFA is enabled to avoid UI issues
+        shouldBlock: false,
+        gracePeriodExpired: false,
+        loading: false,
+        gracePeriodHours: 0
+      });
+      return;
+    }
+
     if (!user || !userProfile?.role) {
       setState(prev => ({ ...prev, loading: false }));
       return;
