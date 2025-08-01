@@ -59,10 +59,15 @@ export function TwoFactorToggle({ className, onMFAEnabled }: TwoFactorToggleProp
     if (!open) {
       // Refresh profile after dialog closes to update the toggle state
       await refreshProfile();
-      // Call onMFAEnabled callback if MFA was just enabled
-      if (onMFAEnabled && userProfile?.twoFactorEnabled) {
-        onMFAEnabled();
-      }
+      
+      // Small delay to ensure database update has propagated
+      setTimeout(async () => {
+        await refreshProfile();
+        // Call onMFAEnabled callback if MFA was just enabled
+        if (onMFAEnabled) {
+          onMFAEnabled();
+        }
+      }, 500);
     }
   };
 

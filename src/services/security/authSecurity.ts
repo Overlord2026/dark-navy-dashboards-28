@@ -83,8 +83,8 @@ export class AuthSecurityService {
     // Check for active MFA bypass first
     const hasActiveBypass = await mfaBypassService.hasActiveMFABypass(userId);
     
-    // Calculate grace period (24 hours from account creation)
-    const gracePeriodHours = 24;
+    // Calculate grace period (168 hours = 7 days from account creation)
+    const gracePeriodHours = 168; // 7 days for users to set up MFA
     const accountAge = Date.now() - new Date(profile.created_at).getTime();
     const gracePeriodMs = gracePeriodHours * 60 * 60 * 1000;
     const gracePeriodExpired = accountAge > gracePeriodMs;

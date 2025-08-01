@@ -126,12 +126,24 @@ export function SecurityForm({ onSave }: { onSave: () => void }) {
         body: { 
           email, 
           otpCode: otpValue,
-          userId: user?.id
+          userId: user?.id,
+          isForLogin: false // This is for MFA setup, not login
         }
       });
 
       if (error || !data?.success) {
         throw new Error(data?.error || error?.message || 'Invalid OTP code');
+      }
+
+      // Double-check that MFA was actually enabled in the database
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('two_factor_enabled')
+        .eq('id', user?.id)
+        .single();
+
+      if (profileError || !profile?.two_factor_enabled) {
+        throw new Error('Failed to enable MFA. Please try again.');
       }
 
       setVerifying(false);

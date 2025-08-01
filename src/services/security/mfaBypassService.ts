@@ -74,22 +74,24 @@ export class MFABypassService {
       // First check for sandbox QA bypass
       const { data: profile } = await supabase
         .from('profiles')
-        .select('email')
+        .select('email, role')
         .eq('id', userId)
         .single();
 
       if (profile && isQABypassAllowed(profile.email)) {
         const env = getEnvironmentConfig();
         if (env.qaBypassEnabled) {
+          console.log(`QA Bypass check: User ${profile.email}, Environment QA enabled: ${env.qaBypassEnabled}`);
           // Auto-create sandbox bypass for QA user
           await this.ensureSandboxBypass(userId, profile.email);
           return true;
         }
       }
 
+      // Check for manual bypasses in the database
       const { data, error } = await supabase
         .from('mfa_bypass_audit')
-        .select('id')
+        .select('id, expires_at, bypass_reason')
         .eq('user_id', userId)
         .eq('is_active', true)
         .gt('expires_at', new Date().toISOString())
@@ -100,7 +102,13 @@ export class MFABypassService {
         return false;
       }
 
-      return (data?.length || 0) > 0;
+      const hasManualBypass = (data?.length || 0) > 0;
+      
+      if (hasManualBypass) {
+        console.log(`Manual MFA bypass found for user ${userId}:`, data[0]);
+      }
+
+      return hasManualBypass;
     } catch (error) {
       console.error('Error checking MFA bypass:', error);
       return false;

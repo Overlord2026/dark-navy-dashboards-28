@@ -44,11 +44,11 @@ export function useMFAEnforcement(redirectOnBlock: boolean = true) {
         userProfile.role
       );
 
-      // Calculate remaining grace period
+      // Calculate remaining grace period - aligned with backend (168 hours = 7 days)
       let gracePeriodHours = 0;
       if (status.requiresMFA && !status.mfaEnabled && !status.gracePeriodExpired) {
         const accountAge = Date.now() - new Date(user.created_at).getTime();
-        const gracePeriodMs = 24 * 60 * 60 * 1000; // 24 hours
+        const gracePeriodMs = 168 * 60 * 60 * 1000; // 168 hours (7 days) - aligned with backend
         const remainingMs = gracePeriodMs - accountAge;
         gracePeriodHours = Math.max(0, Math.floor(remainingMs / (1000 * 60 * 60)));
       }
@@ -59,16 +59,25 @@ export function useMFAEnforcement(redirectOnBlock: boolean = true) {
         gracePeriodHours
       });
 
-      // Handle access blocking
+      // Handle access blocking - but only if not in QA bypass mode
       if (status.shouldBlock && redirectOnBlock) {
-        // Force logout and redirect to auth page
-        try {
-          await authSecurityService.rotateUserSessions(user.id, 'mfa_enforcement_violation');
-        } catch (error) {
-          console.error('Error rotating sessions:', error);
-        }
-        logout();
-        navigate('/auth');
+        console.log('MFA enforcement blocking access:', {
+          userId: user.id,
+          userRole: userProfile.role,
+          mfaEnabled: status.mfaEnabled,
+          gracePeriodExpired: status.gracePeriodExpired
+        });
+        
+        // Give user a moment to see the error before redirecting
+        setTimeout(async () => {
+          try {
+            await authSecurityService.rotateUserSessions(user.id, 'mfa_enforcement_violation');
+          } catch (error) {
+            console.error('Error rotating sessions:', error);
+          }
+          logout();
+          navigate('/auth');
+        }, 2000);
       }
     } catch (error) {
       console.error('Error checking MFA status:', error);
