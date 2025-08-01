@@ -175,55 +175,76 @@ export function EnhancedPortfolioReviewGenerator() {
     totalValue: 500000
   };
 
-  // Calculate portfolio metrics
+  // Calculate portfolio metrics using weighted approach
   const portfolioMetrics = useMemo(() => {
-    if (!currentPortfolio) return { beta: 1.0, volatility: 16.0, yield: 0 };
+    if (!currentPortfolio) return { beta: 1.0, volatility: 16.0, yield: 0, riskScore: 50 };
     
-    let weightedBeta = 0;
+    // Weighted portfolio beta calculation
+    let portfolioBeta = 0;
     let weightedVolatility = 0;
     let weightedYield = 0;
+    let totalValue = currentPortfolio.holdings.reduce((sum, h) => sum + h.value, 0);
 
     currentPortfolio.holdings.forEach(holding => {
-      const weight = holding.allocation / 100;
+      let weight = holding.value / totalValue;
       const data = marketData[holding.symbol];
-      const beta = data?.beta || (holding.assetClass === 'bond' ? 0.1 : 1.0);
-      const volatility = data?.volatility || (holding.assetClass === 'bond' ? 4 : 16);
-      const yieldVal = data?.yield || (holding.assetClass === 'bond' ? 3.5 : 1.8);
+      const beta = data?.beta || (holding.assetClass === 'bond' ? 0.1 : holding.assetClass === 'cash' ? 0.0 : 1.0);
+      const volatility = data?.volatility || (holding.assetClass === 'bond' ? 4 : holding.assetClass === 'cash' ? 0 : 16);
+      const yieldVal = data?.yield || (holding.assetClass === 'bond' ? 3.5 : holding.assetClass === 'cash' ? 0.1 : 1.8);
       
-      weightedBeta += beta * weight;
+      portfolioBeta += weight * beta;
       weightedVolatility += volatility * weight;
       weightedYield += yieldVal * weight;
     });
 
+    // Map beta to a risk score (0-100 scale)
+    // Beta 0.7 = 0 points, Beta 1.2+ = 100 points
+    let riskScore = Math.round((portfolioBeta - 0.7) / 0.5 * 100);
+    riskScore = Math.max(0, Math.min(100, riskScore)); // Clamp to 0-100
+
     return {
-      beta: weightedBeta,
+      beta: portfolioBeta,
       volatility: weightedVolatility,
-      yield: weightedYield
+      yield: weightedYield,
+      riskScore
     };
   }, [currentPortfolio, marketData]);
 
   const proposedMetrics = useMemo(() => {
-    if (!proposedPortfolio) return { beta: 1.0, volatility: 16.0, yield: 0 };
+    if (!proposedPortfolio) return { beta: 1.0, volatility: 16.0, yield: 0, riskScore: 50 };
     
-    let weightedBeta = 0;
+    // Weighted portfolio beta calculation for proposed portfolio
+    let portfolioBeta = 0;
     let weightedVolatility = 0;
     let weightedYield = 0;
+    let totalValue = proposedPortfolio.holdings.reduce((sum, h) => sum + h.value, 0);
 
     proposedPortfolio.holdings.forEach(holding => {
-      const weight = holding.allocation / 100;
-      const beta = holding.assetClass === 'bond' ? 0.1 : holding.assetClass === 'reit' ? 0.8 : 1.0;
-      const volatility = holding.assetClass === 'bond' ? 4 : holding.assetClass === 'reit' ? 12 : 16;
-      const yieldVal = holding.assetClass === 'bond' ? 4.5 : holding.assetClass === 'reit' ? 3.8 : 1.8;
+      let weight = holding.value / totalValue;
+      const beta = holding.assetClass === 'bond' ? 0.1 : 
+                   holding.assetClass === 'reit' ? 0.8 : 
+                   holding.assetClass === 'cash' ? 0.0 : 1.0;
+      const volatility = holding.assetClass === 'bond' ? 4 : 
+                        holding.assetClass === 'reit' ? 12 : 
+                        holding.assetClass === 'cash' ? 0 : 16;
+      const yieldVal = holding.assetClass === 'bond' ? 4.5 : 
+                      holding.assetClass === 'reit' ? 3.8 : 
+                      holding.assetClass === 'cash' ? 0.1 : 1.8;
       
-      weightedBeta += beta * weight;
+      portfolioBeta += weight * beta;
       weightedVolatility += volatility * weight;
       weightedYield += yieldVal * weight;
     });
 
+    // Map beta to a risk score (0-100 scale)
+    let riskScore = Math.round((portfolioBeta - 0.7) / 0.5 * 100);
+    riskScore = Math.max(0, Math.min(100, riskScore)); // Clamp to 0-100
+
     return {
-      beta: weightedBeta,
+      beta: portfolioBeta,
       volatility: weightedVolatility,
-      yield: weightedYield
+      yield: weightedYield,
+      riskScore
     };
   }, [proposedPortfolio]);
 
@@ -329,7 +350,7 @@ export function EnhancedPortfolioReviewGenerator() {
 
       {/* Portfolio Beta Header/Sidebar */}
       {currentPortfolio && (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
           <PortfolioBetaGauge beta={portfolioMetrics.beta} />
           <Card className="p-4">
             <div className="flex items-center gap-3">
@@ -350,6 +371,17 @@ export function EnhancedPortfolioReviewGenerator() {
               <div>
                 <div className="text-2xl font-bold">{formatPercentage(portfolioMetrics.volatility)}</div>
                 <div className="text-sm text-muted-foreground">Portfolio Volatility</div>
+              </div>
+            </div>
+          </Card>
+          <Card className="p-4">
+            <div className="flex items-center gap-3">
+              <div className="p-3 rounded-full bg-purple-100">
+                <Gauge className="w-6 h-6 text-purple-600" />
+              </div>
+              <div>
+                <div className="text-2xl font-bold">{portfolioMetrics.riskScore}</div>
+                <div className="text-sm text-muted-foreground">Risk Score (0-100)</div>
               </div>
             </div>
           </Card>
