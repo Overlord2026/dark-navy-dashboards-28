@@ -23,6 +23,7 @@ import {
 import { EnhancedCalculatorChart } from '@/components/calculators/EnhancedCalculatorChart';
 import { Celebration } from '@/components/ConfettiAnimation';
 import { PortfolioToolsModal } from './PortfolioToolsModal';
+import { QuickActionsPanel } from './QuickActionsPanel';
 
 interface Client {
   id: string;
@@ -465,6 +466,11 @@ export function AdvisorDashboard() {
             </CardContent>
           </Card>
         </div>
+      </motion.div>
+
+      {/* Quick Actions Panel */}
+      <motion.div variants={itemVariants}>
+        <QuickActionsPanel />
       </motion.div>
 
       {/* Portfolio Tools Modal */}
