@@ -25,6 +25,7 @@ import { Celebration } from '@/components/ConfettiAnimation';
 import { PortfolioToolsModal } from './PortfolioToolsModal';
 import { QuickActionsPanel } from './QuickActionsPanel';
 import { AdvisorAlertsPanel } from './AdvisorAlertsPanel';
+import { MyLeadsPanel } from './MyLeadsPanel';
 
 interface Client {
   id: string;
@@ -472,6 +473,11 @@ export function AdvisorDashboard() {
       {/* Real-time Alerts Panel */}
       <motion.div variants={itemVariants}>
         <AdvisorAlertsPanel />
+      </motion.div>
+
+      {/* My Leads Dashboard */}
+      <motion.div variants={itemVariants}>
+        <MyLeadsPanel />
       </motion.div>
 
       {/* Quick Actions Panel */}
