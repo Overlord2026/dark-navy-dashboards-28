@@ -83,6 +83,14 @@ const additionalRoutes = [
   {
     path: '/advisor-roi',
     element: <AdvisorROIDashboard />
+  },
+  {
+    path: '/attorney-onboarding',
+    element: <AttorneyOnboarding />
+  },
+  {
+    path: '/attorney-dashboard',
+    element: <AttorneyDashboard />
   }
 ];
 
