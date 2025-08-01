@@ -13,7 +13,7 @@ import {
   Target,
   Percent
 } from 'lucide-react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, PieChart as RechartsPieChart, Cell, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, PieChart as RechartsPieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 
 interface PortfolioAnalysisProps {
   portfolio: any;
@@ -115,15 +115,15 @@ export const PortfolioAnalysis: React.FC<PortfolioAnalysisProps> = ({
               <ResponsiveContainer width="100%" height="100%">
                 <RechartsPieChart>
                   <RechartsPieChart>
-                    <Pie
-                      data={assetAllocationData}
-                      cx="50%"
-                      cy="50%"
-                      outerRadius={80}
-                      fill="hsl(var(--primary))"
-                      dataKey="value"
-                      label={({ name, percentage }) => `${name}: ${percentage}`}
-                    >
+                  <Pie
+                    data={assetAllocationData}
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={80}
+                    fill="hsl(var(--primary))"
+                    dataKey="value"
+                    label={({ name, percentage }) => `${name}: ${percentage}`}
+                  >
                     {assetAllocationData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
