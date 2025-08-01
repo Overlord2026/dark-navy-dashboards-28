@@ -1317,6 +1317,158 @@ export type Database = {
         }
         Relationships: []
       }
+      cpa_client_relationships: {
+        Row: {
+          client_user_id: string
+          cpa_partner_id: string
+          created_at: string
+          end_date: string | null
+          engagement_letter_signed: boolean | null
+          engagement_letter_url: string | null
+          engagement_type: string
+          fee_structure: Json | null
+          id: string
+          is_active: boolean | null
+          notes: string | null
+          relationship_type: string | null
+          start_date: string | null
+          updated_at: string
+        }
+        Insert: {
+          client_user_id: string
+          cpa_partner_id: string
+          created_at?: string
+          end_date?: string | null
+          engagement_letter_signed?: boolean | null
+          engagement_letter_url?: string | null
+          engagement_type: string
+          fee_structure?: Json | null
+          id?: string
+          is_active?: boolean | null
+          notes?: string | null
+          relationship_type?: string | null
+          start_date?: string | null
+          updated_at?: string
+        }
+        Update: {
+          client_user_id?: string
+          cpa_partner_id?: string
+          created_at?: string
+          end_date?: string | null
+          engagement_letter_signed?: boolean | null
+          engagement_letter_url?: string | null
+          engagement_type?: string
+          fee_structure?: Json | null
+          id?: string
+          is_active?: boolean | null
+          notes?: string | null
+          relationship_type?: string | null
+          start_date?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cpa_client_relationships_cpa_partner_id_fkey"
+            columns: ["cpa_partner_id"]
+            isOneToOne: false
+            referencedRelation: "cpa_partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cpa_partners: {
+        Row: {
+          approved_at: string | null
+          approved_by: string | null
+          bio: string | null
+          certifications: string[] | null
+          client_capacity: number | null
+          created_at: string
+          firm_ein: string | null
+          firm_name: string
+          firm_size: string | null
+          hourly_rate: number | null
+          id: string
+          license_number: string
+          license_state: string
+          linkedin_url: string | null
+          office_address: Json | null
+          onboarding_status: string | null
+          phone: string | null
+          profile_image_url: string | null
+          service_areas: string[] | null
+          software_used: string[] | null
+          specialties: string[] | null
+          status: string | null
+          tenant_id: string | null
+          updated_at: string
+          user_id: string
+          website_url: string | null
+          white_label_enabled: boolean | null
+          years_experience: number | null
+        }
+        Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
+          bio?: string | null
+          certifications?: string[] | null
+          client_capacity?: number | null
+          created_at?: string
+          firm_ein?: string | null
+          firm_name: string
+          firm_size?: string | null
+          hourly_rate?: number | null
+          id?: string
+          license_number: string
+          license_state: string
+          linkedin_url?: string | null
+          office_address?: Json | null
+          onboarding_status?: string | null
+          phone?: string | null
+          profile_image_url?: string | null
+          service_areas?: string[] | null
+          software_used?: string[] | null
+          specialties?: string[] | null
+          status?: string | null
+          tenant_id?: string | null
+          updated_at?: string
+          user_id: string
+          website_url?: string | null
+          white_label_enabled?: boolean | null
+          years_experience?: number | null
+        }
+        Update: {
+          approved_at?: string | null
+          approved_by?: string | null
+          bio?: string | null
+          certifications?: string[] | null
+          client_capacity?: number | null
+          created_at?: string
+          firm_ein?: string | null
+          firm_name?: string
+          firm_size?: string | null
+          hourly_rate?: number | null
+          id?: string
+          license_number?: string
+          license_state?: string
+          linkedin_url?: string | null
+          office_address?: Json | null
+          onboarding_status?: string | null
+          phone?: string | null
+          profile_image_url?: string | null
+          service_areas?: string[] | null
+          software_used?: string[] | null
+          specialties?: string[] | null
+          status?: string | null
+          tenant_id?: string | null
+          updated_at?: string
+          user_id?: string
+          website_url?: string | null
+          white_label_enabled?: boolean | null
+          years_experience?: number | null
+        }
+        Relationships: []
+      }
       credit_cards: {
         Row: {
           apr: number | null
@@ -1672,6 +1824,48 @@ export type Database = {
           requested_at?: string
           status?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      demo_data_sets: {
+        Row: {
+          category: string
+          created_at: string
+          created_by: string | null
+          data_type: string
+          demo_data: Json
+          description: string | null
+          id: string
+          is_active: boolean | null
+          name: string
+          updated_at: string
+          usage_count: number | null
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          created_by?: string | null
+          data_type: string
+          demo_data: Json
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          updated_at?: string
+          usage_count?: number | null
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          created_by?: string | null
+          data_type?: string
+          demo_data?: Json
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          updated_at?: string
+          usage_count?: number | null
         }
         Relationships: []
       }
@@ -6200,6 +6394,86 @@ export type Database = {
         }
         Relationships: []
       }
+      migration_jobs: {
+        Row: {
+          backup_location: string | null
+          client_user_id: string | null
+          completed_at: string | null
+          cpa_partner_id: string
+          created_at: string
+          created_by: string
+          error_log: Json | null
+          estimated_completion: string | null
+          failed_records: number | null
+          file_mappings: Json | null
+          id: string
+          migration_config: Json | null
+          migration_type: string
+          processed_records: number | null
+          progress_percentage: number | null
+          source_system: string
+          source_version: string | null
+          started_at: string | null
+          status: string | null
+          total_records: number | null
+          updated_at: string
+        }
+        Insert: {
+          backup_location?: string | null
+          client_user_id?: string | null
+          completed_at?: string | null
+          cpa_partner_id: string
+          created_at?: string
+          created_by: string
+          error_log?: Json | null
+          estimated_completion?: string | null
+          failed_records?: number | null
+          file_mappings?: Json | null
+          id?: string
+          migration_config?: Json | null
+          migration_type: string
+          processed_records?: number | null
+          progress_percentage?: number | null
+          source_system: string
+          source_version?: string | null
+          started_at?: string | null
+          status?: string | null
+          total_records?: number | null
+          updated_at?: string
+        }
+        Update: {
+          backup_location?: string | null
+          client_user_id?: string | null
+          completed_at?: string | null
+          cpa_partner_id?: string
+          created_at?: string
+          created_by?: string
+          error_log?: Json | null
+          estimated_completion?: string | null
+          failed_records?: number | null
+          file_mappings?: Json | null
+          id?: string
+          migration_config?: Json | null
+          migration_type?: string
+          processed_records?: number | null
+          progress_percentage?: number | null
+          source_system?: string
+          source_version?: string | null
+          started_at?: string | null
+          status?: string | null
+          total_records?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "migration_jobs_cpa_partner_id_fkey"
+            columns: ["cpa_partner_id"]
+            isOneToOne: false
+            referencedRelation: "cpa_partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       model_portfolios: {
         Row: {
           asset_allocation: string | null
@@ -6562,6 +6836,45 @@ export type Database = {
           },
         ]
       }
+      onboarding_progress: {
+        Row: {
+          app_id: string
+          completed_at: string | null
+          created_at: string
+          data: Json | null
+          id: string
+          notes: string | null
+          status: string | null
+          step_key: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          app_id: string
+          completed_at?: string | null
+          created_at?: string
+          data?: Json | null
+          id?: string
+          notes?: string | null
+          status?: string | null
+          step_key: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          app_id?: string
+          completed_at?: string | null
+          created_at?: string
+          data?: Json | null
+          id?: string
+          notes?: string | null
+          status?: string | null
+          step_key?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       onboarding_sessions: {
         Row: {
           completed_at: string | null
@@ -6675,6 +6988,48 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      onboarding_steps: {
+        Row: {
+          app_id: string
+          component_name: string | null
+          created_at: string
+          description: string | null
+          estimated_minutes: number | null
+          help_text: string | null
+          id: string
+          is_required: boolean | null
+          step_key: string
+          step_number: number
+          title: string
+        }
+        Insert: {
+          app_id: string
+          component_name?: string | null
+          created_at?: string
+          description?: string | null
+          estimated_minutes?: number | null
+          help_text?: string | null
+          id?: string
+          is_required?: boolean | null
+          step_key: string
+          step_number: number
+          title: string
+        }
+        Update: {
+          app_id?: string
+          component_name?: string | null
+          created_at?: string
+          description?: string | null
+          estimated_minutes?: number | null
+          help_text?: string | null
+          id?: string
+          is_required?: boolean | null
+          step_key?: string
+          step_number?: number
+          title?: string
+        }
+        Relationships: []
       }
       onboarding_workflow_steps: {
         Row: {
@@ -13632,6 +13987,95 @@ export type Database = {
         }
         Relationships: []
       }
+      white_label_configs: {
+        Row: {
+          accent_color: string | null
+          brand_name: string
+          contact_email: string | null
+          contact_phone: string | null
+          cpa_partner_id: string
+          created_at: string
+          custom_css: string | null
+          custom_domain: string | null
+          favicon_url: string | null
+          features_enabled: Json | null
+          font_family: string | null
+          footer_text: string | null
+          id: string
+          is_active: boolean | null
+          logo_url: string | null
+          pricing_tiers: Json | null
+          primary_color: string | null
+          privacy_url: string | null
+          secondary_color: string | null
+          ssl_enabled: boolean | null
+          subdomain: string | null
+          terms_url: string | null
+          updated_at: string
+          welcome_message: string | null
+        }
+        Insert: {
+          accent_color?: string | null
+          brand_name: string
+          contact_email?: string | null
+          contact_phone?: string | null
+          cpa_partner_id: string
+          created_at?: string
+          custom_css?: string | null
+          custom_domain?: string | null
+          favicon_url?: string | null
+          features_enabled?: Json | null
+          font_family?: string | null
+          footer_text?: string | null
+          id?: string
+          is_active?: boolean | null
+          logo_url?: string | null
+          pricing_tiers?: Json | null
+          primary_color?: string | null
+          privacy_url?: string | null
+          secondary_color?: string | null
+          ssl_enabled?: boolean | null
+          subdomain?: string | null
+          terms_url?: string | null
+          updated_at?: string
+          welcome_message?: string | null
+        }
+        Update: {
+          accent_color?: string | null
+          brand_name?: string
+          contact_email?: string | null
+          contact_phone?: string | null
+          cpa_partner_id?: string
+          created_at?: string
+          custom_css?: string | null
+          custom_domain?: string | null
+          favicon_url?: string | null
+          features_enabled?: Json | null
+          font_family?: string | null
+          footer_text?: string | null
+          id?: string
+          is_active?: boolean | null
+          logo_url?: string | null
+          pricing_tiers?: Json | null
+          primary_color?: string | null
+          privacy_url?: string | null
+          secondary_color?: string | null
+          ssl_enabled?: boolean | null
+          subdomain?: string | null
+          terms_url?: string | null
+          updated_at?: string
+          welcome_message?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "white_label_configs_cpa_partner_id_fkey"
+            columns: ["cpa_partner_id"]
+            isOneToOne: false
+            referencedRelation: "cpa_partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       audit_summary: {
@@ -13809,7 +14253,7 @@ export type Database = {
         Returns: number
       }
       create_default_onboarding_steps: {
-        Args: { app_id: string }
+        Args: { app_id: string } | { app_id: string }
         Returns: undefined
       }
       create_franchise_referral_payout: {
