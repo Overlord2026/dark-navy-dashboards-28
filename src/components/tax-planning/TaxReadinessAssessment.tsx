@@ -5,6 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle, AlertCircle, XCircle, Download, Calendar } from "lucide-react";
 import { analytics } from "@/lib/analytics";
+import { FamilyOfficeReferralTrigger } from "./FamilyOfficeReferralTrigger";
 
 interface AssessmentQuestion {
   id: string;
@@ -194,6 +195,18 @@ export function TaxReadinessAssessment() {
                 Schedule Tax Consultation
               </Button>
             </div>
+
+            {/* Family Office Referral Trigger */}
+            {score < 75 && (
+              <FamilyOfficeReferralTrigger 
+                triggerContext="assessment_score"
+                assessmentScore={score}
+                triggerData={{ 
+                  missed_questions: assessmentQuestions.filter(q => !responses[q.id]).length,
+                  categories_needing_help: [...new Set(assessmentQuestions.filter(q => !responses[q.id]).map(q => q.category))]
+                }}
+              />
+            )}
 
             <div className="bg-muted/50 p-4 rounded-lg">
               <h4 className="font-medium mb-2">Recommended Next Steps:</h4>

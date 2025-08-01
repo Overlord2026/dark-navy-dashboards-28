@@ -11,6 +11,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { useToast } from '@/hooks/use-toast';
 import { analytics } from '@/lib/analytics';
 import { useTaxRules } from '@/hooks/useTaxRules';
+import { FamilyOfficeReferralTrigger } from './FamilyOfficeReferralTrigger';
 
 interface RothConversionInput {
   currentAge: number;
@@ -323,6 +324,18 @@ const RothConversionAnalyzer: React.FC<{ subscriptionTier: string }> = ({ subscr
             )}
           </TabsContent>
         </Tabs>
+
+        {/* Family Office Referral Trigger for complex conversions */}
+        {showResults && inputs.conversionAmount > 100000 && (
+          <FamilyOfficeReferralTrigger 
+            triggerContext="complex_planning"
+            triggerData={{ 
+              conversion_amount: inputs.conversionAmount,
+              traditional_balance: inputs.traditionalIraBalance,
+              tax_bracket: inputs.currentTaxBracket
+            }}
+          />
+        )}
 
         <div className="mt-6 flex items-center gap-2 text-sm text-muted-foreground">
           <HelpCircle className="h-4 w-4" />

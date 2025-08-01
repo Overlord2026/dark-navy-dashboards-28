@@ -10,6 +10,7 @@ import { TrendingUp, Calculator, PieChart, Crown, HelpCircle } from 'lucide-reac
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import { useToast } from '@/hooks/use-toast';
 import { analytics } from '@/lib/analytics';
+import { FamilyOfficeReferralTrigger } from './FamilyOfficeReferralTrigger';
 
 interface ProjectionInput {
   currentAge: number;
@@ -520,6 +521,19 @@ const MultiYearTaxProjector: React.FC<{ subscriptionTier: string }> = ({ subscri
             )}
           </TabsContent>
         </Tabs>
+
+        {/* Family Office Referral Trigger for high tax burden */}
+        {showResults && getTotalTaxesPaid() > 200000 && (
+          <FamilyOfficeReferralTrigger 
+            triggerContext="high_tax_burden"
+            taxAmount={getTotalTaxesPaid()}
+            triggerData={{ 
+              total_projected_taxes: getTotalTaxesPaid(),
+              avg_effective_rate: getAverageEffectiveRate(),
+              years_projected: projections.length
+            }}
+          />
+        )}
 
         <div className="mt-6 flex items-center gap-2 text-sm text-muted-foreground">
           <HelpCircle className="h-4 w-4" />
