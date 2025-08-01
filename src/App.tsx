@@ -1222,7 +1222,10 @@ const App = () => {
                           </ProtectedRoute>
                         }
                       />
-                      {/* QA Testing Routes removed for production */}
+                       {/* Production Readiness Tracker */}
+                       <Route path="/production-readiness" element={<ProductionReadinessTracker />} />
+                       
+                       {/* QA Testing Routes removed for production */}
                       {/* QA brand audit route removed for production */}
                     
                     <Route path="/access-denied" element={<AccessDeniedPage />} />
