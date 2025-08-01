@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { ThreeColumnLayout } from '@/components/layout/ThreeColumnLayout';
 import { AdvisorDashboard } from '@/components/advisor/AdvisorDashboard';
