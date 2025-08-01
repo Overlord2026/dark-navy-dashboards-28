@@ -62,7 +62,7 @@ import { TrainingModulesPage } from "./pages/TrainingModulesPage";
 import { ProfessionalsDirectoryPage } from "./pages/ProfessionalsDirectoryPage";
 import { DocumentUploadPage } from "./pages/DocumentUploadPage";
 import { DocumentViewPage } from "./pages/DocumentViewPage";
-import { NotFoundPage } from "./pages/NotFoundPage";
+import { Global404Handler } from "./pages/Global404Handler";
 import { AccessDeniedPage } from "./pages/AccessDeniedPage";
 import AdvisorInvitePage from "./pages/AdvisorInvitePage";
 import ClientOnboardingPage from "./pages/ClientOnboardingPage";
@@ -140,6 +140,16 @@ import { AnnuitiesVideosPage } from "./pages/AnnuitiesVideosPage";
 import { WealthCashManagementPage } from "./pages/WealthCashManagementPage";
 import { WealthPropertiesPage } from "./pages/WealthPropertiesPage";
 import { WealthDocsPage } from "./pages/WealthDocsPage";
+import { WealthCashTransfersPage } from "./pages/wealth/WealthCashTransfersPage";
+import { WealthGoalsPage } from "./pages/wealth/WealthGoalsPage";
+// Healthcare pages
+import { HealthcareSavingsPage } from "./pages/healthcare/HealthcareSavingsPage";
+import { HealthcareProvidersPage } from "./pages/healthcare/HealthcareProvidersPage";
+import { HealthcareMedicationsPage } from "./pages/healthcare/HealthcareMedicationsPage";
+// Annuities pages
+import { AnnuitiesChatPage } from "./pages/annuities/AnnuitiesChatPage";
+// Help page
+import { HelpPage } from "./pages/HelpPage";
 
 const queryClient = new QueryClient();
 
@@ -1007,31 +1017,93 @@ const App = () => {
                          }
                        />
 
-                       {/* Wealth Management Routes */}
-                       <Route
-                         path="/wealth/cash/management"
-                         element={
-                           <AuthWrapper requireAuth={true}>
-                             <WealthCashManagementPage />
-                           </AuthWrapper>
-                         }
-                       />
-                       <Route
-                         path="/wealth/properties"
-                         element={
-                           <AuthWrapper requireAuth={true}>
-                             <WealthPropertiesPage />
-                           </AuthWrapper>
-                         }
-                       />
-                       <Route
-                         path="/wealth/docs"
-                         element={
-                           <AuthWrapper requireAuth={true}>
-                             <WealthDocsPage />
-                           </AuthWrapper>
-                         }
-                       />
+                        {/* Wealth Management Routes */}
+                        <Route
+                          path="/wealth/cash/management"
+                          element={
+                            <AuthWrapper requireAuth={true}>
+                              <WealthCashManagementPage />
+                            </AuthWrapper>
+                          }
+                        />
+                        <Route
+                          path="/wealth/cash/transfers"
+                          element={
+                            <AuthWrapper requireAuth={true}>
+                              <WealthCashTransfersPage />
+                            </AuthWrapper>
+                          }
+                        />
+                        <Route
+                          path="/wealth/goals"
+                          element={
+                            <AuthWrapper requireAuth={true}>
+                              <WealthGoalsPage />
+                            </AuthWrapper>
+                          }
+                        />
+                        <Route
+                          path="/wealth/properties"
+                          element={
+                            <AuthWrapper requireAuth={true}>
+                              <WealthPropertiesPage />
+                            </AuthWrapper>
+                          }
+                        />
+                        <Route
+                          path="/wealth/docs"
+                          element={
+                            <AuthWrapper requireAuth={true}>
+                              <WealthDocsPage />
+                            </AuthWrapper>
+                          }
+                        />
+
+                        {/* Additional Healthcare Routes */}
+                        <Route
+                          path="/healthcare-savings"
+                          element={
+                            <AuthWrapper requireAuth={true}>
+                              <HealthcareSavingsPage />
+                            </AuthWrapper>
+                          }
+                        />
+                        <Route
+                          path="/healthcare-providers"
+                          element={
+                            <AuthWrapper requireAuth={true}>
+                              <HealthcareProvidersPage />
+                            </AuthWrapper>
+                          }
+                        />
+                        <Route
+                          path="/healthcare-medications"
+                          element={
+                            <AuthWrapper requireAuth={true}>
+                              <HealthcareMedicationsPage />
+                            </AuthWrapper>
+                          }
+                        />
+
+                        {/* Additional Annuities Routes */}
+                        <Route
+                          path="/annuities/chat"
+                          element={
+                            <AuthWrapper requireAuth={true}>
+                              <AnnuitiesChatPage />
+                            </AuthWrapper>
+                          }
+                        />
+
+                        {/* Help & Support */}
+                        <Route
+                          path="/help"
+                          element={
+                            <AuthWrapper requireAuth={true}>
+                              <HelpPage />
+                            </AuthWrapper>
+                          }
+                        />
 
                      {/* Navigation & QA Testing Routes */}
                      <Route path="/navigation-diagnostics" element={
@@ -1058,7 +1130,7 @@ const App = () => {
                       {/* QA brand audit route removed for production */}
                     
                     <Route path="/access-denied" element={<AccessDeniedPage />} />
-                   <Route path="*" element={<NotFoundPage />} />
+                   <Route path="*" element={<Global404Handler />} />
                  </Routes>
                   </div>
                   <BrandedFooter />
