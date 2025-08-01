@@ -1018,6 +1018,173 @@ export type Database = {
           },
         ]
       }
+      attorney_documents: {
+        Row: {
+          document_name: string
+          document_type: string
+          file_path: string
+          file_size: number | null
+          id: string
+          onboarding_id: string
+          status: string | null
+          uploaded_at: string
+          user_id: string
+          verified_at: string | null
+          verified_by: string | null
+        }
+        Insert: {
+          document_name: string
+          document_type: string
+          file_path: string
+          file_size?: number | null
+          id?: string
+          onboarding_id: string
+          status?: string | null
+          uploaded_at?: string
+          user_id: string
+          verified_at?: string | null
+          verified_by?: string | null
+        }
+        Update: {
+          document_name?: string
+          document_type?: string
+          file_path?: string
+          file_size?: number | null
+          id?: string
+          onboarding_id?: string
+          status?: string | null
+          uploaded_at?: string
+          user_id?: string
+          verified_at?: string | null
+          verified_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attorney_documents_onboarding_id_fkey"
+            columns: ["onboarding_id"]
+            isOneToOne: false
+            referencedRelation: "attorney_onboarding"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      attorney_onboarding: {
+        Row: {
+          admission_dates: Json | null
+          attorney_bio: string | null
+          bar_number: string | null
+          bar_status: string | null
+          billing_method: string | null
+          cle_compliance_status: string | null
+          cle_expiration_date: string | null
+          cle_hours_completed: number | null
+          cle_hours_required: number | null
+          consultation_fee: number | null
+          created_at: string
+          current_step: string
+          email: string | null
+          firm_name: string | null
+          firm_website: string | null
+          first_name: string | null
+          hourly_rate: number | null
+          id: string
+          jurisdictions_licensed: string[] | null
+          last_name: string | null
+          nda_signed: boolean | null
+          office_address: string | null
+          participation_agreement_signed: boolean | null
+          phone: string | null
+          practice_areas: string[] | null
+          primary_jurisdiction: string | null
+          primary_practice_area: string | null
+          retainer_required: boolean | null
+          specializations: string[] | null
+          status: string | null
+          tenant_id: string | null
+          terms_accepted: boolean | null
+          typical_retainer_amount: number | null
+          updated_at: string
+          user_id: string
+          years_experience: number | null
+        }
+        Insert: {
+          admission_dates?: Json | null
+          attorney_bio?: string | null
+          bar_number?: string | null
+          bar_status?: string | null
+          billing_method?: string | null
+          cle_compliance_status?: string | null
+          cle_expiration_date?: string | null
+          cle_hours_completed?: number | null
+          cle_hours_required?: number | null
+          consultation_fee?: number | null
+          created_at?: string
+          current_step?: string
+          email?: string | null
+          firm_name?: string | null
+          firm_website?: string | null
+          first_name?: string | null
+          hourly_rate?: number | null
+          id?: string
+          jurisdictions_licensed?: string[] | null
+          last_name?: string | null
+          nda_signed?: boolean | null
+          office_address?: string | null
+          participation_agreement_signed?: boolean | null
+          phone?: string | null
+          practice_areas?: string[] | null
+          primary_jurisdiction?: string | null
+          primary_practice_area?: string | null
+          retainer_required?: boolean | null
+          specializations?: string[] | null
+          status?: string | null
+          tenant_id?: string | null
+          terms_accepted?: boolean | null
+          typical_retainer_amount?: number | null
+          updated_at?: string
+          user_id: string
+          years_experience?: number | null
+        }
+        Update: {
+          admission_dates?: Json | null
+          attorney_bio?: string | null
+          bar_number?: string | null
+          bar_status?: string | null
+          billing_method?: string | null
+          cle_compliance_status?: string | null
+          cle_expiration_date?: string | null
+          cle_hours_completed?: number | null
+          cle_hours_required?: number | null
+          consultation_fee?: number | null
+          created_at?: string
+          current_step?: string
+          email?: string | null
+          firm_name?: string | null
+          firm_website?: string | null
+          first_name?: string | null
+          hourly_rate?: number | null
+          id?: string
+          jurisdictions_licensed?: string[] | null
+          last_name?: string | null
+          nda_signed?: boolean | null
+          office_address?: string | null
+          participation_agreement_signed?: boolean | null
+          phone?: string | null
+          practice_areas?: string[] | null
+          primary_jurisdiction?: string | null
+          primary_practice_area?: string | null
+          retainer_required?: boolean | null
+          specializations?: string[] | null
+          status?: string | null
+          tenant_id?: string | null
+          terms_accepted?: boolean | null
+          typical_retainer_amount?: number | null
+          updated_at?: string
+          user_id?: string
+          years_experience?: number | null
+        }
+        Relationships: []
+      }
       audit_logs: {
         Row: {
           changed_at: string | null
@@ -18311,6 +18478,10 @@ export type Database = {
         Args: { p_retention_days?: number }
         Returns: number
       }
+      complete_attorney_onboarding: {
+        Args: { p_onboarding_id: string }
+        Returns: boolean
+      }
       count_advisors: {
         Args: Record<PropertyKey, never>
         Returns: number
@@ -18334,6 +18505,25 @@ export type Database = {
       count_open_tickets: {
         Args: Record<PropertyKey, never>
         Returns: number
+      }
+      create_attorney_document: {
+        Args: {
+          p_onboarding_id: string
+          p_document_type: string
+          p_document_name: string
+          p_file_path: string
+          p_file_size?: number
+        }
+        Returns: string
+      }
+      create_attorney_onboarding: {
+        Args: {
+          p_first_name: string
+          p_last_name: string
+          p_email: string
+          p_phone?: string
+        }
+        Returns: string
       }
       create_default_email_template: {
         Args: { p_advisor_id: string }
@@ -18372,6 +18562,10 @@ export type Database = {
           p_tenant_id?: string
         }
         Returns: string
+      }
+      delete_attorney_document: {
+        Args: { p_document_id: string }
+        Returns: boolean
       }
       detect_service_role_abuse: {
         Args: Record<PropertyKey, never>
@@ -18441,6 +18635,47 @@ export type Database = {
         }
         Returns: string
       }
+      get_attorney_onboardings: {
+        Args: { p_user_id?: string }
+        Returns: {
+          id: string
+          user_id: string
+          tenant_id: string
+          current_step: string
+          first_name: string
+          last_name: string
+          email: string
+          phone: string
+          office_address: string
+          firm_name: string
+          firm_website: string
+          attorney_bio: string
+          bar_number: string
+          primary_jurisdiction: string
+          jurisdictions_licensed: string[]
+          admission_dates: Json
+          bar_status: string
+          cle_hours_completed: number
+          cle_hours_required: number
+          cle_expiration_date: string
+          cle_compliance_status: string
+          primary_practice_area: string
+          practice_areas: string[]
+          years_experience: number
+          specializations: string[]
+          hourly_rate: number
+          consultation_fee: number
+          billing_method: string
+          retainer_required: boolean
+          typical_retainer_amount: number
+          terms_accepted: boolean
+          nda_signed: boolean
+          participation_agreement_signed: boolean
+          status: string
+          created_at: string
+          updated_at: string
+        }[]
+      }
       get_campaign_analytics: {
         Args: { p_tenant_id: string; p_period_days?: number }
         Returns: {
@@ -18486,6 +18721,22 @@ export type Database = {
           status: string
           last_updated: string
           details: Json
+        }[]
+      }
+      get_onboarding_documents: {
+        Args: { p_onboarding_id: string }
+        Returns: {
+          id: string
+          onboarding_id: string
+          user_id: string
+          document_type: string
+          document_name: string
+          file_path: string
+          file_size: number
+          status: string
+          uploaded_at: string
+          verified_at: string
+          verified_by: string
         }[]
       }
       get_referral_conversion_analytics: {
@@ -18716,6 +18967,10 @@ export type Database = {
           notes: string
         }[]
       }
+      send_onboarding_reminder: {
+        Args: { p_onboarding_id: string }
+        Returns: boolean
+      }
       test_audit_logging: {
         Args: Record<PropertyKey, never>
         Returns: {
@@ -18814,6 +19069,10 @@ export type Database = {
           p_completed: boolean
           p_notes?: string
         }
+        Returns: boolean
+      }
+      update_onboarding_status: {
+        Args: { p_onboarding_id: string; p_status: string }
         Returns: boolean
       }
       upsert_daily_financial_snapshot: {
