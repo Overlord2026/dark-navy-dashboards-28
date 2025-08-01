@@ -225,20 +225,22 @@ export function AttorneyOnboarding() {
 
       if (data) {
         setOnboardingId(data.id);
-        setCurrentStep(data.current_step || 1);
+        setCurrentStep(typeof data.current_step === 'string' ? parseInt(data.current_step) || 1 : 1);
         setFormData({
           first_name: data.first_name || '',
           last_name: data.last_name || '',
           email: data.email || userProfile.email || '',
           phone: data.phone || '',
-          office_address: data.office_address || { street: '', city: '', state: '', zip: '' },
+          office_address: typeof data.office_address === 'string' ? 
+            JSON.parse(data.office_address || '{}') : 
+            data.office_address || { street: '', city: '', state: '', zip: '' },
           firm_name: data.firm_name || '',
           firm_website: data.firm_website || '',
           attorney_bio: data.attorney_bio || '',
           bar_number: data.bar_number || '',
           primary_jurisdiction: data.primary_jurisdiction || '',
           jurisdictions_licensed: data.jurisdictions_licensed || [],
-          admission_dates: data.admission_dates || {},
+          admission_dates: {},
           bar_status: data.bar_status || 'active',
           cle_hours_completed: data.cle_hours_completed || 0,
           cle_hours_required: data.cle_hours_required || 20,
@@ -274,9 +276,36 @@ export function AttorneyOnboarding() {
       const stepData = {
         user_id: userProfile.id,
         tenant_id: userProfile.tenant_id,
-        current_step: currentStep,
-        steps_completed: Array.from(new Set([...(onboardingId ? [] : []), currentStep])),
-        ...formData,
+        current_step: currentStep.toString(),
+        first_name: formData.first_name,
+        last_name: formData.last_name,
+        email: formData.email,
+        phone: formData.phone,
+        office_address: JSON.stringify(formData.office_address),
+        firm_name: formData.firm_name,
+        firm_website: formData.firm_website,
+        attorney_bio: formData.attorney_bio,
+        bar_number: formData.bar_number,
+        primary_jurisdiction: formData.primary_jurisdiction,
+        jurisdictions_licensed: formData.jurisdictions_licensed,
+        admission_dates: formData.admission_dates,
+        bar_status: formData.bar_status,
+        cle_hours_completed: formData.cle_hours_completed,
+        cle_hours_required: formData.cle_hours_required,
+        cle_expiration_date: formData.cle_expiration_date,
+        cle_compliance_status: formData.cle_compliance_status,
+        primary_practice_area: formData.primary_practice_area,
+        practice_areas: formData.practice_areas,
+        years_experience: formData.years_experience,
+        specializations: formData.specializations,
+        hourly_rate: formData.hourly_rate,
+        consultation_fee: formData.consultation_fee,
+        billing_method: formData.billing_method,
+        retainer_required: formData.retainer_required,
+        typical_retainer_amount: formData.typical_retainer_amount,
+        terms_accepted: formData.terms_accepted,
+        nda_signed: formData.nda_signed,
+        participation_agreement_signed: formData.participation_agreement_signed,
         updated_at: new Date().toISOString()
       };
 
@@ -290,7 +319,7 @@ export function AttorneyOnboarding() {
       } else {
         const { data, error } = await supabase
           .from('attorney_onboarding')
-          .insert([stepData])
+          .insert(stepData)
           .select()
           .single();
 
@@ -337,14 +366,14 @@ export function AttorneyOnboarding() {
       // Save document record
       const { error: docError } = await supabase
         .from('attorney_documents')
-        .insert([{
+        .insert({
           onboarding_id: onboardingId,
+          user_id: userProfile?.id,
           document_type: fileType,
           document_name: file.name,
           file_path: fileName,
-          file_size: file.size,
-          mime_type: file.type
-        }]);
+          file_size: file.size
+        });
 
       if (docError) throw docError;
 

@@ -6,35 +6,55 @@ import { useToast } from '@/hooks/use-toast';
 // Define types to match our database schema
 export interface AttorneyOnboarding {
   id: string;
-  attorney_user_id: string;
-  client_user_id: string;
-  onboarding_stage: string;
-  engagement_letter_signed: boolean;
-  welcome_email_sent: boolean;
+  user_id: string;
+  tenant_id: string;
+  current_step: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string;
+  office_address: string;
+  firm_name: string;
+  firm_website: string;
+  attorney_bio: string;
+  bar_number: string;
+  primary_jurisdiction: string;
+  jurisdictions_licensed: string[];
+  admission_dates: any;
+  bar_status: string;
+  cle_hours_completed: number;
+  cle_hours_required: number;
+  cle_expiration_date: string;
+  cle_compliance_status: string;
+  primary_practice_area: string;
+  practice_areas: string[];
+  years_experience: number;
+  specializations: string[];
+  hourly_rate: number;
+  consultation_fee: number;
+  billing_method: string;
+  retainer_required: boolean;
+  typical_retainer_amount: number;
+  terms_accepted: boolean;
+  nda_signed: boolean;
+  participation_agreement_signed: boolean;
   status: string;
   created_at: string;
   updated_at: string;
-  documents_required: number;
-  documents_uploaded: number;
-  progress_percentage: number;
-  intake_form_completed: boolean;
-  client_preferences: any;
 }
 
 export interface AttorneyDocument {
   id: string;
   onboarding_id: string;
+  user_id: string;
   document_type: string;
-  file_name: string;
+  document_name: string;
   file_path: string;
   file_size: number;
-  upload_status: string;
+  status: string;
   uploaded_at: string;
-  uploaded_by: string;
-  is_required: boolean;
-  is_client_visible: boolean;
-  client_comments: string | null;
-  attorney_notes: string | null;
+  verified_at: string;
+  verified_by: string;
 }
 
 export const useAttorneyOnboarding = () => {
@@ -53,7 +73,7 @@ export const useAttorneyOnboarding = () => {
 
       // Use raw SQL query to work around type issues
       const { data, error } = await supabase.rpc('get_attorney_onboardings', {
-        attorney_id: user.id
+        p_user_id: user.id
       });
 
       if (error) throw error;
@@ -84,11 +104,10 @@ export const useAttorneyOnboarding = () => {
       if (!user) throw new Error('Not authenticated');
 
       const { data, error } = await supabase.rpc('create_attorney_onboarding', {
-        attorney_id: user.id,
-        client_email: clientData.client_email,
-        client_name: clientData.client_name,
-        engagement_type: clientData.engagement_type,
-        documents_required: clientData.documents_required
+        p_first_name: clientData.client_name.split(' ')[0] || '',
+        p_last_name: clientData.client_name.split(' ').slice(1).join(' ') || '',
+        p_email: clientData.client_email,
+        p_phone: ''
       });
 
       if (error) throw error;
@@ -122,7 +141,7 @@ export const useAttorneyOnboarding = () => {
       setLoading(true);
       
       const { data, error } = await supabase.rpc('get_onboarding_documents', {
-        onboarding_id: onboardingId
+        p_onboarding_id: onboardingId
       });
 
       if (error) throw error;
@@ -146,9 +165,8 @@ export const useAttorneyOnboarding = () => {
       setLoading(true);
 
       const { error } = await supabase.rpc('update_onboarding_status', {
-        onboarding_id: onboardingId,
-        new_status: status,
-        notes: notes || ''
+        p_onboarding_id: onboardingId,
+        p_status: status
       });
 
       if (error) throw error;
@@ -179,8 +197,7 @@ export const useAttorneyOnboarding = () => {
       setLoading(true);
 
       const { error } = await supabase.rpc('send_onboarding_reminder', {
-        onboarding_id: onboardingId,
-        reminder_type: reminderType
+        p_onboarding_id: onboardingId
       });
 
       if (error) throw error;
@@ -226,13 +243,11 @@ export const useAttorneyOnboarding = () => {
 
       // Create document record
       const { error: docError } = await supabase.rpc('create_attorney_document', {
-        onboarding_id: onboardingId,
-        document_type: documentType,
-        file_name: file.name,
-        file_path: filePath,
-        file_size: file.size,
-        is_required: isRequired,
-        is_client_visible: isClientVisible
+        p_onboarding_id: onboardingId,
+        p_document_type: documentType,
+        p_document_name: file.name,
+        p_file_path: filePath,
+        p_file_size: file.size
       });
 
       if (docError) throw docError;
@@ -271,7 +286,7 @@ export const useAttorneyOnboarding = () => {
 
       // Delete document record
       const { error } = await supabase.rpc('delete_attorney_document', {
-        document_id: documentId
+        p_document_id: documentId
       });
 
       if (error) throw error;
@@ -302,7 +317,7 @@ export const useAttorneyOnboarding = () => {
       setLoading(true);
 
       const { error } = await supabase.rpc('complete_attorney_onboarding', {
-        onboarding_id: onboardingId
+        p_onboarding_id: onboardingId
       });
 
       if (error) throw error;

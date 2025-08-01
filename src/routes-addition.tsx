@@ -19,6 +19,7 @@ import TaxCenter from '@/pages/TaxCenter';
 import AdvisorROIDashboard from '@/pages/AdvisorROIDashboard';
 import { ComprehensiveQATest } from '@/pages/ComprehensiveQATest';
 import { SystemValidationPage } from '@/pages/SystemValidationPage';
+import { AttorneyOnboarding } from '@/pages/AttorneyOnboarding';
 
 // These routes should be added to your existing routes.tsx file
 const additionalRoutes = [
@@ -89,10 +90,6 @@ const additionalRoutes = [
   {
     path: '/attorney-onboarding',
     element: <AttorneyOnboarding />
-  },
-  {
-    path: '/attorney-dashboard',
-    element: <AttorneyDashboard />
   },
   {
     path: '/comprehensive-qa-test',
