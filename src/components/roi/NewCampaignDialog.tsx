@@ -16,25 +16,55 @@ import { CalendarIcon } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
+import { useROIData } from '@/hooks/useROIData';
 
 interface NewCampaignDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onCampaignCreated?: () => void;
 }
 
-export function NewCampaignDialog({ open, onOpenChange }: NewCampaignDialogProps) {
+export function NewCampaignDialog({ open, onOpenChange, onCampaignCreated }: NewCampaignDialogProps) {
   const { toast } = useToast();
+  const { createCampaign, loading } = useROIData();
   const [startDate, setStartDate] = React.useState<Date>();
   const [endDate, setEndDate] = React.useState<Date>();
+  const [formData, setFormData] = React.useState({
+    name: '',
+    source: '',
+    spend: '',
+  });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement campaign creation
-    toast({
-      title: "Campaign Created",
-      description: "New campaign has been added successfully.",
-    });
-    onOpenChange(false);
+    
+    if (!formData.name || !formData.source || !startDate) {
+      toast({
+        title: "Missing Fields",
+        description: "Please fill in all required fields.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      await createCampaign({
+        name: formData.name,
+        source: formData.source,
+        spend: parseFloat(formData.spend) || 0,
+        start_date: format(startDate, 'yyyy-MM-dd'),
+        end_date: endDate ? format(endDate, 'yyyy-MM-dd') : format(startDate, 'yyyy-MM-dd'),
+      });
+      
+      // Reset form
+      setFormData({ name: '', source: '', spend: '' });
+      setStartDate(undefined);
+      setEndDate(undefined);
+      onCampaignCreated?.();
+      onOpenChange(false);
+    } catch (error) {
+      // Error handling is done in the hook
+    }
   };
 
   return (
@@ -48,13 +78,19 @@ export function NewCampaignDialog({ open, onOpenChange }: NewCampaignDialogProps
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="campaignName">Campaign Name</Label>
-            <Input id="campaignName" placeholder="Q4 Facebook Campaign" required />
+            <Label htmlFor="campaignName">Campaign Name *</Label>
+            <Input 
+              id="campaignName" 
+              placeholder="Q4 Facebook Campaign" 
+              value={formData.name}
+              onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+              required 
+            />
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="source">Campaign Source</Label>
-            <Select>
+            <Label htmlFor="source">Campaign Source *</Label>
+            <Select value={formData.source} onValueChange={(value) => setFormData(prev => ({ ...prev, source: value }))}>
               <SelectTrigger>
                 <SelectValue placeholder="Select source" />
               </SelectTrigger>
@@ -70,7 +106,14 @@ export function NewCampaignDialog({ open, onOpenChange }: NewCampaignDialogProps
           
           <div className="space-y-2">
             <Label htmlFor="spend">Total Spend ($)</Label>
-            <Input id="spend" type="number" placeholder="5000" step="0.01" />
+            <Input 
+              id="spend" 
+              type="number" 
+              placeholder="5000" 
+              step="0.01"
+              value={formData.spend}
+              onChange={(e) => setFormData(prev => ({ ...prev, spend: e.target.value }))}
+            />
           </div>
           
           <div className="grid grid-cols-2 gap-4">
@@ -133,7 +176,9 @@ export function NewCampaignDialog({ open, onOpenChange }: NewCampaignDialogProps
             <Button variant="outline" type="button" onClick={() => onOpenChange(false)}>
               Cancel
             </Button>
-            <Button type="submit">Create Campaign</Button>
+            <Button type="submit" disabled={loading}>
+              {loading ? 'Creating...' : 'Create Campaign'}
+            </Button>
           </div>
         </form>
       </DialogContent>
