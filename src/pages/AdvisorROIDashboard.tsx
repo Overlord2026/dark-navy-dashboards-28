@@ -10,6 +10,7 @@ import { CampaignPerformanceTable } from '@/components/roi/CampaignPerformanceTa
 import { NewLeadDialog } from '@/components/roi/NewLeadDialog';
 import { NewCampaignDialog } from '@/components/roi/NewCampaignDialog';
 import { CSVImportDialog } from '@/components/roi/CSVImportDialog';
+import { useCSVOperations } from '@/hooks/useCSVOperations';
 import { addDays } from 'date-fns';
 
 interface DateRange {
@@ -27,11 +28,9 @@ export default function AdvisorROIDashboard() {
   const [isNewLeadOpen, setIsNewLeadOpen] = useState(false);
   const [isNewCampaignOpen, setIsNewCampaignOpen] = useState(false);
   const [isCSVImportOpen, setIsCSVImportOpen] = useState(false);
-
-  const handleExportCSV = () => {
-    // TODO: Implement CSV export
-    console.log('Exporting CSV...');
-  };
+  const [csvImportType, setCsvImportType] = useState<'leads' | 'campaigns' | undefined>();
+  
+  const { exportLeadsToCSV, exportCampaignsToCSV, isExporting } = useCSVOperations();
 
   return (
     <div className="space-y-6 p-6">
@@ -75,22 +74,46 @@ export default function AdvisorROIDashboard() {
               </SelectContent>
             </Select>
 
-            <div className="flex gap-2 ml-auto">
+            <div className="flex gap-2 ml-auto flex-wrap">
               <Button 
                 variant="outline" 
                 size="sm"
-                onClick={() => setIsCSVImportOpen(true)}
+                onClick={() => {
+                  setCsvImportType('leads');
+                  setIsCSVImportOpen(true);
+                }}
               >
                 <Upload className="h-4 w-4 mr-2" />
-                Import CSV
+                Import Leads
               </Button>
               <Button 
                 variant="outline" 
                 size="sm"
-                onClick={handleExportCSV}
+                onClick={() => {
+                  setCsvImportType('campaigns');
+                  setIsCSVImportOpen(true);
+                }}
+              >
+                <Upload className="h-4 w-4 mr-2" />
+                Import Campaigns
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={exportLeadsToCSV}
+                disabled={isExporting}
               >
                 <Download className="h-4 w-4 mr-2" />
-                Export CSV
+                Export Leads
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={exportCampaignsToCSV}
+                disabled={isExporting}
+              >
+                <Download className="h-4 w-4 mr-2" />
+                Export Campaigns
               </Button>
             </div>
           </div>
@@ -133,7 +156,11 @@ export default function AdvisorROIDashboard() {
       />
       <CSVImportDialog 
         open={isCSVImportOpen} 
-        onOpenChange={setIsCSVImportOpen} 
+        onOpenChange={(open) => {
+          setIsCSVImportOpen(open);
+          if (!open) setCsvImportType(undefined);
+        }}
+        defaultType={csvImportType}
       />
     </div>
   );
