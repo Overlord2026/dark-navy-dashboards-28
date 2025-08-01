@@ -10,7 +10,7 @@ import { MarketDataService, MarketDataDisplay } from './MarketDataService';
 import { BenchmarkComparison } from './BenchmarkComparison';
 import { PortfolioReport } from './PortfolioReport';
 import { ClientRiskProfileQuiz } from './ClientRiskProfileQuiz';
-import { AdvisorReportBuilder } from './AdvisorReportBuilder';
+import PortfolioReportBuilder from './PortfolioReportBuilder';
 import { useMarketData } from '@/hooks/useMarketData';
 import { TrendingUp, TrendingDown, Download, Shield, DollarSign, Gauge, FileText, Loader2 } from 'lucide-react';
 
@@ -460,9 +460,9 @@ export function EnhancedPortfolioReviewGenerator() {
           </TabsContent>
           
           <TabsContent value="advisor-builder" className="space-y-4">
-            <AdvisorReportBuilder
-              currentPortfolio={currentPortfolio}
-              proposedPortfolio={proposedPortfolio}
+            <PortfolioReportBuilder
+              portfolio={currentPortfolio}
+              proposal={proposedPortfolio}
               currentMetrics={portfolioMetrics}
               proposedMetrics={proposedMetrics}
               marketData={marketData}
