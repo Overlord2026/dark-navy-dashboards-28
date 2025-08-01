@@ -868,6 +868,53 @@ export type Database = {
         }
         Relationships: []
       }
+      campaign_deliveries: {
+        Row: {
+          campaign_id: string
+          clicked_at: string | null
+          client_user_id: string
+          delivered_at: string | null
+          delivery_type: string
+          error_message: string | null
+          id: string
+          opened_at: string | null
+          status: string
+          tracking_data: Json | null
+        }
+        Insert: {
+          campaign_id: string
+          clicked_at?: string | null
+          client_user_id: string
+          delivered_at?: string | null
+          delivery_type: string
+          error_message?: string | null
+          id?: string
+          opened_at?: string | null
+          status?: string
+          tracking_data?: Json | null
+        }
+        Update: {
+          campaign_id?: string
+          clicked_at?: string | null
+          client_user_id?: string
+          delivered_at?: string | null
+          delivery_type?: string
+          error_message?: string | null
+          id?: string
+          opened_at?: string | null
+          status?: string
+          tracking_data?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campaign_deliveries_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "communication_campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       charities: {
         Row: {
           annual_goal: number | null
@@ -1078,6 +1125,62 @@ export type Database = {
           },
         ]
       }
+      client_organizers: {
+        Row: {
+          client_user_id: string
+          completed_at: string | null
+          cpa_partner_id: string
+          created_at: string
+          description: string | null
+          due_date: string | null
+          id: string
+          organizer_type: string
+          questions: Json
+          responses: Json | null
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          client_user_id: string
+          completed_at?: string | null
+          cpa_partner_id: string
+          created_at?: string
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          organizer_type?: string
+          questions?: Json
+          responses?: Json | null
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          client_user_id?: string
+          completed_at?: string | null
+          cpa_partner_id?: string
+          created_at?: string
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          organizer_type?: string
+          questions?: Json
+          responses?: Json | null
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_organizers_cpa_partner_id_fkey"
+            columns: ["cpa_partner_id"]
+            isOneToOne: false
+            referencedRelation: "cpa_partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       client_storage_audit: {
         Row: {
           error_message: string | null
@@ -1137,6 +1240,59 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      communication_campaigns: {
+        Row: {
+          campaign_name: string
+          campaign_type: string
+          cpa_partner_id: string
+          created_at: string
+          id: string
+          message_content: string
+          recipient_criteria: Json | null
+          scheduled_for: string | null
+          sent_at: string | null
+          status: string
+          subject: string | null
+          updated_at: string
+        }
+        Insert: {
+          campaign_name: string
+          campaign_type: string
+          cpa_partner_id: string
+          created_at?: string
+          id?: string
+          message_content: string
+          recipient_criteria?: Json | null
+          scheduled_for?: string | null
+          sent_at?: string | null
+          status?: string
+          subject?: string | null
+          updated_at?: string
+        }
+        Update: {
+          campaign_name?: string
+          campaign_type?: string
+          cpa_partner_id?: string
+          created_at?: string
+          id?: string
+          message_content?: string
+          recipient_criteria?: Json | null
+          scheduled_for?: string | null
+          sent_at?: string | null
+          status?: string
+          subject?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "communication_campaigns_cpa_partner_id_fkey"
+            columns: ["cpa_partner_id"]
+            isOneToOne: false
+            referencedRelation: "cpa_partners"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       community_giving_metrics: {
         Row: {
@@ -1369,6 +1525,56 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "cpa_client_relationships_cpa_partner_id_fkey"
+            columns: ["cpa_partner_id"]
+            isOneToOne: false
+            referencedRelation: "cpa_partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cpa_onboarding_checklists: {
+        Row: {
+          completed_at: string | null
+          cpa_partner_id: string
+          created_at: string
+          id: string
+          is_completed: boolean
+          step_category: string
+          step_data: Json | null
+          step_description: string | null
+          step_name: string
+          step_order: number
+          updated_at: string
+        }
+        Insert: {
+          completed_at?: string | null
+          cpa_partner_id: string
+          created_at?: string
+          id?: string
+          is_completed?: boolean
+          step_category?: string
+          step_data?: Json | null
+          step_description?: string | null
+          step_name: string
+          step_order: number
+          updated_at?: string
+        }
+        Update: {
+          completed_at?: string | null
+          cpa_partner_id?: string
+          created_at?: string
+          id?: string
+          is_completed?: boolean
+          step_category?: string
+          step_data?: Json | null
+          step_description?: string | null
+          step_name?: string
+          step_order?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cpa_onboarding_checklists_cpa_partner_id_fkey"
             columns: ["cpa_partner_id"]
             isOneToOne: false
             referencedRelation: "cpa_partners"
@@ -2076,6 +2282,41 @@ export type Database = {
         }
         Relationships: []
       }
+      document_nudges: {
+        Row: {
+          id: string
+          nudge_content: string | null
+          nudge_type: string
+          request_id: string
+          response_received: boolean | null
+          sent_at: string
+        }
+        Insert: {
+          id?: string
+          nudge_content?: string | null
+          nudge_type?: string
+          request_id: string
+          response_received?: boolean | null
+          sent_at?: string
+        }
+        Update: {
+          id?: string
+          nudge_content?: string | null
+          nudge_type?: string
+          request_id?: string
+          response_received?: boolean | null
+          sent_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "document_nudges_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "document_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       document_permissions: {
         Row: {
           access_level: string
@@ -2119,6 +2360,144 @@ export type Database = {
             columns: ["document_id"]
             isOneToOne: false
             referencedRelation: "documents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      document_request_items: {
+        Row: {
+          document_description: string | null
+          document_name: string
+          id: string
+          is_required: boolean
+          request_id: string
+          status: string
+          uploaded_at: string | null
+          uploaded_file_url: string | null
+        }
+        Insert: {
+          document_description?: string | null
+          document_name: string
+          id?: string
+          is_required?: boolean
+          request_id: string
+          status?: string
+          uploaded_at?: string | null
+          uploaded_file_url?: string | null
+        }
+        Update: {
+          document_description?: string | null
+          document_name?: string
+          id?: string
+          is_required?: boolean
+          request_id?: string
+          status?: string
+          uploaded_at?: string | null
+          uploaded_file_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "document_request_items_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "document_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      document_requests: {
+        Row: {
+          client_user_id: string
+          completed_at: string | null
+          cpa_partner_id: string
+          created_at: string
+          document_types: Json
+          due_date: string | null
+          id: string
+          instructions: string | null
+          priority: string
+          request_name: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          client_user_id: string
+          completed_at?: string | null
+          cpa_partner_id: string
+          created_at?: string
+          document_types?: Json
+          due_date?: string | null
+          id?: string
+          instructions?: string | null
+          priority?: string
+          request_name: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          client_user_id?: string
+          completed_at?: string | null
+          cpa_partner_id?: string
+          created_at?: string
+          document_types?: Json
+          due_date?: string | null
+          id?: string
+          instructions?: string | null
+          priority?: string
+          request_name?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "document_requests_cpa_partner_id_fkey"
+            columns: ["cpa_partner_id"]
+            isOneToOne: false
+            referencedRelation: "cpa_partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      document_templates: {
+        Row: {
+          cpa_partner_id: string
+          created_at: string
+          id: string
+          is_active: boolean
+          template_content: string
+          template_name: string
+          template_type: string
+          updated_at: string
+          variables: Json | null
+        }
+        Insert: {
+          cpa_partner_id: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          template_content: string
+          template_name: string
+          template_type: string
+          updated_at?: string
+          variables?: Json | null
+        }
+        Update: {
+          cpa_partner_id?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          template_content?: string
+          template_name?: string
+          template_type?: string
+          updated_at?: string
+          variables?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "document_templates_cpa_partner_id_fkey"
+            columns: ["cpa_partner_id"]
+            isOneToOne: false
+            referencedRelation: "cpa_partners"
             referencedColumns: ["id"]
           },
         ]
@@ -7699,6 +8078,44 @@ export type Database = {
         }
         Relationships: []
       }
+      practice_metrics: {
+        Row: {
+          cpa_partner_id: string
+          created_at: string
+          id: string
+          metric_data: Json | null
+          metric_date: string
+          metric_type: string
+          metric_value: number | null
+        }
+        Insert: {
+          cpa_partner_id: string
+          created_at?: string
+          id?: string
+          metric_data?: Json | null
+          metric_date: string
+          metric_type: string
+          metric_value?: number | null
+        }
+        Update: {
+          cpa_partner_id?: string
+          created_at?: string
+          id?: string
+          metric_data?: Json | null
+          metric_date?: string
+          metric_type?: string
+          metric_value?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "practice_metrics_cpa_partner_id_fkey"
+            columns: ["cpa_partner_id"]
+            isOneToOne: false
+            referencedRelation: "cpa_partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       prescriptions: {
         Row: {
           created_at: string
@@ -10839,6 +11256,66 @@ export type Database = {
             columns: ["professional_id"]
             isOneToOne: false
             referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      signature_requests: {
+        Row: {
+          client_user_id: string
+          cpa_partner_id: string
+          created_at: string
+          document_content: string
+          document_template_id: string | null
+          document_title: string
+          id: string
+          sent_at: string | null
+          signature_data: Json | null
+          signature_status: string
+          signed_at: string | null
+          updated_at: string
+        }
+        Insert: {
+          client_user_id: string
+          cpa_partner_id: string
+          created_at?: string
+          document_content: string
+          document_template_id?: string | null
+          document_title: string
+          id?: string
+          sent_at?: string | null
+          signature_data?: Json | null
+          signature_status?: string
+          signed_at?: string | null
+          updated_at?: string
+        }
+        Update: {
+          client_user_id?: string
+          cpa_partner_id?: string
+          created_at?: string
+          document_content?: string
+          document_template_id?: string | null
+          document_title?: string
+          id?: string
+          sent_at?: string | null
+          signature_data?: Json | null
+          signature_status?: string
+          signed_at?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "signature_requests_cpa_partner_id_fkey"
+            columns: ["cpa_partner_id"]
+            isOneToOne: false
+            referencedRelation: "cpa_partners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "signature_requests_document_template_id_fkey"
+            columns: ["document_template_id"]
+            isOneToOne: false
+            referencedRelation: "document_templates"
             referencedColumns: ["id"]
           },
         ]
