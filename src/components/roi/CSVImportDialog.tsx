@@ -11,7 +11,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { FileUpload } from '@/components/ui/file-upload';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { CheckCircle, AlertTriangle, Upload } from 'lucide-react';
+import { CheckCircle, AlertTriangle, Upload, Download } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useCSVOperations, CSVParseResult, LeadCSVRow, CampaignCSVRow } from '@/hooks/useCSVOperations';
 
@@ -84,6 +84,16 @@ export function CSVImportDialog({ open, onOpenChange, defaultType }: CSVImportDi
     setShowPreview(false);
   };
 
+  const handleDownloadSample = () => {
+    const fileName = importType === 'leads' ? 'leads-sample.csv' : 'campaigns-sample.csv';
+    const link = document.createElement('a');
+    link.href = `/${fileName}`;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const handleConfirmImport = async () => {
     if (!parseResult || !parseResult.data.length) return;
 
@@ -128,7 +138,18 @@ export function CSVImportDialog({ open, onOpenChange, defaultType }: CSVImportDi
           
           {importType && (
             <div className="space-y-2">
-              <Label>CSV File</Label>
+              <div className="flex items-center justify-between">
+                <Label>CSV File</Label>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={handleDownloadSample}
+                  className="text-xs"
+                >
+                  <Download className="h-3 w-3 mr-1" />
+                  Download Sample CSV
+                </Button>
+              </div>
               <FileUpload 
                 onFileChange={handleFileChange}
                 accept=".csv,text/csv"

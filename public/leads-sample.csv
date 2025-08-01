@@ -1,0 +1,4 @@
+First Name,Last Name,Email,Phone,Source,Campaign,Lead Date,Status,Amount Closed,LTV,Notes
+Jane,Doe,jane.doe@email.com,9415551234,Facebook,Spring2024,2024-06-01,New,0,0,Initial inquiry
+John,Smith,john.smith@email.com,9415556789,Google,Google2024,2024-07-05,Closed,7500,18000,Referred by client
+Sarah,Lee,sarah.lee@email.com,9415551111,LinkedIn,LI2024,2024-07-09,No Show,0,0,Reschedule requested
