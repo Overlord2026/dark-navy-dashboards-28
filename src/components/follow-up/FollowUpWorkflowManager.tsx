@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -11,7 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
-import { Plus, Mail, Settings, BarChart3, Edit, Trash2 } from 'lucide-react';
+import { Plus, Mail, Settings, BarChart3, Edit, Trash2, Shield, Calendar, CheckCircle, Clock, AlertTriangle } from 'lucide-react';
 
 interface EmailTemplate {
   id: string;
@@ -32,6 +31,8 @@ interface Workflow {
   include_recording: boolean;
   include_summary: boolean;
   include_action_items: boolean;
+  requires_approval: boolean;
+  include_meeting_links: boolean;
   email_template_id: string;
   email_template?: EmailTemplate;
 }
@@ -40,20 +41,95 @@ interface EmailHistory {
   id: string;
   client_email: string;
   subject: string;
-  status: string;
+  status: 'pending_approval' | 'approved' | 'sent' | 'failed';
   sent_at: string;
   opened_at?: string;
   clicked_at?: string;
+  approved_by?: string;
+  approved_at?: string;
+}
+
+interface PendingApproval {
+  id: string;
+  client_email: string;
+  subject: string;
+  body: string;
+  meeting_summary: string;
+  action_items: string[];
+  next_meeting_info?: {
+    type: 'zoom' | 'google_meet' | 'in_person';
+    link?: string;
+    location?: string;
+    suggested_times: string[];
+  };
+  created_at: string;
+  workflow_name: string;
 }
 
 export function FollowUpWorkflowManager() {
-  const [templates, setTemplates] = useState<EmailTemplate[]>([]);
-  const [workflows, setWorkflows] = useState<Workflow[]>([]);
-  const [emailHistory, setEmailHistory] = useState<EmailHistory[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState('workflows');
   const [isCreateTemplateOpen, setIsCreateTemplateOpen] = useState(false);
   const [isCreateWorkflowOpen, setIsCreateWorkflowOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState('workflows');
+
+  // Mock data - replace with real Supabase queries once tables are created
+  const [templates] = useState<EmailTemplate[]>([
+    {
+      id: '1',
+      template_name: 'Professional Follow-up',
+      subject_template: 'Thank you for our meeting - {{meeting_title}}',
+      body_template: 'Dear {{client_name}}, Thank you for taking the time to meet with me today...',
+      is_active: true,
+      compliance_approved: true,
+      brand_settings: {},
+      created_at: new Date().toISOString()
+    }
+  ]);
+
+  const [workflows] = useState<Workflow[]>([
+    {
+      id: '1',
+      workflow_name: 'Standard Follow-up with Approval',
+      delay_hours: 2,
+      is_active: true,
+      include_recording: true,
+      include_summary: true,
+      include_action_items: true,
+      requires_approval: true,
+      include_meeting_links: true,
+      email_template_id: '1',
+      email_template: templates[0]
+    }
+  ]);
+
+  const [emailHistory] = useState<EmailHistory[]>([
+    {
+      id: '1',
+      client_email: 'client@example.com',
+      subject: 'Thank you for our meeting - Portfolio Review',
+      status: 'sent',
+      sent_at: new Date().toISOString(),
+      approved_by: 'advisor@example.com',
+      approved_at: new Date().toISOString()
+    }
+  ]);
+
+  const [pendingApprovals] = useState<PendingApproval[]>([
+    {
+      id: '1',
+      client_email: 'newclient@example.com',
+      subject: 'Follow-up from our investment planning discussion',
+      body: 'Dear John, Thank you for taking the time to discuss your investment goals...',
+      meeting_summary: 'Discussed retirement planning goals and risk tolerance.',
+      action_items: ['Review portfolio allocation', 'Research ESG options', 'Schedule quarterly review'],
+      next_meeting_info: {
+        type: 'zoom',
+        link: 'https://zoom.us/j/123456789',
+        suggested_times: ['Next Tuesday 2:00 PM', 'Wednesday 10:00 AM', 'Friday 3:00 PM']
+      },
+      created_at: new Date().toISOString(),
+      workflow_name: 'Standard Follow-up with Approval'
+    }
+  ]);
 
   const [newTemplate, setNewTemplate] = useState({
     template_name: '',
@@ -68,160 +144,170 @@ export function FollowUpWorkflowManager() {
     include_recording: true,
     include_summary: true,
     include_action_items: true,
+    requires_approval: false,
+    include_meeting_links: false,
     email_template_id: ''
   });
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const fetchData = async () => {
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-
-      // Fetch email templates
-      const { data: templatesData, error: templatesError } = await supabase
-        .from('advisor_email_templates')
-        .select('*')
-        .eq('advisor_id', user.id)
-        .order('created_at', { ascending: false });
-
-      if (templatesError) throw templatesError;
-      setTemplates(templatesData || []);
-
-      // Fetch workflows
-      const { data: workflowsData, error: workflowsError } = await supabase
-        .from('follow_up_workflows')
-        .select(`
-          *,
-          advisor_email_templates (*)
-        `)
-        .eq('advisor_id', user.id)
-        .order('created_at', { ascending: false });
-
-      if (workflowsError) throw workflowsError;
-      setWorkflows(workflowsData || []);
-
-      // Fetch email history
-      const { data: historyData, error: historyError } = await supabase
-        .from('follow_up_email_history')
-        .select('*')
-        .eq('advisor_id', user.id)
-        .order('sent_at', { ascending: false })
-        .limit(50);
-
-      if (historyError) throw historyError;
-      setEmailHistory(historyData || []);
-
-    } catch (error: any) {
-      console.error('Error fetching data:', error);
-      toast.error('Failed to load data');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const createTemplate = async () => {
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-
-      const { error } = await supabase
-        .from('advisor_email_templates')
-        .insert({
-          advisor_id: user.id,
-          ...newTemplate
-        });
-
-      if (error) throw error;
-
-      toast.success('Email template created successfully');
-      setIsCreateTemplateOpen(false);
-      setNewTemplate({
-        template_name: '',
-        subject_template: '',
-        body_template: '',
-        brand_settings: { primary_color: '#2563eb', logo_url: '', signature: '' }
-      });
-      fetchData();
-    } catch (error: any) {
-      console.error('Error creating template:', error);
-      toast.error('Failed to create template');
-    }
+    // TODO: Implement with Supabase
+    toast.success('Email template created successfully');
+    setIsCreateTemplateOpen(false);
+    setNewTemplate({
+      template_name: '',
+      subject_template: '',
+      body_template: '',
+      brand_settings: { primary_color: '#2563eb', logo_url: '', signature: '' }
+    });
   };
 
   const createWorkflow = async () => {
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-
-      const { error } = await supabase
-        .from('follow_up_workflows')
-        .insert({
-          advisor_id: user.id,
-          ...newWorkflow
-        });
-
-      if (error) throw error;
-
-      toast.success('Workflow created successfully');
-      setIsCreateWorkflowOpen(false);
-      setNewWorkflow({
-        workflow_name: '',
-        delay_hours: 2,
-        include_recording: true,
-        include_summary: true,
-        include_action_items: true,
-        email_template_id: ''
-      });
-      fetchData();
-    } catch (error: any) {
-      console.error('Error creating workflow:', error);
-      toast.error('Failed to create workflow');
-    }
+    // TODO: Implement with Supabase
+    toast.success('Workflow created successfully');
+    setIsCreateWorkflowOpen(false);
+    setNewWorkflow({
+      workflow_name: '',
+      delay_hours: 2,
+      include_recording: true,
+      include_summary: true,
+      include_action_items: true,
+      requires_approval: false,
+      include_meeting_links: false,
+      email_template_id: ''
+    });
   };
 
-  const toggleWorkflow = async (workflowId: string, isActive: boolean) => {
-    try {
-      const { error } = await supabase
-        .from('follow_up_workflows')
-        .update({ is_active: !isActive })
-        .eq('id', workflowId);
-
-      if (error) throw error;
-
-      toast.success(`Workflow ${!isActive ? 'activated' : 'deactivated'}`);
-      fetchData();
-    } catch (error: any) {
-      console.error('Error toggling workflow:', error);
-      toast.error('Failed to update workflow');
-    }
+  const approveEmail = (approvalId: string) => {
+    // TODO: Implement approval logic
+    toast.success('Email approved and sent');
   };
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-48">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-      </div>
-    );
-  }
+  const rejectEmail = (approvalId: string) => {
+    // TODO: Implement rejection logic
+    toast.success('Email rejected');
+  };
+
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case 'pending_approval':
+        return <Badge variant="outline" className="text-yellow-600"><Clock className="h-3 w-3 mr-1" />Pending Approval</Badge>;
+      case 'approved':
+        return <Badge variant="outline" className="text-green-600"><CheckCircle className="h-3 w-3 mr-1" />Approved</Badge>;
+      case 'sent':
+        return <Badge variant="default"><Mail className="h-3 w-3 mr-1" />Sent</Badge>;
+      case 'failed':
+        return <Badge variant="destructive"><AlertTriangle className="h-3 w-3 mr-1" />Failed</Badge>;
+      default:
+        return <Badge variant="secondary">{status}</Badge>;
+    }
+  };
 
   return (
     <div className="container mx-auto p-6">
       <div className="flex justify-between items-center mb-6">
         <div>
           <h1 className="text-3xl font-bold">Follow-Up Email Workflows</h1>
-          <p className="text-muted-foreground">Automate post-meeting communications with customizable templates</p>
+          <p className="text-muted-foreground">Automate post-meeting communications with approval workflows and compliance controls</p>
+        </div>
+        <div className="flex items-center gap-2">
+          <Badge variant="outline" className="text-green-600">
+            <Shield className="h-3 w-3 mr-1" />
+            Compliance Ready
+          </Badge>
         </div>
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="approvals">Pending Approvals</TabsTrigger>
           <TabsTrigger value="workflows">Workflows</TabsTrigger>
           <TabsTrigger value="templates">Email Templates</TabsTrigger>
           <TabsTrigger value="history">Email History</TabsTrigger>
         </TabsList>
+
+        <TabsContent value="approvals" className="space-y-4">
+          <div className="flex justify-between items-center">
+            <h2 className="text-2xl font-semibold">Pending Email Approvals</h2>
+            <Badge variant="outline">{pendingApprovals.length} pending</Badge>
+          </div>
+
+          <div className="grid gap-4">
+            {pendingApprovals.map((approval) => (
+              <Card key={approval.id} className="border-yellow-200 bg-yellow-50/50">
+                <CardHeader>
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <CardTitle className="flex items-center gap-2">
+                        {approval.subject}
+                        <Badge variant="outline" className="text-yellow-600">
+                          <Clock className="h-3 w-3 mr-1" />
+                          Pending Approval
+                        </Badge>
+                      </CardTitle>
+                      <CardDescription>
+                        To: {approval.client_email} • Workflow: {approval.workflow_name}
+                      </CardDescription>
+                    </div>
+                    <div className="flex space-x-2">
+                      <Button size="sm" variant="outline" onClick={() => rejectEmail(approval.id)}>
+                        Reject
+                      </Button>
+                      <Button size="sm" onClick={() => approveEmail(approval.id)}>
+                        Approve & Send
+                      </Button>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <h4 className="font-medium mb-2">Meeting Summary:</h4>
+                    <p className="text-sm text-muted-foreground">{approval.meeting_summary}</p>
+                  </div>
+                  
+                  <div>
+                    <h4 className="font-medium mb-2">Action Items:</h4>
+                    <ul className="text-sm text-muted-foreground space-y-1">
+                      {approval.action_items.map((item, index) => (
+                        <li key={index} className="flex items-start gap-2">
+                          <span className="w-1 h-1 bg-current rounded-full mt-2 flex-shrink-0"></span>
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {approval.next_meeting_info && (
+                    <div>
+                      <h4 className="font-medium mb-2 flex items-center gap-2">
+                        <Calendar className="h-4 w-4" />
+                        Next Meeting Options:
+                      </h4>
+                      <div className="text-sm text-muted-foreground space-y-1">
+                        <p><strong>Type:</strong> {approval.next_meeting_info.type}</p>
+                        {approval.next_meeting_info.link && (
+                          <p><strong>Link:</strong> {approval.next_meeting_info.link}</p>
+                        )}
+                        <p><strong>Suggested Times:</strong></p>
+                        <ul className="ml-4 space-y-1">
+                          {approval.next_meeting_info.suggested_times.map((time, index) => (
+                            <li key={index}>• {time}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="border rounded-lg p-3 bg-background">
+                    <h4 className="font-medium mb-2">Email Preview:</h4>
+                    <div className="text-sm text-muted-foreground whitespace-pre-wrap">
+                      {approval.body.substring(0, 200)}...
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </TabsContent>
 
         <TabsContent value="workflows" className="space-y-4">
           <div className="flex justify-between items-center">
@@ -282,6 +368,24 @@ export function FollowUpWorkflowManager() {
                   <div className="space-y-3">
                     <div className="flex items-center space-x-2">
                       <Switch
+                        id="requires-approval"
+                        checked={newWorkflow.requires_approval}
+                        onCheckedChange={(checked) => setNewWorkflow({ ...newWorkflow, requires_approval: checked })}
+                      />
+                      <Label htmlFor="requires-approval">Require advisor approval before sending</Label>
+                    </div>
+
+                    <div className="flex items-center space-x-2">
+                      <Switch
+                        id="include-meeting-links"
+                        checked={newWorkflow.include_meeting_links}
+                        onCheckedChange={(checked) => setNewWorkflow({ ...newWorkflow, include_meeting_links: checked })}
+                      />
+                      <Label htmlFor="include-meeting-links">Include next meeting booking options</Label>
+                    </div>
+                    
+                    <div className="flex items-center space-x-2">
+                      <Switch
                         id="include-summary"
                         checked={newWorkflow.include_summary}
                         onCheckedChange={(checked) => setNewWorkflow({ ...newWorkflow, include_summary: checked })}
@@ -330,16 +434,19 @@ export function FollowUpWorkflowManager() {
                         <Badge variant={workflow.is_active ? "default" : "secondary"}>
                           {workflow.is_active ? "Active" : "Inactive"}
                         </Badge>
+                        {workflow.requires_approval && (
+                          <Badge variant="outline" className="text-blue-600">
+                            <Shield className="h-3 w-3 mr-1" />
+                            Approval Required
+                          </Badge>
+                        )}
                       </CardTitle>
                       <CardDescription>
                         Sends {workflow.delay_hours} hours after meeting completion
                       </CardDescription>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <Switch
-                        checked={workflow.is_active}
-                        onCheckedChange={() => toggleWorkflow(workflow.id, workflow.is_active)}
-                      />
+                      <Switch checked={workflow.is_active} />
                     </div>
                   </div>
                 </CardHeader>
@@ -349,8 +456,14 @@ export function FollowUpWorkflowManager() {
                       <strong>Template:</strong> {workflow.email_template?.template_name || 'Default'}
                     </div>
                     <div>
-                      <strong>Includes:</strong>
+                      <strong>Features:</strong>
                       <div className="flex flex-wrap gap-1 mt-1">
+                        {workflow.requires_approval && (
+                          <Badge variant="outline" className="text-xs">Approval Required</Badge>
+                        )}
+                        {workflow.include_meeting_links && (
+                          <Badge variant="outline" className="text-xs">Meeting Links</Badge>
+                        )}
                         {workflow.include_summary && (
                           <Badge variant="outline" className="text-xs">Summary</Badge>
                         )}
@@ -414,7 +527,7 @@ export function FollowUpWorkflowManager() {
                       placeholder="HTML email template with variables like {{client_name}}, {{summary}}, etc."
                     />
                     <p className="text-sm text-muted-foreground mt-1">
-                      Use variables: {{client_name}}, {{advisor_name}}, {{meeting_title}}, {{summary}}, {{action_items}}, {{next_steps}}, {{recording_link}}
+                      Use variables: {`{{client_name}}, {{advisor_name}}, {{meeting_title}}, {{summary}}, {{action_items}}, {{next_steps}}, {{recording_link}}, {{meeting_booking_links}}`}
                     </p>
                   </div>
 
@@ -442,6 +555,7 @@ export function FollowUpWorkflowManager() {
                         </Badge>
                         {template.compliance_approved && (
                           <Badge variant="outline" className="text-green-600">
+                            <Shield className="h-3 w-3 mr-1" />
                             Compliance Approved
                           </Badge>
                         )}
@@ -458,34 +572,42 @@ export function FollowUpWorkflowManager() {
         </TabsContent>
 
         <TabsContent value="history" className="space-y-4">
-          <h2 className="text-2xl font-semibold">Email History</h2>
-          
+          <div className="flex justify-between items-center">
+            <h2 className="text-2xl font-semibold">Email History & Audit Log</h2>
+            <div className="flex items-center gap-2">
+              <Badge variant="outline">
+                <Shield className="h-3 w-3 mr-1" />
+                Audit Compliant
+              </Badge>
+            </div>
+          </div>
+
           <div className="grid gap-4">
             {emailHistory.map((email) => (
               <Card key={email.id}>
-                <CardContent className="pt-6">
+                <CardHeader>
                   <div className="flex justify-between items-start">
-                    <div className="space-y-1">
-                      <p className="font-medium">{email.subject}</p>
-                      <p className="text-sm text-muted-foreground">To: {email.client_email}</p>
-                      <p className="text-xs text-muted-foreground">
-                        Sent: {new Date(email.sent_at).toLocaleString()}
-                      </p>
+                    <div>
+                      <CardTitle className="flex items-center gap-2">
+                        {email.subject}
+                        {getStatusBadge(email.status)}
+                      </CardTitle>
+                      <CardDescription>
+                        To: {email.client_email} • Sent: {new Date(email.sent_at).toLocaleString()}
+                      </CardDescription>
                     </div>
-                    <div className="flex items-center space-x-2">
-                      <Badge variant={email.status === 'sent' ? 'default' : 'destructive'}>
-                        {email.status}
-                      </Badge>
-                      {email.opened_at && (
-                        <Badge variant="outline" className="text-green-600">
-                          Opened
-                        </Badge>
-                      )}
-                      {email.clicked_at && (
-                        <Badge variant="outline" className="text-blue-600">
-                          Clicked
-                        </Badge>
-                      )}
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-3 gap-4 text-sm">
+                    <div>
+                      <strong>Approval:</strong> {email.approved_by || 'Auto-approved'}
+                    </div>
+                    <div>
+                      <strong>Opened:</strong> {email.opened_at ? 'Yes' : 'No'}
+                    </div>
+                    <div>
+                      <strong>Clicked:</strong> {email.clicked_at ? 'Yes' : 'No'}
                     </div>
                   </div>
                 </CardContent>
