@@ -35,7 +35,17 @@ export function FeaturedCategories({ categories, onSelectCategory }: FeaturedCat
   
   return (
     <div className="mt-8">
-      <h3 className="text-xl font-semibold mb-6">Featured Course Categories</h3>
+      <div className="flex items-center justify-between mb-6">
+        <h3 className="text-xl font-semibold">Featured Course Categories</h3>
+        <div className="flex gap-2">
+          <span className="px-3 py-1 bg-yellow-100 text-yellow-800 text-sm font-medium rounded-full">
+            Staff Picks
+          </span>
+          <span className="px-3 py-1 bg-blue-100 text-blue-800 text-sm font-medium rounded-full">
+            Most Popular
+          </span>
+        </div>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {featuredCategories.map(category => (
           <CourseCategoryCard 

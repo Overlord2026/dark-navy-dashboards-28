@@ -34,6 +34,9 @@ import TaxBracketProjector from "@/components/tax-planning/TaxBracketProjector";
 import { UnifiedTaxAnalyzer } from "@/components/tax-planning/UnifiedTaxAnalyzer";
 import { AIChatWidget } from "@/components/ai/AIChatWidget";
 import { FeedbackButton } from "@/components/feedback/FeedbackButton";
+import { PersistentFeedbackButton } from "@/components/feedback/PersistentFeedbackButton";
+import { SuccessAnimation } from "@/components/ui/SuccessAnimation";
+import { ROIBanner } from "@/components/ui/ROIBanner";
 import { Celebration } from "@/components/ConfettiAnimation";
 
 // Import existing components
@@ -52,6 +55,16 @@ export default function TaxPlanning() {
   const [completedStages, setCompletedStages] = React.useState<string[]>([]);
   const [isFirstTime, setIsFirstTime] = React.useState(true);
   const [showSuccess, setShowSuccess] = React.useState(false);
+  const [successAnimation, setSuccessAnimation] = React.useState<{
+    type: 'optimization' | 'calculation' | 'document';
+    message: string;
+    amount?: number;
+  } | null>(null);
+
+  const triggerSuccess = (type: 'optimization' | 'calculation' | 'document', message: string, amount?: number) => {
+    setSuccessAnimation({ type, message, amount });
+    setTimeout(() => setSuccessAnimation(null), 4000);
+  };
 
   const handleStageClick = (stageId: string) => {
     setCurrentStage(stageId);
@@ -97,6 +110,17 @@ export default function TaxPlanning() {
           <p className={`text-muted-foreground ${isMobile ? 'text-sm mt-1' : 'mt-2'}`}>
             Optimize your tax strategy and minimize your tax burden through proactive planning.
           </p>
+        </motion.div>
+
+        {/* ROI Banner */}
+        <motion.div variants={itemVariants}>
+          <ROIBanner
+            title="Tax Optimization Potential"
+            amount={47500}
+            timeframe="over 10 years"
+            description="Based on your portfolio analysis and current tax situation"
+            variant="highlight"
+          />
         </motion.div>
 
         {/* Subscription Tier Overview */}
@@ -246,6 +270,19 @@ export default function TaxPlanning() {
 
       {/* Success Animation */}
       <Celebration trigger={showSuccess} />
+      
+      {/* Success Animation */}
+      {successAnimation && (
+        <SuccessAnimation
+          type={successAnimation.type}
+          message={successAnimation.message}
+          amount={successAnimation.amount}
+          onComplete={() => setSuccessAnimation(null)}
+        />
+      )}
+
+      {/* Persistent Feedback Button */}
+      <PersistentFeedbackButton />
 
       {/* AI Chat Widget - Persistent */}
       <AIChatWidget 

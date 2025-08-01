@@ -1,17 +1,17 @@
-// Brand color palette for charts
+// Modern vibrant color palette for charts
 export const CHART_COLORS = {
-  // Primary brand colors from design system
-  primary: '#D4AF37', // Gold primary
-  secondary: '#B8860B', // Gold premium  
-  accent: '#0F766E', // Money green accent
+  // Primary brand colors - vibrant blue/gold/green theme
+  primary: '#2563EB', // Vibrant blue primary
+  secondary: '#D4AF37', // Elegant gold  
+  accent: '#059669', // Success green accent
   
-  // Performance colors
-  positive: '#059669', // Success green
-  negative: '#DC2626', // Red for losses
-  neutral: '#6B7280', // Gray for neutral
+  // Performance colors with enhanced vibrancy
+  positive: '#10B981', // Bright success green
+  negative: '#EF4444', // Clear red for losses
+  neutral: '#6B7280', // Professional gray
   
-  // Diversified chart palette
-  portfolio: ['#D4AF37', '#0F766E', '#059669', '#B8860B', '#0891B2', '#7C3AED', '#DC2626', '#F59E0B'],
+  // Modern diversified chart palette with shadows and depth
+  portfolio: ['#2563EB', '#D4AF37', '#059669', '#8B5CF6', '#06B6D4', '#F59E0B', '#EF4444', '#84CC16'],
   
   // Benchmark colors (distinct from portfolio)
   benchmarks: {
@@ -38,29 +38,57 @@ export const CHART_COLORS = {
   }
 };
 
-// Chart styling configurations
+// Modern chart styling with shadows and animations
 export const CHART_STYLES = {
   grid: {
     stroke: '#E5E7EB',
     strokeWidth: 1,
-    strokeDasharray: '2 2'
+    strokeDasharray: '3 3',
+    opacity: 0.6
   },
   axis: {
     fontSize: 12,
     fontFamily: 'Inter, sans-serif',
-    fill: '#374151'
+    fill: '#374151',
+    fontWeight: 500
   },
   tooltip: {
     backgroundColor: '#FFFFFF',
     border: '1px solid #E5E7EB',
-    borderRadius: '8px',
-    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+    borderRadius: '12px',
+    boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
     fontSize: '14px',
-    fontFamily: 'Inter, sans-serif'
+    fontFamily: 'Inter, sans-serif',
+    padding: '12px'
   },
   legend: {
     fontSize: 12,
     fontFamily: 'Inter, sans-serif',
-    fill: '#374151'
+    fill: '#374151',
+    fontWeight: 500
+  },
+  // Animation configurations
+  animations: {
+    duration: 800,
+    easing: 'ease-out',
+    delay: 100
+  },
+  // Enhanced visual effects
+  effects: {
+    chartShadow: '0 4px 20px rgba(37, 99, 235, 0.15)',
+    barShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+    glowEffect: '0 0 20px rgba(37, 99, 235, 0.3)'
   }
+};
+
+// ROI formatting utilities
+export const formatROI = (amount: number, timeframe: string = '') => {
+  const formatted = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(amount);
+  
+  return timeframe ? `${formatted} over ${timeframe}` : formatted;
 };
