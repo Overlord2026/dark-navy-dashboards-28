@@ -129,6 +129,7 @@ import RolesPage from "./pages/admin/RolesPage";
 import AdminSettingsPage from "./pages/admin/AdminSettingsPage";
 import MonitoringPage from "./pages/admin/MonitoringPage";
 import AdvisorResourceCenterPage from "./pages/advisor/AdvisorResourceCenterPage";
+import { MeetingAnalyticsPage } from "./pages/MeetingAnalyticsPage";
 
 const queryClient = new QueryClient();
 
@@ -943,7 +944,20 @@ const App = () => {
                            <CPARevenueDashboard />
                          </AuthWrapper>
                        }
-                     />
+                      />
+
+                      {/* Meeting Analytics Dashboard */}
+                      <Route
+                        path="/meeting-analytics"
+                        element={
+                          <AuthWrapper
+                            requireAuth={true}
+                            allowedRoles={['advisor', 'admin', 'tenant_admin', 'system_administrator']}
+                          >
+                            <MeetingAnalyticsPage />
+                          </AuthWrapper>
+                        }
+                      />
 
                      {/* Navigation & QA Testing Routes */}
                      <Route path="/navigation-diagnostics" element={
