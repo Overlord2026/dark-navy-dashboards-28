@@ -90,7 +90,7 @@ export function ClientStatusCards({ clients, selectedClients, onClientSelect }: 
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
       {clients.map((client, index) => {
         const statusConfig = getStatusConfig(client.status);
         const priorityConfig = getPriorityConfig(client.priority);
@@ -104,93 +104,114 @@ export function ClientStatusCards({ clients, selectedClients, onClientSelect }: 
             transition={{ delay: index * 0.05 }}
           >
             <Card 
-              className={`hover:shadow-lg transition-all duration-300 cursor-pointer ${
+              className={`hover:shadow-lg transition-all duration-300 cursor-pointer focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2 ${
                 isSelected ? 'ring-2 ring-primary' : ''
               } ${statusConfig.borderColor} ${statusConfig.bgColor}`}
+              role="article"
+              aria-label={`Client: ${client.name}. Status: ${statusConfig.label}. Priority: ${client.priority}. ${client.taxSavingsEstimate} potential tax savings.`}
             >
-              <CardHeader className="pb-3">
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-3">
+              <CardHeader className="pb-3 px-4 sm:px-6">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex items-center gap-3 min-w-0 flex-1">
                     <Checkbox
                       checked={isSelected}
                       onCheckedChange={() => onClientSelect(client.id)}
+                      className="mt-1 flex-shrink-0"
+                      aria-label={`Select client ${client.name}`}
                     />
-                    <div className="flex items-center gap-2">
-                      <User className="h-4 w-4 text-muted-foreground" />
-                      <CardTitle className="text-lg">{client.name}</CardTitle>
+                    <div className="flex items-center gap-2 min-w-0 flex-1">
+                      <User className="h-4 w-4 text-muted-foreground flex-shrink-0" aria-hidden="true" />
+                      <CardTitle className="text-base sm:text-lg truncate">{client.name}</CardTitle>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <div className={`h-2 w-2 rounded-full ${priorityConfig.color}`} />
-                    <StatusIcon className={`h-4 w-4 ${statusConfig.color}`} />
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    <div 
+                      className={`h-2 w-2 rounded-full ${priorityConfig.color}`} 
+                      aria-label={priorityConfig.label}
+                      title={priorityConfig.label}
+                    />
+                    <StatusIcon className={`h-4 w-4 ${statusConfig.color}`} aria-hidden="true" />
                   </div>
                 </div>
-                <CardDescription className="flex items-center gap-2">
-                  <Mail className="h-3 w-3" />
-                  {client.email}
+                <CardDescription className="flex items-center gap-2 ml-9 text-sm">
+                  <Mail className="h-3 w-3 flex-shrink-0" aria-hidden="true" />
+                  <span className="truncate">{client.email}</span>
                 </CardDescription>
               </CardHeader>
               
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-4 px-4 sm:px-6">
                 {/* Status Badge */}
-                <Badge className={`${statusConfig.color} ${statusConfig.bgColor}`}>
+                <Badge className={`${statusConfig.color} ${statusConfig.bgColor} text-xs`}>
                   {statusConfig.label}
                 </Badge>
 
                 {/* Key Metrics */}
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
-                    <span className="text-muted-foreground">Last Activity:</span>
-                    <p className="font-medium">{client.lastActivity}</p>
+                    <span className="text-muted-foreground block">Last Activity:</span>
+                    <p className="font-medium truncate">{client.lastActivity}</p>
                   </div>
                   <div>
-                    <span className="text-muted-foreground">Priority:</span>
+                    <span className="text-muted-foreground block">Priority:</span>
                     <p className="font-medium capitalize">{client.priority}</p>
                   </div>
                 </div>
 
                 {/* Action Items */}
-                <div className="space-y-2">
-                  {client.documentsRequired > 0 && (
-                    <div className="flex items-center gap-2 text-sm">
-                      <FileText className="h-4 w-4 text-orange-500" />
-                      <span>{client.documentsRequired} documents required</span>
-                    </div>
-                  )}
-                  
-                  {client.aiOpportunities > 0 && (
-                    <div className="flex items-center gap-2 text-sm">
-                      <TrendingUp className="h-4 w-4 text-blue-500" />
-                      <span>{client.aiOpportunities} AI opportunities found</span>
-                    </div>
-                  )}
-                </div>
+                {(client.documentsRequired > 0 || client.aiOpportunities > 0) && (
+                  <div className="space-y-2" role="list" aria-label="Client action items">
+                    {client.documentsRequired > 0 && (
+                      <div className="flex items-center gap-2 text-sm" role="listitem">
+                        <FileText className="h-4 w-4 text-orange-500 flex-shrink-0" aria-hidden="true" />
+                        <span>{client.documentsRequired} documents required</span>
+                      </div>
+                    )}
+                    
+                    {client.aiOpportunities > 0 && (
+                      <div className="flex items-center gap-2 text-sm" role="listitem">
+                        <TrendingUp className="h-4 w-4 text-blue-500 flex-shrink-0" aria-hidden="true" />
+                        <span>{client.aiOpportunities} AI opportunities found</span>
+                      </div>
+                    )}
+                  </div>
+                )}
 
                 {/* Tax Savings Estimate */}
-                <div className="bg-white p-3 rounded-lg border">
-                  <span className="text-sm text-muted-foreground">Potential Tax Savings:</span>
+                <div className="bg-white p-3 rounded-lg border" role="region" aria-label="Tax savings estimate">
+                  <span className="text-sm text-muted-foreground block">Potential Tax Savings:</span>
                   <p className="text-lg font-bold text-green-600">
                     {formatCurrency(client.taxSavingsEstimate)}
                   </p>
                 </div>
 
                 {/* Quick Actions */}
-                <div className="flex gap-2">
+                <div className="flex gap-2" role="group" aria-label="Client quick actions">
                   <Button 
                     size="sm" 
                     variant="outline" 
-                    className="flex-1"
+                    className="flex-1 min-h-[44px] px-3 py-2 text-xs sm:text-sm"
                     onClick={() => handleGenerateReport(client.id)}
+                    aria-label={`Generate report for ${client.name}`}
                   >
-                    <Download className="h-3 w-3 mr-1" />
-                    Report
+                    <Download className="h-3 w-3 mr-1 flex-shrink-0" aria-hidden="true" />
+                    <span className="truncate">Report</span>
                   </Button>
-                  <Button size="sm" variant="outline" className="flex-1">
-                    <Send className="h-3 w-3 mr-1" />
-                    Contact
+                  <Button 
+                    size="sm" 
+                    variant="outline" 
+                    className="flex-1 min-h-[44px] px-3 py-2 text-xs sm:text-sm"
+                    aria-label={`Contact ${client.name}`}
+                  >
+                    <Send className="h-3 w-3 mr-1 flex-shrink-0" aria-hidden="true" />
+                    <span className="truncate">Contact</span>
                   </Button>
-                  <Button size="sm" variant="outline">
-                    <Eye className="h-3 w-3" />
+                  <Button 
+                    size="sm" 
+                    variant="outline" 
+                    className="min-h-[44px] px-3 py-2"
+                    aria-label={`View details for ${client.name}`}
+                  >
+                    <Eye className="h-3 w-3" aria-hidden="true" />
                   </Button>
                 </div>
               </CardContent>
