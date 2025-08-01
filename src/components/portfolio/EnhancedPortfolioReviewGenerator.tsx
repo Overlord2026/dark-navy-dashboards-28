@@ -8,6 +8,7 @@ import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Toolti
 import { formatCurrency, formatPercentage } from '@/lib/formatters';
 import { MarketDataService, MarketDataDisplay } from './MarketDataService';
 import { BenchmarkComparison } from './BenchmarkComparison';
+import { PortfolioReport } from './PortfolioReport';
 import { ClientRiskProfileQuiz } from './ClientRiskProfileQuiz';
 import { useMarketData } from '@/hooks/useMarketData';
 import { TrendingUp, TrendingDown, Download, Shield, DollarSign, Gauge, FileText, Loader2 } from 'lucide-react';
@@ -365,10 +366,11 @@ export function EnhancedPortfolioReviewGenerator() {
       {/* Portfolio Analysis Tabs */}
       {currentPortfolio && proposedPortfolio && (
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="current">Current Portfolio</TabsTrigger>
             <TabsTrigger value="proposed">Proposed Portfolio</TabsTrigger>
             <TabsTrigger value="comparison">Side-by-Side</TabsTrigger>
+            <TabsTrigger value="report">Professional Report</TabsTrigger>
           </TabsList>
           
           <TabsContent value="current" className="space-y-4">
@@ -410,6 +412,17 @@ export function EnhancedPortfolioReviewGenerator() {
           
           <TabsContent value="comparison" className="space-y-4">
             <BenchmarkComparison portfolio={currentPortfolio} onExportPDF={exportToPDF} />
+          </TabsContent>
+          
+          <TabsContent value="report" className="space-y-4">
+            <PortfolioReport
+              clientName={clientName || 'Sample Client'}
+              currentPortfolio={currentPortfolio}
+              proposedPortfolio={proposedPortfolio}
+              currentMetrics={portfolioMetrics}
+              proposedMetrics={proposedMetrics}
+              marketData={marketData}
+            />
           </TabsContent>
         </Tabs>
       )}
