@@ -244,6 +244,48 @@ export const PersonaDashboardLayout: React.FC<PersonaDashboardLayoutProps> = ({ 
     return nextSteps[role as keyof typeof nextSteps] || nextSteps.client;
   };
 
+  const handleNextStepClick = (step: string) => {
+    // Map next steps to appropriate routes
+    const routeMap: Record<string, string> = {
+      // Client routes
+      'Complete your risk assessment': '/investment-risk',
+      'Set up your financial goals': '/goals/create',
+      'Schedule a portfolio review': '/portfolio',
+      
+      // Advisor routes
+      'Import your client database': '/advisor/clients',
+      'Set up automated reporting': '/advisor/performance',
+      'Configure your referral program': '/advisor/resource-center',
+      
+      // Accountant routes
+      'Set up tax calendar reminders': '/accountant/tax-planning',
+      'Configure client communication preferences': '/accountant/statements',
+      'Review upcoming filing deadlines': '/accountant/tax-planning',
+      
+      // Consultant routes
+      'Create your first project template': '/consultant/projects',
+      'Set up client assessment tools': '/longevity-scorecard',
+      'Configure project tracking': '/consultant/projects',
+      
+      // Attorney routes
+      'Review estate planning templates': '/attorney/estate-planning',
+      'Set up document management workflow': '/attorney/contracts',
+      'Configure client intake process': '/attorney/estate-planning',
+      
+      // Admin routes
+      'Review user permissions': '/admin/roles',
+      'Configure platform settings': '/admin/settings',
+      'Set up monitoring alerts': '/admin/monitoring'
+    };
+
+    const route = routeMap[step];
+    if (route) {
+      navigate(route);
+    } else {
+      console.warn(`No route mapped for step: ${step}`);
+    }
+  };
+
   const toggleSection = (sectionId: string) => {
     setCollapsedSections(prev => {
       const newSet = new Set(prev);
@@ -364,11 +406,16 @@ export const PersonaDashboardLayout: React.FC<PersonaDashboardLayoutProps> = ({ 
             <CardContent>
               <div className="space-y-3">
                 {nextSteps.map((step, index) => (
-                  <div key={index} className="flex items-center gap-3 p-3 rounded-lg hover:bg-muted/50 cursor-pointer transition-colors">
+                  <Button
+                    key={index}
+                    variant="ghost"
+                    className="flex items-center gap-3 p-3 h-auto w-full justify-start hover:bg-muted/50 transition-colors"
+                    onClick={() => handleNextStepClick(step)}
+                  >
                     <div className="w-2 h-2 bg-primary rounded-full flex-shrink-0" />
                     <span className="text-sm">{step}</span>
                     <ArrowRight className="h-4 w-4 ml-auto text-muted-foreground" />
-                  </div>
+                  </Button>
                 ))}
               </div>
             </CardContent>
