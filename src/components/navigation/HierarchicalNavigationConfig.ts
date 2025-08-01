@@ -404,6 +404,52 @@ export const hierarchicalNav: NavItem[] = [
     ]
   },
 
+  // 8.5. Advisor Tools (for advisor role only)
+  { 
+    id: 'advisor-tools', 
+    title: 'Advisor Tools', 
+    icon: BriefcaseIcon, 
+    collapsible: true,
+    children: [
+      { 
+        id: 'advisor-dashboard', 
+        title: 'Advisor Dashboard', 
+        href: '/advisor-dashboard', 
+        icon: Grid3x3Icon
+      },
+      { 
+        id: 'advisor-clients', 
+        title: 'Client Management', 
+        href: '/advisor/clients', 
+        icon: Users2Icon
+      },
+      { 
+        id: 'advisor-prospects', 
+        title: 'Prospect Pipeline', 
+        href: '/advisor/prospects', 
+        icon: TargetIcon
+      },
+      { 
+        id: 'advisor-portfolio', 
+        title: 'Portfolio Tools', 
+        href: '/advisor/portfolio', 
+        icon: PieChart
+      },
+      { 
+        id: 'advisor-resources', 
+        title: 'Resource Center', 
+        href: '/advisor/resources', 
+        icon: BookHeartIcon
+      },
+      { 
+        id: 'advisor-compliance', 
+        title: 'Compliance', 
+        href: '/advisor/compliance', 
+        icon: ShieldCheckIcon
+      }
+    ]
+  },
+
   // 9. Family Wealth Tools (Main App Core)
   { 
     id: 'wealth', 

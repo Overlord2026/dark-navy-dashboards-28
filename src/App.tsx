@@ -128,6 +128,7 @@ import UsersPage from "./pages/admin/UsersPage";
 import RolesPage from "./pages/admin/RolesPage";
 import AdminSettingsPage from "./pages/admin/AdminSettingsPage";
 import MonitoringPage from "./pages/admin/MonitoringPage";
+import AdvisorResourceCenterPage from "./pages/advisor/AdvisorResourceCenterPage";
 
 const queryClient = new QueryClient();
 
@@ -679,7 +680,16 @@ const App = () => {
                       }
                     />
 
-                    {/* Advisor Portfolio Management Routes */}
+                     {/* Advisor Portfolio Management Routes */}
+                      <Route path="/advisor/resources" element={
+                        <AuthWrapper
+                          requireAuth={true}
+                          allowedRoles={['advisor', 'admin', 'tenant_admin', 'system_administrator']}
+                        >
+                          <AdvisorResourceCenterPage />
+                        </AuthWrapper>
+                      } />
+                     {/* Advisor Portfolio Management Routes */}
                     <Route
                       path="/advisor/portfolio"
                       element={
