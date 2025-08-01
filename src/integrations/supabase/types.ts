@@ -1532,6 +1532,73 @@ export type Database = {
           },
         ]
       }
+      cpa_client_staff_assignments: {
+        Row: {
+          assigned_at: string
+          assigned_by: string | null
+          assigned_services: string[] | null
+          assignment_type: string
+          client_user_id: string
+          cpa_partner_id: string
+          created_at: string
+          id: string
+          is_active: boolean
+          notes: string | null
+          staff_id: string
+          updated_at: string
+        }
+        Insert: {
+          assigned_at?: string
+          assigned_by?: string | null
+          assigned_services?: string[] | null
+          assignment_type?: string
+          client_user_id: string
+          cpa_partner_id: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          notes?: string | null
+          staff_id: string
+          updated_at?: string
+        }
+        Update: {
+          assigned_at?: string
+          assigned_by?: string | null
+          assigned_services?: string[] | null
+          assignment_type?: string
+          client_user_id?: string
+          cpa_partner_id?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          notes?: string | null
+          staff_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cpa_client_staff_assignments_assigned_by_fkey"
+            columns: ["assigned_by"]
+            isOneToOne: false
+            referencedRelation: "cpa_staff"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cpa_client_staff_assignments_cpa_partner_id_fkey"
+            columns: ["cpa_partner_id"]
+            isOneToOne: false
+            referencedRelation: "cpa_partners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cpa_client_staff_assignments_staff_id_fkey"
+            columns: ["staff_id"]
+            isOneToOne: false
+            referencedRelation: "cpa_staff"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cpa_onboarding_checklists: {
         Row: {
           completed_at: string | null
@@ -1674,6 +1741,197 @@ export type Database = {
           years_experience?: number | null
         }
         Relationships: []
+      }
+      cpa_practice_metrics: {
+        Row: {
+          active_clients: number
+          calculated_at: string
+          client_communications_sent: number
+          cpa_partner_id: string
+          documents_processed: number
+          hours_logged: number
+          id: string
+          incomplete_organizers: number
+          metric_date: string
+          outstanding_returns: number
+          pending_esigns: number
+          total_revenue: number
+        }
+        Insert: {
+          active_clients?: number
+          calculated_at?: string
+          client_communications_sent?: number
+          cpa_partner_id: string
+          documents_processed?: number
+          hours_logged?: number
+          id?: string
+          incomplete_organizers?: number
+          metric_date?: string
+          outstanding_returns?: number
+          pending_esigns?: number
+          total_revenue?: number
+        }
+        Update: {
+          active_clients?: number
+          calculated_at?: string
+          client_communications_sent?: number
+          cpa_partner_id?: string
+          documents_processed?: number
+          hours_logged?: number
+          id?: string
+          incomplete_organizers?: number
+          metric_date?: string
+          outstanding_returns?: number
+          pending_esigns?: number
+          total_revenue?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cpa_practice_metrics_cpa_partner_id_fkey"
+            columns: ["cpa_partner_id"]
+            isOneToOne: false
+            referencedRelation: "cpa_partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cpa_staff: {
+        Row: {
+          cpa_partner_id: string
+          created_at: string
+          email: string
+          first_name: string
+          hired_date: string | null
+          hourly_rate: number | null
+          id: string
+          is_active: boolean
+          last_name: string
+          notes: string | null
+          permissions: Json
+          role: Database["public"]["Enums"]["cpa_staff_role"]
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          cpa_partner_id: string
+          created_at?: string
+          email: string
+          first_name: string
+          hired_date?: string | null
+          hourly_rate?: number | null
+          id?: string
+          is_active?: boolean
+          last_name: string
+          notes?: string | null
+          permissions?: Json
+          role?: Database["public"]["Enums"]["cpa_staff_role"]
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          cpa_partner_id?: string
+          created_at?: string
+          email?: string
+          first_name?: string
+          hired_date?: string | null
+          hourly_rate?: number | null
+          id?: string
+          is_active?: boolean
+          last_name?: string
+          notes?: string | null
+          permissions?: Json
+          role?: Database["public"]["Enums"]["cpa_staff_role"]
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cpa_staff_cpa_partner_id_fkey"
+            columns: ["cpa_partner_id"]
+            isOneToOne: false
+            referencedRelation: "cpa_partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cpa_workflow_assignments: {
+        Row: {
+          actual_hours: number | null
+          assigned_at: string
+          assigned_by: string | null
+          assigned_to: string
+          completed_at: string | null
+          cpa_partner_id: string
+          created_at: string
+          due_date: string | null
+          estimated_hours: number | null
+          id: string
+          notes: string | null
+          priority: string
+          status: string
+          updated_at: string
+          workflow_id: string
+          workflow_type: string
+        }
+        Insert: {
+          actual_hours?: number | null
+          assigned_at?: string
+          assigned_by?: string | null
+          assigned_to: string
+          completed_at?: string | null
+          cpa_partner_id: string
+          created_at?: string
+          due_date?: string | null
+          estimated_hours?: number | null
+          id?: string
+          notes?: string | null
+          priority?: string
+          status?: string
+          updated_at?: string
+          workflow_id: string
+          workflow_type: string
+        }
+        Update: {
+          actual_hours?: number | null
+          assigned_at?: string
+          assigned_by?: string | null
+          assigned_to?: string
+          completed_at?: string | null
+          cpa_partner_id?: string
+          created_at?: string
+          due_date?: string | null
+          estimated_hours?: number | null
+          id?: string
+          notes?: string | null
+          priority?: string
+          status?: string
+          updated_at?: string
+          workflow_id?: string
+          workflow_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cpa_workflow_assignments_assigned_by_fkey"
+            columns: ["assigned_by"]
+            isOneToOne: false
+            referencedRelation: "cpa_staff"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cpa_workflow_assignments_assigned_to_fkey"
+            columns: ["assigned_to"]
+            isOneToOne: false
+            referencedRelation: "cpa_staff"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cpa_workflow_assignments_cpa_partner_id_fkey"
+            columns: ["cpa_partner_id"]
+            isOneToOne: false
+            referencedRelation: "cpa_partners"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       credit_cards: {
         Row: {
@@ -14830,6 +15088,10 @@ export type Database = {
           total_rewards: number
         }[]
       }
+      get_cpa_staff_permissions: {
+        Args: { staff_user_id: string }
+        Returns: Json
+      }
       get_current_user_firm_id: {
         Args: Record<PropertyKey, never>
         Returns: string
@@ -14925,6 +15187,10 @@ export type Database = {
       }
       has_any_role: {
         Args: { roles: string[] }
+        Returns: boolean
+      }
+      has_cpa_permission: {
+        Args: { staff_user_id: string; permission_name: string }
         Returns: boolean
       }
       has_premium_access: {
@@ -15241,6 +15507,12 @@ export type Database = {
       }
     }
     Enums: {
+      cpa_staff_role:
+        | "tax_only"
+        | "bookkeeping"
+        | "planning"
+        | "admin"
+        | "advisor"
       funding_frequency: "monthly" | "quarterly" | "annually" | "one_time"
       goal_category:
         | "retirement"
@@ -15387,6 +15659,13 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      cpa_staff_role: [
+        "tax_only",
+        "bookkeeping",
+        "planning",
+        "admin",
+        "advisor",
+      ],
       funding_frequency: ["monthly", "quarterly", "annually", "one_time"],
       goal_category: [
         "retirement",
