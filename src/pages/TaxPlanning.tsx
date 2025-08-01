@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { TaxEducationCard } from "@/components/tax-planning/TaxEducationCard";
+import { TaxFeedbackWidget } from "@/components/tax-planning/TaxFeedbackWidget";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 // Import new tax planning calculators
@@ -233,6 +234,11 @@ export default function TaxPlanning() {
             />
           </div>
         </motion.section>
+
+        {/* Feedback Widget */}
+        <motion.div variants={itemVariants}>
+          <TaxFeedbackWidget />
+        </motion.div>
       </motion.div>
     </ThreeColumnLayout>
   );
