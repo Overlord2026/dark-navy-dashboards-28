@@ -36,6 +36,7 @@ import { ClientDashboard } from "./pages/ClientDashboard";
 import AdvisorDashboard from "./pages/AdvisorDashboard";
 import { AdvisorCPARiskDashboard } from "./pages/AdvisorCPARiskDashboard";
 import { TaxRulesAdminPage } from "./pages/TaxRulesAdminPage";
+import { TaxPlatformQAPage } from "./pages/TaxPlatformQAPage";
 import { AdminDashboard } from "./pages/AdminDashboard";
 import { AccountantDashboard } from "./pages/AccountantDashboard";
 import { ConsultantDashboard } from "./pages/ConsultantDashboard";
@@ -224,6 +225,17 @@ const App = () => {
                         allowedRoles={['admin', 'tenant_admin', 'system_administrator']}
                       >
                         <TaxRulesAdminPage />
+                      </AuthWrapper>
+                    }
+                  />
+                  <Route
+                    path="/qa/tax-platform"
+                    element={
+                      <AuthWrapper
+                        requireAuth={true}
+                        allowedRoles={['admin', 'tenant_admin', 'system_administrator', 'developer']}
+                      >
+                        <TaxPlatformQAPage />
                       </AuthWrapper>
                     }
                   />
