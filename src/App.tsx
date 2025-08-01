@@ -34,6 +34,7 @@ import { AuthPage } from "./pages/AuthPage";
 import { SecuritySettingsPage } from "./pages/SecuritySettingsPage";
 import { ClientDashboard } from "./pages/ClientDashboard";
 import AdvisorDashboard from "./pages/AdvisorDashboard";
+import { AdvisorCPARiskDashboard } from "./pages/AdvisorCPARiskDashboard";
 import { AdminDashboard } from "./pages/AdminDashboard";
 import { AccountantDashboard } from "./pages/AccountantDashboard";
 import { ConsultantDashboard } from "./pages/ConsultantDashboard";
@@ -200,6 +201,17 @@ const App = () => {
                         allowedRoles={['advisor', 'admin', 'tenant_admin', 'system_administrator']}
                       >
                         <AdvisorDashboard />
+                      </AuthWrapper>
+                    }
+                  />
+                  <Route
+                    path="/advisor/risk-dashboard"
+                    element={
+                      <AuthWrapper
+                        requireAuth={true}
+                        allowedRoles={['advisor', 'admin', 'tenant_admin', 'system_administrator', 'accountant']}
+                      >
+                        <AdvisorCPARiskDashboard />
                       </AuthWrapper>
                     }
                   />
