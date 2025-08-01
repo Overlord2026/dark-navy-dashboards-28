@@ -18,6 +18,7 @@ import GoalDetailPage from '@/pages/GoalDetailPage';
 import TaxCenter from '@/pages/TaxCenter';
 import AdvisorROIDashboard from '@/pages/AdvisorROIDashboard';
 import { ComprehensiveQATest } from '@/pages/ComprehensiveQATest';
+import { SystemValidationPage } from '@/pages/SystemValidationPage';
 
 // These routes should be added to your existing routes.tsx file
 const additionalRoutes = [
@@ -96,6 +97,10 @@ const additionalRoutes = [
   {
     path: '/comprehensive-qa-test',
     element: <ComprehensiveQATest />
+  },
+  {
+    path: '/system-validation',
+    element: <SystemValidationPage />
   }
 ];
 
