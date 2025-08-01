@@ -17,6 +17,14 @@ interface Portfolio {
     name: string;
     allocation: number;
     value: number;
+    marketData?: {
+      beta?: number;
+      alpha?: number;
+      volatility?: number;
+      yield?: number;
+      ytdReturn?: number;
+      oneYearReturn?: number;
+    };
   }>;
   riskScore: number;
   annualIncome: number;
@@ -296,7 +304,13 @@ export function PortfolioReviewDashboard() {
       {showRiskQuiz && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-background p-6 rounded-lg max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto">
-            <ClientRiskProfileQuiz onClose={() => setShowRiskQuiz(false)} />
+            <ClientRiskProfileQuiz 
+              onClose={() => setShowRiskQuiz(false)}
+              onComplete={(profile) => {
+                console.log('Risk profile completed:', profile);
+                setShowRiskQuiz(false);
+              }}
+            />
           </div>
         </div>
       )}
@@ -304,13 +318,23 @@ export function PortfolioReviewDashboard() {
       {showManualEntry && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-background p-6 rounded-lg max-w-4xl w-full mx-4 max-h-[80vh] overflow-y-auto">
-            <ManualEntryForm 
-              onClose={() => setShowManualEntry(false)}
-              onSave={(portfolio) => {
-                setCurrentPortfolio(portfolio);
-                setShowManualEntry(false);
-              }}
-            />
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Manual Portfolio Entry</h3>
+              <p className="text-sm text-muted-foreground mb-4">
+                Enter portfolio holdings manually if you don't have statements to upload.
+              </p>
+              <div className="flex gap-2">
+                <Button onClick={() => setShowManualEntry(false)} variant="outline">
+                  Cancel
+                </Button>
+                <Button onClick={() => {
+                  // This would be replaced with actual form submission
+                  setShowManualEntry(false);
+                }}>
+                  Save Portfolio
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
       )}
