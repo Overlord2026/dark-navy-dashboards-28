@@ -21,6 +21,8 @@ import { ComprehensiveQATest } from '@/pages/ComprehensiveQATest';
 import { SystemValidationPage } from '@/pages/SystemValidationPage';
 import { AttorneyOnboarding } from '@/pages/AttorneyOnboarding';
 import MobileQATestPage from '@/pages/MobileQATestPage';
+import MobileMore from '@/pages/mobile/MobileMore';
+import MobileMobileQATest from '@/pages/mobile/MobileMobileQATest';
 
 // These routes should be added to your existing routes.tsx file
 const additionalRoutes = [
@@ -103,6 +105,14 @@ const additionalRoutes = [
   {
     path: '/mobile-qa-test',
     element: <MobileQATestPage />
+  },
+  {
+    path: '/more',
+    element: <MobileMore />
+  },
+  {
+    path: '/mobile/qa-test',
+    element: <MobileMobileQATest />
   }
 ];
 

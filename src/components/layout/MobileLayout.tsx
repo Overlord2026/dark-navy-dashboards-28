@@ -76,7 +76,7 @@ export function MobileLayout({
 
   // Check if current route is a route that should activate the "More" tab
   const isMoreRoute = () => {
-    const moreRoutes = ['/more', '/tax-planning', '/education', '/profile', '/advisor-profile', '/security-settings'];
+    const moreRoutes = ['/more', '/tax-planning', '/education', '/profile', '/advisor-profile', '/security-settings', '/mobile-qa-test', '/mobile/qa-test', '/system-validation'];
     const healthRoutes = mobileMenuItems.flatMap(section => section.items.map(item => item.href));
     return moreRoutes.some(route => location.pathname.startsWith(route)) || 
            healthRoutes.some(route => location.pathname.startsWith(route));
