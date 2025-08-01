@@ -162,6 +162,7 @@ import { EstatePlanningPage as NewEstatePlanningPage } from "./pages/estate-plan
 import { CollaborationFamilyPage } from "./pages/collaboration/CollaborationFamilyPage";
 // Help page
 import { HelpPage } from "./pages/HelpPage";
+import ProductionReadinessTracker from "./pages/ProductionReadinessTracker";
 
 const queryClient = new QueryClient();
 
