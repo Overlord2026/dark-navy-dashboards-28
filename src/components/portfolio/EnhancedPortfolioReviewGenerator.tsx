@@ -10,6 +10,7 @@ import { MarketDataService, MarketDataDisplay } from './MarketDataService';
 import { BenchmarkComparison } from './BenchmarkComparison';
 import { PortfolioReport } from './PortfolioReport';
 import { ClientRiskProfileQuiz } from './ClientRiskProfileQuiz';
+import { AdvisorReportBuilder } from './AdvisorReportBuilder';
 import { useMarketData } from '@/hooks/useMarketData';
 import { TrendingUp, TrendingDown, Download, Shield, DollarSign, Gauge, FileText, Loader2 } from 'lucide-react';
 
@@ -366,11 +367,12 @@ export function EnhancedPortfolioReviewGenerator() {
       {/* Portfolio Analysis Tabs */}
       {currentPortfolio && proposedPortfolio && (
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="current">Current Portfolio</TabsTrigger>
             <TabsTrigger value="proposed">Proposed Portfolio</TabsTrigger>
             <TabsTrigger value="comparison">Side-by-Side</TabsTrigger>
             <TabsTrigger value="report">Professional Report</TabsTrigger>
+            <TabsTrigger value="advisor-builder">Report Builder</TabsTrigger>
           </TabsList>
           
           <TabsContent value="current" className="space-y-4">
@@ -422,6 +424,17 @@ export function EnhancedPortfolioReviewGenerator() {
               currentMetrics={portfolioMetrics}
               proposedMetrics={proposedMetrics}
               marketData={marketData}
+            />
+          </TabsContent>
+          
+          <TabsContent value="advisor-builder" className="space-y-4">
+            <AdvisorReportBuilder
+              currentPortfolio={currentPortfolio}
+              proposedPortfolio={proposedPortfolio}
+              currentMetrics={portfolioMetrics}
+              proposedMetrics={proposedMetrics}
+              marketData={marketData}
+              clientName={clientName || 'Sample Client'}
             />
           </TabsContent>
         </Tabs>
