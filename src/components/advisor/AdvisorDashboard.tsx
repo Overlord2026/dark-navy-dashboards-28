@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { EnhancedCalculatorChart } from '@/components/calculators/EnhancedCalculatorChart';
 import { Celebration } from '@/components/ConfettiAnimation';
+import { PortfolioToolsModal } from './PortfolioToolsModal';
 
 interface Client {
   id: string;
@@ -107,6 +108,7 @@ const mockClients: Client[] = [
 export function AdvisorDashboard() {
   const [showConfetti, setShowConfetti] = useState(false);
   const [chartData, setChartData] = useState([]);
+  const [showPortfolioTools, setShowPortfolioTools] = useState(false);
 
   // Calculate dashboard metrics
   const metrics = {
@@ -436,8 +438,8 @@ export function AdvisorDashboard() {
                 </div>
                 <Progress value={90.5} className="w-full" />
               </div>
-              <Button variant="outline" className="w-full">
-                Manage Portfolios
+              <Button variant="outline" className="w-full" onClick={() => setShowPortfolioTools(true)}>
+                Portfolio Tools
               </Button>
             </CardContent>
           </Card>
@@ -464,6 +466,12 @@ export function AdvisorDashboard() {
           </Card>
         </div>
       </motion.div>
+
+      {/* Portfolio Tools Modal */}
+      <PortfolioToolsModal 
+        isOpen={showPortfolioTools} 
+        onClose={() => setShowPortfolioTools(false)} 
+      />
     </motion.div>
   );
 }
