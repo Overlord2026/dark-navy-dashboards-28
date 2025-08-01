@@ -1,6 +1,9 @@
 // Centralized logo management for the Boutique Family Office application
 
 export const LOGOS = {
+  // Animated MP4 logo - primary brand logo
+  animatedLogo: '/src/assets/boutique-family-office-logo.mp4',
+  
   // Tree icon only - for compact headers and navigation
   treeIcon: "/lovable-uploads/03120943-9fc3-4374-89ae-ae70bf1425f0.png",
   
@@ -14,7 +17,7 @@ export const LOGOS = {
   fallback: "/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png"
 };
 
-export type LogoVariant = 'tree' | 'brand' | 'hero' | 'fallback';
+export type LogoVariant = 'animated' | 'tree' | 'brand' | 'hero' | 'fallback';
 
 export interface LogoConfig {
   src: string;
@@ -24,6 +27,11 @@ export interface LogoConfig {
 
 export const getLogoConfig = (variant: LogoVariant): LogoConfig => {
   const configs: Record<LogoVariant, LogoConfig> = {
+    animated: {
+      src: LOGOS.animatedLogo,
+      alt: "Boutique Family Office - Animated Logo",
+      className: "h-12 w-auto md:h-16"
+    },
     tree: {
       src: LOGOS.treeIcon,
       alt: "Boutique Family Office",
