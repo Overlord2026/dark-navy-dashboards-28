@@ -140,3 +140,11 @@ verify_jwt = false
 [functions.send-recording-share-notification]
 verify_jwt = false
 # @public-ok - Email notification service
+
+[functions.process-meeting-summary]
+verify_jwt = false
+# @public-ok - AI processing service for meeting recordings
+
+[functions.send-meeting-summary-email]
+verify_jwt = false
+# @public-ok - Email notification service for meeting summaries
