@@ -5,7 +5,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { DatePickerWithRange } from '@/components/ui/date-range-picker';
 import { Plus, Download, Upload } from 'lucide-react';
 import { ROIKPICards } from '@/components/roi/ROIKPICards';
-import { LeadsFunnelChart } from '@/components/roi/LeadsFunnelChart';
+import { AdvancedROIFunnelChart } from '@/components/roi/AdvancedROIFunnelChart';
+import { TimeToCloseChart } from '@/components/roi/TimeToCloseChart';
+import { CampaignComparisonChart } from '@/components/roi/CampaignComparisonChart';
+import { CumulativeRevenueChart } from '@/components/roi/CumulativeRevenueChart';
 import { CampaignPerformanceTable } from '@/components/roi/CampaignPerformanceTable';
 import { NewLeadDialog } from '@/components/roi/NewLeadDialog';
 import { NewCampaignDialog } from '@/components/roi/NewCampaignDialog';
@@ -135,8 +138,16 @@ export default function AdvisorROIDashboard() {
         </Button>
       </div>
 
-      {/* Leads Funnel Chart */}
-      <LeadsFunnelChart dateRange={dateRange} />
+      {/* Advanced ROI Analytics Charts */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <AdvancedROIFunnelChart dateRange={dateRange} />
+        <TimeToCloseChart dateRange={dateRange} />
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <CampaignComparisonChart dateRange={dateRange} />
+        <CumulativeRevenueChart dateRange={dateRange} />
+      </div>
 
       {/* Campaign Performance Table */}
       <CampaignPerformanceTable 
