@@ -21,6 +21,7 @@ import {
 import { motion } from "framer-motion";
 import { TaxEducationCard } from "@/components/tax-planning/TaxEducationCard";
 import { TaxFeedbackWidget } from "@/components/tax-planning/TaxFeedbackWidget";
+import { TaxOptimizationRoadmap } from "@/components/tax-planning/TaxOptimizationRoadmap";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 // Import new tax planning calculators
@@ -42,6 +43,17 @@ export default function TaxPlanning() {
   
   // Mock subscription tier - in production this would come from user context
   const subscriptionTier = 'free' as const; // 'free', 'basic', 'premium'
+  
+  // Roadmap state - in production this would come from user progress tracking
+  const [currentStage, setCurrentStage] = React.useState('assess');
+  const [completedStages, setCompletedStages] = React.useState<string[]>([]);
+  const [isFirstTime, setIsFirstTime] = React.useState(true);
+
+  const handleStageClick = (stageId: string) => {
+    setCurrentStage(stageId);
+    // In production, this would navigate to the appropriate section or tool
+    console.log('Navigating to stage:', stageId);
+  };
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -133,6 +145,16 @@ export default function TaxPlanning() {
               )}
             </CardContent>
           </Card>
+        </motion.div>
+
+        {/* Tax Optimization Roadmap */}
+        <motion.div variants={itemVariants}>
+          <TaxOptimizationRoadmap 
+            onStageClick={handleStageClick}
+            completedStages={completedStages}
+            currentStage={currentStage}
+            isFirstTime={isFirstTime}
+          />
         </motion.div>
 
         {/* Unified Tax Analyzer - Main Feature */}
