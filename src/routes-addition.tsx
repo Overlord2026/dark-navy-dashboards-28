@@ -15,6 +15,7 @@ import GoalsPage from '@/pages/GoalsPage';
 import CreateGoalPage from '@/pages/CreateGoalPage';
 import GoalFormPage from '@/pages/GoalFormPage';
 import GoalDetailPage from '@/pages/GoalDetailPage';
+import TaxCenter from '@/pages/TaxCenter';
 
 // These routes should be added to your existing routes.tsx file
 const additionalRoutes = [
@@ -73,6 +74,10 @@ const additionalRoutes = [
   {
     path: '/annuities/analyze',
     element: <ContractAnalyzer />
+  },
+  {
+    path: '/tax-center',
+    element: <TaxCenter />
   }
 ];
 

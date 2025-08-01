@@ -11,13 +11,21 @@ import {
   Heart,
   Gift,
   Camera,
-  BarChart3
+  BarChart3,
+  Calculator
 } from "lucide-react";
 
 export const QuickActions: React.FC = () => {
   const navigate = useNavigate();
 
   const actions = [
+    {
+      title: "Tax Center",
+      description: "Optimize your tax strategy",
+      icon: <Calculator className="h-6 w-6" />,
+      color: "bg-emerald-600 hover:bg-emerald-700",
+      onClick: () => navigate('/tax-center')
+    },
     {
       title: "Create New Goal",
       description: "Start planning your next milestone",
