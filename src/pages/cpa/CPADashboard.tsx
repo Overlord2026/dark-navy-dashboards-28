@@ -11,6 +11,8 @@ import { PracticeAnalytics } from '@/components/cpa/PracticeAnalytics';
 import { DataImportMapper } from '@/components/cpa/DataImportMapper';
 import { ClientMappingEngine } from '@/components/cpa/ClientMappingEngine';
 import { WhiteLabelPortalActivation } from '@/components/cpa/WhiteLabelPortalActivation';
+import { StaffRoleManagement } from '@/components/cpa/StaffRoleManagement';
+import { PracticeDashboard } from '@/components/cpa/PracticeDashboard';
 
 export default function CPADashboard() {
   return (
@@ -20,8 +22,10 @@ export default function CPADashboard() {
         text="Complete practice management platform with onboarding, client communication, document management, and analytics"
       />
 
-      <Tabs defaultValue="onboarding" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-10 text-xs">
+      <Tabs defaultValue="dashboard" className="space-y-6">
+        <TabsList className="grid w-full grid-cols-12 text-xs">
+          <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
+          <TabsTrigger value="staff">Staff & Roles</TabsTrigger>
           <TabsTrigger value="onboarding">Onboarding</TabsTrigger>
           <TabsTrigger value="portal">Portal Setup</TabsTrigger>
           <TabsTrigger value="import">Data Import</TabsTrigger>
@@ -33,6 +37,14 @@ export default function CPADashboard() {
           <TabsTrigger value="signatures">E-Signatures</TabsTrigger>
           <TabsTrigger value="analytics">Analytics</TabsTrigger>
         </TabsList>
+
+        <TabsContent value="dashboard">
+          <PracticeDashboard />
+        </TabsContent>
+
+        <TabsContent value="staff">
+          <StaffRoleManagement />
+        </TabsContent>
 
         <TabsContent value="onboarding">
           <CPAOnboardingModule />
