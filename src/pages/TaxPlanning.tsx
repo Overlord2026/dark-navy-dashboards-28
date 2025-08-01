@@ -33,6 +33,8 @@ import WithdrawalSequencingSimulator from "@/components/tax-planning/WithdrawalS
 import TaxBracketProjector from "@/components/tax-planning/TaxBracketProjector";
 import { UnifiedTaxAnalyzer } from "@/components/tax-planning/UnifiedTaxAnalyzer";
 import { AIChatWidget } from "@/components/ai/AIChatWidget";
+import { FeedbackButton } from "@/components/feedback/FeedbackButton";
+import { Celebration } from "@/components/ConfettiAnimation";
 
 // Import existing components
 import { TaxReadinessAssessment } from "@/components/tax-planning/TaxReadinessAssessment";
@@ -49,9 +51,12 @@ export default function TaxPlanning() {
   const [currentStage, setCurrentStage] = React.useState('assess');
   const [completedStages, setCompletedStages] = React.useState<string[]>([]);
   const [isFirstTime, setIsFirstTime] = React.useState(true);
+  const [showSuccess, setShowSuccess] = React.useState(false);
 
   const handleStageClick = (stageId: string) => {
     setCurrentStage(stageId);
+    setShowSuccess(true);
+    setTimeout(() => setShowSuccess(false), 3000);
     // In production, this would navigate to the appropriate section or tool
     console.log('Navigating to stage:', stageId);
   };
@@ -231,10 +236,16 @@ export default function TaxPlanning() {
         </motion.section>
 
         {/* Feedback Widget */}
-        <motion.div variants={itemVariants}>
-          <TaxFeedbackWidget />
+        <motion.div variants={itemVariants} className="text-center">
+          <FeedbackButton 
+            page="Tax Planning" 
+            className="mx-auto"
+          />
         </motion.div>
       </motion.div>
+
+      {/* Success Animation */}
+      <Celebration trigger={showSuccess} />
 
       {/* AI Chat Widget - Persistent */}
       <AIChatWidget 
