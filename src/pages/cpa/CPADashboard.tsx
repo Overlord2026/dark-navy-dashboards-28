@@ -13,6 +13,7 @@ import { ClientMappingEngine } from '@/components/cpa/ClientMappingEngine';
 import { WhiteLabelPortalActivation } from '@/components/cpa/WhiteLabelPortalActivation';
 import { StaffRoleManagement } from '@/components/cpa/StaffRoleManagement';
 import { PracticeDashboard } from '@/components/cpa/PracticeDashboard';
+import { ClientInviteOnboardingFlow } from '@/components/cpa/ClientInviteOnboardingFlow';
 
 export default function CPADashboard() {
   return (
@@ -47,7 +48,7 @@ export default function CPADashboard() {
         </TabsContent>
 
         <TabsContent value="onboarding">
-          <CPAOnboardingModule />
+          <ClientInviteOnboardingFlow />
         </TabsContent>
 
         <TabsContent value="portal">

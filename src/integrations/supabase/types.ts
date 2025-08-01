@@ -1473,6 +1473,178 @@ export type Database = {
         }
         Relationships: []
       }
+      cpa_client_invitations: {
+        Row: {
+          accepted_at: string | null
+          business_structure: string | null
+          client_type: string
+          company_name: string | null
+          cpa_partner_id: string
+          created_at: string
+          custom_message: string | null
+          email: string
+          expires_at: string
+          first_name: string | null
+          id: string
+          invitation_token: string
+          invited_by: string | null
+          last_name: string | null
+          opened_at: string | null
+          phone: string | null
+          sent_at: string | null
+          status: string
+          updated_at: string
+          welcome_video_url: string | null
+        }
+        Insert: {
+          accepted_at?: string | null
+          business_structure?: string | null
+          client_type?: string
+          company_name?: string | null
+          cpa_partner_id: string
+          created_at?: string
+          custom_message?: string | null
+          email: string
+          expires_at?: string
+          first_name?: string | null
+          id?: string
+          invitation_token?: string
+          invited_by?: string | null
+          last_name?: string | null
+          opened_at?: string | null
+          phone?: string | null
+          sent_at?: string | null
+          status?: string
+          updated_at?: string
+          welcome_video_url?: string | null
+        }
+        Update: {
+          accepted_at?: string | null
+          business_structure?: string | null
+          client_type?: string
+          company_name?: string | null
+          cpa_partner_id?: string
+          created_at?: string
+          custom_message?: string | null
+          email?: string
+          expires_at?: string
+          first_name?: string | null
+          id?: string
+          invitation_token?: string
+          invited_by?: string | null
+          last_name?: string | null
+          opened_at?: string | null
+          phone?: string | null
+          sent_at?: string | null
+          status?: string
+          updated_at?: string
+          welcome_video_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cpa_client_invitations_cpa_partner_id_fkey"
+            columns: ["cpa_partner_id"]
+            isOneToOne: false
+            referencedRelation: "cpa_partners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cpa_client_invitations_invited_by_fkey"
+            columns: ["invited_by"]
+            isOneToOne: false
+            referencedRelation: "cpa_staff"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cpa_client_onboarding: {
+        Row: {
+          assigned_staff_id: string | null
+          business_structure: string | null
+          client_type: string
+          client_user_id: string
+          cpa_partner_id: string
+          created_at: string
+          documents_required: number
+          documents_uploaded: number
+          engagement_letter_signed: boolean
+          estimated_completion_date: string | null
+          id: string
+          invitation_id: string | null
+          notes: string | null
+          onboarding_stage: string
+          organizer_completed: boolean
+          progress_percentage: number
+          updated_at: string
+          video_watched: boolean
+          welcome_email_sent: boolean
+        }
+        Insert: {
+          assigned_staff_id?: string | null
+          business_structure?: string | null
+          client_type: string
+          client_user_id: string
+          cpa_partner_id: string
+          created_at?: string
+          documents_required?: number
+          documents_uploaded?: number
+          engagement_letter_signed?: boolean
+          estimated_completion_date?: string | null
+          id?: string
+          invitation_id?: string | null
+          notes?: string | null
+          onboarding_stage?: string
+          organizer_completed?: boolean
+          progress_percentage?: number
+          updated_at?: string
+          video_watched?: boolean
+          welcome_email_sent?: boolean
+        }
+        Update: {
+          assigned_staff_id?: string | null
+          business_structure?: string | null
+          client_type?: string
+          client_user_id?: string
+          cpa_partner_id?: string
+          created_at?: string
+          documents_required?: number
+          documents_uploaded?: number
+          engagement_letter_signed?: boolean
+          estimated_completion_date?: string | null
+          id?: string
+          invitation_id?: string | null
+          notes?: string | null
+          onboarding_stage?: string
+          organizer_completed?: boolean
+          progress_percentage?: number
+          updated_at?: string
+          video_watched?: boolean
+          welcome_email_sent?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cpa_client_onboarding_assigned_staff_id_fkey"
+            columns: ["assigned_staff_id"]
+            isOneToOne: false
+            referencedRelation: "cpa_staff"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cpa_client_onboarding_cpa_partner_id_fkey"
+            columns: ["cpa_partner_id"]
+            isOneToOne: false
+            referencedRelation: "cpa_partners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cpa_client_onboarding_invitation_id_fkey"
+            columns: ["invitation_id"]
+            isOneToOne: false
+            referencedRelation: "cpa_client_invitations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cpa_client_relationships: {
         Row: {
           client_user_id: string
@@ -1599,6 +1771,87 @@ export type Database = {
           },
         ]
       }
+      cpa_document_requests: {
+        Row: {
+          client_user_id: string
+          cpa_partner_id: string
+          created_at: string
+          description: string | null
+          document_name: string
+          document_type: string
+          due_date: string | null
+          id: string
+          is_required: boolean
+          last_reminder_sent: string | null
+          notes: string | null
+          onboarding_id: string | null
+          reminder_count: number
+          request_sent_at: string | null
+          reviewed_at: string | null
+          status: string
+          updated_at: string
+          uploaded_at: string | null
+          uploaded_file_url: string | null
+        }
+        Insert: {
+          client_user_id: string
+          cpa_partner_id: string
+          created_at?: string
+          description?: string | null
+          document_name: string
+          document_type: string
+          due_date?: string | null
+          id?: string
+          is_required?: boolean
+          last_reminder_sent?: string | null
+          notes?: string | null
+          onboarding_id?: string | null
+          reminder_count?: number
+          request_sent_at?: string | null
+          reviewed_at?: string | null
+          status?: string
+          updated_at?: string
+          uploaded_at?: string | null
+          uploaded_file_url?: string | null
+        }
+        Update: {
+          client_user_id?: string
+          cpa_partner_id?: string
+          created_at?: string
+          description?: string | null
+          document_name?: string
+          document_type?: string
+          due_date?: string | null
+          id?: string
+          is_required?: boolean
+          last_reminder_sent?: string | null
+          notes?: string | null
+          onboarding_id?: string | null
+          reminder_count?: number
+          request_sent_at?: string | null
+          reviewed_at?: string | null
+          status?: string
+          updated_at?: string
+          uploaded_at?: string | null
+          uploaded_file_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cpa_document_requests_cpa_partner_id_fkey"
+            columns: ["cpa_partner_id"]
+            isOneToOne: false
+            referencedRelation: "cpa_partners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cpa_document_requests_onboarding_id_fkey"
+            columns: ["onboarding_id"]
+            isOneToOne: false
+            referencedRelation: "cpa_client_onboarding"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cpa_onboarding_checklists: {
         Row: {
           completed_at: string | null
@@ -1645,6 +1898,60 @@ export type Database = {
             columns: ["cpa_partner_id"]
             isOneToOne: false
             referencedRelation: "cpa_partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cpa_onboarding_status_log: {
+        Row: {
+          automated: boolean
+          client_visible: boolean
+          created_at: string
+          id: string
+          metadata: Json | null
+          new_stage: string
+          onboarding_id: string
+          previous_stage: string | null
+          status_message: string | null
+          triggered_by: string | null
+        }
+        Insert: {
+          automated?: boolean
+          client_visible?: boolean
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          new_stage: string
+          onboarding_id: string
+          previous_stage?: string | null
+          status_message?: string | null
+          triggered_by?: string | null
+        }
+        Update: {
+          automated?: boolean
+          client_visible?: boolean
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          new_stage?: string
+          onboarding_id?: string
+          previous_stage?: string | null
+          status_message?: string | null
+          triggered_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cpa_onboarding_status_log_onboarding_id_fkey"
+            columns: ["onboarding_id"]
+            isOneToOne: false
+            referencedRelation: "cpa_client_onboarding"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cpa_onboarding_status_log_triggered_by_fkey"
+            columns: ["triggered_by"]
+            isOneToOne: false
+            referencedRelation: "cpa_staff"
             referencedColumns: ["id"]
           },
         ]
@@ -1850,6 +2157,66 @@ export type Database = {
             columns: ["cpa_partner_id"]
             isOneToOne: false
             referencedRelation: "cpa_partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cpa_welcome_templates: {
+        Row: {
+          client_type: string | null
+          cpa_partner_id: string
+          created_at: string
+          created_by: string | null
+          email_content: string
+          id: string
+          includes_video: boolean
+          is_default: boolean
+          subject_line: string
+          template_name: string
+          updated_at: string
+          video_url: string | null
+        }
+        Insert: {
+          client_type?: string | null
+          cpa_partner_id: string
+          created_at?: string
+          created_by?: string | null
+          email_content: string
+          id?: string
+          includes_video?: boolean
+          is_default?: boolean
+          subject_line: string
+          template_name: string
+          updated_at?: string
+          video_url?: string | null
+        }
+        Update: {
+          client_type?: string | null
+          cpa_partner_id?: string
+          created_at?: string
+          created_by?: string | null
+          email_content?: string
+          id?: string
+          includes_video?: boolean
+          is_default?: boolean
+          subject_line?: string
+          template_name?: string
+          updated_at?: string
+          video_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cpa_welcome_templates_cpa_partner_id_fkey"
+            columns: ["cpa_partner_id"]
+            isOneToOne: false
+            referencedRelation: "cpa_partners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cpa_welcome_templates_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "cpa_staff"
             referencedColumns: ["id"]
           },
         ]
@@ -14914,6 +15281,10 @@ export type Database = {
       calculate_next_training_due_date: {
         Args: { p_frequency: string; p_last_completed?: string }
         Returns: string
+      }
+      calculate_onboarding_progress: {
+        Args: { onboarding_id: string }
+        Returns: number
       }
       calculate_project_analytics: {
         Args: { p_project_id: string }
