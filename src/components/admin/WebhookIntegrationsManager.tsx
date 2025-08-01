@@ -308,7 +308,7 @@ export function WebhookIntegrationsManager() {
                 <ol className="list-decimal list-inside space-y-2 text-sm">
                   <li>Create a new scenario in Make.com</li>
                   <li>Add your trigger module (CRM, form, etc.)</li>
-                  <li>Add an "HTTP" > "Make a request" module</li>
+                  <li>Add an "HTTP" &gt; "Make a request" module</li>
                   <li>Set method to "POST"</li>
                   <li>Enter the webhook URL above</li>
                   <li>Set Content-Type to "application/json"</li>
