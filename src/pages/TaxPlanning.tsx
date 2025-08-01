@@ -29,6 +29,7 @@ import { EnhancedTaxReturnAnalyzer } from "@/components/tax-planning/EnhancedTax
 import MultiYearTaxProjector from "@/components/tax-planning/MultiYearTaxProjector";
 import WithdrawalSequencingSimulator from "@/components/tax-planning/WithdrawalSequencingSimulator";
 import TaxBracketProjector from "@/components/tax-planning/TaxBracketProjector";
+import { UnifiedTaxAnalyzer } from "@/components/tax-planning/UnifiedTaxAnalyzer";
 
 // Import existing components
 import { TaxReadinessAssessment } from "@/components/tax-planning/TaxReadinessAssessment";
@@ -131,6 +132,11 @@ export default function TaxPlanning() {
               )}
             </CardContent>
           </Card>
+        </motion.div>
+
+        {/* Unified Tax Analyzer - Main Feature */}
+        <motion.div variants={itemVariants}>
+          <UnifiedTaxAnalyzer subscriptionTier={subscriptionTier} />
         </motion.div>
 
         {/* Roth Conversion Analyzer */}
