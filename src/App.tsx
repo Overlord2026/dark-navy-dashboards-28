@@ -61,6 +61,7 @@ import { AccessDeniedPage } from "./pages/AccessDeniedPage";
 import AdvisorInvitePage from "./pages/AdvisorInvitePage";
 import ClientOnboardingPage from "./pages/ClientOnboardingPage";
 import OnboardingDashboardPage from "./pages/OnboardingDashboardPage";
+import { QATestDashboard } from "./pages/QATestDashboard";
 import MarketplacePage from "./pages/MarketplacePage";
 import ProductDetailsPage from "./pages/ProductDetailsPage";
 import MarketplaceAdminPage from "./pages/MarketplaceAdminPage";
@@ -880,8 +881,17 @@ const App = () => {
                        </ProtectedRoute>
                      } />
                      
-                     {/* QA Testing Routes removed for production */}
-                     {/* QA brand audit route removed for production */}
+                      {/* QA Test Dashboard - Development Only */}
+                      <Route
+                        path="/qa-dashboard"
+                        element={
+                          <ProtectedRoute>
+                            <QATestDashboard />
+                          </ProtectedRoute>
+                        }
+                      />
+                      {/* QA Testing Routes removed for production */}
+                      {/* QA brand audit route removed for production */}
                     
                     <Route path="/access-denied" element={<AccessDeniedPage />} />
                    <Route path="*" element={<NotFoundPage />} />
