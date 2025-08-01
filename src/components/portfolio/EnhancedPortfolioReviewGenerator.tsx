@@ -145,6 +145,14 @@ export function EnhancedPortfolioReviewGenerator() {
   
   const { fetchStockStats } = useMarketData();
 
+  // Check URL params and auto-load sample data if requested
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('loadSample') === 'true') {
+      loadSampleData();
+    }
+  }, []);
+
   // Sample portfolios with enhanced data
   const sampleCurrentPortfolio: Portfolio = {
     name: "Current Portfolio",

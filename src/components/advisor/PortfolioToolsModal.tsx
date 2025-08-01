@@ -285,7 +285,12 @@ export function PortfolioToolsModal({ isOpen, onClose }: PortfolioToolsModalProp
                     <FileText className="h-4 w-4 mr-2" />
                     Open Portfolio Generator
                   </Button>
-                  <Button variant="outline">
+                  <Button 
+                    variant="outline"
+                    onClick={() => {
+                      window.open('/portfolio?loadSample=true', '_blank');
+                    }}
+                  >
                     Load Sample Portfolio
                   </Button>
                 </div>
