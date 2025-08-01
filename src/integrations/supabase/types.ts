@@ -5611,6 +5611,48 @@ export type Database = {
         }
         Relationships: []
       }
+      market_data_cache: {
+        Row: {
+          alpha: number | null
+          beta: number | null
+          created_at: string
+          error_message: string | null
+          id: string
+          one_year_return: number | null
+          symbol: string
+          updated_at: string
+          volatility: number | null
+          yield: number | null
+          ytd_return: number | null
+        }
+        Insert: {
+          alpha?: number | null
+          beta?: number | null
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          one_year_return?: number | null
+          symbol: string
+          updated_at?: string
+          volatility?: number | null
+          yield?: number | null
+          ytd_return?: number | null
+        }
+        Update: {
+          alpha?: number | null
+          beta?: number | null
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          one_year_return?: number | null
+          symbol?: string
+          updated_at?: string
+          volatility?: number | null
+          yield?: number | null
+          ytd_return?: number | null
+        }
+        Relationships: []
+      }
       med_adherence: {
         Row: {
           created_at: string

@@ -116,12 +116,15 @@ export const ModelComparison: React.FC<ModelComparisonProps> = ({
 
       const modelsWithMetrics = (data || []).map(model => ({
         ...model,
-        expected_return: calculateExpectedReturn(model),
-        volatility: calculateVolatility(model),
-        sharpe_ratio: calculateSharpeRatio(model)
+        expected_return: calculateExpectedReturn(model as any),
+        volatility: calculateVolatility(model as any),
+        sharpe_ratio: calculateSharpeRatio(model as any),
+        target_allocation: typeof model.target_allocation === 'string' 
+          ? JSON.parse(model.target_allocation) 
+          : model.target_allocation || {}
       }));
 
-      setAvailableModels(modelsWithMetrics);
+      setAvailableModels(modelsWithMetrics as any[]);
     } catch (error) {
       console.error('Error fetching models:', error);
       toast.error('Failed to load investment models');

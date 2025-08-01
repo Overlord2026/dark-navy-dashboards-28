@@ -196,12 +196,12 @@ export const RiskScoreCalculator: React.FC<RiskScoreCalculatorProps> = ({
     
     // Calculate Herfindahl-Hirschman Index for sector concentration
     const hhi = Object.values(sectorAllocation).reduce((sum: number, weight: any) => {
-      return sum + Math.pow(weight, 2);
+      return sum + Math.pow(Number(weight) || 0, 2);
     }, 0);
     
     // Convert HHI to risk score (higher concentration = higher risk)
     // HHI ranges from 0 (perfectly diversified) to 10000 (single sector)
-    const concentrationScore = Math.min(100, hhi / 100);
+    const concentrationScore = Math.min(100, Number(hhi || 0) / 100);
     
     return Math.round(concentrationScore);
   };
@@ -289,7 +289,7 @@ export const RiskScoreCalculator: React.FC<RiskScoreCalculatorProps> = ({
 
   const getSectorDescription = (portfolio: Portfolio): string => {
     const sectors = Object.keys(portfolio.analysis.sector_allocation || {});
-    const maxSector = Math.max(...Object.values(portfolio.analysis.sector_allocation || {}));
+    const maxSector = Math.max(...Object.values(portfolio.analysis?.sector_allocation || {}).map(v => Number(v) || 0));
     
     if (maxSector > 40) return 'High sector concentration increases specific risk';
     if (sectors.length < 5) return 'Limited sector diversification';
