@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
+import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { useUser } from '@/context/UserContext';
-import { toast } from 'sonner';
 
 export interface AttorneyOnboardingData {
   id?: string;
@@ -100,7 +99,7 @@ export interface AttorneyDocument {
 }
 
 export function useAttorneyOnboarding() {
-  const { userProfile } = useUser();
+  const { toast } = useToast();
   const [onboardingData, setOnboardingData] = useState<AttorneyOnboardingData | null>(null);
   const [documents, setDocuments] = useState<AttorneyDocument[]>([]);
   const [loading, setLoading] = useState(false);
@@ -109,25 +108,31 @@ export function useAttorneyOnboarding() {
 
   // Load existing onboarding data
   const loadOnboarding = async () => {
-    if (!userProfile?.id) return;
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user?.id) return;
 
     setLoading(true);
     try {
+      // Use raw query until types regenerate
       const { data, error } = await supabase
         .from('attorney_onboarding')
         .select('*')
-        .eq('user_id', userProfile.id)
+        .eq('user_id', user.id)
         .maybeSingle();
 
-      if (error) throw error;
+      if (error && error.code !== 'PGRST116') throw error;
 
       if (data) {
-        setOnboardingData(data);
+        setOnboardingData(data as AttorneyOnboardingData);
         await loadDocuments(data.id);
       }
     } catch (error) {
       console.error('Error loading onboarding:', error);
-      toast.error('Failed to load onboarding data');
+      toast({
+        title: "Error",
+        description: "Failed to load onboarding data",
+        variant: "destructive"
+      });
     } finally {
       setLoading(false);
     }
@@ -151,14 +156,14 @@ export function useAttorneyOnboarding() {
 
   // Save onboarding data
   const saveOnboarding = async (data: Partial<AttorneyOnboardingData>) => {
-    if (!userProfile?.id) return null;
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user?.id) return null;
 
     setSaving(true);
     try {
       const saveData = {
         ...data,
-        user_id: userProfile.id,
-        tenant_id: userProfile.tenant_id,
+        user_id: user.id,
         updated_at: new Date().toISOString()
       };
 
@@ -172,7 +177,7 @@ export function useAttorneyOnboarding() {
           .single();
 
         if (error) throw error;
-        setOnboardingData(updated);
+        setOnboardingData(updated as AttorneyOnboardingData);
         return updated;
       } else {
         // Create new
@@ -183,12 +188,16 @@ export function useAttorneyOnboarding() {
           .single();
 
         if (error) throw error;
-        setOnboardingData(created);
+        setOnboardingData(created as AttorneyOnboardingData);
         return created;
       }
     } catch (error) {
       console.error('Error saving onboarding:', error);
-      toast.error('Failed to save onboarding data');
+      toast({
+        title: "Error",
+        description: "Failed to save onboarding data",
+        variant: "destructive"
+      });
       return null;
     } finally {
       setSaving(false);
@@ -201,18 +210,23 @@ export function useAttorneyOnboarding() {
     file: File,
     onboardingId?: string
   ) => {
-    if (!userProfile?.id) return null;
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user?.id) return null;
     
     const targetOnboardingId = onboardingId || onboardingData?.id;
     if (!targetOnboardingId) {
-      toast.error('Please save your profile first');
+      toast({
+        title: "Error",
+        description: "Please save your profile first",
+        variant: "destructive"
+      });
       return null;
     }
 
     setUploading(true);
     try {
       // Upload file to storage
-      const fileName = `${userProfile.id}/${documentType}_${Date.now()}_${file.name}`;
+      const fileName = `${user.id}/${documentType}_${Date.now()}_${file.name}`;
       const { error: uploadError } = await supabase.storage
         .from('attorney-documents')
         .upload(fileName, file);
@@ -238,11 +252,18 @@ export function useAttorneyOnboarding() {
 
       // Refresh documents
       await loadDocuments(targetOnboardingId);
-      toast.success(`${documentType} uploaded successfully`);
+      toast({
+        title: "Success",
+        description: `${documentType} uploaded successfully`
+      });
       return docData;
     } catch (error) {
       console.error('Error uploading document:', error);
-      toast.error(`Failed to upload ${documentType}`);
+      toast({
+        title: "Error",
+        description: `Failed to upload ${documentType}`,
+        variant: "destructive"
+      });
       return null;
     } finally {
       setUploading(false);
@@ -269,12 +290,19 @@ export function useAttorneyOnboarding() {
 
       if (error) throw error;
 
-      setOnboardingData(data);
-      toast.success(`${agreementType.replace('_', ' ')} signed successfully`);
+      setOnboardingData(data as AttorneyOnboardingData);
+      toast({
+        title: "Success",
+        description: `${agreementType.replace('_', ' ')} signed successfully`
+      });
       return true;
     } catch (error) {
       console.error('Error signing agreement:', error);
-      toast.error('Failed to sign agreement');
+      toast({
+        title: "Error",
+        description: "Failed to sign agreement",
+        variant: "destructive"
+      });
       return false;
     }
   };
@@ -314,10 +342,8 @@ export function useAttorneyOnboarding() {
 
   // Load data on mount
   useEffect(() => {
-    if (userProfile?.id) {
-      loadOnboarding();
-    }
-  }, [userProfile?.id]);
+    loadOnboarding();
+  }, []);
 
   return {
     onboardingData,
