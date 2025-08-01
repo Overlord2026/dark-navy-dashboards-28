@@ -8,7 +8,7 @@ import { formatCurrency } from '@/lib/formatters';
 import { RiskScoreCalculator } from './RiskScoreCalculator';
 import { SideBySideComparison } from './SideBySideComparison';
 import { ClientRiskProfileQuiz } from './ClientRiskProfileQuiz';
-import { ManualEntryForm } from './ManualEntryForm';
+import { BenchmarkComparison } from './BenchmarkComparison';
 
 interface Portfolio {
   name: string;
@@ -17,6 +17,7 @@ interface Portfolio {
     name: string;
     allocation: number;
     value: number;
+    assetClass: 'stock' | 'bond' | 'reit' | 'commodity' | 'cash';
     marketData?: {
       beta?: number;
       alpha?: number;
@@ -42,11 +43,11 @@ export function PortfolioReviewDashboard() {
   const sampleCurrentPortfolio: Portfolio = {
     name: "Current Portfolio",
     holdings: [
-      { symbol: "AAPL", name: "Apple Inc.", allocation: 23, value: 115000 },
-      { symbol: "NVDA", name: "NVIDIA Corp.", allocation: 11, value: 55000 },
-      { symbol: "MSFT", name: "Microsoft Corp.", allocation: 9, value: 45000 },
-      { symbol: "GOOGL", name: "Alphabet Inc.", allocation: 8, value: 40000 },
-      { symbol: "TSLA", name: "Tesla Inc.", allocation: 7, value: 35000 }
+      { symbol: "AAPL", name: "Apple Inc.", allocation: 23, value: 115000, assetClass: 'stock' as const },
+      { symbol: "NVDA", name: "NVIDIA Corp.", allocation: 11, value: 55000, assetClass: 'stock' as const },
+      { symbol: "MSFT", name: "Microsoft Corp.", allocation: 9, value: 45000, assetClass: 'stock' as const },
+      { symbol: "GOOGL", name: "Alphabet Inc.", allocation: 8, value: 40000, assetClass: 'stock' as const },
+      { symbol: "TSLA", name: "Tesla Inc.", allocation: 7, value: 35000, assetClass: 'stock' as const }
     ],
     riskScore: 72,
     annualIncome: 12300,
@@ -57,11 +58,11 @@ export function PortfolioReviewDashboard() {
   const sampleProposedPortfolio: Portfolio = {
     name: "AWM Income Model",
     holdings: [
-      { symbol: "AWM-IB", name: "AWM Income Blend", allocation: 35, value: 175000 },
-      { symbol: "PMA", name: "Private Market Alpha", allocation: 20, value: 100000 },
-      { symbol: "BOND-MIX", name: "Diversified Bonds", allocation: 25, value: 125000 },
-      { symbol: "REIT", name: "Real Estate", allocation: 15, value: 75000 },
-      { symbol: "CASH", name: "Cash & Equivalents", allocation: 5, value: 25000 }
+      { symbol: "AWM-IB", name: "AWM Income Blend", allocation: 35, value: 175000, assetClass: 'stock' as const },
+      { symbol: "PMA", name: "Private Market Alpha", allocation: 20, value: 100000, assetClass: 'reit' as const },
+      { symbol: "BOND-MIX", name: "Diversified Bonds", allocation: 25, value: 125000, assetClass: 'bond' as const },
+      { symbol: "REIT", name: "Real Estate", allocation: 15, value: 75000, assetClass: 'reit' as const },
+      { symbol: "CASH", name: "Cash & Equivalents", allocation: 5, value: 25000, assetClass: 'cash' as const }
     ],
     riskScore: 38,
     annualIncome: 22500,
@@ -254,7 +255,13 @@ export function PortfolioReviewDashboard() {
         />
       )}
 
-      {/* Section 6: Client Risk Profile */}
+      {/* Enhanced Benchmark Analysis */}
+      {currentPortfolio && (
+        <BenchmarkComparison 
+          portfolio={currentPortfolio}
+          onExportPDF={() => console.log('Exporting PDF...')}
+        />
+      )}
       <Card>
         <CardHeader>
           <CardTitle>6. Client Risk Profile</CardTitle>
