@@ -20,6 +20,7 @@ import AdvisorROIDashboard from '@/pages/AdvisorROIDashboard';
 import { ComprehensiveQATest } from '@/pages/ComprehensiveQATest';
 import { SystemValidationPage } from '@/pages/SystemValidationPage';
 import { AttorneyOnboarding } from '@/pages/AttorneyOnboarding';
+import MobileQATestPage from '@/pages/MobileQATestPage';
 
 // These routes should be added to your existing routes.tsx file
 const additionalRoutes = [
@@ -98,6 +99,10 @@ const additionalRoutes = [
   {
     path: '/system-validation',
     element: <SystemValidationPage />
+  },
+  {
+    path: '/mobile-qa-test',
+    element: <MobileQATestPage />
   }
 ];
 
