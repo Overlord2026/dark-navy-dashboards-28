@@ -1,142 +1,155 @@
 import React from 'react';
-import { Document, Page, Text, View, StyleSheet, Font } from '@react-pdf/renderer';
+import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
 import { formatCurrency, formatPercentage } from '@/lib/formatters';
 
-// Register fonts (optional - can use default fonts)
+// Enhanced styles for professional PDF
 const styles = StyleSheet.create({
-  page: {
-    flexDirection: 'column',
-    backgroundColor: '#FFFFFF',
-    padding: 30,
+  page: { 
+    padding: 24, 
+    fontSize: 11, 
     fontFamily: 'Helvetica',
+    lineHeight: 1.4
   },
-  header: {
-    marginBottom: 20,
+  cover: { 
+    textAlign: 'center', 
+    marginBottom: 30,
+    paddingBottom: 20,
     borderBottom: 2,
-    borderBottomColor: '#000000',
-    paddingBottom: 10,
+    borderBottomColor: '#000000'
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#1a1a1a',
+  heading: { 
+    fontSize: 18, 
+    fontWeight: 'bold', 
+    marginBottom: 6,
+    color: '#1a1a1a'
   },
-  subtitle: {
+  subheading: {
     fontSize: 14,
     color: '#666666',
-    marginTop: 5,
+    marginBottom: 4
   },
-  section: {
-    marginBottom: 20,
+  section: { 
+    marginBottom: 16
   },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    color: '#1a1a1a',
-    borderBottom: 1,
-    borderBottomColor: '#cccccc',
-    paddingBottom: 5,
+  table: { 
+    width: "100%", 
+    marginBottom: 8 
   },
-  row: {
-    flexDirection: 'row',
-    paddingVertical: 5,
-  },
-  column: {
-    flex: 1,
-    fontSize: 10,
+  tableRow: { 
+    flexDirection: "row",
+    borderBottom: 0.5,
+    borderBottomColor: '#eeeeee'
   },
   tableHeader: {
-    flexDirection: 'row',
+    flexDirection: "row",
     backgroundColor: '#f5f5f5',
-    paddingVertical: 8,
-    paddingHorizontal: 5,
     borderBottom: 1,
-    borderBottomColor: '#dddddd',
+    borderBottomColor: '#dddddd'
   },
-  tableRow: {
-    flexDirection: 'row',
-    paddingVertical: 6,
-    paddingHorizontal: 5,
-    borderBottom: 0.5,
-    borderBottomColor: '#eeeeee',
-  },
-  headerCell: {
-    flex: 1,
-    fontSize: 10,
-    fontWeight: 'bold',
-    color: '#333333',
-  },
-  cell: {
-    flex: 1,
+  tableCell: { 
+    width: "10%", 
+    padding: 4, 
     fontSize: 9,
-    color: '#333333',
+    textAlign: 'center'
   },
-  summaryGrid: {
-    flexDirection: 'row',
-    marginBottom: 15,
+  tableCellWide: {
+    width: "15%", 
+    padding: 4, 
+    fontSize: 9,
+    textAlign: 'left'
   },
-  summaryItem: {
-    flex: 1,
-    marginRight: 10,
-    padding: 10,
-    backgroundColor: '#f8f9fa',
-    borderRadius: 4,
-  },
-  summaryLabel: {
-    fontSize: 10,
-    color: '#666666',
-    marginBottom: 2,
-  },
-  summaryValue: {
-    fontSize: 14,
+  tableCellHeader: {
+    width: "10%", 
+    padding: 4, 
+    fontSize: 9,
     fontWeight: 'bold',
-    color: '#1a1a1a',
+    textAlign: 'center'
   },
-  notes: {
-    backgroundColor: '#f0f9ff',
-    padding: 15,
+  tableCellHeaderWide: {
+    width: "15%", 
+    padding: 4, 
+    fontSize: 9,
+    fontWeight: 'bold',
+    textAlign: 'left'
+  },
+  notes: { 
+    backgroundColor: "#f0f9ff", 
+    padding: 10, 
     borderRadius: 4,
-    marginTop: 10,
+    marginBottom: 12
   },
   notesTitle: {
     fontSize: 12,
     fontWeight: 'bold',
-    marginBottom: 5,
-    color: '#1e40af',
+    marginBottom: 4,
+    color: '#1e40af'
   },
-  notesText: {
-    fontSize: 10,
-    lineHeight: 1.4,
-    color: '#374151',
+  small: { 
+    fontSize: 8, 
+    color: "#666",
+    marginTop: 20,
+    textAlign: 'center'
   },
-  disclaimer: {
-    marginTop: 30,
-    padding: 15,
-    backgroundColor: '#fef3cd',
-    borderRadius: 4,
+  summaryGrid: {
+    flexDirection: 'row',
+    marginBottom: 12,
+    gap: 8
   },
-  disclaimerTitle: {
-    fontSize: 11,
-    fontWeight: 'bold',
-    marginBottom: 5,
-    color: '#92400e',
+  summaryItem: {
+    flex: 1,
+    padding: 8,
+    backgroundColor: '#f8f9fa',
+    borderRadius: 4
   },
-  disclaimerText: {
+  summaryLabel: {
     fontSize: 9,
-    lineHeight: 1.3,
-    color: '#92400e',
-  },
-  footer: {
-    position: 'absolute',
-    bottom: 30,
-    left: 30,
-    right: 30,
-    textAlign: 'center',
-    fontSize: 8,
     color: '#666666',
+    marginBottom: 2
   },
+  summaryValue: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: '#1a1a1a'
+  }
 });
+
+// Helper for enhanced holdings table with 10-year returns
+function HoldingsTable({ holdings, marketData }: { holdings: any[], marketData: Record<string, any> }) {
+  return (
+    <View style={styles.table}>
+      <View style={styles.tableHeader}>
+        <Text style={styles.tableCellHeaderWide}>Ticker</Text>
+        <Text style={[styles.tableCellHeaderWide, { width: "20%" }]}>Name</Text>
+        <Text style={styles.tableCellHeaderWide}>Sector</Text>
+        <Text style={styles.tableCellHeader}>Weight</Text>
+        <Text style={styles.tableCellHeader}>Beta</Text>
+        <Text style={styles.tableCellHeader}>Yield</Text>
+        <Text style={styles.tableCellHeader}>1yr</Text>
+        <Text style={styles.tableCellHeader}>3yr</Text>
+        <Text style={styles.tableCellHeader}>5yr</Text>
+        <Text style={styles.tableCellHeader}>10yr</Text>
+      </View>
+      {holdings.map((holding, index) => {
+        const data = marketData[holding.symbol] || {};
+        const weight = (holding.value / holdings.reduce((sum, h) => sum + h.value, 0)) * 100;
+        return (
+          <View key={index} style={styles.tableRow}>
+            <Text style={styles.tableCellWide}>{holding.symbol}</Text>
+            <Text style={[styles.tableCellWide, { width: "20%" }]}>{holding.name}</Text>
+            <Text style={styles.tableCellWide}>{data.sector || 'Technology'}</Text>
+            <Text style={styles.tableCell}>{weight.toFixed(1)}%</Text>
+            <Text style={styles.tableCell}>{data.beta ? data.beta.toFixed(2) : 'N/A'}</Text>
+            <Text style={styles.tableCell}>{data.yield ? (data.yield * 100).toFixed(2) + '%' : 'N/A'}</Text>
+            <Text style={styles.tableCell}>{data.oneYearReturn ? (data.oneYearReturn * 100).toFixed(1) + '%' : 'N/A'}</Text>
+            <Text style={styles.tableCell}>{data.threeYearReturn ? (data.threeYearReturn * 100).toFixed(1) + '%' : 'N/A'}</Text>
+            <Text style={styles.tableCell}>{data.fiveYearReturn ? (data.fiveYearReturn * 100).toFixed(1) + '%' : 'N/A'}</Text>
+            <Text style={styles.tableCell}>{data.tenYearReturn ? (data.tenYearReturn * 100).toFixed(1) + '%' : 'N/A'}</Text>
+          </View>
+        );
+      })}
+    </View>
+  );
+}
 
 interface Portfolio {
   name: string;
@@ -175,6 +188,7 @@ interface PortfolioReportPDFProps {
 export default function PortfolioReportPDF({
   portfolio,
   proposal,
+  benchmarks,
   sections,
   advisorNotes,
   previewMode = false,
@@ -192,63 +206,75 @@ export default function PortfolioReportPDF({
   if (previewMode) {
     // Return HTML preview for live preview
     return (
-      <div className="bg-white p-8 text-black font-sans">
-        <div className="border-b-2 border-gray-900 pb-4 mb-6">
-          <h1 className="text-2xl font-bold">{clientName}</h1>
+      <div className="bg-white p-8 text-black font-sans max-w-4xl mx-auto">
+        {/* Cover Page */}
+        <div className="text-center mb-8 pb-6 border-b-2 border-gray-900">
+          <h1 className="text-2xl font-bold mb-2">Portfolio Review & Analysis</h1>
+          <p className="text-lg">Prepared for {clientName}</p>
           <p className="text-gray-600">{reportDate}</p>
-          <h2 className="text-xl font-semibold mt-2">Portfolio Analysis & Review</h2>
         </div>
 
+        {/* Executive Summary */}
         {sections.includes('summary') && (
-          <div className="mb-6">
-            <h3 className="text-lg font-bold mb-4 border-b border-gray-300 pb-2">Executive Summary</h3>
+          <div className="mb-8">
+            <h2 className="text-xl font-bold mb-4 border-b border-gray-300 pb-2">Executive Summary</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
               <div className="bg-gray-50 p-3 rounded">
-                <p className="text-xs text-gray-600">Total Value</p>
+                <p className="text-xs text-gray-600">Portfolio Value</p>
                 <p className="text-lg font-bold">{formatCurrency(portfolio.totalValue)}</p>
               </div>
               <div className="bg-gray-50 p-3 rounded">
                 <p className="text-xs text-gray-600">Portfolio Beta</p>
-                <p className="text-lg font-bold">{currentMetrics.beta.toFixed(2)}</p>
+                <p className="text-lg font-bold">{currentMetrics.beta.toFixed(2)} (vs. S&P 500)</p>
               </div>
               <div className="bg-gray-50 p-3 rounded">
-                <p className="text-xs text-gray-600">Portfolio Yield</p>
+                <p className="text-xs text-gray-600">Income Yield</p>
                 <p className="text-lg font-bold">{formatPercentage(currentMetrics.yield)}</p>
               </div>
               <div className="bg-gray-50 p-3 rounded">
                 <p className="text-xs text-gray-600">Risk Score</p>
-                <p className="text-lg font-bold">{currentMetrics.riskScore}</p>
+                <p className="text-lg font-bold">{currentMetrics.riskScore}/100</p>
               </div>
             </div>
           </div>
         )}
 
+        {/* Holdings Table */}
         {sections.includes('holdings') && (
-          <div className="mb-6">
-            <h3 className="text-lg font-bold mb-4 border-b border-gray-300 pb-2">Holdings Analysis</h3>
+          <div className="mb-8">
+            <h2 className="text-xl font-bold mb-4 border-b border-gray-300 pb-2">Portfolio Holdings</h2>
             <div className="overflow-x-auto">
-              <table className="w-full text-sm">
+              <table className="w-full text-xs border border-gray-200">
                 <thead className="bg-gray-100">
                   <tr>
-                    <th className="text-left p-2">Symbol</th>
-                    <th className="text-left p-2">Name</th>
-                    <th className="text-right p-2">Allocation</th>
-                    <th className="text-right p-2">Value</th>
-                    <th className="text-right p-2">Beta</th>
-                    <th className="text-right p-2">Yield</th>
+                    <th className="text-left p-2 border-r">Ticker</th>
+                    <th className="text-left p-2 border-r">Name</th>
+                    <th className="text-left p-2 border-r">Sector</th>
+                    <th className="text-center p-2 border-r">Weight</th>
+                    <th className="text-center p-2 border-r">Beta</th>
+                    <th className="text-center p-2 border-r">Yield</th>
+                    <th className="text-center p-2 border-r">1yr</th>
+                    <th className="text-center p-2 border-r">3yr</th>
+                    <th className="text-center p-2 border-r">5yr</th>
+                    <th className="text-center p-2">10yr</th>
                   </tr>
                 </thead>
                 <tbody>
                   {portfolio.holdings.map((holding, index) => {
                     const data = marketData[holding.symbol] || {};
+                    const weight = (holding.value / portfolio.totalValue) * 100;
                     return (
                       <tr key={index} className="border-b">
-                        <td className="p-2 font-medium">{holding.symbol}</td>
-                        <td className="p-2">{holding.name}</td>
-                        <td className="p-2 text-right">{formatPercentage(holding.allocation)}</td>
-                        <td className="p-2 text-right">{formatCurrency(holding.value)}</td>
-                        <td className="p-2 text-right">{data.beta ? data.beta.toFixed(2) : 'N/A'}</td>
-                        <td className="p-2 text-right">{data.yield ? formatPercentage(data.yield) : 'N/A'}</td>
+                        <td className="p-2 font-medium border-r">{holding.symbol}</td>
+                        <td className="p-2 border-r">{holding.name}</td>
+                        <td className="p-2 border-r">{data.sector || 'Technology'}</td>
+                        <td className="p-2 text-center border-r">{weight.toFixed(1)}%</td>
+                        <td className="p-2 text-center border-r">{data.beta ? data.beta.toFixed(2) : 'N/A'}</td>
+                        <td className="p-2 text-center border-r">{data.yield ? formatPercentage(data.yield) : 'N/A'}</td>
+                        <td className="p-2 text-center border-r">{data.oneYearReturn ? formatPercentage(data.oneYearReturn) : 'N/A'}</td>
+                        <td className="p-2 text-center border-r">{data.threeYearReturn ? formatPercentage(data.threeYearReturn) : 'N/A'}</td>
+                        <td className="p-2 text-center border-r">{data.fiveYearReturn ? formatPercentage(data.fiveYearReturn) : 'N/A'}</td>
+                        <td className="p-2 text-center">N/A</td>
                       </tr>
                     );
                   })}
@@ -258,36 +284,38 @@ export default function PortfolioReportPDF({
           </div>
         )}
 
+        {/* Risk/Return Section */}
         {sections.includes('risk') && (
-          <div className="mb-6">
-            <h3 className="text-lg font-bold mb-4 border-b border-gray-300 pb-2">Risk & Return Analysis</h3>
+          <div className="mb-8">
+            <h2 className="text-xl font-bold mb-4 border-b border-gray-300 pb-2">Risk & Return Analysis</h2>
             <div className="bg-blue-50 p-4 rounded">
               <p className="text-sm">
-                Portfolio beta of {currentMetrics.beta.toFixed(2)} indicates{' '}
-                {currentMetrics.beta > 1.0 ? 'higher' : currentMetrics.beta < 1.0 ? 'lower' : 'similar'} systematic risk 
-                compared to the S&P 500, with {formatPercentage(currentMetrics.volatility)} annualized volatility.
-                Risk score of {currentMetrics.riskScore} on a 0-100 scale.
+                Your portfolio's beta is {currentMetrics.beta.toFixed(2)}, indicating it's{' '}
+                {currentMetrics.beta > 1 ? 'more' : 'less'} volatile than the market. 
+                With a risk score of {currentMetrics.riskScore}/100 and {formatPercentage(currentMetrics.volatility)} annualized volatility,
+                this portfolio demonstrates {currentMetrics.beta < 0.8 ? 'conservative' : currentMetrics.beta > 1.2 ? 'aggressive' : 'moderate'} risk characteristics.
               </p>
             </div>
           </div>
         )}
 
+        {/* Advisor Notes */}
         {sections.includes('notes') && advisorNotes && (
-          <div className="mb-6">
-            <h3 className="text-lg font-bold mb-4 border-b border-gray-300 pb-2">Advisor Notes</h3>
+          <div className="mb-8">
+            <h2 className="text-xl font-bold mb-4 border-b border-gray-300 pb-2">Advisor Notes & Recommendations</h2>
             <div className="bg-blue-50 p-4 rounded">
               <p className="text-sm whitespace-pre-wrap">{advisorNotes}</p>
             </div>
           </div>
         )}
 
-        <div className="mt-8 p-4 bg-yellow-50 rounded border border-yellow-200">
-          <h4 className="font-bold text-yellow-800 mb-2">Important Disclosure</h4>
-          <p className="text-xs text-yellow-700">
-            This report is generated for informational purposes only and does not constitute investment advice. 
-            Past performance does not guarantee future results. All data sources are clearly attributed. 
-            Market data provided by Finnhub API. Benchmark comparisons use SPY (S&P 500) and AGG (US Aggregate Bonds) as applicable.
+        {/* Compliance Footer */}
+        <div className="mt-12 text-center text-xs text-gray-600 border-t pt-4">
+          <p className="mb-2">
+            This report is for informational purposes only. Data sources: Finnhub API. 
+            Past performance is not indicative of future results.
           </p>
+          <p>© {new Date().getFullYear()} Boutique Family Office. All rights reserved.</p>
         </div>
       </div>
     );
@@ -297,100 +325,73 @@ export default function PortfolioReportPDF({
   return (
     <Document>
       <Page size="A4" style={styles.page}>
-        {/* Header */}
-        <View style={styles.header}>
-          <Text style={styles.title}>{clientName}</Text>
-          <Text style={styles.subtitle}>{reportDate}</Text>
-          <Text style={styles.subtitle}>Portfolio Analysis & Review</Text>
+        {/* Cover Page */}
+        <View style={styles.cover}>
+          <Text style={styles.heading}>Portfolio Review & Analysis</Text>
+          <Text style={styles.subheading}>Prepared for {clientName}</Text>
+          <Text style={styles.subheading}>{reportDate}</Text>
         </View>
 
         {/* Executive Summary */}
         {sections.includes('summary') && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Executive Summary</Text>
+            <Text style={styles.heading}>Executive Summary</Text>
             <View style={styles.summaryGrid}>
               <View style={styles.summaryItem}>
-                <Text style={styles.summaryLabel}>Total Value</Text>
+                <Text style={styles.summaryLabel}>Portfolio Value</Text>
                 <Text style={styles.summaryValue}>{formatCurrency(portfolio.totalValue)}</Text>
               </View>
               <View style={styles.summaryItem}>
                 <Text style={styles.summaryLabel}>Portfolio Beta</Text>
-                <Text style={styles.summaryValue}>{currentMetrics.beta.toFixed(2)}</Text>
+                <Text style={styles.summaryValue}>{currentMetrics.beta.toFixed(2)} (vs. S&P 500)</Text>
               </View>
               <View style={styles.summaryItem}>
-                <Text style={styles.summaryLabel}>Portfolio Yield</Text>
+                <Text style={styles.summaryLabel}>Income Yield</Text>
                 <Text style={styles.summaryValue}>{formatPercentage(currentMetrics.yield)}</Text>
               </View>
               <View style={styles.summaryItem}>
                 <Text style={styles.summaryLabel}>Risk Score</Text>
-                <Text style={styles.summaryValue}>{currentMetrics.riskScore}</Text>
+                <Text style={styles.summaryValue}>{currentMetrics.riskScore}/100</Text>
               </View>
             </View>
           </View>
         )}
 
-        {/* Holdings Table */}
+        {/* Portfolio Holdings */}
         {sections.includes('holdings') && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Holdings Analysis</Text>
-            <View style={styles.tableHeader}>
-              <Text style={[styles.headerCell, { flex: 1.2 }]}>Symbol</Text>
-              <Text style={[styles.headerCell, { flex: 2 }]}>Name</Text>
-              <Text style={styles.headerCell}>Allocation</Text>
-              <Text style={styles.headerCell}>Value</Text>
-              <Text style={styles.headerCell}>Beta</Text>
-              <Text style={styles.headerCell}>Yield</Text>
-            </View>
-            {portfolio.holdings.map((holding, index) => {
-              const data = marketData[holding.symbol] || {};
-              return (
-                <View key={index} style={styles.tableRow}>
-                  <Text style={[styles.cell, { flex: 1.2 }]}>{holding.symbol}</Text>
-                  <Text style={[styles.cell, { flex: 2 }]}>{holding.name}</Text>
-                  <Text style={styles.cell}>{formatPercentage(holding.allocation)}</Text>
-                  <Text style={styles.cell}>{formatCurrency(holding.value)}</Text>
-                  <Text style={styles.cell}>{data.beta ? data.beta.toFixed(2) : 'N/A'}</Text>
-                  <Text style={styles.cell}>{data.yield ? formatPercentage(data.yield) : 'N/A'}</Text>
-                </View>
-              );
-            })}
+            <Text style={styles.heading}>Portfolio Holdings</Text>
+            <HoldingsTable holdings={portfolio.holdings} marketData={marketData} />
           </View>
         )}
 
-        {/* Risk Analysis */}
+        {/* Risk/Return Section */}
         {sections.includes('risk') && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Risk & Return Analysis</Text>
+            <Text style={styles.heading}>Risk & Return Analysis</Text>
             <Text style={{ fontSize: 10, lineHeight: 1.4 }}>
-              Portfolio beta of {currentMetrics.beta.toFixed(2)} indicates{' '}
-              {currentMetrics.beta > 1.0 ? 'higher' : currentMetrics.beta < 1.0 ? 'lower' : 'similar'} systematic risk 
-              compared to the S&P 500, with {formatPercentage(currentMetrics.volatility)} annualized volatility.
-              Risk score of {currentMetrics.riskScore} on a 0-100 scale.
+              Your portfolio's beta is {currentMetrics.beta.toFixed(2)}, indicating it's{' '}
+              {currentMetrics.beta > 1 ? 'more' : 'less'} volatile than the market. 
+              With a risk score of {currentMetrics.riskScore}/100 and {formatPercentage(currentMetrics.volatility)} annualized volatility,
+              this portfolio demonstrates {currentMetrics.beta < 0.8 ? 'conservative' : currentMetrics.beta > 1.2 ? 'aggressive' : 'moderate'} risk characteristics.
             </Text>
           </View>
         )}
 
         {/* Advisor Notes */}
         {sections.includes('notes') && advisorNotes && (
-          <View style={styles.notes}>
-            <Text style={styles.notesTitle}>Advisor Notes</Text>
-            <Text style={styles.notesText}>{advisorNotes}</Text>
+          <View style={styles.section}>
+            <Text style={styles.heading}>Advisor Notes & Recommendations</Text>
+            <View style={styles.notes}>
+              <Text style={{ fontSize: 10, lineHeight: 1.4 }}>{advisorNotes}</Text>
+            </View>
           </View>
         )}
 
-        {/* Disclaimer */}
-        <View style={styles.disclaimer}>
-          <Text style={styles.disclaimerTitle}>Important Disclosure</Text>
-          <Text style={styles.disclaimerText}>
-            This report is generated for informational purposes only and does not constitute investment advice. 
-            Past performance does not guarantee future results. All data sources are clearly attributed. 
-            Market data provided by Finnhub API. Benchmark comparisons use SPY (S&P 500) and AGG (US Aggregate Bonds) as applicable.
-          </Text>
-        </View>
-
-        {/* Footer */}
-        <Text style={styles.footer}>
-          Generated on {reportDate} | Confidential & Proprietary
+        {/* Compliance Footer */}
+        <Text style={styles.small}>
+          This report is for informational purposes only. Data sources: Finnhub API. 
+          Past performance is not indicative of future results. © {new Date().getFullYear()} Boutique Family Office. All rights reserved.
         </Text>
       </Page>
     </Document>
