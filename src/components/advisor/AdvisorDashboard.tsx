@@ -1,27 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Progress } from '@/components/ui/progress';
 import { motion } from 'framer-motion';
 import { 
   Users, 
   FileText, 
   AlertTriangle, 
   Download, 
-  Send, 
-  BarChart,
-  CheckCircle,
+  TrendingUp,
+  DollarSign,
   Clock,
-  XCircle,
+  CheckCircle,
   Plus,
-  Filter,
-  Search,
-  Mail
+  Target,
+  BarChart3,
+  Calendar,
+  Trophy,
+  Sparkles
 } from 'lucide-react';
-import { DashboardWidgets } from './DashboardWidgets';
-import { ClientStatusCards } from './ClientStatusCards';
-import { BatchActions } from './BatchActions';
+import { EnhancedCalculatorChart } from '@/components/calculators/EnhancedCalculatorChart';
+import { Celebration } from '@/components/ConfettiAnimation';
 
 interface Client {
   id: string;
@@ -105,40 +105,47 @@ const mockClients: Client[] = [
 ];
 
 export function AdvisorDashboard() {
-  const [selectedClients, setSelectedClients] = useState<string[]>([]);
-  const [filterStatus, setFilterStatus] = useState<string>('all');
-  const [searchTerm, setSearchTerm] = useState('');
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [chartData, setChartData] = useState([]);
 
   // Calculate dashboard metrics
   const metrics = {
+    totalClients: mockClients.length,
     clientsRequiringAction: mockClients.filter(c => c.status === 'action-needed').length,
     pendingDocReviews: mockClients.filter(c => c.status === 'pending-review').length,
+    monthlyRevenue: '$125,400',
     aiFlaggedOpportunities: mockClients.reduce((sum, c) => sum + c.aiOpportunities, 0),
     totalTaxSavings: mockClients.reduce((sum, c) => sum + c.taxSavingsEstimate, 0),
-    totalClients: mockClients.length
+    completionRate: Math.round((mockClients.filter(c => c.status === 'up-to-date').length / mockClients.length) * 100)
   };
 
-  const filteredClients = mockClients.filter(client => {
-    const matchesStatus = filterStatus === 'all' || client.status === filterStatus;
-    const matchesSearch = client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         client.email.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesStatus && matchesSearch;
-  });
+  // Generate revenue projection data
+  useEffect(() => {
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+    const projectionData = months.map((month, index) => ({
+      month,
+      revenue: 95000 + (index * 5000) + (Math.random() * 10000)
+    }));
+    setChartData(projectionData);
+  }, []);
 
-  const handleClientSelect = (clientId: string) => {
-    setSelectedClients(prev => 
-      prev.includes(clientId) 
-        ? prev.filter(id => id !== clientId)
-        : [...prev, clientId]
-    );
-  };
+  const recentActivity = [
+    { id: 1, client: 'John Smith', action: 'Tax optimization completed', time: '2 hours ago', status: 'completed', savings: '$15,000' },
+    { id: 2, client: 'Sarah Johnson', action: 'Portfolio review scheduled', time: '1 day ago', status: 'scheduled', savings: null },
+    { id: 3, client: 'Michael Brown', action: 'Estate plan updated', time: '2 days ago', status: 'completed', savings: '$8,500' },
+    { id: 4, client: 'Emily Davis', action: 'Tax strategy meeting due', time: '3 days ago', status: 'pending', savings: '$22,000' }
+  ];
 
-  const handleSelectAll = () => {
-    if (selectedClients.length === filteredClients.length) {
-      setSelectedClients([]);
-    } else {
-      setSelectedClients(filteredClients.map(c => c.id));
-    }
+  const upcomingTasks = [
+    { client: 'John Smith', task: 'Quarterly Review Meeting', due: 'Tomorrow', priority: 'high' },
+    { client: 'Emily Davis', task: 'Tax Document Collection', due: 'March 15', priority: 'high' },
+    { client: 'Robert Wilson', task: 'Investment Rebalancing', due: 'March 20', priority: 'medium' },
+    { client: 'Lisa Anderson', task: 'Insurance Review', due: 'March 25', priority: 'low' }
+  ];
+
+  const handleCelebration = () => {
+    setShowConfetti(true);
+    setTimeout(() => setShowConfetti(false), 3000);
   };
 
   const containerVariants = {
@@ -146,7 +153,7 @@ export function AdvisorDashboard() {
     visible: { 
       opacity: 1,
       transition: { 
-        duration: 0.3,
+        duration: 0.6,
         when: "beforeChildren",
         staggerChildren: 0.1
       }
@@ -165,201 +172,297 @@ export function AdvisorDashboard() {
       initial="hidden"
       animate="visible"
     >
-      {/* Header */}
+      <Celebration trigger={showConfetti} />
+      
+      {/* Hero Header */}
       <motion.div variants={itemVariants}>
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="min-w-0 flex-1">
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Advisor Dashboard</h1>
-            <p className="text-sm sm:text-base text-muted-foreground mt-1">
-              Manage your clients and streamline your tax advisory practice
-            </p>
-          </div>
-          <div className="flex flex-col sm:flex-row gap-2">
-            <Button 
-              variant="outline" 
-              className="flex items-center justify-center gap-2 min-h-[44px] px-4 py-2"
-              aria-label="Add new client"
-            >
-              <Plus className="h-4 w-4" aria-hidden="true" />
-              <span>Add Client</span>
-            </Button>
-            <Button 
-              className="flex items-center justify-center gap-2 min-h-[44px] px-4 py-2"
-              aria-label="Export dashboard report"
-            >
-              <Download className="h-4 w-4" aria-hidden="true" />
-              <span>Export Report</span>
-            </Button>
-          </div>
+        <Card className="relative overflow-hidden bg-gradient-to-r from-primary via-primary to-primary-foreground text-white">
+          <div className="absolute inset-0 bg-black/10" />
+          <CardContent className="relative z-10 p-8">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-3 bg-white/20 rounded-lg">
+                    <Trophy className="h-8 w-8 text-white" />
+                  </div>
+                  <div>
+                    <h1 className="text-4xl font-bold tracking-tight">Advisor Command Center</h1>
+                    <p className="text-white/90 text-lg">
+                      Streamline your practice and maximize client value
+                    </p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+                  <div className="text-center">
+                    <div className="text-3xl font-bold">{metrics.totalClients}</div>
+                    <div className="text-white/80 text-sm">Total Clients</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-3xl font-bold">${(metrics.totalTaxSavings / 1000).toFixed(0)}K</div>
+                    <div className="text-white/80 text-sm">Tax Savings YTD</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-3xl font-bold">{metrics.completionRate}%</div>
+                    <div className="text-white/80 text-sm">Completion Rate</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-3xl font-bold">{metrics.aiFlaggedOpportunities}</div>
+                    <div className="text-white/80 text-sm">AI Opportunities</div>
+                  </div>
+                </div>
+              </div>
+              <div className="hidden lg:flex flex-col gap-2">
+                <Button 
+                  variant="secondary"
+                  className="gap-2"
+                  onClick={handleCelebration}
+                >
+                  <Plus className="h-4 w-4" />
+                  Add Client
+                </Button>
+                <Button 
+                  variant="outline" 
+                  className="gap-2 text-white border-white/30 hover:bg-white/10"
+                >
+                  <Download className="h-4 w-4" />
+                  Export Report
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
+
+      {/* Enhanced KPI Cards */}
+      <motion.div variants={itemVariants}>
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <Card className="relative overflow-hidden">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Active Clients</CardTitle>
+              <Users className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{metrics.totalClients}</div>
+              <p className="text-xs text-muted-foreground">
+                +3 new this month
+              </p>
+              <div className="absolute bottom-0 right-0 w-16 h-16 bg-gradient-to-tl from-blue-500/10 to-transparent" />
+            </CardContent>
+          </Card>
+
+          <Card className="relative overflow-hidden">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Action Required</CardTitle>
+              <AlertTriangle className="h-4 w-4 text-amber-500" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-amber-600">{metrics.clientsRequiringAction}</div>
+              <p className="text-xs text-muted-foreground">
+                Clients need attention
+              </p>
+              <div className="absolute bottom-0 right-0 w-16 h-16 bg-gradient-to-tl from-amber-500/10 to-transparent" />
+            </CardContent>
+          </Card>
+
+          <Card className="relative overflow-hidden">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Monthly Revenue</CardTitle>
+              <DollarSign className="h-4 w-4 text-green-500" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-green-600">{metrics.monthlyRevenue}</div>
+              <p className="text-xs text-muted-foreground">
+                +18% from last month
+              </p>
+              <div className="absolute bottom-0 right-0 w-16 h-16 bg-gradient-to-tl from-green-500/10 to-transparent" />
+            </CardContent>
+          </Card>
+
+          <Card className="relative overflow-hidden">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">AI Opportunities</CardTitle>
+              <Sparkles className="h-4 w-4 text-purple-500" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-purple-600">{metrics.aiFlaggedOpportunities}</div>
+              <p className="text-xs text-muted-foreground">
+                Potential optimizations
+              </p>
+              <div className="absolute bottom-0 right-0 w-16 h-16 bg-gradient-to-tl from-purple-500/10 to-transparent" />
+            </CardContent>
+          </Card>
         </div>
       </motion.div>
 
-      {/* Dashboard Widgets */}
+      {/* Animated Revenue Chart */}
       <motion.div variants={itemVariants}>
-        <DashboardWidgets metrics={metrics} />
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <TrendingUp className="h-5 w-5 text-primary" />
+              Revenue Projection
+            </CardTitle>
+            <CardDescription>
+              Monthly recurring revenue and growth trajectory
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <EnhancedCalculatorChart
+              data={chartData}
+              type="area"
+              xKey="month"
+              yKey="revenue"
+              title=""
+              color="#10b981"
+              animated={true}
+              height={300}
+            />
+          </CardContent>
+        </Card>
       </motion.div>
 
-      {/* Main Content Tabs */}
-      <motion.div variants={itemVariants}>
-        <Tabs defaultValue="clients" className="space-y-4">
-          <TabsList className="w-full sm:w-auto" role="tablist">
-            <TabsTrigger value="clients" className="flex-1 sm:flex-none" role="tab">
-              Client Management
-            </TabsTrigger>
-            <TabsTrigger value="batch" className="flex-1 sm:flex-none" role="tab">
-              Batch Actions
-            </TabsTrigger>
-            <TabsTrigger value="reports" className="flex-1 sm:flex-none" role="tab">
-              Reports & Analytics
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="clients" className="space-y-4" role="tabpanel">
-            {/* Filters and Search */}
-            <Card>
-              <CardHeader className="px-4 sm:px-6">
-                <div className="flex flex-col gap-4">
-                  <CardTitle className="text-lg sm:text-xl">Client Portfolio</CardTitle>
-                  
-                  {/* Mobile-first responsive layout */}
-                  <div className="flex flex-col sm:flex-row gap-4">
-                    {/* Search */}
-                    <div className="relative flex-1">
-                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" aria-hidden="true" />
-                      <input
-                        type="search"
-                        inputMode="search"
-                        placeholder="Search clients..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full pl-10 pr-4 py-3 sm:py-2 border rounded-md text-sm min-h-[44px] sm:min-h-[36px]"
-                        aria-label="Search clients by name or email"
-                      />
-                    </div>
-                    
-                    {/* Status Filter */}
-                    <select
-                      value={filterStatus}
-                      onChange={(e) => setFilterStatus(e.target.value)}
-                      className="px-3 py-3 sm:py-2 border rounded-md text-sm min-h-[44px] sm:min-h-[36px] bg-white"
-                      aria-label="Filter clients by status"
-                    >
-                      <option value="all">All Status</option>
-                      <option value="action-needed">Action Needed</option>
-                      <option value="pending-review">Pending Review</option>
-                      <option value="up-to-date">Up to Date</option>
-                    </select>
-                  </div>
-
-                  {/* Bulk Actions - Mobile responsive */}
-                  {selectedClients.length > 0 && (
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2" role="region" aria-label="Bulk actions">
+      <div className="grid gap-6 md:grid-cols-2">
+        {/* Recent Client Activity */}
+        <motion.div variants={itemVariants}>
+          <Card>
+            <CardHeader>
+              <CardTitle>Recent Activity</CardTitle>
+              <CardDescription>
+                Latest client interactions and completed actions
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {recentActivity.map((activity) => (
+                <div key={activity.id} className="flex items-center space-x-4">
+                  <div className={`w-2 h-2 rounded-full ${
+                    activity.status === 'completed' ? 'bg-green-500' : 
+                    activity.status === 'pending' ? 'bg-amber-500' : 'bg-blue-500'
+                  }`} />
+                  <div className="flex-1 space-y-1">
+                    <p className="text-sm font-medium leading-none">
+                      {activity.client}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {activity.action}
+                    </p>
+                    {activity.savings && (
                       <Badge variant="secondary" className="text-xs">
-                        {selectedClients.length} selected
+                        {activity.savings} saved
                       </Badge>
-                      <div className="flex gap-2 w-full sm:w-auto">
-                        <Button 
-                          size="sm" 
-                          variant="outline" 
-                          className="flex-1 sm:flex-none min-h-[44px] px-3 py-2"
-                          aria-label={`Request documents from ${selectedClients.length} selected clients`}
-                        >
-                          <Mail className="h-4 w-4 mr-2" aria-hidden="true" />
-                          <span>Request Docs</span>
-                        </Button>
-                        <Button 
-                          size="sm" 
-                          variant="outline" 
-                          className="flex-1 sm:flex-none min-h-[44px] px-3 py-2"
-                          aria-label={`Run analysis for ${selectedClients.length} selected clients`}
-                        >
-                          <BarChart className="h-4 w-4 mr-2" aria-hidden="true" />
-                          <span>Run Analysis</span>
-                        </Button>
-                      </div>
-                    </div>
-                  )}
-                  
-                  {/* Selection controls */}
-                  <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={handleSelectAll}
-                      className="w-full sm:w-auto min-h-[44px] px-4 py-2"
-                      aria-label={selectedClients.length === filteredClients.length ? 'Deselect all clients' : 'Select all filtered clients'}
-                    >
-                      {selectedClients.length === filteredClients.length ? 'Deselect All' : 'Select All'}
-                    </Button>
-                    <span className="text-sm text-muted-foreground" aria-live="polite">
-                      Showing {filteredClients.length} of {mockClients.length} clients
-                    </span>
+                    )}
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    {activity.time}
                   </div>
                 </div>
-              </CardHeader>
-            </Card>
+              ))}
+            </CardContent>
+          </Card>
+        </motion.div>
 
-            {/* Client Status Cards */}
-            <div role="region" aria-label="Client portfolio cards">
-              <ClientStatusCards 
-                clients={filteredClients}
-                selectedClients={selectedClients}
-                onClientSelect={handleClientSelect}
-              />
-            </div>
-          </TabsContent>
-
-          <TabsContent value="batch" className="space-y-4">
-            <BatchActions clients={mockClients} />
-          </TabsContent>
-
-          <TabsContent value="reports" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Reports & Analytics</CardTitle>
-                <CardDescription>
-                  Generate comprehensive reports and insights for your practice
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  <Card className="p-4">
-                    <h4 className="font-medium mb-2">Client Portfolio Summary</h4>
-                    <p className="text-sm text-muted-foreground mb-3">
-                      Comprehensive overview of all client statuses and opportunities
+        {/* Upcoming Tasks */}
+        <motion.div variants={itemVariants}>
+          <Card>
+            <CardHeader>
+              <CardTitle>Upcoming Tasks</CardTitle>
+              <CardDescription>
+                Important deadlines and scheduled activities
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {upcomingTasks.map((task, index) => (
+                <div key={index} className="flex items-center justify-between space-x-4">
+                  <div className="flex-1 space-y-1">
+                    <p className="text-sm font-medium leading-none">
+                      {task.client}
                     </p>
-                    <Button size="sm" className="w-full">
-                      <Download className="h-4 w-4 mr-2" />
-                      Generate Report
-                    </Button>
-                  </Card>
-
-                  <Card className="p-4">
-                    <h4 className="font-medium mb-2">Tax Savings Analysis</h4>
-                    <p className="text-sm text-muted-foreground mb-3">
-                      Detailed breakdown of identified tax-saving opportunities
+                    <p className="text-sm text-muted-foreground">
+                      {task.task}
                     </p>
-                    <Button size="sm" className="w-full">
-                      <Download className="h-4 w-4 mr-2" />
-                      Generate Report
-                    </Button>
-                  </Card>
-
-                  <Card className="p-4">
-                    <h4 className="font-medium mb-2">Practice Performance</h4>
-                    <p className="text-sm text-muted-foreground mb-3">
-                      Key metrics and trends for your advisory practice
+                    <p className="text-xs text-muted-foreground">
+                      Due: {task.due}
                     </p>
-                    <Button size="sm" className="w-full">
-                      <Download className="h-4 w-4 mr-2" />
-                      Generate Report
-                    </Button>
-                  </Card>
+                  </div>
+                  <div className={`px-2 py-1 text-xs rounded-full ${
+                    task.priority === 'high' ? 'bg-red-100 text-red-800' :
+                    task.priority === 'medium' ? 'bg-amber-100 text-amber-800' :
+                    'bg-green-100 text-green-800'
+                  }`}>
+                    {task.priority}
+                  </div>
                 </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
+              ))}
+            </CardContent>
+          </Card>
+        </motion.div>
+      </div>
+
+      {/* Service Overview */}
+      <motion.div variants={itemVariants}>
+        <div className="grid gap-6 md:grid-cols-3">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Target className="h-5 w-5" />
+                Tax Planning
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span>Strategies Implemented</span>
+                  <span>47/52</span>
+                </div>
+                <Progress value={90.4} className="w-full" />
+              </div>
+              <Button variant="outline" className="w-full">
+                View Tax Center
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <BarChart3 className="h-5 w-5" />
+                Portfolio Management
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span>Portfolios Optimized</span>
+                  <span>38/42</span>
+                </div>
+                <Progress value={90.5} className="w-full" />
+              </div>
+              <Button variant="outline" className="w-full">
+                Manage Portfolios
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Calendar className="h-5 w-5" />
+                Client Meetings
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span>Meetings This Month</span>
+                  <span>28/30</span>
+                </div>
+                <Progress value={93.3} className="w-full" />
+              </div>
+              <Button variant="outline" className="w-full">
+                Schedule Meeting
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
       </motion.div>
     </motion.div>
   );
