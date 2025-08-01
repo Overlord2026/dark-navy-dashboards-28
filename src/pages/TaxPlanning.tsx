@@ -19,6 +19,7 @@ import {
   Star
 } from "lucide-react";
 import { motion } from "framer-motion";
+import { TaxEducationCard } from "@/components/tax-planning/TaxEducationCard";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 // Import new tax planning calculators
@@ -184,6 +185,54 @@ export default function TaxPlanning() {
             </CardContent>
           </Card>
         </motion.div>
+        
+        {/* Educational Resources Section */}
+        <motion.section 
+          className="mt-12"
+          variants={containerVariants}
+        >
+          <h2 className="text-2xl font-bold mb-6">Tax Education & Resources</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <TaxEducationCard
+              title="Complete Guide to Roth Conversions"
+              summary="Master the timing, strategies, and tax implications of Roth IRA conversions with real-world examples and case studies."
+              coverImage="https://images.unsplash.com/photo-1581090464777-f3220bbe1e8b?w=500"
+              tags={["Roth IRA", "Tax Strategy", "Retirement"]}
+              roles={["Client", "Advisor"]}
+              links={[
+                { type: 'guide', label: 'View Complete Guide', url: '/guides/roth-conversions' },
+                { type: 'vimeo', label: 'Watch Video Course', url: 'https://vimeo.com/roth-course' },
+                { type: 'amazon', label: 'Buy Book: Roth Revolution', url: 'https://amazon.com/roth-book' }
+              ]}
+              featured
+            />
+            
+            <TaxEducationCard
+              title="Tax Bracket Optimization Strategies"
+              summary="Learn advanced techniques for managing your tax brackets across multiple years and income sources."
+              coverImage="https://images.unsplash.com/photo-1473091534298-04dcbce3278c?w=500"
+              tags={["Tax Brackets", "Planning", "Strategy"]}
+              roles={["Client", "Advisor", "CPA"]}
+              links={[
+                { type: 'pdf', label: 'Download Tax Guide', url: '/pdfs/tax-bracket-guide.pdf' },
+                { type: 'vimeo', label: 'Watch Webinar', url: 'https://vimeo.com/tax-brackets' }
+              ]}
+            />
+            
+            <TaxEducationCard
+              title="SECURE Act 2.0 Compliance"
+              summary="Navigate the latest changes in retirement account rules, RMD ages, and distribution requirements."
+              coverImage="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=500"
+              tags={["SECURE Act", "RMD", "Compliance"]}
+              roles={["Advisor", "CPA", "Attorney"]}
+              links={[
+                { type: 'guide', label: 'View Compliance Guide', url: '/guides/secure-act' },
+                { type: 'pdf', label: 'Download Checklist', url: '/pdfs/secure-act-checklist.pdf' },
+                { type: 'amazon', label: 'Book: Retirement Rules', url: 'https://amazon.com/secure-act-book' }
+              ]}
+            />
+          </div>
+        </motion.section>
       </motion.div>
     </ThreeColumnLayout>
   );
