@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -109,6 +110,7 @@ const mockClients: Client[] = [
 ];
 
 export function AdvisorDashboard() {
+  const navigate = useNavigate();
   const [showConfetti, setShowConfetti] = useState(false);
   const [chartData, setChartData] = useState([]);
   const [showPortfolioTools, setShowPortfolioTools] = useState(false);
@@ -151,6 +153,39 @@ export function AdvisorDashboard() {
   const handleCelebration = () => {
     setShowConfetti(true);
     setTimeout(() => setShowConfetti(false), 3000);
+  };
+
+  const handleAddClient = () => {
+    navigate('/advisor/clients');
+  };
+
+  const handleExportReport = () => {
+    // Create and download a sample report
+    const reportData = {
+      date: new Date().toISOString().split('T')[0],
+      totalClients: metrics.totalClients,
+      monthlyRevenue: metrics.monthlyRevenue,
+      completionRate: metrics.completionRate,
+      aiOpportunities: metrics.aiFlaggedOpportunities
+    };
+    
+    const blob = new Blob([JSON.stringify(reportData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `advisor-report-${reportData.date}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const handleViewTaxCenter = () => {
+    navigate('/tax-center');
+  };
+
+  const handleScheduleMeeting = () => {
+    window.open('https://calendly.com/tonygomes/talk-with-tony', '_blank');
   };
 
   const containerVariants = {
@@ -220,7 +255,7 @@ export function AdvisorDashboard() {
                 <Button 
                   variant="secondary"
                   className="gap-2"
-                  onClick={handleCelebration}
+                  onClick={handleAddClient}
                 >
                   <Plus className="h-4 w-4" />
                   Add Client
@@ -228,6 +263,7 @@ export function AdvisorDashboard() {
                 <Button 
                   variant="outline" 
                   className="gap-2 text-white border-white/30 hover:bg-white/10"
+                  onClick={handleExportReport}
                 >
                   <Download className="h-4 w-4" />
                   Export Report
@@ -420,7 +456,7 @@ export function AdvisorDashboard() {
                 </div>
                 <Progress value={90.4} className="w-full" />
               </div>
-              <Button variant="outline" className="w-full">
+              <Button variant="outline" className="w-full" onClick={handleViewTaxCenter}>
                 View Tax Center
               </Button>
             </CardContent>
@@ -462,7 +498,7 @@ export function AdvisorDashboard() {
                 </div>
                 <Progress value={93.3} className="w-full" />
               </div>
-              <Button variant="outline" className="w-full">
+              <Button variant="outline" className="w-full" onClick={handleScheduleMeeting}>
                 Schedule Meeting
               </Button>
             </CardContent>

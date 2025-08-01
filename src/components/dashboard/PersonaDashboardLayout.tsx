@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -41,6 +42,7 @@ interface PersonaDashboardLayoutProps {
 }
 
 export const PersonaDashboardLayout: React.FC<PersonaDashboardLayoutProps> = ({ children }) => {
+  const navigate = useNavigate();
   const { userProfile } = useUser();
   const role = userProfile?.role || 'client';
   const tier = userProfile?.client_tier || 'basic';
@@ -282,7 +284,7 @@ export const PersonaDashboardLayout: React.FC<PersonaDashboardLayoutProps> = ({ 
             <Button 
               variant="outline" 
               size="sm"
-              onClick={() => setShowOnboarding(true)}
+              onClick={() => navigate('/education')}
             >
               <BookOpen className="h-4 w-4 mr-2" />
               Getting Started

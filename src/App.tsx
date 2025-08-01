@@ -76,6 +76,7 @@ import PortfolioPage from "./pages/PortfolioPage";
 import GoalsDashboard from "./pages/GoalsDashboard";
 import GoalDetailPage from "./pages/GoalDetailPage";
 import CreateGoalPage from "./pages/CreateGoalPage";
+import GoalFormPage from "./pages/GoalFormPage";
 // Removed QA test pages for production
 // Removed QA pages for production
 import { ComplianceReportingPage } from "./pages/ComplianceReportingPage";
@@ -509,6 +510,16 @@ const App = () => {
                     element={
                       <AuthWrapper requireAuth={true}>
                         <GoalDetailPage />
+                      </AuthWrapper>
+                    }
+                  />
+
+                  {/* Goal Category Creation Routes */}
+                  <Route
+                    path="/goals/create/:category"
+                    element={
+                      <AuthWrapper requireAuth={true}>
+                        <GoalFormPage />
                       </AuthWrapper>
                     }
                   />
