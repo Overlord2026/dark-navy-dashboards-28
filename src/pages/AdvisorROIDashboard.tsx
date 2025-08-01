@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { DatePickerWithRange } from '@/components/ui/date-range-picker';
-import { Plus, Download, Upload } from 'lucide-react';
+import { Plus, Download, Upload, FileText } from 'lucide-react';
 import { ROIKPICards } from '@/components/roi/ROIKPICards';
 import { AdvancedROIFunnelChart } from '@/components/roi/AdvancedROIFunnelChart';
 import { TimeToCloseChart } from '@/components/roi/TimeToCloseChart';
@@ -13,7 +13,10 @@ import { CampaignPerformanceTable } from '@/components/roi/CampaignPerformanceTa
 import { NewLeadDialog } from '@/components/roi/NewLeadDialog';
 import { NewCampaignDialog } from '@/components/roi/NewCampaignDialog';
 import { CSVImportDialog } from '@/components/roi/CSVImportDialog';
+import { NoDataState } from '@/components/roi/NoDataState';
 import { useCSVOperations } from '@/hooks/useCSVOperations';
+import { useROIData } from '@/hooks/useROIData';
+import { exportDashboardToPDF } from '@/utils/pdfExport';
 import { addDays } from 'date-fns';
 
 interface DateRange {
@@ -32,8 +35,43 @@ export default function AdvisorROIDashboard() {
   const [isNewCampaignOpen, setIsNewCampaignOpen] = useState(false);
   const [isCSVImportOpen, setIsCSVImportOpen] = useState(false);
   const [csvImportType, setCsvImportType] = useState<'leads' | 'campaigns' | undefined>();
+  const [hasData, setHasData] = useState(true);
+  const [metrics, setMetrics] = useState<any>(null);
   
   const { exportLeadsToCSV, exportCampaignsToCSV, isExporting } = useCSVOperations();
+  const { getROIMetrics } = useROIData();
+
+  // Check if we have data to show
+  useEffect(() => {
+    const checkData = async () => {
+      try {
+        const data = await getROIMetrics(dateRange);
+        setMetrics(data);
+        setHasData(data.totalLeads > 0 || data.campaigns.length > 0);
+      } catch (error) {
+        console.error('Error checking data:', error);
+        setHasData(false);
+      }
+    };
+
+    checkData();
+  }, [dateRange, getROIMetrics]);
+
+  const handleDataUpdate = () => {
+    // Refresh data when new leads/campaigns are added
+    const checkData = async () => {
+      const data = await getROIMetrics(dateRange);
+      setMetrics(data);
+      setHasData(data.totalLeads > 0 || data.campaigns.length > 0);
+    };
+    checkData();
+  };
+
+  const handleExportPDF = async () => {
+    if (metrics) {
+      await exportDashboardToPDF(metrics, dateRange);
+    }
+  };
 
   return (
     <div className="space-y-6 p-6">
@@ -118,13 +156,40 @@ export default function AdvisorROIDashboard() {
                 <Download className="h-4 w-4 mr-2" />
                 Export Campaigns
               </Button>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={handleExportPDF}
+                disabled={!hasData}
+              >
+                <FileText className="h-4 w-4 mr-2" />
+                Export PDF
+              </Button>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* KPI Cards */}
-      <ROIKPICards dateRange={dateRange} />
+      {/* KPI Cards or No Data State */}
+      {hasData ? (
+        <ROIKPICards dateRange={dateRange} />
+      ) : (
+        <NoDataState
+          title="No data available yet"
+          description="Start by adding leads and campaigns or importing your existing data to see analytics."
+          showSampleActions={true}
+          onAddLead={() => setIsNewLeadOpen(true)}
+          onAddCampaign={() => setIsNewCampaignOpen(true)}
+          onImportLeads={() => {
+            setCsvImportType('leads');
+            setIsCSVImportOpen(true);
+          }}
+          onImportCampaigns={() => {
+            setCsvImportType('campaigns');
+            setIsCSVImportOpen(true);
+          }}
+        />
+      )}
 
       {/* Action Buttons */}
       <div className="flex gap-4">
@@ -138,38 +203,47 @@ export default function AdvisorROIDashboard() {
         </Button>
       </div>
 
-      {/* Advanced ROI Analytics Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <AdvancedROIFunnelChart dateRange={dateRange} />
-        <TimeToCloseChart dateRange={dateRange} />
-      </div>
+      {/* Analytics Charts - Only show if we have data */}
+      {hasData && (
+        <>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <AdvancedROIFunnelChart dateRange={dateRange} />
+            <TimeToCloseChart dateRange={dateRange} />
+          </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <CampaignComparisonChart dateRange={dateRange} />
-        <CumulativeRevenueChart dateRange={dateRange} />
-      </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <CampaignComparisonChart dateRange={dateRange} />
+            <CumulativeRevenueChart dateRange={dateRange} />
+          </div>
 
-      {/* Campaign Performance Table */}
-      <CampaignPerformanceTable 
-        dateRange={dateRange}
-        selectedCampaign={selectedCampaign}
-        selectedSource={selectedSource}
-      />
+          {/* Campaign Performance Table */}
+          <CampaignPerformanceTable 
+            dateRange={dateRange}
+            selectedCampaign={selectedCampaign}
+            selectedSource={selectedSource}
+          />
+        </>
+      )}
 
       {/* Dialogs */}
       <NewLeadDialog 
         open={isNewLeadOpen} 
-        onOpenChange={setIsNewLeadOpen} 
+        onOpenChange={setIsNewLeadOpen}
+        onLeadCreated={handleDataUpdate}
       />
       <NewCampaignDialog 
         open={isNewCampaignOpen} 
-        onOpenChange={setIsNewCampaignOpen} 
+        onOpenChange={setIsNewCampaignOpen}
+        onCampaignCreated={handleDataUpdate}
       />
       <CSVImportDialog 
         open={isCSVImportOpen} 
         onOpenChange={(open) => {
           setIsCSVImportOpen(open);
-          if (!open) setCsvImportType(undefined);
+          if (!open) {
+            setCsvImportType(undefined);
+            handleDataUpdate(); // Refresh data after import
+          }
         }}
         defaultType={csvImportType}
       />

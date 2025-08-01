@@ -31,6 +31,8 @@ export function NewLeadDialog({ open, onOpenChange, onLeadCreated }: NewLeadDial
     stage: 'lead',
     source: '',
     campaign_id: '',
+    revenue: '',
+    ltv: '',
   });
 
   // Load campaigns when dialog opens
@@ -67,6 +69,8 @@ export function NewLeadDialog({ open, onOpenChange, onLeadCreated }: NewLeadDial
         source: formData.source,
         campaign_id: formData.campaign_id || undefined,
         closed: formData.stage === 'closed',
+        revenue: formData.revenue ? parseFloat(formData.revenue) : undefined,
+        ltv: formData.ltv ? parseFloat(formData.ltv) : undefined,
       });
       
       // Reset form
@@ -78,6 +82,8 @@ export function NewLeadDialog({ open, onOpenChange, onLeadCreated }: NewLeadDial
         stage: 'lead',
         source: '',
         campaign_id: '',
+        revenue: '',
+        ltv: '',
       });
       onLeadCreated?.();
       onOpenChange(false);
@@ -151,10 +157,11 @@ export function NewLeadDialog({ open, onOpenChange, onLeadCreated }: NewLeadDial
               <SelectContent className="bg-background border shadow-lg z-50">
                 <SelectItem value="lead">New Lead</SelectItem>
                 <SelectItem value="contacted">Contacted</SelectItem>
-                <SelectItem value="appt1">Appointment Set</SelectItem>
-                <SelectItem value="appt2">Second Appointment</SelectItem>
-                <SelectItem value="appt3">Third Appointment</SelectItem>
+                <SelectItem value="appt1">1st Appointment</SelectItem>
+                <SelectItem value="appt2">2nd Appointment</SelectItem>
+                <SelectItem value="appt3">3rd Appointment</SelectItem>
                 <SelectItem value="proposal">Proposal Sent</SelectItem>
+                <SelectItem value="closed">Closed</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -191,6 +198,34 @@ export function NewLeadDialog({ open, onOpenChange, onLeadCreated }: NewLeadDial
               </SelectContent>
             </Select>
           </div>
+
+          {/* Revenue and LTV fields for closed leads */}
+          {formData.stage === 'closed' && (
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="revenue">Revenue ($)</Label>
+                <Input 
+                  id="revenue" 
+                  type="number" 
+                  placeholder="7500"
+                  step="0.01"
+                  value={formData.revenue}
+                  onChange={(e) => setFormData(prev => ({ ...prev, revenue: e.target.value }))}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="ltv">LTV ($)</Label>
+                <Input 
+                  id="ltv" 
+                  type="number" 
+                  placeholder="18000"
+                  step="0.01"
+                  value={formData.ltv}
+                  onChange={(e) => setFormData(prev => ({ ...prev, ltv: e.target.value }))}
+                />
+              </div>
+            </div>
+          )}
           
           <div className="flex justify-end space-x-2">
             <Button variant="outline" type="button" onClick={() => onOpenChange(false)}>

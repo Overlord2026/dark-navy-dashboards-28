@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+import { ResponsiveChart } from '@/components/ui/responsive-chart';
 import { CHART_COLORS, CHART_STYLES } from '@/utils/chartTheme';
 
 interface DateRange {
@@ -42,7 +43,7 @@ export function AdvancedROIFunnelChart({ dateRange }: AdvancedROIFunnelChartProp
         </p>
       </CardHeader>
       <CardContent>
-        <div className="h-[400px]">
+        <ResponsiveChart height={400}>
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={funnelData}
@@ -91,7 +92,7 @@ export function AdvancedROIFunnelChart({ dateRange }: AdvancedROIFunnelChartProp
               </Bar>
             </BarChart>
           </ResponsiveContainer>
-        </div>
+        </ResponsiveChart>
         
         {/* Conversion Stats */}
         <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4">
