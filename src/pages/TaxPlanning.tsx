@@ -30,6 +30,7 @@ import MultiYearTaxProjector from "@/components/tax-planning/MultiYearTaxProject
 import WithdrawalSequencingSimulator from "@/components/tax-planning/WithdrawalSequencingSimulator";
 import TaxBracketProjector from "@/components/tax-planning/TaxBracketProjector";
 import { UnifiedTaxAnalyzer } from "@/components/tax-planning/UnifiedTaxAnalyzer";
+import { AIChatWidget } from "@/components/ai/AIChatWidget";
 
 // Import existing components
 import { TaxReadinessAssessment } from "@/components/tax-planning/TaxReadinessAssessment";
@@ -246,6 +247,16 @@ export default function TaxPlanning() {
           <TaxFeedbackWidget />
         </motion.div>
       </motion.div>
+
+      {/* AI Chat Widget - Persistent */}
+      <AIChatWidget 
+        userPersona="investor" 
+        currentPage="tax-planning"
+        contextData={{
+          subscriptionTier,
+          currentSection: 'tax-planning'
+        }}
+      />
     </ThreeColumnLayout>
   );
 }
