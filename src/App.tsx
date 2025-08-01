@@ -19,6 +19,7 @@ import { getAdvisorAccessRoles } from "@/utils/roleHierarchy";
 import { DynamicLandingController } from "@/components/auth/DynamicLandingController";
 import { Navigation } from "@/components/Navigation";
 import { QABypassIndicator } from "@/components/security/QABypassIndicator";
+import { BrandedFooter } from "@/components/ui/BrandedFooter";
 import Index from "./pages/Index";
 // Dashboard default export
 import Dashboard from "./pages/Dashboard";
@@ -49,6 +50,7 @@ import NavigationQATest from "./pages/NavigationQATest";
 import { AuthTestSuite } from "./components/test/AuthTestSuite";
 import { SettingsPage } from "./pages/SettingsPage";
 import { HealthRecordsPage } from "./pages/HealthRecordsPage";
+import CPARevenueDashboard from "./pages/cpa/CPARevenueDashboard";
 import { FinancialPlanningPage } from "./pages/FinancialPlanningPage";
 import { LegalDocumentsPage } from "./pages/LegalDocumentsPage";
 import { InsurancePoliciesPage } from "./pages/InsurancePoliciesPage";
@@ -150,9 +152,10 @@ const App = () => {
             <Sonner />
             <BrowserRouter>
               <DynamicLandingController>
-                <div className="min-h-screen bg-background">
+                <div className="min-h-screen bg-background flex flex-col">
                   <QABypassIndicator />
                   <Navigation />
+                  <div className="flex-1">
                   <Routes>
                   <Route path="/auth" element={<AuthPage />} />
                     
@@ -893,17 +896,30 @@ const App = () => {
                         </AuthWrapper>
                       }
                     />
-                    <Route
-                      path="/admin/monitoring"
-                      element={
-                        <AuthWrapper
-                          requireAuth={true}
-                          allowedRoles={['admin', 'tenant_admin', 'system_administrator']}
-                        >
-                          <MonitoringPage />
-                        </AuthWrapper>
-                      }
-                    />
+                     <Route
+                       path="/admin/monitoring"
+                       element={
+                         <AuthWrapper
+                           requireAuth={true}
+                           allowedRoles={['admin', 'tenant_admin', 'system_administrator']}
+                         >
+                           <MonitoringPage />
+                         </AuthWrapper>
+                       }
+                     />
+
+                     {/* CPA Revenue Dashboard */}
+                     <Route
+                       path="/cpa/revenue-dashboard"
+                       element={
+                         <AuthWrapper
+                           requireAuth={true}
+                           allowedRoles={['accountant', 'admin', 'tenant_admin', 'system_administrator']}
+                         >
+                           <CPARevenueDashboard />
+                         </AuthWrapper>
+                       }
+                     />
 
                      {/* Navigation & QA Testing Routes */}
                      <Route path="/navigation-diagnostics" element={
@@ -931,7 +947,9 @@ const App = () => {
                     
                     <Route path="/access-denied" element={<AccessDeniedPage />} />
                    <Route path="*" element={<NotFoundPage />} />
-                </Routes>
+                 </Routes>
+                  </div>
+                  <BrandedFooter />
                 </div>
               </DynamicLandingController>
             </BrowserRouter>
