@@ -51,6 +51,7 @@ import { AuthTestSuite } from "./components/test/AuthTestSuite";
 import { SettingsPage } from "./pages/SettingsPage";
 import { HealthRecordsPage } from "./pages/HealthRecordsPage";
 import CPARevenueDashboard from "./pages/cpa/CPARevenueDashboard";
+import CPADashboard from "./pages/cpa/CPADashboard";
 import { FinancialPlanningPage } from "./pages/FinancialPlanningPage";
 import { LegalDocumentsPage } from "./pages/LegalDocumentsPage";
 import { InsurancePoliciesPage } from "./pages/InsurancePoliciesPage";
