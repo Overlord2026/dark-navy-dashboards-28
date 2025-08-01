@@ -114,6 +114,12 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
 export function PracticeDashboard() {
   const [timeRange, setTimeRange] = useState<'today' | 'week' | 'month' | 'quarter'>('week');
   const [refreshing, setRefreshing] = useState(false);
+  const [arApData, setArApData] = useState({
+    accountsReceivable: 125000,
+    accountsPayable: 45000,
+    overdueAR: 23000,
+    overdueDays: 35
+  });
   const { toast } = useToast();
 
   const handleRefresh = () => {
@@ -248,11 +254,52 @@ export function PracticeDashboard() {
           <TabsTrigger value="workflows">Workflows</TabsTrigger>
           <TabsTrigger value="staff">Staff Performance</TabsTrigger>
           <TabsTrigger value="activity">Client Activity</TabsTrigger>
+          <TabsTrigger value="revenue">Revenue by Staff</TabsTrigger>
         </TabsList>
 
         {/* Overview Tab */}
         <TabsContent value="overview" className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* AR/AP Summary */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <DollarSign className="w-5 h-5" />
+                  Accounts Receivable/Payable
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <div className="text-2xl font-bold text-green-600">
+                        ${arApData.accountsReceivable.toLocaleString()}
+                      </div>
+                      <div className="text-sm text-muted-foreground">Accounts Receivable</div>
+                    </div>
+                    <Badge className="bg-green-500 text-white">Current</Badge>
+                  </div>
+                  
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <div className="text-2xl font-bold text-red-600">
+                        ${arApData.accountsPayable.toLocaleString()}
+                      </div>
+                      <div className="text-sm text-muted-foreground">Accounts Payable</div>
+                    </div>
+                    <Badge className="bg-red-500 text-white">Due</Badge>
+                  </div>
+                  
+                  <div className="pt-2 border-t">
+                    <div className="text-sm text-muted-foreground mb-2">
+                      Overdue AR: ${arApData.overdueAR.toLocaleString()} ({arApData.overdueDays} days avg)
+                    </div>
+                    <Progress value={75} className="h-2" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
             {/* Revenue & Hours */}
             <Card>
               <CardHeader>

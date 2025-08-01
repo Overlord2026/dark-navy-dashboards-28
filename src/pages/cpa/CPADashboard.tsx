@@ -14,6 +14,10 @@ import { WhiteLabelPortalActivation } from '@/components/cpa/WhiteLabelPortalAct
 import { StaffRoleManagement } from '@/components/cpa/StaffRoleManagement';
 import { PracticeDashboard } from '@/components/cpa/PracticeDashboard';
 import { ClientInviteOnboardingFlow } from '@/components/cpa/ClientInviteOnboardingFlow';
+import { CPAFirmSetupWizard } from '@/components/cpa/CPAFirmSetupWizard';
+import { ClientOrganizerDynamic } from '@/components/cpa/ClientOrganizerDynamic';
+import { DataImportMapperEnhanced } from '@/components/cpa/DataImportMapperEnhanced';
+import { PostReturnEngagement } from '@/components/cpa/PostReturnEngagement';
 
 export default function CPADashboard() {
   return (
@@ -23,21 +27,25 @@ export default function CPADashboard() {
         text="Complete practice management platform with onboarding, client communication, document management, and analytics"
       />
 
-      <Tabs defaultValue="dashboard" className="space-y-6">
+      <Tabs defaultValue="setup" className="space-y-6">
         <TabsList className="grid w-full grid-cols-12 text-xs">
+          <TabsTrigger value="setup">Setup Wizard</TabsTrigger>
           <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
           <TabsTrigger value="staff">Staff & Roles</TabsTrigger>
           <TabsTrigger value="onboarding">Onboarding</TabsTrigger>
+          <TabsTrigger value="organizers">Client Organizer</TabsTrigger>
           <TabsTrigger value="portal">Portal Setup</TabsTrigger>
           <TabsTrigger value="import">Data Import</TabsTrigger>
           <TabsTrigger value="mapping">Client Mapping</TabsTrigger>
-          <TabsTrigger value="organizers">Organizers</TabsTrigger>
           <TabsTrigger value="communications">Communications</TabsTrigger>
           <TabsTrigger value="documents">Documents</TabsTrigger>
-          <TabsTrigger value="templates">Templates</TabsTrigger>
           <TabsTrigger value="signatures">E-Signatures</TabsTrigger>
-          <TabsTrigger value="analytics">Analytics</TabsTrigger>
+          <TabsTrigger value="engagement">Post-Return</TabsTrigger>
         </TabsList>
+
+        <TabsContent value="setup">
+          <CPAFirmSetupWizard />
+        </TabsContent>
 
         <TabsContent value="dashboard">
           <PracticeDashboard />
@@ -56,7 +64,7 @@ export default function CPADashboard() {
         </TabsContent>
 
         <TabsContent value="import">
-          <DataImportMapper />
+          <DataImportMapperEnhanced />
         </TabsContent>
 
         <TabsContent value="mapping">
@@ -64,7 +72,7 @@ export default function CPADashboard() {
         </TabsContent>
 
         <TabsContent value="organizers">
-          <ClientOrganizerModule />
+          <ClientOrganizerDynamic />
         </TabsContent>
 
         <TabsContent value="communications">
@@ -83,8 +91,8 @@ export default function CPADashboard() {
           <ESignatureWorkflow />
         </TabsContent>
 
-        <TabsContent value="analytics">
-          <PracticeAnalytics />
+        <TabsContent value="engagement">
+          <PostReturnEngagement />
         </TabsContent>
       </Tabs>
     </div>
