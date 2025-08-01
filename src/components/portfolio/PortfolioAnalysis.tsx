@@ -113,8 +113,7 @@ export const PortfolioAnalysis: React.FC<PortfolioAnalysisProps> = ({
           <CardContent>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
-                <RechartsPieChart>
-                  <RechartsPieChart>
+                <PieChart>
                   <Pie
                     data={assetAllocationData}
                     cx="50%"
@@ -129,7 +128,7 @@ export const PortfolioAnalysis: React.FC<PortfolioAnalysisProps> = ({
                     ))}
                   </Pie>
                   <Tooltip />
-                </RechartsPieChart>
+                </PieChart>
               </ResponsiveContainer>
             </div>
           </CardContent>
@@ -304,7 +303,7 @@ export const PortfolioAnalysis: React.FC<PortfolioAnalysisProps> = ({
                 {feeAnalysis.high_fee_holdings.length}
               </p>
               <p className="text-sm text-gray-500">
-                Holdings with >1.0% fees
+                Holdings with &gt;1.0% fees
               </p>
             </div>
 
