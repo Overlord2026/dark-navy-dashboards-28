@@ -1,62 +1,64 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { BarChart, Calculator, Crown } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { BarChart, Crown } from 'lucide-react';
 import { BarChart as RechartsBar, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-
-const TAX_BRACKETS_2024 = [
-  { min: 0, max: 11000, rate: 10, color: '#22c55e' },
-  { min: 11001, max: 44725, rate: 12, color: '#3b82f6' },
-  { min: 44726, max: 95375, rate: 22, color: '#f59e0b' },
-  { min: 95376, max: 182050, rate: 24, color: '#f97316' },
-  { min: 182051, max: 231250, rate: 32, color: '#ef4444' },
-  { min: 231251, max: 578125, rate: 35, color: '#dc2626' },
-  { min: 578126, max: Infinity, rate: 37, color: '#991b1b' }
-];
+import { useTaxRules } from '@/hooks/useTaxRules';
+import { FilingStatus } from '@/types/tax-rules';
 
 const TaxBracketProjector: React.FC<{ subscriptionTier: string }> = ({ subscriptionTier }) => {
   const [income, setIncome] = useState(75000);
-  const [filingStatus, setFilingStatus] = useState('single');
-  const [deductions, setDeductions] = useState(13850);
+  const [filingStatus, setFilingStatus] = useState<FilingStatus>('single');
+  const [taxYear, setTaxYear] = useState(2024);
+  const { getTaxBrackets, getStandardDeduction, calculateTax, loading } = useTaxRules();
 
   const isPremium = subscriptionTier === 'premium';
-  const isBasic = subscriptionTier === 'basic' || isPremium;
 
-  const calculateTax = (taxableIncome: number) => {
-    let tax = 0;
-    let remainingIncome = taxableIncome;
-
-    for (const bracket of TAX_BRACKETS_2024) {
-      if (remainingIncome <= 0) break;
-      
-      const taxableInThisBracket = Math.min(remainingIncome, bracket.max - bracket.min + 1);
-      tax += (taxableInThisBracket * bracket.rate) / 100;
-      remainingIncome -= taxableInThisBracket;
-    }
-
-    return tax;
-  };
-
-  const taxableIncome = Math.max(0, income - deductions);
-  const totalTax = calculateTax(taxableIncome);
+  // Get current tax data from rules system
+  const brackets = getTaxBrackets(taxYear, filingStatus);
+  const standardDeduction = getStandardDeduction(taxYear, filingStatus);
+  const totalTax = calculateTax(income, taxYear, filingStatus);
+  
+  const taxableIncome = Math.max(0, income - standardDeduction);
   const effectiveRate = income > 0 ? (totalTax / income) * 100 : 0;
-  const marginalRate = TAX_BRACKETS_2024.find(bracket => 
-    taxableIncome >= bracket.min && taxableIncome <= bracket.max
+  const marginalRate = brackets.find(bracket => 
+    taxableIncome >= bracket.min_income && 
+    (!bracket.max_income || taxableIncome <= bracket.max_income)
   )?.rate || 10;
 
-  const bracketData = TAX_BRACKETS_2024.map(bracket => ({
+  const bracketData = brackets.map(bracket => ({
     bracket: `${bracket.rate}%`,
-    min: bracket.min,
-    max: bracket.max === Infinity ? 600000 : bracket.max,
+    min: bracket.min_income,
+    max: bracket.max_income || 600000,
     rate: bracket.rate,
-    inBracket: taxableIncome >= bracket.min && taxableIncome <= bracket.max
+    inBracket: taxableIncome >= bracket.min_income && 
+               (!bracket.max_income || taxableIncome <= bracket.max_income),
+    color: getColorForRate(bracket.rate)
   }));
+
+  function getColorForRate(rate: number): string {
+    const colorMap: Record<number, string> = {
+      10: '#22c55e', 12: '#3b82f6', 22: '#f59e0b', 
+      24: '#f97316', 32: '#ef4444', 35: '#dc2626', 37: '#991b1b'
+    };
+    return colorMap[rate] || '#6b7280';
+  }
 
   const formatCurrency = (amount: number) => 
     new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(amount);
+
+  if (loading) {
+    return (
+      <Card className="w-full">
+        <CardContent className="p-6 flex items-center justify-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card className="w-full">
@@ -67,11 +69,11 @@ const TaxBracketProjector: React.FC<{ subscriptionTier: string }> = ({ subscript
           {isPremium && <Crown className="h-4 w-4 text-yellow-500" />}
         </CardTitle>
         <CardDescription>
-          Visualize your current and projected tax brackets
+          Visualize your current and projected tax brackets using dynamic tax rules
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div>
             <Label htmlFor="income">Annual Income</Label>
             <Input
@@ -82,26 +84,40 @@ const TaxBracketProjector: React.FC<{ subscriptionTier: string }> = ({ subscript
             />
           </div>
           <div>
-            <Label htmlFor="deductions">Total Deductions</Label>
+            <Label htmlFor="taxYear">Tax Year</Label>
+            <Select value={taxYear.toString()} onValueChange={(value) => setTaxYear(parseInt(value))}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="2024">2024</SelectItem>
+                <SelectItem value="2023">2023</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <Label htmlFor="filingStatus">Filing Status</Label>
+            <Select value={filingStatus} onValueChange={(value) => setFilingStatus(value as FilingStatus)}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="single">Single</SelectItem>
+                <SelectItem value="married_filing_jointly">Married Filing Jointly</SelectItem>
+                <SelectItem value="married_filing_separately">Married Filing Separately</SelectItem>
+                <SelectItem value="head_of_household">Head of Household</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <Label htmlFor="deductions">Standard Deduction</Label>
             <Input
               id="deductions"
               type="number"
-              value={deductions}
-              onChange={(e) => setDeductions(parseInt(e.target.value) || 0)}
+              value={standardDeduction}
+              disabled
+              className="bg-muted"
             />
-          </div>
-          <div>
-            <Label htmlFor="filing">Filing Status</Label>
-            <select 
-              id="filing"
-              value={filingStatus}
-              onChange={(e) => setFilingStatus(e.target.value)}
-              className="w-full p-2 border rounded"
-            >
-              <option value="single">Single</option>
-              <option value="married">Married Filing Jointly</option>
-              <option value="head">Head of Household</option>
-            </select>
           </div>
         </div>
 
@@ -115,19 +131,19 @@ const TaxBracketProjector: React.FC<{ subscriptionTier: string }> = ({ subscript
           <Card>
             <CardContent className="p-4 text-center">
               <p className="text-sm text-muted-foreground">Total Tax</p>
-              <p className="text-xl font-bold text-red-600">{formatCurrency(totalTax)}</p>
+              <p className="text-xl font-bold text-destructive">{formatCurrency(totalTax)}</p>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
               <p className="text-sm text-muted-foreground">Effective Rate</p>
-              <p className="text-xl font-bold text-blue-600">{effectiveRate.toFixed(1)}%</p>
+              <p className="text-xl font-bold text-primary">{effectiveRate.toFixed(1)}%</p>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
               <p className="text-sm text-muted-foreground">Marginal Rate</p>
-              <p className="text-xl font-bold text-purple-600">{marginalRate}%</p>
+              <p className="text-xl font-bold text-secondary-foreground">{marginalRate}%</p>
             </CardContent>
           </Card>
         </div>
@@ -139,7 +155,7 @@ const TaxBracketProjector: React.FC<{ subscriptionTier: string }> = ({ subscript
               <XAxis dataKey="bracket" />
               <YAxis tickFormatter={(value) => `$${value / 1000}K`} />
               <Tooltip formatter={(value: number) => formatCurrency(value)} />
-              <Bar dataKey="max" fill="#e5e7eb" />
+              <Bar dataKey="max" fill="#3b82f6" />
             </RechartsBar>
           </ResponsiveContainer>
         </div>
@@ -147,6 +163,9 @@ const TaxBracketProjector: React.FC<{ subscriptionTier: string }> = ({ subscript
         <div className="text-center">
           <p className="text-sm text-muted-foreground">
             You're currently in the <Badge variant="outline">{marginalRate}%</Badge> tax bracket
+          </p>
+          <p className="text-xs text-muted-foreground mt-1">
+            Tax data loaded from configurable rules system
           </p>
         </div>
       </CardContent>

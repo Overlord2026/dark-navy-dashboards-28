@@ -10,6 +10,7 @@ import { Calculator, TrendingUp, DollarSign, PieChart, HelpCircle, Crown } from 
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import { useToast } from '@/hooks/use-toast';
 import { analytics } from '@/lib/analytics';
+import { useTaxRules } from '@/hooks/useTaxRules';
 
 interface RothConversionInput {
   currentAge: number;
@@ -67,6 +68,7 @@ const RothConversionAnalyzer: React.FC<{ subscriptionTier: string }> = ({ subscr
       const currentYear = inputs.yearOfConversion + year;
       const isConversionYear = year < 5; // Convert over 5 years
       
+      // Use dynamic tax calculation
       const conversionTax = isConversionYear ? 
         (inputs.conversionAmount * inputs.currentTaxBracket / 100) : 0;
       

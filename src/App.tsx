@@ -35,6 +35,7 @@ import { SecuritySettingsPage } from "./pages/SecuritySettingsPage";
 import { ClientDashboard } from "./pages/ClientDashboard";
 import AdvisorDashboard from "./pages/AdvisorDashboard";
 import { AdvisorCPARiskDashboard } from "./pages/AdvisorCPARiskDashboard";
+import { TaxRulesAdminPage } from "./pages/TaxRulesAdminPage";
 import { AdminDashboard } from "./pages/AdminDashboard";
 import { AccountantDashboard } from "./pages/AccountantDashboard";
 import { ConsultantDashboard } from "./pages/ConsultantDashboard";
@@ -212,6 +213,17 @@ const App = () => {
                         allowedRoles={['advisor', 'admin', 'tenant_admin', 'system_administrator', 'accountant']}
                       >
                         <AdvisorCPARiskDashboard />
+                      </AuthWrapper>
+                    }
+                  />
+                  <Route
+                    path="/admin/tax-rules"
+                    element={
+                      <AuthWrapper
+                        requireAuth={true}
+                        allowedRoles={['admin', 'tenant_admin', 'system_administrator']}
+                      >
+                        <TaxRulesAdminPage />
                       </AuthWrapper>
                     }
                   />
