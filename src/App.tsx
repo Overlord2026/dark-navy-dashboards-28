@@ -908,6 +908,19 @@ const App = () => {
                        }
                      />
 
+                     {/* CPA Practice Management */}
+                     <Route
+                       path="/cpa/dashboard"
+                       element={
+                         <AuthWrapper
+                           requireAuth={true}
+                           allowedRoles={['accountant', 'admin', 'tenant_admin', 'system_administrator']}
+                         >
+                           <CPADashboard />
+                         </AuthWrapper>
+                       }
+                     />
+
                      {/* CPA Revenue Dashboard */}
                      <Route
                        path="/cpa/revenue-dashboard"
