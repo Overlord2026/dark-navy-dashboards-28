@@ -11149,6 +11149,93 @@ export type Database = {
           },
         ]
       }
+      tax_brackets: {
+        Row: {
+          bracket_order: number
+          created_at: string
+          created_by: string | null
+          filing_status: string
+          id: string
+          is_active: boolean
+          max_income: number | null
+          min_income: number
+          rate: number
+          tax_year: number
+          tenant_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          bracket_order: number
+          created_at?: string
+          created_by?: string | null
+          filing_status?: string
+          id?: string
+          is_active?: boolean
+          max_income?: number | null
+          min_income?: number
+          rate: number
+          tax_year: number
+          tenant_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          bracket_order?: number
+          created_at?: string
+          created_by?: string | null
+          filing_status?: string
+          id?: string
+          is_active?: boolean
+          max_income?: number | null
+          min_income?: number
+          rate?: number
+          tax_year?: number
+          tenant_id?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      tax_deductions: {
+        Row: {
+          amount: number
+          created_at: string
+          created_by: string | null
+          deduction_type: string
+          description: string | null
+          filing_status: string
+          id: string
+          is_active: boolean
+          tax_year: number
+          tenant_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          created_by?: string | null
+          deduction_type: string
+          description?: string | null
+          filing_status?: string
+          id?: string
+          is_active?: boolean
+          tax_year: number
+          tenant_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          created_by?: string | null
+          deduction_type?: string
+          description?: string | null
+          filing_status?: string
+          id?: string
+          is_active?: boolean
+          tax_year?: number
+          tenant_id?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       tax_documents: {
         Row: {
           category: string
@@ -11401,6 +11488,51 @@ export type Database = {
           user_id?: string
           verified?: boolean | null
           years_experience?: number | null
+        }
+        Relationships: []
+      }
+      tax_rules: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          description: string | null
+          effective_year: number
+          expires_year: number | null
+          id: string
+          is_active: boolean
+          rule_name: string
+          rule_type: string
+          rule_value: Json
+          tenant_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          effective_year: number
+          expires_year?: number | null
+          id?: string
+          is_active?: boolean
+          rule_name: string
+          rule_type: string
+          rule_value: Json
+          tenant_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          effective_year?: number
+          expires_year?: number | null
+          id?: string
+          is_active?: boolean
+          rule_name?: string
+          rule_type?: string
+          rule_value?: Json
+          tenant_id?: string | null
+          updated_at?: string
         }
         Relationships: []
       }
