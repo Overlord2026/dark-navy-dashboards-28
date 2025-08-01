@@ -104,7 +104,6 @@ export function CPAFirmSetupWizard() {
         .insert({
           firm_name: firmData.name,
           phone: firmData.phone,
-          website: firmData.website,
           business_address: firmData.address,
           status: 'active'
         });
@@ -492,7 +491,7 @@ export function CPAFirmSetupWizard() {
                             value={invite.name}
                             onChange={(e) => updateStaffInvite(index, 'name', e.target.value)}
                             placeholder="John Smith"
-                            size="sm"
+                            className="text-sm"
                           />
                         </div>
                         <div className="space-y-1">
@@ -502,7 +501,7 @@ export function CPAFirmSetupWizard() {
                             value={invite.email}
                             onChange={(e) => updateStaffInvite(index, 'email', e.target.value)}
                             placeholder="john@firm.com"
-                            size="sm"
+                            className="text-sm"
                           />
                         </div>
                         <div className="space-y-1">
