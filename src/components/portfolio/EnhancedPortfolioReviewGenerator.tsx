@@ -9,7 +9,8 @@ import { formatCurrency, formatPercentage } from '@/lib/formatters';
 import { MarketDataService, MarketDataDisplay } from './MarketDataService';
 import { BenchmarkComparison } from './BenchmarkComparison';
 import { ClientRiskProfileQuiz } from './ClientRiskProfileQuiz';
-import { TrendingUp, TrendingDown, Download, Shield, DollarSign, Gauge, FileText } from 'lucide-react';
+import { useMarketData } from '@/hooks/useMarketData';
+import { TrendingUp, TrendingDown, Download, Shield, DollarSign, Gauge, FileText, Loader2 } from 'lucide-react';
 
 interface Portfolio {
   name: string;
@@ -138,6 +139,9 @@ export function EnhancedPortfolioReviewGenerator() {
   const [marketData, setMarketData] = useState<Record<string, any>>({});
   const [showRiskQuiz, setShowRiskQuiz] = useState(false);
   const [activeTab, setActiveTab] = useState('current');
+  const [isLoadingMarketData, setIsLoadingMarketData] = useState(false);
+  
+  const { fetchStockStats } = useMarketData();
 
   // Sample portfolios with enhanced data
   const sampleCurrentPortfolio: Portfolio = {
@@ -221,9 +225,41 @@ export function EnhancedPortfolioReviewGenerator() {
     };
   }, [proposedPortfolio]);
 
-  const loadSampleData = () => {
+  const loadSampleData = async () => {
     setCurrentPortfolio(sampleCurrentPortfolio);
     setProposedPortfolio(sampleProposedPortfolio);
+    
+    // Auto-fetch market data for current portfolio
+    const tickers = sampleCurrentPortfolio.holdings.map(h => h.symbol).filter(s => s !== 'CASH');
+    const holdings = sampleCurrentPortfolio.holdings.map(h => ({ ticker: h.symbol, marketValue: h.value }));
+    
+    if (tickers.length > 0) {
+      setIsLoadingMarketData(true);
+      try {
+        const { data } = await fetchStockStats(tickers, holdings);
+        const marketDataMap: Record<string, any> = {};
+        
+        data.forEach(stock => {
+          marketDataMap[stock.ticker] = {
+            beta: stock.beta,
+            volatility: stock.volatility,
+            yield: stock.yield,
+            oneYearReturn: stock.oneYearReturn,
+            threeYearReturn: stock.threeYearReturn,
+            fiveYearReturn: stock.fiveYearReturn,
+            sector: stock.sector,
+            name: stock.name,
+            price: stock.price
+          };
+        });
+        
+        setMarketData(marketDataMap);
+      } catch (error) {
+        console.error('Error fetching market data:', error);
+      } finally {
+        setIsLoadingMarketData(false);
+      }
+    }
   };
 
   const handleMarketDataLoaded = (data: Record<string, any>) => {
@@ -281,7 +317,10 @@ export function EnhancedPortfolioReviewGenerator() {
             <Button variant="outline">Upload Statements</Button>
             <Button variant="outline">Connect Account</Button>
             <Button variant="outline">Manual Entry</Button>
-            <Button onClick={loadSampleData}>Load Sample Data</Button>
+            <Button onClick={loadSampleData} disabled={isLoadingMarketData} className="flex items-center gap-2">
+              {isLoadingMarketData && <Loader2 className="w-4 h-4 animate-spin" />}
+              {isLoadingMarketData ? 'Fetching Market Data...' : 'Load Sample Data'}
+            </Button>
           </div>
         </CardContent>
       </Card>

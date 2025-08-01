@@ -1,5 +1,51 @@
 
 // Service to fetch market data from free APIs
+import { supabase } from '@/integrations/supabase/client';
+
+interface FinnhubStockStats {
+  ticker: string;
+  name: string;
+  sector: string;
+  beta: number;
+  volatility: number;
+  yield: number;
+  oneYearReturn: number;
+  threeYearReturn: number;
+  fiveYearReturn: number;
+  price: number;
+  marketValue?: number;
+}
+
+interface PortfolioMetrics {
+  portfolioBeta: number;
+  avgVolatility: number;
+  avgYield: number;
+  riskLevel: string;
+  volatilityVsSP500: string;
+  holdingsWithStats: Array<FinnhubStockStats & { weight: number }>;
+}
+
+// Fetch comprehensive stock data using Finnhub API
+export const fetchStockStats = async (tickers: string[], holdings?: Array<{ticker: string; marketValue: number}>): Promise<{
+  data: FinnhubStockStats[];
+  portfolioMetrics?: PortfolioMetrics;
+}> => {
+  try {
+    const { data, error } = await supabase.functions.invoke('finnhub-stock-stats', {
+      body: { tickers, holdings }
+    });
+
+    if (error) throw error;
+    
+    return {
+      data: data.data || [],
+      portfolioMetrics: data.portfolioMetrics
+    };
+  } catch (error) {
+    console.error('Error fetching stock stats:', error);
+    throw error;
+  }
+};
 
 interface MarketData {
   id: string;

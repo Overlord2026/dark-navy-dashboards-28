@@ -1,6 +1,6 @@
 
 import { useState, useEffect, useCallback } from 'react';
-import { getAllInvestmentCategoryData } from '@/services/marketDataService';
+import { getAllInvestmentCategoryData, fetchStockStats } from '@/services/marketDataService';
 import { toast } from 'sonner';
 
 interface MarketData {
@@ -49,11 +49,17 @@ export const useMarketData = () => {
     return () => clearInterval(intervalId);
   }, [fetchData]);
 
+  // Export fetchStockStats for use in portfolio components
+  const getStockStats = useCallback(async (tickers: string[], holdings?: Array<{ticker: string; marketValue: number}>) => {
+    return await fetchStockStats(tickers, holdings);
+  }, []);
+
   return { 
     marketData, 
     isLoading, 
     error, 
     refreshData,
-    lastUpdated
+    lastUpdated,
+    fetchStockStats: getStockStats
   };
 };
