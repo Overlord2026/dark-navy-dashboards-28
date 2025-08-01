@@ -52,6 +52,62 @@ export type Database = {
           },
         ]
       }
+      ad_spend_tracking: {
+        Row: {
+          advisor_id: string
+          amount: number
+          campaign_id: string | null
+          campaign_name: string | null
+          clicks: number | null
+          cpc: number | null
+          created_at: string
+          ctr: number | null
+          id: string
+          impressions: number | null
+          notes: string | null
+          source: string
+          spend_date: string
+        }
+        Insert: {
+          advisor_id: string
+          amount: number
+          campaign_id?: string | null
+          campaign_name?: string | null
+          clicks?: number | null
+          cpc?: number | null
+          created_at?: string
+          ctr?: number | null
+          id?: string
+          impressions?: number | null
+          notes?: string | null
+          source: string
+          spend_date: string
+        }
+        Update: {
+          advisor_id?: string
+          amount?: number
+          campaign_id?: string | null
+          campaign_name?: string | null
+          clicks?: number | null
+          cpc?: number | null
+          created_at?: string
+          ctr?: number | null
+          id?: string
+          impressions?: number | null
+          notes?: string | null
+          source?: string
+          spend_date?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ad_spend_tracking_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "marketing_campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       advisor_applications: {
         Row: {
           application_form_url: string | null
@@ -129,6 +185,155 @@ export type Database = {
         }
         Relationships: []
       }
+      advisor_email_templates: {
+        Row: {
+          advisor_id: string
+          body_template: string
+          brand_settings: Json | null
+          compliance_approved: boolean
+          created_at: string
+          id: string
+          is_active: boolean
+          subject_template: string
+          template_name: string
+          template_type: string
+          updated_at: string
+        }
+        Insert: {
+          advisor_id: string
+          body_template: string
+          brand_settings?: Json | null
+          compliance_approved?: boolean
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          subject_template: string
+          template_name: string
+          template_type?: string
+          updated_at?: string
+        }
+        Update: {
+          advisor_id?: string
+          body_template?: string
+          brand_settings?: Json | null
+          compliance_approved?: boolean
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          subject_template?: string
+          template_name?: string
+          template_type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      advisor_matches: {
+        Row: {
+          advisor_id: string
+          ai_reasoning: string | null
+          availability_match: boolean | null
+          budget_match: boolean | null
+          created_at: string
+          expertise_match_details: Json | null
+          id: string
+          license_match: boolean | null
+          match_score: number
+          questionnaire_id: string
+          recommended_order: number | null
+        }
+        Insert: {
+          advisor_id: string
+          ai_reasoning?: string | null
+          availability_match?: boolean | null
+          budget_match?: boolean | null
+          created_at?: string
+          expertise_match_details?: Json | null
+          id?: string
+          license_match?: boolean | null
+          match_score: number
+          questionnaire_id: string
+          recommended_order?: number | null
+        }
+        Update: {
+          advisor_id?: string
+          ai_reasoning?: string | null
+          availability_match?: boolean | null
+          budget_match?: boolean | null
+          created_at?: string
+          expertise_match_details?: Json | null
+          id?: string
+          license_match?: boolean | null
+          match_score?: number
+          questionnaire_id?: string
+          recommended_order?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "advisor_matches_advisor_id_fkey"
+            columns: ["advisor_id"]
+            isOneToOne: false
+            referencedRelation: "advisor_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "advisor_matches_questionnaire_id_fkey"
+            columns: ["questionnaire_id"]
+            isOneToOne: false
+            referencedRelation: "client_questionnaires"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      advisor_messages: {
+        Row: {
+          advisor_id: string
+          client_id: string
+          created_at: string
+          id: string
+          message: string
+          message_type: string
+          priority: string
+          responded_at: string | null
+          response: string | null
+          status: string
+          subject: string | null
+        }
+        Insert: {
+          advisor_id: string
+          client_id: string
+          created_at?: string
+          id?: string
+          message: string
+          message_type?: string
+          priority?: string
+          responded_at?: string | null
+          response?: string | null
+          status?: string
+          subject?: string | null
+        }
+        Update: {
+          advisor_id?: string
+          client_id?: string
+          created_at?: string
+          id?: string
+          message?: string
+          message_type?: string
+          priority?: string
+          responded_at?: string | null
+          response?: string | null
+          status?: string
+          subject?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "advisor_messages_advisor_id_fkey"
+            columns: ["advisor_id"]
+            isOneToOne: false
+            referencedRelation: "advisor_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       advisor_overrides: {
         Row: {
           created_at: string | null
@@ -185,6 +390,84 @@ export type Database = {
           },
         ]
       }
+      advisor_performance_metrics: {
+        Row: {
+          action_completion_rate: number | null
+          advisor_id: string
+          avg_meeting_duration_minutes: number | null
+          avg_satisfaction_score: number | null
+          avg_time_to_follow_up_hours: number | null
+          cancelled_meetings: number
+          completed_action_items: number
+          completed_meetings: number
+          completion_rate: number | null
+          created_at: string
+          follow_up_rate: number | null
+          follow_ups_opened: number
+          follow_ups_sent: number
+          id: string
+          no_show_meetings: number
+          period_end: string
+          period_start: string
+          period_type: string
+          recordings_uploaded: number
+          summaries_generated: number
+          total_action_items: number
+          total_meetings: number
+          updated_at: string
+        }
+        Insert: {
+          action_completion_rate?: number | null
+          advisor_id: string
+          avg_meeting_duration_minutes?: number | null
+          avg_satisfaction_score?: number | null
+          avg_time_to_follow_up_hours?: number | null
+          cancelled_meetings?: number
+          completed_action_items?: number
+          completed_meetings?: number
+          completion_rate?: number | null
+          created_at?: string
+          follow_up_rate?: number | null
+          follow_ups_opened?: number
+          follow_ups_sent?: number
+          id?: string
+          no_show_meetings?: number
+          period_end: string
+          period_start: string
+          period_type?: string
+          recordings_uploaded?: number
+          summaries_generated?: number
+          total_action_items?: number
+          total_meetings?: number
+          updated_at?: string
+        }
+        Update: {
+          action_completion_rate?: number | null
+          advisor_id?: string
+          avg_meeting_duration_minutes?: number | null
+          avg_satisfaction_score?: number | null
+          avg_time_to_follow_up_hours?: number | null
+          cancelled_meetings?: number
+          completed_action_items?: number
+          completed_meetings?: number
+          completion_rate?: number | null
+          created_at?: string
+          follow_up_rate?: number | null
+          follow_ups_opened?: number
+          follow_ups_sent?: number
+          id?: string
+          no_show_meetings?: number
+          period_end?: string
+          period_start?: string
+          period_type?: string
+          recordings_uploaded?: number
+          summaries_generated?: number
+          total_action_items?: number
+          total_meetings?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       advisor_production: {
         Row: {
           advisor_id: string
@@ -234,6 +517,156 @@ export type Database = {
             columns: ["tenant_id"]
             isOneToOne: false
             referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      advisor_profiles: {
+        Row: {
+          availability_status: string
+          average_rating: number | null
+          bio: string | null
+          calendly_url: string | null
+          certifications: string[] | null
+          client_capacity: number | null
+          created_at: string
+          current_clients: number | null
+          email: string
+          expertise_areas: string[]
+          firm_name: string | null
+          hourly_rate: number | null
+          id: string
+          is_active: boolean | null
+          is_verified: boolean | null
+          license_states: string[]
+          meeting_types: string[]
+          name: string
+          phone: string | null
+          specializations: string[]
+          total_reviews: number | null
+          updated_at: string
+          user_id: string | null
+          years_experience: number | null
+        }
+        Insert: {
+          availability_status?: string
+          average_rating?: number | null
+          bio?: string | null
+          calendly_url?: string | null
+          certifications?: string[] | null
+          client_capacity?: number | null
+          created_at?: string
+          current_clients?: number | null
+          email: string
+          expertise_areas?: string[]
+          firm_name?: string | null
+          hourly_rate?: number | null
+          id?: string
+          is_active?: boolean | null
+          is_verified?: boolean | null
+          license_states?: string[]
+          meeting_types?: string[]
+          name: string
+          phone?: string | null
+          specializations?: string[]
+          total_reviews?: number | null
+          updated_at?: string
+          user_id?: string | null
+          years_experience?: number | null
+        }
+        Update: {
+          availability_status?: string
+          average_rating?: number | null
+          bio?: string | null
+          calendly_url?: string | null
+          certifications?: string[] | null
+          client_capacity?: number | null
+          created_at?: string
+          current_clients?: number | null
+          email?: string
+          expertise_areas?: string[]
+          firm_name?: string | null
+          hourly_rate?: number | null
+          id?: string
+          is_active?: boolean | null
+          is_verified?: boolean | null
+          license_states?: string[]
+          meeting_types?: string[]
+          name?: string
+          phone?: string | null
+          specializations?: string[]
+          total_reviews?: number | null
+          updated_at?: string
+          user_id?: string | null
+          years_experience?: number | null
+        }
+        Relationships: []
+      }
+      advisor_proposals: {
+        Row: {
+          accepted_at: string | null
+          advisor_id: string
+          compliance_summary: Json | null
+          content: Json
+          created_at: string
+          id: string
+          pdf_url: string | null
+          proposal_type: string
+          questionnaire_id: string | null
+          scenario_ids: string[] | null
+          sent_at: string | null
+          status: string
+          updated_at: string
+          user_id: string
+          viewed_at: string | null
+        }
+        Insert: {
+          accepted_at?: string | null
+          advisor_id: string
+          compliance_summary?: Json | null
+          content?: Json
+          created_at?: string
+          id?: string
+          pdf_url?: string | null
+          proposal_type?: string
+          questionnaire_id?: string | null
+          scenario_ids?: string[] | null
+          sent_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+          viewed_at?: string | null
+        }
+        Update: {
+          accepted_at?: string | null
+          advisor_id?: string
+          compliance_summary?: Json | null
+          content?: Json
+          created_at?: string
+          id?: string
+          pdf_url?: string | null
+          proposal_type?: string
+          questionnaire_id?: string | null
+          scenario_ids?: string[] | null
+          sent_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+          viewed_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "advisor_proposals_advisor_id_fkey"
+            columns: ["advisor_id"]
+            isOneToOne: false
+            referencedRelation: "advisor_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "advisor_proposals_questionnaire_id_fkey"
+            columns: ["questionnaire_id"]
+            isOneToOne: false
+            referencedRelation: "client_questionnaires"
             referencedColumns: ["id"]
           },
         ]
@@ -1217,6 +1650,62 @@ export type Database = {
           },
         ]
       }
+      client_conversions: {
+        Row: {
+          acquisition_cost: number | null
+          advisor_id: string
+          closed_date: string
+          closing_notes: string | null
+          contract_length_months: number | null
+          created_at: string
+          id: string
+          lead_id: string
+          lifetime_value: number | null
+          recurring_revenue: number | null
+          sales_cycle_days: number | null
+          year_one_profit: number | null
+          year_one_revenue: number | null
+        }
+        Insert: {
+          acquisition_cost?: number | null
+          advisor_id: string
+          closed_date: string
+          closing_notes?: string | null
+          contract_length_months?: number | null
+          created_at?: string
+          id?: string
+          lead_id: string
+          lifetime_value?: number | null
+          recurring_revenue?: number | null
+          sales_cycle_days?: number | null
+          year_one_profit?: number | null
+          year_one_revenue?: number | null
+        }
+        Update: {
+          acquisition_cost?: number | null
+          advisor_id?: string
+          closed_date?: string
+          closing_notes?: string | null
+          contract_length_months?: number | null
+          created_at?: string
+          id?: string
+          lead_id?: string
+          lifetime_value?: number | null
+          recurring_revenue?: number | null
+          sales_cycle_days?: number | null
+          year_one_profit?: number | null
+          year_one_revenue?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_conversions_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       client_engagement_history: {
         Row: {
           clicked_at: string | null
@@ -1269,6 +1758,69 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      client_engagement_metrics: {
+        Row: {
+          action_items_assigned: number
+          action_items_completed: number
+          advisor_id: string
+          avg_satisfaction_given: number | null
+          client_id: string
+          created_at: string
+          engagement_score: number | null
+          follow_ups_opened: number
+          follow_ups_received: number
+          id: string
+          meetings_attended: number
+          meetings_cancelled: number
+          meetings_scheduled: number
+          no_shows: number
+          period_end: string
+          period_start: string
+          period_type: string
+          updated_at: string
+        }
+        Insert: {
+          action_items_assigned?: number
+          action_items_completed?: number
+          advisor_id: string
+          avg_satisfaction_given?: number | null
+          client_id: string
+          created_at?: string
+          engagement_score?: number | null
+          follow_ups_opened?: number
+          follow_ups_received?: number
+          id?: string
+          meetings_attended?: number
+          meetings_cancelled?: number
+          meetings_scheduled?: number
+          no_shows?: number
+          period_end: string
+          period_start: string
+          period_type?: string
+          updated_at?: string
+        }
+        Update: {
+          action_items_assigned?: number
+          action_items_completed?: number
+          advisor_id?: string
+          avg_satisfaction_given?: number | null
+          client_id?: string
+          created_at?: string
+          engagement_score?: number | null
+          follow_ups_opened?: number
+          follow_ups_received?: number
+          id?: string
+          meetings_attended?: number
+          meetings_cancelled?: number
+          meetings_scheduled?: number
+          no_shows?: number
+          period_end?: string
+          period_start?: string
+          period_type?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       client_guide_interactions: {
         Row: {
@@ -1544,6 +2096,48 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      client_questionnaires: {
+        Row: {
+          budget_range: string | null
+          complexity_score: number | null
+          created_at: string
+          id: string
+          preferred_meeting_type: string | null
+          questionnaire_type: string
+          responses: Json
+          specialization_needs: string[] | null
+          timeline: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          budget_range?: string | null
+          complexity_score?: number | null
+          created_at?: string
+          id?: string
+          preferred_meeting_type?: string | null
+          questionnaire_type?: string
+          responses?: Json
+          specialization_needs?: string[] | null
+          timeline?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          budget_range?: string | null
+          complexity_score?: number | null
+          created_at?: string
+          id?: string
+          preferred_meeting_type?: string | null
+          questionnaire_type?: string
+          responses?: Json
+          specialization_needs?: string[] | null
+          timeline?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       client_storage_audit: {
         Row: {
@@ -4703,6 +5297,157 @@ export type Database = {
         }
         Relationships: []
       }
+      firm_billing: {
+        Row: {
+          api_calls_count: number | null
+          billing_period_end: string
+          billing_period_start: string
+          created_at: string
+          due_date: string | null
+          firm_id: string
+          id: string
+          invoice_date: string | null
+          invoice_number: string | null
+          paid_date: string | null
+          payment_status: string
+          seat_rate: number
+          seats_billed: number
+          storage_used_gb: number | null
+          stripe_charge_id: string | null
+          stripe_invoice_id: string | null
+          subtotal: number
+          taxes: number | null
+          total_amount: number
+          updated_at: string
+        }
+        Insert: {
+          api_calls_count?: number | null
+          billing_period_end: string
+          billing_period_start: string
+          created_at?: string
+          due_date?: string | null
+          firm_id: string
+          id?: string
+          invoice_date?: string | null
+          invoice_number?: string | null
+          paid_date?: string | null
+          payment_status?: string
+          seat_rate: number
+          seats_billed: number
+          storage_used_gb?: number | null
+          stripe_charge_id?: string | null
+          stripe_invoice_id?: string | null
+          subtotal: number
+          taxes?: number | null
+          total_amount: number
+          updated_at?: string
+        }
+        Update: {
+          api_calls_count?: number | null
+          billing_period_end?: string
+          billing_period_start?: string
+          created_at?: string
+          due_date?: string | null
+          firm_id?: string
+          id?: string
+          invoice_date?: string | null
+          invoice_number?: string | null
+          paid_date?: string | null
+          payment_status?: string
+          seat_rate?: number
+          seats_billed?: number
+          storage_used_gb?: number | null
+          stripe_charge_id?: string | null
+          stripe_invoice_id?: string | null
+          subtotal?: number
+          taxes?: number | null
+          total_amount?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "firm_billing_firm_id_fkey"
+            columns: ["firm_id"]
+            isOneToOne: false
+            referencedRelation: "firms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      firm_handoffs: {
+        Row: {
+          client_notification_log: Json | null
+          client_notification_template: string | null
+          client_notifications_sent: boolean | null
+          completed_at: string | null
+          created_at: string
+          current_owner_id: string
+          firm_id: string
+          id: string
+          initiated_by: string
+          master_admin_approval: boolean | null
+          master_admin_approved_at: string | null
+          master_admin_approved_by: string | null
+          new_owner_email: string
+          new_owner_id: string | null
+          reason: string | null
+          scheduled_date: string | null
+          status: string
+          transfer_items: Json
+          updated_at: string
+        }
+        Insert: {
+          client_notification_log?: Json | null
+          client_notification_template?: string | null
+          client_notifications_sent?: boolean | null
+          completed_at?: string | null
+          created_at?: string
+          current_owner_id: string
+          firm_id: string
+          id?: string
+          initiated_by: string
+          master_admin_approval?: boolean | null
+          master_admin_approved_at?: string | null
+          master_admin_approved_by?: string | null
+          new_owner_email: string
+          new_owner_id?: string | null
+          reason?: string | null
+          scheduled_date?: string | null
+          status?: string
+          transfer_items?: Json
+          updated_at?: string
+        }
+        Update: {
+          client_notification_log?: Json | null
+          client_notification_template?: string | null
+          client_notifications_sent?: boolean | null
+          completed_at?: string | null
+          created_at?: string
+          current_owner_id?: string
+          firm_id?: string
+          id?: string
+          initiated_by?: string
+          master_admin_approval?: boolean | null
+          master_admin_approved_at?: string | null
+          master_admin_approved_by?: string | null
+          new_owner_email?: string
+          new_owner_id?: string | null
+          reason?: string | null
+          scheduled_date?: string | null
+          status?: string
+          transfer_items?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "firm_handoffs_firm_id_fkey"
+            columns: ["firm_id"]
+            isOneToOne: false
+            referencedRelation: "firms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       firm_invitations: {
         Row: {
           accepted_at: string | null
@@ -4748,9 +5493,60 @@ export type Database = {
         }
         Relationships: []
       }
+      firm_users: {
+        Row: {
+          assigned_at: string
+          assigned_by: string | null
+          created_at: string
+          firm_id: string
+          id: string
+          is_active: boolean
+          permissions: Json | null
+          role: string
+          seat_type: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          assigned_at?: string
+          assigned_by?: string | null
+          created_at?: string
+          firm_id: string
+          id?: string
+          is_active?: boolean
+          permissions?: Json | null
+          role: string
+          seat_type?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          assigned_at?: string
+          assigned_by?: string | null
+          created_at?: string
+          firm_id?: string
+          id?: string
+          is_active?: boolean
+          permissions?: Json | null
+          role?: string
+          seat_type?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "firm_users_firm_id_fkey"
+            columns: ["firm_id"]
+            isOneToOne: false
+            referencedRelation: "firms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       firms: {
         Row: {
           billing_email: string
+          billing_status: string
           branding_enabled: boolean
           created_at: string
           custom_domain: string | null
@@ -4758,16 +5554,21 @@ export type Database = {
           logo_url: string | null
           marketplace_visibility: boolean
           name: string
+          onboarding_completed: boolean
+          parent_tenant_id: string | null
           primary_color: string | null
           seats_in_use: number
           seats_purchased: number
           secondary_color: string | null
+          slug: string | null
           subscription_status: string
           type: string
           updated_at: string
+          white_label_enabled: boolean
         }
         Insert: {
           billing_email: string
+          billing_status?: string
           branding_enabled?: boolean
           created_at?: string
           custom_domain?: string | null
@@ -4775,16 +5576,21 @@ export type Database = {
           logo_url?: string | null
           marketplace_visibility?: boolean
           name: string
+          onboarding_completed?: boolean
+          parent_tenant_id?: string | null
           primary_color?: string | null
           seats_in_use?: number
           seats_purchased?: number
           secondary_color?: string | null
+          slug?: string | null
           subscription_status?: string
           type?: string
           updated_at?: string
+          white_label_enabled?: boolean
         }
         Update: {
           billing_email?: string
+          billing_status?: string
           branding_enabled?: boolean
           created_at?: string
           custom_domain?: string | null
@@ -4792,15 +5598,144 @@ export type Database = {
           logo_url?: string | null
           marketplace_visibility?: boolean
           name?: string
+          onboarding_completed?: boolean
+          parent_tenant_id?: string | null
           primary_color?: string | null
           seats_in_use?: number
           seats_purchased?: number
           secondary_color?: string | null
+          slug?: string | null
           subscription_status?: string
           type?: string
           updated_at?: string
+          white_label_enabled?: boolean
         }
         Relationships: []
+      }
+      follow_up_email_history: {
+        Row: {
+          advisor_id: string
+          clicked_at: string | null
+          client_email: string
+          content: string
+          email_template_id: string | null
+          error_message: string | null
+          id: string
+          meeting_recording_id: string | null
+          meeting_summary_id: string | null
+          metadata: Json | null
+          opened_at: string | null
+          sent_at: string
+          status: string
+          subject: string
+          workflow_id: string | null
+        }
+        Insert: {
+          advisor_id: string
+          clicked_at?: string | null
+          client_email: string
+          content: string
+          email_template_id?: string | null
+          error_message?: string | null
+          id?: string
+          meeting_recording_id?: string | null
+          meeting_summary_id?: string | null
+          metadata?: Json | null
+          opened_at?: string | null
+          sent_at?: string
+          status?: string
+          subject: string
+          workflow_id?: string | null
+        }
+        Update: {
+          advisor_id?: string
+          clicked_at?: string | null
+          client_email?: string
+          content?: string
+          email_template_id?: string | null
+          error_message?: string | null
+          id?: string
+          meeting_recording_id?: string | null
+          meeting_summary_id?: string | null
+          metadata?: Json | null
+          opened_at?: string | null
+          sent_at?: string
+          status?: string
+          subject?: string
+          workflow_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "follow_up_email_history_email_template_id_fkey"
+            columns: ["email_template_id"]
+            isOneToOne: false
+            referencedRelation: "advisor_email_templates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "follow_up_email_history_workflow_id_fkey"
+            columns: ["workflow_id"]
+            isOneToOne: false
+            referencedRelation: "follow_up_workflows"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      follow_up_workflows: {
+        Row: {
+          advisor_id: string
+          created_at: string
+          custom_attachments: Json | null
+          delay_hours: number
+          email_template_id: string | null
+          id: string
+          include_action_items: boolean
+          include_recording: boolean
+          include_summary: boolean
+          is_active: boolean
+          trigger_conditions: Json
+          updated_at: string
+          workflow_name: string
+        }
+        Insert: {
+          advisor_id: string
+          created_at?: string
+          custom_attachments?: Json | null
+          delay_hours?: number
+          email_template_id?: string | null
+          id?: string
+          include_action_items?: boolean
+          include_recording?: boolean
+          include_summary?: boolean
+          is_active?: boolean
+          trigger_conditions?: Json
+          updated_at?: string
+          workflow_name: string
+        }
+        Update: {
+          advisor_id?: string
+          created_at?: string
+          custom_attachments?: Json | null
+          delay_hours?: number
+          email_template_id?: string | null
+          id?: string
+          include_action_items?: boolean
+          include_recording?: boolean
+          include_summary?: boolean
+          is_active?: boolean
+          trigger_conditions?: Json
+          updated_at?: string
+          workflow_name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "follow_up_workflows_email_template_id_fkey"
+            columns: ["email_template_id"]
+            isOneToOne: false
+            referencedRelation: "advisor_email_templates"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       franchise_referral_payouts: {
         Row: {
@@ -4965,6 +5900,50 @@ export type Database = {
           utm_term?: string | null
         }
         Relationships: []
+      }
+      funnel_stages: {
+        Row: {
+          advisor_id: string
+          completed_at: string | null
+          created_at: string
+          id: string
+          lead_id: string
+          notes: string | null
+          outcome: string | null
+          stage_name: string
+          stage_order: number
+        }
+        Insert: {
+          advisor_id: string
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          lead_id: string
+          notes?: string | null
+          outcome?: string | null
+          stage_name: string
+          stage_order: number
+        }
+        Update: {
+          advisor_id?: string
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          lead_id?: string
+          notes?: string | null
+          outcome?: string | null
+          stage_name?: string
+          stage_order?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "funnel_stages_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       goal_attachments: {
         Row: {
@@ -6370,6 +7349,74 @@ export type Database = {
           },
         ]
       }
+      import_export_history: {
+        Row: {
+          completed_at: string | null
+          connector_id: string
+          created_by: string
+          error_details: Json | null
+          field_mapping_used: Json | null
+          file_name: string | null
+          file_size_bytes: number | null
+          file_url: string | null
+          id: string
+          operation_type: string
+          records_failed: number | null
+          records_processed: number | null
+          rollback_data: Json | null
+          rolled_back_at: string | null
+          started_at: string
+          status: string
+          tenant_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          connector_id: string
+          created_by: string
+          error_details?: Json | null
+          field_mapping_used?: Json | null
+          file_name?: string | null
+          file_size_bytes?: number | null
+          file_url?: string | null
+          id?: string
+          operation_type: string
+          records_failed?: number | null
+          records_processed?: number | null
+          rollback_data?: Json | null
+          rolled_back_at?: string | null
+          started_at?: string
+          status?: string
+          tenant_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          connector_id?: string
+          created_by?: string
+          error_details?: Json | null
+          field_mapping_used?: Json | null
+          file_name?: string | null
+          file_size_bytes?: number | null
+          file_url?: string | null
+          id?: string
+          operation_type?: string
+          records_failed?: number | null
+          records_processed?: number | null
+          rollback_data?: Json | null
+          rolled_back_at?: string | null
+          started_at?: string
+          status?: string
+          tenant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "import_export_history_connector_id_fkey"
+            columns: ["connector_id"]
+            isOneToOne: false
+            referencedRelation: "platform_connectors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       insurance_policies: {
         Row: {
           coverage: string
@@ -7103,6 +8150,65 @@ export type Database = {
         }
         Relationships: []
       }
+      leads: {
+        Row: {
+          acquisition_cost: number | null
+          advisor_id: string
+          campaign_id: string | null
+          created_at: string
+          email: string | null
+          first_name: string
+          id: string
+          last_name: string
+          lead_source: string
+          lead_status: string | null
+          lead_value: number | null
+          notes: string | null
+          phone: string | null
+          updated_at: string
+        }
+        Insert: {
+          acquisition_cost?: number | null
+          advisor_id: string
+          campaign_id?: string | null
+          created_at?: string
+          email?: string | null
+          first_name: string
+          id?: string
+          last_name: string
+          lead_source: string
+          lead_status?: string | null
+          lead_value?: number | null
+          notes?: string | null
+          phone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          acquisition_cost?: number | null
+          advisor_id?: string
+          campaign_id?: string | null
+          created_at?: string
+          email?: string | null
+          first_name?: string
+          id?: string
+          last_name?: string
+          lead_source?: string
+          lead_status?: string | null
+          lead_value?: number | null
+          notes?: string | null
+          phone?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "leads_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "marketing_campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lending_analytics: {
         Row: {
           avg_approval_time_hours: number | null
@@ -7405,6 +8511,57 @@ export type Database = {
         }
         Relationships: []
       }
+      marketing_campaigns: {
+        Row: {
+          advisor_id: string
+          campaign_name: string
+          campaign_notes: string | null
+          campaign_type: string | null
+          created_at: string
+          end_date: string | null
+          id: string
+          is_active: boolean | null
+          monthly_spend: number | null
+          source: string
+          start_date: string | null
+          target_audience: string | null
+          total_spend: number | null
+          updated_at: string
+        }
+        Insert: {
+          advisor_id: string
+          campaign_name: string
+          campaign_notes?: string | null
+          campaign_type?: string | null
+          created_at?: string
+          end_date?: string | null
+          id?: string
+          is_active?: boolean | null
+          monthly_spend?: number | null
+          source: string
+          start_date?: string | null
+          target_audience?: string | null
+          total_spend?: number | null
+          updated_at?: string
+        }
+        Update: {
+          advisor_id?: string
+          campaign_name?: string
+          campaign_notes?: string | null
+          campaign_type?: string | null
+          created_at?: string
+          end_date?: string | null
+          id?: string
+          is_active?: boolean | null
+          monthly_spend?: number | null
+          source?: string
+          start_date?: string | null
+          target_audience?: string | null
+          total_spend?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       marketplace_partners: {
         Row: {
           bio: string | null
@@ -7672,6 +8829,66 @@ export type Database = {
           },
         ]
       }
+      meeting_analytics: {
+        Row: {
+          action_items_completed: number | null
+          action_items_count: number | null
+          advisor_id: string
+          client_id: string | null
+          client_satisfaction_score: number | null
+          created_at: string
+          follow_up_sent_at: string | null
+          follow_up_status: string | null
+          id: string
+          meeting_date: string
+          meeting_duration_minutes: number | null
+          meeting_status: string
+          meeting_type: string
+          recording_status: string | null
+          summary_status: string | null
+          time_to_follow_up_hours: number | null
+          updated_at: string
+        }
+        Insert: {
+          action_items_completed?: number | null
+          action_items_count?: number | null
+          advisor_id: string
+          client_id?: string | null
+          client_satisfaction_score?: number | null
+          created_at?: string
+          follow_up_sent_at?: string | null
+          follow_up_status?: string | null
+          id?: string
+          meeting_date: string
+          meeting_duration_minutes?: number | null
+          meeting_status?: string
+          meeting_type?: string
+          recording_status?: string | null
+          summary_status?: string | null
+          time_to_follow_up_hours?: number | null
+          updated_at?: string
+        }
+        Update: {
+          action_items_completed?: number | null
+          action_items_count?: number | null
+          advisor_id?: string
+          client_id?: string | null
+          client_satisfaction_score?: number | null
+          created_at?: string
+          follow_up_sent_at?: string | null
+          follow_up_status?: string | null
+          id?: string
+          meeting_date?: string
+          meeting_duration_minutes?: number | null
+          meeting_status?: string
+          meeting_type?: string
+          recording_status?: string | null
+          summary_status?: string | null
+          time_to_follow_up_hours?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       meeting_integrations: {
         Row: {
           api_credentials: Json | null
@@ -7704,6 +8921,142 @@ export type Database = {
           webhook_url?: string | null
         }
         Relationships: []
+      }
+      meeting_recordings: {
+        Row: {
+          client_id: string | null
+          created_at: string
+          download_url: string | null
+          duration_seconds: number | null
+          file_path: string | null
+          file_size: number | null
+          id: string
+          meeting_id: string | null
+          metadata: Json | null
+          provider_recording_id: string | null
+          recording_type: string | null
+          recording_url: string
+          shared_with: Json | null
+          status: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          client_id?: string | null
+          created_at?: string
+          download_url?: string | null
+          duration_seconds?: number | null
+          file_path?: string | null
+          file_size?: number | null
+          id?: string
+          meeting_id?: string | null
+          metadata?: Json | null
+          provider_recording_id?: string | null
+          recording_type?: string | null
+          recording_url: string
+          shared_with?: Json | null
+          status?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          client_id?: string | null
+          created_at?: string
+          download_url?: string | null
+          duration_seconds?: number | null
+          file_path?: string | null
+          file_size?: number | null
+          id?: string
+          meeting_id?: string | null
+          metadata?: Json | null
+          provider_recording_id?: string | null
+          recording_type?: string | null
+          recording_url?: string
+          shared_with?: Json | null
+          status?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "meeting_recordings_meeting_id_fkey"
+            columns: ["meeting_id"]
+            isOneToOne: false
+            referencedRelation: "video_meetings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      meeting_summaries: {
+        Row: {
+          action_items: Json | null
+          client_id: string | null
+          confidence_score: number | null
+          created_at: string
+          error_message: string | null
+          id: string
+          key_decisions: Json | null
+          meeting_duration_minutes: number | null
+          meeting_recording_id: string
+          next_steps: Json | null
+          participants: Json | null
+          processing_status: string | null
+          summary: string | null
+          summary_completed_at: string | null
+          transcription: string | null
+          transcription_completed_at: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          action_items?: Json | null
+          client_id?: string | null
+          confidence_score?: number | null
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          key_decisions?: Json | null
+          meeting_duration_minutes?: number | null
+          meeting_recording_id: string
+          next_steps?: Json | null
+          participants?: Json | null
+          processing_status?: string | null
+          summary?: string | null
+          summary_completed_at?: string | null
+          transcription?: string | null
+          transcription_completed_at?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          action_items?: Json | null
+          client_id?: string | null
+          confidence_score?: number | null
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          key_decisions?: Json | null
+          meeting_duration_minutes?: number | null
+          meeting_recording_id?: string
+          next_steps?: Json | null
+          participants?: Json | null
+          processing_status?: string | null
+          summary?: string | null
+          summary_completed_at?: string | null
+          transcription?: string | null
+          transcription_completed_at?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "meeting_summaries_meeting_recording_id_fkey"
+            columns: ["meeting_recording_id"]
+            isOneToOne: false
+            referencedRelation: "meeting_recordings"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       member_providers: {
         Row: {
@@ -8432,6 +9785,59 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      oauth_sessions: {
+        Row: {
+          access_token_encrypted: string | null
+          auth_code: string | null
+          connector_id: string
+          created_at: string
+          expires_at: string | null
+          id: string
+          platform_name: string
+          refresh_token_encrypted: string | null
+          scope: string | null
+          state_token: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          access_token_encrypted?: string | null
+          auth_code?: string | null
+          connector_id: string
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          platform_name: string
+          refresh_token_encrypted?: string | null
+          scope?: string | null
+          state_token: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          access_token_encrypted?: string | null
+          auth_code?: string | null
+          connector_id?: string
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          platform_name?: string
+          refresh_token_encrypted?: string | null
+          scope?: string | null
+          state_token?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "oauth_sessions_connector_id_fkey"
+            columns: ["connector_id"]
+            isOneToOne: false
+            referencedRelation: "platform_connectors"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       onboarding_checklists: {
         Row: {
@@ -9364,6 +10770,143 @@ export type Database = {
           is_premium?: boolean
           target_audience?: Json
           thumbnail_url?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      planning_scenarios: {
+        Row: {
+          advisor_id: string | null
+          ai_analysis: Json | null
+          created_at: string
+          created_by: string | null
+          id: string
+          input_parameters: Json
+          recommendations: string | null
+          scenario_name: string
+          scenario_type: string
+          simulation_results: Json | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          advisor_id?: string | null
+          ai_analysis?: Json | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          input_parameters?: Json
+          recommendations?: string | null
+          scenario_name: string
+          scenario_type: string
+          simulation_results?: Json | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          advisor_id?: string | null
+          ai_analysis?: Json | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          input_parameters?: Json
+          recommendations?: string | null
+          scenario_name?: string
+          scenario_type?: string
+          simulation_results?: Json | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "planning_scenarios_advisor_id_fkey"
+            columns: ["advisor_id"]
+            isOneToOne: false
+            referencedRelation: "advisor_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      platform_connectors: {
+        Row: {
+          configuration: Json
+          connector_type: string
+          created_at: string
+          created_by: string
+          field_mappings: Json
+          id: string
+          is_active: boolean
+          oauth_credentials: Json | null
+          platform_name: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          configuration?: Json
+          connector_type: string
+          created_at?: string
+          created_by: string
+          field_mappings?: Json
+          id?: string
+          is_active?: boolean
+          oauth_credentials?: Json | null
+          platform_name: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          configuration?: Json
+          connector_type?: string
+          created_at?: string
+          created_by?: string
+          field_mappings?: Json
+          id?: string
+          is_active?: boolean
+          oauth_credentials?: Json | null
+          platform_name?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      platform_field_mappings: {
+        Row: {
+          created_at: string
+          data_type: string
+          default_mapping: Json
+          id: string
+          is_system_template: boolean
+          platform_name: string
+          source_fields: Json
+          target_fields: Json
+          tenant_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          data_type: string
+          default_mapping: Json
+          id?: string
+          is_system_template?: boolean
+          platform_name: string
+          source_fields: Json
+          target_fields: Json
+          tenant_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          data_type?: string
+          default_mapping?: Json
+          id?: string
+          is_system_template?: boolean
+          platform_name?: string
+          source_fields?: Json
+          target_fields?: Json
+          tenant_id?: string | null
           updated_at?: string
         }
         Relationships: []
@@ -11845,6 +13388,69 @@ export type Database = {
         }
         Relationships: []
       }
+      rollup_analytics: {
+        Row: {
+          avg_client_satisfaction: number | null
+          avg_onboarding_time_days: number | null
+          calculated_at: string
+          churn_rate: number | null
+          created_at: string
+          id: string
+          new_clients_acquired: number | null
+          new_firms_added: number | null
+          parent_tenant_id: string
+          period_end: string
+          period_start: string
+          total_clients: number
+          total_documents_processed: number | null
+          total_firms: number
+          total_revenue: number | null
+          total_support_tickets: number | null
+          total_tax_returns: number | null
+          total_users: number
+        }
+        Insert: {
+          avg_client_satisfaction?: number | null
+          avg_onboarding_time_days?: number | null
+          calculated_at?: string
+          churn_rate?: number | null
+          created_at?: string
+          id?: string
+          new_clients_acquired?: number | null
+          new_firms_added?: number | null
+          parent_tenant_id: string
+          period_end: string
+          period_start: string
+          total_clients?: number
+          total_documents_processed?: number | null
+          total_firms?: number
+          total_revenue?: number | null
+          total_support_tickets?: number | null
+          total_tax_returns?: number | null
+          total_users?: number
+        }
+        Update: {
+          avg_client_satisfaction?: number | null
+          avg_onboarding_time_days?: number | null
+          calculated_at?: string
+          churn_rate?: number | null
+          created_at?: string
+          id?: string
+          new_clients_acquired?: number | null
+          new_firms_added?: number | null
+          parent_tenant_id?: string
+          period_end?: string
+          period_start?: string
+          total_clients?: number
+          total_documents_processed?: number | null
+          total_firms?: number
+          total_revenue?: number | null
+          total_support_tickets?: number | null
+          total_tax_returns?: number | null
+          total_users?: number
+        }
+        Relationships: []
+      }
       seat_assignments: {
         Row: {
           assigned_by: string | null
@@ -13933,6 +15539,30 @@ export type Database = {
         }
         Relationships: []
       }
+      tenant_hierarchies: {
+        Row: {
+          child_tenant_id: string
+          created_at: string
+          created_by: string | null
+          id: string
+          parent_tenant_id: string
+        }
+        Insert: {
+          child_tenant_id: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          parent_tenant_id: string
+        }
+        Update: {
+          child_tenant_id?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          parent_tenant_id?: string
+        }
+        Relationships: []
+      }
       tenant_invitations: {
         Row: {
           accepted_at: string | null
@@ -15870,6 +17500,107 @@ export type Database = {
         }
         Relationships: []
       }
+      video_meeting_integrations: {
+        Row: {
+          access_token: string
+          created_at: string
+          expires_at: string | null
+          id: string
+          is_active: boolean
+          provider: string
+          refresh_token: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          access_token: string
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          provider: string
+          refresh_token?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          access_token?: string
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          provider?: string
+          refresh_token?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      video_meetings: {
+        Row: {
+          attendees: Json | null
+          calendar_event_id: string | null
+          created_at: string
+          description: string | null
+          end_time: string
+          external_meeting_id: string
+          id: string
+          integration_id: string
+          join_url: string
+          lead_id: string | null
+          passcode: string | null
+          phone_dial_in: string | null
+          start_time: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          attendees?: Json | null
+          calendar_event_id?: string | null
+          created_at?: string
+          description?: string | null
+          end_time: string
+          external_meeting_id: string
+          id?: string
+          integration_id: string
+          join_url: string
+          lead_id?: string | null
+          passcode?: string | null
+          phone_dial_in?: string | null
+          start_time: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          attendees?: Json | null
+          calendar_event_id?: string | null
+          created_at?: string
+          description?: string | null
+          end_time?: string
+          external_meeting_id?: string
+          id?: string
+          integration_id?: string
+          join_url?: string
+          lead_id?: string | null
+          passcode?: string | null
+          phone_dial_in?: string | null
+          start_time?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "video_meetings_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: false
+            referencedRelation: "video_meeting_integrations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       webhook_configs: {
         Row: {
           created_at: string
@@ -15998,6 +17729,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      webhook_events: {
+        Row: {
+          created_at: string
+          event_type: string
+          id: string
+          payload: Json
+          processed: boolean | null
+          processed_at: string | null
+          processing_error: string | null
+          provider: string
+          webhook_type: string
+        }
+        Insert: {
+          created_at?: string
+          event_type: string
+          id?: string
+          payload: Json
+          processed?: boolean | null
+          processed_at?: string | null
+          processing_error?: string | null
+          provider: string
+          webhook_type: string
+        }
+        Update: {
+          created_at?: string
+          event_type?: string
+          id?: string
+          payload?: Json
+          processed?: boolean | null
+          processed_at?: string | null
+          processing_error?: string | null
+          provider?: string
+          webhook_type?: string
+        }
+        Relationships: []
       }
       webinar_registrations: {
         Row: {
@@ -16211,6 +17978,23 @@ export type Database = {
           updated: boolean
         }[]
       }
+      calculate_advisor_performance_metrics: {
+        Args: {
+          p_advisor_id: string
+          p_period_start: string
+          p_period_end: string
+          p_period_type?: string
+        }
+        Returns: undefined
+      }
+      calculate_advisor_roi_metrics: {
+        Args: {
+          p_advisor_id: string
+          p_start_date?: string
+          p_end_date?: string
+        }
+        Returns: Json
+      }
       calculate_goal_progress: {
         Args: { goal_id: string }
         Returns: number
@@ -16238,6 +18022,10 @@ export type Database = {
       }
       calculate_provider_rating: {
         Args: { provider_id: string }
+        Returns: number
+      }
+      calculate_questionnaire_complexity: {
+        Args: { responses: Json }
         Returns: number
       }
       calculate_security_score: {
@@ -16307,6 +18095,10 @@ export type Database = {
       count_open_tickets: {
         Args: Record<PropertyKey, never>
         Returns: number
+      }
+      create_default_email_template: {
+        Args: { p_advisor_id: string }
+        Returns: string
       }
       create_default_onboarding_steps: {
         Args: { app_id: string } | { app_id: string }
