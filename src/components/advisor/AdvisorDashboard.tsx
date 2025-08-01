@@ -24,6 +24,7 @@ import { EnhancedCalculatorChart } from '@/components/calculators/EnhancedCalcul
 import { Celebration } from '@/components/ConfettiAnimation';
 import { PortfolioToolsModal } from './PortfolioToolsModal';
 import { QuickActionsPanel } from './QuickActionsPanel';
+import { AdvisorAlertsPanel } from './AdvisorAlertsPanel';
 
 interface Client {
   id: string;
@@ -466,6 +467,11 @@ export function AdvisorDashboard() {
             </CardContent>
           </Card>
         </div>
+      </motion.div>
+
+      {/* Real-time Alerts Panel */}
+      <motion.div variants={itemVariants}>
+        <AdvisorAlertsPanel />
       </motion.div>
 
       {/* Quick Actions Panel */}
