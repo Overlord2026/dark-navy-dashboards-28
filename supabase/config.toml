@@ -124,3 +124,19 @@ verify_jwt = true
 
 [functions.partner-onboarding]
 verify_jwt = true
+
+[functions.webhook-recording-zoom]
+verify_jwt = false
+# @public-ok - Zoom webhook needs to be public but validates signature
+
+[functions.webhook-recording-google]
+verify_jwt = false
+# @public-ok - Google Meet webhook needs to be public but validates signature
+
+[functions.send-recording-notification]
+verify_jwt = false
+# @public-ok - Email notification service
+
+[functions.send-recording-share-notification]
+verify_jwt = false
+# @public-ok - Email notification service
