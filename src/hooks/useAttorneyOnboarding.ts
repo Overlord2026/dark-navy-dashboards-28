@@ -1,362 +1,348 @@
-import { useState, useEffect } from 'react';
-import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
 
-export interface AttorneyOnboardingData {
-  id?: string;
-  user_id: string;
-  tenant_id?: string;
-  
-  // Profile Information
-  first_name?: string;
-  last_name?: string;
-  email?: string;
-  phone?: string;
-  office_address?: {
-    street: string;
-    city: string;
-    state: string;
-    zip: string;
-  };
-  firm_name?: string;
-  firm_website?: string;
-  attorney_bio?: string;
-  
-  // Credentials
-  bar_number?: string;
-  primary_jurisdiction?: string;
-  jurisdictions_licensed?: string[];
-  admission_dates?: Record<string, string>;
-  bar_status?: string;
-  
-  // CLE History
-  cle_hours_completed?: number;
-  cle_hours_required?: number;
-  cle_expiration_date?: string;
-  cle_compliance_status?: string;
-  
-  // Practice Areas
-  primary_practice_area?: string;
-  practice_areas?: string[];
-  years_experience?: number;
-  specializations?: string[];
-  
-  // Fee Structure
-  hourly_rate?: number;
-  consultation_fee?: number;
-  billing_method?: string;
-  retainer_required?: boolean;
-  typical_retainer_amount?: number;
-  
-  // Progress
-  current_step?: number;
-  steps_completed?: number[];
-  onboarding_status?: string;
-  progress_percentage?: number;
-  
-  // Documents
-  bar_license_urls?: string[];
-  insurance_certificate_url?: string;
-  cv_resume_url?: string;
-  law_school_diploma_url?: string;
-  additional_certifications_urls?: string[];
-  
-  // Agreements
-  nda_signed?: boolean;
-  nda_signed_at?: string;
-  participation_agreement_signed?: boolean;
-  participation_agreement_signed_at?: string;
-  terms_accepted?: boolean;
-  terms_accepted_at?: string;
-  
-  // Verification
-  bar_verification_status?: string;
-  bar_verification_data?: any;
-  background_check_status?: string;
-  reference_check_status?: string;
-  
-  // Metadata
-  created_at?: string;
-  updated_at?: string;
-  submitted_at?: string;
-  approved_at?: string;
-  approved_by?: string;
+import { useState, useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
+
+// Define types to match our database schema
+export interface AttorneyOnboarding {
+  id: string;
+  attorney_user_id: string;
+  client_user_id: string;
+  onboarding_stage: string;
+  engagement_letter_signed: boolean;
+  welcome_email_sent: boolean;
+  status: string;
+  created_at: string;
+  updated_at: string;
+  documents_required: number;
+  documents_uploaded: number;
+  progress_percentage: number;
+  intake_form_completed: boolean;
+  client_preferences: any;
 }
 
 export interface AttorneyDocument {
   id: string;
   onboarding_id: string;
   document_type: string;
-  document_name: string;
+  file_name: string;
   file_path: string;
-  file_size?: number;
-  mime_type?: string;
+  file_size: number;
   upload_status: string;
-  verification_notes?: string;
   uploaded_at: string;
-  verified_at?: string;
-  verified_by?: string;
+  uploaded_by: string;
+  is_required: boolean;
+  is_client_visible: boolean;
+  client_comments: string | null;
+  attorney_notes: string | null;
 }
 
-export function useAttorneyOnboarding() {
-  const { toast } = useToast();
-  const [onboardingData, setOnboardingData] = useState<AttorneyOnboardingData | null>(null);
+export const useAttorneyOnboarding = () => {
+  const [onboardings, setOnboardings] = useState<AttorneyOnboarding[]>([]);
   const [documents, setDocuments] = useState<AttorneyDocument[]>([]);
   const [loading, setLoading] = useState(false);
-  const [saving, setSaving] = useState(false);
-  const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const { toast } = useToast();
 
-  // Load existing onboarding data
-  const loadOnboarding = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user?.id) return;
-
-    setLoading(true);
+  // Fetch onboardings for current attorney
+  const fetchOnboardings = async () => {
     try {
-      // Use raw query until types regenerate
-      const { data, error } = await supabase
-        .from('attorney_onboarding')
-        .select('*')
-        .eq('user_id', user.id)
-        .maybeSingle();
+      setLoading(true);
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Not authenticated');
 
-      if (error && error.code !== 'PGRST116') throw error;
+      // Use raw SQL query to work around type issues
+      const { data, error } = await supabase.rpc('get_attorney_onboardings', {
+        attorney_id: user.id
+      });
 
-      if (data) {
-        setOnboardingData(data as AttorneyOnboardingData);
-        await loadDocuments(data.id);
-      }
-    } catch (error) {
-      console.error('Error loading onboarding:', error);
+      if (error) throw error;
+      setOnboardings(data || []);
+    } catch (err: any) {
+      console.error('Error fetching onboardings:', err);
+      setError(err.message);
       toast({
         title: "Error",
-        description: "Failed to load onboarding data",
-        variant: "destructive"
+        description: "Failed to fetch onboardings",
+        variant: "destructive",
       });
     } finally {
       setLoading(false);
     }
   };
 
-  // Load documents for the onboarding
-  const loadDocuments = async (onboardingId: string) => {
+  // Create new onboarding
+  const createOnboarding = async (clientData: {
+    client_email: string;
+    client_name: string;
+    engagement_type: string;
+    documents_required: number;
+  }) => {
     try {
-      const { data, error } = await supabase
-        .from('attorney_documents')
-        .select('*')
-        .eq('onboarding_id', onboardingId)
-        .order('uploaded_at', { ascending: false });
+      setLoading(true);
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Not authenticated');
+
+      const { data, error } = await supabase.rpc('create_attorney_onboarding', {
+        attorney_id: user.id,
+        client_email: clientData.client_email,
+        client_name: clientData.client_name,
+        engagement_type: clientData.engagement_type,
+        documents_required: clientData.documents_required
+      });
 
       if (error) throw error;
-      setDocuments(data || []);
-    } catch (error) {
-      console.error('Error loading documents:', error);
+
+      // Refresh the onboardings list
+      await fetchOnboardings();
+      
+      toast({
+        title: "Success",
+        description: "Onboarding created successfully",
+      });
+
+      return { data };
+    } catch (err: any) {
+      console.error('Error creating onboarding:', err);
+      setError(err.message);
+      toast({
+        title: "Error",
+        description: "Failed to create onboarding",
+        variant: "destructive",
+      });
+      return { error: err };
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Save onboarding data
-  const saveOnboarding = async (data: Partial<AttorneyOnboardingData>) => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user?.id) return null;
-
-    setSaving(true);
+  // Fetch documents for an onboarding
+  const fetchDocuments = async (onboardingId: string) => {
     try {
-      const saveData = {
-        ...data,
-        user_id: user.id,
-        updated_at: new Date().toISOString()
-      };
+      setLoading(true);
+      
+      const { data, error } = await supabase.rpc('get_onboarding_documents', {
+        onboarding_id: onboardingId
+      });
 
-      if (onboardingData?.id) {
-        // Update existing
-        const { data: updated, error } = await supabase
-          .from('attorney_onboarding')
-          .update(saveData)
-          .eq('id', onboardingData.id)
-          .select()
-          .single();
-
-        if (error) throw error;
-        setOnboardingData(updated as AttorneyOnboardingData);
-        return updated;
-      } else {
-        // Create new
-        const { data: created, error } = await supabase
-          .from('attorney_onboarding')
-          .insert([saveData])
-          .select()
-          .single();
-
-        if (error) throw error;
-        setOnboardingData(created as AttorneyOnboardingData);
-        return created;
-      }
-    } catch (error) {
-      console.error('Error saving onboarding:', error);
+      if (error) throw error;
+      setDocuments(data || []);
+    } catch (err: any) {
+      console.error('Error fetching documents:', err);
+      setError(err.message);
       toast({
         title: "Error",
-        description: "Failed to save onboarding data",
-        variant: "destructive"
+        description: "Failed to fetch documents",
+        variant: "destructive",
       });
-      return null;
     } finally {
-      setSaving(false);
+      setLoading(false);
+    }
+  };
+
+  // Update onboarding status
+  const updateOnboardingStatus = async (onboardingId: string, status: string, notes?: string) => {
+    try {
+      setLoading(true);
+
+      const { error } = await supabase.rpc('update_onboarding_status', {
+        onboarding_id: onboardingId,
+        new_status: status,
+        notes: notes || ''
+      });
+
+      if (error) throw error;
+
+      // Refresh the onboardings list
+      await fetchOnboardings();
+
+      toast({
+        title: "Success",
+        description: "Onboarding status updated",
+      });
+    } catch (err: any) {
+      console.error('Error updating onboarding:', err);
+      setError(err.message);
+      toast({
+        title: "Error",
+        description: "Failed to update onboarding status",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Send reminder email
+  const sendReminder = async (onboardingId: string, reminderType: string) => {
+    try {
+      setLoading(true);
+
+      const { error } = await supabase.rpc('send_onboarding_reminder', {
+        onboarding_id: onboardingId,
+        reminder_type: reminderType
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Reminder sent successfully",
+      });
+    } catch (err: any) {
+      console.error('Error sending reminder:', err);
+      setError(err.message);
+      toast({
+        title: "Error",
+        description: "Failed to send reminder",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
   // Upload document
   const uploadDocument = async (
-    documentType: string,
+    onboardingId: string,
     file: File,
-    onboardingId?: string
+    documentType: string,
+    isRequired: boolean = false,
+    isClientVisible: boolean = true
   ) => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user?.id) return null;
-    
-    const targetOnboardingId = onboardingId || onboardingData?.id;
-    if (!targetOnboardingId) {
-      toast({
-        title: "Error",
-        description: "Please save your profile first",
-        variant: "destructive"
-      });
-      return null;
-    }
-
-    setUploading(true);
     try {
-      // Upload file to storage
-      const fileName = `${user.id}/${documentType}_${Date.now()}_${file.name}`;
+      setLoading(true);
+
+      // Upload file to Supabase Storage
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Date.now()}_${file.name}`;
+      const filePath = `attorney-documents/${onboardingId}/${fileName}`;
+
       const { error: uploadError } = await supabase.storage
-        .from('attorney-documents')
-        .upload(fileName, file);
+        .from('attorney-files')
+        .upload(filePath, file);
 
       if (uploadError) throw uploadError;
 
-      // Save document record
-      const { data: docData, error: docError } = await supabase
-        .from('attorney_documents')
-        .insert([{
-          onboarding_id: targetOnboardingId,
-          document_type: documentType,
-          document_name: file.name,
-          file_path: fileName,
-          file_size: file.size,
-          mime_type: file.type,
-          upload_status: 'uploaded'
-        }])
-        .select()
-        .single();
+      // Create document record
+      const { error: docError } = await supabase.rpc('create_attorney_document', {
+        onboarding_id: onboardingId,
+        document_type: documentType,
+        file_name: file.name,
+        file_path: filePath,
+        file_size: file.size,
+        is_required: isRequired,
+        is_client_visible: isClientVisible
+      });
 
       if (docError) throw docError;
 
       // Refresh documents
-      await loadDocuments(targetOnboardingId);
+      await fetchDocuments(onboardingId);
+
       toast({
         title: "Success",
-        description: `${documentType} uploaded successfully`
+        description: "Document uploaded successfully",
       });
-      return docData;
-    } catch (error) {
-      console.error('Error uploading document:', error);
+    } catch (err: any) {
+      console.error('Error uploading document:', err);
+      setError(err.message);
       toast({
         title: "Error",
-        description: `Failed to upload ${documentType}`,
-        variant: "destructive"
+        description: "Failed to upload document",
+        variant: "destructive",
       });
-      return null;
     } finally {
-      setUploading(false);
+      setLoading(false);
     }
   };
 
-  // Sign agreement
-  const signAgreement = async (agreementType: 'nda' | 'participation_agreement') => {
-    if (!onboardingData?.id) return false;
-
+  // Delete document
+  const deleteDocument = async (documentId: string, filePath: string) => {
     try {
-      const updateData = {
-        [`${agreementType}_signed`]: true,
-        [`${agreementType}_signed_at`]: new Date().toISOString(),
-        updated_at: new Date().toISOString()
-      };
+      setLoading(true);
 
-      const { data, error } = await supabase
-        .from('attorney_onboarding')
-        .update(updateData)
-        .eq('id', onboardingData.id)
-        .select()
-        .single();
+      // Delete from storage first
+      const { error: storageError } = await supabase.storage
+        .from('attorney-files')
+        .remove([filePath]);
+
+      if (storageError) throw storageError;
+
+      // Delete document record
+      const { error } = await supabase.rpc('delete_attorney_document', {
+        document_id: documentId
+      });
 
       if (error) throw error;
 
-      setOnboardingData(data as AttorneyOnboardingData);
+      // Remove from local state
+      setDocuments(prev => prev.filter(doc => doc.id !== documentId));
+
       toast({
         title: "Success",
-        description: `${agreementType.replace('_', ' ')} signed successfully`
+        description: "Document deleted successfully",
       });
-      return true;
-    } catch (error) {
-      console.error('Error signing agreement:', error);
+    } catch (err: any) {
+      console.error('Error deleting document:', err);
+      setError(err.message);
       toast({
         title: "Error",
-        description: "Failed to sign agreement",
-        variant: "destructive"
+        description: "Failed to delete document",
+        variant: "destructive",
       });
-      return false;
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Get document by type
-  const getDocumentByType = (documentType: string) => {
-    return documents.find(doc => doc.document_type === documentType);
-  };
+  // Complete onboarding
+  const completeOnboarding = async (onboardingId: string) => {
+    try {
+      setLoading(true);
 
-  // Check if onboarding is complete
-  const isOnboardingComplete = () => {
-    if (!onboardingData) return false;
-    
-    return (
-      onboardingData.progress_percentage === 100 &&
-      onboardingData.nda_signed &&
-      onboardingData.participation_agreement_signed &&
-      onboardingData.terms_accepted
-    );
-  };
+      const { error } = await supabase.rpc('complete_attorney_onboarding', {
+        onboarding_id: onboardingId
+      });
 
-  // Get verification status
-  const getVerificationStatus = () => {
-    if (!onboardingData) return 'not_started';
-    
-    if (onboardingData.bar_verification_status === 'verified' && 
-        onboardingData.background_check_status === 'passed') {
-      return 'verified';
+      if (error) throw error;
+
+      // Refresh the onboardings list
+      await fetchOnboardings();
+
+      toast({
+        title: "Success",
+        description: "Onboarding completed successfully",
+      });
+    } catch (err: any) {
+      console.error('Error completing onboarding:', err);
+      setError(err.message);
+      toast({
+        title: "Error",
+        description: "Failed to complete onboarding",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
     }
-    
-    if (onboardingData.onboarding_status === 'completed') {
-      return 'pending_verification';
-    }
-    
-    return 'in_progress';
   };
 
-  // Load data on mount
   useEffect(() => {
-    loadOnboarding();
+    fetchOnboardings();
   }, []);
 
   return {
-    onboardingData,
+    onboardings,
     documents,
     loading,
-    saving,
-    uploading,
-    loadOnboarding,
-    saveOnboarding,
+    error,
+    createOnboarding,
+    fetchOnboardings,
+    fetchDocuments,
+    updateOnboardingStatus,
+    sendReminder,
     uploadDocument,
-    signAgreement,
-    getDocumentByType,
-    isOnboardingComplete,
-    getVerificationStatus
+    deleteDocument,
+    completeOnboarding,
   };
-}
+};
