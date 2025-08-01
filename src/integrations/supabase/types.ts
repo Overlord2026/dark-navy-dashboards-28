@@ -1163,6 +1163,94 @@ export type Database = {
           },
         ]
       }
+      client_engagement_history: {
+        Row: {
+          clicked_at: string | null
+          client_user_id: string
+          content_delivered: Json
+          converted_at: string | null
+          cpa_partner_id: string
+          delivered_at: string
+          delivery_method: string
+          engagement_type: string
+          id: string
+          opened_at: string | null
+          status: string
+          trigger_id: string | null
+        }
+        Insert: {
+          clicked_at?: string | null
+          client_user_id: string
+          content_delivered?: Json
+          converted_at?: string | null
+          cpa_partner_id: string
+          delivered_at?: string
+          delivery_method: string
+          engagement_type: string
+          id?: string
+          opened_at?: string | null
+          status?: string
+          trigger_id?: string | null
+        }
+        Update: {
+          clicked_at?: string | null
+          client_user_id?: string
+          content_delivered?: Json
+          converted_at?: string | null
+          cpa_partner_id?: string
+          delivered_at?: string
+          delivery_method?: string
+          engagement_type?: string
+          id?: string
+          opened_at?: string | null
+          status?: string
+          trigger_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_engagement_history_trigger_id_fkey"
+            columns: ["trigger_id"]
+            isOneToOne: false
+            referencedRelation: "tax_completion_triggers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      client_guide_interactions: {
+        Row: {
+          client_user_id: string
+          guide_id: string | null
+          id: string
+          interacted_at: string
+          interaction_source: string
+          interaction_type: string
+        }
+        Insert: {
+          client_user_id: string
+          guide_id?: string | null
+          id?: string
+          interacted_at?: string
+          interaction_source: string
+          interaction_type: string
+        }
+        Update: {
+          client_user_id?: string
+          guide_id?: string | null
+          id?: string
+          interacted_at?: string
+          interaction_source?: string
+          interaction_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_guide_interactions_guide_id_fkey"
+            columns: ["guide_id"]
+            isOneToOne: false
+            referencedRelation: "planning_guides"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       client_invitations: {
         Row: {
           advisor_id: string | null
@@ -1331,6 +1419,74 @@ export type Database = {
             columns: ["cpa_partner_id"]
             isOneToOne: false
             referencedRelation: "cpa_partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      client_partner_referrals: {
+        Row: {
+          client_need: string
+          client_user_id: string
+          completed_at: string | null
+          contacted_at: string | null
+          cpa_partner_id: string
+          created_at: string
+          feedback_notes: string | null
+          feedback_rating: number | null
+          id: string
+          marketplace_partner_id: string | null
+          meeting_date: string | null
+          referral_fee_earned: number | null
+          referral_notes: string | null
+          referral_type: string
+          referred_at: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          client_need: string
+          client_user_id: string
+          completed_at?: string | null
+          contacted_at?: string | null
+          cpa_partner_id: string
+          created_at?: string
+          feedback_notes?: string | null
+          feedback_rating?: number | null
+          id?: string
+          marketplace_partner_id?: string | null
+          meeting_date?: string | null
+          referral_fee_earned?: number | null
+          referral_notes?: string | null
+          referral_type: string
+          referred_at?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          client_need?: string
+          client_user_id?: string
+          completed_at?: string | null
+          contacted_at?: string | null
+          cpa_partner_id?: string
+          created_at?: string
+          feedback_notes?: string | null
+          feedback_rating?: number | null
+          id?: string
+          marketplace_partner_id?: string | null
+          meeting_date?: string | null
+          referral_fee_earned?: number | null
+          referral_notes?: string | null
+          referral_type?: string
+          referred_at?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_partner_referrals_marketplace_partner_id_fkey"
+            columns: ["marketplace_partner_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_partners"
             referencedColumns: ["id"]
           },
         ]
@@ -4082,6 +4238,48 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      family_office_upsells: {
+        Row: {
+          clicked_at: string | null
+          client_user_id: string
+          conversion_value: number | null
+          converted_at: string | null
+          cpa_partner_id: string
+          id: string
+          metadata: Json
+          presentation_context: string
+          presented_at: string
+          status: string
+          upsell_type: string
+        }
+        Insert: {
+          clicked_at?: string | null
+          client_user_id: string
+          conversion_value?: number | null
+          converted_at?: string | null
+          cpa_partner_id: string
+          id?: string
+          metadata?: Json
+          presentation_context: string
+          presented_at?: string
+          status?: string
+          upsell_type: string
+        }
+        Update: {
+          clicked_at?: string | null
+          client_user_id?: string
+          conversion_value?: number | null
+          converted_at?: string | null
+          cpa_partner_id?: string
+          id?: string
+          metadata?: Json
+          presentation_context?: string
+          presented_at?: string
+          status?: string
+          upsell_type?: string
+        }
+        Relationships: []
       }
       faqs: {
         Row: {
@@ -7153,6 +7351,81 @@ export type Database = {
         }
         Relationships: []
       }
+      marketplace_partners: {
+        Row: {
+          bio: string | null
+          cpa_partner_id: string
+          created_at: string
+          credentials: string[]
+          fee_structure: string | null
+          firm_name: string
+          id: string
+          is_active: boolean
+          is_verified: boolean
+          location: Json | null
+          logo_url: string | null
+          partner_email: string
+          partner_name: string
+          partner_phone: string | null
+          partner_type: string
+          rating: number | null
+          referral_fee_percent: number | null
+          review_count: number | null
+          specialties: string[]
+          updated_at: string
+          website_url: string | null
+          years_experience: number | null
+        }
+        Insert: {
+          bio?: string | null
+          cpa_partner_id: string
+          created_at?: string
+          credentials?: string[]
+          fee_structure?: string | null
+          firm_name: string
+          id?: string
+          is_active?: boolean
+          is_verified?: boolean
+          location?: Json | null
+          logo_url?: string | null
+          partner_email: string
+          partner_name: string
+          partner_phone?: string | null
+          partner_type: string
+          rating?: number | null
+          referral_fee_percent?: number | null
+          review_count?: number | null
+          specialties?: string[]
+          updated_at?: string
+          website_url?: string | null
+          years_experience?: number | null
+        }
+        Update: {
+          bio?: string | null
+          cpa_partner_id?: string
+          created_at?: string
+          credentials?: string[]
+          fee_structure?: string | null
+          firm_name?: string
+          id?: string
+          is_active?: boolean
+          is_verified?: boolean
+          location?: Json | null
+          logo_url?: string | null
+          partner_email?: string
+          partner_name?: string
+          partner_phone?: string | null
+          partner_type?: string
+          rating?: number | null
+          referral_fee_percent?: number | null
+          review_count?: number | null
+          specialties?: string[]
+          updated_at?: string
+          website_url?: string | null
+          years_experience?: number | null
+        }
+        Relationships: []
+      }
       med_adherence: {
         Row: {
           created_at: string
@@ -8992,6 +9265,54 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      planning_guides: {
+        Row: {
+          content_url: string | null
+          cpa_partner_id: string
+          created_at: string
+          description: string | null
+          download_count: number | null
+          guide_title: string
+          guide_type: string
+          id: string
+          is_active: boolean
+          is_premium: boolean
+          target_audience: Json
+          thumbnail_url: string | null
+          updated_at: string
+        }
+        Insert: {
+          content_url?: string | null
+          cpa_partner_id: string
+          created_at?: string
+          description?: string | null
+          download_count?: number | null
+          guide_title: string
+          guide_type: string
+          id?: string
+          is_active?: boolean
+          is_premium?: boolean
+          target_audience?: Json
+          thumbnail_url?: string | null
+          updated_at?: string
+        }
+        Update: {
+          content_url?: string | null
+          cpa_partner_id?: string
+          created_at?: string
+          description?: string | null
+          download_count?: number | null
+          guide_title?: string
+          guide_type?: string
+          id?: string
+          is_active?: boolean
+          is_premium?: boolean
+          target_audience?: Json
+          thumbnail_url?: string | null
+          updated_at?: string
+        }
+        Relationships: []
       }
       playbooks: {
         Row: {
@@ -13023,6 +13344,45 @@ export type Database = {
           rate?: number
           tax_year?: number
           tenant_id?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      tax_completion_triggers: {
+        Row: {
+          content: Json
+          cpa_partner_id: string
+          created_at: string
+          delay_days: number
+          id: string
+          is_active: boolean
+          target_audience: Json
+          trigger_name: string
+          trigger_type: string
+          updated_at: string
+        }
+        Insert: {
+          content?: Json
+          cpa_partner_id: string
+          created_at?: string
+          delay_days?: number
+          id?: string
+          is_active?: boolean
+          target_audience?: Json
+          trigger_name: string
+          trigger_type: string
+          updated_at?: string
+        }
+        Update: {
+          content?: Json
+          cpa_partner_id?: string
+          created_at?: string
+          delay_days?: number
+          id?: string
+          is_active?: boolean
+          target_audience?: Json
+          trigger_name?: string
+          trigger_type?: string
           updated_at?: string
         }
         Relationships: []

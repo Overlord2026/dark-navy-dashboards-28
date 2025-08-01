@@ -99,12 +99,15 @@ export function CPAFirmSetupWizard() {
 
   const handleFirmSubmit = async () => {
     try {
+      const user = await supabase.auth.getUser();
       const { error } = await supabase
         .from('cpa_partners')
         .insert({
+          user_id: user.data.user?.id,
           firm_name: firmData.name,
           phone: firmData.phone,
-          business_address: firmData.address,
+          license_number: firmData.license,
+          license_state: 'CA', // Default - should be made configurable
           status: 'active'
         });
 
