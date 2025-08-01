@@ -139,6 +139,9 @@ verify_jwt = false
 
 [functions.send-recording-share-notification]
 verify_jwt = false
+
+[functions.send-follow-up-email]
+verify_jwt = false
 # @public-ok - Email notification service
 
 [functions.process-meeting-summary]
