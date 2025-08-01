@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -25,7 +25,13 @@ import {
   Calendar,
   TrendingUp,
   MousePointer,
-  CheckCircle
+  CheckCircle,
+  Clock,
+  Target,
+  Video,
+  Filter,
+  Search,
+  AlertTriangle
 } from 'lucide-react';
 
 interface Campaign {
@@ -292,8 +298,11 @@ export function CommunicationsDashboard() {
       <Tabs defaultValue="overview" className="space-y-6">
         <TabsList>
           <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="batch">Batch Messages</TabsTrigger>
+          <TabsTrigger value="nudges">AI Nudges</TabsTrigger>
+          <TabsTrigger value="meetings">Meetings</TabsTrigger>
+          <TabsTrigger value="comments">Comments</TabsTrigger>
           <TabsTrigger value="campaigns">Campaigns</TabsTrigger>
-          <TabsTrigger value="analytics">Analytics</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6">
@@ -358,6 +367,104 @@ export function CommunicationsDashboard() {
                   />
                 </LineChart>
               </ResponsiveChart>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="batch" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Send Batch Communication</CardTitle>
+              <CardDescription>Target clients with missing docs, overdue responses, or specific criteria</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 gap-4 mb-4">
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select recipients" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="missing_docs">Missing Documents (12 clients)</SelectItem>
+                    <SelectItem value="overdue">Overdue Response (8 clients)</SelectItem>
+                    <SelectItem value="all_pending">All Pending (23 clients)</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Button>
+                  <Send className="h-4 w-4 mr-2" />
+                  Send Batch Message
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="nudges" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>AI Nudge Rules</CardTitle>
+              <CardDescription>Automated reminders for slow responders and missing documents</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between p-4 border rounded-lg">
+                  <div>
+                    <h4 className="font-medium">Missing Document Reminder</h4>
+                    <p className="text-sm text-muted-foreground">Triggers after 3 days of missing docs</p>
+                  </div>
+                  <Badge>Active</Badge>
+                </div>
+                <div className="flex items-center justify-between p-4 border rounded-lg">
+                  <div>
+                    <h4 className="font-medium">Overdue Response Follow-up</h4>
+                    <p className="text-sm text-muted-foreground">Triggers after 5 days of no response</p>
+                  </div>
+                  <Badge>Active</Badge>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="meetings" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Client Meetings</CardTitle>
+              <CardDescription>Schedule and manage client meetings with video integration</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between p-4 border rounded-lg">
+                  <div>
+                    <h4 className="font-medium">Tax Review with John Smith</h4>
+                    <p className="text-sm text-muted-foreground">Tomorrow at 2:00 PM</p>
+                  </div>
+                  <Button size="sm">
+                    <Video className="h-4 w-4 mr-1" />
+                    Join
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="comments" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Document Comments</CardTitle>
+              <CardDescription>Recent questions and clarifications on client documents</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="p-4 border rounded-lg">
+                  <div className="flex justify-between items-start mb-2">
+                    <span className="font-medium">Sarah Johnson (Client)</span>
+                    <span className="text-xs text-muted-foreground">2 hours ago</span>
+                  </div>
+                  <p className="text-sm">Question about line 23 on the tax organizer - do I include rental income here?</p>
+                  <Badge variant="secondary" className="mt-2">Pending Response</Badge>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>

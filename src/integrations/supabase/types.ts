@@ -238,6 +238,50 @@ export type Database = {
           },
         ]
       }
+      ai_nudge_rules: {
+        Row: {
+          cpa_partner_id: string
+          created_at: string | null
+          days_threshold: number
+          id: string
+          is_active: boolean | null
+          rule_name: string
+          template_id: string | null
+          trigger_condition: string
+          updated_at: string | null
+        }
+        Insert: {
+          cpa_partner_id: string
+          created_at?: string | null
+          days_threshold?: number
+          id?: string
+          is_active?: boolean | null
+          rule_name: string
+          template_id?: string | null
+          trigger_condition: string
+          updated_at?: string | null
+        }
+        Update: {
+          cpa_partner_id?: string
+          created_at?: string | null
+          days_threshold?: number
+          id?: string
+          is_active?: boolean | null
+          rule_name?: string
+          template_id?: string | null
+          trigger_condition?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_nudge_rules_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "communication_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       analytics_dashboards: {
         Row: {
           created_at: string
@@ -727,6 +771,62 @@ export type Database = {
         }
         Relationships: []
       }
+      batch_communications: {
+        Row: {
+          campaign_name: string
+          communication_type: string
+          cpa_partner_id: string
+          created_at: string | null
+          failed_count: number | null
+          id: string
+          recipient_criteria: Json | null
+          scheduled_for: string | null
+          sent_count: number | null
+          status: string
+          template_id: string | null
+          total_recipients: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          campaign_name: string
+          communication_type: string
+          cpa_partner_id: string
+          created_at?: string | null
+          failed_count?: number | null
+          id?: string
+          recipient_criteria?: Json | null
+          scheduled_for?: string | null
+          sent_count?: number | null
+          status?: string
+          template_id?: string | null
+          total_recipients?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          campaign_name?: string
+          communication_type?: string
+          cpa_partner_id?: string
+          created_at?: string | null
+          failed_count?: number | null
+          id?: string
+          recipient_criteria?: Json | null
+          scheduled_for?: string | null
+          sent_count?: number | null
+          status?: string
+          template_id?: string | null
+          total_recipients?: number | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "batch_communications_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "communication_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       budget_goals: {
         Row: {
           category: string
@@ -1125,6 +1225,60 @@ export type Database = {
           },
         ]
       }
+      client_meetings: {
+        Row: {
+          agenda: Json | null
+          client_user_id: string
+          cpa_partner_id: string
+          created_at: string | null
+          duration_minutes: number | null
+          id: string
+          meeting_platform: string | null
+          meeting_title: string
+          meeting_type: string | null
+          meeting_url: string | null
+          notes: string | null
+          onboarding_id: string | null
+          scheduled_for: string | null
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          agenda?: Json | null
+          client_user_id: string
+          cpa_partner_id: string
+          created_at?: string | null
+          duration_minutes?: number | null
+          id?: string
+          meeting_platform?: string | null
+          meeting_title: string
+          meeting_type?: string | null
+          meeting_url?: string | null
+          notes?: string | null
+          onboarding_id?: string | null
+          scheduled_for?: string | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          agenda?: Json | null
+          client_user_id?: string
+          cpa_partner_id?: string
+          created_at?: string | null
+          duration_minutes?: number | null
+          id?: string
+          meeting_platform?: string | null
+          meeting_title?: string
+          meeting_type?: string | null
+          meeting_url?: string | null
+          notes?: string | null
+          onboarding_id?: string | null
+          scheduled_for?: string | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       client_organizers: {
         Row: {
           client_user_id: string
@@ -1293,6 +1447,101 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      communication_deliveries: {
+        Row: {
+          batch_id: string | null
+          clicked_at: string | null
+          client_user_id: string
+          communication_type: string
+          delivered_at: string | null
+          error_message: string | null
+          id: string
+          opened_at: string | null
+          recipient_email: string | null
+          recipient_phone: string | null
+          sent_at: string | null
+          status: string
+          tracking_data: Json | null
+        }
+        Insert: {
+          batch_id?: string | null
+          clicked_at?: string | null
+          client_user_id: string
+          communication_type: string
+          delivered_at?: string | null
+          error_message?: string | null
+          id?: string
+          opened_at?: string | null
+          recipient_email?: string | null
+          recipient_phone?: string | null
+          sent_at?: string | null
+          status?: string
+          tracking_data?: Json | null
+        }
+        Update: {
+          batch_id?: string | null
+          clicked_at?: string | null
+          client_user_id?: string
+          communication_type?: string
+          delivered_at?: string | null
+          error_message?: string | null
+          id?: string
+          opened_at?: string | null
+          recipient_email?: string | null
+          recipient_phone?: string | null
+          sent_at?: string | null
+          status?: string
+          tracking_data?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "communication_deliveries_batch_id_fkey"
+            columns: ["batch_id"]
+            isOneToOne: false
+            referencedRelation: "batch_communications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      communication_templates: {
+        Row: {
+          content: string
+          cpa_partner_id: string
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          subject: string | null
+          template_name: string
+          template_type: string
+          updated_at: string | null
+          variables: Json | null
+        }
+        Insert: {
+          content: string
+          cpa_partner_id: string
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          subject?: string | null
+          template_name: string
+          template_type: string
+          updated_at?: string | null
+          variables?: Json | null
+        }
+        Update: {
+          content?: string
+          cpa_partner_id?: string
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          subject?: string | null
+          template_name?: string
+          template_type?: string
+          updated_at?: string | null
+          variables?: Json | null
+        }
+        Relationships: []
       }
       community_giving_metrics: {
         Row: {
@@ -2906,6 +3155,59 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: []
+      }
+      document_comments: {
+        Row: {
+          comment_text: string
+          commenter_id: string
+          commenter_type: string
+          created_at: string | null
+          document_id: string | null
+          document_type: string
+          id: string
+          is_internal: boolean | null
+          onboarding_id: string | null
+          parent_comment_id: string | null
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          comment_text: string
+          commenter_id: string
+          commenter_type: string
+          created_at?: string | null
+          document_id?: string | null
+          document_type: string
+          id?: string
+          is_internal?: boolean | null
+          onboarding_id?: string | null
+          parent_comment_id?: string | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          comment_text?: string
+          commenter_id?: string
+          commenter_type?: string
+          created_at?: string | null
+          document_id?: string | null
+          document_type?: string
+          id?: string
+          is_internal?: boolean | null
+          onboarding_id?: string | null
+          parent_comment_id?: string | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "document_comments_parent_comment_id_fkey"
+            columns: ["parent_comment_id"]
+            isOneToOne: false
+            referencedRelation: "document_comments"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       document_nudges: {
         Row: {
@@ -7043,6 +7345,39 @@ export type Database = {
           },
         ]
       }
+      meeting_integrations: {
+        Row: {
+          api_credentials: Json | null
+          cpa_partner_id: string
+          created_at: string | null
+          id: string
+          integration_type: string
+          is_active: boolean | null
+          updated_at: string | null
+          webhook_url: string | null
+        }
+        Insert: {
+          api_credentials?: Json | null
+          cpa_partner_id: string
+          created_at?: string | null
+          id?: string
+          integration_type: string
+          is_active?: boolean | null
+          updated_at?: string | null
+          webhook_url?: string | null
+        }
+        Update: {
+          api_credentials?: Json | null
+          cpa_partner_id?: string
+          created_at?: string | null
+          id?: string
+          integration_type?: string
+          is_active?: boolean | null
+          updated_at?: string | null
+          webhook_url?: string | null
+        }
+        Relationships: []
+      }
       member_providers: {
         Row: {
           created_at: string
@@ -7630,6 +7965,47 @@ export type Database = {
             columns: ["member_id"]
             isOneToOne: false
             referencedRelation: "family_members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      nudge_history: {
+        Row: {
+          client_user_id: string
+          effectiveness_score: number | null
+          id: string
+          nudge_sent_at: string | null
+          onboarding_id: string | null
+          response_received_at: string | null
+          rule_id: string | null
+          trigger_reason: string
+        }
+        Insert: {
+          client_user_id: string
+          effectiveness_score?: number | null
+          id?: string
+          nudge_sent_at?: string | null
+          onboarding_id?: string | null
+          response_received_at?: string | null
+          rule_id?: string | null
+          trigger_reason: string
+        }
+        Update: {
+          client_user_id?: string
+          effectiveness_score?: number | null
+          id?: string
+          nudge_sent_at?: string | null
+          onboarding_id?: string | null
+          response_received_at?: string | null
+          rule_id?: string | null
+          trigger_reason?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "nudge_history_rule_id_fkey"
+            columns: ["rule_id"]
+            isOneToOne: false
+            referencedRelation: "ai_nudge_rules"
             referencedColumns: ["id"]
           },
         ]
@@ -15306,6 +15682,10 @@ export type Database = {
       }
       check_impact_milestones: {
         Args: { p_user_id: string }
+        Returns: undefined
+      }
+      check_nudge_triggers: {
+        Args: Record<PropertyKey, never>
         Returns: undefined
       }
       check_rate_limit: {
