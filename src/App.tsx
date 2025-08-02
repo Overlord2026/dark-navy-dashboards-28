@@ -98,6 +98,7 @@ import { AnnuityMarketplace } from "./components/annuities/marketplace/AnnuityMa
 import { FiduciaryReview } from "./components/annuities/FiduciaryReview";
 import ClientsPage from "./pages/advisor/ClientsPage";
 import ProspectsPage from "./pages/advisor/ProspectsPage";
+import AdvisorROIDashboard from "./pages/AdvisorROIDashboard";
 import WealthOverviewPage from "./pages/WealthOverviewPage";
 // Client pages
 import ClientEducationPage from "./pages/client/ClientEducationPage";
@@ -640,6 +641,19 @@ const App = () => {
                         <ProposalWizard />
                       </AuthWrapper>
                     }
+                   />
+
+                   {/* ROI Dashboard Route */}
+                   <Route 
+                     path="/roi-dashboard" 
+                     element={
+                       <AuthWrapper 
+                         requireAuth={true}
+                         allowedRoles={['advisor', 'admin', 'system_administrator', 'tenant_admin']}
+                       >
+                         <AdvisorROIDashboard />
+                       </AuthWrapper>
+                     } 
                    />
 
                    {/* Additional Pages for Missing Routes */}

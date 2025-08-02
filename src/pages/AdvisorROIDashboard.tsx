@@ -3,25 +3,21 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { DatePickerWithRange } from '@/components/ui/date-range-picker';
-import { Plus, Download, Upload, FileText } from 'lucide-react';
-import { ROIKPICards } from '@/components/roi/ROIKPICards';
-import { AdvancedROIFunnelChart } from '@/components/roi/AdvancedROIFunnelChart';
-import { TimeToCloseChart } from '@/components/roi/TimeToCloseChart';
-import { CampaignComparisonChart } from '@/components/roi/CampaignComparisonChart';
-import { CumulativeRevenueChart } from '@/components/roi/CumulativeRevenueChart';
-import { CampaignPerformanceTable } from '@/components/roi/CampaignPerformanceTable';
-import { NewLeadDialog } from '@/components/roi/NewLeadDialog';
-import { NewCampaignDialog } from '@/components/roi/NewCampaignDialog';
-import { CSVImportDialog } from '@/components/roi/CSVImportDialog';
-import { NoDataState } from '@/components/roi/NoDataState';
-import { useCSVOperations } from '@/hooks/useCSVOperations';
-import { useROIData } from '@/hooks/useROIData';
-import { exportDashboardToPDF } from '@/utils/pdfExport';
-import { addDays } from 'date-fns';
+import { Plus, Download, Upload, FileText, TrendingUp, DollarSign, Users, Target } from 'lucide-react';
+import { useRealROIData } from '@/hooks/useRealROIData';
+import { MainLayout } from '@/components/layout/MainLayout';
+import { toast } from 'sonner';
+import { addDays, format } from 'date-fns';
+import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line, FunnelChart, Funnel, LabelList, Cell } from 'recharts';
 
 interface DateRange {
   from?: Date;
   to?: Date;
+}
+
+interface CSVImportData {
+  leads?: any[];
+  adSpend?: any[];
 }
 
 export default function AdvisorROIDashboard() {
@@ -29,224 +25,435 @@ export default function AdvisorROIDashboard() {
     from: addDays(new Date(), -30),
     to: new Date(),
   });
-  const [selectedCampaign, setSelectedCampaign] = useState<string>('all');
   const [selectedSource, setSelectedSource] = useState<string>('all');
-  const [isNewLeadOpen, setIsNewLeadOpen] = useState(false);
-  const [isNewCampaignOpen, setIsNewCampaignOpen] = useState(false);
-  const [isCSVImportOpen, setIsCSVImportOpen] = useState(false);
-  const [csvImportType, setCsvImportType] = useState<'leads' | 'campaigns' | undefined>();
-  const [hasData, setHasData] = useState(true);
   const [metrics, setMetrics] = useState<any>(null);
+  const [csvFile, setCsvFile] = useState<File | null>(null);
+  const [csvType, setCsvType] = useState<'leads' | 'adSpend'>('leads');
+  const [showImportDialog, setShowImportDialog] = useState(false);
   
-  const { exportLeadsToCSV, exportCampaignsToCSV, isExporting } = useCSVOperations();
-  const { getROIMetrics } = useROIData();
+  const { loading, getROIMetrics, createLead, createCampaign, importLeadsFromCSV, importAdSpendFromCSV } = useRealROIData();
 
-  // Check if we have data to show
+  // Fetch data on mount and when filters change
   useEffect(() => {
-    const checkData = async () => {
+    const fetchData = async () => {
       try {
         const data = await getROIMetrics(dateRange);
         setMetrics(data);
-        setHasData(data.totalLeads > 0 || data.campaigns.length > 0);
       } catch (error) {
-        console.error('Error checking data:', error);
-        setHasData(false);
+        console.error('Error fetching ROI data:', error);
       }
     };
 
-    checkData();
+    fetchData();
   }, [dateRange, getROIMetrics]);
 
-  const handleDataUpdate = () => {
-    // Refresh data when new leads/campaigns are added
-    const checkData = async () => {
-      const data = await getROIMetrics(dateRange);
-      setMetrics(data);
-      setHasData(data.totalLeads > 0 || data.campaigns.length > 0);
-    };
-    checkData();
+  // Filter data based on selected source
+  const filteredMetrics = metrics ? {
+    ...metrics,
+    leadSources: selectedSource === 'all' 
+      ? metrics.leadSources 
+      : metrics.leadSources.filter((s: any) => s.source === selectedSource),
+    timelineData: selectedSource === 'all'
+      ? metrics.timelineData
+      : metrics.timelineData.map((d: any) => ({
+          ...d,
+          // Filter timeline data would require more complex logic
+          // For now, we'll show all timeline data
+        }))
+  } : null;
+
+  // Export to CSV
+  const exportToCSV = (data: any[], filename: string) => {
+    if (!data.length) {
+      toast.error('No data to export');
+      return;
+    }
+
+    const headers = Object.keys(data[0]);
+    const csvContent = [
+      headers.join(','),
+      ...data.map(row => headers.map(header => {
+        const value = row[header];
+        return typeof value === 'string' && value.includes(',') ? `"${value}"` : value;
+      }).join(','))
+    ].join('\\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${filename}-${format(new Date(), 'yyyy-MM-dd')}.csv`;
+    link.click();
+    window.URL.revokeObjectURL(url);
   };
 
-  const handleExportPDF = async () => {
-    if (metrics) {
-      await exportDashboardToPDF(metrics, dateRange);
+  // Handle CSV import
+  const handleCSVImport = async () => {
+    if (!csvFile) {
+      toast.error('Please select a CSV file');
+      return;
+    }
+
+    try {
+      const text = await csvFile.text();
+      const lines = text.split('\\n').filter(line => line.trim());
+      const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+      
+      const data = lines.slice(1).map(line => {
+        const values = line.split(',');
+        return headers.reduce((obj, header, index) => {
+          obj[header] = values[index]?.trim().replace(/^"|"$/g, '') || '';
+          return obj;
+        }, {} as any);
+      });
+
+      if (csvType === 'leads') {
+        await importLeadsFromCSV(data);
+      } else {
+        await importAdSpendFromCSV(data);
+      }
+
+      // Refresh data
+      const refreshedData = await getROIMetrics(dateRange);
+      setMetrics(refreshedData);
+      setShowImportDialog(false);
+      setCsvFile(null);
+    } catch (error) {
+      console.error('Error importing CSV:', error);
+      toast.error('Failed to import CSV file');
     }
   };
 
+  const colors = ['#0ea5e9', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
+
   return (
-    <div className="space-y-6 p-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Advisor Leads & ROI Dashboard</h1>
-      </div>
+    <MainLayout>
+      <div className="min-h-screen bg-gradient-to-br from-primary via-primary-dark to-surface">
+        <div className="container mx-auto p-6">
+          {/* Header */}
+          <div className="mb-8">
+            <h1 className="text-4xl font-black text-white mb-2 font-display tracking-tight">
+              ROI ANALYTICS DASHBOARD
+            </h1>
+            <p className="text-text-secondary text-lg">
+              Track your lead generation performance and return on investment
+            </p>
+          </div>
 
-      {/* Filter Bar */}
-      <Card>
-        <CardContent className="pt-6">
-          <div className="flex flex-wrap gap-4 items-center">
-            <DatePickerWithRange
-              date={dateRange}
-              onDateChange={(newDateRange) => setDateRange(newDateRange || {})}
-              className="w-[300px]"
-            />
-            
-            <Select value={selectedCampaign} onValueChange={setSelectedCampaign}>
-              <SelectTrigger className="w-[200px]">
-                <SelectValue placeholder="All Campaigns" />
-              </SelectTrigger>
-              <SelectContent className="bg-background border shadow-lg z-50">
-                <SelectItem value="all">All Campaigns</SelectItem>
-                <SelectItem value="facebook">Facebook Ads</SelectItem>
-                <SelectItem value="google">Google Ads</SelectItem>
-                <SelectItem value="linkedin">LinkedIn Ads</SelectItem>
-              </SelectContent>
-            </Select>
+          {/* Filters */}
+          <Card className="mb-6 bg-surface border-border-primary">
+            <CardContent className="p-4">
+              <div className="flex flex-col lg:flex-row gap-4 items-center">
+                <DatePickerWithRange
+                  date={dateRange}
+                  onDateChange={(newDateRange) => setDateRange(newDateRange || {})}
+                  className="w-full lg:w-[300px]"
+                />
+                
+                <Select value={selectedSource} onValueChange={setSelectedSource}>
+                  <SelectTrigger className="w-full lg:w-[200px] bg-card border-border-primary text-white">
+                    <SelectValue placeholder="All Sources" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-surface border-border-primary">
+                    <SelectItem value="all">All Sources</SelectItem>
+                    <SelectItem value="website">Website</SelectItem>
+                    <SelectItem value="google_ads">Google Ads</SelectItem>
+                    <SelectItem value="facebook">Facebook</SelectItem>
+                    <SelectItem value="linkedin">LinkedIn</SelectItem>
+                    <SelectItem value="referral">Referral</SelectItem>
+                  </SelectContent>
+                </Select>
 
-            <Select value={selectedSource} onValueChange={setSelectedSource}>
-              <SelectTrigger className="w-[200px]">
-                <SelectValue placeholder="All Sources" />
-              </SelectTrigger>
-              <SelectContent className="bg-background border shadow-lg z-50">
-                <SelectItem value="all">All Sources</SelectItem>
-                <SelectItem value="facebook">Facebook</SelectItem>
-                <SelectItem value="google">Google</SelectItem>
-                <SelectItem value="linkedin">LinkedIn</SelectItem>
-                <SelectItem value="referral">Referral</SelectItem>
-              </SelectContent>
-            </Select>
+                <div className="flex gap-2 ml-auto flex-wrap">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => {
+                      setCsvType('leads');
+                      setShowImportDialog(true);
+                    }}
+                    className="border-accent-gold text-accent-gold hover:bg-accent-gold hover:text-primary"
+                  >
+                    <Upload className="h-4 w-4 mr-2" />
+                    Import Leads
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => {
+                      setCsvType('adSpend');
+                      setShowImportDialog(true);
+                    }}
+                    className="border-accent-aqua text-accent-aqua hover:bg-accent-aqua hover:text-primary"
+                  >
+                    <Upload className="h-4 w-4 mr-2" />
+                    Import Ad Spend
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => exportToCSV(metrics?.leads || [], 'leads')}
+                    disabled={!metrics?.leads?.length}
+                    className="border-white text-white hover:bg-white hover:text-primary"
+                  >
+                    <Download className="h-4 w-4 mr-2" />
+                    Export Leads
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => exportToCSV(metrics?.campaigns || [], 'ad-spend')}
+                    disabled={!metrics?.campaigns?.length}
+                    className="border-white text-white hover:bg-white hover:text-primary"
+                  >
+                    <Download className="h-4 w-4 mr-2" />
+                    Export Ad Spend
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
 
-            <div className="flex gap-2 ml-auto flex-wrap">
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={() => {
-                  setCsvImportType('leads');
-                  setIsCSVImportOpen(true);
-                }}
-              >
-                <Upload className="h-4 w-4 mr-2" />
-                Import Leads
-              </Button>
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={() => {
-                  setCsvImportType('campaigns');
-                  setIsCSVImportOpen(true);
-                }}
-              >
-                <Upload className="h-4 w-4 mr-2" />
-                Import Campaigns
-              </Button>
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={exportLeadsToCSV}
-                disabled={isExporting}
-              >
-                <Download className="h-4 w-4 mr-2" />
-                Export Leads
-              </Button>
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={exportCampaignsToCSV}
-                disabled={isExporting}
-              >
-                <Download className="h-4 w-4 mr-2" />
-                Export Campaigns
-              </Button>
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={handleExportPDF}
-                disabled={!hasData}
-              >
-                <FileText className="h-4 w-4 mr-2" />
-                Export PDF
-              </Button>
+          {/* Summary Metrics */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+            <Card className="bg-card border-border-primary">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-text-secondary text-sm font-medium">Total Ad Spend</p>
+                    <p className="text-2xl font-bold text-white">
+                      ${(filteredMetrics?.totalSpend || 0).toLocaleString()}
+                    </p>
+                  </div>
+                  <DollarSign className="h-8 w-8 text-accent-gold" />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-card border-border-primary">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-text-secondary text-sm font-medium">Leads Generated</p>
+                    <p className="text-2xl font-bold text-white">
+                      {filteredMetrics?.totalLeads || 0}
+                    </p>
+                  </div>
+                  <Users className="h-8 w-8 text-accent-aqua" />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-card border-border-primary">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-text-secondary text-sm font-medium">Cost Per Lead</p>
+                    <p className="text-2xl font-bold text-white">
+                      ${(filteredMetrics?.costPerLead || 0).toFixed(2)}
+                    </p>
+                  </div>
+                  <Target className="h-8 w-8 text-yellow-500" />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-card border-border-primary">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-text-secondary text-sm font-medium">Conversion Rate</p>
+                    <p className="text-2xl font-bold text-white">
+                      {(filteredMetrics?.conversionRate || 0).toFixed(1)}%
+                    </p>
+                  </div>
+                  <TrendingUp className="h-8 w-8 text-emerald-500" />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-card border-border-primary">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-text-secondary text-sm font-medium">Revenue</p>
+                    <p className="text-2xl font-bold text-white">
+                      ${(filteredMetrics?.totalRevenue || 0).toLocaleString()}
+                    </p>
+                  </div>
+                  <DollarSign className="h-8 w-8 text-green-500" />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Charts */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            {/* Lead Source Performance */}
+            <Card className="bg-surface border-border-primary">
+              <CardHeader>
+                <CardTitle className="text-white font-display">Lead Source Performance</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="h-80">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={filteredMetrics?.leadSources || []}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#2A3458" />
+                      <XAxis dataKey="source" stroke="#A6B2D1" />
+                      <YAxis stroke="#A6B2D1" />
+                      <Tooltip 
+                        contentStyle={{ 
+                          backgroundColor: '#1E2333', 
+                          border: '1px solid #2A3458',
+                          borderRadius: '8px',
+                          color: '#FFFFFF'
+                        }} 
+                      />
+                      <Legend />
+                      <Bar dataKey="count" name="Leads" fill="#00D2FF" />
+                      <Bar dataKey="spend" name="Spend ($)" fill="#FFC700" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Conversion Funnel */}
+            <Card className="bg-surface border-border-primary">
+              <CardHeader>
+                <CardTitle className="text-white font-display">Conversion Funnel</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="h-80">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={filteredMetrics?.conversionFunnel || []} layout="horizontal">
+                      <CartesianGrid strokeDasharray="3 3" stroke="#2A3458" />
+                      <XAxis type="number" stroke="#A6B2D1" />
+                      <YAxis dataKey="stage" type="category" stroke="#A6B2D1" width={80} />
+                      <Tooltip 
+                        contentStyle={{ 
+                          backgroundColor: '#1E2333', 
+                          border: '1px solid #2A3458',
+                          borderRadius: '8px',
+                          color: '#FFFFFF'
+                        }} 
+                        formatter={(value, name) => [
+                          name === 'count' ? `${value} leads` : `${value}%`,
+                          name === 'count' ? 'Count' : 'Conversion Rate'
+                        ]}
+                      />
+                      <Bar dataKey="count" fill="#34C759" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Timeline Chart */}
+          <Card className="bg-surface border-border-primary mb-8">
+            <CardHeader>
+              <CardTitle className="text-white font-display">Performance Timeline</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="h-80">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={filteredMetrics?.timelineData || []}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#2A3458" />
+                    <XAxis 
+                      dataKey="date" 
+                      stroke="#A6B2D1"
+                      tickFormatter={(date) => format(new Date(date), 'MMM d')}
+                    />
+                    <YAxis yAxisId="left" stroke="#A6B2D1" />
+                    <YAxis yAxisId="right" orientation="right" stroke="#A6B2D1" />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: '#1E2333', 
+                        border: '1px solid #2A3458',
+                        borderRadius: '8px',
+                        color: '#FFFFFF'
+                      }}
+                      labelFormatter={(date) => format(new Date(date), 'MMM d, yyyy')}
+                    />
+                    <Legend />
+                    <Line 
+                      yAxisId="left" 
+                      type="monotone" 
+                      dataKey="leads" 
+                      stroke="#00D2FF" 
+                      strokeWidth={3}
+                      name="Leads"
+                    />
+                    <Line 
+                      yAxisId="right" 
+                      type="monotone" 
+                      dataKey="spend" 
+                      stroke="#FFC700" 
+                      strokeWidth={3}
+                      name="Ad Spend ($)"
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* CSV Import Dialog */}
+          {showImportDialog && (
+            <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+              <Card className="bg-surface border-border-primary w-full max-w-md">
+                <CardHeader>
+                  <CardTitle className="text-white font-display">
+                    Import {csvType === 'leads' ? 'Leads' : 'Ad Spend'} Data
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-text-secondary mb-2">
+                      Select CSV file
+                    </label>
+                    <input
+                      type="file"
+                      accept=".csv"
+                      onChange={(e) => setCsvFile(e.target.files?.[0] || null)}
+                      className="w-full p-2 border border-border-primary rounded bg-card text-white"
+                    />
+                  </div>
+                  
+                  <div className="text-xs text-text-secondary">
+                    <p className="font-medium mb-1">Expected columns:</p>
+                    {csvType === 'leads' ? (
+                      <p>name, email, phone, status, interest, budget, source, score</p>
+                    ) : (
+                      <p>campaign_name, source, amount, spend_date, clicks, impressions</p>
+                    )}
+                  </div>
+
+                  <div className="flex gap-2 justify-end">
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setShowImportDialog(false);
+                        setCsvFile(null);
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      onClick={handleCSVImport}
+                      disabled={!csvFile || loading}
+                      className="bg-accent-gold text-primary hover:bg-accent-gold/90"
+                    >
+                      Import
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* KPI Cards or No Data State */}
-      {hasData ? (
-        <ROIKPICards dateRange={dateRange} />
-      ) : (
-        <NoDataState
-          title="No data available yet"
-          description="Start by adding leads and campaigns or importing your existing data to see analytics."
-          showSampleActions={true}
-          onAddLead={() => setIsNewLeadOpen(true)}
-          onAddCampaign={() => setIsNewCampaignOpen(true)}
-          onImportLeads={() => {
-            setCsvImportType('leads');
-            setIsCSVImportOpen(true);
-          }}
-          onImportCampaigns={() => {
-            setCsvImportType('campaigns');
-            setIsCSVImportOpen(true);
-          }}
-        />
-      )}
-
-      {/* Action Buttons */}
-      <div className="flex gap-4">
-        <Button onClick={() => setIsNewLeadOpen(true)}>
-          <Plus className="h-4 w-4 mr-2" />
-          New Lead
-        </Button>
-        <Button variant="outline" onClick={() => setIsNewCampaignOpen(true)}>
-          <Plus className="h-4 w-4 mr-2" />
-          New Campaign
-        </Button>
+          )}
+        </div>
       </div>
-
-      {/* Analytics Charts - Only show if we have data */}
-      {hasData && (
-        <>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <AdvancedROIFunnelChart dateRange={dateRange} />
-            <TimeToCloseChart dateRange={dateRange} />
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <CampaignComparisonChart dateRange={dateRange} />
-            <CumulativeRevenueChart dateRange={dateRange} />
-          </div>
-
-          {/* Campaign Performance Table */}
-          <CampaignPerformanceTable 
-            dateRange={dateRange}
-            selectedCampaign={selectedCampaign}
-            selectedSource={selectedSource}
-          />
-        </>
-      )}
-
-      {/* Dialogs */}
-      <NewLeadDialog 
-        open={isNewLeadOpen} 
-        onOpenChange={setIsNewLeadOpen}
-        onLeadCreated={handleDataUpdate}
-      />
-      <NewCampaignDialog 
-        open={isNewCampaignOpen} 
-        onOpenChange={setIsNewCampaignOpen}
-        onCampaignCreated={handleDataUpdate}
-      />
-      <CSVImportDialog 
-        open={isCSVImportOpen} 
-        onOpenChange={(open) => {
-          setIsCSVImportOpen(open);
-          if (!open) {
-            setCsvImportType(undefined);
-            handleDataUpdate(); // Refresh data after import
-          }
-        }}
-        defaultType={csvImportType}
-      />
-    </div>
+    </MainLayout>
   );
 }
