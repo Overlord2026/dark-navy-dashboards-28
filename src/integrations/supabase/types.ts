@@ -12550,6 +12550,51 @@ export type Database = {
         }
         Relationships: []
       }
+      professional_onboarding: {
+        Row: {
+          approved_at: string | null
+          created_at: string | null
+          current_step: string | null
+          form_data: Json | null
+          id: string
+          professional_type: string
+          segment: string
+          status: string | null
+          submitted_at: string | null
+          updated_at: string | null
+          uploaded_documents: string[] | null
+          user_id: string
+        }
+        Insert: {
+          approved_at?: string | null
+          created_at?: string | null
+          current_step?: string | null
+          form_data?: Json | null
+          id?: string
+          professional_type: string
+          segment: string
+          status?: string | null
+          submitted_at?: string | null
+          updated_at?: string | null
+          uploaded_documents?: string[] | null
+          user_id: string
+        }
+        Update: {
+          approved_at?: string | null
+          created_at?: string | null
+          current_step?: string | null
+          form_data?: Json | null
+          id?: string
+          professional_type?: string
+          segment?: string
+          status?: string | null
+          submitted_at?: string | null
+          updated_at?: string | null
+          uploaded_documents?: string[] | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       professional_reviews: {
         Row: {
           comment: string | null
@@ -12659,11 +12704,15 @@ export type Database = {
       professionals: {
         Row: {
           accepting_new_clients: boolean | null
+          accepts_referrals: boolean | null
           address: string | null
+          aum_minimums: number | null
           availability: Json | null
           bio: string | null
           certifications: string[] | null
+          client_capacity: number | null
           company: string | null
+          compliance_status: string | null
           created_at: string
           custom_fields: Json | null
           email: string
@@ -12674,15 +12723,22 @@ export type Database = {
           firm: string | null
           id: string
           languages: string[] | null
+          license_states: string[] | null
           location: string | null
+          marketplace_tier: string | null
+          min_client_assets: number | null
           name: string
           notes: string | null
+          onboarding_process: string | null
           phone: string | null
           photo_url: string | null
+          practice_areas: string[] | null
           rating: number | null
           ratings_average: number | null
+          referral_fee_structure: string | null
           reviews_count: number | null
           scheduling_url: string | null
+          segment: string | null
           show_email: boolean | null
           show_phone: boolean | null
           specialties: string[] | null
@@ -12690,6 +12746,7 @@ export type Database = {
           status: string | null
           tenant_id: string
           type: string
+          typical_engagement_fee: string | null
           updated_at: string
           user_id: string
           verified: boolean | null
@@ -12697,11 +12754,15 @@ export type Database = {
         }
         Insert: {
           accepting_new_clients?: boolean | null
+          accepts_referrals?: boolean | null
           address?: string | null
+          aum_minimums?: number | null
           availability?: Json | null
           bio?: string | null
           certifications?: string[] | null
+          client_capacity?: number | null
           company?: string | null
+          compliance_status?: string | null
           created_at?: string
           custom_fields?: Json | null
           email: string
@@ -12712,15 +12773,22 @@ export type Database = {
           firm?: string | null
           id?: string
           languages?: string[] | null
+          license_states?: string[] | null
           location?: string | null
+          marketplace_tier?: string | null
+          min_client_assets?: number | null
           name: string
           notes?: string | null
+          onboarding_process?: string | null
           phone?: string | null
           photo_url?: string | null
+          practice_areas?: string[] | null
           rating?: number | null
           ratings_average?: number | null
+          referral_fee_structure?: string | null
           reviews_count?: number | null
           scheduling_url?: string | null
+          segment?: string | null
           show_email?: boolean | null
           show_phone?: boolean | null
           specialties?: string[] | null
@@ -12728,6 +12796,7 @@ export type Database = {
           status?: string | null
           tenant_id: string
           type?: string
+          typical_engagement_fee?: string | null
           updated_at?: string
           user_id: string
           verified?: boolean | null
@@ -12735,11 +12804,15 @@ export type Database = {
         }
         Update: {
           accepting_new_clients?: boolean | null
+          accepts_referrals?: boolean | null
           address?: string | null
+          aum_minimums?: number | null
           availability?: Json | null
           bio?: string | null
           certifications?: string[] | null
+          client_capacity?: number | null
           company?: string | null
+          compliance_status?: string | null
           created_at?: string
           custom_fields?: Json | null
           email?: string
@@ -12750,15 +12823,22 @@ export type Database = {
           firm?: string | null
           id?: string
           languages?: string[] | null
+          license_states?: string[] | null
           location?: string | null
+          marketplace_tier?: string | null
+          min_client_assets?: number | null
           name?: string
           notes?: string | null
+          onboarding_process?: string | null
           phone?: string | null
           photo_url?: string | null
+          practice_areas?: string[] | null
           rating?: number | null
           ratings_average?: number | null
+          referral_fee_structure?: string | null
           reviews_count?: number | null
           scheduling_url?: string | null
+          segment?: string | null
           show_email?: boolean | null
           show_phone?: boolean | null
           specialties?: string[] | null
@@ -12766,6 +12846,7 @@ export type Database = {
           status?: string | null
           tenant_id?: string
           type?: string
+          typical_engagement_fee?: string | null
           updated_at?: string
           user_id?: string
           verified?: boolean | null
