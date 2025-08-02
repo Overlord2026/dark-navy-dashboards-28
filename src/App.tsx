@@ -46,7 +46,7 @@ import { AdminDashboard } from "./pages/AdminDashboard";
 import CRMDashboard from "./pages/CRMDashboard";
 import { AccountantDashboard } from "./pages/AccountantDashboard";
 import { ConsultantDashboard } from "./pages/ConsultantDashboard";
-import { AttorneyDashboard } from "./pages/AttorneyDashboard";
+// import { AttorneyDashboard } from "./pages/AttorneyDashboard";
 import { CoachDashboard } from "./pages/CoachDashboard";
 import CoachesLanding from "./pages/CoachesLanding";
 import { CoachDashboard as CoachingDashboard } from "@/components/coaching/CoachDashboard";
@@ -356,6 +356,8 @@ const App = () => {
                       </AuthWrapper>
                     }
                   />
+                  {/* Temporarily disabled - Attorney Dashboard */}
+                  {/*
                   <Route
                     path="/attorney-dashboard"
                     element={
@@ -367,6 +369,7 @@ const App = () => {
                       </AuthWrapper>
                     }
                   />
+                  */}
                   <Route
                     path="/coach-dashboard"
                     element={

@@ -8,25 +8,23 @@ import { OnboardingStepData } from '@/types/onboarding';
 interface WelcomeStepProps {
   data: OnboardingStepData;
   onComplete: (stepData: Partial<OnboardingStepData>) => void;
-  onNext: () => void;
-  brandSettings?: {
-    logo?: string;
-    primaryColor?: string;
-    companyName?: string;
-    welcomeMessage?: string;
-  };
+  onNext?: () => void;
+  whiteLabelConfig?: any;
+  referralInfo?: any;
 }
 
 export const WelcomeStep: React.FC<WelcomeStepProps> = ({
   data,
   onComplete,
   onNext,
-  brandSettings
+  whiteLabelConfig,
+  referralInfo
 }) => {
   const handleStartOnboarding = () => {
     const welcomeData = {
       welcome: {
-        brandSettings,
+        brandSettings: whiteLabelConfig,
+        referralInfo,
         startedAt: new Date().toISOString(),
       }
     };
@@ -34,18 +32,18 @@ export const WelcomeStep: React.FC<WelcomeStepProps> = ({
     onComplete(welcomeData);
   };
 
-  const companyName = brandSettings?.companyName || 'Our Firm';
-  const welcomeMessage = brandSettings?.welcomeMessage || 
+  const companyName = whiteLabelConfig?.companyName || 'Our Firm';
+  const welcomeMessage = whiteLabelConfig?.welcomeMessage || 
     `Welcome to ${companyName}! We're excited to help you begin your wealth management journey.`;
 
   return (
     <div className="space-y-8">
       {/* Hero Section */}
       <div className="text-center space-y-4">
-        {brandSettings?.logo && (
+        {whiteLabelConfig?.logoUrl && (
           <div className="flex justify-center mb-6">
             <img 
-              src={brandSettings.logo} 
+              src={whiteLabelConfig.logoUrl} 
               alt={`${companyName} Logo`}
               className="h-16 w-auto"
             />

@@ -64,14 +64,14 @@ export const ClientOnboardingFlow: React.FC<ClientOnboardingFlowProps> = ({
 
   // Dynamic step configuration based on white-label settings
   const defaultSteps = [
-    { id: 'welcome', name: 'Welcome', title: 'Welcome', enabled: true, required: true, order: 0 },
-    { id: 'client-info', name: 'Client Information', title: 'Client Information', enabled: true, required: true, order: 1 },
-    { id: 'custodian', name: 'Custodian Selection', title: 'Custodian Selection', enabled: effectiveBrandConfig.features.multiCustodian, required: true, order: 2 },
-    { id: 'documents', name: 'Document Upload', title: 'Document Upload', enabled: effectiveBrandConfig.features.documentOcr, required: true, order: 3 },
-    { id: 'application', name: 'Digital Application', title: 'Digital Application', enabled: effectiveBrandConfig.features.digitalSignature, required: true, order: 4 },
-    { id: 'tasks', name: 'Task Management', title: 'Task Management', enabled: true, required: false, order: 5 },
-    { id: 'compliance', name: 'Compliance Review', title: 'Compliance Review', enabled: true, required: true, order: 6 },
-    { id: 'confirmation', name: 'Confirmation', title: 'Confirmation', enabled: true, required: true, order: 7 }
+    { id: 'welcome', name: 'Welcome', title: 'Welcome', description: 'Get started with onboarding', enabled: true, required: true, order: 0 },
+    { id: 'client-info', name: 'Client Information', title: 'Client Information', description: 'Basic client details', enabled: true, required: true, order: 1 },
+    { id: 'custodian', name: 'Custodian Selection', title: 'Custodian Selection', description: 'Choose your custodian', enabled: effectiveBrandConfig.features.multiCustodian, required: true, order: 2 },
+    { id: 'documents', name: 'Document Upload', title: 'Document Upload', description: 'Upload required documents', enabled: effectiveBrandConfig.features.documentOcr, required: true, order: 3 },
+    { id: 'application', name: 'Digital Application', title: 'Digital Application', description: 'Digital application submission', enabled: effectiveBrandConfig.features.digitalSignature, required: true, order: 4 },
+    { id: 'tasks', name: 'Task Management', title: 'Task Management', description: 'Review remaining tasks', enabled: true, required: false, order: 5 },
+    { id: 'compliance', name: 'Compliance Review', title: 'Compliance Review', description: 'Compliance verification', enabled: true, required: true, order: 6 },
+    { id: 'confirmation', name: 'Confirmation', title: 'Confirmation', description: 'Complete onboarding', enabled: true, required: true, order: 7 }
   ];
 
   const activeSteps = (customStepsConfig || defaultSteps)
