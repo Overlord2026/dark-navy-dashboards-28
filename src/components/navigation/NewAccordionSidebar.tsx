@@ -27,7 +27,8 @@ import {
   Crown,
   Ellipsis,
   Menu,
-  X
+  X,
+  BuildingIcon
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -35,12 +36,22 @@ import { useResponsive } from '@/hooks/use-responsive.tsx';
 
 // Role-based navigation configuration
 const getNavigationByRole = (role: string, tier?: string): NavItem[] => {
+  // Determine marketplace label based on role
+  const isProfessional = ['advisor', 'accountant', 'consultant', 'attorney'].includes(role);
+  const marketplaceTitle = isProfessional ? 'Marketplace (Pro)' : 'Marketplace';
+  
   const baseNav: NavItem[] = [
     {
       id: 'dashboard',
       title: 'Dashboard',
       href: '/',
       icon: HomeIcon
+    },
+    {
+      id: 'marketplace',
+      title: marketplaceTitle,
+      href: '/marketplace',
+      icon: BuildingIcon
     }
   ];
 
