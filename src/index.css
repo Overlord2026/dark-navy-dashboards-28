@@ -7,26 +7,34 @@
 
 @layer base {
   :root, .dark-theme {
-    --background: 240 22% 9%; /* #12121C */
-    --foreground: 0 0% 89%; /* #E2E2E2 */
+    /* Boutique Palette - Dark Theme */
+    --background: 216 60% 8%; /* Navy #16213E variant */
+    --foreground: 210 22% 96%; /* Platinum #F6F7F9 */
 
-    --card: 240 20% 14%;
-    --card-foreground: 0 0% 89%;
+    --card: 216 55% 12%;
+    --card-foreground: 210 22% 96%;
 
-    --popover: 240 20% 14%;
-    --popover-foreground: 0 0% 89%;
+    --popover: 216 55% 12%;
+    --popover-foreground: 210 22% 96%;
 
-    --primary: 45 75% 55%;
-    --primary-foreground: 240 10% 10%;
+    --primary: 51 100% 50%; /* Gold #FFD700 */
+    --primary-foreground: 216 60% 8%;
 
-    --secondary: 240 20% 20%;
-    --secondary-foreground: 0 0% 89%;
+    --secondary: 216 45% 18%;
+    --secondary-foreground: 210 22% 96%;
 
-    --muted: 240 20% 20%;
-    --muted-foreground: 240 10% 70%;
+    --muted: 216 45% 18%;
+    --muted-foreground: 216 20% 70%;
 
-    --accent: 162 90% 24%;
+    --accent: 174 65% 36%; /* Emerald #20A39E */
     --accent-foreground: 0 0% 98%;
+
+    /* Role-based accent colors */
+    --role-family: 212 55% 35%; /* Sapphire Blue #2C5282 */
+    --role-advisor: 174 65% 36%; /* Emerald Green #20A39E */
+    --role-accountant: 216 35% 36%; /* Slate Blue #384E77 */
+    --role-attorney: 252 48% 58%; /* Deep Purple #6B47DC */
+    --role-admin: 215 28% 10%; /* Black #111820 */
 
     /* Metallic Gold System */
     --gold-primary: 45 75% 55%;
@@ -65,26 +73,34 @@
   }
 
   .light-theme {
-    --background: 48 33% 97%; /* #F9F7E8 */
-    --foreground: 240 10% 13%; /* #222222 */
+    /* Boutique Palette - Light Theme */
+    --background: 210 22% 97%; /* Platinum #F6F7F9 */
+    --foreground: 215 28% 10%; /* Black #111820 */
 
-    --card: 48 30% 95%; /* Light card background */
-    --card-foreground: 240 10% 13%; /* #222222 */
+    --card: 210 22% 95%;
+    --card-foreground: 215 28% 10%;
 
-    --popover: 48 30% 95%;
-    --popover-foreground: 240 10% 13%; /* #222222 */
+    --popover: 210 22% 95%;
+    --popover-foreground: 215 28% 10%;
 
-    --primary: 45 75% 55%; /* Metallic gold primary */
-    --primary-foreground: 240 10% 13%;
+    --primary: 51 100% 50%; /* Gold #FFD700 */
+    --primary-foreground: 215 28% 10%;
 
-    --secondary: 48 30% 90%; /* Light secondary */
-    --secondary-foreground: 240 10% 13%;
+    --secondary: 210 22% 92%;
+    --secondary-foreground: 215 28% 10%;
 
-    --muted: 48 30% 90%;
-    --muted-foreground: 240 10% 40%;
+    --muted: 210 22% 92%;
+    --muted-foreground: 215 28% 40%;
 
-    --accent: 162 90% 24%; /* Money green accent */
+    --accent: 174 65% 36%; /* Emerald #20A39E */
     --accent-foreground: 0 0% 98%;
+
+    /* Role-based accent colors */
+    --role-family: 212 55% 35%; /* Sapphire Blue #2C5282 */
+    --role-advisor: 174 65% 36%; /* Emerald Green #20A39E */
+    --role-accountant: 216 35% 36%; /* Slate Blue #384E77 */
+    --role-attorney: 252 48% 58%; /* Deep Purple #6B47DC */
+    --role-admin: 215 28% 10%; /* Black #111820 */
 
     /* Metallic Gold System */
     --gold-primary: 45 75% 55%;

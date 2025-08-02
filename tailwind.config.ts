@@ -63,6 +63,13 @@ export default {
           light: "hsl(var(--gold-light))",
           dark: "hsl(var(--gold-dark))",
         },
+        role: {
+          family: "hsl(var(--role-family))",
+          advisor: "hsl(var(--role-advisor))",
+          accountant: "hsl(var(--role-accountant))",
+          attorney: "hsl(var(--role-attorney))",
+          admin: "hsl(var(--role-admin))",
+        },
       },
       borderRadius: {
         lg: `var(--radius)`,

@@ -71,6 +71,8 @@ import { QATestDashboard } from "./pages/QATestDashboard";
 import MarketplacePage from "./pages/MarketplacePage";
 import ProductDetailsPage from "./pages/ProductDetailsPage";
 import MarketplaceAdminPage from "./pages/MarketplaceAdminPage";
+import ConsultationBookingPage from "./pages/marketplace/ConsultationBookingPage";
+import ProfessionalProfilePage from "./pages/marketplace/ProfessionalProfilePage";
 import CompliancePage from "./pages/CompliancePage";
 import PortfolioPage from "./pages/PortfolioPage";
 import GoalsDashboard from "./pages/GoalsDashboard";
