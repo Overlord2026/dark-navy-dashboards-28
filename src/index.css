@@ -210,13 +210,186 @@
     @apply bg-card/90 backdrop-blur-lg border border-border/30 shadow-xl;
   }
   
-  /* Boutique Dashboard Cards */
+  /* Boutique Content Boxes - White/Platinum with subtle shadow & accent border */
+  .content-box {
+    @apply bg-background rounded-xl p-6 shadow-lg border border-border/30;
+    box-shadow: 0 4px 20px -4px hsl(var(--foreground) / 0.1);
+  }
+  
+  .content-box-family {
+    @apply content-box border-l-4 border-role-family;
+  }
+  
+  .content-box-advisor {
+    @apply content-box border-l-4 border-role-advisor;
+  }
+  
+  .content-box-accountant {
+    @apply content-box border-l-4 border-role-accountant;
+  }
+  
+  .content-box-attorney {
+    @apply content-box border-l-4 border-role-attorney;
+  }
+  
+  .content-box-admin {
+    @apply content-box border-l-4 border-role-admin;
+  }
+  
+  /* Primary Buttons - Gold on Navy/Sapphire */
+  .btn-primary-gold {
+    @apply bg-primary text-primary-foreground font-semibold px-6 py-3 rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl;
+    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--gold-premium)));
+    box-shadow: 0 4px 16px hsl(var(--primary) / 0.3);
+  }
+  
+  .btn-primary-gold:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px hsl(var(--primary) / 0.4);
+  }
+  
+  .btn-primary-navy {
+    @apply font-semibold px-6 py-3 rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl;
+    background: hsl(216 60% 8%); /* Navy */
+    color: hsl(var(--primary)); /* Gold text */
+    border: 1px solid hsl(var(--primary) / 0.3);
+  }
+  
+  .btn-primary-navy:hover {
+    background: hsl(216 55% 12%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px hsl(var(--primary) / 0.3);
+  }
+  
+  .btn-primary-sapphire {
+    @apply font-semibold px-6 py-3 rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl;
+    background: hsl(var(--role-family)); /* Sapphire */
+    color: hsl(var(--primary)); /* Gold text */
+  }
+  
+  .btn-primary-sapphire:hover {
+    background: hsl(212 60% 40%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px hsl(var(--role-family) / 0.4);
+  }
+  
+  /* Navigation Tabs with Accent Color Underline */
+  .nav-tab {
+    @apply relative px-4 py-2 text-sm font-medium transition-all duration-300 cursor-pointer;
+    font-family: 'Inter', sans-serif;
+  }
+  
+  .nav-tab::after {
+    @apply absolute bottom-0 left-0 w-full h-0.5 bg-transparent transition-all duration-300;
+    content: '';
+    transform: scaleX(0);
+    transform-origin: right;
+  }
+  
+  .nav-tab.active-family::after {
+    @apply bg-role-family;
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+  
+  .nav-tab.active-advisor::after {
+    @apply bg-role-advisor;
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+  
+  .nav-tab.active-accountant::after {
+    @apply bg-role-accountant;
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+  
+  .nav-tab.active-attorney::after {
+    @apply bg-role-attorney;
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+  
+  .nav-tab.active-admin::after {
+    @apply bg-role-admin;
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+  
+  .nav-tab:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+  
+  /* Headers - Playfair Display, 700 weight, navy or role accent */
+  .header-boutique {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 700;
+    color: hsl(216 60% 8%); /* Navy */
+    letter-spacing: -0.02em;
+  }
+  
+  .header-family {
+    @apply header-boutique text-role-family;
+  }
+  
+  .header-advisor {
+    @apply header-boutique text-role-advisor;
+  }
+  
+  .header-accountant {
+    @apply header-boutique text-role-accountant;
+  }
+  
+  .header-attorney {
+    @apply header-boutique text-role-attorney;
+  }
+  
+  .header-admin {
+    @apply header-boutique text-role-admin;
+  }
+  
+  /* Sidebar - Navy background, active role accent border */
+  .sidebar-boutique {
+    background: hsl(216 60% 8%); /* Navy */
+    border-right: 1px solid hsl(216 35% 20%);
+  }
+  
+  .sidebar-item {
+    @apply flex items-center gap-3 px-4 py-3 rounded-lg mx-2 transition-all duration-300 text-white/70 hover:text-white;
+  }
+  
+  .sidebar-item:hover {
+    background: hsl(216 55% 12%);
+  }
+  
+  .sidebar-item.active-family {
+    @apply text-white border-r-4 border-role-family bg-role-family/10;
+  }
+  
+  .sidebar-item.active-advisor {
+    @apply text-white border-r-4 border-role-advisor bg-role-advisor/10;
+  }
+  
+  .sidebar-item.active-accountant {
+    @apply text-white border-r-4 border-role-accountant bg-role-accountant/10;
+  }
+  
+  .sidebar-item.active-attorney {
+    @apply text-white border-r-4 border-role-attorney bg-role-attorney/10;
+  }
+  
+  .sidebar-item.active-admin {
+    @apply text-white border-r-4 border-role-admin bg-role-admin/10;
+  }
+  
+  /* Dashboard Cards */
   .dashboard-card {
-    @apply bg-card rounded-xl p-6 border border-border/50 transition-all duration-500 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5;
+    @apply content-box hover:shadow-xl transition-all duration-300;
   }
   
   .dashboard-card-premium {
-    @apply bg-card rounded-xl p-6 border-2 transition-all duration-500 shadow-2xl;
+    @apply content-box border-2 transition-all duration-500 shadow-2xl;
     border-image: var(--gradient-gold) 1;
     box-shadow: 0 8px 32px -4px hsl(var(--gold-primary) / 0.15);
   }
@@ -268,7 +441,7 @@
   /* Typography Utilities */
   .text-boutique-heading {
     font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
-    font-weight: 600;
+    font-weight: 700;
     letter-spacing: -0.02em;
   }
   
@@ -276,32 +449,6 @@
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-weight: 400;
     letter-spacing: -0.01em;
-  }
-  
-  /* Button Styles */
-  .btn-boutique-primary {
-    @apply bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg transition-all duration-300;
-    box-shadow: 0 4px 16px hsl(var(--primary) / 0.3);
-  }
-  
-  .btn-boutique-secondary {
-    @apply bg-secondary hover:bg-secondary/90 text-secondary-foreground border border-border/50 transition-all duration-300;
-  }
-  
-  /* Sidebar Enhancements */
-  .sidebar-boutique {
-    @apply bg-sidebar-background border-r border-sidebar-border/50;
-    backdrop-filter: blur(20px);
-  }
-  
-  /* Role Transition Animation */
-  .role-transition {
-    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  
-  /* WCAG Compliant Focus States */
-  .focus-boutique {
-    @apply focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background;
   }
   
   .text-balance {
