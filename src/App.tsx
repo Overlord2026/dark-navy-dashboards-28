@@ -97,6 +97,7 @@ import { ProposalWizard } from "./pages/advisor/ProposalWizard";
 import { ProposalList } from "./pages/advisor/ProposalList";
 import { AnnuitiesPage } from "./pages/AnnuitiesPage";
 import { EducationCenter } from "./components/annuities/EducationCenter";
+import { EducationAdminUpload } from "./components/education/admin/EducationAdminUpload";
 import { ProductComparison } from "./components/annuities/ProductComparison";
 import { ContractAnalyzer } from "./components/annuities/ContractAnalyzer";
 import { AnnuityCalculators } from "./components/annuities/calculators/AnnuityCalculators";
