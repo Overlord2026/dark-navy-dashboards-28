@@ -3,12 +3,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { DatePickerWithRange } from '@/components/ui/date-range-picker';
-import { Plus, Download, Upload, FileText, TrendingUp, DollarSign, Users, Target } from 'lucide-react';
+import { Plus, Download, Upload, FileText, TrendingUp, DollarSign, Users, Target, Award } from 'lucide-react';
 import { useRealROIData } from '@/hooks/useRealROIData';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { toast } from 'sonner';
 import { addDays, format } from 'date-fns';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line, FunnelChart, Funnel, LabelList, Cell } from 'recharts';
+import confetti from 'canvas-confetti';
 
 interface DateRange {
   from?: Date;
@@ -30,14 +31,72 @@ export default function AdvisorROIDashboard() {
   const [csvFile, setCsvFile] = useState<File | null>(null);
   const [csvType, setCsvType] = useState<'leads' | 'adSpend'>('leads');
   const [showImportDialog, setShowImportDialog] = useState(false);
+  const [previousMetrics, setPreviousMetrics] = useState<any>(null);
   
   const { loading, getROIMetrics, createLead, createCampaign, importLeadsFromCSV, importAdSpendFromCSV } = useRealROIData();
+
+  // Check for ROI milestones and trigger celebrations
+  const checkROIMilestones = (newMetrics: any, oldMetrics: any) => {
+    if (!oldMetrics || !newMetrics) return;
+
+    const roi = ((newMetrics.totalRevenue - newMetrics.totalSpend) / Math.max(newMetrics.totalSpend, 1)) * 100;
+    const oldROI = ((oldMetrics.totalRevenue - oldMetrics.totalSpend) / Math.max(oldMetrics.totalSpend, 1)) * 100;
+
+    // ROI Milestones
+    const roiMilestones = [100, 200, 300, 500, 1000];
+    const reachedMilestone = roiMilestones.find(milestone => 
+      roi >= milestone && oldROI < milestone
+    );
+
+    if (reachedMilestone) {
+      // Trigger celebration confetti
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        colors: ['#FFC700', '#00D2FF', '#34C759'],
+        origin: { y: 0.6 }
+      });
+
+      toast(`🎉 ROI Milestone Achieved!`, {
+        description: `You've reached ${reachedMilestone}% ROI! Outstanding performance!`,
+        duration: 5000,
+      });
+    }
+
+    // Lead milestones
+    if (newMetrics.totalLeads >= 100 && oldMetrics.totalLeads < 100) {
+      confetti({
+        particleCount: 50,
+        spread: 60,
+        colors: ['#00D2FF', '#FFFFFF'],
+        origin: { y: 0.6 }
+      });
+      toast(`🎯 100 Leads Milestone!`, {
+        description: `You've generated 100+ leads! Keep up the great work!`,
+      });
+    }
+
+    // Revenue milestones
+    if (newMetrics.totalRevenue >= 1000000 && oldMetrics.totalRevenue < 1000000) {
+      confetti({
+        particleCount: 150,
+        spread: 80,
+        colors: ['#FFC700', '#34C759', '#FFFFFF'],
+        origin: { y: 0.6 }
+      });
+      toast(`💰 $1M Revenue Milestone!`, {
+        description: `You've reached $1 million in revenue! Incredible achievement!`,
+      });
+    }
+  };
 
   // Fetch data on mount and when filters change
   useEffect(() => {
     const fetchData = async () => {
       try {
         const data = await getROIMetrics(dateRange);
+        checkROIMilestones(data, metrics);
+        setPreviousMetrics(metrics);
         setMetrics(data);
       } catch (error) {
         console.error('Error fetching ROI data:', error);
@@ -113,8 +172,10 @@ export default function AdvisorROIDashboard() {
         await importAdSpendFromCSV(data);
       }
 
-      // Refresh data
+      // Refresh data and check for milestones
       const refreshedData = await getROIMetrics(dateRange);
+      checkROIMilestones(refreshedData, metrics);
+      setPreviousMetrics(metrics);
       setMetrics(refreshedData);
       setShowImportDialog(false);
       setCsvFile(null);
@@ -214,6 +275,24 @@ export default function AdvisorROIDashboard() {
             </CardContent>
           </Card>
 
+          {/* ROI Milestone Display */}
+          {filteredMetrics && (
+            <Card className="mb-6 bg-gradient-to-r from-accent-gold/20 to-accent-aqua/20 border-accent-gold">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-xl font-bold text-white mb-2">ROI Performance</h3>
+                    <p className="text-3xl font-black text-accent-gold">
+                      {(((filteredMetrics.totalRevenue - filteredMetrics.totalSpend) / Math.max(filteredMetrics.totalSpend, 1)) * 100).toFixed(1)}%
+                    </p>
+                    <p className="text-text-secondary">Current Return on Investment</p>
+                  </div>
+                  <Award className="h-12 w-12 text-accent-gold" />
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
           {/* Summary Metrics */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
             <Card className="bg-card border-border-primary">
@@ -253,7 +332,7 @@ export default function AdvisorROIDashboard() {
                       ${(filteredMetrics?.costPerLead || 0).toFixed(2)}
                     </p>
                   </div>
-                  <Target className="h-8 w-8 text-yellow-500" />
+                  <Target className="h-8 w-8 text-accent-gold" />
                 </div>
               </CardContent>
             </Card>
@@ -267,7 +346,7 @@ export default function AdvisorROIDashboard() {
                       {(filteredMetrics?.conversionRate || 0).toFixed(1)}%
                     </p>
                   </div>
-                  <TrendingUp className="h-8 w-8 text-emerald-500" />
+                  <TrendingUp className="h-8 w-8 text-accent-emerald" />
                 </div>
               </CardContent>
             </Card>
@@ -281,7 +360,7 @@ export default function AdvisorROIDashboard() {
                       ${(filteredMetrics?.totalRevenue || 0).toLocaleString()}
                     </p>
                   </div>
-                  <DollarSign className="h-8 w-8 text-green-500" />
+                  <DollarSign className="h-8 w-8 text-accent-emerald" />
                 </div>
               </CardContent>
             </Card>
@@ -310,8 +389,8 @@ export default function AdvisorROIDashboard() {
                         }} 
                       />
                       <Legend />
-                      <Bar dataKey="count" name="Leads" fill="#00D2FF" />
-                      <Bar dataKey="spend" name="Spend ($)" fill="#FFC700" />
+                      <Bar dataKey="count" name="Leads" fill="hsl(var(--accent-aqua))" />
+                      <Bar dataKey="spend" name="Spend ($)" fill="hsl(var(--accent-gold))" />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
@@ -342,7 +421,7 @@ export default function AdvisorROIDashboard() {
                           name === 'count' ? 'Count' : 'Conversion Rate'
                         ]}
                       />
-                      <Bar dataKey="count" fill="#34C759" />
+                      <Bar dataKey="count" fill="hsl(var(--accent-emerald))" />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
@@ -381,7 +460,7 @@ export default function AdvisorROIDashboard() {
                       yAxisId="left" 
                       type="monotone" 
                       dataKey="leads" 
-                      stroke="#00D2FF" 
+                      stroke="hsl(var(--accent-aqua))" 
                       strokeWidth={3}
                       name="Leads"
                     />
@@ -389,7 +468,7 @@ export default function AdvisorROIDashboard() {
                       yAxisId="right" 
                       type="monotone" 
                       dataKey="spend" 
-                      stroke="#FFC700" 
+                      stroke="hsl(var(--accent-gold))" 
                       strokeWidth={3}
                       name="Ad Spend ($)"
                     />
