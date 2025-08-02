@@ -1,5 +1,5 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -36,40 +36,41 @@
     --role-attorney: 252 48% 58%; /* Deep Purple #6B47DC */
     --role-admin: 215 28% 10%; /* Black #111820 */
 
-    /* Metallic Gold System */
-    --gold-primary: 45 75% 55%;
-    --gold-premium: 42 85% 45%;
-    --gold-light: 48 65% 70%;
-    --gold-dark: 38 90% 35%;
+    /* Boutique Gold System */
+    --gold-primary: 51 100% 50%; /* Pure Gold #FFD700 */
+    --gold-premium: 45 85% 47%; /* Rich Gold */
+    --gold-light: 51 88% 63%; /* Light Gold */
+    --gold-dark: 45 100% 35%; /* Dark Gold */
     
-    /* Metallic Gradients */
-    --gradient-gold: linear-gradient(135deg, hsl(45 75% 55%), hsl(42 85% 45%));
-    --gradient-premium: linear-gradient(135deg, hsl(42 85% 45%), hsl(38 90% 35%));
-    --gradient-shine: linear-gradient(135deg, hsl(48 65% 70%), hsl(45 75% 55%), hsl(42 85% 45%));
+    /* Boutique Gradients */
+    --gradient-gold: linear-gradient(135deg, hsl(51 100% 50%), hsl(45 85% 47%));
+    --gradient-premium: linear-gradient(135deg, hsl(45 85% 47%), hsl(45 100% 35%));
+    --gradient-role: linear-gradient(135deg, hsl(var(--role-family)), hsl(var(--role-advisor)));
+    --gradient-ultra: linear-gradient(135deg, hsl(215 28% 10%), hsl(51 100% 50%));
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 240 20% 20%;
-    --input: 240 20% 20%;
-    --ring: 45 100% 50%;
+    --border: 216 35% 20%; /* Darker navy border */
+    --input: 216 35% 20%;
+    --ring: 51 100% 50%; /* Gold ring */
 
-    --radius: 0.5rem;
+    --radius: 0.75rem; /* Slightly more rounded for boutique feel */
 
-    --sidebar-background: 240 30% 15%; /* #1B1B32 */
-    --sidebar-foreground: 0 0% 89%; /* #E2E2E2 */
-    --sidebar-primary: 45 75% 55%;
-    --sidebar-primary-foreground: 240 10% 10%;
-    --sidebar-accent: 240 20% 20%;
-    --sidebar-accent-foreground: 45 75% 55%;
-    --sidebar-border: 240 20% 20%;
-    --sidebar-ring: 45 75% 55%;
+    --sidebar-background: 216 55% 12%; /* Deep navy sidebar */
+    --sidebar-foreground: 210 22% 96%;
+    --sidebar-primary: 51 100% 50%;
+    --sidebar-primary-foreground: 216 60% 8%;
+    --sidebar-accent: 216 45% 18%;
+    --sidebar-accent-foreground: 51 100% 50%;
+    --sidebar-border: 216 35% 20%;
+    --sidebar-ring: 51 100% 50%;
 
-    --success: 142 76% 36%;
+    --success: 174 65% 36%; /* Emerald green */
     --success-foreground: 0 0% 98%;
     
-    --warning: 38 90% 35%;
-    --warning-foreground: 48 65% 95%;
+    --warning: 45 85% 47%; /* Gold warning */
+    --warning-foreground: 216 60% 8%;
   }
 
   .light-theme {
@@ -102,40 +103,41 @@
     --role-attorney: 252 48% 58%; /* Deep Purple #6B47DC */
     --role-admin: 215 28% 10%; /* Black #111820 */
 
-    /* Metallic Gold System */
-    --gold-primary: 45 75% 55%;
-    --gold-premium: 42 85% 45%;
-    --gold-light: 48 65% 70%;
-    --gold-dark: 38 90% 35%;
+    /* Boutique Gold System - Light Theme */
+    --gold-primary: 51 100% 50%;
+    --gold-premium: 45 85% 47%;
+    --gold-light: 51 88% 63%;
+    --gold-dark: 45 100% 35%;
     
-    /* Metallic Gradients */
-    --gradient-gold: linear-gradient(135deg, hsl(45 75% 55%), hsl(42 85% 45%));
-    --gradient-premium: linear-gradient(135deg, hsl(42 85% 45%), hsl(38 90% 35%));
-    --gradient-shine: linear-gradient(135deg, hsl(48 65% 70%), hsl(45 75% 55%), hsl(42 85% 45%));
+    /* Boutique Gradients - Light Theme */
+    --gradient-gold: linear-gradient(135deg, hsl(51 100% 50%), hsl(45 85% 47%));
+    --gradient-premium: linear-gradient(135deg, hsl(45 85% 47%), hsl(45 100% 35%));
+    --gradient-role: linear-gradient(135deg, hsl(var(--role-family)), hsl(var(--role-advisor)));
+    --gradient-ultra: linear-gradient(135deg, hsl(215 28% 10%), hsl(51 100% 50%));
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 48 30% 86%; /* Light border #DCD8C0 */
-    --input: 48 30% 86%;
-    --ring: 45 70% 50%;
+    --border: 216 25% 85%; /* Light platinum border */
+    --input: 216 25% 85%;
+    --ring: 51 100% 50%; /* Gold ring */
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
-    --sidebar-background: 48 33% 97%; /* Light sidebar #F9F7E8 */
-    --sidebar-foreground: 240 10% 13%; /* Dark text #222222 */
-    --sidebar-primary: 45 75% 55%;
-    --sidebar-primary-foreground: 240 10% 13%;
-    --sidebar-accent: 48 30% 90%; /* Light sidebar accent */
-    --sidebar-accent-foreground: 240 10% 13%; /* Dark text on accent */
-    --sidebar-border: 48 30% 86%; /* Light border */
-    --sidebar-ring: 45 75% 55%;
+    --sidebar-background: 210 22% 97%; /* Platinum sidebar */
+    --sidebar-foreground: 215 28% 10%;
+    --sidebar-primary: 51 100% 50%;
+    --sidebar-primary-foreground: 215 28% 10%;
+    --sidebar-accent: 210 22% 92%;
+    --sidebar-accent-foreground: 215 28% 10%;
+    --sidebar-border: 216 25% 85%;
+    --sidebar-ring: 51 100% 50%;
 
-    --success: 142 76% 36%;
+    --success: 174 65% 36%;
     --success-foreground: 0 0% 98%;
     
-    --warning: 38 90% 35%;
-    --warning-foreground: 48 65% 95%;
+    --warning: 45 85% 47%;
+    --warning-foreground: 215 28% 10%;
   }
 }
 
@@ -146,13 +148,14 @@
 
   html, body, #root {
     @apply h-full w-full overflow-x-hidden;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
 
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
     font-size: 16px;
+    background-color: hsl(var(--background));
   }
 
   body.light-theme {
@@ -166,157 +169,193 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply text-foreground font-medium tracking-tight font-sans;
+    @apply text-foreground font-medium tracking-tight;
+    font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+    font-weight: 500;
   }
 
-  p, span, li, div {
-    @apply text-foreground font-sans;
+  p, span, li, div, button, input, textarea, label {
+    @apply text-foreground;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
 
   h1 {
-    @apply text-2xl sm:text-[24px];
+    @apply text-3xl sm:text-4xl;
+    font-weight: 600;
   }
 
   h2 {
-    @apply text-xl sm:text-2xl;
+    @apply text-2xl sm:text-3xl;
+    font-weight: 500;
   }
 
   h3 {
-    @apply text-lg sm:text-xl;
+    @apply text-xl sm:text-2xl;
+    font-weight: 500;
   }
 
   h4 {
-    @apply text-base sm:text-lg;
+    @apply text-lg sm:text-xl;
+    font-weight: 500;
   }
 }
 
 @layer utilities {
+  /* Boutique Glass Effects */
   .glass {
-    @apply bg-white/5 backdrop-blur-md border border-white/10 shadow-lg;
+    @apply bg-background/80 backdrop-blur-xl border border-border/50 shadow-2xl;
   }
   
+  .glass-card {
+    @apply bg-card/90 backdrop-blur-lg border border-border/30 shadow-xl;
+  }
+  
+  /* Boutique Dashboard Cards */
   .dashboard-card {
-    @apply bg-card rounded-lg p-6 border border-border/50 transition-all duration-300 hover:border-accent/30 hover:shadow-md hover:shadow-accent/5;
+    @apply bg-card rounded-xl p-6 border border-border/50 transition-all duration-500 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5;
   }
   
   .dashboard-card-premium {
-    @apply bg-card rounded-lg p-6 border transition-all duration-300 shadow-lg;
-    border-image: linear-gradient(135deg, hsl(var(--gold-light)), hsl(var(--gold-primary))) 1;
-    box-shadow: 0 4px 20px -2px hsl(var(--gold-primary) / 0.1);
+    @apply bg-card rounded-xl p-6 border-2 transition-all duration-500 shadow-2xl;
+    border-image: var(--gradient-gold) 1;
+    box-shadow: 0 8px 32px -4px hsl(var(--gold-primary) / 0.15);
   }
   
+  /* Role-Based Styling */
+  .role-family {
+    @apply border-l-4 border-role-family;
+    box-shadow: 0 4px 20px -2px hsl(var(--role-family) / 0.1);
+  }
+  
+  .role-advisor {
+    @apply border-l-4 border-role-advisor;
+    box-shadow: 0 4px 20px -2px hsl(var(--role-advisor) / 0.1);
+  }
+  
+  .role-accountant {
+    @apply border-l-4 border-role-accountant;
+    box-shadow: 0 4px 20px -2px hsl(var(--role-accountant) / 0.1);
+  }
+  
+  .role-attorney {
+    @apply border-l-4 border-role-attorney;
+    box-shadow: 0 4px 20px -2px hsl(var(--role-attorney) / 0.1);
+  }
+  
+  .role-admin {
+    @apply border-l-4 border-role-admin;
+    box-shadow: 0 4px 20px -2px hsl(var(--role-admin) / 0.1);
+  }
+  
+  /* Boutique Effects */
   .premium-glow {
-    box-shadow: 0 0 20px hsl(var(--gold-light) / 0.4), 0 0 40px hsl(var(--gold-primary) / 0.2);
+    box-shadow: 0 0 30px hsl(var(--gold-light) / 0.4), 0 0 60px hsl(var(--gold-primary) / 0.2);
   }
   
-  .metallic-gradient {
+  .ultra-glow {
+    background: var(--gradient-ultra);
+    box-shadow: 0 0 40px hsl(var(--gold-primary) / 0.6), 0 0 80px hsl(215 28% 10% / 0.4);
+  }
+  
+  .boutique-gradient {
     background: var(--gradient-gold);
   }
   
-  .premium-gradient {
-    background: var(--gradient-premium);
+  .role-gradient {
+    background: var(--gradient-role);
   }
   
-  .dashboard-card-header {
-    @apply flex items-center justify-between mb-4;
+  /* Typography Utilities */
+  .text-boutique-heading {
+    font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+    font-weight: 600;
+    letter-spacing: -0.02em;
   }
   
-  .dashboard-card-title {
-    @apply text-lg font-medium text-foreground;
+  .text-boutique-body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+  
+  /* Button Styles */
+  .btn-boutique-primary {
+    @apply bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg transition-all duration-300;
+    box-shadow: 0 4px 16px hsl(var(--primary) / 0.3);
+  }
+  
+  .btn-boutique-secondary {
+    @apply bg-secondary hover:bg-secondary/90 text-secondary-foreground border border-border/50 transition-all duration-300;
+  }
+  
+  /* Sidebar Enhancements */
+  .sidebar-boutique {
+    @apply bg-sidebar-background border-r border-sidebar-border/50;
+    backdrop-filter: blur(20px);
+  }
+  
+  /* Role Transition Animation */
+  .role-transition {
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* WCAG Compliant Focus States */
+  .focus-boutique {
+    @apply focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background;
   }
   
   .text-balance {
     text-wrap: balance;
   }
 
-  /* Light theme specific overrides */
+  /* Enhanced Theme-Specific Overrides */
   .light-theme .dialog-content,
   .light-theme .popover-content,
   .light-theme .select-content,
   .light-theme .dropdown-content {
-    @apply bg-background text-foreground border-border;
+    @apply bg-background text-foreground border-border shadow-2xl;
+    backdrop-filter: blur(20px);
   }
   
   .dark-theme .dialog-content,
   .dark-theme .popover-content,
   .dark-theme .select-content,
   .dark-theme .dropdown-content {
-    @apply bg-background text-foreground border-border;
+    @apply bg-background text-foreground border-border shadow-2xl;
+    backdrop-filter: blur(20px);
   }
   
-  /* Sidebar theming */
+  /* Enhanced Sidebar Theming */
   .light-theme aside,
   .light-theme [data-sidebar="sidebar"] {
-    background-color: hsl(var(--sidebar-background));
-    color: hsl(var(--sidebar-foreground));
-    border-color: hsl(var(--sidebar-border));
+    background: linear-gradient(180deg, hsl(var(--sidebar-background)), hsl(var(--sidebar-background) / 0.95));
+    backdrop-filter: blur(20px);
+    border-right: 1px solid hsl(var(--sidebar-border));
   }
   
   .dark-theme aside,
   .dark-theme [data-sidebar="sidebar"] {
-    background-color: hsl(var(--sidebar-background));
-    color: hsl(var(--sidebar-foreground));
-    border-color: hsl(var(--sidebar-border));
+    background: linear-gradient(180deg, hsl(var(--sidebar-background)), hsl(var(--sidebar-background) / 0.95));
+    backdrop-filter: blur(20px);
+    border-right: 1px solid hsl(var(--sidebar-border));
   }
   
-  .light-theme [data-sidebar="menu-button"] {
-    color: hsl(var(--sidebar-foreground));
-  }
-  
-  .light-theme [data-sidebar="menu-button"]:hover {
-    background-color: hsl(var(--sidebar-accent));
-    color: hsl(var(--sidebar-accent-foreground));
-  }
-  
-  .light-theme [data-sidebar="menu-button"][data-active="true"] {
-    background-color: hsl(var(--sidebar-accent));
-    color: hsl(var(--sidebar-accent-foreground));
-  }
-  
+  /* Enhanced Menu Button States */
+  .light-theme [data-sidebar="menu-button"],
   .dark-theme [data-sidebar="menu-button"] {
-    color: hsl(var(--sidebar-foreground));
+    @apply transition-all duration-300 rounded-lg;
   }
   
+  .light-theme [data-sidebar="menu-button"]:hover,
   .dark-theme [data-sidebar="menu-button"]:hover {
-    background-color: hsl(var(--sidebar-accent));
-    color: hsl(var(--sidebar-accent-foreground));
+    @apply transform scale-105;
+    box-shadow: 0 4px 12px hsl(var(--sidebar-accent) / 0.3);
   }
   
+  .light-theme [data-sidebar="menu-button"][data-active="true"],
   .dark-theme [data-sidebar="menu-button"][data-active="true"] {
-    background-color: hsl(var(--sidebar-accent));
-    color: hsl(var(--sidebar-accent-foreground));
-  }
-  
-  .animate-slide-in-right {
-    animation: slideInRight 0.3s ease-out forwards;
-  }
-  
-  .animate-slide-out-right {
-    animation: slideOutRight 0.3s ease-out forwards;
-  }
-  
-  @keyframes slideInRight {
-    from {
-      transform: translateX(100%);
-      opacity: 0;
-    }
-    to {
-      transform: translateX(0);
-      opacity: 1;
-    }
-  }
-  
-  /* Account type dialog animations */
-  .animate-fade-in {
-    animation: fadeIn 0.4s ease-out forwards;
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  
-  @keyframes fadeIn {
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    background: var(--gradient-gold);
+    color: hsl(var(--primary-foreground));
+    box-shadow: 0 4px 16px hsl(var(--primary) / 0.4);
   }
 }

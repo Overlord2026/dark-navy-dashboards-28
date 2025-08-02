@@ -77,7 +77,10 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        sans: ["var(--font-sans)", ...fontFamily.sans],
+        sans: ["Inter", "var(--font-sans)", ...fontFamily.sans],
+        serif: ["Playfair Display", "Georgia", "Times New Roman", "serif"],
+        boutique: ["Playfair Display", "Georgia", "serif"],
+        body: ["Inter", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"],
       },
       keyframes: {
         "accordion-down": {
@@ -96,12 +99,27 @@ export default {
           from: { height: "var(--radix-collapsible-content-height)" },
           to: { height: "0" },
         },
+        "role-transition": {
+          "0%": { opacity: "0", transform: "scale(0.95) translateY(10px)" },
+          "100%": { opacity: "1", transform: "scale(1) translateY(0)" },
+        },
+        "boutique-glow": {
+          "0%, 100%": { boxShadow: "0 0 20px hsl(var(--gold-primary) / 0.3)" },
+          "50%": { boxShadow: "0 0 40px hsl(var(--gold-primary) / 0.6)" },
+        },
+        "ultra-pulse": {
+          "0%, 100%": { boxShadow: "0 0 30px hsl(var(--gold-primary) / 0.4)" },
+          "50%": { boxShadow: "0 0 60px hsl(var(--gold-primary) / 0.8)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "collapsible-down": "collapsible-down 0.2s ease-out",
         "collapsible-up": "collapsible-up 0.2s ease-out",
+        "role-transition": "role-transition 0.8s cubic-bezier(0.4, 0, 0.2, 1)",
+        "boutique-glow": "boutique-glow 3s ease-in-out infinite",
+        "ultra-pulse": "ultra-pulse 2s ease-in-out infinite",
       },
     },
   },
