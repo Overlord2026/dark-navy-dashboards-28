@@ -38,11 +38,7 @@ export const AgencyReviews: React.FC<AgencyReviewsProps> = ({ agencyId }) => {
       const { data, error } = await supabase
         .from('agency_reviews')
         .select(`
-          *,
-          profiles:advisor_id (
-            first_name,
-            last_name
-          )
+          *
         `)
         .eq('agency_id', agencyId)
         .order('created_at', { ascending: false });
@@ -56,9 +52,7 @@ export const AgencyReviews: React.FC<AgencyReviewsProps> = ({ agencyId }) => {
         response_text: review.response_text,
         responded_at: review.responded_at,
         created_at: review.created_at,
-        advisor_name: review.profiles ? 
-          `${review.profiles.first_name || ''} ${review.profiles.last_name || ''}`.trim() || 'Anonymous' 
-          : 'Anonymous'
+        advisor_name: 'Anonymous Advisor'
       }));
 
       setReviews(transformedReviews);
