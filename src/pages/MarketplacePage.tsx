@@ -29,6 +29,7 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { ProfessionalDirectory } from '@/components/marketplace/ProfessionalDirectory';
+import { MarketplaceEducationalResources } from '@/components/marketplace/MarketplaceEducationalResources';
 
 export default function MarketplacePage() {
   const navigate = useNavigate();
@@ -231,35 +232,6 @@ export default function MarketplacePage() {
     }
   ];
 
-  const marketplaceResources = [
-    {
-      id: '1',
-      title: 'Family Office Setup Guide',
-      type: 'Guide',
-      description: 'Complete guide to establishing your family office',
-      icon: FileText,
-      readTime: '15 min read',
-      downloads: 2847
-    },
-    {
-      id: '2',
-      title: 'Estate Planning Case Study',
-      type: 'Case Study',
-      description: 'Real-world example of multi-generational planning',
-      icon: BookOpen,
-      readTime: '8 min read',
-      downloads: 1924
-    },
-    {
-      id: '3',
-      title: 'Tax Strategy Webinar',
-      type: 'Video',
-      description: 'Advanced tax strategies for HNW families',
-      icon: Play,
-      readTime: '45 min',
-      downloads: 3156
-    }
-  ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30">
@@ -340,53 +312,9 @@ export default function MarketplacePage() {
             </div>
           </TabsContent>
 
-          {/* Marketplace Resources Tab */}
+          {/* Educational Resources Tab */}
           <TabsContent value="resources" className="space-y-8">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold mb-4">Marketplace Resources</h2>
-              <p className="text-muted-foreground max-w-2xl mx-auto">
-                Access guides, case studies, and educational videos to help you make informed decisions
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {marketplaceResources.map((resource) => (
-                <Card 
-                  key={resource.id}
-                  className="cursor-pointer hover-scale transition-all duration-200 border-border/50"
-                >
-                  <CardContent className="p-6">
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between">
-                        <Badge variant="outline" className="text-xs">
-                          {resource.type}
-                        </Badge>
-                        <resource.icon className="w-5 h-5 text-muted-foreground" />
-                      </div>
-                      
-                      <div>
-                        <h3 className="font-bold mb-2">{resource.title}</h3>
-                        <p className="text-sm text-muted-foreground">{resource.description}</p>
-                      </div>
-                      
-                      <div className="flex items-center justify-between pt-2 border-t border-border/50">
-                        <span className="text-xs text-muted-foreground">{resource.readTime}</span>
-                        <div className="text-xs text-muted-foreground">
-                          {resource.downloads.toLocaleString()} downloads
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-
-            <div className="text-center">
-              <Button variant="outline" size="lg" className="gap-2">
-                <GraduationCap className="w-5 h-5" />
-                View Resource Library
-              </Button>
-            </div>
+            <MarketplaceEducationalResources />
           </TabsContent>
         </Tabs>
       </div>
