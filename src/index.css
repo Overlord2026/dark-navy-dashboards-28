@@ -154,7 +154,6 @@
     --current-role-accent: var(--role-family);
     --role-transition-duration: 0.8s;
   }
-  }
 }
 
 @layer base {
