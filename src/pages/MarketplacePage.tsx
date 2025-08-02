@@ -30,12 +30,21 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { ProfessionalDirectory } from '@/components/marketplace/ProfessionalDirectory';
 import { MarketplaceEducationalResources } from '@/components/marketplace/MarketplaceEducationalResources';
+import { ProfessionalUpgradePrompts } from '@/components/marketplace/ProfessionalUpgradePrompts';
+import { MarketplaceFeatureGate } from '@/components/marketplace/MarketplaceFeatureGate';
+import { useSubscriptionAccess } from '@/hooks/useSubscriptionAccess';
+import { useUser } from '@/context/UserContext';
 
 export default function MarketplacePage() {
   const navigate = useNavigate();
+  const { userProfile } = useUser();
+  const { checkFeatureAccess } = useSubscriptionAccess();
   const [searchTerm, setSearchTerm] = useState('');
   const [userType, setUserType] = useState<'family' | 'professional'>('family');
   const [activeTab, setActiveTab] = useState('professionals');
+
+  const userRole = userProfile?.role || 'client';
+  const isProfessional = ['advisor', 'accountant', 'attorney', 'consultant'].includes(userRole);
 
   // Hero Section Component
   const HeroSection = () => (
@@ -241,10 +250,13 @@ export default function MarketplacePage() {
       {/* Main Content */}
       <div className="container mx-auto px-6 py-16">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-3 max-w-md mx-auto mb-12">
+          <TabsList className={`grid w-full ${isProfessional ? 'grid-cols-4' : 'grid-cols-3'} max-w-2xl mx-auto mb-12`}>
             <TabsTrigger value="professionals">Professionals</TabsTrigger>
             <TabsTrigger value="services">Services</TabsTrigger>
             <TabsTrigger value="resources">Resources</TabsTrigger>
+            {isProfessional && (
+              <TabsTrigger value="upgrades">Grow Practice</TabsTrigger>
+            )}
           </TabsList>
 
           {/* Featured Professionals Tab */}
@@ -262,46 +274,74 @@ export default function MarketplacePage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {popularServices.map((service) => (
-                <Card 
-                  key={service.id}
-                  className="cursor-pointer hover-scale transition-all duration-200 border-border/50"
-                >
-                  <CardContent className="p-6">
-                    <div className="space-y-4">
-                      <div className="flex items-start justify-between">
-                        <div className="flex items-center gap-3">
-                          <div className="p-2 bg-primary/10 rounded-lg">
-                            <service.icon className="w-6 h-6 text-primary" />
+              {popularServices.map((service) => {
+                // Gate premium services (Legal Documentation and Portfolio Review require premium)
+                const isPremiumService = service.id === '2' || service.id === '3';
+                const hasAccess = isPremiumService ? checkFeatureAccess('premium') : true;
+                
+                if (!hasAccess) {
+                  return (
+                    <MarketplaceFeatureGate
+                      key={service.id}
+                      featureName={service.title}
+                      requiredTier="premium"
+                      description={`Access ${service.title.toLowerCase()} with ${service.providers} verified professionals`}
+                      benefits={[
+                        'Direct access to specialists',
+                        'Priority booking',
+                        'Document sharing capabilities',
+                        'Detailed reviews and ratings'
+                      ]}
+                    />
+                  );
+                }
+
+                return (
+                  <Card 
+                    key={service.id}
+                    className="cursor-pointer hover-scale transition-all duration-200 border-border/50"
+                  >
+                    <CardContent className="p-6">
+                      <div className="space-y-4">
+                        <div className="flex items-start justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className="p-2 bg-primary/10 rounded-lg">
+                              <service.icon className="w-6 h-6 text-primary" />
+                            </div>
+                            <div>
+                              <h3 className="font-bold">{service.title}</h3>
+                              {service.popular && (
+                                <Badge variant="secondary" className="text-xs mt-1">Popular</Badge>
+                              )}
+                              {isPremiumService && (
+                                <Badge variant="outline" className="text-xs mt-1 bg-purple-500/10 text-purple-600 border-purple-500/20">
+                                  Premium
+                                </Badge>
+                              )}
+                            </div>
                           </div>
-                          <div>
-                            <h3 className="font-bold">{service.title}</h3>
-                            {service.popular && (
-                              <Badge variant="secondary" className="text-xs mt-1">Popular</Badge>
-                            )}
+                          <div className="text-right">
+                            <div className="text-sm font-medium">{service.price}</div>
+                            <div className="text-xs text-muted-foreground">{service.providers} providers</div>
                           </div>
                         </div>
-                        <div className="text-right">
-                          <div className="text-sm font-medium">{service.price}</div>
-                          <div className="text-xs text-muted-foreground">{service.providers} providers</div>
+                        
+                        <p className="text-sm text-muted-foreground">{service.description}</p>
+                        
+                        <div className="flex items-center justify-between pt-2 border-t border-border/50">
+                          <div className="flex items-center gap-1">
+                            <Star className="w-4 h-4 text-yellow-500 fill-current" />
+                            <span className="text-sm">{service.rating}</span>
+                          </div>
+                          <Button size="sm" className="gap-1">
+                            Get Started <ArrowRight className="w-3 h-3" />
+                          </Button>
                         </div>
                       </div>
-                      
-                      <p className="text-sm text-muted-foreground">{service.description}</p>
-                      
-                      <div className="flex items-center justify-between pt-2 border-t border-border/50">
-                        <div className="flex items-center gap-1">
-                          <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                          <span className="text-sm">{service.rating}</span>
-                        </div>
-                        <Button size="sm" className="gap-1">
-                          Get Started <ArrowRight className="w-3 h-3" />
-                        </Button>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+                    </CardContent>
+                  </Card>
+                );
+              })}
             </div>
 
             <div className="text-center">
@@ -316,6 +356,13 @@ export default function MarketplacePage() {
           <TabsContent value="resources" className="space-y-8">
             <MarketplaceEducationalResources />
           </TabsContent>
+
+          {/* Professional Upgrades Tab */}
+          {isProfessional && (
+            <TabsContent value="upgrades" className="space-y-8">
+              <ProfessionalUpgradePrompts />
+            </TabsContent>
+          )}
         </Tabs>
       </div>
     </div>

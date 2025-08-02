@@ -27,10 +27,13 @@ import {
   FileText,
   Home,
   Calculator,
-  Scale
+  Scale,
+  Lock
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '@/context/UserContext';
+import { MarketplaceFeatureGate } from './MarketplaceFeatureGate';
+import { useSubscriptionAccess } from '@/hooks/useSubscriptionAccess';
 
 interface Professional {
   id: string;
@@ -235,6 +238,7 @@ const professionalTypeLabels = {
 export function ProfessionalDirectory() {
   const navigate = useNavigate();
   const { userProfile } = useUser();
+  const { checkFeatureAccess } = useSubscriptionAccess();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedType, setSelectedType] = useState<string>('all');
   const [selectedLocation, setSelectedLocation] = useState<string>('all');
@@ -245,6 +249,9 @@ export function ProfessionalDirectory() {
 
   const userRole = userProfile?.role || 'client';
   const isProfessional = ['advisor', 'accountant', 'attorney', 'consultant'].includes(userRole);
+  const hasMessaging = checkFeatureAccess('premium');
+  const hasRating = checkFeatureAccess('premium');
+  const canAccessEliteProfessionals = checkFeatureAccess('elite');
 
   // Extract unique values for filters
   const uniqueLocations = [...new Set(mockProfessionals.map(p => p.state))].sort();
@@ -427,10 +434,17 @@ export function ProfessionalDirectory() {
                     <Calendar className="w-3 h-3" />
                     Book Consultation
                   </Button>
-                  <Button variant="outline" size="sm" className="gap-1">
-                    <MessageSquare className="w-3 h-3" />
-                    Message
-                  </Button>
+                  {hasMessaging ? (
+                    <Button variant="outline" size="sm" className="gap-1">
+                      <MessageSquare className="w-3 h-3" />
+                      Message
+                    </Button>
+                  ) : (
+                    <Button variant="outline" size="sm" className="gap-1 opacity-50 cursor-not-allowed">
+                      <Lock className="w-3 h-3" />
+                      Message
+                    </Button>
+                  )}
                 </div>
               )}
               
