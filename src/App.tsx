@@ -471,6 +471,22 @@ const App = () => {
                     }
                   />
                   <Route
+                    path="/marketplace/booking/:professionalId"
+                    element={
+                      <AuthWrapper requireAuth={true}>
+                        <ConsultationBookingPage />
+                      </AuthWrapper>
+                    }
+                  />
+                  <Route
+                    path="/marketplace/professional/:professionalId"
+                    element={
+                      <AuthWrapper requireAuth={true}>
+                        <ProfessionalProfilePage />
+                      </AuthWrapper>
+                    }
+                  />
+                  <Route
                     path="/marketplace/product/:id"
                     element={
                       <AuthWrapper requireAuth={true}>
