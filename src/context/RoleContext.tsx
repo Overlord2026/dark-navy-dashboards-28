@@ -12,6 +12,7 @@ const ROLE_DASHBOARDS: Record<string, string> = {
   'client': '/client-dashboard',
   'client_premium': '/client-dashboard',
   'advisor': '/advisor-dashboard',
+  'coach': '/coach-dashboard',
   'admin': '/admin-dashboard',
   'tenant_admin': '/admin-dashboard',
   'system_administrator': '/admin-dashboard',
@@ -92,7 +93,8 @@ export const RoleSwitcher = () => {
   const ALL_ROLES = [
     'client',
     'client_premium',
-    'advisor', 
+    'advisor',
+    'coach',
     'admin',
     'tenant_admin',
     'system_administrator',

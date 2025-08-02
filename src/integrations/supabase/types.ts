@@ -2678,6 +2678,60 @@ export type Database = {
         }
         Relationships: []
       }
+      coach_advisor_relationships: {
+        Row: {
+          advisor_id: string
+          coach_id: string
+          created_at: string
+          end_date: string | null
+          id: string
+          notes: string | null
+          relationship_type: string
+          start_date: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          advisor_id: string
+          coach_id: string
+          created_at?: string
+          end_date?: string | null
+          id?: string
+          notes?: string | null
+          relationship_type?: string
+          start_date?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          advisor_id?: string
+          coach_id?: string
+          created_at?: string
+          end_date?: string | null
+          id?: string
+          notes?: string | null
+          relationship_type?: string
+          start_date?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "coach_advisor_relationships_advisor_id_fkey"
+            columns: ["advisor_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "coach_advisor_relationships_coach_id_fkey"
+            columns: ["coach_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       coach_insights: {
         Row: {
           context_data: Json | null
@@ -2707,6 +2761,166 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      coach_invitations: {
+        Row: {
+          accepted_at: string | null
+          advisor_name: string | null
+          coach_id: string
+          coaching_program: string | null
+          email: string
+          expires_at: string
+          id: string
+          invitation_token: string
+          invited_at: string
+          message: string | null
+          status: string
+        }
+        Insert: {
+          accepted_at?: string | null
+          advisor_name?: string | null
+          coach_id: string
+          coaching_program?: string | null
+          email: string
+          expires_at?: string
+          id?: string
+          invitation_token: string
+          invited_at?: string
+          message?: string | null
+          status?: string
+        }
+        Update: {
+          accepted_at?: string | null
+          advisor_name?: string | null
+          coach_id?: string
+          coaching_program?: string | null
+          email?: string
+          expires_at?: string
+          id?: string
+          invitation_token?: string
+          invited_at?: string
+          message?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "coach_invitations_coach_id_fkey"
+            columns: ["coach_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      coach_progress_tracking: {
+        Row: {
+          advisor_id: string
+          coach_id: string
+          created_at: string
+          id: string
+          metric_type: string
+          metric_value: number
+          notes: string | null
+          period_end: string
+          period_start: string
+          target_value: number | null
+          updated_at: string
+        }
+        Insert: {
+          advisor_id: string
+          coach_id: string
+          created_at?: string
+          id?: string
+          metric_type: string
+          metric_value: number
+          notes?: string | null
+          period_end: string
+          period_start: string
+          target_value?: number | null
+          updated_at?: string
+        }
+        Update: {
+          advisor_id?: string
+          coach_id?: string
+          created_at?: string
+          id?: string
+          metric_type?: string
+          metric_value?: number
+          notes?: string | null
+          period_end?: string
+          period_start?: string
+          target_value?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "coach_progress_tracking_advisor_id_fkey"
+            columns: ["advisor_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "coach_progress_tracking_coach_id_fkey"
+            columns: ["coach_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      coaching_curriculum: {
+        Row: {
+          coach_id: string
+          content_data: Json
+          content_type: string
+          created_at: string
+          estimated_duration_minutes: number | null
+          id: string
+          is_published: boolean
+          module_description: string | null
+          module_name: string
+          order_index: number
+          prerequisites: string[] | null
+          updated_at: string
+        }
+        Insert: {
+          coach_id: string
+          content_data?: Json
+          content_type?: string
+          created_at?: string
+          estimated_duration_minutes?: number | null
+          id?: string
+          is_published?: boolean
+          module_description?: string | null
+          module_name: string
+          order_index?: number
+          prerequisites?: string[] | null
+          updated_at?: string
+        }
+        Update: {
+          coach_id?: string
+          content_data?: Json
+          content_type?: string
+          created_at?: string
+          estimated_duration_minutes?: number | null
+          id?: string
+          is_published?: boolean
+          module_description?: string | null
+          module_name?: string
+          order_index?: number
+          prerequisites?: string[] | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "coaching_curriculum_coach_id_fkey"
+            columns: ["coach_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       communication_campaigns: {
         Row: {
@@ -12577,6 +12791,9 @@ export type Database = {
           avatar_url: string | null
           bio: string | null
           client_segment: string | null
+          coaching_certifications: string[] | null
+          coaching_firm: string | null
+          coaching_specialties: string[] | null
           created_at: string | null
           date_format: string | null
           date_of_birth: string | null
@@ -12639,6 +12856,9 @@ export type Database = {
           avatar_url?: string | null
           bio?: string | null
           client_segment?: string | null
+          coaching_certifications?: string[] | null
+          coaching_firm?: string | null
+          coaching_specialties?: string[] | null
           created_at?: string | null
           date_format?: string | null
           date_of_birth?: string | null
@@ -12701,6 +12921,9 @@ export type Database = {
           avatar_url?: string | null
           bio?: string | null
           client_segment?: string | null
+          coaching_certifications?: string[] | null
+          coaching_firm?: string | null
+          coaching_specialties?: string[] | null
           created_at?: string | null
           date_format?: string | null
           date_of_birth?: string | null
@@ -19002,6 +19225,10 @@ export type Database = {
           remaining_issues: string[]
         }[]
       }
+      generate_coach_invitation_token: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
       generate_compliance_report: {
         Args: { p_compliance_framework?: string }
         Returns: Json
@@ -19199,6 +19426,10 @@ export type Database = {
       }
       has_any_role: {
         Args: { roles: string[] }
+        Returns: boolean
+      }
+      has_coach_access_to_advisor: {
+        Args: { p_coach_id: string; p_advisor_id: string }
         Returns: boolean
       }
       has_cpa_permission: {

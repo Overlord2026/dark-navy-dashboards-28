@@ -4,6 +4,7 @@ export type UserRole =
   | 'admin'
   | 'tenant_admin'
   | 'advisor'
+  | 'coach'
   | 'client'
   | 'client_premium'
   | 'consultant'
@@ -18,6 +19,7 @@ const ROLE_LEVELS: Record<UserRole, number> = {
   tenant_admin: 80,
   developer: 70,
   advisor: 60,
+  coach: 55,
   consultant: 50,
   accountant: 40,
   attorney: 30,
@@ -28,9 +30,10 @@ const ROLE_LEVELS: Record<UserRole, number> = {
 // Define role groups for feature access
 export const ROLE_GROUPS = {
   ADVISOR_ACCESS: ['system_administrator', 'admin', 'tenant_admin', 'advisor'] as UserRole[],
+  COACH_ACCESS: ['system_administrator', 'admin', 'tenant_admin', 'coach'] as UserRole[],
   ADMIN_ACCESS: ['system_administrator', 'admin', 'tenant_admin'] as UserRole[],
   CLIENT_ACCESS: ['system_administrator', 'admin', 'tenant_admin', 'advisor', 'client', 'client_premium'] as UserRole[],
-  PROFESSIONAL_ACCESS: ['system_administrator', 'admin', 'tenant_admin', 'advisor', 'consultant', 'accountant', 'attorney'] as UserRole[],
+  PROFESSIONAL_ACCESS: ['system_administrator', 'admin', 'tenant_admin', 'advisor', 'coach', 'consultant', 'accountant', 'attorney'] as UserRole[],
 };
 
 /**
@@ -70,6 +73,7 @@ export function getRoleDisplayName(role: string): string {
     admin: 'Administrator',
     tenant_admin: 'Tenant Administrator',
     advisor: 'Financial Advisor',
+    coach: 'Practice Coach',
     client: 'Client',
     client_premium: 'Client Premium',
     consultant: 'Consultant',
