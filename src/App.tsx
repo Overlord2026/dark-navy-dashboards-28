@@ -46,6 +46,7 @@ import { AdminDashboard } from "./pages/AdminDashboard";
 import { AccountantDashboard } from "./pages/AccountantDashboard";
 import { ConsultantDashboard } from "./pages/ConsultantDashboard";
 import { AttorneyDashboard } from "./pages/AttorneyDashboard";
+import { CoachDashboard } from "./pages/CoachDashboard";
 import { AdminRoute } from "@/components/auth/AdminRoute";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { DiagnosticsPage } from "./pages/DiagnosticsPage";
@@ -351,6 +352,17 @@ const App = () => {
                         allowedRoles={['attorney', 'admin', 'tenant_admin', 'system_administrator']}
                       >
                         <AttorneyDashboard />
+                      </AuthWrapper>
+                    }
+                  />
+                  <Route
+                    path="/coach-dashboard"
+                    element={
+                      <AuthWrapper
+                        requireAuth={true}
+                        allowedRoles={['coach', 'admin', 'tenant_admin', 'system_administrator']}
+                      >
+                        <CoachDashboard />
                       </AuthWrapper>
                     }
                   />
