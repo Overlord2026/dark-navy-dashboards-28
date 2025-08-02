@@ -28,14 +28,12 @@ interface Lead {
 }
 
 const COLUMNS = [
-  { id: 'new', title: 'New', color: 'bg-primary' },
-  { id: 'contacted', title: 'Contacted', color: 'bg-secondary' },
-  { id: 'qualified', title: 'Qualified', color: 'bg-accent' },
-  { id: 'nurturing', title: 'Nurturing', color: 'bg-warning' },
+  { id: 'new', title: 'New', color: 'bg-accent-gold' },
+  { id: 'contacted', title: 'Contacted', color: 'bg-accent-aqua' },
+  { id: 'qualified', title: 'Qualified', color: 'bg-accent-emerald' },
   { id: 'scheduled', title: 'Scheduled', color: 'bg-success' },
-  { id: 'closed_won', title: 'Closed Won', color: 'bg-emerald-600' },
-  { id: 'closed_lost', title: 'Closed Lost', color: 'bg-destructive' },
-  { id: 'dead', title: 'Dead', color: 'bg-muted' },
+  { id: 'closed', title: 'Closed', color: 'bg-emerald-600' },
+  { id: 'lost', title: 'Lost', color: 'bg-destructive' },
 ];
 
 const mockLeads: Lead[] = [
@@ -133,8 +131,8 @@ export function PipelineBoard() {
     const fromColumn = COLUMNS.find(col => col.id === source.droppableId)?.title;
     const toColumn = COLUMNS.find(col => col.id === destination.droppableId)?.title;
     
-    // Trigger celebration for closed won
-    if (destination.droppableId === 'closed_won') {
+    // Trigger celebration for closed deals
+    if (destination.droppableId === 'closed') {
       setCelebrationTrigger(prev => prev + 1);
       toast.success(`🎉 ${lead.name} just closed! Deal worth ${formatBudget(lead.budget)}`);
     } else {
@@ -226,9 +224,114 @@ export function PipelineBoard() {
             </CardContent>
           </Card>
 
-          {/* Pipeline Board */}
+          {/* Pipeline Board - Mobile Optimized */}
           <DragDropContext onDragEnd={handleDragEnd}>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+            {/* Mobile: Horizontal scroll view */}
+            <div className="block md:hidden overflow-x-auto pb-4">
+              <div className="flex gap-4 min-w-max">
+                {COLUMNS.map((column) => (
+                  <div key={column.id} className="bg-surface rounded-lg border border-border-primary w-80 flex-shrink-0">
+                    <div className="p-4 border-b border-border-primary sticky top-0 bg-surface z-10">
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className={`w-3 h-3 rounded-full ${column.color}`}></div>
+                        <h3 className="font-bold text-white font-display text-sm tracking-wide">
+                          {column.title.toUpperCase()}
+                        </h3>
+                      </div>
+                      <p className="text-xs text-text-secondary">
+                        {leadsGroupedByStatus[column.id]?.length || 0} leads
+                      </p>
+                    </div>
+
+                    <Droppable droppableId={column.id}>
+                      {(provided, snapshot) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.droppableProps}
+                          className={`min-h-[300px] max-h-[60vh] overflow-y-auto p-3 space-y-3 ${
+                            snapshot.isDraggingOver ? 'bg-primary/20' : ''
+                          }`}
+                        >
+                          {leadsGroupedByStatus[column.id]?.map((lead, index) => (
+                            <Draggable key={lead.id} draggableId={lead.id} index={index}>
+                              {(provided, snapshot) => (
+                                <Card
+                                  ref={provided.innerRef}
+                                  {...provided.draggableProps}
+                                  {...provided.dragHandleProps}
+                                  className={`bg-card border-border-primary cursor-move transition-all hover:shadow-lg ${
+                                    snapshot.isDragging ? 'shadow-2xl rotate-2' : ''
+                                  }`}
+                                >
+                                  <CardContent className="p-4">
+                                    <div className="space-y-3">
+                                      {/* Lead Name and Score */}
+                                      <div className="flex items-start justify-between">
+                                        <h4 className="font-semibold text-white text-sm leading-tight">
+                                          {lead.name}
+                                        </h4>
+                                        <Badge 
+                                          className={`text-xs text-white ${getScoreColor(lead.score)}`}
+                                        >
+                                          {lead.score || 0}
+                                        </Badge>
+                                      </div>
+
+                                      {/* Contact Info */}
+                                      <div className="space-y-1 text-xs">
+                                        <div className="flex items-center gap-2 text-text-secondary">
+                                          <Mail className="h-3 w-3" />
+                                          <span className="truncate">{lead.email}</span>
+                                        </div>
+                                        <div className="flex items-center gap-2 text-text-secondary">
+                                          <Phone className="h-3 w-3" />
+                                          <span>{lead.phone}</span>
+                                        </div>
+                                      </div>
+
+                                      {/* Interest and Budget */}
+                                      <div className="flex items-center justify-between text-xs">
+                                        <Badge variant="outline" className="border-accent-gold text-accent-gold text-xs">
+                                          {lead.interest}
+                                        </Badge>
+                                        <span className="text-accent-gold font-bold">
+                                          {formatBudget(lead.budget)}
+                                        </span>
+                                      </div>
+
+                                      {/* Last Touch */}
+                                      {lead.lastTouch && (
+                                        <div className="flex items-center gap-2 text-xs text-text-secondary">
+                                          <Calendar className="h-3 w-3" />
+                                          <span>
+                                            Last: {format(new Date(lead.lastTouch), 'MMM d')}
+                                          </span>
+                                        </div>
+                                      )}
+
+                                      {/* Source */}
+                                      <div className="pt-2 border-t border-border-primary/30">
+                                        <span className="text-xs text-text-secondary">
+                                          Source: {lead.source.replace('_', ' ')}
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </CardContent>
+                                </Card>
+                              )}
+                            </Draggable>
+                          ))}
+                          {provided.placeholder}
+                        </div>
+                      )}
+                    </Droppable>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Desktop: Grid view */}
+            <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
               {COLUMNS.map((column) => (
                 <div key={column.id} className="bg-surface rounded-lg border border-border-primary">
                   <div className="p-4 border-b border-border-primary">
@@ -353,14 +456,14 @@ export function PipelineBoard() {
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-bold text-emerald-500">
-                    {filteredLeads.filter(l => l.status === 'closed_won').length}
+                    {filteredLeads.filter(l => l.status === 'closed').length}
                   </div>
-                  <div className="text-sm text-text-secondary">Closed Won</div>
+                  <div className="text-sm text-text-secondary">Closed</div>
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-bold text-white">
                     {filteredLeads.length > 0 
-                      ? Math.round((filteredLeads.filter(l => l.status === 'closed_won').length / filteredLeads.length) * 100)
+                      ? Math.round((filteredLeads.filter(l => l.status === 'closed').length / filteredLeads.length) * 100)
                       : 0}%
                   </div>
                   <div className="text-sm text-text-secondary">Conversion Rate</div>
