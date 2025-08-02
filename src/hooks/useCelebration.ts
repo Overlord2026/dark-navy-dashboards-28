@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import React from 'react';
 import { Celebration } from '@/components/ConfettiAnimation';
 
 export type CelebrationType = 'client-won' | 'pipeline-goal' | 'milestone' | 'success';
@@ -31,9 +32,10 @@ export const useCelebration = () => {
     setCelebration(prev => ({ ...prev, isActive: false }));
   }, []);
 
-  const CelebrationComponent = () => {
-    return <Celebration trigger={celebration.isActive} />;
-  };
+  const CelebrationComponent = React.createElement(() => {
+    if (!celebration.isActive) return null;
+    return React.createElement(Celebration, { trigger: celebration.isActive });
+  });
 
   return {
     celebration,
