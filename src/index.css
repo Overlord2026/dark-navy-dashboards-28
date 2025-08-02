@@ -80,7 +80,6 @@
     --current-role-accent: var(--role-family);
     --role-transition-duration: 0.8s;
   }
-  }
 
   .light-theme {
     /* Same palette for light theme - platinum backgrounds with navy text */
