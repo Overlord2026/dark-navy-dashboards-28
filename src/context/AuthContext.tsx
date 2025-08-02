@@ -2,29 +2,8 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { shouldEnforceAuthentication, isQABypassAllowed } from '@/utils/environment';
+import { UserProfile } from '@/types/user';
 
-interface UserProfile {
-  id: string;
-  name?: string;
-  displayName?: string;
-  email?: string;
-  firstName?: string;
-  lastName?: string;
-  middleName?: string;
-  title?: string;
-  suffix?: string;
-  gender?: string;
-  maritalStatus?: string;
-  dateOfBirth?: Date;
-  phone?: string;
-  investorType?: string;
-  role: 'client' | 'advisor' | 'admin' | 'tenant_admin' | 'system_administrator' | 'developer' | 'consultant' | 'accountant' | 'attorney';
-  permissions?: string[];
-  twoFactorEnabled?: boolean;
-  tenant_id?: string;
-  segments?: string[];
-  advisor_role?: string;
-}
 
 interface AuthContextType {
   user: User | null;

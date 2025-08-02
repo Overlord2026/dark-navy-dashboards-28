@@ -140,14 +140,15 @@ export function CoachDashboard() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Avatar className="h-12 w-12">
-            <AvatarImage src={undefined} />
+            <AvatarImage src={userProfile?.avatarUrl || userProfile?.avatar_url} />
             <AvatarFallback>
-              {userProfile?.firstName?.charAt(0)}{userProfile?.lastName?.charAt(0)}
+              {(userProfile?.firstName || userProfile?.first_name)?.charAt(0)}
+              {(userProfile?.lastName || userProfile?.last_name)?.charAt(0)}
             </AvatarFallback>
           </Avatar>
           <div>
             <h1 className="text-2xl font-bold">
-              {userProfile?.firstName} {userProfile?.lastName}
+              {(userProfile?.firstName || userProfile?.first_name)} {(userProfile?.lastName || userProfile?.last_name)}
             </h1>
             <p className="text-muted-foreground">Practice Coach Dashboard</p>
           </div>

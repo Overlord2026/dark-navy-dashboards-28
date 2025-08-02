@@ -2,42 +2,10 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useAuth } from './AuthContext';
 import { supabase } from '@/lib/supabase';
+import { UserProfile } from '@/types/user';
 
-export interface UserProfile {
-  id: string;
-  name?: string;
-  displayName?: string;
-  email?: string;
-  firstName?: string;
-  lastName?: string;
-  middleName?: string;
-  title?: string;
-  suffix?: string;
-  gender?: string;
-  maritalStatus?: string;
-  dateOfBirth?: Date;
-  phone?: string;
-  investorType?: string;
-  role: 'client' | 'advisor' | 'admin' | 'tenant_admin' | 'system_administrator' | 'developer' | 'consultant' | 'accountant' | 'attorney';
-  permissions?: string[];
-  twoFactorEnabled?: boolean;
-  client_segment?: string;
-  client_tier?: 'basic' | 'premium';
-  tenant_id?: string;
-  segments?: string[];
-  advisor_role?: string;
-  // Marketing and CRM fields
-  utm_source?: string;
-  utm_medium?: string;
-  utm_campaign?: string;
-  ghl_contact_id?: string;
-  lead_stage?: string;
-  advisor_id?: string;
-  email_opt_in?: boolean;
-  sms_opt_in?: boolean;
-  last_login_at?: Date;
-  last_active_at?: Date;
-}
+export type { UserProfile };
+
 
 interface UserContextType {
   userProfile: UserProfile | null;
