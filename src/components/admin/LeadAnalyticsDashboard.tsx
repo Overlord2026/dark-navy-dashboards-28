@@ -57,7 +57,7 @@ interface LeadAnalytics {
 }
 
 interface Filters {
-  dateRange: { from?: Date; to?: Date };
+  dateRange: { from: Date; to: Date };
   advisor?: string;
   source?: string;
   campaign?: string;
@@ -382,7 +382,7 @@ export function LeadAnalyticsDashboard() {
               <label className="text-sm font-medium mb-2 block">Date Range</label>
               <DatePickerWithRange
                 date={filters.dateRange}
-                onDateChange={(dateRange) => setFilters(prev => ({ ...prev, dateRange: dateRange && dateRange.from && dateRange.to ? dateRange : { from: new Date(), to: new Date() } }))}
+                onDateChange={(dateRange) => setFilters(prev => ({ ...prev, dateRange: dateRange && dateRange.from && dateRange.to ? { from: dateRange.from, to: dateRange.to } : { from: new Date(), to: new Date() } }))}
               />
             </div>
             
