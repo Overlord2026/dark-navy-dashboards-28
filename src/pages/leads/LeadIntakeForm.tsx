@@ -11,8 +11,9 @@ import { Slider } from '@/components/ui/slider';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Card } from '@/components/ui/card';
 import { toast } from 'sonner';
-import { ArrowLeft, DollarSign, Phone, Mail, User, Target } from 'lucide-react';
+import { ArrowLeft, DollarSign, Phone, Mail, User, Target, CheckCircle, ArrowRight } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import confetti from 'canvas-confetti';
 
 const leadFormSchema = z.object({
   name: z.string()
@@ -106,6 +107,14 @@ export function LeadIntakeForm() {
       if (error) {
         throw error;
       }
+
+      // Trigger confetti celebration immediately
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#FFD700', '#169873', '#00D2FF'],
+      });
 
       toast.success('Thank you! Your information has been submitted successfully.');
       

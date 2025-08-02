@@ -1,0 +1,44 @@
+/* Touch-friendly mobile targets for Lead Sales Engine */
+.touch-target-large {
+  min-height: 48px !important;
+  min-width: 48px !important;
+  padding: 12px 16px !important;
+}
+
+/* Mobile-first form enhancements */
+@media (max-width: 768px) {
+  .mobile-form-container {
+    padding: 16px;
+  }
+  
+  .mobile-form-field input,
+  .mobile-form-field select,
+  .mobile-form-field textarea {
+    font-size: 16px !important; /* Prevents zoom on iOS */
+    min-height: 48px;
+    touch-action: manipulation;
+  }
+  
+  .mobile-form-button {
+    min-height: 56px;
+    font-size: 18px;
+    font-weight: 700;
+    touch-action: manipulation;
+  }
+}
+
+/* Enhanced focus states for accessibility */
+.form-input:focus {
+  outline: 2px solid var(--accent-gold);
+  outline-offset: 2px;
+}
+
+/* Loading states */
+.loading-spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
