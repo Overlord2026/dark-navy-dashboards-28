@@ -10,6 +10,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Upload, FileText, Brain, AlertTriangle, TrendingUp, Shield, DollarSign, CheckCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
+interface ContractAnalyzerProps {
+  onAnalysisComplete?: () => void;
+}
+
 interface AnalysisResult {
   score: number;
   fees: {
@@ -30,7 +34,7 @@ interface AnalysisResult {
   };
 }
 
-export const ContractAnalyzer = () => {
+export const ContractAnalyzer = ({ onAnalysisComplete }: ContractAnalyzerProps = {}) => {
   const { toast } = useToast();
   const [file, setFile] = useState<File | null>(null);
   const [manualEntry, setManualEntry] = useState({
@@ -112,6 +116,7 @@ export const ContractAnalyzer = () => {
       
       setResult(mockResult);
       setAnalyzing(false);
+      onAnalysisComplete?.();
       toast({
         title: "Analysis complete",
         description: "Your annuity contract has been analyzed",

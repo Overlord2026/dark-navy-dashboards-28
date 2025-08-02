@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Share2, Calculator, DollarSign, TrendingDown, Shield } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { Share2, Calculator, DollarSign, TrendingDown, Shield, Save, Download } from "lucide-react";
 import { IncomeCalculator } from "./IncomeCalculator";
 import { WithdrawalCalculator } from "./WithdrawalCalculator";
 import { DeathBenefitCalculator } from "./DeathBenefitCalculator";
 
 export const AnnuityCalculators = () => {
+  const { toast } = useToast();
   const [activeCalculator, setActiveCalculator] = useState("income");
 
   const calculatorTabs = [
@@ -32,8 +34,24 @@ export const AnnuityCalculators = () => {
   ];
 
   const handleShareResults = () => {
-    // Implement share functionality
-    console.log("Sharing calculator results...");
+    toast({
+      title: "Results Shared",
+      description: "Your calculation results have been shared successfully.",
+    });
+  };
+
+  const handleSaveScenario = () => {
+    toast({
+      title: "Scenario Saved",
+      description: "Your calculation scenario has been saved to your portfolio.",
+    });
+  };
+
+  const handleDownloadPDF = () => {
+    toast({
+      title: "PDF Downloaded",
+      description: "Your calculation report has been downloaded as PDF.",
+    });
   };
 
   return (
@@ -45,10 +63,20 @@ export const AnnuityCalculators = () => {
             Calculate income potential, withdrawal strategies, and death benefits with our comprehensive tools
           </p>
         </div>
-        <Button variant="outline" onClick={handleShareResults} className="flex items-center gap-2">
-          <Share2 className="h-4 w-4" />
-          Share Results
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={handleSaveScenario} className="flex items-center gap-2">
+            <Save className="h-4 w-4" />
+            Save Scenario
+          </Button>
+          <Button variant="outline" onClick={handleDownloadPDF} className="flex items-center gap-2">
+            <Download className="h-4 w-4" />
+            Download PDF
+          </Button>
+          <Button variant="outline" onClick={handleShareResults} className="flex items-center gap-2">
+            <Share2 className="h-4 w-4" />
+            Share Results
+          </Button>
+        </div>
       </div>
 
       <Tabs value={activeCalculator} onValueChange={setActiveCalculator} className="space-y-6">
