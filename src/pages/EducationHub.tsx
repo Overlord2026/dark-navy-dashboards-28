@@ -14,6 +14,7 @@ import { RecommendedBooksSection } from '@/components/education/RecommendedBooks
 import { ProfessionalResourcesSection } from '@/components/education/ProfessionalResourcesSection';
 import { ProgressDashboard } from '@/components/education/ProgressDashboard';
 import { GettingStartedSection } from '@/components/education/GettingStartedSection';
+import { CoachingModule } from '@/components/coaching/CoachingModule';
 
 export default function EducationHub() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -138,6 +139,7 @@ export default function EducationHub() {
           <TabsTrigger value="videos">Videos</TabsTrigger>
           <TabsTrigger value="books">Books</TabsTrigger>
           <TabsTrigger value="professional">Professional</TabsTrigger>
+          <TabsTrigger value="coaching">Coaching</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6">
@@ -164,6 +166,10 @@ export default function EducationHub() {
 
         <TabsContent value="professional">
           <ProfessionalResourcesSection searchQuery={searchQuery} />
+        </TabsContent>
+
+        <TabsContent value="coaching">
+          <CoachingModule />
         </TabsContent>
       </Tabs>
     </div>

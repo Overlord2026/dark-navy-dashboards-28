@@ -100,8 +100,6 @@ import { AnnuityMarketplace } from "./components/annuities/marketplace/AnnuityMa
 import { FiduciaryReview } from "./components/annuities/FiduciaryReview";
 import ClientsPage from "./pages/advisor/ClientsPage";
 import { AgenciesPage } from "./pages/AgenciesPage";
-import { LeadIntakeForm } from "./pages/LeadIntakeForm";
-import { PipelineBoard } from "./pages/PipelineBoard";
 import { ROIDashboard } from "./pages/ROIDashboard";
 import ProspectsPage from "./pages/advisor/ProspectsPage";
 import AdvisorROIDashboard from "./pages/AdvisorROIDashboard";
