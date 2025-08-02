@@ -10,6 +10,11 @@ import { CuratedPartners } from '@/components/investments/CuratedPartners';
 import { PartnerApplication } from '@/components/investments/PartnerApplication';
 import { ManagerResearch } from '@/components/investments/ManagerResearch';
 import { InvestmentWebinars } from '@/components/investments/InvestmentWebinars';
+import { BitcoinEducationCenter } from '@/components/investments/BitcoinEducationCenter';
+import { IntelligentAllocationModels } from '@/components/investments/IntelligentAllocationModels';
+import { EnhancedVideoIntegration } from '@/components/investments/EnhancedVideoIntegration';
+import { StickyAdvisorSidebar } from '@/components/investments/StickyAdvisorSidebar';
+import { ComplianceFramework } from '@/components/investments/ComplianceFramework';
 import { useCelebration } from '@/hooks/useCelebration';
 
 export default function PrivateMarket() {
@@ -43,12 +48,14 @@ export default function PrivateMarket() {
         {/* Main Content */}
         <div className="max-w-7xl mx-auto px-6 py-12">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
-            <TabsList className="grid w-full grid-cols-5">
+            <TabsList className="grid w-full grid-cols-7 text-xs lg:text-sm">
               <TabsTrigger value="overview">Overview</TabsTrigger>
-              <TabsTrigger value="partners">Curated Partners</TabsTrigger>
-              <TabsTrigger value="research">Manager Research</TabsTrigger>
+              <TabsTrigger value="partners">Partners</TabsTrigger>
+              <TabsTrigger value="models">Models</TabsTrigger>
+              <TabsTrigger value="bitcoin">Bitcoin</TabsTrigger>
+              <TabsTrigger value="research">Research</TabsTrigger>
               <TabsTrigger value="webinars">Webinars</TabsTrigger>
-              <TabsTrigger value="alpha">Private Alpha</TabsTrigger>
+              <TabsTrigger value="alpha">Alpha</TabsTrigger>
             </TabsList>
 
             <TabsContent value="overview" className="space-y-8">
@@ -222,6 +229,14 @@ export default function PrivateMarket() {
               <CuratedPartners />
             </TabsContent>
 
+            <TabsContent value="models">
+              <IntelligentAllocationModels />
+            </TabsContent>
+
+            <TabsContent value="bitcoin">
+              <BitcoinEducationCenter />
+            </TabsContent>
+
             <TabsContent value="research">
               <ManagerResearch />
             </TabsContent>
@@ -282,6 +297,14 @@ export default function PrivateMarket() {
           isOpen={showPartnerApplication} 
           onClose={() => setShowPartnerApplication(false)} 
         />
+
+        {/* Sticky Advisor Sidebar */}
+        <StickyAdvisorSidebar />
+
+        {/* Compliance Section */}
+        <div className="max-w-7xl mx-auto px-6 py-12">
+          <ComplianceFramework />
+        </div>
       </div>
     </FeatureGate>
   );
