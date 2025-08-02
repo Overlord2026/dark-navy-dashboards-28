@@ -43,6 +43,7 @@ import { AdvisorCPARiskDashboard } from "./pages/AdvisorCPARiskDashboard";
 import { TaxRulesAdminPage } from "./pages/TaxRulesAdminPage";
 import { TaxPlatformQAPage } from "./pages/TaxPlatformQAPage";
 import { AdminDashboard } from "./pages/AdminDashboard";
+import CRMDashboard from "./pages/CRMDashboard";
 import { AccountantDashboard } from "./pages/AccountantDashboard";
 import { ConsultantDashboard } from "./pages/ConsultantDashboard";
 import { AttorneyDashboard } from "./pages/AttorneyDashboard";
@@ -320,6 +321,16 @@ const App = () => {
                         allowedRoles={['admin', 'tenant_admin', 'system_administrator']}
                       >
                         <AdminDashboard />
+                      </AuthWrapper>
+                    }
+                  />
+                  
+                  {/* CRM Dashboard */}
+                  <Route
+                    path="/crm"
+                    element={
+                      <AuthWrapper requireAuth={true}>
+                        <CRMDashboard />
                       </AuthWrapper>
                     }
                   />

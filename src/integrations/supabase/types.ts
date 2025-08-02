@@ -4142,6 +4142,99 @@ export type Database = {
         }
         Relationships: []
       }
+      crm_activities: {
+        Row: {
+          activity_type: string
+          contact_email: string | null
+          contact_id: string | null
+          contact_name: string
+          created_at: string | null
+          description: string | null
+          duration_minutes: number | null
+          id: string
+          next_steps: string | null
+          outcome: string | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          activity_type: string
+          contact_email?: string | null
+          contact_id?: string | null
+          contact_name: string
+          created_at?: string | null
+          description?: string | null
+          duration_minutes?: number | null
+          id?: string
+          next_steps?: string | null
+          outcome?: string | null
+          title: string
+          user_id: string
+        }
+        Update: {
+          activity_type?: string
+          contact_email?: string | null
+          contact_id?: string | null
+          contact_name?: string
+          created_at?: string | null
+          description?: string | null
+          duration_minutes?: number | null
+          id?: string
+          next_steps?: string | null
+          outcome?: string | null
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      crm_contacts: {
+        Row: {
+          company: string | null
+          created_at: string | null
+          email: string
+          id: string
+          last_contact: string | null
+          name: string
+          notes: string | null
+          phone: string | null
+          role: string | null
+          status: string
+          tags: string[] | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          company?: string | null
+          created_at?: string | null
+          email: string
+          id?: string
+          last_contact?: string | null
+          name: string
+          notes?: string | null
+          phone?: string | null
+          role?: string | null
+          status?: string
+          tags?: string[] | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          company?: string | null
+          created_at?: string | null
+          email?: string
+          id?: string
+          last_contact?: string | null
+          name?: string
+          notes?: string | null
+          phone?: string | null
+          role?: string | null
+          status?: string
+          tags?: string[] | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       crm_integrations: {
         Row: {
           api_endpoint: string | null
@@ -4194,6 +4287,99 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      crm_pipeline_items: {
+        Row: {
+          contact_email: string
+          contact_id: string | null
+          contact_name: string
+          created_at: string | null
+          expected_close: string | null
+          id: string
+          notes: string | null
+          probability: number | null
+          stage_id: string
+          updated_at: string | null
+          user_id: string
+          value: number | null
+        }
+        Insert: {
+          contact_email: string
+          contact_id?: string | null
+          contact_name: string
+          created_at?: string | null
+          expected_close?: string | null
+          id?: string
+          notes?: string | null
+          probability?: number | null
+          stage_id: string
+          updated_at?: string | null
+          user_id: string
+          value?: number | null
+        }
+        Update: {
+          contact_email?: string
+          contact_id?: string | null
+          contact_name?: string
+          created_at?: string | null
+          expected_close?: string | null
+          id?: string
+          notes?: string | null
+          probability?: number | null
+          stage_id?: string
+          updated_at?: string | null
+          user_id?: string
+          value?: number | null
+        }
+        Relationships: []
+      }
+      crm_reminders: {
+        Row: {
+          auto_generated: boolean
+          contact_email: string | null
+          contact_id: string | null
+          contact_name: string
+          created_at: string | null
+          description: string | null
+          due_date: string
+          id: string
+          priority: string
+          reminder_type: string
+          status: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          auto_generated?: boolean
+          contact_email?: string | null
+          contact_id?: string | null
+          contact_name: string
+          created_at?: string | null
+          description?: string | null
+          due_date: string
+          id?: string
+          priority?: string
+          reminder_type: string
+          status?: string
+          title: string
+          user_id: string
+        }
+        Update: {
+          auto_generated?: boolean
+          contact_email?: string | null
+          contact_id?: string | null
+          contact_name?: string
+          created_at?: string | null
+          description?: string | null
+          due_date?: string
+          id?: string
+          priority?: string
+          reminder_type?: string
+          status?: string
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       daily_analytics: {
         Row: {
