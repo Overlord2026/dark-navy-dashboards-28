@@ -24,10 +24,9 @@ export default {
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
-          gradient: "var(--primary-gradient)",
         },
         secondary: {
-          DEFAULT: "hsl(var(--secondary))",
+          DEFAULT: "hsl(var(--secondary))", // Gold
           foreground: "hsl(var(--secondary-foreground))",
         },
         destructive: {
@@ -39,7 +38,7 @@ export default {
           foreground: "hsl(var(--muted-foreground))",
         },
         accent: {
-          DEFAULT: "hsl(var(--accent))", // Aqua Blue #00D2FF
+          DEFAULT: "hsl(var(--accent))", // Emerald
           foreground: "hsl(var(--accent-foreground))",
         },
         popover: {
@@ -51,33 +50,26 @@ export default {
           foreground: "hsl(var(--card-foreground))",
         },
         success: {
-          DEFAULT: "hsl(var(--success))", // Green #34C759
+          DEFAULT: "hsl(var(--success))", // Emerald
           foreground: "hsl(var(--success-foreground))",
         },
         warning: {
-          DEFAULT: "hsl(var(--warning))", // Yellow #FFD600
+          DEFAULT: "hsl(var(--warning))", // Gold
           foreground: "hsl(var(--warning-foreground))",
         },
-        // Altoo.io Premium Colors
+        // Family Office Premium Colors
         navy: {
-          DEFAULT: "216 30% 13%", // Dark Navy #172042
-          light: "213 30% 18%", // #202D5A
-          surface: "216 26% 19%", // Surface #1E2333
-        },
-        aqua: {
-          DEFAULT: "195 100% 50%", // Aqua Blue #00D2FF
-          foreground: "216 30% 13%",
+          DEFAULT: "216 29% 11%", // Deep Navy #14213D
+          light: "216 25% 16%", // Card background
+          surface: "216 25% 14%", // Surface
         },
         gold: {
-          DEFAULT: "51 100% 50%", // Gold #FFC700
-          foreground: "216 30% 13%",
+          DEFAULT: "51 100% 50%", // Pure Gold #FFD700
+          foreground: "216 29% 11%",
         },
-        role: {
-          family: "hsl(var(--role-family))", // Aqua Blue
-          advisor: "hsl(var(--role-advisor))", // Success Green
-          accountant: "hsl(var(--role-accountant))", // Gold
-          attorney: "hsl(var(--role-attorney))", // Error Red
-          admin: "hsl(var(--role-admin))", // Dark Navy
+        emerald: {
+          DEFAULT: "158 64% 52%", // Emerald #169873
+          foreground: "0 0% 100%",
         },
       },
       borderRadius: {
@@ -88,8 +80,11 @@ export default {
       fontFamily: {
         sans: ["Inter", "var(--font-sans)", ...fontFamily.sans],
         serif: ["Playfair Display", "Georgia", "Times New Roman", "serif"],
-        boutique: ["Playfair Display", "Georgia", "serif"],
-        body: ["Inter", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"],
+        display: ["Playfair Display", "Georgia", "serif"], // For headlines
+        body: ["Inter", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"], // For body text
+      },
+      spacing: {
+        'touch': 'var(--touch-target)', // 44px minimum touch target
       },
       keyframes: {
         "accordion-down": {
@@ -100,35 +95,52 @@ export default {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
-        "collapsible-down": {
-          from: { height: "0" },
-          to: { height: "var(--radix-collapsible-content-height)" },
+        "confetti-fall": {
+          "0%": { 
+            transform: "translateY(-100vh) rotate(0deg)",
+            opacity: "1"
+          },
+          "100%": { 
+            transform: "translateY(100vh) rotate(360deg)",
+            opacity: "0"
+          }
         },
-        "collapsible-up": {
-          from: { height: "var(--radix-collapsible-content-height)" },
-          to: { height: "0" },
+        "sparkle": {
+          "0%, 100%": { 
+            transform: "scale(0) rotate(0deg)",
+            opacity: "0"
+          },
+          "50%": { 
+            transform: "scale(1) rotate(180deg)",
+            opacity: "1"
+          }
         },
-        "role-transition": {
-          "0%": { opacity: "0", transform: "scale(0.95) translateY(10px)" },
-          "100%": { opacity: "1", transform: "scale(1) translateY(0)" },
+        "celebration-pulse": {
+          "0%": { 
+            transform: "scale(1)",
+            boxShadow: "0 0 0 0 hsl(var(--gold) / 0.7)"
+          },
+          "70%": { 
+            transform: "scale(1.1)",
+            boxShadow: "0 0 0 20px hsl(var(--gold) / 0)"
+          },
+          "100%": { 
+            transform: "scale(1)",
+            boxShadow: "0 0 0 0 hsl(var(--gold) / 0)"
+          }
         },
-        "boutique-glow": {
-          "0%, 100%": { boxShadow: "0 0 20px hsl(var(--gold-primary) / 0.3)" },
-          "50%": { boxShadow: "0 0 40px hsl(var(--gold-primary) / 0.6)" },
-        },
-        "ultra-pulse": {
-          "0%, 100%": { boxShadow: "0 0 30px hsl(var(--gold-primary) / 0.4)" },
-          "50%": { boxShadow: "0 0 60px hsl(var(--gold-primary) / 0.8)" },
-        },
+        "float": {
+          "0%, 100%": { transform: "translateY(0px)" },
+          "50%": { transform: "translateY(-10px)" }
+        }
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "collapsible-down": "collapsible-down 0.2s ease-out",
-        "collapsible-up": "collapsible-up 0.2s ease-out",
-        "role-transition": "role-transition 0.8s cubic-bezier(0.4, 0, 0.2, 1)",
-        "boutique-glow": "boutique-glow 3s ease-in-out infinite",
-        "ultra-pulse": "ultra-pulse 2s ease-in-out infinite",
+        "confetti-fall": "confetti-fall 3s linear infinite",
+        "sparkle": "sparkle 1.5s ease-in-out infinite",
+        "celebration-pulse": "celebration-pulse 2s ease-in-out infinite",
+        "float": "float 3s ease-in-out infinite",
       },
     },
   },

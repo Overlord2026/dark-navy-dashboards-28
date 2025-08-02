@@ -7,149 +7,123 @@
 
 @layer base {
   :root, .dark-theme {
-    /* Altoo.io Premium Palette - Dark Navy Base */
-    --background: 216 30% 13%; /* Dark Navy #172042 */
-    --foreground: 0 0% 100%; /* White text */
+    /* Family Office Premium Theme - Gold, Navy, Emerald */
+    --background: 216 29% 11%; /* Deep Navy #14213D */
+    --foreground: 0 0% 100%; /* Pure White text */
 
-    --card: 217 26% 17%; /* Card background #232C45 */
+    --card: 216 25% 16%; /* Card background #222B3E */
     --card-foreground: 0 0% 100%; /* White text */
 
-    --popover: 216 26% 19%; /* Surface color #1E2333 */
+    --popover: 216 25% 14%; /* Surface color #1A2230 */
     --popover-foreground: 0 0% 100%;
 
-    /* Primary Gradient - Dark Navy */
-    --primary: 216 30% 13%; /* Dark Navy #172042 */
+    /* Primary - Navy */
+    --primary: 216 29% 11%; /* Deep Navy #14213D */
     --primary-foreground: 0 0% 100%; /* White text */
-    --primary-gradient: linear-gradient(135deg, hsl(213 30% 18%), hsl(216 30% 13%)); /* #202D5A to #172042 */
 
-    --secondary: 217 30% 20%; /* Border color #2A3458 */
-    --secondary-foreground: 0 0% 100%;
+    /* Gold Accent - Premium Gold */
+    --secondary: 51 100% 50%; /* Pure Gold #FFD700 */
+    --secondary-foreground: 216 29% 11%; /* Navy text on gold */
 
-    --muted: 217 26% 17%; /* Card background */
-    --muted-foreground: 213 35% 70%; /* Text secondary #A6B2D1 */
+    --muted: 216 25% 16%; /* Card background */
+    --muted-foreground: 210 25% 70%; /* Light text #A6B2CC */
 
-    /* Accent Colors - Aqua Blue Primary */
-    --accent: 195 100% 50%; /* Aqua Blue #00D2FF */
-    --accent-foreground: 216 30% 13%; /* Navy text on aqua */
+    /* Emerald Accent - Success Color */
+    --accent: 158 64% 52%; /* Emerald #169873 */
+    --accent-foreground: 0 0% 100%; /* White text on emerald */
 
-    /* Gold Accent */
-    --gold-accent: 51 100% 50%; /* Gold #FFC700 */
-    --gold-foreground: 216 30% 13%; /* Navy text on gold */
+    /* Gold Primary for CTAs */
+    --gold: 51 100% 50%; /* Pure Gold #FFD700 */
+    --gold-foreground: 216 29% 11%; /* Navy text on gold */
 
-    /* Role-based Accent Colors */
-    --role-family: 195 100% 50%; /* Aqua Blue */
-    --role-advisor: 142 76% 36%; /* Success Green #34C759 */
-    --role-accountant: 51 100% 50%; /* Gold #FFC700 */
-    --role-attorney: 343 100% 54%; /* Error Red #FF1744 */
-    --role-admin: 216 30% 13%; /* Dark Navy */
+    /* Emerald for Success States */
+    --emerald: 158 64% 52%; /* Emerald #169873 */
+    --emerald-foreground: 0 0% 100%; /* White text on emerald */
 
     /* Status Colors */
-    --success: 142 76% 36%; /* Green #34C759 */
+    --success: 158 64% 52%; /* Emerald #169873 */
     --success-foreground: 0 0% 100%;
     
-    --warning: 51 100% 50%; /* Yellow #FFD600 */
-    --warning-foreground: 216 30% 13%;
+    --warning: 51 100% 50%; /* Gold #FFD700 */
+    --warning-foreground: 216 29% 11%;
 
-    --destructive: 343 100% 54%; /* Red #FF1744 */
+    --destructive: 0 84% 60%; /* Red for errors */
     --destructive-foreground: 0 0% 100%;
 
     /* UI Elements */
-    --border: 217 30% 20%; /* Border color #2A3458 */
-    --input: 217 26% 17%; /* Card background for inputs */
-    --ring: 195 100% 50%; /* Aqua focus rings */
+    --border: 216 25% 20%; /* Border color */
+    --input: 216 25% 16%; /* Input background */
+    --ring: 51 100% 50%; /* Gold focus rings */
 
     --radius: 0.75rem;
 
-    /* Sidebar & Header - Solid Dark Navy */
-    --sidebar-background: 216 30% 13%; /* Dark Navy */
-    --sidebar-foreground: 0 0% 100%; /* White text */
-    --sidebar-primary: 195 100% 50%; /* Aqua highlights */
-    --sidebar-primary-foreground: 216 30% 13%;
-    --sidebar-accent: 213 30% 18%; /* Lighter navy for hover */
-    --sidebar-accent-foreground: 195 100% 50%; /* Aqua text */
-    --sidebar-border: 217 30% 20%;
-    --sidebar-ring: 195 100% 50%;
+    /* Premium Gradients & Effects */
+    --gradient-primary: linear-gradient(135deg, hsl(216 29% 11%) 0%, hsl(216 25% 14%) 100%);
+    --gradient-gold: linear-gradient(135deg, hsl(51 100% 50%) 0%, hsl(45 100% 47%) 100%);
+    --gradient-emerald: linear-gradient(135deg, hsl(158 64% 52%) 0%, hsl(158 64% 45%) 100%);
+    
+    /* Premium Shadows */
+    --shadow-gold: 0 4px 20px hsla(51, 100%, 50%, 0.25);
+    --shadow-emerald: 0 4px 20px hsla(158, 64%, 52%, 0.25);
+    --shadow-premium: 0 8px 32px hsla(216, 29%, 8%, 0.4);
 
-    /* Premium Gradients & Shadows */
-    --gradient-primary: linear-gradient(135deg, hsl(213 30% 18%) 0%, hsl(216 30% 13%) 100%);
-    --gradient-surface: linear-gradient(135deg, hsl(217 26% 17%), hsl(216 26% 19%));
-    --shadow-subtle: 0 2px 8px hsla(216, 30%, 8%, 0.3);
-    --shadow-elevated: 0 4px 20px hsla(216, 30%, 8%, 0.4);
-    --shadow-premium: 0 8px 32px hsla(216, 30%, 8%, 0.5);
-
-    /* Role Transition Variables */
-    --current-role-accent: var(--role-family);
-    --role-transition-duration: 0.8s;
+    /* Mobile Touch Targets */
+    --touch-target: 44px; /* Minimum 44px for touch */
   }
 
   .light-theme {
-    /* Light theme uses same dark palette - always dark for premium feel */
-    --background: 216 30% 13%; /* Dark Navy #172042 */
-    --foreground: 0 0% 100%; /* White text */
+    /* Family Office always uses dark theme for premium feel */
+    --background: 216 29% 11%; /* Deep Navy #14213D */
+    --foreground: 0 0% 100%; /* Pure White text */
 
-    --card: 217 26% 17%; /* Card background #232C45 */
+    --card: 216 25% 16%; /* Card background */
     --card-foreground: 0 0% 100%;
 
-    --popover: 216 26% 19%; /* Surface color #1E2333 */
+    --popover: 216 25% 14%; /* Surface color */
     --popover-foreground: 0 0% 100%;
 
-    --primary: 216 30% 13%; /* Dark Navy */
+    --primary: 216 29% 11%; /* Deep Navy */
     --primary-foreground: 0 0% 100%;
-    --primary-gradient: linear-gradient(135deg, hsl(213 30% 18%), hsl(216 30% 13%));
 
-    --secondary: 217 30% 20%;
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 51 100% 50%; /* Pure Gold */
+    --secondary-foreground: 216 29% 11%;
 
-    --muted: 217 26% 17%;
-    --muted-foreground: 213 35% 70%; /* #A6B2D1 */
+    --muted: 216 25% 16%;
+    --muted-foreground: 210 25% 70%;
 
-    --accent: 195 100% 50%; /* Aqua Blue */
-    --accent-foreground: 216 30% 13%;
+    --accent: 158 64% 52%; /* Emerald */
+    --accent-foreground: 0 0% 100%;
 
-    --gold-accent: 51 100% 50%; /* Gold */
-    --gold-foreground: 216 30% 13%;
+    --gold: 51 100% 50%;
+    --gold-foreground: 216 29% 11%;
 
-    /* Role colors with new palette */
-    --role-family: 195 100% 50%; /* Aqua Blue */
-    --role-advisor: 142 76% 36%; /* Success Green */
-    --role-accountant: 51 100% 50%; /* Gold */
-    --role-attorney: 343 100% 54%; /* Error Red */
-    --role-admin: 216 30% 13%; /* Dark Navy */
+    --emerald: 158 64% 52%;
+    --emerald-foreground: 0 0% 100%;
 
-    --success: 142 76% 36%; /* Green */
+    --success: 158 64% 52%;
     --success-foreground: 0 0% 100%;
     
-    --warning: 51 100% 50%; /* Yellow */
-    --warning-foreground: 216 30% 13%;
+    --warning: 51 100% 50%;
+    --warning-foreground: 216 29% 11%;
 
-    --destructive: 343 100% 54%; /* Red */
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 217 30% 20%;
-    --input: 217 26% 17%;
-    --ring: 195 100% 50%;
+    --border: 216 25% 20%;
+    --input: 216 25% 16%;
+    --ring: 51 100% 50%;
 
     --radius: 0.75rem;
 
-    /* Sidebar consistent dark navy */
-    --sidebar-background: 216 30% 13%;
-    --sidebar-foreground: 0 0% 100%;
-    --sidebar-primary: 195 100% 50%;
-    --sidebar-primary-foreground: 216 30% 13%;
-    --sidebar-accent: 213 30% 18%;
-    --sidebar-accent-foreground: 195 100% 50%;
-    --sidebar-border: 217 30% 20%;
-    --sidebar-ring: 195 100% 50%;
+    --gradient-primary: linear-gradient(135deg, hsl(216 29% 11%) 0%, hsl(216 25% 14%) 100%);
+    --gradient-gold: linear-gradient(135deg, hsl(51 100% 50%) 0%, hsl(45 100% 47%) 100%);
+    --gradient-emerald: linear-gradient(135deg, hsl(158 64% 52%) 0%, hsl(158 64% 45%) 100%);
+    
+    --shadow-gold: 0 4px 20px hsla(51, 100%, 50%, 0.25);
+    --shadow-emerald: 0 4px 20px hsla(158, 64%, 52%, 0.25);
+    --shadow-premium: 0 8px 32px hsla(216, 29%, 8%, 0.4);
 
-    /* Premium gradients and shadows */
-    --gradient-primary: linear-gradient(135deg, hsl(213 30% 18%) 0%, hsl(216 30% 13%) 100%);
-    --gradient-surface: linear-gradient(135deg, hsl(217 26% 17%), hsl(216 26% 19%));
-    --shadow-subtle: 0 2px 8px hsla(216, 30%, 8%, 0.3);
-    --shadow-elevated: 0 4px 20px hsla(216, 30%, 8%, 0.4);
-    --shadow-premium: 0 8px 32px hsla(216, 30%, 8%, 0.5);
-
-    --current-role-accent: var(--role-family);
-    --role-transition-duration: 0.8s;
+    --touch-target: 44px;
   }
 }
 
@@ -182,39 +156,46 @@
     color: hsl(var(--foreground));
   }
 
-  /* Typography - Inter/Lato for modern sans-serif */
+  /* Typography - Playfair for headlines, Inter for body */
   h1, h2, h3, h4, h5, h6 {
-    @apply text-foreground font-bold tracking-tight uppercase;
-    font-family: 'Inter', 'Lato', -apple-system, BlinkMacSystemFont, sans-serif;
-    font-weight: 900; /* Bold weight for all headings */
+    @apply text-foreground font-bold tracking-tight;
+    font-family: 'Playfair Display', Georgia, Times, serif;
+    font-weight: 700; /* Bold weight for all headings */
     color: hsl(var(--foreground));
-    letter-spacing: 0.05em; /* Spacing for all-caps headings */
+    letter-spacing: -0.025em; /* Tighter spacing for elegant headlines */
   }
 
   p, span, li, div, button, input, textarea, label {
     @apply text-foreground;
-    font-family: 'Inter', 'Lato', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     color: hsl(var(--foreground));
   }
 
   h1 {
-    @apply text-4xl sm:text-5xl;
-    font-weight: 900;
+    @apply text-4xl sm:text-5xl lg:text-6xl;
+    font-weight: 700;
   }
 
   h2 {
-    @apply text-3xl sm:text-4xl;
-    font-weight: 900;
+    @apply text-3xl sm:text-4xl lg:text-5xl;
+    font-weight: 700;
   }
 
   h3 {
-    @apply text-2xl sm:text-3xl;
-    font-weight: 900;
+    @apply text-2xl sm:text-3xl lg:text-4xl;
+    font-weight: 600;
   }
 
   h4 {
-    @apply text-xl sm:text-2xl;
-    font-weight: 900;
+    @apply text-xl sm:text-2xl lg:text-3xl;
+    font-weight: 600;
+  }
+
+  /* Mobile-first touch targets */
+  button, a, .clickable {
+    min-height: var(--touch-target);
+    min-width: var(--touch-target);
+    @apply flex items-center justify-center;
   }
 }
 
