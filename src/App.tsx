@@ -20,6 +20,8 @@ import { DynamicLandingController } from "@/components/auth/DynamicLandingContro
 import { Navigation } from "@/components/Navigation";
 import { QABypassIndicator } from "@/components/security/QABypassIndicator";
 import { BrandedFooter } from "@/components/ui/BrandedFooter";
+import { LeadIntakeForm } from "@/pages/leads/LeadIntakeForm";
+import { LeadConfirmation } from "@/pages/leads/LeadConfirmation";
 import Index from "./pages/Index";
 // Dashboard default export
 import Dashboard from "./pages/Dashboard";
@@ -197,6 +199,10 @@ const App = () => {
                   <Routes>
                   <Route path="/auth" element={<AuthPage />} />
                     
+                    {/* Lead Management Routes */}
+                    <Route path="/leads/new" element={<LeadIntakeForm />} />
+                    <Route path="/leads/confirmation" element={<LeadConfirmation />} />
+
                     {/* Public routes - no authentication required */}
                     <Route path="/welcome" element={<WelcomePage />} />
                     <Route path="/scorecard" element={<RetirementConfidenceScorecard />} />
