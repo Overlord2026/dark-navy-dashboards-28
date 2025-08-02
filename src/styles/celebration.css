@@ -1,0 +1,93 @@
+/* Family Office Marketplace Celebration Styles */
+
+.celebration-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.confetti-gold {
+  background: hsl(var(--confetti-gold));
+}
+
+.confetti-emerald {
+  background: hsl(var(--confetti-emerald));
+}
+
+.confetti-navy {
+  background: hsl(var(--confetti-navy));
+}
+
+.celebration-milestone {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10000;
+  pointer-events: none;
+}
+
+.milestone-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 3rem;
+  font-weight: 700;
+  color: hsl(var(--gold));
+  text-shadow: 0 0 20px hsla(51, 100%, 50%, 0.5);
+  animation: milestone-bounce 2s ease-out;
+}
+
+@keyframes milestone-bounce {
+  0% { 
+    opacity: 0;
+    transform: scale(0.3) translateY(100px);
+  }
+  50% { 
+    opacity: 1;
+    transform: scale(1.2) translateY(-20px);
+  }
+  100% { 
+    opacity: 0;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.celebration-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  background: var(--gradient-gold);
+  color: hsl(var(--gold-foreground));
+  font-weight: 600;
+  font-size: 0.875rem;
+  box-shadow: var(--shadow-gold);
+  animation: celebration-pulse 2s infinite;
+}
+
+@keyframes celebration-pulse {
+  0%, 100% { 
+    transform: scale(1);
+    box-shadow: var(--shadow-gold);
+  }
+  50% { 
+    transform: scale(1.05);
+    box-shadow: 0 8px 40px hsla(51, 100%, 50%, 0.4);
+  }
+}
+
+.pipeline-goal-celebration {
+  background: var(--gradient-emerald);
+  color: hsl(var(--emerald-foreground));
+  box-shadow: var(--shadow-emerald);
+}
+
+.client-won-celebration {
+  background: var(--gradient-gold);
+  color: hsl(var(--gold-foreground));
+  box-shadow: var(--shadow-gold);
+}

@@ -1,5 +1,6 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+@import './styles/celebration.css';
 
 @tailwind base;
 @tailwind components;
@@ -7,36 +8,38 @@
 
 @layer base {
   :root, .dark-theme {
-    /* Family Office Premium Theme - Gold, Navy, Emerald */
-    --background: 216 29% 11%; /* Deep Navy #14213D */
-    --foreground: 0 0% 100%; /* Pure White text */
+    /* Family Office Marketplace Premium Theme */
+    --background: 216 29% 11%; /* Deep Blue #14213D */
+    --foreground: 0 0% 100%; /* White #FFFFFF */
 
-    --card: 216 25% 16%; /* Card background #222B3E */
+    --card: 216 25% 16%; /* Card background */
     --card-foreground: 0 0% 100%; /* White text */
 
-    --popover: 216 25% 14%; /* Surface color #1A2230 */
+    --popover: 216 25% 14%; /* Surface color */
     --popover-foreground: 0 0% 100%;
 
-    /* Primary - Navy */
-    --primary: 216 29% 11%; /* Deep Navy #14213D */
-    --primary-foreground: 0 0% 100%; /* White text */
+    /* Primary - Gold #FFD700 */
+    --primary: 51 100% 50%; /* Gold #FFD700 */
+    --primary-foreground: 216 29% 11%; /* Deep Blue text on gold */
 
-    /* Gold Accent - Premium Gold */
-    --secondary: 51 100% 50%; /* Pure Gold #FFD700 */
-    --secondary-foreground: 216 29% 11%; /* Navy text on gold */
+    /* Secondary - Deep Blue #14213D */
+    --secondary: 216 29% 11%; /* Deep Blue #14213D */
+    --secondary-foreground: 0 0% 100%; /* White text on blue */
 
     --muted: 216 25% 16%; /* Card background */
-    --muted-foreground: 210 25% 70%; /* Light text #A6B2CC */
+    --muted-foreground: 210 25% 70%; /* Light text */
 
-    /* Emerald Accent - Success Color */
+    /* Accent - Emerald #169873 */
     --accent: 158 64% 52%; /* Emerald #169873 */
     --accent-foreground: 0 0% 100%; /* White text on emerald */
 
-    /* Gold Primary for CTAs */
-    --gold: 51 100% 50%; /* Pure Gold #FFD700 */
-    --gold-foreground: 216 29% 11%; /* Navy text on gold */
+    /* Marketplace Colors */
+    --gold: 51 100% 50%; /* Gold #FFD700 */
+    --gold-foreground: 216 29% 11%; /* Deep Blue text on gold */
 
-    /* Emerald for Success States */
+    --navy: 216 29% 11%; /* Deep Blue #14213D */
+    --navy-foreground: 0 0% 100%; /* White text on navy */
+
     --emerald: 158 64% 52%; /* Emerald #169873 */
     --emerald-foreground: 0 0% 100%; /* White text on emerald */
 
@@ -67,14 +70,19 @@
     --shadow-emerald: 0 4px 20px hsla(158, 64%, 52%, 0.25);
     --shadow-premium: 0 8px 32px hsla(216, 29%, 8%, 0.4);
 
-    /* Mobile Touch Targets */
-    --touch-target: 44px; /* Minimum 44px for touch */
+    /* Touch Targets */
+    --touch-target: 44px;
+
+    /* Celebration Colors */
+    --confetti-gold: 51 100% 50%;
+    --confetti-emerald: 158 64% 52%;
+    --confetti-navy: 216 29% 11%;
   }
 
   .light-theme {
-    /* Family Office always uses dark theme for premium feel */
-    --background: 216 29% 11%; /* Deep Navy #14213D */
-    --foreground: 0 0% 100%; /* Pure White text */
+    /* Family Office Marketplace Premium Theme */
+    --background: 216 29% 11%; /* Deep Blue #14213D */
+    --foreground: 0 0% 100%; /* White #FFFFFF */
 
     --card: 216 25% 16%; /* Card background */
     --card-foreground: 0 0% 100%;
@@ -82,22 +90,29 @@
     --popover: 216 25% 14%; /* Surface color */
     --popover-foreground: 0 0% 100%;
 
-    --primary: 216 29% 11%; /* Deep Navy */
-    --primary-foreground: 0 0% 100%;
+    /* Primary - Gold #FFD700 */
+    --primary: 51 100% 50%; /* Gold #FFD700 */
+    --primary-foreground: 216 29% 11%; /* Deep Blue text on gold */
 
-    --secondary: 51 100% 50%; /* Pure Gold */
-    --secondary-foreground: 216 29% 11%;
+    /* Secondary - Deep Blue #14213D */
+    --secondary: 216 29% 11%; /* Deep Blue #14213D */
+    --secondary-foreground: 0 0% 100%; /* White text on blue */
 
     --muted: 216 25% 16%;
     --muted-foreground: 210 25% 70%;
 
-    --accent: 158 64% 52%; /* Emerald */
+    /* Accent - Emerald #169873 */
+    --accent: 158 64% 52%; /* Emerald #169873 */
     --accent-foreground: 0 0% 100%;
 
-    --gold: 51 100% 50%;
+    /* Marketplace Colors */
+    --gold: 51 100% 50%; /* Gold #FFD700 */
     --gold-foreground: 216 29% 11%;
 
-    --emerald: 158 64% 52%;
+    --navy: 216 29% 11%; /* Deep Blue #14213D */
+    --navy-foreground: 0 0% 100%;
+
+    --emerald: 158 64% 52%; /* Emerald #169873 */
     --emerald-foreground: 0 0% 100%;
 
     --success: 158 64% 52%;
@@ -124,6 +139,10 @@
     --shadow-premium: 0 8px 32px hsla(216, 29%, 8%, 0.4);
 
     --touch-target: 44px;
+
+    --confetti-gold: 51 100% 50%;
+    --confetti-emerald: 158 64% 52%;
+    --confetti-navy: 216 29% 11%;
   }
 }
 
@@ -156,19 +175,24 @@
     color: hsl(var(--foreground));
   }
 
-  /* Typography - Playfair for headlines, Inter for body */
+  /* Typography - Playfair Display for headlines, Inter for body */
   h1, h2, h3, h4, h5, h6 {
     @apply text-foreground font-bold tracking-tight;
-    font-family: 'Playfair Display', Georgia, Times, serif;
-    font-weight: 700; /* Bold weight for all headings */
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 700;
     color: hsl(var(--foreground));
-    letter-spacing: -0.025em; /* Tighter spacing for elegant headlines */
+    letter-spacing: -0.025em;
   }
 
   p, span, li, div, button, input, textarea, label {
     @apply text-foreground;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     color: hsl(var(--foreground));
+  }
+
+  /* Code/Monospace - SF Mono */
+  code, pre, .font-mono {
+    font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Consolas', monospace;
   }
 
   h1 {

@@ -31,8 +31,10 @@ import {
   Target, 
   Download,
   FileText,
-  Filter
+  Filter,
+  Trophy
 } from 'lucide-react';
+import { useCelebration } from '@/hooks/useCelebration';
 import { format, subDays } from 'date-fns';
 
 interface ROIMetrics {

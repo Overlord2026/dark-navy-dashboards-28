@@ -22,12 +22,24 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "hsl(var(--primary))",
+          DEFAULT: "hsl(var(--primary))", // Gold #FFD700
           foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
-          DEFAULT: "hsl(var(--secondary))", // Gold
+          DEFAULT: "hsl(var(--secondary))", // Deep Blue #14213D
           foreground: "hsl(var(--secondary-foreground))",
+        },
+        gold: {
+          DEFAULT: "hsl(var(--gold))", // Gold #FFD700
+          foreground: "hsl(var(--gold-foreground))",
+        },
+        navy: {
+          DEFAULT: "hsl(var(--navy))", // Deep Blue #14213D
+          foreground: "hsl(var(--navy-foreground))",
+        },
+        emerald: {
+          DEFAULT: "hsl(var(--emerald))", // Emerald #169873
+          foreground: "hsl(var(--emerald-foreground))",
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
@@ -57,20 +69,6 @@ export default {
           DEFAULT: "hsl(var(--warning))", // Gold
           foreground: "hsl(var(--warning-foreground))",
         },
-        // Family Office Premium Colors
-        navy: {
-          DEFAULT: "216 29% 11%", // Deep Navy #14213D
-          light: "216 25% 16%", // Card background
-          surface: "216 25% 14%", // Surface
-        },
-        gold: {
-          DEFAULT: "51 100% 50%", // Pure Gold #FFD700
-          foreground: "216 29% 11%",
-        },
-        emerald: {
-          DEFAULT: "158 64% 52%", // Emerald #169873
-          foreground: "0 0% 100%",
-        },
       },
       borderRadius: {
         lg: `var(--radius)`,
@@ -80,8 +78,9 @@ export default {
       fontFamily: {
         sans: ["Inter", "var(--font-sans)", ...fontFamily.sans],
         serif: ["Playfair Display", "Georgia", "Times New Roman", "serif"],
-        display: ["Playfair Display", "Georgia", "serif"], // For headlines
-        body: ["Inter", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"], // For body text
+        display: ["Playfair Display", "Georgia", "serif"],
+        body: ["Inter", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"],
+        mono: ["SF Mono", "Monaco", "Inconsolata", "Roboto Mono", "Consolas", "monospace"],
       },
       spacing: {
         'touch': 'var(--touch-target)', // 44px minimum touch target

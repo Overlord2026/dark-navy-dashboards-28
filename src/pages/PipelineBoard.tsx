@@ -7,7 +7,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { Filter, Search, Calendar, DollarSign, User, Building, Phone, Mail } from 'lucide-react';
+import { Filter, Search, Calendar, DollarSign, User, Building, Phone, Mail, Trophy, Target } from 'lucide-react';
+import { useCelebration } from '@/hooks/useCelebration';
 
 interface Lead {
   id: string;
@@ -42,11 +43,11 @@ interface PipelineColumn {
 }
 
 const PIPELINE_STAGES = [
-  { id: 'new', title: 'New', color: 'bg-blue-500' },
-  { id: 'contacted', title: 'Contacted', color: 'bg-yellow-500' },
-  { id: 'qualified', title: 'Qualified', color: 'bg-purple-500' },
-  { id: 'scheduled', title: 'Scheduled', color: 'bg-orange-500' },
-  { id: 'closed', title: 'Closed', color: 'bg-green-500' },
+  { id: 'new', title: 'New', color: 'bg-navy' },
+  { id: 'contacted', title: 'Contacted', color: 'bg-gold' },
+  { id: 'qualified', title: 'Qualified', color: 'bg-emerald' },
+  { id: 'scheduled', title: 'Scheduled', color: 'bg-primary' },
+  { id: 'closed', title: 'Closed', color: 'bg-success' },
 ];
 
 export const PipelineBoard: React.FC = () => {
@@ -64,6 +65,7 @@ export const PipelineBoard: React.FC = () => {
   const [campaigns, setCampaigns] = useState<any[]>([]);
   const [agencies, setAgencies] = useState<any[]>([]);
   const { toast } = useToast();
+  const { triggerCelebration, CelebrationComponent } = useCelebration();
 
   useEffect(() => {
     fetchData();
@@ -186,6 +188,13 @@ export const PipelineBoard: React.FC = () => {
           l.id === draggableId ? { ...l, lead_status: destination.droppableId } : l
         )
       );
+
+      // Check for celebration triggers
+      if (destination.droppableId === 'closed' && lead.client_converted) {
+        triggerCelebration('client-won', 'Client Won! 🎉');
+      } else if (destination.droppableId === 'qualified') {
+        triggerCelebration('pipeline-goal', 'Lead Qualified! 🎯');
+      }
 
       toast({
         title: "Lead Updated",
@@ -320,9 +329,10 @@ export const PipelineBoard: React.FC = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      <CelebrationComponent />
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-3xl font-bold">Lead Pipeline</h1>
+          <h1 className="text-3xl font-bold font-serif">Lead Pipeline</h1>
           <p className="text-muted-foreground">Manage your leads through the sales funnel</p>
         </div>
         <div className="flex gap-2">
