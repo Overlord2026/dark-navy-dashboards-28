@@ -12,8 +12,8 @@ import { Button } from '@/components/ui/button';
 import { Eye } from 'lucide-react';
 
 interface DateRange {
-  from?: Date;
-  to?: Date;
+  from?: Date | null;
+  to?: Date | null;
 }
 
 interface CampaignPerformanceTableProps {

@@ -4,8 +4,8 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { CHART_COLORS, CHART_STYLES } from '@/utils/chartTheme';
 
 interface DateRange {
-  from?: Date;
-  to?: Date;
+  from?: Date | null;
+  to?: Date | null;
 }
 
 interface CampaignComparisonChartProps {

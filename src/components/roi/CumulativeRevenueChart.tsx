@@ -4,8 +4,8 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { CHART_COLORS, CHART_STYLES } from '@/utils/chartTheme';
 
 interface DateRange {
-  from?: Date;
-  to?: Date;
+  from?: Date | null;
+  to?: Date | null;
 }
 
 interface CumulativeRevenueChartProps {

@@ -5,8 +5,8 @@ import { ResponsiveChart } from '@/components/ui/responsive-chart';
 import { CHART_COLORS, CHART_STYLES } from '@/utils/chartTheme';
 
 interface DateRange {
-  from?: Date;
-  to?: Date;
+  from?: Date | null;
+  to?: Date | null;
 }
 
 interface AdvancedROIFunnelChartProps {
