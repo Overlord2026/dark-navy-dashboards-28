@@ -309,7 +309,7 @@
 
   /* Role-Based Dashboard Banners */
   .dashboard-banner {
-    @apply platinum-elevated p-6 mb-6;
+    @apply premium-elevated p-6 mb-6;
     border-left: 4px solid hsl(var(--current-role-accent));
     transition: all var(--role-transition-duration) cubic-bezier(0.4, 0, 0.2, 1);
   }
@@ -468,7 +468,7 @@
 
   /* Cards with Premium Depth */
   .card-boutique {
-    @apply platinum-card p-6 transition-all duration-300;
+    @apply premium-card p-6 transition-all duration-300;
   }
   
   .card-boutique:hover {
@@ -478,7 +478,7 @@
 
   /* Forms with Proper Contrast */
   .form-input {
-    @apply platinum-surface px-4 py-3 rounded-lg border border-border/50 transition-all duration-300;
+    @apply premium-surface px-4 py-3 rounded-lg border border-border/50 transition-all duration-300;
     color: hsl(var(--foreground)); /* Navy text - 12.1:1 contrast on platinum */
   }
   
