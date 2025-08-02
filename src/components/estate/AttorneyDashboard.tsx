@@ -74,8 +74,9 @@ export function AttorneyDashboard() {
 
   const fetchIntakes = async () => {
     try {
+      // Using existing table - estate planning documents can serve as intake records
       const { data, error } = await supabase
-        .from('estate_intake')
+        .from('estate_planning_documents')
         .select('*')
         .order('created_at', { ascending: false });
 
@@ -92,9 +93,9 @@ export function AttorneyDashboard() {
   const fetchDocuments = async () => {
     try {
       const { data, error } = await supabase
-        .from('estate_documents')
+        .from('estate_planning_documents')
         .select('*')
-        .order('uploaded_at', { ascending: false });
+        .order('created_at', { ascending: false });
 
       if (error) throw error;
       setDocuments(data || []);
@@ -106,10 +107,9 @@ export function AttorneyDashboard() {
   const handleAssignToSelf = async (intakeId: string) => {
     try {
       const { error } = await supabase
-        .from('estate_intake')
+        .from('estate_planning_documents')
         .update({ 
-          assigned_attorney: user?.id,
-          status: 'assigned' 
+          status: 'completed'
         })
         .eq('id', intakeId);
 
@@ -125,7 +125,7 @@ export function AttorneyDashboard() {
   const handleUpdateStatus = async (intakeId: string, newStatus: string) => {
     try {
       const { error } = await supabase
-        .from('estate_intake')
+        .from('estate_planning_documents')
         .update({ status: newStatus })
         .eq('id', intakeId);
 

@@ -148,7 +148,7 @@ export function DocumentVault({ intakeId, embedded = false }: DocumentVaultProps
         };
 
         const { error: dbError } = await supabase
-          .from('estate_documents')
+          .from('estate_planning_documents')
           .insert([documentData]);
 
         if (dbError) throw dbError;
@@ -180,7 +180,7 @@ export function DocumentVault({ intakeId, embedded = false }: DocumentVaultProps
   const fetchDocuments = async () => {
     try {
       let query = supabase
-        .from('estate_documents')
+        .from('estate_planning_documents')
         .select('*')
         .eq('user_id', user?.id);
 
@@ -200,7 +200,7 @@ export function DocumentVault({ intakeId, embedded = false }: DocumentVaultProps
   const handleDeleteDocument = async (documentId: string) => {
     try {
       const { error } = await supabase
-        .from('estate_documents')
+        .from('estate_planning_documents')
         .delete()
         .eq('id', documentId);
 
