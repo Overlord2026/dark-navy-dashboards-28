@@ -32,6 +32,7 @@ import { ProfessionalDirectory } from '@/components/marketplace/ProfessionalDire
 import { MarketplaceEducationalResources } from '@/components/marketplace/MarketplaceEducationalResources';
 import { ProfessionalUpgradePrompts } from '@/components/marketplace/ProfessionalUpgradePrompts';
 import { MarketplaceFeatureGate } from '@/components/marketplace/MarketplaceFeatureGate';
+import { MarketplaceAnalytics } from '@/components/marketplace/MarketplaceAnalytics';
 import { useSubscriptionAccess } from '@/hooks/useSubscriptionAccess';
 import { useUser } from '@/context/UserContext';
 
@@ -45,6 +46,7 @@ export default function MarketplacePage() {
 
   const userRole = userProfile?.role || 'client';
   const isProfessional = ['advisor', 'accountant', 'attorney', 'consultant'].includes(userRole);
+  const isAdmin = ['admin', 'system_administrator', 'tenant_admin'].includes(userRole);
 
   // Hero Section Component
   const HeroSection = () => (
@@ -250,12 +252,17 @@ export default function MarketplacePage() {
       {/* Main Content */}
       <div className="container mx-auto px-6 py-16">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className={`grid w-full ${isProfessional ? 'grid-cols-4' : 'grid-cols-3'} max-w-2xl mx-auto mb-12`}>
+          <TabsList className={`grid w-full ${
+            isProfessional || isAdmin ? 'grid-cols-5' : 'grid-cols-3'
+          } max-w-3xl mx-auto mb-12`}>
             <TabsTrigger value="professionals">Professionals</TabsTrigger>
             <TabsTrigger value="services">Services</TabsTrigger>
             <TabsTrigger value="resources">Resources</TabsTrigger>
             {isProfessional && (
               <TabsTrigger value="upgrades">Grow Practice</TabsTrigger>
+            )}
+            {(isProfessional || isAdmin) && (
+              <TabsTrigger value="analytics">Analytics</TabsTrigger>
             )}
           </TabsList>
 
@@ -361,6 +368,30 @@ export default function MarketplacePage() {
           {isProfessional && (
             <TabsContent value="upgrades" className="space-y-8">
               <ProfessionalUpgradePrompts />
+            </TabsContent>
+          )}
+
+          {/* Analytics Tab */}
+          {(isProfessional || isAdmin) && (
+            <TabsContent value="analytics" className="space-y-8">
+              {checkFeatureAccess('premium') ? (
+                <MarketplaceAnalytics />
+              ) : (
+                <MarketplaceFeatureGate
+                  featureName="Marketplace Analytics"
+                  requiredTier="premium"
+                  description="Get detailed insights into your marketplace performance and client engagement"
+                  benefits={[
+                    'Comprehensive performance metrics',
+                    'Lead conversion tracking',
+                    'Client engagement analytics',
+                    'Keyword performance insights',
+                    'Export capabilities (CSV & PDF)',
+                    'Competitive analysis data'
+                  ]}
+                  upgradePrompt="Unlock powerful analytics to grow your practice and optimize your marketplace presence"
+                />
+              )}
             </TabsContent>
           )}
         </Tabs>
