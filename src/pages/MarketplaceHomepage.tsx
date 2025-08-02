@@ -5,7 +5,7 @@ import { ProfessionalCategories } from '@/components/marketplace/ProfessionalCat
 import { FeaturedServices } from '@/components/marketplace/FeaturedServices';
 import { MarketplaceStats } from '@/components/marketplace/MarketplaceStats';
 
-export default function MarketplacePage() {
+export default function MarketplaceHomepage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30">
       {/* Hero Section */}
