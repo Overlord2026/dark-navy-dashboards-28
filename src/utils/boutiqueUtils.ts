@@ -58,7 +58,7 @@ export function getBoutiqueButtonClass(variant: 'primary' | 'navy' | 'sapphire' 
 }
 
 /**
- * Apply role-based theme transition
+ * Apply role-based theme transition with WCAG-compliant colors
  */
 export function applyRoleTheme(role: string) {
   const accent = getRoleAccent(role);
@@ -67,12 +67,24 @@ export function applyRoleTheme(role: string) {
   // Update CSS custom properties for smooth theme transition
   root.style.setProperty('--current-role-accent', accent);
   
-  // Add transition class to body for smooth color changes
+  // Add transition classes to body and relevant elements
   document.body.classList.add('role-transition');
   
-  // Remove transition class after animation completes
+  // Apply role-specific transitions to sidebar items and nav tabs
+  const sidebarItems = document.querySelectorAll('.sidebar-item-icon');
+  const navTabs = document.querySelectorAll('.nav-tab');
+  const banners = document.querySelectorAll('.dashboard-banner');
+  
+  sidebarItems.forEach(item => item.classList.add('role-transition'));
+  navTabs.forEach(tab => tab.classList.add('role-transition'));
+  banners.forEach(banner => banner.classList.add('role-transition'));
+  
+  // Remove transition classes after animation completes
   setTimeout(() => {
     document.body.classList.remove('role-transition');
+    sidebarItems.forEach(item => item.classList.remove('role-transition'));
+    navTabs.forEach(tab => tab.classList.remove('role-transition'));
+    banners.forEach(banner => banner.classList.remove('role-transition'));
   }, 800);
 }
 
