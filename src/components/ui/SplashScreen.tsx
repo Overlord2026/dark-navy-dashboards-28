@@ -45,11 +45,20 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="flex flex-col items-center text-center max-w-md mx-auto"
         >
-          {/* Gold Tree Logo */}
+          {/* Gold Tree Logo with Enhanced Animation */}
           <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            initial={{ scale: 0.8, opacity: 0, rotateY: -15 }}
+            animate={{ 
+              scale: 1, 
+              opacity: 1, 
+              rotateY: 0,
+              filter: ["brightness(0) invert(1)", "brightness(0) invert(1) drop-shadow(0 0 20px #FFD700)"]
+            }}
+            transition={{ 
+              duration: 0.8, 
+              delay: 0.2,
+              filter: { duration: 2, repeat: Infinity, repeatType: "reverse" }
+            }}
             className="mb-8"
           >
             <Logo 
@@ -59,17 +68,17 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
             />
           </motion.div>
 
-          {/* Main Headline - White Serif */}
+          {/* Main Headline - Experience the Difference */}
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="font-playfair font-bold text-white text-2xl md:text-4xl leading-tight mb-4"
+            className="font-playfair font-bold text-white text-2xl md:text-4xl leading-tight mb-4 uppercase tracking-widest"
           >
-            {withTrademarks("Boutique Family Office")}
+            Experience the {withTrademarks("Boutique Family Office")} Difference
           </motion.h1>
 
-          {/* Tagline */}
+          {/* New Tagline */}
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -77,7 +86,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
             className="font-inter text-lg md:text-xl mb-8 leading-relaxed"
             style={{ color: '#C9C8C5' }}
           >
-            Your Wealth. Your Advisors. Your Control.
+            All Your Wealth. All Your Advisors. All Under One Roof.
           </motion.p>
 
           {/* Gold Button - Enter/Get Started */}
@@ -90,7 +99,11 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
             <button
               onClick={handleEnter}
               disabled={isLoading}
-              className="btn-primary-gold px-8 py-4 rounded-lg font-inter font-semibold text-navy text-lg hover:scale-105 transition-transform duration-200 flex items-center gap-3 min-w-[140px] justify-center"
+              className="btn-primary-gold px-8 py-4 rounded-lg font-inter font-bold text-navy text-xl hover:scale-105 hover:shadow-2xl transition-all duration-300 flex items-center gap-3 min-w-[160px] justify-center shadow-lg"
+              style={{ 
+                background: '#FFD700', 
+                boxShadow: '0 2px 20px rgba(20, 33, 61, 0.08), 0 0 30px rgba(255, 215, 0, 0.3)' 
+              }}
               aria-label="Main action to enter Family Office platform"
             >
               {isLoading ? (
@@ -99,7 +112,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
                   Loading...
                 </>
               ) : (
-                'Enter'
+                'Get Started'
               )}
             </button>
           </motion.div>

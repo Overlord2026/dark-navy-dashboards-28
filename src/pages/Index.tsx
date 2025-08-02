@@ -1,34 +1,42 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useRoleContext } from '@/context/RoleContext';
+import { SplashScreen } from '@/components/ui/SplashScreen';
 
 export default function Index() {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
   const { getRoleDashboard } = useRoleContext();
+  const [showSplash, setShowSplash] = useState(true);
 
   useEffect(() => {
-    if (isAuthenticated) {
-      // Redirect to role-appropriate dashboard
+    if (isAuthenticated && !showSplash) {
+      // Redirect to role-appropriate dashboard after splash
       const dashboardPath = getRoleDashboard();
       navigate(dashboardPath, { replace: true });
     }
-  }, [isAuthenticated, getRoleDashboard, navigate]);
+  }, [isAuthenticated, showSplash, getRoleDashboard, navigate]);
 
-  return (
-    <div className="container mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-4">Welcome to Family Office Platform</h1>
-      <p className="text-muted-foreground">
-        Your comprehensive family office management solution.
-      </p>
-      {!isAuthenticated && (
-        <div className="mt-6">
-          <p className="text-sm text-muted-foreground">
-            Please sign in to access your personalized dashboard.
-          </p>
-        </div>
-      )}
-    </div>
-  );
+  const handleEnterApp = () => {
+    setShowSplash(false);
+    if (isAuthenticated) {
+      const dashboardPath = getRoleDashboard();
+      navigate(dashboardPath, { replace: true });
+    } else {
+      navigate('/auth', { replace: true });
+    }
+  };
+
+  if (showSplash) {
+    return (
+      <SplashScreen 
+        onEnter={handleEnterApp}
+        theme="dark"
+        showConfetti={false}
+      />
+    );
+  }
+
+  return null;
 }
