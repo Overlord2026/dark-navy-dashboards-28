@@ -102,7 +102,7 @@ export const ROIDashboard: React.FC = () => {
     try {
       const [advisorsRes, campaignsRes, agenciesRes] = await Promise.all([
         supabase.from('advisor_profiles').select('id, name, user_id').eq('is_active', true),
-        supabase.from('campaigns').select('id, campaign_name').eq('status', 'active'),
+        supabase.from('marketing_campaigns').select('id, campaign_name').eq('status', 'active'),
         supabase.from('marketing_agencies').select('id, name').eq('status', 'approved'),
       ]);
 

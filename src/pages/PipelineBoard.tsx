@@ -329,7 +329,7 @@ export const PipelineBoard: React.FC = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <CelebrationComponent />
+      {/* <CelebrationComponent /> */}
       <div className="flex justify-between items-center mb-6">
         <div>
           <h1 className="text-3xl font-bold font-serif">Lead Pipeline</h1>

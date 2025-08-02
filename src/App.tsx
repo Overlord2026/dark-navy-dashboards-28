@@ -47,6 +47,7 @@ import { AccountantDashboard } from "./pages/AccountantDashboard";
 import { ConsultantDashboard } from "./pages/ConsultantDashboard";
 import { AttorneyDashboard } from "./pages/AttorneyDashboard";
 import { CoachDashboard } from "./pages/CoachDashboard";
+import CoachesLanding from "./pages/CoachesLanding";
 import { AdminRoute } from "@/components/auth/AdminRoute";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { DiagnosticsPage } from "./pages/DiagnosticsPage";
@@ -364,6 +365,7 @@ const App = () => {
                       </AuthWrapper>
                     }
                   />
+                  <Route path="/coaches" element={<CoachesLanding />} />
                   <Route
                     path="/diagnostics"
                     element={

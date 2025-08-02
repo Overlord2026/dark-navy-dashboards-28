@@ -359,7 +359,7 @@ export const AgencyPerformanceCharts: React.FC<AgencyPerformanceChartsProps> = (
                   borderRadius: '8px',
                   color: 'hsl(var(--gold))'
                 }}
-                formatter={(value) => [`$${value.toFixed(0)}`, 'Cost Per Qualified Appt']} 
+                formatter={(value) => [`$${typeof value === 'number' ? value.toFixed(0) : value}`, 'Cost Per Qualified Appt']} 
               />
               <Bar 
                 dataKey="cost_per_qualified_appt" 

@@ -207,7 +207,7 @@ export default function AdvisorROIDashboard() {
               <div className="flex flex-col lg:flex-row gap-4 items-center">
                 <DatePickerWithRange
                   date={dateRange}
-                  onDateChange={(newDateRange) => setDateRange(newDateRange || {})}
+                  onDateChange={(newDateRange) => setDateRange(newDateRange || { from: new Date(), to: new Date() })}
                   className="w-full lg:w-[300px]"
                 />
                 
