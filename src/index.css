@@ -111,11 +111,14 @@
     --role-attorney: 252 48% 45%;
     --role-admin: 215 28% 10%;
 
-    /* Boutique system matches */
-    --gold-primary: 51 100% 50%;
-    --gold-premium: 45 85% 47%;
-    --gold-light: 51 88% 63%;
-    --gold-dark: 45 100% 35%;
+    /* Exact Boutique Brand Colors */
+    --gold-primary: 51 100% 50%; /* #FFD700 */
+    --deep-blue: 216 33% 16%; /* #14213D */
+    --accent-emerald: 162 73% 27%; /* #169873 - Advisor */
+    --accent-navy: 215 31% 22%; /* #27344B - Accountant */
+    --accent-wine: 325 48% 20%; /* #491C38 - Attorney */
+    --accent-sky-blue: 210 100% 56%; /* #1E90FF - Client */
+    --text-sub: 42 8% 78%; /* #C9C8C5 */
     
     /* Light theme gradients */
     --gradient-gold: linear-gradient(135deg, hsl(51 100% 50%), hsl(45 85% 47%));
@@ -242,18 +245,26 @@
     backdrop-filter: blur(12px);
   }
 
-  /* Gold Primary Actions/CTAs - WCAG Compliant */
+  /* Gold Primary Actions/CTAs - Exact Specifications */
   .btn-primary-gold {
-    @apply font-semibold px-6 py-3 rounded-lg transition-all duration-300;
-    background: var(--gradient-gold);
-    color: hsl(var(--primary-foreground)); /* Navy on gold - 7.2:1 contrast */
-    box-shadow: var(--shadow-elevated);
+    background: #FFD700; /* Exact gold */
+    color: #FFFFFF; /* White text */
+    border-radius: 12px; /* Exact border radius */
+    font-weight: 700; /* Bold weight */
+    box-shadow: 0 2px 20px rgba(20, 33, 61, 0.08); /* Exact shadow */
+    font-size: 20px; /* Exact font size */
+    padding: 16px 32px; /* Exact padding */
+    font-family: 'Inter', 'Roboto', 'Arial', sans-serif;
     border: none;
+    transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
   
   .btn-primary-gold:hover {
     transform: translateY(-2px);
-    box-shadow: var(--shadow-premium);
+    box-shadow: 0 4px 32px rgba(20, 33, 61, 0.12);
     filter: brightness(1.05);
   }
   

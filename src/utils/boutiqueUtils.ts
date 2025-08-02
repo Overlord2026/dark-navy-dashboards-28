@@ -1,23 +1,21 @@
 import { UserRole } from './roleHierarchy';
 
-// Boutique Palette Constants
+// Exact Boutique Design Tokens
 export const BOUTIQUE_PALETTE = {
-  navy: '#16213E',
-  platinum: '#F6F7F9', 
   gold: '#FFD700',
-  emerald: '#20A39E',
-  sapphire: '#2C5282',
-  slate: '#384E77',
-  purple: '#6B47DC',
-  black: '#111820',
+  black: '#000000', 
+  deepBlue: '#14213D',
+  white: '#FFFFFF',
+  textSub: '#C9C8C5',
+  border: '#DFDFDF',
 } as const;
 
 export const ROLE_ACCENTS = {
-  family: '#2C5282',     // Sapphire Blue
-  advisor: '#20A39E',    // Emerald Green  
-  accountant: '#384E77', // Slate Blue
-  attorney: '#6B47DC',   // Deep Purple
-  admin: '#111820',      // Black
+  family: '#1E90FF',     // Sky Blue - Client
+  advisor: '#169873',    // Emerald Green - Advisor
+  accountant: '#27344B', // Navy - Accountant
+  attorney: '#491C38',   // Wine - Attorney
+  admin: '#000000',      // Black - Admin
 } as const;
 
 /**
