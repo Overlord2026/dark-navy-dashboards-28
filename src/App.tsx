@@ -366,7 +366,7 @@ const App = () => {
                       </AuthWrapper>
                     }
                   />
-          <Route path="/coaches" element={<CoachesLanding />} />
+          <Route path="/imo-fmo-dashboard" element={<IMOFMODashboard />} />
           <Route 
             path="/coach-dashboard" 
             element={

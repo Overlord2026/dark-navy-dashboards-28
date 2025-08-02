@@ -30,6 +30,9 @@ export type ProfessionalType =
   | "VC / Private Equity Professional"
   | "Tax Resolution Specialist"
   | "HR / Benefit Consultant"
+  // New IMO/FMO types
+  | "IMO / Independent Marketing Organization"
+  | "FMO / Field Marketing Organization"
   | "Other";
 
 // Professional segment categorization
@@ -44,7 +47,8 @@ export type ProfessionalSegment =
   | 'luxury_services'
   | 'investment_management'
   | 'business_advisory'
-  | 'family_office';
+  | 'family_office'
+  | 'imo_fmo_distribution';
 
 export interface Professional {
   id: string;

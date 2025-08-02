@@ -52,7 +52,9 @@ export function ProfessionalOnboarding({ userRole, professionalType, onComplete 
       'Family Investment Club Lead': 'investment_management',
       'VC / Private Equity Professional': 'investment_management',
       'Tax Resolution Specialist': 'tax_compliance',
-      'HR / Benefit Consultant': 'business_advisory'
+      'HR / Benefit Consultant': 'business_advisory',
+      'IMO / Independent Marketing Organization': 'imo_fmo_distribution',
+      'FMO / Field Marketing Organization': 'imo_fmo_distribution'
     };
     
     return typeMap[type] || 'wealth_management';

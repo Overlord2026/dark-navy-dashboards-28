@@ -510,6 +510,61 @@ export const PROFESSIONAL_SEGMENT_CONFIGS: Record<ProfessionalSegment, Professio
       'record_keeping',
       'regulatory_compliance'
     ]
+  },
+
+  imo_fmo_distribution: {
+    segment: 'imo_fmo_distribution',
+    widgets: [
+      'agent_pipeline',
+      'recruiting_metrics',
+      'carrier_marketplace',
+      'production_tracking',
+      'compliance_alerts',
+      'education_center',
+      'event_management',
+      'co_op_marketing'
+    ],
+    permissions: [
+      'manage_agent_pipeline',
+      'access_recruiting_tools',
+      'view_carrier_products',
+      'track_agent_production',
+      'monitor_compliance',
+      'manage_education_content',
+      'coordinate_events',
+      'run_marketing_campaigns',
+      'access_downline_data'
+    ],
+    referral_settings: {
+      accepts_inbound: true,
+      accepts_outbound: true,
+      fee_structure: 'override_commission'
+    },
+    onboarding_steps: [
+      'imo_fmo_profile_setup',
+      'licensing_verification',
+      'carrier_appointments',
+      'agent_hierarchy_setup',
+      'compliance_framework',
+      'recruiting_process_config',
+      'marketing_materials_setup',
+      'commission_structure_setup'
+    ],
+    required_documents: [
+      'imo_fmo_license',
+      'carrier_appointments',
+      'e&o_insurance',
+      'agent_hierarchy_documentation',
+      'compliance_manual',
+      'recruiting_agreement_template'
+    ],
+    compliance_requirements: [
+      'state_licensing',
+      'carrier_appointments',
+      'agent_supervision',
+      'continuing_education_oversight',
+      'compliance_monitoring'
+    ]
   }
 };
 
@@ -535,7 +590,11 @@ export function getSegmentsByRole(userRole: string): ProfessionalSegment[] {
     'investment_club_lead': ['investment_management'],
     'vc_pe_professional': ['investment_management', 'business_advisory'],
     'tax_resolution_specialist': ['tax_compliance', 'legal_advisory'],
-    'hr_benefit_consultant': ['insurance_planning', 'business_advisory']
+    'hr_benefit_consultant': ['insurance_planning', 'business_advisory'],
+    'imo_executive': ['imo_fmo_distribution'],
+    'fmo_executive': ['imo_fmo_distribution'],
+    'imo_recruiter': ['imo_fmo_distribution'],
+    'fmo_recruiter': ['imo_fmo_distribution']
   };
 
   return segmentMap[userRole] || [];

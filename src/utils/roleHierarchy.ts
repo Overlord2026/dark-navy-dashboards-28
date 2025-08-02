@@ -27,7 +27,12 @@ export type UserRole =
   | 'investment_club_lead'
   | 'vc_pe_professional'
   | 'tax_resolution_specialist'
-  | 'hr_benefit_consultant';
+  | 'hr_benefit_consultant'
+  // IMO/FMO roles
+  | 'imo_executive'
+  | 'fmo_executive'
+  | 'imo_recruiter'
+  | 'fmo_recruiter';
 
 // Define role hierarchy levels (higher number = more permissions)
 const ROLE_LEVELS: Record<UserRole, number> = {
@@ -37,6 +42,9 @@ const ROLE_LEVELS: Record<UserRole, number> = {
   developer: 70,
   advisor: 60,
   coach: 55,
+  // IMO/FMO executives (high level due to managing many agents)
+  imo_executive: 58,
+  fmo_executive: 58,
   // Wealth segment professionals (tiered by complexity/access needs)
   private_banker: 55,
   platform_aggregator: 55,
@@ -49,6 +57,9 @@ const ROLE_LEVELS: Record<UserRole, number> = {
   accountant: 40,
   tax_resolution_specialist: 40,
   retirement_advisor: 38,
+  // IMO/FMO recruiters
+  imo_recruiter: 36,
+  fmo_recruiter: 36,
   private_lender: 35,
   philanthropy_consultant: 35,
   property_manager: 32,
@@ -72,7 +83,7 @@ export const ROLE_GROUPS = {
     'private_banker', 'estate_planner', 'business_succession_advisor', 'insurance_specialist', 'property_manager',
     'philanthropy_consultant', 'healthcare_advocate', 'luxury_concierge', 'family_law_advisor', 'platform_aggregator',
     'retirement_advisor', 'private_lender', 'investment_club_lead', 'vc_pe_professional', 'tax_resolution_specialist',
-    'hr_benefit_consultant'
+    'hr_benefit_consultant', 'imo_executive', 'fmo_executive', 'imo_recruiter', 'fmo_recruiter'
   ] as UserRole[],
   // Specialized access groups
   WEALTH_ADVISORS: ['advisor', 'private_banker', 'estate_planner', 'business_succession_advisor'] as UserRole[],
@@ -85,6 +96,10 @@ export const ROLE_GROUPS = {
   MARKETPLACE_VENDORS: [
     'luxury_concierge', 'healthcare_advocate', 'hr_benefit_consultant', 'property_manager'
   ] as UserRole[],
+  // IMO/FMO specific access groups
+  IMO_FMO_EXECUTIVES: ['imo_executive', 'fmo_executive'] as UserRole[],
+  IMO_FMO_STAFF: ['imo_executive', 'fmo_executive', 'imo_recruiter', 'fmo_recruiter'] as UserRole[],
+  DISTRIBUTION_NETWORK: ['imo_executive', 'fmo_executive', 'imo_recruiter', 'fmo_recruiter', 'insurance_specialist'] as UserRole[],
 };
 
 /**
@@ -148,6 +163,11 @@ export function getRoleDisplayName(role: string): string {
     vc_pe_professional: 'VC / Private Equity Professional',
     tax_resolution_specialist: 'Tax Resolution Specialist',
     hr_benefit_consultant: 'HR / Benefit Consultant',
+    // IMO/FMO roles
+    imo_executive: 'IMO Executive',
+    fmo_executive: 'FMO Executive',
+    imo_recruiter: 'IMO Recruiter',
+    fmo_recruiter: 'FMO Recruiter',
   };
   
   return roleMap[role] || role;
