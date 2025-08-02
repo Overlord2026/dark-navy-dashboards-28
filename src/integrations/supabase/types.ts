@@ -1263,6 +1263,56 @@ export type Database = {
         }
         Relationships: []
       }
+      automated_follow_ups: {
+        Row: {
+          advisor_id: string
+          content: string | null
+          created_at: string | null
+          follow_up_type: string
+          id: string
+          lead_id: string
+          response_received: boolean | null
+          scheduled_for: string
+          sent_at: string | null
+          stage: string
+          status: string | null
+        }
+        Insert: {
+          advisor_id: string
+          content?: string | null
+          created_at?: string | null
+          follow_up_type: string
+          id?: string
+          lead_id: string
+          response_received?: boolean | null
+          scheduled_for: string
+          sent_at?: string | null
+          stage: string
+          status?: string | null
+        }
+        Update: {
+          advisor_id?: string
+          content?: string | null
+          created_at?: string | null
+          follow_up_type?: string
+          id?: string
+          lead_id?: string
+          response_received?: boolean | null
+          scheduled_for?: string
+          sent_at?: string | null
+          stage?: string
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automated_follow_ups_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       backup_operations: {
         Row: {
           backup_location: string | null
@@ -8442,6 +8492,41 @@ export type Database = {
         }
         Relationships: []
       }
+      lead_engagement_tracking: {
+        Row: {
+          created_at: string | null
+          engagement_data: Json | null
+          engagement_date: string | null
+          engagement_type: string
+          id: string
+          lead_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          engagement_data?: Json | null
+          engagement_date?: string | null
+          engagement_type: string
+          id?: string
+          lead_id: string
+        }
+        Update: {
+          created_at?: string | null
+          engagement_data?: Json | null
+          engagement_date?: string | null
+          engagement_type?: string
+          id?: string
+          lead_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lead_engagement_tracking_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lead_routing_decisions: {
         Row: {
           created_at: string
@@ -8518,49 +8603,79 @@ export type Database = {
         Row: {
           acquisition_cost: number | null
           advisor_id: string
+          budget_score: number | null
           campaign_id: string | null
           created_at: string
           email: string | null
+          engagement_score: number | null
           first_name: string
+          fit_assessment: string | null
+          fit_score: number | null
+          follow_up_count: number | null
           id: string
+          last_contact_attempt: string | null
           last_name: string
+          lead_score: number | null
           lead_source: string
           lead_status: string | null
           lead_value: number | null
+          next_follow_up_due: string | null
           notes: string | null
           phone: string | null
+          timeline_score: number | null
+          timeline_to_purchase: string | null
           updated_at: string
         }
         Insert: {
           acquisition_cost?: number | null
           advisor_id: string
+          budget_score?: number | null
           campaign_id?: string | null
           created_at?: string
           email?: string | null
+          engagement_score?: number | null
           first_name: string
+          fit_assessment?: string | null
+          fit_score?: number | null
+          follow_up_count?: number | null
           id?: string
+          last_contact_attempt?: string | null
           last_name: string
+          lead_score?: number | null
           lead_source: string
           lead_status?: string | null
           lead_value?: number | null
+          next_follow_up_due?: string | null
           notes?: string | null
           phone?: string | null
+          timeline_score?: number | null
+          timeline_to_purchase?: string | null
           updated_at?: string
         }
         Update: {
           acquisition_cost?: number | null
           advisor_id?: string
+          budget_score?: number | null
           campaign_id?: string | null
           created_at?: string
           email?: string | null
+          engagement_score?: number | null
           first_name?: string
+          fit_assessment?: string | null
+          fit_score?: number | null
+          follow_up_count?: number | null
           id?: string
+          last_contact_attempt?: string | null
           last_name?: string
+          lead_score?: number | null
           lead_source?: string
           lead_status?: string | null
           lead_value?: number | null
+          next_follow_up_due?: string | null
           notes?: string | null
           phone?: string | null
+          timeline_score?: number | null
+          timeline_to_purchase?: string | null
           updated_at?: string
         }
         Relationships: [
@@ -10958,6 +11073,42 @@ export type Database = {
           specialty?: string | null
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      pipeline_stage_config: {
+        Row: {
+          advisor_id: string
+          created_at: string | null
+          email_template: string | null
+          follow_up_delay_hours: number | null
+          id: string
+          is_active: boolean | null
+          sms_template: string | null
+          stage_name: string
+          updated_at: string | null
+        }
+        Insert: {
+          advisor_id: string
+          created_at?: string | null
+          email_template?: string | null
+          follow_up_delay_hours?: number | null
+          id?: string
+          is_active?: boolean | null
+          sms_template?: string | null
+          stage_name: string
+          updated_at?: string | null
+        }
+        Update: {
+          advisor_id?: string
+          created_at?: string | null
+          email_template?: string | null
+          follow_up_delay_hours?: number | null
+          id?: string
+          is_active?: boolean | null
+          sms_template?: string | null
+          stage_name?: string
+          updated_at?: string | null
         }
         Relationships: []
       }
@@ -18405,6 +18556,10 @@ export type Database = {
         Args: { goal_id: string }
         Returns: number
       }
+      calculate_lead_score: {
+        Args: { p_lead_id: string }
+        Returns: number
+      }
       calculate_network_impact_summary: {
         Args: {
           p_tenant_id: string
@@ -18966,6 +19121,10 @@ export type Database = {
           pass_fail: string
           notes: string
         }[]
+      }
+      schedule_follow_up: {
+        Args: { p_lead_id: string; p_stage: string }
+        Returns: undefined
       }
       send_onboarding_reminder: {
         Args: { p_onboarding_id: string }
