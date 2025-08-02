@@ -1361,6 +1361,36 @@ export type Database = {
         }
         Relationships: []
       }
+      attorney_specialties: {
+        Row: {
+          attorney_id: string
+          certifications: string[] | null
+          created_at: string | null
+          id: string
+          specialty: string
+          states_licensed: string[] | null
+          years_experience: number | null
+        }
+        Insert: {
+          attorney_id: string
+          certifications?: string[] | null
+          created_at?: string | null
+          id?: string
+          specialty: string
+          states_licensed?: string[] | null
+          years_experience?: number | null
+        }
+        Update: {
+          attorney_id?: string
+          certifications?: string[] | null
+          created_at?: string | null
+          id?: string
+          specialty?: string
+          states_licensed?: string[] | null
+          years_experience?: number | null
+        }
+        Relationships: []
+      }
       audit_logs: {
         Row: {
           changed_at: string | null
@@ -3248,6 +3278,50 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      content_upload_log: {
+        Row: {
+          action_type: string
+          content_id: string | null
+          id: string
+          new_data: Json | null
+          notes: string | null
+          old_data: Json | null
+          performed_at: string | null
+          performed_by: string | null
+          tenant_id: string | null
+        }
+        Insert: {
+          action_type: string
+          content_id?: string | null
+          id?: string
+          new_data?: Json | null
+          notes?: string | null
+          old_data?: Json | null
+          performed_at?: string | null
+          performed_by?: string | null
+          tenant_id?: string | null
+        }
+        Update: {
+          action_type?: string
+          content_id?: string | null
+          id?: string
+          new_data?: Json | null
+          notes?: string | null
+          old_data?: Json | null
+          performed_at?: string | null
+          performed_by?: string | null
+          tenant_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_upload_log_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "education_content"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       cpa_client_invitations: {
         Row: {
@@ -5363,6 +5437,84 @@ export type Database = {
           },
         ]
       }
+      education_content: {
+        Row: {
+          author: string | null
+          badges: string[] | null
+          category: string
+          content_type: string
+          cover_image_path: string | null
+          created_at: string | null
+          created_by: string | null
+          description: string | null
+          difficulty: string
+          duration: string | null
+          external_url: string | null
+          file_size: number | null
+          id: string
+          is_featured: boolean | null
+          is_published: boolean | null
+          pdf_path: string | null
+          rating: number | null
+          tags: string[] | null
+          tenant_id: string | null
+          title: string
+          updated_at: string | null
+          video_url: string | null
+          view_count: number | null
+        }
+        Insert: {
+          author?: string | null
+          badges?: string[] | null
+          category: string
+          content_type: string
+          cover_image_path?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          difficulty?: string
+          duration?: string | null
+          external_url?: string | null
+          file_size?: number | null
+          id?: string
+          is_featured?: boolean | null
+          is_published?: boolean | null
+          pdf_path?: string | null
+          rating?: number | null
+          tags?: string[] | null
+          tenant_id?: string | null
+          title: string
+          updated_at?: string | null
+          video_url?: string | null
+          view_count?: number | null
+        }
+        Update: {
+          author?: string | null
+          badges?: string[] | null
+          category?: string
+          content_type?: string
+          cover_image_path?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          difficulty?: string
+          duration?: string | null
+          external_url?: string | null
+          file_size?: number | null
+          id?: string
+          is_featured?: boolean | null
+          is_published?: boolean | null
+          pdf_path?: string | null
+          rating?: number | null
+          tags?: string[] | null
+          tenant_id?: string | null
+          title?: string
+          updated_at?: string | null
+          video_url?: string | null
+          view_count?: number | null
+        }
+        Relationships: []
+      }
       educational_content: {
         Row: {
           content_type: string
@@ -5625,6 +5777,160 @@ export type Database = {
           test_date?: string
           test_type?: string
           updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      estate_document_reminders: {
+        Row: {
+          created_at: string | null
+          document_id: string | null
+          id: string
+          message: string | null
+          reminder_date: string
+          reminder_type: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          document_id?: string | null
+          id?: string
+          message?: string | null
+          reminder_date: string
+          reminder_type: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          document_id?: string | null
+          id?: string
+          message?: string | null
+          reminder_date?: string
+          reminder_type?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "estate_document_reminders_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "estate_documents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      estate_documents: {
+        Row: {
+          category: string
+          document_type: string
+          expires_at: string | null
+          file_name: string
+          file_path: string
+          file_size: number | null
+          id: string
+          intake_id: string | null
+          notes: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          tags: string[] | null
+          uploaded_at: string | null
+          user_id: string
+        }
+        Insert: {
+          category: string
+          document_type: string
+          expires_at?: string | null
+          file_name: string
+          file_path: string
+          file_size?: number | null
+          id?: string
+          intake_id?: string | null
+          notes?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          tags?: string[] | null
+          uploaded_at?: string | null
+          user_id: string
+        }
+        Update: {
+          category?: string
+          document_type?: string
+          expires_at?: string | null
+          file_name?: string
+          file_path?: string
+          file_size?: number | null
+          id?: string
+          intake_id?: string | null
+          notes?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          tags?: string[] | null
+          uploaded_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "estate_documents_intake_id_fkey"
+            columns: ["intake_id"]
+            isOneToOne: false
+            referencedRelation: "estate_intake"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      estate_intake: {
+        Row: {
+          assessment_results: Json | null
+          assigned_attorney: string | null
+          client_email: string | null
+          client_name: string | null
+          created_at: string | null
+          current_step: number
+          id: string
+          intake_data: Json | null
+          priority: string
+          progress_percentage: number
+          status: string
+          total_steps: number
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          assessment_results?: Json | null
+          assigned_attorney?: string | null
+          client_email?: string | null
+          client_name?: string | null
+          created_at?: string | null
+          current_step?: number
+          id?: string
+          intake_data?: Json | null
+          priority?: string
+          progress_percentage?: number
+          status?: string
+          total_steps?: number
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          assessment_results?: Json | null
+          assigned_attorney?: string | null
+          client_email?: string | null
+          client_name?: string | null
+          created_at?: string | null
+          current_step?: number
+          id?: string
+          intake_data?: Json | null
+          priority?: string
+          progress_percentage?: number
+          status?: string
+          total_steps?: number
+          updated_at?: string | null
           user_id?: string
         }
         Relationships: []
