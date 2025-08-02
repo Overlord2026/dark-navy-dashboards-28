@@ -276,7 +276,11 @@ export function OnboardingAnalytics() {
         <div className="flex gap-2">
           <DatePickerWithRange
             date={{ from: dateRange.from, to: dateRange.to }}
-            onDateChange={(range) => range?.from && range?.to && setDateRange({ from: range.from, to: range.to })}
+            onDateChange={(range) => {
+              if (range?.from && range?.to) {
+                setDateRange({ from: range.from, to: range.to });
+              }
+            }}
           />
           <Button variant="outline" onClick={exportCSV}>
             <Download className="h-4 w-4 mr-2" />

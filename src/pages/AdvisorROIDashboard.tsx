@@ -207,7 +207,13 @@ export default function AdvisorROIDashboard() {
               <div className="flex flex-col lg:flex-row gap-4 items-center">
                 <DatePickerWithRange
                   date={dateRange}
-                  onDateChange={(newDateRange) => setDateRange(newDateRange && newDateRange.from && newDateRange.to ? { from: newDateRange.from, to: newDateRange.to } : { from: new Date(), to: new Date() })}
+                  onDateChange={(newDateRange) => {
+                    if (newDateRange?.from && newDateRange?.to) {
+                      setDateRange({ from: newDateRange.from, to: newDateRange.to });
+                    } else {
+                      setDateRange({ from: new Date(), to: new Date() });
+                    }
+                  }}
                   className="w-full lg:w-[300px]"
                 />
                 

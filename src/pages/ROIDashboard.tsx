@@ -31,10 +31,14 @@ import {
   Download,
   FileText,
   Filter,
-  Trophy
+  Trophy,
+  AlertTriangle,
+  RefreshCw
 } from 'lucide-react';
 import { format, subDays } from 'date-fns';
+import { supabase } from '@/integrations/supabase/client';
 
+// Safe interface definitions with defensive types
 interface ROIMetrics {
   totalAdSpend: number;
   totalLeads: number;
@@ -71,6 +75,7 @@ interface FunnelData {
   percentage: number;
 }
 
+// Safe fallback data for smooth demo experience
 const mockMetrics: ROIMetrics = {
   totalAdSpend: 12500,
   totalLeads: 45,
@@ -98,11 +103,30 @@ const mockChartData: ChartData[] = [
   { date: '2024-01-22', leads: 10, spend: 5000, costPerLead: 500, qualified: 0, appointments: 5, clients: 2 }
 ];
 
+// Safe data validation helpers
+const isValidNumber = (value: any): value is number => {
+  return typeof value === 'number' && !isNaN(value) && isFinite(value);
+};
+
+const safeNumber = (value: any, fallback: number = 0): number => {
+  return isValidNumber(value) ? value : fallback;
+};
+
+const safeString = (value: any, fallback: string = ''): string => {
+  return typeof value === 'string' ? value : fallback;
+};
+
+const safeBoolean = (value: any): boolean => {
+  return Boolean(value);
+};
+
 export const ROIDashboard: React.FC = () => {
   const [metrics, setMetrics] = useState<ROIMetrics>(mockMetrics);
   const [chartData, setChartData] = useState<ChartData[]>(mockChartData);
   const [funnelData, setFunnelData] = useState<FunnelData[]>([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [isUsingFallbackData, setIsUsingFallbackData] = useState(true);
   const [dateRange, setDateRange] = useState({
     from: subDays(new Date(), 30),
     to: new Date()
@@ -225,7 +249,13 @@ export const ROIDashboard: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
             <DatePickerWithRange
               date={dateRange}
-              onDateChange={(newDateRange) => setDateRange(newDateRange && newDateRange.from && newDateRange.to ? { from: newDateRange.from, to: newDateRange.to } : { from: new Date(), to: new Date() })}
+              onDateChange={(newDateRange) => {
+                if (newDateRange?.from && newDateRange?.to) {
+                  setDateRange({ from: newDateRange.from, to: newDateRange.to });
+                } else {
+                  setDateRange({ from: new Date(), to: new Date() });
+                }
+              }}
             />
 
             <Select value={filters.source} onValueChange={(value) => setFilters(prev => ({ ...prev, source: value }))}>
