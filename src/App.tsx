@@ -78,6 +78,7 @@ import { QATestDashboard } from "./pages/QATestDashboard";
 import MarketplacePage from "./pages/MarketplacePage";
 import ProductDetailsPage from "./pages/ProductDetailsPage";
 import MarketplaceAdminPage from "./pages/MarketplaceAdminPage";
+import IMOFMODashboardPage from "./pages/IMOFMODashboard";
 import ConsultationBookingPage from "./pages/marketplace/ConsultationBookingPage";
 import ProfessionalProfilePage from "./pages/marketplace/ProfessionalProfilePage";
 import CompliancePage from "./pages/CompliancePage";
@@ -366,7 +367,7 @@ const App = () => {
                       </AuthWrapper>
                     }
                   />
-          <Route path="/imo-fmo-dashboard" element={<IMOFMODashboard />} />
+          <Route path="/imo-fmo-dashboard" element={<IMOFMODashboardPage />} />
           <Route 
             path="/coach-dashboard" 
             element={

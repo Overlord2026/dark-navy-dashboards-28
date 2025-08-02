@@ -3,133 +3,89 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { 
-  Users, 
-  TrendingUp, 
-  Award, 
-  DollarSign, 
-  UserPlus, 
-  Search,
-  FileText,
-  Video,
-  CheckSquare,
-  Target,
-  Calendar,
-  Upload,
-  Share2
-} from 'lucide-react';
-import { useAuth } from '@/context/AuthContext';
-import { maskClientData, aggregateClientData } from '@/utils/dataPrivacy';
-import { supabase } from '@/integrations/supabase/client';
-import { toast } from 'sonner';
+import { useUser } from '@/context/UserContext';
+import { TrendingUp, Users, DollarSign, Target, Calendar, MessageSquare } from 'lucide-react';
+
+interface CoachStats {
+  totalAdvisors: number;
+  activeAdvisors: number;
+  totalEarnings: number;
+  referralEarnings: number;
+  newLeadsThisMonth: number;
+  demoConversion: number;
+}
 
 interface AdvisorRosterItem {
   id: string;
   name: string;
-  avatar?: string;
+  email: string;
   engagementScore: number;
   practiceScore: number;
-  status: 'active' | 'inactive' | 'improving';
-}
-
-interface CoachStats {
-  activeAdvisors: number;
-  newLeadsThisMonth: number;
-  demoConversion: number;
-  referralEarnings: number;
+  status: 'active' | 'inactive';
 }
 
 export function CoachDashboard() {
-  const { user, userProfile } = useAuth();
-  const [advisorRoster, setAdvisorRoster] = useState<AdvisorRosterItem[]>([]);
+  const { userProfile } = useUser();
   const [stats, setStats] = useState<CoachStats>({
+    totalAdvisors: 0,
     activeAdvisors: 0,
+    totalEarnings: 0,
+    referralEarnings: 0,
     newLeadsThisMonth: 0,
-    demoConversion: 0,
-    referralEarnings: 0
+    demoConversion: 0
   });
+  const [advisorRoster, setAdvisorRoster] = useState<AdvisorRosterItem[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (user && userProfile?.role === 'coach') {
+    if (userProfile) {
       fetchCoachData();
     }
-  }, [user, userProfile]);
+  }, [userProfile]);
 
   const fetchCoachData = async () => {
     try {
       setLoading(true);
-
-      // Fetch coach's assigned advisors with masked data
-      const { data: advisorData, error: advisorError } = await supabase
-        .from('coach_advisor_relationships')
-        .select(`
-          advisor_id,
-          status,
-          created_at,
-          advisor:advisor_profiles (
-            id,
-            name,
-            user_id,
-            is_active,
-            average_rating,
-            total_reviews
-          )
-        `)
-        .eq('coach_id', user.id)
-        .eq('status', 'active');
-
-      if (advisorError) throw advisorError;
-
-      // Fetch aggregated performance data (no PII)
-      const advisorIds = advisorData?.map(rel => rel.advisor?.user_id).filter(Boolean) || [];
       
-      let aggregatedStats = {
-        activeAdvisors: advisorData?.length || 0,
-        newLeadsThisMonth: 0,
-        demoConversion: 0,
-        referralEarnings: 0
-      };
-
-      if (advisorIds.length > 0) {
-        // Get aggregated lead data (no personal info)
-        const { data: leadStats } = await supabase
-          .from('leads')
-          .select('id, lead_status, created_at')
-          .in('advisor_id', advisorIds)
-          .gte('created_at', new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString());
-
-        const totalLeads = leadStats?.length || 0;
-        const qualifiedLeads = leadStats?.filter(l => l.lead_status === 'qualified').length || 0;
-
-        aggregatedStats.newLeadsThisMonth = totalLeads;
-        aggregatedStats.demoConversion = totalLeads > 0 ? (qualifiedLeads / totalLeads) * 100 : 0;
-      }
-
-      // Get referral earnings (coach-specific data)
-      const { data: referralData } = await supabase
-        .from('coach_referral_payouts')
-        .select('amount')
-        .eq('coach_id', user.id)
-        .gte('created_at', new Date(new Date().getFullYear(), 0, 1).toISOString());
-
-      aggregatedStats.referralEarnings = referralData?.reduce((sum, payout) => sum + payout.amount, 0) || 0;
-
-      // Transform advisor data with privacy protection
-      const maskedAdvisorRoster: AdvisorRosterItem[] = advisorData?.map(rel => ({
-        id: rel.advisor?.id || '',
-        name: rel.advisor?.name || 'Unknown',
-        engagementScore: Math.floor(Math.random() * 40) + 60, // Mock engagement score
-        practiceScore: Math.floor(Math.random() * 30) + 70, // Mock practice score
-        status: rel.advisor?.is_active ? 'active' : 'inactive'
-      })) || [];
-
-      setAdvisorRoster(maskedAdvisorRoster);
-      setStats(aggregatedStats);
-
+      // Mock data for demo purposes
+      setStats({
+        totalAdvisors: 12,
+        activeAdvisors: 8,
+        totalEarnings: 85000,
+        referralEarnings: 15000,
+        newLeadsThisMonth: 23,
+        demoConversion: 68.5
+      });
+      
+      setAdvisorRoster([
+        {
+          id: '1',
+          name: 'John Smith',
+          email: 'john@example.com',
+          engagementScore: 85,
+          practiceScore: 92,
+          status: 'active'
+        },
+        {
+          id: '2',
+          name: 'Jane Doe',
+          email: 'jane@example.com',
+          engagementScore: 78,
+          practiceScore: 88,
+          status: 'active'
+        },
+        {
+          id: '3',
+          name: 'Bob Wilson',
+          email: 'bob@example.com',
+          engagementScore: 65,
+          practiceScore: 75,
+          status: 'inactive'
+        }
+      ]);
+      
     } catch (error) {
       console.error('Error fetching coach data:', error);
-      toast.error('Failed to load coach dashboard data');
     } finally {
       setLoading(false);
     }
@@ -139,14 +95,14 @@ export function CoachDashboard() {
     switch (status) {
       case 'active':
         return 'bg-green-100 text-green-800';
-      case 'improving':
-        return 'bg-yellow-100 text-yellow-800';
+      case 'inactive':
+        return 'bg-gray-100 text-gray-800';
       default:
         return 'bg-gray-100 text-gray-800';
     }
   };
 
-  if (userProfile?.role !== 'coach') {
+  if (!userProfile) {
     return (
       <div className="p-6">
         <Card>
@@ -162,74 +118,129 @@ export function CoachDashboard() {
   if (loading) {
     return (
       <div className="p-6">
-        <div className="animate-pulse space-y-4">
-          <div className="h-8 bg-gray-200 rounded w-1/3"></div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {[...Array(4)].map((_, i) => (
-              <div key={i} className="h-32 bg-gray-200 rounded"></div>
-            ))}
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[...Array(4)].map((_, i) => (
+            <Card key={i}>
+              <CardContent className="p-6">
+                <div className="animate-pulse space-y-2">
+                  <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                  <div className="h-8 bg-gray-200 rounded w-1/2"></div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
         </div>
       </div>
     );
   }
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="space-y-6 p-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Avatar className="h-12 w-12">
-            <AvatarImage src={userProfile?.avatar_url} />
+            <AvatarImage src={undefined} />
             <AvatarFallback>
-              {userProfile?.first_name?.charAt(0)}{userProfile?.last_name?.charAt(0)}
+              {userProfile?.firstName?.charAt(0)}{userProfile?.lastName?.charAt(0)}
             </AvatarFallback>
           </Avatar>
           <div>
             <h1 className="text-2xl font-bold">
-              {userProfile?.first_name} {userProfile?.last_name}
+              {userProfile?.firstName} {userProfile?.lastName}
             </h1>
             <p className="text-muted-foreground">Practice Coach Dashboard</p>
           </div>
         </div>
         <div className="flex gap-2">
           <Button variant="outline">
-            <UserPlus className="h-4 w-4 mr-2" />
-            Invite New Advisor
+            <Calendar className="h-4 w-4 mr-2" />
+            Schedule Check-in
           </Button>
           <Button>
-            <Search className="h-4 w-4 mr-2" />
-            Find More Coaches
+            <MessageSquare className="h-4 w-4 mr-2" />
+            Send Update
           </Button>
         </div>
+      </div>
+
+      {/* Key Metrics */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Advisors</CardTitle>
+            <Users className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.totalAdvisors}</div>
+            <p className="text-xs text-muted-foreground">
+              {stats.activeAdvisors} active this month
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Earnings</CardTitle>
+            <DollarSign className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">${stats.totalEarnings.toLocaleString()}</div>
+            <p className="text-xs text-muted-foreground">
+              +12% from last month
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">New Leads</CardTitle>
+            <Target className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.newLeadsThisMonth}</div>
+            <p className="text-xs text-muted-foreground">
+              This month
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Conversion Rate</CardTitle>
+            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.demoConversion.toFixed(1)}%</div>
+            <p className="text-xs text-muted-foreground">
+              Lead to client
+            </p>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Advisor Roster */}
       <Card>
         <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle>Advisor Roster</CardTitle>
-            <Button variant="outline" size="sm">View All</Button>
-          </div>
+          <CardTitle>Advisor Roster</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-3">
-            {advisorRoster.slice(0, 5).map((advisor) => (
-              <div key={advisor.id} className="flex items-center justify-between p-3 bg-muted rounded-lg">
+          <div className="space-y-4">
+            {advisorRoster.map((advisor) => (
+              <div key={advisor.id} className="flex items-center justify-between p-4 border rounded-lg">
                 <div className="flex items-center gap-3">
-                  <Avatar className="h-8 w-8">
-                    <AvatarFallback>
-                      {advisor.name.split(' ').map(n => n.charAt(0)).join('')}
-                    </AvatarFallback>
+                  <Avatar>
+                    <AvatarFallback>{advisor.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                   </Avatar>
-                  <span className="font-medium">{advisor.name}</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="text-sm text-muted-foreground">
-                    Engagement: {advisor.engagementScore}%
+                  <div>
+                    <h4 className="font-medium">{advisor.name}</h4>
+                    <p className="text-sm text-muted-foreground">{advisor.email}</p>
                   </div>
-                  <div className="text-sm text-muted-foreground">
-                    Score: {advisor.practiceScore}
+                </div>
+                <div className="flex items-center gap-4">
+                  <div className="text-right">
+                    <p className="text-sm">Engagement: {advisor.engagementScore}%</p>
+                    <p className="text-sm">Practice: {advisor.practiceScore}%</p>
                   </div>
                   <Badge className={getStatusColor(advisor.status)}>
                     {advisor.status}
@@ -237,147 +248,6 @@ export function CoachDashboard() {
                 </div>
               </div>
             ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Practice Analytics */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Practice Analytics</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-primary/10 rounded-lg">
-                <Users className="h-5 w-5 text-primary" />
-              </div>
-              <div>
-                <div className="text-2xl font-bold">{stats.activeAdvisors}</div>
-                <div className="text-sm text-muted-foreground">Active Advisors</div>
-              </div>
-            </div>
-            
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <TrendingUp className="h-5 w-5 text-blue-600" />
-              </div>
-              <div>
-                <div className="text-2xl font-bold">{stats.newLeadsThisMonth}</div>
-                <div className="text-sm text-muted-foreground">New Leads This Month</div>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-green-100 rounded-lg">
-                <Target className="h-5 w-5 text-green-600" />
-              </div>
-              <div>
-                <div className="text-2xl font-bold">{stats.demoConversion.toFixed(1)}%</div>
-                <div className="text-sm text-muted-foreground">Demo Conversion</div>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Curriculum Library */}
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle>Curriculum Library</CardTitle>
-            <div className="flex gap-2">
-              <Button variant="outline" size="sm">
-                <Upload className="h-4 w-4 mr-2" />
-                Upload
-              </Button>
-              <Button variant="outline" size="sm">
-                <Share2 className="h-4 w-4 mr-2" />
-                Share
-              </Button>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="p-4 border rounded-lg hover:shadow-md transition-shadow cursor-pointer">
-              <div className="flex items-center gap-3 mb-3">
-                <Video className="h-8 w-8 text-blue-500" />
-                <div>
-                  <div className="font-medium">Webinar</div>
-                  <div className="text-sm text-muted-foreground">5 modules</div>
-                </div>
-              </div>
-              <p className="text-sm text-muted-foreground">Lead Generation Masterclass</p>
-            </div>
-
-            <div className="p-4 border rounded-lg hover:shadow-md transition-shadow cursor-pointer">
-              <div className="flex items-center gap-3 mb-3">
-                <FileText className="h-8 w-8 text-green-500" />
-                <div>
-                  <div className="font-medium">Playbook</div>
-                  <div className="text-sm text-muted-foreground">25 pages</div>
-                </div>
-              </div>
-              <p className="text-sm text-muted-foreground">Sales Process Optimization</p>
-            </div>
-
-            <div className="p-4 border rounded-lg hover:shadow-md transition-shadow cursor-pointer">
-              <div className="flex items-center gap-3 mb-3">
-                <CheckSquare className="h-8 w-8 text-purple-500" />
-                <div>
-                  <div className="font-medium">Checklist</div>
-                  <div className="text-sm text-muted-foreground">12 items</div>
-                </div>
-              </div>
-              <p className="text-sm text-muted-foreground">Client Onboarding Steps</p>
-            </div>
-          </div>
-
-          <div className="mt-4 p-3 bg-muted rounded-lg">
-            <div className="font-medium mb-2">Progress Tracker</div>
-            <div className="text-sm text-muted-foreground">
-              Track advisor milestones and completion rates across your curriculum
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Referral Earnings */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <DollarSign className="h-5 w-5" />
-            Referral Performance
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="text-3xl font-bold text-green-600">
-                ${stats.referralEarnings.toLocaleString()}
-              </div>
-              <div className="text-sm text-muted-foreground">YTD Referral Earnings</div>
-            </div>
-            <Award className="h-12 w-12 text-yellow-500" />
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Privacy Notice */}
-      <Card className="border-amber-200 bg-amber-50">
-        <CardContent className="p-4">
-          <div className="flex items-start gap-3">
-            <div className="p-1 bg-amber-100 rounded">
-              <Users className="h-4 w-4 text-amber-600" />
-            </div>
-            <div>
-              <div className="font-medium text-amber-800">Privacy Protection Active</div>
-              <div className="text-sm text-amber-700">
-                All client personal information is masked or aggregated to protect privacy. 
-                You can see performance metrics and engagement data without accessing sensitive personal details.
-              </div>
-            </div>
           </div>
         </CardContent>
       </Card>

@@ -489,7 +489,7 @@ export function TaskAssignment() {
                 <Select
                   value={newTask.priority}
                   onValueChange={(value: string) => 
-                    setNewTask({...newTask, priority: value as 'low' | 'medium' | 'high'})
+                    setNewTask({...newTask, priority: value as any})
                   }
                 >
                   <SelectTrigger>
