@@ -23,6 +23,7 @@ import { BrandedFooter } from "@/components/ui/BrandedFooter";
 import { LeadIntakeForm } from "@/pages/leads/LeadIntakeForm";
 import { LeadConfirmation } from "@/pages/leads/LeadConfirmation";
 import { PipelineBoard } from "@/pages/leads/PipelineBoard";
+import { LeadScoringDashboard } from "@/components/leads/LeadScoringDashboard";
 import Index from "./pages/Index";
 // Dashboard default export
 import Dashboard from "./pages/Dashboard";
@@ -210,6 +211,14 @@ const App = () => {
                         allowedRoles={['advisor', 'admin', 'system_administrator', 'tenant_admin']}
                       >
                         <PipelineBoard />
+                      </AuthWrapper>
+                    } />
+                    <Route path="/lead-scoring" element={
+                      <AuthWrapper 
+                        requireAuth={true}
+                        allowedRoles={['advisor', 'admin', 'system_administrator', 'tenant_admin']}
+                      >
+                        <LeadScoringDashboard />
                       </AuthWrapper>
                     } />
 
