@@ -60,7 +60,7 @@ export const LeadIntakeForm: React.FC = () => {
 
       // Fetch campaigns
       const { data: campaignsData } = await supabase
-        .from('campaigns')
+        .from('agency_campaigns')
         .select('id, campaign_name, agency_id')
         .eq('status', 'active');
 
@@ -101,20 +101,16 @@ export const LeadIntakeForm: React.FC = () => {
       const { data: { user } } = await supabase.auth.getUser();
       
       const leadData = {
-        name: data.name,
+        first_name: data.name.split(' ')[0],
+        last_name: data.name.split(' ').slice(1).join(' ') || '',
         email: data.email,
         phone: data.phone,
-        interest: data.interest,
         lead_value: data.budget[0],
-        lead_source: data.source as any,
+        lead_source: data.source,
         campaign_id: data.campaign_id || null,
         agency_id: data.agency_id || null,
         advisor_id: data.assigned_advisor || user?.id,
-        qualified: false,
-        client_converted: false,
-        qualification_notes: data.notes,
         lead_status: 'new',
-        created_by: user?.id,
       };
 
       const { error } = await supabase
