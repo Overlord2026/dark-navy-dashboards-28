@@ -24,6 +24,7 @@ export default {
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
+          gradient: "var(--primary-gradient)",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
@@ -38,7 +39,7 @@ export default {
           foreground: "hsl(var(--muted-foreground))",
         },
         accent: {
-          DEFAULT: "hsl(var(--accent))",
+          DEFAULT: "hsl(var(--accent))", // Aqua Blue #00D2FF
           foreground: "hsl(var(--accent-foreground))",
         },
         popover: {
@@ -50,25 +51,33 @@ export default {
           foreground: "hsl(var(--card-foreground))",
         },
         success: {
-          DEFAULT: "hsl(var(--success))",
+          DEFAULT: "hsl(var(--success))", // Green #34C759
           foreground: "hsl(var(--success-foreground))",
         },
         warning: {
-          DEFAULT: "hsl(var(--warning))",
+          DEFAULT: "hsl(var(--warning))", // Yellow #FFD600
           foreground: "hsl(var(--warning-foreground))",
         },
+        // Altoo.io Premium Colors
+        navy: {
+          DEFAULT: "216 30% 13%", // Dark Navy #172042
+          light: "213 30% 18%", // #202D5A
+          surface: "216 26% 19%", // Surface #1E2333
+        },
+        aqua: {
+          DEFAULT: "195 100% 50%", // Aqua Blue #00D2FF
+          foreground: "216 30% 13%",
+        },
         gold: {
-          primary: "hsl(var(--gold-primary))",
-          premium: "hsl(var(--gold-premium))",
-          light: "hsl(var(--gold-light))",
-          dark: "hsl(var(--gold-dark))",
+          DEFAULT: "51 100% 50%", // Gold #FFC700
+          foreground: "216 30% 13%",
         },
         role: {
-          family: "hsl(var(--role-family))",
-          advisor: "hsl(var(--role-advisor))",
-          accountant: "hsl(var(--role-accountant))",
-          attorney: "hsl(var(--role-attorney))",
-          admin: "hsl(var(--role-admin))",
+          family: "hsl(var(--role-family))", // Aqua Blue
+          advisor: "hsl(var(--role-advisor))", // Success Green
+          accountant: "hsl(var(--role-accountant))", // Gold
+          attorney: "hsl(var(--role-attorney))", // Error Red
+          admin: "hsl(var(--role-admin))", // Dark Navy
         },
       },
       borderRadius: {

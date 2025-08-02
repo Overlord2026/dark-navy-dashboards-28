@@ -1,26 +1,33 @@
-// Exact Brand Color Tokens for Boutique Family Office™
+// Altoo.io Premium Color Tokens
 export const colors = {
-  gold: "#FFD700",
-  black: "#000000",
-  deepBlue: "#14213D",
-  white: "#FFFFFF",
-  accentEmerald: "#169873",    // Advisor
-  accentNavy: "#27344B",       // Accountant  
-  accentWine: "#491C38",       // Attorney
-  accentSkyBlue: "#1E90FF",    // Client
-  textMain: "#FFFFFF",
-  textSub: "#C9C8C5",
-  buttonGold: "#FFD700",
-  buttonText: "#FFFFFF",
-  border: "#DFDFDF",
+  // Primary Palette
+  navy: "#172042",           // Dark Navy Primary
+  navyLight: "#202D5A",      // Navy Light (gradient)
+  surface: "#1E2333",        // Surface Color
+  cardBg: "#232C45",         // Card Background
+  border: "#2A3458",         // Border Color
+  
+  // Accent Colors
+  aqua: "#00D2FF",           // Aqua Blue CTA
+  gold: "#FFC700",           // Gold Highlights
+  
+  // Text Colors
+  textPrimary: "#FFFFFF",    // High-contrast white
+  textSecondary: "#A6B2D1",  // Soft muted blue-gray
+  
+  // Status Colors
+  success: "#34C759",        // Green
+  warning: "#FFD600",        // Yellow  
+  error: "#FF1744",          // Red
 } as const;
 
-// Typography Tokens
+// Typography Tokens - Modern Sans-Serif
 export const fonts = {
-  headline: "'Playfair Display', 'Montserrat', serif",
-  body: "'Inter', 'Roboto', 'Arial', sans-serif",
-  weightBold: 700,
+  headline: "'Inter', 'Lato', sans-serif",
+  body: "'Inter', 'Lato', sans-serif", 
+  weightBold: 900,      // All headings use 900 weight
   weightNormal: 400,
+  weightSemiBold: 600,
 } as const;
 
 // Spacing Tokens
@@ -36,7 +43,7 @@ export const spacing = {
 // Button Style Specifications
 export const button = {
   background: colors.gold,
-  color: colors.white,
+  color: colors.textPrimary,
   borderRadius: spacing.borderRadius,
   fontWeight: fonts.weightBold,
   boxShadow: "0 2px 20px rgba(20, 33, 61, 0.08)",
@@ -51,13 +58,13 @@ export const spinner = {
   animation: "spin 1.2s linear infinite",
 } as const;
 
-// Role-based accent mapping
+// Role-based accent mapping - Altoo.io Style
 export const roleAccents = {
-  family: colors.accentSkyBlue,     // Client - Sky Blue
-  advisor: colors.accentEmerald,    // Advisor - Emerald Green  
-  accountant: colors.accentNavy,    // Accountant - Navy
-  attorney: colors.accentWine,      // Attorney - Wine
-  admin: colors.black,              // Admin - Black
+  family: colors.aqua,       // Client - Aqua Blue
+  advisor: colors.success,   // Advisor - Success Green  
+  accountant: colors.gold,   // Accountant - Gold
+  attorney: colors.error,    // Attorney - Error Red
+  admin: colors.navy,        // Admin - Dark Navy
 } as const;
 
 // Convert hex to HSL for CSS variables
@@ -86,14 +93,18 @@ const hexToHsl = (hex: string): string => {
 
 // CSS Variables mapping
 export const cssVariables = {
+  '--navy-primary': hexToHsl(colors.navy),
+  '--navy-light': hexToHsl(colors.navyLight),
+  '--surface': hexToHsl(colors.surface),
+  '--card-bg': hexToHsl(colors.cardBg),
+  '--border': hexToHsl(colors.border),
+  '--aqua-primary': hexToHsl(colors.aqua),
   '--gold-primary': hexToHsl(colors.gold),
-  '--deep-blue': hexToHsl(colors.deepBlue),
-  '--accent-emerald': hexToHsl(colors.accentEmerald),
-  '--accent-navy': hexToHsl(colors.accentNavy),
-  '--accent-wine': hexToHsl(colors.accentWine),
-  '--accent-sky-blue': hexToHsl(colors.accentSkyBlue),
-  '--text-main': hexToHsl(colors.textMain),
-  '--text-sub': hexToHsl(colors.textSub),
+  '--text-primary': hexToHsl(colors.textPrimary),
+  '--text-secondary': hexToHsl(colors.textSecondary),
+  '--success': hexToHsl(colors.success),
+  '--warning': hexToHsl(colors.warning),
+  '--error': hexToHsl(colors.error),
 } as const;
 
 export type ColorKeys = keyof typeof colors;

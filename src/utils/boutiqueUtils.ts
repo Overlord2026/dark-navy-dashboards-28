@@ -1,21 +1,24 @@
 import { UserRole } from './roleHierarchy';
 
-// Exact Boutique Design Tokens
+// Altoo.io Premium Design Tokens
 export const BOUTIQUE_PALETTE = {
-  gold: '#FFD700',
-  black: '#000000', 
-  deepBlue: '#14213D',
-  white: '#FFFFFF',
-  textSub: '#C9C8C5',
-  border: '#DFDFDF',
+  navy: '#172042',       // Dark Navy Primary
+  navyLight: '#202D5A',  // Navy Light
+  surface: '#1E2333',    // Surface Color
+  cardBg: '#232C45',     // Card Background
+  border: '#2A3458',     // Border Color
+  aqua: '#00D2FF',       // Aqua Blue
+  gold: '#FFC700',       // Gold
+  white: '#FFFFFF',      // White Text
+  textSub: '#A6B2D1',    // Muted Blue-Gray
 } as const;
 
 export const ROLE_ACCENTS = {
-  family: '#1E90FF',     // Sky Blue - Client
-  advisor: '#169873',    // Emerald Green - Advisor
-  accountant: '#27344B', // Navy - Accountant
-  attorney: '#491C38',   // Wine - Attorney
-  admin: '#000000',      // Black - Admin
+  family: '#00D2FF',     // Aqua Blue - Client
+  advisor: '#34C759',    // Success Green - Advisor
+  accountant: '#FFC700', // Gold - Accountant
+  attorney: '#FF1744',   // Error Red - Attorney
+  admin: '#172042',      // Dark Navy - Admin
 } as const;
 
 /**
