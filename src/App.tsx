@@ -22,6 +22,7 @@ import { QABypassIndicator } from "@/components/security/QABypassIndicator";
 import { BrandedFooter } from "@/components/ui/BrandedFooter";
 import { LeadIntakeForm } from "@/pages/leads/LeadIntakeForm";
 import { LeadConfirmation } from "@/pages/leads/LeadConfirmation";
+import { PipelineBoard } from "@/pages/leads/PipelineBoard";
 import Index from "./pages/Index";
 // Dashboard default export
 import Dashboard from "./pages/Dashboard";
@@ -202,6 +203,14 @@ const App = () => {
                     {/* Lead Management Routes */}
                     <Route path="/leads/new" element={<LeadIntakeForm />} />
                     <Route path="/leads/confirmation" element={<LeadConfirmation />} />
+                    <Route path="/pipeline" element={
+                      <AuthWrapper 
+                        requireAuth={true}
+                        allowedRoles={['advisor', 'admin', 'system_administrator', 'tenant_admin']}
+                      >
+                        <PipelineBoard />
+                      </AuthWrapper>
+                    } />
 
                     {/* Public routes - no authentication required */}
                     <Route path="/welcome" element={<WelcomePage />} />
