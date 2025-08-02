@@ -19,6 +19,7 @@ import {
 import { useLeadScoring, LeadWithScore } from '@/hooks/useLeadScoring';
 import { LeadScoringConfig } from './LeadScoringConfig';
 import { EngagementTracker } from './EngagementTracker';
+import { CelebrationEffects } from '@/components/ui/celebration-effects';
 
 export function LeadScoringDashboard() {
   const { 
@@ -32,6 +33,7 @@ export function LeadScoringDashboard() {
   const [leads, setLeads] = useState<LeadWithScore[]>([]);
   const [topLeads, setTopLeads] = useState<LeadWithScore[]>([]);
   const [selectedLead, setSelectedLead] = useState<LeadWithScore | null>(null);
+  const [celebrationTrigger, setCelebrationTrigger] = useState(0);
 
   useEffect(() => {
     loadData();
@@ -51,10 +53,10 @@ export function LeadScoringDashboard() {
   };
 
   const getScoreBadgeColor = (score: number) => {
-    if (score >= 80) return 'bg-green-500';
-    if (score >= 60) return 'bg-yellow-500';
-    if (score >= 40) return 'bg-orange-500';
-    return 'bg-red-500';
+    if (score >= 80) return 'bg-success';
+    if (score >= 60) return 'bg-secondary';
+    if (score >= 40) return 'bg-warning';
+    return 'bg-destructive';
   };
 
   const getScoreCategory = (score: number) => {
@@ -71,6 +73,12 @@ export function LeadScoringDashboard() {
 
   const handleStatusChange = async (leadId: string, newStatus: string) => {
     await updateLeadStatus(leadId, newStatus);
+    
+    // Trigger celebration for closed won
+    if (newStatus === 'closed_won') {
+      setCelebrationTrigger(prev => prev + 1);
+    }
+    
     loadData(); // Refresh data
   };
 
@@ -294,9 +302,11 @@ export function LeadScoringDashboard() {
                         <option value="new">New</option>
                         <option value="contacted">Contacted</option>
                         <option value="qualified">Qualified</option>
+                        <option value="nurturing">Nurturing</option>
                         <option value="scheduled">Scheduled</option>
                         <option value="closed_won">Closed Won</option>
                         <option value="closed_lost">Closed Lost</option>
+                        <option value="dead">Dead</option>
                       </select>
                     </div>
 
@@ -322,6 +332,13 @@ export function LeadScoringDashboard() {
           <LeadScoringConfig />
         </TabsContent>
       </Tabs>
+      
+      {/* Celebration Effects */}
+      <CelebrationEffects 
+        trigger={celebrationTrigger > 0} 
+        type="confetti" 
+        duration={3000}
+      />
     </div>
   );
 }

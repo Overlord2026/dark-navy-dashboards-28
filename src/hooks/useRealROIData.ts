@@ -191,15 +191,19 @@ export function useRealROIData() {
       const statusCounts = {
         new: leads.filter(l => l.status === 'new').length,
         contacted: leads.filter(l => ['contacted', 'qualified'].includes(l.status)).length,
+        nurturing: leads.filter(l => l.status === 'nurturing').length,
         scheduled: leads.filter(l => l.status === 'scheduled').length,
         closed_won: leads.filter(l => l.status === 'closed_won').length,
+        dead: leads.filter(l => l.status === 'dead').length,
       };
 
       const conversionFunnel = [
         { stage: 'New Leads', count: statusCounts.new, percentage: 100 },
         { stage: 'Contacted', count: statusCounts.contacted, percentage: totalLeads > 0 ? (statusCounts.contacted / totalLeads) * 100 : 0 },
+        { stage: 'Nurturing', count: statusCounts.nurturing, percentage: totalLeads > 0 ? (statusCounts.nurturing / totalLeads) * 100 : 0 },
         { stage: 'Scheduled', count: statusCounts.scheduled, percentage: totalLeads > 0 ? (statusCounts.scheduled / totalLeads) * 100 : 0 },
         { stage: 'Closed Won', count: statusCounts.closed_won, percentage: totalLeads > 0 ? (statusCounts.closed_won / totalLeads) * 100 : 0 },
+        { stage: 'Dead', count: statusCounts.dead, percentage: totalLeads > 0 ? (statusCounts.dead / totalLeads) * 100 : 0 },
       ];
 
       // Timeline data

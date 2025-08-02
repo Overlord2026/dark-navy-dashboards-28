@@ -10,6 +10,7 @@ import { MainLayout } from '@/components/layout/MainLayout';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
+import { CelebrationEffects } from '@/components/ui/celebration-effects';
 
 interface Lead {
   id: string;
@@ -27,12 +28,14 @@ interface Lead {
 }
 
 const COLUMNS = [
-  { id: 'new', title: 'New', color: 'bg-blue-500' },
-  { id: 'contacted', title: 'Contacted', color: 'bg-yellow-500' },
-  { id: 'qualified', title: 'Qualified', color: 'bg-purple-500' },
-  { id: 'scheduled', title: 'Scheduled', color: 'bg-green-500' },
-  { id: 'closed_won', title: 'Closed Won', color: 'bg-emerald-500' },
-  { id: 'closed_lost', title: 'Closed Lost', color: 'bg-red-500' },
+  { id: 'new', title: 'New', color: 'bg-primary' },
+  { id: 'contacted', title: 'Contacted', color: 'bg-secondary' },
+  { id: 'qualified', title: 'Qualified', color: 'bg-accent' },
+  { id: 'nurturing', title: 'Nurturing', color: 'bg-warning' },
+  { id: 'scheduled', title: 'Scheduled', color: 'bg-success' },
+  { id: 'closed_won', title: 'Closed Won', color: 'bg-emerald-600' },
+  { id: 'closed_lost', title: 'Closed Lost', color: 'bg-destructive' },
+  { id: 'dead', title: 'Dead', color: 'bg-muted' },
 ];
 
 const mockLeads: Lead[] = [
@@ -85,6 +88,7 @@ export function PipelineBoard() {
   const [searchTerm, setSearchTerm] = useState('');
   const [sourceFilter, setSourceFilter] = useState<string>('all');
   const [interestFilter, setInterestFilter] = useState<string>('all');
+  const [celebrationTrigger, setCelebrationTrigger] = useState(0);
 
   // Filter leads based on search and filters
   const filteredLeads = leads.filter(lead => {
@@ -129,7 +133,13 @@ export function PipelineBoard() {
     const fromColumn = COLUMNS.find(col => col.id === source.droppableId)?.title;
     const toColumn = COLUMNS.find(col => col.id === destination.droppableId)?.title;
     
-    toast.success(`${lead.name} moved from ${fromColumn} to ${toColumn}`);
+    // Trigger celebration for closed won
+    if (destination.droppableId === 'closed_won') {
+      setCelebrationTrigger(prev => prev + 1);
+      toast.success(`🎉 ${lead.name} just closed! Deal worth ${formatBudget(lead.budget)}`);
+    } else {
+      toast.success(`${lead.name} moved from ${fromColumn} to ${toColumn}`);
+    }
 
     // In a real app, you would save to database here
     try {
@@ -359,6 +369,13 @@ export function PipelineBoard() {
             </CardContent>
           </Card>
         </div>
+        
+        {/* Celebration Effects */}
+        <CelebrationEffects 
+          trigger={celebrationTrigger > 0} 
+          type="confetti" 
+          duration={3000}
+        />
       </div>
     </MainLayout>
   );

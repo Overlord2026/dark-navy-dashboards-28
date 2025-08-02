@@ -15,7 +15,7 @@ interface Prospect {
   name: string;
   email: string;
   phone: string;
-  status: 'new' | 'contacted' | 'meeting' | 'proposal' | 'closed_won' | 'closed_lost';
+  status: 'new' | 'contacted' | 'meeting' | 'proposal' | 'nurturing' | 'closed_won' | 'closed_lost' | 'dead';
   score: number;
   source: string;
   lastTouch: Date;
@@ -77,13 +77,15 @@ export default function ProspectsPage() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'new': return 'bg-blue-500';
-      case 'contacted': return 'bg-yellow-500';
-      case 'meeting': return 'bg-purple-500';
-      case 'proposal': return 'bg-orange-500';
-      case 'closed_won': return 'bg-emerald-500';
-      case 'closed_lost': return 'bg-red-500';
-      default: return 'bg-gray-500';
+      case 'new': return 'bg-primary';
+      case 'contacted': return 'bg-secondary';
+      case 'meeting': return 'bg-accent';
+      case 'proposal': return 'bg-warning';
+      case 'nurturing': return 'bg-muted';
+      case 'closed_won': return 'bg-success';
+      case 'closed_lost': return 'bg-destructive';
+      case 'dead': return 'bg-muted';
+      default: return 'bg-muted';
     }
   };
 
