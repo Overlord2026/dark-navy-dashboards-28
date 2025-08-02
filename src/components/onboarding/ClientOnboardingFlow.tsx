@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
+import { Card, CardContent } from '@/components/ui/card';
+import { ChevronLeft, ChevronRight, MessageCircle, Sparkles } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { CheckCircle, Clock, AlertCircle, MessageCircle } from 'lucide-react';
-import { OnboardingState, OnboardingStepData } from '@/types/onboarding';
 import { WelcomeStep } from './steps/WelcomeStep';
 import { ClientInfoStep } from './steps/ClientInfoStep';
 import { CustodianSelectionStep } from './steps/CustodianSelectionStep';
@@ -14,214 +13,279 @@ import { TaskListStep } from './steps/TaskListStep';
 import { ComplianceStep } from './steps/ComplianceStep';
 import { ConfirmationStep } from './steps/ConfirmationStep';
 import { AIAssistant } from './AIAssistant';
-import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
+import { OnboardingState, OnboardingStepData, WhiteLabelConfig, ReferralInfo, OnboardingStepConfig } from '@/types/onboarding';
+import { useTenantBranding } from '@/hooks/useTenantBranding';
 
 interface ClientOnboardingFlowProps {
-  initialState?: Partial<OnboardingState>;
   onComplete?: (state: OnboardingState) => void;
-  brandSettings?: {
-    logo?: string;
-    primaryColor?: string;
-    companyName?: string;
-  };
+  whiteLabelConfig?: WhiteLabelConfig;
+  referralInfo?: ReferralInfo;
+  customStepsConfig?: OnboardingStepConfig[];
+  initialData?: Partial<OnboardingStepData>;
+  tenantId?: string;
+  partnerId?: string;
 }
 
-const ONBOARDING_STEPS = [
-  { id: 1, title: 'Welcome', component: WelcomeStep },
-  { id: 2, title: 'Client Information', component: ClientInfoStep },
-  { id: 3, title: 'Custodian Selection', component: CustodianSelectionStep },
-  { id: 4, title: 'Document Upload', component: DocumentUploadStep },
-  { id: 5, title: 'Digital Application', component: DigitalApplicationStep },
-  { id: 6, title: 'Task Management', component: TaskListStep },
-  { id: 7, title: 'Compliance Review', component: ComplianceStep },
-  { id: 8, title: 'Confirmation', component: ConfirmationStep },
-];
-
 export const ClientOnboardingFlow: React.FC<ClientOnboardingFlowProps> = ({
-  initialState,
   onComplete,
-  brandSettings
+  whiteLabelConfig,
+  referralInfo,
+  customStepsConfig,
+  initialData = {},
+  tenantId,
+  partnerId
 }) => {
-  const [currentStep, setCurrentStep] = useState(initialState?.currentStep || 1);
-  const [onboardingData, setOnboardingData] = useState<OnboardingStepData>(
-    initialState || {}
-  );
-  const [isLoading, setIsLoading] = useState(false);
+  const { brandingConfig } = useTenantBranding();
+  
+  const [currentStep, setCurrentStep] = useState(0);
   const [showAIAssistant, setShowAIAssistant] = useState(false);
-  const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
+  const [estimatedCompletion, setEstimatedCompletion] = useState<string>('');
+  
+  // Merge branding configurations
+  const effectiveBrandConfig = whiteLabelConfig || {
+    companyName: brandingConfig?.companyName || 'Family Office Platform',
+    primaryColor: brandingConfig?.primaryColor || '#FFD700',
+    secondaryColor: brandingConfig?.secondaryColor || '#1E40AF',
+    accentColor: brandingConfig?.accentColor || '#10B981',
+    logoUrl: brandingConfig?.logoUrl,
+    pricingTier: 'professional' as const,
+    features: {
+      aiAssistant: true,
+      documentOcr: true,
+      digitalSignature: true,
+      apiIntegrations: true,
+      customBranding: true,
+      multiCustodian: true,
+    }
+  };
 
-  const progressPercentage = Math.round((currentStep / ONBOARDING_STEPS.length) * 100);
+  const [data, setData] = useState<OnboardingStepData>(initialData);
 
-  const handleStepComplete = async (stepData: Partial<OnboardingStepData>) => {
-    setIsLoading(true);
-    try {
-      const updatedData = { ...onboardingData, ...stepData };
-      setOnboardingData(updatedData);
+  // Dynamic step configuration based on white-label settings
+  const defaultSteps = [
+    { id: 'welcome', name: 'Welcome', title: 'Welcome', enabled: true, required: true, order: 0 },
+    { id: 'client-info', name: 'Client Information', title: 'Client Information', enabled: true, required: true, order: 1 },
+    { id: 'custodian', name: 'Custodian Selection', title: 'Custodian Selection', enabled: effectiveBrandConfig.features.multiCustodian, required: true, order: 2 },
+    { id: 'documents', name: 'Document Upload', title: 'Document Upload', enabled: effectiveBrandConfig.features.documentOcr, required: true, order: 3 },
+    { id: 'application', name: 'Digital Application', title: 'Digital Application', enabled: effectiveBrandConfig.features.digitalSignature, required: true, order: 4 },
+    { id: 'tasks', name: 'Task Management', title: 'Task Management', enabled: true, required: false, order: 5 },
+    { id: 'compliance', name: 'Compliance Review', title: 'Compliance Review', enabled: true, required: true, order: 6 },
+    { id: 'confirmation', name: 'Confirmation', title: 'Confirmation', enabled: true, required: true, order: 7 }
+  ];
 
-      // Save to database
-      await saveOnboardingState(updatedData);
+  const activeSteps = (customStepsConfig || defaultSteps)
+    .filter(step => step.enabled)
+    .sort((a, b) => a.order - b.order);
 
-      if (currentStep < ONBOARDING_STEPS.length) {
-        setCurrentStep(currentStep + 1);
+  const stepTitles = activeSteps.map(step => step.title);
+
+  const progressPercentage = ((currentStep + 1) / stepTitles.length) * 100;
+
+  // Calculate estimated completion time
+  useEffect(() => {
+    const estimateCompletion = () => {
+      const averageTimePerStep = 8; // minutes
+      const remainingSteps = stepTitles.length - currentStep - 1;
+      const estimatedMinutes = remainingSteps * averageTimePerStep;
+      
+      if (estimatedMinutes <= 0) {
+        setEstimatedCompletion('Almost done!');
+      } else if (estimatedMinutes < 60) {
+        setEstimatedCompletion(`~${estimatedMinutes} minutes remaining`);
       } else {
-        // Onboarding complete
-        const finalState: OnboardingState = {
-          ...updatedData,
-          currentStep,
-          totalSteps: ONBOARDING_STEPS.length,
-          progressPercentage: 100,
-          status: 'completed',
-          priority: 'medium',
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        };
-        onComplete?.(finalState);
+        const hours = Math.floor(estimatedMinutes / 60);
+        const minutes = estimatedMinutes % 60;
+        setEstimatedCompletion(`~${hours}h ${minutes}m remaining`);
       }
+    };
+    estimateCompletion();
+  }, [currentStep, stepTitles.length]);
 
-      toast({
-        title: "Progress Saved",
-        description: "Your information has been saved successfully.",
-      });
-    } catch (error) {
-      console.error('Error saving onboarding data:', error);
-      toast({
-        title: "Error",
-        description: "Failed to save your progress. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
+  const handleComplete = (stepData: Partial<OnboardingStepData>) => {
+    const updatedData = { ...data, ...stepData };
+    setData(updatedData);
+
+    if (currentStep < stepTitles.length - 1) {
+      setCurrentStep(currentStep + 1);
+    } else {
+      const finalState: OnboardingState = {
+        ...updatedData,
+        currentStep: currentStep + 1,
+        totalSteps: stepTitles.length,
+        progressPercentage: 100,
+        status: 'completed',
+        priority: 'medium',
+        referralInfo,
+        whiteLabelConfig: effectiveBrandConfig,
+        customStepsConfig: customStepsConfig || defaultSteps,
+        estimatedCompletion: 'Completed!',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+      onComplete?.(finalState);
     }
   };
 
-  const saveOnboardingState = async (data: OnboardingStepData) => {
-    // This would save to the estate_intake table once the migration is complete
-    // For now, we'll just simulate the save
-    console.log('Saving onboarding state:', data);
-  };
+  const renderCurrentStep = () => {
+    const commonProps = {
+      data,
+      onComplete: handleComplete,
+      onNext: () => setCurrentStep(Math.min(currentStep + 1, stepTitles.length - 1)),
+      onPrevious: () => setCurrentStep(Math.max(currentStep - 1, 0)),
+      isLoading,
+      whiteLabelConfig: effectiveBrandConfig,
+      referralInfo,
+    };
 
-  const goToStep = (step: number) => {
-    if (step <= currentStep || step === currentStep - 1) {
-      setCurrentStep(step);
+    const activeStep = activeSteps[currentStep];
+    if (!activeStep) return null;
+
+    switch (activeStep.id) {
+      case 'welcome':
+        return <WelcomeStep {...commonProps} />;
+      case 'client-info':
+        return <ClientInfoStep {...commonProps} />;
+      case 'custodian':
+        return <CustodianSelectionStep {...commonProps} />;
+      case 'documents':
+        return <DocumentUploadStep {...commonProps} />;
+      case 'application':
+        return <DigitalApplicationStep {...commonProps} />;
+      case 'tasks':
+        return <TaskListStep {...commonProps} />;
+      case 'compliance':
+        return <ComplianceStep {...commonProps} />;
+      case 'confirmation':
+        return <ConfirmationStep {...commonProps} />;
+      default:
+        return <WelcomeStep {...commonProps} />;
     }
   };
-
-  const currentStepConfig = ONBOARDING_STEPS.find(step => step.id === currentStep);
-  const CurrentStepComponent = currentStepConfig?.component;
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <div className="border-b border-border bg-card">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              {brandSettings?.logo && (
-                <img 
-                  src={brandSettings.logo} 
-                  alt="Company Logo" 
-                  className="h-8 w-auto"
-                />
-              )}
-              <div>
-                <h1 className="text-2xl font-display font-bold text-foreground">
-                  Client Onboarding
-                </h1>
-                <p className="text-sm text-muted-foreground">
-                  Step {currentStep} of {ONBOARDING_STEPS.length}: {currentStepConfig?.title}
-                </p>
+    <div className="min-h-screen bg-gradient-to-br from-background to-accent/5">
+      <div className="container mx-auto px-4 py-4 md:py-8">
+        <div className="max-w-4xl mx-auto">
+          {/* Mobile-First Header */}
+          <div className="text-center mb-6">
+            {effectiveBrandConfig.logoUrl && (
+              <img 
+                src={effectiveBrandConfig.logoUrl} 
+                alt={effectiveBrandConfig.companyName}
+                className="h-12 mx-auto mb-4"
+              />
+            )}
+            <h1 className="text-2xl md:text-3xl font-display font-bold text-foreground mb-2">
+              {effectiveBrandConfig.companyName} Client Onboarding
+            </h1>
+            {referralInfo && (
+              <div className="flex justify-center mb-2">
+                <Badge variant="secondary" className="text-xs">
+                  Referred by {referralInfo.referrerName || 'Partner'}
+                </Badge>
+              </div>
+            )}
+            <p className="text-muted-foreground text-sm md:text-base">
+              {effectiveBrandConfig.welcomeMessage || 'Complete your onboarding to access our platform'}
+            </p>
+          </div>
+
+          {/* Enhanced Progress with ETA */}
+          <div className="mb-6 md:mb-8">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-3 gap-2">
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium text-foreground">
+                  Step {currentStep + 1} of {stepTitles.length}: {stepTitles[currentStep]}
+                </span>
+                {effectiveBrandConfig.features.aiAssistant && (
+                  <Sparkles className="h-4 w-4 text-primary" />
+                )}
+              </div>
+              <div className="flex flex-col md:items-end text-xs md:text-sm text-muted-foreground">
+                <span>{Math.round(progressPercentage)}% Complete</span>
+                <span className="text-xs">{estimatedCompletion}</span>
               </div>
             </div>
-            <div className="flex items-center gap-4">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setShowAIAssistant(!showAIAssistant)}
-                className="flex items-center gap-2"
-              >
-                <MessageCircle className="h-4 w-4" />
-                AI Assistant
-              </Button>
-              <Badge variant="secondary">
-                {progressPercentage}% Complete
-              </Badge>
-            </div>
-          </div>
-          
-          {/* Progress Bar */}
-          <div className="mt-4">
-            <Progress value={progressPercentage} className="h-2" />
-          </div>
-          
-          {/* Step Navigation */}
-          <div className="mt-4 flex flex-wrap gap-2">
-            {ONBOARDING_STEPS.map((step) => (
-              <Button
-                key={step.id}
-                variant={step.id === currentStep ? "default" : step.id < currentStep ? "secondary" : "outline"}
-                size="sm"
-                onClick={() => goToStep(step.id)}
-                disabled={step.id > currentStep + 1}
-                className="flex items-center gap-2"
-              >
-                {step.id < currentStep && (
-                  <CheckCircle className="h-3 w-3" />
-                )}
-                {step.id === currentStep && (
-                  <Clock className="h-3 w-3" />
-                )}
-                <span className="hidden sm:inline">{step.title}</span>
-                <span className="sm:hidden">{step.id}</span>
-              </Button>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex gap-8">
-          {/* Main Content Area */}
-          <div className="flex-1">
-            <Card className="premium-card">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  {currentStepConfig?.title}
-                  {currentStep < ONBOARDING_STEPS.length && (
-                    <Badge variant="outline" className="ml-2">
-                      Required
-                    </Badge>
-                  )}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                {CurrentStepComponent && (
-                  <CurrentStepComponent
-                    data={onboardingData}
-                    onComplete={handleStepComplete}
-                    onNext={() => setCurrentStep(Math.min(currentStep + 1, ONBOARDING_STEPS.length))}
-                    onPrevious={() => setCurrentStep(Math.max(currentStep - 1, 1))}
-                    isLoading={isLoading}
-                    brandSettings={brandSettings}
-                  />
-                )}
-              </CardContent>
-            </Card>
+            <Progress 
+              value={progressPercentage} 
+              className="h-3"
+              indicatorClassName="bg-gradient-to-r from-primary to-primary/80 transition-all duration-500"
+            />
           </div>
 
-          {/* AI Assistant Sidebar */}
-          {showAIAssistant && (
-            <div className="w-80">
-              <AIAssistant
-                currentStep={currentStep}
-                onboardingData={onboardingData}
-                onClose={() => setShowAIAssistant(false)}
-              />
+          {/* Main Content */}
+          <Card className="premium-card mb-6 shadow-lg">
+            <CardContent className="p-4 md:p-8">
+              {renderCurrentStep()}
+            </CardContent>
+          </Card>
+
+          {/* Mobile-First Navigation */}
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <Button
+              onClick={() => setCurrentStep(Math.max(currentStep - 1, 0))}
+              disabled={currentStep === 0}
+              variant="outline"
+              className="w-full md:w-auto flex items-center gap-2 order-2 md:order-1"
+            >
+              <ChevronLeft className="h-4 w-4" />
+              Previous
+            </Button>
+
+            {/* AI Assistant Button - Prominent on Mobile */}
+            {effectiveBrandConfig.features.aiAssistant && (
+              <div className="flex items-center gap-2 order-1 md:order-2">
+                <span className="text-sm text-muted-foreground hidden md:block">
+                  Need help?
+                </span>
+                <Button
+                  onClick={() => setShowAIAssistant(true)}
+                  variant="ghost"
+                  size="sm"
+                  className="flex items-center gap-2 text-primary hover:text-primary/80"
+                >
+                  <MessageCircle className="h-4 w-4" />
+                  <span className="md:hidden">Chat with Linda</span>
+                  <span className="hidden md:inline">Ask Linda</span>
+                </Button>
+              </div>
+            )}
+
+            <Button
+              onClick={() => setCurrentStep(Math.min(currentStep + 1, stepTitles.length - 1))}
+              disabled={currentStep === stepTitles.length - 1}
+              className="w-full md:w-auto btn-primary-gold flex items-center gap-2 order-3"
+            >
+              {currentStep === stepTitles.length - 1 ? 'Complete' : 'Next'}
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
+
+          {/* Partner Attribution */}
+          {referralInfo && referralInfo.type !== 'direct' && (
+            <div className="text-center mt-6 text-xs text-muted-foreground">
+              <p>
+                Onboarding powered by {effectiveBrandConfig.companyName} 
+                {referralInfo.referrerFirm && ` in partnership with ${referralInfo.referrerFirm}`}
+              </p>
             </div>
           )}
         </div>
       </div>
+
+      {/* AI Assistant */}
+      {showAIAssistant && effectiveBrandConfig.features.aiAssistant && (
+        <AIAssistant
+          isOpen={showAIAssistant}
+          onClose={() => setShowAIAssistant(false)}
+          currentStep={currentStep}
+          stepTitle={stepTitles[currentStep]}
+          onboardingData={data}
+          whiteLabelConfig={effectiveBrandConfig}
+          referralInfo={referralInfo}
+        />
+      )}
     </div>
   );
 };

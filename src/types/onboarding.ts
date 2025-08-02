@@ -1,10 +1,48 @@
+export interface WhiteLabelConfig {
+  companyName: string;
+  logoUrl?: string;
+  primaryColor: string;
+  secondaryColor: string;
+  accentColor: string;
+  customDomain?: string;
+  welcomeMessage?: string;
+  customSteps?: OnboardingStepConfig[];
+  pricingTier: 'starter' | 'professional' | 'enterprise';
+  features: {
+    aiAssistant: boolean;
+    documentOcr: boolean;
+    digitalSignature: boolean;
+    apiIntegrations: boolean;
+    customBranding: boolean;
+    multiCustodian: boolean;
+  };
+}
+
+export interface OnboardingStepConfig {
+  id: string;
+  name: string;
+  title: string;
+  description: string;
+  enabled: boolean;
+  required: boolean;
+  order: number;
+  customFields?: any[];
+}
+
+export interface ReferralInfo {
+  type: 'direct' | 'advisor' | 'cpa' | 'attorney' | 'partner';
+  referrerName?: string;
+  referrerId?: string;
+  referrerFirm?: string;
+  referrerEmail?: string;
+  referralCode?: string;
+  partnerTier?: string;
+}
+
 export interface OnboardingStepData {
   welcome?: {
-    brandSettings?: {
-      logo?: string;
-      primaryColor?: string;
-      welcomeMessage?: string;
-    };
+    brandSettings?: WhiteLabelConfig;
+    referralInfo?: ReferralInfo;
   };
   clientInfo?: {
     primaryClient: {
@@ -48,6 +86,7 @@ export interface OnboardingStepData {
       type: string;
       url: string;
       extractedData?: any;
+      ocrStatus?: 'pending' | 'completed' | 'failed';
     }>;
     required: string[];
   };
@@ -58,6 +97,7 @@ export interface OnboardingStepData {
       status: 'pending' | 'submitted' | 'approved' | 'rejected';
       applicationId?: string;
       docusignEnvelopeId?: string;
+      signatureUrl?: string;
     }>;
   };
   compliance?: {
@@ -66,29 +106,49 @@ export interface OnboardingStepData {
     ofacStatus: 'pending' | 'passed' | 'failed';
     riskProfile?: string;
   };
+  pricing?: {
+    selectedTier: string;
+    monthlyFee: number;
+    setupFee: number;
+    features: string[];
+  };
 }
 
 export interface OnboardingState extends OnboardingStepData {
   currentStep: number;
   totalSteps: number;
   progressPercentage: number;
-  status: 'in_progress' | 'completed' | 'needs_attorney' | 'assigned';
+  status: 'in_progress' | 'completed' | 'needs_attorney' | 'assigned' | 'stalled' | 'pending_signature';
   priority: 'low' | 'medium' | 'high' | 'urgent';
   assignedAdvisor?: string;
+  referralInfo?: ReferralInfo;
+  whiteLabelConfig?: WhiteLabelConfig;
+  customStepsConfig?: OnboardingStepConfig[];
   createdAt: string;
   updatedAt: string;
+  estimatedCompletion?: string;
 }
 
 export interface AIAssistantMessage {
   id: string;
-  type: 'user' | 'assistant';
+  type: 'user' | 'assistant' | 'system';
   content: string;
   timestamp: string;
   metadata?: {
     stepContext?: number;
     actionRequired?: boolean;
     documents?: string[];
+    suggestedActions?: string[];
+    urgency?: 'low' | 'medium' | 'high';
   };
+}
+
+export interface AIAssistantCapabilities {
+  conversationalHelp: boolean;
+  documentParsing: boolean;
+  progressTracking: boolean;
+  proactiveReminders: boolean;
+  escalationToHuman: boolean;
 }
 
 export interface OnboardingTask {
