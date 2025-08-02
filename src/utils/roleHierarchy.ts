@@ -10,7 +10,24 @@ export type UserRole =
   | 'consultant'
   | 'accountant'
   | 'attorney'
-  | 'developer';
+  | 'developer'
+  // New wealth segment professional roles
+  | 'private_banker'
+  | 'estate_planner'
+  | 'business_succession_advisor'
+  | 'insurance_specialist'
+  | 'property_manager'
+  | 'philanthropy_consultant'
+  | 'healthcare_advocate'
+  | 'luxury_concierge'
+  | 'family_law_advisor'
+  | 'platform_aggregator'
+  | 'retirement_advisor'
+  | 'private_lender'
+  | 'investment_club_lead'
+  | 'vc_pe_professional'
+  | 'tax_resolution_specialist'
+  | 'hr_benefit_consultant';
 
 // Define role hierarchy levels (higher number = more permissions)
 const ROLE_LEVELS: Record<UserRole, number> = {
@@ -20,9 +37,26 @@ const ROLE_LEVELS: Record<UserRole, number> = {
   developer: 70,
   advisor: 60,
   coach: 55,
+  // Wealth segment professionals (tiered by complexity/access needs)
+  private_banker: 55,
+  platform_aggregator: 55,
+  vc_pe_professional: 52,
+  estate_planner: 50,
   consultant: 50,
+  business_succession_advisor: 48,
+  family_law_advisor: 45,
+  insurance_specialist: 42,
   accountant: 40,
+  tax_resolution_specialist: 40,
+  retirement_advisor: 38,
+  private_lender: 35,
+  philanthropy_consultant: 35,
+  property_manager: 32,
   attorney: 30,
+  hr_benefit_consultant: 28,
+  healthcare_advocate: 25,
+  investment_club_lead: 22,
+  luxury_concierge: 20,
   client_premium: 15,
   client: 10,
 };
@@ -33,7 +67,24 @@ export const ROLE_GROUPS = {
   COACH_ACCESS: ['system_administrator', 'admin', 'tenant_admin', 'coach'] as UserRole[],
   ADMIN_ACCESS: ['system_administrator', 'admin', 'tenant_admin'] as UserRole[],
   CLIENT_ACCESS: ['system_administrator', 'admin', 'tenant_admin', 'advisor', 'client', 'client_premium'] as UserRole[],
-  PROFESSIONAL_ACCESS: ['system_administrator', 'admin', 'tenant_admin', 'advisor', 'coach', 'consultant', 'accountant', 'attorney'] as UserRole[],
+  PROFESSIONAL_ACCESS: [
+    'system_administrator', 'admin', 'tenant_admin', 'advisor', 'coach', 'consultant', 'accountant', 'attorney',
+    'private_banker', 'estate_planner', 'business_succession_advisor', 'insurance_specialist', 'property_manager',
+    'philanthropy_consultant', 'healthcare_advocate', 'luxury_concierge', 'family_law_advisor', 'platform_aggregator',
+    'retirement_advisor', 'private_lender', 'investment_club_lead', 'vc_pe_professional', 'tax_resolution_specialist',
+    'hr_benefit_consultant'
+  ] as UserRole[],
+  // Specialized access groups
+  WEALTH_ADVISORS: ['advisor', 'private_banker', 'estate_planner', 'business_succession_advisor'] as UserRole[],
+  LEGAL_PROFESSIONALS: ['attorney', 'estate_planner', 'family_law_advisor', 'tax_resolution_specialist'] as UserRole[],
+  INVESTMENT_PROFESSIONALS: ['advisor', 'private_banker', 'vc_pe_professional', 'investment_club_lead', 'platform_aggregator'] as UserRole[],
+  REFERRAL_NETWORK: [
+    'advisor', 'private_banker', 'estate_planner', 'business_succession_advisor', 'insurance_specialist',
+    'property_manager', 'philanthropy_consultant', 'family_law_advisor', 'retirement_advisor', 'private_lender'
+  ] as UserRole[],
+  MARKETPLACE_VENDORS: [
+    'luxury_concierge', 'healthcare_advocate', 'hr_benefit_consultant', 'property_manager'
+  ] as UserRole[],
 };
 
 /**
@@ -80,6 +131,23 @@ export function getRoleDisplayName(role: string): string {
     accountant: 'Accountant',
     attorney: 'Attorney',
     developer: 'Developer',
+    // Wealth segment professionals
+    private_banker: 'Private Banker / Trust Officer',
+    estate_planner: 'Estate Planning Consultant',
+    business_succession_advisor: 'Business Succession Advisor',
+    insurance_specialist: 'Insurance & Advanced Planning Specialist',
+    property_manager: 'Property Manager / Real Estate Specialist',
+    philanthropy_consultant: 'Philanthropy Consultant',
+    healthcare_advocate: 'Healthcare Advocate',
+    luxury_concierge: 'Luxury Concierge / Travel Specialist',
+    family_law_advisor: 'Divorce / Family Law Advisor',
+    platform_aggregator: 'Platform Aggregator / MFO',
+    retirement_advisor: 'Retirement Plan Advisor',
+    private_lender: 'Private Lender / Credit Specialist',
+    investment_club_lead: 'Family Investment Club Lead',
+    vc_pe_professional: 'VC / Private Equity Professional',
+    tax_resolution_specialist: 'Tax Resolution Specialist',
+    hr_benefit_consultant: 'HR / Benefit Consultant',
   };
   
   return roleMap[role] || role;
