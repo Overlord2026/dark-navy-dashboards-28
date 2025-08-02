@@ -6,6 +6,7 @@ import { PropertyAnalytics } from "./PropertyAnalytics";
 import { PropertyDocuments } from "./PropertyDocuments";
 import { PropertyMarketplace } from "./PropertyMarketplace";
 import { PropertyReminders } from "./PropertyReminders";
+import { PropertyCollaboration } from "./PropertyCollaboration";
 import { useSubscriptionAccess } from "@/hooks/useSubscriptionAccess";
 
 interface PropertyDashboardProps {
@@ -28,17 +29,19 @@ export const PropertyDashboard: React.FC<PropertyDashboardProps> = ({ initialFil
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-6">
+        <TabsList className="grid w-full grid-cols-3 lg:grid-cols-8 gap-1">
           <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="properties">Properties</TabsTrigger>
-          <TabsTrigger value="documents">Documents</TabsTrigger>
-          <TabsTrigger value="reminders">Reminders</TabsTrigger>
-          <TabsTrigger value="analytics" disabled={!hasPremiumAccess}>
-            Analytics {!hasPremiumAccess && "🔒"}
-          </TabsTrigger>
+          <TabsTrigger value="properties">My Properties</TabsTrigger>
           <TabsTrigger value="marketplace" disabled={!hasPremiumAccess}>
             Marketplace {!hasPremiumAccess && "🔒"}
           </TabsTrigger>
+          <TabsTrigger value="analytics" disabled={!hasPremiumAccess}>
+            Analytics {!hasPremiumAccess && "🔒"}
+          </TabsTrigger>
+          <TabsTrigger value="reminders">Reminders</TabsTrigger>
+          <TabsTrigger value="documents">Documents</TabsTrigger>
+          <TabsTrigger value="collaboration">Collaboration</TabsTrigger>
+          <TabsTrigger value="pros">Pro Directory</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview">
@@ -62,6 +65,14 @@ export const PropertyDashboard: React.FC<PropertyDashboardProps> = ({ initialFil
         </TabsContent>
 
         <TabsContent value="marketplace">
+          <PropertyMarketplace />
+        </TabsContent>
+
+        <TabsContent value="collaboration">
+          <PropertyCollaboration />
+        </TabsContent>
+
+        <TabsContent value="pros">
           <PropertyMarketplace />
         </TabsContent>
       </Tabs>
