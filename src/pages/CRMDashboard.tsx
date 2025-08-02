@@ -7,7 +7,7 @@ import { ActivityFeed } from '@/components/crm/ActivityFeed';
 import { SmartReminders } from '@/components/crm/SmartReminders';
 import { CRMAnalytics } from '@/components/crm/CRMAnalytics';
 import { ImportExport } from '@/components/crm/ImportExport';
-import { Users, Pipeline, Activity, Bell, BarChart3, Upload } from 'lucide-react';
+import { Users, ArrowRightLeft, Activity, Bell, BarChart3, Upload } from 'lucide-react';
 
 export default function CRMDashboard() {
   const [activeTab, setActiveTab] = useState('contacts');
@@ -33,7 +33,7 @@ export default function CRMDashboard() {
               Contacts
             </TabsTrigger>
             <TabsTrigger value="pipeline" className="flex items-center gap-2">
-              <Pipeline className="h-4 w-4" />
+              <ArrowRightLeft className="h-4 w-4" />
               Pipeline
             </TabsTrigger>
             <TabsTrigger value="activity" className="flex items-center gap-2">

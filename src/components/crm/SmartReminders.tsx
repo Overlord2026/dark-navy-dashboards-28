@@ -87,7 +87,7 @@ export function SmartReminders() {
         .order('due_date', { ascending: true });
 
       if (error) throw error;
-      setReminders(data || []);
+      setReminders(data as Reminder[] || []);
     } catch (error) {
       console.error('Error fetching reminders:', error);
       toast.error('Failed to load reminders');

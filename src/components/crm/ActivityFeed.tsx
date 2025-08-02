@@ -78,7 +78,7 @@ export function ActivityFeed() {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setActivities(data || []);
+      setActivities(data as Activity[] || []);
     } catch (error) {
       console.error('Error fetching activities:', error);
       toast.error('Failed to load activities');

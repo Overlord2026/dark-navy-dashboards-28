@@ -63,7 +63,7 @@ export function ContactBook() {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setContacts(data || []);
+      setContacts(data as Contact[] || []);
     } catch (error) {
       console.error('Error fetching contacts:', error);
       toast.error('Failed to load contacts');
