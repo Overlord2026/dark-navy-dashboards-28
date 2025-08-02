@@ -100,6 +100,7 @@ import { FiduciaryReview } from "./components/annuities/FiduciaryReview";
 import ClientsPage from "./pages/advisor/ClientsPage";
 import ProspectsPage from "./pages/advisor/ProspectsPage";
 import AdvisorROIDashboard from "./pages/AdvisorROIDashboard";
+import IntegrationTestPage from "./pages/IntegrationTestPage";
 import WealthOverviewPage from "./pages/WealthOverviewPage";
 // Client pages
 import ClientEducationPage from "./pages/client/ClientEducationPage";
@@ -663,9 +664,20 @@ const App = () => {
                          <AdvisorROIDashboard />
                        </AuthWrapper>
                      } 
-                   />
+                    />
 
-                   {/* Additional Pages for Missing Routes */}
+                    {/* Integration Test Suite Route */}
+                    <Route 
+                      path="/integration-test" 
+                      element={
+                        <AuthWrapper 
+                          requireAuth={true}
+                          allowedRoles={['admin', 'system_administrator', 'tenant_admin']}
+                        >
+                          <IntegrationTestPage />
+                        </AuthWrapper>
+                      } 
+                    />
                    <Route
                      path="/advisor/clients"
                      element={
