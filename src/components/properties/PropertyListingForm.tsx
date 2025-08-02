@@ -33,11 +33,12 @@ interface PropertyListingFormData {
 }
 
 interface PropertyListingFormProps {
-  onSubmit: (data: PropertyListingFormData) => void;
-  onCancel: () => void;
+  onSubmit?: (data: PropertyListingFormData) => void;
+  onCancel?: () => void;
+  onClose?: () => void;
 }
 
-export const PropertyListingForm: React.FC<PropertyListingFormProps> = ({ onSubmit, onCancel }) => {
+export const PropertyListingForm: React.FC<PropertyListingFormProps> = ({ onSubmit, onCancel, onClose }) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [photos, setPhotos] = useState<File[]>([]);
   const [documents, setDocuments] = useState<File[]>([]);
@@ -71,8 +72,22 @@ export const PropertyListingForm: React.FC<PropertyListingFormProps> = ({ onSubm
   };
 
   const handleSubmit = (data: PropertyListingFormData) => {
-    onSubmit({ ...data, photos, documents });
+    if (onSubmit) {
+      onSubmit({ ...data, photos, documents });
+    }
     toast.success("Property listing created successfully!");
+    if (onClose) {
+      onClose();
+    }
+  };
+
+  const handleCancel = () => {
+    if (onCancel) {
+      onCancel();
+    }
+    if (onClose) {
+      onClose();
+    }
   };
 
   const nextStep = () => setCurrentStep(prev => prev + 1);
@@ -521,7 +536,7 @@ export const PropertyListingForm: React.FC<PropertyListingFormProps> = ({ onSubm
                   <Button type="button" variant="outline" onClick={prevStep}>
                     Back
                   </Button>
-                  <Button type="button" variant="outline" onClick={onCancel}>
+                  <Button type="button" variant="outline" onClick={handleCancel}>
                     Cancel
                   </Button>
                   <Button type="submit">
