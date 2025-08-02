@@ -20,9 +20,13 @@ import { AIAssistantMessage, OnboardingStepData } from '@/types/onboarding';
 import { useToast } from '@/hooks/use-toast';
 
 interface AIAssistantProps {
-  currentStep: number;
-  onboardingData: OnboardingStepData;
+  isOpen: boolean;
   onClose: () => void;
+  currentStep: number;
+  stepTitle: string;
+  onboardingData: OnboardingStepData;
+  whiteLabelConfig?: any;
+  referralInfo?: any;
 }
 
 const STEP_CONTEXTS = {
@@ -53,9 +57,13 @@ const SAMPLE_RESPONSES = {
 };
 
 export const AIAssistant: React.FC<AIAssistantProps> = ({
+  isOpen,
+  onClose,
   currentStep,
+  stepTitle,
   onboardingData,
-  onClose
+  whiteLabelConfig,
+  referralInfo
 }) => {
   const [messages, setMessages] = useState<AIAssistantMessage[]>([
     {
