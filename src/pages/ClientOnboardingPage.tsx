@@ -1,6 +1,18 @@
 import React from 'react';
-import { ClientWelcomeFlow } from '@/components/onboarding/ClientWelcomeFlow';
+import { ClientOnboardingFlow } from '@/components/onboarding/ClientOnboardingFlow';
 
 export default function ClientOnboardingPage() {
-  return <ClientWelcomeFlow />;
+  const handleOnboardingComplete = (state: any) => {
+    console.log('Onboarding completed:', state);
+  };
+
+  return (
+    <ClientOnboardingFlow 
+      onComplete={handleOnboardingComplete}
+      brandSettings={{
+        companyName: 'MyBFOCFO',
+        primaryColor: '#FFD700'
+      }}
+    />
+  );
 }
