@@ -55,6 +55,7 @@ export type Database = {
       ad_spend_tracking: {
         Row: {
           advisor_id: string
+          agency_id: string | null
           amount: number
           campaign_id: string | null
           campaign_name: string | null
@@ -70,6 +71,7 @@ export type Database = {
         }
         Insert: {
           advisor_id: string
+          agency_id?: string | null
           amount: number
           campaign_id?: string | null
           campaign_name?: string | null
@@ -85,6 +87,7 @@ export type Database = {
         }
         Update: {
           advisor_id?: string
+          agency_id?: string | null
           amount?: number
           campaign_id?: string | null
           campaign_name?: string | null
@@ -99,6 +102,13 @@ export type Database = {
           spend_date?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "ad_spend_tracking_agency_id_fkey"
+            columns: ["agency_id"]
+            isOneToOne: false
+            referencedRelation: "marketing_agencies"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "ad_spend_tracking_campaign_id_fkey"
             columns: ["campaign_id"]
@@ -667,6 +677,172 @@ export type Database = {
             columns: ["questionnaire_id"]
             isOneToOne: false
             referencedRelation: "client_questionnaires"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agency_campaigns: {
+        Row: {
+          advisor_id: string
+          agency_id: string
+          budget: number | null
+          campaign_name: string
+          campaign_type: string | null
+          created_at: string
+          end_date: string | null
+          goals: Json | null
+          id: string
+          start_date: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          advisor_id: string
+          agency_id: string
+          budget?: number | null
+          campaign_name: string
+          campaign_type?: string | null
+          created_at?: string
+          end_date?: string | null
+          goals?: Json | null
+          id?: string
+          start_date: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          advisor_id?: string
+          agency_id?: string
+          budget?: number | null
+          campaign_name?: string
+          campaign_type?: string | null
+          created_at?: string
+          end_date?: string | null
+          goals?: Json | null
+          id?: string
+          start_date?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agency_campaigns_agency_id_fkey"
+            columns: ["agency_id"]
+            isOneToOne: false
+            referencedRelation: "marketing_agencies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agency_performance_metrics: {
+        Row: {
+          agency_id: string
+          average_cpl: number | null
+          average_ltv: number | null
+          close_rate: number | null
+          conversion_rate: number | null
+          created_at: string
+          id: string
+          period_end: string
+          period_start: string
+          total_ad_spend: number | null
+          total_appointments: number | null
+          total_campaigns: number | null
+          total_closed_clients: number | null
+          total_leads: number | null
+        }
+        Insert: {
+          agency_id: string
+          average_cpl?: number | null
+          average_ltv?: number | null
+          close_rate?: number | null
+          conversion_rate?: number | null
+          created_at?: string
+          id?: string
+          period_end: string
+          period_start: string
+          total_ad_spend?: number | null
+          total_appointments?: number | null
+          total_campaigns?: number | null
+          total_closed_clients?: number | null
+          total_leads?: number | null
+        }
+        Update: {
+          agency_id?: string
+          average_cpl?: number | null
+          average_ltv?: number | null
+          close_rate?: number | null
+          conversion_rate?: number | null
+          created_at?: string
+          id?: string
+          period_end?: string
+          period_start?: string
+          total_ad_spend?: number | null
+          total_appointments?: number | null
+          total_campaigns?: number | null
+          total_closed_clients?: number | null
+          total_leads?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agency_performance_metrics_agency_id_fkey"
+            columns: ["agency_id"]
+            isOneToOne: false
+            referencedRelation: "marketing_agencies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agency_reviews: {
+        Row: {
+          advisor_id: string
+          agency_id: string
+          campaign_id: string | null
+          created_at: string
+          id: string
+          rating: number
+          responded_at: string | null
+          response_text: string | null
+          review_text: string | null
+          updated_at: string
+        }
+        Insert: {
+          advisor_id: string
+          agency_id: string
+          campaign_id?: string | null
+          created_at?: string
+          id?: string
+          rating: number
+          responded_at?: string | null
+          response_text?: string | null
+          review_text?: string | null
+          updated_at?: string
+        }
+        Update: {
+          advisor_id?: string
+          agency_id?: string
+          campaign_id?: string | null
+          created_at?: string
+          id?: string
+          rating?: number
+          responded_at?: string | null
+          response_text?: string | null
+          review_text?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agency_reviews_agency_id_fkey"
+            columns: ["agency_id"]
+            isOneToOne: false
+            referencedRelation: "marketing_agencies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agency_reviews_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "ad_spend_tracking"
             referencedColumns: ["id"]
           },
         ]
@@ -8603,6 +8779,7 @@ export type Database = {
         Row: {
           acquisition_cost: number | null
           advisor_id: string
+          agency_id: string | null
           budget_score: number | null
           campaign_id: string | null
           created_at: string
@@ -8629,6 +8806,7 @@ export type Database = {
         Insert: {
           acquisition_cost?: number | null
           advisor_id: string
+          agency_id?: string | null
           budget_score?: number | null
           campaign_id?: string | null
           created_at?: string
@@ -8655,6 +8833,7 @@ export type Database = {
         Update: {
           acquisition_cost?: number | null
           advisor_id?: string
+          agency_id?: string | null
           budget_score?: number | null
           campaign_id?: string | null
           created_at?: string
@@ -8679,6 +8858,13 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "leads_agency_id_fkey"
+            columns: ["agency_id"]
+            isOneToOne: false
+            referencedRelation: "marketing_agencies"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "leads_campaign_id_fkey"
             columns: ["campaign_id"]
@@ -9029,6 +9215,57 @@ export type Database = {
           volatility?: number | null
           yield?: number | null
           ytd_return?: number | null
+        }
+        Relationships: []
+      }
+      marketing_agencies: {
+        Row: {
+          contact_email: string
+          contact_phone: string | null
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          is_featured: boolean | null
+          logo_url: string | null
+          name: string
+          specializations: string[] | null
+          status: string
+          tenant_id: string | null
+          updated_at: string
+          website_url: string | null
+        }
+        Insert: {
+          contact_email: string
+          contact_phone?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_featured?: boolean | null
+          logo_url?: string | null
+          name: string
+          specializations?: string[] | null
+          status?: string
+          tenant_id?: string | null
+          updated_at?: string
+          website_url?: string | null
+        }
+        Update: {
+          contact_email?: string
+          contact_phone?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_featured?: boolean | null
+          logo_url?: string | null
+          name?: string
+          specializations?: string[] | null
+          status?: string
+          tenant_id?: string | null
+          updated_at?: string
+          website_url?: string | null
         }
         Relationships: []
       }
@@ -18552,6 +18789,10 @@ export type Database = {
         }
         Returns: Json
       }
+      calculate_agency_average_rating: {
+        Args: { p_agency_id: string }
+        Returns: number
+      }
       calculate_goal_progress: {
         Args: { goal_id: string }
         Returns: number
@@ -19220,6 +19461,14 @@ export type Database = {
           p_metadata?: Json
         }
         Returns: string
+      }
+      update_agency_performance_metrics: {
+        Args: {
+          p_agency_id: string
+          p_period_start: string
+          p_period_end: string
+        }
+        Returns: undefined
       }
       update_disaster_recovery_progress: {
         Args: {

@@ -666,18 +666,21 @@ const App = () => {
                      } 
                     />
 
-                    {/* Integration Test Suite Route */}
-                    <Route 
-                      path="/integration-test" 
-                      element={
-                        <AuthWrapper 
-                          requireAuth={true}
-                          allowedRoles={['admin', 'system_administrator', 'tenant_admin']}
-                        >
-                          <IntegrationTestPage />
-                        </AuthWrapper>
-                      } 
-                    />
+                     {/* Integration Test Suite Route */}
+                     <Route 
+                       path="/integration-test" 
+                       element={
+                         <AuthWrapper 
+                           requireAuth={true}
+                           allowedRoles={['admin', 'system_administrator', 'tenant_admin']}
+                         >
+                           <IntegrationTestPage />
+                         </AuthWrapper>
+                       } 
+                     />
+
+                     {/* Marketing Agencies Marketplace */}
+                     <Route path="/agencies" element={<AgenciesPage />} />
                    <Route
                      path="/advisor/clients"
                      element={
