@@ -382,7 +382,7 @@ export function LeadAnalyticsDashboard() {
               <label className="text-sm font-medium mb-2 block">Date Range</label>
               <DatePickerWithRange
                 date={filters.dateRange}
-                onDateChange={(dateRange) => setFilters(prev => ({ ...prev, dateRange: dateRange || { from: new Date(), to: new Date() } }))}
+                onDateChange={(dateRange) => setFilters(prev => ({ ...prev, dateRange: dateRange && dateRange.from ? dateRange : { from: new Date(), to: new Date() } }))}
               />
             </div>
             

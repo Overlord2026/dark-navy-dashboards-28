@@ -162,8 +162,8 @@ export const ROIDashboard: React.FC = () => {
       // Calculate metrics
       const totalAdSpend = adSpend?.reduce((sum, item) => sum + (item.amount || 0), 0) || 0;
       const totalLeads = leads?.length || 0;
-      const qualifiedLeads = leads?.filter(lead => lead.qualified).length || 0;
-      const clientsWon = leads?.filter(lead => lead.client_converted).length || 0;
+      const qualifiedLeads = leads?.filter(lead => lead.lead_status === 'qualified').length || 0;
+      const clientsWon = leads?.filter(lead => lead.lead_status === 'client').length || 0;
 
       // Calculate appointment metrics
       let appt1Scheduled = 0, appt1Attended = 0;
@@ -172,12 +172,12 @@ export const ROIDashboard: React.FC = () => {
 
       leads?.forEach(lead => {
         const appointment = lead.appointments?.[0];
-        if (appointment?.appt_1_scheduled) appt1Scheduled++;
-        if (appointment?.appt_1_attended) appt1Attended++;
-        if (appointment?.appt_2_scheduled) appt2Scheduled++;
-        if (appointment?.appt_2_attended) appt2Attended++;
-        if (appointment?.appt_3_scheduled) appt3Scheduled++;
-        if (appointment?.appt_3_attended) appt3Attended++;
+        if (appointment?.appt_1_scheduled === true) appt1Scheduled++;
+        if (appointment?.appt_1_attended === true) appt1Attended++;
+        if (appointment?.appt_2_scheduled === true) appt2Scheduled++;
+        if (appointment?.appt_2_attended === true) appt2Attended++;
+        if (appointment?.appt_3_scheduled === true) appt3Scheduled++;
+        if (appointment?.appt_3_attended === true) appt3Attended++;
       });
 
       const costPerLead = totalLeads > 0 ? totalAdSpend / totalLeads : 0;
@@ -238,9 +238,9 @@ export const ROIDashboard: React.FC = () => {
         }
         const data = weeklyData.get(week);
         data.leads++;
-        if (lead.qualified) data.qualified++;
-        if (lead.appointments?.[0]?.appt_1_attended) data.appointments++;
-        if (lead.client_converted) data.clients++;
+        if (lead.lead_status === 'qualified') data.qualified++;
+        if (lead.appointments?.[0]?.appt_1_attended === true) data.appointments++;
+        if (lead.lead_status === 'client') data.clients++;
       });
 
       adSpend?.forEach(spend => {
@@ -385,7 +385,7 @@ export const ROIDashboard: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
             <DatePickerWithRange
               date={dateRange}
-              onDateChange={setDateRange}
+              onDateChange={(newDateRange) => setDateRange(newDateRange && newDateRange.from ? newDateRange : { from: new Date(), to: new Date() })}
             />
 
             <Select value={filters.source} onValueChange={(value) => setFilters(prev => ({ ...prev, source: value }))}>

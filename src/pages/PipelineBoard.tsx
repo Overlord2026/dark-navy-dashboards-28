@@ -103,12 +103,15 @@ export const PipelineBoard: React.FC = () => {
         const appointment = lead.appointments?.[0];
         return {
           ...lead,
-          appt_1_scheduled: appointment?.appt_1_scheduled,
-          appt_1_attended: appointment?.appt_1_attended,
-          appt_2_scheduled: appointment?.appt_2_scheduled,
-          appt_2_attended: appointment?.appt_2_attended,
-          appt_3_scheduled: appointment?.appt_3_scheduled,
-          appt_3_attended: appointment?.appt_3_attended,
+          name: lead.first_name + ' ' + lead.last_name,
+          qualified: lead.lead_status === 'qualified',
+          client_converted: lead.lead_status === 'client',
+          appt_1_scheduled: appointment?.appt_1_scheduled || false,
+          appt_1_attended: appointment?.appt_1_attended || false,
+          appt_2_scheduled: appointment?.appt_2_scheduled || false,
+          appt_2_attended: appointment?.appt_2_attended || false,
+          appt_3_scheduled: appointment?.appt_3_scheduled || false,
+          appt_3_attended: appointment?.appt_3_attended || false,
         };
       }) || [];
 
@@ -129,7 +132,7 @@ export const PipelineBoard: React.FC = () => {
     try {
       const [advisorsRes, campaignsRes, agenciesRes] = await Promise.all([
         supabase.from('advisor_profiles').select('id, name, user_id').eq('is_active', true),
-        supabase.from('campaigns').select('id, campaign_name').eq('status', 'active'),
+        supabase.from('marketing_campaigns').select('id, campaign_name').eq('status', 'active'),
         supabase.from('marketing_agencies').select('id, name').eq('status', 'approved'),
       ]);
 

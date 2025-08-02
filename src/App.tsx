@@ -48,6 +48,7 @@ import { ConsultantDashboard } from "./pages/ConsultantDashboard";
 import { AttorneyDashboard } from "./pages/AttorneyDashboard";
 import { CoachDashboard } from "./pages/CoachDashboard";
 import CoachesLanding from "./pages/CoachesLanding";
+import { CoachDashboard as CoachingDashboard } from "@/components/coaching/CoachDashboard";
 import { AdminRoute } from "@/components/auth/AdminRoute";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { DiagnosticsPage } from "./pages/DiagnosticsPage";
@@ -365,7 +366,18 @@ const App = () => {
                       </AuthWrapper>
                     }
                   />
-                  <Route path="/coaches" element={<CoachesLanding />} />
+          <Route path="/coaches" element={<CoachesLanding />} />
+          <Route 
+            path="/coach-dashboard" 
+            element={
+              <AuthWrapper
+                requireAuth={true}
+                allowedRoles={['coach', 'admin', 'tenant_admin', 'system_administrator']}
+              >
+                <CoachingDashboard />
+              </AuthWrapper>
+            } 
+          />
                   <Route
                     path="/diagnostics"
                     element={
