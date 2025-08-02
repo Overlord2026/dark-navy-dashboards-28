@@ -99,6 +99,7 @@ import { AnnuityMarketplace } from "./components/annuities/marketplace/AnnuityMa
 import { FiduciaryReview } from "./components/annuities/FiduciaryReview";
 import ClientsPage from "./pages/advisor/ClientsPage";
 import { AgenciesPage } from "./pages/AgenciesPage";
+import { LeadIntakeForm } from "./pages/LeadIntakeForm";
 import ProspectsPage from "./pages/advisor/ProspectsPage";
 import AdvisorROIDashboard from "./pages/AdvisorROIDashboard";
 import IntegrationTestPage from "./pages/IntegrationTestPage";
@@ -680,9 +681,13 @@ const App = () => {
                        } 
                      />
 
-                     {/* Marketing Agencies Marketplace */}
-                     <Route path="/agencies" element={<AgenciesPage />} />
-                   <Route
+                      {/* Marketing Agencies Marketplace */}
+                      <Route path="/agencies" element={<AgenciesPage />} />
+                      
+                      {/* Lead Intake Form */}
+                      <Route path="/leads/new" element={<LeadIntakeForm />} />
+                      
+                    <Route
                      path="/advisor/clients"
                      element={
                        <AuthWrapper
