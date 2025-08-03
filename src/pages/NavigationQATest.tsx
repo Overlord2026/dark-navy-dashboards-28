@@ -11,6 +11,7 @@ import { UIUXAuditTester } from "@/components/testing/UIUXAuditTester";
 import { VaultComprehensiveTester } from "@/components/testing/VaultComprehensiveTester";
 import { UIUXIssueTracker } from "@/components/testing/UIUXIssueTracker";
 import { ClientPersonaComprehensiveQA } from "@/components/qa/ClientPersonaComprehensiveQA";
+import { AdvisorPersonaComprehensiveQA } from "@/components/qa/AdvisorPersonaComprehensiveQA";
 import { measureRoutePerformance } from "@/services/performance/performanceMonitorService";
 import { useAuth } from "@/context/AuthContext";
 import { Navigate } from "react-router-dom";
@@ -44,6 +45,7 @@ const NavigationQATest: React.FC = () => {
       
       <div className="grid grid-cols-1 gap-6">
         <UIUXIssueTracker />
+        <AdvisorPersonaComprehensiveQA />
         <ClientPersonaComprehensiveQA />
         <UIUXAuditTester />
         <VaultComprehensiveTester />
