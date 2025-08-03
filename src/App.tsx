@@ -108,6 +108,10 @@ import { AgenciesPage } from "./pages/AgenciesPage";
 import { ROIDashboard } from "./pages/ROIDashboard";
 import ProspectsPage from "./pages/advisor/ProspectsPage";
 import AdvisorROIDashboard from "./pages/AdvisorROIDashboard";
+import AdvisorMainDashboard from "./pages/advisor/AdvisorMainDashboard";
+import NewProposalPage from "./pages/advisor/NewProposalPage";
+import InviteClientPage from "./pages/advisor/InviteClientPage";
+import OnboardingDashboard from "./pages/advisor/OnboardingDashboard";
 import IntegrationTestPage from "./pages/IntegrationTestPage";
 import WealthOverviewPage from "./pages/WealthOverviewPage";
 // Client pages
@@ -682,18 +686,73 @@ const App = () => {
                   <Route path="/annuities/marketplace" element={<AnnuityMarketplace />} />
                   <Route path="/annuities/review" element={<FiduciaryReview />} />
 
-                  {/* Advisor Proposal Routes */}
-                  <Route
-                    path="/advisor/proposals"
-                    element={
-                      <AuthWrapper
-                        requireAuth={true}
-                        allowedRoles={['advisor', 'admin', 'tenant_admin', 'system_administrator']}
-                      >
-                        <ProposalList />
-                      </AuthWrapper>
-                    }
-                  />
+                   {/* Advisor Routes */}
+                   <Route
+                     path="/advisor-dashboard"
+                     element={
+                       <AuthWrapper
+                         requireAuth={true}
+                         allowedRoles={['advisor', 'admin', 'tenant_admin', 'system_administrator']}
+                       >
+                         <AdvisorMainDashboard />
+                       </AuthWrapper>
+                     }
+                   />
+                   <Route
+                     path="/advisor/billing"
+                     element={
+                       <AuthWrapper
+                         requireAuth={true}
+                         allowedRoles={['advisor', 'admin', 'tenant_admin', 'system_administrator']}
+                       >
+                         <BillingPage />
+                       </AuthWrapper>
+                     }
+                   />
+                   <Route
+                     path="/advisor/proposals"
+                     element={
+                       <AuthWrapper
+                         requireAuth={true}
+                         allowedRoles={['advisor', 'admin', 'tenant_admin', 'system_administrator']}
+                       >
+                         <ProposalList />
+                       </AuthWrapper>
+                     }
+                   />
+                   <Route
+                     path="/advisor/proposals/new"
+                     element={
+                       <AuthWrapper
+                         requireAuth={true}
+                         allowedRoles={['advisor', 'admin', 'tenant_admin', 'system_administrator']}
+                       >
+                         <NewProposalPage />
+                       </AuthWrapper>
+                     }
+                   />
+                   <Route
+                     path="/invite-client"
+                     element={
+                       <AuthWrapper
+                         requireAuth={true}
+                         allowedRoles={['advisor', 'admin', 'tenant_admin', 'system_administrator']}
+                       >
+                         <InviteClientPage />
+                       </AuthWrapper>
+                     }
+                   />
+                   <Route
+                     path="/onboarding-dashboard"
+                     element={
+                       <AuthWrapper
+                         requireAuth={true}
+                         allowedRoles={['advisor', 'admin', 'tenant_admin', 'system_administrator']}
+                       >
+                         <OnboardingDashboard />
+                       </AuthWrapper>
+                     }
+                   />
                   <Route
                     path="/advisor/proposals/new"
                     element={
