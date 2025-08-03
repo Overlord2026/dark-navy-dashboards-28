@@ -1194,6 +1194,142 @@ export type Database = {
           },
         ]
       }
+      attorney_document_access_log: {
+        Row: {
+          access_granted: boolean | null
+          access_type: string
+          created_at: string | null
+          denial_reason: string | null
+          document_id: string
+          id: string
+          ip_address: unknown | null
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          access_granted?: boolean | null
+          access_type: string
+          created_at?: string | null
+          denial_reason?: string | null
+          document_id: string
+          id?: string
+          ip_address?: unknown | null
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          access_granted?: boolean | null
+          access_type?: string
+          created_at?: string | null
+          denial_reason?: string | null
+          document_id?: string
+          id?: string
+          ip_address?: unknown | null
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attorney_document_access_log_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "attorney_documents_metadata"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      attorney_document_classifications: {
+        Row: {
+          classification_name: string
+          created_at: string | null
+          description: string | null
+          id: string
+          is_active: boolean | null
+          required_fields: Json | null
+          retention_period_years: number | null
+          updated_at: string | null
+          validation_rules: Json | null
+        }
+        Insert: {
+          classification_name: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          required_fields?: Json | null
+          retention_period_years?: number | null
+          updated_at?: string | null
+          validation_rules?: Json | null
+        }
+        Update: {
+          classification_name?: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          required_fields?: Json | null
+          retention_period_years?: number | null
+          updated_at?: string | null
+          validation_rules?: Json | null
+        }
+        Relationships: []
+      }
+      attorney_document_shares: {
+        Row: {
+          access_count: number | null
+          access_token: string | null
+          created_at: string | null
+          document_id: string
+          expires_at: string | null
+          id: string
+          is_active: boolean | null
+          max_access_count: number | null
+          permission_level: string | null
+          shared_by: string
+          shared_with_email: string | null
+          shared_with_user_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          access_count?: number | null
+          access_token?: string | null
+          created_at?: string | null
+          document_id: string
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          max_access_count?: number | null
+          permission_level?: string | null
+          shared_by: string
+          shared_with_email?: string | null
+          shared_with_user_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          access_count?: number | null
+          access_token?: string | null
+          created_at?: string | null
+          document_id?: string
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          max_access_count?: number | null
+          permission_level?: string | null
+          shared_by?: string
+          shared_with_email?: string | null
+          shared_with_user_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attorney_document_shares_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "attorney_documents_metadata"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       attorney_documents: {
         Row: {
           document_name: string
@@ -1240,6 +1376,99 @@ export type Database = {
             columns: ["onboarding_id"]
             isOneToOne: false
             referencedRelation: "attorney_onboarding"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      attorney_documents_metadata: {
+        Row: {
+          access_count: number | null
+          attorney_id: string
+          classification_id: string
+          client_id: string | null
+          created_at: string | null
+          document_description: string | null
+          document_title: string
+          encryption_status: string | null
+          file_path: string
+          file_size: number
+          id: string
+          is_current_version: boolean | null
+          last_accessed_at: string | null
+          metadata_fields: Json | null
+          mime_type: string
+          original_filename: string
+          parent_document_id: string | null
+          retention_date: string | null
+          security_level: string | null
+          tags: string[] | null
+          updated_at: string | null
+          uploaded_by: string
+          version_number: number | null
+        }
+        Insert: {
+          access_count?: number | null
+          attorney_id: string
+          classification_id: string
+          client_id?: string | null
+          created_at?: string | null
+          document_description?: string | null
+          document_title: string
+          encryption_status?: string | null
+          file_path: string
+          file_size: number
+          id?: string
+          is_current_version?: boolean | null
+          last_accessed_at?: string | null
+          metadata_fields?: Json | null
+          mime_type: string
+          original_filename: string
+          parent_document_id?: string | null
+          retention_date?: string | null
+          security_level?: string | null
+          tags?: string[] | null
+          updated_at?: string | null
+          uploaded_by: string
+          version_number?: number | null
+        }
+        Update: {
+          access_count?: number | null
+          attorney_id?: string
+          classification_id?: string
+          client_id?: string | null
+          created_at?: string | null
+          document_description?: string | null
+          document_title?: string
+          encryption_status?: string | null
+          file_path?: string
+          file_size?: number
+          id?: string
+          is_current_version?: boolean | null
+          last_accessed_at?: string | null
+          metadata_fields?: Json | null
+          mime_type?: string
+          original_filename?: string
+          parent_document_id?: string | null
+          retention_date?: string | null
+          security_level?: string | null
+          tags?: string[] | null
+          updated_at?: string | null
+          uploaded_by?: string
+          version_number?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attorney_documents_metadata_classification_id_fkey"
+            columns: ["classification_id"]
+            isOneToOne: false
+            referencedRelation: "attorney_document_classifications"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "attorney_documents_metadata_parent_document_id_fkey"
+            columns: ["parent_document_id"]
+            isOneToOne: false
+            referencedRelation: "attorney_documents_metadata"
             referencedColumns: ["id"]
           },
         ]
@@ -20364,6 +20593,19 @@ export type Database = {
         }
         Returns: string
       }
+      create_attorney_document_version: {
+        Args: {
+          p_parent_document_id: string
+          p_file_path: string
+          p_original_filename: string
+          p_file_size: number
+          p_mime_type: string
+          p_document_title: string
+          p_document_description?: string
+          p_metadata_fields?: Json
+        }
+        Returns: string
+      }
       create_attorney_onboarding: {
         Args: {
           p_first_name: string
@@ -20689,6 +20931,14 @@ export type Database = {
       is_tenant_admin: {
         Args: Record<PropertyKey, never>
         Returns: boolean
+      }
+      log_attorney_document_access: {
+        Args: {
+          p_document_id: string
+          p_access_type: string
+          p_user_id?: string
+        }
+        Returns: string
       }
       log_diagnostic_test_run: {
         Args: {
