@@ -124,6 +124,7 @@ export function DocumentUpload({ open, onOpenChange, onSuccess, documentType = "
             file_size: result.file_size,
             mime_type: result.mime_type,
             attorney_id: user.id,
+            classification_id: 'general',
             document_title: title,
             document_description: description,
             metadata_fields: {
