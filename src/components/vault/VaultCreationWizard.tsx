@@ -137,7 +137,7 @@ export function VaultCreationWizard() {
             add: true,
             share: true,
             admin: true
-          },
+          } as const,
           status: 'active',
           accepted_at: new Date().toISOString(),
           created_by: user.id

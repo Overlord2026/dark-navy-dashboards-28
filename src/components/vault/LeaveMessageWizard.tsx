@@ -42,8 +42,8 @@ interface MessageData {
 interface VaultMember {
   id: string;
   email: string;
-  first_name: string;
-  last_name: string;
+  first_name: string | null;
+  last_name: string | null;
   role: string;
 }
 
@@ -463,7 +463,9 @@ export function LeaveMessageWizard({ vaultId, members, onClose, onSuccess }: Lea
                     }}
                   >
                     <div className="flex-1">
-                      <p className="font-medium">{member.first_name} {member.last_name}</p>
+                      <p className="font-medium">
+                        {member.first_name || ''} {member.last_name || ''}
+                      </p>
                       <p className="text-sm text-muted-foreground">{member.email}</p>
                     </div>
                     <Badge variant={member.role === 'admin' ? 'default' : 'secondary'}>
