@@ -4,8 +4,10 @@ import { useAuth } from './AuthContext';
 import { isQABypassAllowed } from '@/utils/environment';
 import { getRoleDisplayName } from '@/utils/roleHierarchy';
 
-// Dev mode disabled for production security
-const DEV_EMAILS: string[] = [];
+// PRODUCTION SECURITY: Role switching only available in development
+const DEV_EMAILS: string[] = process.env.NODE_ENV === "development"
+  ? ["tonygomes88@gmail.com"]
+  : [];
 
 // Role-specific navigation configuration
 const ROLE_DASHBOARDS: Record<string, string> = {
