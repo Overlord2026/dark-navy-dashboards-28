@@ -394,10 +394,10 @@ export const hierarchicalNav: NavItem[] = [
         isPremium: true
       },
       { 
-        id: 'family-legacy-box', 
-        title: 'Family Legacy Box™', 
-        href: '/estate-planning/legacy', 
-        icon: GiftIcon,
+        id: 'family-legacy-vault', 
+        title: 'Family Legacy Vault™', 
+        href: '/family-vault', 
+        icon: FolderHeartIcon,
         featureId: 'family_legacy_box',
         isPremium: true
       }

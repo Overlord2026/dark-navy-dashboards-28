@@ -176,6 +176,8 @@ import { LendingPage } from "./pages/lending/LendingPage";
 import { EstatePlanningPage as NewEstatePlanningPage } from "./pages/estate-planning/EstatePlanningPage";
 // Collaboration pages
 import { CollaborationFamilyPage } from "./pages/collaboration/CollaborationFamilyPage";
+// Family Vault page
+import FamilyVaultDashboard from "./pages/FamilyVaultDashboard";
 // Help page
 import { HelpPage } from "./pages/HelpPage";
 import ProductionReadinessTracker from "./pages/ProductionReadinessTracker";
@@ -1303,6 +1305,30 @@ const App = () => {
                           element={
                             <AuthWrapper requireAuth={true}>
                               <NewEstatePlanningPage />
+                            </AuthWrapper>
+                          }
+                        />
+
+                        {/* Family Vault Routes */}
+                        <Route
+                          path="/family-vault"
+                          element={
+                            <AuthWrapper 
+                              requireAuth={true}
+                              allowedRoles={['client', 'client_premium', 'advisor', 'admin', 'tenant_admin', 'system_administrator']}
+                            >
+                              <FamilyVaultDashboard />
+                            </AuthWrapper>
+                          }
+                        />
+                        <Route
+                          path="/family-vault/:vaultId"
+                          element={
+                            <AuthWrapper 
+                              requireAuth={true}
+                              allowedRoles={['client', 'client_premium', 'advisor', 'admin', 'tenant_admin', 'system_administrator']}
+                            >
+                              <FamilyVaultDashboard />
                             </AuthWrapper>
                           }
                         />
