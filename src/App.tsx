@@ -82,7 +82,7 @@ import MarketplaceAdminPage from "./pages/MarketplaceAdminPage";
 import IMOFMODashboardPage from "./pages/IMOFMODashboard";
 import ConsultationBookingPage from "./pages/marketplace/ConsultationBookingPage";
 import ProfessionalProfilePage from "./pages/marketplace/ProfessionalProfilePage";
-import CompliancePage from "./pages/CompliancePage";
+import GeneralCompliancePage from "./pages/CompliancePage";
 import PortfolioPage from "./pages/PortfolioPage";
 import GoalsDashboard from "./pages/GoalsDashboard";
 import GoalDetailPage from "./pages/GoalDetailPage";
@@ -130,6 +130,9 @@ import TaxPrepPage from "./pages/accountant/TaxPrepPage";
 import AccountantTaxPlanningPage from "./pages/accountant/TaxPlanningPage";
 import LedgerPage from "./pages/accountant/LedgerPage";
 import StatementsPage from "./pages/accountant/StatementsPage";
+import AuditPrepPage from "./pages/accountant/AuditPrepPage";
+import AccountantCompliancePage from "./pages/accountant/CompliancePage";
+import ClientManagementPage from "./pages/accountant/ClientManagementPage";
 // Consultant pages
 import ProjectsPage from "./pages/consultant/ProjectsPage";
 import AssessmentsPage from "./pages/consultant/AssessmentsPage";
@@ -584,7 +587,7 @@ const App = () => {
                         requireAuth={true}
                         allowedRoles={['admin', 'system_administrator', 'tenant_admin']}
                       >
-                        <CompliancePage />
+                        <GeneralCompliancePage />
                       </AuthWrapper>
                     }
                   />
@@ -938,17 +941,50 @@ const App = () => {
                         </AuthWrapper>
                       }
                     />
-                    <Route
-                      path="/accountant/statements"
-                      element={
-                        <AuthWrapper
-                          requireAuth={true}
-                          allowedRoles={['accountant', 'admin', 'tenant_admin', 'system_administrator']}
-                        >
-                          <StatementsPage />
-                        </AuthWrapper>
-                      }
-                    />
+                     <Route
+                       path="/accountant/statements"
+                       element={
+                         <AuthWrapper
+                           requireAuth={true}
+                           allowedRoles={['accountant', 'admin', 'tenant_admin', 'system_administrator']}
+                         >
+                           <StatementsPage />
+                         </AuthWrapper>
+                       }
+                     />
+                     <Route
+                       path="/accountant/audit-prep"
+                       element={
+                         <AuthWrapper
+                           requireAuth={true}
+                           allowedRoles={['accountant', 'admin', 'tenant_admin', 'system_administrator']}
+                         >
+                           <AuditPrepPage />
+                         </AuthWrapper>
+                       }
+                     />
+                     <Route
+                       path="/accountant/compliance"
+                       element={
+                         <AuthWrapper
+                           requireAuth={true}
+                           allowedRoles={['accountant', 'admin', 'tenant_admin', 'system_administrator']}
+                         >
+                           <AccountantCompliancePage />
+                         </AuthWrapper>
+                       }
+                     />
+                     <Route
+                       path="/accountant/clients"
+                       element={
+                         <AuthWrapper
+                           requireAuth={true}
+                           allowedRoles={['accountant', 'admin', 'tenant_admin', 'system_administrator']}
+                         >
+                           <ClientManagementPage />
+                         </AuthWrapper>
+                       }
+                     />
 
                     {/* Consultant Routes */}
                     <Route
