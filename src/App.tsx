@@ -140,6 +140,7 @@ import EstatePlanningPageOld from "./pages/attorney/EstatePlanningPage";
 import BusinessLawPage from "./pages/attorney/BusinessLawPage";
 import ContractsPage from "./pages/attorney/ContractsPage";
 import ResearchPage from "./pages/attorney/ResearchPage";
+import ClientPortalPage from "./pages/attorney/ClientPortalPage";
 // Admin pages
 import UsersPage from "./pages/admin/UsersPage";
 import RolesPage from "./pages/admin/RolesPage";
@@ -996,17 +997,28 @@ const App = () => {
                     />
 
                     {/* Attorney Routes */}
-                    <Route
-                      path="/attorney/estate-planning"
-                      element={
-                        <AuthWrapper
-                          requireAuth={true}
-                          allowedRoles={['attorney', 'admin', 'tenant_admin', 'system_administrator']}
-                        >
-                          <EstatePlanningPageOld />
-                        </AuthWrapper>
-                      }
-                    />
+                  <Route
+                    path="/attorney/estate-planning"
+                    element={
+                      <AuthWrapper
+                        requireAuth={true}
+                        allowedRoles={['attorney', 'admin', 'tenant_admin', 'system_administrator']}
+                      >
+                        <EstatePlanningPageOld />
+                      </AuthWrapper>
+                    }
+                  />
+                  <Route
+                    path="/client-portal"
+                    element={
+                      <AuthWrapper
+                        requireAuth={true}
+                        allowedRoles={['attorney', 'admin', 'tenant_admin', 'system_administrator']}
+                      >
+                        <ClientPortalPage />
+                      </AuthWrapper>
+                    }
+                  />
                     <Route
                       path="/attorney/business-law"
                       element={

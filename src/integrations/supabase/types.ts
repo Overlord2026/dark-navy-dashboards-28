@@ -1194,6 +1194,224 @@ export type Database = {
           },
         ]
       }
+      attorney_client_invitations: {
+        Row: {
+          accepted_at: string | null
+          attorney_id: string
+          client_email: string
+          client_name: string | null
+          created_at: string
+          expires_at: string
+          id: string
+          invitation_token: string
+          metadata: Json | null
+          status: string
+        }
+        Insert: {
+          accepted_at?: string | null
+          attorney_id: string
+          client_email: string
+          client_name?: string | null
+          created_at?: string
+          expires_at?: string
+          id?: string
+          invitation_token: string
+          metadata?: Json | null
+          status?: string
+        }
+        Update: {
+          accepted_at?: string | null
+          attorney_id?: string
+          client_email?: string
+          client_name?: string | null
+          created_at?: string
+          expires_at?: string
+          id?: string
+          invitation_token?: string
+          metadata?: Json | null
+          status?: string
+        }
+        Relationships: []
+      }
+      attorney_client_links: {
+        Row: {
+          attorney_id: string
+          client_id: string
+          client_permissions: Json
+          created_at: string
+          id: string
+          relationship_type: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          attorney_id: string
+          client_id: string
+          client_permissions?: Json
+          created_at?: string
+          id?: string
+          relationship_type?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          attorney_id?: string
+          client_id?: string
+          client_permissions?: Json
+          created_at?: string
+          id?: string
+          relationship_type?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      attorney_client_messages: {
+        Row: {
+          attachment_name: string | null
+          attachment_size: number | null
+          attachment_url: string | null
+          attorney_id: string
+          client_id: string
+          created_at: string
+          id: string
+          is_encrypted: boolean
+          message_content: string
+          message_type: string
+          metadata: Json | null
+          priority: string
+          read_at: string | null
+          sender_id: string
+          sender_type: string
+          updated_at: string
+        }
+        Insert: {
+          attachment_name?: string | null
+          attachment_size?: number | null
+          attachment_url?: string | null
+          attorney_id: string
+          client_id: string
+          created_at?: string
+          id?: string
+          is_encrypted?: boolean
+          message_content: string
+          message_type?: string
+          metadata?: Json | null
+          priority?: string
+          read_at?: string | null
+          sender_id: string
+          sender_type: string
+          updated_at?: string
+        }
+        Update: {
+          attachment_name?: string | null
+          attachment_size?: number | null
+          attachment_url?: string | null
+          attorney_id?: string
+          client_id?: string
+          created_at?: string
+          id?: string
+          is_encrypted?: boolean
+          message_content?: string
+          message_type?: string
+          metadata?: Json | null
+          priority?: string
+          read_at?: string | null
+          sender_id?: string
+          sender_type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      attorney_client_shared_documents: {
+        Row: {
+          access_count: number
+          attorney_id: string
+          client_id: string
+          document_id: string
+          expires_at: string | null
+          id: string
+          is_active: boolean
+          last_accessed_at: string | null
+          notes: string | null
+          permission_level: string
+          shared_at: string
+          shared_by: string
+        }
+        Insert: {
+          access_count?: number
+          attorney_id: string
+          client_id: string
+          document_id: string
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          last_accessed_at?: string | null
+          notes?: string | null
+          permission_level?: string
+          shared_at?: string
+          shared_by: string
+        }
+        Update: {
+          access_count?: number
+          attorney_id?: string
+          client_id?: string
+          document_id?: string
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          last_accessed_at?: string | null
+          notes?: string | null
+          permission_level?: string
+          shared_at?: string
+          shared_by?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attorney_client_shared_documents_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "attorney_documents_metadata"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      attorney_dashboard_metrics: {
+        Row: {
+          active_clients: number
+          attorney_id: string
+          calculated_at: string
+          client_uploads_today: number
+          documents_shared_today: number
+          id: string
+          metric_date: string
+          pending_invitations: number
+          unread_messages: number
+        }
+        Insert: {
+          active_clients?: number
+          attorney_id: string
+          calculated_at?: string
+          client_uploads_today?: number
+          documents_shared_today?: number
+          id?: string
+          metric_date?: string
+          pending_invitations?: number
+          unread_messages?: number
+        }
+        Update: {
+          active_clients?: number
+          attorney_id?: string
+          calculated_at?: string
+          client_uploads_today?: number
+          documents_shared_today?: number
+          id?: string
+          metric_date?: string
+          pending_invitations?: number
+          unread_messages?: number
+        }
+        Relationships: []
+      }
       attorney_document_access_log: {
         Row: {
           access_granted: boolean | null
@@ -2864,6 +3082,51 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      client_portal_notifications: {
+        Row: {
+          action_url: string | null
+          attorney_id: string
+          client_id: string | null
+          created_at: string
+          id: string
+          is_read: boolean
+          message: string
+          metadata: Json | null
+          notification_type: string
+          priority: string
+          read_at: string | null
+          title: string
+        }
+        Insert: {
+          action_url?: string | null
+          attorney_id: string
+          client_id?: string | null
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          message: string
+          metadata?: Json | null
+          notification_type: string
+          priority?: string
+          read_at?: string | null
+          title: string
+        }
+        Update: {
+          action_url?: string | null
+          attorney_id?: string
+          client_id?: string | null
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          message?: string
+          metadata?: Json | null
+          notification_type?: string
+          priority?: string
+          read_at?: string | null
+          title?: string
+        }
+        Relationships: []
       }
       client_questionnaires: {
         Row: {
@@ -20695,6 +20958,10 @@ export type Database = {
           status: string
           remaining_issues: string[]
         }[]
+      }
+      generate_attorney_invitation_token: {
+        Args: Record<PropertyKey, never>
+        Returns: string
       }
       generate_coach_invitation_token: {
         Args: Record<PropertyKey, never>
