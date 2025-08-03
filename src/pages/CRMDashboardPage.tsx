@@ -1,13 +1,15 @@
 import React from 'react';
 import { ThreeColumnLayout } from '@/components/layout/ThreeColumnLayout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Users, Pipeline, BarChart3, Calendar, Bell, Upload, Video, Mail, Target } from 'lucide-react';
+import { Users, BarChart3, Calendar, Bell, Upload, Video, Mail, Target, Zap } from 'lucide-react';
 import { LeadCaptureForm } from '@/components/crm/LeadCaptureForm';
 import { PipelineKanban } from '@/components/crm/PipelineKanban';
 import { MeetingIntegrations } from '@/components/crm/MeetingIntegrations';
 import { ROIDashboard } from '@/components/crm/ROIDashboard';
 import { ContactManagement } from '@/components/crm/ContactManagement';
 import { AutomatedReminders } from '@/components/crm/AutomatedReminders';
+import { EmailAutomation } from '@/components/crm/EmailAutomation';
+import { AdIntegrations } from '@/components/crm/AdIntegrations';
 
 export default function CRMDashboardPage() {
   return (
@@ -31,7 +33,7 @@ export default function CRMDashboardPage() {
         <Tabs defaultValue="pipeline" className="w-full">
           <TabsList className="grid w-full grid-cols-7">
             <TabsTrigger value="pipeline" className="flex items-center gap-2">
-              <Pipeline className="h-4 w-4" />
+              <Zap className="h-4 w-4" />
               Pipeline
             </TabsTrigger>
             <TabsTrigger value="contacts" className="flex items-center gap-2">

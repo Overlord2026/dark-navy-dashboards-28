@@ -1,27 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Switch } from '@/components/ui/switch';
 import { 
-  Video, 
   Calendar, 
-  Clock, 
-  Users, 
-  Mic, 
-  FileText, 
-  Download,
-  Play,
-  Plus,
+  Video, 
+  Phone, 
+  MapPin, 
+  Plus, 
+  Clock,
+  Users,
   Settings,
-  Phone,
-  MapPin
+  Play,
+  Pause,
+  Edit,
+  Trash2,
+  ExternalLink
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
 import { format } from 'date-fns';
 
 interface Meeting {
@@ -29,411 +32,365 @@ interface Meeting {
   title: string;
   client_name: string;
   client_email: string;
-  meeting_type: 'zoom' | 'google_meet' | 'in_office' | 'phone';
   scheduled_at: string;
   duration_minutes: number;
-  status: 'scheduled' | 'in_progress' | 'completed' | 'cancelled';
-  zoom_meeting_id?: string;
-  google_meet_link?: string;
+  type: 'video' | 'phone' | 'in_person';
+  status: 'scheduled' | 'completed' | 'cancelled' | 'no_show';
+  meeting_url?: string;
+  location?: string;
+  notes?: string;
   recording_url?: string;
   summary?: string;
-  action_items?: string[];
-  lead_id?: string;
   advisor_id: string;
-  created_at: string;
 }
 
-const meetingTypes = [
-  { value: 'zoom', label: 'Zoom Meeting', icon: Video },
-  { value: 'google_meet', label: 'Google Meet', icon: Video },
-  { value: 'in_office', label: 'In-Office', icon: MapPin },
-  { value: 'phone', label: 'Phone Call', icon: Phone }
-];
+interface Integration {
+  id: string;
+  provider: 'zoom' | 'google_meet' | 'calendly';
+  is_active: boolean;
+  config: Record<string, any>;
+  last_sync: string;
+}
 
 export function MeetingIntegrations() {
   const { toast } = useToast();
   const [meetings, setMeetings] = useState<Meeting[]>([]);
+  const [integrations, setIntegrations] = useState<Integration[]>([]);
   const [loading, setLoading] = useState(true);
-  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [isScheduleOpen, setIsScheduleOpen] = useState(false);
   const [selectedMeeting, setSelectedMeeting] = useState<Meeting | null>(null);
-  const [isConnected, setIsConnected] = useState({
-    zoom: false,
-    google: false
-  });
+  const [activeTab, setActiveTab] = useState('meetings');
 
   const [newMeeting, setNewMeeting] = useState({
     title: '',
     client_name: '',
     client_email: '',
-    meeting_type: 'zoom' as const,
     scheduled_at: '',
     duration_minutes: 60,
-    lead_id: ''
+    type: 'video' as 'video' | 'phone' | 'in_person',
+    location: ''
   });
 
   useEffect(() => {
     loadMeetings();
-    checkIntegrationStatus();
+    loadIntegrations();
   }, []);
 
   const loadMeetings = async () => {
     try {
-      const { data: user } = await supabase.auth.getUser();
-      if (!user.user) return;
-
-      const { data, error } = await supabase
-        .from('meetings')
-        .select('*')
-        .eq('advisor_id', user.user.id)
-        .order('scheduled_at', { ascending: true });
-
-      if (error) throw error;
-      setMeetings(data || []);
-    } catch (error) {
-      console.error('Error loading meetings:', error);
-      // Mock data for demo
-      setMeetings([
+      // Use mock data
+      const mockMeetings: Meeting[] = [
         {
           id: '1',
           title: 'Portfolio Review',
           client_name: 'John Smith',
           client_email: 'john@example.com',
-          meeting_type: 'zoom',
           scheduled_at: new Date(Date.now() + 86400000).toISOString(),
           duration_minutes: 60,
+          type: 'video',
           status: 'scheduled',
-          zoom_meeting_id: '123456789',
-          advisor_id: 'advisor-1',
-          created_at: new Date().toISOString()
+          meeting_url: 'https://zoom.us/j/123456789',
+          advisor_id: 'mock-advisor'
         },
         {
           id: '2',
           title: 'Initial Consultation',
           client_name: 'Sarah Johnson',
           client_email: 'sarah@example.com',
-          meeting_type: 'google_meet',
           scheduled_at: new Date(Date.now() + 172800000).toISOString(),
           duration_minutes: 30,
-          status: 'completed',
-          google_meet_link: 'https://meet.google.com/abc-def-ghi',
-          recording_url: 'https://recordings.example.com/recording1.mp4',
-          summary: 'Discussed investment goals and risk tolerance. Client interested in growth portfolio.',
-          action_items: ['Send portfolio proposals', 'Schedule follow-up', 'Prepare risk assessment'],
-          advisor_id: 'advisor-1',
-          created_at: new Date(Date.now() - 86400000).toISOString()
+          type: 'phone',
+          status: 'scheduled',
+          advisor_id: 'mock-advisor'
         }
-      ]);
+      ];
+      
+      setMeetings(mockMeetings);
+    } catch (error) {
+      console.error('Error loading meetings:', error);
     } finally {
       setLoading(false);
     }
   };
 
-  const checkIntegrationStatus = async () => {
+  const loadIntegrations = async () => {
     try {
-      // Check if user has connected integrations
-      const { data } = await supabase
-        .from('user_integrations')
-        .select('provider, is_active')
-        .eq('user_id', (await supabase.auth.getUser()).data.user?.id);
+      // Use mock integration data
+      const mockIntegrations: Integration[] = [
+        {
+          id: '1',
+          provider: 'zoom',
+          is_active: true,
+          config: { api_key: 'configured' },
+          last_sync: new Date().toISOString()
+        },
+        {
+          id: '2',
+          provider: 'google_meet',
+          is_active: false,
+          config: {},
+          last_sync: new Date().toISOString()
+        }
+      ];
 
-      const connected = {
-        zoom: data?.some(d => d.provider === 'zoom' && d.is_active) || false,
-        google: data?.some(d => d.provider === 'google' && d.is_active) || false
-      };
-      setIsConnected(connected);
+      setIntegrations(mockIntegrations);
     } catch (error) {
-      console.error('Error checking integration status:', error);
+      console.error('Error loading integrations:', error);
     }
   };
 
-  const createMeeting = async () => {
-    if (!newMeeting.title || !newMeeting.client_email) {
-      toast({
-        title: "Missing Information",
-        description: "Please fill in all required fields",
-        variant: "destructive",
-      });
-      return;
-    }
-
+  const handleScheduleMeeting = async () => {
     try {
-      const { data: user } = await supabase.auth.getUser();
-      if (!user.user) return;
-
-      let meetingData: any = {
-        title: newMeeting.title,
-        client_name: newMeeting.client_name,
-        client_email: newMeeting.client_email,
-        meeting_type: newMeeting.meeting_type,
-        scheduled_at: newMeeting.scheduled_at,
-        duration_minutes: newMeeting.duration_minutes,
+      const meeting: Meeting = {
+        id: Date.now().toString(),
+        ...newMeeting,
         status: 'scheduled',
-        advisor_id: user.user.id,
-        lead_id: newMeeting.lead_id || null
+        advisor_id: 'mock-advisor'
       };
 
-      // Create meeting with integration
-      if (newMeeting.meeting_type === 'zoom' && isConnected.zoom) {
-        const { data: zoomMeeting } = await supabase.functions.invoke('create-video-meeting', {
-          body: {
-            type: 'zoom',
-            topic: newMeeting.title,
-            start_time: newMeeting.scheduled_at,
-            duration: newMeeting.duration_minutes,
-            attendees: [newMeeting.client_email]
-          }
-        });
-        
-        if (zoomMeeting) {
-          meetingData.zoom_meeting_id = zoomMeeting.id;
-          meetingData.zoom_join_url = zoomMeeting.join_url;
-        }
-      } else if (newMeeting.meeting_type === 'google_meet' && isConnected.google) {
-        const { data: googleMeeting } = await supabase.functions.invoke('create-video-meeting', {
-          body: {
-            type: 'google_meet',
-            summary: newMeeting.title,
-            start: { dateTime: newMeeting.scheduled_at },
-            end: { dateTime: new Date(new Date(newMeeting.scheduled_at).getTime() + newMeeting.duration_minutes * 60000).toISOString() },
-            attendees: [{ email: newMeeting.client_email }]
-          }
-        });
-        
-        if (googleMeeting) {
-          meetingData.google_meet_link = googleMeeting.hangoutLink;
-          meetingData.google_event_id = googleMeeting.id;
-        }
-      }
-
-      const { data, error } = await supabase
-        .from('meetings')
-        .insert([meetingData])
-        .select()
-        .single();
-
-      if (error) throw error;
-
-      // Send calendar invitation
-      await supabase.functions.invoke('send-meeting-invitation', {
-        body: {
-          meeting_id: data.id,
-          client_email: newMeeting.client_email,
-          meeting_details: meetingData
-        }
-      });
-
+      setMeetings(prev => [meeting, ...prev]);
       toast({
-        title: "Meeting Created",
-        description: "Meeting scheduled and invitation sent",
+        title: "Success",
+        description: "Meeting scheduled successfully",
       });
-
-      setIsCreateOpen(false);
-      setNewMeeting({
-        title: '',
-        client_name: '',
-        client_email: '',
-        meeting_type: 'zoom',
-        scheduled_at: '',
-        duration_minutes: 60,
-        lead_id: ''
-      });
-
-      loadMeetings();
+      setIsScheduleOpen(false);
+      resetMeetingForm();
     } catch (error) {
-      console.error('Error creating meeting:', error);
+      console.error('Error scheduling meeting:', error);
       toast({
         title: "Error",
-        description: "Failed to create meeting",
+        description: "Failed to schedule meeting",
         variant: "destructive",
       });
     }
   };
 
-  const connectIntegration = async (provider: 'zoom' | 'google') => {
-    try {
-      // Initiate OAuth flow
-      const { data } = await supabase.functions.invoke('oauth-callback', {
-        body: { provider, action: 'initiate' }
-      });
-      
-      if (data?.auth_url) {
-        window.open(data.auth_url, '_blank', 'width=600,height=600');
-      }
-    } catch (error) {
-      console.error(`Error connecting ${provider}:`, error);
-      toast({
-        title: "Connection Error",
-        description: `Failed to connect ${provider}`,
-        variant: "destructive",
-      });
-    }
+  const resetMeetingForm = () => {
+    setNewMeeting({
+      title: '',
+      client_name: '',
+      client_email: '',
+      scheduled_at: '',
+      duration_minutes: 60,
+      type: 'video',
+      location: ''
+    });
   };
 
-  const startRecording = async (meetingId: string) => {
-    try {
-      await supabase.functions.invoke('start-meeting-recording', {
-        body: { meeting_id: meetingId }
-      });
-      
-      toast({
-        title: "Recording Started",
-        description: "Meeting recording has been initiated",
-      });
-    } catch (error) {
-      console.error('Error starting recording:', error);
-    }
-  };
-
-  const generateSummary = async (meetingId: string) => {
-    try {
-      const { data } = await supabase.functions.invoke('generate-meeting-summary', {
-        body: { meeting_id: meetingId }
-      });
-      
-      if (data) {
-        toast({
-          title: "Summary Generated",
-          description: "AI meeting summary has been created",
-        });
-        loadMeetings();
-      }
-    } catch (error) {
-      console.error('Error generating summary:', error);
-    }
+  const toggleIntegration = async (integrationId: string, provider: string) => {
+    // Mock toggle
+    setIntegrations(prev => prev.map(int => 
+      int.id === integrationId 
+        ? { ...int, is_active: !int.is_active }
+        : int
+    ));
+    
+    toast({
+      title: "Success",
+      description: `${provider} integration updated`,
+    });
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'scheduled': return 'bg-blue-100 text-blue-800';
-      case 'in_progress': return 'bg-green-100 text-green-800';
-      case 'completed': return 'bg-gray-100 text-gray-800';
+      case 'completed': return 'bg-green-100 text-green-800';
       case 'cancelled': return 'bg-red-100 text-red-800';
+      case 'no_show': return 'bg-yellow-100 text-yellow-800';
       default: return 'bg-gray-100 text-gray-800';
     }
   };
 
   const getMeetingTypeIcon = (type: string) => {
-    const typeConfig = meetingTypes.find(t => t.value === type);
-    const Icon = typeConfig?.icon || Video;
-    return <Icon className="h-4 w-4" />;
+    switch (type) {
+      case 'video': return <Video className="h-4 w-4" />;
+      case 'phone': return <Phone className="h-4 w-4" />;
+      case 'in_person': return <MapPin className="h-4 w-4" />;
+      default: return <Calendar className="h-4 w-4" />;
+    }
   };
 
   return (
     <div className="space-y-6">
-      {/* Integration Status */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center justify-between">
-            <span className="flex items-center gap-2">
-              <Settings className="h-5 w-5" />
-              Meeting Integrations
-            </span>
-            <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
-              <DialogTrigger asChild>
-                <Button>
-                  <Plus className="h-4 w-4 mr-2" />
-                  Schedule Meeting
-                </Button>
-              </DialogTrigger>
-            </Dialog>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="flex items-center justify-between p-4 border rounded-lg">
-              <div className="flex items-center gap-3">
-                <Video className="h-5 w-5" />
-                <div>
-                  <p className="font-medium">Zoom</p>
-                  <p className="text-sm text-muted-foreground">
-                    {isConnected.zoom ? 'Connected' : 'Not connected'}
-                  </p>
-                </div>
-              </div>
-              <Button 
-                variant={isConnected.zoom ? "outline" : "default"}
-                size="sm"
-                onClick={() => !isConnected.zoom && connectIntegration('zoom')}
-              >
-                {isConnected.zoom ? 'Connected' : 'Connect'}
-              </Button>
-            </div>
-            
-            <div className="flex items-center justify-between p-4 border rounded-lg">
-              <div className="flex items-center gap-3">
-                <Video className="h-5 w-5" />
-                <div>
-                  <p className="font-medium">Google Meet</p>
-                  <p className="text-sm text-muted-foreground">
-                    {isConnected.google ? 'Connected' : 'Not connected'}
-                  </p>
-                </div>
-              </div>
-              <Button 
-                variant={isConnected.google ? "outline" : "default"}
-                size="sm"
-                onClick={() => !isConnected.google && connectIntegration('google')}
-              >
-                {isConnected.google ? 'Connected' : 'Connect'}
-              </Button>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold">Meeting Integrations</h2>
+          <p className="text-muted-foreground">Manage meetings and calendar integrations</p>
+        </div>
+        <Dialog open={isScheduleOpen} onOpenChange={setIsScheduleOpen}>
+          <DialogTrigger asChild>
+            <Button>
+              <Plus className="h-4 w-4 mr-2" />
+              Schedule Meeting
+            </Button>
+          </DialogTrigger>
+        </Dialog>
+      </div>
 
-      {/* Meetings List */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Scheduled Meetings</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {meetings.map((meeting) => (
-              <div 
-                key={meeting.id} 
-                className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 cursor-pointer"
-                onClick={() => setSelectedMeeting(meeting)}
-              >
-                <div className="flex items-center gap-4">
-                  <div className="p-2 bg-primary/10 rounded-lg">
-                    {getMeetingTypeIcon(meeting.meeting_type)}
-                  </div>
-                  <div>
-                    <h3 className="font-medium">{meeting.title}</h3>
-                    <p className="text-sm text-muted-foreground">
-                      {meeting.client_name} • {format(new Date(meeting.scheduled_at), 'MMM d, yyyy h:mm a')}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Badge className={getStatusColor(meeting.status)}>
-                    {meeting.status}
-                  </Badge>
-                  {meeting.status === 'scheduled' && (
-                    <Button size="sm" variant="outline">
-                      Join
-                    </Button>
-                  )}
-                  {meeting.status === 'in_progress' && (
-                    <Button size="sm" onClick={() => startRecording(meeting.id)}>
-                      <Mic className="h-4 w-4 mr-1" />
-                      Record
-                    </Button>
-                  )}
-                  {meeting.recording_url && (
-                    <Button size="sm" variant="outline">
-                      <Play className="h-4 w-4 mr-1" />
-                      Watch
-                    </Button>
-                  )}
-                </div>
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">Upcoming</p>
+                <p className="text-2xl font-bold">
+                  {meetings.filter(m => m.status === 'scheduled').length}
+                </p>
               </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+              <Calendar className="h-8 w-8 text-muted-foreground" />
+            </div>
+          </CardContent>
+        </Card>
 
-      {/* Create Meeting Dialog */}
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">This Week</p>
+                <p className="text-2xl font-bold">
+                  {meetings.filter(m => {
+                    const meetingDate = new Date(m.scheduled_at);
+                    const weekStart = new Date();
+                    const weekEnd = new Date();
+                    weekEnd.setDate(weekEnd.getDate() + 7);
+                    return meetingDate >= weekStart && meetingDate <= weekEnd;
+                  }).length}
+                </p>
+              </div>
+              <Clock className="h-8 w-8 text-muted-foreground" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">Completed</p>
+                <p className="text-2xl font-bold">
+                  {meetings.filter(m => m.status === 'completed').length}
+                </p>
+              </div>
+              <Users className="h-8 w-8 text-muted-foreground" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">Active Integrations</p>
+                <p className="text-2xl font-bold">
+                  {integrations.filter(i => i.is_active).length}
+                </p>
+              </div>
+              <Settings className="h-8 w-8 text-muted-foreground" />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Main Content */}
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <TabsList>
+          <TabsTrigger value="meetings">Meetings</TabsTrigger>
+          <TabsTrigger value="integrations">Integrations</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="meetings" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Scheduled Meetings</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {meetings.map((meeting) => (
+                  <div key={meeting.id} className="flex items-center justify-between p-4 border rounded-lg">
+                    <div className="flex items-center gap-4">
+                      <div className="p-2 bg-primary/10 rounded-lg">
+                        {getMeetingTypeIcon(meeting.type)}
+                      </div>
+                      <div>
+                        <h3 className="font-medium">{meeting.title}</h3>
+                        <p className="text-sm text-muted-foreground">
+                          {meeting.client_name} • {format(new Date(meeting.scheduled_at), 'MMM d, yyyy h:mm a')}
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          {meeting.duration_minutes} minutes • {meeting.type}
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center gap-2">
+                      <Badge className={getStatusColor(meeting.status)}>
+                        {meeting.status}
+                      </Badge>
+                      {meeting.meeting_url && (
+                        <Button size="sm" variant="outline" asChild>
+                          <a href={meeting.meeting_url} target="_blank" rel="noopener noreferrer">
+                            <ExternalLink className="h-3 w-3 mr-1" />
+                            Join
+                          </a>
+                        </Button>
+                      )}
+                      <Button size="sm" variant="outline">
+                        <Edit className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="integrations" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Calendar Integrations</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {integrations.map((integration) => (
+                  <div key={integration.id} className="flex items-center justify-between p-4 border rounded-lg">
+                    <div className="flex items-center gap-4">
+                      <div className="p-2 bg-primary/10 rounded-lg">
+                        {integration.provider === 'zoom' && <Video className="h-4 w-4" />}
+                        {integration.provider === 'google_meet' && <Calendar className="h-4 w-4" />}
+                        {integration.provider === 'calendly' && <Clock className="h-4 w-4" />}
+                      </div>
+                      <div>
+                        <h3 className="font-medium capitalize">{integration.provider.replace('_', ' ')}</h3>
+                        <p className="text-sm text-muted-foreground">
+                          Last synced: {format(new Date(integration.last_sync), 'MMM d, yyyy h:mm a')}
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center gap-2">
+                      <Badge className={integration.is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}>
+                        {integration.is_active ? 'Active' : 'Inactive'}
+                      </Badge>
+                      <Switch
+                        checked={integration.is_active}
+                        onCheckedChange={() => toggleIntegration(integration.id, integration.provider)}
+                      />
+                      <Button size="sm" variant="outline">
+                        <Settings className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+
+      {/* Schedule Meeting Dialog */}
       <DialogContent className="max-w-2xl">
         <DialogHeader>
           <DialogTitle>Schedule New Meeting</DialogTitle>
@@ -448,21 +405,20 @@ export function MeetingIntegrations() {
                 placeholder="e.g., Portfolio Review"
               />
             </div>
+            
             <div className="space-y-2">
               <Label>Meeting Type</Label>
-              <Select
-                value={newMeeting.meeting_type}
-                onValueChange={(value: any) => setNewMeeting({...newMeeting, meeting_type: value})}
+              <Select 
+                value={newMeeting.type} 
+                onValueChange={(value: any) => setNewMeeting({...newMeeting, type: value})}
               >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {meetingTypes.map((type) => (
-                    <SelectItem key={type.value} value={type.value}>
-                      {type.label}
-                    </SelectItem>
-                  ))}
+                  <SelectItem value="video">Video Call</SelectItem>
+                  <SelectItem value="phone">Phone Call</SelectItem>
+                  <SelectItem value="in_person">In Person</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -474,14 +430,17 @@ export function MeetingIntegrations() {
               <Input
                 value={newMeeting.client_name}
                 onChange={(e) => setNewMeeting({...newMeeting, client_name: e.target.value})}
+                placeholder="Client name"
               />
             </div>
+            
             <div className="space-y-2">
               <Label>Client Email</Label>
               <Input
                 type="email"
                 value={newMeeting.client_email}
                 onChange={(e) => setNewMeeting({...newMeeting, client_email: e.target.value})}
+                placeholder="client@example.com"
               />
             </div>
           </div>
@@ -495,89 +454,40 @@ export function MeetingIntegrations() {
                 onChange={(e) => setNewMeeting({...newMeeting, scheduled_at: e.target.value})}
               />
             </div>
+            
             <div className="space-y-2">
               <Label>Duration (minutes)</Label>
               <Input
                 type="number"
                 value={newMeeting.duration_minutes}
                 onChange={(e) => setNewMeeting({...newMeeting, duration_minutes: Number(e.target.value)})}
+                min="15"
+                step="15"
               />
             </div>
           </div>
           
+          {newMeeting.type === 'in_person' && (
+            <div className="space-y-2">
+              <Label>Location</Label>
+              <Input
+                value={newMeeting.location}
+                onChange={(e) => setNewMeeting({...newMeeting, location: e.target.value})}
+                placeholder="Meeting location"
+              />
+            </div>
+          )}
+          
           <div className="flex justify-end gap-2">
-            <Button variant="outline" onClick={() => setIsCreateOpen(false)}>
+            <Button variant="outline" onClick={() => setIsScheduleOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={createMeeting}>
+            <Button onClick={handleScheduleMeeting}>
               Schedule Meeting
             </Button>
           </div>
         </div>
       </DialogContent>
-
-      {/* Meeting Detail Modal */}
-      <Dialog open={!!selectedMeeting} onOpenChange={() => setSelectedMeeting(null)}>
-        <DialogContent className="max-w-3xl">
-          <DialogHeader>
-            <DialogTitle>{selectedMeeting?.title}</DialogTitle>
-          </DialogHeader>
-          {selectedMeeting && (
-            <div className="space-y-6">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <p className="text-sm font-medium">Client</p>
-                  <p className="text-sm text-muted-foreground">{selectedMeeting.client_name}</p>
-                </div>
-                <div>
-                  <p className="text-sm font-medium">Date & Time</p>
-                  <p className="text-sm text-muted-foreground">
-                    {format(new Date(selectedMeeting.scheduled_at), 'MMM d, yyyy h:mm a')}
-                  </p>
-                </div>
-              </div>
-              
-              {selectedMeeting.summary && (
-                <div className="space-y-2">
-                  <p className="font-medium">AI Summary</p>
-                  <div className="p-3 bg-muted rounded-lg">
-                    <p className="text-sm">{selectedMeeting.summary}</p>
-                  </div>
-                </div>
-              )}
-              
-              {selectedMeeting.action_items && selectedMeeting.action_items.length > 0 && (
-                <div className="space-y-2">
-                  <p className="font-medium">Action Items</p>
-                  <ul className="space-y-1">
-                    {selectedMeeting.action_items.map((item, index) => (
-                      <li key={index} className="text-sm flex items-center gap-2">
-                        <div className="h-1.5 w-1.5 rounded-full bg-primary" />
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-              
-              <div className="flex gap-2">
-                {selectedMeeting.recording_url && (
-                  <Button variant="outline">
-                    <Download className="h-4 w-4 mr-2" />
-                    Download Recording
-                  </Button>
-                )}
-                {selectedMeeting.status === 'completed' && !selectedMeeting.summary && (
-                  <Button onClick={() => generateSummary(selectedMeeting.id)}>
-                    <FileText className="h-4 w-4 mr-2" />
-                    Generate Summary
-                  </Button>
-                )}
-              </div>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }

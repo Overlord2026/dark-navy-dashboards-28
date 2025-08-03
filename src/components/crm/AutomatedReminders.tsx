@@ -86,15 +86,15 @@ export function AutomatedReminders() {
 
   const [newRule, setNewRule] = useState({
     name: '',
-    trigger_type: 'time_based' as const,
+    trigger_type: 'time_based' as 'time_based' | 'action_based',
     trigger_conditions: {
       delay_hours: 0,
       delay_days: 0,
       no_activity_days: 0
     },
-    action_type: 'email' as const,
+    action_type: 'email' as 'email' | 'sms' | 'task',
     template_content: '',
-    priority: 'medium' as const
+    priority: 'medium' as 'low' | 'medium' | 'high'
   });
 
   useEffect(() => {
