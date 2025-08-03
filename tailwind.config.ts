@@ -83,7 +83,7 @@ export default {
         mono: ["SF Mono", "Monaco", "Inconsolata", "Roboto Mono", "Consolas", "monospace"],
       },
       spacing: {
-        'touch': 'var(--touch-target)', // 44px minimum touch target
+        'touch': '44px', // 44px minimum touch target for mobile
       },
       keyframes: {
         "accordion-down": {
@@ -131,6 +131,18 @@ export default {
         "float": {
           "0%, 100%": { transform: "translateY(0px)" },
           "50%": { transform: "translateY(-10px)" }
+        },
+        "fade-in": {
+          "0%": { opacity: "0", transform: "translateY(10px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" }
+        },
+        "scale-in": {
+          "0%": { transform: "scale(0.95)", opacity: "0" },
+          "100%": { transform: "scale(1)", opacity: "1" }
+        },
+        "slide-up": {
+          "0%": { transform: "translateY(20px)", opacity: "0" },
+          "100%": { transform: "translateY(0)", opacity: "1" }
         }
       },
       animation: {
@@ -140,8 +152,35 @@ export default {
         "sparkle": "sparkle 1.5s ease-in-out infinite",
         "celebration-pulse": "celebration-pulse 2s ease-in-out infinite",
         "float": "float 3s ease-in-out infinite",
+        "fade-in": "fade-in 0.3s ease-out",
+        "scale-in": "scale-in 0.2s ease-out",
+        "slide-up": "slide-up 0.4s ease-out",
+      },
+      transitionProperty: {
+        'transform-opacity': 'transform, opacity',
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [
+    require("tailwindcss-animate"),
+    function({ addUtilities }) {
+      addUtilities({
+        '.hover-scale': {
+          'transition': 'transform 0.2s ease-in-out',
+          '&:hover': {
+            'transform': 'scale(1.05)',
+          },
+        },
+        '.touch-target': {
+          'min-height': '44px',
+          'min-width': '44px',
+        },
+        '.glass': {
+          'backdrop-filter': 'blur(16px)',
+          'background-color': 'rgba(255, 255, 255, 0.1)',
+          'border': '1px solid rgba(255, 255, 255, 0.2)',
+        },
+      });
+    }
+  ],
 } satisfies Config

@@ -21,6 +21,8 @@ import { Camera as CapacitorCamera, CameraResultType, CameraSource } from '@capa
 
 interface SecureFileUploadProps {
   vaultId: string;
+  userRole: string;
+  masterKey: CryptoKey;
   onUploadComplete?: (fileId: string) => void;
   onClose?: () => void;
   onSuccess?: () => void;
@@ -31,6 +33,8 @@ interface SecureFileUploadProps {
 
 export function SecureFileUpload({ 
   vaultId,
+  userRole,
+  masterKey,
   onUploadComplete,
   onClose,
   onSuccess,
