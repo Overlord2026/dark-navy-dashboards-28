@@ -5,9 +5,10 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
-import { Calculator, TrendingUp, DollarSign, Target, AlertTriangle, CheckCircle } from 'lucide-react';
+import { Calculator, TrendingUp, DollarSign, Target, AlertTriangle, CheckCircle, BarChart3 } from 'lucide-react';
 import { useRetirementCalculator } from '@/hooks/useRetirementCalculator';
 import { RetirementAnalysisInput, RetirementAnalysisResults } from '@/types/retirement';
+import { ScenarioBuilder } from './ScenarioBuilder';
 
 interface RetirementCalculatorEngineProps {
   inputs: RetirementAnalysisInput;
@@ -88,13 +89,23 @@ export const RetirementCalculatorEngine: React.FC<RetirementCalculatorEngineProp
       {/* Results Dashboard */}
       {results && (
         <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="scenarios">Scenarios</TabsTrigger>
             <TabsTrigger value="cashflow">Cash Flow</TabsTrigger>
             <TabsTrigger value="montecarlo">Monte Carlo</TabsTrigger>
             <TabsTrigger value="recommendations">Recommendations</TabsTrigger>
-            <TabsTrigger value="scenarios">Scenarios</TabsTrigger>
+            <TabsTrigger value="stress">Stress Test</TabsTrigger>
           </TabsList>
+
+          {/* Scenarios Tab */}
+          <TabsContent value="scenarios" className="space-y-6">
+            <ScenarioBuilder
+              baselineInputs={inputs}
+              baselineResults={results}
+              onInputsChange={onInputsChange}
+            />
+          </TabsContent>
 
           {/* Overview Tab */}
           <TabsContent value="overview" className="space-y-6">
@@ -359,17 +370,16 @@ export const RetirementCalculatorEngine: React.FC<RetirementCalculatorEngineProp
             </div>
           </TabsContent>
 
-          {/* Scenarios Tab */}
-          <TabsContent value="scenarios" className="space-y-6">
+          {/* Stress Test Tab */}
+          <TabsContent value="stress" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Scenario Analysis</CardTitle>
+                <CardTitle>Stress Testing</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  Scenario planning features will be available in the next update. 
-                  This will include "What If" analysis for early retirement, market downturns, 
-                  healthcare events, and other life changes.
+                  Advanced stress testing features including widow(er)'s penalty scenarios, 
+                  long-term care events, and market crash simulations will be available soon.
                 </p>
               </CardContent>
             </Card>

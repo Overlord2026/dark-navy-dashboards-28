@@ -33,6 +33,7 @@ import LongevityScorecard from "./pages/LongevityScorecard";
 import PublicFeeCalculator from "./pages/PublicFeeCalculator";
 import RetirementIncomeGapAnalyzer from "./pages/RetirementIncomeGapAnalyzer";
 import RetirementRoadmapInfo from "./pages/RetirementRoadmapInfo";
+import RetirementAnalyzerDemo from "./pages/RetirementAnalyzerDemo";
 import PublicTaxCenter from "./pages/PublicTaxCenter";
 import { AuthPage } from "./pages/AuthPage";
 import { SecuritySettingsPage } from "./pages/SecuritySettingsPage";
@@ -154,8 +155,9 @@ function App() {
                           <Route path="/scorecard/retirement-confidence" element={<RetirementConfidenceScorecard />} />
                           <Route path="/scorecard/longevity" element={<LongevityScorecard />} />
                           <Route path="/calculator/fee" element={<PublicFeeCalculator />} />
-                          <Route path="/analyzer/retirement-income-gap" element={<RetirementIncomeGapAnalyzer />} />
-                          <Route path="/info/retirement-roadmap" element={<RetirementRoadmapInfo />} />
+                           <Route path="/analyzer/retirement-income-gap" element={<RetirementIncomeGapAnalyzer />} />
+                           <Route path="/info/retirement-roadmap" element={<RetirementRoadmapInfo />} />
+                           <Route path="/retirement-analyzer" element={<RetirementAnalyzerDemo />} />
                           <Route path="/tax-center" element={<PublicTaxCenter />} />
                   
                   <Route 
