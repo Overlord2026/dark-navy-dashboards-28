@@ -19,6 +19,9 @@ export interface UseFamilyVaultReturn {
   inviteMember: (vaultId: string, memberData: InviteMemberData) => Promise<boolean>;
   uploadLegacyItem: (vaultId: string, itemData: UploadItemData) => Promise<boolean>;
   refetch: () => void;
+  // Legacy aliases for backward compatibility
+  items: LegacyItem[];
+  isLoading: boolean;
 }
 
 export interface CreateVaultData {
@@ -27,6 +30,8 @@ export interface CreateVaultData {
   family_motto?: string | null;
   family_values?: string[] | null;
   vault_photo_url?: string | null;
+  // Legacy alias
+  name?: string;
 }
 
 export interface InviteMemberData {
@@ -308,5 +313,8 @@ export function useFamilyVault(vaultId?: string): UseFamilyVaultReturn {
     inviteMember,
     uploadLegacyItem,
     refetch,
+    // Legacy aliases for backward compatibility
+    items: legacyItems,
+    isLoading: loading,
   };
 }
