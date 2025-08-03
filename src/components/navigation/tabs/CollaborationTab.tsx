@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { BriefcaseIcon, Users2, UsersIcon, InfoIcon } from "lucide-react";
+import { BriefcaseIcon, Users2, UsersIcon, InfoIcon, VaultIcon } from "lucide-react";
 import { NavItem } from "@/types/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ProfessionalType } from "@/types/professional";
@@ -16,6 +16,11 @@ export const collaborationNavItems: NavItem[] = [
     title: "Family Members", 
     href: "/client-family", 
     icon: UsersIcon 
+  },
+  { 
+    title: "Family Vault", 
+    href: "/family-vault", 
+    icon: VaultIcon 
   }
 ];
 

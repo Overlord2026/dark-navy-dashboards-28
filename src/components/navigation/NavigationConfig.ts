@@ -157,6 +157,11 @@ export const collaborationNavItems: NavItem[] = [
     title: "Family Members", 
     href: "/sharing", 
     icon: ShareIcon 
+  },
+  { 
+    title: "Family Vault", 
+    href: "/family-vault", 
+    icon: VaultIcon 
   }
 ];
 
