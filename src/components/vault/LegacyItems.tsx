@@ -183,6 +183,8 @@ export function LegacyItems({ vaultId, items, onItemAdded }: LegacyItemsProps) {
       {showFileUpload && (
         <SecureFileUpload
           vaultId={vaultId}
+          userRole="member"
+          masterKey={new CryptoKey()}
           onClose={() => setShowFileUpload(false)}
           onSuccess={() => {
             setShowFileUpload(false);

@@ -354,7 +354,7 @@ const App = () => {
                     />
                     <Route path="/accountant/tax-planning" element={<AccountantTaxPlanningPage />} />
                     <Route path="/accountant/audit-prep" element={<AuditPrepPage />} />
-                    <Route path="/accountant/compliance" element={<CompliancePage />} />
+                    <Route path="/accountant/compliance" element={<AccountantCompliancePage />} />
                     <Route path="/accountant/clients" element={<ClientManagementPage />} />
                     <Route path="/accountant/ledger" element={<LedgerPage />} />
                     <Route path="/accountant/statements" element={<StatementsPage />} />

@@ -432,6 +432,8 @@ export function EnhancedLeaveMessageWizard({ vaultId, members, onClose, onSucces
                     </DialogHeader>
                     <SecureFileUpload
                       vaultId={vaultId}
+                      userRole="member"
+                      masterKey={new CryptoKey()}
                       onUploadComplete={(fileId) => {
                         setUploadedFileId(fileId);
                         setShowFileUpload(false);

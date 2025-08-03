@@ -564,10 +564,10 @@ export function LegacyCircleManager({ vaultId, currentMembers }: LegacyCircleMan
                     id="milestone-age"
                     type="number"
                     placeholder="e.g., 18, 21, 30, 50"
-                    value={newEvent.conditions?.age?.toString() || ''}
+                    value={(newEvent.conditions as any)?.age?.toString() || ''}
                     onChange={(e) => setNewEvent(prev => ({
                       ...prev,
-                      conditions: { ...prev.conditions, age: parseInt(e.target.value) || undefined }
+                      conditions: { ...(prev.conditions as any), age: parseInt(e.target.value) || undefined }
                     }))}
                   />
                 </div>

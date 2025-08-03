@@ -94,7 +94,7 @@ export function VaultAuditLogs({ vaultId }: VaultAuditLogsProps) {
         user_agent: (log.user_agent as string) || ''
       }));
       
-      setLogs(mappedLogs);
+      setLogs(mappedLogs as AuditLogEntry[]);
     } catch (error) {
       console.error('Error fetching audit logs:', error);
     } finally {

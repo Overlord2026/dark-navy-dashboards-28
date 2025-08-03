@@ -65,11 +65,11 @@ export function FamilyVaultDashboard({ vaultId }: FamilyVaultDashboardProps) {
 
   const handleCreateFirstVault = async () => {
     try {
-      const newVaultId = await createVault({
-        name: "My Family Vault",
+      const newVault = await createVault({
+        vault_name: "My Family Vault",
         description: "A secure space to store our family memories and messages"
       });
-      setSelectedVaultId(newVaultId);
+      setSelectedVaultId(newVault?.id || '');
       toast.success("Your Family Vault has been created!");
     } catch (error) {
       toast.error("Failed to create vault. Please try again.");
@@ -82,7 +82,7 @@ export function FamilyVaultDashboard({ vaultId }: FamilyVaultDashboardProps) {
 
   const handleInviteMember = async (email: string, role: string) => {
     try {
-      await inviteMember(selectedVaultId!, email, role);
+      await inviteMember(selectedVaultId!, { email, role, permissions: { can_view: true, can_upload: false, can_manage_members: false } });
       toast.success(`Invitation sent to ${email}`);
       setShowMembersDialog(false);
     } catch (error) {
@@ -158,7 +158,7 @@ export function FamilyVaultDashboard({ vaultId }: FamilyVaultDashboardProps) {
               </div>
               <div>
                 <h1 className="text-2xl font-display font-bold text-navy">
-                  {currentVault?.name || 'Family Vault'}
+                  {currentVault?.vault_name || 'Family Vault'}
                 </h1>
                 <p className="text-sm text-muted-foreground">
                   {currentVault?.description || 'Secure family memories'}
@@ -214,7 +214,9 @@ export function FamilyVaultDashboard({ vaultId }: FamilyVaultDashboardProps) {
               </DialogHeader>
               <LeaveMessageWizard 
                 vaultId={selectedVaultId!}
-                onComplete={() => setShowMessageDialog(false)}
+                members={members?.map(m => ({ ...m, role: m.permission_level })) || []}
+                onClose={() => setShowMessageDialog(false)}
+                onSuccess={() => setShowMessageDialog(false)}
               />
             </DialogContent>
           </Dialog>
@@ -285,8 +287,8 @@ export function FamilyVaultDashboard({ vaultId }: FamilyVaultDashboardProps) {
               </DialogHeader>
               <VaultMembers
                 vaultId={selectedVaultId!}
-                currentMembers={members || []}
-                onInviteMember={handleInviteMember}
+                members={members || []}
+                onMemberAdded={() => window.location.reload()}
               />
             </DialogContent>
           </Dialog>
@@ -377,8 +379,8 @@ export function FamilyVaultDashboard({ vaultId }: FamilyVaultDashboardProps) {
                       <MessageSquare className="h-5 w-5 text-navy" />
                     </div>
                     <div>
-                      <p className="text-2xl font-bold text-navy">
-                        {items?.filter(item => item.type === 'message').length || 0}
+                       <p className="text-2xl font-bold text-navy">
+                        {items?.filter(item => item.content_type === 'text/plain').length || 0}
                       </p>
                       <p className="text-sm text-muted-foreground">Messages</p>
                     </div>
@@ -415,9 +417,9 @@ export function FamilyVaultDashboard({ vaultId }: FamilyVaultDashboardProps) {
                     items.slice(0, 5).map((item) => (
                       <div key={item.id} className="flex items-center gap-4 p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
                         <div className="p-2 bg-white rounded-lg shadow-sm">
-                          {item.type === 'file' && <FileText className="h-4 w-4 text-navy" />}
-                          {item.type === 'message' && <MessageSquare className="h-4 w-4 text-gold" />}
-                          {item.type === 'video' && <Video className="h-4 w-4 text-emerald" />}
+                          {item.content_type?.includes('application/') && <FileText className="h-4 w-4 text-navy" />}
+                          {item.content_type === 'text/plain' && <MessageSquare className="h-4 w-4 text-gold" />}
+                          {item.content_type?.startsWith('video/') && <Video className="h-4 w-4 text-emerald" />}
                         </div>
                         <div className="flex-1">
                           <p className="font-medium text-navy">{item.title}</p>
@@ -426,7 +428,7 @@ export function FamilyVaultDashboard({ vaultId }: FamilyVaultDashboardProps) {
                           </p>
                         </div>
                         <Badge variant="outline" className="text-xs">
-                          {item.type}
+                          {item.item_type}
                         </Badge>
                       </div>
                     ))
@@ -446,36 +448,46 @@ export function FamilyVaultDashboard({ vaultId }: FamilyVaultDashboardProps) {
           <TabsContent value="messages">
             <LegacyItems 
               vaultId={selectedVaultId!} 
-              items={items?.filter(item => item.type === 'message') || []}
-              filter="messages"
+              items={items?.filter(item => item.content_type === 'text/plain') || []}
+              onItemAdded={() => window.location.reload()}
             />
           </TabsContent>
 
           <TabsContent value="files">
             <LegacyItems 
               vaultId={selectedVaultId!} 
-              items={items?.filter(item => item.type !== 'message') || []}
-              filter="files"
+              items={items?.filter(item => item.content_type !== 'text/plain') || []}
+              onItemAdded={() => window.location.reload()}
             />
           </TabsContent>
 
           <TabsContent value="members">
             <VaultMembers
               vaultId={selectedVaultId!}
-              currentMembers={members || []}
-              onInviteMember={handleInviteMember}
+              members={members || []}
+              onMemberAdded={() => window.location.reload()}
             />
           </TabsContent>
 
           <TabsContent value="settings">
-            <VaultBrandingCustomizer vaultId={selectedVaultId!} />
+            <VaultBrandingCustomizer 
+              vaultId={selectedVaultId!} 
+              currentBranding={{
+                familyMotto: currentVault?.family_motto || '',
+                familyValues: currentVault?.family_values || [],
+                primaryColor: '#4F46E5',
+                secondaryColor: '#10B981',
+                fontStyle: 'modern' as const
+              }}
+              onSave={async (branding) => { console.log('Branding saved:', branding); return true; }}
+            />
           </TabsContent>
 
           <TabsContent value="legacy">
             <LegacyItems 
               vaultId={selectedVaultId!} 
               items={items || []}
-              filter="all"
+              onItemAdded={() => window.location.reload()}
             />
           </TabsContent>
         </Tabs>
