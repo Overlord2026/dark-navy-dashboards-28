@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ThreeColumnLayout } from '@/components/layout/ThreeColumnLayout';
 import { DashboardHeader } from '@/components/ui/DashboardHeader';
+import { AttorneyNavigation } from '@/components/attorney/AttorneyNavigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
@@ -119,6 +120,8 @@ export default function BusinessLawPage() {
           heading="Business Law Practice"
           text="Manage corporate matters, business formation, and commercial legal services."
         />
+
+        <AttorneyNavigation />
 
         <Tabs defaultValue="matters" className="w-full">
           <TabsList className="grid w-full grid-cols-5">

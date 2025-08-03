@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ThreeColumnLayout } from '@/components/layout/ThreeColumnLayout';
 import { DashboardHeader } from '@/components/ui/DashboardHeader';
+import { AttorneyNavigation } from '@/components/attorney/AttorneyNavigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
@@ -112,6 +113,8 @@ export default function ResearchPage() {
           heading="Legal Research & Analysis"
           text="Advanced legal research tools, case law database, and regulatory compliance tracking."
         />
+
+        <AttorneyNavigation />
 
         <Tabs defaultValue="search" className="w-full">
           <TabsList className="grid w-full grid-cols-6">
