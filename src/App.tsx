@@ -63,7 +63,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <ThemeProvider defaultTheme="light" storageKey="marketplace-theme">
+        <ThemeProvider>
           <AuthProvider>
             <UserProvider>
               <RoleProvider>
@@ -77,7 +77,7 @@ function App() {
                           <Route path="/auth" element={<AuthPage />} />
                           <Route path="/auth/:authType" element={<AuthPage />} />
                           <Route path="/auth/:authType/:tenantId" element={<AuthPage />} />
-                          <Route path="/dynamic-landing" element={<DynamicLandingController />} />
+                           <Route path="/dynamic-landing" element={<DynamicLandingController><div /></DynamicLandingController>} />
                           <Route path="/security" element={<SecuritySettingsPage />} />
                           <Route path="/dashboard" element={
                             <AuthWrapper requireAuth={true}>

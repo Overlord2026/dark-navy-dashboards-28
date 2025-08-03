@@ -447,9 +447,14 @@ export function AdvisorDashboard() {
                 </div>
                 <Progress value={90.4} className="w-full" />
               </div>
-              <Button variant="outline" className="w-full" onClick={handleViewTaxCenter}>
-                View Tax Center
-              </Button>
+              <div className="space-y-2">
+                <Button variant="outline" className="w-full" onClick={handleViewTaxCenter}>
+                  View Tax Center
+                </Button>
+                <Button variant="outline" className="w-full" onClick={() => navigate('/advisor/billing')}>
+                  Billing & Invoicing
+                </Button>
+              </div>
             </CardContent>
           </Card>
 
@@ -468,9 +473,14 @@ export function AdvisorDashboard() {
                 </div>
                 <Progress value={90.5} className="w-full" />
               </div>
-              <Button variant="outline" className="w-full" onClick={() => setShowPortfolioTools(true)}>
-                Portfolio Tools
-              </Button>
+              <div className="space-y-2">
+                <Button variant="outline" className="w-full" onClick={() => setShowPortfolioTools(true)}>
+                  Portfolio Tools
+                </Button>
+                <Button variant="outline" className="w-full" onClick={() => navigate('/advisor/compliance')}>
+                  Compliance Tracker
+                </Button>
+              </div>
             </CardContent>
           </Card>
 
@@ -489,9 +499,14 @@ export function AdvisorDashboard() {
                 </div>
                 <Progress value={93.3} className="w-full" />
               </div>
-              <Button variant="outline" className="w-full" onClick={handleScheduleMeeting}>
-                Schedule Meeting
-              </Button>
+              <div className="space-y-2">
+                <Button variant="outline" className="w-full" onClick={handleScheduleMeeting}>
+                  Schedule Meeting
+                </Button>
+                <Button variant="outline" className="w-full" onClick={() => navigate('/advisor/regulatory-reporting')}>
+                  Regulatory Reports
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </div>
