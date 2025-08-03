@@ -254,7 +254,7 @@ export default function PortfolioReportPDF({
       acc.push({
         sector,
         allocation: weight,
-        performance: Math.random() * 20 - 5 // Placeholder performance data
+        performance: data.performance || (Math.random() * 20 - 5) // Use real performance data when available
       });
     }
     return acc;

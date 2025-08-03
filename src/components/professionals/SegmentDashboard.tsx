@@ -23,6 +23,7 @@ import {
 import { getProfessionalSegmentConfig, getDefaultSegmentForRole } from '@/utils/professionalSegments';
 import { ProfessionalSegment } from '@/types/professional';
 import { UserRole } from '@/utils/roleHierarchy';
+import { supabase } from '@/integrations/supabase/client';
 
 interface SegmentDashboardProps {
   userRole: UserRole;
@@ -47,18 +48,74 @@ export function SegmentDashboard({ userRole, segment }: SegmentDashboardProps) {
   const fetchDashboardData = async () => {
     setLoading(true);
     try {
-      // Mock data for demonstration - in real implementation, fetch from Supabase
-      const mockData = {
-        clients: Math.floor(Math.random() * 50) + 10,
-        revenue: Math.floor(Math.random() * 500000) + 100000,
-        referrals: Math.floor(Math.random() * 20) + 5,
-        satisfaction: Math.floor(Math.random() * 20) + 80,
-        documents: Math.floor(Math.random() * 100) + 20,
-        meetings: Math.floor(Math.random() * 30) + 10,
-        compliance: Math.floor(Math.random() * 20) + 80,
-        growth: Math.floor(Math.random() * 50) + 10
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        console.error('User not authenticated');
+        setLoading(false);
+        return;
+      }
+
+      // Fetch professional metrics for the current user
+      const { data: metricsData, error: metricsError } = await supabase
+        .from('professional_metrics')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('metric_date', new Date().toISOString().split('T')[0]);
+
+      if (metricsError) {
+        console.error('Error fetching professional metrics:', metricsError);
+      }
+
+      // Process metrics data into dashboard format
+      const processedData = {
+        clients: 0,
+        revenue: 0,
+        referrals: 0,
+        satisfaction: 0,
+        documents: 0,
+        meetings: 0,
+        compliance: 0,
+        growth: 0
       };
-      setDashboardData(mockData);
+
+      metricsData?.forEach(metric => {
+        switch (metric.metric_type) {
+          case 'active_clients':
+            processedData.clients = metric.metric_value;
+            break;
+          case 'total_revenue':
+          case 'aum':
+            processedData.revenue = metric.metric_value;
+            break;
+          case 'referrals':
+            processedData.referrals = metric.metric_value;
+            break;
+          case 'satisfaction_score':
+            processedData.satisfaction = metric.metric_value;
+            break;
+          case 'documents_managed':
+            processedData.documents = metric.metric_value;
+            break;
+          case 'meetings_completed':
+            processedData.meetings = metric.metric_value;
+            break;
+          case 'compliance_score':
+            processedData.compliance = metric.metric_value;
+            break;
+          case 'growth_rate':
+            processedData.growth = metric.metric_value;
+            break;
+        }
+      });
+
+      // If no metrics exist, create default ones or calculate from other tables
+      if (!metricsData || metricsData.length === 0) {
+        // You could fetch data from other related tables here
+        // For now, we'll show empty state
+        console.log('No metrics found for user, showing empty dashboard');
+      }
+
+      setDashboardData(processedData);
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
     } finally {

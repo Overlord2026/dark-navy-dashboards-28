@@ -2196,6 +2196,48 @@ export type Database = {
           },
         ]
       }
+      billing_metrics: {
+        Row: {
+          created_at: string
+          id: string
+          invoice_count: number
+          paid_revenue: number
+          pending_revenue: number
+          period_end: string
+          period_start: string
+          tenant_id: string
+          total_revenue: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          invoice_count?: number
+          paid_revenue?: number
+          pending_revenue?: number
+          period_end: string
+          period_start: string
+          tenant_id: string
+          total_revenue?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          invoice_count?: number
+          paid_revenue?: number
+          pending_revenue?: number
+          period_end?: string
+          period_start?: string
+          tenant_id?: string
+          total_revenue?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       bookkeeping_reports: {
         Row: {
           anomalies_found: number | null
@@ -2916,6 +2958,51 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      client_invoices: {
+        Row: {
+          amount: number
+          client_id: string | null
+          client_name: string
+          created_at: string
+          due_date: string | null
+          id: string
+          invoice_number: string
+          paid_date: string | null
+          status: string
+          tenant_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          client_id?: string | null
+          client_name: string
+          created_at?: string
+          due_date?: string | null
+          id?: string
+          invoice_number: string
+          paid_date?: string | null
+          status?: string
+          tenant_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          client_id?: string | null
+          client_name?: string
+          created_at?: string
+          due_date?: string | null
+          id?: string
+          invoice_number?: string
+          paid_date?: string | null
+          status?: string
+          tenant_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       client_meetings: {
         Row: {
@@ -13317,6 +13404,51 @@ export type Database = {
         }
         Relationships: []
       }
+      portfolio_performance: {
+        Row: {
+          account_id: string | null
+          allocation_percentage: number
+          benchmark_performance: number | null
+          created_at: string
+          id: string
+          performance_percentage: number
+          period_end: string
+          period_start: string
+          sector: string
+          updated_at: string
+          user_id: string
+          value_amount: number
+        }
+        Insert: {
+          account_id?: string | null
+          allocation_percentage?: number
+          benchmark_performance?: number | null
+          created_at?: string
+          id?: string
+          performance_percentage?: number
+          period_end: string
+          period_start: string
+          sector: string
+          updated_at?: string
+          user_id: string
+          value_amount?: number
+        }
+        Update: {
+          account_id?: string | null
+          allocation_percentage?: number
+          benchmark_performance?: number | null
+          created_at?: string
+          id?: string
+          performance_percentage?: number
+          period_end?: string
+          period_start?: string
+          sector?: string
+          updated_at?: string
+          user_id?: string
+          value_amount?: number
+        }
+        Relationships: []
+      }
       practice_metrics: {
         Row: {
           cpa_partner_id: string
@@ -13859,6 +13991,42 @@ export type Database = {
           status?: string
           tenant_id?: string
           updated_at?: string | null
+        }
+        Relationships: []
+      }
+      professional_metrics: {
+        Row: {
+          created_at: string
+          id: string
+          metadata: Json | null
+          metric_date: string
+          metric_type: string
+          metric_value: number
+          tenant_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          metric_date?: string
+          metric_type: string
+          metric_value?: number
+          tenant_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          metric_date?: string
+          metric_type?: string
+          metric_value?: number
+          tenant_id?: string
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
