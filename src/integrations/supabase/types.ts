@@ -6227,42 +6227,54 @@ export type Database = {
       }
       family_vaults: {
         Row: {
+          cover_photo_url: string | null
           created_at: string
+          custom_css: Json | null
           description: string | null
           encryption_key_id: string
           family_motto: string | null
           family_values: string[] | null
+          font_family: string | null
           id: string
           is_active: boolean
           tenant_id: string | null
+          theme_color: string | null
           updated_at: string
           user_id: string
           vault_name: string
           vault_photo_url: string | null
         }
         Insert: {
+          cover_photo_url?: string | null
           created_at?: string
+          custom_css?: Json | null
           description?: string | null
           encryption_key_id?: string
           family_motto?: string | null
           family_values?: string[] | null
+          font_family?: string | null
           id?: string
           is_active?: boolean
           tenant_id?: string | null
+          theme_color?: string | null
           updated_at?: string
           user_id: string
           vault_name: string
           vault_photo_url?: string | null
         }
         Update: {
+          cover_photo_url?: string | null
           created_at?: string
+          custom_css?: Json | null
           description?: string | null
           encryption_key_id?: string
           family_motto?: string | null
           family_values?: string[] | null
+          font_family?: string | null
           id?: string
           is_active?: boolean
           tenant_id?: string | null
+          theme_color?: string | null
           updated_at?: string
           user_id?: string
           vault_name?: string
@@ -9628,11 +9640,18 @@ export type Database = {
       legacy_delivery_rules: {
         Row: {
           created_at: string
+          delivered_at: string | null
+          delivery_attempts: number | null
           delivery_method: string
+          delivery_status: string | null
+          executor_approval_required: boolean | null
+          executor_approved_at: string | null
+          executor_approved_by: string | null
           executor_user_id: string | null
           id: string
           legacy_item_id: string
           require_executor_approval: boolean
+          scheduled_for: string | null
           status: string
           trigger_condition: Json | null
           trigger_date: string | null
@@ -9641,11 +9660,18 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          delivered_at?: string | null
+          delivery_attempts?: number | null
           delivery_method?: string
+          delivery_status?: string | null
+          executor_approval_required?: boolean | null
+          executor_approved_at?: string | null
+          executor_approved_by?: string | null
           executor_user_id?: string | null
           id?: string
           legacy_item_id: string
           require_executor_approval?: boolean
+          scheduled_for?: string | null
           status?: string
           trigger_condition?: Json | null
           trigger_date?: string | null
@@ -9654,11 +9680,18 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          delivered_at?: string | null
+          delivery_attempts?: number | null
           delivery_method?: string
+          delivery_status?: string | null
+          executor_approval_required?: boolean | null
+          executor_approved_at?: string | null
+          executor_approved_by?: string | null
           executor_user_id?: string | null
           id?: string
           legacy_item_id?: string
           require_executor_approval?: boolean
+          scheduled_for?: string | null
           status?: string
           trigger_condition?: Json | null
           trigger_date?: string | null
@@ -19310,6 +19343,53 @@ export type Database = {
           },
         ]
       }
+      vault_activity_log: {
+        Row: {
+          action_type: string
+          created_at: string | null
+          details: Json | null
+          id: string
+          ip_address: unknown | null
+          resource_id: string | null
+          resource_type: string
+          user_agent: string | null
+          user_id: string | null
+          vault_id: string
+        }
+        Insert: {
+          action_type: string
+          created_at?: string | null
+          details?: Json | null
+          id?: string
+          ip_address?: unknown | null
+          resource_id?: string | null
+          resource_type: string
+          user_agent?: string | null
+          user_id?: string | null
+          vault_id: string
+        }
+        Update: {
+          action_type?: string
+          created_at?: string | null
+          details?: Json | null
+          id?: string
+          ip_address?: unknown | null
+          resource_id?: string | null
+          resource_type?: string
+          user_agent?: string | null
+          user_id?: string | null
+          vault_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vault_activity_log_vault_id_fkey"
+            columns: ["vault_id"]
+            isOneToOne: false
+            referencedRelation: "family_vaults"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       vault_demo_content: {
         Row: {
           category: string | null
@@ -19346,45 +19426,128 @@ export type Database = {
         }
         Relationships: []
       }
+      vault_files: {
+        Row: {
+          chunk_count: number | null
+          content_type: string
+          created_at: string | null
+          encryption_key_id: string
+          file_name: string
+          file_path: string
+          file_size: number
+          id: string
+          is_encrypted: boolean | null
+          metadata: Json | null
+          updated_at: string | null
+          upload_status: string | null
+          uploaded_by: string
+          vault_id: string
+        }
+        Insert: {
+          chunk_count?: number | null
+          content_type: string
+          created_at?: string | null
+          encryption_key_id: string
+          file_name: string
+          file_path: string
+          file_size: number
+          id?: string
+          is_encrypted?: boolean | null
+          metadata?: Json | null
+          updated_at?: string | null
+          upload_status?: string | null
+          uploaded_by: string
+          vault_id: string
+        }
+        Update: {
+          chunk_count?: number | null
+          content_type?: string
+          created_at?: string | null
+          encryption_key_id?: string
+          file_name?: string
+          file_path?: string
+          file_size?: number
+          id?: string
+          is_encrypted?: boolean | null
+          metadata?: Json | null
+          updated_at?: string | null
+          upload_status?: string | null
+          uploaded_by?: string
+          vault_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vault_files_vault_id_fkey"
+            columns: ["vault_id"]
+            isOneToOne: false
+            referencedRelation: "family_vaults"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       vault_members: {
         Row: {
           accepted_at: string | null
+          can_delete: boolean | null
+          can_manage_members: boolean | null
+          can_share: boolean | null
+          can_upload: boolean | null
+          can_view: boolean | null
           created_by: string
           email: string
           first_name: string | null
           id: string
           invited_at: string
+          is_executor: boolean | null
           last_name: string | null
+          permission_level:
+            | Database["public"]["Enums"]["vault_permission_level"]
+            | null
           permissions: Json
-          role: string
           status: string
           user_id: string | null
           vault_id: string
         }
         Insert: {
           accepted_at?: string | null
+          can_delete?: boolean | null
+          can_manage_members?: boolean | null
+          can_share?: boolean | null
+          can_upload?: boolean | null
+          can_view?: boolean | null
           created_by: string
           email: string
           first_name?: string | null
           id?: string
           invited_at?: string
+          is_executor?: boolean | null
           last_name?: string | null
+          permission_level?:
+            | Database["public"]["Enums"]["vault_permission_level"]
+            | null
           permissions?: Json
-          role?: string
           status?: string
           user_id?: string | null
           vault_id: string
         }
         Update: {
           accepted_at?: string | null
+          can_delete?: boolean | null
+          can_manage_members?: boolean | null
+          can_share?: boolean | null
+          can_upload?: boolean | null
+          can_view?: boolean | null
           created_by?: string
           email?: string
           first_name?: string | null
           id?: string
           invited_at?: string
+          is_executor?: boolean | null
           last_name?: string | null
+          permission_level?:
+            | Database["public"]["Enums"]["vault_permission_level"]
+            | null
           permissions?: Json
-          role?: string
           status?: string
           user_id?: string | null
           vault_id?: string
@@ -19392,6 +19555,62 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "vault_members_vault_id_fkey"
+            columns: ["vault_id"]
+            isOneToOne: false
+            referencedRelation: "family_vaults"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vault_notifications: {
+        Row: {
+          created_at: string | null
+          delivery_method: string | null
+          id: string
+          message: string
+          metadata: Json | null
+          notification_type: string
+          read_at: string | null
+          recipient_id: string
+          scheduled_for: string | null
+          sent_at: string | null
+          status: string | null
+          title: string
+          vault_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          delivery_method?: string | null
+          id?: string
+          message: string
+          metadata?: Json | null
+          notification_type: string
+          read_at?: string | null
+          recipient_id: string
+          scheduled_for?: string | null
+          sent_at?: string | null
+          status?: string | null
+          title: string
+          vault_id: string
+        }
+        Update: {
+          created_at?: string | null
+          delivery_method?: string | null
+          id?: string
+          message?: string
+          metadata?: Json | null
+          notification_type?: string
+          read_at?: string | null
+          recipient_id?: string
+          scheduled_for?: string | null
+          sent_at?: string | null
+          status?: string | null
+          title?: string
+          vault_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vault_notifications_vault_id_fkey"
             columns: ["vault_id"]
             isOneToOne: false
             referencedRelation: "family_vaults"
@@ -20015,6 +20234,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: Json
       }
+      check_vault_permission: {
+        Args: { p_vault_id: string; p_user_id: string; p_permission: string }
+        Returns: boolean
+      }
       cleanup_expired_export_requests: {
         Args: Record<PropertyKey, never>
         Returns: undefined
@@ -20496,6 +20719,16 @@ export type Database = {
         }
         Returns: string
       }
+      log_vault_activity: {
+        Args: {
+          p_vault_id: string
+          p_action_type: string
+          p_resource_type: string
+          p_resource_id?: string
+          p_details?: Json
+        }
+        Returns: string
+      }
       process_advisor_referral: {
         Args: { p_referral_code: string; p_new_advisor_id: string }
         Returns: boolean
@@ -20725,6 +20958,13 @@ export type Database = {
         | "other"
       goal_priority: "low" | "medium" | "high" | "top_aspiration"
       goal_status: "active" | "completed" | "paused" | "archived"
+      vault_permission_level:
+        | "owner"
+        | "admin"
+        | "editor"
+        | "member"
+        | "viewer"
+        | "executor"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -20879,6 +21119,14 @@ export const Constants = {
       ],
       goal_priority: ["low", "medium", "high", "top_aspiration"],
       goal_status: ["active", "completed", "paused", "archived"],
+      vault_permission_level: [
+        "owner",
+        "admin",
+        "editor",
+        "member",
+        "viewer",
+        "executor",
+      ],
     },
   },
 } as const

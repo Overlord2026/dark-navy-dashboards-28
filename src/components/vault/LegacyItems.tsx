@@ -160,10 +160,10 @@ export function LegacyItems({ vaultId, items, onItemAdded }: LegacyItemsProps) {
         )}
       </div>
 
-      {showMessageWizard && (
+      {showMessageWizard && members && (
         <LeaveMessageWizard
           vaultId={vaultId}
-          members={members}
+          members={members.map(m => ({ ...m, role: m.permission_level || 'member' }))}
           onClose={() => setShowMessageWizard(false)}
           onSuccess={() => {
             setShowMessageWizard(false);

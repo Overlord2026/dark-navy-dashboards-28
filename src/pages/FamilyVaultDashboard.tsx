@@ -297,10 +297,10 @@ export default function FamilyVaultDashboard() {
       </Tabs>
 
       {/* Message Wizard */}
-      {showMessageWizard && (
+      {showMessageWizard && members && (
         <LeaveMessageWizard
           vaultId={currentVault.id}
-          members={members}
+          members={members.map(m => ({ ...m, role: m.permission_level || 'member' }))}
           onClose={() => setShowMessageWizard(false)}
           onSuccess={() => {
             setShowMessageWizard(false);

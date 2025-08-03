@@ -56,9 +56,10 @@ export function VaultMembers({ vaultId, members, onMemberAdded }: VaultMembersPr
     setLoading(false);
   };
 
-  const getRoleIcon = (role: string) => {
-    switch (role) {
+  const getRoleIcon = (permissionLevel: string) => {
+    switch (permissionLevel) {
       case 'admin':
+      case 'owner':
         return <Shield className="h-4 w-4" />;
       case 'editor':
         return <UserCheck className="h-4 w-4" />;
@@ -168,7 +169,7 @@ export function VaultMembers({ vaultId, members, onMemberAdded }: VaultMembersPr
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <div className="flex items-center gap-2">
-                    {getRoleIcon(member.role)}
+                    {getRoleIcon(member.permission_level || 'member')}
                     <div>
                       <p className="font-medium">
                         {member.first_name && member.last_name 
@@ -186,7 +187,7 @@ export function VaultMembers({ vaultId, members, onMemberAdded }: VaultMembersPr
                 
                 <div className="flex items-center gap-2">
                   <Badge variant="outline" className="capitalize">
-                    {member.role}
+                    {member.permission_level || 'member'}
                   </Badge>
                   <Badge variant={getStatusColor(member.status) as any}>
                     {member.status}

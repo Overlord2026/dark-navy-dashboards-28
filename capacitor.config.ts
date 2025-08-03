@@ -12,6 +12,12 @@ const config: CapacitorConfig = {
     StatusBar: {
       style: 'dark',
       backgroundColor: '#1B1B32'
+    },
+    Camera: {
+      permissions: ['camera', 'photos']
+    },
+    Device: {
+      permissions: ['camera', 'microphone', 'photos']
     }
   }
 };
