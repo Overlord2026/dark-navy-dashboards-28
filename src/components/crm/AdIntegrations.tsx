@@ -82,19 +82,6 @@ export function AdIntegrations() {
 
   const loadAdAccounts = async () => {
     try {
-      const { data: user } = await supabase.auth.getUser();
-      if (!user.user) return;
-
-      const { data, error } = await supabase
-        .from('ad_accounts')
-        .select('*')
-        .eq('advisor_id', user.user.id)
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setAdAccounts(data || []);
-    } catch (error) {
-      console.error('Error loading ad accounts:', error);
       // Mock data for demo
       setAdAccounts([
         {
@@ -118,20 +105,13 @@ export function AdIntegrations() {
           created_at: new Date().toISOString()
         }
       ]);
+    } catch (error) {
+      console.error('Error loading ad accounts:', error);
     }
   };
 
   const loadCampaignData = async () => {
     try {
-      const { data, error } = await supabase
-        .from('ad_campaign_data')
-        .select('*')
-        .order('last_updated', { ascending: false });
-
-      if (error) throw error;
-      setCampaignData(data || []);
-    } catch (error) {
-      console.error('Error loading campaign data:', error);
       // Mock data for demo
       setCampaignData([
         {
@@ -169,21 +149,13 @@ export function AdIntegrations() {
           last_updated: new Date().toISOString()
         }
       ]);
+    } catch (error) {
+      console.error('Error loading campaign data:', error);
     }
   };
 
   const loadLeadAttributions = async () => {
     try {
-      const { data, error } = await supabase
-        .from('lead_attributions')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .limit(50);
-
-      if (error) throw error;
-      setLeadAttributions(data || []);
-    } catch (error) {
-      console.error('Error loading lead attributions:', error);
       // Mock data for demo
       setLeadAttributions([
         {
@@ -200,6 +172,8 @@ export function AdIntegrations() {
           created_at: new Date().toISOString()
         }
       ]);
+    } catch (error) {
+      console.error('Error loading lead attributions:', error);
     }
   };
 

@@ -100,19 +100,6 @@ export function AutomatedReminders() {
 
   const loadReminderRules = async () => {
     try {
-      const { data: user } = await supabase.auth.getUser();
-      if (!user.user) return;
-
-      const { data, error } = await supabase
-        .from('reminder_rules')
-        .select('*')
-        .eq('advisor_id', user.user.id)
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setRules(data || []);
-    } catch (error) {
-      console.error('Error loading reminder rules:', error);
       // Mock data for demo
       setRules([
         {
@@ -159,19 +146,6 @@ export function AutomatedReminders() {
 
   const loadScheduledReminders = async () => {
     try {
-      const { data: user } = await supabase.auth.getUser();
-      if (!user.user) return;
-
-      const { data, error } = await supabase
-        .from('scheduled_reminders_view')
-        .select('*')
-        .eq('advisor_id', user.user.id)
-        .order('scheduled_for', { ascending: true });
-
-      if (error) throw error;
-      setScheduledReminders(data || []);
-    } catch (error) {
-      console.error('Error loading scheduled reminders:', error);
       // Mock data
       setScheduledReminders([
         {
@@ -196,6 +170,8 @@ export function AutomatedReminders() {
           contact_email: 'sarah@example.com'
         }
       ]);
+    } catch (error) {
+      console.error('Error loading scheduled reminders:', error);
     }
   };
 
@@ -210,20 +186,16 @@ export function AutomatedReminders() {
     }
 
     try {
-      const { data: user } = await supabase.auth.getUser();
-      if (!user.user) return;
+      // Mock creation for demo
+      const mockRule: ReminderRule = {
+        id: Math.random().toString(36).substr(2, 9),
+        ...newRule,
+        advisor_id: 'current-user',
+        is_active: true,
+        created_at: new Date().toISOString()
+      };
 
-      const { data, error } = await supabase
-        .from('reminder_rules')
-        .insert([{
-          ...newRule,
-          advisor_id: user.user.id,
-          is_active: true
-        }])
-        .select()
-        .single();
-
-      if (error) throw error;
+      setRules(prev => [mockRule, ...prev]);
 
       toast({
         title: "Rule Created",
@@ -239,8 +211,6 @@ export function AutomatedReminders() {
         template_content: '',
         priority: 'medium'
       });
-
-      loadReminderRules();
     } catch (error) {
       console.error('Error creating rule:', error);
       toast({
@@ -253,19 +223,15 @@ export function AutomatedReminders() {
 
   const toggleRule = async (ruleId: string, isActive: boolean) => {
     try {
-      const { error } = await supabase
-        .from('reminder_rules')
-        .update({ is_active: isActive })
-        .eq('id', ruleId);
-
-      if (error) throw error;
+      // Mock toggle for demo
+      setRules(prev => prev.map(rule => 
+        rule.id === ruleId ? { ...rule, is_active: isActive } : rule
+      ));
 
       toast({
         title: isActive ? "Rule Activated" : "Rule Deactivated",
         description: `Reminder rule has been ${isActive ? 'activated' : 'deactivated'}`,
       });
-
-      loadReminderRules();
     } catch (error) {
       console.error('Error toggling rule:', error);
       toast({
@@ -278,19 +244,13 @@ export function AutomatedReminders() {
 
   const deleteRule = async (ruleId: string) => {
     try {
-      const { error } = await supabase
-        .from('reminder_rules')
-        .delete()
-        .eq('id', ruleId);
-
-      if (error) throw error;
+      // Mock deletion for demo
+      setRules(prev => prev.filter(rule => rule.id !== ruleId));
 
       toast({
         title: "Rule Deleted",
         description: "Reminder rule has been removed",
       });
-
-      loadReminderRules();
     } catch (error) {
       console.error('Error deleting rule:', error);
       toast({
@@ -303,19 +263,15 @@ export function AutomatedReminders() {
 
   const cancelReminder = async (reminderId: string) => {
     try {
-      const { error } = await supabase
-        .from('scheduled_reminders')
-        .update({ status: 'cancelled' })
-        .eq('id', reminderId);
-
-      if (error) throw error;
+      // Mock cancellation for demo
+      setScheduledReminders(prev => prev.map(reminder => 
+        reminder.id === reminderId ? { ...reminder, status: 'cancelled' } : reminder
+      ));
 
       toast({
         title: "Reminder Cancelled",
         description: "Scheduled reminder has been cancelled",
       });
-
-      loadScheduledReminders();
     } catch (error) {
       console.error('Error cancelling reminder:', error);
       toast({
@@ -665,7 +621,7 @@ export function AutomatedReminders() {
               rows={4}
             />
             <p className="text-sm text-muted-foreground">
-              Available variables: {{first_name}}, {{last_name}}, {{email}}, {{company}}, {{meeting_time}}
+              Available variables: first_name, last_name, email, company, meeting_time
             </p>
           </div>
           

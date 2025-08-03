@@ -65,112 +65,61 @@ export function AdvisorDashboard() {
 
   const loadDashboardData = async () => {
     try {
-      const { data: user } = await supabase.auth.getUser();
-      if (!user.user) return;
+      // Use mock data for now until database tables are created
+      const mockClients: Client[] = [
+        {
+          id: '1',
+          name: 'John Smith',
+          email: 'john.smith@email.com',
+          status: 'action-needed',
+          lastActivity: '3 days ago',
+          documentsRequired: 2,
+          aiOpportunities: 3,
+          priority: 'high',
+          taxSavingsEstimate: 15000
+        },
+        {
+          id: '2',
+          name: 'Sarah Johnson',
+          email: 'sarah.johnson@email.com',
+          status: 'pending-review',
+          lastActivity: '1 day ago',
+          documentsRequired: 0,
+          aiOpportunities: 1,
+          priority: 'medium',
+          taxSavingsEstimate: 8500
+        },
+        {
+          id: '3',
+          name: 'Michael Brown',
+          email: 'michael.brown@email.com',
+          status: 'up-to-date',
+          lastActivity: 'Today',
+          documentsRequired: 0,
+          aiOpportunities: 2,
+          priority: 'low',
+          taxSavingsEstimate: 12000
+        }
+      ];
+      
+      setClients(mockClients);
+      setMetrics({
+        totalClients: mockClients.length,
+        clientsRequiringAction: mockClients.filter(c => c.status === 'action-needed').length,
+        pendingDocReviews: mockClients.filter(c => c.status === 'pending-review').length,
+        monthlyRevenue: '$125,400',
+        aiFlaggedOpportunities: mockClients.reduce((sum, c) => sum + c.aiOpportunities, 0),
+        totalTaxSavings: mockClients.reduce((sum, c) => sum + c.taxSavingsEstimate, 0),
+        completionRate: Math.round((mockClients.filter(c => c.status === 'up-to-date').length / mockClients.length) * 100)
+      });
 
-      // Load clients data
-      const { data: clientsData, error: clientsError } = await supabase
-        .from('crm_clients')
-        .select('*')
-        .eq('advisor_id', user.user.id);
-
-      // Load advisor performance metrics
-      const { data: performanceData, error: performanceError } = await supabase
-        .from('advisor_performance_metrics')
-        .select('*')
-        .eq('advisor_id', user.user.id)
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .single();
-
-      // Load revenue data
-      const { data: revenueData, error: revenueError } = await supabase
-        .from('advisor_production')
-        .select('*')
-        .eq('advisor_id', user.user.id)
-        .order('period_start', { ascending: false })
-        .limit(6);
-
-      if (clientsData && !clientsError) {
-        setClients(clientsData);
-        
-        // Calculate metrics from real data
-        const calculatedMetrics = {
-          totalClients: clientsData.length,
-          clientsRequiringAction: clientsData.filter(c => c.status === 'action-needed').length,
-          pendingDocReviews: clientsData.filter(c => c.status === 'pending-review').length,
-          monthlyRevenue: performanceData?.gross_revenue ? `$${performanceData.gross_revenue.toLocaleString()}` : '$0',
-          aiFlaggedOpportunities: clientsData.reduce((sum, c) => sum + (c.ai_opportunities || 0), 0),
-          totalTaxSavings: clientsData.reduce((sum, c) => sum + (c.tax_savings_estimate || 0), 0),
-          completionRate: Math.round((clientsData.filter(c => c.status === 'up-to-date').length / clientsData.length) * 100) || 0
-        };
-        setMetrics(calculatedMetrics);
-      } else {
-        // Fallback to mock data
-        const mockClients: Client[] = [
-          {
-            id: '1',
-            name: 'John Smith',
-            email: 'john.smith@email.com',
-            status: 'action-needed',
-            lastActivity: '3 days ago',
-            documentsRequired: 2,
-            aiOpportunities: 3,
-            priority: 'high',
-            taxSavingsEstimate: 15000
-          },
-          {
-            id: '2',
-            name: 'Sarah Johnson',
-            email: 'sarah.johnson@email.com',
-            status: 'pending-review',
-            lastActivity: '1 day ago',
-            documentsRequired: 0,
-            aiOpportunities: 1,
-            priority: 'medium',
-            taxSavingsEstimate: 8500
-          },
-          {
-            id: '3',
-            name: 'Michael Brown',
-            email: 'michael.brown@email.com',
-            status: 'up-to-date',
-            lastActivity: 'Today',
-            documentsRequired: 0,
-            aiOpportunities: 2,
-            priority: 'low',
-            taxSavingsEstimate: 12000
-          }
-        ];
-        
-        setClients(mockClients);
-        setMetrics({
-          totalClients: mockClients.length,
-          clientsRequiringAction: mockClients.filter(c => c.status === 'action-needed').length,
-          pendingDocReviews: mockClients.filter(c => c.status === 'pending-review').length,
-          monthlyRevenue: '$125,400',
-          aiFlaggedOpportunities: mockClients.reduce((sum, c) => sum + c.aiOpportunities, 0),
-          totalTaxSavings: mockClients.reduce((sum, c) => sum + c.taxSavingsEstimate, 0),
-          completionRate: Math.round((mockClients.filter(c => c.status === 'up-to-date').length / mockClients.length) * 100)
-        });
-      }
-
-      // Generate revenue projection data from real data or mock
-      if (revenueData && !revenueError && revenueData.length > 0) {
-        const projectionData = revenueData.reverse().map((item, index) => ({
-          month: format(new Date(item.period_start), 'MMM'),
-          revenue: item.gross_revenue || 0
-        }));
-        setChartData(projectionData);
-      } else {
-        // Mock revenue data
-        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
-        const projectionData = months.map((month, index) => ({
-          month,
-          revenue: 95000 + (index * 5000) + (Math.random() * 10000)
-        }));
-        setChartData(projectionData);
-      }
+      // Mock revenue data
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+      const projectionData = months.map((month, index) => ({
+        month,
+        revenue: 95000 + (index * 5000) + (Math.random() * 10000)
+      }));
+      setChartData(projectionData);
     } catch (error) {
       console.error('Error loading dashboard data:', error);
     } finally {

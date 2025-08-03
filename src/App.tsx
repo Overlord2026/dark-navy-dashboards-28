@@ -341,7 +341,7 @@ const App = () => {
                     path="/crm"
                     element={
                       <AuthWrapper requireAuth={true}>
-                        <CRMDashboard />
+                        <CRMDashboardPage />
                       </AuthWrapper>
                     }
                   />

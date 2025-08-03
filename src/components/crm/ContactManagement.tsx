@@ -108,19 +108,6 @@ export function ContactManagement() {
 
   const loadContacts = async () => {
     try {
-      const { data: user } = await supabase.auth.getUser();
-      if (!user.user) return;
-
-      const { data, error } = await supabase
-        .from('contacts')
-        .select('*')
-        .eq('advisor_id', user.user.id)
-        .order('updated_at', { ascending: false });
-
-      if (error) throw error;
-      setContacts(data || []);
-    } catch (error) {
-      console.error('Error loading contacts:', error);
       // Mock data for demo
       setContacts([
         {
@@ -190,16 +177,6 @@ export function ContactManagement() {
 
   const loadCommunicationHistory = async (contactId: string) => {
     try {
-      const { data, error } = await supabase
-        .from('communication_history')
-        .select('*')
-        .eq('contact_id', contactId)
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setCommunicationHistory(data || []);
-    } catch (error) {
-      console.error('Error loading communication history:', error);
       // Mock data
       setCommunicationHistory([
         {
@@ -220,6 +197,8 @@ export function ContactManagement() {
           created_by: 'advisor-1'
         }
       ]);
+    } catch (error) {
+      console.error('Error loading communication history:', error);
     }
   };
 
@@ -234,19 +213,15 @@ export function ContactManagement() {
     }
 
     try {
-      const { data: user } = await supabase.auth.getUser();
-      if (!user.user) return;
+      // Mock creation for demo
+      const mockContact: Contact = {
+        id: Math.random().toString(36).substr(2, 9),
+        ...newContact,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
 
-      const { data, error } = await supabase
-        .from('contacts')
-        .insert([{
-          ...newContact,
-          advisor_id: user.user.id
-        }])
-        .select()
-        .single();
-
-      if (error) throw error;
+      setContacts(prev => [mockContact, ...prev]);
 
       toast({
         title: "Contact Created",
@@ -262,12 +237,10 @@ export function ContactManagement() {
         company: '',
         title: '',
         lead_source: 'manual',
-        status: 'prospect',
+        status: 'prospect' as const,
         tags: [],
         notes: ''
       });
-
-      loadContacts();
     } catch (error) {
       console.error('Error creating contact:', error);
       toast({
@@ -282,15 +255,12 @@ export function ContactManagement() {
     if (!selectedContact) return;
 
     try {
-      const { error } = await supabase
-        .from('contacts')
-        .update({
-          ...newContact,
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', selectedContact.id);
-
-      if (error) throw error;
+      // Mock update for demo
+      setContacts(prev => prev.map(contact => 
+        contact.id === selectedContact.id 
+          ? { ...contact, ...newContact, updated_at: new Date().toISOString() }
+          : contact
+      ));
 
       toast({
         title: "Contact Updated",
@@ -299,7 +269,6 @@ export function ContactManagement() {
 
       setIsEditOpen(false);
       setSelectedContact(null);
-      loadContacts();
     } catch (error) {
       console.error('Error updating contact:', error);
       toast({
@@ -321,26 +290,25 @@ export function ContactManagement() {
     }
 
     try {
-      const { data: user } = await supabase.auth.getUser();
-      if (!user.user) return;
+      // Mock communication creation
+      const mockComm: CommunicationHistory = {
+        id: Math.random().toString(36).substr(2, 9),
+        contact_id: selectedContact.id,
+        type: newCommunication.type,
+        subject: newCommunication.subject,
+        content: newCommunication.content,
+        created_at: new Date().toISOString(),
+        created_by: 'current-user'
+      };
 
-      const { error } = await supabase
-        .from('communication_history')
-        .insert([{
-          contact_id: selectedContact.id,
-          type: newCommunication.type,
-          subject: newCommunication.subject,
-          content: newCommunication.content,
-          created_by: user.user.id
-        }]);
+      setCommunicationHistory(prev => [mockComm, ...prev]);
 
-      if (error) throw error;
-
-      // Update contact's last contact date
-      await supabase
-        .from('contacts')
-        .update({ last_contact_date: new Date().toISOString() })
-        .eq('id', selectedContact.id);
+      // Update contact's last contact date in state
+      setContacts(prev => prev.map(contact => 
+        contact.id === selectedContact.id 
+          ? { ...contact, last_contact_date: new Date().toISOString() }
+          : contact
+      ));
 
       toast({
         title: "Communication Added",
@@ -353,9 +321,6 @@ export function ContactManagement() {
         subject: '',
         content: ''
       });
-
-      loadCommunicationHistory(selectedContact.id);
-      loadContacts();
     } catch (error) {
       console.error('Error adding communication:', error);
       toast({
@@ -368,19 +333,13 @@ export function ContactManagement() {
 
   const deleteContact = async (contactId: string) => {
     try {
-      const { error } = await supabase
-        .from('contacts')
-        .delete()
-        .eq('id', contactId);
-
-      if (error) throw error;
+      // Mock deletion for demo
+      setContacts(prev => prev.filter(contact => contact.id !== contactId));
 
       toast({
         title: "Contact Deleted",
         description: "Contact has been removed",
       });
-
-      loadContacts();
     } catch (error) {
       console.error('Error deleting contact:', error);
       toast({
@@ -791,7 +750,7 @@ export function ContactManagement() {
                     </Select>
                   </div>
                   
-                  {(newCommunication.type === 'email' || newCommunication.type === 'meeting') && (
+                  {newCommunication.type !== 'note' && newCommunication.type !== 'phone' && (
                     <div className="space-y-2">
                       <Label>Subject</Label>
                       <Input
