@@ -1,0 +1,168 @@
+/* Enhanced mobile-responsive modal and dialog fixes */
+
+/* Ensure all modals are responsive and don't overflow on small screens */
+[role="dialog"],
+.modal,
+[data-radix-dialog-content] {
+  max-height: calc(100vh - 2rem) !important;
+  max-width: calc(100vw - 2rem) !important;
+  overflow-y: auto !important;
+  margin: 1rem auto !important;
+}
+
+/* Specific iPhone SE and small mobile fixes */
+@media (max-width: 374px) {
+  [role="dialog"],
+  .modal,
+  [data-radix-dialog-content] {
+    max-height: calc(100vh - 1rem) !important;
+    max-width: calc(100vw - 1rem) !important;
+    margin: 0.5rem auto !important;
+  }
+  
+  /* Ensure buttons are always visible on small screens */
+  .modal-footer,
+  [data-radix-dialog-content] > div:last-child {
+    position: sticky !important;
+    bottom: 0 !important;
+    background: inherit !important;
+    padding-top: 1rem !important;
+    border-top: 1px solid hsl(var(--border)) !important;
+  }
+}
+
+/* Portrait orientation fixes for modals */
+@media (orientation: portrait) and (max-height: 700px) {
+  [role="dialog"],
+  .modal,
+  [data-radix-dialog-content] {
+    max-height: 85vh !important;
+  }
+}
+
+/* Ensure modal content scrolls properly */
+.modal-content,
+[data-radix-dialog-content] > div {
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+
+/* Fix for specific goal modal and other form modals */
+.goals-modal,
+.add-goal-modal,
+.form-modal {
+  min-height: auto !important;
+  height: auto !important;
+}
+
+/* Enhanced touch targets for all interactive elements */
+button,
+[role="button"],
+a,
+input[type="submit"],
+input[type="button"],
+.clickable {
+  min-height: 44px !important;
+  min-width: 44px !important;
+  touch-action: manipulation !important;
+}
+
+/* Book card icons and similar small interactive elements */
+.book-card-icon,
+.card-icon,
+.small-icon-button {
+  min-height: 44px !important;
+  min-width: 44px !important;
+  padding: 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* Hamburger menu and mobile navigation fixes */
+.hamburger-menu,
+.mobile-nav-menu,
+[data-mobile-nav] {
+  max-height: calc(100vh - 60px) !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+
+/* Ensure navigation links are touch-friendly */
+.mobile-nav-link,
+.hamburger-menu a,
+.nav-menu-item {
+  min-height: 44px !important;
+  padding: 12px 16px !important;
+  display: flex !important;
+  align-items: center !important;
+  touch-action: manipulation !important;
+}
+
+/* Sidebar and navigation item visibility fixes */
+.sidebar-nav-item,
+.nav-item {
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* Fix for hidden menu items behind scroll */
+.nav-scroll-container {
+  padding-bottom: 44px !important;
+}
+
+/* Dark mode sidebar icon fixes */
+.dark .sidebar-icon,
+.dark .nav-icon,
+.dark [data-theme="dark"] .sidebar-icon {
+  filter: brightness(1.2) !important;
+}
+
+/* Theme switcher icon updates for dark mode */
+.dark .theme-icon,
+.dark .sidebar .lucide,
+.dark .navigation .lucide {
+  color: hsl(var(--primary-foreground)) !important;
+}
+
+/* Ensure all text has sufficient contrast */
+.low-contrast-fix {
+  color: hsl(var(--foreground)) !important;
+  background-color: hsl(var(--background)) !important;
+}
+
+/* KPI widget contrast fixes */
+.kpi-widget,
+.stats-widget {
+  color: hsl(var(--foreground)) !important;
+}
+
+.kpi-widget .text-muted,
+.stats-widget .text-muted {
+  color: hsl(var(--muted-foreground)) !important;
+  opacity: 0.8 !important;
+}
+
+/* Button contrast improvements */
+.btn-on-gold,
+.gold-background button {
+  background: hsl(var(--secondary)) !important;
+  color: hsl(var(--secondary-foreground)) !important;
+}
+
+/* Animation performance optimizations */
+.animation-smooth {
+  will-change: transform, opacity !important;
+  transform: translateZ(0) !important;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

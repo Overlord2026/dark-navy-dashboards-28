@@ -20,7 +20,7 @@ export const StickyAdvisorSidebar = () => {
 
   return (
     <div className="fixed right-6 top-1/2 transform -translate-y-1/2 z-50 hidden lg:block">
-      <Card className="w-80 bg-gradient-to-br from-primary/95 to-gold-premium/95 text-white border-gold-premium shadow-2xl">
+      <Card className="w-80 bg-gradient-to-br from-navy/95 to-secondary/95 text-white border-secondary shadow-2xl">
         <CardContent className="p-6 space-y-4">
           <div className="text-center">
             <h3 className="text-lg font-bold mb-2">Speak to a Fiduciary Advisor</h3>
