@@ -43,7 +43,7 @@ import { AdvisorCPARiskDashboard } from "./pages/AdvisorCPARiskDashboard";
 import { TaxRulesAdminPage } from "./pages/TaxRulesAdminPage";
 import { TaxPlatformQAPage } from "./pages/TaxPlatformQAPage";
 import { AdminDashboard } from "./pages/AdminDashboard";
-import CRMDashboard from "./pages/CRMDashboard";
+import CRMDashboardPage from "./pages/CRMDashboardPage";
 import { AccountantDashboard } from "./pages/AccountantDashboard";
 import { ConsultantDashboard } from "./pages/ConsultantDashboard";
 import { AttorneyDashboard } from "./pages/AttorneyDashboard";
