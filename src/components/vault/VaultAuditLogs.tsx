@@ -88,10 +88,10 @@ export function VaultAuditLogs({ vaultId }: VaultAuditLogsProps) {
       // Map the data to match our interface
       const mappedLogs = (data || []).map(log => ({
         ...log,
-        resource_type: log.resource_type || 'vault',
-        details: log.metadata as Record<string, any> || {},
-        ip_address: log.ip_address as string || undefined,
-        user_agent: log.user_agent as string || undefined
+        resource_type: log.action_type || 'vault',
+        details: (log.metadata as Record<string, any>) || {},
+        ip_address: (log.ip_address as string) || '',
+        user_agent: (log.user_agent as string) || ''
       }));
       
       setLogs(mappedLogs);
