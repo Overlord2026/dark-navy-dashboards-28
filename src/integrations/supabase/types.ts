@@ -19426,6 +19426,39 @@ export type Database = {
         }
         Relationships: []
       }
+      vault_encryption_keys: {
+        Row: {
+          created_at: string
+          created_by: string
+          encrypted_master_key: string
+          id: string
+          is_active: boolean
+          key_derivation_salt: string
+          role_type: string
+          vault_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          encrypted_master_key: string
+          id?: string
+          is_active?: boolean
+          key_derivation_salt: string
+          role_type: string
+          vault_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          encrypted_master_key?: string
+          id?: string
+          is_active?: boolean
+          key_derivation_salt?: string
+          role_type?: string
+          vault_id?: string
+        }
+        Relationships: []
+      }
       vault_files: {
         Row: {
           chunk_count: number | null
@@ -19617,6 +19650,45 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      vault_sessions: {
+        Row: {
+          created_at: string
+          expires_at: string
+          id: string
+          ip_address: unknown | null
+          last_activity: string
+          session_token: string
+          two_factor_verified: boolean
+          user_agent: string | null
+          user_id: string
+          vault_id: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at: string
+          id?: string
+          ip_address?: unknown | null
+          last_activity?: string
+          session_token: string
+          two_factor_verified?: boolean
+          user_agent?: string | null
+          user_id: string
+          vault_id: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string
+          id?: string
+          ip_address?: unknown | null
+          last_activity?: string
+          session_token?: string
+          two_factor_verified?: boolean
+          user_agent?: string | null
+          user_id?: string
+          vault_id?: string
+        }
+        Relationships: []
       }
       vendor_learning: {
         Row: {
@@ -20243,6 +20315,10 @@ export type Database = {
         Returns: undefined
       }
       cleanup_expired_otp_codes: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      cleanup_expired_vault_sessions: {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
@@ -20930,6 +21006,10 @@ export type Database = {
           is_valid: boolean
           error_message: string
         }[]
+      }
+      verify_vault_2fa_requirement: {
+        Args: { p_user_id: string }
+        Returns: boolean
       }
     }
     Enums: {
