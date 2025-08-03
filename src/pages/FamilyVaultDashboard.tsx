@@ -224,10 +224,23 @@ export default function FamilyVaultDashboard() {
             )}
           </div>
         </div>
-        <div className="flex gap-2">
-          <Button onClick={() => setShowMessageWizard(true)} className="gap-2">
-            <Plus className="h-4 w-4" />
-            Leave Message
+        <div className="flex flex-col sm:flex-row gap-3">
+          <Button 
+            onClick={() => setShowMessageWizard(true)} 
+            variant="gold"
+            size="lg"
+            className="gap-2 min-h-12 touch-target-large animate-float"
+          >
+            <Plus className="h-5 w-5" />
+            Record a Message
+          </Button>
+          <Button 
+            variant="premium"
+            size="lg"
+            className="gap-2 min-h-12 touch-target-large"
+          >
+            <Users className="h-5 w-5" />
+            Invite Family
           </Button>
         </div>
       </div>

@@ -13,7 +13,7 @@ import {
   FileText, 
   Lock,
   Camera,
-  Smartphone
+  X
 } from 'lucide-react';
 import { useVaultUpload } from '@/hooks/useVaultUpload';
 import { Capacitor } from '@capacitor/core';
@@ -22,16 +22,20 @@ import { Camera as CapacitorCamera, CameraResultType, CameraSource } from '@capa
 interface SecureFileUploadProps {
   vaultId: string;
   onUploadComplete?: (fileId: string) => void;
+  onClose?: () => void;
+  onSuccess?: () => void;
   maxSize?: number; // in bytes
   acceptedTypes?: string[];
   showMobileCapture?: boolean;
 }
 
 export function SecureFileUpload({ 
-  vaultId, 
+  vaultId,
   onUploadComplete,
-  maxSize = 100 * 1024 * 1024, // 100MB default
-  acceptedTypes = ['image/*', 'video/*', 'audio/*', 'application/pdf', 'text/*'],
+  onClose,
+  onSuccess,
+  maxSize = 50 * 1024 * 1024, // 50MB default
+  acceptedTypes = ['image/*', 'video/*', 'audio/*', 'application/pdf', '.doc,.docx'],
   showMobileCapture = true
 }: SecureFileUploadProps) {
   const { uploadFile, uploadProgress, isUploading } = useVaultUpload();
@@ -66,6 +70,9 @@ export function SecureFileUpload({
       }
     }
     setSelectedFiles([]);
+    if (onSuccess) {
+      onSuccess();
+    }
   };
 
   const capturePhoto = async () => {
@@ -81,7 +88,7 @@ export function SecureFileUpload({
         // Convert dataUrl to File
         const response = await fetch(image.dataUrl);
         const blob = await response.blob();
-        const file = new File([blob], `photo_${Date.now()}.jpg`, { type: 'image/jpeg' });
+        const file = new window.File([blob], `photo_${Date.now()}.jpg`, { type: 'image/jpeg' });
         setSelectedFiles(prev => [...prev, file]);
       }
     } catch (error) {
@@ -125,144 +132,149 @@ export function SecureFileUpload({
   };
 
   return (
-    <div className="space-y-6">
-      {/* Upload Area */}
-      <Card>
+    <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
+      <Card className="w-full max-w-2xl mx-auto bg-background border-primary/20 shadow-2xl">
         <CardContent className="p-6">
-          <div
-            {...getRootProps()}
-            className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${
-              isDragActive 
-                ? 'border-primary bg-primary/5' 
-                : 'border-muted-foreground/25 hover:border-primary/50'
-            }`}
-          >
-            <input {...getInputProps()} />
-            <div className="space-y-4">
-              <div className="flex justify-center">
-                <div className="p-4 bg-primary/10 rounded-full">
-                  <Upload className="h-8 w-8 text-primary" />
-                </div>
-              </div>
-              <div>
-                <h3 className="font-semibold text-lg">
-                  {isDragActive ? 'Drop files here' : 'Upload Files to Your Vault'}
-                </h3>
-                <p className="text-muted-foreground mt-2">
-                  Drag & drop files here, or click to select files
-                </p>
-                <div className="flex items-center justify-center gap-2 mt-3">
-                  <Lock className="h-4 w-4 text-green-600" />
-                  <span className="text-sm text-green-600 font-medium">
-                    AES-256 Encrypted
-                  </span>
-                </div>
-              </div>
-            </div>
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-gold to-emerald bg-clip-text text-transparent">
+              Secure File Upload
+            </h2>
+            {onClose && (
+              <Button variant="ghost" size="sm" onClick={onClose}>
+                <X className="h-4 w-4" />
+              </Button>
+            )}
           </div>
-        </CardContent>
-      </Card>
-
-      {/* Mobile Capture Options */}
-      {showMobileCapture && (
-        <Card>
-          <CardContent className="p-6">
-            <h4 className="font-semibold mb-4 flex items-center gap-2">
-              <Smartphone className="h-4 w-4" />
-              Mobile Capture
-            </h4>
-            <div className="flex gap-3">
-              <Button 
-                variant="outline" 
-                onClick={capturePhoto}
-                className="flex-1 gap-2"
-              >
-                <Camera className="h-4 w-4" />
-                Take Photo
-              </Button>
-              <Button 
-                variant="outline" 
-                onClick={captureVideo}
-                className="flex-1 gap-2"
-              >
-                <Video className="h-4 w-4" />
-                Record Video
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Selected Files */}
-      {selectedFiles.length > 0 && (
-        <Card>
-          <CardContent className="p-6">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <h4 className="font-semibold">Selected Files ({selectedFiles.length})</h4>
-                <Button 
-                  onClick={handleUpload}
-                  disabled={isUploading}
-                  className="gap-2"
-                >
-                  <Lock className="h-4 w-4" />
-                  {isUploading ? 'Encrypting & Uploading...' : 'Secure Upload'}
-                </Button>
+          <div className="space-y-6">
+            {/* Enhanced Mobile-First Dropzone */}
+            <div
+              {...getRootProps()}
+              className={`border-2 border-dashed rounded-xl p-8 text-center transition-all duration-300 touch-target-large cursor-pointer ${
+                isDragActive 
+                  ? 'border-gold bg-gold/10 shadow-lg shadow-gold/25' 
+                  : 'border-muted-foreground/25 hover:border-gold/50 hover:bg-gold/5'
+              }`}
+            >
+              <input {...getInputProps()} />
+              <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-gold to-emerald rounded-full flex items-center justify-center">
+                <Upload className="h-8 w-8 text-navy" />
               </div>
-
-              {/* Upload Progress */}
-              {isUploading && (
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between text-sm">
-                    <span>Upload Progress</span>
-                    <span>{Math.round(uploadProgress.progress)}%</span>
-                  </div>
-                  <Progress value={uploadProgress.progress} className="h-2" />
-                </div>
-              )}
-
-              {/* File List */}
-              <div className="space-y-2">
-                {selectedFiles.map((file, index) => (
-                  <div key={index} className="flex items-center gap-3 p-3 border rounded-lg">
-                    <div className="p-2 bg-muted rounded">
-                      {getFileIcon(file.type)}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-medium truncate">{file.name}</p>
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <span>{formatFileSize(file.size)}</span>
-                        <Badge variant="outline">{file.type}</Badge>
-                      </div>
-                    </div>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setSelectedFiles(prev => prev.filter((_, i) => i !== index))}
-                      disabled={isUploading}
-                    >
-                      Remove
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Security Info */}
-      <Card className="border-green-200 bg-green-50">
-        <CardContent className="p-4">
-          <div className="flex items-start gap-3">
-            <Lock className="h-5 w-5 text-green-600 mt-0.5" />
-            <div className="space-y-1">
-              <h5 className="font-medium text-green-800">Secure Upload</h5>
-              <p className="text-sm text-green-700">
-                All files are encrypted with AES-256 before upload and stored securely in your family vault. 
-                Large files are automatically chunked for reliable transmission.
+              <h3 className="text-xl font-semibold mb-2 text-gold">
+                {isDragActive ? 'Drop files here' : 'Upload Family Files'}
+              </h3>
+              <p className="text-muted-foreground mb-4">
+                Tap to browse or drag & drop files
+              </p>
+              <p className="text-xs text-muted-foreground">
+                Max size: {formatFileSize(maxSize)} • All file types supported
               </p>
             </div>
+
+            {/* Enhanced Mobile Capture Options */}
+            {showMobileCapture && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <Button
+                  variant="outline"
+                  onClick={capturePhoto}
+                  size="lg"
+                  className="flex items-center gap-3 p-6 h-auto touch-target-large border-emerald/30 hover:bg-emerald/10 hover:border-emerald/50"
+                >
+                  <div className="w-10 h-10 bg-emerald/20 rounded-full flex items-center justify-center">
+                    <Camera className="h-5 w-5 text-emerald" />
+                  </div>
+                  <div className="text-left">
+                    <div className="font-semibold text-emerald">Take Photo</div>
+                    <div className="text-sm text-muted-foreground">Capture with camera</div>
+                  </div>
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={captureVideo}
+                  size="lg"
+                  className="flex items-center gap-3 p-6 h-auto touch-target-large border-primary/30 hover:bg-primary/10 hover:border-primary/50"
+                >
+                  <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center">
+                    <Video className="h-5 w-5 text-primary" />
+                  </div>
+                  <div className="text-left">
+                    <div className="font-semibold text-primary">Record Video</div>
+                    <div className="text-sm text-muted-foreground">Capture moment</div>
+                  </div>
+                </Button>
+              </div>
+            )}
+
+            {/* Selected Files */}
+            {selectedFiles.length > 0 && (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <h4 className="font-semibold">Selected Files ({selectedFiles.length})</h4>
+                  <Button 
+                    onClick={handleUpload}
+                    disabled={isUploading}
+                    variant="gold"
+                    size="lg"
+                    className="gap-2 touch-target-large"
+                  >
+                    <Lock className="h-4 w-4" />
+                    {isUploading ? 'Encrypting & Uploading...' : 'Secure Upload'}
+                  </Button>
+                </div>
+
+                {/* Upload Progress */}
+                {isUploading && (
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between text-sm">
+                      <span>Upload Progress</span>
+                      <span>{Math.round(uploadProgress.progress)}%</span>
+                    </div>
+                    <Progress value={uploadProgress.progress} className="h-2" />
+                  </div>
+                )}
+
+                {/* File List */}
+                <div className="space-y-2 max-h-64 overflow-y-auto">
+                  {selectedFiles.map((file, index) => (
+                    <div key={index} className="flex items-center gap-3 p-3 border rounded-lg bg-card/50">
+                      <div className="p-2 bg-muted rounded">
+                        {getFileIcon(file.type)}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium truncate">{file.name}</p>
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <span>{formatFileSize(file.size)}</span>
+                          <Badge variant="outline">{file.type}</Badge>
+                        </div>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setSelectedFiles(prev => prev.filter((_, i) => i !== index))}
+                        disabled={isUploading}
+                      >
+                        Remove
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Security Info */}
+            <Card className="border-emerald/20 bg-emerald/5">
+              <CardContent className="p-4">
+                <div className="flex items-start gap-3">
+                  <Lock className="h-5 w-5 text-emerald mt-0.5" />
+                  <div className="space-y-1">
+                    <h5 className="font-medium text-emerald">Secure Upload</h5>
+                    <p className="text-sm text-muted-foreground">
+                      All files are encrypted with AES-256 before upload and stored securely in your family vault. 
+                      Large files are automatically chunked for reliable transmission.
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </CardContent>
       </Card>

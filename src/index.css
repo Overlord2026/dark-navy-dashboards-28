@@ -43,11 +43,15 @@
     --emerald: 158 64% 52%; /* Emerald #169873 */
     --emerald-foreground: 0 0% 100%; /* White text on emerald */
 
-    /* Status Colors */
-    --success: 158 64% 52%; /* Emerald #169873 */
-    --success-foreground: 0 0% 100%;
-    
-    --warning: 51 100% 50%; /* Gold #FFD700 */
+  /* Status Colors */
+  --success: 158 64% 52%; /* Emerald #169873 */
+  --success-foreground: 0 0% 100%;
+  
+  --warning: 51 100% 50%; /* Gold #FFD700 */
+  --warning-foreground: 216 29% 11%;
+
+  /* Touch Targets */
+  --touch-target: 44px; /* iOS Human Interface Guidelines minimum */
     --warning-foreground: 216 29% 11%;
 
     --destructive: 0 84% 60%; /* Red for errors */

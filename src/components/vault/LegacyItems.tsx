@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { FileText, Video, Mic, Image, Plus, Calendar, Eye, Download } from 'lucide-react';
+import { FileText, Video, Mic, Image, Plus, Calendar, Eye, Download, Upload } from 'lucide-react';
 import { LeaveMessageWizard } from './LeaveMessageWizard';
+import { SecureFileUpload } from './SecureFileUpload';
+import { VaultCTASection } from './VaultCTASection';
 import { useFamilyVault } from '@/hooks/useFamilyVault';
 import type { Database } from '@/integrations/supabase/types';
 
@@ -18,6 +20,7 @@ interface LegacyItemsProps {
 
 export function LegacyItems({ vaultId, items, onItemAdded }: LegacyItemsProps) {
   const [showMessageWizard, setShowMessageWizard] = useState(false);
+  const [showFileUpload, setShowFileUpload] = useState(false);
   const { members } = useFamilyVault(vaultId);
 
   const getItemIcon = (itemType: string) => {
@@ -62,19 +65,24 @@ export function LegacyItems({ vaultId, items, onItemAdded }: LegacyItemsProps) {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold">Legacy Items</h2>
-          <p className="text-muted-foreground">
-            Messages, videos, and memories preserved for your family.
-          </p>
-        </div>
-        
-        <Button onClick={() => setShowMessageWizard(true)} className="gap-2">
-          <Plus className="h-4 w-4" />
-          Leave Message
-        </Button>
+      <div className="text-center mb-8">
+        <h2 className="text-3xl font-bold mb-3 bg-gradient-to-r from-gold via-primary to-emerald bg-clip-text text-transparent">
+          Legacy Items
+        </h2>
+        <p className="text-muted-foreground text-lg">
+          Messages, videos, and memories preserved for your family's future generations.
+        </p>
       </div>
+
+      {/* Enhanced CTA Section */}
+      <VaultCTASection 
+        onRecordMessage={() => setShowMessageWizard(true)}
+        onUploadFile={() => setShowFileUpload(true)}
+        onInviteFamily={() => {
+          // TODO: Implement invite family functionality
+          console.log('Invite family clicked');
+        }}
+      />
 
       <div className="grid gap-4">
         {items.filter(item => item.status === 'active').map((item) => (
@@ -167,6 +175,17 @@ export function LegacyItems({ vaultId, items, onItemAdded }: LegacyItemsProps) {
           onClose={() => setShowMessageWizard(false)}
           onSuccess={() => {
             setShowMessageWizard(false);
+            onItemAdded();
+          }}
+        />
+      )}
+
+      {showFileUpload && (
+        <SecureFileUpload
+          vaultId={vaultId}
+          onClose={() => setShowFileUpload(false)}
+          onSuccess={() => {
+            setShowFileUpload(false);
             onItemAdded();
           }}
         />
