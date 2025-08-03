@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { ThreeColumnLayout } from '@/components/layout/ThreeColumnLayout';
 import { DashboardHeader } from '@/components/ui/DashboardHeader';
 import { AttorneyNavigation } from '@/components/attorney/AttorneyNavigation';
+import { Breadcrumbs } from '@/components/navigation/Breadcrumbs';
+import { useBusinessLawDashboard } from '@/hooks/useBusinessLawDashboard';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
@@ -23,6 +25,7 @@ import {
 
 export default function BusinessLawPage() {
   const [searchQuery, setSearchQuery] = useState('');
+  const { businessClients, businessMatters, stats, loading } = useBusinessLawDashboard();
 
   const activeCases = [
     {
@@ -116,6 +119,11 @@ export default function BusinessLawPage() {
   return (
     <ThreeColumnLayout title="Business Law Practice">
       <div className="space-y-6">
+        <Breadcrumbs items={[
+          { label: 'Attorney Dashboard', href: '/attorney-dashboard' },
+          { label: 'Business Law', href: '/attorney/business-law', active: true }
+        ]} />
+
         <DashboardHeader 
           heading="Business Law Practice"
           text="Manage corporate matters, business formation, and commercial legal services."
@@ -140,7 +148,7 @@ export default function BusinessLawPage() {
                   <Briefcase className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">23</div>
+                  <div className="text-2xl font-bold">{stats.activeMatters}</div>
                   <p className="text-xs text-muted-foreground">
                     Currently open
                   </p>
@@ -153,7 +161,7 @@ export default function BusinessLawPage() {
                   <Calendar className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">8</div>
+                  <div className="text-2xl font-bold">{stats.newMattersThisMonth}</div>
                   <p className="text-xs text-muted-foreground">
                     New matters opened
                   </p>
@@ -166,7 +174,7 @@ export default function BusinessLawPage() {
                   <DollarSign className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">$42,500</div>
+                  <div className="text-2xl font-bold">${stats.totalRevenue.toLocaleString()}</div>
                   <p className="text-xs text-muted-foreground">
                     This month
                   </p>
@@ -179,7 +187,7 @@ export default function BusinessLawPage() {
                   <Scale className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">$425</div>
+                  <div className="text-2xl font-bold">${Math.round(stats.averageRate)}</div>
                   <p className="text-xs text-muted-foreground">
                     Per hour
                   </p>
@@ -196,23 +204,23 @@ export default function BusinessLawPage() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {activeCases.map((case_item) => (
-                    <div key={case_item.id} className="flex items-center justify-between p-4 border rounded-lg">
+                  {businessMatters.map((matter) => (
+                    <div key={matter.id} className="flex items-center justify-between p-4 border rounded-lg">
                       <div className="flex items-center gap-3">
-                        {getStatusIcon(case_item.status)}
+                        {getStatusIcon(matter.status)}
                         <div>
-                          <div className="font-medium">{case_item.client}</div>
-                          <div className="text-sm text-muted-foreground">{case_item.matter}</div>
+                          <div className="font-medium">{matter.matter_name}</div>
+                          <div className="text-sm text-muted-foreground">{matter.client_name}</div>
                           <div className="text-xs text-muted-foreground">
-                            {case_item.type} • Due: {case_item.deadline}
+                            {matter.matter_type} • Due: {matter.deadline || 'No deadline'}
                           </div>
                         </div>
                       </div>
                       <div className="flex items-center gap-3">
-                        {getPriorityBadge(case_item.priority)}
-                        {getStatusBadge(case_item.status)}
+                        {getPriorityBadge(matter.priority)}
+                        {getStatusBadge(matter.status)}
                         <div className="text-right">
-                          <div className="text-sm font-medium">{case_item.billing_rate}</div>
+                          <div className="text-sm font-medium">{matter.billing_rate || 'TBD'}</div>
                           <Button variant="outline" size="sm" className="mt-1">
                             View Matter
                           </Button>
@@ -220,6 +228,11 @@ export default function BusinessLawPage() {
                       </div>
                     </div>
                   ))}
+                  {businessMatters.length === 0 && (
+                    <p className="text-muted-foreground text-center py-4">
+                      No business matters yet. Create your first matter.
+                    </p>
+                  )}
                 </div>
               </CardContent>
             </Card>

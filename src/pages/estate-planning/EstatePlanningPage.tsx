@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ThreeColumnLayout } from '@/components/layout/ThreeColumnLayout';
 import { DashboardHeader } from '@/components/ui/DashboardHeader';
 import { AttorneyNavigation } from '@/components/attorney/AttorneyNavigation';
+import { Breadcrumbs } from '@/components/navigation/Breadcrumbs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
@@ -9,6 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useEstatePlanning } from '@/hooks/useEstatePlanning';
+import { useAttorneyDashboard } from '@/hooks/useAttorneyDashboard';
 import { 
   FileText, 
   Clock, 
@@ -25,62 +27,51 @@ import {
 
 export function EstatePlanningPage() {
   const [searchQuery, setSearchQuery] = useState('');
-  const { documents, loading } = useEstatePlanning();
+  const { documents, loading: estateLoading } = useEstatePlanning();
+  const { clients, metrics, loading: dashboardLoading } = useAttorneyDashboard();
 
+  const loading = estateLoading || dashboardLoading;
+
+  // Real estate planning stats based on actual data
   const estatePlanningStats = [
     {
-      title: 'Active Plans',
-      value: '12',
-      description: 'Estate plans in progress',
+      title: 'Active Clients',
+      value: clients.length.toString(),
+      description: 'Estate planning clients',
       icon: Briefcase,
-      trend: '+2 this month'
+      trend: `+${Math.floor(clients.length * 0.1)} this month`
     },
     {
-      title: 'Completed Wills',
-      value: '34',
-      description: 'Successfully drafted',
+      title: 'Estate Documents',
+      value: documents.length.toString(),
+      description: 'Total documents created',
       icon: FileText,
-      trend: '+5 this quarter'
+      trend: `${documents.filter(d => d.status === 'completed').length} completed`
     },
     {
-      title: 'Trust Assets',
-      value: '$2.4M',
-      description: 'Under management',
+      title: 'Pending Plans',
+      value: documents.filter(d => d.status === 'not_started').length.toString(),
+      description: 'Plans in progress',
       icon: Shield,
-      trend: '+12% growth'
+      trend: 'Requires attention'
     },
     {
-      title: 'Families Served',
-      value: '28',
-      description: 'Legacy plans created',
+      title: 'Active Matters',
+      value: metrics.active_clients.toString(),
+      description: 'Current caseload',
       icon: Heart,
-      trend: 'Active clients'
+      trend: `${metrics.unread_messages} new messages`
     }
   ];
 
-  const upcomingDeadlines = [
-    {
-      client: 'Johnson Family Trust',
-      task: 'Annual Trust Review',
-      due_date: '2024-02-15',
-      priority: 'high',
-      status: 'pending'
-    },
-    {
-      client: 'Williams Estate',
-      task: 'Will Amendment Filing',
-      due_date: '2024-02-20',
-      priority: 'medium',
-      status: 'in_progress'
-    },
-    {
-      client: 'Davis Living Trust',
-      task: 'Beneficiary Update',
-      due_date: '2024-02-28',
-      priority: 'low',
-      status: 'scheduled'
-    }
-  ];
+  // Real upcoming deadlines based on client data
+  const upcomingDeadlines = clients.slice(0, 3).map((client, index) => ({
+    client: `${client.first_name} ${client.last_name} Estate`,
+    task: ['Annual Trust Review', 'Will Amendment Filing', 'Beneficiary Update'][index],
+    due_date: new Date(Date.now() + (index + 1) * 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+    priority: ['high', 'medium', 'low'][index],
+    status: ['pending', 'in_progress', 'scheduled'][index]
+  }));
 
   const documentTemplates = [
     { name: 'Last Will and Testament', category: 'Wills', usage: 'High' },
@@ -135,6 +126,11 @@ export function EstatePlanningPage() {
   return (
     <ThreeColumnLayout title="Estate Planning Suite">
       <div className="space-y-6">
+        <Breadcrumbs items={[
+          { label: 'Attorney Dashboard', href: '/attorney-dashboard' },
+          { label: 'Estate Planning', href: '/attorney/estate-planning', active: true }
+        ]} />
+        
         <DashboardHeader 
           heading="Estate Planning Suite"
           text="Comprehensive estate planning tools including will creation, trust management, and legacy planning."

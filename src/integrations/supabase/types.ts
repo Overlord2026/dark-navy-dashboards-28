@@ -1264,7 +1264,22 @@ export type Database = {
           status?: string
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "fk_attorney_client_links_attorney_id"
+            columns: ["attorney_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_attorney_client_links_client_id"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       attorney_client_messages: {
         Row: {
@@ -1321,7 +1336,29 @@ export type Database = {
           sender_type?: string
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "fk_attorney_client_messages_attorney_id"
+            columns: ["attorney_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_attorney_client_messages_client_id"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_attorney_client_messages_sender_id"
+            columns: ["sender_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       attorney_client_shared_documents: {
         Row: {
@@ -1374,6 +1411,27 @@ export type Database = {
             referencedRelation: "attorney_documents_metadata"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "fk_attorney_client_shared_documents_attorney_id"
+            columns: ["attorney_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_attorney_client_shared_documents_client_id"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_attorney_client_shared_documents_shared_by"
+            columns: ["shared_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
         ]
       }
       attorney_dashboard_metrics: {
@@ -1410,7 +1468,15 @@ export type Database = {
           pending_invitations?: number
           unread_messages?: number
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "fk_attorney_dashboard_metrics_attorney_id"
+            columns: ["attorney_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       attorney_document_access_log: {
         Row: {
@@ -3126,7 +3192,22 @@ export type Database = {
           read_at?: string | null
           title?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "fk_client_portal_notifications_attorney_id"
+            columns: ["attorney_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_client_portal_notifications_client_id"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       client_questionnaires: {
         Row: {
