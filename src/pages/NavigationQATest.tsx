@@ -7,6 +7,7 @@ import QASummaryReport from "@/components/qa/QASummaryReport";
 import EndToEndQARunner from "@/components/qa/EndToEndQARunner";
 import { PersonaSequentialQA } from "@/components/qa/PersonaSequentialQA";
 import { ClientRoleSecurityAudit } from "@/components/testing/ClientRoleSecurityAudit";
+import { UIUXAuditTester } from "@/components/testing/UIUXAuditTester";
 import { measureRoutePerformance } from "@/services/performance/performanceMonitorService";
 import { useAuth } from "@/context/AuthContext";
 import { Navigate } from "react-router-dom";
@@ -39,6 +40,7 @@ const NavigationQATest: React.FC = () => {
       />
       
       <div className="grid grid-cols-1 gap-6">
+        <UIUXAuditTester />
         <ClientRoleSecurityAudit />
         <PersonaSequentialQA />
         <EndToEndQARunner />
