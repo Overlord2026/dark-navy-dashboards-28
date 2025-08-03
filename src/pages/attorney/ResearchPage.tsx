@@ -146,7 +146,12 @@ export default function ResearchPage() {
                         onChange={(e) => setSearchQuery(e.target.value)}
                         className="flex-1"
                       />
-                      <Button>
+                      <Button
+                        onClick={() => {
+                          // TODO: Execute search
+                          console.log('Searching for:', searchQuery);
+                        }}
+                      >
                         <Search className="h-4 w-4 mr-2" />
                         Search
                       </Button>
@@ -213,7 +218,14 @@ export default function ResearchPage() {
                           {search.date} • {search.results} results
                         </div>
                       </div>
-                      <Button variant="outline" size="sm">
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => {
+                          // TODO: Execute search again
+                          console.log('Search again:', search.query);
+                        }}
+                      >
                         <Search className="h-4 w-4 mr-1" />
                         Search Again
                       </Button>

@@ -220,7 +220,14 @@ export function EstatePlanningPage() {
                         </div>
                         <div className="text-right">
                           {getStatusBadge(doc.status)}
-                          <Button variant="outline" size="sm" className="mt-1">
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => {
+                              // TODO: Navigate to document view
+                              console.log('View document:', doc.id);
+                            }}
+                          >
                             View
                           </Button>
                         </div>
@@ -257,7 +264,12 @@ export function EstatePlanningPage() {
                     />
                   </div>
                   <div className="flex items-end">
-                    <Button>
+                    <Button 
+                      onClick={() => {
+                        // TODO: Open new document creation flow
+                        console.log('Create new estate planning document');
+                      }}
+                    >
                       <Plus className="h-4 w-4 mr-2" />
                       New Document
                     </Button>
@@ -282,8 +294,26 @@ export function EstatePlanningPage() {
                       <div className="flex items-center gap-3">
                         {getStatusBadge(doc.status)}
                         <div className="flex gap-2">
-                          <Button variant="outline" size="sm">Edit</Button>
-                          <Button variant="outline" size="sm">Share</Button>
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => {
+                              // TODO: Open document editor
+                              console.log('Edit document:', doc.id);
+                            }}
+                          >
+                            Edit
+                          </Button>
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => {
+                              // TODO: Open share dialog
+                              console.log('Share document:', doc.id);
+                            }}
+                          >
+                            Share
+                          </Button>
                         </div>
                       </div>
                     </div>
@@ -345,7 +375,14 @@ export function EstatePlanningPage() {
                           <div className="text-sm font-medium">Due: {item.due_date}</div>
                           {getStatusBadge(item.status)}
                         </div>
-                        <Button variant="outline" size="sm">
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => {
+                            // TODO: Open deadline details
+                            console.log('View deadline details:', item);
+                          }}
+                        >
                           View Details
                         </Button>
                       </div>
@@ -377,8 +414,27 @@ export function EstatePlanningPage() {
                         Category: {template.category}
                       </p>
                       <div className="flex gap-2">
-                        <Button variant="outline" size="sm" className="flex-1">Use Template</Button>
-                        <Button variant="outline" size="sm">Preview</Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="flex-1"
+                          onClick={() => {
+                            // TODO: Use template functionality
+                            console.log('Use template:', template.name);
+                          }}
+                        >
+                          Use Template
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => {
+                            // TODO: Preview template
+                            console.log('Preview template:', template.name);
+                          }}
+                        >
+                          Preview
+                        </Button>
                       </div>
                     </div>
                   ))}

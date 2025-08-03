@@ -216,7 +216,12 @@ export default function ContractsPage() {
                     </Select>
                   </div>
                   <div className="flex items-end">
-                    <Button>
+                    <Button
+                      onClick={() => {
+                        // TODO: Open new contract creation
+                        console.log('Create new contract');
+                      }}
+                    >
                       <FileText className="h-4 w-4 mr-2" />
                       New Contract
                     </Button>
@@ -241,11 +246,25 @@ export default function ContractsPage() {
                       <div className="flex items-center gap-3">
                         {getStatusBadge(contract.status)}
                         <div className="flex gap-2">
-                          <Button variant="outline" size="sm">
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => {
+                              // TODO: Edit contract
+                              console.log('Edit contract:', contract.id);
+                            }}
+                          >
                             <Edit className="h-4 w-4 mr-1" />
                             Edit
                           </Button>
-                          <Button variant="outline" size="sm">
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => {
+                              // TODO: Download contract
+                              console.log('Download contract:', contract.id);
+                            }}
+                          >
                             <Download className="h-4 w-4 mr-1" />
                             Download
                           </Button>
@@ -276,7 +295,12 @@ export default function ContractsPage() {
                       onChange={(e) => setSearchQuery(e.target.value)}
                     />
                   </div>
-                  <Button>
+                  <Button
+                    onClick={() => {
+                      // TODO: Open template upload
+                      console.log('Upload template');
+                    }}
+                  >
                     <Upload className="h-4 w-4 mr-2" />
                     Upload Template
                   </Button>
@@ -295,11 +319,25 @@ export default function ContractsPage() {
                         <p>Updated: {template.last_updated}</p>
                       </div>
                       <div className="flex gap-2">
-                        <Button variant="outline" size="sm">
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => {
+                            // TODO: Use template
+                            console.log('Use template:', template.name);
+                          }}
+                        >
                           <Copy className="h-4 w-4 mr-1" />
                           Use
                         </Button>
-                        <Button variant="outline" size="sm">
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => {
+                            // TODO: Edit template
+                            console.log('Edit template:', template.name);
+                          }}
+                        >
                           <Edit className="h-4 w-4 mr-1" />
                           Edit
                         </Button>
@@ -326,7 +364,16 @@ export default function ContractsPage() {
                     <p className="text-sm text-muted-foreground mb-3">
                       Draft → Legal Review → Client Review → Execution
                     </p>
-                    <Button variant="outline" size="sm">Configure</Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => {
+                        // TODO: Configure workflow
+                        console.log('Configure standard review workflow');
+                      }}
+                    >
+                      Configure
+                    </Button>
                   </div>
 
                   <div className="p-4 border rounded-lg">
@@ -334,7 +381,16 @@ export default function ContractsPage() {
                     <p className="text-sm text-muted-foreground mb-3">
                       Template → HR Review → Legal Approval → Signing
                     </p>
-                    <Button variant="outline" size="sm">Configure</Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => {
+                        // TODO: Configure employment workflow
+                        console.log('Configure employment contract workflow');
+                      }}
+                    >
+                      Configure
+                    </Button>
                   </div>
                 </div>
               </CardContent>

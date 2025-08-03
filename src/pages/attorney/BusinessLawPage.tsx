@@ -221,7 +221,15 @@ export default function BusinessLawPage() {
                         {getStatusBadge(matter.status)}
                         <div className="text-right">
                           <div className="text-sm font-medium">{matter.billing_rate || 'TBD'}</div>
-                          <Button variant="outline" size="sm" className="mt-1">
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="mt-1"
+                            onClick={() => {
+                              // TODO: Navigate to matter view
+                              console.log('View matter:', matter.id);
+                            }}
+                          >
                             View Matter
                           </Button>
                         </div>
@@ -258,7 +266,12 @@ export default function BusinessLawPage() {
                     />
                   </div>
                   <div className="flex items-end">
-                    <Button>
+                    <Button
+                      onClick={() => {
+                        // TODO: Open new document creation
+                        console.log('Create new business document');
+                      }}
+                    >
                       <FileText className="h-4 w-4 mr-2" />
                       New Document
                     </Button>
@@ -277,8 +290,26 @@ export default function BusinessLawPage() {
                         Last used: {doc.last_used}
                       </p>
                       <div className="flex gap-2">
-                        <Button variant="outline" size="sm">Use</Button>
-                        <Button variant="outline" size="sm">Edit</Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => {
+                            // TODO: Use template
+                            console.log('Use template:', doc.name);
+                          }}
+                        >
+                          Use
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => {
+                            // TODO: Edit template
+                            console.log('Edit template:', doc.name);
+                          }}
+                        >
+                          Edit
+                        </Button>
                       </div>
                     </div>
                   ))}
@@ -311,7 +342,14 @@ export default function BusinessLawPage() {
                           <div className="text-sm font-medium">Due: {item.due_date}</div>
                           {getStatusBadge(item.status)}
                         </div>
-                        <Button variant="outline" size="sm">
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => {
+                            // TODO: View compliance details
+                            console.log('View compliance item:', item);
+                          }}
+                        >
                           View Details
                         </Button>
                       </div>
@@ -343,7 +381,13 @@ export default function BusinessLawPage() {
                     <p className="text-sm text-muted-foreground">Pending payment</p>
                   </div>
                 </div>
-                <Button className="w-full">
+                <Button 
+                  className="w-full"
+                  onClick={() => {
+                    // TODO: Generate invoices functionality
+                    console.log('Generate invoices');
+                  }}
+                >
                   <DollarSign className="h-4 w-4 mr-2" />
                   Generate Invoices
                 </Button>
