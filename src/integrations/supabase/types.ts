@@ -6225,6 +6225,51 @@ export type Database = {
         }
         Relationships: []
       }
+      family_vaults: {
+        Row: {
+          created_at: string
+          description: string | null
+          encryption_key_id: string
+          family_motto: string | null
+          family_values: string[] | null
+          id: string
+          is_active: boolean
+          tenant_id: string | null
+          updated_at: string
+          user_id: string
+          vault_name: string
+          vault_photo_url: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          encryption_key_id?: string
+          family_motto?: string | null
+          family_values?: string[] | null
+          id?: string
+          is_active?: boolean
+          tenant_id?: string | null
+          updated_at?: string
+          user_id: string
+          vault_name: string
+          vault_photo_url?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          encryption_key_id?: string
+          family_motto?: string | null
+          family_values?: string[] | null
+          id?: string
+          is_active?: boolean
+          tenant_id?: string | null
+          updated_at?: string
+          user_id?: string
+          vault_name?: string
+          vault_photo_url?: string | null
+        }
+        Relationships: []
+      }
       faqs: {
         Row: {
           answer: string
@@ -9576,6 +9621,175 @@ export type Database = {
             columns: ["campaign_id"]
             isOneToOne: false
             referencedRelation: "marketing_campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      legacy_delivery_rules: {
+        Row: {
+          created_at: string
+          delivery_method: string
+          executor_user_id: string | null
+          id: string
+          legacy_item_id: string
+          require_executor_approval: boolean
+          status: string
+          trigger_condition: Json | null
+          trigger_date: string | null
+          trigger_event: string | null
+          trigger_type: string
+        }
+        Insert: {
+          created_at?: string
+          delivery_method?: string
+          executor_user_id?: string | null
+          id?: string
+          legacy_item_id: string
+          require_executor_approval?: boolean
+          status?: string
+          trigger_condition?: Json | null
+          trigger_date?: string | null
+          trigger_event?: string | null
+          trigger_type: string
+        }
+        Update: {
+          created_at?: string
+          delivery_method?: string
+          executor_user_id?: string | null
+          id?: string
+          legacy_item_id?: string
+          require_executor_approval?: boolean
+          status?: string
+          trigger_condition?: Json | null
+          trigger_date?: string | null
+          trigger_event?: string | null
+          trigger_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "legacy_delivery_rules_legacy_item_id_fkey"
+            columns: ["legacy_item_id"]
+            isOneToOne: false
+            referencedRelation: "legacy_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      legacy_items: {
+        Row: {
+          content_type: string | null
+          content_url: string | null
+          created_at: string
+          created_by: string
+          description: string | null
+          duration_seconds: number | null
+          encryption_metadata: Json | null
+          file_size: number | null
+          id: string
+          is_encrypted: boolean
+          item_type: string
+          status: string
+          thumbnail_url: string | null
+          title: string
+          updated_at: string
+          vault_id: string
+        }
+        Insert: {
+          content_type?: string | null
+          content_url?: string | null
+          created_at?: string
+          created_by: string
+          description?: string | null
+          duration_seconds?: number | null
+          encryption_metadata?: Json | null
+          file_size?: number | null
+          id?: string
+          is_encrypted?: boolean
+          item_type: string
+          status?: string
+          thumbnail_url?: string | null
+          title: string
+          updated_at?: string
+          vault_id: string
+        }
+        Update: {
+          content_type?: string | null
+          content_url?: string | null
+          created_at?: string
+          created_by?: string
+          description?: string | null
+          duration_seconds?: number | null
+          encryption_metadata?: Json | null
+          file_size?: number | null
+          id?: string
+          is_encrypted?: boolean
+          item_type?: string
+          status?: string
+          thumbnail_url?: string | null
+          title?: string
+          updated_at?: string
+          vault_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "legacy_items_vault_id_fkey"
+            columns: ["vault_id"]
+            isOneToOne: false
+            referencedRelation: "family_vaults"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      legacy_recipients: {
+        Row: {
+          created_at: string
+          delivered_at: string | null
+          delivery_status: string
+          id: string
+          legacy_item_id: string
+          personal_message: string | null
+          recipient_email: string | null
+          recipient_name: string | null
+          vault_member_id: string | null
+          viewed_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          delivered_at?: string | null
+          delivery_status?: string
+          id?: string
+          legacy_item_id: string
+          personal_message?: string | null
+          recipient_email?: string | null
+          recipient_name?: string | null
+          vault_member_id?: string | null
+          viewed_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          delivered_at?: string | null
+          delivery_status?: string
+          id?: string
+          legacy_item_id?: string
+          personal_message?: string | null
+          recipient_email?: string | null
+          recipient_name?: string | null
+          vault_member_id?: string | null
+          viewed_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "legacy_recipients_legacy_item_id_fkey"
+            columns: ["legacy_item_id"]
+            isOneToOne: false
+            referencedRelation: "legacy_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "legacy_recipients_vault_member_id_fkey"
+            columns: ["vault_member_id"]
+            isOneToOne: false
+            referencedRelation: "vault_members"
             referencedColumns: ["id"]
           },
         ]
@@ -19041,6 +19255,149 @@ export type Database = {
           zip_code?: string | null
         }
         Relationships: []
+      }
+      vault_access_logs: {
+        Row: {
+          action_type: string
+          created_at: string
+          id: string
+          ip_address: unknown | null
+          legacy_item_id: string | null
+          metadata: Json | null
+          user_agent: string | null
+          user_email: string | null
+          user_id: string | null
+          vault_id: string
+        }
+        Insert: {
+          action_type: string
+          created_at?: string
+          id?: string
+          ip_address?: unknown | null
+          legacy_item_id?: string | null
+          metadata?: Json | null
+          user_agent?: string | null
+          user_email?: string | null
+          user_id?: string | null
+          vault_id: string
+        }
+        Update: {
+          action_type?: string
+          created_at?: string
+          id?: string
+          ip_address?: unknown | null
+          legacy_item_id?: string | null
+          metadata?: Json | null
+          user_agent?: string | null
+          user_email?: string | null
+          user_id?: string | null
+          vault_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vault_access_logs_legacy_item_id_fkey"
+            columns: ["legacy_item_id"]
+            isOneToOne: false
+            referencedRelation: "legacy_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vault_access_logs_vault_id_fkey"
+            columns: ["vault_id"]
+            isOneToOne: false
+            referencedRelation: "family_vaults"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vault_demo_content: {
+        Row: {
+          category: string | null
+          content_type: string
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean
+          sample_url: string | null
+          thumbnail_url: string | null
+          title: string
+        }
+        Insert: {
+          category?: string | null
+          content_type: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          sample_url?: string | null
+          thumbnail_url?: string | null
+          title: string
+        }
+        Update: {
+          category?: string | null
+          content_type?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          sample_url?: string | null
+          thumbnail_url?: string | null
+          title?: string
+        }
+        Relationships: []
+      }
+      vault_members: {
+        Row: {
+          accepted_at: string | null
+          created_by: string
+          email: string
+          first_name: string | null
+          id: string
+          invited_at: string
+          last_name: string | null
+          permissions: Json
+          role: string
+          status: string
+          user_id: string | null
+          vault_id: string
+        }
+        Insert: {
+          accepted_at?: string | null
+          created_by: string
+          email: string
+          first_name?: string | null
+          id?: string
+          invited_at?: string
+          last_name?: string | null
+          permissions?: Json
+          role?: string
+          status?: string
+          user_id?: string | null
+          vault_id: string
+        }
+        Update: {
+          accepted_at?: string | null
+          created_by?: string
+          email?: string
+          first_name?: string | null
+          id?: string
+          invited_at?: string
+          last_name?: string | null
+          permissions?: Json
+          role?: string
+          status?: string
+          user_id?: string | null
+          vault_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vault_members_vault_id_fkey"
+            columns: ["vault_id"]
+            isOneToOne: false
+            referencedRelation: "family_vaults"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       vendor_learning: {
         Row: {
