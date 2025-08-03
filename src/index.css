@@ -498,6 +498,60 @@
   }
   
   .form-label {
+    @apply text-sm font-medium text-foreground mb-2 block;
+  }
+
+  /* Mobile-First CRM Components */
+  .crm-card {
+    @apply bg-card border-border rounded-lg p-4 hover:shadow-lg transition-all duration-300 hover:scale-105;
+  }
+
+  .crm-grid {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4;
+  }
+
+  .touch-friendly {
+    @apply min-h-touch min-w-touch p-3 rounded-lg transition-all duration-200;
+  }
+
+  /* Family Office Premium Animations */
+  .celebration-gold {
+    animation: celebration-pulse 2s ease-in-out infinite;
+    color: hsl(var(--gold));
+  }
+
+  .celebration-emerald {
+    animation: celebration-pulse 2s ease-in-out infinite;
+    color: hsl(var(--emerald));
+  }
+
+  /* Mobile Pipeline Stages */
+  .pipeline-stage {
+    @apply p-4 rounded-lg border-2 transition-all duration-300 hover:shadow-lg;
+    min-height: 400px;
+  }
+
+  .pipeline-stage.new { @apply bg-muted/50 border-border; }
+  .pipeline-stage.contacted { @apply bg-warning/10 border-warning/30; }
+  .pipeline-stage.qualified { @apply bg-accent/10 border-accent/30; }
+  .pipeline-stage.proposal { @apply bg-primary/10 border-primary/30; }
+  .pipeline-stage.negotiation { @apply bg-secondary/10 border-secondary/30; }
+  .pipeline-stage.closed_won { @apply bg-success/10 border-success/30; }
+  .pipeline-stage.closed_lost { @apply bg-destructive/10 border-destructive/30; }
+
+  /* Mobile ROI Cards */
+  .roi-metric-card {
+    @apply bg-card border-border p-4 md:p-6 rounded-lg hover:shadow-lg transition-all duration-300 hover:scale-105;
+  }
+
+  .roi-trend-positive {
+    @apply text-success flex items-center gap-1 text-sm font-medium;
+  }
+
+  .roi-trend-negative {
+    @apply text-destructive flex items-center gap-1 text-sm font-medium;
+  }
+}
     @apply font-medium mb-2 block;
     color: hsl(var(--foreground)); /* Navy text for readability */
     font-family: 'Inter', 'Avenir', sans-serif;

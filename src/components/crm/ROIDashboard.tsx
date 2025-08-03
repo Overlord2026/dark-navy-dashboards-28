@@ -245,26 +245,44 @@ export function ROIDashboard() {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Header with Filters */}
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">ROI Campaign Dashboard</h2>
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <Calendar className="h-4 w-4" />
-            <DatePicker
-              date={dateRange.from}
-              onSelect={(date) => date && setDateRange({...dateRange, from: date})}
-            />
-            <span>to</span>
-            <DatePicker
-              date={dateRange.to}
-              onSelect={(date) => date && setDateRange({...dateRange, to: date})}
-            />
+    <div className="space-y-4 md:space-y-6 p-4 md:p-6">
+      {/* Mobile-First Header with Filters */}
+      <div className="flex flex-col space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground">ROI Campaign Dashboard</h2>
+            <p className="text-sm text-muted-foreground mt-1">
+              Track performance across all marketing channels
+            </p>
+          </div>
+          
+          <Button onClick={exportReport} variant="outline" className="touch-target">
+            <Download className="h-4 w-4 mr-2" />
+            Export Report
+          </Button>
+        </div>
+        
+        {/* Mobile-optimized filters */}
+        <div className="flex flex-col sm:flex-row gap-3">
+          <div className="flex items-center gap-2 flex-1">
+            <Calendar className="h-4 w-4 text-muted-foreground" />
+            <div className="flex flex-col sm:flex-row gap-2 flex-1">
+              <DatePicker
+                date={dateRange.from}
+                onSelect={(date) => date && setDateRange({...dateRange, from: date})}
+                className="flex-1"
+              />
+              <span className="text-sm text-muted-foreground hidden sm:block">to</span>
+              <DatePicker
+                date={dateRange.to}
+                onSelect={(date) => date && setDateRange({...dateRange, to: date})}
+                className="flex-1"
+              />
+            </div>
           </div>
           
           <Select value={selectedSource} onValueChange={setSelectedSource}>
-            <SelectTrigger className="w-48">
+            <SelectTrigger className="w-full sm:w-48 touch-target">
               <SelectValue placeholder="All Sources" />
             </SelectTrigger>
             <SelectContent>
@@ -275,115 +293,166 @@ export function ROIDashboard() {
               <SelectItem value="referral">Referral</SelectItem>
             </SelectContent>
           </Select>
-          
-          <Button onClick={exportReport} variant="outline">
-            <Download className="h-4 w-4 mr-2" />
-            Export Report
-          </Button>
         </div>
       </div>
 
-      {/* KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card>
-          <CardContent className="p-4">
+      {/* Mobile-First KPI Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Card className="bg-card border-border hover:shadow-lg transition-all duration-300 hover:scale-105">
+          <CardContent className="p-4 md:p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Total Spend</p>
-                <p className="text-2xl font-bold">${metrics?.total_spend.toLocaleString()}</p>
+                <p className="text-sm text-muted-foreground font-medium">Total Spend</p>
+                <p className="text-2xl md:text-3xl font-bold text-foreground">
+                  ${metrics?.total_spend.toLocaleString()}
+                </p>
               </div>
-              <DollarSign className="h-8 w-8 text-muted-foreground" />
+              <div className="p-3 bg-primary/10 rounded-lg">
+                <DollarSign className="h-6 w-6 md:h-8 md:w-8 text-primary" />
+              </div>
             </div>
-            <div className="flex items-center mt-2 text-sm">
-              <ArrowUpRight className="h-4 w-4 text-green-500 mr-1" />
-              <span className="text-green-600">12% vs last month</span>
+            <div className="flex items-center mt-3 text-sm">
+              <ArrowUpRight className="h-4 w-4 text-success mr-1" />
+              <span className="text-success font-medium">12% vs last month</span>
             </div>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardContent className="p-4">
+        <Card className="bg-card border-border hover:shadow-lg transition-all duration-300 hover:scale-105">
+          <CardContent className="p-4 md:p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Total Revenue</p>
-                <p className="text-2xl font-bold">${metrics?.total_revenue.toLocaleString()}</p>
+                <p className="text-sm text-muted-foreground font-medium">Total Revenue</p>
+                <p className="text-2xl md:text-3xl font-bold text-foreground">
+                  ${metrics?.total_revenue.toLocaleString()}
+                </p>
               </div>
-              <TrendingUp className="h-8 w-8 text-muted-foreground" />
+              <div className="p-3 bg-success/10 rounded-lg">
+                <TrendingUp className="h-6 w-6 md:h-8 md:w-8 text-success" />
+              </div>
             </div>
-            <div className="flex items-center mt-2 text-sm">
-              <ArrowUpRight className="h-4 w-4 text-green-500 mr-1" />
-              <span className="text-green-600">28% vs last month</span>
+            <div className="flex items-center mt-3 text-sm">
+              <ArrowUpRight className="h-4 w-4 text-success mr-1" />
+              <span className="text-success font-medium">28% vs last month</span>
             </div>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardContent className="p-4">
+        <Card className="bg-card border-border hover:shadow-lg transition-all duration-300 hover:scale-105">
+          <CardContent className="p-4 md:p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">ROI</p>
-                <p className="text-2xl font-bold">{metrics?.roi_percentage}%</p>
+                <p className="text-sm text-muted-foreground font-medium">ROI</p>
+                <p className="text-2xl md:text-3xl font-bold text-primary">
+                  {metrics?.roi_percentage}%
+                </p>
               </div>
-              <Target className="h-8 w-8 text-muted-foreground" />
+              <div className="p-3 bg-emerald/10 rounded-lg">
+                <Target className="h-6 w-6 md:h-8 md:w-8 text-emerald" />
+              </div>
             </div>
-            <div className="flex items-center mt-2 text-sm">
-              <ArrowUpRight className="h-4 w-4 text-green-500 mr-1" />
-              <span className="text-green-600">15% vs last month</span>
+            <div className="flex items-center mt-3 text-sm">
+              <ArrowUpRight className="h-4 w-4 text-success mr-1" />
+              <span className="text-success font-medium">15% vs last month</span>
             </div>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardContent className="p-4">
+        <Card className="bg-card border-border hover:shadow-lg transition-all duration-300 hover:scale-105">
+          <CardContent className="p-4 md:p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Cost Per Lead</p>
-                <p className="text-2xl font-bold">${metrics?.cost_per_lead.toFixed(0)}</p>
+                <p className="text-sm text-muted-foreground font-medium">Cost Per Lead</p>
+                <p className="text-2xl md:text-3xl font-bold text-foreground">
+                  ${metrics?.cost_per_lead.toFixed(0)}
+                </p>
               </div>
-              <Users className="h-8 w-8 text-muted-foreground" />
+              <div className="p-3 bg-warning/10 rounded-lg">
+                <Users className="h-6 w-6 md:h-8 md:w-8 text-warning" />
+              </div>
             </div>
-            <div className="flex items-center mt-2 text-sm">
-              <ArrowDownRight className="h-4 w-4 text-green-500 mr-1" />
-              <span className="text-green-600">8% reduction</span>
+            <div className="flex items-center mt-3 text-sm">
+              <ArrowDownRight className="h-4 w-4 text-success mr-1" />
+              <span className="text-success font-medium">8% reduction</span>
             </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Charts Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* Mobile-Optimized Charts */}
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 md:gap-6">
         {/* ROI Trend Chart */}
-        <Card>
-          <CardHeader>
-            <CardTitle>ROI Trend (30 Days)</CardTitle>
+        <Card className="bg-card border-border">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-foreground flex items-center gap-2">
+              <BarChart3 className="h-5 w-5 text-primary" />
+              ROI Trend (30 Days)
+            </CardTitle>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer width="100%" height={250} className="md:h-[300px]">
               <LineChart data={trendData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" />
-                <YAxis />
-                <Tooltip />
-                <Line type="monotone" dataKey="roi" stroke="#3b82f6" strokeWidth={2} />
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                <XAxis 
+                  dataKey="date" 
+                  tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
+                  tickLine={{ stroke: 'hsl(var(--border))' }}
+                />
+                <YAxis 
+                  tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
+                  tickLine={{ stroke: 'hsl(var(--border))' }}
+                />
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: 'hsl(var(--popover))',
+                    border: '1px solid hsl(var(--border))',
+                    borderRadius: '8px',
+                    color: 'hsl(var(--foreground))'
+                  }}
+                />
+                <Line 
+                  type="monotone" 
+                  dataKey="roi" 
+                  stroke="hsl(var(--primary))" 
+                  strokeWidth={3}
+                  dot={{ fill: 'hsl(var(--primary))', strokeWidth: 2, r: 4 }}
+                />
               </LineChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
 
         {/* Source Performance */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Performance by Source</CardTitle>
+        <Card className="bg-card border-border">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-foreground flex items-center gap-2">
+              <TrendingUp className="h-5 w-5 text-success" />
+              Performance by Source
+            </CardTitle>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer width="100%" height={250} className="md:h-[300px]">
               <BarChart data={sourceData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="source" />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="revenue" fill="#10b981" />
-                <Bar dataKey="spend" fill="#ef4444" />
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                <XAxis 
+                  dataKey="source" 
+                  tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
+                  tickLine={{ stroke: 'hsl(var(--border))' }}
+                />
+                <YAxis 
+                  tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
+                  tickLine={{ stroke: 'hsl(var(--border))' }}
+                />
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: 'hsl(var(--popover))',
+                    border: '1px solid hsl(var(--border))',
+                    borderRadius: '8px',
+                    color: 'hsl(var(--foreground))'
+                  }}
+                />
+                <Bar dataKey="revenue" fill="hsl(var(--success))" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="spend" fill="hsl(var(--destructive))" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
