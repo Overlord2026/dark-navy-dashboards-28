@@ -23,6 +23,8 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { format } from 'date-fns';
+import { useCelebration } from '@/hooks/useCelebration';
+import { useLeadScoring } from '@/hooks/useLeadScoring';
 
 interface Lead {
   id: string;
@@ -54,6 +56,8 @@ const stages = [
 
 export function PipelineKanban() {
   const { toast } = useToast();
+  const { triggerCelebration, CelebrationComponent } = useCelebration();
+  const { calculateLeadScore, getScoreColor } = useLeadScoring();
   const [leads, setLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
@@ -145,6 +149,16 @@ export function PipelineKanban() {
         p_lead_id: leadId, 
         p_stage: newStatus 
       });
+
+      // Trigger celebration for major milestones
+      if (newStatus === 'closed_won') {
+        triggerCelebration('client-won', 'New client acquired! 🎉');
+      } else if (newStatus === 'proposal') {
+        triggerCelebration('milestone', 'Proposal sent! 📋');
+      }
+
+      // Recalculate lead score
+      await calculateLeadScore(leadId);
 
       toast({
         title: "Lead Updated",
@@ -405,6 +419,9 @@ export function PipelineKanban() {
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Celebration Effects */}
+      <CelebrationComponent />
     </div>
   );
 }

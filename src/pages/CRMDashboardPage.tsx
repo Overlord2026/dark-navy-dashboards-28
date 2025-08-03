@@ -1,7 +1,7 @@
 import React from 'react';
 import { ThreeColumnLayout } from '@/components/layout/ThreeColumnLayout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Users, Pipeline, BarChart3, Calendar, Bell, Upload, Video } from 'lucide-react';
+import { Users, Pipeline, BarChart3, Calendar, Bell, Upload, Video, Mail, Target } from 'lucide-react';
 import { LeadCaptureForm } from '@/components/crm/LeadCaptureForm';
 import { PipelineKanban } from '@/components/crm/PipelineKanban';
 import { MeetingIntegrations } from '@/components/crm/MeetingIntegrations';
@@ -29,7 +29,7 @@ export default function CRMDashboardPage() {
         </div>
 
         <Tabs defaultValue="pipeline" className="w-full">
-          <TabsList className="grid w-full grid-cols-6">
+          <TabsList className="grid w-full grid-cols-7">
             <TabsTrigger value="pipeline" className="flex items-center gap-2">
               <Pipeline className="h-4 w-4" />
               Pipeline
@@ -53,6 +53,14 @@ export default function CRMDashboardPage() {
             <TabsTrigger value="import" className="flex items-center gap-2">
               <Upload className="h-4 w-4" />
               Import/Export
+            </TabsTrigger>
+            <TabsTrigger value="automation" className="flex items-center gap-2">
+              <Mail className="h-4 w-4" />
+              Email/SMS
+            </TabsTrigger>
+            <TabsTrigger value="ads" className="flex items-center gap-2">
+              <Target className="h-4 w-4" />
+              Ad Tracking
             </TabsTrigger>
           </TabsList>
 
@@ -84,6 +92,14 @@ export default function CRMDashboardPage() {
                 Bulk import contacts, export pipeline reports, and sync with external CRM systems
               </p>
             </div>
+          </TabsContent>
+
+          <TabsContent value="automation" className="space-y-4">
+            <EmailAutomation />
+          </TabsContent>
+
+          <TabsContent value="ads" className="space-y-4">
+            <AdIntegrations />
           </TabsContent>
         </Tabs>
       </div>
