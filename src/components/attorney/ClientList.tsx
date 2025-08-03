@@ -65,37 +65,43 @@ export function ClientList({ onRefresh }: ClientListProps) {
       const user = (await supabase.auth.getUser()).data.user;
       if (!user) throw new Error('Not authenticated');
 
-      // Fetch active clients
+      // Fetch active clients with separate profile queries
       const { data: clientsData, error: clientsError } = await supabase
         .from('attorney_client_links')
-        .select(`
-          id,
-          client_id,
-          relationship_type,
-          status,
-          created_at,
-          profiles:client_id(
-            email,
-            first_name,
-            last_name
-          )
-        `)
+        .select('*')
         .eq('attorney_id', user.id)
         .eq('status', 'active');
 
       if (clientsError) throw clientsError;
 
-      // Transform client data
-      const transformedClients = clientsData?.map(link => ({
-        id: link.id,
-        email: link.profiles?.email || 'No email',
-        name: `${link.profiles?.first_name || ''} ${link.profiles?.last_name || ''}`.trim() || 'Unknown',
-        relationship_type: link.relationship_type,
-        status: link.status,
-        created_at: link.created_at,
-        // TODO: Add message counts and last message date
-        unread_count: 0
-      })) || [];
+      // Get client profiles separately to avoid ambiguous joins
+      const clientIds = clientsData?.map(link => link.client_id) || [];
+      let clientProfiles: any[] = [];
+      
+      if (clientIds.length > 0) {
+        const { data: profilesData, error: profilesError } = await supabase
+          .from('profiles')
+          .select('id, email, first_name, last_name')
+          .in('id', clientIds);
+        
+        if (profilesError) throw profilesError;
+        clientProfiles = profilesData || [];
+      }
+
+      // Transform client data by combining links with profiles
+      const transformedClients = clientsData?.map(link => {
+        const profile = clientProfiles.find(p => p.id === link.client_id);
+        return {
+          id: link.id,
+          email: profile?.email || 'No email',
+          name: `${profile?.first_name || ''} ${profile?.last_name || ''}`.trim() || 'Unknown',
+          relationship_type: link.relationship_type,
+          status: link.status,
+          created_at: link.created_at,
+          // TODO: Add message counts and last message date
+          unread_count: 0
+        };
+      }) || [];
 
       // Fetch pending invitations
       const { data: invitationsData, error: invitationsError } = await supabase

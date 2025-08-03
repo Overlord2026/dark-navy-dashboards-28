@@ -46,25 +46,40 @@ export function ClientPortalNotifications() {
 
       const { data, error } = await supabase
         .from('client_portal_notifications')
-        .select(`
-          *,
-          profiles:client_id(
-            first_name,
-            last_name
-          )
-        `)
+        .select('*')
         .eq('attorney_id', user.id)
         .order('created_at', { ascending: false })
         .limit(100);
 
       if (error) throw error;
 
-      const transformedNotifications = data?.map(notification => ({
-        ...notification,
-        client_name: notification.profiles 
-          ? `${notification.profiles.first_name || ''} ${notification.profiles.last_name || ''}`.trim() || 'Unknown Client'
-          : 'System'
-      })) || [];
+      // Get client profiles separately
+      const clientIds = data?.map(n => n.client_id).filter(Boolean) || [];
+      let clientProfiles: any[] = [];
+      
+      if (clientIds.length > 0) {
+        const { data: profilesData, error: profilesError } = await supabase
+          .from('profiles')
+          .select('id, first_name, last_name')
+          .in('id', clientIds);
+        
+        if (!profilesError) {
+          clientProfiles = profilesData || [];
+        }
+      }
+
+      const transformedNotifications = data?.map(notification => {
+        const profile = notification.client_id 
+          ? clientProfiles.find(p => p.id === notification.client_id)
+          : null;
+        
+        return {
+          ...notification,
+          client_name: profile 
+            ? `${profile.first_name || ''} ${profile.last_name || ''}`.trim() || 'Unknown Client'
+            : 'System'
+        };
+      }) || [];
 
       setNotifications(transformedNotifications);
     } catch (error) {

@@ -64,26 +64,35 @@ export function ClientMessaging() {
 
       const { data, error } = await supabase
         .from('attorney_client_links')
-        .select(`
-          id,
-          client_id,
-          profiles:client_id(
-            email,
-            first_name,
-            last_name
-          )
-        `)
+        .select('*')
         .eq('attorney_id', user.id)
         .eq('status', 'active');
 
       if (error) throw error;
 
-      const transformedClients = data?.map(link => ({
-        id: link.id,
-        client_id: link.client_id,
-        client_name: `${link.profiles?.first_name || ''} ${link.profiles?.last_name || ''}`.trim() || 'Unknown',
-        client_email: link.profiles?.email || 'No email'
-      })) || [];
+      // Get client profiles separately
+      const clientIds = data?.map(link => link.client_id) || [];
+      let clientProfiles: any[] = [];
+      
+      if (clientIds.length > 0) {
+        const { data: profilesData, error: profilesError } = await supabase
+          .from('profiles')
+          .select('id, email, first_name, last_name')
+          .in('id', clientIds);
+        
+        if (profilesError) throw profilesError;
+        clientProfiles = profilesData || [];
+      }
+
+      const transformedClients = data?.map(link => {
+        const profile = clientProfiles.find(p => p.id === link.client_id);
+        return {
+          id: link.id,
+          client_id: link.client_id,
+          client_name: `${profile?.first_name || ''} ${profile?.last_name || ''}`.trim() || 'Unknown',
+          client_email: profile?.email || 'No email'
+        };
+      }) || [];
 
       setClients(transformedClients);
       
@@ -110,24 +119,32 @@ export function ClientMessaging() {
 
       const { data, error } = await supabase
         .from('attorney_client_messages')
-        .select(`
-          *,
-          profiles:client_id(
-            first_name,
-            last_name,
-            email
-          )
-        `)
+        .select('*')
         .eq('attorney_id', user.id)
         .eq('client_id', selectedClientId)
         .order('created_at', { ascending: true });
 
       if (error) throw error;
 
+      // Get client profile separately
+      let clientProfile: any = null;
+      if (selectedClientId) {
+        const { data: profileData, error: profileError } = await supabase
+          .from('profiles')
+          .select('id, email, first_name, last_name')
+          .eq('id', selectedClientId)
+          .single();
+        
+        if (!profileError) {
+          clientProfile = profileData;
+        }
+      }
+
       const transformedMessages = data?.map(msg => ({
         ...msg,
-        client_name: `${msg.profiles?.first_name || ''} ${msg.profiles?.last_name || ''}`.trim() || 'Unknown',
-        client_email: msg.profiles?.email || 'No email'
+        sender_type: msg.sender_type as 'attorney' | 'client',
+        client_name: `${clientProfile?.first_name || ''} ${clientProfile?.last_name || ''}`.trim() || 'Unknown',
+        client_email: clientProfile?.email || 'No email'
       })) || [];
 
       setMessages(transformedMessages);
@@ -161,7 +178,7 @@ export function ClientMessaging() {
         .insert({
           attorney_id: user.id,
           client_id: selectedClientId,
-          sender_type: 'attorney',
+          sender_type: 'attorney' as const,
           sender_id: user.id,
           message_content: newMessage.trim(),
           message_type: 'text',
@@ -293,7 +310,7 @@ export function ClientMessaging() {
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="pl-8 w-48"
-                    size="sm"
+                    
                   />
                 </div>
               )}

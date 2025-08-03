@@ -57,11 +57,6 @@ export function SharedDocumentsList() {
         .from('attorney_client_shared_documents')
         .select(`
           *,
-          profiles:client_id(
-            first_name,
-            last_name,
-            email
-          ),
           attorney_documents_metadata:document_id(
             document_title,
             classification_id,
@@ -77,14 +72,32 @@ export function SharedDocumentsList() {
 
       if (error) throw error;
 
-      const transformedDocuments = data?.map(doc => ({
-        ...doc,
-        client_name: `${doc.profiles?.first_name || ''} ${doc.profiles?.last_name || ''}`.trim() || 'Unknown',
-        client_email: doc.profiles?.email || 'No email',
-        document_title: doc.attorney_documents_metadata?.document_title || 'Unknown Document',
-        document_type: doc.attorney_documents_metadata?.attorney_document_classifications?.classification_name || 'Document',
-        file_size: doc.attorney_documents_metadata?.file_size || 0
-      })) || [];
+      // Get client profiles separately
+      const clientIds = data?.map(doc => doc.client_id) || [];
+      let clientProfiles: any[] = [];
+      
+      if (clientIds.length > 0) {
+        const { data: profilesData, error: profilesError } = await supabase
+          .from('profiles')
+          .select('id, email, first_name, last_name')
+          .in('id', clientIds);
+        
+        if (!profilesError) {
+          clientProfiles = profilesData || [];
+        }
+      }
+
+      const transformedDocuments = data?.map(doc => {
+        const profile = clientProfiles.find(p => p.id === doc.client_id);
+        return {
+          ...doc,
+          client_name: `${profile?.first_name || ''} ${profile?.last_name || ''}`.trim() || 'Unknown',
+          client_email: profile?.email || 'No email',
+          document_title: doc.attorney_documents_metadata?.document_title || 'Unknown Document',
+          document_type: doc.attorney_documents_metadata?.attorney_document_classifications?.classification_name || 'Document',
+          file_size: doc.attorney_documents_metadata?.file_size || 0
+        };
+      }) || [];
 
       setSharedDocuments(transformedDocuments);
     } catch (error) {
