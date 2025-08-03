@@ -94,23 +94,23 @@ export function LegacyItems({ vaultId, items, onItemAdded }: LegacyItemsProps) {
                 </div>
                 
                 <div className="flex-1 space-y-2">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <h3 className="font-semibold text-lg">{item.title}</h3>
-                      {item.description && (
-                        <p className="text-muted-foreground mt-1">{item.description}</p>
-                      )}
-                    </div>
+                   <div className="flex items-start justify-between">
+                     <div>
+                       <h3 className="font-semibold text-lg">{item.title || 'Untitled Item'}</h3>
+                       {item.description && (
+                         <p className="text-muted-foreground mt-1">{item.description}</p>
+                       )}
+                     </div>
                     <Badge variant="outline" className="capitalize">
                       {item.item_type}
                     </Badge>
                   </div>
                   
                   <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                    <div className="flex items-center gap-1">
-                      <Calendar className="h-4 w-4" />
-                      {new Date(item.created_at).toLocaleDateString()}
-                    </div>
+                     <div className="flex items-center gap-1">
+                       <Calendar className="h-4 w-4" />
+                       {item.created_at ? new Date(item.created_at).toLocaleDateString() : 'Unknown date'}
+                     </div>
                     
                     {item.file_size && (
                       <div>
@@ -168,7 +168,7 @@ export function LegacyItems({ vaultId, items, onItemAdded }: LegacyItemsProps) {
         )}
       </div>
 
-      {showMessageWizard && members && (
+      {showMessageWizard && members && members.length > 0 && (
         <LeaveMessageWizard
           vaultId={vaultId}
           members={members.map(m => ({ ...m, role: m.permission_level || 'member' }))}

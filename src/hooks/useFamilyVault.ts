@@ -23,33 +23,28 @@ export interface UseFamilyVaultReturn {
 
 export interface CreateVaultData {
   vault_name: string;
-  description?: string;
-  family_motto?: string;
-  family_values?: string[];
-  vault_photo_url?: string;
+  description?: string | null;
+  family_motto?: string | null;
+  family_values?: string[] | null;
+  vault_photo_url?: string | null;
 }
 
 export interface InviteMemberData {
   email: string;
-  first_name?: string;
-  last_name?: string;
+  first_name?: string | null;
+  last_name?: string | null;
   role: string;
-  permissions: {
-    view: boolean;
-    add: boolean;
-    share: boolean;
-    admin: boolean;
-  };
+  permissions: Record<string, any>; // Supabase Json type
 }
 
 export interface UploadItemData {
   title: string;
-  description?: string;
+  description?: string | null;
   item_type: string;
-  content_url?: string;
-  content_type?: string;
-  file_size?: number;
-  duration_seconds?: number;
+  content_url?: string | null;
+  content_type?: string | null;
+  file_size?: number | null;
+  duration_seconds?: number | null;
 }
 
 export function useFamilyVault(vaultId?: string): UseFamilyVaultReturn {

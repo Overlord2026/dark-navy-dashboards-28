@@ -44,7 +44,7 @@ export function VaultMembers({ vaultId, members, onMemberAdded }: VaultMembersPr
         add: inviteData.role === 'admin' || inviteData.role === 'editor',
         share: inviteData.role === 'admin',
         admin: inviteData.role === 'admin'
-      }
+      } as Record<string, any>
     });
     
     if (success) {
@@ -174,13 +174,15 @@ export function VaultMembers({ vaultId, members, onMemberAdded }: VaultMembersPr
                       <p className="font-medium">
                         {member.first_name && member.last_name 
                           ? `${member.first_name} ${member.last_name}`
-                          : member.email
+                          : member.email || 'Unknown User'
                         }
                       </p>
-                      <p className="text-sm text-muted-foreground flex items-center gap-1">
-                        <Mail className="h-3 w-3" />
-                        {member.email}
-                      </p>
+                      {member.email && (
+                        <p className="text-sm text-muted-foreground flex items-center gap-1">
+                          <Mail className="h-3 w-3" />
+                          {member.email}
+                        </p>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -189,13 +191,13 @@ export function VaultMembers({ vaultId, members, onMemberAdded }: VaultMembersPr
                   <Badge variant="outline" className="capitalize">
                     {member.permission_level || 'member'}
                   </Badge>
-                  <Badge variant={getStatusColor(member.status) as any}>
-                    {member.status}
+                  <Badge variant={getStatusColor(member.status || 'pending') as any}>
+                    {member.status || 'pending'}
                   </Badge>
                 </div>
               </div>
               
-              {member.status === 'pending' && (
+              {member.status === 'pending' && member.invited_at && (
                 <div className="mt-4 p-3 bg-muted/50 rounded-lg">
                   <p className="text-sm text-muted-foreground">
                     Invitation sent on {new Date(member.invited_at).toLocaleDateString()}

@@ -63,20 +63,44 @@ export function SecureFileUpload({
   });
 
   const handleUpload = async () => {
-    for (const file of selectedFiles) {
-      const fileId = await uploadFile(vaultId, file);
-      if (fileId && onUploadComplete) {
-        onUploadComplete(fileId);
+    if (!selectedFiles.length) return;
+    
+    try {
+      for (const file of selectedFiles) {
+        const fileId = await uploadFile(vaultId, file);
+        if (fileId && onUploadComplete) {
+          onUploadComplete(fileId);
+        }
       }
-    }
-    setSelectedFiles([]);
-    if (onSuccess) {
-      onSuccess();
+      setSelectedFiles([]);
+      if (onSuccess) {
+        onSuccess();
+      }
+    } catch (error) {
+      console.error('Upload error:', error);
     }
   };
 
   const capturePhoto = async () => {
     try {
+      if (!Capacitor.isNativePlatform()) {
+        // Fallback for web
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.capture = 'environment';
+        
+        input.onchange = (e) => {
+          const files = (e.target as HTMLInputElement).files;
+          if (files) {
+            setSelectedFiles(prev => [...prev, ...Array.from(files)]);
+          }
+        };
+        
+        input.click();
+        return;
+      }
+
       const image = await CapacitorCamera.getPhoto({
         quality: 90,
         allowEditing: false,
