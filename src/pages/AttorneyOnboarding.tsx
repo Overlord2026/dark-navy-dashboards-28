@@ -14,6 +14,7 @@ import { MainLayout } from '@/components/layout/MainLayout';
 import { useUser } from '@/context/UserContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { useNavigate } from 'react-router-dom';
 import {
   User,
   Shield,
@@ -162,11 +163,13 @@ const PRACTICE_AREAS = [
 
 export function AttorneyOnboarding() {
   const { userProfile } = useUser();
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [onboardingId, setOnboardingId] = useState<string | null>(null);
   const [uploadedFiles, setUploadedFiles] = useState<Record<string, File>>({});
+  const [showCompletionScreen, setShowCompletionScreen] = useState(false);
   
   const [formData, setFormData] = useState<AttorneyOnboardingData>({
     first_name: '',
@@ -410,6 +413,37 @@ export function AttorneyOnboarding() {
     } catch (error) {
       console.error('Error signing agreement:', error);
       toast.error('Failed to sign agreement');
+    }
+  };
+
+  const completeOnboarding = async () => {
+    await saveStep();
+    
+    try {
+      // Mark onboarding as completed
+      if (onboardingId) {
+        const { error } = await supabase
+          .from('attorney_onboarding')
+          .update({ 
+            status: 'completed', 
+            completed_at: new Date().toISOString(),
+            current_step: ONBOARDING_STEPS.length.toString()
+          })
+          .eq('id', onboardingId);
+
+        if (error) throw error;
+      }
+
+      setShowCompletionScreen(true);
+      toast.success('Onboarding completed successfully!');
+      
+      // Redirect to attorney dashboard after showing completion screen
+      setTimeout(() => {
+        navigate('/attorney-dashboard');
+      }, 3000);
+    } catch (error) {
+      console.error('Error completing onboarding:', error);
+      toast.error('Failed to complete onboarding');
     }
   };
 
@@ -1026,6 +1060,53 @@ export function AttorneyOnboarding() {
     );
   }
 
+  if (showCompletionScreen) {
+    return (
+      <MainLayout>
+        <div className="container mx-auto p-6">
+          <Card className="max-w-2xl mx-auto">
+            <CardContent className="text-center py-12">
+              <CheckCircle className="h-16 w-16 text-green-600 mx-auto mb-6" />
+              <h1 className="text-3xl font-bold text-green-800 mb-4">
+                Welcome to your Attorney Dashboard!
+              </h1>
+              <p className="text-lg text-muted-foreground mb-6">
+                Congratulations! Your attorney onboarding is complete. You now have access to:
+              </p>
+              <div className="text-left max-w-md mx-auto space-y-3 mb-8">
+                <div className="flex items-center gap-3">
+                  <CheckCircle className="h-5 w-5 text-green-600" />
+                  <span>Case management tools</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <CheckCircle className="h-5 w-5 text-green-600" />
+                  <span>CLE tracking system</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <CheckCircle className="h-5 w-5 text-green-600" />
+                  <span>Client collaboration portal</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <CheckCircle className="h-5 w-5 text-green-600" />
+                  <span>Document management</span>
+                </div>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Redirecting to your dashboard in a few seconds...
+              </p>
+              <Button 
+                onClick={() => navigate('/attorney-dashboard')} 
+                className="mt-4"
+              >
+                Go to Dashboard Now
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      </MainLayout>
+    );
+  }
+
   return (
     <MainLayout>
       <div className="container mx-auto p-6 max-w-4xl">
@@ -1121,7 +1202,7 @@ export function AttorneyOnboarding() {
               </Button>
             ) : (
               <Button
-                onClick={saveStep}
+                onClick={completeOnboarding}
                 disabled={!canProceed() || saving}
                 className="bg-green-600 hover:bg-green-700"
               >

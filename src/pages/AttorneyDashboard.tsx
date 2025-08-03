@@ -277,6 +277,15 @@ export function AttorneyDashboard() {
                   <p className="text-xs text-muted-foreground">
                     2 hours remaining • Due Dec 31, 2024
                   </p>
+                  <Button 
+                    size="sm" 
+                    variant="outline" 
+                    className="w-full mt-3"
+                    onClick={() => setSelectedSidebarItem('cle-tracker')}
+                  >
+                    <GraduationCap className="h-4 w-4 mr-1" />
+                    Track CLE Hours
+                  </Button>
                 </div>
               </CardContent>
             </Card>
