@@ -551,9 +551,11 @@
   .roi-trend-negative {
     @apply text-destructive flex items-center gap-1 text-sm font-medium;
   }
-}
+
+  /* Form Labels */
+  .form-label {
     @apply font-medium mb-2 block;
-    color: hsl(var(--foreground)); /* Navy text for readability */
+    color: hsl(var(--foreground));
     font-family: 'Inter', 'Avenir', sans-serif;
   }
 
