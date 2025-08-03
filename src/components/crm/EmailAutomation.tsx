@@ -1,84 +1,71 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Switch } from '@/components/ui/switch';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   Mail, 
   MessageSquare, 
-  Clock, 
+  Send, 
+  Plus, 
   Play, 
-  Pause, 
-  Settings, 
-  Plus,
-  Zap,
-  Target,
-  BarChart3
+  Pause,
+  Trash2,
+  Edit,
+  Users,
+  TrendingUp,
+  Eye,
+  MousePointer
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
+import { format } from 'date-fns';
 
 interface EmailCampaign {
   id: string;
   name: string;
   subject: string;
   content: string;
-  trigger_type: 'lead_status_change' | 'time_based' | 'engagement_based' | 'manual';
-  trigger_config: any;
-  status: 'active' | 'paused' | 'draft';
-  send_count: number;
+  status: 'draft' | 'active' | 'paused' | 'completed';
+  sent_count: number;
   open_rate: number;
   click_rate: number;
-  conversion_rate: number;
   created_at: string;
+  advisor_id: string;
 }
 
 interface SMSCampaign {
   id: string;
   name: string;
   message: string;
-  trigger_type: 'lead_status_change' | 'time_based' | 'engagement_based' | 'manual';
-  trigger_config: any;
-  status: 'active' | 'paused' | 'draft';
-  send_count: number;
+  status: 'draft' | 'active' | 'paused' | 'completed';
+  sent_count: number;
   response_rate: number;
   created_at: string;
+  advisor_id: string;
 }
 
 export function EmailAutomation() {
   const { toast } = useToast();
   const [emailCampaigns, setEmailCampaigns] = useState<EmailCampaign[]>([]);
   const [smsCampaigns, setSmsCampaigns] = useState<SMSCampaign[]>([]);
-  const [isCreateEmailOpen, setIsCreateEmailOpen] = useState(false);
-  const [isCreateSMSOpen, setIsCreateSMSOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<'email' | 'sms'>('email');
+  const [loading, setLoading] = useState(true);
+  const [isEmailDialogOpen, setIsEmailDialogOpen] = useState(false);
+  const [isSMSDialogOpen, setIsSMSDialogOpen] = useState(false);
 
   const [newEmailCampaign, setNewEmailCampaign] = useState({
     name: '',
     subject: '',
-    content: '',
-    trigger_type: 'lead_status_change' as const,
-    trigger_config: {
-      from_status: 'new',
-      to_status: 'contacted',
-      delay_hours: 0
-    }
+    content: ''
   });
 
   const [newSMSCampaign, setNewSMSCampaign] = useState({
     name: '',
-    message: '',
-    trigger_type: 'lead_status_change' as const,
-    trigger_config: {
-      from_status: 'new', 
-      to_status: 'contacted',
-      delay_hours: 0
-    }
+    message: ''
   });
 
   useEffect(() => {
@@ -87,106 +74,67 @@ export function EmailAutomation() {
 
   const loadCampaigns = async () => {
     try {
-      const { data: user } = await supabase.auth.getUser();
-      if (!user.user) return;
+      // Use mock data for now
+      const mockEmailCampaigns: EmailCampaign[] = [
+        {
+          id: '1',
+          name: 'Welcome Series',
+          status: 'active',
+          subject: 'Welcome to our services',
+          content: 'Thank you for choosing us...',
+          sent_count: 125,
+          open_rate: 24.5,
+          click_rate: 3.2,
+          created_at: new Date().toISOString(),
+          advisor_id: 'mock-advisor'
+        }
+      ];
 
-      // Load email campaigns
-      const { data: emails } = await supabase
-        .from('email_campaigns')
-        .select('*')
-        .eq('advisor_id', user.user.id)
-        .order('created_at', { ascending: false });
+      const mockSMSCampaigns: SMSCampaign[] = [
+        {
+          id: '1',
+          name: 'Follow-up Sequence',
+          status: 'active',
+          message: 'Thanks for meeting with us...',
+          sent_count: 85,
+          response_rate: 12.4,
+          created_at: new Date().toISOString(),
+          advisor_id: 'mock-advisor'
+        }
+      ];
 
-      // Load SMS campaigns  
-      const { data: sms } = await supabase
-        .from('sms_campaigns')
-        .select('*')
-        .eq('advisor_id', user.user.id)
-        .order('created_at', { ascending: false });
-
-      setEmailCampaigns(emails || []);
-      setSmsCampaigns(sms || []);
+      setEmailCampaigns(mockEmailCampaigns);
+      setSmsCampaigns(mockSMSCampaigns);
     } catch (error) {
       console.error('Error loading campaigns:', error);
-      // Mock data for demo
-      setEmailCampaigns([
-        {
-          id: '1',
-          name: 'Welcome Email Series',
-          subject: 'Welcome to our financial planning service',
-          content: 'Thank you for your interest in our services...',
-          trigger_type: 'lead_status_change',
-          trigger_config: { from_status: 'new', to_status: 'contacted' },
-          status: 'active',
-          send_count: 45,
-          open_rate: 0.68,
-          click_rate: 0.24,
-          conversion_rate: 0.12,
-          created_at: new Date().toISOString()
-        }
-      ]);
-
-      setSmsCampaigns([
-        {
-          id: '1',
-          name: 'Appointment Reminder',
-          message: 'Hi {{name}}, this is a reminder about your meeting tomorrow at {{time}}. Reply CONFIRM to confirm.',
-          trigger_type: 'time_based',
-          trigger_config: { hours_before_meeting: 24 },
-          status: 'active',
-          send_count: 23,
-          response_rate: 0.87,
-          created_at: new Date().toISOString()
-        }
-      ]);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const createEmailCampaign = async () => {
-    if (!newEmailCampaign.name || !newEmailCampaign.subject || !newEmailCampaign.content) {
-      toast({
-        title: "Missing Information",
-        description: "Please fill in all required fields",
-        variant: "destructive",
-      });
-      return;
-    }
-
+  const handleCreateEmailCampaign = async () => {
     try {
-      const { data: user } = await supabase.auth.getUser();
-      if (!user.user) return;
-
-      const { data, error } = await supabase
-        .from('email_campaigns')
-        .insert([{
-          ...newEmailCampaign,
-          advisor_id: user.user.id,
-          status: 'draft'
-        }])
-        .select()
-        .single();
-
-      if (error) throw error;
-
+      // Mock campaign creation
+      const newCampaign: EmailCampaign = {
+        id: Date.now().toString(),
+        name: newEmailCampaign.name,
+        subject: newEmailCampaign.subject,
+        content: newEmailCampaign.content,
+        status: 'active',
+        sent_count: 0,
+        open_rate: 0,
+        click_rate: 0,
+        created_at: new Date().toISOString(),
+        advisor_id: 'mock-advisor'
+      };
+      
+      setEmailCampaigns(prev => [newCampaign, ...prev]);
       toast({
-        title: "Email Campaign Created",
-        description: "Your email campaign has been saved as draft",
+        title: "Success",
+        description: "Email campaign created successfully",
       });
-
-      setIsCreateEmailOpen(false);
-      setNewEmailCampaign({
-        name: '',
-        subject: '',
-        content: '',
-        trigger_type: 'lead_status_change',
-        trigger_config: {
-          from_status: 'new',
-          to_status: 'contacted',
-          delay_hours: 0
-        }
-      });
-
-      loadCampaigns();
+      setIsEmailDialogOpen(false);
+      setNewEmailCampaign({ name: '', subject: '', content: '' });
     } catch (error) {
       console.error('Error creating email campaign:', error);
       toast({
@@ -197,50 +145,27 @@ export function EmailAutomation() {
     }
   };
 
-  const createSMSCampaign = async () => {
-    if (!newSMSCampaign.name || !newSMSCampaign.message) {
-      toast({
-        title: "Missing Information", 
-        description: "Please fill in all required fields",
-        variant: "destructive",
-      });
-      return;
-    }
-
+  const handleCreateSMSCampaign = async () => {
     try {
-      const { data: user } = await supabase.auth.getUser();
-      if (!user.user) return;
-
-      const { data, error } = await supabase
-        .from('sms_campaigns')
-        .insert([{
-          ...newSMSCampaign,
-          advisor_id: user.user.id,
-          status: 'draft'
-        }])
-        .select()
-        .single();
-
-      if (error) throw error;
-
+      // Mock campaign creation
+      const newCampaign: SMSCampaign = {
+        id: Date.now().toString(),
+        name: newSMSCampaign.name,
+        message: newSMSCampaign.message,
+        status: 'active',
+        sent_count: 0,
+        response_rate: 0,
+        created_at: new Date().toISOString(),
+        advisor_id: 'mock-advisor'
+      };
+      
+      setSmsCampaigns(prev => [newCampaign, ...prev]);
       toast({
-        title: "SMS Campaign Created",
-        description: "Your SMS campaign has been saved as draft",
+        title: "Success",
+        description: "SMS campaign created successfully",
       });
-
-      setIsCreateSMSOpen(false);
-      setNewSMSCampaign({
-        name: '',
-        message: '',
-        trigger_type: 'lead_status_change',
-        trigger_config: {
-          from_status: 'new',
-          to_status: 'contacted', 
-          delay_hours: 0
-        }
-      });
-
-      loadCampaigns();
+      setIsSMSDialogOpen(false);
+      setNewSMSCampaign({ name: '', message: '' });
     } catch (error) {
       console.error('Error creating SMS campaign:', error);
       toast({
@@ -251,56 +176,25 @@ export function EmailAutomation() {
     }
   };
 
-  const toggleCampaignStatus = async (id: string, type: 'email' | 'sms', currentStatus: string) => {
-    const newStatus = currentStatus === 'active' ? 'paused' : 'active';
-    
+  const deleteCampaign = async (id: string, type: 'email' | 'sms') => {
     try {
-      const table = type === 'email' ? 'email_campaigns' : 'sms_campaigns';
-      const { error } = await supabase
-        .from(table)
-        .update({ status: newStatus })
-        .eq('id', id);
-
-      if (error) throw error;
-
+      if (type === 'email') {
+        setEmailCampaigns(prev => prev.filter(c => c.id !== id));
+      } else {
+        setSmsCampaigns(prev => prev.filter(c => c.id !== id));
+      }
+      
       toast({
-        title: "Campaign Updated",
-        description: `Campaign ${newStatus === 'active' ? 'activated' : 'paused'}`,
-      });
-
-      loadCampaigns();
-    } catch (error) {
-      console.error('Error updating campaign status:', error);
-    }
-  };
-
-  const sendTestEmail = async (campaignId: string) => {
-    try {
-      await supabase.functions.invoke('send-test-email', {
-        body: { campaign_id: campaignId }
-      });
-
-      toast({
-        title: "Test Email Sent",
-        description: "Check your inbox for the test email",
+        title: "Success",
+        description: `${type === 'email' ? 'Email' : 'SMS'} campaign deleted`,
       });
     } catch (error) {
-      console.error('Error sending test email:', error);
-    }
-  };
-
-  const sendTestSMS = async (campaignId: string) => {
-    try {
-      await supabase.functions.invoke('send-test-sms', {
-        body: { campaign_id: campaignId }
-      });
-
+      console.error(`Error deleting ${type} campaign:`, error);
       toast({
-        title: "Test SMS Sent",
-        description: "Check your phone for the test message",
+        title: "Error",
+        description: `Failed to delete ${type} campaign`,
+        variant: "destructive",
       });
-    } catch (error) {
-      console.error('Error sending test SMS:', error);
     }
   };
 
@@ -309,6 +203,7 @@ export function EmailAutomation() {
       case 'active': return 'bg-green-100 text-green-800';
       case 'paused': return 'bg-yellow-100 text-yellow-800';
       case 'draft': return 'bg-gray-100 text-gray-800';
+      case 'completed': return 'bg-blue-100 text-blue-800';
       default: return 'bg-gray-100 text-gray-800';
     }
   };
@@ -319,13 +214,10 @@ export function EmailAutomation() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold">Email & SMS Automation</h2>
-          <p className="text-muted-foreground">
-            Automate your follow-up campaigns and communications
-          </p>
+          <p className="text-muted-foreground">Create and manage automated communication campaigns</p>
         </div>
-        
         <div className="flex gap-2">
-          <Dialog open={isCreateEmailOpen} onOpenChange={setIsCreateEmailOpen}>
+          <Dialog open={isEmailDialogOpen} onOpenChange={setIsEmailDialogOpen}>
             <DialogTrigger asChild>
               <Button>
                 <Mail className="h-4 w-4 mr-2" />
@@ -333,8 +225,7 @@ export function EmailAutomation() {
               </Button>
             </DialogTrigger>
           </Dialog>
-          
-          <Dialog open={isCreateSMSOpen} onOpenChange={setIsCreateSMSOpen}>
+          <Dialog open={isSMSDialogOpen} onOpenChange={setIsSMSDialogOpen}>
             <DialogTrigger asChild>
               <Button variant="outline">
                 <MessageSquare className="h-4 w-4 mr-2" />
@@ -345,146 +236,160 @@ export function EmailAutomation() {
         </div>
       </div>
 
-      {/* Campaign Tabs */}
-      <div className="flex border-b">
-        <button
-          className={`px-4 py-2 font-medium ${
-            activeTab === 'email' 
-              ? 'border-b-2 border-primary text-primary' 
-              : 'text-muted-foreground hover:text-foreground'
-          }`}
-          onClick={() => setActiveTab('email')}
-        >
-          <Mail className="h-4 w-4 mr-2 inline" />
-          Email Campaigns ({emailCampaigns.length})
-        </button>
-        <button
-          className={`px-4 py-2 font-medium ${
-            activeTab === 'sms' 
-              ? 'border-b-2 border-primary text-primary' 
-              : 'text-muted-foreground hover:text-foreground'
-          }`}
-          onClick={() => setActiveTab('sms')}
-        >
-          <MessageSquare className="h-4 w-4 mr-2 inline" />
-          SMS Campaigns ({smsCampaigns.length})
-        </button>
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">Active Campaigns</p>
+                <p className="text-2xl font-bold">
+                  {emailCampaigns.filter(c => c.status === 'active').length + 
+                   smsCampaigns.filter(c => c.status === 'active').length}
+                </p>
+              </div>
+              <Send className="h-8 w-8 text-muted-foreground" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">Messages Sent</p>
+                <p className="text-2xl font-bold">
+                  {emailCampaigns.reduce((sum, c) => sum + c.sent_count, 0) +
+                   smsCampaigns.reduce((sum, c) => sum + c.sent_count, 0)}
+                </p>
+              </div>
+              <Users className="h-8 w-8 text-muted-foreground" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">Avg Open Rate</p>
+                <p className="text-2xl font-bold">
+                  {emailCampaigns.length > 0 
+                    ? (emailCampaigns.reduce((sum, c) => sum + c.open_rate, 0) / emailCampaigns.length).toFixed(1)
+                    : '0'}%
+                </p>
+              </div>
+              <Eye className="h-8 w-8 text-muted-foreground" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">Avg Click Rate</p>
+                <p className="text-2xl font-bold">
+                  {emailCampaigns.length > 0 
+                    ? (emailCampaigns.reduce((sum, c) => sum + c.click_rate, 0) / emailCampaigns.length).toFixed(1)
+                    : '0'}%
+                </p>
+              </div>
+              <MousePointer className="h-8 w-8 text-muted-foreground" />
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
-      {/* Email Campaigns */}
-      {activeTab === 'email' && (
-        <div className="grid gap-4">
-          {emailCampaigns.map((campaign) => (
-            <Card key={campaign.id}>
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-primary/10 rounded-lg">
-                      <Mail className="h-4 w-4" />
-                    </div>
-                    <div>
-                      <h3 className="font-medium">{campaign.name}</h3>
-                      <p className="text-sm text-muted-foreground">{campaign.subject}</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center gap-3">
-                    <Badge className={getStatusColor(campaign.status)}>
-                      {campaign.status}
-                    </Badge>
-                    
-                    <div className="text-sm text-muted-foreground text-right">
-                      <div>Sent: {campaign.send_count}</div>
-                      <div>Open: {Math.round(campaign.open_rate * 100)}%</div>
-                    </div>
-                    
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => toggleCampaignStatus(campaign.id, 'email', campaign.status)}
-                    >
-                      {campaign.status === 'active' ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
-                    </Button>
-                    
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => sendTestEmail(campaign.id)}
-                    >
-                      Test
-                    </Button>
-                  </div>
-                </div>
-                
-                <div className="mt-4 grid grid-cols-3 gap-4 text-sm">
-                  <div className="text-center">
-                    <div className="font-medium text-lg">{Math.round(campaign.open_rate * 100)}%</div>
-                    <div className="text-muted-foreground">Open Rate</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="font-medium text-lg">{Math.round(campaign.click_rate * 100)}%</div>
-                    <div className="text-muted-foreground">Click Rate</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="font-medium text-lg">{Math.round(campaign.conversion_rate * 100)}%</div>
-                    <div className="text-muted-foreground">Conversion Rate</div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      )}
+      {/* Campaigns Tabs */}
+      <Tabs defaultValue="email" className="w-full">
+        <TabsList>
+          <TabsTrigger value="email">Email Campaigns</TabsTrigger>
+          <TabsTrigger value="sms">SMS Campaigns</TabsTrigger>
+        </TabsList>
 
-      {/* SMS Campaigns */}
-      {activeTab === 'sms' && (
-        <div className="grid gap-4">
-          {smsCampaigns.map((campaign) => (
-            <Card key={campaign.id}>
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-primary/10 rounded-lg">
-                      <MessageSquare className="h-4 w-4" />
+        <TabsContent value="email" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Email Campaigns</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {emailCampaigns.map((campaign) => (
+                  <div key={campaign.id} className="flex items-center justify-between p-4 border rounded-lg">
+                    <div className="flex items-center gap-4">
+                      <div className="p-2 bg-primary/10 rounded-lg">
+                        <Mail className="h-4 w-4" />
+                      </div>
+                      <div>
+                        <h3 className="font-medium">{campaign.name}</h3>
+                        <p className="text-sm text-muted-foreground">{campaign.subject}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {campaign.sent_count} sent • {campaign.open_rate}% open rate • {campaign.click_rate}% click rate
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="font-medium">{campaign.name}</h3>
-                      <p className="text-sm text-muted-foreground truncate max-w-md">{campaign.message}</p>
+                    
+                    <div className="flex items-center gap-2">
+                      <Badge className={getStatusColor(campaign.status)}>
+                        {campaign.status}
+                      </Badge>
+                      <Button size="sm" variant="outline">
+                        <Edit className="h-3 w-3 mr-1" />
+                        Edit
+                      </Button>
+                      <Button size="sm" variant="outline" onClick={() => deleteCampaign(campaign.id, 'email')}>
+                        <Trash2 className="h-3 w-3" />
+                      </Button>
                     </div>
                   </div>
-                  
-                  <div className="flex items-center gap-3">
-                    <Badge className={getStatusColor(campaign.status)}>
-                      {campaign.status}
-                    </Badge>
-                    
-                    <div className="text-sm text-muted-foreground text-right">
-                      <div>Sent: {campaign.send_count}</div>
-                      <div>Response: {Math.round(campaign.response_rate * 100)}%</div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="sms" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>SMS Campaigns</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {smsCampaigns.map((campaign) => (
+                  <div key={campaign.id} className="flex items-center justify-between p-4 border rounded-lg">
+                    <div className="flex items-center gap-4">
+                      <div className="p-2 bg-primary/10 rounded-lg">
+                        <MessageSquare className="h-4 w-4" />
+                      </div>
+                      <div>
+                        <h3 className="font-medium">{campaign.name}</h3>
+                        <p className="text-sm text-muted-foreground">{campaign.message}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {campaign.sent_count} sent • {campaign.response_rate}% response rate
+                        </p>
+                      </div>
                     </div>
                     
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => toggleCampaignStatus(campaign.id, 'sms', campaign.status)}
-                    >
-                      {campaign.status === 'active' ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
-                    </Button>
-                    
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => sendTestSMS(campaign.id)}
-                    >
-                      Test
-                    </Button>
+                    <div className="flex items-center gap-2">
+                      <Badge className={getStatusColor(campaign.status)}>
+                        {campaign.status}
+                      </Badge>
+                      <Button size="sm" variant="outline">
+                        <Edit className="h-3 w-3 mr-1" />
+                        Edit
+                      </Button>
+                      <Button size="sm" variant="outline" onClick={() => deleteCampaign(campaign.id, 'sms')}>
+                        <Trash2 className="h-3 w-3" />
+                      </Button>
+                    </div>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      )}
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
 
       {/* Create Email Campaign Dialog */}
       <DialogContent className="max-w-2xl">
@@ -497,16 +402,16 @@ export function EmailAutomation() {
             <Input
               value={newEmailCampaign.name}
               onChange={(e) => setNewEmailCampaign({...newEmailCampaign, name: e.target.value})}
-              placeholder="e.g., Welcome Email Series"
+              placeholder="e.g., Welcome Series"
             />
           </div>
           
           <div className="space-y-2">
-            <Label>Email Subject</Label>
+            <Label>Subject Line</Label>
             <Input
               value={newEmailCampaign.subject}
               onChange={(e) => setNewEmailCampaign({...newEmailCampaign, subject: e.target.value})}
-              placeholder="e.g., Welcome to our financial planning service"
+              placeholder="Email subject..."
             />
           </div>
           
@@ -515,34 +420,16 @@ export function EmailAutomation() {
             <Textarea
               value={newEmailCampaign.content}
               onChange={(e) => setNewEmailCampaign({...newEmailCampaign, content: e.target.value})}
-              placeholder="Write your email content here... Use {{name}}, {{company}} for personalization"
+              placeholder="Email content..."
               rows={6}
             />
           </div>
           
-          <div className="space-y-2">
-            <Label>Trigger Type</Label>
-            <Select
-              value={newEmailCampaign.trigger_type}
-              onValueChange={(value: any) => setNewEmailCampaign({...newEmailCampaign, trigger_type: value})}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="lead_status_change">Lead Status Change</SelectItem>
-                <SelectItem value="time_based">Time Based</SelectItem>
-                <SelectItem value="engagement_based">Engagement Based</SelectItem>
-                <SelectItem value="manual">Manual</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          
           <div className="flex justify-end gap-2">
-            <Button variant="outline" onClick={() => setIsCreateEmailOpen(false)}>
+            <Button variant="outline" onClick={() => setIsEmailDialogOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={createEmailCampaign}>
+            <Button onClick={handleCreateEmailCampaign}>
               Create Campaign
             </Button>
           </div>
@@ -550,7 +437,7 @@ export function EmailAutomation() {
       </DialogContent>
 
       {/* Create SMS Campaign Dialog */}
-      <Dialog open={isCreateSMSOpen} onOpenChange={setIsCreateSMSOpen}>
+      <Dialog open={isSMSDialogOpen} onOpenChange={setIsSMSDialogOpen}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle>Create SMS Campaign</DialogTitle>
@@ -561,47 +448,29 @@ export function EmailAutomation() {
               <Input
                 value={newSMSCampaign.name}
                 onChange={(e) => setNewSMSCampaign({...newSMSCampaign, name: e.target.value})}
-                placeholder="e.g., Appointment Reminder"
+                placeholder="e.g., Follow-up Sequence"
               />
             </div>
             
             <div className="space-y-2">
-              <Label>SMS Message (160 characters max)</Label>
+              <Label>Message</Label>
               <Textarea
                 value={newSMSCampaign.message}
                 onChange={(e) => setNewSMSCampaign({...newSMSCampaign, message: e.target.value})}
-                placeholder="Hi {{name}}, this is a reminder about your meeting..."
+                placeholder="SMS message..."
                 rows={3}
                 maxLength={160}
               />
-              <div className="text-sm text-muted-foreground text-right">
+              <p className="text-sm text-muted-foreground">
                 {newSMSCampaign.message.length}/160 characters
-              </div>
-            </div>
-            
-            <div className="space-y-2">
-              <Label>Trigger Type</Label>
-              <Select
-                value={newSMSCampaign.trigger_type}
-                onValueChange={(value: any) => setNewSMSCampaign({...newSMSCampaign, trigger_type: value})}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="lead_status_change">Lead Status Change</SelectItem>
-                  <SelectItem value="time_based">Time Based</SelectItem>
-                  <SelectItem value="engagement_based">Engagement Based</SelectItem>
-                  <SelectItem value="manual">Manual</SelectItem>
-                </SelectContent>
-              </Select>
+              </p>
             </div>
             
             <div className="flex justify-end gap-2">
-              <Button variant="outline" onClick={() => setIsCreateSMSOpen(false)}>
+              <Button variant="outline" onClick={() => setIsSMSDialogOpen(false)}>
                 Cancel
               </Button>
-              <Button onClick={createSMSCampaign}>
+              <Button onClick={handleCreateSMSCampaign}>
                 Create Campaign
               </Button>
             </div>

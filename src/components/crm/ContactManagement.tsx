@@ -85,7 +85,7 @@ export function ContactManagement() {
     company: '',
     title: '',
     lead_source: 'manual',
-    status: 'prospect' as const,
+    status: 'prospect' as 'prospect' | 'lead' | 'client' | 'inactive',
     tags: [] as string[],
     notes: ''
   });

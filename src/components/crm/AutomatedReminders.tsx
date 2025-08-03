@@ -87,7 +87,11 @@ export function AutomatedReminders() {
   const [newRule, setNewRule] = useState({
     name: '',
     trigger_type: 'time_based' as const,
-    trigger_conditions: {},
+    trigger_conditions: {
+      delay_hours: 0,
+      delay_days: 0,
+      no_activity_days: 0
+    },
     action_type: 'email' as const,
     template_content: '',
     priority: 'medium' as const
@@ -206,7 +210,11 @@ export function AutomatedReminders() {
       setNewRule({
         name: '',
         trigger_type: 'time_based',
-        trigger_conditions: {},
+        trigger_conditions: {
+          delay_hours: 0,
+          delay_days: 0,
+          no_activity_days: 0
+        },
         action_type: 'email',
         template_content: '',
         priority: 'medium'
@@ -517,7 +525,11 @@ export function AutomatedReminders() {
               <Label>Trigger Type</Label>
               <Select 
                 value={newRule.trigger_type} 
-                onValueChange={(value: any) => setNewRule({...newRule, trigger_type: value, trigger_conditions: {}})}
+                onValueChange={(value: any) => setNewRule({...newRule, trigger_type: value, trigger_conditions: {
+                  delay_hours: 0,
+                  delay_days: 0,
+                  no_activity_days: 0
+                }})}
               >
                 <SelectTrigger>
                   <SelectValue />
