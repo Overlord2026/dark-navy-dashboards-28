@@ -19,7 +19,6 @@ import {
   User
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
 import { format } from 'date-fns';
 
 interface TimeEntry {
@@ -47,8 +46,39 @@ export function TimeTrackingWidget() {
   const [isTracking, setIsTracking] = useState(false);
   const [startTime, setStartTime] = useState<Date | null>(null);
   const [elapsedTime, setElapsedTime] = useState(0);
-  const [timeEntries, setTimeEntries] = useState<TimeEntry[]>([]);
-  const [clients, setClients] = useState<Client[]>([]);
+  const [timeEntries, setTimeEntries] = useState<TimeEntry[]>([
+    {
+      id: '1',
+      client_id: '1',
+      task_description: 'Tax return preparation and review',
+      hours_worked: 3.5,
+      hourly_rate: 150,
+      work_date: '2024-02-01',
+      is_billable: true,
+      status: 'billed',
+      created_at: '2024-02-01T10:00:00Z',
+      accountant_clients: { business_name: 'Johnson Corp' }
+    },
+    {
+      id: '2',
+      client_id: '2',
+      task_description: 'Quarterly financial review',
+      hours_worked: 2.0,
+      hourly_rate: 150,
+      work_date: '2024-02-02',
+      is_billable: true,
+      status: 'approved',
+      created_at: '2024-02-02T14:00:00Z',
+      accountant_clients: { business_name: 'Smith LLC' }
+    }
+  ]);
+  
+  const [clients, setClients] = useState<Client[]>([
+    { id: '1', business_name: 'Johnson Corp' },
+    { id: '2', business_name: 'Smith LLC' },
+    { id: '3', business_name: 'Davis Enterprises' }
+  ]);
+  
   const [isAddEntryOpen, setIsAddEntryOpen] = useState(false);
   
   const [currentTask, setCurrentTask] = useState({
@@ -68,11 +98,6 @@ export function TimeTrackingWidget() {
   });
 
   useEffect(() => {
-    fetchTimeEntries();
-    fetchClients();
-  }, []);
-
-  useEffect(() => {
     let interval: NodeJS.Timeout;
     if (isTracking && startTime) {
       interval = setInterval(() => {
@@ -81,41 +106,6 @@ export function TimeTrackingWidget() {
     }
     return () => clearInterval(interval);
   }, [isTracking, startTime]);
-
-  const fetchTimeEntries = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('accountant_time_entries')
-        .select(`
-          *,
-          accountant_clients (
-            business_name
-          )
-        `)
-        .order('work_date', { ascending: false })
-        .limit(10);
-
-      if (error) throw error;
-      setTimeEntries(data || []);
-    } catch (error) {
-      console.error('Error fetching time entries:', error);
-    }
-  };
-
-  const fetchClients = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('accountant_clients')
-        .select('id, business_name')
-        .eq('status', 'active')
-        .order('business_name');
-
-      if (error) throw error;
-      setClients(data || []);
-    } catch (error) {
-      console.error('Error fetching clients:', error);
-    }
-  };
 
   const startTracking = () => {
     if (!currentTask.client_id || !currentTask.task_description) {
@@ -145,87 +135,74 @@ export function TimeTrackingWidget() {
     });
   };
 
-  const stopTracking = async () => {
+  const stopTracking = () => {
     if (!startTime) return;
 
     const hours = elapsedTime / 3600;
     
-    try {
-      const { error } = await supabase
-        .from('accountant_time_entries')
-        .insert([{
-          client_id: currentTask.client_id,
-          task_description: currentTask.task_description,
-          hours_worked: hours,
-          hourly_rate: currentTask.hourly_rate,
-          work_date: format(new Date(), 'yyyy-MM-dd'),
-          is_billable: currentTask.is_billable,
-          status: 'draft'
-        }]);
+    const entry: TimeEntry = {
+      id: Math.random().toString(36).substr(2, 9),
+      client_id: currentTask.client_id,
+      task_description: currentTask.task_description,
+      hours_worked: hours,
+      hourly_rate: currentTask.hourly_rate,
+      work_date: format(new Date(), 'yyyy-MM-dd'),
+      is_billable: currentTask.is_billable,
+      status: 'draft',
+      created_at: new Date().toISOString(),
+      accountant_clients: { business_name: clients.find(c => c.id === currentTask.client_id)?.business_name || '' }
+    };
 
-      if (error) throw error;
+    setTimeEntries(prev => [entry, ...prev]);
+    setIsTracking(false);
+    setStartTime(null);
+    setElapsedTime(0);
+    setCurrentTask({
+      client_id: '',
+      task_description: '',
+      hourly_rate: 150,
+      is_billable: true
+    });
 
-      setIsTracking(false);
-      setStartTime(null);
-      setElapsedTime(0);
-      setCurrentTask({
-        client_id: '',
-        task_description: '',
-        hourly_rate: 150,
-        is_billable: true
-      });
-
-      fetchTimeEntries();
-
-      toast({
-        title: "Time Entry Saved",
-        description: `Tracked ${hours.toFixed(2)} hours`,
-      });
-    } catch (error) {
-      console.error('Error saving time entry:', error);
-      toast({
-        title: "Error",
-        description: "Failed to save time entry",
-        variant: "destructive",
-      });
-    }
+    toast({
+      title: "Time Entry Saved",
+      description: `Tracked ${hours.toFixed(2)} hours`,
+    });
   };
 
-  const addManualEntry = async () => {
-    try {
-      const { error } = await supabase
-        .from('accountant_time_entries')
-        .insert([{
-          ...newEntry,
-          status: 'draft'
-        }]);
-
-      if (error) throw error;
-
-      setIsAddEntryOpen(false);
-      setNewEntry({
-        client_id: '',
-        task_description: '',
-        hours_worked: 0,
-        hourly_rate: 150,
-        work_date: format(new Date(), 'yyyy-MM-dd'),
-        is_billable: true
-      });
-
-      fetchTimeEntries();
-
+  const addManualEntry = () => {
+    if (!newEntry.client_id || !newEntry.task_description || newEntry.hours_worked <= 0) {
       toast({
-        title: "Time Entry Added",
-        description: "Manual time entry has been added",
-      });
-    } catch (error) {
-      console.error('Error adding time entry:', error);
-      toast({
-        title: "Error",
-        description: "Failed to add time entry",
+        title: "Missing Information",
+        description: "Please fill in all required fields",
         variant: "destructive",
       });
+      return;
     }
+
+    const entry: TimeEntry = {
+      id: Math.random().toString(36).substr(2, 9),
+      ...newEntry,
+      status: 'draft',
+      created_at: new Date().toISOString(),
+      accountant_clients: { business_name: clients.find(c => c.id === newEntry.client_id)?.business_name || '' }
+    };
+
+    setTimeEntries(prev => [entry, ...prev]);
+    setIsAddEntryOpen(false);
+    setNewEntry({
+      client_id: '',
+      task_description: '',
+      hours_worked: 0,
+      hourly_rate: 150,
+      work_date: format(new Date(), 'yyyy-MM-dd'),
+      is_billable: true
+    });
+
+    toast({
+      title: "Time Entry Added",
+      description: "Manual time entry has been added",
+    });
   };
 
   const formatTime = (seconds: number) => {

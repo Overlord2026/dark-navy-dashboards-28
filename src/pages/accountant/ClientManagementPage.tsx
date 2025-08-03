@@ -23,15 +23,15 @@ import {
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { useCelebration } from '@/hooks/useCelebration';
+import { Celebration } from '@/components/ConfettiAnimation';
 
 export default function ClientManagementPage() {
   const { toast } = useToast();
-  const { triggerCelebration, CelebrationComponent } = useCelebration();
+  const [showConfetti, setShowConfetti] = useState(false);
 
   return (
     <div className="container mx-auto p-6 space-y-6">
-      <CelebrationComponent />
+      <Celebration trigger={showConfetti} />
       
       <div className="flex justify-between items-center">
         <div>

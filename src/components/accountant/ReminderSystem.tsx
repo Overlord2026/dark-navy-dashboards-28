@@ -21,7 +21,6 @@ import {
   X
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
 import { format, addDays, isAfter, isBefore } from 'date-fns';
 
 interface Reminder {
@@ -49,8 +48,44 @@ interface Client {
 
 export function ReminderSystem() {
   const { toast } = useToast();
-  const [reminders, setReminders] = useState<Reminder[]>([]);
-  const [clients, setClients] = useState<Client[]>([]);
+  const [reminders, setReminders] = useState<Reminder[]>([
+    {
+      id: '1',
+      client_id: '1',
+      reminder_type: 'tax_deadline',
+      title: 'Q4 Tax Filing Deadline',
+      description: 'Submit quarterly tax returns for Johnson Corp',
+      due_date: '2024-03-15',
+      reminder_date: '2024-03-10',
+      is_recurring: true,
+      recurrence_interval: 'quarterly',
+      status: 'active',
+      priority: 'high',
+      created_at: '2024-01-15T10:00:00Z',
+      accountant_clients: { business_name: 'Johnson Corp' }
+    },
+    {
+      id: '2',
+      client_id: '2',
+      reminder_type: 'document_request',
+      title: 'Collect 2023 Financial Records',
+      description: 'Request bank statements and receipts for Smith LLC',
+      due_date: '2024-02-20',
+      reminder_date: '2024-02-15',
+      is_recurring: false,
+      status: 'active',
+      priority: 'medium',
+      created_at: '2024-01-16T09:00:00Z',
+      accountant_clients: { business_name: 'Smith LLC' }
+    }
+  ]);
+  
+  const [clients, setClients] = useState<Client[]>([
+    { id: '1', business_name: 'Johnson Corp' },
+    { id: '2', business_name: 'Smith LLC' },
+    { id: '3', business_name: 'Davis Enterprises' }
+  ]);
+  
   const [isAddReminderOpen, setIsAddReminderOpen] = useState(false);
   const [filter, setFilter] = useState('all');
 
@@ -67,165 +102,90 @@ export function ReminderSystem() {
   });
 
   useEffect(() => {
-    fetchReminders();
-    fetchClients();
     checkUpcomingReminders();
   }, []);
 
-  const fetchReminders = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('accountant_reminders')
-        .select(`
-          *,
-          accountant_clients (
-            business_name
-          )
-        `)
-        .order('due_date', { ascending: true });
+  const checkUpcomingReminders = () => {
+    const today = new Date();
+    const tomorrow = addDays(today, 1);
+    
+    const upcomingReminders = reminders.filter(reminder => {
+      const reminderDate = new Date(reminder.reminder_date);
+      return reminder.status === 'active' && 
+             reminderDate >= today && 
+             reminderDate <= tomorrow;
+    });
 
-      if (error) throw error;
-      setReminders(data || []);
-    } catch (error) {
-      console.error('Error fetching reminders:', error);
-    }
-  };
-
-  const fetchClients = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('accountant_clients')
-        .select('id, business_name')
-        .eq('status', 'active')
-        .order('business_name');
-
-      if (error) throw error;
-      setClients(data || []);
-    } catch (error) {
-      console.error('Error fetching clients:', error);
-    }
-  };
-
-  const checkUpcomingReminders = async () => {
-    try {
-      const today = new Date();
-      const tomorrow = addDays(today, 1);
-      
-      const { data, error } = await supabase
-        .from('accountant_reminders')
-        .select(`
-          *,
-          accountant_clients (
-            business_name
-          )
-        `)
-        .eq('status', 'active')
-        .gte('reminder_date', format(today, 'yyyy-MM-dd'))
-        .lte('reminder_date', format(tomorrow, 'yyyy-MM-dd'));
-
-      if (error) throw error;
-
-      if (data && data.length > 0) {
-        data.forEach((reminder) => {
-          toast({
-            title: "Reminder Alert",
-            description: `${reminder.title} is due ${format(new Date(reminder.due_date), 'MMM d, yyyy')}`,
-          });
+    if (upcomingReminders.length > 0) {
+      upcomingReminders.forEach((reminder) => {
+        toast({
+          title: "Reminder Alert",
+          description: `${reminder.title} is due ${format(new Date(reminder.due_date), 'MMM d, yyyy')}`,
         });
-      }
-    } catch (error) {
-      console.error('Error checking reminders:', error);
-    }
-  };
-
-  const addReminder = async () => {
-    try {
-      const { error } = await supabase
-        .from('accountant_reminders')
-        .insert([{
-          ...newReminder,
-          status: 'active'
-        }]);
-
-      if (error) throw error;
-
-      setIsAddReminderOpen(false);
-      setNewReminder({
-        client_id: '',
-        reminder_type: 'custom',
-        title: '',
-        description: '',
-        due_date: '',
-        reminder_date: '',
-        is_recurring: false,
-        recurrence_interval: 'monthly',
-        priority: 'medium'
-      });
-
-      fetchReminders();
-
-      toast({
-        title: "Reminder Added",
-        description: "New reminder has been created",
-      });
-    } catch (error) {
-      console.error('Error adding reminder:', error);
-      toast({
-        title: "Error",
-        description: "Failed to add reminder",
-        variant: "destructive",
       });
     }
   };
 
-  const updateReminderStatus = async (reminderId: string, status: string) => {
-    try {
-      const { error } = await supabase
-        .from('accountant_reminders')
-        .update({ status })
-        .eq('id', reminderId);
-
-      if (error) throw error;
-
-      fetchReminders();
-
-      toast({
-        title: "Reminder Updated",
-        description: `Reminder marked as ${status}`,
-      });
-    } catch (error) {
-      console.error('Error updating reminder:', error);
+  const addReminder = () => {
+    if (!newReminder.title || !newReminder.due_date) {
       toast({
         title: "Error",
-        description: "Failed to update reminder",
+        description: "Please fill in required fields",
         variant: "destructive",
       });
+      return;
     }
+
+    const reminder: Reminder = {
+      id: Math.random().toString(36).substr(2, 9),
+      ...newReminder,
+      status: 'active',
+      created_at: new Date().toISOString(),
+      accountant_clients: newReminder.client_id ? 
+        { business_name: clients.find(c => c.id === newReminder.client_id)?.business_name || '' } : 
+        undefined
+    };
+
+    setReminders(prev => [...prev, reminder]);
+    setIsAddReminderOpen(false);
+    setNewReminder({
+      client_id: '',
+      reminder_type: 'custom',
+      title: '',
+      description: '',
+      due_date: '',
+      reminder_date: '',
+      is_recurring: false,
+      recurrence_interval: 'monthly',
+      priority: 'medium'
+    });
+
+    toast({
+      title: "Reminder Added",
+      description: "New reminder has been created",
+    });
   };
 
-  const deleteReminder = async (reminderId: string) => {
-    try {
-      const { error } = await supabase
-        .from('accountant_reminders')
-        .delete()
-        .eq('id', reminderId);
+  const updateReminderStatus = (reminderId: string, status: string) => {
+    setReminders(prev => 
+      prev.map(reminder => 
+        reminder.id === reminderId ? { ...reminder, status: status as 'active' | 'completed' | 'cancelled' } : reminder
+      )
+    );
 
-      if (error) throw error;
+    toast({
+      title: "Reminder Updated",
+      description: `Reminder marked as ${status}`,
+    });
+  };
 
-      fetchReminders();
+  const deleteReminder = (reminderId: string) => {
+    setReminders(prev => prev.filter(reminder => reminder.id !== reminderId));
 
-      toast({
-        title: "Reminder Deleted",
-        description: "Reminder has been deleted",
-      });
-    } catch (error) {
-      console.error('Error deleting reminder:', error);
-      toast({
-        title: "Error",
-        description: "Failed to delete reminder",
-        variant: "destructive",
-      });
-    }
+    toast({
+      title: "Reminder Deleted",
+      description: "Reminder has been deleted",
+    });
   };
 
   const getTypeIcon = (type: string) => {
@@ -501,24 +461,17 @@ export function ReminderSystem() {
                     {reminder.description && (
                       <p className="text-sm text-muted-foreground">{reminder.description}</p>
                     )}
-                    <div className="flex gap-4 text-sm text-muted-foreground">
-                      {reminder.accountant_clients && (
-                        <span className="flex items-center gap-1">
-                          <User className="h-3 w-3" />
-                          {reminder.accountant_clients.business_name}
-                        </span>
-                      )}
-                      <span className="flex items-center gap-1">
-                        <Calendar className="h-3 w-3" />
-                        Due: {format(new Date(reminder.due_date), 'MMM d, yyyy')}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Bell className="h-3 w-3" />
-                        Remind: {format(new Date(reminder.reminder_date), 'MMM d, yyyy')}
-                      </span>
+                    {reminder.accountant_clients && (
+                      <p className="text-sm text-muted-foreground">
+                        Client: {reminder.accountant_clients.business_name}
+                      </p>
+                    )}
+                    <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                      <span>Due: {format(new Date(reminder.due_date), 'MMM d, yyyy')}</span>
+                      <span>Reminder: {format(new Date(reminder.reminder_date), 'MMM d, yyyy')}</span>
                     </div>
                   </div>
-                  <div className="flex gap-1">
+                  <div className="flex items-center gap-2">
                     {reminder.status === 'active' && (
                       <Button
                         variant="outline"
@@ -541,9 +494,7 @@ export function ReminderSystem() {
             ))}
             {filteredReminders.length === 0 && (
               <div className="text-center py-8 text-muted-foreground">
-                {filter === 'all' 
-                  ? 'No reminders yet. Add your first reminder to get started.'
-                  : `No ${filter} reminders found.`}
+                No reminders found for the selected filter.
               </div>
             )}
           </div>
