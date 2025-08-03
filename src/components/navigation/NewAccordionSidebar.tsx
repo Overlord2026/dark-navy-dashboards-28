@@ -28,7 +28,10 @@ import {
   Ellipsis,
   Menu,
   X,
-  BuildingIcon
+  BuildingIcon,
+  Scale,
+  FileText,
+  Search
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -248,6 +251,41 @@ const getNavigationByRole = (role: string, tier?: string): NavItem[] => {
     }
   ];
 
+  const attorneyNav: NavItem[] = [
+    ...baseNav,
+    {
+      id: 'legal-services',
+      title: 'Legal Services',
+      icon: Scale,
+      children: [
+        {
+          id: 'estate-planning',
+          title: 'Estate Planning',
+          href: '/attorney/estate-planning',
+          icon: Scale
+        },
+        {
+          id: 'business-law',
+          title: 'Business Law',
+          href: '/attorney/business-law',
+          icon: BriefcaseIcon
+        },
+        {
+          id: 'contracts',
+          title: 'Contracts',
+          href: '/attorney/contracts',
+          icon: FileText
+        },
+        {
+          id: 'research',
+          title: 'Research',
+          href: '/attorney/research',
+          icon: Search
+        }
+      ]
+    }
+  ];
+
   const adminNav: NavItem[] = [
     ...baseNav,
     {
@@ -278,9 +316,10 @@ const getNavigationByRole = (role: string, tier?: string): NavItem[] => {
       return clientNav;
     case 'advisor':
       return advisorNav;
+    case 'attorney':
+      return attorneyNav;
     case 'accountant':
     case 'consultant':
-    case 'attorney':
       return professionalNav;
     case 'admin':
     case 'tenant_admin':
