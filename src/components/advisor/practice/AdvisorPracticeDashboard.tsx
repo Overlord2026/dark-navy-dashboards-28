@@ -26,6 +26,7 @@ import { PracticeBillingModule } from './modules/PracticeBillingModule';
 import { PracticeRMDModule } from './modules/PracticeRMDModule';
 import { PracticeComplianceModule } from './modules/PracticeComplianceModule';
 import { PracticeAnalyticsModule } from './modules/PracticeAnalyticsModule';
+import { ADVComplianceFilingsModule } from './modules/ADVComplianceFilingsModule';
 import { EventAnalyzer } from '@/pages/EventAnalyzer';
 
 export function AdvisorPracticeDashboard() {
@@ -59,7 +60,7 @@ export function AdvisorPracticeDashboard() {
 
       {/* Main Practice Modules */}
       <Tabs defaultValue="dashboard" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-8 lg:grid-cols-12">
+        <TabsList className="grid w-full grid-cols-5 lg:grid-cols-10">
           <TabsTrigger value="dashboard" className="flex items-center gap-1">
             <BarChart3 className="h-4 w-4" />
             <span className="hidden sm:inline">Dashboard</span>
@@ -83,6 +84,10 @@ export function AdvisorPracticeDashboard() {
           <TabsTrigger value="compliance" className="flex items-center gap-1">
             <CheckSquare className="h-4 w-4" />
             <span className="hidden sm:inline">Compliance</span>
+          </TabsTrigger>
+          <TabsTrigger value="adv-filings" className="flex items-center gap-1">
+            <FileSpreadsheet className="h-4 w-4" />
+            <span className="hidden sm:inline">ADV Filings</span>
           </TabsTrigger>
           <TabsTrigger value="events" className="flex items-center gap-1">
             <Target className="h-4 w-4" />
@@ -186,6 +191,10 @@ export function AdvisorPracticeDashboard() {
 
         <TabsContent value="compliance">
           <PracticeComplianceModule />
+        </TabsContent>
+
+        <TabsContent value="adv-filings">
+          <ADVComplianceFilingsModule />
         </TabsContent>
 
         <TabsContent value="events">
