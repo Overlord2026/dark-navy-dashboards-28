@@ -34,15 +34,8 @@ export function BFOHomePage() {
           <img 
             src={treeLogoConfig.src}
             alt={treeLogoConfig.alt}
-            className="h-20 w-auto mb-6 mx-auto"
+            className="h-16 w-auto mb-8 mx-auto md:h-20"
           />
-          
-          <div className="space-y-2">
-            <h2 className="text-xl sm:text-2xl font-bold tracking-wider text-gold font-serif">
-              BOUTIQUE FAMILY OFFICE™
-            </h2>
-            <div className="w-24 h-0.5 bg-gradient-to-r from-transparent via-gold to-transparent mx-auto"></div>
-          </div>
         </div>
 
         {/* Main Headline */}
