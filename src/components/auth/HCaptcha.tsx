@@ -21,40 +21,24 @@ export const HCaptchaComponent = forwardRef<HCaptchaRef, HCaptchaComponentProps>
 
     useImperativeHandle(ref, () => ({
       executeAsync: async (): Promise<string | null> => {
-        return new Promise((resolve) => {
-          if (hcaptchaRef.current) {
-            hcaptchaRef.current.execute({ async: true }).then((response) => {
-              if (response && response.response) {
-                resolve(response.response);
-              } else {
-                resolve(null);
-              }
-            }).catch(() => {
-              resolve(null);
-            });
-          } else {
-            resolve(null);
-          }
-        });
+        // QA MODE: Return dummy token immediately without CAPTCHA
+        console.log("QA MODE: hCAPTCHA disabled - returning dummy token");
+        return "qa-mode-dummy-token";
       },
       resetCaptcha: () => {
-        if (hcaptchaRef.current) {
-          hcaptchaRef.current.resetCaptcha();
-        }
+        // QA MODE: No-op
+        console.log("QA MODE: hCAPTCHA reset disabled");
       }
     }));
 
+    // QA MODE: Show disabled message instead of CAPTCHA
     return (
       <div className="flex justify-center my-4">
-        <HCaptcha
-          ref={hcaptchaRef}
-          sitekey={HCAPTCHA_SITE_KEY}
-          onVerify={onVerify}
-          onExpire={onExpire}
-          onError={onError}
-          size="normal"
-          theme="light"
-        />
+        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
+          <div className="text-sm text-blue-700 dark:text-blue-300 text-center">
+            🛠️ QA Mode: hCAPTCHA Disabled
+          </div>
+        </div>
       </div>
     );
   }
