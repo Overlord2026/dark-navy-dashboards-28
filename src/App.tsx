@@ -23,6 +23,8 @@ import { LeadIntakeForm } from "@/pages/leads/LeadIntakeForm";
 import { LeadConfirmation } from "@/pages/leads/LeadConfirmation";
 import { PipelineBoard } from "@/pages/leads/PipelineBoard";
 import { LeadScoringDashboard } from "@/components/leads/LeadScoringDashboard";
+import LinkedInImport from "./pages/LinkedInImport";
+import ProfessionalOnboardingSuccess from "./pages/ProfessionalOnboardingSuccess";
 import Index from "./pages/Index";
 // Dashboard default export
 import Dashboard from "./pages/Dashboard";
@@ -164,9 +166,11 @@ function App() {
                            <Route path="/analyzer/retirement-income-gap" element={<RetirementIncomeGapAnalyzer />} />
                            <Route path="/info/retirement-roadmap" element={<RetirementRoadmapInfo />} />
                            <Route path="/retirement-analyzer" element={<RetirementAnalyzerDemo />} />
-                          <Route path="/tax-center" element={<PublicTaxCenter />} />
+                           <Route path="/tax-center" element={<PublicTaxCenter />} />
+                           <Route path="/linkedin-import" element={<LinkedInImport />} />
+                           <Route path="/professional-onboarding-success" element={<ProfessionalOnboardingSuccess />} />
                   
-                  <Route 
+                  <Route
                     path="/advisor/billing" 
                     element={
                       <AuthWrapper requireAuth={true} allowedRoles={getAdvisorAccessRoles()}>

@@ -130,7 +130,7 @@ export default function LinkedInImport() {
     setLoading(true);
     try {
       // Save professional profile to database
-      const { error } = await supabase.from('professionals_marketplace').insert({
+      const { error } = await supabase.from('linkedin_professionals').insert({
         name: formData.name,
         title: formData.title,
         company: formData.company,
@@ -139,9 +139,13 @@ export default function LinkedInImport() {
         email: formData.email,
         phone: formData.phone,
         linkedin_url: formData.linkedInUrl,
+        linkedin_id: linkedInProfile.id,
+        profile_image_url: linkedInProfile.profilePicture?.displayImage?.elements?.[0]?.identifiers?.[0]?.identifier,
         profile_source: 'linkedin_import',
         status: 'active',
-        featured: true // Give LinkedIn imports featured status initially
+        featured: true, // Give LinkedIn imports featured status initially
+        referral_code: 'PROF' + Math.random().toString(36).substring(2, 8).toUpperCase(),
+        referred_by: searchParams.get('ref')
       });
 
       if (error) throw error;
