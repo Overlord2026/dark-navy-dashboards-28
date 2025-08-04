@@ -173,3 +173,7 @@ verify_jwt = false
 [functions.check-api-keys]
 verify_jwt = false
 # @public-ok - API key validation utility for QA
+
+[functions.test-api-integrations]
+verify_jwt = false
+# @public-ok - API integration testing suite for QA

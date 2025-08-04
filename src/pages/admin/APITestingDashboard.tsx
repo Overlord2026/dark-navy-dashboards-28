@@ -1,0 +1,21 @@
+import React from 'react';
+import { APIIntegrationTester } from '@/components/admin/APIIntegrationTester';
+import { QAWarningBanner } from '@/components/admin/QAWarningBanner';
+
+export default function APITestingDashboard() {
+  return (
+    <div className="container mx-auto py-6 space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold">API Integration Testing</h1>
+          <p className="text-muted-foreground">
+            Live testing of all API connections and integrations
+          </p>
+        </div>
+      </div>
+      
+      <QAWarningBanner />
+      <APIIntegrationTester />
+    </div>
+  );
+}

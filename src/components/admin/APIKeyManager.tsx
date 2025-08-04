@@ -3,9 +3,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
-import { AlertTriangle, CheckCircle, Key, RefreshCw, Settings } from "lucide-react";
+import { AlertTriangle, CheckCircle, Key, RefreshCw, Settings, TestTube } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { useNavigate } from 'react-router-dom';
 
 interface APISecret {
   name: string;
@@ -128,6 +129,7 @@ export function APIKeyManager() {
   const [secrets, setSecrets] = useState<APISecret[]>(API_SECRETS);
   const [isChecking, setIsChecking] = useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const checkSecrets = async () => {
     setIsChecking(true);
@@ -279,6 +281,14 @@ export function APIKeyManager() {
                 <RefreshCw className="h-4 w-4 mr-2" />
               )}
               Refresh Status
+            </Button>
+            <Button 
+              onClick={() => navigate('/admin/api-testing')}
+              variant="default"
+              size="sm"
+            >
+              <TestTube className="h-4 w-4 mr-2" />
+              Test Connections
             </Button>
           </div>
         </CardHeader>
