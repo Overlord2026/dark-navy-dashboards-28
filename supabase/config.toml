@@ -154,3 +154,14 @@ verify_jwt = false
 
 [functions.parse-retirement-pdf]
 verify_jwt = true
+
+[functions.alternative-investments]
+verify_jwt = true
+
+[functions.finnhub-stock-stats]
+verify_jwt = false
+# @public-ok - Market data service
+
+[functions.market-data]
+verify_jwt = false
+# @public-ok - Market data service
