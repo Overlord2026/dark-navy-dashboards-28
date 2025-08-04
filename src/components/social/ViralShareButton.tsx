@@ -1,0 +1,195 @@
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+import { Share2, Copy, Check, ExternalLink } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Textarea } from '@/components/ui/textarea';
+import { Badge } from '@/components/ui/badge';
+import { useToast } from '@/hooks/use-toast';
+
+interface ViralShareButtonProps {
+  variant?: 'button' | 'card' | 'inline';
+  landingPageUrl?: string;
+  userName?: string;
+  customMessage?: string;
+  showDismiss?: boolean;
+  onDismiss?: () => void;
+}
+
+const ViralShareButton: React.FC<ViralShareButtonProps> = ({
+  variant = 'button',
+  landingPageUrl = window.location.origin + '/join-pros',
+  userName = 'Professional',
+  customMessage,
+  showDismiss = false,
+  onDismiss
+}) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const { toast } = useToast();
+
+  const defaultMessage = `I just joined the Family Office Marketplace™—the new home for fiduciary professionals and families. Import your LinkedIn profile and join me: ${landingPageUrl} #FamilyOfficeMarketplace #WealthManagement #FutureOfFinance`;
+
+  const shareMessage = customMessage || defaultMessage;
+
+  const handleLinkedInShare = () => {
+    const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(landingPageUrl)}&title=${encodeURIComponent('Join the Family Office Marketplace™')}&summary=${encodeURIComponent(shareMessage)}`;
+    window.open(linkedInUrl, '_blank', 'width=550,height=550');
+    
+    toast({
+      title: "Shared on LinkedIn",
+      description: "Thank you for helping us grow the community!",
+    });
+  };
+
+  const handleCopyMessage = async () => {
+    try {
+      await navigator.clipboard.writeText(shareMessage);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+      
+      toast({
+        title: "Message copied",
+        description: "Share this message anywhere to invite others!",
+      });
+    } catch (error) {
+      toast({
+        title: "Copy failed",
+        description: "Please copy the message manually.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const ShareContent = () => (
+    <div className="space-y-4">
+      <div className="text-center space-y-2">
+        <h3 className="text-lg font-semibold">Share the Future of Finance</h3>
+        <p className="text-sm text-muted-foreground">
+          Help us build the largest network of trusted wealth professionals
+        </p>
+      </div>
+
+      <div className="space-y-3">
+        <label className="text-sm font-medium">Message to share:</label>
+        <Textarea
+          value={shareMessage}
+          readOnly
+          className="min-h-[120px] text-sm"
+        />
+      </div>
+
+      <div className="flex gap-2">
+        <Button 
+          onClick={handleLinkedInShare}
+          className="flex-1 bg-[#0077b5] hover:bg-[#0077b5]/90 text-white"
+        >
+          <ExternalLink className="w-4 h-4 mr-2" />
+          Share on LinkedIn
+        </Button>
+        <Button 
+          onClick={handleCopyMessage}
+          variant="outline"
+          className="flex-1"
+        >
+          {copied ? (
+            <>
+              <Check className="w-4 h-4 mr-2" />
+              Copied!
+            </>
+          ) : (
+            <>
+              <Copy className="w-4 h-4 mr-2" />
+              Copy Message
+            </>
+          )}
+        </Button>
+      </div>
+
+      <div className="text-center">
+        <Badge variant="secondary" className="text-xs">
+          💡 Tip: Personal referrals get priority review and bonus features
+        </Badge>
+      </div>
+    </div>
+  );
+
+  if (variant === 'card') {
+    return (
+      <motion.div
+        initial={{ scale: 0.95, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.3 }}
+      >
+        <Card className="border-2 border-primary/20 bg-gradient-to-br from-primary/5 to-gold/5">
+          <CardContent className="p-6">
+            <div className="flex items-start justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-r from-primary to-gold flex items-center justify-center">
+                  <Share2 className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <h3 className="font-semibold">Spread the Word</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Invite colleagues to join
+                  </p>
+                </div>
+              </div>
+              {showDismiss && (
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={onDismiss}
+                  className="h-6 w-6 p-0"
+                >
+                  ×
+                </Button>
+              )}
+            </div>
+            <ShareContent />
+          </CardContent>
+        </Card>
+      </motion.div>
+    );
+  }
+
+  if (variant === 'inline') {
+    return (
+      <div className="space-y-4">
+        <div className="flex items-center gap-2">
+          <Share2 className="w-5 h-5 text-primary" />
+          <span className="font-semibold">Share with your network</span>
+        </div>
+        <ShareContent />
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <Button 
+        onClick={() => setIsModalOpen(true)}
+        variant="outline"
+        className="gap-2 border-primary/20 hover:bg-primary/5"
+      >
+        <Share2 className="w-4 h-4" />
+        🔗 Share on LinkedIn
+      </Button>
+
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Share2 className="w-5 h-5 text-primary" />
+              Share the Marketplace
+            </DialogTitle>
+          </DialogHeader>
+          <ShareContent />
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+};
+
+export default ViralShareButton;
