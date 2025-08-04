@@ -18,6 +18,7 @@ import { AuthWrapper } from "@/components/auth/AuthWrapper";
 import { getAdvisorAccessRoles } from "@/utils/roleHierarchy";
 import { DynamicLandingController } from "@/components/auth/DynamicLandingController";
 import { Navigation } from "@/components/Navigation";
+import { StickyTopBanner } from "@/components/layout/StickyTopBanner";
 import ReferralTracker from "@/components/tracking/ReferralTracker";
 import { QABypassIndicator } from "@/components/security/QABypassIndicator";
 import { BrandedFooter } from "@/components/ui/BrandedFooter";
@@ -25,6 +26,7 @@ import { LeadIntakeForm } from "@/pages/leads/LeadIntakeForm";
 import { LeadConfirmation } from "@/pages/leads/LeadConfirmation";
 import { PipelineBoard } from "@/pages/leads/PipelineBoard";
 import { LeadScoringDashboard } from "@/components/leads/LeadScoringDashboard";
+import { FamilyOfficeMarketplacePage } from "@/components/marketplace/FamilyOfficeMarketplacePage";
 import LinkedInImport from "./pages/LinkedInImport";
 import ProfessionalOnboardingSuccess from "./pages/ProfessionalOnboardingSuccess";
 import ProOnboarding from "./pages/ProOnboarding";
@@ -88,14 +90,16 @@ function App() {
                   <TenantProvider>
                     <AdvisorProvider>
                       <PersonaProvider>
-                       <BrowserRouter>
-                         <ReferralTracker />
-                        <Routes>
-                          <Route path="/" element={<Index />} />
-                          <Route path="/welcome" element={<WelcomePage />} />
-                          <Route path="/auth" element={<AuthPage />} />
-                          <Route path="/auth/:authType" element={<AuthPage />} />
-                          <Route path="/auth/:authType/:tenantId" element={<AuthPage />} />
+                        <BrowserRouter>
+                          <StickyTopBanner />
+                          <ReferralTracker />
+                         <Routes>
+                           <Route path="/" element={<Index />} />
+                           <Route path="/marketplace" element={<FamilyOfficeMarketplacePage />} />
+                           <Route path="/welcome" element={<WelcomePage />} />
+                           <Route path="/auth" element={<AuthPage />} />
+                           <Route path="/auth/:authType" element={<AuthPage />} />
+                           <Route path="/auth/:authType/:tenantId" element={<AuthPage />} />
                            <Route path="/dynamic-landing" element={<DynamicLandingController><div /></DynamicLandingController>} />
                           <Route path="/security" element={<SecuritySettingsPage />} />
                           <Route path="/dashboard" element={
