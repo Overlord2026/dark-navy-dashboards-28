@@ -3,6 +3,7 @@ import { ThreeColumnLayout } from '@/components/layout/ThreeColumnLayout';
 import { DashboardHeader } from '@/components/ui/DashboardHeader';
 import { ComprehensivePersonaQARunner } from '@/components/qa/ComprehensivePersonaQARunner';
 import { ProductionReadinessChecker } from '@/components/production/ProductionReadinessChecker';
+import { ComplianceGoLiveChecklist } from '@/components/compliance/ComplianceGoLiveChecklist';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export default function FinalQAValidationPage() {
@@ -14,11 +15,16 @@ export default function FinalQAValidationPage() {
           text="Comprehensive production readiness check including security, performance, QA testing, and deployment validation."
         />
         
-        <Tabs defaultValue="production" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
+        <Tabs defaultValue="compliance-golive" className="w-full">
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="compliance-golive">Compliance Go-Live</TabsTrigger>
             <TabsTrigger value="production">Production Readiness</TabsTrigger>
             <TabsTrigger value="persona-qa">Persona QA Testing</TabsTrigger>
           </TabsList>
+
+          <TabsContent value="compliance-golive" className="space-y-6">
+            <ComplianceGoLiveChecklist />
+          </TabsContent>
 
           <TabsContent value="production" className="space-y-6">
             <ProductionReadinessChecker />
