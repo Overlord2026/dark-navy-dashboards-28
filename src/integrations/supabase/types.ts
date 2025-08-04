@@ -506,6 +506,51 @@ export type Database = {
         }
         Relationships: []
       }
+      advisor_availability: {
+        Row: {
+          advisor_id: string
+          booking_advance_days: number | null
+          buffer_time_minutes: number | null
+          created_at: string
+          day_of_week: number
+          end_time: string
+          id: string
+          is_active: boolean | null
+          max_meetings_per_day: number | null
+          start_time: string
+          timezone: string
+          updated_at: string
+        }
+        Insert: {
+          advisor_id: string
+          booking_advance_days?: number | null
+          buffer_time_minutes?: number | null
+          created_at?: string
+          day_of_week: number
+          end_time: string
+          id?: string
+          is_active?: boolean | null
+          max_meetings_per_day?: number | null
+          start_time: string
+          timezone?: string
+          updated_at?: string
+        }
+        Update: {
+          advisor_id?: string
+          booking_advance_days?: number | null
+          buffer_time_minutes?: number | null
+          created_at?: string
+          day_of_week?: number
+          end_time?: string
+          id?: string
+          is_active?: boolean | null
+          max_meetings_per_day?: number | null
+          start_time?: string
+          timezone?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       advisor_email_templates: {
         Row: {
           advisor_id: string
@@ -2958,6 +3003,48 @@ export type Database = {
         }
         Relationships: []
       }
+      booking_workflows: {
+        Row: {
+          advisor_id: string
+          automation_rules: Json | null
+          created_at: string
+          delay_minutes: number | null
+          id: string
+          is_active: boolean | null
+          template_id: string | null
+          trigger_event: string
+          updated_at: string
+          workflow_name: string
+          workflow_type: string
+        }
+        Insert: {
+          advisor_id: string
+          automation_rules?: Json | null
+          created_at?: string
+          delay_minutes?: number | null
+          id?: string
+          is_active?: boolean | null
+          template_id?: string | null
+          trigger_event: string
+          updated_at?: string
+          workflow_name: string
+          workflow_type: string
+        }
+        Update: {
+          advisor_id?: string
+          automation_rules?: Json | null
+          created_at?: string
+          delay_minutes?: number | null
+          id?: string
+          is_active?: boolean | null
+          template_id?: string | null
+          trigger_event?: string
+          updated_at?: string
+          workflow_name?: string
+          workflow_type?: string
+        }
+        Relationships: []
+      }
       bookkeeping_reports: {
         Row: {
           anomalies_found: number | null
@@ -3149,6 +3236,54 @@ export type Database = {
           recurring_period?: string | null
           reminder_days?: number
           updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      calendar_sync_logs: {
+        Row: {
+          error_message: string | null
+          events_created: number | null
+          events_deleted: number | null
+          events_processed: number | null
+          events_updated: number | null
+          id: string
+          metadata: Json | null
+          sync_completed_at: string | null
+          sync_direction: string
+          sync_started_at: string
+          sync_status: string
+          sync_type: string
+          user_id: string
+        }
+        Insert: {
+          error_message?: string | null
+          events_created?: number | null
+          events_deleted?: number | null
+          events_processed?: number | null
+          events_updated?: number | null
+          id?: string
+          metadata?: Json | null
+          sync_completed_at?: string | null
+          sync_direction: string
+          sync_started_at?: string
+          sync_status?: string
+          sync_type: string
+          user_id: string
+        }
+        Update: {
+          error_message?: string | null
+          events_created?: number | null
+          events_deleted?: number | null
+          events_processed?: number | null
+          events_updated?: number | null
+          id?: string
+          metadata?: Json | null
+          sync_completed_at?: string | null
+          sync_direction?: string
+          sync_started_at?: string
+          sync_status?: string
+          sync_type?: string
           user_id?: string
         }
         Relationships: []
@@ -12944,6 +13079,50 @@ export type Database = {
           },
         ]
       }
+      meeting_reminders: {
+        Row: {
+          created_at: string
+          delivery_status: string | null
+          id: string
+          meeting_id: string
+          personalization_data: Json | null
+          reminder_type: string
+          scheduled_for: string
+          sent_at: string | null
+          template_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          delivery_status?: string | null
+          id?: string
+          meeting_id: string
+          personalization_data?: Json | null
+          reminder_type: string
+          scheduled_for: string
+          sent_at?: string | null
+          template_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          delivery_status?: string | null
+          id?: string
+          meeting_id?: string
+          personalization_data?: Json | null
+          reminder_type?: string
+          scheduled_for?: string
+          sent_at?: string | null
+          template_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "meeting_reminders_meeting_id_fkey"
+            columns: ["meeting_id"]
+            isOneToOne: false
+            referencedRelation: "scheduled_meetings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       meeting_summaries: {
         Row: {
           action_items: Json | null
@@ -18468,6 +18647,78 @@ export type Database = {
         }
         Relationships: []
       }
+      scheduled_meetings: {
+        Row: {
+          advisor_id: string
+          agenda: string | null
+          client_email: string
+          client_name: string
+          created_at: string
+          drive_recording_id: string | null
+          duration: number
+          follow_up_sent_at: string | null
+          google_event_id: string | null
+          google_meet_link: string | null
+          id: string
+          intake_form_data: Json | null
+          meeting_type: string
+          meeting_url: string | null
+          reminder_sent_at: string | null
+          scheduled_at: string
+          status: string
+          teams_meeting_id: string | null
+          title: string
+          updated_at: string
+          zoom_meeting_id: string | null
+        }
+        Insert: {
+          advisor_id: string
+          agenda?: string | null
+          client_email: string
+          client_name: string
+          created_at?: string
+          drive_recording_id?: string | null
+          duration: number
+          follow_up_sent_at?: string | null
+          google_event_id?: string | null
+          google_meet_link?: string | null
+          id?: string
+          intake_form_data?: Json | null
+          meeting_type?: string
+          meeting_url?: string | null
+          reminder_sent_at?: string | null
+          scheduled_at: string
+          status?: string
+          teams_meeting_id?: string | null
+          title: string
+          updated_at?: string
+          zoom_meeting_id?: string | null
+        }
+        Update: {
+          advisor_id?: string
+          agenda?: string | null
+          client_email?: string
+          client_name?: string
+          created_at?: string
+          drive_recording_id?: string | null
+          duration?: number
+          follow_up_sent_at?: string | null
+          google_event_id?: string | null
+          google_meet_link?: string | null
+          id?: string
+          intake_form_data?: Json | null
+          meeting_type?: string
+          meeting_url?: string | null
+          reminder_sent_at?: string | null
+          scheduled_at?: string
+          status?: string
+          teams_meeting_id?: string | null
+          title?: string
+          updated_at?: string
+          zoom_meeting_id?: string | null
+        }
+        Relationships: []
+      }
       seat_assignments: {
         Row: {
           assigned_by: string | null
@@ -21983,6 +22234,60 @@ export type Database = {
           id?: string
           quarterly_reports?: boolean | null
           report_format?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_integrations: {
+        Row: {
+          access_token_encrypted: string | null
+          auto_sync_enabled: boolean | null
+          connected_at: string | null
+          created_at: string
+          expires_at: string | null
+          id: string
+          integration_type: string
+          last_sync_at: string | null
+          metadata: Json | null
+          refresh_token_encrypted: string | null
+          scopes: string[] | null
+          status: string
+          sync_direction: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          access_token_encrypted?: string | null
+          auto_sync_enabled?: boolean | null
+          connected_at?: string | null
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          integration_type: string
+          last_sync_at?: string | null
+          metadata?: Json | null
+          refresh_token_encrypted?: string | null
+          scopes?: string[] | null
+          status?: string
+          sync_direction?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          access_token_encrypted?: string | null
+          auto_sync_enabled?: boolean | null
+          connected_at?: string | null
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          integration_type?: string
+          last_sync_at?: string | null
+          metadata?: Json | null
+          refresh_token_encrypted?: string | null
+          scopes?: string[] | null
+          status?: string
+          sync_direction?: string | null
           updated_at?: string
           user_id?: string
         }
