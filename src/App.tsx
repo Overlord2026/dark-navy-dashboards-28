@@ -59,6 +59,8 @@ import { AttorneyDashboard } from "./pages/AttorneyDashboard";
 import { CoachDashboard } from "./pages/CoachDashboard";
 import { ComplianceDashboard } from "./pages/ComplianceDashboard";
 import FAQPage from "./pages/FAQPage";
+import AdvisorPracticeHome from "./pages/advisor/AdvisorPracticeHome";
+import RIAPracticeQATest from "./pages/RIAPracticeQATest";
 
 const queryClient = new QueryClient();
 
@@ -178,7 +180,8 @@ function App() {
                             <Route path="/pro-onboarding" element={<ProOnboarding />} />
                             <Route path="/join-pros" element={<JoinProsLanding />} />
                             <Route path="/professional-onboarding-success" element={<ProfessionalOnboardingSuccess />} />
-                            <Route path="/faq" element={<FAQPage />} />
+                             <Route path="/faq" element={<FAQPage />} />
+                             <Route path="/qa/ria-practice" element={<RIAPracticeQATest />} />
                   
                   <Route
                     path="/advisor/billing" 
@@ -201,6 +204,22 @@ function App() {
                     element={
                       <AuthWrapper requireAuth={true} allowedRoles={getAdvisorAccessRoles()}>
                         <RegulatoryReportingPage />
+                      </AuthWrapper>
+                    } 
+                  />
+                  <Route 
+                    path="/advisor/practice" 
+                    element={
+                      <AuthWrapper requireAuth={true} allowedRoles={getAdvisorAccessRoles()}>
+                        <AdvisorPracticeHome />
+                      </AuthWrapper>
+                    } 
+                  />
+                  <Route 
+                    path="/advisor/practice/*" 
+                    element={
+                      <AuthWrapper requireAuth={true} allowedRoles={getAdvisorAccessRoles()}>
+                        <AdvisorPracticeHome />
                       </AuthWrapper>
                     } 
                   />
