@@ -17516,6 +17516,322 @@ export type Database = {
         }
         Relationships: []
       }
+      ria_state_checklists: {
+        Row: {
+          category: string | null
+          compliance_notes: string | null
+          created_at: string
+          description: string | null
+          doc_type: string
+          estimated_hours: number | null
+          example_file: string | null
+          id: string
+          is_required: boolean
+          order_sequence: number | null
+          requirement: string
+          state: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string | null
+          compliance_notes?: string | null
+          created_at?: string
+          description?: string | null
+          doc_type: string
+          estimated_hours?: number | null
+          example_file?: string | null
+          id?: string
+          is_required?: boolean
+          order_sequence?: number | null
+          requirement: string
+          state: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string | null
+          compliance_notes?: string | null
+          created_at?: string
+          description?: string | null
+          doc_type?: string
+          estimated_hours?: number | null
+          example_file?: string | null
+          id?: string
+          is_required?: boolean
+          order_sequence?: number | null
+          requirement?: string
+          state?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      ria_state_comms: {
+        Row: {
+          attachments: Json | null
+          id: string
+          is_internal: boolean | null
+          license_request_id: string
+          message: string
+          message_type: string | null
+          priority: string | null
+          read_by: Json | null
+          sender: string
+          timestamp: string
+        }
+        Insert: {
+          attachments?: Json | null
+          id?: string
+          is_internal?: boolean | null
+          license_request_id: string
+          message: string
+          message_type?: string | null
+          priority?: string | null
+          read_by?: Json | null
+          sender: string
+          timestamp?: string
+        }
+        Update: {
+          attachments?: Json | null
+          id?: string
+          is_internal?: boolean | null
+          license_request_id?: string
+          message?: string
+          message_type?: string | null
+          priority?: string | null
+          read_by?: Json | null
+          sender?: string
+          timestamp?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ria_state_comms_license_request_id_fkey"
+            columns: ["license_request_id"]
+            isOneToOne: false
+            referencedRelation: "ria_state_license_requests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ria_state_comms_sender_fkey"
+            columns: ["sender"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ria_state_comms_sender_fkey"
+            columns: ["sender"]
+            isOneToOne: false
+            referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      ria_state_docs: {
+        Row: {
+          ai_feedback: Json | null
+          ai_review_score: number | null
+          compliance_issues: Json | null
+          created_at: string
+          doc_type: string
+          file_name: string | null
+          file_size: number | null
+          file_url: string | null
+          id: string
+          license_request_id: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          updated_at: string
+          version_number: number | null
+        }
+        Insert: {
+          ai_feedback?: Json | null
+          ai_review_score?: number | null
+          compliance_issues?: Json | null
+          created_at?: string
+          doc_type: string
+          file_name?: string | null
+          file_size?: number | null
+          file_url?: string | null
+          id?: string
+          license_request_id: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          updated_at?: string
+          version_number?: number | null
+        }
+        Update: {
+          ai_feedback?: Json | null
+          ai_review_score?: number | null
+          compliance_issues?: Json | null
+          created_at?: string
+          doc_type?: string
+          file_name?: string | null
+          file_size?: number | null
+          file_url?: string | null
+          id?: string
+          license_request_id?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          updated_at?: string
+          version_number?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ria_state_docs_license_request_id_fkey"
+            columns: ["license_request_id"]
+            isOneToOne: false
+            referencedRelation: "ria_state_license_requests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ria_state_docs_reviewed_by_fkey"
+            columns: ["reviewed_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ria_state_docs_reviewed_by_fkey"
+            columns: ["reviewed_by"]
+            isOneToOne: false
+            referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      ria_state_license_requests: {
+        Row: {
+          approval_date: string | null
+          compliance_score: number | null
+          created_at: string
+          doc_links: Json | null
+          estimated_completion_date: string | null
+          fees_paid: number | null
+          id: string
+          notes: string | null
+          priority: string | null
+          reviewer: string | null
+          ria_id: string
+          state: string
+          state_reference_number: string | null
+          status: string
+          submission_date: string | null
+          updated_at: string
+        }
+        Insert: {
+          approval_date?: string | null
+          compliance_score?: number | null
+          created_at?: string
+          doc_links?: Json | null
+          estimated_completion_date?: string | null
+          fees_paid?: number | null
+          id?: string
+          notes?: string | null
+          priority?: string | null
+          reviewer?: string | null
+          ria_id: string
+          state: string
+          state_reference_number?: string | null
+          status?: string
+          submission_date?: string | null
+          updated_at?: string
+        }
+        Update: {
+          approval_date?: string | null
+          compliance_score?: number | null
+          created_at?: string
+          doc_links?: Json | null
+          estimated_completion_date?: string | null
+          fees_paid?: number | null
+          id?: string
+          notes?: string | null
+          priority?: string | null
+          reviewer?: string | null
+          ria_id?: string
+          state?: string
+          state_reference_number?: string | null
+          status?: string
+          submission_date?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ria_state_license_requests_reviewer_fkey"
+            columns: ["reviewer"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ria_state_license_requests_reviewer_fkey"
+            columns: ["reviewer"]
+            isOneToOne: false
+            referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "ria_state_license_requests_ria_id_fkey"
+            columns: ["ria_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ria_state_license_requests_ria_id_fkey"
+            columns: ["ria_id"]
+            isOneToOne: false
+            referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      ria_state_requirements: {
+        Row: {
+          created_at: string
+          description: string | null
+          fee_amount: number | null
+          id: string
+          is_mandatory: boolean | null
+          renewal_period_months: number | null
+          renewal_required: boolean | null
+          requirement_name: string
+          requirement_type: string
+          state: string
+          typical_processing_days: number | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          fee_amount?: number | null
+          id?: string
+          is_mandatory?: boolean | null
+          renewal_period_months?: number | null
+          renewal_required?: boolean | null
+          requirement_name: string
+          requirement_type: string
+          state: string
+          typical_processing_days?: number | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          fee_amount?: number | null
+          id?: string
+          is_mandatory?: boolean | null
+          renewal_period_months?: number | null
+          renewal_required?: boolean | null
+          requirement_name?: string
+          requirement_type?: string
+          state?: string
+          typical_processing_days?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       rollup_analytics: {
         Row: {
           avg_client_satisfaction: number | null
