@@ -10,6 +10,7 @@ import {
   BookOpen,
   Users,
   FileText,
+  Target,
   X,
   Settings,
   AlertTriangle,
@@ -183,6 +184,14 @@ export const InsuranceCEDashboard: React.FC = () => {
             >
               <FileText className="h-4 w-4 mr-2" />
               Compliance Guide
+            </Button>
+            <Button 
+              variant="outline"
+              onClick={() => window.open('/qa-testing', '_blank')}
+              className="border-purple-600 text-purple-600 hover:bg-purple-600 hover:text-white"
+            >
+              <Target className="h-4 w-4 mr-2" />
+              Run QA Tests
             </Button>
             <Button 
               variant="outline"

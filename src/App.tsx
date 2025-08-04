@@ -60,6 +60,7 @@ import { CoachDashboard } from "./pages/CoachDashboard";
 import { ComplianceDashboard } from "./pages/ComplianceDashboard";
 import FAQPage from "./pages/FAQPage";
 import AdvisorPracticeHome from "./pages/advisor/AdvisorPracticeHome";
+import QATestingPage from "./pages/QATestingPage";
 import RIAPracticeQATest from "./pages/RIAPracticeQATest";
 
 const queryClient = new QueryClient();
@@ -180,8 +181,9 @@ function App() {
                             <Route path="/pro-onboarding" element={<ProOnboarding />} />
                             <Route path="/join-pros" element={<JoinProsLanding />} />
                             <Route path="/professional-onboarding-success" element={<ProfessionalOnboardingSuccess />} />
-                             <Route path="/faq" element={<FAQPage />} />
-                             <Route path="/qa/ria-practice" element={<RIAPracticeQATest />} />
+                              <Route path="/faq" element={<FAQPage />} />
+                              <Route path="/qa-testing" element={<QATestingPage />} />
+                              <Route path="/qa/ria-practice" element={<RIAPracticeQATest />} />
                   
                   <Route
                     path="/advisor/billing" 
