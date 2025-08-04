@@ -9,19 +9,22 @@ import {
   Plus, 
   Upload, 
   Download, 
-  Filter, 
   FileText, 
   Calendar, 
   Clock, 
   CheckCircle, 
   XCircle, 
-  AlertCircle,
+  AlertTriangle,
   Search,
   DownloadCloud,
-  Upload as UploadIcon
+  UploadCloud,
+  ClipboardList,
+  ShieldCheck
 } from 'lucide-react';
 import { useDropzone } from 'react-dropzone';
 import { cn } from '@/lib/utils';
+import { useCelebration } from '@/hooks/useCelebration';
+import { toast } from 'sonner';
 
 interface Filing {
   id: string;
@@ -73,12 +76,12 @@ const mockFilings: Filing[] = [
 ];
 
 const statusConfig = {
-  draft: { color: 'bg-gray-500', label: 'Draft', icon: Clock },
-  pending: { color: 'bg-orange-500', label: 'Pending Review', icon: AlertCircle },
-  submitted: { color: 'bg-blue-500', label: 'Submitted', icon: Upload },
-  approved: { color: 'bg-green-500', label: 'Approved', icon: CheckCircle },
-  rejected: { color: 'bg-red-500', label: 'Rejected', icon: XCircle },
-  due_soon: { color: 'bg-amber-500', label: 'Due Soon', icon: Calendar }
+  draft: { color: 'bg-muted-foreground', label: 'Draft', icon: Clock },
+  pending: { color: 'bg-amber text-amber-foreground', label: 'Pending Review', icon: AlertTriangle },
+  submitted: { color: 'bg-navy text-navy-foreground', label: 'Submitted', icon: UploadCloud },
+  approved: { color: 'bg-emerald text-emerald-foreground', label: 'Approved', icon: CheckCircle },
+  rejected: { color: 'bg-destructive text-destructive-foreground', label: 'Rejected', icon: XCircle },
+  due_soon: { color: 'bg-amber text-amber-foreground', label: 'Due Soon', icon: Calendar }
 };
 
 const templateDocuments = [
@@ -93,11 +96,19 @@ export function ADVComplianceFilingsModule() {
   const [filings, setFilings] = useState<Filing[]>(mockFilings);
   const [activeFilter, setActiveFilter] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const { triggerCelebration, CelebrationComponent } = useCelebration();
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     console.log('Files dropped:', acceptedFiles);
-    // Handle file upload logic here
-  }, []);
+    toast.success(`${acceptedFiles.length} file(s) uploaded successfully!`);
+    
+    // Simulate successful filing submission to trigger celebration
+    if (acceptedFiles.length > 0) {
+      setTimeout(() => {
+        triggerCelebration('success', 'Filing submitted on time! 🎉');
+      }, 1000);
+    }
+  }, [triggerCelebration]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -120,8 +131,13 @@ export function ADVComplianceFilingsModule() {
     const Icon = config.icon;
     
     return (
-      <Badge variant="secondary" className={cn("text-white", config.color)}>
-        <Icon className="h-3 w-3 mr-1" />
+      <Badge 
+        variant="secondary" 
+        className={cn("flex items-center gap-1 font-medium", config.color)}
+        role="status"
+        aria-label={`Filing status: ${config.label}`}
+      >
+        <Icon className="h-3 w-3" aria-hidden="true" />
         {config.label}
       </Badge>
     );
@@ -136,20 +152,28 @@ export function ADVComplianceFilingsModule() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" role="main" aria-label="ADV & Compliance Filings">
+      <CelebrationComponent />
       {/* Header Actions */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-foreground">ADV & Compliance Filings</h2>
+          <h1 className="text-2xl font-bold text-foreground">ADV & Compliance Filings</h1>
           <p className="text-muted-foreground">Manage your regulatory filings and compliance documents</p>
         </div>
-        <div className="flex gap-2">
-          <Button>
-            <Plus className="h-4 w-4 mr-2" />
+        <div className="flex flex-col sm:flex-row gap-2">
+          <Button 
+            className="bg-navy hover:bg-navy/90 text-navy-foreground"
+            aria-label="Add new compliance filing"
+          >
+            <Plus className="h-4 w-4 mr-2" aria-hidden="true" />
             Add New Filing
           </Button>
-          <Button variant="outline">
-            <DownloadCloud className="h-4 w-4 mr-2" />
+          <Button 
+            variant="outline" 
+            className="border-gold text-gold hover:bg-gold hover:text-gold-foreground"
+            aria-label="Export filings data"
+          >
+            <DownloadCloud className="h-4 w-4 mr-2" aria-hidden="true" />
             Export
           </Button>
         </div>
@@ -158,8 +182,8 @@ export function ADVComplianceFilingsModule() {
       {/* Quick Upload Section */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <UploadIcon className="h-5 w-5" />
+          <CardTitle className="flex items-center gap-2 text-navy">
+            <UploadCloud className="h-5 w-5 text-emerald" aria-hidden="true" />
             Quick Upload
           </CardTitle>
         </CardHeader>
@@ -167,19 +191,25 @@ export function ADVComplianceFilingsModule() {
           <div
             {...getRootProps()}
             className={cn(
-              "border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors",
-              isDragActive ? "border-primary bg-primary/5" : "border-border hover:border-primary/50"
+              "border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-navy focus:ring-offset-2",
+              isDragActive ? "border-emerald bg-emerald/5" : "border-border hover:border-emerald/50"
             )}
+            role="button"
+            tabIndex={0}
+            aria-label="File upload area - drag and drop files or click to select"
           >
-            <input {...getInputProps()} />
-            <Upload className="h-8 w-8 mx-auto mb-4 text-muted-foreground" />
+            <input {...getInputProps()} aria-label="File selection input" />
+            <UploadCloud className="h-8 w-8 mx-auto mb-4 text-emerald" aria-hidden="true" />
             {isDragActive ? (
-              <p className="text-primary">Drop your ADV PDFs and CE certificates here...</p>
+              <p className="text-emerald font-medium">Drop your ADV PDFs and CE certificates here...</p>
             ) : (
               <div>
                 <p className="text-foreground font-medium">Drag & drop your filing documents here</p>
                 <p className="text-muted-foreground text-sm mt-1">
                   Supports PDF, JPG, PNG files up to 10MB
+                </p>
+                <p className="text-xs text-muted-foreground mt-2">
+                  Click to browse files if drag & drop is not available
                 </p>
               </div>
             )}
@@ -188,9 +218,21 @@ export function ADVComplianceFilingsModule() {
       </Card>
 
       <Tabs defaultValue="filings" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="filings">Active Filings</TabsTrigger>
-          <TabsTrigger value="templates">Document Templates</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-2 bg-muted">
+          <TabsTrigger 
+            value="filings" 
+            className="data-[state=active]:bg-navy data-[state=active]:text-navy-foreground"
+          >
+            <ClipboardList className="h-4 w-4 mr-2" aria-hidden="true" />
+            Active Filings
+          </TabsTrigger>
+          <TabsTrigger 
+            value="templates"
+            className="data-[state=active]:bg-navy data-[state=active]:text-navy-foreground"
+          >
+            <FileText className="h-4 w-4 mr-2" aria-hidden="true" />
+            Document Templates
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="filings" className="space-y-6">
@@ -198,23 +240,31 @@ export function ADVComplianceFilingsModule() {
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Search 
+                  className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" 
+                  aria-hidden="true" 
+                />
                 <Input
                   placeholder="Search filings..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
+                  className="pl-10 focus:ring-navy"
+                  aria-label="Search filings by type or description"
                 />
               </div>
             </div>
-            <div className="flex gap-2 flex-wrap">
+            <div className="flex gap-2 flex-wrap" role="group" aria-label="Filter filings by status">
               {['all', 'due_soon', 'pending', 'submitted', 'approved'].map((filter) => (
                 <Button
                   key={filter}
                   variant={activeFilter === filter ? "default" : "outline"}
                   size="sm"
                   onClick={() => setActiveFilter(filter)}
-                  className="capitalize"
+                  className={cn(
+                    "capitalize",
+                    activeFilter === filter ? "bg-navy hover:bg-navy/90 text-navy-foreground" : "border-navy text-navy hover:bg-navy hover:text-navy-foreground"
+                  )}
+                  aria-pressed={activeFilter === filter}
                 >
                   {filter === 'all' ? 'All' : filter.replace('_', ' ')}
                 </Button>
@@ -225,15 +275,15 @@ export function ADVComplianceFilingsModule() {
           {/* Filings Table */}
           <Card>
             <CardContent className="p-0">
-              <Table>
+              <Table role="table" aria-label="Compliance filings table">
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Filing Type</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Due Date</TableHead>
-                    <TableHead>Days Left</TableHead>
-                    <TableHead>Last Updated</TableHead>
-                    <TableHead>Actions</TableHead>
+                    <TableHead scope="col">Filing Type</TableHead>
+                    <TableHead scope="col">Status</TableHead>
+                    <TableHead scope="col">Due Date</TableHead>
+                    <TableHead scope="col">Days Left</TableHead>
+                    <TableHead scope="col">Last Updated</TableHead>
+                    <TableHead scope="col">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -258,9 +308,11 @@ export function ADVComplianceFilingsModule() {
                         <TableCell>
                           <div className={cn(
                             "text-sm font-medium",
-                            daysLeft <= 7 ? "text-red-600" : 
-                            daysLeft <= 30 ? "text-amber-600" : "text-green-600"
-                          )}>
+                            daysLeft <= 7 ? "text-destructive" : 
+                            daysLeft <= 30 ? "text-amber" : "text-emerald"
+                          )}
+                          aria-label={daysLeft > 0 ? `${daysLeft} days remaining` : `${Math.abs(daysLeft)} days overdue`}
+                          >
                             {daysLeft > 0 ? `${daysLeft} days` : `${Math.abs(daysLeft)} days overdue`}
                           </div>
                         </TableCell>
@@ -268,12 +320,22 @@ export function ADVComplianceFilingsModule() {
                           {new Date(filing.lastUpdated).toLocaleDateString()}
                         </TableCell>
                         <TableCell>
-                          <div className="flex gap-1">
-                            <Button variant="ghost" size="sm">
-                              <FileText className="h-4 w-4" />
+                          <div className="flex gap-1" role="group" aria-label="Filing actions">
+                            <Button 
+                              variant="ghost" 
+                              size="sm"
+                              className="hover:bg-navy/10 hover:text-navy"
+                              aria-label={`View ${filing.type} details`}
+                            >
+                              <FileText className="h-4 w-4" aria-hidden="true" />
                             </Button>
-                            <Button variant="ghost" size="sm">
-                              <Download className="h-4 w-4" />
+                            <Button 
+                              variant="ghost" 
+                              size="sm"
+                              className="hover:bg-emerald/10 hover:text-emerald"
+                              aria-label={`Download ${filing.type} document`}
+                            >
+                              <Download className="h-4 w-4" aria-hidden="true" />
                             </Button>
                           </div>
                         </TableCell>
@@ -289,23 +351,34 @@ export function ADVComplianceFilingsModule() {
         <TabsContent value="templates" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Download Template Documents</CardTitle>
+              <CardTitle className="text-navy">
+                <ShieldCheck className="h-5 w-5 inline mr-2 text-emerald" aria-hidden="true" />
+                Download Template Documents
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {templateDocuments.map((template, index) => (
-                  <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div 
+                    key={index} 
+                    className="flex items-center justify-between p-4 border rounded-lg hover:border-emerald/50 transition-colors"
+                  >
                     <div className="flex items-center gap-3">
-                      <FileText className="h-8 w-8 text-blue-500" />
+                      <FileText className="h-8 w-8 text-navy" aria-hidden="true" />
                       <div>
-                        <div className="font-medium">{template.name}</div>
+                        <div className="font-medium text-foreground">{template.name}</div>
                         <div className="text-sm text-muted-foreground">
                           {template.type} • {template.size}
                         </div>
                       </div>
                     </div>
-                    <Button variant="ghost" size="sm">
-                      <Download className="h-4 w-4" />
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      className="hover:bg-gold/10 hover:text-gold"
+                      aria-label={`Download ${template.name}`}
+                    >
+                      <Download className="h-4 w-4" aria-hidden="true" />
                     </Button>
                   </div>
                 ))}
@@ -316,16 +389,30 @@ export function ADVComplianceFilingsModule() {
       </Tabs>
 
       {/* Upcoming Deadlines Alert */}
-      <Card className="border-amber-200 bg-amber-50">
+      <Card 
+        className="border-amber bg-amber/5" 
+        role="alert" 
+        aria-labelledby="deadlines-heading"
+      >
         <CardContent className="pt-6">
           <div className="flex items-start gap-3">
-            <AlertCircle className="h-5 w-5 text-amber-600 mt-0.5" />
-            <div>
-              <h3 className="font-medium text-amber-900">Upcoming Deadlines</h3>
-              <p className="text-sm text-amber-700 mt-1">
+            <AlertTriangle 
+              className="h-5 w-5 text-amber mt-0.5 flex-shrink-0" 
+              aria-hidden="true" 
+            />
+            <div className="flex-1">
+              <h3 id="deadlines-heading" className="font-medium text-amber-foreground">
+                Upcoming Deadlines
+              </h3>
+              <p className="text-sm text-amber-foreground/80 mt-1">
                 You have 2 filings due within the next 30 days. Review and submit them to avoid penalties.
               </p>
-              <Button variant="outline" size="sm" className="mt-3 border-amber-300 text-amber-700 hover:bg-amber-100">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="mt-3 border-gold text-gold hover:bg-gold hover:text-gold-foreground"
+                aria-label="View upcoming deadline details"
+              >
                 View Details
               </Button>
             </div>
