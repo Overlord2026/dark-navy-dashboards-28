@@ -61,6 +61,7 @@ import { AttorneyDashboard } from "./pages/AttorneyDashboard";
 import { CoachDashboard } from "./pages/CoachDashboard";
 import { ComplianceDashboard } from "./pages/ComplianceDashboard";
 import HealthcareLongevityCenter from "@/components/healthcare/HealthcareLongevityCenter";
+import { AssetInventory } from "@/components/AssetInventory";
 import FAQPage from "./pages/FAQPage";
 import AdvisorPracticeHome from "./pages/advisor/AdvisorPracticeHome";
 import QATestingPage from "./pages/QATestingPage";
@@ -252,6 +253,7 @@ function App() {
                      } 
                    />
                    <Route path="/healthcare" element={<HealthcareLongevityCenter />} />
+                   <Route path="/assets" element={<AssetInventory />} />
 
                         </Routes>
                         <Navigation />
