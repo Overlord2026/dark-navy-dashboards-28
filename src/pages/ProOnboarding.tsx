@@ -11,9 +11,10 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
-import { LinkedinIcon, CheckCircle, Upload, Plus, X, User, Building, Award, MapPin } from 'lucide-react';
+import { LinkedinIcon, CheckCircle, Upload, Plus, X, User, Building, Award, MapPin, Shield, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
+import { GDPRConsentModal } from '@/components/professionals/GDPRConsentModal';
 
 interface LinkedInProfile {
   id: string;
@@ -67,6 +68,10 @@ export default function ProOnboarding() {
   const [currentStep, setCurrentStep] = useState(1);
   const [linkedInProfile, setLinkedInProfile] = useState<LinkedInProfile | null>(null);
   const [loading, setLoading] = useState(false);
+  const [showGDPRModal, setShowGDPRModal] = useState(false);
+  const [gdprConsented, setGdprConsented] = useState(false);
+  const [authError, setAuthError] = useState<string | null>(null);
+  const [existingUser, setExistingUser] = useState(false);
   const [formData, setFormData] = useState({
     // Basic Info
     name: '',
@@ -123,58 +128,82 @@ export default function ProOnboarding() {
 
   const handleLinkedInCallback = async (code: string) => {
     setLoading(true);
+    setAuthError(null);
+    
     try {
       // Call our edge function to exchange code for profile data
       const { data, error } = await supabase.functions.invoke('linkedin-import', {
-        body: { code }
+        body: { 
+          code,
+          redirectUri: `${window.location.origin}/pro-onboarding`
+        }
       });
 
       if (error) throw error;
 
+      if (!data.success) {
+        throw new Error(data.error || 'Failed to import LinkedIn profile');
+      }
+
+      // Check if user already exists by email
+      if (data.profile.email) {
+        const { data: existingProfiles } = await supabase
+          .from('professional_profiles')
+          .select('id, user_id')
+          .eq('contact_email', data.profile.email)
+          .limit(1);
+
+        if (existingProfiles && existingProfiles.length > 0) {
+          setExistingUser(true);
+          toast.info('Account found! Redirecting to your dashboard...');
+          // Route to appropriate dashboard based on user profile
+          setTimeout(() => navigate('/dashboard'), 2000);
+          return;
+        }
+      }
+
       setLinkedInProfile(data.profile);
-      prefillFromLinkedIn(data.profile, data.email);
+      prefillFromLinkedIn(data.profile);
       toast.success('LinkedIn profile imported successfully!');
     } catch (error) {
       console.error('LinkedIn import error:', error);
-      toast.error('Failed to import LinkedIn profile. Please try again.');
+      setAuthError(error instanceof Error ? error.message : 'Failed to import LinkedIn profile');
+      toast.error('Failed to import LinkedIn profile. You can still continue manually.');
     } finally {
       setLoading(false);
     }
   };
 
-  const prefillFromLinkedIn = (profile: LinkedInProfile, email: string) => {
-    const firstName = profile.firstName?.localized?.en_US || '';
-    const lastName = profile.lastName?.localized?.en_US || '';
-    const fullName = `${firstName} ${lastName}`.trim();
+  const prefillFromLinkedIn = (profile: any) => {
+    const fullName = `${profile.firstName} ${profile.lastName}`.trim();
     
-    // Extract work experience
-    const experience = profile.positions?.elements?.map(pos => ({
-      title: pos.title?.localized?.en_US || '',
-      company: pos.companyName?.localized?.en_US || '',
-      period: formatWorkPeriod(pos.timePeriod),
-      description: pos.description?.localized?.en_US || ''
+    // Map experience from the structured response
+    const experience = profile.experience?.map((exp: any) => ({
+      title: exp.title,
+      company: exp.company,
+      period: `${exp.startDate} - ${exp.endDate}`,
+      description: exp.description
     })) || [];
 
-    // Extract education
-    const education = profile.educations?.elements?.map(edu => ({
-      school: edu.schoolName?.localized?.en_US || '',
-      degree: edu.degreeName?.localized?.en_US || '',
-      field: edu.fieldOfStudy?.localized?.en_US || '',
+    // Map education from the structured response
+    const education = profile.education?.map((edu: any) => ({
+      school: edu.school,
+      degree: edu.degree,
+      field: edu.field,
       year: ''
     })) || [];
 
     // Extract specialties from headline
-    const headline = profile.headline?.localized?.en_US || '';
-    const specialties = extractSpecialties(headline);
+    const specialties = extractSpecialties(profile.headline);
 
     setFormData(prev => ({
       ...prev,
       name: fullName,
-      title: headline,
+      title: profile.headline,
       company: experience[0]?.company || '',
-      bio: profile.summary?.localized?.en_US || '',
-      email: email,
-      profileImage: profile.profilePicture?.displayImage?.elements?.[0]?.identifiers?.[0]?.identifier || '',
+      bio: profile.summary,
+      email: profile.email,
+      profileImage: profile.profilePhotoUrl,
       experience: experience,
       education: education,
       specialties: specialties,
@@ -202,10 +231,20 @@ export default function ProOnboarding() {
   };
 
   const handleLinkedInLogin = () => {
-    const clientId = '78c9g8au2ddoil'; // LinkedIn app client ID
+    setShowGDPRModal(true);
+  };
+
+  const handleGDPRConsent = () => {
+    setGdprConsented(true);
+    setShowGDPRModal(false);
+    initiateLinkedInAuth();
+  };
+
+  const initiateLinkedInAuth = () => {
+    const clientId = '78c9g8au2ddoil';
     const redirectUri = encodeURIComponent(`${window.location.origin}/pro-onboarding`);
-    const scope = encodeURIComponent('r_liteprofile r_emailaddress');
-    const state = Math.random().toString(36).substring(7);
+    const scope = encodeURIComponent('r_liteprofile r_emailaddress w_member_social');
+    const state = 'gdpr-consented-' + Math.random().toString(36).substring(7);
     
     const authUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&state=${state}`;
     window.location.href = authUrl;
@@ -278,23 +317,38 @@ export default function ProOnboarding() {
 
     setLoading(true);
     try {
-      // Save professional profile to database
-      const { error } = await supabase.from('linkedin_professionals').insert({
-        name: formData.name,
-        title: formData.title,
-        company: formData.company,
+      // Save to professional_profiles table (the main table)
+      const { error } = await supabase.from('professional_profiles').insert({
+        business_name: formData.name,
+        professional_type_id: formData.professionalType.toLowerCase().replace(/\s+/g, '_'),
         bio: formData.bio,
-        specialties: formData.specialties,
-        email: formData.email,
-        phone: formData.phone,
+        specializations: formData.specialties,
+        contact_email: formData.email,
+        contact_phone: formData.phone,
+        website_url: formData.website,
         linkedin_url: formData.linkedinUrl,
-        linkedin_id: linkedInProfile?.id,
         profile_image_url: formData.profileImage,
-        profile_source: linkedInProfile ? 'linkedin_import' : 'manual',
-        status: 'active',
-        featured: true,
-        referral_code: 'PROF' + Math.random().toString(36).substring(2, 8).toUpperCase(),
-        referred_by: searchParams.get('ref')
+        years_experience: parseInt(formData.experience[0]?.period?.match(/\d{4}/)?.[0] || '0') || null,
+        location: formData.location,
+        is_verified: false,
+        accepts_new_clients: formData.acceptingClients,
+        hourly_rate: formData.hourlyRate ? parseFloat(formData.hourlyRate) : null,
+        min_engagement_value: formData.minEngagement ? parseFloat(formData.minEngagement) : null,
+        status: 'pending_approval',
+        custom_fields: {
+          linkedin_profile: linkedInProfile,
+          experience: formData.experience,
+          education: formData.education,
+          certifications: formData.certifications,
+          languages: formData.languages,
+          fee_structure: formData.feeStructure,
+          availability: formData.availability,
+          gdpr_consented: gdprConsented,
+          marketing_consent: formData.marketingConsent,
+          data_source: linkedInProfile ? 'linkedin_import' : 'manual',
+          referral_code: 'PROF' + Math.random().toString(36).substring(2, 8).toUpperCase(),
+          referred_by: searchParams.get('ref')
+        }
       });
 
       if (error) throw error;
@@ -353,7 +407,7 @@ export default function ProOnboarding() {
               {currentStep === 1 && (
                 <div className="space-y-6">
                   {/* LinkedIn Import Section */}
-                  {!linkedInProfile && (
+                  {!linkedInProfile && !existingUser && (
                     <Card className="border-blue-200 bg-blue-50/50 dark:bg-blue-950/20">
                       <CardContent className="p-6">
                         <div className="text-center space-y-4">
@@ -372,6 +426,51 @@ export default function ProOnboarding() {
                             <LinkedinIcon className="w-4 h-4 mr-2" />
                             {loading ? 'Importing...' : 'Sign in with LinkedIn'}
                           </Button>
+                          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                            <Shield className="w-3 h-3" />
+                            GDPR compliant • Secure import
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  )}
+
+                  {/* Auth Error Display */}
+                  {authError && (
+                    <Card className="border-red-200 bg-red-50/50 dark:bg-red-950/20">
+                      <CardContent className="p-4">
+                        <div className="flex items-center gap-3">
+                          <AlertCircle className="w-5 h-5 text-red-600" />
+                          <div>
+                            <p className="font-medium text-red-700 dark:text-red-300">
+                              LinkedIn Import Failed
+                            </p>
+                            <p className="text-sm text-red-600 dark:text-red-400">
+                              {authError}
+                            </p>
+                            <p className="text-xs text-red-500 mt-1">
+                              You can continue with manual entry below.
+                            </p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  )}
+
+                  {/* Existing User Notice */}
+                  {existingUser && (
+                    <Card className="border-green-200 bg-green-50/50 dark:bg-green-950/20">
+                      <CardContent className="p-6">
+                        <div className="text-center space-y-4">
+                          <CheckCircle className="w-12 h-12 mx-auto text-green-600" />
+                          <div>
+                            <h3 className="font-semibold text-lg text-green-700 dark:text-green-300">
+                              Welcome Back!
+                            </h3>
+                            <p className="text-sm text-green-600 dark:text-green-400">
+                              We found your existing professional profile. Redirecting to your dashboard...
+                            </p>
+                          </div>
                         </div>
                       </CardContent>
                     </Card>
@@ -714,6 +813,13 @@ export default function ProOnboarding() {
           </Card>
         </motion.div>
       </div>
+
+      {/* GDPR Consent Modal */}
+      <GDPRConsentModal 
+        isOpen={showGDPRModal}
+        onClose={() => setShowGDPRModal(false)}
+        onConsent={handleGDPRConsent}
+      />
     </div>
   );
 }

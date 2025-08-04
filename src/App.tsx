@@ -26,6 +26,7 @@ import { LeadScoringDashboard } from "@/components/leads/LeadScoringDashboard";
 import LinkedInImport from "./pages/LinkedInImport";
 import ProfessionalOnboardingSuccess from "./pages/ProfessionalOnboardingSuccess";
 import ProOnboarding from "./pages/ProOnboarding";
+import JoinProsLanding from "./pages/JoinProsLanding";
 import Index from "./pages/Index";
 // Dashboard default export
 import Dashboard from "./pages/Dashboard";
@@ -168,9 +169,10 @@ function App() {
                            <Route path="/info/retirement-roadmap" element={<RetirementRoadmapInfo />} />
                            <Route path="/retirement-analyzer" element={<RetirementAnalyzerDemo />} />
                            <Route path="/tax-center" element={<PublicTaxCenter />} />
-                           <Route path="/linkedin-import" element={<LinkedInImport />} />
-                           <Route path="/pro-onboarding" element={<ProOnboarding />} />
-                           <Route path="/professional-onboarding-success" element={<ProfessionalOnboardingSuccess />} />
+                            <Route path="/linkedin-import" element={<LinkedInImport />} />
+                            <Route path="/pro-onboarding" element={<ProOnboarding />} />
+                            <Route path="/join-pros" element={<JoinProsLanding />} />
+                            <Route path="/professional-onboarding-success" element={<ProfessionalOnboardingSuccess />} />
                   
                   <Route
                     path="/advisor/billing" 

@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -12,20 +13,22 @@ serve(async (req) => {
   }
 
   try {
-    const { code } = await req.json();
+    const { code, redirectUri } = await req.json();
     
     if (!code) {
       throw new Error('Authorization code is required');
     }
 
-    // LinkedIn OAuth credentials (these would need to be set as secrets)
+    // LinkedIn OAuth credentials
     const clientId = '78c9g8au2ddoil';
     const clientSecret = Deno.env.get('LINKEDIN_CLIENT_SECRET');
-    const redirectUri = 'https://xcmqjkvyvuhoslbzmlgi.supabase.co/functions/v1/linkedin-import';
+    const actualRedirectUri = redirectUri || 'https://xcmqjkvyvuhoslbzmlgi.supabase.co/functions/v1/linkedin-import';
     
     if (!clientSecret) {
       throw new Error('LinkedIn client secret not configured');
     }
+
+    console.log('Exchange code for token with redirect URI:', actualRedirectUri);
 
     // Exchange authorization code for access token
     const tokenResponse = await fetch('https://www.linkedin.com/oauth/v2/accessToken', {
@@ -38,19 +41,23 @@ serve(async (req) => {
         code,
         client_id: clientId,
         client_secret: clientSecret,
-        redirect_uri: redirectUri,
+        redirect_uri: actualRedirectUri,
       }),
     });
 
     if (!tokenResponse.ok) {
+      const errorText = await tokenResponse.text();
+      console.error('Token response error:', errorText);
       throw new Error(`Token exchange failed: ${tokenResponse.statusText}`);
     }
 
     const tokenData = await tokenResponse.json();
     const accessToken = tokenData.access_token;
 
-    // Fetch profile data from LinkedIn
-    const profileResponse = await fetch('https://api.linkedin.com/v2/people/~:(id,firstName,lastName,headline,summary,profilePicture(displayImage~:playableStreams))', {
+    console.log('Token acquired successfully');
+
+    // Fetch comprehensive profile data from LinkedIn
+    const profileResponse = await fetch('https://api.linkedin.com/v2/people/~:(id,firstName,lastName,headline,summary,profilePicture(displayImage~:playableStreams),positions(elements*(title,companyName,description,timePeriod)),educations(elements*(schoolName,degreeName,fieldOfStudy)))', {
       headers: {
         'Authorization': `Bearer ${accessToken}`,
         'cache-control': 'no-cache',
@@ -59,6 +66,8 @@ serve(async (req) => {
     });
 
     if (!profileResponse.ok) {
+      const errorText = await profileResponse.text();
+      console.error('Profile response error:', errorText);
       throw new Error(`Profile fetch failed: ${profileResponse.statusText}`);
     }
 
@@ -81,10 +90,43 @@ serve(async (req) => {
 
     console.log('LinkedIn profile imported successfully:', profileData.id);
 
+    // Extract profile photo URL
+    let profilePhotoUrl = '';
+    if (profileData.profilePicture?.displayImage?.elements?.length > 0) {
+      const photoElement = profileData.profilePicture.displayImage.elements[0];
+      if (photoElement.identifiers?.length > 0) {
+        profilePhotoUrl = photoElement.identifiers[0].identifier;
+      }
+    }
+
+    // Structure the response with all needed fields
+    const structuredProfile = {
+      id: profileData.id,
+      firstName: profileData.firstName?.localized?.en_US || '',
+      lastName: profileData.lastName?.localized?.en_US || '',
+      headline: profileData.headline?.localized?.en_US || '',
+      summary: profileData.summary?.localized?.en_US || '',
+      profilePhotoUrl: profilePhotoUrl,
+      email: email,
+      experience: profileData.positions?.elements?.map((pos: any) => ({
+        title: pos.title?.localized?.en_US || '',
+        company: pos.companyName?.localized?.en_US || '',
+        description: pos.description?.localized?.en_US || '',
+        startDate: pos.timePeriod?.startDate ? `${pos.timePeriod.startDate.month}/${pos.timePeriod.startDate.year}` : '',
+        endDate: pos.timePeriod?.endDate ? `${pos.timePeriod.endDate.month}/${pos.timePeriod.endDate.year}` : 'Present'
+      })) || [],
+      education: profileData.educations?.elements?.map((edu: any) => ({
+        school: edu.schoolName?.localized?.en_US || '',
+        degree: edu.degreeName?.localized?.en_US || '',
+        field: edu.fieldOfStudy?.localized?.en_US || ''
+      })) || []
+    };
+
     return new Response(
       JSON.stringify({
-        profile: profileData,
-        email: email,
+        success: true,
+        profile: structuredProfile,
+        rawProfile: profileData // Keep for backward compatibility
       }),
       {
         headers: { 
@@ -98,6 +140,7 @@ serve(async (req) => {
     console.error('LinkedIn import error:', error);
     return new Response(
       JSON.stringify({ 
+        success: false,
         error: error.message || 'Failed to import LinkedIn profile' 
       }),
       {
