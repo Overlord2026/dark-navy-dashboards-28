@@ -13,6 +13,7 @@ import { SubscriptionProvider } from "@/context/SubscriptionContext";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { TenantProvider } from "@/context/TenantContext";
 import { AdvisorProvider } from "@/context/AdvisorContext";
+import { PersonaProvider } from "@/context/PersonaContext";
 import { AuthWrapper } from "@/components/auth/AuthWrapper";
 import { getAdvisorAccessRoles } from "@/utils/roleHierarchy";
 import { DynamicLandingController } from "@/components/auth/DynamicLandingController";
@@ -57,6 +58,7 @@ import { ConsultantDashboard } from "./pages/ConsultantDashboard";
 import { AttorneyDashboard } from "./pages/AttorneyDashboard";
 import { CoachDashboard } from "./pages/CoachDashboard";
 import { ComplianceDashboard } from "./pages/ComplianceDashboard";
+import FAQPage from "./pages/FAQPage";
 
 const queryClient = new QueryClient();
 
@@ -77,6 +79,7 @@ function App() {
                 <SubscriptionProvider>
                   <TenantProvider>
                     <AdvisorProvider>
+                      <PersonaProvider>
                        <BrowserRouter>
                          <ReferralTracker />
                         <Routes>
@@ -175,6 +178,7 @@ function App() {
                             <Route path="/pro-onboarding" element={<ProOnboarding />} />
                             <Route path="/join-pros" element={<JoinProsLanding />} />
                             <Route path="/professional-onboarding-success" element={<ProfessionalOnboardingSuccess />} />
+                            <Route path="/faq" element={<FAQPage />} />
                   
                   <Route
                     path="/advisor/billing" 
@@ -203,10 +207,11 @@ function App() {
 
                         </Routes>
                         <Navigation />
-                      </BrowserRouter>
-                      <QABypassIndicator />
-                      <BrandedFooter />
-                    </AdvisorProvider>
+                       </BrowserRouter>
+                       <QABypassIndicator />
+                       <BrandedFooter />
+                      </PersonaProvider>
+                     </AdvisorProvider>
                   </TenantProvider>
                   <Toaster />
                   <Sonner />
