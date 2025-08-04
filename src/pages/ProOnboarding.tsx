@@ -148,9 +148,9 @@ export default function ProOnboarding() {
       // Check if user already exists by email
       if (data.profile.email) {
         const { data: existingProfiles } = await supabase
-          .from('professional_profiles')
+          .from('advisor_profiles')
           .select('id, user_id')
-          .eq('contact_email', data.profile.email)
+          .eq('email', data.profile.email)
           .limit(1);
 
         if (existingProfiles && existingProfiles.length > 0) {
@@ -317,38 +317,20 @@ export default function ProOnboarding() {
 
     setLoading(true);
     try {
-      // Save to professional_profiles table (the main table)
-      const { error } = await supabase.from('professional_profiles').insert({
-        business_name: formData.name,
-        professional_type_id: formData.professionalType.toLowerCase().replace(/\s+/g, '_'),
+      // Save to advisor_profiles table
+      const { error } = await supabase.from('advisor_profiles').insert({
+        name: formData.name,
+        email: formData.email,
         bio: formData.bio,
+        expertise_areas: formData.specialties,
         specializations: formData.specialties,
-        contact_email: formData.email,
-        contact_phone: formData.phone,
-        website_url: formData.website,
-        linkedin_url: formData.linkedinUrl,
-        profile_image_url: formData.profileImage,
+        phone: formData.phone,
+        firm_name: formData.company,
         years_experience: parseInt(formData.experience[0]?.period?.match(/\d{4}/)?.[0] || '0') || null,
-        location: formData.location,
         is_verified: false,
-        accepts_new_clients: formData.acceptingClients,
+        is_active: true,
         hourly_rate: formData.hourlyRate ? parseFloat(formData.hourlyRate) : null,
-        min_engagement_value: formData.minEngagement ? parseFloat(formData.minEngagement) : null,
-        status: 'pending_approval',
-        custom_fields: {
-          linkedin_profile: linkedInProfile,
-          experience: formData.experience,
-          education: formData.education,
-          certifications: formData.certifications,
-          languages: formData.languages,
-          fee_structure: formData.feeStructure,
-          availability: formData.availability,
-          gdpr_consented: gdprConsented,
-          marketing_consent: formData.marketingConsent,
-          data_source: linkedInProfile ? 'linkedin_import' : 'manual',
-          referral_code: 'PROF' + Math.random().toString(36).substring(2, 8).toUpperCase(),
-          referred_by: searchParams.get('ref')
-        }
+        calendly_url: formData.website
       });
 
       if (error) throw error;

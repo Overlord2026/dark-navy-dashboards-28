@@ -14,8 +14,9 @@ const SocialProofSection: React.FC = () => {
         const oneWeekAgo = new Date();
         oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
         
+        // Use advisor_profiles table instead of professional_profiles
         const { count } = await supabase
-          .from('professional_profiles')
+          .from('advisor_profiles')
           .select('*', { count: 'exact', head: true })
           .gte('created_at', oneWeekAgo.toISOString());
         

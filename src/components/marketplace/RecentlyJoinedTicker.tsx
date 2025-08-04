@@ -18,17 +18,24 @@ const RecentlyJoinedTicker: React.FC = () => {
   useEffect(() => {
     const fetchRecentProfessionals = async () => {
       try {
+        // Use advisor_profiles table instead of professional_profiles
         const { data, error } = await supabase
-          .from('professional_profiles')
-          .select('id, name, title, company, profile_photo_url, created_at')
-          .eq('status', 'active')
+          .from('advisor_profiles')
+          .select('id, name, expertise_areas, firm_name, created_at')
+          .eq('is_active', true)
           .order('created_at', { ascending: false })
           .limit(20);
 
         if (error) throw error;
 
         // Add some mock data if no real data exists
-        const mockData = data?.length ? data : [
+        const mockData = data?.length ? data.map(item => ({
+          id: item.id,
+          name: item.name,
+          title: item.expertise_areas?.[0] || 'Financial Professional',
+          company: item.firm_name || 'Independent',
+          created_at: item.created_at
+        })) : [
           { id: '1', name: 'Sarah Chen', title: 'Wealth Advisor', company: 'Goldman Sachs', created_at: new Date().toISOString() },
           { id: '2', name: 'Michael Rodriguez', title: 'Estate Attorney', company: 'Baker McKenzie', created_at: new Date().toISOString() },
           { id: '3', name: 'Jennifer Park', title: 'Tax Strategist', company: 'KPMG', created_at: new Date().toISOString() },

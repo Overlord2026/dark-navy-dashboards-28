@@ -8,6 +8,7 @@ import { CheckCircle, Users, Share2, Trophy } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import ColleagueInviteModal from '@/components/professionals/ColleagueInviteModal';
+import CelebrationEffects from '@/components/effects/CelebrationEffects';
 
 export default function ProfessionalOnboardingSuccess() {
   const navigate = useNavigate();
@@ -133,6 +134,11 @@ export default function ProfessionalOnboardingSuccess() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Celebration Effects */}
+        <CelebrationEffects 
+          userName={userProfile?.display_name || userProfile?.first_name || userProfile?.name || 'Professional'}
+        />
 
         {/* Colleague Invite Modal */}
         {showInviteModal && userProfile && (

@@ -17,10 +17,20 @@ const ReferralTracker: React.FC = () => {
           
           if (user) {
             // User is already logged in, complete the referral immediately
-            await supabase.rpc('complete_referral_signup', {
-              p_referral_code: referralCode,
-              p_referred_user_id: user.id
-            });
+            try {
+              // Update the referral as activated
+              await supabase
+                .from('referrals')
+                .update({ 
+                  referee_id: user.id,
+                  status: 'activated',
+                  activated_at: new Date().toISOString()
+                })
+                .eq('referral_code', referralCode)
+                .eq('status', 'pending');
+            } catch (error) {
+              console.error('Error completing referral:', error);
+            }
           } else {
             // Store referral code in localStorage for later processing
             localStorage.setItem('pending_referral_code', referralCode);
@@ -50,15 +60,25 @@ const ReferralTracker: React.FC = () => {
         try {
           const { data: { user } } = await supabase.auth.getUser();
           
-          if (user) {
-            await supabase.rpc('complete_referral_signup', {
-              p_referral_code: pendingReferralCode,
-              p_referred_user_id: user.id
-            });
+        if (user) {
+          try {
+            // Update the referral as activated
+            await supabase
+              .from('referrals')
+              .update({ 
+                referee_id: user.id,
+                status: 'activated',
+                activated_at: new Date().toISOString()
+              })
+              .eq('referral_code', pendingReferralCode)
+              .eq('status', 'pending');
             
             // Clean up
             localStorage.removeItem('pending_referral_code');
+          } catch (error) {
+            console.error('Error processing pending referral:', error);
           }
+        }
         } catch (error) {
           console.error('Error processing pending referral:', error);
         }
