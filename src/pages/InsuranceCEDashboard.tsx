@@ -10,6 +10,7 @@ import {
   BookOpen,
   Users,
   FileText,
+  X,
   Settings,
   AlertTriangle,
   CheckCircle,
@@ -22,6 +23,7 @@ import { CEProgressTracker } from '@/components/insurance/CEProgressTracker';
 import { CECoursesTable } from '@/components/insurance/CECoursesTable';
 import { EnhancedCEUploadModal } from '@/components/insurance/EnhancedCEUploadModal';
 import { ComplianceAlertsPanel } from '@/components/insurance/ComplianceAlertsPanel';
+import { ComplianceGuide } from '@/components/insurance/ComplianceGuide';
 import { useCelebration } from '@/hooks/useCelebration';
 import { toast } from 'sonner';
 
@@ -39,6 +41,7 @@ export const InsuranceCEDashboard: React.FC = () => {
   
   const { triggerCelebration, celebration } = useCelebration();
   const [showAddCourse, setShowAddCourse] = useState(false);
+  const [showComplianceGuide, setShowComplianceGuide] = useState(false);
   const [activeTab, setActiveTab] = useState('overview');
 
   const daysUntilExpiry = getDaysUntilExpiry();
@@ -173,6 +176,14 @@ export const InsuranceCEDashboard: React.FC = () => {
             </p>
           </div>
           <div className="flex flex-col sm:flex-row gap-2">
+            <Button 
+              variant="outline"
+              onClick={() => setShowComplianceGuide(true)}
+              className="border-navy text-navy hover:bg-navy hover:text-navy-foreground"
+            >
+              <FileText className="h-4 w-4 mr-2" />
+              Compliance Guide
+            </Button>
             <Button 
               variant="outline"
               onClick={handleDownloadReport}
@@ -428,6 +439,24 @@ export const InsuranceCEDashboard: React.FC = () => {
           agent={agent}
           isLoading={false}
         />
+
+        {/* Compliance Guide Modal */}
+        {showComplianceGuide && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white dark:bg-gray-900 rounded-lg max-w-6xl max-h-[90vh] overflow-y-auto">
+              <div className="sticky top-0 bg-white dark:bg-gray-900 border-b p-4 flex justify-end">
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                  onClick={() => setShowComplianceGuide(false)}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+              <ComplianceGuide onDownload={() => setShowComplianceGuide(false)} />
+            </div>
+          </div>
+        )}
       </div>
     </AuthWrapper>
   );
