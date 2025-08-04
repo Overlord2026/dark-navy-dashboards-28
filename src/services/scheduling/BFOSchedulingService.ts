@@ -1,5 +1,6 @@
 import { supabase } from '@/integrations/supabase/client';
 import { MeetingProvider, SchedulingConfig } from '@/types/integrations';
+import { googleIntegrationService, GoogleCalendarEvent } from './GoogleIntegrationService';
 
 export interface SchedulingSlot {
   id: string;
@@ -8,6 +9,7 @@ export interface SchedulingSlot {
   duration: number;
   available: boolean;
   meetingType: MeetingProvider;
+  googleEventId?: string;
 }
 
 export interface MeetingRequest {
@@ -32,6 +34,9 @@ export interface ScheduledMeeting {
   meetingUrl?: string;
   status: 'scheduled' | 'confirmed' | 'cancelled';
   calendarEventId?: string;
+  googleEventId?: string;
+  googleMeetLink?: string;
+  driveRecordingId?: string;
   createdAt: string;
 }
 
@@ -50,18 +55,24 @@ class BFOSchedulingService {
 
   async getAvailableSlots(advisorId: string, date: string): Promise<SchedulingSlot[]> {
     try {
-      // Call BFO scheduling engine
-      const { data, error } = await supabase.functions.invoke('bfo-scheduling', {
-        body: {
-          action: 'get_available_slots',
-          advisorId,
-          date,
-          config: this.defaultConfig
-        }
-      });
-
-      if (error) throw error;
-      return data.slots || [];
+      // First check if Google is connected
+      const isGoogleConnected = await googleIntegrationService.isGoogleConnected();
+      
+      if (isGoogleConnected) {
+        // Get real availability from Google Calendar
+        const startOfDay = `${date}T00:00:00Z`;
+        const endOfDay = `${date}T23:59:59Z`;
+        
+        const availability = await googleIntegrationService.getAvailability(
+          startOfDay,
+          endOfDay
+        );
+        
+        return this.generateSlotsFromAvailability(date, availability);
+      } else {
+        // Fallback to BFO scheduling logic
+        return this.getMockSlots(date);
+      }
     } catch (error) {
       console.error('Error fetching available slots:', error);
       return this.getMockSlots(date);
@@ -70,22 +81,49 @@ class BFOSchedulingService {
 
   async scheduleMeeting(request: MeetingRequest): Promise<ScheduledMeeting> {
     try {
-      const { data, error } = await supabase.functions.invoke('bfo-scheduling', {
-        body: {
-          action: 'schedule_meeting',
-          request,
-          config: this.defaultConfig
-        }
-      });
+      // Create Google Calendar event first (always default to Google)
+      const googleEvent: Partial<GoogleCalendarEvent> = {
+        summary: `Meeting with ${request.clientName}`,
+        description: request.agenda || `Meeting scheduled through BFO`,
+        start: {
+          dateTime: request.selectedSlot.start,
+          timeZone: 'America/New_York'
+        },
+        end: {
+          dateTime: request.selectedSlot.end,
+          timeZone: 'America/New_York'
+        },
+        attendees: [
+          { email: request.clientEmail, displayName: request.clientName }
+        ]
+      };
 
-      if (error) throw error;
+      const createdEvent = await googleIntegrationService.createCalendarEvent(googleEvent);
+      
+      // Create BFO meeting record
+      const meeting: ScheduledMeeting = {
+        id: crypto.randomUUID(),
+        title: googleEvent.summary!,
+        clientName: request.clientName,
+        clientEmail: request.clientEmail,
+        advisorId: request.advisorId,
+        scheduledAt: request.selectedSlot.start,
+        duration: request.selectedSlot.duration,
+        meetingType: 'google_meet', // Always default to Google Meet
+        meetingUrl: createdEvent.meetLink,
+        googleEventId: createdEvent.id,
+        googleMeetLink: createdEvent.meetLink,
+        status: 'scheduled',
+        createdAt: new Date().toISOString()
+      };
 
-      // Create Google Calendar event if Google is selected
-      if (request.meetingType === 'google_meet') {
-        await this.createGoogleCalendarEvent(data.meeting);
-      }
+      // Store in BFO database
+      await this.storeMeetingRecord(meeting);
 
-      return data.meeting;
+      // Send confirmations via Gmail
+      await this.sendMeetingConfirmations(meeting);
+
+      return meeting;
     } catch (error) {
       console.error('Error scheduling meeting:', error);
       throw new Error('Failed to schedule meeting. Please try again.');
@@ -126,18 +164,103 @@ class BFOSchedulingService {
     }
   }
 
-  private async createGoogleCalendarEvent(meeting: ScheduledMeeting): Promise<void> {
+  private async sendMeetingConfirmations(meeting: ScheduledMeeting): Promise<void> {
     try {
-      await supabase.functions.invoke('google-calendar-integration', {
-        body: {
-          action: 'create_event',
-          meeting
-        }
-      });
+      // Send email confirmation via Gmail
+      const emailSubject = `Meeting Confirmed: ${meeting.title}`;
+      const emailContent = this.generateConfirmationEmail(meeting);
+      
+      await googleIntegrationService.sendGmailNotification(
+        meeting.clientEmail,
+        emailSubject,
+        emailContent,
+        { meeting }
+      );
+
+      // TODO: Send SMS confirmation when SMS integration is implemented
     } catch (error) {
-      console.error('Error creating Google Calendar event:', error);
+      console.error('Error sending meeting confirmations:', error);
       // Don't throw - meeting is already scheduled
     }
+  }
+
+  private generateSlotsFromAvailability(
+    date: string, 
+    availability: { busy: Array<{ start: string; end: string }> }
+  ): SchedulingSlot[] {
+    const slots: SchedulingSlot[] = [];
+    const startHour = 9;
+    const endHour = 17;
+    const slotDuration = 30; // minutes
+
+    for (let hour = startHour; hour < endHour; hour++) {
+      for (let minute = 0; minute < 60; minute += slotDuration) {
+        const slotStart = new Date(`${date}T${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}:00`);
+        const slotEnd = new Date(slotStart.getTime() + slotDuration * 60000);
+
+        // Check if slot conflicts with busy periods
+        const isAvailable = !availability.busy.some(busy => {
+          const busyStart = new Date(busy.start);
+          const busyEnd = new Date(busy.end);
+          return slotStart < busyEnd && slotEnd > busyStart;
+        });
+
+        slots.push({
+          id: `${date}-${hour}-${minute}`,
+          start: slotStart.toISOString(),
+          end: slotEnd.toISOString(),
+          duration: slotDuration,
+          available: isAvailable,
+          meetingType: 'google_meet'
+        });
+      }
+    }
+
+    return slots.filter(slot => slot.available);
+  }
+
+  private async storeMeetingRecord(meeting: ScheduledMeeting): Promise<void> {
+    const { error } = await supabase
+      .from('scheduled_meetings')
+      .insert({
+        id: meeting.id,
+        title: meeting.title,
+        client_name: meeting.clientName,
+        client_email: meeting.clientEmail,
+        advisor_id: meeting.advisorId,
+        scheduled_at: meeting.scheduledAt,
+        duration: meeting.duration,
+        meeting_type: meeting.meetingType,
+        meeting_url: meeting.meetingUrl,
+        google_event_id: meeting.googleEventId,
+        google_meet_link: meeting.googleMeetLink,
+        status: meeting.status,
+        created_at: meeting.createdAt
+      });
+
+    if (error) throw error;
+  }
+
+  private generateConfirmationEmail(meeting: ScheduledMeeting): string {
+    const meetingDate = new Date(meeting.scheduledAt).toLocaleDateString();
+    const meetingTime = new Date(meeting.scheduledAt).toLocaleTimeString();
+
+    return `
+      <h2>Meeting Confirmed ✅</h2>
+      <p>Hi ${meeting.clientName},</p>
+      <p>Your meeting has been confirmed for <strong>${meetingDate} at ${meetingTime}</strong>.</p>
+      
+      <div style="margin: 20px 0; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+        <h3>${meeting.title}</h3>
+        <p><strong>When:</strong> ${meetingDate} at ${meetingTime}</p>
+        <p><strong>Duration:</strong> ${meeting.duration} minutes</p>
+        ${meeting.googleMeetLink ? `<p><strong>Join via Google Meet:</strong> <a href="${meeting.googleMeetLink}">Click to join</a></p>` : ''}
+      </div>
+      
+      <p>This meeting will automatically be added to your Google Calendar. You'll receive a reminder 15 minutes before the meeting starts.</p>
+      
+      <p>Best regards,<br>The BFO Team</p>
+    `;
   }
 
   private getMockSlots(date: string): SchedulingSlot[] {
@@ -162,32 +285,7 @@ class BFOSchedulingService {
       }
     }
     
-    return slots;
-  }
-
-  getDefaultMeetingProvider(): MeetingProvider {
-    return this.defaultConfig.defaultMeetingType;
-  }
-
-  getAvailableMeetingTypes(): { type: MeetingProvider; name: string; description: string; recommended?: boolean }[] {
-    return [
-      {
-        type: 'google_meet',
-        name: 'Google Meet',
-        description: 'BFO Default - Integrated with Google Calendar',
-        recommended: true
-      },
-      {
-        type: 'zoom',
-        name: 'Zoom',
-        description: 'Optional - Alternative video platform'
-      },
-      {
-        type: 'teams',
-        name: 'Microsoft Teams',
-        description: 'Optional - Alternative video platform'
-      }
-    ];
+    return slots.filter(slot => slot.available);
   }
 }
 
