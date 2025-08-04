@@ -32,11 +32,12 @@ export const getEnvironmentConfig = (): EnvironmentConfig => {
   };
 };
 
-export const QA_BYPASS_EMAIL = 'tonygomes88@gmail.com';
+// SECURITY: Removed hardcoded bypass email
+export const QA_BYPASS_EMAIL = process.env.NODE_ENV === "development" ? process.env.QA_BYPASS_EMAIL || '' : '';
 
 export const isQABypassAllowed = (userEmail?: string): boolean => {
   const env = getEnvironmentConfig();
-  return env.qaBypassEnabled && userEmail === QA_BYPASS_EMAIL;
+  return env.qaBypassEnabled && env.isDevelopment && userEmail === QA_BYPASS_EMAIL && QA_BYPASS_EMAIL !== '';
 };
 
 export const shouldEnforceAuthentication = (userEmail?: string): boolean => {

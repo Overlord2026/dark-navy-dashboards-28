@@ -28,8 +28,8 @@ interface PersonaCredentials {
 
 // Test personas - these should match actual database users
 const TEST_PERSONAS: PersonaCredentials[] = [
-  { email: 'tonygomes88@gmail.com', password: 'TestPassword123!', role: 'system_administrator', name: 'Tony Admin' },
-  { email: 'votepedro1988@gmail.com', password: 'TestPassword123!', role: 'system_administrator', name: 'Pedro Admin' },
+  { email: 'admin@test.com', password: 'TestPassword123!', role: 'system_administrator', name: 'Test Admin' },
+  { email: 'admin2@test.com', password: 'TestPassword123!', role: 'system_administrator', name: 'Test Admin 2' },
   { email: 'client@test.com', password: 'TestPassword123!', role: 'client', name: 'Test Client' },
   { email: 'advisor@test.com', password: 'TestPassword123!', role: 'advisor', name: 'Test Advisor' },
   { email: 'accountant@test.com', password: 'TestPassword123!', role: 'accountant', name: 'Test Accountant' },

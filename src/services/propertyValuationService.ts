@@ -2,9 +2,7 @@
 import { Property, PropertyValuation } from "@/types/property";
 import { toast } from "sonner";
 
-// API endpoint for Zillow Property API (would normally be in environment variables)
-const ZILLOW_API_ENDPOINT = "https://api.bridgedataoutput.com/api/v2/zestimates";
-const ZILLOW_API_KEY = "YOUR_ZILLOW_API_KEY"; // This would normally be stored securely
+// SECURITY: API keys moved to secure Edge Functions
 
 // Service to get property valuations from Zillow
 export const getPropertyValuation = async (address: string): Promise<PropertyValuation> => {
@@ -41,10 +39,23 @@ export const getPropertyValuation = async (address: string): Promise<PropertyVal
   }
   */
   
-  // Since we don't have actual Zillow API credentials, we'll simulate the API call
-  // but make it clear in the UI that this is coming from Zillow
+  // Use secure Edge Function for property valuation
+  try {
+    const response = await fetch(`${window.location.origin}/api/property-valuation`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ address })
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    }
+  } catch (error) {
+    console.error('Error fetching from property valuation API:', error);
+  }
   
-  // Simulate API call delay
+  // Fallback to simulated data
   await new Promise(resolve => setTimeout(resolve, 1500));
   
   try {
@@ -70,12 +81,12 @@ export const getPropertyValuation = async (address: string): Promise<PropertyVal
       estimatedValue,
       lastUpdated: lastUpdated.toISOString().split('T')[0],
       confidence,
-      source: 'Zillow API'  // Changed from 'Zillow Estimation Service' to 'Zillow API'
+      source: 'Property Valuation API'
     };
   } catch (error) {
-    console.error("Error in Zillow valuation simulation:", error);
+    console.error("Error in property valuation simulation:", error);
     toast.error("Failed to fetch property valuation");
-    throw new Error("Failed to fetch property valuation from Zillow");
+    throw new Error("Failed to fetch property valuation");
   }
 };
 
