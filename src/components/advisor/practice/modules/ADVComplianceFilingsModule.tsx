@@ -96,7 +96,7 @@ export function ADVComplianceFilingsModule() {
   const [filings, setFilings] = useState<Filing[]>(mockFilings);
   const [activeFilter, setActiveFilter] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
-  const { triggerCelebration, CelebrationComponent } = useCelebration();
+  const { triggerCelebration, celebration } = useCelebration();
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     console.log('Files dropped:', acceptedFiles);
@@ -153,7 +153,7 @@ export function ADVComplianceFilingsModule() {
 
   return (
     <div className="space-y-6" role="main" aria-label="ADV & Compliance Filings">
-      <CelebrationComponent />
+      {celebration.isActive && <div className="celebration-container"><div className="confetti-gold"></div></div>}
       {/* Header Actions */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
