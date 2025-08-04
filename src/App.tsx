@@ -61,6 +61,7 @@ import { ComplianceDashboard } from "./pages/ComplianceDashboard";
 import FAQPage from "./pages/FAQPage";
 import AdvisorPracticeHome from "./pages/advisor/AdvisorPracticeHome";
 import QATestingPage from "./pages/QATestingPage";
+import IMOAdminPage from "./pages/IMOAdminPage";
 import RIAPracticeQATest from "./pages/RIAPracticeQATest";
 
 const queryClient = new QueryClient();
@@ -183,6 +184,7 @@ function App() {
                             <Route path="/professional-onboarding-success" element={<ProfessionalOnboardingSuccess />} />
                               <Route path="/faq" element={<FAQPage />} />
                               <Route path="/qa-testing" element={<QATestingPage />} />
+                              <Route path="/imo-admin" element={<IMOAdminPage />} />
                               <Route path="/qa/ria-practice" element={<RIAPracticeQATest />} />
                   
                   <Route

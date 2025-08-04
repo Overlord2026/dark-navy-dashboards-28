@@ -3,187 +3,90 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { Resend } from "npm:resend@2.0.0";
 
 const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+interface AgentInfo {
+  id: string;
+  email: string;
+  name: string;
+  days_until_ce_deadline: number | null;
+  days_until_expiry: number | null;
+  compliance_status: string;
+}
+
 const handler = async (req: Request): Promise<Response> => {
-  if (req.method === 'OPTIONS') {
+  if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
-  if (req.method !== 'POST') {
-    return new Response(JSON.stringify({ error: 'Method not allowed' }), { 
-      status: 405, headers: { 'Content-Type': 'application/json', ...corsHeaders }
-    });
-  }
-
   try {
-    const supabase = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
-    );
-
-    const resend = new Resend(Deno.env.get('RESEND_API_KEY') ?? '');
+    const { type, agents }: { type: string; agents: AgentInfo[] } = await req.json();
     
-    const { batchId } = await req.json();
+    console.log(`Processing batch ${type} for ${agents.length} agents`);
 
-    // Get batch communication details
-    const { data: batchComm, error: batchError } = await supabase
-      .from('batch_communications')
-      .select(`
-        *,
-        communication_templates(*)
-      `)
-      .eq('id', batchId)
-      .single();
+    const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
+    const results = [];
 
-    if (batchError || !batchComm) {
-      throw new Error('Batch communication not found');
-    }
-
-    // Get recipients based on criteria
-    let recipients = [];
-    const criteria = batchComm.recipient_criteria;
-
-    // Build query based on criteria
-    let query = supabase
-      .from('cpa_client_onboarding')
-      .select(`
-        client_user_id,
-        profiles(email, display_name),
-        status,
-        onboarding_stage,
-        documents_uploaded,
-        documents_required
-      `)
-      .eq('cpa_partner_id', batchComm.cpa_partner_id);
-
-    // Apply filters
-    if (criteria.status) {
-      query = query.in('status', criteria.status);
-    }
-    if (criteria.onboarding_stage) {
-      query = query.in('onboarding_stage', criteria.onboarding_stage);
-    }
-    if (criteria.missing_docs) {
-      query = query.lt('documents_uploaded', supabase.rpc('documents_required'));
-    }
-
-    const { data: clientData, error: clientError } = await query;
-    
-    if (clientError) {
-      throw new Error('Failed to fetch recipients');
-    }
-
-    recipients = clientData || [];
-
-    // Update batch with recipient count
-    await supabase
-      .from('batch_communications')
-      .update({ 
-        total_recipients: recipients.length,
-        status: 'sending'
-      })
-      .eq('id', batchId);
-
-    let sentCount = 0;
-    let failedCount = 0;
-
-    // Send communications
-    for (const recipient of recipients) {
+    for (const agent of agents) {
       try {
-        const deliveryId = crypto.randomUUID();
+        const emailContent = generateEmailContent(agent, type);
         
-        if (batchComm.communication_type === 'email') {
-          // Replace template variables
-          let content = batchComm.communication_templates.content;
-          let subject = batchComm.communication_templates.subject || '';
-          
-          content = content.replace('{{client_name}}', recipient.profiles?.display_name || 'Client');
-          subject = subject.replace('{{client_name}}', recipient.profiles?.display_name || 'Client');
+        await resend.emails.send({
+          from: "Compliance Team <compliance@agency.com>",
+          to: [agent.email],
+          subject: emailContent.subject,
+          html: emailContent.html,
+        });
 
-          await resend.emails.send({
-            from: 'CPA Portal <onboarding@resend.dev>',
-            to: [recipient.profiles?.email],
-            subject: subject,
-            html: content
-          });
-
-          // Log delivery
-          await supabase
-            .from('communication_deliveries')
-            .insert({
-              id: deliveryId,
-              batch_id: batchId,
-              client_user_id: recipient.client_user_id,
-              communication_type: 'email',
-              recipient_email: recipient.profiles?.email,
-              status: 'sent',
-              sent_at: new Date().toISOString()
-            });
-
-          sentCount++;
-        } else if (batchComm.communication_type === 'in_app') {
-          // Create in-app notification
-          await supabase
-            .from('communication_deliveries')
-            .insert({
-              id: deliveryId,
-              batch_id: batchId,
-              client_user_id: recipient.client_user_id,
-              communication_type: 'in_app',
-              status: 'delivered',
-              sent_at: new Date().toISOString(),
-              delivered_at: new Date().toISOString()
-            });
-
-          sentCount++;
-        }
+        console.log(`Email sent to ${agent.email}`);
+        results.push({ agentId: agent.id, status: 'sent' });
       } catch (error) {
-        console.error('Failed to send to recipient:', error);
-        failedCount++;
-        
-        // Log failed delivery
-        await supabase
-          .from('communication_deliveries')
-          .insert({
-            batch_id: batchId,
-            client_user_id: recipient.client_user_id,
-            communication_type: batchComm.communication_type,
-            recipient_email: recipient.profiles?.email,
-            status: 'failed',
-            error_message: error.message
-          });
+        console.error(`Failed to send email to ${agent.email}:`, error);
+        results.push({ agentId: agent.id, status: 'failed', error: error.message });
       }
     }
 
-    // Update batch status
-    await supabase
-      .from('batch_communications')
-      .update({ 
-        status: 'completed',
-        sent_count: sentCount,
-        failed_count: failedCount
-      })
-      .eq('id', batchId);
+    const successCount = results.filter(r => r.status === 'sent').length;
 
-    return new Response(JSON.stringify({ 
-      success: true, 
-      sent: sentCount, 
-      failed: failedCount 
+    return new Response(JSON.stringify({
+      success: true,
+      message: `Batch reminders sent to ${successCount}/${agents.length} agents`,
+      results
     }), {
       status: 200,
-      headers: { 'Content-Type': 'application/json', ...corsHeaders }
+      headers: { "Content-Type": "application/json", ...corsHeaders },
     });
 
   } catch (error: any) {
-    console.error('Batch communication error:', error);
+    console.error("Error in batch-communicate function:", error);
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
-      headers: { 'Content-Type': 'application/json', ...corsHeaders }
+      headers: { "Content-Type": "application/json", ...corsHeaders },
     });
   }
 };
+
+function generateEmailContent(agent: AgentInfo, type: string) {
+  const isUrgent = (agent.days_until_ce_deadline !== null && agent.days_until_ce_deadline <= 7);
+  
+  return {
+    subject: isUrgent ? `🚨 URGENT: CE Requirements Due Soon` : `📅 CE Compliance Reminder`,
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+        <h2>Hello ${agent.name},</h2>
+        <p>This is a reminder about your continuing education compliance status.</p>
+        <ul>
+          ${agent.days_until_ce_deadline !== null ? 
+            `<li>CE Deadline: ${agent.days_until_ce_deadline > 0 ? 
+              `${agent.days_until_ce_deadline} days remaining` : 'OVERDUE'}</li>` : ''}
+          <li>Compliance Status: ${agent.compliance_status.toUpperCase()}</li>
+        </ul>
+        <p><a href="https://app.example.com/insurance-ce" style="background: #059669; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px;">Access Dashboard</a></p>
+      </div>
+    `
+  };
+}
 
 serve(handler);
