@@ -2,6 +2,11 @@ import React from 'react';
 import { AuthWrapper } from '@/components/auth/AuthWrapper';
 import { ROLE_GROUPS } from '@/utils/roleHierarchy';
 import { ComplianceOverview } from '@/components/compliance/ComplianceOverview';
+import { ComplianceQuickActions } from '@/components/compliance/ComplianceQuickActions';
+import { ComplianceCalendar } from '@/components/compliance/ComplianceCalendar';
+import { PolicyVault } from '@/components/compliance/PolicyVault';
+import { TeamTrainingCenter } from '@/components/compliance/TeamTrainingCenter';
+import { AuditLogFeed } from '@/components/compliance/AuditLogFeed';
 import { ComplianceWorkflow } from '@/components/compliance/ComplianceWorkflow';
 import { ComplianceDocumentVault } from '@/components/compliance/ComplianceDocumentVault';
 import { ComplianceRiskScoring } from '@/components/compliance/ComplianceRiskScoring';
@@ -32,19 +37,20 @@ export const ComplianceDashboard: React.FC = () => {
         </div>
 
         <ComplianceOverview />
+        <ComplianceQuickActions />
 
         <Tabs defaultValue="workflow" className="space-y-6">
           <TabsList className="grid w-full grid-cols-5 lg:grid-cols-10 text-xs">
             <TabsTrigger value="workflow">Workflow</TabsTrigger>
             <TabsTrigger value="audits">Mock Audits</TabsTrigger>
+            <TabsTrigger value="calendar">Calendar</TabsTrigger>
+            <TabsTrigger value="vault">Policy Vault</TabsTrigger>
+            <TabsTrigger value="team">Team</TabsTrigger>
+            <TabsTrigger value="logs">Audit Logs</TabsTrigger>
             <TabsTrigger value="alerts">Alerts</TabsTrigger>
             <TabsTrigger value="incidents">Incidents</TabsTrigger>
-            <TabsTrigger value="ce-tracking">CE Tracking</TabsTrigger>
-            <TabsTrigger value="documents">Documents</TabsTrigger>
-            <TabsTrigger value="risk">Risk</TabsTrigger>
             <TabsTrigger value="community">Community</TabsTrigger>
             <TabsTrigger value="copilot">AI Copilot</TabsTrigger>
-            <TabsTrigger value="reports">Reports</TabsTrigger>
           </TabsList>
 
           <TabsContent value="workflow">
@@ -55,6 +61,22 @@ export const ComplianceDashboard: React.FC = () => {
             <MockAuditCenter />
           </TabsContent>
 
+          <TabsContent value="calendar">
+            <ComplianceCalendar />
+          </TabsContent>
+
+          <TabsContent value="vault">
+            <PolicyVault />
+          </TabsContent>
+
+          <TabsContent value="team">
+            <TeamTrainingCenter />
+          </TabsContent>
+
+          <TabsContent value="logs">
+            <AuditLogFeed />
+          </TabsContent>
+
           <TabsContent value="alerts">
             <RegulatoryAlertsFeed />
           </TabsContent>
@@ -63,30 +85,12 @@ export const ComplianceDashboard: React.FC = () => {
             <ComplianceIncidentReporting />
           </TabsContent>
 
-          <TabsContent value="ce-tracking">
-            <CETrackingModule />
-          </TabsContent>
-
-          <TabsContent value="documents">
-            <ComplianceDocumentVault />
-          </TabsContent>
-
-          <TabsContent value="risk">
-            <ComplianceRiskScoring />
-          </TabsContent>
-
           <TabsContent value="community">
             <ComplianceCommunity />
           </TabsContent>
 
           <TabsContent value="copilot">
             <ComplianceAICopilot />
-          </TabsContent>
-
-          <TabsContent value="reports">
-            <div className="text-center py-8">
-              <p className="text-muted-foreground">Compliance reporting module coming soon...</p>
-            </div>
           </TabsContent>
         </Tabs>
       </div>
