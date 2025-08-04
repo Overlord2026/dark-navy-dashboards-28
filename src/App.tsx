@@ -51,6 +51,7 @@ import { AccountantDashboard } from "./pages/AccountantDashboard";
 import { ConsultantDashboard } from "./pages/ConsultantDashboard";
 import { AttorneyDashboard } from "./pages/AttorneyDashboard";
 import { CoachDashboard } from "./pages/CoachDashboard";
+import { ComplianceDashboard } from "./pages/ComplianceDashboard";
 
 const queryClient = new QueryClient();
 
@@ -118,6 +119,11 @@ function App() {
                            <Route path="/coach" element={
                             <AuthWrapper requireAuth={true} allowedRoles={['coach', 'admin', 'system_administrator', 'tenant_admin']}>
                               <CoachDashboard />
+                            </AuthWrapper>
+                          } />
+                           <Route path="/compliance" element={
+                            <AuthWrapper requireAuth={true} allowedRoles={['compliance_officer', 'compliance_provider', 'admin', 'system_administrator', 'tenant_admin']}>
+                              <ComplianceDashboard />
                             </AuthWrapper>
                           } />
                           <Route path="/cpa-risk" element={

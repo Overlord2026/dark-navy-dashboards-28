@@ -32,7 +32,10 @@ export type UserRole =
   | 'imo_executive'
   | 'fmo_executive'
   | 'imo_recruiter'
-  | 'fmo_recruiter';
+  | 'fmo_recruiter'
+  // Compliance roles
+  | 'compliance_officer'
+  | 'compliance_provider';
 
 // Define role hierarchy levels (higher number = more permissions)
 const ROLE_LEVELS: Record<UserRole, number> = {
@@ -45,6 +48,9 @@ const ROLE_LEVELS: Record<UserRole, number> = {
   // IMO/FMO executives (high level due to managing many agents)
   imo_executive: 58,
   fmo_executive: 58,
+  // Compliance professionals (high level due to regulatory oversight)
+  compliance_officer: 65,
+  compliance_provider: 62,
   // Wealth segment professionals (tiered by complexity/access needs)
   private_banker: 55,
   platform_aggregator: 55,
@@ -100,6 +106,9 @@ export const ROLE_GROUPS = {
   IMO_FMO_EXECUTIVES: ['imo_executive', 'fmo_executive'] as UserRole[],
   IMO_FMO_STAFF: ['imo_executive', 'fmo_executive', 'imo_recruiter', 'fmo_recruiter'] as UserRole[],
   DISTRIBUTION_NETWORK: ['imo_executive', 'fmo_executive', 'imo_recruiter', 'fmo_recruiter', 'insurance_specialist'] as UserRole[],
+  // Compliance access groups
+  COMPLIANCE_ACCESS: ['system_administrator', 'admin', 'tenant_admin', 'compliance_officer', 'compliance_provider'] as UserRole[],
+  COMPLIANCE_OVERSIGHT: ['compliance_officer', 'compliance_provider'] as UserRole[],
 };
 
 /**
@@ -168,6 +177,9 @@ export function getRoleDisplayName(role: string): string {
     fmo_executive: 'FMO Executive',
     imo_recruiter: 'IMO Recruiter',
     fmo_recruiter: 'FMO Recruiter',
+    // Compliance roles
+    compliance_officer: 'Chief Compliance Officer',
+    compliance_provider: 'Compliance Consultant / Provider',
   };
   
   return roleMap[role] || role;
