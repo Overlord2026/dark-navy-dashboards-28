@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import OutreachTemplates from './OutreachTemplates';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { HealthcareNavigation } from './HealthcareNavigation';
+import { PersonaWelcomeBanner } from './PersonaWelcomeBanner';
+import { HealthcareModals } from './HealthcareModals';
+import { ProviderSearch } from './ProviderSearch';
+import { HealthcareBreadcrumbs } from './HealthcareBreadcrumbs';
+import { useCelebration } from '@/components/ui/confetti';
+import { Tabs, TabsContent } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -10,6 +16,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { useToast } from '@/hooks/use-toast';
+import { getLogoConfig } from '@/assets/logos';
 import { 
   Heart, 
   Users, 
@@ -36,7 +44,8 @@ import {
   Link,
   Camera,
   Globe,
-  TrendingUp
+  TrendingUp,
+  Search
 } from 'lucide-react';
 
 type Persona = 'client' | 'family' | 'advisor' | 'consultant' | 'influencer' | 'agent';
@@ -46,6 +55,10 @@ const HealthcareLongevityCenter = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [showOnboardingModal, setShowOnboardingModal] = useState(false);
   const [showWelcomeBanner, setShowWelcomeBanner] = useState(true);
+  const [activeModal, setActiveModal] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const { celebrating, celebrate, ConfettiComponent } = useCelebration();
+  const { toast } = useToast();
   const [profileData, setProfileData] = useState({
     name: '',
     specialty: '',
@@ -54,6 +67,8 @@ const HealthcareLongevityCenter = () => {
     certifications: '',
     experience: ''
   });
+
+  const treeLogoConfig = getLogoConfig('tree');
 
   const personaOptions = [
     { value: 'client', label: 'Family/Client', icon: Heart, description: 'See care team, health reports, book appointments' },
@@ -66,65 +81,114 @@ const HealthcareLongevityCenter = () => {
 
   const getPersonaColor = (persona: Persona) => {
     switch (persona) {
-      case 'client': return 'bg-blue-500';
-      case 'family': return 'bg-green-500';
-      case 'advisor': return 'bg-purple-500';
-      case 'consultant': return 'bg-orange-500';
-      case 'influencer': return 'bg-pink-500';
-      case 'agent': return 'bg-teal-500';
-      default: return 'bg-gray-500';
-    }
-  };
-
-  const getPersonaWelcomeMessage = (persona: Persona) => {
-    switch (persona) {
-      case 'consultant':
-        return "Welcome! Set up your Healthcare Consultant profile to join our Longevity Network and connect with families seeking trusted health guidance.";
-      case 'advisor':
-        return "Welcome to the Healthcare & Longevity Center! Start viewing clients' health summaries and share valuable resources.";
-      case 'influencer':
-        return "Join our exclusive Health & Longevity Network as a Thought Leader. Share your expertise and inspire families on their wellness journey.";
-      case 'agent':
-        return "Welcome to the healthcare agent portal! Manage insurance renewals, receive qualified leads, and grow your healthcare practice.";
-      default:
-        return "Welcome to your comprehensive healthcare and longevity planning center!";
+      case 'client': return 'bg-primary';
+      case 'family': return 'bg-emerald';
+      case 'advisor': return 'bg-navy';
+      case 'consultant': return 'bg-emerald';
+      case 'influencer': return 'bg-gold text-navy';
+      case 'agent': return 'bg-emerald';
+      default: return 'bg-muted';
     }
   };
 
   const handlePersonaChange = (newPersona: Persona) => {
-    setActivePersona(newPersona);
-    if (['consultant', 'influencer', 'agent'].includes(newPersona)) {
-      setShowOnboardingModal(true);
-    }
+    setIsLoading(true);
+    
+    // Simulate loading state
+    setTimeout(() => {
+      setActivePersona(newPersona);
+      setIsLoading(false);
+      
+      if (['consultant', 'influencer', 'agent'].includes(newPersona)) {
+        setShowOnboardingModal(true);
+      }
+      
+      toast({
+        title: "Persona Updated",
+        description: `Now viewing as ${personaOptions.find(p => p.value === newPersona)?.label}`,
+      });
+    }, 500);
   };
 
   const handleProfileSetup = () => {
     setShowOnboardingModal(false);
-    // Here you would typically save the profile data
-    console.log('Profile setup completed:', profileData);
+    celebrate(); // Trigger confetti
+    toast({
+      title: "Profile Complete!",
+      description: "Your healthcare professional profile has been successfully set up.",
+    });
   };
+
+  const handleCTAClick = (action: string) => {
+    switch (action) {
+      case 'set-rates':
+        setActiveModal('set-rates');
+        break;
+      case 'complete-profile':
+        setShowOnboardingModal(true);
+        break;
+      case 'find-providers':
+        setActiveTab('care-team');
+        break;
+      default:
+        toast({
+          title: "Feature Coming Soon",
+          description: `${action.replace('-', ' ')} functionality will be available soon.`,
+        });
+    }
+  };
+
+  const handleModalSuccess = (type: string, data: any) => {
+    celebrate(); // Trigger confetti for successful actions
+    toast({
+      title: "Success!",
+      description: `${type} has been completed successfully.`,
+    });
+  };
+
+  const breadcrumbItems = [
+    { label: 'Healthcare Center', current: activeTab === 'dashboard' },
+    ...(activeTab !== 'dashboard' ? [{ 
+      label: activeTab.split('-').map(word => 
+        word.charAt(0).toUpperCase() + word.slice(1)
+      ).join(' '), 
+      current: true 
+    }] : [])
+  ];
 
   return (
     <div className="min-h-screen bg-background">
+      <ConfettiComponent />
+      
       {/* Header */}
-      <div className="border-b border-border bg-card">
+      <div className="border-b border-border bg-navy">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                <Heart className="h-8 w-8 text-primary" />
-                <h1 className="text-2xl font-bold text-foreground">Healthcare & Longevity Center</h1>
+              <div className="flex items-center gap-3">
+                <img 
+                  src={treeLogoConfig.src}
+                  alt={treeLogoConfig.alt}
+                  className="h-8 w-auto"
+                />
+                <h1 className="text-2xl font-serif font-bold text-white">
+                  Healthcare & Longevity Center
+                </h1>
               </div>
             </div>
             
             {/* Persona Switcher */}
             <div className="flex items-center gap-3">
-              <span className="text-sm text-muted-foreground">View as:</span>
-              <Select value={activePersona} onValueChange={handlePersonaChange}>
-                <SelectTrigger className="w-48">
+              <span className="text-sm text-white/70">View as:</span>
+              <Select 
+                value={activePersona} 
+                onValueChange={handlePersonaChange}
+                disabled={isLoading}
+              >
+                <SelectTrigger className="w-48 touch-target bg-card border-white/20">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-card z-50">
                   {personaOptions.map((option) => {
                     const Icon = option.icon;
                     return (
@@ -146,107 +210,47 @@ const HealthcareLongevityCenter = () => {
         </div>
       </div>
 
-      {/* Hero Section */}
-      <div className="bg-gradient-to-r from-primary/10 to-secondary/10 border-b border-border">
-        <div className="container mx-auto px-6 py-12 text-center">
-          <h2 className="text-4xl font-bold text-foreground mb-4">
-            Welcome to the BFO Healthcare & Longevity Center!
-          </h2>
-          <p className="text-xl text-muted-foreground mb-6 max-w-3xl mx-auto">
-            Explore world-class health resources, connect with leading medical experts, and unlock wellness strategies tailored for you and your family.
-          </p>
-          <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Are you a healthcare consultant, coach, or longevity influencer? Set up your professional profile and help families live healthier, longer lives.
-          </p>
-          <div className="flex gap-4 justify-center">
-            <Button size="lg" className="gap-2" onClick={() => setShowOnboardingModal(true)}>
-              <Briefcase className="h-5 w-5" />
-              Set Up My Healthcare Profile
-            </Button>
-            <Button size="lg" variant="outline" className="gap-2">
-              <BookOpen className="h-5 w-5" />
-              Explore Resources
-            </Button>
-          </div>
-
-          {/* Quick FAQ Section */}
-          <div className="bg-card border rounded-lg p-8 max-w-4xl mx-auto mt-12">
-            <h2 className="text-2xl font-semibold text-foreground mb-6 text-center">Quick FAQ</h2>
-            <div className="space-y-6">
-              <div>
-                <h3 className="text-lg font-medium text-foreground mb-2">
-                  What is the BFO Healthcare & Longevity Center?
-                </h3>
-                <p className="text-muted-foreground">
-                  A secure hub for managing your family's health, connecting with vetted experts, and accessing the best in medical, insurance, and longevity planning.
-                </p>
-              </div>
-              
-              <div>
-                <h3 className="text-lg font-medium text-foreground mb-2">
-                  Can I invite my doctor or consultant?
-                </h3>
-                <p className="text-muted-foreground">
-                  Yes! Use the "Add to My Care Team" feature to send them a secure invite.
-                </p>
-              </div>
-              
-              <div>
-                <h3 className="text-lg font-medium text-foreground mb-2">
-                  How do I become a featured influencer?
-                </h3>
-                <p className="text-muted-foreground">
-                  Apply for a professional profile and our team will review and verify your credentials.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+      {/* Breadcrumbs */}
+      <div className="container mx-auto px-6 py-2">
+        <HealthcareBreadcrumbs items={breadcrumbItems} />
       </div>
 
-      {/* Main Content Tabs */}
+      {/* Welcome Banner */}
+      {showWelcomeBanner && (
+        <div className="container mx-auto px-6">
+          <PersonaWelcomeBanner 
+            persona={activePersona}
+            onDismiss={() => setShowWelcomeBanner(false)}
+            onCTAClick={handleCTAClick}
+          />
+        </div>
+      )}
+
+      {/* Main Content */}
       <div className="container mx-auto px-6 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-7 mb-8">
-            <TabsTrigger value="dashboard" className="gap-2">
-              <Activity className="h-4 w-4" />
-              Dashboard
-            </TabsTrigger>
-            <TabsTrigger value="care-team" className="gap-2">
-              <Stethoscope className="h-4 w-4" />
-              My Care Team
-            </TabsTrigger>
-            <TabsTrigger value="longevity" className="gap-2">
-              <Brain className="h-4 w-4" />
-              Longevity Programs
-            </TabsTrigger>
-            <TabsTrigger value="guides" className="gap-2">
-              <BookOpen className="h-4 w-4" />
-              Health Guides
-            </TabsTrigger>
-            <TabsTrigger value="insurance" className="gap-2">
-              <Shield className="h-4 w-4" />
-              Insurance
-            </TabsTrigger>
-            <TabsTrigger value="community" className="gap-2">
-              <MessageCircle className="h-4 w-4" />
-              Community
-            </TabsTrigger>
-            {['consultant', 'influencer', 'agent'].includes(activePersona) && (
-              <TabsTrigger value="outreach" className="gap-2">
-                <Users className="h-4 w-4" />
-                Outreach
-              </TabsTrigger>
-            )}
-          </TabsList>
+          <HealthcareNavigation 
+            activeTab={activeTab}
+            onTabChange={setActiveTab}
+            activePersona={activePersona}
+            showOutreach={['consultant', 'influencer', 'agent'].includes(activePersona)}
+          />
 
           {/* Dashboard Tab */}
           <TabsContent value="dashboard" className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <Card>
+              <Card className="relative overflow-hidden">
+                {/* Gold tree watermark */}
+                <div className="absolute top-2 right-2 opacity-10">
+                  <img 
+                    src={treeLogoConfig.src}
+                    alt=""
+                    className="h-8 w-auto"
+                  />
+                </div>
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Heart className="h-5 w-5 text-red-500" />
+                  <CardTitle className="flex items-center gap-2 font-serif">
+                    <Heart className="h-5 w-5 text-emerald" />
                     Health Snapshot
                   </CardTitle>
                 </CardHeader>
@@ -264,7 +268,10 @@ const HealthcareLongevityCenter = () => {
                       <span>BMI</span>
                       <Badge variant="secondary">22.5</Badge>
                     </div>
-                    <Button className="w-full gap-2">
+                    <Button 
+                      className="w-full gap-2 touch-target font-display"
+                      onClick={() => setActiveModal('book-appointment')}
+                    >
                       <Target className="h-4 w-4" />
                       Set Health Goals
                     </Button>
@@ -272,10 +279,17 @@ const HealthcareLongevityCenter = () => {
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="relative overflow-hidden">
+                <div className="absolute top-2 right-2 opacity-10">
+                  <img 
+                    src={treeLogoConfig.src}
+                    alt=""
+                    className="h-8 w-auto"
+                  />
+                </div>
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Users2 className="h-5 w-5 text-green-500" />
+                  <CardTitle className="flex items-center gap-2 font-serif">
+                    <Users2 className="h-5 w-5 text-emerald" />
                     Family Health Tree
                   </CardTitle>
                 </CardHeader>
@@ -288,7 +302,17 @@ const HealthcareLongevityCenter = () => {
                       <div className="text-sm">Cardiovascular: 2 family members</div>
                       <div className="text-sm">Diabetes: 1 family member</div>
                     </div>
-                    <Button variant="outline" className="w-full gap-2">
+                    <Button 
+                      variant="outline" 
+                      className="w-full gap-2 touch-target"
+                      onClick={() => {
+                        celebrate();
+                        toast({
+                          title: "Family Member Added!",
+                          description: "Health history has been updated.",
+                        });
+                      }}
+                    >
                       <Plus className="h-4 w-4" />
                       Add Family Member
                     </Button>
@@ -296,10 +320,17 @@ const HealthcareLongevityCenter = () => {
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="relative overflow-hidden">
+                <div className="absolute top-2 right-2 opacity-10">
+                  <img 
+                    src={treeLogoConfig.src}
+                    alt=""
+                    className="h-8 w-auto"
+                  />
+                </div>
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Shield className="h-5 w-5 text-blue-500" />
+                  <CardTitle className="flex items-center gap-2 font-serif">
+                    <Shield className="h-5 w-5 text-navy" />
                     Insurance Coverage
                   </CardTitle>
                 </CardHeader>
@@ -307,17 +338,21 @@ const HealthcareLongevityCenter = () => {
                   <div className="space-y-3">
                     <div className="flex justify-between">
                       <span>Health Insurance</span>
-                      <Badge variant="default">Active</Badge>
+                      <Badge className="bg-emerald text-white">Active</Badge>
                     </div>
                     <div className="flex justify-between">
                       <span>Life Insurance</span>
-                      <Badge variant="default">Active</Badge>
+                      <Badge className="bg-emerald text-white">Active</Badge>
                     </div>
                     <div className="flex justify-between">
                       <span>Long-term Care</span>
                       <Badge variant="secondary">Review Needed</Badge>
                     </div>
-                    <Button variant="outline" className="w-full gap-2">
+                    <Button 
+                      variant="outline" 
+                      className="w-full gap-2 touch-target"
+                      onClick={() => setActiveModal('get-quote')}
+                    >
                       <ExternalLink className="h-4 w-4" />
                       Review Coverage
                     </Button>
@@ -327,21 +362,51 @@ const HealthcareLongevityCenter = () => {
             </div>
 
             {/* Next Steps */}
-            <Card>
+            <Card className="relative overflow-hidden">
+              <div className="absolute top-4 right-4 opacity-10">
+                <img 
+                  src={treeLogoConfig.src}
+                  alt=""
+                  className="h-12 w-auto"
+                />
+              </div>
               <CardHeader>
-                <CardTitle>Next Steps</CardTitle>
+                <CardTitle className="font-serif">Next Steps</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <Button className="h-20 flex-col gap-2">
+                  <Button 
+                    className="h-20 flex-col gap-2 touch-target font-display"
+                    onClick={() => setActiveModal('book-appointment')}
+                  >
                     <Calendar className="h-6 w-6" />
                     Book Annual Checkup
                   </Button>
-                  <Button variant="outline" className="h-20 flex-col gap-2">
+                  <Button 
+                    variant="outline" 
+                    className="h-20 flex-col gap-2 touch-target"
+                    onClick={() => {
+                      celebrate();
+                      toast({
+                        title: "Device Connected!",
+                        description: "Your wearable device has been synced.",
+                      });
+                    }}
+                  >
                     <Activity className="h-6 w-6" />
                     Connect Wearable Device
                   </Button>
-                  <Button variant="outline" className="h-20 flex-col gap-2">
+                  <Button 
+                    variant="outline" 
+                    className="h-20 flex-col gap-2 touch-target"
+                    onClick={() => {
+                      celebrate();
+                      toast({
+                        title: "Assessment Complete!",
+                        description: "Your health risk assessment has been completed.",
+                      });
+                    }}
+                  >
                     <FileText className="h-6 w-6" />
                     Complete Risk Assessment
                   </Button>
@@ -353,103 +418,185 @@ const HealthcareLongevityCenter = () => {
           {/* Care Team Tab */}
           <TabsContent value="care-team" className="space-y-6">
             <div className="flex justify-between items-center">
-              <h3 className="text-2xl font-bold">My Care Team</h3>
-              <Button className="gap-2">
+              <h3 className="text-2xl font-serif font-bold">My Care Team</h3>
+              <Button 
+                className="gap-2 touch-target font-display"
+                onClick={() => setActiveTab('care-team-search')}
+              >
                 <Plus className="h-4 w-4" />
                 Add Provider
               </Button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Dr. Sarah Johnson</CardTitle>
-                  <p className="text-muted-foreground">Primary Care Physician</p>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    <div className="text-sm">Last visit: March 15, 2024</div>
-                    <div className="text-sm">Next appointment: June 15, 2024</div>
-                    <div className="flex gap-2">
-                      <Button size="sm" variant="outline">Message</Button>
-                      <Button size="sm" variant="outline">
-                        <Upload className="h-4 w-4" />
-                      </Button>
-                    </div>
+            {activeTab === 'care-team-search' ? (
+              <ProviderSearch 
+                onInviteProvider={(provider) => {
+                  celebrate();
+                  toast({
+                    title: "Provider Invited!",
+                    description: `${provider.name} has been invited to your care team.`,
+                  });
+                  setActiveTab('care-team');
+                }}
+                onBookAppointment={(provider) => setActiveModal('book-appointment')}
+              />
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <Card className="relative overflow-hidden">
+                  <div className="absolute top-2 right-2 opacity-10">
+                    <img 
+                      src={treeLogoConfig.src}
+                      alt=""
+                      className="h-6 w-auto"
+                    />
                   </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Dr. Michael Chen</CardTitle>
-                  <p className="text-muted-foreground">Cardiologist</p>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    <div className="text-sm">Last visit: February 20, 2024</div>
-                    <div className="text-sm">Next appointment: August 20, 2024</div>
-                    <div className="flex gap-2">
-                      <Button size="sm" variant="outline">Message</Button>
-                      <Button size="sm" variant="outline">
-                        <Upload className="h-4 w-4" />
-                      </Button>
+                  <CardHeader>
+                    <CardTitle className="text-lg font-serif">Dr. Sarah Johnson</CardTitle>
+                    <p className="text-muted-foreground">Primary Care Physician</p>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      <div className="text-sm">Last visit: March 15, 2024</div>
+                      <div className="text-sm">Next appointment: June 15, 2024</div>
+                      <div className="flex gap-2">
+                        <Button size="sm" variant="outline" className="touch-target">Message</Button>
+                        <Button size="sm" variant="outline" className="touch-target">
+                          <Upload className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
 
-              <Card className="border-dashed">
-                <CardContent className="flex flex-col items-center justify-center h-40 text-center">
-                  <Plus className="h-12 w-12 text-muted-foreground mb-4" />
-                  <p className="text-muted-foreground mb-4">Add a new healthcare provider</p>
-                  <Button>Invite Provider</Button>
-                </CardContent>
-              </Card>
-            </div>
+                <Card className="relative overflow-hidden">
+                  <div className="absolute top-2 right-2 opacity-10">
+                    <img 
+                      src={treeLogoConfig.src}
+                      alt=""
+                      className="h-6 w-auto"
+                    />
+                  </div>
+                  <CardHeader>
+                    <CardTitle className="text-lg font-serif">Dr. Michael Chen</CardTitle>
+                    <p className="text-muted-foreground">Cardiologist</p>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      <div className="text-sm">Last visit: February 20, 2024</div>
+                      <div className="text-sm">Next appointment: August 20, 2024</div>
+                      <div className="flex gap-2">
+                        <Button size="sm" variant="outline" className="touch-target">Message</Button>
+                        <Button size="sm" variant="outline" className="touch-target">
+                          <Upload className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-dashed relative overflow-hidden">
+                  <div className="absolute top-2 right-2 opacity-5">
+                    <img 
+                      src={treeLogoConfig.src}
+                      alt=""
+                      className="h-6 w-auto"
+                    />
+                  </div>
+                  <CardContent className="flex flex-col items-center justify-center h-40 text-center">
+                    <Plus className="h-12 w-12 text-muted-foreground mb-4" />
+                    <p className="text-muted-foreground mb-4">Add a new healthcare provider</p>
+                    <Button 
+                      className="touch-target font-display"
+                      onClick={() => setActiveTab('care-team-search')}
+                    >
+                      Find & Invite Provider
+                    </Button>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
           </TabsContent>
 
           {/* Longevity Programs Tab */}
           <TabsContent value="longevity" className="space-y-6">
             <div className="text-center mb-8">
-              <h3 className="text-2xl font-bold mb-4">Evidence-Based Longevity Programs</h3>
+              <h3 className="text-2xl font-serif font-bold mb-4">Evidence-Based Longevity Programs</h3>
               <p className="text-muted-foreground">Curated programs from leading longevity experts</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <Card>
-                <div className="h-48 bg-gradient-to-br from-blue-500 to-purple-600 rounded-t-lg"></div>
+              <Card className="relative overflow-hidden">
+                <div className="h-48 bg-gradient-to-br from-emerald to-emerald/80 rounded-t-lg relative">
+                  <div className="absolute top-2 right-2 opacity-20">
+                    <img 
+                      src={treeLogoConfig.src}
+                      alt=""
+                      className="h-8 w-auto"
+                    />
+                  </div>
+                </div>
                 <CardHeader>
-                  <CardTitle>Fountain Life</CardTitle>
+                  <CardTitle className="font-serif">Fountain Life</CardTitle>
                   <p className="text-muted-foreground">Comprehensive health optimization</p>
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm mb-4">Advanced diagnostics and precision medicine approach to longevity.</p>
-                  <Button className="w-full">Request Review</Button>
+                  <Button 
+                    className="w-full touch-target font-display"
+                    onClick={() => setActiveModal('request-review')}
+                  >
+                    Request Review
+                  </Button>
                 </CardContent>
               </Card>
 
-              <Card>
-                <div className="h-48 bg-gradient-to-br from-green-500 to-teal-600 rounded-t-lg"></div>
+              <Card className="relative overflow-hidden">
+                <div className="h-48 bg-gradient-to-br from-navy to-navy/80 rounded-t-lg relative">
+                  <div className="absolute top-2 right-2 opacity-20">
+                    <img 
+                      src={treeLogoConfig.src}
+                      alt=""
+                      className="h-8 w-auto"
+                    />
+                  </div>
+                </div>
                 <CardHeader>
-                  <CardTitle>Human Longevity Inc.</CardTitle>
+                  <CardTitle className="font-serif">Human Longevity Inc.</CardTitle>
                   <p className="text-muted-foreground">Genomics-based health insights</p>
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm mb-4">Cutting-edge genomics and AI for personalized health strategies.</p>
-                  <Button className="w-full">Request Review</Button>
+                  <Button 
+                    className="w-full touch-target font-display"
+                    onClick={() => setActiveModal('request-review')}
+                  >
+                    Request Review
+                  </Button>
                 </CardContent>
               </Card>
 
-              <Card>
-                <div className="h-48 bg-gradient-to-br from-orange-500 to-red-600 rounded-t-lg"></div>
+              <Card className="relative overflow-hidden">
+                <div className="h-48 bg-gradient-to-br from-gold to-gold/80 rounded-t-lg relative">
+                  <div className="absolute top-2 right-2 opacity-20">
+                    <img 
+                      src={treeLogoConfig.src}
+                      alt=""
+                      className="h-8 w-auto"
+                    />
+                  </div>
+                </div>
                 <CardHeader>
-                  <CardTitle>Attia Healthspan</CardTitle>
+                  <CardTitle className="font-serif">Attia Healthspan</CardTitle>
                   <p className="text-muted-foreground">Science-driven longevity</p>
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm mb-4">Evidence-based approach to extending healthy lifespan.</p>
-                  <Button className="w-full">Request Review</Button>
+                  <Button 
+                    className="w-full touch-target font-display"
+                    onClick={() => setActiveModal('request-review')}
+                  >
+                    Request Review
+                  </Button>
                 </CardContent>
               </Card>
             </div>
@@ -550,10 +697,17 @@ const HealthcareLongevityCenter = () => {
           {/* Insurance Tab */}
           <TabsContent value="insurance" className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <Card>
+              <Card className="relative overflow-hidden">
+                <div className="absolute top-2 right-2 opacity-10">
+                  <img 
+                    src={treeLogoConfig.src}
+                    alt=""
+                    className="h-6 w-auto"
+                  />
+                </div>
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Shield className="h-5 w-5 text-blue-500" />
+                  <CardTitle className="flex items-center gap-2 font-serif">
+                    <Shield className="h-5 w-5 text-navy" />
                     Medicare Planning
                   </CardTitle>
                 </CardHeader>
@@ -561,14 +715,26 @@ const HealthcareLongevityCenter = () => {
                   <p className="text-sm text-muted-foreground mb-4">
                     Optimize your Medicare coverage and supplements
                   </p>
-                  <Button className="w-full">Get Quote</Button>
+                  <Button 
+                    className="w-full touch-target font-display"
+                    onClick={() => setActiveModal('get-quote')}
+                  >
+                    Get Quote
+                  </Button>
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="relative overflow-hidden">
+                <div className="absolute top-2 right-2 opacity-10">
+                  <img 
+                    src={treeLogoConfig.src}
+                    alt=""
+                    className="h-6 w-auto"
+                  />
+                </div>
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Heart className="h-5 w-5 text-green-500" />
+                  <CardTitle className="flex items-center gap-2 font-serif">
+                    <Heart className="h-5 w-5 text-emerald" />
                     Long-Term Care
                   </CardTitle>
                 </CardHeader>
@@ -576,14 +742,26 @@ const HealthcareLongevityCenter = () => {
                   <p className="text-sm text-muted-foreground mb-4">
                     Protect against long-term care costs
                   </p>
-                  <Button className="w-full">Get Quote</Button>
+                  <Button 
+                    className="w-full touch-target font-display"
+                    onClick={() => setActiveModal('get-quote')}
+                  >
+                    Get Quote
+                  </Button>
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="relative overflow-hidden">
+                <div className="absolute top-2 right-2 opacity-10">
+                  <img 
+                    src={treeLogoConfig.src}
+                    alt=""
+                    className="h-6 w-auto"
+                  />
+                </div>
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Activity className="h-5 w-5 text-orange-500" />
+                  <CardTitle className="flex items-center gap-2 font-serif">
+                    <Activity className="h-5 w-5 text-gold" />
                     Disability Insurance
                   </CardTitle>
                 </CardHeader>
@@ -591,7 +769,12 @@ const HealthcareLongevityCenter = () => {
                   <p className="text-sm text-muted-foreground mb-4">
                     Income protection for health events
                   </p>
-                  <Button className="w-full">Get Quote</Button>
+                  <Button 
+                    className="w-full touch-target font-display"
+                    onClick={() => setActiveModal('get-quote')}
+                  >
+                    Get Quote
+                  </Button>
                 </CardContent>
               </Card>
             </div>
@@ -858,27 +1041,12 @@ const HealthcareLongevityCenter = () => {
         </Tabs>
       </div>
 
-      {/* Welcome Banner */}
-      {showWelcomeBanner && (
-        <div className="fixed bottom-4 right-4 max-w-sm z-50">
-          <Alert className="bg-primary text-primary-foreground border-primary">
-            <Heart className="h-4 w-4" />
-            <AlertDescription>
-              {getPersonaWelcomeMessage(activePersona)}
-              <div className="mt-2 flex gap-2">
-                <Button size="sm" variant="secondary" onClick={() => setShowWelcomeBanner(false)}>
-                  <X className="h-4 w-4" />
-                </Button>
-                {['consultant', 'influencer', 'agent'].includes(activePersona) && (
-                  <Button size="sm" variant="secondary" onClick={() => setShowOnboardingModal(true)}>
-                    Get Started
-                  </Button>
-                )}
-              </div>
-            </AlertDescription>
-          </Alert>
-        </div>
-      )}
+      {/* Modals */}
+      <HealthcareModals 
+        activeModal={activeModal}
+        onClose={() => setActiveModal(null)}
+        onSuccess={handleModalSuccess}
+      />
 
       {/* Onboarding Modal */}
       <Dialog open={showOnboardingModal} onOpenChange={setShowOnboardingModal}>
