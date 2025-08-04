@@ -2680,6 +2680,100 @@ export type Database = {
           },
         ]
       }
+      ce_courses: {
+        Row: {
+          agent_id: string
+          certificate_url: string | null
+          completion_date: string | null
+          course_name: string
+          course_type: string | null
+          created_at: string | null
+          credits_earned: number | null
+          id: string
+          provider_name: string | null
+          verified: boolean | null
+          verified_at: string | null
+          verified_by: string | null
+        }
+        Insert: {
+          agent_id: string
+          certificate_url?: string | null
+          completion_date?: string | null
+          course_name: string
+          course_type?: string | null
+          created_at?: string | null
+          credits_earned?: number | null
+          id?: string
+          provider_name?: string | null
+          verified?: boolean | null
+          verified_at?: string | null
+          verified_by?: string | null
+        }
+        Update: {
+          agent_id?: string
+          certificate_url?: string | null
+          completion_date?: string | null
+          course_name?: string
+          course_type?: string | null
+          created_at?: string | null
+          credits_earned?: number | null
+          id?: string
+          provider_name?: string | null
+          verified?: boolean | null
+          verified_at?: string | null
+          verified_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ce_courses_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "insurance_agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ce_reminders: {
+        Row: {
+          agent_id: string | null
+          created_at: string | null
+          id: string
+          message: string | null
+          reminder_status: string | null
+          reminder_type: string
+          resolved_date: string | null
+          trigger_date: string | null
+        }
+        Insert: {
+          agent_id?: string | null
+          created_at?: string | null
+          id?: string
+          message?: string | null
+          reminder_status?: string | null
+          reminder_type: string
+          resolved_date?: string | null
+          trigger_date?: string | null
+        }
+        Update: {
+          agent_id?: string | null
+          created_at?: string | null
+          id?: string
+          message?: string | null
+          reminder_status?: string | null
+          reminder_type?: string
+          resolved_date?: string | null
+          trigger_date?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ce_reminders_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "insurance_agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ce_tracking: {
         Row: {
           ce_period_end: string
@@ -10228,6 +10322,63 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      insurance_agents: {
+        Row: {
+          ce_credits_completed: number | null
+          ce_credits_required: number | null
+          ce_reporting_period_end: string | null
+          ce_reporting_period_start: string | null
+          created_at: string | null
+          email: string
+          id: string
+          license_expiry: string | null
+          license_number: string
+          license_type: string
+          name: string
+          nmls_id: string | null
+          state: string
+          status: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          ce_credits_completed?: number | null
+          ce_credits_required?: number | null
+          ce_reporting_period_end?: string | null
+          ce_reporting_period_start?: string | null
+          created_at?: string | null
+          email: string
+          id?: string
+          license_expiry?: string | null
+          license_number: string
+          license_type: string
+          name: string
+          nmls_id?: string | null
+          state: string
+          status?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          ce_credits_completed?: number | null
+          ce_credits_required?: number | null
+          ce_reporting_period_end?: string | null
+          ce_reporting_period_start?: string | null
+          created_at?: string | null
+          email?: string
+          id?: string
+          license_expiry?: string | null
+          license_number?: string
+          license_type?: string
+          name?: string
+          nmls_id?: string | null
+          state?: string
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
       }
       insurance_policies: {
         Row: {
@@ -22440,6 +22591,10 @@ export type Database = {
       }
       check_impact_milestones: {
         Args: { p_user_id: string }
+        Returns: undefined
+      }
+      check_license_expiry: {
+        Args: Record<PropertyKey, never>
         Returns: undefined
       }
       check_nudge_triggers: {
