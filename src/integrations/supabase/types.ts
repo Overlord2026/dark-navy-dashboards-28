@@ -14,6 +14,317 @@ export type Database = {
   }
   public: {
     Tables: {
+      accountant_ce_alerts: {
+        Row: {
+          alert_type: string
+          created_at: string
+          due_date: string | null
+          id: string
+          license_id: string | null
+          metadata: Json | null
+          notes: string | null
+          priority: string | null
+          resolved: boolean | null
+          resolved_at: string | null
+          user_id: string
+        }
+        Insert: {
+          alert_type: string
+          created_at?: string
+          due_date?: string | null
+          id?: string
+          license_id?: string | null
+          metadata?: Json | null
+          notes?: string | null
+          priority?: string | null
+          resolved?: boolean | null
+          resolved_at?: string | null
+          user_id: string
+        }
+        Update: {
+          alert_type?: string
+          created_at?: string
+          due_date?: string | null
+          id?: string
+          license_id?: string | null
+          metadata?: Json | null
+          notes?: string | null
+          priority?: string | null
+          resolved?: boolean | null
+          resolved_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "accountant_ce_alerts_license_id_fkey"
+            columns: ["license_id"]
+            isOneToOne: false
+            referencedRelation: "accountant_license_status"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "accountant_ce_alerts_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "accountant_ce_alerts_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      accountant_ce_providers: {
+        Row: {
+          approved_states: string[] | null
+          contact_info: Json | null
+          course_catalog_url: string | null
+          created_at: string
+          id: string
+          is_active: boolean | null
+          provider_code: string | null
+          provider_name: string
+          specialty: string[] | null
+          updated_at: string
+          url: string | null
+        }
+        Insert: {
+          approved_states?: string[] | null
+          contact_info?: Json | null
+          course_catalog_url?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          provider_code?: string | null
+          provider_name: string
+          specialty?: string[] | null
+          updated_at?: string
+          url?: string | null
+        }
+        Update: {
+          approved_states?: string[] | null
+          contact_info?: Json | null
+          course_catalog_url?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          provider_code?: string | null
+          provider_name?: string
+          specialty?: string[] | null
+          updated_at?: string
+          url?: string | null
+        }
+        Relationships: []
+      }
+      accountant_ce_records: {
+        Row: {
+          ce_hours: number
+          certificate_number: string | null
+          certificate_url: string | null
+          course_name: string
+          created_at: string
+          credential_type: string
+          date_completed: string
+          ethics_hours: number | null
+          id: string
+          notes: string | null
+          provider: string
+          provider_id: string | null
+          renewal_period: string | null
+          state: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          ce_hours?: number
+          certificate_number?: string | null
+          certificate_url?: string | null
+          course_name: string
+          created_at?: string
+          credential_type: string
+          date_completed: string
+          ethics_hours?: number | null
+          id?: string
+          notes?: string | null
+          provider: string
+          provider_id?: string | null
+          renewal_period?: string | null
+          state: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          ce_hours?: number
+          certificate_number?: string | null
+          certificate_url?: string | null
+          course_name?: string
+          created_at?: string
+          credential_type?: string
+          date_completed?: string
+          ethics_hours?: number | null
+          id?: string
+          notes?: string | null
+          provider?: string
+          provider_id?: string | null
+          renewal_period?: string | null
+          state?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "accountant_ce_records_provider_id_fkey"
+            columns: ["provider_id"]
+            isOneToOne: false
+            referencedRelation: "accountant_ce_providers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "accountant_ce_records_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "accountant_ce_records_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      accountant_ce_requirements: {
+        Row: {
+          audit_frequency_years: number | null
+          ce_hours_required: number
+          created_at: string
+          credential_type: string
+          ethics_hours_required: number | null
+          ethics_required: boolean | null
+          id: string
+          notes: string | null
+          renewal_cycle_months: number
+          reporting_deadline: string | null
+          specialty_requirements: Json | null
+          state: string
+          updated_at: string
+        }
+        Insert: {
+          audit_frequency_years?: number | null
+          ce_hours_required?: number
+          created_at?: string
+          credential_type: string
+          ethics_hours_required?: number | null
+          ethics_required?: boolean | null
+          id?: string
+          notes?: string | null
+          renewal_cycle_months?: number
+          reporting_deadline?: string | null
+          specialty_requirements?: Json | null
+          state: string
+          updated_at?: string
+        }
+        Update: {
+          audit_frequency_years?: number | null
+          ce_hours_required?: number
+          created_at?: string
+          credential_type?: string
+          ethics_hours_required?: number | null
+          ethics_required?: boolean | null
+          id?: string
+          notes?: string | null
+          renewal_cycle_months?: number
+          reporting_deadline?: string | null
+          specialty_requirements?: Json | null
+          state?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      accountant_license_status: {
+        Row: {
+          audit_flag: boolean | null
+          audit_selected_date: string | null
+          ce_hours_completed: number | null
+          ce_hours_required: number | null
+          created_at: string
+          credential_type: string
+          ethics_hours_completed: number | null
+          ethics_hours_required: number | null
+          expiration_date: string
+          id: string
+          issue_date: string | null
+          license_number: string
+          notes: string | null
+          renewal_status: string
+          state: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          audit_flag?: boolean | null
+          audit_selected_date?: string | null
+          ce_hours_completed?: number | null
+          ce_hours_required?: number | null
+          created_at?: string
+          credential_type: string
+          ethics_hours_completed?: number | null
+          ethics_hours_required?: number | null
+          expiration_date: string
+          id?: string
+          issue_date?: string | null
+          license_number: string
+          notes?: string | null
+          renewal_status?: string
+          state: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          audit_flag?: boolean | null
+          audit_selected_date?: string | null
+          ce_hours_completed?: number | null
+          ce_hours_required?: number | null
+          created_at?: string
+          credential_type?: string
+          ethics_hours_completed?: number | null
+          ethics_hours_required?: number | null
+          expiration_date?: string
+          id?: string
+          issue_date?: string | null
+          license_number?: string
+          notes?: string | null
+          renewal_status?: string
+          state?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "accountant_license_status_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "accountant_license_status_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       ach_events: {
         Row: {
           created_at: string | null
