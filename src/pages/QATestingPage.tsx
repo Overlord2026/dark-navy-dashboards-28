@@ -5,6 +5,7 @@ import { PreLaunchQARunner } from '@/components/qa/PreLaunchQARunner';
 import { AccessibilityQARunner } from '@/components/qa/AccessibilityQARunner';
 import { ComprehensiveQATestSuite } from '@/components/qa/ComprehensiveQATestSuite';
 import { FullSystemQARunner } from '@/components/qa/FullSystemQARunner';
+import { ComplianceQARunner } from '@/components/insurance/ComplianceQARunner';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { 
@@ -15,7 +16,8 @@ import {
   AlertTriangle,
   TrendingUp,
   Users,
-  Monitor
+  Monitor,
+  FileText
 } from 'lucide-react';
 
 export default function QATestingPage() {
@@ -114,8 +116,12 @@ export default function QATestingPage() {
         </Card>
 
         {/* Testing Suites */}
-        <Tabs defaultValue="full-system" className="w-full">
-          <TabsList className="grid w-full grid-cols-5">
+        <Tabs defaultValue="compliance" className="w-full">
+          <TabsList className="grid w-full grid-cols-6">
+            <TabsTrigger value="compliance" className="flex items-center gap-2">
+              <FileText className="h-4 w-4" />
+              Compliance
+            </TabsTrigger>
             <TabsTrigger value="full-system" className="flex items-center gap-2">
               <TestTube className="h-4 w-4" />
               Full System
@@ -138,8 +144,16 @@ export default function QATestingPage() {
             </TabsTrigger>
           </TabsList>
 
+          <TabsContent value="compliance">
+            <ComplianceQARunner />
+          </TabsContent>
+
           <TabsContent value="full-system">
             <FullSystemQARunner />
+          </TabsContent>
+
+          <TabsContent value="pre-launch">
+            <PreLaunchQARunner />
           </TabsContent>
 
           <TabsContent value="accessibility">

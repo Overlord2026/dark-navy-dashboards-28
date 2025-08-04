@@ -13,7 +13,7 @@ import {
   Target,
   X,
   Settings,
-  AlertTriangle,
+  TestTube,
   CheckCircle,
   Clock
 } from 'lucide-react';
