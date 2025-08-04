@@ -6,6 +6,7 @@ import { ComplianceWorkflowQATest } from '@/components/qa/ComplianceWorkflowQATe
 import { AdvisorAnalyticsQATest } from '@/components/qa/AdvisorAnalyticsQATest';
 import { SecurityAccessQATest } from '@/components/qa/SecurityAccessQATest';
 import { MobileTabletQATest } from '@/components/qa/MobileTabletQATest';
+import { LaunchReadinessQATest } from '@/components/qa/LaunchReadinessQATest';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Briefcase, Users, BarChart3, DollarSign, FileText, Shield, Settings } from 'lucide-react';
@@ -78,6 +79,9 @@ export default function RIAPracticeQATest() {
 
         {/* Mobile & Tablet Experience QA Test Component */}
         <MobileTabletQATest />
+
+        {/* Launch Readiness QA Test Component */}
+        <LaunchReadinessQATest />
 
         {/* Navigation QA Test Component */}
         <RIAPracticeNavigationQA />
