@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { Loader2 } from 'lucide-react';
 import { VIPWelcomeBanner } from './VIPWelcomeBanner';
 import { useReservedProfiles } from '@/hooks/useReservedProfiles';
-import { useAuth } from '@/contexts/UserContext';
+import { supabase } from '@/integrations/supabase/client';
 import { ReservedProfile } from '@/types/reservedProfiles';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -13,7 +13,7 @@ import CelebrationEffects from '@/components/effects/CelebrationEffects';
 export const ReservedProfileClaimPage: React.FC = () => {
   const { token } = useParams<{ token: string }>();
   const navigate = useNavigate();
-  const { user, signInWithOAuth } = useAuth();
+  const [user, setUser] = useState<any>(null);
   const { getProfileByToken, claimProfile, loading } = useReservedProfiles();
   
   const [profile, setProfile] = useState<ReservedProfile | null>(null);
@@ -40,7 +40,7 @@ export const ReservedProfileClaimPage: React.FC = () => {
         setError('This profile has already been claimed');
         return;
       }
-      setProfile(profileData);
+      setProfile(profileData as ReservedProfile);
     } catch (error) {
       setError('Failed to load profile');
     }
@@ -65,8 +65,11 @@ export const ReservedProfileClaimPage: React.FC = () => {
     }
   };
 
-  const handleSignIn = () => {
-    signInWithOAuth('linkedin_oidc');
+  const handleSignIn = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'linkedin_oidc'
+    });
+    if (error) console.error('Auth error:', error);
   };
 
   const spotsLeft = 25 - Math.floor(Math.random() * 20); // Simulated urgency

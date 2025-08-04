@@ -17,7 +17,7 @@ export const useReservedProfiles = () => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setProfiles(data || []);
+      setProfiles((data || []) as ReservedProfile[]);
     } catch (error) {
       console.error('Error fetching reserved profiles:', error);
       toast({
@@ -44,7 +44,7 @@ export const useReservedProfiles = () => {
 
       if (error) throw error;
 
-      setProfiles(prev => [data, ...prev]);
+      setProfiles(prev => [data as ReservedProfile, ...prev]);
       toast({
         title: "Success",
         description: `Reserved profile created for ${profile.name}`,

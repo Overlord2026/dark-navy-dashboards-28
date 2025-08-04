@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { PersonaSegment, detectPersonaSegment, PERSONA_SEGMENT_CONFIGS } from '@/types/personaSegments';
 import { PersonaType } from '@/types/personas';
-import { useAnalytics } from '@/hooks/useAnalytics';
+import { analytics } from '@/lib/analytics';
 
 interface SegmentContextType {
   currentSegment: PersonaSegment;
@@ -14,7 +14,6 @@ const SegmentContext = createContext<SegmentContextType | undefined>(undefined);
 
 export const SegmentProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentSegment, setCurrentSegment] = useState<PersonaSegment>('general');
-  const analytics = useAnalytics();
 
   const segmentConfig = PERSONA_SEGMENT_CONFIGS[currentSegment];
 
@@ -23,11 +22,7 @@ export const SegmentProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setCurrentSegment(detectedSegment);
     
     // Track segment selection
-    analytics.trackOnboardingStart({
-      persona,
-      segment: detectedSegment,
-      source: 'segment_detection'
-    });
+    analytics.trackOnboardingStart(persona, detectedSegment);
   };
 
   const trackSegmentEvent = (event: string, properties: Record<string, any> = {}) => {

@@ -166,6 +166,32 @@ export const PERSONA_WELCOME_MESSAGES: Record<PersonaType, PersonaWelcomeMessage
     ctaPrimary: "Claim My Reserved Profile",
     ctaSecondary: "Learn More",
     learnMoreText: "Join the elite network transforming wealth management."
+  },
+  insurance_agent: {
+    title: "Insurance Agent Hub",
+    subtitle: "Your Insurance Agency Hub. Manage quotes, enrollments, and family education—all in one place.",
+    benefits: [
+      "Streamlined quote management",
+      "Automated enrollment tracking",
+      "Family education resources",
+      "Compliance tools"
+    ],
+    ctaPrimary: "Get Started",
+    ctaSecondary: "Learn More",
+    learnMoreText: "Discover insurance-specific features"
+  },
+  healthcare_consultant: {
+    title: "Healthcare Consultant Gateway",
+    subtitle: "Healthcare Consultant Gateway. Empower families with up-to-date advice, benefit navigation, and healthspan planning tools.",
+    benefits: [
+      "Benefit navigation tools",
+      "Health planning resources",
+      "Family healthcare coordination",
+      "Compliance tracking"
+    ],
+    ctaPrimary: "Get Started",
+    ctaSecondary: "Learn More",
+    learnMoreText: "Explore healthcare consulting features"
   }
 };
 

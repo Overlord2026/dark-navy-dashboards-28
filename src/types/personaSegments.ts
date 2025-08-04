@@ -1,4 +1,5 @@
 // Segment-specific persona types for enhanced analytics
+import { PersonaType } from './personas';
 export type PersonaSegment = 
   // Attorney segments
   | 'divorce_family_law'

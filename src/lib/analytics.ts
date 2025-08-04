@@ -142,5 +142,50 @@ export const analytics = {
       user_id: userId,
       timestamp: Date.now()
     });
+  },
+
+  // Segment-specific tracking methods
+  trackOnboardingStart: (persona: string, segment: string) => {
+    posthog.capture('onboarding_started', {
+      persona,
+      segment,
+      timestamp: Date.now()
+    });
+  },
+
+  trackOnboardingCompleted: (persona: string, segment: string, referrer?: string) => {
+    posthog.capture('onboarding_completed', {
+      persona,
+      segment,
+      referrer,
+      timestamp: Date.now()
+    });
+  },
+
+  trackFAQOpened: (persona: string, segment: string, page: string) => {
+    posthog.capture('faq_opened', {
+      persona,
+      segment,
+      page,
+      timestamp: Date.now()
+    });
+  },
+
+  trackFAQSearched: (persona: string, segment: string, query: string) => {
+    posthog.capture('faq_searched', {
+      persona,
+      segment,
+      query,
+      timestamp: Date.now()
+    });
+  },
+
+  trackViralShareClicked: (persona: string, segment: string, channel: string) => {
+    posthog.capture('viral_share_clicked', {
+      persona,
+      segment,
+      channel,
+      timestamp: Date.now()
+    });
   }
 };
