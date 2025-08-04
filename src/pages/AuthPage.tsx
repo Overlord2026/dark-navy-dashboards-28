@@ -13,6 +13,7 @@ import { authSecurityService } from '@/services/security/authSecurity';
 import { PasswordValidationResult } from '@/services/security/passwordPolicy';
 import { supabase } from '@/lib/supabase';
 import { getLogoConfig } from '@/assets/logos';
+import { EnvironmentIndicator } from '@/components/debug/EnvironmentIndicator';
 import { Shield } from 'lucide-react';
 
 export function AuthPage() {
@@ -23,7 +24,7 @@ export function AuthPage() {
   const [error, setError] = useState<string | null>(null);
   const [passwordValidation, setPasswordValidation] = useState<PasswordValidationResult | null>(null);
   const [isSignUp, setIsSignUp] = useState(false);
-  const { login, isAuthenticated } = useUser();
+  const { isAuthenticated } = useUser();
   const navigate = useNavigate();
   
   // Get BFO logos
@@ -62,16 +63,22 @@ export function AuthPage() {
     setError(null);
 
     try {
-      const { success, error: loginError } = await login(email, password);
+      // Standard Supabase login without CAPTCHA for development
+      const { data, error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
       
-      if (success) {
-        navigate('/', { replace: true });
-      } else {
-        setError(loginError || 'Login failed. Please check your credentials.');
+      if (signInError) {
+        throw signInError;
       }
-    } catch (err) {
+
+      if (data.user) {
+        navigate('/', { replace: true });
+      }
+    } catch (err: any) {
       console.error('Login error:', err);
-      setError('An unexpected error occurred. Please try again.');
+      setError(err.message || 'Login failed. Please check your credentials.');
     }
     
     setLoading(false);
@@ -99,7 +106,7 @@ export function AuthPage() {
     try {
       const redirectUrl = `${window.location.origin}/`;
       
-      const { error: signUpError } = await supabase.auth.signUp({
+      const { data, error: signUpError } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -108,15 +115,15 @@ export function AuthPage() {
       });
 
       if (signUpError) {
-        setError(signUpError.message);
-      } else {
-        setError(null);
-        // Show success message
+        throw signUpError;
+      }
+
+      if (data.user) {
         setError('Sign up successful! Please check your email to verify your account.');
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Sign up error:', err);
-      setError('An unexpected error occurred during sign up.');
+      setError(err.message || 'An unexpected error occurred during sign up.');
     }
 
     setLoading(false);
@@ -301,6 +308,7 @@ export function AuthPage() {
           </CardContent>
         </Card>
       </div>
+      <EnvironmentIndicator />
     </div>
   </ErrorBoundary>
   );
