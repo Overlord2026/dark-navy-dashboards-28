@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { RetirementCalculatorEngine } from '@/components/retirement/RetirementCalculatorEngine';
 import { RetirementErrorBoundary } from '@/components/retirement/RetirementErrorBoundary';
+import { PlanImportWizard } from '@/components/retirement/PlanImportWizard';
+import { PlanImportDashboard } from '@/components/retirement/PlanImportDashboard';
 import { RetirementAnalysisInput } from '@/types/retirement';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export default function RetirementAnalyzerDemo() {
   const [inputs, setInputs] = useState<RetirementAnalysisInput>({
@@ -149,15 +152,31 @@ export default function RetirementAnalyzerDemo() {
               Next-generation retirement planning with Monte Carlo simulations, scenario modeling, 
               and personalized roadmap generation. Experience the future of financial planning.
             </p>
+            <div className="flex justify-center">
+              <PlanImportWizard />
+            </div>
           </div>
 
-          {/* Main Calculator */}
-          <RetirementErrorBoundary>
-            <RetirementCalculatorEngine
-              inputs={inputs}
-              onInputsChange={setInputs}
-            />
-          </RetirementErrorBoundary>
+          {/* Main Content */}
+          <Tabs defaultValue="analyzer" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="analyzer">Retirement Analyzer</TabsTrigger>
+              <TabsTrigger value="imports">Plan Imports</TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="analyzer" className="mt-8">
+              <RetirementErrorBoundary>
+                <RetirementCalculatorEngine
+                  inputs={inputs}
+                  onInputsChange={setInputs}
+                />
+              </RetirementErrorBoundary>
+            </TabsContent>
+            
+            <TabsContent value="imports" className="mt-8">
+              <PlanImportDashboard />
+            </TabsContent>
+          </Tabs>
         </div>
       </div>
     </div>
