@@ -20,7 +20,7 @@ import { useInsuranceAgent } from '@/hooks/useInsuranceAgent';
 import { AgentStatusCard } from '@/components/insurance/AgentStatusCard';
 import { CEProgressTracker } from '@/components/insurance/CEProgressTracker';
 import { CECoursesTable } from '@/components/insurance/CECoursesTable';
-import { AddCourseModal } from '@/components/insurance/AddCourseModal';
+import { EnhancedCEUploadModal } from '@/components/insurance/EnhancedCEUploadModal';
 import { ComplianceAlertsPanel } from '@/components/insurance/ComplianceAlertsPanel';
 import { useCelebration } from '@/hooks/useCelebration';
 import { toast } from 'sonner';
@@ -420,11 +420,12 @@ export const InsuranceCEDashboard: React.FC = () => {
           </TabsContent>
         </Tabs>
 
-        {/* Add Course Modal */}
-        <AddCourseModal 
+        {/* Enhanced CE Upload Modal */}
+        <EnhancedCEUploadModal 
           isOpen={showAddCourse}
           onClose={() => setShowAddCourse(false)}
           onSubmit={handleAddCourse}
+          agent={agent}
           isLoading={false}
         />
       </div>
