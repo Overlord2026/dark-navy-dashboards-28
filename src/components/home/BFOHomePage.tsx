@@ -19,7 +19,7 @@ export function BFOHomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-navy via-navy to-slate-900 relative overflow-hidden">
       {/* Background Watermark */}
-      <div className="absolute bottom-0 right-0 opacity-5 pointer-events-none">
+      <div className="absolute bottom-0 right-0 opacity-10 pointer-events-none">
         <img 
           src={treeLogoConfig.src}
           alt="Background watermark"
