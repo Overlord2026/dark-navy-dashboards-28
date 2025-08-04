@@ -60,6 +60,7 @@ import { ConsultantDashboard } from "./pages/ConsultantDashboard";
 import { AttorneyDashboard } from "./pages/AttorneyDashboard";
 import { CoachDashboard } from "./pages/CoachDashboard";
 import { ComplianceDashboard } from "./pages/ComplianceDashboard";
+import HealthcareLongevityCenter from "@/components/healthcare/HealthcareLongevityCenter";
 import FAQPage from "./pages/FAQPage";
 import AdvisorPracticeHome from "./pages/advisor/AdvisorPracticeHome";
 import QATestingPage from "./pages/QATestingPage";
@@ -242,14 +243,15 @@ function App() {
                       </AuthWrapper>
                     } 
                   />
-                  <Route 
-                    path="/advisor/practice/*" 
-                    element={
-                      <AuthWrapper requireAuth={true} allowedRoles={getAdvisorAccessRoles()}>
-                        <AdvisorPracticeHome />
-                      </AuthWrapper>
-                    } 
-                  />
+                   <Route 
+                     path="/advisor/practice/*" 
+                     element={
+                       <AuthWrapper requireAuth={true} allowedRoles={getAdvisorAccessRoles()}>
+                         <AdvisorPracticeHome />
+                       </AuthWrapper>
+                     } 
+                   />
+                   <Route path="/healthcare" element={<HealthcareLongevityCenter />} />
 
                         </Routes>
                         <Navigation />
