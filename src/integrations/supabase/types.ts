@@ -4396,6 +4396,54 @@ export type Database = {
         }
         Relationships: []
       }
+      compliance_events: {
+        Row: {
+          created_at: string | null
+          details: Json | null
+          event_status: string
+          event_type: string
+          filing_id: string | null
+          id: string
+          ria_id: string | null
+          trigger_date: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          details?: Json | null
+          event_status: string
+          event_type: string
+          filing_id?: string | null
+          id?: string
+          ria_id?: string | null
+          trigger_date?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          details?: Json | null
+          event_status?: string
+          event_type?: string
+          filing_id?: string | null
+          id?: string
+          ria_id?: string | null
+          trigger_date?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "compliance_events_filing_id_fkey"
+            columns: ["filing_id"]
+            isOneToOne: false
+            referencedRelation: "ria_filings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "compliance_events_ria_id_fkey"
+            columns: ["ria_id"]
+            isOneToOne: false
+            referencedRelation: "ria_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       compliance_incidents: {
         Row: {
           actual_cost: number | null
@@ -4471,6 +4519,81 @@ export type Database = {
           severity?: string
           status?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      compliance_officer_actions: {
+        Row: {
+          action_date: string | null
+          action_notes: string | null
+          action_type: string
+          filing_id: string
+          id: string
+          officer_id: string
+        }
+        Insert: {
+          action_date?: string | null
+          action_notes?: string | null
+          action_type: string
+          filing_id: string
+          id?: string
+          officer_id: string
+        }
+        Update: {
+          action_date?: string | null
+          action_notes?: string | null
+          action_type?: string
+          filing_id?: string
+          id?: string
+          officer_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "compliance_officer_actions_filing_id_fkey"
+            columns: ["filing_id"]
+            isOneToOne: false
+            referencedRelation: "ria_filings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "compliance_officer_actions_officer_id_fkey"
+            columns: ["officer_id"]
+            isOneToOne: false
+            referencedRelation: "compliance_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      compliance_profiles: {
+        Row: {
+          created_at: string | null
+          id: string
+          jurisdiction: string[] | null
+          license_number: string | null
+          officer_name: string
+          specializations: string[] | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          jurisdiction?: string[] | null
+          license_number?: string | null
+          officer_name: string
+          specializations?: string[] | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          jurisdiction?: string[] | null
+          license_number?: string | null
+          officer_name?: string
+          specializations?: string[] | null
+          updated_at?: string | null
+          user_id?: string
         }
         Relationships: []
       }
@@ -17095,6 +17218,63 @@ export type Database = {
         }
         Relationships: []
       }
+      ria_filings: {
+        Row: {
+          created_at: string | null
+          document_url: string | null
+          due_date: string
+          filing_status: string
+          filing_type: string
+          id: string
+          review_notes: string | null
+          reviewer_id: string | null
+          ria_id: string
+          submission_date: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          document_url?: string | null
+          due_date: string
+          filing_status?: string
+          filing_type: string
+          id?: string
+          review_notes?: string | null
+          reviewer_id?: string | null
+          ria_id: string
+          submission_date?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          document_url?: string | null
+          due_date?: string
+          filing_status?: string
+          filing_type?: string
+          id?: string
+          review_notes?: string | null
+          reviewer_id?: string | null
+          ria_id?: string
+          submission_date?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ria_filings_reviewer_id_fkey"
+            columns: ["reviewer_id"]
+            isOneToOne: false
+            referencedRelation: "compliance_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ria_filings_ria_id_fkey"
+            columns: ["ria_id"]
+            isOneToOne: false
+            referencedRelation: "ria_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ria_onboarding_configs: {
         Row: {
           created_at: string | null
@@ -17149,6 +17329,39 @@ export type Database = {
           updated_at?: string | null
           welcome_message?: string | null
           welcome_video_url?: string | null
+        }
+        Relationships: []
+      }
+      ria_profiles: {
+        Row: {
+          aum_range: string | null
+          crd_number: string | null
+          created_at: string | null
+          firm_name: string
+          id: string
+          state_registrations: string[] | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          aum_range?: string | null
+          crd_number?: string | null
+          created_at?: string | null
+          firm_name: string
+          id?: string
+          state_registrations?: string[] | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          aum_range?: string | null
+          crd_number?: string | null
+          created_at?: string | null
+          firm_name?: string
+          id?: string
+          state_registrations?: string[] | null
+          updated_at?: string | null
+          user_id?: string
         }
         Relationships: []
       }
