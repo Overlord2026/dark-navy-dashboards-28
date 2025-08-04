@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import OutreachTemplates from './OutreachTemplates';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -149,15 +150,18 @@ const HealthcareLongevityCenter = () => {
       <div className="bg-gradient-to-r from-primary/10 to-secondary/10 border-b border-border">
         <div className="container mx-auto px-6 py-12 text-center">
           <h2 className="text-4xl font-bold text-foreground mb-4">
-            Proactive Health = Proactive Wealth
+            Welcome to the BFO Healthcare & Longevity Center!
           </h2>
-          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Comprehensive healthcare planning for lasting prosperity and longevity
+          <p className="text-xl text-muted-foreground mb-6 max-w-3xl mx-auto">
+            Explore world-class health resources, connect with leading medical experts, and unlock wellness strategies tailored for you and your family.
+          </p>
+          <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
+            Are you a healthcare consultant, coach, or longevity influencer? Set up your professional profile and help families live healthier, longer lives.
           </p>
           <div className="flex gap-4 justify-center">
-            <Button size="lg" className="gap-2">
-              <Calendar className="h-5 w-5" />
-              Book a Consultation
+            <Button size="lg" className="gap-2" onClick={() => setShowOnboardingModal(true)}>
+              <Briefcase className="h-5 w-5" />
+              Set Up My Healthcare Profile
             </Button>
             <Button size="lg" variant="outline" className="gap-2">
               <BookOpen className="h-5 w-5" />
@@ -170,7 +174,7 @@ const HealthcareLongevityCenter = () => {
       {/* Main Content Tabs */}
       <div className="container mx-auto px-6 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-6 mb-8">
+          <TabsList className="grid w-full grid-cols-7 mb-8">
             <TabsTrigger value="dashboard" className="gap-2">
               <Activity className="h-4 w-4" />
               Dashboard
@@ -195,6 +199,12 @@ const HealthcareLongevityCenter = () => {
               <MessageCircle className="h-4 w-4" />
               Community
             </TabsTrigger>
+            {['consultant', 'influencer', 'agent'].includes(activePersona) && (
+              <TabsTrigger value="outreach" className="gap-2">
+                <Users className="h-4 w-4" />
+                Outreach
+              </TabsTrigger>
+            )}
           </TabsList>
 
           {/* Dashboard Tab */}
@@ -805,6 +815,13 @@ const HealthcareLongevityCenter = () => {
               </CardContent>
             </Card>
           </TabsContent>
+
+          {/* Outreach Tab - For Consultants, Influencers, and Agents */}
+          {['consultant', 'influencer', 'agent'].includes(activePersona) && (
+            <TabsContent value="outreach">
+              <OutreachTemplates />
+            </TabsContent>
+          )}
         </Tabs>
       </div>
 
