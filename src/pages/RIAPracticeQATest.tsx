@@ -3,6 +3,7 @@ import { RIAPracticeNavigationQA } from '@/components/qa/RIAPracticeNavigationQA
 import { CRMPipelineQATest } from '@/components/qa/CRMPipelineQATest';
 import { BillingSubscriptionRMDQATest } from '@/components/qa/BillingSubscriptionRMDQATest';
 import { ComplianceWorkflowQATest } from '@/components/qa/ComplianceWorkflowQATest';
+import { AdvisorAnalyticsQATest } from '@/components/qa/AdvisorAnalyticsQATest';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Briefcase, Users, BarChart3, DollarSign, FileText, Shield, Settings } from 'lucide-react';
@@ -66,6 +67,9 @@ export default function RIAPracticeQATest() {
 
         {/* Compliance & Workflow QA Test Component */}
         <ComplianceWorkflowQATest />
+
+        {/* Advisor Analytics & Reporting QA Test Component */}
+        <AdvisorAnalyticsQATest />
 
         {/* Navigation QA Test Component */}
         <RIAPracticeNavigationQA />
