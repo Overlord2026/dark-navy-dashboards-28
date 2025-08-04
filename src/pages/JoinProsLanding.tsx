@@ -5,16 +5,19 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { 
   LinkedinIcon, 
-  TrendingUp, 
-  Users, 
-  Star, 
-  CheckCircle, 
   Shield,
+  Bolt,
+  Network,
+  Users,
   Award,
-  Building,
-  Globe
+  Sparkles,
+  CheckCircle
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import RecentlyJoinedTicker from '@/components/marketplace/RecentlyJoinedTicker';
+import TrustedPartners from '@/components/landing/TrustedPartners';
+import SocialProofSection from '@/components/landing/SocialProofSection';
+import HowItWorksSection from '@/components/landing/HowItWorksSection';
 
 const JoinProsLanding = () => {
   const navigate = useNavigate();
@@ -37,181 +40,215 @@ const JoinProsLanding = () => {
 
   const benefits = [
     {
-      icon: <Users className="w-6 h-6" />,
-      title: "Elite Client Network",
-      description: "Connect with high-net-worth families and ultra-high-net-worth individuals"
+      icon: <Shield className="w-8 h-8" />,
+      title: "Get Discovered by High-Net-Worth Families",
+      description: "Connect with ultra-high-net-worth individuals actively seeking trusted financial professionals"
     },
     {
-      icon: <TrendingUp className="w-6 h-6" />,
-      title: "Verified Credentials",
-      description: "Showcase your expertise with verified professional credentials"
+      icon: <Bolt className="w-8 h-8" />,
+      title: "Access Premium Tech & Training",
+      description: "Cutting-edge tools, compliance resources, and exclusive educational content"
     },
     {
-      icon: <Star className="w-6 h-6" />,
-      title: "Premium Visibility",
-      description: "Featured placement in our exclusive professional marketplace"
-    },
-    {
-      icon: <Shield className="w-6 h-6" />,
-      title: "Compliance Ready",
-      description: "GDPR compliant platform with enterprise-grade security"
+      icon: <Network className="w-8 h-8" />,
+      title: "Invite Your Professional Network",
+      description: "Build referral partnerships and expand your reach within the elite financial ecosystem"
     }
   ];
 
-  const stats = [
-    { number: "2,500+", label: "Elite Professionals" },
-    { number: "$2.8B+", label: "Assets Under Management" },
-    { number: "98%", label: "Client Satisfaction" },
-    { number: "150+", label: "Family Offices" }
-  ];
+  const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-primary/5">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-primary/5 relative overflow-hidden">
+      {/* Animated Background Elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <motion.div
+          className="absolute top-20 left-10 w-32 h-32 bg-primary/5 rounded-full blur-xl"
+          animate={{
+            x: [0, 100, 0],
+            y: [0, -50, 0],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "linear"
+          }}
+        />
+        <motion.div
+          className="absolute top-40 right-20 w-24 h-24 bg-secondary/5 rounded-full blur-xl"
+          animate={{
+            x: [0, -80, 0],
+            y: [0, 60, 0],
+          }}
+          transition={{
+            duration: 15,
+            repeat: Infinity,
+            ease: "linear"
+          }}
+        />
+      </div>
+
       {/* Hero Section */}
-      <div className="container mx-auto px-4 pt-16 pb-24">
+      <div className="container mx-auto px-4 pt-16 pb-12 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center max-w-4xl mx-auto"
+          className="text-center max-w-5xl mx-auto"
         >
-          <Badge variant="secondary" className="mb-6 px-4 py-2">
-            <Award className="w-4 h-4 mr-2" />
-            Exclusive Professional Network
+          <Badge variant="secondary" className="mb-6 px-6 py-3 text-base">
+            <Award className="w-5 h-5 mr-2" />
+            Elite Family Office Marketplace
           </Badge>
           
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-            Join the Elite
-          </h1>
-          
-          <p className="text-xl md:text-2xl text-muted-foreground mb-8 leading-relaxed">
-            Connect with ultra-high-net-worth families through our exclusive marketplace.
+          <motion.h1 
+            className="text-6xl md:text-7xl font-black mb-6 leading-tight"
+            style={{ fontFamily: 'Inter, Lato, sans-serif', fontWeight: 900 }}
+          >
+            <span className="bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
+              Join the Elite
+            </span>
             <br />
-            <span className="font-semibold text-foreground">Import your LinkedIn profile in seconds.</span>
+            <span className="text-foreground">
+              Family Office Marketplace
+            </span>
+          </motion.h1>
+          
+          <p className="text-xl md:text-2xl text-muted-foreground mb-4 leading-relaxed max-w-4xl mx-auto">
+            <span className="font-semibold text-foreground">One-Click LinkedIn Onboarding</span>
+          </p>
+          
+          <p className="text-lg text-muted-foreground mb-12 max-w-3xl mx-auto">
+            Advisors, CPAs, Attorneys: Showcase your expertise, connect with clients, and grow your practice.
           </p>
 
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-            <Button 
-              onClick={handleLinkedInAuth}
-              size="lg"
-              className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 text-lg"
-              disabled={loading}
+          {/* Main CTA Button */}
+          <motion.div
+            className="mb-16"
+            onHoverStart={() => setIsHovered(true)}
+            onHoverEnd={() => setIsHovered(false)}
+          >
+            <motion.div
+              animate={isHovered ? { scale: 1.05 } : { scale: 1 }}
+              transition={{ type: "spring", stiffness: 300 }}
             >
-              <LinkedinIcon className="w-5 h-5 mr-3" />
-              {loading ? 'Connecting...' : 'Sign in with LinkedIn'}
-            </Button>
-            
-            <Button 
-              onClick={handleManualSignup}
-              variant="outline"
-              size="lg"
-              className="px-8 py-4 text-lg"
-            >
-              Manual Setup
-            </Button>
-          </div>
+              <Button 
+                onClick={handleLinkedInAuth}
+                size="lg"
+                className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-12 py-6 text-xl font-bold rounded-xl shadow-2xl border-2 border-blue-500/20 relative overflow-hidden group"
+                disabled={loading}
+              >
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent"
+                  animate={isHovered ? { x: ["100%", "-100%"] } : {}}
+                  transition={{ duration: 0.6 }}
+                />
+                <LinkedinIcon className="w-6 h-6 mr-4" />
+                {loading ? (
+                  <motion.span
+                    animate={{ opacity: [1, 0.5, 1] }}
+                    transition={{ duration: 1.5, repeat: Infinity }}
+                  >
+                    Connecting...
+                  </motion.span>
+                ) : (
+                  'Sign in with LinkedIn'
+                )}
+                <Sparkles className="w-5 h-5 ml-3" />
+              </Button>
+            </motion.div>
+          </motion.div>
+        </motion.div>
+      </div>
 
-          {/* Trust Indicators */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16">
-            {stats.map((stat, index) => (
+      {/* Recently Joined Ticker */}
+      <RecentlyJoinedTicker />
+
+      {/* Trusted Partners */}
+      <TrustedPartners />
+
+      {/* Benefits Section */}
+      <div className="py-16 bg-gradient-to-br from-background via-muted/10 to-background">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-4xl font-bold mb-4">Why Elite Professionals Choose Us</h2>
+            <p className="text-xl text-muted-foreground">Join thousands of top-tier professionals already growing their practice</p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            {benefits.map((benefit, index) => (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                className="text-center"
+                transition={{ delay: index * 0.2 }}
+                whileHover={{ y: -5, scale: 1.02 }}
+                className="group"
               >
-                <div className="text-3xl font-bold text-primary mb-2">{stat.number}</div>
-                <div className="text-sm text-muted-foreground">{stat.label}</div>
+                <Card className="h-full text-center border-muted/40 group-hover:border-primary/30 transition-all duration-300 group-hover:shadow-xl">
+                  <CardContent className="p-8">
+                    <motion.div
+                      className="flex justify-center mb-6"
+                      whileHover={{ rotate: 10, scale: 1.1 }}
+                      transition={{ type: "spring", stiffness: 300 }}
+                    >
+                      <div className="p-4 bg-primary/10 rounded-2xl text-primary group-hover:bg-primary/20 transition-colors">
+                        {benefit.icon}
+                      </div>
+                    </motion.div>
+                    <h3 className="text-xl font-bold mb-4 text-foreground">{benefit.title}</h3>
+                    <p className="text-muted-foreground leading-relaxed">{benefit.description}</p>
+                  </CardContent>
+                </Card>
               </motion.div>
             ))}
           </div>
-        </motion.div>
+        </div>
+      </div>
 
-        {/* Benefits Grid */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16"
-        >
-          {benefits.map((benefit, index) => (
-            <Card key={index} className="text-center h-full border-muted/40">
-              <CardHeader className="pb-4">
-                <div className="flex justify-center mb-4">
-                  <div className="p-3 bg-primary/10 rounded-full text-primary">
-                    {benefit.icon}
-                  </div>
-                </div>
-                <CardTitle className="text-lg">{benefit.title}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground text-sm">{benefit.description}</p>
-              </CardContent>
-            </Card>
-          ))}
-        </motion.div>
+      {/* How It Works Section */}
+      <HowItWorksSection />
 
-        {/* LinkedIn Import Preview */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="max-w-3xl mx-auto"
-        >
-          <Card className="border-blue-200 bg-gradient-to-r from-blue-50/50 to-blue-100/30 dark:from-blue-950/20 dark:to-blue-900/20">
-            <CardHeader className="text-center">
-              <CardTitle className="flex items-center justify-center gap-2 text-blue-700 dark:text-blue-300">
-                <LinkedinIcon className="w-6 h-6" />
-                LinkedIn Import Features
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid md:grid-cols-3 gap-6">
-                <div className="text-center space-y-2">
-                  <Building className="w-8 h-8 mx-auto text-blue-600" />
-                  <h4 className="font-semibold">Professional Details</h4>
-                  <p className="text-sm text-muted-foreground">
-                    Name, headline, current role, company, and bio automatically imported
-                  </p>
-                </div>
-                <div className="text-center space-y-2">
-                  <Award className="w-8 h-8 mx-auto text-blue-600" />
-                  <h4 className="font-semibold">Experience & Education</h4>
-                  <p className="text-sm text-muted-foreground">
-                    Complete work history and educational background with one click
-                  </p>
-                </div>
-                <div className="text-center space-y-2">
-                  <Globe className="w-8 h-8 mx-auto text-blue-600" />
-                  <h4 className="font-semibold">Professional Photo</h4>
-                  <p className="text-sm text-muted-foreground">
-                    High-quality profile photo imported directly from LinkedIn
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
+      {/* Social Proof Section */}
+      <SocialProofSection />
 
-        {/* Privacy Notice */}
+      {/* Privacy Notice */}
+      <div className="py-12 bg-muted/20">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7 }}
-          className="text-center mt-12 max-w-2xl mx-auto"
+          className="text-center max-w-3xl mx-auto px-4"
         >
           <div className="flex items-center justify-center gap-2 mb-4">
-            <Shield className="w-5 h-5 text-green-600" />
-            <span className="font-semibold text-green-700 dark:text-green-300">
+            <Shield className="w-6 h-6 text-primary" />
+            <span className="font-bold text-primary text-lg">
               Privacy & Security Guaranteed
             </span>
           </div>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-muted-foreground leading-relaxed">
             Your LinkedIn data is imported securely and stored with enterprise-grade encryption. 
             We never post to your LinkedIn without permission and comply with all GDPR requirements.
+            <span className="block mt-2 text-sm">
+              <CheckCircle className="w-4 h-4 inline mr-2 text-primary" />
+              SOC 2 Compliant • GDPR Ready • Bank-Level Security
+            </span>
           </p>
         </motion.div>
+      </div>
+
+      {/* Sticky Mobile CTA */}
+      <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-background/95 backdrop-blur-sm border-t border-border p-4">
+        <Button 
+          onClick={handleLinkedInAuth}
+          className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-4 text-lg font-bold"
+          disabled={loading}
+        >
+          <LinkedinIcon className="w-5 h-5 mr-2" />
+          Join Now
+        </Button>
       </div>
     </div>
   );
