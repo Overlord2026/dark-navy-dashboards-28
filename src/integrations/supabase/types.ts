@@ -21230,7 +21230,7 @@ export type Database = {
         Insert: {
           attempts?: number
           created_at?: string
-          expires_at: string
+          expires_at?: string
           id?: string
           is_used?: boolean
           otp_code: string
@@ -23289,6 +23289,10 @@ export type Database = {
       }
       update_onboarding_status: {
         Args: { p_onboarding_id: string; p_status: string }
+        Returns: boolean
+      }
+      update_user_role: {
+        Args: { target_user_id: string; new_role: string }
         Returns: boolean
       }
       upsert_daily_financial_snapshot: {
