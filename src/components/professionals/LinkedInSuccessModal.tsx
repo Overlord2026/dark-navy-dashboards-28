@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { CheckCircle, Users, Shield, Sparkles, BarChart3 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import ViralShareButton from '@/components/social/ViralShareButton';
 
 interface LinkedInSuccessModalProps {
   isOpen: boolean;
@@ -119,6 +120,20 @@ const LinkedInSuccessModal: React.FC<LinkedInSuccessModalProps> = ({
               Edit My Profile
             </Button>
           </div>
+
+          {/* Viral Share Section */}
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.7 }}
+            className="pt-4 border-t"
+          >
+            <ViralShareButton 
+              variant="inline"
+              userName={userName}
+              customMessage={`Just joined the Family Office Marketplace™! Import your LinkedIn profile and connect with top professionals: ${window.location.origin}/join-pros #FamilyOfficeMarketplace #WealthManagement #ProfessionalNetworking`}
+            />
+          </motion.div>
         </motion.div>
       </DialogContent>
     </Dialog>
