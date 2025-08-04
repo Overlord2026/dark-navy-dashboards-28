@@ -165,3 +165,7 @@ verify_jwt = false
 [functions.market-data]
 verify_jwt = false
 # @public-ok - Market data service
+
+[functions.finnhub-webhook]
+verify_jwt = false
+# @public-ok - Finnhub webhook endpoint with secret validation
