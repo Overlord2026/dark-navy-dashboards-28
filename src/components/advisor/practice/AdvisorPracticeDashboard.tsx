@@ -14,7 +14,8 @@ import {
   Bell,
   BarChart3,
   PieChart,
-  FileSpreadsheet
+  FileSpreadsheet,
+  Target
 } from 'lucide-react';
 import { PracticeKPICards } from './PracticeKPICards';
 import { PracticeQuickActions } from './PracticeQuickActions';
@@ -25,6 +26,7 @@ import { PracticeBillingModule } from './modules/PracticeBillingModule';
 import { PracticeRMDModule } from './modules/PracticeRMDModule';
 import { PracticeComplianceModule } from './modules/PracticeComplianceModule';
 import { PracticeAnalyticsModule } from './modules/PracticeAnalyticsModule';
+import { EventAnalyzer } from '@/pages/EventAnalyzer';
 
 export function AdvisorPracticeDashboard() {
   return (
@@ -57,7 +59,7 @@ export function AdvisorPracticeDashboard() {
 
       {/* Main Practice Modules */}
       <Tabs defaultValue="dashboard" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-8 lg:grid-cols-11">
+        <TabsList className="grid w-full grid-cols-8 lg:grid-cols-12">
           <TabsTrigger value="dashboard" className="flex items-center gap-1">
             <BarChart3 className="h-4 w-4" />
             <span className="hidden sm:inline">Dashboard</span>
@@ -81,6 +83,10 @@ export function AdvisorPracticeDashboard() {
           <TabsTrigger value="compliance" className="flex items-center gap-1">
             <CheckSquare className="h-4 w-4" />
             <span className="hidden sm:inline">Compliance</span>
+          </TabsTrigger>
+          <TabsTrigger value="events" className="flex items-center gap-1">
+            <Target className="h-4 w-4" />
+            <span className="hidden sm:inline">Events</span>
           </TabsTrigger>
           <TabsTrigger value="analytics" className="flex items-center gap-1">
             <PieChart className="h-4 w-4" />
@@ -180,6 +186,10 @@ export function AdvisorPracticeDashboard() {
 
         <TabsContent value="compliance">
           <PracticeComplianceModule />
+        </TabsContent>
+
+        <TabsContent value="events">
+          <EventAnalyzer />
         </TabsContent>
 
         <TabsContent value="analytics">
