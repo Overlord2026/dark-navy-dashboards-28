@@ -66,6 +66,7 @@ import IMOAdminPage from "./pages/IMOAdminPage";
 import RIAPracticeQATest from "./pages/RIAPracticeQATest";
 import RIALicensingPage from "./pages/RIALicensingPage";
 import CompliancePage from "./pages/CompliancePage";
+import AttorneyCLEPage from "./pages/AttorneyCLEPage";
 
 const queryClient = new QueryClient();
 
@@ -142,11 +143,16 @@ function App() {
                               <ComplianceDashboard />
                             </AuthWrapper>
                           } />
-                          <Route path="/compliance-ce" element={
-                            <AuthWrapper requireAuth={true} allowedRoles={['accountant', 'admin', 'system_administrator', 'tenant_admin']}>
-                              <CompliancePage />
-                            </AuthWrapper>
-                          } />
+                           <Route path="/compliance-ce" element={
+                             <AuthWrapper requireAuth={true} allowedRoles={['accountant', 'admin', 'system_administrator', 'tenant_admin']}>
+                               <CompliancePage />
+                             </AuthWrapper>
+                           } />
+                           <Route path="/attorney-cle" element={
+                             <AuthWrapper requireAuth={true} allowedRoles={['attorney', 'admin', 'system_administrator', 'tenant_admin']}>
+                               <AttorneyCLEPage />
+                             </AuthWrapper>
+                           } />
                           <Route path="/cpa-risk" element={
                             <AuthWrapper requireAuth={true} allowedRoles={getAdvisorAccessRoles()}>
                               <AdvisorCPARiskDashboard />

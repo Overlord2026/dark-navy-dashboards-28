@@ -1544,6 +1544,268 @@ export type Database = {
           },
         ]
       }
+      attorney_bar_status: {
+        Row: {
+          admission_date: string | null
+          bar_number: string
+          cle_hours_completed: number | null
+          cle_hours_required: number | null
+          created_at: string
+          ethics_hours_completed: number | null
+          ethics_hours_required: number | null
+          expiration_date: string
+          good_standing: boolean | null
+          id: string
+          notes: string | null
+          renewal_status: string
+          state: string
+          tech_hours_completed: number | null
+          tech_hours_required: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          admission_date?: string | null
+          bar_number: string
+          cle_hours_completed?: number | null
+          cle_hours_required?: number | null
+          created_at?: string
+          ethics_hours_completed?: number | null
+          ethics_hours_required?: number | null
+          expiration_date: string
+          good_standing?: boolean | null
+          id?: string
+          notes?: string | null
+          renewal_status?: string
+          state: string
+          tech_hours_completed?: number | null
+          tech_hours_required?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          admission_date?: string | null
+          bar_number?: string
+          cle_hours_completed?: number | null
+          cle_hours_required?: number | null
+          created_at?: string
+          ethics_hours_completed?: number | null
+          ethics_hours_required?: number | null
+          expiration_date?: string
+          good_standing?: boolean | null
+          id?: string
+          notes?: string | null
+          renewal_status?: string
+          state?: string
+          tech_hours_completed?: number | null
+          tech_hours_required?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      attorney_cle_alerts: {
+        Row: {
+          alert_type: string
+          bar_status_id: string | null
+          created_at: string
+          due_date: string | null
+          id: string
+          metadata: Json | null
+          notes: string | null
+          priority: string | null
+          resolved: boolean | null
+          resolved_at: string | null
+          user_id: string
+        }
+        Insert: {
+          alert_type: string
+          bar_status_id?: string | null
+          created_at?: string
+          due_date?: string | null
+          id?: string
+          metadata?: Json | null
+          notes?: string | null
+          priority?: string | null
+          resolved?: boolean | null
+          resolved_at?: string | null
+          user_id: string
+        }
+        Update: {
+          alert_type?: string
+          bar_status_id?: string | null
+          created_at?: string
+          due_date?: string | null
+          id?: string
+          metadata?: Json | null
+          notes?: string | null
+          priority?: string | null
+          resolved?: boolean | null
+          resolved_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_attorney_cle_alerts_bar_status"
+            columns: ["bar_status_id"]
+            isOneToOne: false
+            referencedRelation: "attorney_bar_status"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      attorney_cle_providers: {
+        Row: {
+          approved_states: string[] | null
+          contact_info: Json | null
+          course_catalog_url: string | null
+          created_at: string
+          id: string
+          is_active: boolean | null
+          provider_code: string | null
+          provider_name: string
+          specialty: string[] | null
+          updated_at: string
+          url: string | null
+        }
+        Insert: {
+          approved_states?: string[] | null
+          contact_info?: Json | null
+          course_catalog_url?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          provider_code?: string | null
+          provider_name: string
+          specialty?: string[] | null
+          updated_at?: string
+          url?: string | null
+        }
+        Update: {
+          approved_states?: string[] | null
+          contact_info?: Json | null
+          course_catalog_url?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          provider_code?: string | null
+          provider_name?: string
+          specialty?: string[] | null
+          updated_at?: string
+          url?: string | null
+        }
+        Relationships: []
+      }
+      attorney_cle_records: {
+        Row: {
+          bar_number: string | null
+          certificate_number: string | null
+          certificate_url: string | null
+          cle_hours: number
+          course_name: string
+          created_at: string
+          date_completed: string
+          ethics_hours: number | null
+          id: string
+          notes: string | null
+          provider: string
+          provider_id: string | null
+          state: string
+          status: string
+          tech_hours: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          bar_number?: string | null
+          certificate_number?: string | null
+          certificate_url?: string | null
+          cle_hours?: number
+          course_name: string
+          created_at?: string
+          date_completed: string
+          ethics_hours?: number | null
+          id?: string
+          notes?: string | null
+          provider: string
+          provider_id?: string | null
+          state: string
+          status?: string
+          tech_hours?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          bar_number?: string | null
+          certificate_number?: string | null
+          certificate_url?: string | null
+          cle_hours?: number
+          course_name?: string
+          created_at?: string
+          date_completed?: string
+          ethics_hours?: number | null
+          id?: string
+          notes?: string | null
+          provider?: string
+          provider_id?: string | null
+          state?: string
+          status?: string
+          tech_hours?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_attorney_cle_records_provider"
+            columns: ["provider_id"]
+            isOneToOne: false
+            referencedRelation: "attorney_cle_providers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      attorney_cle_requirements: {
+        Row: {
+          cle_hours_required: number
+          created_at: string
+          cycle_months: number
+          ethics_hours: number | null
+          id: string
+          notes: string | null
+          reporting_deadline: string | null
+          specialty_requirements: Json | null
+          state: string
+          tech_hours: number | null
+          updated_at: string
+        }
+        Insert: {
+          cle_hours_required?: number
+          created_at?: string
+          cycle_months?: number
+          ethics_hours?: number | null
+          id?: string
+          notes?: string | null
+          reporting_deadline?: string | null
+          specialty_requirements?: Json | null
+          state: string
+          tech_hours?: number | null
+          updated_at?: string
+        }
+        Update: {
+          cle_hours_required?: number
+          created_at?: string
+          cycle_months?: number
+          ethics_hours?: number | null
+          id?: string
+          notes?: string | null
+          reporting_deadline?: string | null
+          specialty_requirements?: Json | null
+          state?: string
+          tech_hours?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       attorney_client_invitations: {
         Row: {
           accepted_at: string | null
