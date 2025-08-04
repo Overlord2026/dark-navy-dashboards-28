@@ -14,6 +14,7 @@ import { EstateEducationHub } from "@/components/estate-planning/EstateEducation
 import { SecureFamilyVault } from "@/components/estate-planning/SecureFamilyVault";
 import { AdvancedEstateCalculators } from "@/components/estate-planning/AdvancedEstateCalculators";
 import { CollaborationTools } from "@/components/estate-planning/CollaborationTools";
+import { EstateDisclaimerBanner } from "@/components/legal/EstateDisclaimerBanner";
 // import { IntegrationsPanel } from "@/components/integrations/IntegrationsPanel";
 import { 
   FileText, 
@@ -78,6 +79,9 @@ export default function EstatePlanning() {
   return (
     <ThreeColumnLayout activeMainItem="estate-planning" title="">
       <div className="space-y-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Legal Disclaimer Banner */}
+        <EstateDisclaimerBanner />
+        
         {/* Header Section */}
         <div className="space-y-4">
           <div className="text-left ml-2">

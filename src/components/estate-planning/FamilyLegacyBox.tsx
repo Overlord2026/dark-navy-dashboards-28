@@ -8,6 +8,7 @@ import { ShareDocumentDialog, TaxReturnUploadDialog } from "@/components/estate-
 import { DocumentViewerDialog } from "./DocumentViewerDialog";
 import { AdvancedTaxStrategies } from "./AdvancedTaxStrategies";
 import { useEstatePlanning } from "@/hooks/useEstatePlanning";
+import { EstateDisclaimerBanner } from "@/components/legal/EstateDisclaimerBanner";
 import { toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
@@ -169,8 +170,12 @@ export const FamilyLegacyBox: React.FC = () => {
   }
 
   return (
-    <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
-      <div className="xl:col-span-3 space-y-6">
+    <div className="space-y-6">
+      {/* Legal Disclaimer */}
+      <EstateDisclaimerBanner />
+      
+      <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
+        <div className="xl:col-span-3 space-y-6">
         <Card>
           <CardHeader className="pb-4">
             <CardTitle className={cn(
@@ -224,10 +229,11 @@ export const FamilyLegacyBox: React.FC = () => {
         </Card>
         
         <AdvancedTaxStrategies />
-      </div>
-      
-      <div className="xl:col-span-1">
-        <ResourcesCard />
+        </div>
+        
+        <div className="xl:col-span-1">
+          <ResourcesCard />
+        </div>
       </div>
       
       {/* Dialogs */}
