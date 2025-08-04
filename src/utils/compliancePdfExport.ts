@@ -159,7 +159,7 @@ export const exportComplianceGuideToPDF = async () => {
     yPosition += 3;
   });
   
-  // Support Contact Section
+  // Support Contact Section with working links
   yPosition += 10;
   doc.setFontSize(16);
   doc.setFont('helvetica', 'bold');
@@ -175,6 +175,8 @@ export const exportComplianceGuideToPDF = async () => {
   doc.text('Email: compliance@bfocfo.com', 20, yPosition);
   yPosition += 8;
   doc.text('Live Chat: Available in Dashboard (Mon-Fri 8AM-6PM)', 20, yPosition);
+  yPosition += 8;
+  doc.text('Support Portal: https://app.bfocfo.com/support', 20, yPosition);
   
   // Footer with BFO branding
   doc.setFillColor(22, 163, 74); // Emerald background
