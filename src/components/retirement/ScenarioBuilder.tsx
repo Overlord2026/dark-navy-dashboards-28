@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { useRetirementCalculator } from '@/hooks/useRetirementCalculator';
 import { RetirementAnalysisInput, RetirementAnalysisResults, ScenarioComparison } from '@/types/retirement';
+import { ResponsiveChart } from '@/components/ui/responsive-chart';
 
 interface Scenario {
   id: string;
@@ -391,53 +392,57 @@ export const ScenarioBuilder: React.FC<ScenarioBuilderProps> = ({
                 <CardTitle>Portfolio Projection Comparison</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="h-80">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={comparisonData}>
-                      <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
-                      <XAxis 
-                        dataKey="age" 
-                        tick={{ fontSize: 12 }}
-                        tickFormatter={(value) => `Age ${value}`}
-                      />
-                      <YAxis 
-                        tick={{ fontSize: 12 }}
-                        tickFormatter={(value) => `$${(value/1000000).toFixed(1)}M`}
-                      />
-                      <Tooltip 
-                        formatter={(value: number, name: string) => [
-                          formatCurrency(value),
-                          name === 'baseline' ? 'Baseline' : scenarios.find(s => s.id === name)?.name || name
-                        ]}
-                        labelFormatter={(value) => `Age ${value}`}
-                      />
-                      <Legend />
-                      
+                <ResponsiveChart height={320} minHeight={200}>
+                  <AreaChart data={comparisonData}>
+                    <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
+                    <XAxis 
+                      dataKey="age" 
+                      tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
+                      tickFormatter={(value) => `Age ${value}`}
+                    />
+                    <YAxis 
+                      tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
+                      tickFormatter={(value) => `$${(value/1000000).toFixed(1)}M`}
+                    />
+                    <Tooltip 
+                      formatter={(value: number, name: string) => [
+                        formatCurrency(value),
+                        name === 'baseline' ? 'Baseline' : scenarios.find(s => s.id === name)?.name || name
+                      ]}
+                      labelFormatter={(value) => `Age ${value}`}
+                      contentStyle={{
+                        backgroundColor: 'hsl(var(--popover))',
+                        border: '1px solid hsl(var(--border))',
+                        borderRadius: '6px',
+                        color: 'hsl(var(--foreground))'
+                      }}
+                    />
+                    <Legend />
+                    
+                    <Area
+                      type="monotone"
+                      dataKey="baseline"
+                      stackId="1"
+                      stroke="hsl(var(--primary))"
+                      fill="hsl(var(--primary))"
+                      fillOpacity={0.3}
+                      name="Baseline"
+                    />
+                    
+                    {activeScenarios.map(scenario => (
                       <Area
+                        key={scenario.id}
                         type="monotone"
-                        dataKey="baseline"
-                        stackId="1"
-                        stroke="#8884d8"
-                        fill="#8884d8"
+                        dataKey={scenario.id}
+                        stackId="2"
+                        stroke={scenario.color}
+                        fill={scenario.color}
                         fillOpacity={0.3}
-                        name="Baseline"
+                        name={scenario.name}
                       />
-                      
-                      {activeScenarios.map(scenario => (
-                        <Area
-                          key={scenario.id}
-                          type="monotone"
-                          dataKey={scenario.id}
-                          stackId="2"
-                          stroke={scenario.color}
-                          fill={scenario.color}
-                          fillOpacity={0.3}
-                          name={scenario.name}
-                        />
-                      ))}
-                    </AreaChart>
-                  </ResponsiveContainer>
-                </div>
+                    ))}
+                  </AreaChart>
+                </ResponsiveChart>
               </CardContent>
             </Card>
           )}

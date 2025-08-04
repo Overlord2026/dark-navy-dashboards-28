@@ -9,6 +9,8 @@ import { Calculator, TrendingUp, DollarSign, Target, AlertTriangle, CheckCircle,
 import { useRetirementCalculator } from '@/hooks/useRetirementCalculator';
 import { RetirementAnalysisInput, RetirementAnalysisResults } from '@/types/retirement';
 import { ScenarioBuilder } from './ScenarioBuilder';
+import { RetirementPDFExport } from './RetirementPDFExport';
+import { ResponsiveChart } from '@/components/ui/responsive-chart';
 
 interface RetirementCalculatorEngineProps {
   inputs: RetirementAnalysisInput;
@@ -41,9 +43,9 @@ export const RetirementCalculatorEngine: React.FC<RetirementCalculatorEngineProp
   };
 
   const getSwagScoreColor = (score: number) => {
-    if (score >= 80) return 'text-emerald-500';
-    if (score >= 60) return 'text-amber-500';
-    return 'text-red-500';
+    if (score >= 80) return 'text-emerald';
+    if (score >= 60) return 'text-warning';
+    return 'text-destructive';
   };
 
   const getSwagScoreBadge = (score: number) => {
@@ -64,14 +66,19 @@ export const RetirementCalculatorEngine: React.FC<RetirementCalculatorEngineProp
               <Calculator className="h-6 w-6 text-primary" />
               <CardTitle>Retirement Calculator Engine</CardTitle>
             </div>
-            <Button 
-              onClick={handleCalculate} 
-              disabled={loading}
-              className="gap-2"
-            >
-              <TrendingUp className="h-4 w-4" />
-              {loading ? 'Calculating...' : 'Run Analysis'}
-            </Button>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
+              {results && (
+                <RetirementPDFExport inputs={inputs} results={results} loading={loading} />
+              )}
+              <Button 
+                onClick={handleCalculate} 
+                disabled={loading}
+                className="gap-2 w-full sm:w-auto"
+              >
+                <TrendingUp className="h-4 w-4" />
+                {loading ? 'Calculating...' : 'Run Analysis'}
+              </Button>
+            </div>
           </div>
         </CardHeader>
         {error && (
@@ -89,13 +96,13 @@ export const RetirementCalculatorEngine: React.FC<RetirementCalculatorEngineProp
       {/* Results Dashboard */}
       {results && (
         <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-6">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="scenarios">Scenarios</TabsTrigger>
-            <TabsTrigger value="cashflow">Cash Flow</TabsTrigger>
-            <TabsTrigger value="montecarlo">Monte Carlo</TabsTrigger>
-            <TabsTrigger value="recommendations">Recommendations</TabsTrigger>
-            <TabsTrigger value="stress">Stress Test</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-3 md:grid-cols-6">
+            <TabsTrigger value="overview" className="text-xs sm:text-sm">Overview</TabsTrigger>
+            <TabsTrigger value="scenarios" className="text-xs sm:text-sm">Scenarios</TabsTrigger>
+            <TabsTrigger value="cashflow" className="text-xs sm:text-sm">Cash Flow</TabsTrigger>
+            <TabsTrigger value="montecarlo" className="text-xs sm:text-sm">Monte Carlo</TabsTrigger>
+            <TabsTrigger value="recommendations" className="text-xs sm:text-sm">Recommendations</TabsTrigger>
+            <TabsTrigger value="stress" className="text-xs sm:text-sm">Stress Test</TabsTrigger>
           </TabsList>
 
           {/* Scenarios Tab */}
@@ -168,12 +175,12 @@ export const RetirementCalculatorEngine: React.FC<RetirementCalculatorEngineProp
                     <div className="flex items-center justify-center gap-2">
                       {results.monthlyIncomeGap > 0 ? (
                         <>
-                          <AlertTriangle className="h-4 w-4 text-amber-500" />
+                          <AlertTriangle className="h-4 w-4 text-warning" />
                           <span className="text-xs text-muted-foreground">Shortfall to address</span>
                         </>
                       ) : (
                         <>
-                          <CheckCircle className="h-4 w-4 text-emerald-500" />
+                          <CheckCircle className="h-4 w-4 text-emerald" />
                           <span className="text-xs text-muted-foreground">On track</span>
                         </>
                       )}
@@ -188,7 +195,7 @@ export const RetirementCalculatorEngine: React.FC<RetirementCalculatorEngineProp
               <Card>
                 <CardContent className="p-4">
                   <div className="flex items-center gap-2">
-                    <TrendingUp className="h-4 w-4 text-emerald-500" />
+                    <TrendingUp className="h-4 w-4 text-emerald" />
                     <div>
                       <p className="text-xs text-muted-foreground">Success Probability</p>
                       <p className="text-lg font-semibold">{results.monteCarlo.successProbability.toFixed(1)}%</p>
@@ -200,7 +207,7 @@ export const RetirementCalculatorEngine: React.FC<RetirementCalculatorEngineProp
               <Card>
                 <CardContent className="p-4">
                   <div className="flex items-center gap-2">
-                    <DollarSign className="h-4 w-4 text-blue-500" />
+                    <DollarSign className="h-4 w-4 text-primary" />
                     <div>
                       <p className="text-xs text-muted-foreground">Median Portfolio Value</p>
                       <p className="text-lg font-semibold">{formatCurrency(results.monteCarlo.medianPortfolioValue)}</p>
@@ -212,7 +219,7 @@ export const RetirementCalculatorEngine: React.FC<RetirementCalculatorEngineProp
               <Card>
                 <CardContent className="p-4">
                   <div className="flex items-center gap-2">
-                    <Target className="h-4 w-4 text-purple-500" />
+                    <Target className="h-4 w-4 text-accent" />
                     <div>
                       <p className="text-xs text-muted-foreground">Retirement Target</p>
                       <p className="text-lg font-semibold">{formatCurrency(inputs.goals.annualRetirementIncome)}</p>
@@ -224,7 +231,7 @@ export const RetirementCalculatorEngine: React.FC<RetirementCalculatorEngineProp
               <Card>
                 <CardContent className="p-4">
                   <div className="flex items-center gap-2">
-                    <Calculator className="h-4 w-4 text-amber-500" />
+                    <Calculator className="h-4 w-4 text-warning" />
                     <div>
                       <p className="text-xs text-muted-foreground">Years to Retirement</p>
                       <p className="text-lg font-semibold">{inputs.goals.retirementAge - inputs.goals.currentAge}</p>
@@ -242,18 +249,42 @@ export const RetirementCalculatorEngine: React.FC<RetirementCalculatorEngineProp
                 <CardTitle>Projected Cash Flow</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="h-96">
-                  <ResponsiveContainer width="100%" height="100%">
+                <ResponsiveChart height={400} minHeight={250}>
                     <LineChart data={results.projectedCashFlow.slice(0, 30)}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="age" />
-                      <YAxis tickFormatter={(value) => `$${(value/1000).toFixed(0)}k`} />
-                      <Tooltip formatter={(value) => formatCurrency(value as number)} />
-                      <Line type="monotone" dataKey="beginningBalance" stroke="#8884d8" name="Portfolio Balance" />
-                      <Line type="monotone" dataKey="endingBalance" stroke="#82ca9d" name="Ending Balance" />
+                      <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
+                      <XAxis 
+                        dataKey="age" 
+                        tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
+                      />
+                      <YAxis 
+                        tickFormatter={(value) => `$${(value/1000).toFixed(0)}k`}
+                        tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
+                      />
+                      <Tooltip 
+                        formatter={(value) => formatCurrency(value as number)}
+                        contentStyle={{
+                          backgroundColor: 'hsl(var(--popover))',
+                          border: '1px solid hsl(var(--border))',
+                          borderRadius: '6px',
+                          color: 'hsl(var(--foreground))'
+                        }}
+                      />
+                      <Line 
+                        type="monotone" 
+                        dataKey="beginningBalance" 
+                        stroke="hsl(var(--primary))" 
+                        strokeWidth={2}
+                        name="Portfolio Balance" 
+                      />
+                      <Line 
+                        type="monotone" 
+                        dataKey="endingBalance" 
+                        stroke="hsl(var(--emerald))" 
+                        strokeWidth={2}
+                        name="Ending Balance" 
+                      />
                     </LineChart>
-                  </ResponsiveContainer>
-                </div>
+                </ResponsiveChart>
               </CardContent>
             </Card>
           </TabsContent>

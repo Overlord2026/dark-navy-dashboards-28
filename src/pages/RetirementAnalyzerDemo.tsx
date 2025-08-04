@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { RetirementCalculatorEngine } from '@/components/retirement/RetirementCalculatorEngine';
+import { RetirementErrorBoundary } from '@/components/retirement/RetirementErrorBoundary';
 import { RetirementAnalysisInput } from '@/types/retirement';
 
 export default function RetirementAnalyzerDemo() {
@@ -151,10 +152,12 @@ export default function RetirementAnalyzerDemo() {
           </div>
 
           {/* Main Calculator */}
-          <RetirementCalculatorEngine
-            inputs={inputs}
-            onInputsChange={setInputs}
-          />
+          <RetirementErrorBoundary>
+            <RetirementCalculatorEngine
+              inputs={inputs}
+              onInputsChange={setInputs}
+            />
+          </RetirementErrorBoundary>
         </div>
       </div>
     </div>
