@@ -46,10 +46,12 @@ interface Meeting {
 
 interface Integration {
   id: string;
-  provider: 'zoom' | 'google_meet' | 'calendly';
+  provider: 'google_meet' | 'zoom' | 'teams' | 'bfo_scheduling';
   is_active: boolean;
   config: Record<string, any>;
   last_sync: string;
+  priority?: number;
+  recommended?: boolean;
 }
 
 export function MeetingIntegrations() {
@@ -115,21 +117,41 @@ export function MeetingIntegrations() {
 
   const loadIntegrations = async () => {
     try {
-      // Use mock integration data
+      // BFO Platform Minimization: Google as Default
       const mockIntegrations: Integration[] = [
         {
           id: '1',
-          provider: 'zoom',
+          provider: 'bfo_scheduling',
           is_active: true,
-          config: { api_key: 'configured' },
-          last_sync: new Date().toISOString()
+          config: { default_meeting_type: 'google_meet' },
+          last_sync: new Date().toISOString(),
+          priority: 1,
+          recommended: true
         },
         {
           id: '2',
           provider: 'google_meet',
+          is_active: true,
+          config: { api_key: 'configured', calendar_sync: true },
+          last_sync: new Date().toISOString(),
+          priority: 1,
+          recommended: true
+        },
+        {
+          id: '3',
+          provider: 'zoom',
           is_active: false,
           config: {},
-          last_sync: new Date().toISOString()
+          last_sync: new Date().toISOString(),
+          priority: 3
+        },
+        {
+          id: '4',
+          provider: 'teams',
+          is_active: false,
+          config: {},
+          last_sync: new Date().toISOString(),
+          priority: 3
         }
       ];
 
@@ -356,18 +378,27 @@ export function MeetingIntegrations() {
               <div className="space-y-4">
                 {integrations.map((integration) => (
                   <div key={integration.id} className="flex items-center justify-between p-4 border rounded-lg">
-                    <div className="flex items-center gap-4">
-                      <div className="p-2 bg-primary/10 rounded-lg">
-                        {integration.provider === 'zoom' && <Video className="h-4 w-4" />}
-                        {integration.provider === 'google_meet' && <Calendar className="h-4 w-4" />}
-                        {integration.provider === 'calendly' && <Clock className="h-4 w-4" />}
-                      </div>
-                      <div>
-                        <h3 className="font-medium capitalize">{integration.provider.replace('_', ' ')}</h3>
-                        <p className="text-sm text-muted-foreground">
-                          Last synced: {format(new Date(integration.last_sync), 'MMM d, yyyy h:mm a')}
-                        </p>
-                      </div>
+                     <div className="flex items-center gap-4">
+                       <div className="p-2 bg-primary/10 rounded-lg">
+                         {integration.provider === 'bfo_scheduling' && <Calendar className="h-4 w-4" />}
+                         {integration.provider === 'google_meet' && <Video className="h-4 w-4" />}
+                         {integration.provider === 'zoom' && <Video className="h-4 w-4" />}
+                         {integration.provider === 'teams' && <Users className="h-4 w-4" />}
+                       </div>
+                       <div>
+                         <div className="flex items-center gap-2">
+                           <h3 className="font-medium capitalize">{integration.provider.replace('_', ' ')}</h3>
+                           {integration.recommended && (
+                             <Badge variant="secondary" className="text-xs">BFO Default</Badge>
+                           )}
+                           {integration.priority === 3 && (
+                             <Badge variant="outline" className="text-xs">Optional</Badge>
+                           )}
+                         </div>
+                         <p className="text-sm text-muted-foreground">
+                           Last synced: {format(new Date(integration.last_sync), 'MMM d, yyyy h:mm a')}
+                         </p>
+                       </div>
                     </div>
                     
                     <div className="flex items-center gap-2">

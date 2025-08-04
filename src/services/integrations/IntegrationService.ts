@@ -11,6 +11,17 @@ class IntegrationService {
 
   private initializeIntegrations() {
     const defaultIntegrations: Integration[] = [
+      // Core Platform Integrations (Priority)
+      {
+        id: 'google-integration',
+        type: 'google',
+        name: 'Google Workspace',
+        description: 'Default platform for meetings, calendar, docs, and email - BFO Recommended',
+        status: 'disconnected',
+        enabled: true,
+        metadata: { priority: 1, recommended: true }
+      },
+      // Financial Data Integrations
       {
         id: 'schwab-integration',
         type: 'schwab',
@@ -19,14 +30,17 @@ class IntegrationService {
         status: 'disconnected',
         enabled: false
       },
+      // Legacy CRM Migrations (Gradual Sunset)
       {
         id: 'advyzon-integration', 
         type: 'advyzon',
-        name: 'Advyzon CRM',
-        description: 'Sync client data with Advyzon portfolio management system',
+        name: 'Advyzon CRM (Legacy)',
+        description: 'Legacy CRM system - migrating to BFO Practice Management',
         status: 'disconnected',
-        enabled: false
+        enabled: false,
+        metadata: { deprecated: true, migrationTarget: 'bfo-practice-management' }
       },
+      // Professional Network
       {
         id: 'cpa-integration',
         type: 'cpa',
@@ -42,6 +56,25 @@ class IntegrationService {
         description: 'Collaborate on estate planning documents and strategies',
         status: 'disconnected',
         enabled: false
+      },
+      // Optional Meeting Platforms
+      {
+        id: 'zoom-integration',
+        type: 'zoom',
+        name: 'Zoom (Optional)',
+        description: 'Optional video conferencing - Google Meet is default',
+        status: 'disconnected',
+        enabled: false,
+        metadata: { priority: 3, optional: true }
+      },
+      {
+        id: 'teams-integration',
+        type: 'teams',
+        name: 'Microsoft Teams (Optional)',
+        description: 'Optional video conferencing - Google Meet is default',
+        status: 'disconnected',
+        enabled: false,
+        metadata: { priority: 3, optional: true }
       }
     ];
 

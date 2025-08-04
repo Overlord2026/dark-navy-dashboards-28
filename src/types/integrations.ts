@@ -1,4 +1,13 @@
-export type IntegrationType = 'schwab' | 'advyzon' | 'cpa' | 'attorney';
+export type IntegrationType = 'schwab' | 'advyzon' | 'cpa' | 'attorney' | 'google' | 'zoom' | 'teams';
+
+export type MeetingProvider = 'google_meet' | 'zoom' | 'teams';
+
+export interface MeetingPreferences {
+  defaultProvider: MeetingProvider;
+  enabledProviders: MeetingProvider[];
+  googleCalendarIntegration: boolean;
+  bfoSchedulingEnabled: boolean;
+}
 
 export type IntegrationStatus = 'disconnected' | 'connecting' | 'connected' | 'error';
 
@@ -28,4 +37,16 @@ export interface IntegrationConfig {
   authType?: 'oauth' | 'api_key' | 'basic';
   credentials?: Record<string, string>;
   settings?: Record<string, any>;
+}
+
+export interface SchedulingConfig {
+  provider: 'bfo' | 'calendly';
+  defaultMeetingType: MeetingProvider;
+  bufferTime: number;
+  workingHours: {
+    start: string;
+    end: string;
+    timezone: string;
+  };
+  availableDurations: number[];
 }
