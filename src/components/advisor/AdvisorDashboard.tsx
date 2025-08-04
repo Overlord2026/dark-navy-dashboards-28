@@ -19,7 +19,10 @@ import {
   BarChart3,
   Calendar,
   Trophy,
-  Sparkles
+  Sparkles,
+  Upload,
+  ArrowRight,
+  BookOpen
 } from 'lucide-react';
 import { EnhancedCalculatorChart } from '@/components/calculators/EnhancedCalculatorChart';
 import { Celebration } from '@/components/ConfettiAnimation';
@@ -29,6 +32,8 @@ import { AdvisorAlertsPanel } from './AdvisorAlertsPanel';
 import { MyLeadsPanel } from './MyLeadsPanel';
 import { supabase } from '@/integrations/supabase/client';
 import { format } from 'date-fns';
+import { PlanImportWizard } from './PlanImportWizard';
+import { AdvisorOnboardingBanner } from './AdvisorOnboardingBanner';
 
 interface Client {
   id: string;
@@ -47,6 +52,8 @@ export function AdvisorDashboard() {
   const [showConfetti, setShowConfetti] = useState(false);
   const [chartData, setChartData] = useState([]);
   const [showPortfolioTools, setShowPortfolioTools] = useState(false);
+  const [showPlanImport, setShowPlanImport] = useState(false);
+  const [showOnboardingBanner, setShowOnboardingBanner] = useState(true);
   const [clients, setClients] = useState<Client[]>([]);
   const [metrics, setMetrics] = useState({
     totalClients: 0,
@@ -179,6 +186,10 @@ export function AdvisorDashboard() {
     window.open('https://calendly.com/tonygomes/talk-with-tony', '_blank');
   };
 
+  const handleImportPlans = () => {
+    setShowPlanImport(true);
+  };
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: { 
@@ -204,6 +215,14 @@ export function AdvisorDashboard() {
       animate="visible"
     >
       <Celebration trigger={showConfetti} />
+      
+      {/* Onboarding Banner */}
+      {showOnboardingBanner && (
+        <AdvisorOnboardingBanner 
+          onDismiss={() => setShowOnboardingBanner(false)}
+          onImportPlans={handleImportPlans}
+        />
+      )}
       
       {/* Hero Header */}
       <motion.div variants={itemVariants}>
@@ -243,6 +262,14 @@ export function AdvisorDashboard() {
                 </div>
               </div>
               <div className="hidden lg:flex flex-col gap-2">
+                <Button 
+                  variant="secondary"
+                  className="gap-2"
+                  onClick={handleImportPlans}
+                >
+                  <Upload className="h-4 w-4" />
+                  Import Existing Plans
+                </Button>
                 <Button 
                   variant="secondary"
                   className="gap-2"
@@ -531,6 +558,12 @@ export function AdvisorDashboard() {
       <PortfolioToolsModal 
         isOpen={showPortfolioTools} 
         onClose={() => setShowPortfolioTools(false)} 
+      />
+
+      {/* Plan Import Wizard */}
+      <PlanImportWizard 
+        open={showPlanImport} 
+        onOpenChange={setShowPlanImport} 
       />
     </motion.div>
   );
