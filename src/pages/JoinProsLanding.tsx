@@ -41,29 +41,24 @@ const JoinProsLanding = () => {
 
   const benefits = [
     {
-      icon: <CheckCircle className="w-8 h-8" />,
-      title: "Instantly create your profile—no forms required",
-      description: "Import your LinkedIn data in seconds to build a complete professional profile"
+      icon: <Bolt className="w-8 h-8" />,
+      title: "Lightning Fast",
+      description: "Create your account in seconds—no tedious forms."
     },
     {
       icon: <Award className="w-8 h-8" />,
-      title: "Showcase your credentials, experience, and expertise",
-      description: "Highlight your professional achievements and specializations to attract ideal clients"
+      title: "Professional Grade",
+      description: "Bring over your credentials, education, and testimonials."
     },
     {
-      icon: <Users className="w-8 h-8" />,
-      title: "Connect with high-value families and vetted professionals",
-      description: "Access our exclusive network of ultra-high-net-worth families and trusted advisors"
+      icon: <CheckCircle className="w-8 h-8" />,
+      title: "Instant Credibility",
+      description: "Verified LinkedIn import for trust and transparency."
     },
     {
       icon: <Sparkles className="w-8 h-8" />,
-      title: "Unlock access to premium features and network opportunities",
-      description: "Get advanced tools, resources, and networking events reserved for verified professionals"
-    },
-    {
-      icon: <Shield className="w-8 h-8" />,
-      title: "Enjoy best-in-class privacy and control—no data sold or shared",
-      description: "Your information stays secure with bank-level encryption and strict privacy controls"
+      title: "Seamless Onboarding",
+      description: "Your personalized dashboard is ready as soon as you sign in."
     }
   ];
 
@@ -106,26 +101,17 @@ const JoinProsLanding = () => {
           animate={{ opacity: 1, y: 0 }}
           className="text-center max-w-5xl mx-auto"
         >
-          <Badge variant="secondary" className="mb-6 px-6 py-3 text-base">
-            <Award className="w-5 h-5 mr-2" />
-            Demo UI Copy: LinkedIn Import / Fast-Track Onboarding
-          </Badge>
-          
           <motion.h1 
             className="text-6xl md:text-7xl font-black mb-6 leading-tight"
             style={{ fontFamily: 'Inter, Lato, sans-serif', fontWeight: 900 }}
           >
             <span className="bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
-              Join the Family Office Marketplace™
+              Experience the Next Generation of Professional Networking
             </span>
           </motion.h1>
           
-          <p className="text-xl md:text-2xl text-muted-foreground mb-4 leading-relaxed max-w-4xl mx-auto">
-            <span className="font-semibold text-foreground">Build Your Future, Faster—Import Your Professional Profile in Seconds.</span>
-          </p>
-          
-          <p className="text-lg text-muted-foreground mb-12 max-w-3xl mx-auto">
-            Connect your LinkedIn profile to instantly create your personalized dashboard, access premium resources, and connect with the best families and professionals in the industry.
+          <p className="text-lg text-muted-foreground mb-12 max-w-4xl mx-auto leading-relaxed">
+            Our Family Office Marketplace™ is designed for top advisors, attorneys, accountants, consultants, and coaches. Import your LinkedIn profile to join an exclusive community, showcase your expertise, and connect with families seeking trusted guidance.
           </p>
 
           {/* Main CTA Button */}
@@ -197,8 +183,8 @@ const JoinProsLanding = () => {
             animate={{ opacity: 1, y: 0 }}
             className="text-center mb-12"
           >
-            <h2 className="text-4xl font-bold mb-4">Why Elite Professionals Choose Us</h2>
-            <p className="text-xl text-muted-foreground">Join thousands of top-tier professionals already growing their practice</p>
+            <h2 className="text-4xl font-bold mb-4">Why Import from LinkedIn?</h2>
+            <p className="text-xl text-muted-foreground">Create your professional profile in seconds with these exclusive benefits</p>
           </motion.div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
@@ -233,12 +219,62 @@ const JoinProsLanding = () => {
       </div>
 
       {/* How It Works Section */}
-      <HowItWorksSection />
+      <div className="py-16 bg-muted/10">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-4xl font-bold mb-4">How It Works</h2>
+            <p className="text-xl text-muted-foreground">Get started in just 4 simple steps</p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+            {[
+              {
+                step: "1",
+                title: "Click \"Import from LinkedIn\"",
+                description: "Start your journey with a single click"
+              },
+              {
+                step: "2", 
+                title: "Authorize securely with LinkedIn (one click)",
+                description: "Quick and secure OAuth authentication"
+              },
+              {
+                step: "3",
+                title: "Preview and edit your imported profile", 
+                description: "Review and customize your professional information"
+              },
+              {
+                step: "4",
+                title: "Go live instantly in the Family Office Marketplace",
+                description: "Your profile becomes discoverable immediately"
+              }
+            ].map((item, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.2 }}
+                className="text-center"
+              >
+                <div className="w-16 h-16 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
+                  {item.step}
+                </div>
+                <h3 className="text-lg font-semibold mb-2">{item.title}</h3>
+                <p className="text-muted-foreground text-sm">{item.description}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </div>
 
       {/* Social Proof Section */}
       <SocialProofSection />
 
-      {/* Privacy Notice */}
+      {/* How We Use Your Data Section */}
       <div className="py-12 bg-muted/20">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -248,17 +284,49 @@ const JoinProsLanding = () => {
           <div className="flex items-center justify-center gap-2 mb-4">
             <Shield className="w-6 h-6 text-primary" />
             <span className="font-bold text-primary text-lg">
-              Privacy & Security Guaranteed
+              How We Use Your Data
             </span>
           </div>
           <p className="text-muted-foreground leading-relaxed">
-            Your LinkedIn data is imported securely and stored with enterprise-grade encryption. 
-            We never post to your LinkedIn without permission and comply with all GDPR requirements.
-            <span className="block mt-2 text-sm">
-              <CheckCircle className="w-4 h-4 inline mr-2 text-primary" />
-              SOC 2 Compliant • GDPR Ready • Bank-Level Security
-            </span>
+            We use your LinkedIn data only to create your professional profile. Your privacy is our top priority—no data is ever sold or shared.
           </p>
+        </motion.div>
+      </div>
+
+      {/* Social Proof/Trust Section */}
+      <div className="py-16 bg-background">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center max-w-4xl mx-auto px-4"
+        >
+          <h2 className="text-3xl font-bold mb-8">Already Trusted By</h2>
+          
+          <div className="grid md:grid-cols-3 gap-8 mb-12">
+            <div className="text-center">
+              <div className="w-20 h-20 bg-gradient-to-br from-primary/20 to-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <Users className="w-10 h-10 text-primary" />
+              </div>
+              <h3 className="font-semibold">Top Advisors</h3>
+            </div>
+            <div className="text-center">
+              <div className="w-20 h-20 bg-gradient-to-br from-secondary/20 to-secondary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <Award className="w-10 h-10 text-secondary-foreground" />
+              </div>
+              <h3 className="font-semibold">Elite Attorneys</h3>
+            </div>
+            <div className="text-center">
+              <div className="w-20 h-20 bg-gradient-to-br from-accent/20 to-accent/10 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <Sparkles className="w-10 h-10 text-accent-foreground" />
+              </div>
+              <h3 className="font-semibold">Expert Accountants</h3>
+            </div>
+          </div>
+
+          <blockquote className="text-xl italic text-muted-foreground mb-4">
+            "Finally, a platform where professionals and families can connect with trust and transparency."
+          </blockquote>
+          <cite className="text-sm text-primary font-semibold">— Industry Leader</cite>
         </motion.div>
       </div>
 
