@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Users, Sparkles, TreePine } from 'lucide-react';
+import { ArrowRight, Users, Store } from 'lucide-react';
 import { getLogoConfig } from '@/assets/logos';
 import { useNavigate } from 'react-router-dom';
 
@@ -47,6 +47,31 @@ export function BFOHomePage() {
           <p className="text-xl sm:text-2xl text-gray-200 font-light max-w-2xl mx-auto leading-relaxed">
             All Your Wealth. All Your Advisors. All Under One Roof.
           </p>
+        </div>
+
+        {/* CTA Buttons */}
+        <div className="flex flex-col gap-4 mt-12 w-full max-w-md mx-auto sm:flex-row sm:max-w-2xl">
+          <Button
+            onClick={handleGetStarted}
+            size="lg"
+            className="group relative overflow-hidden bg-gold hover:bg-gold/90 text-white font-bold text-lg px-8 py-4 rounded-lg shadow-gold hover:shadow-xl transition-all duration-300 hover:scale-105 min-w-[48px]"
+          >
+            <span className="relative z-10 flex items-center gap-2">
+              Get Started
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </span>
+          </Button>
+
+          <Button
+            onClick={handleMarketplace}
+            size="lg"
+            className="group relative overflow-hidden bg-emerald hover:bg-emerald/90 text-white font-bold text-lg px-8 py-4 rounded-lg shadow-emerald hover:shadow-xl transition-all duration-300 hover:scale-105 min-w-[48px]"
+          >
+            <span className="relative z-10 flex items-center gap-2">
+              <Store className="w-5 h-5" />
+              Family Office Marketplace
+            </span>
+          </Button>
         </div>
       </div>
     </div>
