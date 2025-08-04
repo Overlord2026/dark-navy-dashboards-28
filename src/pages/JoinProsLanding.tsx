@@ -41,19 +41,29 @@ const JoinProsLanding = () => {
 
   const benefits = [
     {
+      icon: <CheckCircle className="w-8 h-8" />,
+      title: "Instantly create your profile—no forms required",
+      description: "Import your LinkedIn data in seconds to build a complete professional profile"
+    },
+    {
+      icon: <Award className="w-8 h-8" />,
+      title: "Showcase your credentials, experience, and expertise",
+      description: "Highlight your professional achievements and specializations to attract ideal clients"
+    },
+    {
+      icon: <Users className="w-8 h-8" />,
+      title: "Connect with high-value families and vetted professionals",
+      description: "Access our exclusive network of ultra-high-net-worth families and trusted advisors"
+    },
+    {
+      icon: <Sparkles className="w-8 h-8" />,
+      title: "Unlock access to premium features and network opportunities",
+      description: "Get advanced tools, resources, and networking events reserved for verified professionals"
+    },
+    {
       icon: <Shield className="w-8 h-8" />,
-      title: "Get Discovered by High-Net-Worth Families",
-      description: "Connect with ultra-high-net-worth individuals actively seeking trusted financial professionals"
-    },
-    {
-      icon: <Bolt className="w-8 h-8" />,
-      title: "Access Premium Tech & Training",
-      description: "Cutting-edge tools, compliance resources, and exclusive educational content"
-    },
-    {
-      icon: <Network className="w-8 h-8" />,
-      title: "Invite Your Professional Network",
-      description: "Build referral partnerships and expand your reach within the elite financial ecosystem"
+      title: "Enjoy best-in-class privacy and control—no data sold or shared",
+      description: "Your information stays secure with bank-level encryption and strict privacy controls"
     }
   ];
 
@@ -98,7 +108,7 @@ const JoinProsLanding = () => {
         >
           <Badge variant="secondary" className="mb-6 px-6 py-3 text-base">
             <Award className="w-5 h-5 mr-2" />
-            Elite Family Office Marketplace
+            Demo UI Copy: LinkedIn Import / Fast-Track Onboarding
           </Badge>
           
           <motion.h1 
@@ -106,20 +116,16 @@ const JoinProsLanding = () => {
             style={{ fontFamily: 'Inter, Lato, sans-serif', fontWeight: 900 }}
           >
             <span className="bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
-              Join the Elite
-            </span>
-            <br />
-            <span className="text-foreground">
-              Family Office Marketplace
+              Join the Family Office Marketplace™
             </span>
           </motion.h1>
           
           <p className="text-xl md:text-2xl text-muted-foreground mb-4 leading-relaxed max-w-4xl mx-auto">
-            <span className="font-semibold text-foreground">One-Click LinkedIn Onboarding</span>
+            <span className="font-semibold text-foreground">Build Your Future, Faster—Import Your Professional Profile in Seconds.</span>
           </p>
           
           <p className="text-lg text-muted-foreground mb-12 max-w-3xl mx-auto">
-            Advisors, CPAs, Attorneys: Showcase your expertise, connect with clients, and grow your practice.
+            Connect your LinkedIn profile to instantly create your personalized dashboard, access premium resources, and connect with the best families and professionals in the industry.
           </p>
 
           {/* Main CTA Button */}
@@ -144,7 +150,7 @@ const JoinProsLanding = () => {
                   transition={{ duration: 0.6 }}
                 />
                 <LinkedinIcon className="w-6 h-6 mr-4" />
-                {loading ? (
+                 {loading ? (
                   <motion.span
                     animate={{ opacity: [1, 0.5, 1] }}
                     transition={{ duration: 1.5, repeat: Infinity }}
@@ -152,12 +158,28 @@ const JoinProsLanding = () => {
                     Connecting...
                   </motion.span>
                 ) : (
-                  'Sign in with LinkedIn'
+                  '🔗 Import from LinkedIn'
                 )}
                 <Sparkles className="w-5 h-5 ml-3" />
               </Button>
             </motion.div>
           </motion.div>
+
+          {/* Or Divider */}
+          <div className="flex items-center justify-center gap-4 mb-8">
+            <div className="flex-1 h-px bg-border"></div>
+            <span className="text-muted-foreground text-sm">— or complete your profile manually —</span>
+            <div className="flex-1 h-px bg-border"></div>
+          </div>
+
+          <Button 
+            onClick={handleManualSignup}
+            variant="outline"
+            size="lg"
+            className="px-8 py-3 text-lg"
+          >
+            Complete Profile Manually
+          </Button>
         </motion.div>
       </div>
 
@@ -179,7 +201,7 @@ const JoinProsLanding = () => {
             <p className="text-xl text-muted-foreground">Join thousands of top-tier professionals already growing their practice</p>
           </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
             {benefits.map((benefit, index) => (
               <motion.div
                 key={index}
