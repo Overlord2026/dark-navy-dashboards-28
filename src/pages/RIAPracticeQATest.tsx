@@ -1,5 +1,6 @@
 import React from 'react';
 import { RIAPracticeNavigationQA } from '@/components/qa/RIAPracticeNavigationQA';
+import { CRMPipelineQATest } from '@/components/qa/CRMPipelineQATest';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Briefcase, Users, BarChart3, DollarSign, FileText, Shield, Settings } from 'lucide-react';
@@ -53,9 +54,12 @@ export default function RIAPracticeQATest() {
             })}
           </div>
         </CardContent>
-      </Card>
+        </Card>
 
-      {/* QA Test Component */}
+        {/* CRM & Pipeline QA Test Component */}
+        <CRMPipelineQATest />
+
+        {/* Navigation QA Test Component */}
       <RIAPracticeNavigationQA />
 
       {/* Test Instructions */}
