@@ -19,24 +19,105 @@ import RecentlyJoinedTicker from '@/components/marketplace/RecentlyJoinedTicker'
 import TrustedPartners from '@/components/landing/TrustedPartners';
 import SocialProofSection from '@/components/landing/SocialProofSection';
 import HowItWorksSection from '@/components/landing/HowItWorksSection';
+import LinkedInSuccessModal from '@/components/professionals/LinkedInSuccessModal';
+import OnboardingStepsModal from '@/components/professionals/OnboardingStepsModal';
+import ManualProfileForm from '@/components/professionals/ManualProfileForm';
+import CelebrationEffects from '@/components/effects/CelebrationEffects';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 const JoinProsLanding = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showOnboardingSteps, setShowOnboardingSteps] = useState(false);
+  const [showManualForm, setShowManualForm] = useState(false);
+  const [userName, setUserName] = useState('');
 
-  const handleLinkedInAuth = () => {
+  const handleLinkedInAuth = async () => {
     setLoading(true);
-    const clientId = '78c9g8au2ddoil';
-    const redirectUri = encodeURIComponent(`${window.location.origin}/pro-onboarding`);
-    const scope = encodeURIComponent('r_liteprofile r_emailaddress w_member_social');
-    const state = 'join-pros-' + Math.random().toString(36).substring(7);
     
-    const authUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&state=${state}`;
-    window.location.href = authUrl;
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'linkedin_oidc',
+        options: {
+          redirectTo: `${window.location.origin}/professional-onboarding-success`
+        }
+      });
+
+      if (error) {
+        console.error('LinkedIn auth error:', error);
+        toast({
+          title: "Authentication Error",
+          description: "Failed to connect with LinkedIn. Please try again.",
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      console.error('LinkedIn auth error:', error);
+      toast({
+        title: "Authentication Error", 
+        description: "Failed to connect with LinkedIn. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleManualSignup = () => {
-    navigate('/pro-onboarding?manual=true');
+    setShowManualForm(true);
+  };
+
+  const handleManualFormSubmit = async (formData: any) => {
+    setLoading(true);
+    try {
+      // Create user account
+      const { data: authData, error: signUpError } = await supabase.auth.signUp({
+        email: formData.email,
+        password: 'temp-password-' + Math.random().toString(36),
+        options: {
+          emailRedirectTo: `${window.location.origin}/professional-onboarding-success`
+        }
+      });
+
+      if (signUpError) throw signUpError;
+
+      // Send welcome email
+      await fetch('/api/send-welcome-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          firstName: formData.firstName,
+          email: formData.email,
+          profileType: formData.specialty
+        })
+      });
+
+      setUserName(formData.firstName);
+      setShowManualForm(false);
+      setShowSuccessModal(true);
+      
+      toast({
+        title: "Profile Created!",
+        description: "Welcome to the Family Office Marketplace. Check your email for next steps.",
+      });
+    } catch (error: any) {
+      console.error('Manual signup error:', error);
+      toast({
+        title: "Signup Error",
+        description: error.message || "Failed to create profile. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSuccessModalClose = () => {
+    setShowSuccessModal(false);
+    setShowOnboardingSteps(true);
   };
 
   const benefits = [
@@ -168,6 +249,30 @@ const JoinProsLanding = () => {
           </Button>
         </motion.div>
       </div>
+
+      {/* Manual Form Modal */}
+      {showManualForm && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+          <div className="bg-background rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-bold">Create Your Profile</h2>
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                  onClick={() => setShowManualForm(false)}
+                >
+                  ×
+                </Button>
+              </div>
+              <ManualProfileForm 
+                onSubmit={handleManualFormSubmit}
+                isLoading={loading}
+              />
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Recently Joined Ticker */}
       <RecentlyJoinedTicker />
@@ -341,6 +446,24 @@ const JoinProsLanding = () => {
           Join Now
         </Button>
       </div>
+
+      {/* Success Modal */}
+      <LinkedInSuccessModal
+        isOpen={showSuccessModal}
+        onClose={handleSuccessModalClose}
+        userName={userName}
+      />
+
+      {/* Onboarding Steps Modal */}
+      <OnboardingStepsModal
+        isOpen={showOnboardingSteps}
+        onClose={() => setShowOnboardingSteps(false)}
+      />
+
+      {/* Celebration Effects */}
+      {showSuccessModal && (
+        <CelebrationEffects userName={userName} />
+      )}
     </div>
   );
 };
