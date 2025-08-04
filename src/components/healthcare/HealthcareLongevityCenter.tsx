@@ -168,6 +168,39 @@ const HealthcareLongevityCenter = () => {
               Explore Resources
             </Button>
           </div>
+
+          {/* Quick FAQ Section */}
+          <div className="bg-card border rounded-lg p-8 max-w-4xl mx-auto mt-12">
+            <h2 className="text-2xl font-semibold text-foreground mb-6 text-center">Quick FAQ</h2>
+            <div className="space-y-6">
+              <div>
+                <h3 className="text-lg font-medium text-foreground mb-2">
+                  What is the BFO Healthcare & Longevity Center?
+                </h3>
+                <p className="text-muted-foreground">
+                  A secure hub for managing your family's health, connecting with vetted experts, and accessing the best in medical, insurance, and longevity planning.
+                </p>
+              </div>
+              
+              <div>
+                <h3 className="text-lg font-medium text-foreground mb-2">
+                  Can I invite my doctor or consultant?
+                </h3>
+                <p className="text-muted-foreground">
+                  Yes! Use the "Add to My Care Team" feature to send them a secure invite.
+                </p>
+              </div>
+              
+              <div>
+                <h3 className="text-lg font-medium text-foreground mb-2">
+                  How do I become a featured influencer?
+                </h3>
+                <p className="text-muted-foreground">
+                  Apply for a professional profile and our team will review and verify your credentials.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
