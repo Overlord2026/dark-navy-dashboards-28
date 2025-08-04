@@ -1988,6 +1988,51 @@ export type Database = {
         }
         Relationships: []
       }
+      audit_templates: {
+        Row: {
+          audit_type: string
+          checklist_items: Json
+          created_at: string
+          created_by: string | null
+          description: string | null
+          evidence_requirements: Json | null
+          firm_id: string | null
+          id: string
+          is_system_template: boolean | null
+          name: string
+          scoring_criteria: Json | null
+          updated_at: string
+        }
+        Insert: {
+          audit_type: string
+          checklist_items?: Json
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          evidence_requirements?: Json | null
+          firm_id?: string | null
+          id?: string
+          is_system_template?: boolean | null
+          name: string
+          scoring_criteria?: Json | null
+          updated_at?: string
+        }
+        Update: {
+          audit_type?: string
+          checklist_items?: Json
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          evidence_requirements?: Json | null
+          firm_id?: string | null
+          id?: string
+          is_system_template?: boolean | null
+          name?: string
+          scoring_criteria?: Json | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       auth_rate_limits: {
         Row: {
           attempt_count: number | null
@@ -2518,6 +2563,119 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      ce_completions: {
+        Row: {
+          ce_tracking_id: string
+          certificate_url: string | null
+          completion_date: string
+          course_name: string
+          course_type: string | null
+          created_at: string
+          ethics_hours: number | null
+          hours_earned: number
+          id: string
+          metadata: Json | null
+          provider_name: string | null
+          verification_code: string | null
+        }
+        Insert: {
+          ce_tracking_id: string
+          certificate_url?: string | null
+          completion_date: string
+          course_name: string
+          course_type?: string | null
+          created_at?: string
+          ethics_hours?: number | null
+          hours_earned: number
+          id?: string
+          metadata?: Json | null
+          provider_name?: string | null
+          verification_code?: string | null
+        }
+        Update: {
+          ce_tracking_id?: string
+          certificate_url?: string | null
+          completion_date?: string
+          course_name?: string
+          course_type?: string | null
+          created_at?: string
+          ethics_hours?: number | null
+          hours_earned?: number
+          id?: string
+          metadata?: Json | null
+          provider_name?: string | null
+          verification_code?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ce_completions_ce_tracking_id_fkey"
+            columns: ["ce_tracking_id"]
+            isOneToOne: false
+            referencedRelation: "ce_tracking"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ce_tracking: {
+        Row: {
+          ce_period_end: string
+          ce_period_start: string
+          completed_hours: number | null
+          compliance_status: string | null
+          created_at: string
+          ethics_hours_completed: number | null
+          ethics_hours_required: number | null
+          firm_id: string
+          id: string
+          license_number: string | null
+          license_state: string | null
+          license_type: string
+          notes: string | null
+          required_hours: number
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          ce_period_end: string
+          ce_period_start: string
+          completed_hours?: number | null
+          compliance_status?: string | null
+          created_at?: string
+          ethics_hours_completed?: number | null
+          ethics_hours_required?: number | null
+          firm_id: string
+          id?: string
+          license_number?: string | null
+          license_state?: string | null
+          license_type: string
+          notes?: string | null
+          required_hours: number
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          ce_period_end?: string
+          ce_period_start?: string
+          completed_hours?: number | null
+          compliance_status?: string | null
+          created_at?: string
+          ethics_hours_completed?: number | null
+          ethics_hours_required?: number | null
+          firm_id?: string
+          id?: string
+          license_number?: string | null
+          license_state?: string | null
+          license_type?: string
+          notes?: string | null
+          required_hours?: number
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       charities: {
         Row: {
@@ -4027,6 +4185,306 @@ export type Database = {
           risk_score?: number | null
           status?: string
           tenant_id?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      compliance_documents: {
+        Row: {
+          access_log: Json | null
+          approved_by: string | null
+          compliance_flags: Json | null
+          created_at: string
+          document_category: string | null
+          document_name: string
+          document_type: string
+          expiration_date: string | null
+          file_path: string
+          file_size: number | null
+          firm_id: string
+          id: string
+          is_current_version: boolean | null
+          last_reviewed_date: string | null
+          metadata: Json | null
+          mime_type: string | null
+          parent_document_id: string | null
+          retention_period_years: number | null
+          reviewed_by: string | null
+          status: string
+          tags: string[] | null
+          updated_at: string
+          uploaded_by: string
+          version_number: number | null
+        }
+        Insert: {
+          access_log?: Json | null
+          approved_by?: string | null
+          compliance_flags?: Json | null
+          created_at?: string
+          document_category?: string | null
+          document_name: string
+          document_type: string
+          expiration_date?: string | null
+          file_path: string
+          file_size?: number | null
+          firm_id: string
+          id?: string
+          is_current_version?: boolean | null
+          last_reviewed_date?: string | null
+          metadata?: Json | null
+          mime_type?: string | null
+          parent_document_id?: string | null
+          retention_period_years?: number | null
+          reviewed_by?: string | null
+          status?: string
+          tags?: string[] | null
+          updated_at?: string
+          uploaded_by: string
+          version_number?: number | null
+        }
+        Update: {
+          access_log?: Json | null
+          approved_by?: string | null
+          compliance_flags?: Json | null
+          created_at?: string
+          document_category?: string | null
+          document_name?: string
+          document_type?: string
+          expiration_date?: string | null
+          file_path?: string
+          file_size?: number | null
+          firm_id?: string
+          id?: string
+          is_current_version?: boolean | null
+          last_reviewed_date?: string | null
+          metadata?: Json | null
+          mime_type?: string | null
+          parent_document_id?: string | null
+          retention_period_years?: number | null
+          reviewed_by?: string | null
+          status?: string
+          tags?: string[] | null
+          updated_at?: string
+          uploaded_by?: string
+          version_number?: number | null
+        }
+        Relationships: []
+      }
+      compliance_incidents: {
+        Row: {
+          actual_cost: number | null
+          assigned_to: string | null
+          corrective_actions: string[] | null
+          created_at: string
+          description: string
+          discovery_date: string
+          estimated_cost: number | null
+          firm_id: string
+          id: string
+          incident_title: string
+          incident_type: string
+          is_anonymous: boolean | null
+          metadata: Json | null
+          prevention_measures: string[] | null
+          regulatory_filing_date: string | null
+          regulatory_filing_required: boolean | null
+          regulatory_impact: string | null
+          reported_by: string | null
+          resolution_date: string | null
+          root_cause: string | null
+          severity: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          actual_cost?: number | null
+          assigned_to?: string | null
+          corrective_actions?: string[] | null
+          created_at?: string
+          description: string
+          discovery_date: string
+          estimated_cost?: number | null
+          firm_id: string
+          id?: string
+          incident_title: string
+          incident_type: string
+          is_anonymous?: boolean | null
+          metadata?: Json | null
+          prevention_measures?: string[] | null
+          regulatory_filing_date?: string | null
+          regulatory_filing_required?: boolean | null
+          regulatory_impact?: string | null
+          reported_by?: string | null
+          resolution_date?: string | null
+          root_cause?: string | null
+          severity: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          actual_cost?: number | null
+          assigned_to?: string | null
+          corrective_actions?: string[] | null
+          created_at?: string
+          description?: string
+          discovery_date?: string
+          estimated_cost?: number | null
+          firm_id?: string
+          id?: string
+          incident_title?: string
+          incident_type?: string
+          is_anonymous?: boolean | null
+          metadata?: Json | null
+          prevention_measures?: string[] | null
+          regulatory_filing_date?: string | null
+          regulatory_filing_required?: boolean | null
+          regulatory_impact?: string | null
+          reported_by?: string | null
+          resolution_date?: string | null
+          root_cause?: string | null
+          severity?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      compliance_risk_assessments: {
+        Row: {
+          approved_by: string | null
+          approved_date: string | null
+          assessment_date: string
+          assessment_name: string
+          assessment_type: string
+          conducted_by: string
+          created_at: string
+          findings: Json | null
+          firm_id: string
+          id: string
+          mitigation_plan: Json | null
+          next_assessment_date: string | null
+          overall_risk_score: number | null
+          recommendations: Json | null
+          risk_categories: Json
+          risk_level: string | null
+          scope_description: string | null
+          status: string | null
+          updated_at: string
+        }
+        Insert: {
+          approved_by?: string | null
+          approved_date?: string | null
+          assessment_date: string
+          assessment_name: string
+          assessment_type: string
+          conducted_by: string
+          created_at?: string
+          findings?: Json | null
+          firm_id: string
+          id?: string
+          mitigation_plan?: Json | null
+          next_assessment_date?: string | null
+          overall_risk_score?: number | null
+          recommendations?: Json | null
+          risk_categories?: Json
+          risk_level?: string | null
+          scope_description?: string | null
+          status?: string | null
+          updated_at?: string
+        }
+        Update: {
+          approved_by?: string | null
+          approved_date?: string | null
+          assessment_date?: string
+          assessment_name?: string
+          assessment_type?: string
+          conducted_by?: string
+          created_at?: string
+          findings?: Json | null
+          firm_id?: string
+          id?: string
+          mitigation_plan?: Json | null
+          next_assessment_date?: string | null
+          overall_risk_score?: number | null
+          recommendations?: Json | null
+          risk_categories?: Json
+          risk_level?: string | null
+          scope_description?: string | null
+          status?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      compliance_tasks: {
+        Row: {
+          assigned_to: string | null
+          completed_date: string | null
+          compliance_category: string | null
+          created_at: string
+          created_by: string
+          description: string | null
+          due_date: string | null
+          evidence_required: boolean | null
+          evidence_urls: string[] | null
+          firm_id: string
+          id: string
+          metadata: Json | null
+          notes: string | null
+          parent_task_id: string | null
+          priority: string
+          recurring_rule: string | null
+          regulatory_type: string | null
+          start_date: string | null
+          status: string
+          task_type: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          assigned_to?: string | null
+          completed_date?: string | null
+          compliance_category?: string | null
+          created_at?: string
+          created_by: string
+          description?: string | null
+          due_date?: string | null
+          evidence_required?: boolean | null
+          evidence_urls?: string[] | null
+          firm_id: string
+          id?: string
+          metadata?: Json | null
+          notes?: string | null
+          parent_task_id?: string | null
+          priority?: string
+          recurring_rule?: string | null
+          regulatory_type?: string | null
+          start_date?: string | null
+          status?: string
+          task_type: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          assigned_to?: string | null
+          completed_date?: string | null
+          compliance_category?: string | null
+          created_at?: string
+          created_by?: string
+          description?: string | null
+          due_date?: string | null
+          evidence_required?: boolean | null
+          evidence_urls?: string[] | null
+          firm_id?: string
+          id?: string
+          metadata?: Json | null
+          notes?: string | null
+          parent_task_id?: string | null
+          priority?: string
+          recurring_rule?: string | null
+          regulatory_type?: string | null
+          start_date?: string | null
+          status?: string
+          task_type?: string
+          title?: string
           updated_at?: string
         }
         Relationships: []
@@ -11956,6 +12414,72 @@ export type Database = {
           },
         ]
       }
+      mock_audits: {
+        Row: {
+          assigned_to: string | null
+          audit_data: Json | null
+          audit_name: string
+          audit_type: string
+          completed_date: string | null
+          created_at: string
+          created_by: string
+          critical_findings: number | null
+          evidence_urls: string[] | null
+          findings_count: number | null
+          firm_id: string
+          id: string
+          notes: string | null
+          overall_score: number | null
+          scheduled_date: string | null
+          started_date: string | null
+          status: string
+          template_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          assigned_to?: string | null
+          audit_data?: Json | null
+          audit_name: string
+          audit_type: string
+          completed_date?: string | null
+          created_at?: string
+          created_by: string
+          critical_findings?: number | null
+          evidence_urls?: string[] | null
+          findings_count?: number | null
+          firm_id: string
+          id?: string
+          notes?: string | null
+          overall_score?: number | null
+          scheduled_date?: string | null
+          started_date?: string | null
+          status?: string
+          template_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          assigned_to?: string | null
+          audit_data?: Json | null
+          audit_name?: string
+          audit_type?: string
+          completed_date?: string | null
+          created_at?: string
+          created_by?: string
+          critical_findings?: number | null
+          evidence_urls?: string[] | null
+          findings_count?: number | null
+          firm_id?: string
+          id?: string
+          notes?: string | null
+          overall_score?: number | null
+          scheduled_date?: string | null
+          started_date?: string | null
+          status?: string
+          template_id?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       model_portfolios: {
         Row: {
           asset_allocation: string | null
@@ -15942,6 +16466,69 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      regulatory_alerts: {
+        Row: {
+          action_items: string[] | null
+          action_required: boolean | null
+          alert_type: string
+          content: string
+          created_at: string
+          created_by: string | null
+          deadline_date: string | null
+          effective_date: string | null
+          id: string
+          is_system_alert: boolean | null
+          regulatory_body: string | null
+          related_documents: string[] | null
+          severity: string
+          source_url: string | null
+          status: string | null
+          target_audience: string[] | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          action_items?: string[] | null
+          action_required?: boolean | null
+          alert_type: string
+          content: string
+          created_at?: string
+          created_by?: string | null
+          deadline_date?: string | null
+          effective_date?: string | null
+          id?: string
+          is_system_alert?: boolean | null
+          regulatory_body?: string | null
+          related_documents?: string[] | null
+          severity?: string
+          source_url?: string | null
+          status?: string | null
+          target_audience?: string[] | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          action_items?: string[] | null
+          action_required?: boolean | null
+          alert_type?: string
+          content?: string
+          created_at?: string
+          created_by?: string | null
+          deadline_date?: string | null
+          effective_date?: string | null
+          id?: string
+          is_system_alert?: boolean | null
+          regulatory_body?: string | null
+          related_documents?: string[] | null
+          severity?: string
+          source_url?: string | null
+          status?: string | null
+          target_audience?: string[] | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       reports: {
         Row: {
