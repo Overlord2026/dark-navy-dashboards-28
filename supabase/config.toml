@@ -169,3 +169,7 @@ verify_jwt = false
 [functions.finnhub-webhook]
 verify_jwt = false
 # @public-ok - Finnhub webhook endpoint with secret validation
+
+[functions.check-api-keys]
+verify_jwt = false
+# @public-ok - API key validation utility for QA

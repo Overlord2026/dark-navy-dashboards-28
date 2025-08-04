@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useRoleContext } from '@/context/RoleContext';
 import { SplashScreen } from '@/components/ui/SplashScreen';
+import { QAWarningBanner } from '@/components/admin/QAWarningBanner';
 
 export default function Index() {
   const navigate = useNavigate();
@@ -30,11 +31,14 @@ export default function Index() {
 
   if (showSplash) {
     return (
-      <SplashScreen 
-        onEnter={handleEnterApp}
-        theme="dark"
-        showConfetti={false}
-      />
+      <div>
+        <QAWarningBanner />
+        <SplashScreen 
+          onEnter={handleEnterApp}
+          theme="dark"
+          showConfetti={false}
+        />
+      </div>
     );
   }
 
