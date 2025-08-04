@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ReservedProfile } from '@/types/reservedProfiles';
+import { PERSONA_SEGMENT_CONFIGS, detectPersonaSegment } from '@/types/personaSegments';
 
 interface VIPWelcomeBannerProps {
   profile: ReservedProfile;
@@ -21,6 +22,15 @@ export const VIPWelcomeBanner: React.FC<VIPWelcomeBannerProps> = ({
 }) => {
   const isUrgent = spotsLeft <= 5;
   const urgencyColor = isUrgent ? 'destructive' : 'default';
+  
+  // Get segment-specific configuration
+  const segment = detectPersonaSegment(
+    profile.persona_type as any, 
+    profile.referral_source,
+    { practice_area: profile.notes }
+  );
+  
+  const segmentConfig = PERSONA_SEGMENT_CONFIGS[segment];
 
   return (
     <motion.div
@@ -61,11 +71,10 @@ export const VIPWelcomeBanner: React.FC<VIPWelcomeBannerProps> = ({
 
           <div className="mb-6">
             <h2 className="text-xl font-semibold mb-2 text-foreground">
-              Your Premium Profile is Reserved
+              {segmentConfig.title}
             </h2>
             <p className="text-muted-foreground max-w-2xl">
-              You're one of the first 25 industry leaders invited to the Family Office Marketplace™. 
-              Your exclusive profile is ready—just click below to activate and access your premium dashboard.
+              {segmentConfig.subtitle}
             </p>
           </div>
 

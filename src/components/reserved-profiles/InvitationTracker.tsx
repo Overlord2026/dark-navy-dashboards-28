@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { ReservedProfile, INVITATION_TEMPLATES } from '@/types/reservedProfiles';
+import { PERSONA_SEGMENT_CONFIGS, detectPersonaSegment } from '@/types/personaSegments';
 
 interface InvitationTrackerProps {
   profile: ReservedProfile;
@@ -30,18 +31,29 @@ export const InvitationTracker: React.FC<InvitationTrackerProps> = ({
   const [selectedMethod, setSelectedMethod] = useState<'email' | 'sms' | 'linkedin' | 'heygen'>('email');
   
   const claimUrl = `${window.location.origin}/claim/${profile.invitation_token}`;
+  
+  // Get segment-specific configuration
+  const segment = detectPersonaSegment(
+    profile.persona_type as any,
+    profile.referral_source,
+    { practice_area: profile.notes }
+  );
+  const segmentConfig = PERSONA_SEGMENT_CONFIGS[segment];
 
   const generateMessage = (method: 'email' | 'sms' | 'linkedin' | 'heygen') => {
     const template = INVITATION_TEMPLATES[method];
     if (!template) return '';
     
     const content = 'body' in template ? template.body : template.body;
-    return content
+    const personalizedContent = content
       .replace(/\{\{name\}\}/g, profile.name)
       .replace(/\{\{role_title\}\}/g, profile.role_title || 'Professional')
       .replace(/\{\{organization\}\}/g, profile.organization || '')
-      .replace(/\{\{segment\}\}/g, profile.segment || profile.persona_type)
+      .replace(/\{\{segment\}\}/g, segment)
       .replace(/\{\{claim_link\}\}/g, claimUrl);
+    
+    // Add segment-specific welcome message
+    return `${personalizedContent}\n\n${segmentConfig.welcomeMessage}`;
   };
 
   const copyToClipboard = (text: string) => {

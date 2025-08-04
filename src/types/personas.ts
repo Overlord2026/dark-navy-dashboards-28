@@ -10,7 +10,9 @@ export type PersonaType =
   | 'agency' 
   | 'organization'
   | 'client'
-  | 'vip_reserved';
+  | 'vip_reserved'
+  | 'insurance_agent'
+  | 'healthcare_consultant';
 
 export interface PersonaWelcomeMessage {
   title: string;
