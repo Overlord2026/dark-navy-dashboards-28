@@ -1,9 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { 
   Heart, 
   Users, 
@@ -21,21 +26,41 @@ import {
   Users2,
   FileText,
   Video,
-  Award
+  Award,
+  Star,
+  CheckCircle,
+  DollarSign,
+  Briefcase,
+  X,
+  Link,
+  Camera,
+  Globe,
+  TrendingUp
 } from 'lucide-react';
 
-type Persona = 'client' | 'family' | 'advisor' | 'consultant' | 'influencer';
+type Persona = 'client' | 'family' | 'advisor' | 'consultant' | 'influencer' | 'agent';
 
 const HealthcareLongevityCenter = () => {
   const [activePersona, setActivePersona] = useState<Persona>('client');
   const [activeTab, setActiveTab] = useState('dashboard');
+  const [showOnboardingModal, setShowOnboardingModal] = useState(false);
+  const [showWelcomeBanner, setShowWelcomeBanner] = useState(true);
+  const [profileData, setProfileData] = useState({
+    name: '',
+    specialty: '',
+    bio: '',
+    linkedinUrl: '',
+    certifications: '',
+    experience: ''
+  });
 
   const personaOptions = [
-    { value: 'client', label: 'Client', icon: Heart },
-    { value: 'family', label: 'Family Member', icon: Users2 },
-    { value: 'advisor', label: 'Advisor', icon: Users },
-    { value: 'consultant', label: 'Consultant', icon: Brain },
-    { value: 'influencer', label: 'Influencer', icon: Award },
+    { value: 'client', label: 'Family/Client', icon: Heart, description: 'See care team, health reports, book appointments' },
+    { value: 'family', label: 'Family Member', icon: Users2, description: 'Manage family health records and appointments' },
+    { value: 'advisor', label: 'Advisor', icon: Users, description: 'View clients\' health summary, share guides, recommend programs' },
+    { value: 'consultant', label: 'Healthcare Consultant', icon: Brain, description: 'Set up public profile, offer consultations, upload content' },
+    { value: 'influencer', label: 'Thought Leader', icon: Award, description: 'Verified badge, post resources, host AMA events' },
+    { value: 'agent', label: 'Healthcare Agent', icon: Shield, description: 'Sell insurance, manage renewals, receive leads' },
   ];
 
   const getPersonaColor = (persona: Persona) => {
@@ -45,8 +70,37 @@ const HealthcareLongevityCenter = () => {
       case 'advisor': return 'bg-purple-500';
       case 'consultant': return 'bg-orange-500';
       case 'influencer': return 'bg-pink-500';
+      case 'agent': return 'bg-teal-500';
       default: return 'bg-gray-500';
     }
+  };
+
+  const getPersonaWelcomeMessage = (persona: Persona) => {
+    switch (persona) {
+      case 'consultant':
+        return "Welcome! Set up your Healthcare Consultant profile to join our Longevity Network and connect with families seeking trusted health guidance.";
+      case 'advisor':
+        return "Welcome to the Healthcare & Longevity Center! Start viewing clients' health summaries and share valuable resources.";
+      case 'influencer':
+        return "Join our exclusive Health & Longevity Network as a Thought Leader. Share your expertise and inspire families on their wellness journey.";
+      case 'agent':
+        return "Welcome to the healthcare agent portal! Manage insurance renewals, receive qualified leads, and grow your healthcare practice.";
+      default:
+        return "Welcome to your comprehensive healthcare and longevity planning center!";
+    }
+  };
+
+  const handlePersonaChange = (newPersona: Persona) => {
+    setActivePersona(newPersona);
+    if (['consultant', 'influencer', 'agent'].includes(newPersona)) {
+      setShowOnboardingModal(true);
+    }
+  };
+
+  const handleProfileSetup = () => {
+    setShowOnboardingModal(false);
+    // Here you would typically save the profile data
+    console.log('Profile setup completed:', profileData);
   };
 
   return (
@@ -65,7 +119,7 @@ const HealthcareLongevityCenter = () => {
             {/* Persona Switcher */}
             <div className="flex items-center gap-3">
               <span className="text-sm text-muted-foreground">View as:</span>
-              <Select value={activePersona} onValueChange={(value) => setActivePersona(value as Persona)}>
+              <Select value={activePersona} onValueChange={handlePersonaChange}>
                 <SelectTrigger className="w-48">
                   <SelectValue />
                 </SelectTrigger>
@@ -502,35 +556,146 @@ const HealthcareLongevityCenter = () => {
 
           {/* Community Tab */}
           <TabsContent value="community" className="space-y-6">
+            {/* Influencer Hub */}
             {activePersona === 'influencer' && (
-              <Card className="border-gold bg-gold/5">
+              <>
+                <Card className="border-pink-200 bg-pink-50/50">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Award className="h-5 w-5 text-pink-600" />
+                      Verified Thought Leader Hub
+                      <Badge className="bg-pink-600 text-white gap-1">
+                        <Star className="h-3 w-3" />
+                        Verified
+                      </Badge>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div>
+                        <h4 className="font-semibold mb-2">Leaderboard</h4>
+                        <div className="space-y-2">
+                          <div className="flex justify-between items-center">
+                            <span className="flex items-center gap-1">
+                              <Star className="h-3 w-3 text-gold" />
+                              Dr. Health Expert
+                            </span>
+                            <Badge>1,250 pts</Badge>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="flex items-center gap-1">
+                              <Star className="h-3 w-3 text-gold" />
+                              Wellness Coach Pro
+                            </span>
+                            <Badge>1,100 pts</Badge>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-pink-600 font-medium">Your Rank: #3</span>
+                            <Badge variant="secondary">980 pts</Badge>
+                          </div>
+                        </div>
+                      </div>
+                      <div>
+                        <h4 className="font-semibold mb-2">Content Analytics</h4>
+                        <div className="space-y-2">
+                          <div className="text-sm">Your contributions: 45</div>
+                          <div className="text-sm">Total views: 12,500</div>
+                          <div className="text-sm">Engagement rate: 8.5%</div>
+                          <div className="text-sm">AMA sessions: 3</div>
+                        </div>
+                      </div>
+                      <div>
+                        <h4 className="font-semibold mb-2">Actions</h4>
+                        <div className="space-y-2">
+                          <Button size="sm" className="w-full gap-2">
+                            <Plus className="h-4 w-4" />
+                            Post Resource
+                          </Button>
+                          <Button size="sm" variant="outline" className="w-full gap-2">
+                            <MessageCircle className="h-4 w-4" />
+                            Schedule AMA
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Upcoming AMA Events */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Calendar className="h-5 w-5" />
+                      Your Upcoming AMA Events
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      <div className="p-3 border rounded-lg">
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <h4 className="font-semibold">Longevity Supplements Q&A</h4>
+                            <p className="text-sm text-muted-foreground">March 28, 2024 at 2:00 PM EST</p>
+                          </div>
+                          <Badge>45 registered</Badge>
+                        </div>
+                      </div>
+                      <Button variant="outline" className="w-full gap-2">
+                        <Plus className="h-4 w-4" />
+                        Schedule New AMA
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </>
+            )}
+
+            {/* Healthcare Agent Lead Dashboard */}
+            {activePersona === 'agent' && (
+              <Card className="border-teal-200 bg-teal-50/50">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <Award className="h-5 w-5 text-gold" />
-                    Influencer Hub
+                    <Shield className="h-5 w-5 text-teal-600" />
+                    Healthcare Agent Dashboard
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
-                      <h4 className="font-semibold mb-2">Leaderboard</h4>
+                      <h4 className="font-semibold mb-2">Lead Pipeline</h4>
                       <div className="space-y-2">
                         <div className="flex justify-between">
-                          <span>Dr. Health Expert</span>
-                          <Badge>1,250 pts</Badge>
+                          <span>New Leads</span>
+                          <Badge className="bg-teal-600">12</Badge>
                         </div>
                         <div className="flex justify-between">
-                          <span>Wellness Coach Pro</span>
-                          <Badge>1,100 pts</Badge>
+                          <span>In Progress</span>
+                          <Badge variant="secondary">8</Badge>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Closed This Month</span>
+                          <Badge variant="default">15</Badge>
                         </div>
                       </div>
                     </div>
                     <div>
-                      <h4 className="font-semibold mb-2">Content Analytics</h4>
+                      <h4 className="font-semibold mb-2">Renewals Due</h4>
                       <div className="space-y-2">
-                        <div className="text-sm">Your contributions: 45</div>
-                        <div className="text-sm">Total views: 12,500</div>
-                        <div className="text-sm">Engagement rate: 8.5%</div>
+                        <div className="text-sm">Health Insurance: 24 clients</div>
+                        <div className="text-sm">Life Insurance: 12 clients</div>
+                        <div className="text-sm">LTC Insurance: 8 clients</div>
+                      </div>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold mb-2">Performance</h4>
+                      <div className="space-y-2">
+                        <div className="text-sm">Conversion Rate: 68%</div>
+                        <div className="text-sm">Avg. Policy Value: $2,850</div>
+                        <div className="text-sm flex items-center gap-1">
+                          Revenue Growth: 
+                          <TrendingUp className="h-3 w-3 text-green-500" />
+                          <span className="text-green-600">+15%</span>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -538,23 +703,103 @@ const HealthcareLongevityCenter = () => {
               </Card>
             )}
 
+            {/* Discussion Threads */}
             <Card>
               <CardHeader>
-                <CardTitle>Discussion Threads</CardTitle>
+                <div className="flex justify-between items-center">
+                  <CardTitle>Discussion Threads</CardTitle>
+                  {['consultant', 'influencer'].includes(activePersona) && (
+                    <Button size="sm" className="gap-2">
+                      <Plus className="h-4 w-4" />
+                      Start Discussion
+                    </Button>
+                  )}
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   <div className="border-l-4 border-primary pl-4">
-                    <h4 className="font-semibold">Best Strategies for Healthy Retirement</h4>
+                    <div className="flex items-center gap-2 mb-1">
+                      <h4 className="font-semibold">Best Strategies for Healthy Retirement</h4>
+                      {activePersona === 'influencer' && (
+                        <Badge variant="outline" className="text-xs">Trending</Badge>
+                      )}
+                    </div>
                     <p className="text-sm text-muted-foreground">24 replies • Started by WealthAdvisor123</p>
                   </div>
                   <div className="border-l-4 border-green-500 pl-4">
-                    <h4 className="font-semibold">Longevity Supplements: Evidence vs. Hype</h4>
-                    <p className="text-sm text-muted-foreground">18 replies • Started by HealthOptimizer</p>
+                    <div className="flex items-center gap-2 mb-1">
+                      <h4 className="font-semibold">Longevity Supplements: Evidence vs. Hype</h4>
+                      <Badge className="bg-pink-600 text-white gap-1 text-xs">
+                        <Star className="h-2 w-2" />
+                        Expert
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-muted-foreground">18 replies • Started by Dr. Sarah Chen (Verified)</p>
                   </div>
                   <div className="border-l-4 border-blue-500 pl-4">
                     <h4 className="font-semibold">Insurance Gaps in Health Planning</h4>
                     <p className="text-sm text-muted-foreground">12 replies • Started by InsurancePro</p>
+                  </div>
+
+                  {/* Featured Content for Advisors */}
+                  {activePersona === 'advisor' && (
+                    <div className="border-l-4 border-purple-500 pl-4 bg-purple-50 p-3 rounded-r-lg">
+                      <div className="flex items-center gap-2 mb-1">
+                        <h4 className="font-semibold">Client Health Summary Templates</h4>
+                        <Badge className="bg-purple-600 text-white text-xs">Advisor Only</Badge>
+                      </div>
+                      <p className="text-sm text-muted-foreground">8 replies • Shared by FinancialWellnessPro</p>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Network Directory */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Users className="h-5 w-5" />
+                  Health & Longevity Network Directory
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <div className="p-3 border rounded-lg">
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full"></div>
+                      <div>
+                        <h4 className="font-semibold text-sm">Dr. Michael Torres</h4>
+                        <p className="text-xs text-muted-foreground">Longevity Medicine</p>
+                      </div>
+                      <Badge className="bg-pink-600 text-white">
+                        <Star className="h-2 w-2" />
+                      </Badge>
+                    </div>
+                    <Button size="sm" variant="outline" className="w-full">Connect</Button>
+                  </div>
+                  
+                  <div className="p-3 border rounded-lg">
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-teal-600 rounded-full"></div>
+                      <div>
+                        <h4 className="font-semibold text-sm">Sarah Wilson</h4>
+                        <p className="text-xs text-muted-foreground">Health Coach</p>
+                      </div>
+                    </div>
+                    <Button size="sm" variant="outline" className="w-full">Connect</Button>
+                  </div>
+
+                  <div className="p-3 border rounded-lg">
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-red-600 rounded-full"></div>
+                      <div>
+                        <h4 className="font-semibold text-sm">James Rodriguez</h4>
+                        <p className="text-xs text-muted-foreground">Insurance Agent</p>
+                      </div>
+                    </div>
+                    <Button size="sm" variant="outline" className="w-full">Connect</Button>
                   </div>
                 </div>
               </CardContent>
@@ -562,6 +807,192 @@ const HealthcareLongevityCenter = () => {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Welcome Banner */}
+      {showWelcomeBanner && (
+        <div className="fixed bottom-4 right-4 max-w-sm z-50">
+          <Alert className="bg-primary text-primary-foreground border-primary">
+            <Heart className="h-4 w-4" />
+            <AlertDescription>
+              {getPersonaWelcomeMessage(activePersona)}
+              <div className="mt-2 flex gap-2">
+                <Button size="sm" variant="secondary" onClick={() => setShowWelcomeBanner(false)}>
+                  <X className="h-4 w-4" />
+                </Button>
+                {['consultant', 'influencer', 'agent'].includes(activePersona) && (
+                  <Button size="sm" variant="secondary" onClick={() => setShowOnboardingModal(true)}>
+                    Get Started
+                  </Button>
+                )}
+              </div>
+            </AlertDescription>
+          </Alert>
+        </div>
+      )}
+
+      {/* Onboarding Modal */}
+      <Dialog open={showOnboardingModal} onOpenChange={setShowOnboardingModal}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              {activePersona === 'consultant' && <Brain className="h-5 w-5 text-orange-500" />}
+              {activePersona === 'influencer' && <Award className="h-5 w-5 text-pink-500" />}
+              {activePersona === 'agent' && <Shield className="h-5 w-5 text-teal-500" />}
+              Set Up Your {personaOptions.find(p => p.value === activePersona)?.label} Profile
+            </DialogTitle>
+            <DialogDescription>
+              Join our Health & Longevity Network and connect with families seeking trusted guidance.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-6 py-4">
+            {/* VIP Outreach Script for Influencers */}
+            {activePersona === 'influencer' && (
+              <Alert className="bg-pink-50 border-pink-200">
+                <Award className="h-4 w-4 text-pink-600" />
+                <AlertDescription className="text-pink-800">
+                  <strong>VIP Invitation:</strong> Your pioneering work has inspired our Family Office mission. 
+                  We'd be honored to feature you as a Founding Healthcare Influencer in our network.
+                </AlertDescription>
+              </Alert>
+            )}
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="name">Full Name</Label>
+                <Input 
+                  id="name"
+                  value={profileData.name}
+                  onChange={(e) => setProfileData(prev => ({ ...prev, name: e.target.value }))}
+                  placeholder="Dr. John Smith"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="specialty">Specialty/Area of Expertise</Label>
+                <Input 
+                  id="specialty"
+                  value={profileData.specialty}
+                  onChange={(e) => setProfileData(prev => ({ ...prev, specialty: e.target.value }))}
+                  placeholder="Longevity Medicine"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="bio">Professional Bio</Label>
+              <Textarea 
+                id="bio"
+                value={profileData.bio}
+                onChange={(e) => setProfileData(prev => ({ ...prev, bio: e.target.value }))}
+                placeholder="Brief description of your background and expertise..."
+                rows={3}
+              />
+            </div>
+
+            {/* LinkedIn Import */}
+            <div className="flex items-center gap-4 p-4 border rounded-lg">
+              <div className="flex items-center gap-2">
+                <Link className="h-5 w-5 text-blue-600" />
+                <span className="font-medium">Import from LinkedIn</span>
+              </div>
+              <Button variant="outline" size="sm">
+                Connect LinkedIn
+              </Button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="certifications">Certifications</Label>
+                <Input 
+                  id="certifications"
+                  value={profileData.certifications}
+                  onChange={(e) => setProfileData(prev => ({ ...prev, certifications: e.target.value }))}
+                  placeholder="MD, PhD, Certified Longevity Specialist"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="experience">Years of Experience</Label>
+                <Input 
+                  id="experience"
+                  value={profileData.experience}
+                  onChange={(e) => setProfileData(prev => ({ ...prev, experience: e.target.value }))}
+                  placeholder="15+ years"
+                />
+              </div>
+            </div>
+
+            {/* Upload Photo Section */}
+            <div className="space-y-2">
+              <Label>Professional Photo</Label>
+              <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-6 text-center">
+                <Camera className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
+                <p className="text-sm text-muted-foreground mb-2">Upload professional headshot</p>
+                <Button variant="outline" size="sm">
+                  Choose File
+                </Button>
+              </div>
+            </div>
+
+            {/* Media/Press Links for Influencers */}
+            {activePersona === 'influencer' && (
+              <div className="space-y-2">
+                <Label>Media & Press Links</Label>
+                <div className="space-y-2">
+                  <Input placeholder="Website URL" />
+                  <Input placeholder="Book/Publication URL" />
+                  <Input placeholder="Podcast/Media URL" />
+                </div>
+              </div>
+            )}
+
+            {/* Healthcare Agent Specific Fields */}
+            {activePersona === 'agent' && (
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label>Licensed States</Label>
+                  <Input placeholder="CA, NY, TX" />
+                </div>
+                <div className="space-y-2">
+                  <Label>Insurance Products</Label>
+                  <Input placeholder="Health, Life, Long-term Care, Disability" />
+                </div>
+                <div className="space-y-2">
+                  <Label>Commission Structure</Label>
+                  <Input placeholder="Fee structure details" />
+                </div>
+              </div>
+            )}
+
+            <div className="flex gap-3 pt-4">
+              <Button 
+                onClick={handleProfileSetup}
+                className="flex-1 gap-2"
+              >
+                <CheckCircle className="h-4 w-4" />
+                Complete Profile Setup
+              </Button>
+              <Button 
+                variant="outline" 
+                onClick={() => setShowOnboardingModal(false)}
+              >
+                Skip for Now
+              </Button>
+            </div>
+
+            {/* Network CTA */}
+            <div className="text-center p-4 bg-muted rounded-lg">
+              <h4 className="font-semibold mb-2">
+                Join Our Health & Longevity Network
+              </h4>
+              <p className="text-sm text-muted-foreground">
+                For Thought Leaders, Advisors, and Families Serious About Wellbeing
+              </p>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
