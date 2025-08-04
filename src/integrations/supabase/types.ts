@@ -11157,6 +11157,69 @@ export type Database = {
         }
         Relationships: []
       }
+      linkedin_professionals: {
+        Row: {
+          bio: string | null
+          company: string | null
+          created_at: string
+          email: string | null
+          featured: boolean | null
+          id: string
+          linkedin_id: string | null
+          linkedin_url: string | null
+          name: string
+          phone: string | null
+          profile_image_url: string | null
+          profile_source: string | null
+          referral_code: string | null
+          referred_by: string | null
+          specialties: string[] | null
+          status: string | null
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          bio?: string | null
+          company?: string | null
+          created_at?: string
+          email?: string | null
+          featured?: boolean | null
+          id?: string
+          linkedin_id?: string | null
+          linkedin_url?: string | null
+          name: string
+          phone?: string | null
+          profile_image_url?: string | null
+          profile_source?: string | null
+          referral_code?: string | null
+          referred_by?: string | null
+          specialties?: string[] | null
+          status?: string | null
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          bio?: string | null
+          company?: string | null
+          created_at?: string
+          email?: string | null
+          featured?: boolean | null
+          id?: string
+          linkedin_id?: string | null
+          linkedin_url?: string | null
+          name?: string
+          phone?: string | null
+          profile_image_url?: string | null
+          profile_source?: string | null
+          referral_code?: string | null
+          referred_by?: string | null
+          specialties?: string[] | null
+          status?: string | null
+          title?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       loan_documents: {
         Row: {
           created_at: string
