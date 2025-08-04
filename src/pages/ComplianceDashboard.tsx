@@ -7,6 +7,10 @@ import { ComplianceDocumentVault } from '@/components/compliance/ComplianceDocum
 import { ComplianceRiskScoring } from '@/components/compliance/ComplianceRiskScoring';
 import { ComplianceCommunity } from '@/components/compliance/ComplianceCommunity';
 import { ComplianceAICopilot } from '@/components/compliance/ComplianceAICopilot';
+import { MockAuditCenter } from '@/components/compliance/MockAuditCenter';
+import { RegulatoryAlertsFeed } from '@/components/compliance/RegulatoryAlertsFeed';
+import { CETrackingModule } from '@/components/compliance/CETrackingModule';
+import { ComplianceIncidentReporting } from '@/components/compliance/ComplianceIncidentReporting';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export const ComplianceDashboard: React.FC = () => {
@@ -30,10 +34,14 @@ export const ComplianceDashboard: React.FC = () => {
         <ComplianceOverview />
 
         <Tabs defaultValue="workflow" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-6">
+          <TabsList className="grid w-full grid-cols-5 lg:grid-cols-10 text-xs">
             <TabsTrigger value="workflow">Workflow</TabsTrigger>
-            <TabsTrigger value="documents">Document Vault</TabsTrigger>
-            <TabsTrigger value="risk">Risk Scoring</TabsTrigger>
+            <TabsTrigger value="audits">Mock Audits</TabsTrigger>
+            <TabsTrigger value="alerts">Alerts</TabsTrigger>
+            <TabsTrigger value="incidents">Incidents</TabsTrigger>
+            <TabsTrigger value="ce-tracking">CE Tracking</TabsTrigger>
+            <TabsTrigger value="documents">Documents</TabsTrigger>
+            <TabsTrigger value="risk">Risk</TabsTrigger>
             <TabsTrigger value="community">Community</TabsTrigger>
             <TabsTrigger value="copilot">AI Copilot</TabsTrigger>
             <TabsTrigger value="reports">Reports</TabsTrigger>
@@ -41,6 +49,22 @@ export const ComplianceDashboard: React.FC = () => {
 
           <TabsContent value="workflow">
             <ComplianceWorkflow />
+          </TabsContent>
+
+          <TabsContent value="audits">
+            <MockAuditCenter />
+          </TabsContent>
+
+          <TabsContent value="alerts">
+            <RegulatoryAlertsFeed />
+          </TabsContent>
+
+          <TabsContent value="incidents">
+            <ComplianceIncidentReporting />
+          </TabsContent>
+
+          <TabsContent value="ce-tracking">
+            <CETrackingModule />
           </TabsContent>
 
           <TabsContent value="documents">
