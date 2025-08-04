@@ -64,6 +64,7 @@ import QATestingPage from "./pages/QATestingPage";
 import VideoStoryboardPage from "./pages/VideoStoryboardPage";
 import IMOAdminPage from "./pages/IMOAdminPage";
 import RIAPracticeQATest from "./pages/RIAPracticeQATest";
+import RIALicensingPage from "./pages/RIALicensingPage";
 
 const queryClient = new QueryClient();
 
@@ -186,7 +187,12 @@ function App() {
                               <Route path="/faq" element={<FAQPage />} />
                               <Route path="/video-storyboard" element={<VideoStoryboardPage />} />
                               <Route path="/imo-admin" element={<IMOAdminPage />} />
-                              <Route path="/qa/ria-practice" element={<RIAPracticeQATest />} />
+                               <Route path="/qa/ria-practice" element={<RIAPracticeQATest />} />
+                               <Route path="/ria-licensing/*" element={
+                                 <AuthWrapper requireAuth={true} allowedRoles={getAdvisorAccessRoles()}>
+                                   <RIALicensingPage />
+                                 </AuthWrapper>
+                               } />
                   
                   <Route
                     path="/advisor/billing" 
