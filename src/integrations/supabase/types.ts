@@ -1312,11 +1312,25 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "fk_attorney_client_links_attorney_id"
+            columns: ["attorney_id"]
+            isOneToOne: false
+            referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+          {
             foreignKeyName: "fk_attorney_client_links_client_id"
             columns: ["client_id"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_attorney_client_links_client_id"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
           },
         ]
       }
@@ -1384,8 +1398,29 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "fk_attorney_client_messages_attorney_id"
+            columns: ["attorney_id"]
+            isOneToOne: false
+            referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+          {
             foreignKeyName: "fk_attorney_client_messages_client_id"
             columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_attorney_client_messages_client_id"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "fk_attorney_client_messages_sender_id"
+            columns: ["sender_id"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
@@ -1394,8 +1429,8 @@ export type Database = {
             foreignKeyName: "fk_attorney_client_messages_sender_id"
             columns: ["sender_id"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
           },
         ]
       }
@@ -1458,8 +1493,29 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "fk_attorney_client_shared_documents_attorney_id"
+            columns: ["attorney_id"]
+            isOneToOne: false
+            referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+          {
             foreignKeyName: "fk_attorney_client_shared_documents_client_id"
             columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_attorney_client_shared_documents_client_id"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "fk_attorney_client_shared_documents_shared_by"
+            columns: ["shared_by"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
@@ -1468,8 +1524,8 @@ export type Database = {
             foreignKeyName: "fk_attorney_client_shared_documents_shared_by"
             columns: ["shared_by"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
           },
         ]
       }
@@ -1514,6 +1570,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_attorney_dashboard_metrics_attorney_id"
+            columns: ["attorney_id"]
+            isOneToOne: false
+            referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
           },
         ]
       }
@@ -3154,6 +3217,13 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "client_invitations_advisor_id_fkey"
+            columns: ["advisor_id"]
+            isOneToOne: false
+            referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
+          },
         ]
       }
       client_invoices: {
@@ -3538,11 +3608,25 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "fk_client_portal_notifications_attorney_id"
+            columns: ["attorney_id"]
+            isOneToOne: false
+            referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+          {
             foreignKeyName: "fk_client_portal_notifications_client_id"
             columns: ["client_id"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_client_portal_notifications_client_id"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
           },
         ]
       }
@@ -3664,11 +3748,25 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "coach_advisor_relationships_advisor_id_fkey"
+            columns: ["advisor_id"]
+            isOneToOne: false
+            referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+          {
             foreignKeyName: "coach_advisor_relationships_coach_id_fkey"
             columns: ["coach_id"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "coach_advisor_relationships_coach_id_fkey"
+            columns: ["coach_id"]
+            isOneToOne: false
+            referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
           },
         ]
       }
@@ -3750,6 +3848,13 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "coach_invitations_coach_id_fkey"
+            columns: ["coach_id"]
+            isOneToOne: false
+            referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
+          },
         ]
       }
       coach_progress_tracking: {
@@ -3801,11 +3906,25 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "coach_progress_tracking_advisor_id_fkey"
+            columns: ["advisor_id"]
+            isOneToOne: false
+            referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+          {
             foreignKeyName: "coach_progress_tracking_coach_id_fkey"
             columns: ["coach_id"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "coach_progress_tracking_coach_id_fkey"
+            columns: ["coach_id"]
+            isOneToOne: false
+            referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
           },
         ]
       }
@@ -3859,6 +3978,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "coaching_curriculum_coach_id_fkey"
+            columns: ["coach_id"]
+            isOneToOne: false
+            referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
           },
         ]
       }
@@ -12997,6 +13123,13 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "onboarding_documents_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
+          },
         ]
       }
       onboarding_progress: {
@@ -13096,6 +13229,13 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "onboarding_sessions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
+          },
         ]
       }
       onboarding_step_completions: {
@@ -13149,6 +13289,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "onboarding_step_completions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
           },
         ]
       }
@@ -16454,17 +16601,22 @@ export type Database = {
         Row: {
           activated_at: string | null
           campaign_data: Json | null
+          completed_at: string | null
           created_at: string | null
           expires_at: string | null
           id: string
+          metadata: Json | null
           notes: string | null
           paid_at: string | null
           referee_id: string | null
           referral_code: string
+          referral_source: string | null
           referral_type: string
+          referred_email: string | null
           referrer_id: string
           reward_amount: number | null
           reward_type: string | null
+          signup_completed: boolean | null
           status: string
           tenant_id: string
           updated_at: string | null
@@ -16477,17 +16629,22 @@ export type Database = {
         Insert: {
           activated_at?: string | null
           campaign_data?: Json | null
+          completed_at?: string | null
           created_at?: string | null
           expires_at?: string | null
           id?: string
+          metadata?: Json | null
           notes?: string | null
           paid_at?: string | null
           referee_id?: string | null
           referral_code: string
+          referral_source?: string | null
           referral_type: string
+          referred_email?: string | null
           referrer_id: string
           reward_amount?: number | null
           reward_type?: string | null
+          signup_completed?: boolean | null
           status?: string
           tenant_id: string
           updated_at?: string | null
@@ -16500,17 +16657,22 @@ export type Database = {
         Update: {
           activated_at?: string | null
           campaign_data?: Json | null
+          completed_at?: string | null
           created_at?: string | null
           expires_at?: string | null
           id?: string
+          metadata?: Json | null
           notes?: string | null
           paid_at?: string | null
           referee_id?: string | null
           referral_code?: string
+          referral_source?: string | null
           referral_type?: string
+          referred_email?: string | null
           referrer_id?: string
           reward_amount?: number | null
           reward_type?: string | null
+          signup_completed?: boolean | null
           status?: string
           tenant_id?: string
           updated_at?: string | null
@@ -21738,6 +21900,16 @@ export type Database = {
           query_count: number | null
           slow_query_count: number | null
           table_name: string | null
+        }
+        Relationships: []
+      }
+      referral_leaderboard: {
+        Row: {
+          last_referral_date: string | null
+          name: string | null
+          successful_referrals: number | null
+          total_referrals: number | null
+          user_id: string | null
         }
         Relationships: []
       }

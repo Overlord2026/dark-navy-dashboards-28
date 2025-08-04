@@ -17,6 +17,7 @@ import { AuthWrapper } from "@/components/auth/AuthWrapper";
 import { getAdvisorAccessRoles } from "@/utils/roleHierarchy";
 import { DynamicLandingController } from "@/components/auth/DynamicLandingController";
 import { Navigation } from "@/components/Navigation";
+import ReferralTracker from "@/components/tracking/ReferralTracker";
 import { QABypassIndicator } from "@/components/security/QABypassIndicator";
 import { BrandedFooter } from "@/components/ui/BrandedFooter";
 import { LeadIntakeForm } from "@/pages/leads/LeadIntakeForm";
@@ -76,7 +77,8 @@ function App() {
                 <SubscriptionProvider>
                   <TenantProvider>
                     <AdvisorProvider>
-                      <BrowserRouter>
+                       <BrowserRouter>
+                         <ReferralTracker />
                         <Routes>
                           <Route path="/" element={<Index />} />
                           <Route path="/welcome" element={<WelcomePage />} />
