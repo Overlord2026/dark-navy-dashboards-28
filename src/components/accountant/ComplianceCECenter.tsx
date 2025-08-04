@@ -665,15 +665,17 @@ export default function ComplianceCECenter() {
       </div>
 
       {/* Add CE Record Modal */}
-      {showAddModal && (
-        <AddCERecordModal
-          isOpen={showAddModal}
-          onClose={() => setShowAddModal(false)}
-          onRecordAdded={handleRecordAdded}
-          licenses={licenses}
-          providers={providers}
-        />
-      )}
+      <AddCERecordModal
+        trigger={
+          <div style={{ display: showAddModal ? 'block' : 'none' }}>
+            <button>Hidden trigger</button>
+          </div>
+        }
+        onSuccess={() => {
+          setShowAddModal(false);
+          handleRecordAdded();
+        }}
+      />
     </div>
   );
 }
