@@ -33,7 +33,7 @@ export const getEnvironmentConfig = (): EnvironmentConfig => {
 };
 
 // SECURITY: Removed hardcoded bypass email
-export const QA_BYPASS_EMAIL = process.env.NODE_ENV === "development" ? process.env.QA_BYPASS_EMAIL || '' : '';
+export const QA_BYPASS_EMAIL = import.meta.env.DEV ? import.meta.env.VITE_QA_BYPASS_EMAIL || '' : '';
 
 export const isQABypassAllowed = (userEmail?: string): boolean => {
   const env = getEnvironmentConfig();
