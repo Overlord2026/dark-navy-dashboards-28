@@ -21,6 +21,9 @@ import {
   Settings
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { exportComplianceGuideToPDF } from '@/utils/compliancePdfExport';
+import { LOGOS, getLogoConfig } from '@/assets/logos';
+import celebrationImage from '@/assets/ce-celebration-preview.jpg';
 
 const stateDeadlines = [
   { state: 'CA', deadline: 'May 31', period: '2-year cycle', ethics: '3 hrs', total: '24 hrs' },
@@ -102,10 +105,15 @@ interface ComplianceGuideProps {
 }
 
 export function ComplianceGuide({ onDownload }: ComplianceGuideProps) {
-  const handleDownload = () => {
-    // In a real implementation, this would generate a PDF
-    toast.success('Compliance guide downloaded successfully!');
-    onDownload?.();
+  const handleDownload = async () => {
+    try {
+      await exportComplianceGuideToPDF();
+      toast.success('Compliance guide downloaded successfully!');
+      onDownload?.();
+    } catch (error) {
+      toast.error('Failed to download guide. Please try again.');
+      console.error('PDF export error:', error);
+    }
   };
 
   const handlePrint = () => {
@@ -114,13 +122,21 @@ export function ComplianceGuide({ onDownload }: ComplianceGuideProps) {
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white dark:bg-gray-900">
-      {/* Header */}
+      {/* Header with BFO Branding */}
       <div className="text-center mb-8">
-        <div className="flex items-center justify-center gap-3 mb-4">
+        <div className="flex items-center justify-center gap-4 mb-4">
+          <img 
+            src={getLogoConfig('tree').src} 
+            alt={getLogoConfig('tree').alt}
+            className="h-12 w-auto"
+          />
+          <div>
+            <h1 className="text-3xl font-bold text-navy dark:text-white">
+              How to Stay Compliant
+            </h1>
+            <p className="text-sm text-emerald-600 font-semibold">Boutique Family Office™</p>
+          </div>
           <Shield className="h-8 w-8 text-emerald-600" />
-          <h1 className="text-3xl font-bold text-navy dark:text-white">
-            How to Stay Compliant
-          </h1>
         </div>
         <p className="text-lg text-gray-600 dark:text-gray-300 mb-6">
           Your complete guide to insurance CE compliance and license management
@@ -236,38 +252,68 @@ export function ComplianceGuide({ onDownload }: ComplianceGuideProps) {
             <div className="text-center p-4 border rounded-lg">
               <Mail className="h-8 w-8 text-blue-600 mx-auto mb-2" />
               <h3 className="font-semibold mb-1">Email Support</h3>
-              <p className="text-sm text-gray-600 dark:text-gray-400">compliance@agency.com</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">compliance@bfocfo.com</p>
               <p className="text-xs text-gray-500">Response within 4 hours</p>
             </div>
             <div className="text-center p-4 border rounded-lg">
               <MessageCircle className="h-8 w-8 text-emerald-600 mx-auto mb-2" />
               <h3 className="font-semibold mb-1">Live Chat</h3>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Dashboard Support</p>
-              <p className="text-xs text-gray-500">Mon-Fri 8AM-6PM</p>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => window.open('/support', '_blank')}
+                className="mt-2"
+              >
+                Open Support Chat
+              </Button>
+              <p className="text-xs text-gray-500 mt-1">Mon-Fri 8AM-6PM</p>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* DALL-E Storyboard Prompt */}
+      {/* DALL-E Animation Preview */}
       <Card className="mb-8">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <FileText className="h-5 w-5 text-amber-600" />
-            Video Storyboard Concept
+            CE Completion Celebration Preview
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="bg-amber-50 dark:bg-amber-950/20 p-4 rounded-lg border border-amber-200 dark:border-amber-800">
-            <h3 className="font-semibold text-amber-800 dark:text-amber-200 mb-2">
-              DALL·E Prompt: "Insurance Agent CE Compliance, the Easy Way"
-            </h3>
-            <div className="text-sm text-amber-700 dark:text-amber-300 space-y-2">
-              <p><strong>Scene 1:</strong> Professional insurance agent at clean desk with laptop, confident smile, CE dashboard visible on screen showing green progress bars and checkmarks</p>
-              <p><strong>Scene 2:</strong> Split screen showing calendar with renewal dates highlighted, agent uploading certificate via drag-and-drop interface, AI scanning document with subtle tech effects</p>
-              <p><strong>Scene 3:</strong> Close-up of mobile phone showing compliance alerts and notifications, agent reviewing requirements while commuting, seamless workflow</p>
-              <p><strong>Scene 4:</strong> Agent presenting to clients with confidence, compliance badges and certifications visible in background, professional success</p>
-              <p><strong>Style:</strong> Modern, clean, professional aesthetic with blue and green color palette, subtle technology elements, realistic photography style</p>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Preview Image */}
+            <div className="space-y-4">
+              <img 
+                src={celebrationImage} 
+                alt="Insurance agent celebrates CE renewal with confetti"
+                className="w-full h-48 object-cover rounded-lg shadow-md"
+              />
+              <div className="text-center">
+                <Badge className="bg-gold text-gold-foreground">
+                  🎉 Milestone Achievement Animation
+                </Badge>
+              </div>
+            </div>
+            
+            {/* Storyboard Details */}
+            <div className="bg-amber-50 dark:bg-amber-950/20 p-4 rounded-lg border border-amber-200 dark:border-amber-800">
+              <h3 className="font-semibold text-amber-800 dark:text-amber-200 mb-3">
+                Animation Trigger: CE Renewal Complete
+              </h3>
+              <div className="text-sm text-amber-700 dark:text-amber-300 space-y-2">
+                <p><strong>Trigger:</strong> When agent completes all required CE hours</p>
+                <p><strong>Effect:</strong> Golden confetti animation with celebration message</p>
+                <p><strong>Duration:</strong> 3-second celebration with "Congratulations!" overlay</p>
+                <p><strong>Sound:</strong> Optional success chime (user preference)</p>
+                <p><strong>Badge:</strong> "Compliant Agent" status badge appears</p>
+              </div>
+              
+              <div className="mt-4 p-3 bg-white/50 dark:bg-gray-800/50 rounded">
+                <p className="text-xs text-gray-600 dark:text-gray-400">
+                  <strong>DALL·E Prompt Used:</strong> "Insurance agent celebrates CE renewal with confetti - professional agent in business attire celebrating at desk with golden confetti, laptop showing completion screen"
+                </p>
+              </div>
             </div>
           </div>
         </CardContent>
