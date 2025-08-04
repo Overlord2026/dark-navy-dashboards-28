@@ -189,6 +189,10 @@
     letter-spacing: -0.025em;
   }
 
+  .font-serif {
+    font-family: 'Playfair Display', Georgia, serif;
+  }
+
   p, span, li, div, button, input, textarea, label {
     @apply text-foreground;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
