@@ -12,6 +12,7 @@ import { PasswordStrengthIndicator } from '@/components/auth/PasswordStrengthInd
 import { authSecurityService } from '@/services/security/authSecurity';
 import { PasswordValidationResult } from '@/services/security/passwordPolicy';
 import { supabase } from '@/lib/supabase';
+import { getLogoConfig } from '@/assets/logos';
 import { Shield } from 'lucide-react';
 
 export function AuthPage() {
@@ -24,6 +25,10 @@ export function AuthPage() {
   const [isSignUp, setIsSignUp] = useState(false);
   const { login, isAuthenticated } = useUser();
   const navigate = useNavigate();
+  
+  // Get BFO logos
+  const heroLogoConfig = getLogoConfig('hero');
+  const brandLogoConfig = getLogoConfig('brand');
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -119,27 +124,58 @@ export function AuthPage() {
 
   return (
     <ErrorBoundary>
-      <div className="min-h-screen flex items-center justify-center bg-background px-4">
-        <Card className="w-full max-w-md">
-          <CardHeader>
-            <div className="flex items-center gap-2">
-              <Shield className="h-5 w-5 text-primary" />
-              <CardTitle>Welcome to Family Office</CardTitle>
-            </div>
-            <CardDescription>
-              {isSignUp ? 'Create your secure account' : 'Sign in to access your account'}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Tabs value={isSignUp ? 'signup' : 'login'} onValueChange={(value) => {
-              setIsSignUp(value === 'signup');
-              setError(null);
-              setPasswordValidation(null);
-            }}>
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="login">Login</TabsTrigger>
-                <TabsTrigger value="signup">Sign Up</TabsTrigger>
-              </TabsList>
+      <div className="min-h-screen bg-navy relative overflow-hidden">
+        {/* Background Watermark - Faint gold tree */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <img 
+            src={brandLogoConfig.src}
+            alt=""
+            className="w-[600px] h-[600px] object-contain opacity-5"
+            style={{ filter: 'sepia(1) saturate(3) hue-rotate(30deg)' }}
+          />
+        </div>
+
+        {/* Auth Content */}
+        <div className="relative z-10 flex items-center justify-center min-h-screen px-4 py-8">
+          <Card className="w-full max-w-md bg-card border-white/10">
+            <CardHeader className="text-center">
+              {/* BFO Logo */}
+              <div className="mb-4">
+                <img 
+                  src={heroLogoConfig.src}
+                  alt="Boutique Family Office™"
+                  className="h-16 w-auto mx-auto mb-4"
+                />
+              </div>
+              
+              <CardTitle className="font-serif text-white text-xl">
+                Welcome to Boutique Family Office™
+              </CardTitle>
+              <CardDescription className="text-white/70">
+                {isSignUp ? 'Create your secure account' : 'Sign in to access your wealth management platform'}
+              </CardDescription>
+            </CardHeader>
+            
+            <CardContent>
+              <Tabs value={isSignUp ? 'signup' : 'login'} onValueChange={(value) => {
+                setIsSignUp(value === 'signup');
+                setError(null);
+                setPasswordValidation(null);
+              }}>
+                <TabsList className="grid w-full grid-cols-2 bg-navy border-white/20">
+                  <TabsTrigger 
+                    value="login" 
+                    className="text-white data-[state=active]:bg-gold data-[state=active]:text-navy font-display"
+                  >
+                    Login
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="signup" 
+                    className="text-white data-[state=active]:bg-emerald data-[state=active]:text-white font-display"
+                  >
+                    Sign Up
+                  </TabsTrigger>
+                </TabsList>
               
               <TabsContent value="login">
                 <form onSubmit={handleLogin} className="space-y-4">
@@ -173,7 +209,16 @@ export function AuthPage() {
                     />
                   </div>
                   
-                  <Button type="submit" className="w-full" disabled={loading}>
+                  <Button 
+                    type="submit" 
+                    className="w-full touch-target font-display"
+                    style={{ 
+                      backgroundColor: '#FFD700',
+                      color: '#14213D',
+                      minHeight: '48px'
+                    }}
+                    disabled={loading}
+                  >
                     {loading ? 'Signing in...' : 'Sign In'}
                   </Button>
                 </form>
@@ -240,7 +285,12 @@ export function AuthPage() {
                   
                   <Button 
                     type="submit" 
-                    className="w-full" 
+                    className="w-full touch-target font-display" 
+                    style={{ 
+                      backgroundColor: '#169873',
+                      color: 'white',
+                      minHeight: '48px'
+                    }}
                     disabled={loading || !passwordValidation?.isValid || password !== confirmPassword}
                   >
                     {loading ? 'Creating account...' : 'Create Account'}
@@ -251,6 +301,7 @@ export function AuthPage() {
           </CardContent>
         </Card>
       </div>
-    </ErrorBoundary>
+    </div>
+  </ErrorBoundary>
   );
 }
