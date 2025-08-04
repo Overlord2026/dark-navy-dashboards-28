@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { PersonaType, getPersonaFromRole } from '@/types/personas';
 import { useUser } from '@/context/UserContext';
+import { analytics } from '@/lib/analytics';
 
 interface PersonaContextType {
   currentPersona: PersonaType;
@@ -32,6 +33,9 @@ export const PersonaProvider: React.FC<PersonaProviderProps> = ({ children }) =>
       const persona = getPersonaFromRole(userProfile.role || 'client');
       setCurrentPersona(persona);
 
+      // Track persona claim for analytics
+      analytics.trackPersonaClaim(persona, userProfile.id);
+
       // Check localStorage for welcome states
       const modalKey = `fom_welcome_modal_seen_${userProfile.id}`;
       const bannerKey = `fom_welcome_banner_seen_${userProfile.id}`;
@@ -58,6 +62,9 @@ export const PersonaProvider: React.FC<PersonaProviderProps> = ({ children }) =>
       const modalKey = `fom_welcome_modal_seen_${userProfile.id}`;
       localStorage.setItem(modalKey, 'true');
       setHasSeenWelcomeModal(true);
+      
+      // Track onboarding completion
+      analytics.trackOnboardingStep('welcome_modal_completed', currentPersona, userProfile.id, true);
     }
   };
 

@@ -7,6 +7,10 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
+import { analytics } from '@/lib/analytics';
+import { abTesting } from '@/lib/abTesting';
+import { usePersona } from '@/context/PersonaContext';
+import { useUser } from '@/context/UserContext';
 
 interface ViralShareButtonProps {
   variant?: 'button' | 'card' | 'inline';
@@ -28,12 +32,32 @@ const ViralShareButton: React.FC<ViralShareButtonProps> = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const { toast } = useToast();
+  const { currentPersona } = usePersona();
+  const { userProfile } = useUser();
+
+  // A/B test the button text
+  const buttonVariant = abTesting.getVariantConfig(
+    'viral_share_button_text', 
+    userProfile?.id || 'anonymous',
+    { buttonText: 'Share on LinkedIn', description: 'Share your professional network access' }
+  );
 
   const defaultMessage = `I just joined the Family Office Marketplace™—the new home for fiduciary professionals and families. Import your LinkedIn profile and join me: ${landingPageUrl} #FamilyOfficeMarketplace #WealthManagement #FutureOfFinance`;
 
   const shareMessage = customMessage || defaultMessage;
 
   const handleLinkedInShare = () => {
+    // Track viral share analytics
+    if (userProfile) {
+      analytics.trackViralShare('linkedin', currentPersona, userProfile.id);
+      
+      // Track A/B test conversion
+      const variant = abTesting.getVariant('viral_share_button_text', userProfile.id);
+      if (variant) {
+        abTesting.trackConversion('viral_share_button_text', variant.id, userProfile.id, 'clicked');
+      }
+    }
+
     const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(landingPageUrl)}&title=${encodeURIComponent('Join the Family Office Marketplace™')}&summary=${encodeURIComponent(shareMessage)}`;
     window.open(linkedInUrl, '_blank', 'width=550,height=550');
     
@@ -86,7 +110,7 @@ const ViralShareButton: React.FC<ViralShareButtonProps> = ({
           className="flex-1 bg-[#0077b5] hover:bg-[#0077b5]/90 text-white"
         >
           <ExternalLink className="w-4 h-4 mr-2" />
-          Share on LinkedIn
+          {buttonVariant.buttonText}
         </Button>
         <Button 
           onClick={handleCopyMessage}
@@ -174,7 +198,7 @@ const ViralShareButton: React.FC<ViralShareButtonProps> = ({
         className="gap-2 border-primary/20 hover:bg-primary/5"
       >
         <Share2 className="w-4 h-4" />
-        🔗 Share on LinkedIn
+        🔗 {buttonVariant.buttonText}
       </Button>
 
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>

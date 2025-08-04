@@ -1,9 +1,13 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import FAQSection from '@/components/faq/FAQSection';
+import { analytics } from '@/lib/analytics';
 
 const FAQPage: React.FC = () => {
   const handleContactSupport = () => {
+    // Track FAQ support request
+    analytics.trackFAQUsage(undefined, 'support_contact');
+    
     // Open support email or chat
     window.open('mailto:support@familyofficemarketplace.com?subject=Support Request from FAQ', '_blank');
   };

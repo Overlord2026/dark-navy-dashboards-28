@@ -97,5 +97,50 @@ export const analytics = {
   // Reset user (for logout)
   reset: () => {
     posthog.reset();
+  },
+
+  // Onboarding & Engagement Tracking
+  trackPersonaClaim: (persona: string, userId: string) => {
+    posthog.capture('persona_claimed', {
+      persona_type: persona,
+      user_id: userId,
+      timestamp: Date.now()
+    });
+  },
+
+  trackViralShare: (platform: string, persona: string, userId: string) => {
+    posthog.capture('viral_share_clicked', {
+      platform,
+      persona_type: persona,
+      user_id: userId,
+      timestamp: Date.now()
+    });
+  },
+
+  trackOnboardingStep: (step: string, persona: string, userId: string, completed: boolean = false) => {
+    posthog.capture('onboarding_step', {
+      step_name: step,
+      persona_type: persona,
+      user_id: userId,
+      completed,
+      timestamp: Date.now()
+    });
+  },
+
+  trackFAQUsage: (searchTerm?: string, articleId?: string) => {
+    posthog.capture('faq_usage', {
+      search_term: searchTerm,
+      article_id: articleId,
+      timestamp: Date.now()
+    });
+  },
+
+  trackEmailSequenceEngagement: (day: number, action: string, userId: string) => {
+    posthog.capture('email_sequence_engagement', {
+      sequence_day: day,
+      action, // 'opened', 'clicked', 'converted'
+      user_id: userId,
+      timestamp: Date.now()
+    });
   }
 };
