@@ -12,7 +12,7 @@ import {
   AlertTriangle, 
   Calendar,
   Mail,
-  Drive,
+  HardDrive,
   Video,
   Settings,
   RefreshCw
@@ -163,7 +163,7 @@ export function GoogleIntegrationPanel({ onConnectionChange }: GoogleIntegration
       status: isConnected ? 'active' : 'inactive'
     },
     {
-      icon: <Drive className="h-4 w-4" />,
+      icon: <HardDrive className="h-4 w-4" />,
       name: 'Google Drive',
       description: 'Store meeting recordings and documents',
       status: isConnected ? 'active' : 'inactive'

@@ -3288,6 +3288,105 @@ export type Database = {
         }
         Relationships: []
       }
+      call_logs: {
+        Row: {
+          advisor_id: string | null
+          call_data: Json | null
+          client_id: string | null
+          created_at: string
+          direction: string
+          duration_seconds: number | null
+          from_number: string
+          id: string
+          recording_sid: string | null
+          recording_url: string | null
+          status: string
+          tenant_id: string
+          to_number: string
+          transcript: string | null
+          twilio_call_sid: string
+          updated_at: string
+        }
+        Insert: {
+          advisor_id?: string | null
+          call_data?: Json | null
+          client_id?: string | null
+          created_at?: string
+          direction: string
+          duration_seconds?: number | null
+          from_number: string
+          id?: string
+          recording_sid?: string | null
+          recording_url?: string | null
+          status: string
+          tenant_id: string
+          to_number: string
+          transcript?: string | null
+          twilio_call_sid: string
+          updated_at?: string
+        }
+        Update: {
+          advisor_id?: string | null
+          call_data?: Json | null
+          client_id?: string | null
+          created_at?: string
+          direction?: string
+          duration_seconds?: number | null
+          from_number?: string
+          id?: string
+          recording_sid?: string | null
+          recording_url?: string | null
+          status?: string
+          tenant_id?: string
+          to_number?: string
+          transcript?: string | null
+          twilio_call_sid?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      call_routing: {
+        Row: {
+          advisor_id: string
+          business_hours: Json | null
+          created_at: string
+          forward_to_number: string
+          id: string
+          is_active: boolean | null
+          recording_enabled: boolean | null
+          tenant_id: string
+          twilio_number: string
+          updated_at: string
+          voicemail_enabled: boolean | null
+        }
+        Insert: {
+          advisor_id: string
+          business_hours?: Json | null
+          created_at?: string
+          forward_to_number: string
+          id?: string
+          is_active?: boolean | null
+          recording_enabled?: boolean | null
+          tenant_id: string
+          twilio_number: string
+          updated_at?: string
+          voicemail_enabled?: boolean | null
+        }
+        Update: {
+          advisor_id?: string
+          business_hours?: Json | null
+          created_at?: string
+          forward_to_number?: string
+          id?: string
+          is_active?: boolean | null
+          recording_enabled?: boolean | null
+          tenant_id?: string
+          twilio_number?: string
+          updated_at?: string
+          voicemail_enabled?: boolean | null
+        }
+        Relationships: []
+      }
       campaign_deliveries: {
         Row: {
           campaign_id: string
@@ -14736,6 +14835,63 @@ export type Database = {
         }
         Relationships: []
       }
+      phone_analytics: {
+        Row: {
+          advisor_id: string
+          cost_recording: number | null
+          cost_sms: number | null
+          cost_total: number | null
+          cost_voice: number | null
+          created_at: string
+          id: string
+          inbound_calls: number | null
+          missed_calls: number | null
+          outbound_calls: number | null
+          period_end: string
+          period_start: string
+          tenant_id: string
+          total_calls: number | null
+          total_minutes: number | null
+          voicemails_received: number | null
+        }
+        Insert: {
+          advisor_id: string
+          cost_recording?: number | null
+          cost_sms?: number | null
+          cost_total?: number | null
+          cost_voice?: number | null
+          created_at?: string
+          id?: string
+          inbound_calls?: number | null
+          missed_calls?: number | null
+          outbound_calls?: number | null
+          period_end: string
+          period_start: string
+          tenant_id: string
+          total_calls?: number | null
+          total_minutes?: number | null
+          voicemails_received?: number | null
+        }
+        Update: {
+          advisor_id?: string
+          cost_recording?: number | null
+          cost_sms?: number | null
+          cost_total?: number | null
+          cost_voice?: number | null
+          created_at?: string
+          id?: string
+          inbound_calls?: number | null
+          missed_calls?: number | null
+          outbound_calls?: number | null
+          period_end?: string
+          period_start?: string
+          tenant_id?: string
+          total_calls?: number | null
+          total_minutes?: number | null
+          voicemails_received?: number | null
+        }
+        Relationships: []
+      }
       physicians: {
         Row: {
           created_at: string
@@ -21531,6 +21687,45 @@ export type Database = {
           },
         ]
       }
+      twilio_phone_numbers: {
+        Row: {
+          advisor_id: string | null
+          capabilities: Json | null
+          created_at: string
+          friendly_name: string | null
+          id: string
+          phone_number: string
+          status: string
+          tenant_id: string
+          twilio_sid: string | null
+          updated_at: string
+        }
+        Insert: {
+          advisor_id?: string | null
+          capabilities?: Json | null
+          created_at?: string
+          friendly_name?: string | null
+          id?: string
+          phone_number: string
+          status?: string
+          tenant_id: string
+          twilio_sid?: string | null
+          updated_at?: string
+        }
+        Update: {
+          advisor_id?: string | null
+          capabilities?: Json | null
+          created_at?: string
+          friendly_name?: string | null
+          id?: string
+          phone_number?: string
+          status?: string
+          tenant_id?: string
+          twilio_sid?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_additional_info: {
         Row: {
           citizenship_status: string | null
@@ -23320,6 +23515,62 @@ export type Database = {
             columns: ["integration_id"]
             isOneToOne: false
             referencedRelation: "video_meeting_integrations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      voicemails: {
+        Row: {
+          advisor_id: string
+          call_log_id: string | null
+          client_phone: string
+          created_at: string
+          duration_seconds: number | null
+          id: string
+          recording_sid: string
+          recording_url: string
+          status: string
+          tenant_id: string
+          transcription: string | null
+          transcription_confidence: number | null
+          updated_at: string
+        }
+        Insert: {
+          advisor_id: string
+          call_log_id?: string | null
+          client_phone: string
+          created_at?: string
+          duration_seconds?: number | null
+          id?: string
+          recording_sid: string
+          recording_url: string
+          status?: string
+          tenant_id: string
+          transcription?: string | null
+          transcription_confidence?: number | null
+          updated_at?: string
+        }
+        Update: {
+          advisor_id?: string
+          call_log_id?: string | null
+          client_phone?: string
+          created_at?: string
+          duration_seconds?: number | null
+          id?: string
+          recording_sid?: string
+          recording_url?: string
+          status?: string
+          tenant_id?: string
+          transcription?: string | null
+          transcription_confidence?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "voicemails_call_log_id_fkey"
+            columns: ["call_log_id"]
+            isOneToOne: false
+            referencedRelation: "call_logs"
             referencedColumns: ["id"]
           },
         ]

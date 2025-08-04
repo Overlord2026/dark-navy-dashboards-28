@@ -1,6 +1,12 @@
 import { supabase } from '@/integrations/supabase/client';
 import { MeetingProvider, SchedulingConfig } from '@/types/integrations';
-import { googleIntegrationService, GoogleCalendarEvent } from './GoogleIntegrationService';
+import { googleIntegrationService, GoogleCalendarEvent } from '@/services/integrations/GoogleIntegrationService';
+
+interface MeetingType {
+  id: string;
+  name: string;
+  duration: number;
+}
 
 export interface SchedulingSlot {
   id: string;
@@ -52,6 +58,14 @@ class BFOSchedulingService {
     },
     availableDurations: [15, 30, 45, 60, 90]
   };
+
+  getAvailableMeetingTypes(): MeetingType[] {
+    return [
+      { id: 'consultation', name: '30-min Consultation', duration: 30 },
+      { id: 'planning', name: '60-min Planning Session', duration: 60 },
+      { id: 'review', name: '45-min Portfolio Review', duration: 45 }
+    ];
+  }
 
   async getAvailableSlots(advisorId: string, date: string): Promise<SchedulingSlot[]> {
     try {

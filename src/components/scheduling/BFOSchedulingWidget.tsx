@@ -40,7 +40,11 @@ export function BFOSchedulingWidget({
     agenda: ''
   });
 
-  const meetingTypes = bfoSchedulingService.getAvailableMeetingTypes();
+  const meetingTypesList = [
+    { type: 'google_meet' as MeetingProvider, name: 'Google Meet', description: 'Video call via Google Meet', recommended: true },
+    { type: 'zoom' as MeetingProvider, name: 'Zoom', description: 'Video call via Zoom', recommended: false },
+    { type: 'teams' as MeetingProvider, name: 'Microsoft Teams', description: 'Video call via Teams', recommended: false }
+  ];
 
   useEffect(() => {
     loadAvailableSlots();
@@ -135,7 +139,7 @@ export function BFOSchedulingWidget({
             <div>
               <h3 className="font-medium mb-3">Choose Meeting Type</h3>
               <div className="space-y-3">
-                {meetingTypes.map((type) => (
+                {meetingTypesList.map((type) => (
                   <div
                     key={type.type}
                     className={`p-4 border rounded-lg cursor-pointer transition-colors ${
@@ -339,7 +343,7 @@ export function BFOSchedulingWidget({
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Meeting Type:</span>
                 <span className="font-medium">
-                  {meetingTypes.find(t => t.type === selectedMeetingType)?.name}
+                  {meetingTypesList.find(t => t.type === selectedMeetingType)?.name}
                 </span>
               </div>
               
