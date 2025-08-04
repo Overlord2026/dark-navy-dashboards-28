@@ -344,6 +344,45 @@ export type Database = {
           },
         ]
       }
+      advisor_migration_status: {
+        Row: {
+          advisor_id: string
+          clients_migrated: number | null
+          created_at: string
+          id: string
+          migration_completed_at: string | null
+          migration_notes: string | null
+          migration_started_at: string | null
+          previous_platform: string | null
+          total_clients_to_migrate: number | null
+          updated_at: string
+        }
+        Insert: {
+          advisor_id: string
+          clients_migrated?: number | null
+          created_at?: string
+          id?: string
+          migration_completed_at?: string | null
+          migration_notes?: string | null
+          migration_started_at?: string | null
+          previous_platform?: string | null
+          total_clients_to_migrate?: number | null
+          updated_at?: string
+        }
+        Update: {
+          advisor_id?: string
+          clients_migrated?: number | null
+          created_at?: string
+          id?: string
+          migration_completed_at?: string | null
+          migration_notes?: string | null
+          migration_started_at?: string | null
+          previous_platform?: string | null
+          total_clients_to_migrate?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       advisor_overrides: {
         Row: {
           created_at: string | null
@@ -3057,6 +3096,59 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: []
+      }
+      client_migration_records: {
+        Row: {
+          advisor_id: string
+          client_email: string | null
+          client_name: string
+          created_at: string
+          id: string
+          import_id: string | null
+          migrated_at: string | null
+          migrated_plan_data: Json | null
+          migration_notes: string | null
+          migration_status: string
+          original_plan_data: Json | null
+          updated_at: string
+        }
+        Insert: {
+          advisor_id: string
+          client_email?: string | null
+          client_name: string
+          created_at?: string
+          id?: string
+          import_id?: string | null
+          migrated_at?: string | null
+          migrated_plan_data?: Json | null
+          migration_notes?: string | null
+          migration_status?: string
+          original_plan_data?: Json | null
+          updated_at?: string
+        }
+        Update: {
+          advisor_id?: string
+          client_email?: string | null
+          client_name?: string
+          created_at?: string
+          id?: string
+          import_id?: string | null
+          migrated_at?: string | null
+          migrated_plan_data?: Json | null
+          migration_notes?: string | null
+          migration_status?: string
+          original_plan_data?: Json | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_migration_records_import_id_fkey"
+            columns: ["import_id"]
+            isOneToOne: false
+            referencedRelation: "plan_imports"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       client_onboarding: {
         Row: {
@@ -13005,6 +13097,95 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      plan_import_audit: {
+        Row: {
+          action_details: Json | null
+          action_type: string
+          advisor_id: string
+          created_at: string
+          id: string
+          import_id: string | null
+          ip_address: unknown | null
+          user_agent: string | null
+        }
+        Insert: {
+          action_details?: Json | null
+          action_type: string
+          advisor_id: string
+          created_at?: string
+          id?: string
+          import_id?: string | null
+          ip_address?: unknown | null
+          user_agent?: string | null
+        }
+        Update: {
+          action_details?: Json | null
+          action_type?: string
+          advisor_id?: string
+          created_at?: string
+          id?: string
+          import_id?: string | null
+          ip_address?: unknown | null
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "plan_import_audit_import_id_fkey"
+            columns: ["import_id"]
+            isOneToOne: false
+            referencedRelation: "plan_imports"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      plan_imports: {
+        Row: {
+          advisor_id: string
+          client_count: number | null
+          created_at: string
+          error_log: string | null
+          field_mapping: Json | null
+          file_path: string | null
+          id: string
+          import_status: string
+          import_type: string
+          original_filename: string
+          parsed_data: Json | null
+          raw_data: Json | null
+          updated_at: string
+        }
+        Insert: {
+          advisor_id: string
+          client_count?: number | null
+          created_at?: string
+          error_log?: string | null
+          field_mapping?: Json | null
+          file_path?: string | null
+          id?: string
+          import_status?: string
+          import_type: string
+          original_filename: string
+          parsed_data?: Json | null
+          raw_data?: Json | null
+          updated_at?: string
+        }
+        Update: {
+          advisor_id?: string
+          client_count?: number | null
+          created_at?: string
+          error_log?: string | null
+          field_mapping?: Json | null
+          file_path?: string | null
+          id?: string
+          import_status?: string
+          import_type?: string
+          original_filename?: string
+          parsed_data?: Json | null
+          raw_data?: Json | null
+          updated_at?: string
+        }
+        Relationships: []
       }
       plan_income: {
         Row: {

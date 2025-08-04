@@ -151,3 +151,6 @@ verify_jwt = false
 [functions.send-meeting-summary-email]
 verify_jwt = false
 # @public-ok - Email notification service for meeting summaries
+
+[functions.parse-retirement-pdf]
+verify_jwt = true
