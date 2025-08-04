@@ -31,33 +31,109 @@ const OutreachTemplates = () => {
   });
 
   const templates = {
+    // Personalized Professional Templates
+    'longevity-doctor': {
+      title: 'Longevity/Preventive Medicine Doctors',
+      platform: 'Email',
+      icon: Brain,
+      color: 'text-emerald-600',
+      subject: 'Invitation to Lead the Family Office Longevity Movement',
+      message: `Dear Dr. {{recipientName}},
+
+Your pioneering work in longevity and proactive health is transforming lives. We'd be honored to feature you as a Founding Medical Partner in the Family Office Marketplace—our secure, invitation-only platform for HNW families, advisors, and elite health experts.
+
+Set up your free professional profile to:
+• Share your research and programs
+• Host webinars or Q&As
+• Connect directly with proactive families
+
+Let's elevate the industry together.
+
+Best,  
+Tony Gomes, CEO & Co-Founder
+
+{{personalNote}}`
+    },
+    'wellness-coach': {
+      title: 'Health & Wellness Coaches/Consultants',
+      platform: 'Email',
+      icon: Heart,
+      color: 'text-rose-600',
+      subject: 'Become a Founding Wellness Coach in the Family Office Marketplace',
+      message: `Hi {{recipientName}},
+
+We're inviting select top coaches to launch their practice in our new Family Office Marketplace. You'll have:
+• A branded profile for your expertise
+• Direct access to high-impact clients
+• Opportunities to publish guides, lead challenges, and more
+
+Reply to activate your spot!
+
+{{personalNote}}
+
+Cheers,  
+Tony Gomes
+
+P.S. Your work in {{recipientSpecialty}} is exactly what families are seeking for their wellness journey.`
+    },
+    'insurance-agent': {
+      title: 'Healthcare Insurance Agents',
+      platform: 'Email',
+      icon: Shield,
+      color: 'text-blue-600',
+      subject: 'Join the BFO Health & Insurance Advisory Network',
+      message: `Dear {{recipientName}},
+
+We're building the nation's most trusted platform for families to manage wealth, health, and insurance—together. As a Founding Insurance Professional, you can:
+• Offer premium Medicare, LTC, and hybrid solutions
+• Receive qualified referrals (with permission)
+• Build long-term trust with HNW families
+
+Activate your profile or schedule a discovery call today.
+
+{{personalNote}}
+
+Best regards,
+Tony Gomes & the BFO Team`
+    },
+    'thought-leader': {
+      title: 'Influencers/Thought Leaders',
+      platform: 'Email',
+      icon: Award,
+      color: 'text-amber-600',
+      subject: 'Exclusive Invite: Be a Founding Thought Leader at BFO',
+      message: `Hi {{recipientName}},
+
+You've inspired a movement in health and longevity. We'd love to honor your work with a verified profile, plus invite-only access to our BFO Family Office Community.
+
+Let's help families live longer, healthier, and more connected lives—together.
+
+Ready to join us?
+
+{{personalNote}}
+
+Best,
+Tony Gomes, CEO & Co-Founder
+BFO Healthcare & Longevity Center`
+    },
+    // LinkedIn Templates
     'linkedin-influencer': {
-      title: 'LinkedIn - Healthcare Influencer/Thought Leader',
+      title: 'LinkedIn - Healthcare Influencer',
       platform: 'LinkedIn',
       icon: Linkedin,
       color: 'text-blue-600',
       subject: 'Invitation to Join BFO Healthcare & Longevity Network',
       message: `Hi {{recipientName}},
 
-I hope this message finds you well. Your pioneering work in {{recipientSpecialty}} has truly inspired our mission at the Boutique Family Office Healthcare & Longevity Center.
+I've been following your work in {{recipientSpecialty}} and truly admire your impact on the health community.
 
-We're building an exclusive network of healthcare thought leaders, and your expertise would be invaluable to families seeking trusted guidance on their wellness journey.
+I'm building the BFO Healthcare & Longevity Center - a secure platform where families connect with verified health experts like yourself. Would you be interested in exploring a founding partnership?
 
-🌟 What we're offering:
-• Verified Thought Leader status with exclusive badge
-• Platform to share your expertise with high-net-worth families
-• AMA hosting opportunities and content amplification
-• Direct connection with families serious about longevity
-
-We'd be honored to feature you as a Founding Healthcare Influencer in our network. Your insights on evidence-based wellness strategies could help shape the future of family health planning.
-
-Would you be interested in a brief conversation about this opportunity?
+{{personalNote}}
 
 Best regards,
 [Your Name]
-BFO Healthcare & Longevity Center
-
-P.S. We're particularly excited about your work in {{recipientSpecialty}} and how it aligns with our mission to help families live healthier, longer lives.`
+BFO Healthcare & Longevity Center`
     },
     'linkedin-consultant': {
       title: 'LinkedIn - Healthcare Consultant/Coach',
@@ -77,16 +153,13 @@ We're launching the BFO Healthcare & Longevity Center's consultant network, conn
 • Offer consultations and share resources with our community
 • Join a curated network of healthcare professionals
 
-Our platform serves families who are serious about proactive health planning and have the resources to invest in quality care.
-
-Would you be interested in learning more about how you can help families live healthier, longer lives while growing your practice?
-
 {{personalNote}}
 
 Best,
 [Your Name]
 BFO Healthcare & Longevity Center`
     },
+    // Email Templates
     'email-formal': {
       title: 'Email - Formal Professional Invitation',
       platform: 'Email',
@@ -102,32 +175,21 @@ I am reaching out on behalf of the Boutique Family Office Healthcare & Longevity
 Your renowned expertise in {{recipientSpecialty}} and commitment to advancing patient care makes you an ideal candidate for our thought leadership program.
 
 About Our Network:
-The BFO Healthcare & Longevity Center serves as a comprehensive resource hub for high-net-worth families seeking world-class health resources and expert guidance. We connect leading medical experts with families who prioritize proactive health planning and longevity strategies.
+The BFO Healthcare & Longevity Center serves as a comprehensive resource hub for high-net-worth families seeking world-class health resources and expert guidance.
 
 What We're Offering:
 • Verified expert profile with professional credentialing
 • Platform to share knowledge and best practices
 • Direct access to families seeking specialized guidance
 • Collaborative network of peer professionals
-• Opportunity to influence family health planning strategies
-
-Your contributions would help shape how families approach healthcare planning and longevity optimization. We believe your insights could significantly impact our community's health outcomes.
-
-Would you be available for a brief 15-minute conversation this week to discuss this opportunity in more detail?
 
 {{personalNote}}
-
-I look forward to the possibility of collaborating with you.
 
 Warm regards,
 
 [Your Full Name]
 [Your Title]
-BFO Healthcare & Longevity Center
-[Phone Number]
-[Email Address]
-
-P.S. We're particularly interested in your recent work on {{recipientSpecialty}} and how it could benefit our family-focused approach to healthcare planning.`
+BFO Healthcare & Longevity Center`
     },
     'email-warm': {
       title: 'Email - Warm Introduction',
@@ -141,35 +203,28 @@ I hope you're doing well! I wanted to reach out because I've been following your
 
 We're building something special at the BFO Healthcare & Longevity Center - a network where healthcare professionals like yourself can connect with families who are serious about proactive health planning.
 
-The idea is simple: families need trusted guidance, and professionals like you have the expertise they're looking for. We're creating the bridge between the two.
-
 Some quick details:
-• Professional profile setup (think LinkedIn for healthcare)
+• Professional profile setup
 • Connect with motivated families
 • Share your expertise through our platform
 • Grow your practice with qualified leads
 
 {{personalNote}}
 
-The families in our network aren't just looking for any healthcare advice - they want guidance from professionals who truly understand longevity and optimal health strategies.
-
-Would you be up for a quick 10-minute call to learn more? I think you'd find it interesting, and there's no pressure either way.
-
-Let me know what works for your schedule!
+Would you be up for a quick 10-minute call to learn more?
 
 Best,
 [Your Name]
-[Your Phone Number]
-
-P.S. I'd love to hear your thoughts on the current state of {{recipientSpecialty}} and how you see the field evolving.`
+[Your Phone Number]`
     },
+    // SMS Templates
     'sms-initial': {
       title: 'SMS - Initial Outreach',
       platform: 'SMS',
       icon: MessageSquare,
       color: 'text-purple-600',
       subject: 'SMS Template',
-      message: `Hi {{recipientName}}! I'm reaching out from BFO Healthcare & Longevity Center. Your work in {{recipientSpecialty}} caught our attention. We're building a network of healthcare experts to help families with longevity planning. Would you be interested in a quick 5-min call about an opportunity? No pressure! [Your Name] - [Phone]`
+      message: `Hi {{recipientName}}! I'm reaching out from BFO Healthcare & Longevity Center. Your work in {{recipientSpecialty}} caught our attention. We're building a network of healthcare experts to help families with longevity planning. Would you be interested in a quick 5-min call? [Your Name] - [Phone]`
     },
     'sms-followup': {
       title: 'SMS - Follow-up',
@@ -177,7 +232,7 @@ P.S. I'd love to hear your thoughts on the current state of {{recipientSpecialty
       icon: MessageSquare,
       color: 'text-purple-600',
       subject: 'SMS Follow-up Template',
-      message: `Hi {{recipientName}}, following up on my message about the BFO Healthcare network opportunity. We're specifically looking for {{recipientSpecialty}} experts to help families with health planning. Quick call this week? Worth exploring! [Your Name]`
+      message: `Hi {{recipientName}}, following up on my message about the BFO Healthcare network opportunity. We're specifically looking for {{recipientSpecialty}} experts to help families with health planning. Quick call this week? [Your Name]`
     }
   };
 
