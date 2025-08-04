@@ -9,7 +9,8 @@ export type PersonaType =
   | 'imo_fmo' 
   | 'agency' 
   | 'organization'
-  | 'client';
+  | 'client'
+  | 'vip_reserved';
 
 export interface PersonaWelcomeMessage {
   title: string;
@@ -150,6 +151,19 @@ export const PERSONA_WELCOME_MESSAGES: Record<PersonaType, PersonaWelcomeMessage
     ctaPrimary: "Find Your Advisor",
     ctaSecondary: "Explore Resources",
     learnMoreText: "Access exclusive wealth management insights and tools."
+  },
+  vip_reserved: {
+    title: "Welcome, {{name}}! Your Reserved Profile Awaits.",
+    subtitle: "You're one of the first 25 industry leaders invited to shape the future of family wealth management. Your premium profile is ready—just click to activate.",
+    benefits: [
+      "Exclusive founding member access",
+      "Priority onboarding and support",
+      "Direct influence on platform development",
+      "Elite professional network access"
+    ],
+    ctaPrimary: "Claim My Reserved Profile",
+    ctaSecondary: "Learn More",
+    learnMoreText: "Join the elite network transforming wealth management."
   }
 };
 

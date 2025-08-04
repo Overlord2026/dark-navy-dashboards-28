@@ -16788,6 +16788,199 @@ export type Database = {
         }
         Relationships: []
       }
+      reserved_profile_analytics: {
+        Row: {
+          avg_time_to_claim_hours: number | null
+          calculated_at: string | null
+          claim_rate: number | null
+          custodian_preferences: Json | null
+          date: string
+          id: string
+          persona_type: string
+          response_rate: number | null
+          segment: string | null
+          top_referral_sources: Json | null
+          total_claimed: number | null
+          total_invited: number | null
+          total_reserved: number | null
+        }
+        Insert: {
+          avg_time_to_claim_hours?: number | null
+          calculated_at?: string | null
+          claim_rate?: number | null
+          custodian_preferences?: Json | null
+          date: string
+          id?: string
+          persona_type: string
+          response_rate?: number | null
+          segment?: string | null
+          top_referral_sources?: Json | null
+          total_claimed?: number | null
+          total_invited?: number | null
+          total_reserved?: number | null
+        }
+        Update: {
+          avg_time_to_claim_hours?: number | null
+          calculated_at?: string | null
+          claim_rate?: number | null
+          custodian_preferences?: Json | null
+          date?: string
+          id?: string
+          persona_type?: string
+          response_rate?: number | null
+          segment?: string | null
+          top_referral_sources?: Json | null
+          total_claimed?: number | null
+          total_invited?: number | null
+          total_reserved?: number | null
+        }
+        Relationships: []
+      }
+      reserved_profile_invitations: {
+        Row: {
+          clicked_at: string | null
+          id: string
+          invitation_method: string
+          message_content: string | null
+          metadata: Json | null
+          opened_at: string | null
+          reserved_profile_id: string
+          response_at: string | null
+          response_received: boolean | null
+          response_text: string | null
+          sent_at: string | null
+          sent_by: string | null
+          template_used: string | null
+        }
+        Insert: {
+          clicked_at?: string | null
+          id?: string
+          invitation_method: string
+          message_content?: string | null
+          metadata?: Json | null
+          opened_at?: string | null
+          reserved_profile_id: string
+          response_at?: string | null
+          response_received?: boolean | null
+          response_text?: string | null
+          sent_at?: string | null
+          sent_by?: string | null
+          template_used?: string | null
+        }
+        Update: {
+          clicked_at?: string | null
+          id?: string
+          invitation_method?: string
+          message_content?: string | null
+          metadata?: Json | null
+          opened_at?: string | null
+          reserved_profile_id?: string
+          response_at?: string | null
+          response_received?: boolean | null
+          response_text?: string | null
+          sent_at?: string | null
+          sent_by?: string | null
+          template_used?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reserved_profile_invitations_reserved_profile_id_fkey"
+            columns: ["reserved_profile_id"]
+            isOneToOne: false
+            referencedRelation: "reserved_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      reserved_profiles: {
+        Row: {
+          claimed_at: string | null
+          claimed_by: string | null
+          created_at: string | null
+          created_by: string | null
+          custodian_partners: string[] | null
+          email: string
+          id: string
+          invitation_method: string | null
+          invitation_sent_at: string | null
+          invitation_token: string
+          is_active: boolean | null
+          linkedin_url: string | null
+          name: string
+          notes: string | null
+          organization: string | null
+          persona_type: string
+          photo_url: string | null
+          priority_level: string | null
+          referral_source: string | null
+          role_title: string | null
+          segment: string | null
+          tenant_id: string | null
+          updated_at: string | null
+          urgency_deadline: string | null
+        }
+        Insert: {
+          claimed_at?: string | null
+          claimed_by?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          custodian_partners?: string[] | null
+          email: string
+          id?: string
+          invitation_method?: string | null
+          invitation_sent_at?: string | null
+          invitation_token?: string
+          is_active?: boolean | null
+          linkedin_url?: string | null
+          name: string
+          notes?: string | null
+          organization?: string | null
+          persona_type: string
+          photo_url?: string | null
+          priority_level?: string | null
+          referral_source?: string | null
+          role_title?: string | null
+          segment?: string | null
+          tenant_id?: string | null
+          updated_at?: string | null
+          urgency_deadline?: string | null
+        }
+        Update: {
+          claimed_at?: string | null
+          claimed_by?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          custodian_partners?: string[] | null
+          email?: string
+          id?: string
+          invitation_method?: string | null
+          invitation_sent_at?: string | null
+          invitation_token?: string
+          is_active?: boolean | null
+          linkedin_url?: string | null
+          name?: string
+          notes?: string | null
+          organization?: string | null
+          persona_type?: string
+          photo_url?: string | null
+          priority_level?: string | null
+          referral_source?: string | null
+          role_title?: string | null
+          segment?: string | null
+          tenant_id?: string | null
+          updated_at?: string | null
+          urgency_deadline?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reserved_profiles_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       resource_utilization_analytics: {
         Row: {
           active_projects: number
@@ -22018,6 +22211,10 @@ export type Database = {
         Args: { responses: Json }
         Returns: number
       }
+      calculate_reserved_profile_analytics: {
+        Args: { p_date?: string }
+        Returns: undefined
+      }
       calculate_security_score: {
         Args: Record<PropertyKey, never>
         Returns: {
@@ -22212,6 +22409,10 @@ export type Database = {
         }[]
       }
       generate_attorney_invitation_token: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      generate_claim_token: {
         Args: Record<PropertyKey, never>
         Returns: string
       }
