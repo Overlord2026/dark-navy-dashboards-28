@@ -458,7 +458,8 @@ export const PersonaDashboardLayout: React.FC<PersonaDashboardLayoutProps> = ({ 
       {/* Onboarding Flow */}
       {showOnboarding && (
         <PersonaOnboardingFlow 
-          onComplete={() => setShowOnboarding(false)} 
+          isOpen={showOnboarding}
+          onClose={() => setShowOnboarding(false)} 
         />
       )}
     </MainLayout>

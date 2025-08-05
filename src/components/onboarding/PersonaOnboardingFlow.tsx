@@ -11,8 +11,9 @@ import {
 import { usePersona } from '@/context/PersonaContext';
 import { PersonaType } from '@/types/personas';
 import { useEventTracking } from '@/hooks/useEventTracking';
-import { ConfettiAnimation } from '@/components/ConfettiAnimation';
+import { Celebration } from '@/components/ConfettiAnimation';
 import { SWAGViralShare } from '@/components/leads/SWAGViralShare';
+import { analytics } from '@/lib/analytics';
 
 // Enhanced persona welcome messages with specific CTAs
 const ENHANCED_PERSONA_MESSAGES = {
@@ -124,7 +125,7 @@ export const PersonaOnboardingFlow: React.FC<PersonaOnboardingFlowProps> = ({
   forcePersona
 }) => {
   const { currentPersona, markWelcomeModalSeen } = usePersona();
-  const { trackUserOnboarding, trackViralShare } = useEventTracking();
+  const { trackUserOnboarding } = useEventTracking();
   const [showConfetti, setShowConfetti] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
 
@@ -174,7 +175,7 @@ export const PersonaOnboardingFlow: React.FC<PersonaOnboardingFlowProps> = ({
     <AnimatePresence>
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
-          {showConfetti && <ConfettiAnimation />}
+          {showConfetti && <Celebration trigger={showConfetti} />}
           
           <DialogHeader className="text-center pb-4">
             <div className="flex items-center justify-center mb-4">
@@ -243,12 +244,23 @@ export const PersonaOnboardingFlow: React.FC<PersonaOnboardingFlowProps> = ({
                 🎯 Invite colleagues and get 1 month free for each professional who joins!
               </p>
               <SWAGViralShare 
-                onShare={(platform) => {
-                  trackViralShare(platform, { source: 'welcome_modal', persona });
+                leadData={{
+                  name: "Sample Lead",
+                  swagScore: 85,
+                  band: "Gold"
                 }}
-                customMessage={`Just joined the Family Office Marketplace™! Connect with top ${persona}s and families: my.bfocfo.com`}
-                compact={true}
               />
+              <div className="text-center mt-2">
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                  onClick={() => {
+                    analytics.trackViralShare('welcome_modal', persona, 'user_id');
+                  }}
+                >
+                  Share my SWAG profile
+                </Button>
+              </div>
             </div>
 
             {/* Skip Option */}
