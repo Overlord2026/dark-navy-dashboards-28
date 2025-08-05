@@ -8900,6 +8900,69 @@ export type Database = {
         }
         Relationships: []
       }
+      family_group_members: {
+        Row: {
+          created_at: string
+          family_group_id: string
+          id: string
+          invitation_status: string | null
+          invited_at: string | null
+          invited_by: string | null
+          joined_at: string | null
+          linked_professional_id: string | null
+          relationship: string | null
+          role: string
+          seat_purchase_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          family_group_id: string
+          id?: string
+          invitation_status?: string | null
+          invited_at?: string | null
+          invited_by?: string | null
+          joined_at?: string | null
+          linked_professional_id?: string | null
+          relationship?: string | null
+          role?: string
+          seat_purchase_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          family_group_id?: string
+          id?: string
+          invitation_status?: string | null
+          invited_at?: string | null
+          invited_by?: string | null
+          joined_at?: string | null
+          linked_professional_id?: string | null
+          relationship?: string | null
+          role?: string
+          seat_purchase_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "family_group_members_linked_professional_id_fkey"
+            columns: ["linked_professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "family_group_members_seat_purchase_id_fkey"
+            columns: ["seat_purchase_id"]
+            isOneToOne: false
+            referencedRelation: "seat_purchases"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       family_members: {
         Row: {
           access_level: string | null
@@ -9649,6 +9712,66 @@ export type Database = {
           invited_by?: string | null
           seats_requested?: number
           status?: string
+        }
+        Relationships: []
+      }
+      firm_subscriptions: {
+        Row: {
+          billing_contact_id: string | null
+          compliance_settings: Json | null
+          created_at: string
+          current_period_end: string
+          current_period_start: string
+          features_enabled: Json | null
+          firm_id: string
+          id: string
+          payment_method_id: string | null
+          seats_included: number
+          seats_used: number
+          status: string
+          stripe_subscription_id: string | null
+          subscription_type: string
+          trial_ends_at: string | null
+          updated_at: string
+          white_label_settings: Json | null
+        }
+        Insert: {
+          billing_contact_id?: string | null
+          compliance_settings?: Json | null
+          created_at?: string
+          current_period_end?: string
+          current_period_start?: string
+          features_enabled?: Json | null
+          firm_id: string
+          id?: string
+          payment_method_id?: string | null
+          seats_included?: number
+          seats_used?: number
+          status?: string
+          stripe_subscription_id?: string | null
+          subscription_type?: string
+          trial_ends_at?: string | null
+          updated_at?: string
+          white_label_settings?: Json | null
+        }
+        Update: {
+          billing_contact_id?: string | null
+          compliance_settings?: Json | null
+          created_at?: string
+          current_period_end?: string
+          current_period_start?: string
+          features_enabled?: Json | null
+          firm_id?: string
+          id?: string
+          payment_method_id?: string | null
+          seats_included?: number
+          seats_used?: number
+          status?: string
+          stripe_subscription_id?: string | null
+          subscription_type?: string
+          trial_ends_at?: string | null
+          updated_at?: string
+          white_label_settings?: Json | null
         }
         Relationships: []
       }
@@ -17375,6 +17498,66 @@ export type Database = {
           },
         ]
       }
+      professional_client_links: {
+        Row: {
+          billing_arrangement: string | null
+          client_user_id: string
+          created_at: string
+          family_group_id: string | null
+          id: string
+          linked_at: string | null
+          professional_id: string
+          relationship_type: string
+          seat_purchase_id: string | null
+          services_authorized: Json | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          billing_arrangement?: string | null
+          client_user_id: string
+          created_at?: string
+          family_group_id?: string | null
+          id?: string
+          linked_at?: string | null
+          professional_id: string
+          relationship_type?: string
+          seat_purchase_id?: string | null
+          services_authorized?: Json | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          billing_arrangement?: string | null
+          client_user_id?: string
+          created_at?: string
+          family_group_id?: string | null
+          id?: string
+          linked_at?: string | null
+          professional_id?: string
+          relationship_type?: string
+          seat_purchase_id?: string | null
+          services_authorized?: Json | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "professional_client_links_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "professional_client_links_seat_purchase_id_fkey"
+            columns: ["seat_purchase_id"]
+            isOneToOne: false
+            referencedRelation: "seat_purchases"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       professional_client_relationships: {
         Row: {
           billing_owner: string | null
@@ -20627,6 +20810,65 @@ export type Database = {
             columns: ["seat_id"]
             isOneToOne: false
             referencedRelation: "professional_seat_management"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      seat_purchases: {
+        Row: {
+          auto_link_enabled: boolean | null
+          billing_frequency: string
+          created_at: string
+          expires_at: string | null
+          id: string
+          professional_id: string | null
+          purchase_type: string
+          purchased_for: Json | null
+          purchaser_id: string
+          seats_purchased: number
+          status: string
+          stripe_subscription_id: string | null
+          total_amount: number
+          updated_at: string
+        }
+        Insert: {
+          auto_link_enabled?: boolean | null
+          billing_frequency?: string
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          professional_id?: string | null
+          purchase_type?: string
+          purchased_for?: Json | null
+          purchaser_id: string
+          seats_purchased?: number
+          status?: string
+          stripe_subscription_id?: string | null
+          total_amount?: number
+          updated_at?: string
+        }
+        Update: {
+          auto_link_enabled?: boolean | null
+          billing_frequency?: string
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          professional_id?: string | null
+          purchase_type?: string
+          purchased_for?: Json | null
+          purchaser_id?: string
+          seats_purchased?: number
+          status?: string
+          stripe_subscription_id?: string | null
+          total_amount?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "seat_purchases_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals"
             referencedColumns: ["id"]
           },
         ]

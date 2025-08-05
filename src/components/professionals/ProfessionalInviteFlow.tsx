@@ -46,8 +46,9 @@ interface InviteData {
 interface ProfessionalInviteFlowProps {
   isOpen: boolean;
   onClose: () => void;
-  professionalType: string;
+  professionalType?: string;
   onInvitesSent?: (invites: InviteData) => void;
+  onSuccess?: () => void;
 }
 
 const INVITE_TEMPLATES = {
@@ -126,7 +127,7 @@ Best regards,
   }
 };
 
-export function ProfessionalInviteFlow({ isOpen, onClose, professionalType, onInvitesSent }: ProfessionalInviteFlowProps) {
+export function ProfessionalInviteFlow({ isOpen, onClose, professionalType = 'advisor', onInvitesSent, onSuccess }: ProfessionalInviteFlowProps) {
   const { userProfile } = useUser();
   const [currentTab, setCurrentTab] = useState('email');
   const [inviteData, setInviteData] = useState<InviteData>({
@@ -226,6 +227,7 @@ export function ProfessionalInviteFlow({ isOpen, onClose, professionalType, onIn
         : `Successfully sent ${inviteData.recipients.length} invitation(s)!`;
       
       toast.success(message);
+      onSuccess?.();
       onInvitesSent?.(inviteData);
       onClose();
     } catch (error) {

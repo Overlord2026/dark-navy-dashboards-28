@@ -1,11 +1,10 @@
 import React from 'react';
 import { CorporateBenefitsPortal } from '@/components/enterprise/CorporateBenefitsPortal';
-import { ThreeColumnLayout } from '@/components/layout/ThreeColumnLayout';
 
 export default function CorporateBenefitsPage() {
   return (
-    <ThreeColumnLayout title="Corporate Benefits" activeMainItem="corporate-benefits">
+    <div className="container mx-auto py-6 space-y-8">
       <CorporateBenefitsPortal />
-    </ThreeColumnLayout>
+    </div>
   );
 }
