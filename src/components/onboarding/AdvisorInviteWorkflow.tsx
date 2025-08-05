@@ -72,20 +72,23 @@ export function AdvisorInviteWorkflow() {
   const generateInviteLink = async () => {
     setIsSubmitting(true);
     try {
-      // TODO: Uncomment when onboarding tables are created
-      /*
+      // Generate unique invite token
+      const inviteToken = crypto.randomUUID();
+      const link = `${window.location.origin}/onboard/${inviteToken}`;
+      
       const { data, error } = await supabase
         .from('client_invitations')
         .insert({
           advisor_id: userProfile?.id,
+          tenant_id: userProfile?.tenant_id || userProfile?.id, // Fallback to user ID if no tenant
           email: formData.email,
           first_name: formData.firstName,
           last_name: formData.lastName,
-          phone: formData.phone,
           custom_message: formData.message,
           onboarding_template: formData.onboardingTemplate,
           fee_structure: formData.feeStructure,
           premium_modules: formData.premiumModules,
+          invite_link: link,
           expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString() // 7 days
         })
         .select()
@@ -93,9 +96,6 @@ export function AdvisorInviteWorkflow() {
 
       if (error) throw error;
 
-      const link = `${window.location.origin}/onboard/${data.invite_token}`;
-      */
-      const link = `${window.location.origin}/onboard/demo-token`;
       setInviteLink(link);
       setStep(4);
 
