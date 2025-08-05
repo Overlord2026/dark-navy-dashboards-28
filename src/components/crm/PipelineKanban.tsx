@@ -64,16 +64,29 @@ interface LeadCardProps {
 }
 
 function LeadCard({ lead, onEdit, onDelete, onStatusChange, isMobile }: LeadCardProps) {
-  const getScoreColor = (score: number) => {
-    if (score >= 80) return 'bg-success text-success-foreground';
-    if (score >= 60) return 'bg-warning text-warning-foreground';
-    return 'bg-destructive text-destructive-foreground';
+  const getSWAGScoreBand = (score: number) => {
+    if (score >= 85) return { band: 'Gold', color: 'bg-yellow-500/20 text-yellow-700 border-yellow-500/30' };
+    if (score >= 70) return { band: 'Silver', color: 'bg-gray-400/20 text-gray-700 border-gray-400/30' };
+    if (score >= 50) return { band: 'Bronze', color: 'bg-amber-600/20 text-amber-700 border-amber-600/30' };
+    return { band: 'Unscored', color: 'bg-muted text-muted-foreground border-border' };
   };
 
   const getValueColor = (value: number) => {
-    if (value >= 200000) return 'text-success';
-    if (value >= 100000) return 'text-warning';
+    if (value >= 200000) return 'text-emerald-600';
+    if (value >= 100000) return 'text-yellow-600';
     return 'text-muted-foreground';
+  };
+
+  const getSWAGBadge = () => {
+    const { band, color } = getSWAGScoreBand(lead.lead_score);
+    return (
+      <div className="flex items-center gap-2">
+        <Badge className={`${color} font-semibold`}>
+          {band} SWAG™
+        </Badge>
+        <span className="text-xs text-yellow-600 font-medium">Got SWAG?</span>
+      </div>
+    );
   };
 
   const isOverdue = (date?: string) => {
@@ -88,9 +101,10 @@ function LeadCard({ lead, onEdit, onDelete, onStatusChange, isMobile }: LeadCard
           <h3 className="font-semibold text-foreground">
             {lead.first_name} {lead.last_name}
           </h3>
-          <Badge className={getScoreColor(lead.lead_score)} variant="outline">
-            {lead.lead_score}
-          </Badge>
+          <div className="text-right">
+            <div className="text-sm font-bold text-primary">SWAG Score™: {lead.lead_score}</div>
+            {getSWAGBadge()}
+          </div>
         </div>
         
         {lead.company && (
@@ -175,6 +189,7 @@ export function PipelineKanban() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [filter, setFilter] = useState('all');
+  const [swagFilter, setSWAGFilter] = useState('all'); // Filter by SWAG score band
   const [selectedStage, setSelectedStage] = useState('new'); // For mobile tabs
 
   useEffect(() => {
@@ -300,7 +315,23 @@ export function PipelineKanban() {
   };
 
   const getLeadsForStage = (stageId: string) => {
-    return leads.filter(lead => lead.lead_status === stageId);
+    let filteredLeads = leads.filter(lead => lead.lead_status === stageId);
+    
+    // Apply SWAG score filter
+    if (swagFilter !== 'all') {
+      filteredLeads = filteredLeads.filter(lead => {
+        const score = lead.lead_score;
+        switch (swagFilter) {
+          case 'gold': return score >= 85;
+          case 'silver': return score >= 70 && score < 85;
+          case 'bronze': return score >= 50 && score < 70;
+          case 'unscored': return score < 50;
+          default: return true;
+        }
+      });
+    }
+    
+    return filteredLeads;
   };
 
   const getTotalPipelineValue = () => {
@@ -312,10 +343,18 @@ export function PipelineKanban() {
       {/* Mobile Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl md:text-3xl font-bold text-foreground">Sales Pipeline</h2>
+          <h2 className="text-2xl md:text-3xl font-bold text-foreground">
+            SWAG Lead Score™ Pipeline
+          </h2>
           <p className="text-sm text-muted-foreground mt-1">
-            Track leads through your sales process • ${getTotalPipelineValue().toLocaleString()} total value
+            Track leads with SWAG Lead Score™ intelligence • ${getTotalPipelineValue().toLocaleString()} total value
           </p>
+          <div className="flex items-center gap-2 mt-2">
+            <span className="text-xs text-yellow-600 font-medium">🌟 Got SWAG?</span>
+            <Badge variant="outline" className="text-xs">
+              Strategic Wealth Alpha GPS™
+            </Badge>
+          </div>
         </div>
         
         <div className="flex flex-col sm:flex-row gap-2">
@@ -333,8 +372,22 @@ export function PipelineKanban() {
             className="touch-target"
           >
             <Filter className="h-4 w-4 mr-2" />
-            Filter
+            SWAG Filter
           </Button>
+          
+          {/* SWAG Score Filter */}
+          <Select value={swagFilter} onValueChange={setSWAGFilter}>
+            <SelectTrigger className="w-32">
+              <SelectValue placeholder="SWAG Band" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All SWAG</SelectItem>
+              <SelectItem value="gold">Gold SWAG</SelectItem>
+              <SelectItem value="silver">Silver SWAG</SelectItem>
+              <SelectItem value="bronze">Bronze SWAG</SelectItem>
+              <SelectItem value="unscored">Unscored</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </div>
 

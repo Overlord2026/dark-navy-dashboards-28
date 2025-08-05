@@ -34,6 +34,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { format } from 'date-fns';
 import { PlanImportWizard } from './PlanImportWizard';
 import { AdvisorOnboardingBanner } from './AdvisorOnboardingBanner';
+import { SWAGDashboardMetrics } from './SWAGDashboardMetrics';
 
 interface Client {
   id: string;
@@ -248,16 +249,17 @@ export function AdvisorDashboard() {
                     <div className="text-white/80 text-sm">Total Clients</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-3xl font-bold">${(metrics.totalTaxSavings / 1000).toFixed(0)}K</div>
-                    <div className="text-white/80 text-sm">Tax Savings YTD</div>
+                    <div className="text-3xl font-bold">92</div>
+                    <div className="text-white/80 text-sm">Avg SWAG Score™</div>
+                    <div className="text-xs text-yellow-300">Got SWAG? 🌟</div>
                   </div>
                   <div className="text-center">
                     <div className="text-3xl font-bold">{metrics.completionRate}%</div>
-                    <div className="text-white/80 text-sm">Completion Rate</div>
+                    <div className="text-white/80 text-sm">Conversion Rate</div>
                   </div>
                   <div className="text-center">
                     <div className="text-3xl font-bold">{metrics.aiFlaggedOpportunities}</div>
-                    <div className="text-white/80 text-sm">AI Opportunities</div>
+                    <div className="text-white/80 text-sm">SWAG Opportunities</div>
                   </div>
                 </div>
               </div>
@@ -290,6 +292,25 @@ export function AdvisorDashboard() {
             </div>
           </CardContent>
         </Card>
+      </motion.div>
+
+      {/* SWAG Lead Score™ Metrics */}
+      <motion.div variants={itemVariants}>
+        <SWAGDashboardMetrics 
+          metrics={{
+            totalLeads: 24,
+            goldSWAGLeads: 8,
+            silverSWAGLeads: 12,
+            bronzeSWAGLeads: 4,
+            averageSWAGScore: 78,
+            conversionByBand: {
+              gold: 85,
+              silver: 65,
+              bronze: 35
+            },
+            verifiedSWAGLeads: 15
+          }}
+        />
       </motion.div>
 
       {/* Enhanced KPI Cards */}
