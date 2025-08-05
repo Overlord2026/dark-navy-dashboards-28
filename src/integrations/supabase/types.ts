@@ -11883,6 +11883,53 @@ export type Database = {
           },
         ]
       }
+      lead_enrichment_log: {
+        Row: {
+          created_at: string | null
+          enrichment_type: string
+          error_message: string | null
+          id: string
+          lead_id: string
+          processing_time_ms: number | null
+          provider: string
+          request_data: Json | null
+          response_data: Json | null
+          status: string
+        }
+        Insert: {
+          created_at?: string | null
+          enrichment_type: string
+          error_message?: string | null
+          id?: string
+          lead_id: string
+          processing_time_ms?: number | null
+          provider: string
+          request_data?: Json | null
+          response_data?: Json | null
+          status: string
+        }
+        Update: {
+          created_at?: string | null
+          enrichment_type?: string
+          error_message?: string | null
+          id?: string
+          lead_id?: string
+          processing_time_ms?: number | null
+          provider?: string
+          request_data?: Json | null
+          response_data?: Json | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lead_enrichment_log_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lead_routing_decisions: {
         Row: {
           created_at: string
@@ -11955,16 +12002,66 @@ export type Database = {
         }
         Relationships: []
       }
+      lead_scoring_analytics: {
+        Row: {
+          analytics_date: string
+          auto_assigned_leads: number | null
+          avg_enrichment_time_ms: number | null
+          conversion_by_score: Json | null
+          created_at: string | null
+          enriched_leads: number | null
+          high_score_leads: number | null
+          id: string
+          plaid_verified_leads: number | null
+          tenant_id: string
+          total_leads: number | null
+        }
+        Insert: {
+          analytics_date: string
+          auto_assigned_leads?: number | null
+          avg_enrichment_time_ms?: number | null
+          conversion_by_score?: Json | null
+          created_at?: string | null
+          enriched_leads?: number | null
+          high_score_leads?: number | null
+          id?: string
+          plaid_verified_leads?: number | null
+          tenant_id: string
+          total_leads?: number | null
+        }
+        Update: {
+          analytics_date?: string
+          auto_assigned_leads?: number | null
+          avg_enrichment_time_ms?: number | null
+          conversion_by_score?: Json | null
+          created_at?: string | null
+          enriched_leads?: number | null
+          high_score_leads?: number | null
+          id?: string
+          plaid_verified_leads?: number | null
+          tenant_id?: string
+          total_leads?: number | null
+        }
+        Relationships: []
+      }
       leads: {
         Row: {
           acquisition_cost: number | null
           advisor_id: string
           agency_id: string | null
+          assignment_reason: string | null
+          auto_assigned: boolean | null
           budget_score: number | null
           campaign_id: string | null
+          catchlight_confidence: number | null
+          catchlight_score: number | null
           created_at: string
           email: string | null
           engagement_score: number | null
+          enrichment_completed_at: string | null
+          enrichment_data: Json | null
+          enrichment_requested_at: string | null
+          enrichment_status: string | null
           first_name: string
           fit_assessment: string | null
           fit_score: number | null
@@ -11979,19 +12076,31 @@ export type Database = {
           next_follow_up_due: string | null
           notes: string | null
           phone: string | null
+          plaid_consent_given: boolean | null
+          plaid_verification_status: string | null
+          plaid_verified_data: Json | null
           timeline_score: number | null
           timeline_to_purchase: string | null
           updated_at: string
+          verified_net_worth: number | null
         }
         Insert: {
           acquisition_cost?: number | null
           advisor_id: string
           agency_id?: string | null
+          assignment_reason?: string | null
+          auto_assigned?: boolean | null
           budget_score?: number | null
           campaign_id?: string | null
+          catchlight_confidence?: number | null
+          catchlight_score?: number | null
           created_at?: string
           email?: string | null
           engagement_score?: number | null
+          enrichment_completed_at?: string | null
+          enrichment_data?: Json | null
+          enrichment_requested_at?: string | null
+          enrichment_status?: string | null
           first_name: string
           fit_assessment?: string | null
           fit_score?: number | null
@@ -12006,19 +12115,31 @@ export type Database = {
           next_follow_up_due?: string | null
           notes?: string | null
           phone?: string | null
+          plaid_consent_given?: boolean | null
+          plaid_verification_status?: string | null
+          plaid_verified_data?: Json | null
           timeline_score?: number | null
           timeline_to_purchase?: string | null
           updated_at?: string
+          verified_net_worth?: number | null
         }
         Update: {
           acquisition_cost?: number | null
           advisor_id?: string
           agency_id?: string | null
+          assignment_reason?: string | null
+          auto_assigned?: boolean | null
           budget_score?: number | null
           campaign_id?: string | null
+          catchlight_confidence?: number | null
+          catchlight_score?: number | null
           created_at?: string
           email?: string | null
           engagement_score?: number | null
+          enrichment_completed_at?: string | null
+          enrichment_data?: Json | null
+          enrichment_requested_at?: string | null
+          enrichment_status?: string | null
           first_name?: string
           fit_assessment?: string | null
           fit_score?: number | null
@@ -12033,9 +12154,13 @@ export type Database = {
           next_follow_up_due?: string | null
           notes?: string | null
           phone?: string | null
+          plaid_consent_given?: boolean | null
+          plaid_verification_status?: string | null
+          plaid_verified_data?: Json | null
           timeline_score?: number | null
           timeline_to_purchase?: string | null
           updated_at?: string
+          verified_net_worth?: number | null
         }
         Relationships: [
           {
