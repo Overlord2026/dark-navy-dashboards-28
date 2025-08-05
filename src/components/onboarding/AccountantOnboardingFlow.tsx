@@ -507,24 +507,69 @@ const FirmSetupStep = ({ profile, onUpdate, onComplete }: any) => (
   </div>
 );
 
-const ClientInviteStep = ({ onComplete }: any) => (
-  <div className="space-y-6">
-    <div className="text-center p-6 bg-gradient-to-r from-primary/5 to-primary/10 rounded-lg">
-      <CreditCard className="w-12 h-12 text-primary mx-auto mb-4" />
-      <h4 className="text-lg font-semibold mb-2">Ready to Invite Families?</h4>
-      <p className="text-muted-foreground mb-4">
-        Invite families to enjoy streamlined tax planning, document vaults, and secure messaging.
-      </p>
-      
-      <div className="grid md:grid-cols-2 gap-4 mb-4">
-        <div className="p-4 border rounded-lg text-left">
-          <h5 className="font-medium mb-2">Buy Client Seats</h5>
-          <p className="text-sm text-muted-foreground mb-3">
-            Volume discounts available for firm packages
-          </p>
+const ClientInviteStep = ({ onComplete }: any) => {
+  const [inviteForm, setInviteForm] = useState({ name: '', email: '', note: '' });
+
+  return (
+    <div className="space-y-6">
+      <div className="text-center p-6 bg-gradient-to-r from-primary/5 to-primary/10 rounded-lg">
+        <CreditCard className="w-12 h-12 text-primary mx-auto mb-4" />
+        <h4 className="text-lg font-semibold mb-2">Ready to Invite Families?</h4>
+        <p className="text-muted-foreground mb-4">
+          Invite families to enjoy streamlined tax planning, document vaults, and secure messaging.
+        </p>
+        
+        {/* Seat Purchase Options */}
+        <div className="grid md:grid-cols-3 gap-4 mb-6">
+          <div className="p-4 border rounded-lg text-left">
+            <h5 className="font-medium mb-2">Starter Package</h5>
+            <div className="text-2xl font-bold text-primary mb-1">$29/mo</div>
+            <p className="text-xs text-muted-foreground mb-3">5 client seats included</p>
+            <Button size="sm" className="w-full">Start Here</Button>
+          </div>
+          
+          <div className="p-4 border-2 border-primary rounded-lg text-left relative">
+            <Badge className="absolute -top-2 left-1/2 transform -translate-x-1/2">Popular</Badge>
+            <h5 className="font-medium mb-2">Professional</h5>
+            <div className="text-2xl font-bold text-primary mb-1">$89/mo</div>
+            <p className="text-xs text-muted-foreground mb-3">20 seats + premium features</p>
+            <Button size="sm" className="w-full">Choose Plan</Button>
+          </div>
+          
+          <div className="p-4 border rounded-lg text-left">
+            <h5 className="font-medium mb-2">Enterprise</h5>
+            <div className="text-2xl font-bold text-primary mb-1">Custom</div>
+            <p className="text-xs text-muted-foreground mb-3">Unlimited seats + white-label</p>
+            <Button size="sm" variant="outline" className="w-full">Contact Sales</Button>
+          </div>
+        </div>
+
+        {/* Client Invitation Form */}
+        <div className="p-4 bg-white border rounded-lg text-left mb-4">
+          <h5 className="font-medium mb-3">Invite Your First Client</h5>
+          <div className="grid grid-cols-2 gap-3 mb-3">
+            <Input 
+              placeholder="Client Name"
+              value={inviteForm.name}
+              onChange={(e) => setInviteForm({...inviteForm, name: e.target.value})}
+            />
+            <Input 
+              placeholder="Client Email"
+              type="email"
+              value={inviteForm.email}
+              onChange={(e) => setInviteForm({...inviteForm, email: e.target.value})}
+            />
+          </div>
+          <Textarea 
+            placeholder="Add a note explaining the benefits (optional)"
+            rows={2}
+            value={inviteForm.note}
+            onChange={(e) => setInviteForm({...inviteForm, note: e.target.value})}
+            className="mb-3"
+          />
           <Button className="w-full">
-            <CreditCard className="w-4 h-4 mr-2" />
-            Buy Seats
+            <Mail className="w-4 h-4 mr-2" />
+            Send Invitation
           </Button>
         </div>
         
@@ -551,8 +596,8 @@ const ClientInviteStep = ({ onComplete }: any) => (
         Skip for Now - Set Up Later
       </Button>
     </div>
-  </div>
-);
+  );
+};
 
 const ProfilePreview = ({ profile }: any) => (
   <div className="space-y-4">

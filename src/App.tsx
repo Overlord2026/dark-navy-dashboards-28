@@ -86,6 +86,7 @@ import HealthcareQAPage from "./pages/HealthcareQAPage";
 import AdvisorOnboardingPage from "./pages/AdvisorOnboardingPage";
 import AttorneyOnboardingPage from "./pages/AttorneyOnboardingPage";
 import AccountantOnboardingPage from "./pages/AccountantOnboardingPage";
+import AccountantDashboardPage from "./pages/AccountantDashboardPage";
 
 const queryClient = new QueryClient();
 
@@ -284,6 +285,7 @@ function App() {
             <Route path="/advisor-onboarding" element={<AdvisorOnboardingPage />} />
             <Route path="/attorney-onboarding" element={<AttorneyOnboardingPage />} />
             <Route path="/accountant-onboarding" element={<AccountantOnboardingPage />} />
+            <Route path="/accountant-dashboard" element={<AccountantDashboardPage />} />
 
                          </Routes>
                         <Navigation />
