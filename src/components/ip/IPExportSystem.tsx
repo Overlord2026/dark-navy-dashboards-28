@@ -9,6 +9,9 @@ import { UIWireframeExports } from './UIWireframeExports';
 import { IPLogExport } from './IPLogExport';
 import { PatentPendingAssets } from './PatentPendingAssets';
 import { LegalTemplates } from './LegalTemplates';
+import { PatentWireframeGenerator } from './PatentWireframeGenerator';
+import { TechnicalSpecificationDiagrams } from './TechnicalSpecificationDiagrams';
+import { PatentDocumentationPackage } from './PatentDocumentationPackage';
 import { TechnicalWorkflowDiagrams } from './TechnicalWorkflowDiagrams';
 
 export function IPExportSystem() {
@@ -184,9 +187,6 @@ export function IPExportSystem() {
           <PatentClaimDrafts />
         </TabsContent>
 
-        <TabsContent value="wireframes">
-          <UIWireframeExports />
-        </TabsContent>
 
         <TabsContent value="assets">
           <PatentPendingAssets />
@@ -194,6 +194,10 @@ export function IPExportSystem() {
 
         <TabsContent value="legal">
           <LegalTemplates />
+        </TabsContent>
+
+        <TabsContent value="package">
+          <PatentDocumentationPackage />
         </TabsContent>
       </Tabs>
 
