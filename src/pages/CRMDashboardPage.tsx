@@ -2,7 +2,7 @@ import React from 'react';
 import { ThreeColumnLayout } from '@/components/layout/ThreeColumnLayout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Users, BarChart3, Calendar, Bell, Upload, Video, Mail, Target, Zap } from 'lucide-react';
-import { LeadCaptureForm } from '@/components/crm/LeadCaptureForm';
+import { EnhancedLeadIntakeForm } from '@/components/leads/EnhancedLeadIntakeForm';
 import { PipelineKanban } from '@/components/crm/PipelineKanban';
 import { MeetingIntegrations } from '@/components/crm/MeetingIntegrations';
 import { ROIDashboard } from '@/components/crm/ROIDashboard';
@@ -10,6 +10,7 @@ import { ContactManagement } from '@/components/crm/ContactManagement';
 import { AutomatedReminders } from '@/components/crm/AutomatedReminders';
 import { EmailAutomation } from '@/components/crm/EmailAutomation';
 import { AdIntegrations } from '@/components/crm/AdIntegrations';
+import { LeadScoringAnalyticsDashboard } from '@/components/leads/LeadScoringAnalyticsDashboard';
 
 export default function CRMDashboardPage() {
   return (
@@ -27,14 +28,18 @@ export default function CRMDashboardPage() {
               Complete customer relationship management with automated workflows
             </p>
           </div>
-          <LeadCaptureForm />
+          <EnhancedLeadIntakeForm />
         </div>
 
         <Tabs defaultValue="pipeline" className="w-full">
-          <TabsList className="grid w-full grid-cols-7">
+          <TabsList className="grid w-full grid-cols-8">
             <TabsTrigger value="pipeline" className="flex items-center gap-2">
               <Zap className="h-4 w-4" />
               Pipeline
+            </TabsTrigger>
+            <TabsTrigger value="scoring" className="flex items-center gap-2">
+              <BarChart3 className="h-4 w-4" />
+              Lead Scoring
             </TabsTrigger>
             <TabsTrigger value="contacts" className="flex items-center gap-2">
               <Users className="h-4 w-4" />
@@ -68,6 +73,10 @@ export default function CRMDashboardPage() {
 
           <TabsContent value="pipeline" className="space-y-4">
             <PipelineKanban />
+          </TabsContent>
+
+          <TabsContent value="scoring" className="space-y-4">
+            <LeadScoringAnalyticsDashboard />
           </TabsContent>
 
           <TabsContent value="contacts" className="space-y-4">
