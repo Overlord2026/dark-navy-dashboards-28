@@ -15157,6 +15157,154 @@ export type Database = {
           },
         ]
       }
+      organization_admins: {
+        Row: {
+          created_at: string
+          id: string
+          invited_by: string | null
+          is_active: boolean | null
+          organization_id: string | null
+          permissions: Json | null
+          role: Database["public"]["Enums"]["admin_role"]
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          invited_by?: string | null
+          is_active?: boolean | null
+          organization_id?: string | null
+          permissions?: Json | null
+          role?: Database["public"]["Enums"]["admin_role"]
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          invited_by?: string | null
+          is_active?: boolean | null
+          organization_id?: string | null
+          permissions?: Json | null
+          role?: Database["public"]["Enums"]["admin_role"]
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organization_admins_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      organization_branches: {
+        Row: {
+          address: Json | null
+          branch_code: string | null
+          branch_name: string
+          contact_info: Json | null
+          created_at: string
+          id: string
+          is_active: boolean | null
+          manager_id: string | null
+          organization_id: string | null
+          seat_allocation: number | null
+          updated_at: string
+        }
+        Insert: {
+          address?: Json | null
+          branch_code?: string | null
+          branch_name: string
+          contact_info?: Json | null
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          manager_id?: string | null
+          organization_id?: string | null
+          seat_allocation?: number | null
+          updated_at?: string
+        }
+        Update: {
+          address?: Json | null
+          branch_code?: string | null
+          branch_name?: string
+          contact_info?: Json | null
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          manager_id?: string | null
+          organization_id?: string | null
+          seat_allocation?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organization_branches_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      organizations: {
+        Row: {
+          billing_email: string | null
+          branding_enabled: boolean | null
+          created_at: string
+          custom_domain: string | null
+          id: string
+          logo_url: string | null
+          marketplace_visibility: boolean | null
+          name: string
+          organization_type: Database["public"]["Enums"]["organization_type"]
+          primary_color: string | null
+          seats_in_use: number
+          secondary_color: string | null
+          subscription_status: string
+          total_seats_purchased: number
+          updated_at: string
+        }
+        Insert: {
+          billing_email?: string | null
+          branding_enabled?: boolean | null
+          created_at?: string
+          custom_domain?: string | null
+          id?: string
+          logo_url?: string | null
+          marketplace_visibility?: boolean | null
+          name: string
+          organization_type: Database["public"]["Enums"]["organization_type"]
+          primary_color?: string | null
+          seats_in_use?: number
+          secondary_color?: string | null
+          subscription_status?: string
+          total_seats_purchased?: number
+          updated_at?: string
+        }
+        Update: {
+          billing_email?: string | null
+          branding_enabled?: boolean | null
+          created_at?: string
+          custom_domain?: string | null
+          id?: string
+          logo_url?: string | null
+          marketplace_visibility?: boolean | null
+          name?: string
+          organization_type?: Database["public"]["Enums"]["organization_type"]
+          primary_color?: string | null
+          seats_in_use?: number
+          secondary_color?: string | null
+          subscription_status?: string
+          total_seats_purchased?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       other_assets: {
         Row: {
           created_at: string
@@ -25273,6 +25421,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: string
       }
+      get_current_user_organization_id: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
       get_current_user_role: {
         Args: Record<PropertyKey, never>
         Returns: string
@@ -25794,6 +25946,12 @@ export type Database = {
       }
     }
     Enums: {
+      admin_role:
+        | "admin"
+        | "sub_admin"
+        | "billing_admin"
+        | "compliance_officer"
+        | "branch_manager"
       cpa_staff_role:
         | "tax_only"
         | "bookkeeping"
@@ -25819,6 +25977,15 @@ export type Database = {
         | "other"
       goal_priority: "low" | "medium" | "high" | "top_aspiration"
       goal_status: "active" | "completed" | "paused" | "archived"
+      organization_type:
+        | "broker_dealer"
+        | "ria"
+        | "insurance_agency"
+        | "law_firm"
+        | "accounting_firm"
+        | "family_office"
+        | "wealth_management"
+        | "financial_planning"
       professional_persona:
         | "advisor"
         | "attorney"
@@ -25961,6 +26128,13 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      admin_role: [
+        "admin",
+        "sub_admin",
+        "billing_admin",
+        "compliance_officer",
+        "branch_manager",
+      ],
       cpa_staff_role: [
         "tax_only",
         "bookkeeping",
@@ -25988,6 +26162,16 @@ export const Constants = {
       ],
       goal_priority: ["low", "medium", "high", "top_aspiration"],
       goal_status: ["active", "completed", "paused", "archived"],
+      organization_type: [
+        "broker_dealer",
+        "ria",
+        "insurance_agency",
+        "law_firm",
+        "accounting_firm",
+        "family_office",
+        "wealth_management",
+        "financial_planning",
+      ],
       professional_persona: [
         "advisor",
         "attorney",
