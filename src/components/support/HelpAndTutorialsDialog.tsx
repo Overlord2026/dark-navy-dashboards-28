@@ -25,6 +25,18 @@ export function HelpAndTutorialsDialog({ isOpen, onClose, onChatWithSupport }: H
   
   const faqItems = [
     {
+      question: "How does Linda, the Voice AI Assistant, work?",
+      answer: "Linda is your AI-powered voice assistant that automatically calls clients to confirm appointments, handle reschedule requests, send reminders, and follow up after meetings. She speaks naturally and represents your firm professionally through VOIP and SMS communications."
+    },
+    {
+      question: "How do I enable Linda for my practice?",
+      answer: "Linda is included in Pro/Premium plans or available as a +$10/month add-on for Basic plans. Go to Settings → Voice AI Assistant to configure Linda's greeting, branding, and call preferences. Setup takes less than 5 minutes!"
+    },
+    {
+      question: "Is Linda secure and compliant?",
+      answer: "Yes! Linda is HIPAA-compliant with encrypted communications, SOC 2 certified infrastructure, and configurable data retention policies. All calls are secure and client data is protected according to industry standards."
+    },
+    {
       question: "How do I connect a bill payment provider?",
       answer: "You can connect bill payment providers through the Advanced Bill Paying Providers dialog. Click on the 'Advanced Bill Paying Providers' button on the Bill Pay page, then select the provider you want to integrate with and follow the on-screen instructions."
     },
@@ -47,6 +59,12 @@ export function HelpAndTutorialsDialog({ isOpen, onClose, onChatWithSupport }: H
   ];
   
   const tutorials = [
+    {
+      title: "Watch: Linda AI Meeting Assistant in Action",
+      description: "See how Linda handles real client interactions with professional voice calls and SMS.",
+      videoUrl: "#",
+      duration: "4:12"
+    },
     {
       title: "Getting Started with Bill Pay",
       description: "Learn the basics of setting up and managing your bills in the system.",
