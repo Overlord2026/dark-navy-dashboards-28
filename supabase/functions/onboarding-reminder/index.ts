@@ -25,7 +25,7 @@ serve(async (req) => {
     const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
     
     const { data: abandonedProgress, error: progressError } = await supabase
-      .from('onboarding_progress')
+      .from('onboarding_flow_progress')
       .select(`
         *,
         user:user_id (
@@ -105,7 +105,7 @@ serve(async (req) => {
 
         // Mark reminder as sent
         const { error: updateError } = await supabase
-          .from('onboarding_progress')
+          .from('onboarding_flow_progress')
           .update({
             abandonment_reminder_sent_at: new Date().toISOString()
           })

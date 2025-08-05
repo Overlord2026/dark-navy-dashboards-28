@@ -17,6 +17,8 @@ import { ConfirmationStep } from './steps/ConfirmationStep';
 import { AIAssistant } from './AIAssistant';
 import { OnboardingState, OnboardingStepData, WhiteLabelConfig, ReferralInfo, OnboardingStepConfig } from '@/types/onboarding';
 import { useTenantBranding } from '@/hooks/useTenantBranding';
+import { useOnboardingProgress } from '@/hooks/useOnboardingProgress';
+import { OnboardingProgressBar } from './OnboardingProgressBar';
 
 interface ClientOnboardingFlowProps {
   onComplete?: (state: OnboardingState) => void;
@@ -38,6 +40,7 @@ export const ClientOnboardingFlow: React.FC<ClientOnboardingFlowProps> = ({
   partnerId
 }) => {
   const { brandingConfig } = useTenantBranding();
+  const { progress, saveProgress, markCompleted, hasExistingProgress } = useOnboardingProgress();
   
   const [currentStep, setCurrentStep] = useState(0);
   const [showAIAssistant, setShowAIAssistant] = useState(false);
@@ -62,7 +65,17 @@ export const ClientOnboardingFlow: React.FC<ClientOnboardingFlowProps> = ({
     }
   };
 
-  const [data, setData] = useState<OnboardingStepData>(initialData);
+  const [data, setData] = useState<OnboardingStepData>(
+    hasExistingProgress && progress?.stepData ? progress.stepData : initialData
+  );
+
+  // Restore progress if exists
+  useEffect(() => {
+    if (progress && hasExistingProgress) {
+      setCurrentStep(progress.currentStep);
+      setData(progress.stepData);
+    }
+  }, [progress, hasExistingProgress]);
 
   // Dynamic step configuration based on white-label settings
   const defaultSteps = [
@@ -106,16 +119,29 @@ export const ClientOnboardingFlow: React.FC<ClientOnboardingFlowProps> = ({
     estimateCompletion();
   }, [currentStep, stepTitles.length]);
 
-  const handleComplete = (stepData: Partial<OnboardingStepData>) => {
+  const handleComplete = async (stepData: Partial<OnboardingStepData>) => {
     const updatedData = { ...data, ...stepData };
     setData(updatedData);
 
+    const nextStep = currentStep + 1;
+    
+    // Save progress
+    await saveProgress(
+      nextStep,
+      stepTitles.length,
+      stepData,
+      nextStep >= stepTitles.length ? 'completed' : 'in_progress'
+    );
+
     if (currentStep < stepTitles.length - 1) {
-      setCurrentStep(currentStep + 1);
+      setCurrentStep(nextStep);
     } else {
+      // Mark as completed
+      await markCompleted();
+      
       const finalState: OnboardingState = {
         ...updatedData,
-        currentStep: currentStep + 1,
+        currentStep: nextStep,
         totalSteps: stepTitles.length,
         progressPercentage: 100,
         status: 'completed',
@@ -201,25 +227,20 @@ export const ClientOnboardingFlow: React.FC<ClientOnboardingFlowProps> = ({
 
           {/* Enhanced Progress with ETA */}
           <div className="mb-6 md:mb-8">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-3 gap-2">
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-foreground">
-                  Step {currentStep + 1} of {stepTitles.length}: {stepTitles[currentStep]}
-                </span>
-                {effectiveBrandConfig.features.aiAssistant && (
-                  <Sparkles className="h-4 w-4 text-primary" />
-                )}
-              </div>
-              <div className="flex flex-col md:items-end text-xs md:text-sm text-muted-foreground">
-                <span>{Math.round(progressPercentage)}% Complete</span>
-                <span className="text-xs">{estimatedCompletion}</span>
-              </div>
-            </div>
-            <Progress 
-              value={progressPercentage} 
-              className="h-3"
-              indicatorClassName="bg-gradient-to-r from-primary to-primary/80 transition-all duration-500"
+            <OnboardingProgressBar
+              currentStep={currentStep + 1}
+              totalSteps={stepTitles.length}
+              progressPercentage={progressPercentage}
+              status={progress?.status || 'in_progress'}
+              lastActiveAt={progress?.lastActiveAt}
+              estimatedCompletion={estimatedCompletion}
             />
+            
+            {hasExistingProgress && (
+              <div className="mt-2 text-sm text-muted-foreground">
+                Welcome back! Continuing from where you left off.
+              </div>
+            )}
           </div>
 
           {/* Main Content */}

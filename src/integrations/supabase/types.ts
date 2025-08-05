@@ -14508,6 +14508,51 @@ export type Database = {
         }
         Relationships: []
       }
+      onboarding_flow_progress: {
+        Row: {
+          abandonment_reminder_sent_at: string | null
+          completed_at: string | null
+          created_at: string
+          current_step: number
+          id: string
+          last_active_at: string
+          progress_percentage: number
+          status: string
+          step_data: Json | null
+          total_steps: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          abandonment_reminder_sent_at?: string | null
+          completed_at?: string | null
+          created_at?: string
+          current_step?: number
+          id?: string
+          last_active_at?: string
+          progress_percentage?: number
+          status?: string
+          step_data?: Json | null
+          total_steps?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          abandonment_reminder_sent_at?: string | null
+          completed_at?: string | null
+          created_at?: string
+          current_step?: number
+          id?: string
+          last_active_at?: string
+          progress_percentage?: number
+          status?: string
+          step_data?: Json | null
+          total_steps?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       onboarding_progress: {
         Row: {
           app_id: string

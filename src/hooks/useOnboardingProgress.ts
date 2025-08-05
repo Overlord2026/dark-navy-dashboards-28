@@ -32,7 +32,7 @@ export const useOnboardingProgress = () => {
   const loadProgress = async () => {
     try {
       const { data, error } = await supabase
-        .from('onboarding_progress')
+        .from('onboarding_flow_progress')
         .select('*')
         .eq('user_id', user?.id)
         .eq('status', 'in_progress')
@@ -48,8 +48,8 @@ export const useOnboardingProgress = () => {
           currentStep: progressData.current_step,
           totalSteps: progressData.total_steps,
           progressPercentage: progressData.progress_percentage,
-          stepData: progressData.step_data || {},
-          status: progressData.status,
+          stepData: (progressData.step_data as OnboardingStepData) || {},
+          status: progressData.status as 'in_progress' | 'completed' | 'abandoned' | 'paused',
           lastActiveAt: progressData.last_active_at,
         });
       }
@@ -76,7 +76,7 @@ export const useOnboardingProgress = () => {
         current_step: currentStep,
         total_steps: totalSteps,
         progress_percentage: progressPercentage,
-        step_data: { ...progress?.stepData, ...stepData },
+        step_data: JSON.parse(JSON.stringify({ ...progress?.stepData, ...stepData })), // Convert to Json
         status,
         last_active_at: new Date().toISOString(),
       };
@@ -84,7 +84,7 @@ export const useOnboardingProgress = () => {
       if (progress?.id) {
         // Update existing progress
         const { error } = await supabase
-          .from('onboarding_progress')
+          .from('onboarding_flow_progress')
           .update(progressData)
           .eq('id', progress.id);
 
@@ -92,7 +92,7 @@ export const useOnboardingProgress = () => {
       } else {
         // Create new progress record
         const { data, error } = await supabase
-          .from('onboarding_progress')
+          .from('onboarding_flow_progress')
           .insert(progressData)
           .select()
           .single();
@@ -127,7 +127,7 @@ export const useOnboardingProgress = () => {
 
     try {
       const { error } = await supabase
-        .from('onboarding_progress')
+        .from('onboarding_flow_progress')
         .update({
           status: 'completed',
           progress_percentage: 100,
@@ -155,7 +155,7 @@ export const useOnboardingProgress = () => {
 
     try {
       const { error } = await supabase
-        .from('onboarding_progress')
+        .from('onboarding_flow_progress')
         .update({ status: 'abandoned' })
         .eq('id', progress.id);
 
