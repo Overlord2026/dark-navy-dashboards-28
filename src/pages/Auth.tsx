@@ -9,7 +9,7 @@ import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
 import { Chrome } from "lucide-react";
 import OTPVerification from "@/components/auth/OTPVerification";
-import { HCaptchaComponent, HCaptchaRef } from "@/components/auth/HCaptcha";
+import { ReCaptchaComponent, ReCaptchaRef } from "@/components/auth/ReCaptcha";
 import { supabase } from "@/lib/supabase";
 
 // Google Logo Component
@@ -49,8 +49,8 @@ export default function Auth() {
   const [loginUserId, setLoginUserId] = useState<string | null>(null);
   const [tempCredentials, setTempCredentials] = useState<{email: string, password: string} | null>(null);
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
-  const signInCaptchaRef = useRef<HCaptchaRef>(null);
-  const signUpCaptchaRef = useRef<HCaptchaRef>(null);
+  const signInCaptchaRef = useRef<ReCaptchaRef>(null);
+  const signUpCaptchaRef = useRef<ReCaptchaRef>(null);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { isAuthenticated, login, signup, signInWithGoogle, resendConfirmation, resetPassword, complete2FALogin } = useAuth();
@@ -514,7 +514,7 @@ export default function Auth() {
                 </div>
                 )}
                 
-                <HCaptchaComponent 
+                <ReCaptchaComponent 
                   ref={isSignUp ? signUpCaptchaRef : signInCaptchaRef}
                   onVerify={(token) => setCaptchaToken(token)}
                   onExpire={() => setCaptchaToken(null)}

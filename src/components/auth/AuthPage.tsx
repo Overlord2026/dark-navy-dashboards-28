@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Loader2, Eye, EyeOff } from 'lucide-react';
-import { HCaptchaComponent, HCaptchaRef } from './HCaptcha';
+import { ReCaptchaComponent, ReCaptchaRef } from './ReCaptcha';
 
 export function AuthPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -20,8 +20,8 @@ export function AuthPage() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
-  const signInCaptchaRef = useRef<HCaptchaRef>(null);
-  const signUpCaptchaRef = useRef<HCaptchaRef>(null);
+  const signInCaptchaRef = useRef<ReCaptchaRef>(null);
+  const signUpCaptchaRef = useRef<ReCaptchaRef>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -303,7 +303,7 @@ export function AuthPage() {
                   </div>
                 </div>
                 
-                <HCaptchaComponent 
+                <ReCaptchaComponent
                   ref={signInCaptchaRef}
                   onError={(error) => {
                     toast({
@@ -427,7 +427,7 @@ export function AuthPage() {
                   </div>
                 </div>
                 
-                <HCaptchaComponent 
+                <ReCaptchaComponent 
                   ref={signUpCaptchaRef}
                   onError={(error) => {
                     toast({

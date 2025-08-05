@@ -9,7 +9,7 @@ import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { CheckCircle, XCircle, AlertTriangle, Play, Loader2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
-import { HCaptchaComponent, HCaptchaRef } from '@/components/auth/HCaptcha';
+import { ReCaptchaComponent, ReCaptchaRef } from '@/components/auth/ReCaptcha';
 import { useToast } from '@/hooks/use-toast';
 
 interface TestResult {
@@ -24,7 +24,7 @@ export function AuthTestSuite() {
   const [isRunning, setIsRunning] = useState(false);
   const [testEmail, setTestEmail] = useState('test@example.com');
   const [testPassword, setTestPassword] = useState('testpass123');
-  const captchaRef = useRef<HCaptchaRef>(null);
+  const captchaRef = useRef<ReCaptchaRef>(null);
   const { toast } = useToast();
 
   const addResult = (result: TestResult) => {
@@ -226,33 +226,33 @@ export function AuthTestSuite() {
   };
 
   const testCaptchaIntegration = async () => {
-    addResult({ test: 'hCAPTCHA Integration', status: 'pending', message: 'Testing CAPTCHA...' });
+    addResult({ test: 'reCAPTCHA Integration', status: 'pending', message: 'Testing CAPTCHA...' });
     
     try {
       const isValid = await testCaptcha();
       
       if (isValid) {
         addResult({ 
-          test: 'hCAPTCHA Integration', 
+          test: 'reCAPTCHA Integration', 
           status: 'pass', 
-          message: 'hCAPTCHA verification successful',
+          message: 'reCAPTCHA verification successful',
           details: 'CAPTCHA token obtained successfully'
         });
         return true;
       } else {
         addResult({ 
-          test: 'hCAPTCHA Integration', 
+          test: 'reCAPTCHA Integration', 
           status: 'fail', 
-          message: 'hCAPTCHA verification failed',
+          message: 'reCAPTCHA verification failed',
           details: 'Unable to get valid CAPTCHA token'
         });
         return false;
       }
     } catch (error) {
       addResult({ 
-        test: 'hCAPTCHA Integration', 
+        test: 'reCAPTCHA Integration', 
         status: 'fail', 
-        message: `hCAPTCHA error: ${error}`,
+        message: `reCAPTCHA error: ${error}`,
         details: String(error)
       });
       return false;
@@ -501,23 +501,23 @@ export function AuthTestSuite() {
             <TabsContent value="captcha" className="space-y-4">
               <Alert>
                 <AlertDescription>
-                  Test hCAPTCHA integration independently. Complete the CAPTCHA below to verify it's working correctly.
+                  Test reCAPTCHA integration independently. Complete the CAPTCHA below to verify it's working correctly.
                 </AlertDescription>
               </Alert>
               
               <div className="flex flex-col items-center space-y-4">
-                <HCaptchaComponent 
+                <ReCaptchaComponent 
                   ref={captchaRef}
                   onVerify={(token) => {
                     toast({
                       title: "CAPTCHA Verified",
-                      description: "hCAPTCHA verification successful!",
+                      description: "reCAPTCHA verification successful!",
                     });
                   }}
                   onError={(error) => {
                     toast({
                       title: "CAPTCHA Error",
-                      description: "hCAPTCHA verification failed",
+                      description: "reCAPTCHA verification failed",
                       variant: "destructive",
                     });
                   }}
