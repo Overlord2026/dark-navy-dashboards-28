@@ -4,7 +4,8 @@ import { IPProtectionSettings } from "@/components/settings/IPProtectionSettings
 import { PublishAuditLogViewer } from "@/components/settings/PublishAuditLogViewer";
 import { CollaborationGuidelines } from "@/components/settings/CollaborationGuidelines";
 import { UserAccessRevocation } from "@/components/settings/UserAccessRevocation";
-import { ShieldX } from "lucide-react";
+import { IPExportSystem } from "@/components/ip/IPExportSystem";
+import { ShieldX, FileDown } from "lucide-react";
 import { useUser } from "@/context/UserContext";
 import { DiagnosticsAccessButton } from "@/components/diagnostics/DiagnosticsAccessButton";
 
@@ -23,6 +24,10 @@ export default function IPProtection() {
       <Tabs defaultValue="ip-settings" className="w-full">
         <TabsList className="mb-4">
           <TabsTrigger value="ip-settings">IP Agreement</TabsTrigger>
+          <TabsTrigger value="patent-export" className="text-amber-600 flex items-center gap-1">
+            <FileDown className="h-4 w-4" />
+            <span>Patent Export</span>
+          </TabsTrigger>
           <TabsTrigger value="repository">Repository Access</TabsTrigger>
           <TabsTrigger value="collaboration">Collaboration Guidelines</TabsTrigger>
           <TabsTrigger value="audit-logs">Publish Audit Logs</TabsTrigger>
@@ -34,6 +39,10 @@ export default function IPProtection() {
         
         <TabsContent value="ip-settings">
           <IPProtectionSettings />
+        </TabsContent>
+        
+        <TabsContent value="patent-export">
+          <IPExportSystem />
         </TabsContent>
         
         <TabsContent value="repository">
