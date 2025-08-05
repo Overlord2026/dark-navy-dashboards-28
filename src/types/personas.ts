@@ -25,121 +25,121 @@ export interface PersonaWelcomeMessage {
 
 export const PERSONA_WELCOME_MESSAGES: Record<PersonaType, PersonaWelcomeMessage> = {
   advisor: {
-    title: "Welcome, Advisor!",
-    subtitle: "You're now connected to a new generation of families seeking best-in-class guidance. Showcase your expertise, connect instantly, and deliver custom Roadmaps powered by AI—without any commission bias.",
+    title: "Welcome, Financial Advisor!",
+    subtitle: "Grow your practice, deliver SWAG™ client value, automate compliance, and maximize prospect conversion. Your advisor profile is ready to connect with high-net-worth families.",
     benefits: [
-      "Advanced portfolio tools and premium insights",
-      "Direct access to high-net-worth families",
-      "AI-powered client roadmaps",
-      "No commission bias in recommendations"
+      "Advanced CRM and proposal tools",
+      "SWAG Lead Score™ prospect analytics",
+      "Automated compliance monitoring",
+      "Direct access to vetted HNW families"
     ],
-    ctaPrimary: "Complete Your Profile",
-    ctaSecondary: "Explore Client Matching",
-    learnMoreText: "Unlock advanced portfolio tools and premium insights."
+    ctaPrimary: "Invite Clients Now",
+    ctaSecondary: "Create First Proposal",
+    learnMoreText: "Grow your practice with SWAG™ client value and automated compliance."
   },
   attorney: {
     title: "Welcome, Attorney!",
-    subtitle: "Join a vetted network of legal professionals trusted by high-net-worth families. Share your expertise, manage clients securely, and collaborate with other advisors—all in one secure platform.",
+    subtitle: "Connect with HNW families, automate CLE, streamline document workflows. Manage estate plans, contracts, and compliance with secure document vaults.",
     benefits: [
-      "Document vaults and compliance tools",
-      "Client referral management",
-      "Secure collaboration platform",
-      "Trusted by HNW families"
+      "Secure document vaults and workflows",
+      "Automated CLE tracking and alerts",
+      "Direct HNW family connections",
+      "Estate planning collaboration tools"
     ],
-    ctaPrimary: "Set Up Document Vault",
-    ctaSecondary: "View Client Portal",
-    learnMoreText: "Access document vaults, compliance, and client referral tools."
+    ctaPrimary: "Upload Legal Documents",
+    ctaSecondary: "Schedule Consultation",
+    learnMoreText: "Connect with HNW families and automate CLE tracking."
   },
   accountant: {
     title: "Welcome, CPA!",
-    subtitle: "Streamline your practice, offer clients proactive tax planning, and partner with wealth advisors in a compliant, secure ecosystem.",
+    subtitle: "Deliver seamless tax planning, automate CE, and partner with fiduciaries for client retention. Upload returns, monitor compliance, and connect with families who need your expertise.",
     benefits: [
-      "Tax workflow automation",
-      "RIA integrations",
-      "Proactive tax planning tools",
-      "Secure advisor partnerships"
+      "Seamless tax planning workflows",
+      "Automated CE tracking and alerts",
+      "Fiduciary partnership network",
+      "Client retention automation"
     ],
-    ctaPrimary: "Configure Tax Workflows",
-    ctaSecondary: "Connect with Advisors",
-    learnMoreText: "Unlock tax workflow automation and RIA integrations."
+    ctaPrimary: "Import Clients",
+    ctaSecondary: "Start Tax Planning",
+    learnMoreText: "Deliver seamless tax planning and automate CE requirements."
   },
   coach: {
-    title: "Welcome, Coach!",
-    subtitle: "Expand your influence by supporting advisors and families nationwide. Offer workshops, host events, and track your impact—all with a branded profile.",
+    title: "Welcome, Coach/Consultant!",
+    subtitle: "Showcase curriculum, manage advisor cohorts, deliver trackable outcomes. Expand your influence by supporting advisors and families nationwide with branded workshops.",
     benefits: [
-      "Nationwide reach for workshops",
-      "Event hosting capabilities",
-      "Impact tracking tools",
-      "Branded professional profile"
+      "Curriculum showcase platform",
+      "Advisor cohort management",
+      "Trackable outcome analytics",
+      "Nationwide workshop hosting"
     ],
-    ctaPrimary: "Create Workshop",
-    ctaSecondary: "Build Your Brand",
-    learnMoreText: "Connect directly with advisors seeking expert guidance."
+    ctaPrimary: "Upload Training Content",
+    ctaSecondary: "Publish Curriculum",
+    learnMoreText: "Showcase curriculum and manage advisor cohorts with trackable outcomes."
   },
   consultant: {
     title: "Welcome, Consultant!",
-    subtitle: "Share your specialized expertise with top-tier wealth management professionals. Build your reputation and expand your client base through our trusted network.",
+    subtitle: "Showcase curriculum, manage advisor cohorts, deliver trackable outcomes. Share your specialized expertise with top-tier wealth management professionals.",
     benefits: [
-      "Access to elite wealth professionals",
-      "Reputation building platform",
-      "Specialized expertise showcase",
-      "Trusted network connections"
+      "Elite wealth professional access",
+      "Specialized expertise platform",
+      "Reputation building tools",
+      "Trackable impact metrics"
     ],
     ctaPrimary: "Showcase Expertise",
-    ctaSecondary: "Browse Opportunities",
-    learnMoreText: "Build your reputation in the wealth management ecosystem."
+    ctaSecondary: "Publish Practice Audit",
+    learnMoreText: "Showcase curriculum and deliver trackable outcomes to elite professionals."
   },
   compliance: {
-    title: "Welcome, Compliance Pro!",
-    subtitle: "Manage firm-wide best practices, track audit trails, and support compliance across all roles. Access the industry's first built-in mock audit center.",
+    title: "Welcome, Compliance Officer!",
+    subtitle: "Centralize audits, monitor filings, automate RIA/insurance/attorney compliance. Access the industry's first built-in mock audit center and regulatory tracking.",
     benefits: [
-      "Firm-wide compliance tracking",
-      "Mock audit center access",
-      "Automated audit trails",
-      "SEC/state requirement updates"
+      "Centralized audit management",
+      "Automated compliance monitoring",
+      "RIA/insurance/attorney workflows",
+      "Mock audit center access"
     ],
-    ctaPrimary: "Set Up Compliance Dashboard",
-    ctaSecondary: "Run Mock Audit",
-    learnMoreText: "Stay ahead of SEC/state requirements—always."
+    ctaPrimary: "Launch Mock Audit",
+    ctaSecondary: "Track Regulatory Changes",
+    learnMoreText: "Centralize audits and automate RIA/insurance/attorney compliance."
   },
   imo_fmo: {
-    title: "Welcome, IMO/FMO Partner!",
-    subtitle: "Connect with qualified advisors, distribute approved insurance solutions, and offer exclusive training programs in a secure, reputation-first platform.",
+    title: "Welcome, Insurance/IMO!",
+    subtitle: "Manage multi-state compliance, automate CE, grow your agent network. Connect with qualified advisors and distribute approved solutions in a secure platform.",
     benefits: [
-      "Qualified advisor network",
-      "Approved solution distribution",
-      "Training program management",
-      "Agent compliance tracking"
+      "Multi-state compliance management",
+      "Automated CE tracking",
+      "Agent network growth tools",
+      "Approved solution distribution"
     ],
-    ctaPrimary: "View Advisor Network",
-    ctaSecondary: "Upload Training Materials",
-    learnMoreText: "Track agent compliance and continuing education."
+    ctaPrimary: "Start New Quote",
+    ctaSecondary: "Upload Licensing",
+    learnMoreText: "Manage multi-state compliance and automate CE for your agent network."
   },
   agency: {
-    title: "Welcome, Lead Gen Partner!",
-    subtitle: "Showcase your lead services to verified advisors and track your ROI per campaign—real time.",
+    title: "Welcome, Marketing Agency!",
+    subtitle: "Engage your audience, add value with VIP reserved access, cross-promote. Showcase lead services to verified advisors and track ROI in real-time.",
     benefits: [
+      "VIP audience engagement",
+      "Cross-promotion opportunities",
       "Verified advisor marketplace",
-      "Real-time ROI tracking",
-      "Campaign performance analytics",
-      "Performance-based referrals"
+      "Real-time ROI tracking"
     ],
-    ctaPrimary: "Launch First Campaign",
-    ctaSecondary: "View Analytics",
-    learnMoreText: "Earn referrals for top performance and transparent results."
+    ctaPrimary: "Launch Campaign",
+    ctaSecondary: "Request VIP Access",
+    learnMoreText: "Engage your audience with VIP reserved access and cross-promotion."
   },
   organization: {
     title: "Welcome, Industry Organization!",
-    subtitle: "Provide thought leadership, host educational webinars, and connect your members to the largest marketplace of trusted wealth professionals and families.",
+    subtitle: "Early-adopter status, drive innovation, and build strategic partnerships. Host educational content and connect members to trusted wealth professionals.",
     benefits: [
-      "Thought leadership platform",
-      "Educational webinar hosting",
-      "Member networking tools",
-      "Sponsorship opportunities"
+      "Early-adopter innovation status",
+      "Strategic partnership building",
+      "Educational content hosting",
+      "Member networking platform"
     ],
-    ctaPrimary: "Schedule Webinar",
-    ctaSecondary: "Connect Members",
-    learnMoreText: "Unlock sponsorship and collaboration tools."
+    ctaPrimary: "Customize VIP Profile",
+    ctaSecondary: "Upload Articles/Events",
+    learnMoreText: "Achieve early-adopter status and drive innovation through strategic partnerships."
   },
   client: {
     title: "Welcome to the Family Office Marketplace™!",
@@ -168,30 +168,30 @@ export const PERSONA_WELCOME_MESSAGES: Record<PersonaType, PersonaWelcomeMessage
     learnMoreText: "Join the elite network transforming wealth management."
   },
   insurance_agent: {
-    title: "Insurance Agent Hub",
-    subtitle: "Your Insurance Agency Hub. Manage quotes, enrollments, and family education—all in one place.",
+    title: "Welcome, Insurance Agent!",
+    subtitle: "Manage multi-state compliance, automate CE, grow your agent network. Quote policies, track commissions, and connect with high-value clients while staying audit-ready.",
     benefits: [
-      "Streamlined quote management",
-      "Automated enrollment tracking",
-      "Family education resources",
-      "Compliance tools"
+      "Multi-state compliance management",
+      "Automated CE and licensing tracking",
+      "Commission tracking system",
+      "High-value client connections"
     ],
-    ctaPrimary: "Get Started",
-    ctaSecondary: "Learn More",
-    learnMoreText: "Discover insurance-specific features"
+    ctaPrimary: "Start New Quote",
+    ctaSecondary: "Upload Licensing",
+    learnMoreText: "Manage multi-state compliance and automate CE requirements."
   },
   healthcare_consultant: {
-    title: "Healthcare Consultant Gateway",
-    subtitle: "Healthcare Consultant Gateway. Empower families with up-to-date advice, benefit navigation, and healthspan planning tools.",
+    title: "Welcome, Healthcare Consultant!",
+    subtitle: "Connect as a verified longevity consultant, manage client care, and join expert panels. Lead in family health and longevity with our nationwide network.",
     benefits: [
-      "Benefit navigation tools",
-      "Health planning resources",
-      "Family healthcare coordination",
-      "Compliance tracking"
+      "Verified longevity consultant status",
+      "Client care management tools",
+      "Expert panel participation",
+      "Nationwide healthcare network"
     ],
-    ctaPrimary: "Get Started",
-    ctaSecondary: "Learn More",
-    learnMoreText: "Explore healthcare consulting features"
+    ctaPrimary: "Set My Consultation Rates",
+    ctaSecondary: "Join Longevity Network",
+    learnMoreText: "Connect as a verified longevity consultant and join expert panels."
   }
 };
 

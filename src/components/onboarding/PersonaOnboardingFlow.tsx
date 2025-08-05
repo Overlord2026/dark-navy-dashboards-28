@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 import { usePersona } from '@/context/PersonaContext';
 import { PersonaType } from '@/types/personas';
-import { useEventTracking } from '@/hooks/useEventTracking';
+import { useAdvancedEventTracking } from '@/hooks/useAdvancedEventTracking';
 import { Celebration } from '@/components/ConfettiAnimation';
 import { SWAGViralShare } from '@/components/leads/SWAGViralShare';
 import { analytics } from '@/lib/analytics';
@@ -19,7 +19,7 @@ import { analytics } from '@/lib/analytics';
 const ENHANCED_PERSONA_MESSAGES = {
   advisor: {
     title: "Welcome to the Family Office Marketplace™!",
-    subtitle: "Your advisor profile is ready. Invite clients, showcase your expertise, and grow your business with our advanced CRM, proposal, compliance, and portfolio tools.",
+    subtitle: "Grow your practice, deliver SWAG™ client value, automate compliance, and maximize prospect conversion. Your advisor profile is ready to connect with high-net-worth families.",
     icon: <Briefcase className="h-8 w-8" />,
     color: "from-blue-500 to-blue-700",
     ctas: [
@@ -30,65 +30,113 @@ const ENHANCED_PERSONA_MESSAGES = {
     ]
   },
   accountant: {
-    title: "Welcome, Tax Professional!",
-    subtitle: "Your accountant dashboard is live. Upload returns, monitor compliance, and connect with families and businesses who need your expertise.",
+    title: "Welcome, CPA/Enrolled Agent!",
+    subtitle: "Deliver seamless tax planning, automate CE, and partner with fiduciaries for client retention. Your accountant dashboard is live with automated compliance monitoring.",
     icon: <FileText className="h-8 w-8" />,
     color: "from-green-500 to-green-700",
     ctas: [
       { label: "Import Clients", action: "import_clients", primary: true },
-      { label: "Start Tax Planning", action: "tax_planning" },
-      { label: "Connect Partners", action: "connect_partners" }
+      { label: "Start Tax Planning Engagement", action: "tax_planning" },
+      { label: "Connect to Family Office Partners", action: "connect_partners" }
     ]
   },
   attorney: {
     title: "Welcome, Counselor!",
-    subtitle: "Your legal practice center is ready. Manage estate plans, contracts, and compliance with secure document vaults and CLE tracking.",
+    subtitle: "Connect with HNW families, automate CLE, streamline document workflows. Your legal practice center is ready with secure document vaults and compliance tracking.",
     icon: <Shield className="h-8 w-8" />,
     color: "from-purple-500 to-purple-700", 
     ctas: [
-      { label: "Upload Legal Docs", action: "upload_docs", primary: true },
+      { label: "Upload Legal Documents", action: "upload_docs", primary: true },
       { label: "Schedule Consultation", action: "schedule_consult" },
       { label: "Access CLE Resources", action: "cle_resources" }
     ]
   },
   coach: {
-    title: "Welcome, Practice Coach!",
-    subtitle: "Your practice growth hub is active. Publish curriculum, connect with teams, and automate referrals for maximum impact.",
+    title: "Welcome, Coach/Consultant!",
+    subtitle: "Showcase curriculum, manage advisor cohorts, deliver trackable outcomes. Your practice growth hub is active with curriculum publishing and impact tracking.",
     icon: <GraduationCap className="h-8 w-8" />,
     color: "from-orange-500 to-orange-700",
     ctas: [
-      { label: "Upload Training", action: "upload_training", primary: true },
+      { label: "Upload Training Content", action: "upload_training", primary: true },
+      { label: "Publish Practice Audit", action: "publish_audit" },
+      { label: "Connect to Teams", action: "connect_teams" }
+    ]
+  },
+  consultant: {
+    title: "Welcome, Consultant!",
+    subtitle: "Showcase curriculum, manage advisor cohorts, deliver trackable outcomes. Share your specialized expertise with top-tier wealth management professionals.",
+    icon: <Users className="h-8 w-8" />,
+    color: "from-indigo-500 to-indigo-700",
+    ctas: [
+      { label: "Showcase Expertise", action: "showcase_expertise", primary: true },
+      { label: "Publish Practice Audit", action: "publish_audit" },
       { label: "Connect to Teams", action: "connect_teams" }
     ]
   },
   compliance: {
     title: "Welcome, Compliance Officer!",
-    subtitle: "Your compliance center is ready. Automate audits, track incidents, and provide world-class consulting.",
+    subtitle: "Centralize audits, monitor filings, automate RIA/insurance/attorney compliance. Your compliance center is ready with mock audit capabilities.",
     icon: <UserCheck className="h-8 w-8" />,
     color: "from-red-500 to-red-700",
     ctas: [
       { label: "Launch Mock Audit", action: "mock_audit", primary: true },
-      { label: "Start Training", action: "compliance_training" }
+      { label: "Track Regulatory Changes", action: "track_regulatory" },
+      { label: "Start Compliance Training", action: "compliance_training" }
+    ]
+  },
+  insurance_agent: {
+    title: "Welcome, Insurance Agent!",
+    subtitle: "Manage multi-state compliance, automate CE, grow your agent network. Your insurance hub is live with quote management and commission tracking.",
+    icon: <Shield className="h-8 w-8" />,
+    color: "from-cyan-500 to-cyan-700",
+    ctas: [
+      { label: "Start New Quote", action: "new_quote", primary: true },
+      { label: "Upload Licensing", action: "upload_licensing" },
+      { label: "Book Training", action: "book_training" }
+    ]
+  },
+  imo_fmo: {
+    title: "Welcome, IMO/FMO!",
+    subtitle: "Manage multi-state compliance, automate CE, grow your agent network. Connect with qualified advisors and distribute approved solutions.",
+    icon: <Building2 className="h-8 w-8" />,
+    color: "from-teal-500 to-teal-700",
+    ctas: [
+      { label: "View Agent Network", action: "view_network", primary: true },
+      { label: "Upload Training Materials", action: "upload_materials" },
+      { label: "Track Compliance", action: "track_compliance" }
     ]
   },
   healthcare_consultant: {
-    title: "Welcome, Healthcare Leader!",
-    subtitle: "Lead in family health and longevity. Share protocols and join our network to reach families nationwide.",
+    title: "Welcome, Healthcare Consultant!",
+    subtitle: "Connect as a verified longevity consultant, manage client care, and join expert panels. Lead in family health and longevity nationwide.",
     icon: <Heart className="h-8 w-8" />,
     color: "from-emerald-500 to-emerald-700",
     ctas: [
-      { label: "Set My Rates", action: "set_rates", primary: true },
-      { label: "Join Longevity AMA", action: "join_ama" }
+      { label: "Set My Consultation Rates", action: "set_rates", primary: true },
+      { label: "Share Medical Protocols", action: "share_protocols" },
+      { label: "Join Longevity Network", action: "join_network" }
     ]
   },
   organization: {
-    title: "Welcome, Industry Leader!",
-    subtitle: "Your VIP profile is ready. Share content and connect with thousands of professionals in our trusted space.",
+    title: "Welcome, Industry Organization!",
+    subtitle: "Early-adopter status, drive innovation, build strategic partnerships. Your VIP profile is ready to engage thousands of professionals.",
     icon: <Building2 className="h-8 w-8" />,
     color: "from-gold to-yellow-600",
     ctas: [
-      { label: "Customize VIP Profile", action: "customize_profile", primary: true },
-      { label: "Upload Content", action: "upload_content" }
+      { label: "Customize My VIP Profile", action: "customize_profile", primary: true },
+      { label: "Upload Articles/Events", action: "upload_content" },
+      { label: "Request Analytics Dashboard", action: "request_analytics" }
+    ]
+  },
+  agency: {
+    title: "Welcome, Marketing Partner!",
+    subtitle: "Engage your audience, add value with VIP reserved access, cross-promote. Your partnership hub is ready for campaign management.",
+    icon: <Star className="h-8 w-8" />,
+    color: "from-pink-500 to-pink-700",
+    ctas: [
+      { label: "Launch Campaign", action: "launch_campaign", primary: true },
+      { label: "Request VIP Access", action: "request_vip" },
+      { label: "View Analytics", action: "view_analytics" }
     ]
   },
   client: {
@@ -98,16 +146,16 @@ const ENHANCED_PERSONA_MESSAGES = {
     color: "from-blue-500 to-purple-600",
     ctas: [
       { label: "Find Your Advisor", action: "find_advisor", primary: true },
-      { label: "Complete Assessment", action: "wealth_assessment" }
+      { label: "Complete Wealth Assessment", action: "wealth_assessment" }
     ]
   },
   vip_reserved: {
     title: "Welcome, VIP Member!",
-    subtitle: "Your exclusive founding member profile awaits. Shape the future of family wealth management.",
+    subtitle: "Your exclusive founding member profile awaits. Shape the future of family wealth management with early-adopter innovation status.",
     icon: <Crown className="h-8 w-8" />,
     color: "from-gold to-yellow-500",
     ctas: [
-      { label: "Claim Reserved Profile", action: "claim_profile", primary: true },
+      { label: "Claim My Reserved Profile", action: "claim_profile", primary: true },
       { label: "Schedule VIP Onboarding", action: "vip_onboarding" }
     ]
   }
@@ -125,7 +173,7 @@ export const PersonaOnboardingFlow: React.FC<PersonaOnboardingFlowProps> = ({
   forcePersona
 }) => {
   const { currentPersona, markWelcomeModalSeen } = usePersona();
-  const { trackUserOnboarding } = useEventTracking();
+  const { trackOnboardingEvent, trackViralShare } = useAdvancedEventTracking();
   const [showConfetti, setShowConfetti] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
 
@@ -140,10 +188,11 @@ export const PersonaOnboardingFlow: React.FC<PersonaOnboardingFlowProps> = ({
   }, [isOpen]);
 
   const handleCTAAction = async (action: string, isPrimary = false) => {
-    await trackUserOnboarding(`cta_${action}`, { 
-      persona, 
-      action,
-      is_primary: isPrimary
+    await trackOnboardingEvent({
+      step: `cta_${action}`,
+      persona,
+      channel: 'direct',
+      source: 'welcome_modal'
     });
     
     // Handle specific actions
@@ -255,7 +304,11 @@ export const PersonaOnboardingFlow: React.FC<PersonaOnboardingFlowProps> = ({
                   variant="ghost" 
                   size="sm"
                   onClick={() => {
-                    analytics.trackViralShare('welcome_modal', persona, 'user_id');
+                    trackViralShare({
+                      platform: 'copy',
+                      persona,
+                      shareType: 'profile'
+                    });
                   }}
                 >
                   Share my SWAG profile
