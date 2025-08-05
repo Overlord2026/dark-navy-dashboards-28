@@ -3897,6 +3897,59 @@ export type Database = {
         }
         Relationships: []
       }
+      client_access_logs: {
+        Row: {
+          access_type: string
+          client_id: string
+          created_at: string
+          device_info: Json | null
+          id: string
+          ip_address: unknown | null
+          location_data: Json | null
+          professional_id: string
+          resource_accessed: string | null
+          seat_id: string | null
+          session_duration_minutes: number | null
+          user_agent: string | null
+        }
+        Insert: {
+          access_type: string
+          client_id: string
+          created_at?: string
+          device_info?: Json | null
+          id?: string
+          ip_address?: unknown | null
+          location_data?: Json | null
+          professional_id: string
+          resource_accessed?: string | null
+          seat_id?: string | null
+          session_duration_minutes?: number | null
+          user_agent?: string | null
+        }
+        Update: {
+          access_type?: string
+          client_id?: string
+          created_at?: string
+          device_info?: Json | null
+          id?: string
+          ip_address?: unknown | null
+          location_data?: Json | null
+          professional_id?: string
+          resource_accessed?: string | null
+          seat_id?: string | null
+          session_duration_minutes?: number | null
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_access_logs_seat_id_fkey"
+            columns: ["seat_id"]
+            isOneToOne: false
+            referencedRelation: "professional_seat_management"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       client_assignments: {
         Row: {
           assigned_at: string
@@ -5514,6 +5567,75 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "ria_profiles"
             referencedColumns: ["id"]
+          },
+        ]
+      }
+      compliance_export_requests: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          date_range_end: string | null
+          date_range_start: string | null
+          expires_at: string | null
+          export_type: string
+          export_url: string | null
+          id: string
+          parameters: Json | null
+          persona_filter:
+            | Database["public"]["Enums"]["professional_persona"][]
+            | null
+          requested_by: string
+          status: string
+          tenant_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          date_range_end?: string | null
+          date_range_start?: string | null
+          expires_at?: string | null
+          export_type: string
+          export_url?: string | null
+          id?: string
+          parameters?: Json | null
+          persona_filter?:
+            | Database["public"]["Enums"]["professional_persona"][]
+            | null
+          requested_by: string
+          status?: string
+          tenant_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          date_range_end?: string | null
+          date_range_start?: string | null
+          expires_at?: string | null
+          export_type?: string
+          export_url?: string | null
+          id?: string
+          parameters?: Json | null
+          persona_filter?:
+            | Database["public"]["Enums"]["professional_persona"][]
+            | null
+          requested_by?: string
+          status?: string
+          tenant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "compliance_export_requests_requested_by_fkey"
+            columns: ["requested_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "compliance_export_requests_requested_by_fkey"
+            columns: ["requested_by"]
+            isOneToOne: false
+            referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
           },
         ]
       }
@@ -12059,6 +12181,66 @@ export type Database = {
           },
         ]
       }
+      invitation_message_templates: {
+        Row: {
+          body_template: string
+          created_at: string
+          created_by: string | null
+          id: string
+          is_active: boolean | null
+          is_default: boolean | null
+          persona_type: Database["public"]["Enums"]["professional_persona"]
+          subject_template: string
+          template_name: string
+          tenant_id: string | null
+          updated_at: string
+          variables: Json | null
+        }
+        Insert: {
+          body_template: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_default?: boolean | null
+          persona_type: Database["public"]["Enums"]["professional_persona"]
+          subject_template: string
+          template_name: string
+          tenant_id?: string | null
+          updated_at?: string
+          variables?: Json | null
+        }
+        Update: {
+          body_template?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_default?: boolean | null
+          persona_type?: Database["public"]["Enums"]["professional_persona"]
+          subject_template?: string
+          template_name?: string
+          tenant_id?: string | null
+          updated_at?: string
+          variables?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "invitation_message_templates_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "invitation_message_templates_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       kyc_verifications: {
         Row: {
           created_at: string
@@ -16425,6 +16607,60 @@ export type Database = {
           },
         ]
       }
+      professional_client_relationships: {
+        Row: {
+          billing_owner: string | null
+          client_tier: string | null
+          client_user_id: string
+          compliance_notes: string | null
+          created_at: string
+          id: string
+          invitation_code: string | null
+          linked_at: string
+          metadata: Json | null
+          persona_type: Database["public"]["Enums"]["professional_persona"]
+          professional_user_id: string
+          relationship_type: string | null
+          status: string
+          tenant_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          billing_owner?: string | null
+          client_tier?: string | null
+          client_user_id: string
+          compliance_notes?: string | null
+          created_at?: string
+          id?: string
+          invitation_code?: string | null
+          linked_at?: string
+          metadata?: Json | null
+          persona_type: Database["public"]["Enums"]["professional_persona"]
+          professional_user_id: string
+          relationship_type?: string | null
+          status?: string
+          tenant_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          billing_owner?: string | null
+          client_tier?: string | null
+          client_user_id?: string
+          compliance_notes?: string | null
+          created_at?: string
+          id?: string
+          invitation_code?: string | null
+          linked_at?: string
+          metadata?: Json | null
+          persona_type?: Database["public"]["Enums"]["professional_persona"]
+          professional_user_id?: string
+          relationship_type?: string | null
+          status?: string
+          tenant_id?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       professional_compliance: {
         Row: {
           created_at: string | null
@@ -16517,6 +16753,57 @@ export type Database = {
           required_hours?: number | null
           status?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      professional_invitation_codes: {
+        Row: {
+          branding_config: Json | null
+          created_at: string
+          expires_at: string | null
+          id: string
+          invitation_code: string
+          invitation_url: string | null
+          is_active: boolean | null
+          max_uses: number | null
+          metadata: Json | null
+          persona_type: Database["public"]["Enums"]["professional_persona"]
+          professional_user_id: string
+          tenant_id: string | null
+          updated_at: string
+          uses_remaining: number | null
+        }
+        Insert: {
+          branding_config?: Json | null
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          invitation_code: string
+          invitation_url?: string | null
+          is_active?: boolean | null
+          max_uses?: number | null
+          metadata?: Json | null
+          persona_type: Database["public"]["Enums"]["professional_persona"]
+          professional_user_id: string
+          tenant_id?: string | null
+          updated_at?: string
+          uses_remaining?: number | null
+        }
+        Update: {
+          branding_config?: Json | null
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          invitation_code?: string
+          invitation_url?: string | null
+          is_active?: boolean | null
+          max_uses?: number | null
+          metadata?: Json | null
+          persona_type?: Database["public"]["Enums"]["professional_persona"]
+          professional_user_id?: string
+          tenant_id?: string | null
+          updated_at?: string
+          uses_remaining?: number | null
         }
         Relationships: []
       }
@@ -16677,6 +16964,108 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      professional_seat_audit: {
+        Row: {
+          action_details: Json | null
+          action_type: string
+          client_user_id: string | null
+          created_at: string
+          id: string
+          ip_address: unknown | null
+          performed_by: string | null
+          persona_type: Database["public"]["Enums"]["professional_persona"]
+          professional_user_id: string
+          user_agent: string | null
+        }
+        Insert: {
+          action_details?: Json | null
+          action_type: string
+          client_user_id?: string | null
+          created_at?: string
+          id?: string
+          ip_address?: unknown | null
+          performed_by?: string | null
+          persona_type: Database["public"]["Enums"]["professional_persona"]
+          professional_user_id: string
+          user_agent?: string | null
+        }
+        Update: {
+          action_details?: Json | null
+          action_type?: string
+          client_user_id?: string | null
+          created_at?: string
+          id?: string
+          ip_address?: unknown | null
+          performed_by?: string | null
+          persona_type?: Database["public"]["Enums"]["professional_persona"]
+          professional_user_id?: string
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
+      professional_seat_management: {
+        Row: {
+          auto_renew: boolean | null
+          billing_frequency: string | null
+          created_at: string
+          expiration_date: string | null
+          id: string
+          metadata: Json | null
+          package_name: string
+          package_type: string
+          persona_type: Database["public"]["Enums"]["professional_persona"]
+          price_per_seat: number | null
+          professional_user_id: string
+          purchase_date: string
+          remaining_seats: number | null
+          status: string
+          tenant_id: string | null
+          total_seats: number
+          updated_at: string
+          used_seats: number
+        }
+        Insert: {
+          auto_renew?: boolean | null
+          billing_frequency?: string | null
+          created_at?: string
+          expiration_date?: string | null
+          id?: string
+          metadata?: Json | null
+          package_name?: string
+          package_type?: string
+          persona_type: Database["public"]["Enums"]["professional_persona"]
+          price_per_seat?: number | null
+          professional_user_id: string
+          purchase_date?: string
+          remaining_seats?: number | null
+          status?: string
+          tenant_id?: string | null
+          total_seats?: number
+          updated_at?: string
+          used_seats?: number
+        }
+        Update: {
+          auto_renew?: boolean | null
+          billing_frequency?: string | null
+          created_at?: string
+          expiration_date?: string | null
+          id?: string
+          metadata?: Json | null
+          package_name?: string
+          package_type?: string
+          persona_type?: Database["public"]["Enums"]["professional_persona"]
+          price_per_seat?: number | null
+          professional_user_id?: string
+          purchase_date?: string
+          remaining_seats?: number | null
+          status?: string
+          tenant_id?: string | null
+          total_seats?: number
+          updated_at?: string
+          used_seats?: number
+        }
+        Relationships: []
       }
       professional_users: {
         Row: {
@@ -16948,6 +17337,9 @@ export type Database = {
           middle_name: string | null
           notification_preferences: Json | null
           permissions: string[] | null
+          persona_type:
+            | Database["public"]["Enums"]["professional_persona"]
+            | null
           personalization_settings: Json | null
           phone: string | null
           premium_analytics_access: boolean | null
@@ -17013,6 +17405,9 @@ export type Database = {
           middle_name?: string | null
           notification_preferences?: Json | null
           permissions?: string[] | null
+          persona_type?:
+            | Database["public"]["Enums"]["professional_persona"]
+            | null
           personalization_settings?: Json | null
           phone?: string | null
           premium_analytics_access?: boolean | null
@@ -17078,6 +17473,9 @@ export type Database = {
           middle_name?: string | null
           notification_preferences?: Json | null
           permissions?: string[] | null
+          persona_type?:
+            | Database["public"]["Enums"]["professional_persona"]
+            | null
           personalization_settings?: Json | null
           phone?: string | null
           premium_analytics_access?: boolean | null
@@ -19394,6 +19792,73 @@ export type Database = {
             columns: ["professional_user_id"]
             isOneToOne: false
             referencedRelation: "professional_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      seat_audit_logs: {
+        Row: {
+          action_type: string
+          client_id: string | null
+          created_at: string
+          created_by: string | null
+          details: Json | null
+          id: string
+          ip_address: unknown | null
+          persona_type: Database["public"]["Enums"]["professional_persona"]
+          professional_id: string
+          seat_id: string | null
+          session_id: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          action_type: string
+          client_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          details?: Json | null
+          id?: string
+          ip_address?: unknown | null
+          persona_type: Database["public"]["Enums"]["professional_persona"]
+          professional_id: string
+          seat_id?: string | null
+          session_id?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          action_type?: string
+          client_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          details?: Json | null
+          id?: string
+          ip_address?: unknown | null
+          persona_type?: Database["public"]["Enums"]["professional_persona"]
+          professional_id?: string
+          seat_id?: string | null
+          session_id?: string | null
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "seat_audit_logs_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "seat_audit_logs_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "seat_audit_logs_seat_id_fkey"
+            columns: ["seat_id"]
+            isOneToOne: false
+            referencedRelation: "professional_seat_management"
             referencedColumns: ["id"]
           },
         ]
@@ -24514,6 +24979,13 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
+      check_professional_seats_available: {
+        Args: {
+          p_professional_user_id: string
+          p_persona_type: Database["public"]["Enums"]["professional_persona"]
+        }
+        Returns: boolean
+      }
       check_rate_limit: {
         Args: {
           p_identifier: string
@@ -24725,6 +25197,12 @@ export type Database = {
         Args: { p_user_id: string; p_otp_type?: string }
         Returns: string
       }
+      generate_universal_invitation_code: {
+        Args: {
+          p_persona_type: Database["public"]["Enums"]["professional_persona"]
+        }
+        Returns: string
+      }
       generate_user_impact_report: {
         Args: {
           p_user_id: string
@@ -24838,6 +25316,15 @@ export type Database = {
           verified_by: string
         }[]
       }
+      get_personalized_invitation_template: {
+        Args: {
+          p_persona_type: Database["public"]["Enums"]["professional_persona"]
+          p_professional_name: string
+          p_client_name: string
+          p_firm_name?: string
+        }
+        Returns: Json
+      }
       get_referral_conversion_analytics: {
         Args: { p_tenant_id: string; p_period_days?: number }
         Returns: {
@@ -24945,6 +25432,18 @@ export type Database = {
         }
         Returns: string
       }
+      log_client_access: {
+        Args: {
+          p_client_id: string
+          p_professional_id: string
+          p_seat_id: string
+          p_access_type: string
+          p_resource_accessed?: string
+          p_session_duration_minutes?: number
+          p_device_info?: Json
+        }
+        Returns: string
+      }
       log_diagnostic_test_run: {
         Args: {
           p_environment?: string
@@ -25024,6 +25523,19 @@ export type Database = {
         }
         Returns: undefined
       }
+      log_seat_activity: {
+        Args: {
+          p_seat_id: string
+          p_professional_id: string
+          p_client_id: string
+          p_action_type: string
+          p_persona_type: Database["public"]["Enums"]["professional_persona"]
+          p_details?: Json
+          p_ip_address?: unknown
+          p_user_agent?: string
+        }
+        Returns: string
+      }
       log_security_event: {
         Args: {
           p_event_type: string
@@ -25067,6 +25579,16 @@ export type Database = {
       process_partner_application: {
         Args: { p_application_id: string; p_action: string; p_notes?: string }
         Returns: boolean
+      }
+      request_compliance_export: {
+        Args: {
+          p_export_type: string
+          p_persona_filter?: Database["public"]["Enums"]["professional_persona"][]
+          p_date_range_start?: string
+          p_date_range_end?: string
+          p_parameters?: Json
+        }
+        Returns: string
       }
       rpc_backup_status: {
         Args: Record<PropertyKey, never>
@@ -25297,6 +25819,14 @@ export type Database = {
         | "other"
       goal_priority: "low" | "medium" | "high" | "top_aspiration"
       goal_status: "active" | "completed" | "paused" | "archived"
+      professional_persona:
+        | "advisor"
+        | "attorney"
+        | "cpa"
+        | "insurance_agent"
+        | "consultant"
+        | "coach"
+        | "enterprise_admin"
       vault_permission_level:
         | "owner"
         | "admin"
@@ -25458,6 +25988,15 @@ export const Constants = {
       ],
       goal_priority: ["low", "medium", "high", "top_aspiration"],
       goal_status: ["active", "completed", "paused", "archived"],
+      professional_persona: [
+        "advisor",
+        "attorney",
+        "cpa",
+        "insurance_agent",
+        "consultant",
+        "coach",
+        "enterprise_admin",
+      ],
       vault_permission_level: [
         "owner",
         "admin",
