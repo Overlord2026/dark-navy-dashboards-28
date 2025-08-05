@@ -218,7 +218,7 @@ export const ComplianceExportPanel: React.FC<ComplianceExportPanelProps> = ({
                         <Checkbox 
                           id="audit-logs" 
                           checked={includeAuditLogs}
-                          onCheckedChange={setIncludeAuditLogs}
+                          onCheckedChange={(checked) => setIncludeAuditLogs(checked === true)}
                         />
                         <Label htmlFor="audit-logs">Audit logs and activity records</Label>
                       </div>
@@ -226,7 +226,7 @@ export const ComplianceExportPanel: React.FC<ComplianceExportPanelProps> = ({
                         <Checkbox 
                           id="agreements" 
                           checked={includeAgreements}
-                          onCheckedChange={setIncludeAgreements}
+                          onCheckedChange={(checked) => setIncludeAgreements(checked === true)}
                         />
                         <Label htmlFor="agreements">Signed agreements and contracts</Label>
                       </div>
@@ -234,7 +234,7 @@ export const ComplianceExportPanel: React.FC<ComplianceExportPanelProps> = ({
                         <Checkbox 
                           id="document-vault" 
                           checked={includeDocumentVault}
-                          onCheckedChange={setIncludeDocumentVault}
+                          onCheckedChange={(checked) => setIncludeDocumentVault(checked === true)}
                         />
                         <Label htmlFor="document-vault">Document vault contents</Label>
                       </div>

@@ -304,7 +304,7 @@ export const AgreementTemplatesPanel: React.FC<AgreementTemplatesPanelProps> = (
                       className="min-h-[300px]"
                     />
                     <p className="text-xs text-muted-foreground">
-                      Use {{placeholder}} syntax for dynamic content (e.g., {{client_name}}, {{organization_name}})
+                      Use placeholder syntax for dynamic content (e.g., client_name, organization_name)
                     </p>
                   </div>
 
