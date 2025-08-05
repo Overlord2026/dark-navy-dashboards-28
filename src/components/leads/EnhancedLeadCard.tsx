@@ -163,8 +163,8 @@ export function EnhancedLeadCard({ lead, onViewDetails, onUpdateStatus, classNam
             <div className="grid grid-cols-2 gap-2">
               {lead.catchlight_score && (
                 <div>
-                  <div className="text-xs text-muted-foreground mb-1">Catchlight Score</div>
-                  <Badge variant={getScoreBadgeVariant(lead.catchlight_score)}>
+                  <div className="text-xs text-muted-foreground mb-1">SWAG Score™</div>
+                  <Badge variant={getScoreBadgeVariant(lead.catchlight_score)} className="bg-gradient-to-r from-yellow-500 to-amber-600 text-white">
                     <Star className="h-3 w-3 mr-1" />
                     {lead.catchlight_score}/100
                   </Badge>
