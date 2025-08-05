@@ -230,36 +230,21 @@ export const ClientInfoStep: React.FC<ClientInfoStepProps> = ({
                 </div>
               </div>
 
-              <div className="grid md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="ssn">Social Security Number</Label>
-                  <Input
-                    id="ssn"
-                    type="password"
-                    value={primaryClient.ssn}
-                    onChange={(e) => setPrimaryClient({ ...primaryClient, ssn: e.target.value })}
-                    placeholder="###-##-####"
-                  />
-                  <p className="text-xs text-muted-foreground">
-                    Encrypted and secure. Required for account opening.
-                  </p>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="citizenship">Citizenship</Label>
-                  <Select
-                    value={primaryClient.citizenship}
-                    onValueChange={(value) => setPrimaryClient({ ...primaryClient, citizenship: value })}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="US">United States</SelectItem>
-                      <SelectItem value="CA">Canada</SelectItem>
-                      <SelectItem value="other">Other</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+              <div className="space-y-2">
+                <Label htmlFor="citizenship">Citizenship</Label>
+                <Select
+                  value={primaryClient.citizenship}
+                  onValueChange={(value) => setPrimaryClient({ ...primaryClient, citizenship: value })}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="US">United States</SelectItem>
+                    <SelectItem value="CA">Canada</SelectItem>
+                    <SelectItem value="other">Other</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </CardContent>
           </Card>
@@ -340,15 +325,6 @@ export const ClientInfoStep: React.FC<ClientInfoStepProps> = ({
                             type="date"
                             value={member.dateOfBirth}
                             onChange={(e) => updateHouseholdMember(index, 'dateOfBirth', e.target.value)}
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label>SSN (if applicable)</Label>
-                          <Input
-                            type="password"
-                            value={member.ssn}
-                            onChange={(e) => updateHouseholdMember(index, 'ssn', e.target.value)}
-                            placeholder="###-##-####"
                           />
                         </div>
                       </div>
