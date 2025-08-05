@@ -78,6 +78,7 @@ import EndToEndQAPage from "./pages/EndToEndQAPage";
 import PersonaOnboardingQAPage from "./pages/PersonaOnboardingQAPage";
 import StripeSubscriptionTestPage from "./pages/StripeSubscriptionTestPage";
 import PersonaDashboardQAPage from "./pages/PersonaDashboardQAPage";
+import GoNoGoQAPage from "./pages/GoNoGoQAPage";
 
 const queryClient = new QueryClient();
 
@@ -268,6 +269,7 @@ function App() {
         <Route path="/qa/persona-onboarding" element={<PersonaOnboardingQAPage />} />
         <Route path="/qa/stripe-subscription" element={<StripeSubscriptionTestPage />} />
         <Route path="/qa/persona-dashboards" element={<PersonaDashboardQAPage />} />
+        <Route path="/qa/go-no-go" element={<GoNoGoQAPage />} />
 
                          </Routes>
                         <Navigation />
