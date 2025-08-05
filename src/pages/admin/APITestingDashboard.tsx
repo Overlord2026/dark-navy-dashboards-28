@@ -1,6 +1,7 @@
 import React from 'react';
 import { APIIntegrationTester } from '@/components/admin/APIIntegrationTester';
 import { QAWarningBanner } from '@/components/admin/QAWarningBanner';
+import { APIIntegrationAudit } from '@/components/admin/APIIntegrationAudit';
 
 export default function APITestingDashboard() {
   return (
@@ -15,6 +16,7 @@ export default function APITestingDashboard() {
       </div>
       
       <QAWarningBanner />
+      <APIIntegrationAudit />
       <APIIntegrationTester />
     </div>
   );

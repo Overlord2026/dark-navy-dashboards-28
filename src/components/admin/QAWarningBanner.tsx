@@ -21,8 +21,20 @@ export function QAWarningBanner() {
     { name: 'PLAID_CLIENT_ID', displayName: 'Plaid Client ID', required: true },
     { name: 'PLAID_SECRET', displayName: 'Plaid Secret', required: true },
     { name: 'FINNHUB_API_KEY', displayName: 'Finnhub API', required: true },
+    { name: 'FINNHUB_WEBHOOK_SECRET', displayName: 'Finnhub Webhook', required: false },
     { name: 'ALTS_API_KEY', displayName: 'Alt Investments API', required: true },
     { name: 'RESEND_API_KEY', displayName: 'Resend Email API', required: true },
+    { name: 'OPENAI_API_KEY', displayName: 'OpenAI API', required: false },
+    { name: 'TWILIO_ACCOUNT_SID', displayName: 'Twilio Account SID', required: false },
+    { name: 'TWILIO_AUTH_TOKEN', displayName: 'Twilio Auth Token', required: false },
+    { name: 'TWILIO_MESSAGING_SID', displayName: 'Twilio Messaging SID', required: false },
+    { name: 'GOOGLE_CLIENT_ID', displayName: 'Google Client ID', required: false },
+    { name: 'GOOGLE_CLIENT_SECRET', displayName: 'Google Client Secret', required: false },
+    { name: 'ZOOM_CLIENT_ID', displayName: 'Zoom Client ID', required: false },
+    { name: 'ZOOM_CLIENT_SECRET', displayName: 'Zoom Client Secret', required: false },
+    { name: 'FACEBOOK_APP_ID', displayName: 'Facebook App ID', required: false },
+    { name: 'FACEBOOK_APP_SECRET', displayName: 'Facebook App Secret', required: false },
+    { name: 'CALENDLY_API_KEY', displayName: 'Calendly API Key', required: false },
   ];
 
   const checkAPIKeys = async () => {
