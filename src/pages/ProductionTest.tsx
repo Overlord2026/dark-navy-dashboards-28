@@ -6,6 +6,7 @@ import { AnalyticsChecklist } from "@/components/testing/AnalyticsChecklist";
 import { PlaidConnectionTest } from "@/components/accounts/PlaidConnectionTest";
 import { PlaidDiagnosticRunner } from "@/components/testing/PlaidDiagnosticRunner";
 import { PlaidEnvironmentChecker } from "@/components/testing/PlaidEnvironmentChecker";
+import { PlaidSecretTester } from "@/components/testing/PlaidSecretTester";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function ProductionTest() {
@@ -133,6 +134,7 @@ export default function ProductionTest() {
         </TabsContent>
 
         <TabsContent value="plaid" className="space-y-6">
+          <PlaidSecretTester />
           <PlaidEnvironmentChecker />
           <PlaidDiagnosticRunner />
           <PlaidConnectionTest />
