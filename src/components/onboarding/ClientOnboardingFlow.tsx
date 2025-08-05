@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { WelcomeStep } from './steps/WelcomeStep';
 import { ClientInfoStep } from './steps/ClientInfoStep';
+import { AssetLinkingStep } from './steps/AssetLinkingStep';
+import { UpgradeToClientStep } from './steps/UpgradeToClientStep';
 import { CustodianSelectionStep } from './steps/CustodianSelectionStep';
 import { DocumentUploadStep } from './steps/DocumentUploadStep';
 import { DigitalApplicationStep } from './steps/DigitalApplicationStep';
@@ -65,13 +67,15 @@ export const ClientOnboardingFlow: React.FC<ClientOnboardingFlowProps> = ({
   // Dynamic step configuration based on white-label settings
   const defaultSteps = [
     { id: 'welcome', name: 'Welcome', title: 'Welcome', description: 'Get started with onboarding', enabled: true, required: true, order: 0 },
-    { id: 'client-info', name: 'Client Information', title: 'Client Information', description: 'Basic client details', enabled: true, required: true, order: 1 },
-    { id: 'custodian', name: 'Custodian Selection', title: 'Custodian Selection', description: 'Choose your custodian', enabled: effectiveBrandConfig.features.multiCustodian, required: true, order: 2 },
-    { id: 'documents', name: 'Document Upload', title: 'Document Upload', description: 'Upload required documents', enabled: effectiveBrandConfig.features.documentOcr, required: true, order: 3 },
-    { id: 'application', name: 'Digital Application', title: 'Digital Application', description: 'Digital application submission', enabled: effectiveBrandConfig.features.digitalSignature, required: true, order: 4 },
-    { id: 'tasks', name: 'Task Management', title: 'Task Management', description: 'Review remaining tasks', enabled: true, required: false, order: 5 },
-    { id: 'compliance', name: 'Compliance Review', title: 'Compliance Review', description: 'Compliance verification', enabled: true, required: true, order: 6 },
-    { id: 'confirmation', name: 'Confirmation', title: 'Confirmation', description: 'Complete onboarding', enabled: true, required: true, order: 7 }
+    { id: 'client-info', name: 'Client Information', title: 'Personal Information', description: 'Basic client details', enabled: true, required: true, order: 1 },
+    { id: 'asset-linking', name: 'Asset Linking', title: 'Connect Your Assets', description: 'Link accounts or add manually', enabled: true, required: false, order: 2 },
+    { id: 'upgrade-client', name: 'Upgrade to Client', title: 'Become a Full Client', description: 'Unlock premium services', enabled: true, required: false, order: 3 },
+    { id: 'custodian', name: 'Custodian Selection', title: 'Custodian Selection', description: 'Choose your custodian', enabled: effectiveBrandConfig.features.multiCustodian, required: false, order: 4 },
+    { id: 'documents', name: 'Document Upload', title: 'Document Upload', description: 'Upload required documents', enabled: effectiveBrandConfig.features.documentOcr, required: false, order: 5 },
+    { id: 'application', name: 'Digital Application', title: 'Digital Application', description: 'Digital application submission', enabled: effectiveBrandConfig.features.digitalSignature, required: false, order: 6 },
+    { id: 'tasks', name: 'Task Management', title: 'Task Management', description: 'Review remaining tasks', enabled: true, required: false, order: 7 },
+    { id: 'compliance', name: 'Compliance Review', title: 'Compliance Review', description: 'Compliance verification', enabled: true, required: false, order: 8 },
+    { id: 'confirmation', name: 'Confirmation', title: 'Confirmation', description: 'Complete onboarding', enabled: true, required: true, order: 9 }
   ];
 
   const activeSteps = (customStepsConfig || defaultSteps)
@@ -146,6 +150,10 @@ export const ClientOnboardingFlow: React.FC<ClientOnboardingFlowProps> = ({
         return <WelcomeStep {...commonProps} />;
       case 'client-info':
         return <ClientInfoStep {...commonProps} />;
+      case 'asset-linking':
+        return <AssetLinkingStep {...commonProps} />;
+      case 'upgrade-client':
+        return <UpgradeToClientStep {...commonProps} />;
       case 'custodian':
         return <CustodianSelectionStep {...commonProps} />;
       case 'documents':

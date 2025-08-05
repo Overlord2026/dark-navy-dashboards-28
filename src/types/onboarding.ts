@@ -112,6 +112,32 @@ export interface OnboardingStepData {
     setupFee: number;
     features: string[];
   };
+  assetLinking?: {
+    method: 'plaid' | 'manual' | null;
+    manualAssets?: Array<{
+      id: string;
+      name: string;
+      type: string;
+      value: number;
+      institution?: string;
+    }>;
+    plaidConnected?: boolean;
+    skipped?: boolean;
+  };
+  clientUpgrade?: {
+    choice: 'upgrade' | 'defer' | 'assistance';
+    timestamp: string;
+    kycData?: {
+      ssn: string;
+      employmentStatus: string;
+      annualIncome: string;
+      netWorth: string;
+      sourceOfWealth: string;
+      investmentExperience: string;
+      riskTolerance: string;
+      consentGiven: boolean;
+    };
+  };
 }
 
 export interface OnboardingState extends OnboardingStepData {
