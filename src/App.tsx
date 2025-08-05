@@ -77,6 +77,7 @@ import AttorneyCLEPage from "./pages/AttorneyCLEPage";
 import EndToEndQAPage from "./pages/EndToEndQAPage";
 import PersonaOnboardingQAPage from "./pages/PersonaOnboardingQAPage";
 import StripeSubscriptionTestPage from "./pages/StripeSubscriptionTestPage";
+import PersonaDashboardQAPage from "./pages/PersonaDashboardQAPage";
 
 const queryClient = new QueryClient();
 
@@ -264,8 +265,9 @@ function App() {
                      <Route path="/auth-test" element={<AuthTestPage />} />
                      <Route path="/assets" element={<AssetInventory />} />
                      <Route path="/qa/end-to-end" element={<EndToEndQAPage />} />
-                     <Route path="/qa/persona-onboarding" element={<PersonaOnboardingQAPage />} />
-                     <Route path="/qa/stripe-subscription" element={<StripeSubscriptionTestPage />} />
+        <Route path="/qa/persona-onboarding" element={<PersonaOnboardingQAPage />} />
+        <Route path="/qa/stripe-subscription" element={<StripeSubscriptionTestPage />} />
+        <Route path="/qa/persona-dashboards" element={<PersonaDashboardQAPage />} />
 
                          </Routes>
                         <Navigation />
