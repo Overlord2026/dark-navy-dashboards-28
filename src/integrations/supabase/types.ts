@@ -1414,6 +1414,65 @@ export type Database = {
           },
         ]
       }
+      agreement_workflow_templates: {
+        Row: {
+          auto_send_triggers: Json | null
+          created_at: string
+          created_by: string | null
+          expiration_days: number | null
+          id: string
+          is_active: boolean | null
+          organization_id: string | null
+          reminder_schedule: Json | null
+          signature_required: boolean | null
+          template_content: string
+          template_name: string
+          updated_at: string
+          version: number | null
+          workflow_type: string
+        }
+        Insert: {
+          auto_send_triggers?: Json | null
+          created_at?: string
+          created_by?: string | null
+          expiration_days?: number | null
+          id?: string
+          is_active?: boolean | null
+          organization_id?: string | null
+          reminder_schedule?: Json | null
+          signature_required?: boolean | null
+          template_content: string
+          template_name: string
+          updated_at?: string
+          version?: number | null
+          workflow_type: string
+        }
+        Update: {
+          auto_send_triggers?: Json | null
+          created_at?: string
+          created_by?: string | null
+          expiration_days?: number | null
+          id?: string
+          is_active?: boolean | null
+          organization_id?: string | null
+          reminder_schedule?: Json | null
+          signature_required?: boolean | null
+          template_content?: string
+          template_name?: string
+          updated_at?: string
+          version?: number | null
+          workflow_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agreement_workflow_templates_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ai_nudge_rules: {
         Row: {
           cpa_partner_id: string
@@ -15157,6 +15216,72 @@ export type Database = {
           },
         ]
       }
+      organization_activity_logs: {
+        Row: {
+          activity_category: string
+          activity_type: string
+          branch_id: string | null
+          created_at: string
+          description: string
+          id: string
+          ip_address: unknown | null
+          metadata: Json | null
+          organization_id: string | null
+          resource_id: string | null
+          resource_type: string | null
+          severity: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          activity_category: string
+          activity_type: string
+          branch_id?: string | null
+          created_at?: string
+          description: string
+          id?: string
+          ip_address?: unknown | null
+          metadata?: Json | null
+          organization_id?: string | null
+          resource_id?: string | null
+          resource_type?: string | null
+          severity?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          activity_category?: string
+          activity_type?: string
+          branch_id?: string | null
+          created_at?: string
+          description?: string
+          id?: string
+          ip_address?: unknown | null
+          metadata?: Json | null
+          organization_id?: string | null
+          resource_id?: string | null
+          resource_type?: string | null
+          severity?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organization_activity_logs_branch_id_fkey"
+            columns: ["branch_id"]
+            isOneToOne: false
+            referencedRelation: "organization_branches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "organization_activity_logs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       organization_admins: {
         Row: {
           created_at: string
@@ -15194,6 +15319,130 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "organization_admins_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      organization_agreement_templates: {
+        Row: {
+          agreement_type: Database["public"]["Enums"]["agreement_type"]
+          auto_renewal: boolean | null
+          created_at: string
+          created_by: string | null
+          id: string
+          is_active: boolean | null
+          organization_id: string | null
+          requires_signature: boolean | null
+          template_content: string
+          template_name: string
+          updated_at: string
+          validity_days: number | null
+          version: string
+        }
+        Insert: {
+          agreement_type: Database["public"]["Enums"]["agreement_type"]
+          auto_renewal?: boolean | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_active?: boolean | null
+          organization_id?: string | null
+          requires_signature?: boolean | null
+          template_content: string
+          template_name: string
+          updated_at?: string
+          validity_days?: number | null
+          version?: string
+        }
+        Update: {
+          agreement_type?: Database["public"]["Enums"]["agreement_type"]
+          auto_renewal?: boolean | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_active?: boolean | null
+          organization_id?: string | null
+          requires_signature?: boolean | null
+          template_content?: string
+          template_name?: string
+          updated_at?: string
+          validity_days?: number | null
+          version?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organization_agreement_templates_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      organization_billing_configs: {
+        Row: {
+          auto_renew: boolean | null
+          base_price_per_seat: number
+          billing_address: Json | null
+          billing_contact_name: string | null
+          billing_cycle_day: number | null
+          billing_model: Database["public"]["Enums"]["billing_model"]
+          created_at: string
+          custom_billing_notes: string | null
+          id: string
+          invoice_email: string | null
+          minimum_seats: number
+          organization_id: string | null
+          payment_terms_days: number | null
+          updated_at: string
+          usage_based_pricing: Json | null
+          volume_discount_tiers: Json | null
+          white_label_invoice: boolean | null
+        }
+        Insert: {
+          auto_renew?: boolean | null
+          base_price_per_seat?: number
+          billing_address?: Json | null
+          billing_contact_name?: string | null
+          billing_cycle_day?: number | null
+          billing_model?: Database["public"]["Enums"]["billing_model"]
+          created_at?: string
+          custom_billing_notes?: string | null
+          id?: string
+          invoice_email?: string | null
+          minimum_seats?: number
+          organization_id?: string | null
+          payment_terms_days?: number | null
+          updated_at?: string
+          usage_based_pricing?: Json | null
+          volume_discount_tiers?: Json | null
+          white_label_invoice?: boolean | null
+        }
+        Update: {
+          auto_renew?: boolean | null
+          base_price_per_seat?: number
+          billing_address?: Json | null
+          billing_contact_name?: string | null
+          billing_cycle_day?: number | null
+          billing_model?: Database["public"]["Enums"]["billing_model"]
+          created_at?: string
+          custom_billing_notes?: string | null
+          id?: string
+          invoice_email?: string | null
+          minimum_seats?: number
+          organization_id?: string | null
+          payment_terms_days?: number | null
+          updated_at?: string
+          usage_based_pricing?: Json | null
+          volume_discount_tiers?: Json | null
+          white_label_invoice?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organization_billing_configs_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
@@ -15244,6 +15493,377 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "organization_branches_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      organization_bulk_imports: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          error_log: Json | null
+          failed_imports: number | null
+          id: string
+          import_data: Json | null
+          import_type: string
+          imported_by: string | null
+          organization_id: string | null
+          status: string | null
+          successful_imports: number | null
+          total_records: number
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          error_log?: Json | null
+          failed_imports?: number | null
+          id?: string
+          import_data?: Json | null
+          import_type?: string
+          imported_by?: string | null
+          organization_id?: string | null
+          status?: string | null
+          successful_imports?: number | null
+          total_records?: number
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          error_log?: Json | null
+          failed_imports?: number | null
+          id?: string
+          import_data?: Json | null
+          import_type?: string
+          imported_by?: string | null
+          organization_id?: string | null
+          status?: string | null
+          successful_imports?: number | null
+          total_records?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organization_bulk_imports_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      organization_compliance_exports: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          date_range_end: string
+          date_range_start: string
+          export_size_bytes: number | null
+          export_status: string | null
+          export_type: string
+          export_url: string | null
+          exported_by: string | null
+          id: string
+          includes_agreements: boolean | null
+          includes_audit_logs: boolean | null
+          includes_document_vault: boolean | null
+          metadata: Json | null
+          organization_id: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          date_range_end: string
+          date_range_start: string
+          export_size_bytes?: number | null
+          export_status?: string | null
+          export_type: string
+          export_url?: string | null
+          exported_by?: string | null
+          id?: string
+          includes_agreements?: boolean | null
+          includes_audit_logs?: boolean | null
+          includes_document_vault?: boolean | null
+          metadata?: Json | null
+          organization_id?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          date_range_end?: string
+          date_range_start?: string
+          export_size_bytes?: number | null
+          export_status?: string | null
+          export_type?: string
+          export_url?: string | null
+          exported_by?: string | null
+          id?: string
+          includes_agreements?: boolean | null
+          includes_audit_logs?: boolean | null
+          includes_document_vault?: boolean | null
+          metadata?: Json | null
+          organization_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organization_compliance_exports_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      organization_module_access: {
+        Row: {
+          created_at: string
+          id: string
+          is_enabled: boolean | null
+          module_type: Database["public"]["Enums"]["module_type"]
+          organization_id: string | null
+          pricing_override: number | null
+          rep_assignment_rules: Json | null
+          revenue_share_percent: number | null
+          updated_at: string
+          usage_limits: Json | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_enabled?: boolean | null
+          module_type: Database["public"]["Enums"]["module_type"]
+          organization_id?: string | null
+          pricing_override?: number | null
+          rep_assignment_rules?: Json | null
+          revenue_share_percent?: number | null
+          updated_at?: string
+          usage_limits?: Json | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_enabled?: boolean | null
+          module_type?: Database["public"]["Enums"]["module_type"]
+          organization_id?: string | null
+          pricing_override?: number | null
+          rep_assignment_rules?: Json | null
+          revenue_share_percent?: number | null
+          updated_at?: string
+          usage_limits?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organization_module_access_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      organization_onboarding_flows: {
+        Row: {
+          agreement_templates: Json | null
+          auto_assignments: Json | null
+          branding_config: Json | null
+          compliance_requirements: Json | null
+          created_at: string
+          created_by: string | null
+          flow_name: string
+          flow_steps: Json
+          id: string
+          invite_source: Database["public"]["Enums"]["invite_source"]
+          is_active: boolean | null
+          organization_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          agreement_templates?: Json | null
+          auto_assignments?: Json | null
+          branding_config?: Json | null
+          compliance_requirements?: Json | null
+          created_at?: string
+          created_by?: string | null
+          flow_name: string
+          flow_steps?: Json
+          id?: string
+          invite_source: Database["public"]["Enums"]["invite_source"]
+          is_active?: boolean | null
+          organization_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          agreement_templates?: Json | null
+          auto_assignments?: Json | null
+          branding_config?: Json | null
+          compliance_requirements?: Json | null
+          created_at?: string
+          created_by?: string | null
+          flow_name?: string
+          flow_steps?: Json
+          id?: string
+          invite_source?: Database["public"]["Enums"]["invite_source"]
+          is_active?: boolean | null
+          organization_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organization_onboarding_flows_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      organization_referral_codes: {
+        Row: {
+          code_type: string
+          commission_earned: number | null
+          created_at: string
+          created_by: string | null
+          expires_at: string | null
+          id: string
+          is_active: boolean | null
+          organization_id: string | null
+          referral_code: string
+          revenue_share_percent: number
+          total_revenue: number | null
+          updated_at: string
+          usage_count: number | null
+        }
+        Insert: {
+          code_type?: string
+          commission_earned?: number | null
+          created_at?: string
+          created_by?: string | null
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          organization_id?: string | null
+          referral_code: string
+          revenue_share_percent?: number
+          total_revenue?: number | null
+          updated_at?: string
+          usage_count?: number | null
+        }
+        Update: {
+          code_type?: string
+          commission_earned?: number | null
+          created_at?: string
+          created_by?: string | null
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          organization_id?: string | null
+          referral_code?: string
+          revenue_share_percent?: number
+          total_revenue?: number | null
+          updated_at?: string
+          usage_count?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organization_referral_codes_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      organization_seat_usage: {
+        Row: {
+          billing_amount: number | null
+          clients_onboarded: number
+          created_at: string
+          id: string
+          organization_id: string | null
+          period_end: string
+          period_start: string
+          seats_active: number
+          seats_assigned: number
+          seats_purchased: number
+          usage_metrics: Json | null
+        }
+        Insert: {
+          billing_amount?: number | null
+          clients_onboarded?: number
+          created_at?: string
+          id?: string
+          organization_id?: string | null
+          period_end: string
+          period_start: string
+          seats_active?: number
+          seats_assigned?: number
+          seats_purchased?: number
+          usage_metrics?: Json | null
+        }
+        Update: {
+          billing_amount?: number | null
+          clients_onboarded?: number
+          created_at?: string
+          id?: string
+          organization_id?: string | null
+          period_end?: string
+          period_start?: string
+          seats_active?: number
+          seats_assigned?: number
+          seats_purchased?: number
+          usage_metrics?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organization_seat_usage_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      organization_support_configs: {
+        Row: {
+          chat_routing_config: Json | null
+          created_at: string
+          custom_faq_content: Json | null
+          escalation_rules: Json | null
+          help_desk_branding: Json | null
+          id: string
+          is_active: boolean | null
+          organization_id: string | null
+          support_contact_info: Json | null
+          updated_at: string
+        }
+        Insert: {
+          chat_routing_config?: Json | null
+          created_at?: string
+          custom_faq_content?: Json | null
+          escalation_rules?: Json | null
+          help_desk_branding?: Json | null
+          id?: string
+          is_active?: boolean | null
+          organization_id?: string | null
+          support_contact_info?: Json | null
+          updated_at?: string
+        }
+        Update: {
+          chat_routing_config?: Json | null
+          created_at?: string
+          custom_faq_content?: Json | null
+          escalation_rules?: Json | null
+          help_desk_branding?: Json | null
+          id?: string
+          is_active?: boolean | null
+          organization_id?: string | null
+          support_contact_info?: Json | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organization_support_configs_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
@@ -22900,6 +23520,72 @@ export type Database = {
         }
         Relationships: []
       }
+      user_agreements: {
+        Row: {
+          agreement_type: Database["public"]["Enums"]["agreement_type"]
+          created_at: string
+          document_url: string | null
+          expires_at: string | null
+          id: string
+          organization_id: string | null
+          signature_data: Json | null
+          signed_at: string | null
+          signed_ip_address: unknown | null
+          signed_user_agent: string | null
+          status: Database["public"]["Enums"]["agreement_status"] | null
+          template_id: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          agreement_type: Database["public"]["Enums"]["agreement_type"]
+          created_at?: string
+          document_url?: string | null
+          expires_at?: string | null
+          id?: string
+          organization_id?: string | null
+          signature_data?: Json | null
+          signed_at?: string | null
+          signed_ip_address?: unknown | null
+          signed_user_agent?: string | null
+          status?: Database["public"]["Enums"]["agreement_status"] | null
+          template_id?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          agreement_type?: Database["public"]["Enums"]["agreement_type"]
+          created_at?: string
+          document_url?: string | null
+          expires_at?: string | null
+          id?: string
+          organization_id?: string | null
+          signature_data?: Json | null
+          signed_at?: string | null
+          signed_ip_address?: unknown | null
+          signed_user_agent?: string | null
+          status?: Database["public"]["Enums"]["agreement_status"] | null
+          template_id?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_agreements_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_agreements_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "organization_agreement_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_assets: {
         Row: {
           created_at: string
@@ -25337,6 +26023,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: string
       }
+      generate_organization_referral_code: {
+        Args: { p_organization_id: string; p_prefix?: string }
+        Returns: string
+      }
       generate_referral_code: {
         Args: Record<PropertyKey, never>
         Returns: string
@@ -25627,6 +26317,20 @@ export type Database = {
           p_bucket_name: string
           p_access_type: string
           p_file_size?: number
+        }
+        Returns: string
+      }
+      log_organization_activity: {
+        Args: {
+          p_organization_id: string
+          p_activity_type: string
+          p_activity_category: string
+          p_description: string
+          p_branch_id?: string
+          p_severity?: string
+          p_resource_type?: string
+          p_resource_id?: string
+          p_metadata?: Json
         }
         Returns: string
       }
@@ -25952,6 +26656,25 @@ export type Database = {
         | "billing_admin"
         | "compliance_officer"
         | "branch_manager"
+      agreement_status:
+        | "draft"
+        | "pending_signature"
+        | "signed"
+        | "expired"
+        | "revoked"
+      agreement_type:
+        | "nda"
+        | "client_agreement"
+        | "privacy_policy"
+        | "terms_of_service"
+        | "advisor_agreement"
+        | "compliance_disclosure"
+      billing_model:
+        | "monthly"
+        | "annual"
+        | "usage_based"
+        | "volume_discount"
+        | "enterprise_custom"
       cpa_staff_role:
         | "tax_only"
         | "bookkeeping"
@@ -25977,6 +26700,24 @@ export type Database = {
         | "other"
       goal_priority: "low" | "medium" | "high" | "top_aspiration"
       goal_status: "active" | "completed" | "paused" | "archived"
+      invite_source:
+        | "advisor"
+        | "broker_dealer"
+        | "ria"
+        | "insurance_agency"
+        | "law_firm"
+        | "accounting_firm"
+        | "direct"
+        | "referral"
+      module_type:
+        | "estate_planning"
+        | "tax_optimization"
+        | "private_markets"
+        | "insurance_analysis"
+        | "retirement_planning"
+        | "investment_management"
+        | "lending"
+        | "vault_premium"
       organization_type:
         | "broker_dealer"
         | "ria"
@@ -26135,6 +26876,28 @@ export const Constants = {
         "compliance_officer",
         "branch_manager",
       ],
+      agreement_status: [
+        "draft",
+        "pending_signature",
+        "signed",
+        "expired",
+        "revoked",
+      ],
+      agreement_type: [
+        "nda",
+        "client_agreement",
+        "privacy_policy",
+        "terms_of_service",
+        "advisor_agreement",
+        "compliance_disclosure",
+      ],
+      billing_model: [
+        "monthly",
+        "annual",
+        "usage_based",
+        "volume_discount",
+        "enterprise_custom",
+      ],
       cpa_staff_role: [
         "tax_only",
         "bookkeeping",
@@ -26162,6 +26925,26 @@ export const Constants = {
       ],
       goal_priority: ["low", "medium", "high", "top_aspiration"],
       goal_status: ["active", "completed", "paused", "archived"],
+      invite_source: [
+        "advisor",
+        "broker_dealer",
+        "ria",
+        "insurance_agency",
+        "law_firm",
+        "accounting_firm",
+        "direct",
+        "referral",
+      ],
+      module_type: [
+        "estate_planning",
+        "tax_optimization",
+        "private_markets",
+        "insurance_analysis",
+        "retirement_planning",
+        "investment_management",
+        "lending",
+        "vault_premium",
+      ],
       organization_type: [
         "broker_dealer",
         "ria",
