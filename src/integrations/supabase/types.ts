@@ -551,6 +551,59 @@ export type Database = {
         }
         Relationships: []
       }
+      advisor_client_links: {
+        Row: {
+          advisor_id: string
+          client_tier: string
+          client_user_id: string
+          created_at: string
+          id: string
+          invitation_id: string | null
+          linked_via_invitation: boolean
+          notes: string | null
+          relationship_type: string
+          status: string
+          tier_billing_type: string
+          updated_at: string
+        }
+        Insert: {
+          advisor_id: string
+          client_tier?: string
+          client_user_id: string
+          created_at?: string
+          id?: string
+          invitation_id?: string | null
+          linked_via_invitation?: boolean
+          notes?: string | null
+          relationship_type?: string
+          status?: string
+          tier_billing_type?: string
+          updated_at?: string
+        }
+        Update: {
+          advisor_id?: string
+          client_tier?: string
+          client_user_id?: string
+          created_at?: string
+          id?: string
+          invitation_id?: string | null
+          linked_via_invitation?: boolean
+          notes?: string | null
+          relationship_type?: string
+          status?: string
+          tier_billing_type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "advisor_client_links_invitation_id_fkey"
+            columns: ["invitation_id"]
+            isOneToOne: false
+            referencedRelation: "advisor_invitations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       advisor_email_templates: {
         Row: {
           advisor_id: string
@@ -589,6 +642,80 @@ export type Database = {
           subject_template?: string
           template_name?: string
           template_type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      advisor_invitation_usage: {
+        Row: {
+          client_tier: string
+          id: string
+          invitation_id: string
+          signup_completed: boolean
+          used_at: string
+          user_id: string
+        }
+        Insert: {
+          client_tier?: string
+          id?: string
+          invitation_id: string
+          signup_completed?: boolean
+          used_at?: string
+          user_id: string
+        }
+        Update: {
+          client_tier?: string
+          id?: string
+          invitation_id?: string
+          signup_completed?: boolean
+          used_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "advisor_invitation_usage_invitation_id_fkey"
+            columns: ["invitation_id"]
+            isOneToOne: false
+            referencedRelation: "advisor_invitations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      advisor_invitations: {
+        Row: {
+          advisor_id: string
+          created_at: string
+          current_uses: number
+          expires_at: string | null
+          id: string
+          invitation_code: string
+          invitation_link: string
+          is_active: boolean
+          max_uses: number | null
+          updated_at: string
+        }
+        Insert: {
+          advisor_id: string
+          created_at?: string
+          current_uses?: number
+          expires_at?: string | null
+          id?: string
+          invitation_code: string
+          invitation_link: string
+          is_active?: boolean
+          max_uses?: number | null
+          updated_at?: string
+        }
+        Update: {
+          advisor_id?: string
+          created_at?: string
+          current_uses?: number
+          expires_at?: string | null
+          id?: string
+          invitation_code?: string
+          invitation_link?: string
+          is_active?: boolean
+          max_uses?: number | null
           updated_at?: string
         }
         Relationships: []
@@ -1075,6 +1202,51 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      advisor_seat_packages: {
+        Row: {
+          advisor_id: string
+          billing_info: Json | null
+          created_at: string
+          expiry_date: string | null
+          id: string
+          package_size: number
+          package_type: string
+          purchase_date: string
+          seats_remaining: number | null
+          seats_used: number
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          advisor_id: string
+          billing_info?: Json | null
+          created_at?: string
+          expiry_date?: string | null
+          id?: string
+          package_size: number
+          package_type?: string
+          purchase_date?: string
+          seats_remaining?: number | null
+          seats_used?: number
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          advisor_id?: string
+          billing_info?: Json | null
+          created_at?: string
+          expiry_date?: string | null
+          id?: string
+          package_size?: number
+          package_type?: string
+          purchase_date?: string
+          seats_remaining?: number | null
+          seats_used?: number
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       agency_campaigns: {
         Row: {
@@ -24516,6 +24688,10 @@ export type Database = {
           status: string
           remaining_issues: string[]
         }[]
+      }
+      generate_advisor_invitation_code: {
+        Args: Record<PropertyKey, never>
+        Returns: string
       }
       generate_attorney_invitation_token: {
         Args: Record<PropertyKey, never>
