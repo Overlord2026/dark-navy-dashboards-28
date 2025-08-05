@@ -4,8 +4,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { PersonaOnboardingFlow } from '@/components/onboarding/PersonaOnboardingFlow';
+import { InviteFlowModal } from '@/components/viral/InviteFlowModal';
+import { VIPBadge, getVIPStatus } from '@/components/badges/VIPBadgeSystem';
 import { useUser } from '@/context/UserContext';
 import { MainLayout } from '@/components/layout/MainLayout';
+import { PersonaType } from '@/types/personas';
 import { 
   TrendingUp, 
   Users, 
@@ -18,7 +21,8 @@ import {
   BookOpen,
   Calculator,
   Shield,
-  Crown
+  Crown,
+  UserPlus
 } from 'lucide-react';
 
 interface DashboardSection {
@@ -48,7 +52,12 @@ export const PersonaDashboardLayout: React.FC<PersonaDashboardLayoutProps> = ({ 
   const tier = userProfile?.client_tier || 'basic';
   
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const [showInviteModal, setShowInviteModal] = useState(false);
   const [collapsedSections, setCollapsedSections] = useState<Set<string>>(new Set());
+
+  // Check for VIP status
+  const vipStatus = getVIPStatus(role as PersonaType, userProfile);
+  const isVIP = vipStatus !== null;
 
   useEffect(() => {
     const onboardingKey = `onboarding-completed-${role}-${tier}`;
@@ -309,14 +318,33 @@ export const PersonaDashboardLayout: React.FC<PersonaDashboardLayoutProps> = ({ 
         {/* Welcome Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold">
-              Welcome back
-            </h1>
+            <div className="flex items-center gap-3">
+              <h1 className="text-3xl font-bold">
+                Welcome back
+              </h1>
+              {isVIP && (
+                <VIPBadge 
+                  type={vipStatus?.tier === 'founding_member' ? 'founding_member' : 'early_adopter'} 
+                  size="md" 
+                  animated={true}
+                />
+              )}
+            </div>
             <p className="text-muted-foreground">
               Here's what's happening with your {role === 'client' ? 'financial portfolio' : 'practice'} today.
+              {isVIP && " • VIP Member"}
             </p>
           </div>
           <div className="flex items-center gap-3">
+            <Button
+              onClick={() => setShowInviteModal(true)}
+              variant="outline"
+              size="sm"
+              className="flex items-center gap-2"
+            >
+              <UserPlus className="h-4 w-4" />
+              Invite Colleagues
+            </Button>
             {tier === 'premium' && (
               <Badge variant="outline" className="gap-1">
                 <Crown className="h-3 w-3" />
@@ -455,18 +483,7 @@ export const PersonaDashboardLayout: React.FC<PersonaDashboardLayoutProps> = ({ 
         {children}
       </div>
 
-      {/* VIP Onboarding Flow */}
-      {showVIPOnboarding && (
-        <VIPOnboardingFlow 
-          isOpen={showVIPOnboarding}
-          onClose={() => setShowVIPOnboarding(false)}
-          persona={currentPersona}
-          userProfile={userProfile}
-          isReservedVIP={isReservedVIP}
-        />
-      )}
-
-      {/* Regular Onboarding Flow */}
+      {/* Onboarding Flow */}
       {showOnboarding && (
         <PersonaOnboardingFlow 
           isOpen={showOnboarding}
@@ -474,36 +491,14 @@ export const PersonaDashboardLayout: React.FC<PersonaDashboardLayoutProps> = ({ 
         />
       )}
 
-      {/* Invite Flow */}
-      {showInviteFlow && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-          onClick={() => setShowInviteFlow(false)}
-        >
-          <motion.div
-            initial={{ scale: 0.95, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.95, opacity: 0 }}
-            onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-2xl"
-          >
-            <PersonaInviteTemplates 
-              currentPersona={currentPersona}
-              onInviteSent={handleInviteSent}
-            />
-            <Button 
-              variant="outline" 
-              onClick={() => setShowInviteFlow(false)}
-              className="w-full mt-4"
-            >
-              Close
-            </Button>
-          </motion.div>
-        </motion.div>
-      )}
+      {/* Invite Flow Modal */}
+      <InviteFlowModal
+        isOpen={showInviteModal}
+        onClose={() => setShowInviteModal(false)}
+        persona={role as PersonaType}
+      />
     </MainLayout>
   );
 };
+
+export default PersonaDashboardLayout;
