@@ -62,7 +62,7 @@ import { AttorneyDashboard } from "./pages/AttorneyDashboard";
 import { CoachDashboard } from "./pages/CoachDashboard";
 import { ComplianceDashboard } from "./pages/ComplianceDashboard";
 import HealthcareLongevityCenter from "@/components/healthcare/HealthcareLongevityCenter";
-import { HealthcareQAPage } from "@/components/healthcare/HealthcareQAPage";
+
 import { AuthTestPage } from "@/components/auth/AuthTestPage";
 import { AssetInventory } from "@/components/AssetInventory";
 import FAQPage from "./pages/FAQPage";
@@ -79,6 +79,7 @@ import PersonaOnboardingQAPage from "./pages/PersonaOnboardingQAPage";
 import StripeSubscriptionTestPage from "./pages/StripeSubscriptionTestPage";
 import PersonaDashboardQAPage from "./pages/PersonaDashboardQAPage";
 import GoNoGoQAPage from "./pages/GoNoGoQAPage";
+import HealthcareQAPage from "./pages/HealthcareQAPage";
 
 const queryClient = new QueryClient();
 
@@ -269,7 +270,8 @@ function App() {
         <Route path="/qa/persona-onboarding" element={<PersonaOnboardingQAPage />} />
         <Route path="/qa/stripe-subscription" element={<StripeSubscriptionTestPage />} />
         <Route path="/qa/persona-dashboards" element={<PersonaDashboardQAPage />} />
-        <Route path="/qa/go-no-go" element={<GoNoGoQAPage />} />
+            <Route path="/qa/go-no-go" element={<GoNoGoQAPage />} />
+            <Route path="/qa/healthcare" element={<HealthcareQAPage />} />
 
                          </Routes>
                         <Navigation />
