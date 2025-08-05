@@ -4,6 +4,7 @@ import { ProductionReadinessTest } from "@/components/testing/ProductionReadines
 import { StripeWebhookTest } from "@/components/testing/StripeWebhookTest";
 import { AnalyticsChecklist } from "@/components/testing/AnalyticsChecklist";
 import { PlaidConnectionTest } from "@/components/accounts/PlaidConnectionTest";
+import { PlaidDiagnosticRunner } from "@/components/testing/PlaidDiagnosticRunner";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function ProductionTest() {
@@ -130,7 +131,8 @@ export default function ProductionTest() {
           </div>
         </TabsContent>
 
-        <TabsContent value="plaid">
+        <TabsContent value="plaid" className="space-y-6">
+          <PlaidDiagnosticRunner />
           <PlaidConnectionTest />
         </TabsContent>
 
