@@ -74,6 +74,7 @@ import RIAPracticeQATest from "./pages/RIAPracticeQATest";
 import RIALicensingPage from "./pages/RIALicensingPage";
 import CompliancePage from "./pages/CompliancePage";
 import AttorneyCLEPage from "./pages/AttorneyCLEPage";
+import EndToEndQAPage from "./pages/EndToEndQAPage";
 
 const queryClient = new QueryClient();
 
@@ -259,9 +260,10 @@ function App() {
                     <Route path="/healthcare" element={<HealthcareLongevityCenter />} />
                     <Route path="/healthcare-qa" element={<HealthcareQAPage />} />
                     <Route path="/auth-test" element={<AuthTestPage />} />
-                   <Route path="/assets" element={<AssetInventory />} />
+                    <Route path="/assets" element={<AssetInventory />} />
+                    <Route path="/qa/end-to-end" element={<EndToEndQAPage />} />
 
-                        </Routes>
+                         </Routes>
                         <Navigation />
                        </BrowserRouter>
                        <QABypassIndicator />

@@ -19,7 +19,7 @@ import {
   MousePointer,
   AlertCircle
 } from 'lucide-react';
-import { qaTestRunner, QATestResult } from '@/utils/qaTestRunner';
+import { runComprehensiveQAValidation } from '@/utils/qaTestRunner';
 import { getEnvironmentConfig } from '@/utils/environment';
 
 export function QATestDashboard() {
