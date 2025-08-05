@@ -33,6 +33,7 @@ import { MarketplaceEducationalResources } from '@/components/marketplace/Market
 import { ProfessionalUpgradePrompts } from '@/components/marketplace/ProfessionalUpgradePrompts';
 import { MarketplaceFeatureGate } from '@/components/marketplace/MarketplaceFeatureGate';
 import { MarketplaceAnalytics } from '@/components/marketplace/MarketplaceAnalytics';
+import { FamilyMarketplaceHub } from '@/components/marketplace/FamilyMarketplaceHub';
 import { useSubscriptionAccess } from '@/hooks/useSubscriptionAccess';
 import { useUser } from '@/context/UserContext';
 
@@ -43,10 +44,17 @@ export default function MarketplacePage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [userType, setUserType] = useState<'family' | 'professional'>('family');
   const [activeTab, setActiveTab] = useState('professionals');
+  const [showFamilyView, setShowFamilyView] = useState(true);
 
   const userRole = userProfile?.role || 'client';
   const isProfessional = ['advisor', 'accountant', 'attorney', 'consultant'].includes(userRole);
   const isAdmin = ['admin', 'system_administrator', 'tenant_admin'].includes(userRole);
+  const userName = userProfile?.displayName || userProfile?.name || 'Family';
+
+  // Show family-friendly view for clients
+  if (userRole === 'client' && showFamilyView) {
+    return <FamilyMarketplaceHub userName={userName} />;
+  }
 
   // Hero Section Component
   const HeroSection = () => (
@@ -109,8 +117,8 @@ export default function MarketplacePage() {
               />
             </div>
             <Button size="lg" className="gap-2 whitespace-nowrap">
-              <Search className="w-4 h-4" />
-              Search
+              <BookOpen className="w-4 h-4" />
+              Learn More
             </Button>
           </div>
 
@@ -136,8 +144,8 @@ export default function MarketplacePage() {
             className="gap-2 bg-primary hover:bg-primary/90 px-8"
             onClick={() => setActiveTab('professionals')}
           >
-            Start Exploring
-            <ArrowRight className="w-4 h-4" />
+            <BookOpen className="w-4 h-4" />
+            See Benefits
           </Button>
         </div>
       </div>
@@ -340,8 +348,9 @@ export default function MarketplacePage() {
                             <Star className="w-4 h-4 text-yellow-500 fill-current" />
                             <span className="text-sm">{service.rating}</span>
                           </div>
-                          <Button size="sm" className="gap-1">
-                            Get Started <ArrowRight className="w-3 h-3" />
+                          <Button size="sm" className="gap-1" variant="outline">
+                            <BookOpen className="w-3 h-3" />
+                            Learn More
                           </Button>
                         </div>
                       </div>
