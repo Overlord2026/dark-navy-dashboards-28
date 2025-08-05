@@ -313,6 +313,11 @@ export const PricingFeatureTooltips = ({ features, persona, getFeatureIcon }: Pr
       name: 'Users Included',
       description: 'Number of user seats included in this plan.',
       tooltip: 'Additional users can be added for an extra monthly fee'
+    },
+    'linda_ai_assistant': {
+      name: 'Linda Voice AI Meeting Assistant (VOIP/SMS)',
+      description: 'Linda is your AI-powered voice assistant for meeting confirmations, reschedules, reminders, and post-meeting follow-up calls or SMS—fully branded for your practice.',
+      tooltip: '🎙️ Linda calls and texts your clients automatically to confirm meetings, send reminders, and follow up—saving you hours every week!'
     }
   };
 
@@ -329,11 +334,11 @@ export const PricingFeatureTooltips = ({ features, persona, getFeatureIcon }: Pr
   };
 
   const coreFeatures = Object.entries(features).filter(([key]) => 
-    ['branded_portal', 'crm_pipeline', 'document_vault', 'training_center', 'community_access', 'client_portal', 'family_dashboard', 'agent_portal', 'practice_dashboard', 'member_management'].includes(key)
+    ['branded_portal', 'crm_pipeline', 'document_vault', 'training_center', 'community_access', 'client_portal', 'family_dashboard', 'agent_portal', 'practice_dashboard', 'member_management', 'linda_ai_assistant'].includes(key)
   );
 
   const advancedFeatures = Object.entries(features).filter(([key]) => 
-    !['branded_portal', 'crm_pipeline', 'document_vault', 'training_center', 'community_access', 'client_portal', 'family_dashboard', 'agent_portal', 'practice_dashboard', 'member_management', 'users_included'].includes(key)
+    !['branded_portal', 'crm_pipeline', 'document_vault', 'training_center', 'community_access', 'client_portal', 'family_dashboard', 'agent_portal', 'practice_dashboard', 'member_management', 'linda_ai_assistant', 'users_included'].includes(key)
   );
 
   const userInfo = Object.entries(features).filter(([key]) => key === 'users_included');

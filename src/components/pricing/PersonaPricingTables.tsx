@@ -41,71 +41,75 @@ export const PersonaPricingTables = () => {
           name: 'Basic',
           monthlyPrice: 59,
           annualPrice: 600,
-          features: {
-            'branded_portal': true,
-            'crm_pipeline': true,
-            'document_vault': true,
-            'training_center': true,
-            'community_access': true,
-            'lead_engine': false,
-            'automated_meetings': false,
-            'advertising_dashboard': false,
-            'portfolio_analytics': false,
-            'compliance_center': false,
-            'swag_scoring': false,
-            'vip_marketplace': false,
-            'ai_copilot': false,
-            'white_label': false,
-            'users_included': '1 seat'
-          }
+            features: {
+              'branded_portal': true,
+              'crm_pipeline': true,
+              'document_vault': true,
+              'training_center': true,
+              'community_access': true,
+              'linda_ai_assistant': '+$10/mo',
+              'lead_engine': false,
+              'automated_meetings': false,
+              'advertising_dashboard': false,
+              'portfolio_analytics': false,
+              'compliance_center': false,
+              'swag_scoring': false,
+              'vip_marketplace': false,
+              'ai_copilot': false,
+              'white_label': false,
+              'users_included': '1 seat'
+            }
         },
         {
           name: 'Pro',
           monthlyPrice: 119,
           annualPrice: 1200,
           isPopular: true,
-          features: {
-            'branded_portal': true,
-            'crm_pipeline': true,
-            'document_vault': true,
-            'training_center': true,
-            'community_access': true,
-            'lead_engine': true,
-            'automated_meetings': true,
-            'advertising_dashboard': true,
-            'portfolio_analytics': true,
-            'compliance_center': true,
-            'swag_scoring': false,
-            'vip_marketplace': false,
-            'ai_copilot': false,
-            'white_label': false,
-            'users_included': '3 seats'
-          }
+            features: {
+              'branded_portal': true,
+              'crm_pipeline': true,
+              'document_vault': true,
+              'training_center': true,
+              'community_access': true,
+              'linda_ai_assistant': true,
+              'lead_engine': true,
+              'automated_meetings': true,
+              'advertising_dashboard': true,
+              'portfolio_analytics': true,
+              'compliance_center': true,
+              'swag_scoring': false,
+              'vip_marketplace': false,
+              'ai_copilot': false,
+              'white_label': false,
+              'users_included': '3 seats'
+            }
         },
         {
           name: 'Premium',
           monthlyPrice: 199,
           annualPrice: 2000,
-          features: {
-            'branded_portal': true,
-            'crm_pipeline': true,
-            'document_vault': true,
-            'training_center': true,
-            'community_access': true,
-            'lead_engine': true,
-            'automated_meetings': true,
-            'advertising_dashboard': true,
-            'portfolio_analytics': true,
-            'compliance_center': true,
-            'swag_scoring': true,
-            'vip_marketplace': true,
-            'ai_copilot': true,
-            'white_label': true,
-            'users_included': '10 seats'
-          }
+            features: {
+              'branded_portal': true,
+              'crm_pipeline': true,
+              'document_vault': true,
+              'training_center': true,
+              'community_access': true,
+              'linda_ai_assistant': true,
+              'lead_engine': true,
+              'automated_meetings': true,
+              'advertising_dashboard': true,
+              'portfolio_analytics': true,
+              'compliance_center': true,
+              'swag_scoring': true,
+              'vip_marketplace': true,
+              'ai_copilot': true,
+              'white_label': true,
+              'users_included': '10 seats'
+            }
         }
       ],
       addOns: [
+        { name: 'Linda AI Assistant', price: 10, description: 'Voice AI meeting confirmation assistant (VOIP/SMS)' },
         { name: 'SMS/Voice Add-on', price: 5, description: 'SMS and voice calling capabilities' },
         { name: 'VIP Support', price: 25, description: 'Priority support and dedicated success manager' },
         { name: 'Extra Users', price: 15, description: 'Additional user seats beyond included amount' }
@@ -126,6 +130,7 @@ export const PersonaPricingTables = () => {
             'document_vault': true,
             'training_center': true,
             'community_access': true,
+            'linda_ai_assistant': '+$10/mo',
             'tax_analysis': false,
             'workflow_automation': false,
             'lead_engine': false,
@@ -148,6 +153,7 @@ export const PersonaPricingTables = () => {
             'document_vault': true,
             'training_center': true,
             'community_access': true,
+            'linda_ai_assistant': true,
             'tax_analysis': true,
             'workflow_automation': true,
             'lead_engine': true,
@@ -169,6 +175,7 @@ export const PersonaPricingTables = () => {
             'document_vault': true,
             'training_center': true,
             'community_access': true,
+            'linda_ai_assistant': true,
             'tax_analysis': true,
             'workflow_automation': true,
             'lead_engine': true,
@@ -182,6 +189,7 @@ export const PersonaPricingTables = () => {
         }
       ],
       addOns: [
+        { name: 'Linda AI Assistant', price: 10, description: 'Voice AI meeting confirmation assistant (VOIP/SMS)' },
         { name: 'Advanced Tax Module', price: 15, description: 'Enhanced tax planning and analysis tools' },
         { name: 'Client Communication Suite', price: 10, description: 'SMS, email automation, and client messaging' },
         { name: 'Extra Storage', price: 8, description: 'Additional document storage beyond base limits' }
@@ -202,6 +210,7 @@ export const PersonaPricingTables = () => {
             'document_vault': true,
             'training_center': true,
             'community_access': true,
+            'linda_ai_assistant': '+$10/mo',
             'legal_crm': false,
             'document_automation': false,
             'event_scheduling': false,
@@ -224,6 +233,7 @@ export const PersonaPricingTables = () => {
             'document_vault': true,
             'training_center': true,
             'community_access': true,
+            'linda_ai_assistant': true,
             'legal_crm': true,
             'document_automation': true,
             'event_scheduling': true,
@@ -245,6 +255,7 @@ export const PersonaPricingTables = () => {
             'document_vault': true,
             'training_center': true,
             'community_access': true,
+            'linda_ai_assistant': true,
             'legal_crm': true,
             'document_automation': true,
             'event_scheduling': true,
@@ -258,6 +269,7 @@ export const PersonaPricingTables = () => {
         }
       ],
       addOns: [
+        { name: 'Linda AI Assistant', price: 10, description: 'Voice AI meeting confirmation assistant (VOIP/SMS)' },
         { name: 'Legal Document Library', price: 20, description: 'Access to premium legal document templates' },
         { name: 'Court Calendar Integration', price: 12, description: 'Sync with court systems and legal calendars' },
         { name: 'Expert Witness Network', price: 25, description: 'Access to vetted expert witness database' }
@@ -275,6 +287,7 @@ export const PersonaPricingTables = () => {
           features: {
             'agent_portal': true,
             'ce_tracking': true,
+            'linda_ai_assistant': '+$10/mo',
             'commission_tracking': false,
             'lead_engine': false,
             'marketing_dashboard': false,
@@ -294,6 +307,7 @@ export const PersonaPricingTables = () => {
           features: {
             'agent_portal': true,
             'ce_tracking': true,
+            'linda_ai_assistant': true,
             'commission_tracking': true,
             'lead_engine': true,
             'marketing_dashboard': true,
@@ -312,6 +326,7 @@ export const PersonaPricingTables = () => {
           features: {
             'agent_portal': true,
             'ce_tracking': true,
+            'linda_ai_assistant': true,
             'commission_tracking': true,
             'lead_engine': true,
             'marketing_dashboard': true,
@@ -325,6 +340,7 @@ export const PersonaPricingTables = () => {
         }
       ],
       addOns: [
+        { name: 'Linda AI Assistant', price: 10, description: 'Voice AI for policy reviews and annual calls (VOIP/SMS)' },
         { name: 'Carrier Integration Suite', price: 18, description: 'Direct integration with major insurance carriers' },
         { name: 'Advanced Analytics', price: 15, description: 'Deep dive analytics and reporting tools' },
         { name: 'Team Collaboration Tools', price: 10, description: 'Enhanced team communication and workflow' }
@@ -342,6 +358,7 @@ export const PersonaPricingTables = () => {
           features: {
             'practice_dashboard': true,
             'client_management': true,
+            'linda_ai_assistant': '+$10/mo',
             'meeting_tools': false,
             'curriculum_manager': false,
             'lead_engine': false,
@@ -360,6 +377,7 @@ export const PersonaPricingTables = () => {
           features: {
             'practice_dashboard': true,
             'client_management': true,
+            'linda_ai_assistant': true,
             'meeting_tools': true,
             'curriculum_manager': true,
             'lead_engine': true,
@@ -377,6 +395,7 @@ export const PersonaPricingTables = () => {
           features: {
             'practice_dashboard': true,
             'client_management': true,
+            'linda_ai_assistant': true,
             'meeting_tools': true,
             'curriculum_manager': true,
             'lead_engine': true,
@@ -389,6 +408,7 @@ export const PersonaPricingTables = () => {
         }
       ],
       addOns: [
+        { name: 'Linda AI Assistant', price: 10, description: 'Voice AI meeting confirmation assistant (VOIP/SMS)' },
         { name: 'Course Builder Pro', price: 12, description: 'Advanced course creation and delivery tools' },
         { name: 'Client Assessment Suite', price: 8, description: 'Comprehensive client evaluation tools' },
         { name: 'Marketing Automation', price: 15, description: 'Automated marketing and lead nurturing' }
@@ -405,6 +425,7 @@ export const PersonaPricingTables = () => {
           annualPrice: 2000,
           features: {
             'member_management': true,
+            'linda_ai_assistant': '+$10/mo',
             'event_platform': false,
             'marketplace_access': false,
             'bulk_onboarding': false,
@@ -422,6 +443,7 @@ export const PersonaPricingTables = () => {
           isPopular: true,
           features: {
             'member_management': true,
+            'linda_ai_assistant': true,
             'event_platform': true,
             'marketplace_access': true,
             'bulk_onboarding': true,
@@ -438,6 +460,7 @@ export const PersonaPricingTables = () => {
           annualPrice: 7000,
           features: {
             'member_management': true,
+            'linda_ai_assistant': true,
             'event_platform': true,
             'marketplace_access': true,
             'bulk_onboarding': true,
@@ -450,6 +473,7 @@ export const PersonaPricingTables = () => {
         }
       ],
       addOns: [
+        { name: 'Linda AI Assistant', price: 10, description: 'Voice AI meeting confirmation assistant (VOIP/SMS)' },
         { name: 'Enterprise SSO', price: 50, description: 'Single sign-on integration for enterprise security' },
         { name: 'Custom Integrations', price: 100, description: 'Custom API integrations and data connectors' },
         { name: 'Dedicated Success Manager', price: 200, description: 'Dedicated enterprise success manager' }
@@ -467,6 +491,7 @@ export const PersonaPricingTables = () => {
           features: {
             'family_dashboard': true,
             'net_worth_tracking': true,
+            'linda_ai_assistant': '+$10/mo',
             'budget_tools': false,
             'education_center': false,
             'secure_vault': false,
@@ -485,6 +510,7 @@ export const PersonaPricingTables = () => {
           features: {
             'family_dashboard': true,
             'net_worth_tracking': true,
+            'linda_ai_assistant': true,
             'budget_tools': true,
             'education_center': true,
             'secure_vault': true,
@@ -502,6 +528,7 @@ export const PersonaPricingTables = () => {
           features: {
             'family_dashboard': true,
             'net_worth_tracking': true,
+            'linda_ai_assistant': true,
             'budget_tools': true,
             'education_center': true,
             'secure_vault': true,
@@ -514,6 +541,7 @@ export const PersonaPricingTables = () => {
         }
       ],
       addOns: [
+        { name: 'AI Scheduling Concierge (Linda)', price: 10, description: 'AI scheduling concierge assistant (VOIP/SMS)' },
         { name: 'Premium Concierge', price: 25, description: 'Enhanced concierge and lifestyle services' },
         { name: 'Investment Tracking Pro', price: 15, description: 'Advanced investment performance tracking' },
         { name: 'Tax Optimization Suite', price: 20, description: 'Advanced tax planning and optimization tools' }
