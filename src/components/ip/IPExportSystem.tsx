@@ -13,6 +13,7 @@ import { PatentWireframeGenerator } from './PatentWireframeGenerator';
 import { TechnicalSpecificationDiagrams } from './TechnicalSpecificationDiagrams';
 import { PatentDocumentationPackage } from './PatentDocumentationPackage';
 import { TechnicalWorkflowDiagrams } from './TechnicalWorkflowDiagrams';
+import { AttorneyHandoffPackets } from './AttorneyHandoffPackets';
 
 export function IPExportSystem() {
   const [exportStatus, setExportStatus] = useState<Record<string, boolean>>({});
@@ -131,6 +132,7 @@ export function IPExportSystem() {
           <TabsTrigger value="wireframes">UI Wireframes</TabsTrigger>
           <TabsTrigger value="assets">Pending Assets</TabsTrigger>
           <TabsTrigger value="legal">Legal Materials</TabsTrigger>
+          <TabsTrigger value="attorney-packets">Attorney Packets</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview">
@@ -194,6 +196,10 @@ export function IPExportSystem() {
 
         <TabsContent value="legal">
           <LegalTemplates />
+        </TabsContent>
+
+        <TabsContent value="attorney-packets">
+          <AttorneyHandoffPackets />
         </TabsContent>
 
         <TabsContent value="package">
