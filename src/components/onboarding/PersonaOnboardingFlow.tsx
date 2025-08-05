@@ -1,310 +1,273 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
-import { CheckCircle, Circle, ArrowRight, Star, Target, Trophy } from 'lucide-react';
-import { useUser } from '@/context/UserContext';
-import { toast } from 'sonner';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/ui/card';
+import { 
+  Sparkles, CheckCircle, ArrowRight, Crown, Gift, FileText, Calendar, Shield, 
+  Heart, Briefcase, UserCheck, Building2, GraduationCap, Users, Star 
+} from 'lucide-react';
+import { usePersona } from '@/context/PersonaContext';
+import { PersonaType } from '@/types/personas';
+import { useEventTracking } from '@/hooks/useEventTracking';
+import { ConfettiAnimation } from '@/components/ConfettiAnimation';
+import { SWAGViralShare } from '@/components/leads/SWAGViralShare';
 
-interface OnboardingStep {
-  id: string;
-  title: string;
-  description: string;
-  completed: boolean;
-  action?: () => void;
-  href?: string;
-  priority: 'high' | 'medium' | 'low';
+// Enhanced persona welcome messages with specific CTAs
+const ENHANCED_PERSONA_MESSAGES = {
+  advisor: {
+    title: "Welcome to the Family Office Marketplace™!",
+    subtitle: "Your advisor profile is ready. Invite clients, showcase your expertise, and grow your business with our advanced CRM, proposal, compliance, and portfolio tools.",
+    icon: <Briefcase className="h-8 w-8" />,
+    color: "from-blue-500 to-blue-700",
+    ctas: [
+      { label: "Invite Clients Now", action: "invite_clients", primary: true },
+      { label: "Create First Proposal", action: "create_proposal" },
+      { label: "Book Demo with Platform Coach", action: "book_demo" },
+      { label: "Watch SWAG Lead Score Demo", action: "watch_demo" }
+    ]
+  },
+  accountant: {
+    title: "Welcome, Tax Professional!",
+    subtitle: "Your accountant dashboard is live. Upload returns, monitor compliance, and connect with families and businesses who need your expertise.",
+    icon: <FileText className="h-8 w-8" />,
+    color: "from-green-500 to-green-700",
+    ctas: [
+      { label: "Import Clients", action: "import_clients", primary: true },
+      { label: "Start Tax Planning", action: "tax_planning" },
+      { label: "Connect Partners", action: "connect_partners" }
+    ]
+  },
+  attorney: {
+    title: "Welcome, Counselor!",
+    subtitle: "Your legal practice center is ready. Manage estate plans, contracts, and compliance with secure document vaults and CLE tracking.",
+    icon: <Shield className="h-8 w-8" />,
+    color: "from-purple-500 to-purple-700", 
+    ctas: [
+      { label: "Upload Legal Docs", action: "upload_docs", primary: true },
+      { label: "Schedule Consultation", action: "schedule_consult" },
+      { label: "Access CLE Resources", action: "cle_resources" }
+    ]
+  },
+  coach: {
+    title: "Welcome, Practice Coach!",
+    subtitle: "Your practice growth hub is active. Publish curriculum, connect with teams, and automate referrals for maximum impact.",
+    icon: <GraduationCap className="h-8 w-8" />,
+    color: "from-orange-500 to-orange-700",
+    ctas: [
+      { label: "Upload Training", action: "upload_training", primary: true },
+      { label: "Connect to Teams", action: "connect_teams" }
+    ]
+  },
+  compliance: {
+    title: "Welcome, Compliance Officer!",
+    subtitle: "Your compliance center is ready. Automate audits, track incidents, and provide world-class consulting.",
+    icon: <UserCheck className="h-8 w-8" />,
+    color: "from-red-500 to-red-700",
+    ctas: [
+      { label: "Launch Mock Audit", action: "mock_audit", primary: true },
+      { label: "Start Training", action: "compliance_training" }
+    ]
+  },
+  healthcare_consultant: {
+    title: "Welcome, Healthcare Leader!",
+    subtitle: "Lead in family health and longevity. Share protocols and join our network to reach families nationwide.",
+    icon: <Heart className="h-8 w-8" />,
+    color: "from-emerald-500 to-emerald-700",
+    ctas: [
+      { label: "Set My Rates", action: "set_rates", primary: true },
+      { label: "Join Longevity AMA", action: "join_ama" }
+    ]
+  },
+  organization: {
+    title: "Welcome, Industry Leader!",
+    subtitle: "Your VIP profile is ready. Share content and connect with thousands of professionals in our trusted space.",
+    icon: <Building2 className="h-8 w-8" />,
+    color: "from-gold to-yellow-600",
+    ctas: [
+      { label: "Customize VIP Profile", action: "customize_profile", primary: true },
+      { label: "Upload Content", action: "upload_content" }
+    ]
+  },
+  client: {
+    title: "Welcome to Your Financial Future!",
+    subtitle: "Connect with vetted professionals and take control of your financial future with confidence.",
+    icon: <Star className="h-8 w-8" />,
+    color: "from-blue-500 to-purple-600",
+    ctas: [
+      { label: "Find Your Advisor", action: "find_advisor", primary: true },
+      { label: "Complete Assessment", action: "wealth_assessment" }
+    ]
+  },
+  vip_reserved: {
+    title: "Welcome, VIP Member!",
+    subtitle: "Your exclusive founding member profile awaits. Shape the future of family wealth management.",
+    icon: <Crown className="h-8 w-8" />,
+    color: "from-gold to-yellow-500",
+    ctas: [
+      { label: "Claim Reserved Profile", action: "claim_profile", primary: true },
+      { label: "Schedule VIP Onboarding", action: "vip_onboarding" }
+    ]
+  }
+};
+
+interface PersonaOnboardingFlowProps {
+  isOpen: boolean;
+  onClose: () => void;
+  forcePersona?: PersonaType;
 }
 
-interface PersonaOnboardingProps {
-  onComplete?: () => void;
-}
-
-export const PersonaOnboardingFlow: React.FC<PersonaOnboardingProps> = ({ onComplete }) => {
-  const { userProfile } = useUser();
-  const role = userProfile?.role || 'client';
-  const tier = userProfile?.client_tier || 'basic';
-  
+export const PersonaOnboardingFlow: React.FC<PersonaOnboardingFlowProps> = ({
+  isOpen,
+  onClose,
+  forcePersona
+}) => {
+  const { currentPersona, markWelcomeModalSeen } = usePersona();
+  const { trackUserOnboarding, trackViralShare } = useEventTracking();
+  const [showConfetti, setShowConfetti] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
-  const [steps, setSteps] = useState<OnboardingStep[]>([]);
-  const [isVisible, setIsVisible] = useState(true);
+
+  const persona = forcePersona || currentPersona;
+  const welcomeData = ENHANCED_PERSONA_MESSAGES[persona] || ENHANCED_PERSONA_MESSAGES.client;
 
   useEffect(() => {
-    const onboardingKey = `onboarding-completed-${role}-${tier}`;
-    const hasCompleted = localStorage.getItem(onboardingKey);
+    if (isOpen) {
+      setShowConfetti(true);
+      setTimeout(() => setShowConfetti(false), 3000);
+    }
+  }, [isOpen]);
+
+  const handleCTAAction = async (action: string, isPrimary = false) => {
+    await trackUserOnboarding(`cta_${action}`, { 
+      persona, 
+      action,
+      is_primary: isPrimary
+    });
     
-    if (!hasCompleted) {
-      setSteps(getOnboardingSteps(role, tier));
-      setIsVisible(true);
-    } else {
-      setIsVisible(false);
+    // Handle specific actions
+    switch (action) {
+      case 'invite_clients':
+      case 'import_clients':
+        // Navigate to client import/invite
+        break;
+      case 'create_proposal':
+        // Navigate to proposal builder
+        break;
+      case 'upload_docs':
+        // Navigate to document vault
+        break;
+      case 'book_demo':
+        // Open demo booking
+        break;
+      default:
+        console.log(`CTA action: ${action}`);
     }
-  }, [role, tier]);
-
-  const getOnboardingSteps = (userRole: string, userTier: string): OnboardingStep[] => {
-    const baseSteps = {
-      client: [
-        {
-          id: 'welcome',
-          title: 'Welcome to Your Family Office',
-          description: 'Get an overview of available tools and services',
-          completed: false,
-          priority: 'high' as const,
-        },
-        {
-          id: 'profile',
-          title: 'Complete Your Profile',
-          description: 'Help us personalize your experience',
-          completed: false,
-          href: '/settings',
-          priority: 'high' as const,
-        },
-        {
-          id: 'education',
-          title: 'Explore Education Center',
-          description: 'Discover financial planning resources',
-          completed: false,
-          href: '/education',
-          priority: 'medium' as const,
-        }
-      ],
-      advisor: [
-        {
-          id: 'welcome',
-          title: 'Welcome to Your Advisor Portal',
-          description: 'Explore client management and business tools',
-          completed: false,
-          priority: 'high' as const,
-        },
-        {
-          id: 'clients',
-          title: 'Import Your Client List',
-          description: 'Add your existing clients to the platform',
-          completed: false,
-          href: '/advisor/clients',
-          priority: 'high' as const,
-        },
-        {
-          id: 'referrals',
-          title: 'Set Up Referral Program',
-          description: 'Start earning rewards for referrals',
-          completed: false,
-          href: '/advisor/referrals',
-          priority: 'medium' as const,
-        }
-      ],
-      accountant: [
-        {
-          id: 'welcome',
-          title: 'Welcome to Your Tax & Accounting Hub',
-          description: 'Set up your professional practice dashboard',
-          completed: false,
-          priority: 'high' as const,
-        },
-        {
-          id: 'tax-setup',
-          title: 'Configure Tax Services',
-          description: 'Set up your tax preparation workflow',
-          completed: false,
-          href: '/tax-planning',
-          priority: 'high' as const,
-        }
-      ],
-      consultant: [
-        {
-          id: 'welcome',
-          title: 'Welcome to Your Consulting Platform',
-          description: 'Discover tools for strategic advisory services',
-          completed: false,
-          priority: 'high' as const,
-        },
-        {
-          id: 'projects',
-          title: 'Create Your First Project',
-          description: 'Set up project management for clients',
-          completed: false,
-          priority: 'high' as const,
-        }
-      ],
-      attorney: [
-        {
-          id: 'welcome',
-          title: 'Welcome to Your Legal Services Hub',
-          description: 'Access estate planning and legal document tools',
-          completed: false,
-          priority: 'high' as const,
-        },
-        {
-          id: 'estate',
-          title: 'Explore Estate Planning Tools',
-          description: 'Review comprehensive estate planning resources',
-          completed: false,
-          href: '/estate-planning',
-          priority: 'high' as const,
-        }
-      ],
-      admin: [
-        {
-          id: 'welcome',
-          title: 'Welcome to Admin Console',
-          description: 'Configure platform settings and user management',
-          completed: false,
-          priority: 'high' as const,
-        },
-        {
-          id: 'users',
-          title: 'Set Up User Management',
-          description: 'Configure roles and permissions',
-          completed: false,
-          href: '/admin-portal',
-          priority: 'high' as const,
-        }
-      ]
-    };
-
-    // Add premium-specific steps for clients
-    if (userRole === 'client' && userTier === 'premium') {
-      baseSteps.client.push({
-        id: 'premium',
-        title: 'Explore Premium Features',
-        description: 'Unlock advanced wealth management tools',
-        completed: false,
-        href: '/wealth/premium',
-        priority: 'medium' as const,
-      });
-    }
-
-    return baseSteps[userRole as keyof typeof baseSteps] || baseSteps.client;
-  };
-
-  const completeStep = (stepId: string) => {
-    setSteps(prev => prev.map(step => 
-      step.id === stepId ? { ...step, completed: true } : step
-    ));
     
-    if (currentStep < steps.length - 1) {
-      setCurrentStep(prev => prev + 1);
-    }
+    markWelcomeModalSeen();
+    onClose();
   };
 
-  const dismissOnboarding = () => {
-    const onboardingKey = `onboarding-completed-${role}-${tier}`;
-    localStorage.setItem(onboardingKey, 'true');
-    setIsVisible(false);
-    onComplete?.();
-    toast.success('Onboarding completed! You can access these features anytime.');
-  };
-
-  const progress = (steps.filter(s => s.completed).length / steps.length) * 100;
-
-  if (!isVisible || steps.length === 0) {
-    return null;
-  }
+  if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-      <Card className="w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle className="flex items-center gap-2">
-              <Star className="h-5 w-5 text-primary" />
-              Getting Started
-            </CardTitle>
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              onClick={dismissOnboarding}
-            >
-              Skip Tour
-            </Button>
-          </div>
-          <CardDescription>
-            Let's get you set up with the tools you need most
-          </CardDescription>
-          <Progress value={progress} className="mt-2" />
-          <p className="text-sm text-muted-foreground">
-            {steps.filter(s => s.completed).length} of {steps.length} completed
-          </p>
-        </CardHeader>
-        
-        <CardContent className="space-y-4">
-          {steps.map((step, index) => (
-            <div 
-              key={step.id}
-              className={`p-4 rounded-lg border transition-all ${
-                index === currentStep 
-                  ? 'border-primary bg-primary/5' 
-                  : step.completed 
-                    ? 'border-green-200 bg-green-50' 
-                    : 'border-muted'
-              }`}
-            >
-              <div className="flex items-start gap-3">
-                <div className="mt-1">
-                  {step.completed ? (
-                    <CheckCircle className="h-5 w-5 text-green-600" />
-                  ) : (
-                    <Circle className="h-5 w-5 text-muted-foreground" />
-                  )}
-                </div>
-                
-                <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-medium">{step.title}</h3>
-                    {step.priority === 'high' && (
-                      <span className="px-2 py-1 text-xs bg-red-100 text-red-700 rounded">
-                        High Priority
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    {step.description}
-                  </p>
-                  
-                  {!step.completed && index === currentStep && (
-                    <div className="mt-3 flex gap-2">
-                      {step.href ? (
-                        <Button 
-                          size="sm" 
-                          onClick={() => {
-                            completeStep(step.id);
-                            // In a real app, navigate to step.href
-                            toast.success(`${step.title} completed!`);
-                          }}
-                          className="flex items-center gap-2"
-                        >
-                          Get Started
-                          <ArrowRight className="h-4 w-4" />
-                        </Button>
-                      ) : (
-                        <Button 
-                          size="sm" 
-                          onClick={() => completeStep(step.id)}
-                        >
-                          Mark Complete
-                        </Button>
-                      )}
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          ))}
+    <AnimatePresence>
+      <Dialog open={isOpen} onOpenChange={onClose}>
+        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+          {showConfetti && <ConfettiAnimation />}
           
-          {progress === 100 && (
-            <div className="text-center py-6">
-              <Trophy className="h-12 w-12 text-primary mx-auto mb-4" />
-              <h3 className="text-lg font-semibold mb-2">Congratulations!</h3>
-              <p className="text-muted-foreground mb-4">
-                You've completed the getting started tour
+          <DialogHeader className="text-center pb-4">
+            <div className="flex items-center justify-center mb-4">
+              <motion.div
+                initial={{ scale: 0, rotate: -180 }}
+                animate={{ scale: 1, rotate: 0 }}
+                transition={{ type: "spring", stiffness: 200 }}
+                className={`w-16 h-16 rounded-full bg-gradient-to-br ${welcomeData.color} flex items-center justify-center text-white`}
+              >
+                {welcomeData.icon}
+              </motion.div>
+            </div>
+            
+            <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-gold bg-clip-text text-transparent">
+              {welcomeData.title}
+            </DialogTitle>
+            
+            <p className="text-muted-foreground leading-relaxed mt-2">
+              {welcomeData.subtitle}
+            </p>
+          </DialogHeader>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-4"
+          >
+            {/* SWAG Score Display */}
+            <Card className="border-gold/20 bg-gradient-to-br from-gold/5 to-primary/5">
+              <CardContent className="p-4 text-center">
+                <div className="text-3xl font-bold text-gold mb-1">Got SWAG?</div>
+                <div className="text-sm text-muted-foreground">
+                  Your AI-powered professional score is ready!
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* CTA Buttons */}
+            <div className="space-y-3">
+              {welcomeData.ctas.map((cta, index) => (
+                <motion.div
+                  key={cta.action}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.1 * index }}
+                >
+                  <Button
+                    onClick={() => handleCTAAction(cta.action, cta.primary)}
+                    className={`w-full ${
+                      cta.primary 
+                        ? `bg-gradient-to-r ${welcomeData.color} hover:opacity-90 text-white` 
+                        : 'bg-muted hover:bg-muted/80'
+                    }`}
+                    size="lg"
+                  >
+                    {cta.label}
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Viral Share */}
+            <div className="pt-4 border-t">
+              <p className="text-sm text-muted-foreground mb-3 text-center">
+                🎯 Invite colleagues and get 1 month free for each professional who joins!
               </p>
-              <Button onClick={dismissOnboarding}>
-                Continue to Dashboard
+              <SWAGViralShare 
+                onShare={(platform) => {
+                  trackViralShare(platform, { source: 'welcome_modal', persona });
+                }}
+                customMessage={`Just joined the Family Office Marketplace™! Connect with top ${persona}s and families: my.bfocfo.com`}
+                compact={true}
+              />
+            </div>
+
+            {/* Skip Option */}
+            <div className="text-center">
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={() => {
+                  markWelcomeModalSeen();
+                  onClose();
+                }}
+                className="text-muted-foreground"
+              >
+                Maybe Later
               </Button>
             </div>
-          )}
-        </CardContent>
-      </Card>
-    </div>
+          </motion.div>
+        </DialogContent>
+      </Dialog>
+    </AnimatePresence>
   );
 };
