@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Download, FileText, Image, Shield, CheckCircle, ExternalLink, Award } from 'lucide-react';
+import { Download, FileText, Image, Shield, CheckCircle, ExternalLink, Award, Scale } from 'lucide-react';
 import { PatentClaimDrafts } from './PatentClaimDrafts';
 import { UIWireframeExports } from './UIWireframeExports';
 import { IPLogExport } from './IPLogExport';
@@ -17,6 +17,7 @@ import { AttorneyHandoffPackets } from './AttorneyHandoffPackets';
 import { SWAGPatentPrepPackage } from './SWAGPatentPrepPackage';
 import { PatentabilityTestDashboard } from './PatentabilityTestDashboard';
 import { FamilyOfficePlatformPatentPackage } from './FamilyOfficePlatformPatentPackage';
+import { ComprehensivePatentFilingPackage } from './ComprehensivePatentFilingPackage';
 
 export function IPExportSystem() {
   const [exportStatus, setExportStatus] = useState<Record<string, boolean>>({});
@@ -145,6 +146,10 @@ export function IPExportSystem() {
             <Award className="h-4 w-4" />
             <span>Platform Patent Package</span>
           </TabsTrigger>
+          <TabsTrigger value="filing-package" className="text-amber-600 flex items-center gap-1">
+            <Scale className="h-4 w-4" />
+            <span>Complete Filing Package</span>
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview">
@@ -224,6 +229,10 @@ export function IPExportSystem() {
 
         <TabsContent value="platform-patent">
           <FamilyOfficePlatformPatentPackage />
+        </TabsContent>
+
+        <TabsContent value="filing-package">
+          <ComprehensivePatentFilingPackage />
         </TabsContent>
 
         <TabsContent value="package">
