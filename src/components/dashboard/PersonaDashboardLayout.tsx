@@ -455,12 +455,54 @@ export const PersonaDashboardLayout: React.FC<PersonaDashboardLayoutProps> = ({ 
         {children}
       </div>
 
-      {/* Onboarding Flow */}
+      {/* VIP Onboarding Flow */}
+      {showVIPOnboarding && (
+        <VIPOnboardingFlow 
+          isOpen={showVIPOnboarding}
+          onClose={() => setShowVIPOnboarding(false)}
+          persona={currentPersona}
+          userProfile={userProfile}
+          isReservedVIP={isReservedVIP}
+        />
+      )}
+
+      {/* Regular Onboarding Flow */}
       {showOnboarding && (
         <PersonaOnboardingFlow 
           isOpen={showOnboarding}
           onClose={() => setShowOnboarding(false)} 
         />
+      )}
+
+      {/* Invite Flow */}
+      {showInviteFlow && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+          onClick={() => setShowInviteFlow(false)}
+        >
+          <motion.div
+            initial={{ scale: 0.95, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.95, opacity: 0 }}
+            onClick={(e) => e.stopPropagation()}
+            className="w-full max-w-2xl"
+          >
+            <PersonaInviteTemplates 
+              currentPersona={currentPersona}
+              onInviteSent={handleInviteSent}
+            />
+            <Button 
+              variant="outline" 
+              onClick={() => setShowInviteFlow(false)}
+              className="w-full mt-4"
+            >
+              Close
+            </Button>
+          </motion.div>
+        </motion.div>
       )}
     </MainLayout>
   );
