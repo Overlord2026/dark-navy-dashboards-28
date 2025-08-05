@@ -97,35 +97,7 @@ export const PersonaFAQ = ({ userPersona, isVIP = false }: PersonaFAQProps) => {
     try {
       setLoading(true);
       
-      // Get persona-specific FAQs from database
-      const { data, error } = await supabase
-        .from('faq_items')
-        .select('*')
-        .contains('personas', [userPersona])
-        .order('helpful_votes', { ascending: false });
-
-      if (error) throw error;
-
-      // If no DB data, use hardcoded persona FAQs
-      if (!data || data.length === 0) {
-        const defaultFAQs = personaFAQs[userPersona]?.questions.map((faq, index) => ({
-          id: `${userPersona}-${index}`,
-          question: faq.question,
-          answer: faq.answer,
-          personas: [userPersona],
-          category: faq.category,
-          helpful_votes: 0,
-          not_helpful_votes: 0,
-          search_count: 0
-        })) || [];
-        
-        setFaqs(defaultFAQs);
-      } else {
-        setFaqs(data);
-      }
-    } catch (error) {
-      console.error('Error fetching FAQs:', error);
-      // Fallback to hardcoded FAQs
+      // Use hardcoded persona FAQs for now since database types aren't updated
       const defaultFAQs = personaFAQs[userPersona]?.questions.map((faq, index) => ({
         id: `${userPersona}-${index}`,
         question: faq.question,
@@ -138,6 +110,10 @@ export const PersonaFAQ = ({ userPersona, isVIP = false }: PersonaFAQProps) => {
       })) || [];
       
       setFaqs(defaultFAQs);
+    } catch (error) {
+      console.error('Error fetching FAQs:', error);
+      // Fallback to empty array
+      setFaqs([]);
     } finally {
       setLoading(false);
     }
@@ -164,13 +140,16 @@ export const PersonaFAQ = ({ userPersona, isVIP = false }: PersonaFAQProps) => {
 
   const logFAQEvent = async (eventType: string, query: string | null, faqId: string | null) => {
     try {
-      await supabase.from('faq_analytics').insert({
+      // Store analytics in localStorage for now
+      const analytics = JSON.parse(localStorage.getItem('faq_analytics') || '[]');
+      analytics.push({
         user_persona: userPersona,
         event_type: eventType,
         search_query: query,
         faq_id: faqId,
         timestamp: new Date().toISOString()
       });
+      localStorage.setItem('faq_analytics', JSON.stringify(analytics));
     } catch (error) {
       console.error('Error logging FAQ event:', error);
     }

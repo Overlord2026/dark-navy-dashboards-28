@@ -7940,6 +7940,69 @@ export type Database = {
           },
         ]
       }
+      email_schedule: {
+        Row: {
+          created_at: string
+          id: string
+          is_sent: boolean
+          persona: string
+          scheduled_for: string
+          sequence_type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_sent?: boolean
+          persona: string
+          scheduled_for: string
+          sequence_type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_sent?: boolean
+          persona?: string
+          scheduled_for?: string
+          sequence_type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      email_sequences: {
+        Row: {
+          content_template: string
+          created_at: string
+          id: string
+          is_active: boolean
+          persona: string
+          sequence_type: string
+          subject_template: string
+          updated_at: string
+        }
+        Insert: {
+          content_template: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          persona: string
+          sequence_type: string
+          subject_template: string
+          updated_at?: string
+        }
+        Update: {
+          content_template?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          persona?: string
+          sequence_type?: string
+          subject_template?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       entity_documents: {
         Row: {
           compliance_related: boolean | null
@@ -8639,6 +8702,36 @@ export type Database = {
           user_id?: string
           vault_name?: string
           vault_photo_url?: string | null
+        }
+        Relationships: []
+      }
+      faq_analytics: {
+        Row: {
+          created_at: string
+          event_type: string
+          faq_id: string | null
+          id: string
+          search_query: string | null
+          timestamp: string
+          user_persona: string
+        }
+        Insert: {
+          created_at?: string
+          event_type: string
+          faq_id?: string | null
+          id?: string
+          search_query?: string | null
+          timestamp?: string
+          user_persona: string
+        }
+        Update: {
+          created_at?: string
+          event_type?: string
+          faq_id?: string | null
+          id?: string
+          search_query?: string | null
+          timestamp?: string
+          user_persona?: string
         }
         Relationships: []
       }
@@ -14381,6 +14474,39 @@ export type Database = {
             referencedColumns: ["user_id"]
           },
         ]
+      }
+      onboarding_email_log: {
+        Row: {
+          created_at: string
+          email_id: string | null
+          email_sent_at: string
+          id: string
+          persona: string
+          sequence_type: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email_id?: string | null
+          email_sent_at?: string
+          id?: string
+          persona: string
+          sequence_type: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email_id?: string | null
+          email_sent_at?: string
+          id?: string
+          persona?: string
+          sequence_type?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       onboarding_progress: {
         Row: {

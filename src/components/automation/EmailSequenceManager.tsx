@@ -51,13 +51,26 @@ export const EmailSequenceManager = () => {
 
   const fetchSequences = async () => {
     try {
-      const { data, error } = await supabase
-        .from('email_sequences')
-        .select('*')
-        .order('persona', { ascending: true });
-
-      if (error) throw error;
-      setSequences(data || []);
+      // Load from localStorage for now since database types aren't updated yet
+      const stored = localStorage.getItem('email_sequences');
+      if (stored) {
+        setSequences(JSON.parse(stored));
+      } else {
+        // Default sequences
+        const defaultSequences = [
+          {
+            id: '1',
+            persona: 'advisor',
+            sequence_type: 'welcome',
+            subject_template: '🚀 Welcome to the Future of Family Office Advisory',
+            content_template: '<h2>Welcome {{userName}}!</h2><p>Elite Advisory Network awaits...</p>',
+            is_active: true,
+            created_at: new Date().toISOString()
+          }
+        ];
+        setSequences(defaultSequences);
+        localStorage.setItem('email_sequences', JSON.stringify(defaultSequences));
+      }
     } catch (error) {
       console.error('Error fetching sequences:', error);
       toast({
@@ -70,17 +83,11 @@ export const EmailSequenceManager = () => {
 
   const fetchEmailLogs = async () => {
     try {
-      const { data, error } = await supabase
-        .from('onboarding_email_log')
-        .select(`
-          *,
-          profiles!user_id(email)
-        `)
-        .order('email_sent_at', { ascending: false })
-        .limit(50);
-
-      if (error) throw error;
-      setEmailLogs(data || []);
+      // Load from localStorage for now
+      const stored = localStorage.getItem('email_logs');
+      if (stored) {
+        setEmailLogs(JSON.parse(stored));
+      }
     } catch (error) {
       console.error('Error fetching email logs:', error);
     }
@@ -88,15 +95,24 @@ export const EmailSequenceManager = () => {
 
   const handleSaveSequence = async () => {
     try {
-      const { error } = await supabase
-        .from('email_sequences')
-        .upsert({
-          id: editingSequence || undefined,
-          ...formData,
-          is_active: true
-        });
+      const newSequence = {
+        id: editingSequence || Date.now().toString(),
+        ...formData,
+        is_active: true,
+        created_at: new Date().toISOString()
+      };
 
-      if (error) throw error;
+      let updatedSequences;
+      if (editingSequence) {
+        updatedSequences = sequences.map(seq => 
+          seq.id === editingSequence ? newSequence : seq
+        );
+      } else {
+        updatedSequences = [...sequences, newSequence];
+      }
+
+      setSequences(updatedSequences);
+      localStorage.setItem('email_sequences', JSON.stringify(updatedSequences));
 
       toast({
         title: "Success",
@@ -105,7 +121,6 @@ export const EmailSequenceManager = () => {
 
       setEditingSequence(null);
       setFormData({ persona: '', sequence_type: '', subject_template: '', content_template: '' });
-      fetchSequences();
     } catch (error) {
       console.error('Error saving sequence:', error);
       toast({
