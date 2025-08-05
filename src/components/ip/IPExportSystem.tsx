@@ -15,6 +15,7 @@ import { PatentDocumentationPackage } from './PatentDocumentationPackage';
 import { TechnicalWorkflowDiagrams } from './TechnicalWorkflowDiagrams';
 import { AttorneyHandoffPackets } from './AttorneyHandoffPackets';
 import { SWAGPatentPrepPackage } from './SWAGPatentPrepPackage';
+import { PatentabilityTestDashboard } from './PatentabilityTestDashboard';
 
 export function IPExportSystem() {
   const [exportStatus, setExportStatus] = useState<Record<string, boolean>>({});
@@ -135,6 +136,10 @@ export function IPExportSystem() {
           <TabsTrigger value="legal">Legal Materials</TabsTrigger>
           <TabsTrigger value="attorney-packets">Attorney Packets</TabsTrigger>
           <TabsTrigger value="swag-patent">SWAG Patent</TabsTrigger>
+          <TabsTrigger value="patentability-test" className="text-emerald-600 flex items-center gap-1">
+            <Shield className="h-4 w-4" />
+            <span>Patentability Test</span>
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview">
@@ -206,6 +211,10 @@ export function IPExportSystem() {
         
         <TabsContent value="swag-patent">
           <SWAGPatentPrepPackage />
+        </TabsContent>
+
+        <TabsContent value="patentability-test">
+          <PatentabilityTestDashboard />
         </TabsContent>
 
         <TabsContent value="package">
