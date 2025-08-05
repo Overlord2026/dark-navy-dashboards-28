@@ -85,6 +85,7 @@ import GoNoGoQAPage from "./pages/GoNoGoQAPage";
 import HealthcareQAPage from "./pages/HealthcareQAPage";
 import AdvisorOnboardingPage from "./pages/AdvisorOnboardingPage";
 import AttorneyOnboardingPage from "./pages/AttorneyOnboardingPage";
+import AccountantOnboardingPage from "./pages/AccountantOnboardingPage";
 
 const queryClient = new QueryClient();
 
@@ -282,6 +283,7 @@ function App() {
             <Route path="/qa/healthcare" element={<HealthcareQAPage />} />
             <Route path="/advisor-onboarding" element={<AdvisorOnboardingPage />} />
             <Route path="/attorney-onboarding" element={<AttorneyOnboardingPage />} />
+            <Route path="/accountant-onboarding" element={<AccountantOnboardingPage />} />
 
                          </Routes>
                         <Navigation />
