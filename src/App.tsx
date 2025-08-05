@@ -83,6 +83,8 @@ import StripeSubscriptionTestPage from "./pages/StripeSubscriptionTestPage";
 import PersonaDashboardQAPage from "./pages/PersonaDashboardQAPage";
 import GoNoGoQAPage from "./pages/GoNoGoQAPage";
 import HealthcareQAPage from "./pages/HealthcareQAPage";
+import AdvisorOnboardingPage from "./pages/AdvisorOnboardingPage";
+import AttorneyOnboardingPage from "./pages/AttorneyOnboardingPage";
 
 const queryClient = new QueryClient();
 
@@ -278,6 +280,8 @@ function App() {
         <Route path="/qa/persona-dashboards" element={<PersonaDashboardQAPage />} />
             <Route path="/qa/go-no-go" element={<GoNoGoQAPage />} />
             <Route path="/qa/healthcare" element={<HealthcareQAPage />} />
+            <Route path="/advisor-onboarding" element={<AdvisorOnboardingPage />} />
+            <Route path="/attorney-onboarding" element={<AttorneyOnboardingPage />} />
 
                          </Routes>
                         <Navigation />
