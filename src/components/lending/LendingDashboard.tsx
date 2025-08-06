@@ -28,6 +28,30 @@ import {
 import confetti from 'canvas-confetti';
 import bannerImage from '@/assets/lending-dashboard-banner.png';
 
+interface WelcomeMessage {
+  title: string;
+  subtitle: string;
+  userType: 'client' | 'advisor' | 'admin';
+}
+
+const WELCOME_MESSAGES: Record<string, WelcomeMessage> = {
+  client: {
+    title: "Welcome to your Lending Marketplace",
+    subtitle: "Explore private offers, compare your best options, or talk to our Lending Concierge for white-glove service.",
+    userType: 'client'
+  },
+  advisor: {
+    title: "Lending Dashboard",
+    subtitle: "Manage client applications, monitor partner lender performance, and deliver premium lending experiences—all from one dashboard.",
+    userType: 'advisor'
+  },
+  admin: {
+    title: "Lending Operations Center",
+    subtitle: "Oversee lending workflow, track approval rates, manage partners, and review compliance in real time.",
+    userType: 'admin'
+  }
+};
+
 interface LendingStats {
   creditAvailable: number;
   latestOffers: number;
@@ -56,6 +80,9 @@ interface LoanApplication {
 }
 
 export function LendingDashboard() {
+  // For demo purposes, we'll use 'client' as default. In a real app, this would come from user context
+  const [currentUserType] = useState<'client' | 'advisor' | 'admin'>('client');
+  const welcomeMessage = WELCOME_MESSAGES[currentUserType];
   const [stats] = useState<LendingStats>({
     creditAvailable: 2500000,
     latestOffers: 8,
@@ -173,8 +200,8 @@ export function LendingDashboard() {
                 <div className="text-primary-foreground font-bold text-2xl">🌳</div>
               </div>
               <div>
-                <h1 className="text-4xl font-serif font-bold text-primary mb-2">Intelligent Lending Solutions</h1>
-                <p className="text-xl text-white/90">For discerning families</p>
+                <h1 className="text-4xl font-serif font-bold text-primary mb-2">{welcomeMessage.title}</h1>
+                <p className="text-xl text-white/90 max-w-2xl">{welcomeMessage.subtitle}</p>
               </div>
             </div>
             <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground min-h-[48px] px-8 shadow-lg">
