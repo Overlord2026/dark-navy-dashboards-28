@@ -22,120 +22,174 @@ interface OutreachTemplate {
 const OUTREACH_TEMPLATES: OutreachTemplate[] = [
   {
     id: '1',
-    name: 'Initial Agent Introduction',
+    name: 'VIP Founding 100 Invitation',
     type: 'email',
-    subject: 'Empowering Athletes & Their Agents: Family Office Marketplace Collaboration',
+    subject: 'You\'ve Been Chosen: Elite VIP Founders Invitation for Family Office Marketplace',
     content: `Hi [AGENT_NAME],
 
-I'm Tony Gomes, founder of Boutique Family Office. Our mission is to empower athletes and their trusted advisors—sports agents, coaches, and families—with world-class education, compliance tools, and wellness resources.
+We're excited to invite you as one of the first 100 Sports Agents recognized as leaders in your field to join the Family Office Marketplace.
 
-We're launching a first-of-its-kind platform combining:
-• Fiduciary best practices and education
-• Private market access and family office services
-• Mental health and post-career transition support
-• Secure, compliant digital environments for your clients
+As one of the industry's most respected agents representing [NOTABLE_CLIENTS], you've been personally selected for our exclusive Founding 100.
 
-As one of the industry's most respected agents representing [NOTABLE_CLIENTS], your insights would be invaluable. We're inviting a select group of top agents to:
+🏆 What You Get as a Founding Member:
+• Private access to HNW families and athletes
+• Premium AI-driven compliance & marketplace toolkit  
+• Athlete education modules and wellness resources
+• Special "Founding Member" VIP badge and recognition
+• Early access to all platform features
 
-✓ Preview our platform before public launch
-✓ Provide feedback on agent-specific features
-✓ Join as a Founding Partner with special benefits
-✓ Co-create educational content for your athletes
+This offer is exclusive—first 100 only.
 
-Would you be open to a brief 15-minute call to discuss how we can support your clients' long-term success?
+[Link: Claim My Founders Seat]
+
+Spots are limited—first come, first served. We look forward to welcoming you as a founding member!
 
 Best regards,
 Tony Gomes
 Founder & CEO, Boutique Family Office
 
-P.S. Happy to arrange this around your schedule - I know how busy you are during [SEASON_CONTEXT].`,
+P.S. The Founding 100 window closes soon. Secure your VIP profile today.`,
     category: 'initial',
-    personalizable: ['AGENT_NAME', 'NOTABLE_CLIENTS', 'SEASON_CONTEXT']
+    personalizable: ['AGENT_NAME', 'NOTABLE_CLIENTS']
   },
   {
     id: '2',
-    name: 'LinkedIn Connection Request',
+    name: 'LinkedIn VIP Connection',
     type: 'linkedin',
-    content: `Hi [AGENT_NAME], I'm launching a family office platform specifically designed to empower athletes and their agents with financial education, compliance tools, and wellness resources. Would love to connect and share our vision for supporting [PRIMARY_SPORT] athletes like [TOP_CLIENT]. Always looking to learn from industry leaders!`,
+    content: `Hi [AGENT_NAME], you've been selected as one of the top 100 sports agents to join our Family Office Marketplace as a VIP founding member. Exclusive access to HNW families, athlete education tools, and AI compliance platform. Would love to connect and share how we're empowering [PRIMARY_SPORT] agents like you with [TOP_CLIENT]. Founding 100 spots filling fast!`,
     category: 'initial',
     personalizable: ['AGENT_NAME', 'PRIMARY_SPORT', 'TOP_CLIENT']
   },
   {
     id: '3',
-    name: 'League Executive Partnership',
+    name: 'Follow-Up: Founding Window Closing',
     type: 'email',
-    subject: 'Athlete Financial Wellness Partnership Opportunity',
-    content: `Dear [EXEC_NAME],
-
-I'm Tony Gomes, founder of Boutique Family Office. Our mission aligns perfectly with [LEAGUE]'s commitment to player welfare and long-term success.
-
-We're developing a comprehensive platform that addresses the critical gap in athlete financial education and post-career planning. Key features include:
-
-🏆 League-endorsed educational modules
-📊 Compliance tools and best practices
-🧠 Mental health and transition support
-💼 Family office services and private market access
-🤝 Secure collaboration tools for agents and families
-
-We'd be honored to collaborate with [LEAGUE] as a founding partner to:
-• Co-create player education content
-• Develop league-specific compliance tools
-• Offer white-label solutions for player development programs
-• Support your existing wellness initiatives
-
-Could we schedule a brief call to discuss how our platform can complement [LEAGUE]'s player development goals?
-
-Respectfully,
-Tony Gomes
-Founder & CEO
-
-[LEAGUE_SPECIFIC_STATS]`,
-    category: 'league-exec',
-    personalizable: ['EXEC_NAME', 'LEAGUE', 'LEAGUE_SPECIFIC_STATS']
-  },
-  {
-    id: '4',
-    name: 'Video Script Template',
-    type: 'video',
-    content: `Hey [AGENT_NAME],
-
-Tony Gomes here from Boutique Family Office. I know you're incredibly busy representing some of the best talent in [SPORT], including [TOP_CLIENT].
-
-I wanted to personally reach out because we're building something I think you and your clients will find incredibly valuable—a comprehensive family office platform designed specifically for athletes.
-
-We're talking about:
-- Real fiduciary education and compliance tools
-- Mental health support and post-career planning
-- Private market access typically reserved for ultra-high net worth families
-- Secure collaboration spaces for you, your athletes, and their families
-
-As one of the most respected agents in the business, your input would be invaluable. We're offering a select group of top agents early access and founding partner benefits.
-
-Would you be open to a quick 15-minute call this week? I can work around your schedule.
-
-Looking forward to hearing from you!`,
-    category: 'initial',
-    personalizable: ['AGENT_NAME', 'SPORT', 'TOP_CLIENT']
-  },
-  {
-    id: '5',
-    name: 'Follow-up After No Response',
-    type: 'email',
-    subject: 'Quick follow-up: Athlete empowerment platform',
+    subject: 'Final Hours: Your VIP Founding 100 Seat Is Reserved',
     content: `Hi [AGENT_NAME],
 
-I sent a note last week about our athlete family office platform. I know you're incredibly busy, especially with [CURRENT_CONTEXT].
+Quick follow-up on your reserved VIP Founding 100 seat in our Family Office Marketplace.
 
-Just wanted to share a quick update: we've had [RECENT_SUCCESS] and several top agents have already joined as founding partners.
+We're down to the final spots, and I wanted to make sure you didn't miss this exclusive opportunity.
 
-No pressure at all—if you're interested in learning more, I'm happy to send a 2-minute video demo or schedule a brief call at your convenience.
+As a leading agent in [SPORT] representing [TOP_CLIENT], your expertise would be invaluable to our founding community.
 
-If now isn't the right time, I completely understand. Your clients and their success come first.
+⏰ Only [SPOTS_LEFT] founding seats remain
+
+What happens when you claim your seat:
+✓ Instant VIP profile activation
+✓ Access to our Hall of Champions network
+✓ Premium compliance and education tools
+✓ Direct connection to elite families
+
+[Claim Your Founding Seat - 2 Minutes]
+
+The founding window closes at midnight. After that, entry moves to our standard waitlist.
+
+Questions? Just reply to this email.
 
 Best,
 Tony`,
     category: 'follow-up',
-    personalizable: ['AGENT_NAME', 'CURRENT_CONTEXT', 'RECENT_SUCCESS']
+    personalizable: ['AGENT_NAME', 'SPORT', 'TOP_CLIENT', 'SPOTS_LEFT']
+  },
+  {
+    id: '4',
+    name: 'Video Invitation Script',
+    type: 'video',
+    content: `Hey [AGENT_NAME],
+
+Tony Gomes here, founder of the Family Office Marketplace. 
+
+I'm personally reaching out because you've been selected as one of our Founding 100 - the most elite sports agents who are shaping the future of athlete representation.
+
+Your work with [TOP_CLIENT] and success in [SPORT] exemplifies exactly the kind of leadership we want in our founding community.
+
+We're building the first comprehensive platform that combines:
+- Real fiduciary education for athletes
+- AI-powered compliance tools
+- Direct access to family office services
+- Mental health and post-career planning resources
+
+As a founding member, you'll get:
+• VIP badge and recognition
+• Early access to all features
+• Direct line to our development team
+• Exclusive founding member benefits
+
+There are only [SPOTS_LEFT] founding seats left. Once they're gone, that's it.
+
+Ready to be part of something revolutionary in athlete representation?
+
+Claim your founding seat now - it takes 2 minutes.
+
+Looking forward to having you on board!`,
+    category: 'initial',
+    personalizable: ['AGENT_NAME', 'TOP_CLIENT', 'SPORT', 'SPOTS_LEFT']
+  },
+  {
+    id: '5',
+    name: 'Last Call - Urgency Sequence',
+    type: 'email',
+    subject: '🚨 FINAL CALL: Your Founding 100 Seat Expires Tonight',
+    content: `[AGENT_NAME],
+
+This is it - the final call for your reserved Founding 100 seat.
+
+At midnight tonight, we close the founding member program forever. After that:
+❌ No more founding member benefits
+❌ No more VIP status
+❌ Standard application process only
+
+I'd hate to see you miss out on this exclusive opportunity, especially given your impressive track record with [NOTABLE_CLIENTS].
+
+Your seat is literally one click away:
+[SECURE MY FOUNDING SEAT NOW]
+
+After tonight, this link deactivates permanently.
+
+Don't let this opportunity slip away.
+
+Final hours,
+Tony Gomes
+Founder, Family Office Marketplace
+
+P.S. Only [FINAL_SPOTS] seats remain. When they're gone, they're gone.`,
+    category: 'follow-up',
+    personalizable: ['AGENT_NAME', 'NOTABLE_CLIENTS', 'FINAL_SPOTS']
+  },
+  {
+    id: '6',
+    name: 'Congratulations - Welcome Template',
+    type: 'email',
+    subject: '🎉 Welcome to the Founding 100! Your VIP Access is Now Active',
+    content: `Congratulations [AGENT_NAME]!
+
+Welcome to the exclusive Founding 100 of the Family Office Marketplace!
+
+Your VIP profile is now live, and you officially have founding member status. You're now part of an elite group of just 100 sports agents who are shaping the future of athlete representation.
+
+🎯 Your Next Steps:
+1. Complete your VIP profile: [PROFILE_LINK]
+2. Access the Hall of Champions: [CHAMPIONS_LINK]  
+3. Explore athlete education modules: [EDUCATION_LINK]
+4. Join our founding member Slack: [SLACK_INVITE]
+
+🏆 Your Founding Member Benefits:
+• Exclusive VIP badge on all platforms
+• Priority access to new features
+• Direct line to our development team
+• Founding member networking events
+• Revenue sharing opportunities
+
+We're thrilled to have someone of your caliber representing [NOTABLE_CLIENTS] as part of our founding community.
+
+Ready to revolutionize athlete representation together?
+
+Welcome aboard!
+
+Tony Gomes & The Family Office Team`,
+    category: 'agent-specific',
+    personalizable: ['AGENT_NAME', 'NOTABLE_CLIENTS', 'PROFILE_LINK', 'CHAMPIONS_LINK', 'EDUCATION_LINK', 'SLACK_INVITE']
   }
 ];
 
