@@ -95,6 +95,7 @@ import HealthcareOnboardingPage from "./pages/HealthcareOnboardingPage";
 import HealthcareDashboardPage from "./pages/HealthcareDashboardPage";
 import WireframePage from "./pages/WireframePage";
 import ImageGeneratorPage from "./pages/ImageGeneratorPage";
+import LendingWireframePage from "./pages/LendingWireframePage";
 
 const queryClient = new QueryClient();
 
@@ -121,8 +122,9 @@ function App() {
                           <APIWarningBanner />
                           <ReferralTracker />
                           <Routes>
-                            <Route path="/wireframe" element={<WireframePage />} />
-                            <Route path="/image-generator" element={<ImageGeneratorPage />} />
+        <Route path="/wireframe" element={<WireframePage />} />
+        <Route path="/lending-wireframe" element={<LendingWireframePage />} />
+        <Route path="/image-generator" element={<ImageGeneratorPage />} />
                             <Route path="/" element={<Index />} />
                            <Route path="/marketplace" element={<FamilyOfficeMarketplacePage />} />
                            <Route path="/welcome" element={<WelcomePage />} />
