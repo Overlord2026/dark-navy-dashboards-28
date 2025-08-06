@@ -25809,6 +25809,72 @@ export type Database = {
           },
         ]
       }
+      vip_batch_imports: {
+        Row: {
+          batch_name: string
+          completed_at: string | null
+          created_at: string
+          created_by: string
+          error_log: Json | null
+          failed_imports: number
+          id: string
+          import_data: Json | null
+          persona_type: string
+          processed_records: number
+          status: string
+          successful_imports: number
+          tenant_id: string | null
+          total_records: number
+        }
+        Insert: {
+          batch_name: string
+          completed_at?: string | null
+          created_at?: string
+          created_by: string
+          error_log?: Json | null
+          failed_imports?: number
+          id?: string
+          import_data?: Json | null
+          persona_type: string
+          processed_records?: number
+          status?: string
+          successful_imports?: number
+          tenant_id?: string | null
+          total_records?: number
+        }
+        Update: {
+          batch_name?: string
+          completed_at?: string | null
+          created_at?: string
+          created_by?: string
+          error_log?: Json | null
+          failed_imports?: number
+          id?: string
+          import_data?: Json | null
+          persona_type?: string
+          processed_records?: number
+          status?: string
+          successful_imports?: number
+          tenant_id?: string | null
+          total_records?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vip_batch_imports_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vip_batch_imports_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       vip_invitation_tracking: {
         Row: {
           channel: Database["public"]["Enums"]["invite_channel"]
@@ -25963,6 +26029,402 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "vip_invites"
             referencedColumns: ["id"]
+          },
+        ]
+      }
+      vip_organization_members: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          invitation_sent_at: string | null
+          invitation_status: string | null
+          invitation_token: string | null
+          joined_at: string | null
+          name: string | null
+          organization_id: string
+          permissions: Json | null
+          role: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          invitation_sent_at?: string | null
+          invitation_status?: string | null
+          invitation_token?: string | null
+          joined_at?: string | null
+          name?: string | null
+          organization_id: string
+          permissions?: Json | null
+          role?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          invitation_sent_at?: string | null
+          invitation_status?: string | null
+          invitation_token?: string | null
+          joined_at?: string | null
+          name?: string | null
+          organization_id?: string
+          permissions?: Json | null
+          role?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vip_organization_members_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "vip_organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vip_organization_members_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vip_organization_members_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      vip_organizations: {
+        Row: {
+          admin_contact_id: string | null
+          batch_import_id: string | null
+          brand_colors: Json | null
+          concierge_notes: string | null
+          contact_email: string
+          contact_name: string
+          contact_phone: string | null
+          created_at: string
+          created_by: string | null
+          custom_banner_url: string | null
+          early_access_expires_at: string | null
+          firm_details: Json | null
+          first_login_at: string | null
+          id: string
+          industry_segment: string | null
+          internal_notes: string | null
+          linkedin_url: string | null
+          location: string | null
+          logo_url: string | null
+          magic_link_expires_at: string | null
+          magic_link_token: string | null
+          onboarding_completed_at: string | null
+          organization_name: string
+          organization_type: string
+          portal_subdomain: string | null
+          premium_features_unlocked: Json | null
+          referral_code: string | null
+          referred_by_user_id: string | null
+          specialties: string[] | null
+          status: string
+          tenant_id: string | null
+          updated_at: string
+          vip_tier: string
+          website_url: string | null
+        }
+        Insert: {
+          admin_contact_id?: string | null
+          batch_import_id?: string | null
+          brand_colors?: Json | null
+          concierge_notes?: string | null
+          contact_email: string
+          contact_name: string
+          contact_phone?: string | null
+          created_at?: string
+          created_by?: string | null
+          custom_banner_url?: string | null
+          early_access_expires_at?: string | null
+          firm_details?: Json | null
+          first_login_at?: string | null
+          id?: string
+          industry_segment?: string | null
+          internal_notes?: string | null
+          linkedin_url?: string | null
+          location?: string | null
+          logo_url?: string | null
+          magic_link_expires_at?: string | null
+          magic_link_token?: string | null
+          onboarding_completed_at?: string | null
+          organization_name: string
+          organization_type: string
+          portal_subdomain?: string | null
+          premium_features_unlocked?: Json | null
+          referral_code?: string | null
+          referred_by_user_id?: string | null
+          specialties?: string[] | null
+          status?: string
+          tenant_id?: string | null
+          updated_at?: string
+          vip_tier?: string
+          website_url?: string | null
+        }
+        Update: {
+          admin_contact_id?: string | null
+          batch_import_id?: string | null
+          brand_colors?: Json | null
+          concierge_notes?: string | null
+          contact_email?: string
+          contact_name?: string
+          contact_phone?: string | null
+          created_at?: string
+          created_by?: string | null
+          custom_banner_url?: string | null
+          early_access_expires_at?: string | null
+          firm_details?: Json | null
+          first_login_at?: string | null
+          id?: string
+          industry_segment?: string | null
+          internal_notes?: string | null
+          linkedin_url?: string | null
+          location?: string | null
+          logo_url?: string | null
+          magic_link_expires_at?: string | null
+          magic_link_token?: string | null
+          onboarding_completed_at?: string | null
+          organization_name?: string
+          organization_type?: string
+          portal_subdomain?: string | null
+          premium_features_unlocked?: Json | null
+          referral_code?: string | null
+          referred_by_user_id?: string | null
+          specialties?: string[] | null
+          status?: string
+          tenant_id?: string | null
+          updated_at?: string
+          vip_tier?: string
+          website_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vip_organizations_admin_contact_id_fkey"
+            columns: ["admin_contact_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vip_organizations_admin_contact_id_fkey"
+            columns: ["admin_contact_id"]
+            isOneToOne: false
+            referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "vip_organizations_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vip_organizations_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "vip_organizations_referred_by_user_id_fkey"
+            columns: ["referred_by_user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vip_organizations_referred_by_user_id_fkey"
+            columns: ["referred_by_user_id"]
+            isOneToOne: false
+            referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      vip_outreach_log: {
+        Row: {
+          clicked_at: string | null
+          created_at: string
+          follow_up_scheduled: string | null
+          id: string
+          message_content: string | null
+          opened_at: string | null
+          organization_id: string
+          outreach_method: string | null
+          outreach_type: string
+          responded_at: string | null
+          response_text: string | null
+          sent_at: string | null
+          sent_by: string | null
+          status: string | null
+          subject_line: string | null
+          template_used: string | null
+          tracking_data: Json | null
+        }
+        Insert: {
+          clicked_at?: string | null
+          created_at?: string
+          follow_up_scheduled?: string | null
+          id?: string
+          message_content?: string | null
+          opened_at?: string | null
+          organization_id: string
+          outreach_method?: string | null
+          outreach_type: string
+          responded_at?: string | null
+          response_text?: string | null
+          sent_at?: string | null
+          sent_by?: string | null
+          status?: string | null
+          subject_line?: string | null
+          template_used?: string | null
+          tracking_data?: Json | null
+        }
+        Update: {
+          clicked_at?: string | null
+          created_at?: string
+          follow_up_scheduled?: string | null
+          id?: string
+          message_content?: string | null
+          opened_at?: string | null
+          organization_id?: string
+          outreach_method?: string | null
+          outreach_type?: string
+          responded_at?: string | null
+          response_text?: string | null
+          sent_at?: string | null
+          sent_by?: string | null
+          status?: string | null
+          subject_line?: string | null
+          template_used?: string | null
+          tracking_data?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vip_outreach_log_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "vip_organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vip_outreach_log_sent_by_fkey"
+            columns: ["sent_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vip_outreach_log_sent_by_fkey"
+            columns: ["sent_by"]
+            isOneToOne: false
+            referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      vip_referral_networks: {
+        Row: {
+          activation_date: string | null
+          activation_status: string | null
+          created_at: string
+          id: string
+          ltv_contribution: number | null
+          network_level: number | null
+          organization_id: string
+          referee_email: string | null
+          referee_id: string | null
+          referee_organization: string | null
+          referral_source: string | null
+          referrer_id: string
+          total_credits_earned: number | null
+          total_features_unlocked: number | null
+          updated_at: string
+        }
+        Insert: {
+          activation_date?: string | null
+          activation_status?: string | null
+          created_at?: string
+          id?: string
+          ltv_contribution?: number | null
+          network_level?: number | null
+          organization_id: string
+          referee_email?: string | null
+          referee_id?: string | null
+          referee_organization?: string | null
+          referral_source?: string | null
+          referrer_id: string
+          total_credits_earned?: number | null
+          total_features_unlocked?: number | null
+          updated_at?: string
+        }
+        Update: {
+          activation_date?: string | null
+          activation_status?: string | null
+          created_at?: string
+          id?: string
+          ltv_contribution?: number | null
+          network_level?: number | null
+          organization_id?: string
+          referee_email?: string | null
+          referee_id?: string | null
+          referee_organization?: string | null
+          referral_source?: string | null
+          referrer_id?: string
+          total_credits_earned?: number | null
+          total_features_unlocked?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vip_referral_networks_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "vip_organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vip_referral_networks_referee_id_fkey"
+            columns: ["referee_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vip_referral_networks_referee_id_fkey"
+            columns: ["referee_id"]
+            isOneToOne: false
+            referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "vip_referral_networks_referrer_id_fkey"
+            columns: ["referrer_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vip_referral_networks_referrer_id_fkey"
+            columns: ["referrer_id"]
+            isOneToOne: false
+            referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
           },
         ]
       }
@@ -26368,6 +26830,10 @@ export type Database = {
         Args: { p_referee_id: string }
         Returns: boolean
       }
+      activate_vip_organization: {
+        Args: { p_magic_token: string; p_user_id: string }
+        Returns: Json
+      }
       audit_public_schema_extensions: {
         Args: Record<PropertyKey, never>
         Returns: {
@@ -26742,6 +27208,14 @@ export type Database = {
       }
       generate_vip_invite_slug: {
         Args: { p_name: string; p_firm: string }
+        Returns: string
+      }
+      generate_vip_magic_link: {
+        Args: { p_organization_id: string }
+        Returns: string
+      }
+      generate_vip_referral_code: {
+        Args: { p_organization_id: string }
         Returns: string
       }
       get_attorney_onboardings: {
