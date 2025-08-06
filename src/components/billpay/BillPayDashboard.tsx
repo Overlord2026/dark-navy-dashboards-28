@@ -5,6 +5,7 @@ import { ManualBillEntry } from "./ManualBillEntry";
 import { AutomatedPayments } from "./AutomatedPayments";
 import { BillAnalytics } from "./BillAnalytics";
 import { SecurityPrivacyBadges } from "./SecurityPrivacyBadges";
+import { BillPayAIAssistant } from "./BillPayAIAssistant";
 import { useSubscriptionAccess } from "@/hooks/useSubscriptionAccess";
 
 export const BillPayDashboard: React.FC = () => {
@@ -24,9 +25,10 @@ export const BillPayDashboard: React.FC = () => {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="manual">Manual Entry</TabsTrigger>
+          <TabsTrigger value="manual">Bills</TabsTrigger>
+          <TabsTrigger value="ai-assistant">AI Assistant</TabsTrigger>
           <TabsTrigger value="automated" disabled={!hasPremiumAccess}>
             Automated {!hasPremiumAccess && "🔒"}
           </TabsTrigger>
@@ -41,6 +43,10 @@ export const BillPayDashboard: React.FC = () => {
 
         <TabsContent value="manual">
           <ManualBillEntry />
+        </TabsContent>
+
+        <TabsContent value="ai-assistant">
+          <BillPayAIAssistant />
         </TabsContent>
 
         <TabsContent value="automated">
