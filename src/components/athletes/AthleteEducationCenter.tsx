@@ -4,9 +4,16 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Trophy, Star, Shield, Download, PlayCircle, CheckCircle, Brain, Target, Users } from 'lucide-react';
+import { Trophy, Star, Shield, Download, PlayCircle, CheckCircle, Brain, Target, Users, Presentation, GraduationCap, Video, Mail, FileText } from 'lucide-react';
 import { AthleteAssessmentQuiz } from './AthleteAssessmentQuiz';
 import { AthleteCopilotChat } from './AthleteCopilotChat';
+import { AthleteOnboardingSlides } from './AthleteOnboardingSlides';
+import { AthleteCurriculumModules } from './AthleteCurriculumModules';
+import { AthleteTrainingManual } from './AthleteTrainingManual';
+import { AthleteEmailTemplates } from './AthleteEmailTemplates';
+import { AthleteSlideContent } from './AthleteSlideContent';
+import { AthleteVideoScripts } from './AthleteVideoScripts';
+import { AthleteCampaignKit } from './AthleteCampaignKit';
 
 interface Module {
   id: string;
@@ -177,45 +184,112 @@ export function AthleteEducationCenter() {
         </Card>
       </div>
 
-      {/* Curriculum Tabs */}
-      <Tabs defaultValue="financial" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="financial" className="flex items-center gap-2">
-            <Shield className="h-4 w-4" />
-            Financial
-          </TabsTrigger>
-          <TabsTrigger value="wellness" className="flex items-center gap-2">
-            <Brain className="h-4 w-4" />
-            Wellness
-          </TabsTrigger>
-          <TabsTrigger value="career" className="flex items-center gap-2">
-            <Target className="h-4 w-4" />
-            Career
-          </TabsTrigger>
+      <Tabs defaultValue="overview" className="space-y-4">
+        <TabsList className="grid w-full grid-cols-6 lg:grid-cols-9">
+          <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="onboarding">Onboarding</TabsTrigger>
+          <TabsTrigger value="curriculum">Curriculum</TabsTrigger>
+          <TabsTrigger value="assessment">Assessment</TabsTrigger>
+          <TabsTrigger value="training">Training</TabsTrigger>
+          <TabsTrigger value="slides">Slide Copy</TabsTrigger>
+          <TabsTrigger value="videos">Video Scripts</TabsTrigger>
+          <TabsTrigger value="emails">Email Kit</TabsTrigger>
+          <TabsTrigger value="campaigns">Campaigns</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="financial" className="space-y-4">
-          <div className="grid gap-4">
-            {getCategoryModules('financial').map((module) => (
-              <ModuleCard key={module.id} module={module} onSelect={setSelectedModule} />
-            ))}
+        <TabsContent value="overview">
+          {/* Quick Access Cards remain the same */}
+          <div className="grid md:grid-cols-3 gap-4">
+            <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setShowAssessment(true)}>
+              <CardContent className="pt-4">
+                <div className="flex items-center gap-3">
+                  <Target className="h-8 w-8 text-primary" />
+                  <div>
+                    <h3 className="font-semibold">Take Assessment</h3>
+                    <p className="text-sm text-muted-foreground">Are you ready for life after sports?</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setShowCopilot(true)}>
+              <CardContent className="pt-4">
+                <div className="flex items-center gap-3">
+                  <Brain className="h-8 w-8 text-primary" />
+                  <div>
+                    <h3 className="font-semibold">Wellbeing Copilot</h3>
+                    <p className="text-sm text-muted-foreground">AI-powered support and guidance</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+              <CardContent className="pt-4">
+                <div className="flex items-center gap-3">
+                  <Users className="h-8 w-8 text-primary" />
+                  <div>
+                    <h3 className="font-semibold">Find Advisor</h3>
+                    <p className="text-sm text-muted-foreground">Connect with trusted professionals</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </TabsContent>
 
-        <TabsContent value="wellness" className="space-y-4">
-          <div className="grid gap-4">
-            {getCategoryModules('wellness').map((module) => (
-              <ModuleCard key={module.id} module={module} onSelect={setSelectedModule} />
-            ))}
-          </div>
+        <TabsContent value="onboarding">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Presentation className="w-6 h-6 text-primary" />
+                Interactive Onboarding Experience
+              </CardTitle>
+              <p className="text-muted-foreground">12-slide journey through the platform</p>
+            </CardHeader>
+            <CardContent>
+              <AthleteOnboardingSlides />
+            </CardContent>
+          </Card>
         </TabsContent>
 
-        <TabsContent value="career" className="space-y-4">
-          <div className="grid gap-4">
-            {getCategoryModules('career').map((module) => (
-              <ModuleCard key={module.id} module={module} onSelect={setSelectedModule} />
-            ))}
-          </div>
+        <TabsContent value="curriculum">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <GraduationCap className="w-6 h-6 text-primary" />
+                Complete Curriculum Library
+              </CardTitle>
+              <p className="text-muted-foreground">12 comprehensive learning modules</p>
+            </CardHeader>
+            <CardContent>
+              <AthleteCurriculumModules />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="assessment">
+          <AthleteAssessmentQuiz onClose={() => setShowAssessment(false)} />
+        </TabsContent>
+
+        <TabsContent value="training">
+          <AthleteTrainingManual />
+        </TabsContent>
+
+        <TabsContent value="slides">
+          <AthleteSlideContent />
+        </TabsContent>
+
+        <TabsContent value="videos">
+          <AthleteVideoScripts />
+        </TabsContent>
+
+        <TabsContent value="emails">
+          <AthleteEmailTemplates />
+        </TabsContent>
+
+        <TabsContent value="campaigns">
+          <AthleteCampaignKit />
         </TabsContent>
       </Tabs>
 
