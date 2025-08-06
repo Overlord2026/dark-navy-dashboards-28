@@ -87,6 +87,35 @@ export const VIPInvitationEmail = ({
           callToAction: 'Activate Healthcare Profile',
           closing: 'Start connecting with top families seeking elite wellness and longevity expertise.'
         };
+      case 'realestate':
+      case 'real_estate':
+        return {
+          title: 'Welcome! Founding VIP Access to the Family Office Real Estate Marketplace',
+          description: 'As a top real estate professional',
+          benefits: [
+            '🏆 VIP badge & featured profile: First page listing in our Realty Marketplace',
+            '🏢 Practice Management Suite: All-in-one dashboard for listings, clients, transactions, and compliance',
+            '👥 Client & Agent Seat Allocation: Instantly onboard your agents and premium clients',
+            '🎨 Co-branded Marketing: Access templates, event tools, and referral programs',
+            '💰 Referral Wallet: Track credits for every deal and referral'
+          ],
+          callToAction: 'Activate Realty Profile',
+          closing: 'Excited to help you elevate your real estate business to the next level.'
+        };
+      default:
+        return {
+          title: 'VIP Founding Member Invitation: Boutique Family Office Platform™',
+          description: 'As a leader in your industry',
+          benefits: [
+            '🏆 Custom branded portal with premium features',
+            '💰 Enhanced referral rewards system',
+            '🌟 Access to elite professional network',
+            '🚀 Advanced practice management tools',
+            '👑 Founding member recognition and perks'
+          ],
+          callToAction: 'Activate Your VIP Access',
+          closing: 'Join the founding community of elite professionals.'
+        };
       default:
         return {
           title: 'VIP Founding Member Invitation: Boutique Family Office Platform™',

@@ -10,7 +10,9 @@ import { CPAOnboardingSlides } from '@/components/cpa/CPAOnboardingSlides';
 import { AttorneyOnboardingSlides } from '@/components/attorney/AttorneyOnboardingSlides';
 import { HealthcareOnboardingSlides } from '@/components/healthcare/HealthcareOnboardingSlides';
 import { HealthcareVIPLaunchKit } from '@/components/healthcare/HealthcareVIPLaunchKit';
-import { Crown, Upload, Users, Trophy, BookOpen, Heart } from 'lucide-react';
+import { RealEstateOnboardingSlides } from '@/components/realestate/RealEstateOnboardingSlides';
+import { RealEstateVIPLaunchKit } from '@/components/realestate/RealEstateVIPLaunchKit';
+import { Crown, Upload, Users, Trophy, BookOpen, Heart, Building } from 'lucide-react';
 
 export const VIPManagementHub: React.FC = () => {
   return (
@@ -26,7 +28,7 @@ export const VIPManagementHub: React.FC = () => {
       </div>
 
       <Tabs defaultValue="bulk-manager" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-11">
+        <TabsList className="grid w-full grid-cols-12">
           <TabsTrigger value="bulk-manager" className="flex items-center gap-2">
             <Upload className="h-4 w-4" />
             Bulk Manager
@@ -55,6 +57,14 @@ export const VIPManagementHub: React.FC = () => {
             <Heart className="h-4 w-4" />
             Healthcare Launch
           </TabsTrigger>
+          <TabsTrigger value="realestate-slides" className="flex items-center gap-2">
+            <Building className="h-4 w-4" />
+            Real Estate Slides
+          </TabsTrigger>
+          <TabsTrigger value="realestate-launch" className="flex items-center gap-2">
+            <Building className="h-4 w-4" />
+            Real Estate Launch
+          </TabsTrigger>
           <TabsTrigger value="onboarding" className="flex items-center gap-2">
             <Crown className="h-4 w-4" />
             VIP Engine
@@ -66,10 +76,6 @@ export const VIPManagementHub: React.FC = () => {
           <TabsTrigger value="training" className="flex items-center gap-2">
             <BookOpen className="h-4 w-4" />
             Training Center
-          </TabsTrigger>
-          <TabsTrigger value="analytics" className="flex items-center gap-2">
-            <Users className="h-4 w-4" />
-            Analytics
           </TabsTrigger>
         </TabsList>
 
@@ -101,12 +107,24 @@ export const VIPManagementHub: React.FC = () => {
           <HealthcareVIPLaunchKit />
         </TabsContent>
 
+        <TabsContent value="realestate-slides">
+          <RealEstateOnboardingSlides />
+        </TabsContent>
+
+        <TabsContent value="realestate-launch">
+          <RealEstateVIPLaunchKit />
+        </TabsContent>
+
         <TabsContent value="onboarding">
           <VIPOnboardingEngine />
         </TabsContent>
 
         <TabsContent value="training">
           <VIPTrainingManuals />
+        </TabsContent>
+
+        <TabsContent value="founders-wall">
+          <VIPFoundersWall />
         </TabsContent>
 
         <TabsContent value="analytics">
