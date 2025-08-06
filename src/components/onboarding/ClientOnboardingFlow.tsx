@@ -5,15 +5,11 @@ import { ChevronLeft, ChevronRight, MessageCircle, Sparkles } from 'lucide-react
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { WelcomeStep } from './steps/WelcomeStep';
-import { ClientInfoStep } from './steps/ClientInfoStep';
-import { AssetLinkingStep } from './steps/AssetLinkingStep';
-import { UpgradeToClientStep } from './steps/UpgradeToClientStep';
-import { CustodianSelectionStep } from './steps/CustodianSelectionStep';
-import { DocumentUploadStep } from './steps/DocumentUploadStep';
-import { DigitalApplicationStep } from './steps/DigitalApplicationStep';
-import { TaskListStep } from './steps/TaskListStep';
-import { ComplianceStep } from './steps/ComplianceStep';
-import { ConfirmationStep } from './steps/ConfirmationStep';
+import { SecureAccountStep } from './steps/SecureAccountStep';
+import { OptionalAccountLinkingStep } from './steps/OptionalAccountLinkingStep';
+import { FamilyGoalsStep } from './steps/FamilyGoalsStep';
+import { WelcomeCallStep } from './steps/WelcomeCallStep';
+import { CompletionStep } from './steps/CompletionStep';
 import { AIAssistant } from './AIAssistant';
 import { OnboardingState, OnboardingStepData, WhiteLabelConfig, ReferralInfo, OnboardingStepConfig } from '@/types/onboarding';
 import { useTenantBranding } from '@/hooks/useTenantBranding';
@@ -77,18 +73,14 @@ export const ClientOnboardingFlow: React.FC<ClientOnboardingFlowProps> = ({
     }
   }, [progress, hasExistingProgress]);
 
-  // Dynamic step configuration based on white-label settings
+  // Simplified step configuration for basic onboarding
   const defaultSteps = [
-    { id: 'welcome', name: 'Welcome', title: 'Welcome', description: 'Get started with onboarding', enabled: true, required: true, order: 0 },
-    { id: 'client-info', name: 'Client Information', title: 'Personal Information', description: 'Basic client details', enabled: true, required: true, order: 1 },
-    { id: 'asset-linking', name: 'Asset Linking', title: 'Connect Your Assets', description: 'Link accounts or add manually', enabled: true, required: false, order: 2 },
-    { id: 'upgrade-client', name: 'Upgrade to Client', title: 'Become a Full Client', description: 'Unlock premium services', enabled: true, required: false, order: 3 },
-    { id: 'custodian', name: 'Custodian Selection', title: 'Custodian Selection', description: 'Choose your custodian', enabled: effectiveBrandConfig.features.multiCustodian, required: false, order: 4 },
-    { id: 'documents', name: 'Document Upload', title: 'Document Upload', description: 'Upload required documents', enabled: effectiveBrandConfig.features.documentOcr, required: false, order: 5 },
-    { id: 'application', name: 'Digital Application', title: 'Digital Application', description: 'Digital application submission', enabled: effectiveBrandConfig.features.digitalSignature, required: false, order: 6 },
-    { id: 'tasks', name: 'Task Management', title: 'Task Management', description: 'Review remaining tasks', enabled: true, required: false, order: 7 },
-    { id: 'compliance', name: 'Compliance Review', title: 'Compliance Review', description: 'Compliance verification', enabled: true, required: false, order: 8 },
-    { id: 'confirmation', name: 'Confirmation', title: 'Confirmation', description: 'Complete onboarding', enabled: true, required: true, order: 9 }
+    { id: 'welcome', name: 'Welcome', title: 'Welcome', description: 'Get started', enabled: true, required: true, order: 0 },
+    { id: 'secure-account', name: 'Create Account', title: 'Create Your Secure Account', description: 'Basic account setup', enabled: true, required: true, order: 1 },
+    { id: 'optional-linking', name: 'Add Account', title: 'Add Account (Optional)', description: 'Connect or add accounts', enabled: true, required: false, order: 2 },
+    { id: 'family-goals', name: 'Family & Goals', title: 'Set Up Your Family/Goals', description: 'Optional family and goal setup', enabled: true, required: false, order: 3 },
+    { id: 'welcome-call', name: 'Welcome Call', title: 'Book a Welcome Call', description: 'Optional consultation', enabled: true, required: false, order: 4 },
+    { id: 'completion', name: 'Complete', title: 'You\'re All Set!', description: 'Access your dashboard', enabled: true, required: true, order: 5 }
   ];
 
   const activeSteps = (customStepsConfig || defaultSteps)
@@ -171,27 +163,25 @@ export const ClientOnboardingFlow: React.FC<ClientOnboardingFlowProps> = ({
     const activeStep = activeSteps[currentStep];
     if (!activeStep) return null;
 
+    const stepProps = {
+      ...commonProps,
+      currentStep: currentStep + 1,
+      totalSteps: stepTitles.length
+    };
+
     switch (activeStep.id) {
       case 'welcome':
         return <WelcomeStep {...commonProps} />;
-      case 'client-info':
-        return <ClientInfoStep {...commonProps} />;
-      case 'asset-linking':
-        return <AssetLinkingStep {...commonProps} />;
-      case 'upgrade-client':
-        return <UpgradeToClientStep {...commonProps} />;
-      case 'custodian':
-        return <CustodianSelectionStep {...commonProps} />;
-      case 'documents':
-        return <DocumentUploadStep {...commonProps} />;
-      case 'application':
-        return <DigitalApplicationStep {...commonProps} />;
-      case 'tasks':
-        return <TaskListStep {...commonProps} />;
-      case 'compliance':
-        return <ComplianceStep {...commonProps} />;
-      case 'confirmation':
-        return <ConfirmationStep {...commonProps} />;
+      case 'secure-account':
+        return <SecureAccountStep {...stepProps} />;
+      case 'optional-linking':
+        return <OptionalAccountLinkingStep {...stepProps} />;
+      case 'family-goals':
+        return <FamilyGoalsStep {...stepProps} />;
+      case 'welcome-call':
+        return <WelcomeCallStep {...stepProps} />;
+      case 'completion':
+        return <CompletionStep {...stepProps} />;
       default:
         return <WelcomeStep {...commonProps} />;
     }
