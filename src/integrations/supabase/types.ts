@@ -720,6 +720,57 @@ export type Database = {
         }
         Relationships: []
       }
+      advisor_lending_commissions: {
+        Row: {
+          advisor_id: string
+          commission_amount: number
+          commission_percentage: number | null
+          commission_tier: string | null
+          commission_type: string
+          created_at: string
+          id: string
+          lender_partner_id: string | null
+          loan_amount: number | null
+          loan_application_id: string | null
+          payment_date: string | null
+          payment_status: string
+          performance_metrics: Json | null
+          updated_at: string
+        }
+        Insert: {
+          advisor_id: string
+          commission_amount?: number
+          commission_percentage?: number | null
+          commission_tier?: string | null
+          commission_type: string
+          created_at?: string
+          id?: string
+          lender_partner_id?: string | null
+          loan_amount?: number | null
+          loan_application_id?: string | null
+          payment_date?: string | null
+          payment_status?: string
+          performance_metrics?: Json | null
+          updated_at?: string
+        }
+        Update: {
+          advisor_id?: string
+          commission_amount?: number
+          commission_percentage?: number | null
+          commission_tier?: string | null
+          commission_type?: string
+          created_at?: string
+          id?: string
+          lender_partner_id?: string | null
+          loan_amount?: number | null
+          loan_application_id?: string | null
+          payment_date?: string | null
+          payment_status?: string
+          performance_metrics?: Json | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       advisor_matches: {
         Row: {
           advisor_id: string
@@ -13040,6 +13091,69 @@ export type Database = {
         }
         Relationships: []
       }
+      lender_reviews: {
+        Row: {
+          approval_speed_rating: number | null
+          communication_rating: number | null
+          created_at: string
+          helpful_votes: number | null
+          id: string
+          is_published: boolean | null
+          is_verified: boolean | null
+          lender_partner_id: string
+          loan_amount: number | null
+          loan_application_id: string | null
+          loan_type: string | null
+          rating: number
+          review_text: string | null
+          review_title: string | null
+          terms_satisfaction_rating: number | null
+          updated_at: string
+          user_id: string
+          would_recommend: boolean | null
+        }
+        Insert: {
+          approval_speed_rating?: number | null
+          communication_rating?: number | null
+          created_at?: string
+          helpful_votes?: number | null
+          id?: string
+          is_published?: boolean | null
+          is_verified?: boolean | null
+          lender_partner_id: string
+          loan_amount?: number | null
+          loan_application_id?: string | null
+          loan_type?: string | null
+          rating: number
+          review_text?: string | null
+          review_title?: string | null
+          terms_satisfaction_rating?: number | null
+          updated_at?: string
+          user_id: string
+          would_recommend?: boolean | null
+        }
+        Update: {
+          approval_speed_rating?: number | null
+          communication_rating?: number | null
+          created_at?: string
+          helpful_votes?: number | null
+          id?: string
+          is_published?: boolean | null
+          is_verified?: boolean | null
+          lender_partner_id?: string
+          loan_amount?: number | null
+          loan_application_id?: string | null
+          loan_type?: string | null
+          rating?: number
+          review_text?: string | null
+          review_title?: string | null
+          terms_satisfaction_rating?: number | null
+          updated_at?: string
+          user_id?: string
+          would_recommend?: boolean | null
+        }
+        Relationships: []
+      }
       lending_analytics: {
         Row: {
           avg_approval_time_hours: number | null
@@ -13115,6 +13229,90 @@ export type Database = {
           is_active?: boolean
           name?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      lending_pdf_exports: {
+        Row: {
+          created_at: string
+          download_count: number | null
+          expires_at: string | null
+          export_status: string
+          export_type: string
+          file_size: number | null
+          file_url: string | null
+          id: string
+          lender_partner_ids: string[] | null
+          loan_application_ids: string[] | null
+          pdf_content: Json
+          scenario_ids: string[] | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          download_count?: number | null
+          expires_at?: string | null
+          export_status?: string
+          export_type: string
+          file_size?: number | null
+          file_url?: string | null
+          id?: string
+          lender_partner_ids?: string[] | null
+          loan_application_ids?: string[] | null
+          pdf_content?: Json
+          scenario_ids?: string[] | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          download_count?: number | null
+          expires_at?: string | null
+          export_status?: string
+          export_type?: string
+          file_size?: number | null
+          file_url?: string | null
+          id?: string
+          lender_partner_ids?: string[] | null
+          loan_application_ids?: string[] | null
+          pdf_content?: Json
+          scenario_ids?: string[] | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      lending_sms_alerts: {
+        Row: {
+          alert_type: string
+          application_id: string | null
+          created_at: string
+          id: string
+          message: string
+          phone_number: string
+          sent_at: string | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          alert_type: string
+          application_id?: string | null
+          created_at?: string
+          id?: string
+          message: string
+          phone_number: string
+          sent_at?: string | null
+          status?: string
+          user_id: string
+        }
+        Update: {
+          alert_type?: string
+          application_id?: string | null
+          created_at?: string
+          id?: string
+          message?: string
+          phone_number?: string
+          sent_at?: string | null
+          status?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -13332,6 +13530,51 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      loan_scenarios: {
+        Row: {
+          base_interest_rate: number
+          base_loan_amount: number
+          base_term_months: number
+          calculated_results: Json
+          created_at: string
+          id: string
+          loan_application_id: string | null
+          scenario_name: string
+          scenario_parameters: Json
+          scenario_type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          base_interest_rate: number
+          base_loan_amount: number
+          base_term_months: number
+          calculated_results?: Json
+          created_at?: string
+          id?: string
+          loan_application_id?: string | null
+          scenario_name: string
+          scenario_parameters?: Json
+          scenario_type: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          base_interest_rate?: number
+          base_loan_amount?: number
+          base_term_months?: number
+          calculated_results?: Json
+          created_at?: string
+          id?: string
+          loan_application_id?: string | null
+          scenario_name?: string
+          scenario_parameters?: Json
+          scenario_type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       loan_status_updates: {
         Row: {
@@ -25999,6 +26242,16 @@ export type Database = {
       calculate_lead_score: {
         Args: { p_lead_id: string }
         Returns: number
+      }
+      calculate_loan_scenario: {
+        Args: {
+          p_loan_amount: number
+          p_interest_rate: number
+          p_term_months: number
+          p_scenario_type: string
+          p_scenario_params: Json
+        }
+        Returns: Json
       }
       calculate_network_impact_summary: {
         Args: {

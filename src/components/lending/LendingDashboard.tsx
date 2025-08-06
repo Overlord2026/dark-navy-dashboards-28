@@ -7,6 +7,7 @@ import { Progress } from '@/components/ui/progress';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { LendingConciergeModal } from './LendingConciergeModal';
+import { LendingEnhancedFeatures } from './LendingEnhancedFeatures';
 import { 
   DollarSign, 
   TrendingUp, 
@@ -309,8 +310,11 @@ export function LendingDashboard() {
           </div>
         </div>
       </div>
+        
+        {/* Enhanced Features */}
+        <LendingEnhancedFeatures />
 
-      {/* Sticky Concierge Button */}
+        {/* Sticky Concierge Button */}
       <div className="fixed bottom-6 right-6 z-50">
         <Button 
           size="lg" 

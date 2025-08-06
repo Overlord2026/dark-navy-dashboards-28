@@ -72,7 +72,7 @@ export function PersonaLendingFlow() {
           ]
         };
       
-      case 'family_admin':
+      case 'family_office_admin':
         return {
           badge: { icon: UserCheck, text: 'Family Admin', variant: 'destructive' as const },
           title: 'Family Lending Management',
@@ -164,7 +164,7 @@ export function PersonaLendingFlow() {
         </Card>
       )}
 
-      {currentPersona === 'family_admin' && (
+      {currentPersona === 'family_office_admin' && (
         <Card className="p-6">
           <h3 className="text-lg font-semibold mb-4">Family Lending Analytics</h3>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -285,7 +285,7 @@ export function PersonaLendingFlow() {
             </>
           )}
           
-          {currentPersona === 'family_admin' && (
+          {currentPersona === 'family_office_admin' && (
             <>
               <h3 className="text-lg font-semibold">Family Office Management</h3>
               <p className="text-muted-foreground">
