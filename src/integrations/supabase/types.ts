@@ -25390,6 +25390,59 @@ export type Database = {
           },
         ]
       }
+      vault_access_rules: {
+        Row: {
+          access_type: string
+          authorized_by: string
+          created_at: string
+          id: string
+          item_id: string
+          milestone_description: string | null
+          status: string
+          unlock_date: string | null
+          unlock_event: string | null
+          updated_at: string
+          user_email: string | null
+          user_id: string | null
+        }
+        Insert: {
+          access_type: string
+          authorized_by: string
+          created_at?: string
+          id?: string
+          item_id: string
+          milestone_description?: string | null
+          status?: string
+          unlock_date?: string | null
+          unlock_event?: string | null
+          updated_at?: string
+          user_email?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          access_type?: string
+          authorized_by?: string
+          created_at?: string
+          id?: string
+          item_id?: string
+          milestone_description?: string | null
+          status?: string
+          unlock_date?: string | null
+          unlock_event?: string | null
+          updated_at?: string
+          user_email?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vault_access_rules_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "vault_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       vault_activity_log: {
         Row: {
           action_type: string
@@ -25436,6 +25489,92 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      vault_audit_log: {
+        Row: {
+          action: string
+          details: Json | null
+          id: string
+          ip_address: unknown | null
+          item_id: string | null
+          timestamp: string
+          user_agent: string | null
+          user_email: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          details?: Json | null
+          id?: string
+          ip_address?: unknown | null
+          item_id?: string | null
+          timestamp?: string
+          user_agent?: string | null
+          user_email?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          details?: Json | null
+          id?: string
+          ip_address?: unknown | null
+          item_id?: string | null
+          timestamp?: string
+          user_agent?: string | null
+          user_email?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vault_audit_log_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "vault_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vault_avatar: {
+        Row: {
+          avatar_file_url: string | null
+          avatar_name: string
+          created_at: string
+          id: string
+          notes: string | null
+          owner_id: string
+          personality_prompts: string[] | null
+          status: string
+          training_data_url: string | null
+          updated_at: string
+          voice_sample_url: string | null
+        }
+        Insert: {
+          avatar_file_url?: string | null
+          avatar_name: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          owner_id: string
+          personality_prompts?: string[] | null
+          status?: string
+          training_data_url?: string | null
+          updated_at?: string
+          voice_sample_url?: string | null
+        }
+        Update: {
+          avatar_file_url?: string | null
+          avatar_name?: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          owner_id?: string
+          personality_prompts?: string[] | null
+          status?: string
+          training_data_url?: string | null
+          updated_at?: string
+          voice_sample_url?: string | null
+        }
+        Relationships: []
       }
       vault_demo_content: {
         Row: {
@@ -25565,6 +25704,57 @@ export type Database = {
           },
         ]
       }
+      vault_items: {
+        Row: {
+          created_at: string
+          description: string | null
+          encrypted: boolean
+          file_size: number | null
+          file_url: string | null
+          id: string
+          mime_type: string | null
+          owner_id: string
+          status: string
+          tags: string[] | null
+          title: string
+          type: string
+          updated_at: string
+          upload_date: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          encrypted?: boolean
+          file_size?: number | null
+          file_url?: string | null
+          id?: string
+          mime_type?: string | null
+          owner_id: string
+          status?: string
+          tags?: string[] | null
+          title: string
+          type: string
+          updated_at?: string
+          upload_date?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          encrypted?: boolean
+          file_size?: number | null
+          file_url?: string | null
+          id?: string
+          mime_type?: string | null
+          owner_id?: string
+          status?: string
+          tags?: string[] | null
+          title?: string
+          type?: string
+          updated_at?: string
+          upload_date?: string
+        }
+        Relationships: []
+      }
       vault_members: {
         Row: {
           accepted_at: string | null
@@ -25638,6 +25828,59 @@ export type Database = {
             columns: ["vault_id"]
             isOneToOne: false
             referencedRelation: "family_vaults"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vault_milestones: {
+        Row: {
+          age_trigger: number | null
+          created_at: string
+          description: string
+          id: string
+          item_id: string
+          milestone_type: string
+          recipient_email: string | null
+          recipient_id: string | null
+          trigger_date: string | null
+          triggered: boolean
+          triggered_at: string | null
+          updated_at: string
+        }
+        Insert: {
+          age_trigger?: number | null
+          created_at?: string
+          description: string
+          id?: string
+          item_id: string
+          milestone_type: string
+          recipient_email?: string | null
+          recipient_id?: string | null
+          trigger_date?: string | null
+          triggered?: boolean
+          triggered_at?: string | null
+          updated_at?: string
+        }
+        Update: {
+          age_trigger?: number | null
+          created_at?: string
+          description?: string
+          id?: string
+          item_id?: string
+          milestone_type?: string
+          recipient_email?: string | null
+          recipient_id?: string | null
+          trigger_date?: string | null
+          triggered?: boolean
+          triggered_at?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vault_milestones_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "vault_items"
             referencedColumns: ["id"]
           },
         ]
@@ -27745,13 +27988,15 @@ export type Database = {
         Returns: string
       }
       log_vault_activity: {
-        Args: {
-          p_vault_id: string
-          p_action_type: string
-          p_resource_type: string
-          p_resource_id?: string
-          p_details?: Json
-        }
+        Args:
+          | { p_item_id: string; p_action: string; p_details?: Json }
+          | {
+              p_vault_id: string
+              p_action_type: string
+              p_resource_type: string
+              p_resource_id?: string
+              p_details?: Json
+            }
         Returns: string
       }
       log_vip_admin_activity: {
