@@ -36,47 +36,59 @@ export const VIPInvitationEmail = ({
     switch (persona) {
       case 'advisor':
         return {
-          title: 'Exclusive Early Access: Boutique Family Office Platform',
-          description: 'As a leader and innovator in the advisor community',
+          title: "You're Invited: Founding Access to the Boutique Family Office Platform™",
+          description: 'As a leader in the advisor community',
           benefits: [
-            'Custom branded dashboard for your practice',
-            'Enhanced client referral rewards system',
-            'Premium practice management tools',
-            'Founding member marketplace listing'
-          ]
+            '🎖️ VIP status: Founding Member badge and early adopter perks',
+            '👥 Invite your book of business: Seamlessly onboard clients—your brand, your experience',
+            '💎 Unlock rewards: Credits for every client/referral, exclusive dashboard access',
+            '🤝 Marketplace access: Network with elite family offices, attorneys, CPAs, and more',
+            '⚡ Practice management tools: Automate onboarding, compliance, and client reporting'
+          ],
+          callToAction: 'Activate Your Founders Account Now',
+          closing: "We're reserving your spot for the next 7 days—don't miss this founding opportunity!"
         };
       case 'attorney':
         return {
-          title: 'VIP Legal Partner: Family Office Marketplace',
+          title: 'Exclusive Legal Partner Invitation: Boutique Family Office Platform™',
           description: 'As a respected legal professional',
           benefits: [
-            'Branded legal partner portal',
-            'Client intake and lead management',
-            'Attorney referral network access',
-            'Compliance and document management tools'
-          ]
+            '🏛️ Legal Partner Portal: Branded practice management dashboard',
+            '📋 Client intake automation: Streamlined case management and document processing',
+            '🤝 Attorney referral network: Connect with elite family offices and advisors',
+            '📄 Document automation: E-signature and legal workflow tools',
+            '🛡️ Premium compliance features: Trust accounting and regulatory support'
+          ],
+          callToAction: 'Access Your Legal Partner Portal',
+          closing: 'Join the elite network of legal professionals serving high-net-worth families.'
         };
       case 'cpa':
         return {
-          title: 'Founding CPA Partner Invitation',
+          title: 'CPA Founding Member Invitation: Boutique Family Office Platform™',
           description: 'As a trusted accounting professional',
           benefits: [
-            'Custom CPA practice dashboard',
-            'Tax planning and compliance tools',
-            'Client collaboration platform',
-            'Professional referral network'
-          ]
+            '📊 Custom CPA practice dashboard with tax planning collaboration tools',
+            '📁 Client document management and secure file sharing',
+            '🌐 Professional referral network with family offices and advisors',
+            '🔄 Tax workflow automation and compliance tracking',
+            '📈 Premium analytics and client reporting features'
+          ],
+          callToAction: 'Activate Your CPA Founding Access',
+          closing: 'Be part of the premier network serving sophisticated tax planning clients.'
         };
       default:
         return {
-          title: 'VIP Founding Member Invitation',
+          title: 'VIP Founding Member Invitation: Boutique Family Office Platform™',
           description: 'As a leader in your industry',
           benefits: [
-            'Custom branded portal',
-            'Enhanced referral system',
-            'Premium platform features',
-            'Founding member recognition'
-          ]
+            '🏆 Custom branded portal with premium features',
+            '💰 Enhanced referral rewards system',
+            '🌟 Access to elite professional network',
+            '🚀 Advanced practice management tools',
+            '👑 Founding member recognition and perks'
+          ],
+          callToAction: 'Activate Your VIP Access',
+          closing: 'Join the founding community of elite professionals.'
         };
     }
   };
@@ -109,10 +121,10 @@ export const VIPInvitationEmail = ({
           <Text style={greeting}>Hi {recipientName},</Text>
 
           <Text style={paragraph}>
-            {content.description}, you've been selected as one of the first 100 VIPs 
-            to join the new <strong>Boutique Family Office™ Platform</strong>. Your personalized 
-            {organizationName ? ` ${organizationName}` : ''} dashboard and referral toolkit are ready 
-            for you and your clients.
+            {content.description}, you've been selected as a <strong>Founding Member</strong> of the new 
+            Boutique Family Office™ platform—a premium ecosystem for high-net-worth families and top professionals.
+            {organizationName ? ` Your ${organizationName}` : ' Your'} personalized dashboard and referral toolkit 
+            are ready for you and your clients.
           </Text>
 
           {customMessage && (
@@ -122,22 +134,22 @@ export const VIPInvitationEmail = ({
           )}
 
           <Section style={benefitsSection}>
-            <Heading style={h2}>Your VIP Benefits Include:</Heading>
+            <Heading style={h2}>What's in it for you:</Heading>
             <ul style={benefitsList}>
               {content.benefits.map((benefit, index) => (
-                <li key={index} style={benefitItem}>✓ {benefit}</li>
+                <li key={index} style={benefitItem}>• {benefit}</li>
               ))}
             </ul>
           </Section>
 
           <Section style={ctaSection}>
+            <Text style={paragraph}>Ready to elevate your practice?</Text>
             <Button style={ctaButton} href={magicLink}>
-              🔗 Access Your VIP Portal
+              {content.callToAction}
             </Button>
-            <Text style={linkText}>
-              Or copy this link: <Link href={magicLink} style={link}>{magicLink}</Link>
-            </Text>
           </Section>
+
+          <Text style={urgency}>{content.closing}</Text>
 
           <Section style={foundersSection}>
             <Text style={foundersText}>
@@ -154,12 +166,12 @@ export const VIPInvitationEmail = ({
           <Text style={signature}>
             Best,<br />
             {senderName}<br />
-            Founder & CEO, Boutique Family Office™
+            Co-Founder, Boutique Family Office™
           </Text>
 
           <Section style={footer}>
             <Text style={footerText}>
-              This exclusive invitation expires in 30 days. 
+              This invitation is exclusive to {organizationName || 'your organization'} and expires in 7 days. 
               <Link href="mailto:support@boutiquefamilyoffice.com" style={link}>
                 Contact support
               </Link> for assistance.
@@ -324,6 +336,14 @@ const signature = {
   fontSize: '16px',
   lineHeight: '1.6',
   margin: '32px 0',
+};
+
+const urgency = {
+  color: '#dc2626',
+  fontSize: '16px',
+  fontWeight: 'bold',
+  textAlign: 'center' as const,
+  margin: '24px 0',
 };
 
 const footer = {

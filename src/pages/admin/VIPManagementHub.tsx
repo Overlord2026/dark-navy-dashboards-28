@@ -4,6 +4,8 @@ import { VIPOnboardingEngine } from '@/components/vip/VIPOnboardingEngine';
 import { VIPBulkManager } from '@/components/admin/VIPBulkManager';
 import { VIPFoundersWall } from '@/components/vip/VIPFoundersWall';
 import { VIPTrainingManuals } from '@/components/admin/VIPTrainingManuals';
+import { AdvisorOnboardingSlides } from '@/components/advisor/AdvisorOnboardingSlides';
+import { AdvisorVIPLaunchKit } from '@/components/advisor/AdvisorVIPLaunchKit';
 import { Crown, Upload, Users, Trophy, BookOpen } from 'lucide-react';
 
 export const VIPManagementHub: React.FC = () => {
@@ -20,10 +22,18 @@ export const VIPManagementHub: React.FC = () => {
       </div>
 
       <Tabs defaultValue="bulk-manager" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-5">
+        <TabsList className="grid w-full grid-cols-6">
           <TabsTrigger value="bulk-manager" className="flex items-center gap-2">
             <Upload className="h-4 w-4" />
             Bulk Manager
+          </TabsTrigger>
+          <TabsTrigger value="advisor-launch" className="flex items-center gap-2">
+            <Crown className="h-4 w-4" />
+            Advisor Launch
+          </TabsTrigger>
+          <TabsTrigger value="onboarding-slides" className="flex items-center gap-2">
+            <Users className="h-4 w-4" />
+            Onboarding Slides
           </TabsTrigger>
           <TabsTrigger value="onboarding" className="flex items-center gap-2">
             <Crown className="h-4 w-4" />
@@ -47,12 +57,16 @@ export const VIPManagementHub: React.FC = () => {
           <VIPBulkManager />
         </TabsContent>
 
-        <TabsContent value="onboarding">
-          <VIPOnboardingEngine />
+        <TabsContent value="advisor-launch">
+          <AdvisorVIPLaunchKit />
         </TabsContent>
 
-        <TabsContent value="founders-wall">
-          <VIPFoundersWall />
+        <TabsContent value="onboarding-slides">
+          <AdvisorOnboardingSlides />
+        </TabsContent>
+
+        <TabsContent value="onboarding">
+          <VIPOnboardingEngine />
         </TabsContent>
 
         <TabsContent value="training">
