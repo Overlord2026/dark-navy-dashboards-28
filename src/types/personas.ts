@@ -1,10 +1,13 @@
-export type ClientPersona = 'hnw_client' | 'pre_retiree' | 'next_gen' | 'family_office_admin';
+export type ClientPersona = 'hnw_client' | 'pre_retiree' | 'next_gen' | 'family_office_admin' | 'client';
 
-// Professional personas for service providers
-export type ProfessionalPersona = 'advisor' | 'attorney' | 'cpa' | 'insurance_agent' | 'consultant' | 'coach' | 'enterprise_admin';
+// Professional personas for service providers  
+export type ProfessionalPersona = 'advisor' | 'attorney' | 'cpa' | 'insurance_agent' | 'consultant' | 'coach' | 'enterprise_admin' | 'accountant' | 'compliance' | 'imo_fmo' | 'agency' | 'organization' | 'healthcare_consultant';
 
-// Union type for both client and professional personas
-export type AllPersonaTypes = ClientPersona | ProfessionalPersona;
+// Special personas for VIP and reserved profiles
+export type SpecialPersona = 'vip_reserved';
+
+// Union type for all persona types
+export type AllPersonaTypes = ClientPersona | ProfessionalPersona | SpecialPersona;
 
 // Legacy types for backward compatibility
 export type PersonaType = AllPersonaTypes;
@@ -114,6 +117,24 @@ export const PERSONA_CONFIGS: Record<ClientPersona, PersonaConfig> = {
     },
     marketplaceOrder: ['Family Coordination', 'Document Sharing', 'Professional Services', 'Estate Planning'],
     educationPriority: ['Family Governance', 'Communication Tools', 'Legal Structure', 'Multi-Generational Planning']
+  },
+  client: {
+    id: 'client',
+    name: 'Client',
+    welcomeMessage: 'Welcome to your financial future, {name}!',
+    primaryCTA: 'Get Started',
+    features: {
+      showLegacyVault: false,
+      showRetirementTimeline: false,
+      showMilestoneTracker: true,
+      showUserManagement: false,
+      showPrivateInvestments: false,
+      showEducationBasics: true,
+      showEstatePlanning: false,
+      showAnnuityEducation: false
+    },
+    marketplaceOrder: ['Getting Started', 'Professional Network', 'Investment Basics', 'Financial Planning'],
+    educationPriority: ['Financial Basics', 'Investment 101', 'Goal Setting', 'Professional Guidance']
   }
 };
 

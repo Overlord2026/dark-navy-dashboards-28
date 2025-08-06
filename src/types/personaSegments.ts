@@ -1,5 +1,5 @@
 // Segment-specific persona types for enhanced analytics
-import { PersonaType } from './personas';
+import { AllPersonaTypes } from './personas';
 export type PersonaSegment = 
   // Attorney segments
   | 'divorce_family_law'
@@ -21,7 +21,7 @@ export type PersonaSegment =
 
 export interface PersonaSegmentConfig {
   segment: PersonaSegment;
-  persona: PersonaType;
+  persona: AllPersonaTypes;
   title: string;
   subtitle: string;
   welcomeMessage: string;
@@ -272,7 +272,7 @@ export const PERSONA_SEGMENT_CONFIGS: Record<PersonaSegment, PersonaSegmentConfi
 
 // Segment detection utility
 export const detectPersonaSegment = (
-  persona: PersonaType, 
+  persona: AllPersonaTypes,
   registrationSource?: string, 
   onboardingAnswers?: Record<string, any>
 ): PersonaSegment => {
