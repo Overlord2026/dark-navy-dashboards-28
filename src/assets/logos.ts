@@ -10,6 +10,9 @@ export const LOGOS = {
   // Full brand logo - for main branding areas
   fullBrand: "/lovable-uploads/48e6fed8-fac5-4be6-8f0b-767dd5f6eacc.png",
   
+  // Professional brand logo - clean tree with company name
+  professional: "/lovable-uploads/68cdb24b-f610-489a-a5a6-b469617eba0d.png",
+  
   // Large hero logo - for hero sections and prominent displays
   largeHero: "/lovable-uploads/190d282a-70e8-45cb-a6d5-3b528dc97d46.png",
   
@@ -17,7 +20,7 @@ export const LOGOS = {
   fallback: "/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png"
 };
 
-export type LogoVariant = 'animated' | 'tree' | 'brand' | 'hero' | 'fallback';
+export type LogoVariant = 'animated' | 'tree' | 'brand' | 'professional' | 'hero' | 'fallback';
 
 export interface LogoConfig {
   src: string;
@@ -41,6 +44,11 @@ export const getLogoConfig = (variant: LogoVariant): LogoConfig => {
       src: LOGOS.fullBrand,
       alt: "Boutique Family Office - Comprehensive Wealth Management",
       className: "h-12 w-auto md:h-16"
+    },
+    professional: {
+      src: LOGOS.professional,
+      alt: "Boutique Family Office - Professional Brand Logo",
+      className: "h-14 w-auto md:h-18"
     },
     hero: {
       src: LOGOS.largeHero,
