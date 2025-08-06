@@ -87,6 +87,19 @@ export const VIPInvitationEmail = ({
           callToAction: 'Activate Healthcare Profile',
           closing: 'Start connecting with top families seeking elite wellness and longevity expertise.'
         };
+      case 'insurance':
+        return {
+          title: 'Elite Access to Boutique Family Office™ Insurance Marketplace',
+          description: 'As a recognized leader in the insurance & annuities field',
+          benefits: [
+            '🎖️ VIP badge & profile: Priority placement in the Insurance Marketplace',
+            '👥 Bulk Client/Downline Invites: Instantly bring your agents and clients',
+            '📋 CE Tracker & License Alerts: Stay compliant with automated reminders',
+            '💰 Marketplace referral credits: Earn for each agent or client added'
+          ],
+          callToAction: 'Activate Insurance Profile',
+          closing: 'Start building your presence in the elite insurance marketplace.'
+        };
       case 'realestate':
       case 'real_estate':
         return {

@@ -12,7 +12,9 @@ import { HealthcareOnboardingSlides } from '@/components/healthcare/HealthcareOn
 import { HealthcareVIPLaunchKit } from '@/components/healthcare/HealthcareVIPLaunchKit';
 import { RealEstateOnboardingSlides } from '@/components/realestate/RealEstateOnboardingSlides';
 import { RealEstateVIPLaunchKit } from '@/components/realestate/RealEstateVIPLaunchKit';
-import { Crown, Upload, Users, Trophy, BookOpen, Heart, Building } from 'lucide-react';
+import { InsuranceOnboardingSlides } from '@/components/insurance/InsuranceOnboardingSlides';
+import { InsuranceVIPLaunchKit } from '@/components/insurance/InsuranceVIPLaunchKit';
+import { Crown, Upload, Users, Trophy, BookOpen, Heart, Building, Shield } from 'lucide-react';
 
 export const VIPManagementHub: React.FC = () => {
   return (
@@ -28,7 +30,7 @@ export const VIPManagementHub: React.FC = () => {
       </div>
 
       <Tabs defaultValue="bulk-manager" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-12">
+        <TabsList className="grid w-full grid-cols-14">
           <TabsTrigger value="bulk-manager" className="flex items-center gap-2">
             <Upload className="h-4 w-4" />
             Bulk Manager
@@ -64,6 +66,14 @@ export const VIPManagementHub: React.FC = () => {
           <TabsTrigger value="realestate-launch" className="flex items-center gap-2">
             <Building className="h-4 w-4" />
             Real Estate Launch
+          </TabsTrigger>
+          <TabsTrigger value="insurance-slides" className="flex items-center gap-2">
+            <Shield className="h-4 w-4" />
+            Insurance Slides
+          </TabsTrigger>
+          <TabsTrigger value="insurance-launch" className="flex items-center gap-2">
+            <Shield className="h-4 w-4" />
+            Insurance Launch
           </TabsTrigger>
           <TabsTrigger value="onboarding" className="flex items-center gap-2">
             <Crown className="h-4 w-4" />
@@ -113,6 +123,14 @@ export const VIPManagementHub: React.FC = () => {
 
         <TabsContent value="realestate-launch">
           <RealEstateVIPLaunchKit />
+        </TabsContent>
+
+        <TabsContent value="insurance-slides">
+          <InsuranceOnboardingSlides />
+        </TabsContent>
+
+        <TabsContent value="insurance-launch">
+          <InsuranceVIPLaunchKit />
         </TabsContent>
 
         <TabsContent value="onboarding">
