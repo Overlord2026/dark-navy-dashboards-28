@@ -6,6 +6,8 @@ import { VIPFoundersWall } from '@/components/vip/VIPFoundersWall';
 import { VIPTrainingManuals } from '@/components/admin/VIPTrainingManuals';
 import { AdvisorOnboardingSlides } from '@/components/advisor/AdvisorOnboardingSlides';
 import { AdvisorVIPLaunchKit } from '@/components/advisor/AdvisorVIPLaunchKit';
+import { CPAOnboardingSlides } from '@/components/cpa/CPAOnboardingSlides';
+import { AttorneyOnboardingSlides } from '@/components/attorney/AttorneyOnboardingSlides';
 import { Crown, Upload, Users, Trophy, BookOpen } from 'lucide-react';
 
 export const VIPManagementHub: React.FC = () => {
@@ -22,7 +24,7 @@ export const VIPManagementHub: React.FC = () => {
       </div>
 
       <Tabs defaultValue="bulk-manager" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-6">
+        <TabsList className="grid w-full grid-cols-8">
           <TabsTrigger value="bulk-manager" className="flex items-center gap-2">
             <Upload className="h-4 w-4" />
             Bulk Manager
@@ -31,9 +33,17 @@ export const VIPManagementHub: React.FC = () => {
             <Crown className="h-4 w-4" />
             Advisor Launch
           </TabsTrigger>
-          <TabsTrigger value="onboarding-slides" className="flex items-center gap-2">
+          <TabsTrigger value="advisor-slides" className="flex items-center gap-2">
             <Users className="h-4 w-4" />
-            Onboarding Slides
+            Advisor Slides
+          </TabsTrigger>
+          <TabsTrigger value="cpa-slides" className="flex items-center gap-2">
+            <BookOpen className="h-4 w-4" />
+            CPA Slides
+          </TabsTrigger>
+          <TabsTrigger value="attorney-slides" className="flex items-center gap-2">
+            <Trophy className="h-4 w-4" />
+            Attorney Slides
           </TabsTrigger>
           <TabsTrigger value="onboarding" className="flex items-center gap-2">
             <Crown className="h-4 w-4" />
@@ -61,8 +71,16 @@ export const VIPManagementHub: React.FC = () => {
           <AdvisorVIPLaunchKit />
         </TabsContent>
 
-        <TabsContent value="onboarding-slides">
+        <TabsContent value="advisor-slides">
           <AdvisorOnboardingSlides />
+        </TabsContent>
+
+        <TabsContent value="cpa-slides">
+          <CPAOnboardingSlides />
+        </TabsContent>
+
+        <TabsContent value="attorney-slides">
+          <AttorneyOnboardingSlides />
         </TabsContent>
 
         <TabsContent value="onboarding">
