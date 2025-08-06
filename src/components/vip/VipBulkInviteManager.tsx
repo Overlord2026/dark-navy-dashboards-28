@@ -93,13 +93,9 @@ export const VipBulkInviteManager: React.FC = () => {
   const loadInvites = async () => {
     try {
       setLoading(true);
-      const { data, error } = await supabase
-        .from('vip_invites')
-        .select('*')
-        .order('created_at', { ascending: false });
-      
-      if (error) throw error;
-      setInvites(data || []);
+      // TODO: Enable after migration
+      // const { data, error } = await supabase.from('vip_invites').select('*');
+      setInvites([]);
       
     } catch (error) {
       console.error('Error loading invites:', error);
@@ -111,14 +107,9 @@ export const VipBulkInviteManager: React.FC = () => {
 
   const loadActivityLog = async () => {
     try {
-      const { data, error } = await supabase
-        .from('vip_admin_activity_log')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .limit(50);
-      
-      if (error) throw error;
-      setActivityLog(data || []);
+      // TODO: Enable after migration
+      // const { data, error } = await supabase.from('vip_admin_activity_log').select('*');
+      setActivityLog([]);
       
     } catch (error) {
       console.error('Error loading activity log:', error);

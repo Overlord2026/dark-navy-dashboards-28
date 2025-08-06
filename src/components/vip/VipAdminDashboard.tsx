@@ -75,22 +75,15 @@ export const VipAdminDashboard: React.FC = () => {
     try {
       setLoading(true);
       
-      let query = supabase.from('vip_invites').select('*');
+      // TODO: Enable after migration is run
+      // let query = supabase.from('vip_invites').select('*');
+      // const { data: invitesData, error } = await query.order('created_at', { ascending: false });
+      // setInvites(invitesData || []);
+      // calculateAnalytics(invitesData || []);
       
-      if (selectedBatch !== 'all') {
-        query = query.eq('batch_name', selectedBatch);
-      }
-      
-      if (selectedPersona !== 'all') {
-        query = query.eq('persona_type', selectedPersona);
-      }
-      
-      const { data: invitesData, error } = await query.order('created_at', { ascending: false });
-      
-      if (error) throw error;
-      
-      setInvites(invitesData || []);
-      calculateAnalytics(invitesData || []);
+      // Mock data for now
+      setInvites([]);
+      calculateAnalytics([]);
       
     } catch (error) {
       console.error('Error loading dashboard data:', error);
