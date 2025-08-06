@@ -6,8 +6,8 @@ export type ProfessionalPersona = 'advisor' | 'attorney' | 'cpa' | 'insurance_ag
 // Union type for both client and professional personas
 export type AllPersonaTypes = ClientPersona | ProfessionalPersona;
 
-// Backward compatibility alias
-export type PersonaType = ClientPersona;
+// Legacy types for backward compatibility
+export type PersonaType = AllPersonaTypes;
 
 export interface PersonaConfig {
   id: ClientPersona;
