@@ -69,7 +69,18 @@ export const VIPPortalDashboard: React.FC = () => {
         .single();
 
       if (orgError) throw orgError;
-      setOrganization(orgData);
+      const processedOrgData = {
+        ...orgData,
+        premium_features_unlocked: Array.isArray(orgData.premium_features_unlocked) 
+          ? (orgData.premium_features_unlocked as string[])
+          : [],
+        brand_colors: orgData.brand_colors 
+          ? (typeof orgData.brand_colors === 'object' && orgData.brand_colors !== null 
+            ? orgData.brand_colors as { primary: string; secondary: string }
+            : { primary: '#000000', secondary: '#666666' })
+          : { primary: '#000000', secondary: '#666666' }
+      };
+      setOrganization(processedOrgData);
 
       // Get organization members
       const { data: memberData, error: memberError } = await supabase
