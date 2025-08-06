@@ -40,17 +40,17 @@ export const PersonaSelector = () => {
         </p>
       </CardHeader>
       <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {availablePersonas.map((personaConfig) => {
-          const IconComponent = getIcon(personaConfig.id);
-          const isSelected = persona === personaConfig.id;
+        {Object.entries(PERSONA_CONFIGS).map(([personaId, personaConfig]) => {
+          const IconComponent = getIcon(personaId as ClientPersona);
+          const isSelected = persona === personaId;
 
           return (
             <Card 
-              key={personaConfig.id}
+              key={personaId}
               className={`cursor-pointer transition-all duration-200 hover:shadow-md ${
                 isSelected ? 'ring-2 ring-primary' : ''
-              } bg-gradient-to-r ${getGradient(personaConfig.id)}`}
-              onClick={() => updatePersona(personaConfig.id)}
+              } bg-gradient-to-r ${getGradient(personaId as ClientPersona)}`}
+              onClick={() => updatePersona(personaId as ClientPersona)}
             >
               <CardContent className="p-4">
                 <div className="flex items-center gap-3 mb-3">

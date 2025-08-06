@@ -16,13 +16,13 @@ import {
   Star,
   Crown
 } from 'lucide-react';
-import { PersonaType } from '@/types/personas';
+import { AllPersonaTypes } from '@/types/personas';
 import { useAdvancedEventTracking } from '@/hooks/useAdvancedEventTracking';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 
 // Persona-specific invite templates with exact copy provided
-const PERSONA_INVITE_TEMPLATES: Record<PersonaType, {
+const PERSONA_INVITE_TEMPLATES: Record<AllPersonaTypes, {
   subject: string;
   message: string;
   ctaText: string;
@@ -39,6 +39,14 @@ const PERSONA_INVITE_TEMPLATES: Record<PersonaType, {
     description: "Grow your practice with premium planning tools and vetted HNW family connections."
   },
   accountant: {
+    subject: "Simplify Client Tax Season - Premium CPA Tools",
+    message: "Simplify client tax season with premium tools and trusted wealth partners. Access automated workflows, CE tracking, and direct connections to family office clients who need expert tax planning.",
+    ctaText: "Join Premium CPA Network",
+    linkedinMessage: "I've been using the Family Office Marketplace™ to streamline my tax practice. Simplify client tax season with premium tools and trusted wealth partners. Great for CPAs looking to expand into HNW clients!",
+    smsMessage: "Simplify tax season with premium CPA tools + wealth partner connections. Check it out: [link]",
+    description: "Streamline your tax practice with premium tools and wealth partner connections."
+  },
+  cpa: {
     subject: "Simplify Client Tax Season - Premium CPA Tools",
     message: "Simplify client tax season with premium tools and trusted wealth partners. Access automated workflows, CE tracking, and direct connections to family office clients who need expert tax planning.",
     ctaText: "Join Premium CPA Network",
@@ -118,6 +126,38 @@ const PERSONA_INVITE_TEMPLATES: Record<PersonaType, {
     smsMessage: "Join VIP marketing partner network. Reserved access + ROI tracking: [link]",
     description: "Engage audiences with VIP access and cross-promotion opportunities."
   },
+  hnw_client: {
+    subject: "Exclusive Family Office Access",
+    message: "Connect with vetted wealth professionals and access premium financial resources. Take control of your financial future with personalized strategies and our secure, private platform.",
+    ctaText: "Join Family Network",
+    linkedinMessage: "I'm using the Family Office Marketplace™ to connect with vetted wealth professionals. Exclusive access to premium financial resources and personalized strategies!",
+    smsMessage: "Connect with vetted wealth professionals. Exclusive family office access: [link]",
+    description: "Access premium financial resources and personalized wealth strategies."
+  },
+  pre_retiree: {
+    subject: "Retire with Confidence - Expert Guidance",
+    message: "Prepare for retirement with expert guidance and proven strategies. Connect with specialists who understand pre-retirement planning and secure your financial future.",
+    ctaText: "Plan My Retirement",
+    linkedinMessage: "I'm using the Family Office Marketplace™ to prepare for retirement. Expert guidance and proven strategies for pre-retirees. Highly recommend!",
+    smsMessage: "Expert retirement planning guidance available. Check it out: [link]",
+    description: "Expert retirement planning and proven pre-retirement strategies."
+  },
+  next_gen: {
+    subject: "Next Generation Wealth Building",
+    message: "Build your wealth with modern strategies and connect with professionals who understand young investors. Start your financial journey with confidence.",
+    ctaText: "Start Building Wealth",
+    linkedinMessage: "I'm using the Family Office Marketplace™ for next-gen wealth building. Modern strategies and professionals who understand young investors!",
+    smsMessage: "Modern wealth building for young investors. Join here: [link]",
+    description: "Modern wealth building strategies for the next generation."
+  },
+  family_office_admin: {
+    subject: "Family Office Management Tools",
+    message: "Streamline family office operations with professional-grade tools and connect with trusted service providers who understand complex family needs.",
+    ctaText: "Optimize Operations",
+    linkedinMessage: "I'm using the Family Office Marketplace™ to streamline our family office operations. Professional-grade tools and trusted service providers!",
+    smsMessage: "Streamline family office operations with professional tools: [link]",
+    description: "Professional-grade tools for family office management."
+  },
   client: {
     subject: "Exclusive Family Office Access",
     message: "Connect with vetted wealth professionals and access premium financial resources. Take control of your financial future with personalized strategies and our secure, private platform.",
@@ -125,6 +165,14 @@ const PERSONA_INVITE_TEMPLATES: Record<PersonaType, {
     linkedinMessage: "I'm using the Family Office Marketplace™ to connect with vetted wealth professionals. Exclusive access to premium financial resources and personalized strategies!",
     smsMessage: "Connect with vetted wealth professionals. Exclusive family office access: [link]",
     description: "Access premium financial resources and personalized wealth strategies."
+  },
+  enterprise_admin: {
+    subject: "Enterprise Platform Access",
+    message: "Manage your organization's wealth management needs with enterprise-grade tools and connect with top-tier professionals.",
+    ctaText: "Access Enterprise Tools",
+    linkedinMessage: "I'm using the Family Office Marketplace™ for our enterprise wealth management. Top-tier professionals and enterprise-grade tools!",
+    smsMessage: "Enterprise wealth management tools available: [link]",
+    description: "Enterprise-grade wealth management solutions."
   },
   vip_reserved: {
     subject: "Your VIP Reserved Profile is Ready",
@@ -137,7 +185,7 @@ const PERSONA_INVITE_TEMPLATES: Record<PersonaType, {
 };
 
 interface PersonaInviteTemplatesProps {
-  currentPersona: PersonaType;
+  currentPersona: AllPersonaTypes;
   onInviteSent?: (platform: string, count: number) => void;
 }
 

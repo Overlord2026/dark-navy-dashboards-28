@@ -65,7 +65,8 @@ export const PersonaAnalyticsDashboard: React.FC = () => {
             hnw_client: { started: 89, completed: 76 },
             pre_retiree: { started: 45, completed: 38 },
             next_gen: { started: 32, completed: 28 },
-            family_office_admin: { started: 28, completed: 24 }
+            family_office_admin: { started: 28, completed: 24 },
+            client: { started: 156, completed: 142 }
           },
           byChannel: {
             linkedin: { started: 156, completed: 142 },
@@ -76,39 +77,39 @@ export const PersonaAnalyticsDashboard: React.FC = () => {
         },
         engagement: {
           demoViews: {
-            hnw_client: 234, pre_retiree: 123, next_gen: 89, family_office_admin: 76
+            hnw_client: 234, pre_retiree: 123, next_gen: 89, family_office_admin: 76, client: 298
           },
           viralShares: {
             hnw_client: { clicked: 89, shared: 67 }, pre_retiree: { clicked: 45, shared: 32 },
-            next_gen: { clicked: 34, shared: 28 }, family_office_admin: { clicked: 28, shared: 23 }
+            next_gen: { clicked: 34, shared: 28 }, family_office_admin: { clicked: 28, shared: 23 }, client: { clicked: 156, shared: 123 }
           },
           trainingAccessed: {
-            hnw_client: 156, pre_retiree: 89, next_gen: 67, family_office_admin: 54
+            hnw_client: 156, pre_retiree: 89, next_gen: 67, family_office_admin: 54, client: 234
           },
           faqViews: {
-            hnw_client: 267, pre_retiree: 134, next_gen: 98, family_office_admin: 76
+            hnw_client: 267, pre_retiree: 134, next_gen: 98, family_office_admin: 76, client: 345
           }
         },
         conversion: {
           signupsByChannel: {
             linkedin: {
-              hnw_client: 45, pre_retiree: 23, next_gen: 18, family_office_admin: 15
+              hnw_client: 45, pre_retiree: 23, next_gen: 18, family_office_admin: 15, client: 67
             },
             email: {
-              hnw_client: 28, pre_retiree: 15, next_gen: 12, family_office_admin: 9
+              hnw_client: 28, pre_retiree: 15, next_gen: 12, family_office_admin: 9, client: 34
             },
             sms: {
-              hnw_client: 16, pre_retiree: 9, next_gen: 7, family_office_admin: 5
+              hnw_client: 16, pre_retiree: 9, next_gen: 7, family_office_admin: 5, client: 23
             },
             direct: {
-              hnw_client: 12, pre_retiree: 6, next_gen: 5, family_office_admin: 4
+              hnw_client: 12, pre_retiree: 6, next_gen: 5, family_office_admin: 4, client: 18
             }
           },
           upgradesByPersona: {
-            hnw_client: 34, pre_retiree: 18, next_gen: 14, family_office_admin: 11
+            hnw_client: 34, pre_retiree: 18, next_gen: 14, family_office_admin: 11, client: 45
           },
           timeToUpgrade: {
-            hnw_client: 5.2, pre_retiree: 7.1, next_gen: 6.8, family_office_admin: 8.3
+            hnw_client: 5.2, pre_retiree: 7.1, next_gen: 6.8, family_office_admin: 8.3, client: 4.8
           }
         }
       };

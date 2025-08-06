@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { usePersona } from '@/context/PersonaContext';
 import { useEventTracking } from '@/hooks/useEventTracking';
-import { PersonaType } from '@/types/personas';
+import { AllPersonaTypes } from '@/types/personas';
 
 interface OnboardingProgress {
   currentStep: number;
@@ -17,7 +17,7 @@ interface OnboardingStep {
   description: string;
   required: boolean;
   completed: boolean;
-  persona?: PersonaType[];
+  persona?: AllPersonaTypes[];
 }
 
 export const useOnboarding = () => {
@@ -35,7 +35,7 @@ export const useOnboarding = () => {
   const [showOnboarding, setShowOnboarding] = useState(false);
 
   // Define persona-specific onboarding steps
-  const getStepsForPersona = useCallback((persona: PersonaType): OnboardingStep[] => {
+  const getStepsForPersona = useCallback((persona: AllPersonaTypes): OnboardingStep[] => {
     const commonSteps: OnboardingStep[] = [
       {
         id: 'persona_welcome',
@@ -67,7 +67,7 @@ export const useOnboarding = () => {
       }
     ];
 
-    const personaSpecificSteps: Record<PersonaType, OnboardingStep[]> = {
+    const personaSpecificSteps: Record<AllPersonaTypes, OnboardingStep[]> = {
       advisor: [
         ...commonSteps,
         {
@@ -123,6 +123,25 @@ export const useOnboarding = () => {
           required: false,
           completed: false,
           persona: ['accountant']
+        }
+      ],
+      cpa: [
+        ...commonSteps,
+        {
+          id: 'tax_workflows',
+          title: 'Tax Workflows',
+          description: 'Set up automated tax processes',
+          required: true,
+          completed: false,
+          persona: ['cpa']
+        },
+        {
+          id: 'ce_tracking',
+          title: 'CE Tracking',
+          description: 'Set up continuing education tracking',
+          required: true,
+          completed: false,
+          persona: ['cpa']
         }
       ],
       coach: [
@@ -231,8 +250,60 @@ export const useOnboarding = () => {
           persona: ['organization']
         }
       ],
+      hnw_client: [
+        ...commonSteps.filter(step => step.id !== 'viral_share'),
+        {
+          id: 'wealth_questionnaire',
+          title: 'Wealth Assessment',
+          description: 'Complete your financial profile',
+          required: true,
+          completed: false,
+          persona: ['hnw_client']
+        },
+        {
+          id: 'advisor_matching',
+          title: 'Find Advisors',
+          description: 'Get matched with professionals',
+          required: true,
+          completed: false,
+          persona: ['hnw_client']
+        }
+      ],
+      pre_retiree: [
+        ...commonSteps,
+        {
+          id: 'retirement_planning',
+          title: 'Retirement Strategy',
+          description: 'Set up your retirement plan',
+          required: true,
+          completed: false,
+          persona: ['pre_retiree']
+        }
+      ],
+      next_gen: [
+        ...commonSteps,
+        {
+          id: 'wealth_building',
+          title: 'Wealth Building Plan',
+          description: 'Start your investment journey',
+          required: true,
+          completed: false,
+          persona: ['next_gen']
+        }
+      ],
+      family_office_admin: [
+        ...commonSteps,
+        {
+          id: 'family_coordination',
+          title: 'Family Coordination',
+          description: 'Set up family office tools',
+          required: true,
+          completed: false,
+          persona: ['family_office_admin']
+        }
+      ],
       client: [
-        ...commonSteps.filter(step => step.id !== 'viral_share'), // Clients don't need viral sharing as much
+        ...commonSteps.filter(step => step.id !== 'viral_share'),
         {
           id: 'wealth_questionnaire',
           title: 'Wealth Assessment',
@@ -248,6 +319,17 @@ export const useOnboarding = () => {
           required: true,
           completed: false,
           persona: ['client']
+        }
+      ],
+      enterprise_admin: [
+        ...commonSteps,
+        {
+          id: 'enterprise_setup',
+          title: 'Enterprise Configuration',
+          description: 'Configure enterprise settings',
+          required: true,
+          completed: false,
+          persona: ['enterprise_admin']
         }
       ],
       vip_reserved: [
