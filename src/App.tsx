@@ -89,6 +89,8 @@ import AccountantOnboardingPage from "./pages/AccountantOnboardingPage";
 import AccountantDashboardPage from "./pages/AccountantDashboardPage";
 import ConsultantOnboardingPage from "./pages/ConsultantOnboardingPage";
 import ConsultantDashboardPage from "./pages/ConsultantDashboardPage";
+import InsuranceOnboardingPage from "./pages/InsuranceOnboardingPage";
+import InsuranceDashboardPage from "./pages/InsuranceDashboardPage";
 
 const queryClient = new QueryClient();
 
@@ -288,8 +290,10 @@ function App() {
             <Route path="/attorney-onboarding" element={<AttorneyOnboardingPage />} />
             <Route path="/accountant-onboarding" element={<AccountantOnboardingPage />} />
             <Route path="/accountant-dashboard" element={<AccountantDashboardPage />} />
-            <Route path="/consultant-onboarding" element={<ConsultantOnboardingPage />} />
-            <Route path="/consultant-dashboard" element={<ConsultantDashboardPage />} />
+          <Route path="/consultant-onboarding" element={<ConsultantOnboardingPage />} />
+          <Route path="/consultant-dashboard" element={<ConsultantDashboardPage />} />
+          <Route path="/insurance-onboarding" element={<InsuranceOnboardingPage />} />
+          <Route path="/insurance-dashboard" element={<InsuranceDashboardPage />} />
 
                          </Routes>
                         <Navigation />
