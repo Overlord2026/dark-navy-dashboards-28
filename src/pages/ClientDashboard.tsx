@@ -9,11 +9,16 @@ import { MarketplaceHighlights } from '@/components/client/MarketplaceHighlights
 import { EducationResources } from '@/components/client/EducationResources';
 import { CelebrationProgress } from '@/components/client/CelebrationProgress';
 import { SupportAlerts } from '@/components/client/SupportAlerts';
+import { PersonalizedCTA } from '@/components/client/PersonalizedCTA';
+import { MilestoneTracker } from '@/components/client/MilestoneTracker';
+import { RetirementTimeline } from '@/components/client/RetirementTimeline';
 import { useDashboardMetrics } from '@/hooks/useDashboardMetrics';
+import { usePersona } from '@/hooks/usePersona';
 
 export function ClientDashboard() {
   // Track dashboard metrics for A/B testing
   useDashboardMetrics();
+  const { personaConfig } = usePersona();
 
   return (
     <PersonaDashboardLayout>
@@ -21,19 +26,26 @@ export function ClientDashboard() {
         {/* Welcome Banner */}
         <WelcomeBanner />
 
+        {/* Personalized CTA */}
+        <PersonalizedCTA />
+
         {/* Dashboard Metrics - Top Row */}
         <DashboardMetrics />
 
         {/* Action Quick Links */}
         <ActionQuickLinks />
 
+        {/* Persona-specific features */}
+        {personaConfig.features.showRetirementTimeline && <RetirementTimeline />}
+        {personaConfig.features.showMilestoneTracker && <MilestoneTracker />}
+
         {/* Goal Center & Timeline */}
         <GoalCenter />
 
         {/* Two Column Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Family Legacy Vault Snapshot */}
-          <FamilyVaultSnapshot />
+          {/* Family Legacy Vault Snapshot - Only for HNW and Family Admin */}
+          {personaConfig.features.showLegacyVault && <FamilyVaultSnapshot />}
 
           {/* Celebration Progress */}
           <CelebrationProgress />

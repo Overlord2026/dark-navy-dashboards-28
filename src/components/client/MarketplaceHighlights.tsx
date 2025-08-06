@@ -1,34 +1,77 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight, Users, Heart, BookOpen, ArrowRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Users, Heart, BookOpen, ArrowRight, DollarSign, Shield } from 'lucide-react';
+import { usePersona } from '@/hooks/usePersona';
 
 export const MarketplaceHighlights = () => {
   const [currentCard, setCurrentCard] = useState(0);
-  
-  const highlights = [
-    {
-      title: 'Connect with a Pro',
-      description: 'Find verified financial advisors, attorneys, and specialists',
-      icon: Users,
-      color: 'from-blue-500 to-blue-600',
-      action: 'Browse Professionals'
-    },
-    {
-      title: 'Explore Health & Wellness',
-      description: 'Premium health programs and longevity consultations',
-      icon: Heart,
-      color: 'from-green-500 to-green-600',
-      action: 'View Programs'
-    },
-    {
-      title: 'New Premium Guide',
-      description: 'Advanced Tax Strategies for High Net Worth Families',
-      icon: BookOpen,
-      color: 'from-purple-500 to-purple-600',
-      action: 'Download Now'
-    }
-  ];
+  const { personaConfig } = usePersona();
+
+  const getPersonalizedHighlights = () => {
+    const allHighlights = {
+      'Private Investments': {
+        title: 'Private Investments',
+        description: 'Exclusive opportunities for qualified investors',
+        icon: DollarSign,
+        color: 'from-amber-500 to-amber-600',
+        action: 'View Opportunities'
+      },
+      'Estate Planning': {
+        title: 'Estate Planning Services',
+        description: 'Comprehensive legacy and succession planning',
+        icon: Shield,
+        color: 'from-blue-500 to-blue-600',
+        action: 'Schedule Consultation'
+      },
+      'Retirement Planning': {
+        title: 'Retirement Planning',
+        description: 'Comprehensive retirement income strategies',
+        icon: BookOpen,
+        color: 'from-green-500 to-green-600',
+        action: 'Start Planning'
+      },
+      'Annuities & Insurance': {
+        title: 'Annuities & Insurance',
+        description: 'Income protection and guaranteed returns',
+        icon: Shield,
+        color: 'from-purple-500 to-purple-600',
+        action: 'Compare Options'
+      },
+      'Personal Finance 101': {
+        title: 'Personal Finance 101',
+        description: 'Start your financial journey with confidence',
+        icon: BookOpen,
+        color: 'from-emerald-500 to-emerald-600',
+        action: 'Begin Learning'
+      },
+      'Family Coordination': {
+        title: 'Family Coordination Tools',
+        description: 'Manage your entire family\'s wealth together',
+        icon: Users,
+        color: 'from-indigo-500 to-indigo-600',
+        action: 'Setup Family Access'
+      },
+      'Health & Wellness': {
+        title: 'Health & Wellness',
+        description: 'Holistic wealth and wellbeing services',
+        icon: Heart,
+        color: 'from-pink-500 to-pink-600',
+        action: 'Explore Programs'
+      },
+      'Professional Services': {
+        title: 'Professional Network',
+        description: 'Connect with vetted advisors and specialists',
+        icon: Users,
+        color: 'from-teal-500 to-teal-600',
+        action: 'Find Professionals'
+      }
+    };
+
+    return personaConfig.marketplaceOrder.slice(0, 3).map(key => allHighlights[key]).filter(Boolean);
+  };
+
+  const highlights = getPersonalizedHighlights();
 
   useEffect(() => {
     const timer = setInterval(() => {

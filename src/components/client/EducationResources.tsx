@@ -6,56 +6,104 @@ import { BookOpen, Play, ArrowRight } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useAuth } from '@/context/AuthContext';
 import { abTesting } from '@/lib/abTesting';
+import { usePersona } from '@/hooks/usePersona';
 
 export const EducationResources = () => {
   const { user } = useAuth();
+  const { personaConfig } = usePersona();
   
   // A/B Test for education CTA
   const educationVariant = abTesting.getVariant('education_cta', user?.id || 'anonymous');
   const ctaText = educationVariant?.config.buttonText || 'Start Learning';
 
-  const resources = [
-    {
-      title: 'Wealth Preservation Strategies',
-      type: 'Course',
-      duration: '2h 30m',
-      image: '/placeholder.svg',
-      isNew: true,
-      recommended: true
-    },
-    {
-      title: 'Estate Planning Fundamentals',
-      type: 'Guide',
-      duration: '45m read',
-      image: '/placeholder.svg',
-      isNew: false,
-      recommended: true
-    },
-    {
-      title: 'Tax Optimization Techniques',
-      type: 'Video Series',
-      duration: '3h 15m',
-      image: '/placeholder.svg',
-      isNew: true,
-      recommended: false
-    },
-    {
-      title: 'Family Governance Best Practices',
-      type: 'Webinar',
-      duration: '1h 20m',
-      image: '/placeholder.svg',
-      isNew: false,
-      recommended: true
-    },
-    {
-      title: 'Investment Due Diligence',
-      type: 'Course',
-      duration: '4h 10m',
-      image: '/placeholder.svg',
-      isNew: false,
-      recommended: false
-    }
-  ];
+  const getPersonalizedResources = () => {
+    const allResources = {
+      'Estate Planning Advanced': {
+        title: 'Estate Planning Advanced',
+        type: 'Master Class',
+        duration: '3h 45m',
+        image: '/placeholder.svg',
+        isNew: true,
+        recommended: true
+      },
+      'Tax Strategies': {
+        title: 'Advanced Tax Optimization',
+        type: 'Course',
+        duration: '2h 15m',
+        image: '/placeholder.svg',
+        isNew: false,
+        recommended: true
+      },
+      'Private Markets': {
+        title: 'Private Investment Guide',
+        type: 'Video Series',
+        duration: '4h 30m',
+        image: '/placeholder.svg',
+        isNew: true,
+        recommended: true
+      },
+      'Social Security Guide': {
+        title: 'Social Security Optimization',
+        type: 'Guide',
+        duration: '1h 15m',
+        image: '/placeholder.svg',
+        isNew: false,
+        recommended: true
+      },
+      'Retirement Income Planning': {
+        title: 'Retirement Income Strategies',
+        type: 'Course',
+        duration: '2h 30m',
+        image: '/placeholder.svg',
+        isNew: true,
+        recommended: true
+      },
+      'Healthcare Costs': {
+        title: 'Healthcare in Retirement',
+        type: 'Webinar',
+        duration: '1h 20m',
+        image: '/placeholder.svg',
+        isNew: false,
+        recommended: true
+      },
+      'Personal Finance 101': {
+        title: 'Personal Finance Fundamentals',
+        type: 'Interactive Course',
+        duration: '3h 00m',
+        image: '/placeholder.svg',
+        isNew: true,
+        recommended: true
+      },
+      'Intro to Investing': {
+        title: 'Investment Basics',
+        type: 'Video Series',
+        duration: '2h 45m',
+        image: '/placeholder.svg',
+        isNew: false,
+        recommended: true
+      },
+      'Building Credit': {
+        title: 'Credit Building Guide',
+        type: 'Guide',
+        duration: '45m read',
+        image: '/placeholder.svg',
+        isNew: true,
+        recommended: false
+      },
+      'Family Governance': {
+        title: 'Family Governance Best Practices',
+        type: 'Webinar',
+        duration: '1h 40m',
+        image: '/placeholder.svg',
+        isNew: false,
+        recommended: true
+      }
+    };
+
+    return personaConfig.educationPriority.map(key => allResources[key]).filter(Boolean);
+  };
+
+  const resources = getPersonalizedResources();
 
   return (
     <Card>
