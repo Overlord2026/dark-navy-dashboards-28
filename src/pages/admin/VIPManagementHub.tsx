@@ -9,6 +9,7 @@ import { AdvisorVIPLaunchKit } from '@/components/advisor/AdvisorVIPLaunchKit';
 import { CPAOnboardingSlides } from '@/components/cpa/CPAOnboardingSlides';
 import { AttorneyOnboardingSlides } from '@/components/attorney/AttorneyOnboardingSlides';
 import { HealthcareOnboardingSlides } from '@/components/healthcare/HealthcareOnboardingSlides';
+import { HealthcareVIPLaunchKit } from '@/components/healthcare/HealthcareVIPLaunchKit';
 import { Crown, Upload, Users, Trophy, BookOpen, Heart } from 'lucide-react';
 
 export const VIPManagementHub: React.FC = () => {
@@ -25,7 +26,7 @@ export const VIPManagementHub: React.FC = () => {
       </div>
 
       <Tabs defaultValue="bulk-manager" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-10">
+        <TabsList className="grid w-full grid-cols-11">
           <TabsTrigger value="bulk-manager" className="flex items-center gap-2">
             <Upload className="h-4 w-4" />
             Bulk Manager
@@ -49,6 +50,10 @@ export const VIPManagementHub: React.FC = () => {
           <TabsTrigger value="healthcare-slides" className="flex items-center gap-2">
             <Heart className="h-4 w-4" />
             Healthcare Slides
+          </TabsTrigger>
+          <TabsTrigger value="healthcare-launch" className="flex items-center gap-2">
+            <Heart className="h-4 w-4" />
+            Healthcare Launch
           </TabsTrigger>
           <TabsTrigger value="onboarding" className="flex items-center gap-2">
             <Crown className="h-4 w-4" />
@@ -90,6 +95,10 @@ export const VIPManagementHub: React.FC = () => {
 
         <TabsContent value="healthcare-slides">
           <HealthcareOnboardingSlides />
+        </TabsContent>
+
+        <TabsContent value="healthcare-launch">
+          <HealthcareVIPLaunchKit />
         </TabsContent>
 
         <TabsContent value="onboarding">

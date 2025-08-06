@@ -50,31 +50,42 @@ export const VIPInvitationEmail = ({
         };
       case 'attorney':
         return {
-          title: 'Exclusive Legal Partner Invitation: Boutique Family Office Platform™',
+          title: 'Founding Attorney Invitation: Boutique Family Office™ Platform for Legal Innovators',
           description: 'As a respected legal professional',
           benefits: [
-            '🏛️ Legal Partner Portal: Branded practice management dashboard',
-            '📋 Client intake automation: Streamlined case management and document processing',
-            '🤝 Attorney referral network: Connect with elite family offices and advisors',
-            '📄 Document automation: E-signature and legal workflow tools',
-            '🛡️ Premium compliance features: Trust accounting and regulatory support'
+            '🏛️ Attorney Dashboard: Matters management, contract templates, CLE tracker, secure document vault',
+            '🎖️ VIP badge: Elite listing for client and pro referrals',
+            '👥 Invite clients and business partners: Streamline onboarding and referrals',
+            '💰 Earn platform credits: For every new family or attorney you invite'
           ],
-          callToAction: 'Access Your Legal Partner Portal',
-          closing: 'Join the elite network of legal professionals serving high-net-worth families.'
+          callToAction: 'Activate Attorney Profile',
+          closing: 'Transform your legal practice with cutting-edge family office technology.'
         };
       case 'cpa':
         return {
-          title: 'CPA Founding Member Invitation: Boutique Family Office Platform™',
+          title: 'Founding Attorney Invitation: Boutique Family Office™ Platform for Elite Accountants',
           description: 'As a trusted accounting professional',
           benefits: [
-            '📊 Custom CPA practice dashboard with tax planning collaboration tools',
-            '📁 Client document management and secure file sharing',
-            '🌐 Professional referral network with family offices and advisors',
-            '🔄 Tax workflow automation and compliance tracking',
-            '📈 Premium analytics and client reporting features'
+            '📊 Branded CPA Dashboard: Tax planning tools, CE tracking, workflow automation, and secure document vault',
+            '🎖️ VIP badge & directory listing: Stand out to HNW families and business owners',
+            '👥 One-click onboarding: Invite clients and collaborate with other trusted pros',
+            '💰 Referral credits: Earn rewards for inviting peers and clients to the platform'
           ],
-          callToAction: 'Activate Your CPA Founding Access',
-          closing: 'Be part of the premier network serving sophisticated tax planning clients.'
+          callToAction: 'Activate My Accountant Portal',
+          closing: 'Join the elite CPA community transforming how we serve high-net-worth families.'
+        };
+      case 'healthcare':
+        return {
+          title: 'VIP Healthcare Invitation: Boutique Family Office™ Platform for Elite Wellness Leaders',
+          description: 'As a leading healthcare professional',
+          benefits: [
+            '🏥 Healthcare Consultant Dashboard: Host your profile, rates, credentials',
+            '🎖️ VIP badge: Early adopter recognition, high-visibility for families seeking longevity advice',
+            '👥 Client & Family Referral Hub: Get direct, warm introductions to motivated clients',
+            '💰 Earn platform credits: For every professional or clinic you refer'
+          ],
+          callToAction: 'Activate Healthcare Profile',
+          closing: 'Start connecting with top families seeking elite wellness and longevity expertise.'
         };
       default:
         return {
@@ -121,8 +132,10 @@ export const VIPInvitationEmail = ({
           <Text style={greeting}>Hi {recipientName},</Text>
 
           <Text style={paragraph}>
-            {content.description}, you've been selected as a <strong>Founding Member</strong> of the new 
-            Boutique Family Office™ platform—a premium ecosystem for high-net-worth families and top professionals.
+            {personaType === 'healthcare' 
+              ? `You've been handpicked as a Founding Healthcare Partner for the Boutique Family Office™—the industry's first all-in-one wealth and health hub for families and their trusted advisors.`
+              : `${content.description}, you've been selected as a Founding Member of the new Boutique Family Office™ platform—a premium ecosystem for high-net-worth families and top professionals.`
+            }
             {organizationName ? ` Your ${organizationName}` : ' Your'} personalized dashboard and referral toolkit 
             are ready for you and your clients.
           </Text>
@@ -134,7 +147,9 @@ export const VIPInvitationEmail = ({
           )}
 
           <Section style={benefitsSection}>
-            <Heading style={h2}>What's in it for you:</Heading>
+            <Heading style={h2}>
+              {personaType === 'healthcare' ? 'Why Join as a Founding Partner?' : 'What\'s in it for you:'}
+            </Heading>
             <ul style={benefitsList}>
               {content.benefits.map((benefit, index) => (
                 <li key={index} style={benefitItem}>• {benefit}</li>
@@ -164,7 +179,8 @@ export const VIPInvitationEmail = ({
           </Text>
 
           <Text style={signature}>
-            Best,<br />
+            {personaType === 'healthcare' ? 'Wishing you health and prosperity,' : 'Best,'}
+            <br />
             {senderName}<br />
             Co-Founder, Boutique Family Office™
           </Text>
