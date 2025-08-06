@@ -14,6 +14,8 @@ import { RealEstateOnboardingSlides } from '@/components/realestate/RealEstateOn
 import { RealEstateVIPLaunchKit } from '@/components/realestate/RealEstateVIPLaunchKit';
 import { InsuranceOnboardingSlides } from '@/components/insurance/InsuranceOnboardingSlides';
 import { InsuranceVIPLaunchKit } from '@/components/insurance/InsuranceVIPLaunchKit';
+import { InsuranceAgentsOnboardingSlides } from '@/components/insurance/InsuranceAgentsOnboardingSlides';
+import { InsuranceAgentsVIPLaunchKit } from '@/components/insurance/InsuranceAgentsVIPLaunchKit';
 import { HealthcareInnovatorsOnboardingSlides } from '@/components/healthcare/HealthcareInnovatorsOnboardingSlides';
 import { HealthcareInnovatorsVIPLaunchKit } from '@/components/healthcare/HealthcareInnovatorsVIPLaunchKit';
 import { HealthcareExecutivesOnboardingSlides } from '@/components/healthcare/HealthcareExecutivesOnboardingSlides';
@@ -78,6 +80,14 @@ export const VIPManagementHub: React.FC = () => {
           <TabsTrigger value="insurance-launch" className="flex items-center gap-2">
             <Shield className="h-4 w-4" />
             Insurance Launch
+          </TabsTrigger>
+          <TabsTrigger value="agents-slides" className="flex items-center gap-2">
+            <Shield className="h-4 w-4" />
+            Agents Slides
+          </TabsTrigger>
+          <TabsTrigger value="agents-launch" className="flex items-center gap-2">
+            <Shield className="h-4 w-4" />
+            Agents Launch
           </TabsTrigger>
           <TabsTrigger value="innovators-slides" className="flex items-center gap-2">
             <Microscope className="h-4 w-4" />
@@ -151,6 +161,14 @@ export const VIPManagementHub: React.FC = () => {
 
         <TabsContent value="insurance-launch">
           <InsuranceVIPLaunchKit />
+        </TabsContent>
+
+        <TabsContent value="agents-slides">
+          <InsuranceAgentsOnboardingSlides />
+        </TabsContent>
+
+        <TabsContent value="agents-launch">
+          <InsuranceAgentsVIPLaunchKit />
         </TabsContent>
 
         <TabsContent value="innovators-slides">
