@@ -372,6 +372,44 @@ export const useOnboarding = () => {
           completed: false,
           persona: ['healthcare_consultant']
         }
+      ],
+      realtor: [
+        ...commonSteps,
+        {
+          id: 'property_showcase',
+          title: 'Property Portfolio',
+          description: 'Showcase your property listings',
+          required: true,
+          completed: false,
+          persona: ['realtor']
+        },
+        {
+          id: 'client_preferences',
+          title: 'Client Preferences',
+          description: 'Set up property matching criteria',
+          required: true,
+          completed: false,
+          persona: ['realtor']
+        }
+      ],
+      property_manager: [
+        ...commonSteps,
+        {
+          id: 'property_management',
+          title: 'Management Services',
+          description: 'Configure property management offerings',
+          required: true,
+          completed: false,
+          persona: ['property_manager']
+        },
+        {
+          id: 'maintenance_network',
+          title: 'Service Network',
+          description: 'Set up your maintenance and service providers',
+          required: true,
+          completed: false,
+          persona: ['property_manager']
+        }
       ]
     };
 

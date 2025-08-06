@@ -181,6 +181,22 @@ const PERSONA_INVITE_TEMPLATES: Record<AllPersonaTypes, {
     linkedinMessage: "I've been invited as one of the first 25 VIP members to shape the Family Office Marketplace™. Exclusive founding member access to transform wealth management!",
     smsMessage: "Your VIP reserved profile is ready. Founding member access available: [link]",
     description: "Exclusive founding member access to shape the future of wealth management."
+  },
+  realtor: {
+    subject: "Join Our Elite Real Estate Professional Network",
+    message: "Real estate is at the heart of every successful family office. Join our Family Office Marketplace™ as a Founding Real Estate Professional and connect with HNW families needing sophisticated property services.",
+    ctaText: "Join Real Estate Network",
+    linkedinMessage: "I'm using the Family Office Marketplace™ to connect with HNW families. Join our elite real estate professional network - perfect for realtors working with high-net-worth clients and family offices!",
+    smsMessage: "Elite real estate network for HNW families. Founding member access: [link]",
+    description: "Connect with HNW families and expand your real estate practice."
+  },
+  property_manager: {
+    subject: "Premium Property Management Network Invitation",
+    message: "Join our Family Office Marketplace™ as a Founding Property Management Expert. Connect with families managing complex property portfolios and showcase your expertise to qualified prospects.",
+    ctaText: "Join Property Network",
+    linkedinMessage: "I've joined the Family Office Marketplace™ property management network. Great opportunity for property managers to connect with HNW families and family offices needing professional management services!",
+    smsMessage: "Premium property management network for family offices. Join here: [link]",
+    description: "Showcase expertise to families with complex property portfolios."
   }
 };
 

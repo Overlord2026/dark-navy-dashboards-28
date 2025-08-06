@@ -60,49 +60,51 @@ export const VipLandingPage: React.FC = () => {
   }, [slug]);
 
   const loadVipInvite = async (inviteSlug: string) => {
-    try {
-      setLoading(true);
-      
-      const { data, error } = await supabase
-        .from('vip_invites')
-        .select('*')
-        .eq('slug', inviteSlug)
-        .single();
+    // TODO: Uncomment after VIP migration is run
+    // try {
+    //   setLoading(true);
+    //   
+    //   const { data, error } = await supabase
+    //     .from('vip_invites')
+    //     .select('*')
+    //     .eq('slug', inviteSlug)
+    //     .single();
 
-      if (error) {
-        console.error('Error loading VIP invite:', error);
-        toast.error('Invite not found');
-        navigate('/marketplace');
-        return;
-      }
+    //   if (error) {
+    //     console.error('Error loading VIP invite:', error);
+    //     toast.error('Invite not found');
+    //     navigate('/marketplace');
+    //     return;
+    //   }
 
-      setVipInvite(data);
-      setIsActivated(data.invite_status === 'activated');
+    //   setVipInvite(data);
+    //   setIsActivated(data.invite_status === 'activated');
 
-      // Track page view
-      await supabase
-        .from('vip_invitation_tracking')
-        .insert({
-          vip_invite_id: data.id,
-          action_type: 'page_viewed',
-          user_agent: navigator.userAgent,
-          ip_address: await getUserIP()
-        });
+    //   // Track page view
+    //   await supabase
+    //     .from('vip_invitation_tracking')
+    //     .insert({
+    //       vip_invite_id: data.id,
+    //       action_type: 'page_viewed',
+    //       user_agent: navigator.userAgent,
+    //       ip_address: await getUserIP()
+    //     });
 
-      // Update invite status to viewed if not already
-      if (data.invite_status === 'sent') {
-        await supabase
-          .from('vip_invites')
-          .update({ invite_status: 'viewed' })
-          .eq('id', data.id);
-      }
+    //   // Update invite status to viewed if not already
+    //   if (data.invite_status === 'sent') {
+    //     await supabase
+    //       .from('vip_invites')
+    //       .update({ invite_status: 'viewed' })
+    //       .eq('id', data.id);
+    //   }
 
-    } catch (error) {
-      console.error('Error loading VIP invite:', error);
-      toast.error('Failed to load invitation');
-    } finally {
-      setLoading(false);
-    }
+    // } catch (error) {
+    //   console.error('Error loading VIP invite:', error);
+    //   toast.error('Failed to load invitation');
+    // } finally {
+    //   setLoading(false);
+    // }
+    setLoading(false);
   };
 
   const getUserIP = async () => {
@@ -150,33 +152,34 @@ export const VipLandingPage: React.FC = () => {
         throw authError;
       }
 
+      // TODO: Uncomment after VIP migration is run
       // Update VIP invite status
-      await supabase
-        .from('vip_invites')
-        .update({ 
-          invite_status: 'activated',
-          activated_at: new Date().toISOString(),
-          activation_data: {
-            phone: activationForm.phone,
-            linkedin: activationForm.linkedin,
-            activation_ip: await getUserIP()
-          }
-        })
-        .eq('id', vipInvite.id);
+      // await supabase
+      //   .from('vip_invites')
+      //   .update({ 
+      //     invite_status: 'activated',
+      //     activated_at: new Date().toISOString(),
+      //     activation_data: {
+      //       phone: activationForm.phone,
+      //       linkedin: activationForm.linkedin,
+      //       activation_ip: await getUserIP()
+      //     }
+      //   })
+      //   .eq('id', vipInvite.id);
 
       // Track activation
-      await supabase
-        .from('vip_invitation_tracking')
-        .insert({
-          vip_invite_id: vipInvite.id,
-          action_type: 'profile_activated',
-          user_agent: navigator.userAgent,
-          ip_address: await getUserIP(),
-          additional_data: {
-            phone: activationForm.phone,
-            linkedin: activationForm.linkedin
-          }
-        });
+      // await supabase
+      //   .from('vip_invitation_tracking')
+      //   .insert({
+      //     vip_invite_id: vipInvite.id,
+      //     action_type: 'profile_activated',
+      //     user_agent: navigator.userAgent,
+      //     ip_address: await getUserIP(),
+      //     additional_data: {
+      //       phone: activationForm.phone,
+      //       linkedin: activationForm.linkedin
+      //     }
+      //   });
 
       setIsActivated(true);
       toast.success('Welcome to the Founding Members! Your VIP profile is now active.');
@@ -204,6 +207,8 @@ export const VipLandingPage: React.FC = () => {
       case 'consultant': return 'Consultant';
       case 'coach': return 'Coach';
       case 'healthcare_consultant': return 'Healthcare Consultant';
+      case 'realtor': return 'Real Estate Professional';
+      case 'property_manager': return 'Property Manager';
       default: return 'Professional';
     }
   };

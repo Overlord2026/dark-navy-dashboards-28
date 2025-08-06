@@ -55,7 +55,9 @@ const PERSONA_DISPLAY_NAMES = {
   insurance_agent: 'Insurance Professional',
   consultant: 'Consultant',
   coach: 'Coach',
-  healthcare_consultant: 'Healthcare Consultant'
+  healthcare_consultant: 'Healthcare Consultant',
+  realtor: 'Real Estate Professional',
+  property_manager: 'Property Manager'
 };
 
 const PERSONA_COLORS = {
@@ -66,7 +68,9 @@ const PERSONA_COLORS = {
   insurance_agent: 'bg-orange-100 text-orange-800',
   consultant: 'bg-indigo-100 text-indigo-800',
   coach: 'bg-pink-100 text-pink-800',
-  healthcare_consultant: 'bg-teal-100 text-teal-800'
+  healthcare_consultant: 'bg-teal-100 text-teal-800',
+  realtor: 'bg-indigo-100 text-indigo-800',
+  property_manager: 'bg-cyan-100 text-cyan-800'
 };
 
 export const VipDirectory: React.FC<VipDirectoryProps> = ({
@@ -87,27 +91,29 @@ export const VipDirectory: React.FC<VipDirectoryProps> = ({
   }, [showPublicOnly]);
 
   const loadProfiles = async () => {
-    try {
-      setLoading(true);
-      
-      let query = supabase.from('vip_invites').select('*');
-      
-      if (showPublicOnly) {
-        query = query.eq('invite_status', 'activated');
-      }
-      
-      const { data, error } = await query.order('created_at', { ascending: false });
-      
-      if (error) throw error;
-      
-      setProfiles(data || []);
-      
-    } catch (error) {
-      console.error('Error loading profiles:', error);
-      toast.error('Failed to load VIP directory');
-    } finally {
-      setLoading(false);
-    }
+    // TODO: Uncomment after VIP migration is run
+    // try {
+    //   setLoading(true);
+    //   
+    //   let query = supabase.from('vip_invites').select('*');
+    //   
+    //   if (showPublicOnly) {
+    //     query = query.eq('invite_status', 'activated');
+    //   }
+    //   
+    //   const { data, error } = await query.order('created_at', { ascending: false });
+    //   
+    //   if (error) throw error;
+    //   
+    //   setProfiles(data || []);
+    //   
+    // } catch (error) {
+    //   console.error('Error loading profiles:', error);
+    //   toast.error('Failed to load VIP directory');
+    // } finally {
+    //   setLoading(false);
+    // }
+    setLoading(false);
   };
 
   const filteredProfiles = profiles.filter(profile => {

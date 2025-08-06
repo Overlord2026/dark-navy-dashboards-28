@@ -1,7 +1,7 @@
 export type ClientPersona = 'hnw_client' | 'pre_retiree' | 'next_gen' | 'family_office_admin' | 'client';
 
 // Professional personas for service providers  
-export type ProfessionalPersona = 'advisor' | 'attorney' | 'cpa' | 'insurance_agent' | 'consultant' | 'coach' | 'enterprise_admin' | 'accountant' | 'compliance' | 'imo_fmo' | 'agency' | 'organization' | 'healthcare_consultant';
+export type ProfessionalPersona = 'advisor' | 'attorney' | 'cpa' | 'insurance_agent' | 'consultant' | 'coach' | 'enterprise_admin' | 'accountant' | 'compliance' | 'imo_fmo' | 'agency' | 'organization' | 'healthcare_consultant' | 'realtor' | 'property_manager';
 
 // Special personas for VIP and reserved profiles
 export type SpecialPersona = 'vip_reserved';

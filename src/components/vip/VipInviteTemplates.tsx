@@ -160,6 +160,65 @@ Excited for your wisdom and expertise!
 Best,
 Tony Gomes`
     }
+  },
+
+  realtor: {
+    email: {
+      subject: "Founding Real Estate Professional Invitation",
+      body: `Hi {{name}},
+
+Real estate is at the heart of every successful family office, and your expertise as a {{role_title}} is exactly what our members value. We're launching the Family Office Marketplace™—a private, invitation-only network for HNW families and trusted professionals.
+
+As a Founding Real Estate Professional, you'll:
+• Showcase your properties and services to qualified families
+• Connect with estate planners, attorneys, and financial advisors
+• Participate in exclusive panels and webinars
+• Be featured in our premium directory with a "Founding 100" badge
+
+Get early access and claim your spot: {{claim_link}}
+
+Looking forward to elevating the family office experience together!
+
+Best,
+Tony Gomes
+Boutique Family Office™`
+    },
+    linkedin: {
+      subject: "Founding Real Estate Expert Invitation",
+      body: `Hi {{name}},
+
+Your real estate expertise is exactly what our family office community values. Join as a Founding Real Estate Professional in our exclusive marketplace.
+
+Claim your VIP spot: {{claim_link}}
+
+Limited seats available!
+
+Best,
+Tony`
+    }
+  },
+
+  property_manager: {
+    email: {
+      subject: "Invitation: Join Our Elite Property Management Network",
+      body: `Hi {{name}},
+
+Property management is critical for multi-generational wealth preservation and growth. We're inviting you to be a Founding Property Management Expert in our Family Office Marketplace™.
+
+As a Founding Member, you'll:
+• Serve HNW families with complex property portfolios
+• Connect with wealth managers and estate attorneys
+• Access exclusive property management tools and solutions
+• Display your "Founding 100" credentials
+
+Activate your VIP profile: {{claim_link}}
+
+Excited to have your expertise in our community!
+
+Best regards,
+Tony Gomes
+Boutique Family Office™`
+    }
   }
 };
 
@@ -199,5 +258,17 @@ export const PERSONA_INVITE_SETTINGS = {
     maxInvites: 20,
     priority: 'medium',
     color: 'pink'
+  },
+  realtor: {
+    displayName: 'Real Estate Professional',
+    maxInvites: 75,
+    priority: 'high',
+    color: 'indigo'
+  },
+  property_manager: {
+    displayName: 'Property Manager',
+    maxInvites: 30,
+    priority: 'medium',
+    color: 'cyan'
   }
 };
