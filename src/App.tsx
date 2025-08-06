@@ -91,6 +91,8 @@ import ConsultantOnboardingPage from "./pages/ConsultantOnboardingPage";
 import ConsultantDashboardPage from "./pages/ConsultantDashboardPage";
 import InsuranceOnboardingPage from "./pages/InsuranceOnboardingPage";
 import InsuranceDashboardPage from "./pages/InsuranceDashboardPage";
+import HealthcareOnboardingPage from "./pages/HealthcareOnboardingPage";
+import HealthcareDashboardPage from "./pages/HealthcareDashboardPage";
 
 const queryClient = new QueryClient();
 
@@ -294,6 +296,8 @@ function App() {
           <Route path="/consultant-dashboard" element={<ConsultantDashboardPage />} />
           <Route path="/insurance-onboarding" element={<InsuranceOnboardingPage />} />
           <Route path="/insurance-dashboard" element={<InsuranceDashboardPage />} />
+          <Route path="/healthcare-onboarding" element={<HealthcareOnboardingPage />} />
+          <Route path="/healthcare-dashboard" element={<HealthcareDashboardPage />} />
 
                          </Routes>
                         <Navigation />
