@@ -19,6 +19,9 @@ import { ChampionSubmissionForm } from './ChampionSubmissionForm';
 import { ChampionAdminPanel } from './ChampionAdminPanel';
 import { ChampionOutreachTemplates } from './ChampionOutreachTemplates';
 import { AthleteDatabase } from './AthleteDatabase';
+import { SportsAgentsDatabase } from './SportsAgentsDatabase';
+import { AgentOutreachTemplates } from './AgentOutreachTemplates';
+import { LeagueExecutivePortal } from './LeagueExecutivePortal';
 
 interface Module {
   id: string;
@@ -337,9 +340,21 @@ export function AthleteEducationCenter() {
           <HallOfChampions />
         </TabsContent>
 
-        <TabsContent value="database">
-          <AthleteDatabase />
-        </TabsContent>
+      <TabsContent value="database">
+        <AthleteDatabase />
+      </TabsContent>
+
+      <TabsContent value="agents">
+        <SportsAgentsDatabase />
+      </TabsContent>
+
+      <TabsContent value="outreach">
+        <AgentOutreachTemplates />
+      </TabsContent>
+
+      <TabsContent value="leagues">
+        <LeagueExecutivePortal />
+      </TabsContent>
 
         <TabsContent value="submit">
           <ChampionSubmissionForm />
