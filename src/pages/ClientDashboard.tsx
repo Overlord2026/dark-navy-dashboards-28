@@ -9,8 +9,12 @@ import { MarketplaceHighlights } from '@/components/client/MarketplaceHighlights
 import { EducationResources } from '@/components/client/EducationResources';
 import { CelebrationProgress } from '@/components/client/CelebrationProgress';
 import { SupportAlerts } from '@/components/client/SupportAlerts';
+import { useDashboardMetrics } from '@/hooks/useDashboardMetrics';
 
 export function ClientDashboard() {
+  // Track dashboard metrics for A/B testing
+  useDashboardMetrics();
+
   return (
     <PersonaDashboardLayout>
       <div className="space-y-6">

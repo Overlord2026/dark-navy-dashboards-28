@@ -4,8 +4,16 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { BookOpen, Play, ArrowRight } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { useAuth } from '@/context/AuthContext';
+import { abTesting } from '@/lib/abTesting';
 
 export const EducationResources = () => {
+  const { user } = useAuth();
+  
+  // A/B Test for education CTA
+  const educationVariant = abTesting.getVariant('education_cta', user?.id || 'anonymous');
+  const ctaText = educationVariant?.config.buttonText || 'Start Learning';
+
   const resources = [
     {
       title: 'Wealth Preservation Strategies',
@@ -57,8 +65,15 @@ export const EducationResources = () => {
             <BookOpen className="h-5 w-5 text-primary" />
             Education & Resources
           </CardTitle>
-          <Button variant="outline" size="sm" className="gap-2">
-            Start Learning
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="gap-2"
+            onClick={() => {
+              abTesting.trackConversion('education_cta', educationVariant?.id || 'unknown', user?.id || 'anonymous', 'education_cta_click');
+            }}
+          >
+            {ctaText}
             <ArrowRight className="h-4 w-4" />
           </Button>
         </div>

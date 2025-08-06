@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Crown, Shield } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { useRoleContext } from '@/context/RoleContext';
+import { abTesting } from '@/lib/abTesting';
 
 export const WelcomeBanner = () => {
   const { user } = useAuth();
@@ -17,13 +18,17 @@ export const WelcomeBanner = () => {
     return user?.email?.split('@')[0] || 'Valued Client';
   };
 
+  // A/B Test for welcome banner text
+  const welcomeVariant = abTesting.getVariant('welcome_banner_text', user?.id || 'anonymous');
+  const greeting = welcomeVariant?.config.greeting.replace('{name}', getDisplayName()) || `Welcome, ${getDisplayName()}!`;
+
   return (
     <Card className="bg-gradient-to-r from-primary/5 to-secondary/5 border-primary/20">
       <CardContent className="p-6">
         <div className="flex items-center justify-between">
           <div className="space-y-2">
             <h1 className="text-2xl font-bold text-foreground">
-              Welcome, {getDisplayName()}!
+              {greeting}
             </h1>
             <p className="text-muted-foreground max-w-2xl">
               Your Family Office Dashboard is live. Secure. Private. Powered by BFO's Fiduciary Duty Principles™.
