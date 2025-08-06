@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Trophy, Star, Shield, Download, PlayCircle, CheckCircle, Brain, Target, Users, Presentation, GraduationCap, Video, Mail, FileText } from 'lucide-react';
+import { Trophy, Star, Shield, Download, PlayCircle, CheckCircle, Brain, Target, Users, Presentation, GraduationCap, Video, Mail, FileText, Upload, Send } from 'lucide-react';
 import { AthleteAssessmentQuiz } from './AthleteAssessmentQuiz';
 import { AthleteCopilotChat } from './AthleteCopilotChat';
 import { AthleteOnboardingSlides } from './AthleteOnboardingSlides';
@@ -14,6 +14,10 @@ import { AthleteEmailTemplates } from './AthleteEmailTemplates';
 import { AthleteSlideContent } from './AthleteSlideContent';
 import { AthleteVideoScripts } from './AthleteVideoScripts';
 import { AthleteCampaignKit } from './AthleteCampaignKit';
+import { HallOfChampions } from './HallOfChampions';
+import { ChampionSubmissionForm } from './ChampionSubmissionForm';
+import { ChampionAdminPanel } from './ChampionAdminPanel';
+import { ChampionOutreachTemplates } from './ChampionOutreachTemplates';
 
 interface Module {
   id: string;
@@ -185,7 +189,7 @@ export function AthleteEducationCenter() {
       </div>
 
       <Tabs defaultValue="overview" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-6 lg:grid-cols-9">
+        <TabsList className="grid w-full grid-cols-6 lg:grid-cols-13">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="onboarding">Onboarding</TabsTrigger>
           <TabsTrigger value="curriculum">Curriculum</TabsTrigger>
@@ -195,7 +199,39 @@ export function AthleteEducationCenter() {
           <TabsTrigger value="videos">Video Scripts</TabsTrigger>
           <TabsTrigger value="emails">Email Kit</TabsTrigger>
           <TabsTrigger value="campaigns">Campaigns</TabsTrigger>
+          <TabsTrigger value="hall-of-champions">
+            <Trophy className="h-4 w-4 mr-2" />
+            Hall of Champions
+          </TabsTrigger>
+          <TabsTrigger value="champion-submission">
+            <Upload className="h-4 w-4 mr-2" />
+            Submit Content
+          </TabsTrigger>
+          <TabsTrigger value="admin-panel">
+            <Users className="h-4 w-4 mr-2" />
+            Admin Panel
+          </TabsTrigger>
+          <TabsTrigger value="outreach-templates">
+            <Send className="h-4 w-4 mr-2" />
+            Outreach Kit
+          </TabsTrigger>
         </TabsList>
+
+        <TabsContent value="hall-of-champions" className="space-y-6">
+          <HallOfChampions />
+        </TabsContent>
+
+        <TabsContent value="champion-submission" className="space-y-6">
+          <ChampionSubmissionForm />
+        </TabsContent>
+
+        <TabsContent value="admin-panel" className="space-y-6">
+          <ChampionAdminPanel />
+        </TabsContent>
+
+        <TabsContent value="outreach-templates" className="space-y-6">
+          <ChampionOutreachTemplates />
+        </TabsContent>
 
         <TabsContent value="overview">
           {/* Quick Access Cards remain the same */}
