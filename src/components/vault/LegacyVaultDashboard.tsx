@@ -16,17 +16,24 @@ import {
   Calendar,
   Eye,
   Download,
-  Share
+  Share,
+  Brain
 } from 'lucide-react';
 import { useVaultItems } from '@/hooks/useVaultItems';
 import { VaultItemUpload } from './VaultItemUpload';
 import { VaultAvatarSetup } from './VaultAvatarSetup';
 import { VaultAuditLog } from './VaultAuditLog';
+import { VaultWatermark } from './VaultWatermark';
+import { PatentPendingBadge } from './PatentPendingBadge';
+import { VaultOnboardingFlow } from './VaultOnboardingFlow';
+import { LegacyCopilotAvatar } from './LegacyCopilotAvatar';
+import { VaultPermissionManager } from './VaultPermissionManager';
 
 export function LegacyVaultDashboard() {
   const [activeTab, setActiveTab] = useState('overview');
   const [showUpload, setShowUpload] = useState(false);
   const [showAvatarSetup, setShowAvatarSetup] = useState(false);
+  const [currentView, setCurrentView] = useState<'dashboard' | 'onboarding' | 'avatar' | 'permissions'>('dashboard');
   const { items, isLoading } = useVaultItems();
 
   const getItemIcon = (type: string) => {
@@ -70,18 +77,66 @@ export function LegacyVaultDashboard() {
     photos: items?.filter(item => item.type === 'photo').length || 0
   };
 
+  if (currentView === 'onboarding') {
+    return <VaultOnboardingFlow />;
+  }
+
+  if (currentView === 'avatar') {
+    return <LegacyCopilotAvatar />;
+  }
+
+  if (currentView === 'permissions') {
+    return <VaultPermissionManager />;
+  }
+
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-navy via-navy-light to-navy-dark relative">
+      <VaultWatermark opacity={0.08} position="bottom-right" />
+      
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-navy via-primary to-emerald p-8 text-white">
+      <div className="bg-gradient-to-r from-navy via-primary to-emerald p-8 text-white relative">
         <div className="max-w-4xl mx-auto">
-          <div className="flex items-center gap-3 mb-4">
-            <Shield className="h-8 w-8" />
-            <h1 className="text-3xl font-bold">Secure Legacy Vault™</h1>
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <Shield className="h-8 w-8" />
+              <h1 className="text-3xl font-bold">Secure Legacy Vault™</h1>
+            </div>
+            <PatentPendingBadge />
           </div>
-          <p className="text-xl opacity-90">
+          <p className="text-xl opacity-90 mb-6">
             Your family's story, secure forever. Preserved across generations.
           </p>
+          <div className="flex gap-3">
+            <Button 
+              onClick={() => setCurrentView('onboarding')}
+              className="bg-gold text-navy hover:bg-gold-light"
+            >
+              Start Setup Guide
+            </Button>
+            <Button 
+              onClick={() => setCurrentView('avatar')}
+              variant="outline" 
+              className="border-white text-white hover:bg-white/10"
+            >
+              <Brain className="h-4 w-4 mr-2" />
+              Legacy Copilot
+            </Button>
+            <Button 
+              onClick={() => setCurrentView('permissions')}
+              variant="outline" 
+              className="border-white text-white hover:bg-white/10"
+            >
+              <Users className="h-4 w-4 mr-2" />
+              Manage Access
+            </Button>
+            <Button 
+              variant="outline" 
+              className="border-white text-white hover:bg-white/10"
+            >
+              <Download className="h-4 w-4 mr-2" />
+              Training Materials
+            </Button>
+          </div>
         </div>
       </div>
 
