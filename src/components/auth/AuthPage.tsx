@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Loader2, Eye, EyeOff } from 'lucide-react';
-import { ReCaptchaComponent, ReCaptchaRef } from './ReCaptcha';
+// import { ReCaptchaComponent, ReCaptchaRef } from './ReCaptcha'; // Disabled for now
 
 export function AuthPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -19,9 +19,9 @@ export function AuthPage() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
-  const signInCaptchaRef = useRef<ReCaptchaRef>(null);
-  const signUpCaptchaRef = useRef<ReCaptchaRef>(null);
+  // const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  // const signInCaptchaRef = useRef<ReCaptchaRef>(null);
+  // const signUpCaptchaRef = useRef<ReCaptchaRef>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -49,21 +49,10 @@ export function AuthPage() {
 
     setIsLoading(true);
     try {
-      // Get CAPTCHA token - make it optional for now to test core auth
-      let captchaToken;
-      try {
-        captchaToken = await signInCaptchaRef.current?.executeAsync();
-      } catch (error) {
-        console.warn("CAPTCHA failed, proceeding without it:", error);
-        // Continue without captcha for now
-      }
-
+      // CAPTCHA disabled for now
       const { error } = await supabase.auth.signInWithPassword({
         email: email.trim(),
-        password,
-        options: {
-          captchaToken
-        }
+        password
       });
 
       if (error) {
@@ -137,21 +126,12 @@ export function AuthPage() {
 
     setIsLoading(true);
     try {
-      // Get CAPTCHA token - make it optional for now to test core auth
-      let captchaToken;
-      try {
-        captchaToken = await signUpCaptchaRef.current?.executeAsync();
-      } catch (error) {
-        console.warn("CAPTCHA failed, proceeding without it:", error);
-        // Continue without captcha for now
-      }
-
+      // CAPTCHA disabled for now
       const { error } = await supabase.auth.signUp({
         email: email.trim(),
         password,
         options: {
           emailRedirectTo: `${window.location.origin}/`,
-          captchaToken,
           data: {
             first_name: firstName.trim(),
             last_name: lastName.trim(),
@@ -303,16 +283,7 @@ export function AuthPage() {
                   </div>
                 </div>
                 
-                <ReCaptchaComponent
-                  ref={signInCaptchaRef}
-                  onError={(error) => {
-                    toast({
-                      title: "CAPTCHA Error",
-                      description: "Please refresh and try again",
-                      variant: "destructive",
-                    });
-                  }}
-                />
+                {/* CAPTCHA disabled for now */}
                 
                 <Button type="submit" className="w-full" disabled={isLoading}>
                   {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
@@ -427,16 +398,7 @@ export function AuthPage() {
                   </div>
                 </div>
                 
-                <ReCaptchaComponent 
-                  ref={signUpCaptchaRef}
-                  onError={(error) => {
-                    toast({
-                      title: "CAPTCHA Error",
-                      description: "Please refresh and try again",
-                      variant: "destructive",
-                    });
-                  }}
-                />
+                {/* CAPTCHA disabled for now */}
                 
                 <Button type="submit" className="w-full" disabled={isLoading}>
                   {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}

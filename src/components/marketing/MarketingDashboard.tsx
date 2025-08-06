@@ -22,6 +22,9 @@ import { CampaignBoard } from './CampaignBoard';
 import { ContactManager } from './ContactManager';
 import { MarketingAnalytics } from './MarketingAnalytics';
 import { StaffSOPGuide } from './StaffSOPGuide';
+import StaffTaskManager from './StaffTaskManager';
+import StaffTrainingModule from './StaffTrainingModule';
+import AutomationInsights from './AutomationInsights';
 
 interface CampaignStats {
   sent: number;
@@ -150,13 +153,16 @@ export function MarketingDashboard() {
       )}
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-        <TabsList className="grid w-full grid-cols-6">
+        <TabsList className="grid w-full grid-cols-4 lg:grid-cols-9">
           <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="upload">CSV Upload</TabsTrigger>
+          <TabsTrigger value="upload">Upload</TabsTrigger>
           <TabsTrigger value="campaigns">Campaigns</TabsTrigger>
           <TabsTrigger value="contacts">Contacts</TabsTrigger>
+          <TabsTrigger value="tasks">Tasks</TabsTrigger>
+          <TabsTrigger value="training">Training</TabsTrigger>
+          <TabsTrigger value="automation">Automation</TabsTrigger>
           <TabsTrigger value="analytics">Analytics</TabsTrigger>
-          <TabsTrigger value="sop">Staff Guide</TabsTrigger>
+          <TabsTrigger value="sop">SOPs</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview">
@@ -231,6 +237,18 @@ export function MarketingDashboard() {
 
         <TabsContent value="analytics">
           <MarketingAnalytics />
+        </TabsContent>
+
+        <TabsContent value="tasks">
+          <StaffTaskManager />
+        </TabsContent>
+
+        <TabsContent value="training">
+          <StaffTrainingModule />
+        </TabsContent>
+
+        <TabsContent value="automation">
+          <AutomationInsights />
         </TabsContent>
 
         <TabsContent value="sop">
