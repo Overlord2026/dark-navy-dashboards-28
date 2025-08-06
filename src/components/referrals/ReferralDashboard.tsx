@@ -66,43 +66,22 @@ export const ReferralDashboard: React.FC = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      // Fetch referral code
-      const { data: referralCode } = await supabase
-        .from('referral_codes')
-        .select('referral_code')
-        .eq('user_id', user.id)
-        .single();
-
-      // Fetch referrals
-      const { data: referralsData } = await supabase
-        .from('referrals')
-        .select('*')
-        .eq('referrer_user_id', user.id)
-        .order('referral_date', { ascending: false });
-
-      // Fetch rewards
-      const { data: rewardsData } = await supabase
-        .from('referral_rewards')
-        .select('*')
-        .eq('referrer_user_id', user.id)
-        .order('created_at', { ascending: false });
-
-      const totalReferrals = referralsData?.length || 0;
-      const activeReferrals = referralsData?.filter(r => r.status === 'active').length || 0;
-      const pendingRewards = rewardsData?.filter(r => r.status === 'pending' || r.status === 'approved').length || 0;
-      const totalEarnings = rewardsData?.filter(r => r.status === 'paid').reduce((sum, r) => sum + Number(r.reward_amount), 0) || 0;
+      // For now, create a simple referral code and mock data
+      // This will be updated when the migration runs and tables are available
+      const simpleCode = `REF-${user.id.slice(-8).toUpperCase()}`;
+      const simpleLink = `${baseUrl}?ref=${simpleCode}`;
 
       setStats({
-        totalReferrals,
-        activeReferrals,
-        pendingRewards,
-        totalEarnings,
-        referralCode: referralCode?.referral_code || '',
-        referralLink: `${baseUrl}?ref=${referralCode?.referral_code}`
+        totalReferrals: 0,
+        activeReferrals: 0,
+        pendingRewards: 0,
+        totalEarnings: 0,
+        referralCode: simpleCode,
+        referralLink: simpleLink
       });
 
-      setReferrals(referralsData || []);
-      setRewards(rewardsData || []);
+      setReferrals([]);
+      setRewards([]);
     } catch (error) {
       console.error('Error fetching referral data:', error);
       toast({
