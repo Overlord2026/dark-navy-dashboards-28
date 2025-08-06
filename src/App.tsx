@@ -93,6 +93,7 @@ import InsuranceOnboardingPage from "./pages/InsuranceOnboardingPage";
 import InsuranceDashboardPage from "./pages/InsuranceDashboardPage";
 import HealthcareOnboardingPage from "./pages/HealthcareOnboardingPage";
 import HealthcareDashboardPage from "./pages/HealthcareDashboardPage";
+import WireframePage from "./pages/WireframePage";
 
 const queryClient = new QueryClient();
 
@@ -118,8 +119,9 @@ function App() {
                           <StickyTopBanner />
                           <APIWarningBanner />
                           <ReferralTracker />
-                         <Routes>
-                           <Route path="/" element={<Index />} />
+                          <Routes>
+                            <Route path="/wireframe" element={<WireframePage />} />
+                            <Route path="/" element={<Index />} />
                            <Route path="/marketplace" element={<FamilyOfficeMarketplacePage />} />
                            <Route path="/welcome" element={<WelcomePage />} />
                            <Route path="/auth" element={<AuthPage />} />
