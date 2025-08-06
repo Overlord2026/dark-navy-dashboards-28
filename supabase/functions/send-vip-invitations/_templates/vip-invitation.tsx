@@ -129,20 +129,6 @@ export const VIPInvitationEmail = ({
           callToAction: 'Activate Your VIP Access',
           closing: 'Join the founding community of elite professionals.'
         };
-      default:
-        return {
-          title: 'VIP Founding Member Invitation: Boutique Family Office Platform™',
-          description: 'As a leader in your industry',
-          benefits: [
-            '🏆 Custom branded portal with premium features',
-            '💰 Enhanced referral rewards system',
-            '🌟 Access to elite professional network',
-            '🚀 Advanced practice management tools',
-            '👑 Founding member recognition and perks'
-          ],
-          callToAction: 'Activate Your VIP Access',
-          closing: 'Join the founding community of elite professionals.'
-        };
     }
   };
 

@@ -16,6 +16,8 @@ import { InsuranceOnboardingSlides } from '@/components/insurance/InsuranceOnboa
 import { InsuranceVIPLaunchKit } from '@/components/insurance/InsuranceVIPLaunchKit';
 import { HealthcareInnovatorsOnboardingSlides } from '@/components/healthcare/HealthcareInnovatorsOnboardingSlides';
 import { HealthcareInnovatorsVIPLaunchKit } from '@/components/healthcare/HealthcareInnovatorsVIPLaunchKit';
+import { HealthcareExecutivesOnboardingSlides } from '@/components/healthcare/HealthcareExecutivesOnboardingSlides';
+import { HealthcareExecutivesVIPLaunchKit } from '@/components/healthcare/HealthcareExecutivesVIPLaunchKit';
 import { Crown, Upload, Users, Trophy, BookOpen, Heart, Building, Shield, Microscope } from 'lucide-react';
 
 export const VIPManagementHub: React.FC = () => {
@@ -32,7 +34,7 @@ export const VIPManagementHub: React.FC = () => {
       </div>
 
       <Tabs defaultValue="bulk-manager" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-16">
+        <TabsList className="grid w-full grid-cols-8 lg:grid-cols-16">
           <TabsTrigger value="bulk-manager" className="flex items-center gap-2">
             <Upload className="h-4 w-4" />
             Bulk Manager
@@ -84,6 +86,14 @@ export const VIPManagementHub: React.FC = () => {
           <TabsTrigger value="innovators-launch" className="flex items-center gap-2">
             <Microscope className="h-4 w-4" />
             Innovators Launch
+          </TabsTrigger>
+          <TabsTrigger value="executives-slides" className="flex items-center gap-2">
+            <Heart className="h-4 w-4" />
+            Executives Slides
+          </TabsTrigger>
+          <TabsTrigger value="executives-launch" className="flex items-center gap-2">
+            <Heart className="h-4 w-4" />
+            Executives Launch
           </TabsTrigger>
           <TabsTrigger value="onboarding" className="flex items-center gap-2">
             <Crown className="h-4 w-4" />
@@ -149,6 +159,14 @@ export const VIPManagementHub: React.FC = () => {
 
         <TabsContent value="innovators-launch">
           <HealthcareInnovatorsVIPLaunchKit />
+        </TabsContent>
+
+        <TabsContent value="executives-slides">
+          <HealthcareExecutivesOnboardingSlides />
+        </TabsContent>
+
+        <TabsContent value="executives-launch">
+          <HealthcareExecutivesVIPLaunchKit />
         </TabsContent>
 
         <TabsContent value="onboarding">
