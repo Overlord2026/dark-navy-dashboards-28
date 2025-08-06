@@ -227,7 +227,7 @@ export function LendingDashboard() {
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
       {/* Premium Banner Header */}
       <div 
-        className="relative bg-gradient-to-r from-navy-900 to-navy-800 text-white py-12 overflow-hidden"
+        className="relative bg-gradient-to-r from-navy-900 to-navy-800 text-white py-16 overflow-hidden"
         style={{
           backgroundImage: `linear-gradient(rgba(30, 58, 138, 0.9), rgba(30, 58, 138, 0.8)), url(${bannerImage})`,
           backgroundSize: 'cover',
@@ -236,24 +236,68 @@ export function LendingDashboard() {
         }}
       >
         <div className="container mx-auto px-6 relative z-10">
-          <div className="flex items-center justify-between mb-8">
-            <div className="flex items-center space-x-6">
-              <div className="w-16 h-16 bg-primary rounded-xl flex items-center justify-center shadow-lg">
-                <div className="text-primary-foreground font-bold text-2xl">🌳</div>
+          <div className="text-center space-y-6 max-w-4xl mx-auto">
+            <h1 className="text-5xl font-serif font-bold text-white mb-4">
+              Your Boutique Lending Marketplace—Premium Credit for Every Family Need
+            </h1>
+            <p className="text-xl text-white/90 mb-8">
+              Compare exclusive offers, get pre-qualified instantly, and access white-glove support from top lending specialists—all inside your Family Office dashboard.
+            </p>
+            
+            {/* Benefits Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 my-8">
+              <div className="flex items-center text-white/90 text-sm">
+                <CheckCircle className="w-4 h-4 mr-2 text-primary" />
+                Access vetted private and institutional lenders
               </div>
-              <div>
-                <h1 className="text-4xl font-serif font-bold text-primary mb-2">{welcomeMessage.title}</h1>
-                <p className="text-xl text-white/90 max-w-2xl">{welcomeMessage.subtitle}</p>
+              <div className="flex items-center text-white/90 text-sm">
+                <CheckCircle className="w-4 h-4 mr-2 text-primary" />
+                No-impact credit pre-qualification via Plaid
+              </div>
+              <div className="flex items-center text-white/90 text-sm">
+                <CheckCircle className="w-4 h-4 mr-2 text-primary" />
+                Compare mortgages, HELOCs, business & bridge loans
+              </div>
+              <div className="flex items-center text-white/90 text-sm">
+                <CheckCircle className="w-4 h-4 mr-2 text-primary" />
+                Transparent terms—no hidden fees or sales pitches
+              </div>
+              <div className="flex items-center text-white/90 text-sm">
+                <CheckCircle className="w-4 h-4 mr-2 text-primary" />
+                Secure, encrypted data—your privacy guaranteed
+              </div>
+              <div className="flex items-center text-white/90 text-sm">
+                <CheckCircle className="w-4 h-4 mr-2 text-primary" />
+                Dedicated Lending Concierge for expert guidance
               </div>
             </div>
-            <Button 
-              size="lg" 
-              className="bg-primary hover:bg-primary/90 text-primary-foreground min-h-[48px] px-8 shadow-lg"
-              onClick={handleConciergeCall}
-            >
-              <Phone className="w-5 h-5 mr-2" />
-              Speak to Concierge
-            </Button>
+
+            {/* CTAs */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button 
+                size="lg" 
+                className="bg-primary hover:bg-primary/90 text-primary-foreground min-h-[48px] px-8 shadow-lg"
+                onClick={handlePreQualification}
+              >
+                Get My Rate
+              </Button>
+              <Button 
+                size="lg" 
+                variant="outline"
+                className="bg-white/10 border-white/20 text-white hover:bg-white/20 min-h-[48px] px-8"
+                onClick={() => setShowConciergeModal(true)}
+              >
+                <Phone className="w-5 h-5 mr-2" />
+                Schedule a Call
+              </Button>
+              <Button 
+                size="lg" 
+                variant="ghost"
+                className="text-white hover:bg-white/10 min-h-[48px] px-8"
+              >
+                See Lender Reviews
+              </Button>
+            </div>
           </div>
           
           {/* Floating confetti particles */}
@@ -264,6 +308,18 @@ export function LendingDashboard() {
             <div className="absolute bottom-20 right-1/3 w-3 h-3 bg-primary rounded-full opacity-15 animate-pulse" style={{ animationDelay: '2s' }}></div>
           </div>
         </div>
+      </div>
+
+      {/* Sticky Concierge Button */}
+      <div className="fixed bottom-6 right-6 z-50">
+        <Button 
+          size="lg" 
+          className="bg-primary hover:bg-primary/90 text-primary-foreground min-h-[56px] px-6 shadow-lg rounded-full"
+          onClick={() => setShowConciergeModal(true)}
+        >
+          <Phone className="w-5 h-5 mr-2" />
+          Talk to a Lending Concierge
+        </Button>
       </div>
 
       <div className="container mx-auto px-6 py-8 space-y-8">

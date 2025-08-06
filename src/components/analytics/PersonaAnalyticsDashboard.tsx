@@ -12,50 +12,41 @@ import {
   Users, TrendingUp, Target, Share2, Play, BookOpen, 
   Calendar, Award, Filter, Download 
 } from 'lucide-react';
-import { PersonaType } from '@/types/personas';
+import { ClientPersona } from '@/types/personas';
 import { motion } from 'framer-motion';
 
 interface AnalyticsData {
   onboarding: {
     started: number;
     completed: number;
-    byPersona: Record<PersonaType, { started: number; completed: number }>;
+    byPersona: Record<ClientPersona, { started: number; completed: number }>;
     byChannel: Record<string, { started: number; completed: number }>;
   };
   engagement: {
-    demoViews: Record<PersonaType, number>;
-    viralShares: Record<PersonaType, { clicked: number; shared: number }>;
-    trainingAccessed: Record<PersonaType, number>;
-    faqViews: Record<PersonaType, number>;
+    demoViews: Record<ClientPersona, number>;
+    viralShares: Record<ClientPersona, { clicked: number; shared: number }>;
+    trainingAccessed: Record<ClientPersona, number>;
+    faqViews: Record<ClientPersona, number>;
   };
   conversion: {
-    signupsByChannel: Record<string, Record<PersonaType, number>>;
-    upgradesByPersona: Record<PersonaType, number>;
-    timeToUpgrade: Record<PersonaType, number>; // days
+    signupsByChannel: Record<string, Record<ClientPersona, number>>;
+    upgradesByPersona: Record<ClientPersona, number>;
+    timeToUpgrade: Record<ClientPersona, number>; // days
   };
 }
 
 const PERSONA_COLORS = {
-  advisor: '#3B82F6',
-  accountant: '#10B981', 
-  attorney: '#8B5CF6',
-  coach: '#F59E0B',
-  consultant: '#6366F1',
-  compliance: '#EF4444',
-  insurance_agent: '#06B6D4',
-  imo_fmo: '#14B8A6',
-  healthcare_consultant: '#10B981',
-  organization: '#F59E0B',
-  agency: '#EC4899',
-  client: '#3B82F6',
-  vip_reserved: '#F59E0B'
+  hnw_client: '#3B82F6',
+  pre_retiree: '#10B981', 
+  next_gen: '#8B5CF6',
+  family_office_admin: '#F59E0B'
 };
 
 export const PersonaAnalyticsDashboard: React.FC = () => {
   const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [timeRange, setTimeRange] = useState('7d');
-  const [selectedPersona, setSelectedPersona] = useState<PersonaType | 'all'>('all');
+  const [selectedPersona, setSelectedPersona] = useState<ClientPersona | 'all'>('all');
 
   useEffect(() => {
     loadAnalyticsData();
@@ -71,19 +62,10 @@ export const PersonaAnalyticsDashboard: React.FC = () => {
           started: 342,
           completed: 289,
           byPersona: {
-            advisor: { started: 89, completed: 76 },
-            accountant: { started: 45, completed: 38 },
-            attorney: { started: 32, completed: 28 },
-            coach: { started: 28, completed: 24 },
-            consultant: { started: 25, completed: 21 },
-            compliance: { started: 18, completed: 15 },
-            insurance_agent: { started: 22, completed: 19 },
-            imo_fmo: { started: 15, completed: 12 },
-            healthcare_consultant: { started: 20, completed: 17 },
-            organization: { started: 12, completed: 10 },
-            agency: { started: 14, completed: 12 },
-            client: { started: 16, completed: 13 },
-            vip_reserved: { started: 6, completed: 6 }
+            hnw_client: { started: 89, completed: 76 },
+            pre_retiree: { started: 45, completed: 38 },
+            next_gen: { started: 32, completed: 28 },
+            family_office_admin: { started: 28, completed: 24 }
           },
           byChannel: {
             linkedin: { started: 156, completed: 142 },
@@ -94,62 +76,39 @@ export const PersonaAnalyticsDashboard: React.FC = () => {
         },
         engagement: {
           demoViews: {
-            advisor: 234, accountant: 123, attorney: 89, coach: 76, consultant: 65,
-            compliance: 54, insurance_agent: 67, imo_fmo: 43, healthcare_consultant: 58,
-            organization: 32, agency: 41, client: 45, vip_reserved: 18
+            hnw_client: 234, pre_retiree: 123, next_gen: 89, family_office_admin: 76
           },
           viralShares: {
-            advisor: { clicked: 89, shared: 67 }, accountant: { clicked: 45, shared: 32 },
-            attorney: { clicked: 34, shared: 28 }, coach: { clicked: 28, shared: 23 },
-            consultant: { clicked: 24, shared: 19 }, compliance: { clicked: 18, shared: 14 },
-            insurance_agent: { clicked: 22, shared: 17 }, imo_fmo: { clicked: 15, shared: 11 },
-            healthcare_consultant: { clicked: 20, shared: 16 }, organization: { clicked: 12, shared: 10 },
-            agency: { clicked: 14, shared: 11 }, client: { clicked: 16, shared: 12 },
-            vip_reserved: { clicked: 8, shared: 6 }
+            hnw_client: { clicked: 89, shared: 67 }, pre_retiree: { clicked: 45, shared: 32 },
+            next_gen: { clicked: 34, shared: 28 }, family_office_admin: { clicked: 28, shared: 23 }
           },
           trainingAccessed: {
-            advisor: 156, accountant: 89, attorney: 67, coach: 54, consultant: 48,
-            compliance: 32, insurance_agent: 41, imo_fmo: 28, healthcare_consultant: 35,
-            organization: 22, agency: 27, client: 31, vip_reserved: 12
+            hnw_client: 156, pre_retiree: 89, next_gen: 67, family_office_admin: 54
           },
           faqViews: {
-            advisor: 267, accountant: 134, attorney: 98, coach: 76, consultant: 65,
-            compliance: 43, insurance_agent: 58, imo_fmo: 34, healthcare_consultant: 47,
-            organization: 28, agency: 35, client: 42, vip_reserved: 16
+            hnw_client: 267, pre_retiree: 134, next_gen: 98, family_office_admin: 76
           }
         },
         conversion: {
           signupsByChannel: {
             linkedin: {
-              advisor: 45, accountant: 23, attorney: 18, coach: 15, consultant: 12,
-              compliance: 8, insurance_agent: 11, imo_fmo: 7, healthcare_consultant: 9,
-              organization: 5, agency: 6, client: 7, vip_reserved: 3
+              hnw_client: 45, pre_retiree: 23, next_gen: 18, family_office_admin: 15
             },
             email: {
-              advisor: 28, accountant: 15, attorney: 12, coach: 9, consultant: 8,
-              compliance: 5, insurance_agent: 7, imo_fmo: 4, healthcare_consultant: 6,
-              organization: 3, agency: 4, client: 5, vip_reserved: 2
+              hnw_client: 28, pre_retiree: 15, next_gen: 12, family_office_admin: 9
             },
             sms: {
-              advisor: 16, accountant: 9, attorney: 7, coach: 5, consultant: 4,
-              compliance: 3, insurance_agent: 4, imo_fmo: 2, healthcare_consultant: 3,
-              organization: 2, agency: 2, client: 3, vip_reserved: 1
+              hnw_client: 16, pre_retiree: 9, next_gen: 7, family_office_admin: 5
             },
             direct: {
-              advisor: 12, accountant: 6, attorney: 5, coach: 4, consultant: 3,
-              compliance: 2, insurance_agent: 3, imo_fmo: 2, healthcare_consultant: 2,
-              organization: 1, agency: 2, client: 2, vip_reserved: 1
+              hnw_client: 12, pre_retiree: 6, next_gen: 5, family_office_admin: 4
             }
           },
           upgradesByPersona: {
-            advisor: 34, accountant: 18, attorney: 14, coach: 11, consultant: 9,
-            compliance: 6, insurance_agent: 8, imo_fmo: 5, healthcare_consultant: 7,
-            organization: 4, agency: 5, client: 6, vip_reserved: 3
+            hnw_client: 34, pre_retiree: 18, next_gen: 14, family_office_admin: 11
           },
           timeToUpgrade: {
-            advisor: 5.2, accountant: 7.1, attorney: 6.8, coach: 8.3, consultant: 9.1,
-            compliance: 4.2, insurance_agent: 6.5, imo_fmo: 7.8, healthcare_consultant: 8.9,
-            organization: 3.1, agency: 5.7, client: 12.4, vip_reserved: 2.1
+            hnw_client: 5.2, pre_retiree: 7.1, next_gen: 6.8, family_office_admin: 8.3
           }
         }
       };
