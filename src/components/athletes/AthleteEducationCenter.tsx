@@ -18,6 +18,7 @@ import { HallOfChampions } from './HallOfChampions';
 import { ChampionSubmissionForm } from './ChampionSubmissionForm';
 import { ChampionAdminPanel } from './ChampionAdminPanel';
 import { ChampionOutreachTemplates } from './ChampionOutreachTemplates';
+import { AthleteDatabase } from './AthleteDatabase';
 
 interface Module {
   id: string;
@@ -199,6 +200,10 @@ export function AthleteEducationCenter() {
           <TabsTrigger value="videos">Video Scripts</TabsTrigger>
           <TabsTrigger value="emails">Email Kit</TabsTrigger>
           <TabsTrigger value="campaigns">Campaigns</TabsTrigger>
+          <TabsTrigger value="champions">Champions</TabsTrigger>
+          <TabsTrigger value="database">Database</TabsTrigger>
+          <TabsTrigger value="submit">Submit</TabsTrigger>
+          <TabsTrigger value="admin">Admin</TabsTrigger>
           <TabsTrigger value="hall-of-champions">
             <Trophy className="h-4 w-4 mr-2" />
             Hall of Champions
@@ -326,6 +331,22 @@ export function AthleteEducationCenter() {
 
         <TabsContent value="campaigns">
           <AthleteCampaignKit />
+        </TabsContent>
+
+        <TabsContent value="champions">
+          <HallOfChampions />
+        </TabsContent>
+
+        <TabsContent value="database">
+          <AthleteDatabase />
+        </TabsContent>
+
+        <TabsContent value="submit">
+          <ChampionSubmissionForm />
+        </TabsContent>
+
+        <TabsContent value="admin">
+          <ChampionAdminPanel />
         </TabsContent>
       </Tabs>
 
