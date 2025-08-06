@@ -132,5 +132,32 @@
     "userManual": "Manuel Utilisateur",
     "trainingVideo": "Vidéo de Formation",
     "quickGuide": "Guide de Démarrage Rapide"
+  },
+  "campaign": {
+    "globalBanner": "🌎 Maintenant disponible dans le monde entier—dans votre langue!",
+    "hero": {
+      "headline": "Chaque Famille Mérite un Family Office Boutique—Maintenant Mondial",
+      "subheadline": "Votre patrimoine. Votre héritage. Votre family office numérique privé—maintenant disponible en espagnol/français/portugais/chinois/arabe/votre-langue."
+    },
+    "benefits": {
+      "global": "Voyez tout ce que vous possédez, où que vous viviez",
+      "secure": "Travaillez avec des professionnels de confiance, dans votre langue",
+      "collaborative": "Contrôlez la confidentialité, la conformité et l'accès mondial",
+      "ai": "Basé sur nos Principes de Devoir Fiduciaire™"
+    },
+    "cta": {
+      "getStarted": "Commencez Gratuitement",
+      "watchDemo": "Voir la Démo"
+    },
+    "trust": {
+      "fiduciary": "Basé sur nos Principes de Devoir Fiduciaire™—vos intérêts d'abord",
+      "bankGrade": "Sécurité de Niveau Bancaire",
+      "multiLanguage": "Support Multi-Langues",
+      "compliant": "Conformité Mondiale"
+    },
+    "materials": {
+      "title": "Matériaux de Campagne Mondiale",
+      "description": "Modèles prêts à utiliser pour la sensibilisation internationale et le marketing"
+    }
   }
 }

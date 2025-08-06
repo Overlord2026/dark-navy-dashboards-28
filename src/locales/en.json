@@ -132,5 +132,32 @@
     "userManual": "User Manual",
     "trainingVideo": "Training Video",
     "quickGuide": "Quick Start Guide"
+  },
+  "campaign": {
+    "globalBanner": "🌎 Now available worldwide—in your language!",
+    "hero": {
+      "headline": "Every Family Deserves a Boutique Family Office—Now Worldwide",
+      "subheadline": "Your wealth. Your legacy. Your private digital family office—now available in Spanish/French/Portuguese/Chinese/Arabic/your-language."
+    },
+    "benefits": {
+      "global": "See everything you own, everywhere you live",
+      "secure": "Work with trusted professionals, in your language", 
+      "collaborative": "Control privacy, compliance, and global access",
+      "ai": "Built on our Fiduciary Duty Principles™"
+    },
+    "cta": {
+      "getStarted": "Get Started Free",
+      "watchDemo": "Watch Demo"
+    },
+    "trust": {
+      "fiduciary": "Built on our Fiduciary Duty Principles™—your interests first",
+      "bankGrade": "Bank-Grade Security",
+      "multiLanguage": "Multi-Language Support", 
+      "compliant": "Global Compliance"
+    },
+    "materials": {
+      "title": "Global Campaign Materials",
+      "description": "Ready-to-use templates for international outreach and marketing"
+    }
   }
 }

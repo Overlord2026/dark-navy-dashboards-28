@@ -79,7 +79,7 @@ export const EnhancedUploadSystem: React.FC<EnhancedUploadSystemProps> = ({
       'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ['.xlsx'],
       'text/plain': ['.txt'],
     },
-    maxFileSize: 100 * 1024 * 1024, // 100MB
+    maxSize: 100 * 1024 * 1024, // 100MB
   });
 
   const removeFile = (id: string) => {

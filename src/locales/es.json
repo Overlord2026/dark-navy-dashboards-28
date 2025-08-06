@@ -132,5 +132,32 @@
     "userManual": "Manual del Usuario",
     "trainingVideo": "Video de Entrenamiento",
     "quickGuide": "Guía de Inicio Rápido"
+  },
+  "campaign": {
+    "globalBanner": "🌎 Ahora disponible en todo el mundo—¡en tu idioma!",
+    "hero": {
+      "headline": "Cada Familia Merece una Family Office Boutique—Ahora Mundial",
+      "subheadline": "Tu patrimonio. Tu legado. Tu family office digital privada—ahora disponible en español/francés/portugués/chino/árabe/tu-idioma."
+    },
+    "benefits": {
+      "global": "Ve todo tu patrimonio, dondequiera que vivas",
+      "secure": "Trabaja con profesionales de confianza, en tu idioma",
+      "collaborative": "Controla privacidad, cumplimiento y acceso global", 
+      "ai": "Construido sobre nuestros Principios de Deber Fiduciario™"
+    },
+    "cta": {
+      "getStarted": "Comienza Gratis",
+      "watchDemo": "Ver Demo"
+    },
+    "trust": {
+      "fiduciary": "Construido sobre nuestros Principios de Deber Fiduciario™—tus intereses primero",
+      "bankGrade": "Seguridad de Grado Bancario",
+      "multiLanguage": "Soporte Multi-idioma",
+      "compliant": "Cumplimiento Global"
+    },
+    "materials": {
+      "title": "Materiales de Campaña Global",
+      "description": "Plantillas listas para usar para alcance internacional y marketing"
+    }
   }
 }

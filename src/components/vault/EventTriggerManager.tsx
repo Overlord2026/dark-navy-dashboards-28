@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { VaultWatermark } from './VaultWatermark';
 import { PatentPendingBadge } from './PatentPendingBadge';
+import { cn } from '@/lib/utils';
 import { 
   Calendar, 
   Clock, 
