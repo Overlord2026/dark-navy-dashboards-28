@@ -124,6 +124,19 @@ export const serviceCategories: ServiceCategory[] = [
       { id: "venture-capital", name: "Family Venture Capital Access" },
       { id: "cross-border", name: "Cross-Border Planning & Compliance" }
     ]
+  },
+  {
+    id: "real-estate",
+    name: "Real Estate & Property Management",
+    icon: Building,
+    description: "Professional real estate services for property portfolios",
+    subcategories: [
+      { id: "luxury-sales", name: "Luxury Real Estate Sales" },
+      { id: "property-management", name: "Portfolio Property Management" },
+      { id: "investment-properties", name: "Investment Property Advisory" },
+      { id: "estate-planning-real-estate", name: "Estate Planning & Real Estate" },
+      { id: "vacation-properties", name: "Vacation & Second Home Management" }
+    ]
   }
 ];
 

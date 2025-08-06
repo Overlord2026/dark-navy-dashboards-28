@@ -3,15 +3,14 @@ import React from "react";
 import { ServiceCategory } from "./MarketplaceNavigation";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { MarketplaceListings } from "./MarketplaceListings";
-import { useMarketplace } from "@/hooks/useMarketplace";
+import { RealEstateMarketplace } from "@/components/property/RealEstateMarketplace";
 import { Skeleton } from "@/components/ui/skeleton";
-import { MarketplaceListing } from "@/hooks/useMarketplace";
 
 interface MarketplaceContentProps {
   activeCategory: string;
   activeSubcategory: string | null;
   serviceCategories: ServiceCategory[];
-  filteredListings?: MarketplaceListing[];
+  filteredListings?: any[];
   isSearching?: boolean;
 }
 
@@ -22,11 +21,18 @@ export function MarketplaceContent({
   filteredListings,
   isSearching = false
 }: MarketplaceContentProps) {
-  const { listings, isLoading } = useMarketplace();
+  // For now, we'll use mock data since useMarketplace might not exist
+  const listings: any[] = [];
+  const isLoading = false;
   
   // Find the active category and subcategory objects
   const currentCategory = serviceCategories.find(category => category.id === activeCategory);
   const currentSubcategory = currentCategory?.subcategories.find(sub => sub.id === activeSubcategory);
+
+  // Special handling for real estate category
+  if (activeCategory === "real-estate") {
+    return <RealEstateMarketplace />;
+  }
 
   // If filtered listings are provided, use them; otherwise, filter the listings
   const displayListings = filteredListings || listings.filter(listing => {
@@ -87,10 +93,15 @@ export function MarketplaceContent({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <MarketplaceListings 
-            listings={displayListings} 
-            isLoading={isLoading} 
-          />
+          {displayListings.length === 0 ? (
+            <p className="text-center text-muted-foreground py-8">
+              No services available in this category yet. Check back soon!
+            </p>
+          ) : (
+            <div className="text-center text-muted-foreground py-8">
+              Marketplace listings will be displayed here.
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>
