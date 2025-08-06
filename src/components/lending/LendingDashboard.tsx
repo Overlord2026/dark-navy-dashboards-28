@@ -26,6 +26,7 @@ import {
   Landmark
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import bannerImage from '@/assets/lending-dashboard-banner.png';
 
 interface LendingStats {
   creditAvailable: number;
@@ -155,23 +156,39 @@ export function LendingDashboard() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-navy-900 to-navy-800 text-white py-8">
-        <div className="container mx-auto px-6">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center">
-                <div className="text-primary-foreground font-bold text-xl">🌳</div>
+      {/* Premium Banner Header */}
+      <div 
+        className="relative bg-gradient-to-r from-navy-900 to-navy-800 text-white py-12 overflow-hidden"
+        style={{
+          backgroundImage: `linear-gradient(rgba(30, 58, 138, 0.9), rgba(30, 58, 138, 0.8)), url(${bannerImage})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat'
+        }}
+      >
+        <div className="container mx-auto px-6 relative z-10">
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center space-x-6">
+              <div className="w-16 h-16 bg-primary rounded-xl flex items-center justify-center shadow-lg">
+                <div className="text-primary-foreground font-bold text-2xl">🌳</div>
               </div>
               <div>
-                <h1 className="text-3xl font-serif font-bold text-primary">Intelligent Lending Solutions</h1>
-                <p className="text-lg text-muted-foreground mt-1">For discerning families</p>
+                <h1 className="text-4xl font-serif font-bold text-primary mb-2">Intelligent Lending Solutions</h1>
+                <p className="text-xl text-white/90">For discerning families</p>
               </div>
             </div>
-            <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground min-h-[44px]">
+            <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground min-h-[48px] px-8 shadow-lg">
               <Phone className="w-5 h-5 mr-2" />
               Speak to Concierge
             </Button>
+          </div>
+          
+          {/* Floating confetti particles */}
+          <div className="absolute inset-0 pointer-events-none">
+            <div className="absolute top-10 left-10 w-2 h-2 bg-primary rounded-full opacity-30 animate-bounce"></div>
+            <div className="absolute top-20 right-20 w-3 h-3 bg-primary rounded-full opacity-20 animate-pulse"></div>
+            <div className="absolute bottom-10 left-1/4 w-2 h-2 bg-primary rounded-full opacity-25 animate-bounce" style={{ animationDelay: '1s' }}></div>
+            <div className="absolute bottom-20 right-1/3 w-3 h-3 bg-primary rounded-full opacity-15 animate-pulse" style={{ animationDelay: '2s' }}></div>
           </div>
         </div>
       </div>
