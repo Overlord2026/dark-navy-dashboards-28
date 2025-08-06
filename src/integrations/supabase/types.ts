@@ -3243,6 +3243,53 @@ export type Database = {
           },
         ]
       }
+      bill_transactions: {
+        Row: {
+          amount: number
+          bill_id: string
+          confirmation_number: string | null
+          created_at: string | null
+          id: string
+          notes: string | null
+          payment_date: string
+          payment_method: string | null
+          transaction_status: string | null
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          bill_id: string
+          confirmation_number?: string | null
+          created_at?: string | null
+          id?: string
+          notes?: string | null
+          payment_date: string
+          payment_method?: string | null
+          transaction_status?: string | null
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          bill_id?: string
+          confirmation_number?: string | null
+          created_at?: string | null
+          id?: string
+          notes?: string | null
+          payment_date?: string
+          payment_method?: string | null
+          transaction_status?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bill_transactions_bill_id_fkey"
+            columns: ["bill_id"]
+            isOneToOne: false
+            referencedRelation: "bills"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       billing_metrics: {
         Row: {
           created_at: string
@@ -3284,6 +3331,74 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      bills: {
+        Row: {
+          amount: number
+          biller_name: string
+          category: Database["public"]["Enums"]["bill_category"]
+          created_at: string | null
+          due_date: string
+          frequency: Database["public"]["Enums"]["bill_frequency"]
+          household_id: string | null
+          id: string
+          is_auto_pay: boolean | null
+          next_due_date: string | null
+          notes: string | null
+          payment_method: string | null
+          reminder_days: number | null
+          status: Database["public"]["Enums"]["bill_status"]
+          updated_at: string | null
+          user_id: string
+          vendor_id: string | null
+        }
+        Insert: {
+          amount: number
+          biller_name: string
+          category?: Database["public"]["Enums"]["bill_category"]
+          created_at?: string | null
+          due_date: string
+          frequency?: Database["public"]["Enums"]["bill_frequency"]
+          household_id?: string | null
+          id?: string
+          is_auto_pay?: boolean | null
+          next_due_date?: string | null
+          notes?: string | null
+          payment_method?: string | null
+          reminder_days?: number | null
+          status?: Database["public"]["Enums"]["bill_status"]
+          updated_at?: string | null
+          user_id: string
+          vendor_id?: string | null
+        }
+        Update: {
+          amount?: number
+          biller_name?: string
+          category?: Database["public"]["Enums"]["bill_category"]
+          created_at?: string | null
+          due_date?: string
+          frequency?: Database["public"]["Enums"]["bill_frequency"]
+          household_id?: string | null
+          id?: string
+          is_auto_pay?: boolean | null
+          next_due_date?: string | null
+          notes?: string | null
+          payment_method?: string | null
+          reminder_days?: number | null
+          status?: Database["public"]["Enums"]["bill_status"]
+          updated_at?: string | null
+          user_id?: string
+          vendor_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bills_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       booking_workflows: {
         Row: {
@@ -25670,6 +25785,42 @@ export type Database = {
         }
         Relationships: []
       }
+      vendors: {
+        Row: {
+          contact_info: Json | null
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          logo_url: string | null
+          name: string
+          type: Database["public"]["Enums"]["vendor_type"]
+          updated_at: string | null
+          website_url: string | null
+        }
+        Insert: {
+          contact_info?: Json | null
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          logo_url?: string | null
+          name: string
+          type?: Database["public"]["Enums"]["vendor_type"]
+          updated_at?: string | null
+          website_url?: string | null
+        }
+        Update: {
+          contact_info?: Json | null
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          logo_url?: string | null
+          name?: string
+          type?: Database["public"]["Enums"]["vendor_type"]
+          updated_at?: string | null
+          website_url?: string | null
+        }
+        Relationships: []
+      }
       video_meeting_integrations: {
         Row: {
           access_token: string
@@ -26923,6 +27074,13 @@ export type Database = {
         }
         Returns: undefined
       }
+      calculate_next_due_date: {
+        Args: {
+          current_due_date: string
+          bill_frequency: Database["public"]["Enums"]["bill_frequency"]
+        }
+        Returns: string
+      }
       calculate_next_training_due_date: {
         Args: { p_frequency: string; p_last_completed?: string }
         Returns: string
@@ -27750,6 +27908,10 @@ export type Database = {
         }
         Returns: undefined
       }
+      update_bill_status: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       update_disaster_recovery_progress: {
         Args: {
           p_recovery_id: string
@@ -27846,6 +28008,19 @@ export type Database = {
         | "terms_of_service"
         | "advisor_agreement"
         | "compliance_disclosure"
+      bill_category:
+        | "utilities"
+        | "mortgage"
+        | "insurance"
+        | "tuition"
+        | "loans"
+        | "subscriptions"
+        | "transportation"
+        | "healthcare"
+        | "entertainment"
+        | "other"
+      bill_frequency: "one_time" | "weekly" | "monthly" | "quarterly" | "annual"
+      bill_status: "unpaid" | "paid" | "overdue" | "scheduled"
       billing_model:
         | "monthly"
         | "annual"
@@ -27937,6 +28112,15 @@ export type Database = {
         | "member"
         | "viewer"
         | "executor"
+      vendor_type:
+        | "utility"
+        | "lender"
+        | "school"
+        | "insurance_provider"
+        | "subscription_service"
+        | "government"
+        | "healthcare_provider"
+        | "other"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -28086,6 +28270,20 @@ export const Constants = {
         "advisor_agreement",
         "compliance_disclosure",
       ],
+      bill_category: [
+        "utilities",
+        "mortgage",
+        "insurance",
+        "tuition",
+        "loans",
+        "subscriptions",
+        "transportation",
+        "healthcare",
+        "entertainment",
+        "other",
+      ],
+      bill_frequency: ["one_time", "weekly", "monthly", "quarterly", "annual"],
+      bill_status: ["unpaid", "paid", "overdue", "scheduled"],
       billing_model: [
         "monthly",
         "annual",
@@ -28186,6 +28384,16 @@ export const Constants = {
         "member",
         "viewer",
         "executor",
+      ],
+      vendor_type: [
+        "utility",
+        "lender",
+        "school",
+        "insurance_provider",
+        "subscription_service",
+        "government",
+        "healthcare_provider",
+        "other",
       ],
     },
   },
