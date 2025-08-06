@@ -20,6 +20,8 @@ import { HealthcareInnovatorsOnboardingSlides } from '@/components/healthcare/He
 import { HealthcareInnovatorsVIPLaunchKit } from '@/components/healthcare/HealthcareInnovatorsVIPLaunchKit';
 import { HealthcareExecutivesOnboardingSlides } from '@/components/healthcare/HealthcareExecutivesOnboardingSlides';
 import { HealthcareExecutivesVIPLaunchKit } from '@/components/healthcare/HealthcareExecutivesVIPLaunchKit';
+import { FamilyOfficeExecutivesOnboardingSlides } from '@/components/familyoffice/FamilyOfficeExecutivesOnboardingSlides';
+import { AdminSystemChecklist } from '@/components/admin/AdminSystemChecklist';
 import { Crown, Upload, Users, Trophy, BookOpen, Heart, Building, Shield, Microscope } from 'lucide-react';
 
 export const VIPManagementHub: React.FC = () => {
@@ -105,6 +107,10 @@ export const VIPManagementHub: React.FC = () => {
             <Heart className="h-4 w-4" />
             Executives Launch
           </TabsTrigger>
+          <TabsTrigger value="familyoffice-slides" className="flex items-center gap-2">
+            <Crown className="h-4 w-4" />
+            Family Office Slides
+          </TabsTrigger>
           <TabsTrigger value="onboarding" className="flex items-center gap-2">
             <Crown className="h-4 w-4" />
             VIP Engine
@@ -116,6 +122,10 @@ export const VIPManagementHub: React.FC = () => {
           <TabsTrigger value="training" className="flex items-center gap-2">
             <BookOpen className="h-4 w-4" />
             Training Center
+          </TabsTrigger>
+          <TabsTrigger value="admin-checklist" className="flex items-center gap-2">
+            <Crown className="h-4 w-4" />
+            Admin Checklist
           </TabsTrigger>
         </TabsList>
 
@@ -187,6 +197,10 @@ export const VIPManagementHub: React.FC = () => {
           <HealthcareExecutivesVIPLaunchKit />
         </TabsContent>
 
+        <TabsContent value="familyoffice-slides">
+          <FamilyOfficeExecutivesOnboardingSlides />
+        </TabsContent>
+
         <TabsContent value="onboarding">
           <VIPOnboardingEngine />
         </TabsContent>
@@ -197,6 +211,10 @@ export const VIPManagementHub: React.FC = () => {
 
         <TabsContent value="founders-wall">
           <VIPFoundersWall />
+        </TabsContent>
+
+        <TabsContent value="admin-checklist">
+          <AdminSystemChecklist />
         </TabsContent>
 
         <TabsContent value="analytics">
