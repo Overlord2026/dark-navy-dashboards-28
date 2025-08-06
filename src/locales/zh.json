@@ -1,0 +1,136 @@
+{
+  "navigation": {
+    "home": "首页",
+    "dashboard": "仪表板",
+    "vault": "安全传承保险库™",
+    "settings": "设置",
+    "help": "帮助"
+  },
+  "vault": {
+    "title": "安全传承保险库™",
+    "tagline": "保护重要的东西。安全地传承给下一代。",
+    "welcome": {
+      "headline": "终于有了一个安全的地方来存储、整理和分享您的家庭今天和未来几代人所需的一切。",
+      "subtitle": "您家庭的超安全数字保险库，用于存放所有重要文件、视频、照片、说明和传承愿望。",
+      "getStarted": "开始使用"
+    },
+    "features": {
+      "title": "保险库功能和优势",
+      "security": "银行级安全、加密和零知识隐私",
+      "access": "多用户、多代访问——基于角色的控制",
+      "delivery": "预定/触发的传承交付",
+      "uploads": "文档、照片和视频上传",
+      "ai": "AI/虚拟化身传承（未来：询问爸爸/奶奶一个问题）",
+      "integration": "与法律/财务团队集成"
+    },
+    "storage": {
+      "title": "您可以存储什么",
+      "documents": "遗嘱、信托、财产契约、保险单",
+      "media": "家庭照片、视频消息、语音录音",
+      "financial": "投资记录、税务文件、银行信息",
+      "personal": "人生教训、家族历史、个人信件"
+    },
+    "howItWorks": {
+      "title": "工作原理",
+      "step1": "上传文档和媒体",
+      "step2": "按代/家庭成员分配访问权限",
+      "step3": "设置规则和触发器（例如，在X事件时交付）",
+      "step4": "如有需要，授权您的法律/顾问团队访问"
+    },
+    "privacy": {
+      "title": "您的隐私，受保护",
+      "encryption": "您的保险库使用与顶级银行相同的技术进行加密。",
+      "audit": "每个操作的审计日志——无未经授权的访问。",
+      "control": "您控制谁看到什么——以及何时看到。"
+    },
+    "gettingStarted": {
+      "title": "开始使用",
+      "create": "几分钟内创建您的家庭传承保险库。",
+      "assign": "添加您的家庭，分配角色，邀请您信任的顾问。",
+      "upload": "上传您最重要的文件和故事。"
+    },
+    "onboarding": {
+      "step1": {
+        "title": "保险库设置",
+        "description": "创建您的安全保险库并设置初始偏好"
+      },
+      "step2": {
+        "title": "家庭和团队",
+        "description": "添加家庭成员和专业顾问"
+      },
+      "step3": {
+        "title": "文档上传",
+        "description": "上传和整理您的重要文档"
+      },
+      "step4": {
+        "title": "访问规则",
+        "description": "设置权限和基于事件的交付触发器"
+      },
+      "step5": {
+        "title": "传承消息",
+        "description": "录制视频消息并训练您的AI虚拟化身"
+      },
+      "step6": {
+        "title": "审查和激活",
+        "description": "审查设置并激活您的保险库"
+      }
+    },
+    "permissions": {
+      "owner": "拥有者",
+      "family": "家庭成员",
+      "advisor": "财务顾问",
+      "attorney": "律师",
+      "read_only": "仅查看"
+    },
+    "triggers": {
+      "age": "基于年龄的交付",
+      "date": "特定日期",
+      "death": "死亡时",
+      "incapacity": "如果丧失能力",
+      "marriage": "结婚事件",
+      "custom": "自定义触发器"
+    },
+    "ai": {
+      "copilot": "传承副驾驶™",
+      "training": "AI虚拟化身训练",
+      "comingSoon": "即将推出：询问传承AI"
+    },
+    "patentPending": "专利申请中"
+  },
+  "common": {
+    "save": "保存",
+    "cancel": "取消",
+    "delete": "删除",
+    "edit": "编辑",
+    "add": "添加",
+    "remove": "移除",
+    "confirm": "确认",
+    "loading": "加载中...",
+    "error": "错误",
+    "success": "成功",
+    "continue": "继续",
+    "back": "返回",
+    "next": "下一步",
+    "finish": "完成",
+    "close": "关闭",
+    "download": "下载",
+    "upload": "上传"
+  },
+  "agreements": {
+    "privacyConsent": "隐私和数据同意",
+    "accessAgreement": "保险库访问协议",
+    "fiduciaryTerms": "信托条款和条件",
+    "dataSharing": "数据共享协议",
+    "signatureRequired": "需要数字签名",
+    "pending": "待签名",
+    "signed": "已签名",
+    "declined": "已拒绝",
+    "expired": "已过期"
+  },
+  "training": {
+    "onboardingSlides": "入门演示",
+    "userManual": "用户手册",
+    "trainingVideo": "培训视频",
+    "quickGuide": "快速入门指南"
+  }
+}

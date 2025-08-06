@@ -1,0 +1,136 @@
+{
+  "navigation": {
+    "home": "Accueil",
+    "dashboard": "Tableau de Bord",
+    "vault": "Coffre-fort d'Héritage Sécurisé™",
+    "settings": "Paramètres",
+    "help": "Aide"
+  },
+  "vault": {
+    "title": "Coffre-fort d'Héritage Sécurisé™",
+    "tagline": "Protégez ce qui compte. Transmettez-le en toute sécurité, pour les générations.",
+    "welcome": {
+      "headline": "Enfin, un endroit sécurisé pour stocker, organiser et partager tout ce dont votre famille a besoin aujourd'hui et pour les générations à venir.",
+      "subtitle": "Le coffre-fort numérique ultra-sécurisé de votre famille pour tous les documents critiques, vidéos, photos, instructions et souhaits d'héritage.",
+      "getStarted": "Commencer"
+    },
+    "features": {
+      "title": "Fonctionnalités et Avantages du Coffre-fort",
+      "security": "Sécurité de niveau bancaire, chiffrement et confidentialité à connaissance zéro",
+      "access": "Accès multi-utilisateur, multi-générationnel—contrôles basés sur les rôles",
+      "delivery": "Livraison d'héritage programmée/déclenchée",
+      "uploads": "Téléchargement de documents, photos et vidéos",
+      "ai": "Héritage IA/Avatar (futur : \"Demandez à Papa/Grand-mère une question\")",
+      "integration": "Intégration avec les équipes juridiques/financières"
+    },
+    "storage": {
+      "title": "Ce Que Vous Pouvez Stocker",
+      "documents": "Testaments, Fiducies, Actes de Propriété, Polices d'Assurance",
+      "media": "Photos de Famille, Messages Vidéo, Enregistrements Vocaux",
+      "financial": "Dossiers d'Investissement, Documents Fiscaux, Informations Bancaires",
+      "personal": "Leçons de Vie, Histoire Familiale, Lettres Personnelles"
+    },
+    "howItWorks": {
+      "title": "Comment Ça Marche",
+      "step1": "Téléchargez des documents et des médias",
+      "step2": "Attribuez l'accès par génération/membre de famille",
+      "step3": "Définissez des règles et déclencheurs (ex., \"livrer lors de l'événement X\")",
+      "step4": "Accordez l'accès à votre équipe juridique/conseil si désiré"
+    },
+    "privacy": {
+      "title": "Votre Vie Privée, Sécurisée",
+      "encryption": "Votre coffre-fort est chiffré avec la même technologie que les meilleures banques.",
+      "audit": "Journaux d'audit pour chaque action—aucun accès non autorisé.",
+      "control": "Vous contrôlez qui voit quoi—et quand."
+    },
+    "gettingStarted": {
+      "title": "Pour Commencer",
+      "create": "Créez votre Coffre-fort d'Héritage Familial en quelques minutes.",
+      "assign": "Ajoutez votre famille, attribuez des rôles, invitez vos conseillers de confiance.",
+      "upload": "Téléchargez vos fichiers et histoires les plus importants."
+    },
+    "onboarding": {
+      "step1": {
+        "title": "Configuration du Coffre-fort",
+        "description": "Créez votre coffre-fort sécurisé et définissez les préférences initiales"
+      },
+      "step2": {
+        "title": "Famille et Équipe",
+        "description": "Ajoutez des membres de la famille et des conseillers professionnels"
+      },
+      "step3": {
+        "title": "Téléchargement de Documents",
+        "description": "Téléchargez et organisez vos documents importants"
+      },
+      "step4": {
+        "title": "Règles d'Accès",
+        "description": "Définissez les permissions et les déclencheurs de livraison basés sur les événements"
+      },
+      "step5": {
+        "title": "Messages d'Héritage",
+        "description": "Enregistrez des messages vidéo et entraînez votre avatar IA"
+      },
+      "step6": {
+        "title": "Réviser et Activer",
+        "description": "Révisez les paramètres et activez votre coffre-fort"
+      }
+    },
+    "permissions": {
+      "owner": "Propriétaire",
+      "family": "Membre de la Famille",
+      "advisor": "Conseiller Financier",
+      "attorney": "Avocat",
+      "read_only": "Lecture Seule"
+    },
+    "triggers": {
+      "age": "Livraison basée sur l'âge",
+      "date": "Date spécifique",
+      "death": "Au décès",
+      "incapacity": "Si incapacité",
+      "marriage": "Événement de mariage",
+      "custom": "Déclencheur personnalisé"
+    },
+    "ai": {
+      "copilot": "Copilote d'Héritage™",
+      "training": "Formation d'Avatar IA",
+      "comingSoon": "Bientôt : Demandez à une IA d'Héritage"
+    },
+    "patentPending": "Brevet en Attente"
+  },
+  "common": {
+    "save": "Sauvegarder",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "add": "Ajouter",
+    "remove": "Retirer",
+    "confirm": "Confirmer",
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès",
+    "continue": "Continuer",
+    "back": "Retour",
+    "next": "Suivant",
+    "finish": "Terminer",
+    "close": "Fermer",
+    "download": "Télécharger",
+    "upload": "Télécharger"
+  },
+  "agreements": {
+    "privacyConsent": "Consentement de Confidentialité et Données",
+    "accessAgreement": "Accord d'Accès au Coffre-fort",
+    "fiduciaryTerms": "Termes et Conditions Fiduciaires",
+    "dataSharing": "Accord de Partage de Données",
+    "signatureRequired": "Signature numérique requise",
+    "pending": "Signature en Attente",
+    "signed": "Signé",
+    "declined": "Refusé",
+    "expired": "Expiré"
+  },
+  "training": {
+    "onboardingSlides": "Présentation d'Intégration",
+    "userManual": "Manuel Utilisateur",
+    "trainingVideo": "Vidéo de Formation",
+    "quickGuide": "Guide de Démarrage Rapide"
+  }
+}

@@ -1,0 +1,136 @@
+{
+  "navigation": {
+    "home": "Inicio",
+    "dashboard": "Panel de Control",
+    "vault": "Bóveda de Legado Segura™",
+    "settings": "Configuración",
+    "help": "Ayuda"
+  },
+  "vault": {
+    "title": "Bóveda de Legado Segura™",
+    "tagline": "Protege lo que importa. Pásalo adelante—de forma segura, por generaciones.",
+    "welcome": {
+      "headline": "Finalmente, un lugar seguro para almacenar, organizar y compartir todo lo que tu familia necesita para hoy y las generaciones venideras.",
+      "subtitle": "La bóveda digital ultra-segura de tu familia para todos los documentos críticos, videos, fotos, instrucciones y deseos de legado.",
+      "getStarted": "Comenzar"
+    },
+    "features": {
+      "title": "Características y Beneficios de la Bóveda",
+      "security": "Seguridad de grado bancario, encriptación y privacidad de conocimiento cero",
+      "access": "Acceso multi-usuario, multi-generacional—controles basados en roles",
+      "delivery": "Entrega de legado programada/activada",
+      "uploads": "Subida de documentos, fotos y videos",
+      "ai": "Legado de IA/Avatar (futuro: \"Pregúntale a Papá/Abuela\")",
+      "integration": "Integración con equipos legales/financieros"
+    },
+    "storage": {
+      "title": "Qué Puedes Almacenar",
+      "documents": "Testamentos, Fideicomisos, Escrituras de Propiedad, Pólizas de Seguro",
+      "media": "Fotos Familiares, Mensajes de Video, Grabaciones de Voz",
+      "financial": "Registros de Inversión, Documentos Fiscales, Información Bancaria",
+      "personal": "Lecciones de Vida, Historia Familiar, Cartas Personales"
+    },
+    "howItWorks": {
+      "title": "Cómo Funciona",
+      "step1": "Sube documentos y medios",
+      "step2": "Asigna acceso por generación/miembro familiar",
+      "step3": "Establece reglas y activadores (ej., \"entregar en evento X\")",
+      "step4": "Otorga acceso a tu equipo legal/asesor si lo deseas"
+    },
+    "privacy": {
+      "title": "Tu Privacidad, Asegurada",
+      "encryption": "Tu bóveda está encriptada con la misma tecnología que los mejores bancos.",
+      "audit": "Registros de auditoría para cada acción—sin acceso no autorizado.",
+      "control": "Tú controlas quién ve qué—y cuándo."
+    },
+    "gettingStarted": {
+      "title": "Comenzando",
+      "create": "Crea tu Bóveda de Legado Familiar en minutos.",
+      "assign": "Agrega tu familia, asigna roles, invita a tus asesores de confianza.",
+      "upload": "Sube tus archivos e historias más importantes."
+    },
+    "onboarding": {
+      "step1": {
+        "title": "Configuración de Bóveda",
+        "description": "Crea tu bóveda segura y establece las preferencias iniciales"
+      },
+      "step2": {
+        "title": "Familia y Equipo",
+        "description": "Agrega miembros de la familia y asesores profesionales"
+      },
+      "step3": {
+        "title": "Subida de Documentos",
+        "description": "Sube y organiza tus documentos importantes"
+      },
+      "step4": {
+        "title": "Reglas de Acceso",
+        "description": "Establece permisos y activadores de entrega basados en eventos"
+      },
+      "step5": {
+        "title": "Mensajes de Legado",
+        "description": "Graba mensajes de video y entrena tu avatar de IA"
+      },
+      "step6": {
+        "title": "Revisar y Activar",
+        "description": "Revisa la configuración y activa tu bóveda"
+      }
+    },
+    "permissions": {
+      "owner": "Propietario",
+      "family": "Miembro de la Familia",
+      "advisor": "Asesor Financiero",
+      "attorney": "Abogado",
+      "read_only": "Solo Ver"
+    },
+    "triggers": {
+      "age": "Entrega basada en edad",
+      "date": "Fecha específica",
+      "death": "Al fallecer",
+      "incapacity": "Si se incapacita",
+      "marriage": "Evento de matrimonio",
+      "custom": "Activador personalizado"
+    },
+    "ai": {
+      "copilot": "Copiloto de Legado™",
+      "training": "Entrenamiento de Avatar de IA",
+      "comingSoon": "Próximamente: Pregúntale a una IA de Legado"
+    },
+    "patentPending": "Patente Pendiente"
+  },
+  "common": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "add": "Agregar",
+    "remove": "Quitar",
+    "confirm": "Confirmar",
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "continue": "Continuar",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "finish": "Finalizar",
+    "close": "Cerrar",
+    "download": "Descargar",
+    "upload": "Subir"
+  },
+  "agreements": {
+    "privacyConsent": "Consentimiento de Privacidad y Datos",
+    "accessAgreement": "Acuerdo de Acceso a la Bóveda",
+    "fiduciaryTerms": "Términos y Condiciones Fiduciarias",
+    "dataSharing": "Acuerdo de Intercambio de Datos",
+    "signatureRequired": "Firma digital requerida",
+    "pending": "Firma Pendiente",
+    "signed": "Firmado",
+    "declined": "Rechazado",
+    "expired": "Expirado"
+  },
+  "training": {
+    "onboardingSlides": "Presentación de Incorporación",
+    "userManual": "Manual del Usuario",
+    "trainingVideo": "Video de Entrenamiento",
+    "quickGuide": "Guía de Inicio Rápido"
+  }
+}

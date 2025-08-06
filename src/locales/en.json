@@ -1,0 +1,136 @@
+{
+  "navigation": {
+    "home": "Home",
+    "dashboard": "Dashboard", 
+    "vault": "Secure Legacy Vault™",
+    "settings": "Settings",
+    "help": "Help"
+  },
+  "vault": {
+    "title": "Secure Legacy Vault™",
+    "tagline": "Protect what matters. Pass it forward—securely, for generations.",
+    "welcome": {
+      "headline": "Finally, a secure place to store, organize, and share everything your family needs for today and generations to come.",
+      "subtitle": "Your family's ultra-secure digital vault for all critical documents, videos, photos, instructions, and legacy wishes.",
+      "getStarted": "Get Started"
+    },
+    "features": {
+      "title": "Vault Features & Benefits",
+      "security": "Bank-grade security, encryption, and zero-knowledge privacy",
+      "access": "Multi-user, multi-generational access—role-based controls",
+      "delivery": "Scheduled/triggered legacy delivery",
+      "uploads": "Document, photo, and video uploads",
+      "ai": "AI/Avatar legacy (future: \"Ask Dad/Grandma a question\")",
+      "integration": "Integration with legal/financial teams"
+    },
+    "storage": {
+      "title": "What You Can Store",
+      "documents": "Wills, Trusts, Property Deeds, Insurance Policies",
+      "media": "Family Photos, Video Messages, Voice Recordings",
+      "financial": "Investment Records, Tax Documents, Bank Information",
+      "personal": "Life Lessons, Family History, Personal Letters"
+    },
+    "howItWorks": {
+      "title": "How It Works",
+      "step1": "Upload documents & media",
+      "step2": "Assign access by generation/family member",
+      "step3": "Set rules & triggers (e.g., \"deliver on X event\")",
+      "step4": "Grant access to your legal/advisory team if desired"
+    },
+    "privacy": {
+      "title": "Your Privacy, Secured",
+      "encryption": "Your vault is encrypted with the same tech as top banks.",
+      "audit": "Audit logs for every action—no unauthorized access.",
+      "control": "You control who sees what—and when."
+    },
+    "gettingStarted": {
+      "title": "Getting Started",
+      "create": "Create your Family Legacy Vault in minutes.",
+      "assign": "Add your family, assign roles, invite your trusted advisors.",
+      "upload": "Upload your most important files and stories."
+    },
+    "onboarding": {
+      "step1": {
+        "title": "Vault Setup",
+        "description": "Create your secure vault and set initial preferences"
+      },
+      "step2": {
+        "title": "Family & Team",
+        "description": "Add family members and professional advisors"
+      },
+      "step3": {
+        "title": "Document Upload",
+        "description": "Upload and organize your important documents"
+      },
+      "step4": {
+        "title": "Access Rules",
+        "description": "Set permissions and event-based delivery triggers"
+      },
+      "step5": {
+        "title": "Legacy Messages",
+        "description": "Record video messages and train your AI avatar"
+      },
+      "step6": {
+        "title": "Review & Activate",
+        "description": "Review settings and activate your vault"
+      }
+    },
+    "permissions": {
+      "owner": "Owner",
+      "family": "Family Member",
+      "advisor": "Financial Advisor",
+      "attorney": "Attorney",
+      "read_only": "View Only"
+    },
+    "triggers": {
+      "age": "Age-based delivery",
+      "date": "Specific date",
+      "death": "Upon death",
+      "incapacity": "If incapacitated",
+      "marriage": "Marriage event",
+      "custom": "Custom trigger"
+    },
+    "ai": {
+      "copilot": "Legacy Copilot™",
+      "training": "AI Avatar Training",
+      "comingSoon": "Coming Soon: Ask a Legacy AI"
+    },
+    "patentPending": "Patent Pending"
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "remove": "Remove",
+    "confirm": "Confirm",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "continue": "Continue",
+    "back": "Back",
+    "next": "Next",
+    "finish": "Finish",
+    "close": "Close",
+    "download": "Download",
+    "upload": "Upload"
+  },
+  "agreements": {
+    "privacyConsent": "Privacy & Data Consent",
+    "accessAgreement": "Vault Access Agreement", 
+    "fiduciaryTerms": "Fiduciary Terms & Conditions",
+    "dataSharing": "Data Sharing Agreement",
+    "signatureRequired": "Digital signature required",
+    "pending": "Pending Signature",
+    "signed": "Signed",
+    "declined": "Declined",
+    "expired": "Expired"
+  },
+  "training": {
+    "onboardingSlides": "Onboarding Presentation",
+    "userManual": "User Manual",
+    "trainingVideo": "Training Video",
+    "quickGuide": "Quick Start Guide"
+  }
+}
