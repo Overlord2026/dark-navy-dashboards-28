@@ -115,24 +115,27 @@ export const VIPMagicLinkOnboarding: React.FC = () => {
           throw new Error('Passwords do not match');
         }
 
-        const { data: authData, error: authError } = await signUp(
-          formData.email,
-          formData.password,
-          {
-            firstName: formData.firstName,
-            lastName: formData.lastName,
-            persona: organization.organization_type,
-            vip_organization_id: organization.id
+        const { data: authData, error: authError } = await supabase.auth.signUp({
+          email: formData.email,
+          password: formData.password,
+          options: {
+            emailRedirectTo: `${window.location.origin}/dashboard`,
+            data: {
+              first_name: formData.firstName,
+              last_name: formData.lastName,
+              persona: organization.organization_type,
+              vip_organization_id: organization.id
+            }
           }
-        );
+        });
 
         if (authError) throw authError;
 
       } else {
-        const { data: authData, error: authError } = await signIn(
-          formData.email,
-          formData.password
-        );
+        const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+          email: formData.email,
+          password: formData.password
+        });
 
         if (authError) throw authError;
       }
@@ -145,8 +148,9 @@ export const VIPMagicLinkOnboarding: React.FC = () => {
           p_user_id: currentUser.id
         });
 
-        if (!activationResult.data?.success) {
-          throw new Error(activationResult.data?.error || 'Failed to activate VIP organization');
+        const result = activationResult.data as any;
+        if (!result?.success) {
+          throw new Error(result?.error || 'Failed to activate VIP organization');
         }
 
         toast({
