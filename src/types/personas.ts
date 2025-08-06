@@ -1,5 +1,11 @@
 export type ClientPersona = 'hnw_client' | 'pre_retiree' | 'next_gen' | 'family_office_admin';
 
+// Professional personas for service providers
+export type ProfessionalPersona = 'advisor' | 'attorney' | 'cpa' | 'insurance_agent' | 'consultant' | 'coach' | 'enterprise_admin';
+
+// Union type for both client and professional personas
+export type AllPersonaTypes = ClientPersona | ProfessionalPersona;
+
 // Backward compatibility alias
 export type PersonaType = ClientPersona;
 
