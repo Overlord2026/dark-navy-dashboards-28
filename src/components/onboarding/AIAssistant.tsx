@@ -143,10 +143,43 @@ export const AIAssistant: React.FC<AIAssistantProps> = ({
     setMessages(prev => [...prev, newMessage]);
   };
 
+const logProhibitedRequest = async (userMessage: string, category: string) => {
+    // Log prohibited advice requests for compliance review
+    console.warn(`COMPLIANCE LOG: User requested ${category} advice: "${userMessage}"`);
+    // In production, this would send to a compliance monitoring system
+  };
+
   const generateResponse = (userMessage: string): string => {
     const lowerMessage = userMessage.toLowerCase();
     
-    // Simple keyword matching for demo purposes
+    // Check for prohibited financial, legal, tax, investment advice requests
+    const financialTerms = ['invest', 'portfolio', 'stocks', 'bonds', 'mutual funds', 'etf', 'returns', 'performance', 'risk', 'allocation'];
+    const legalTerms = ['legal', 'lawyer', 'attorney', 'lawsuit', 'contract', 'liability', 'regulations', 'compliance advice'];
+    const taxTerms = ['tax advice', 'deductions', 'write-off', 'tax strategy', 'irs', 'tax planning'];
+    const insuranceTerms = ['insurance advice', 'policy', 'coverage', 'claims', 'premiums', 'life insurance'];
+    
+    if (financialTerms.some(term => lowerMessage.includes(term)) && 
+        (lowerMessage.includes('advice') || lowerMessage.includes('recommend') || lowerMessage.includes('should i'))) {
+      logProhibitedRequest(userMessage, 'financial');
+      return "I can't provide financial or investment advice. I'm here to help you navigate the platform and onboarding process. For personalized financial guidance, I'd be happy to connect you with one of our licensed advisors. Would you like me to schedule a consultation?";
+    }
+    
+    if (legalTerms.some(term => lowerMessage.includes(term))) {
+      logProhibitedRequest(userMessage, 'legal');
+      return "I cannot provide legal advice. For legal questions, please consult with a qualified attorney. I can help you find legal professionals in our marketplace or assist with platform navigation. What can I help you with regarding the platform?";
+    }
+    
+    if (taxTerms.some(term => lowerMessage.includes(term))) {
+      logProhibitedRequest(userMessage, 'tax');
+      return "I'm not able to provide tax advice. Tax matters require consultation with a licensed tax professional. I can connect you with CPAs in our network or help you navigate tax-related platform features. How can I assist with your platform experience?";
+    }
+    
+    if (insuranceTerms.some(term => lowerMessage.includes(term))) {
+      logProhibitedRequest(userMessage, 'insurance');
+      return "I cannot provide insurance advice. For insurance guidance, please speak with a licensed insurance professional. I can help you find insurance experts in our marketplace. What platform features can I help you with?";
+    }
+    
+    // Platform help responses
     if (lowerMessage.includes('stuck') || lowerMessage.includes('help') || lowerMessage.includes('confused')) {
       return SAMPLE_RESPONSES.stuck;
     }
@@ -232,7 +265,10 @@ export const AIAssistant: React.FC<AIAssistantProps> = ({
           <div className="w-8 h-8 bg-gradient-to-br from-emerald to-emerald/80 rounded-full flex items-center justify-center">
             <Bot className="h-4 w-4 text-white" />
           </div>
-          <CardTitle className="text-lg">Linda - AI Assistant</CardTitle>
+          <div>
+            <CardTitle className="text-lg">Linda - AI Assistant</CardTitle>
+            <p className="text-xs text-muted-foreground">Platform guide, not a financial or legal advisor</p>
+          </div>
         </div>
         <Button variant="ghost" size="sm" onClick={onClose}>
           <X className="h-4 w-4" />

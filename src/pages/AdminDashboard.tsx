@@ -1,13 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { PersonaDashboardLayout } from '@/components/dashboard/PersonaDashboardLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Users, Activity, AlertTriangle, CheckCircle } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { UserManagementPanel } from '@/components/admin/UserManagementPanel';
+import { OnboardingSlideExport } from '@/components/onboarding/OnboardingSlideExport';
+import { Users, Activity, AlertTriangle, CheckCircle, Settings, Download } from 'lucide-react';
 
 export function AdminDashboard() {
+  const [captchaDisabled, setCaptchaDisabled] = useState(true); // QA mode
+
   return (
     <PersonaDashboardLayout>
+      {/* CAPTCHA Warning */}
+      {captchaDisabled && (
+        <Card className="border-amber-200 bg-amber-50 dark:bg-amber-950/20">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-2 text-amber-800 dark:text-amber-300">
+              <AlertTriangle className="h-5 w-5" />
+              <p className="font-medium">⚠️ CAPTCHA Disabled for QA Environment</p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Admin-specific metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium flex items-center gap-2">
@@ -68,6 +85,46 @@ export function AdminDashboard() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Admin Management Tabs */}
+      <Tabs defaultValue="users" className="space-y-6">
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="users" className="flex items-center gap-2">
+            <Users className="h-4 w-4" />
+            User Management
+          </TabsTrigger>
+          <TabsTrigger value="onboarding" className="flex items-center gap-2">
+            <Download className="h-4 w-4" />
+            Onboarding Slides
+          </TabsTrigger>
+          <TabsTrigger value="system" className="flex items-center gap-2">
+            <Settings className="h-4 w-4" />
+            System Settings
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="users">
+          <UserManagementPanel />
+        </TabsContent>
+
+        <TabsContent value="onboarding">
+          <OnboardingSlideExport />
+        </TabsContent>
+
+        <TabsContent value="system">
+          <Card>
+            <CardHeader>
+              <CardTitle>System Configuration</CardTitle>
+              <CardDescription>
+                Manage system-wide settings and configurations
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">System settings panel will be implemented here.</p>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </PersonaDashboardLayout>
   );
 }
