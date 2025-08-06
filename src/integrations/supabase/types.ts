@@ -25771,6 +25771,201 @@ export type Database = {
           },
         ]
       }
+      vip_admin_activity_log: {
+        Row: {
+          action_type: string
+          admin_user_id: string
+          created_at: string
+          details: Json | null
+          id: string
+          target_invite_id: string | null
+          tenant_id: string | null
+        }
+        Insert: {
+          action_type: string
+          admin_user_id: string
+          created_at?: string
+          details?: Json | null
+          id?: string
+          target_invite_id?: string | null
+          tenant_id?: string | null
+        }
+        Update: {
+          action_type?: string
+          admin_user_id?: string
+          created_at?: string
+          details?: Json | null
+          id?: string
+          target_invite_id?: string | null
+          tenant_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vip_admin_activity_log_target_invite_id_fkey"
+            columns: ["target_invite_id"]
+            isOneToOne: false
+            referencedRelation: "vip_invites"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vip_invitation_tracking: {
+        Row: {
+          channel: Database["public"]["Enums"]["invite_channel"]
+          clicked_at: string | null
+          created_at: string
+          error_message: string | null
+          id: string
+          invite_id: string
+          metadata: Json | null
+          sent_at: string | null
+          viewed_at: string | null
+        }
+        Insert: {
+          channel: Database["public"]["Enums"]["invite_channel"]
+          clicked_at?: string | null
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          invite_id: string
+          metadata?: Json | null
+          sent_at?: string | null
+          viewed_at?: string | null
+        }
+        Update: {
+          channel?: Database["public"]["Enums"]["invite_channel"]
+          clicked_at?: string | null
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          invite_id?: string
+          metadata?: Json | null
+          sent_at?: string | null
+          viewed_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vip_invitation_tracking_invite_id_fkey"
+            columns: ["invite_id"]
+            isOneToOne: false
+            referencedRelation: "vip_invites"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vip_invites: {
+        Row: {
+          activated_at: string | null
+          activation_link: string | null
+          batch_name: string | null
+          created_at: string
+          created_by: string | null
+          email: string
+          expires_at: string | null
+          firm: string | null
+          id: string
+          invite_status: Database["public"]["Enums"]["invite_status"]
+          is_public_directory: boolean
+          is_vip: boolean
+          linkedin_url: string | null
+          name: string
+          persona_group: string | null
+          persona_type: Database["public"]["Enums"]["persona_type"]
+          phone: string | null
+          region: string | null
+          slug: string
+          source: string | null
+          specialty: string | null
+          tenant_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          activated_at?: string | null
+          activation_link?: string | null
+          batch_name?: string | null
+          created_at?: string
+          created_by?: string | null
+          email: string
+          expires_at?: string | null
+          firm?: string | null
+          id?: string
+          invite_status?: Database["public"]["Enums"]["invite_status"]
+          is_public_directory?: boolean
+          is_vip?: boolean
+          linkedin_url?: string | null
+          name: string
+          persona_group?: string | null
+          persona_type: Database["public"]["Enums"]["persona_type"]
+          phone?: string | null
+          region?: string | null
+          slug: string
+          source?: string | null
+          specialty?: string | null
+          tenant_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          activated_at?: string | null
+          activation_link?: string | null
+          batch_name?: string | null
+          created_at?: string
+          created_by?: string | null
+          email?: string
+          expires_at?: string | null
+          firm?: string | null
+          id?: string
+          invite_status?: Database["public"]["Enums"]["invite_status"]
+          is_public_directory?: boolean
+          is_vip?: boolean
+          linkedin_url?: string | null
+          name?: string
+          persona_group?: string | null
+          persona_type?: Database["public"]["Enums"]["persona_type"]
+          phone?: string | null
+          region?: string | null
+          slug?: string
+          source?: string | null
+          specialty?: string | null
+          tenant_id?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      vip_landing_page_views: {
+        Row: {
+          id: string
+          invite_id: string
+          ip_address: unknown | null
+          metadata: Json | null
+          user_agent: string | null
+          viewed_at: string
+        }
+        Insert: {
+          id?: string
+          invite_id: string
+          ip_address?: unknown | null
+          metadata?: Json | null
+          user_agent?: string | null
+          viewed_at?: string
+        }
+        Update: {
+          id?: string
+          invite_id?: string
+          ip_address?: unknown | null
+          metadata?: Json | null
+          user_agent?: string | null
+          viewed_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vip_landing_page_views_invite_id_fkey"
+            columns: ["invite_id"]
+            isOneToOne: false
+            referencedRelation: "vip_invites"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       voicemails: {
         Row: {
           advisor_id: string
@@ -26545,6 +26740,10 @@ export type Database = {
         }
         Returns: string
       }
+      generate_vip_invite_slug: {
+        Args: { p_name: string; p_firm: string }
+        Returns: string
+      }
       get_attorney_onboardings: {
         Args: { p_user_id?: string }
         Returns: {
@@ -26923,6 +27122,15 @@ export type Database = {
         }
         Returns: string
       }
+      log_vip_admin_activity: {
+        Args: {
+          p_admin_user_id: string
+          p_action_type: string
+          p_target_invite_id?: string
+          p_details?: Json
+        }
+        Returns: string
+      }
       process_advisor_referral: {
         Args: { p_referral_code: string; p_new_advisor_id: string }
         Returns: boolean
@@ -27195,6 +27403,7 @@ export type Database = {
         | "other"
       goal_priority: "low" | "medium" | "high" | "top_aspiration"
       goal_status: "active" | "completed" | "paused" | "archived"
+      invite_channel: "email" | "sms" | "linkedin" | "direct"
       invite_source:
         | "advisor"
         | "broker_dealer"
@@ -27204,6 +27413,13 @@ export type Database = {
         | "accounting_firm"
         | "direct"
         | "referral"
+      invite_status:
+        | "pending"
+        | "sent"
+        | "viewed"
+        | "activated"
+        | "expired"
+        | "error"
       module_type:
         | "estate_planning"
         | "tax_optimization"
@@ -27222,6 +27438,16 @@ export type Database = {
         | "family_office"
         | "wealth_management"
         | "financial_planning"
+      persona_type:
+        | "family_office"
+        | "advisor"
+        | "attorney"
+        | "cpa"
+        | "healthcare"
+        | "insurance"
+        | "consultant"
+        | "coach"
+        | "other"
       professional_persona:
         | "advisor"
         | "attorney"
@@ -27420,6 +27646,7 @@ export const Constants = {
       ],
       goal_priority: ["low", "medium", "high", "top_aspiration"],
       goal_status: ["active", "completed", "paused", "archived"],
+      invite_channel: ["email", "sms", "linkedin", "direct"],
       invite_source: [
         "advisor",
         "broker_dealer",
@@ -27429,6 +27656,14 @@ export const Constants = {
         "accounting_firm",
         "direct",
         "referral",
+      ],
+      invite_status: [
+        "pending",
+        "sent",
+        "viewed",
+        "activated",
+        "expired",
+        "error",
       ],
       module_type: [
         "estate_planning",
@@ -27449,6 +27684,17 @@ export const Constants = {
         "family_office",
         "wealth_management",
         "financial_planning",
+      ],
+      persona_type: [
+        "family_office",
+        "advisor",
+        "attorney",
+        "cpa",
+        "healthcare",
+        "insurance",
+        "consultant",
+        "coach",
+        "other",
       ],
       professional_persona: [
         "advisor",
