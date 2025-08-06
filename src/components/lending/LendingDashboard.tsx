@@ -83,6 +83,12 @@ export function LendingDashboard() {
   // For demo purposes, we'll use 'client' as default. In a real app, this would come from user context
   const [currentUserType] = useState<'client' | 'advisor' | 'admin'>('client');
   const welcomeMessage = WELCOME_MESSAGES[currentUserType];
+  
+  // Enhanced state for functional requirements
+  const [activeComparison, setActiveComparison] = useState<string[]>([]);
+  const [uploadedDocs, setUploadedDocs] = useState<File[]>([]);
+  const [applicationStep, setApplicationStep] = useState(1);
+  const [isPreQualifying, setIsPreQualifying] = useState(false);
   const [stats] = useState<LendingStats>({
     creditAvailable: 2500000,
     latestOffers: 8,
@@ -154,6 +160,36 @@ export function LendingDashboard() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState('all');
 
+  // Functional handlers
+  const handlePreQualification = async () => {
+    setIsPreQualifying(true);
+    // Simulate Plaid integration
+    setTimeout(() => {
+      setIsPreQualifying(false);
+      alert('Pre-qualification complete! Your estimated rate: 5.25% APR');
+    }, 2000);
+  };
+
+  const handleDocumentUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (files) {
+      const validTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+      const validFiles = Array.from(files).filter(file => validTypes.includes(file.type));
+      setUploadedDocs([...uploadedDocs, ...validFiles]);
+      if (validFiles.length > 0) {
+        setApplicationStep(prev => Math.min(prev + 1, 5));
+      }
+    }
+  };
+
+  const handleCompareToggle = (partnerId: string) => {
+    setActiveComparison(prev => 
+      prev.includes(partnerId) 
+        ? prev.filter(id => id !== partnerId)
+        : [...prev, partnerId].slice(0, 3) // Max 3 comparisons
+    );
+  };
+
   const handleApprovalCelebration = () => {
     confetti({
       particleCount: 100,
@@ -161,6 +197,10 @@ export function LendingDashboard() {
       origin: { y: 0.6 },
       colors: ['#D4AF37', '#1e3a8a', '#10b981']
     });
+  };
+
+  const handleConciergeCall = () => {
+    alert('Connecting you to our Lending Concierge...');
   };
 
   const getStatusColor = (status: string) => {
@@ -204,7 +244,11 @@ export function LendingDashboard() {
                 <p className="text-xl text-white/90 max-w-2xl">{welcomeMessage.subtitle}</p>
               </div>
             </div>
-            <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground min-h-[48px] px-8 shadow-lg">
+            <Button 
+              size="lg" 
+              className="bg-primary hover:bg-primary/90 text-primary-foreground min-h-[48px] px-8 shadow-lg"
+              onClick={handleConciergeCall}
+            >
               <Phone className="w-5 h-5 mr-2" />
               Speak to Concierge
             </Button>
@@ -275,9 +319,14 @@ export function LendingDashboard() {
               <h3 className="text-2xl font-serif font-bold">Check Your Pre-Qualified Rate</h3>
               <p className="text-muted-foreground">Soft credit check won't impact your score</p>
               <div className="flex justify-center">
-                <Button size="lg" className="bg-primary hover:bg-primary/90 min-h-[44px] px-8">
+                <Button 
+                  size="lg" 
+                  className="bg-primary hover:bg-primary/90 min-h-[44px] px-8"
+                  onClick={handlePreQualification}
+                  disabled={isPreQualifying}
+                >
                   <CheckCircle className="w-5 h-5 mr-2" />
-                  Get Pre-Qualified
+                  {isPreQualifying ? 'Processing...' : 'Get Pre-Qualified'}
                 </Button>
               </div>
               <p className="text-xs text-muted-foreground">Powered by Plaid • Secure • Instant</p>
