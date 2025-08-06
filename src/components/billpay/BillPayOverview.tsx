@@ -36,7 +36,7 @@ export const BillPayOverview: React.FC = () => {
   const formattedUpcomingBills = useMemo(() => 
     upcomingBills.map(bill => ({
       ...bill,
-      dueDate: bill.dueDate.toLocaleDateString('en-US', { 
+      formattedDueDate: new Date(bill.due_date).toLocaleDateString('en-US', { 
         month: 'short', 
         day: 'numeric' 
       })
@@ -149,10 +149,10 @@ export const BillPayOverview: React.FC = () => {
               <Card key={bill.id}>
                 <CardContent className="p-4">
                   <div className="flex justify-between items-center">
-                    <div>
-                      <h3 className="font-medium">{bill.name}</h3>
-                      <p className="text-sm text-muted-foreground">Due {bill.dueDate}</p>
-                    </div>
+                  <div>
+                    <h3 className="font-medium">{bill.biller_name}</h3>
+                    <p className="text-sm text-muted-foreground">Due {bill.formattedDueDate}</p>
+                  </div>
                     <div className="text-right">
                       <p className="font-semibold">${bill.amount.toFixed(2)}</p>
                       <Badge variant={bill.status === 'scheduled' ? 'default' : 'secondary'}>

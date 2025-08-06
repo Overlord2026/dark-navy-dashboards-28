@@ -1,24 +1,46 @@
-import { useMemo, useCallback } from "react";
+import { useMemo, useCallback, useEffect, useState } from "react";
 import { useSubscriptionAccess } from "@/hooks/useSubscriptionAccess";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 export interface Bill {
   id: string;
-  name: string;
+  user_id: string;
+  vendor_id?: string | null;
+  biller_name: string;
+  category: 'utilities' | 'mortgage' | 'insurance' | 'tuition' | 'loans' | 'subscriptions' | 'transportation' | 'healthcare' | 'entertainment' | 'other';
   amount: number;
-  dueDate: Date;
-  category: string;
-  status: 'pending' | 'paid' | 'overdue' | 'scheduled';
-  isAutoPay: boolean;
+  due_date: string;
+  frequency: 'one_time' | 'weekly' | 'monthly' | 'quarterly' | 'annual';
+  status: 'unpaid' | 'paid' | 'overdue' | 'scheduled';
+  payment_method?: string | null;
+  is_auto_pay: boolean;
+  notes?: string | null;
+  reminder_days: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Vendor {
+  id: string;
+  name: string;
+  type: string;
+  contact_info: any;
+  logo_url?: string;
+  website_url?: string;
 }
 
 export interface BillTransaction {
   id: string;
-  billId: string;
-  billName: string;
+  bill_id: string;
+  user_id: string;
   amount: number;
-  date: Date;
-  status: 'completed' | 'pending' | 'failed';
-  paymentMethod: string;
+  payment_date: string;
+  payment_method?: string;
+  transaction_status: 'completed' | 'pending' | 'failed';
+  confirmation_number?: string;
+  notes?: string;
+  created_at: string;
 }
 
 export interface BillAnalytics {
@@ -32,77 +54,102 @@ export interface BillAnalytics {
   }>;
 }
 
-// Mock data - replace with actual API calls
-const mockBills: Bill[] = [
-  {
-    id: '1',
-    name: 'Electric Bill',
-    amount: 150.00,
-    dueDate: new Date('2024-01-15'),
-    category: 'utilities',
-    status: 'pending',
-    isAutoPay: true
-  },
-  {
-    id: '2',
-    name: 'Internet Service',
-    amount: 79.99,
-    dueDate: new Date('2024-01-20'),
-    category: 'utilities',
-    status: 'scheduled',
-    isAutoPay: true
-  },
-  {
-    id: '3',
-    name: 'Credit Card Payment',
-    amount: 250.00,
-    dueDate: new Date('2024-01-25'),
-    category: 'credit',
-    status: 'pending',
-    isAutoPay: false
-  }
-];
-
-const mockTransactions: BillTransaction[] = [
-  {
-    id: '1',
-    billId: '1',
-    billName: 'Electric Bill',
-    amount: 150.00,
-    date: new Date('2024-01-01'),
-    status: 'completed',
-    paymentMethod: 'Auto Pay'
-  },
-  {
-    id: '2',
-    billId: '2',
-    billName: 'Internet Service',
-    amount: 79.99,
-    date: new Date('2024-01-05'),
-    status: 'completed',
-    paymentMethod: 'Auto Pay'
-  }
-];
+// Real Supabase data fetching
 
 export const useBillPayData = () => {
   const { checkFeatureAccess } = useSubscriptionAccess();
+  const { toast } = useToast();
+  const [bills, setBills] = useState<Bill[]>([]);
+  const [transactions, setTransactions] = useState<BillTransaction[]>([]);
+  const [vendors, setVendors] = useState<Vendor[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Memoized calculations
-  const bills = useMemo(() => mockBills, []);
-  const transactions = useMemo(() => mockTransactions, []);
+  // Fetch bills from Supabase
+  const fetchBills = useCallback(async () => {
+    try {
+      const { data, error } = await supabase
+        .from('bills')
+        .select('*')
+        .order('due_date', { ascending: true });
+
+      if (error) throw error;
+      setBills(data || []);
+    } catch (err) {
+      console.error('Error fetching bills:', err);
+      setError(err instanceof Error ? err.message : 'Failed to fetch bills');
+    }
+  }, []);
+
+  // Fetch transactions from Supabase
+  const fetchTransactions = useCallback(async () => {
+    try {
+      const { data, error } = await supabase
+        .from('bill_transactions')
+        .select('*')
+        .order('payment_date', { ascending: false });
+
+      if (error) throw error;
+      // Type assertion for transaction_status to ensure it matches our interface
+      const typedData = data?.map(t => ({
+        ...t,
+        transaction_status: t.transaction_status as 'completed' | 'pending' | 'failed'
+      })) || [];
+      setTransactions(typedData);
+    } catch (err) {
+      console.error('Error fetching transactions:', err);
+    }
+  }, []);
+
+  // Fetch vendors from Supabase
+  const fetchVendors = useCallback(async () => {
+    try {
+      const { data, error } = await supabase
+        .from('vendors')
+        .select('*')
+        .eq('is_active', true)
+        .order('name', { ascending: true });
+
+      if (error) throw error;
+      setVendors(data || []);
+    } catch (err) {
+      console.error('Error fetching vendors:', err);
+    }
+  }, []);
+
+  // Initial data fetch
+  useEffect(() => {
+    const loadData = async () => {
+      setIsLoading(true);
+      await Promise.all([fetchBills(), fetchTransactions(), fetchVendors()]);
+      setIsLoading(false);
+    };
+
+    loadData();
+  }, [fetchBills, fetchTransactions, fetchVendors]);
 
   const analytics = useMemo((): BillAnalytics => {
-    const monthlyTotal = bills.reduce((sum, bill) => sum + bill.amount, 0);
+    const monthlyTotal = bills.reduce((sum, bill) => sum + Number(bill.amount), 0);
     const activeBills = bills.filter(bill => bill.status !== 'paid').length;
-    const automatedPayments = bills.filter(bill => bill.isAutoPay).length;
+    const automatedPayments = bills.filter(bill => bill.is_auto_pay).length;
     const potentialSavings = bills
-      .filter(bill => !bill.isAutoPay)
-      .reduce((sum, bill) => sum + (bill.amount * 0.02), 0); // 2% potential savings
+      .filter(bill => !bill.is_auto_pay)
+      .reduce((sum, bill) => sum + (Number(bill.amount) * 0.02), 0); // 2% potential savings
 
-    const paymentHistory = Array.from({ length: 12 }, (_, i) => ({
-      month: new Date(2023, i).toLocaleDateString('en-US', { month: 'short' }),
-      amount: Math.random() * 500 + 200
-    }));
+    // Calculate payment history from actual transactions
+    const paymentHistory = Array.from({ length: 12 }, (_, i) => {
+      const month = new Date(2023, i);
+      const monthTransactions = transactions.filter(t => {
+        const transactionDate = new Date(t.payment_date);
+        return transactionDate.getMonth() === month.getMonth() && 
+               transactionDate.getFullYear() === month.getFullYear();
+      });
+      
+      return {
+        month: month.toLocaleDateString('en-US', { month: 'short' }),
+        amount: monthTransactions.reduce((sum, t) => sum + Number(t.amount), 0)
+      };
+    });
 
     return {
       monthlyTotal,
@@ -111,52 +158,190 @@ export const useBillPayData = () => {
       potentialSavings,
       paymentHistory
     };
-  }, [bills]);
+  }, [bills, transactions]);
 
   const upcomingBills = useMemo(() => {
     const now = new Date();
     const nextWeek = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
     
     return bills
-      .filter(bill => bill.dueDate <= nextWeek && bill.status !== 'paid')
-      .sort((a, b) => a.dueDate.getTime() - b.dueDate.getTime());
+      .filter(bill => {
+        const dueDate = new Date(bill.due_date);
+        return dueDate <= nextWeek && bill.status !== 'paid';
+      })
+      .sort((a, b) => new Date(a.due_date).getTime() - new Date(b.due_date).getTime());
   }, [bills]);
 
   const overdueBills = useMemo(() => {
     const now = new Date();
-    return bills.filter(bill => bill.dueDate < now && bill.status !== 'paid');
+    return bills.filter(bill => {
+      const dueDate = new Date(bill.due_date);
+      return dueDate < now && bill.status !== 'paid';
+    });
   }, [bills]);
 
   // Callback functions
-  const addBill = useCallback((billData: Omit<Bill, 'id'>) => {
-    const newBill: Bill = {
-      ...billData,
-      id: Date.now().toString()
-    };
-    // In real app: make API call to add bill
-    console.info('Adding bill:', newBill);
-    return newBill;
-  }, []);
+  const addBill = useCallback(async (billData: {
+    biller_name: string;
+    category: Bill['category'];
+    amount: number;
+    due_date: string;
+    frequency?: Bill['frequency'];
+    payment_method?: string;
+    is_auto_pay?: boolean;
+    notes?: string;
+    reminder_days?: number;
+  }) => {
+    try {
+      const { data: user } = await supabase.auth.getUser();
+      if (!user.user) throw new Error('User not authenticated');
 
-  const updateBill = useCallback((billId: string, updates: Partial<Bill>) => {
-    // In real app: make API call to update bill
-    console.info('Updating bill:', billId, updates);
-  }, []);
+      const { data, error } = await supabase
+        .from('bills')
+        .insert({
+          user_id: user.user.id,
+          biller_name: billData.biller_name,
+          category: billData.category,
+          amount: billData.amount,
+          due_date: billData.due_date,
+          frequency: billData.frequency || 'monthly',
+          payment_method: billData.payment_method,
+          is_auto_pay: billData.is_auto_pay || false,
+          notes: billData.notes,
+          reminder_days: billData.reminder_days || 3,
+          status: 'unpaid'
+        })
+        .select()
+        .single();
 
-  const deleteBill = useCallback((billId: string) => {
-    // In real app: make API call to delete bill
-    console.info('Deleting bill:', billId);
-  }, []);
+      if (error) throw error;
 
-  const payBill = useCallback((billId: string, paymentMethod: string) => {
-    // In real app: process payment and update bill status
-    console.info('Paying bill:', billId, 'with', paymentMethod);
-  }, []);
+      setBills(prev => [...prev, data]);
+      toast({
+        title: "Bill Added",
+        description: `${billData.biller_name} has been added successfully.`
+      });
+      
+      return data;
+    } catch (err) {
+      console.error('Error adding bill:', err);
+      toast({
+        title: "Error",
+        description: "Failed to add bill. Please try again.",
+        variant: "destructive"
+      });
+      throw err;
+    }
+  }, [toast]);
 
-  const toggleAutoPay = useCallback((billId: string, enabled: boolean) => {
-    // In real app: update autopay settings
-    console.info('Toggle autopay for bill:', billId, 'enabled:', enabled);
-  }, []);
+  const updateBill = useCallback(async (billId: string, updates: Partial<Bill>) => {
+    try {
+      const { data, error } = await supabase
+        .from('bills')
+        .update(updates)
+        .eq('id', billId)
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      setBills(prev => prev.map(bill => bill.id === billId ? data : bill));
+      toast({
+        title: "Bill Updated",
+        description: "Bill has been updated successfully."
+      });
+    } catch (err) {
+      console.error('Error updating bill:', err);
+      toast({
+        title: "Error",
+        description: "Failed to update bill. Please try again.",
+        variant: "destructive"
+      });
+    }
+  }, [toast]);
+
+  const deleteBill = useCallback(async (billId: string) => {
+    try {
+      const { error } = await supabase
+        .from('bills')
+        .delete()
+        .eq('id', billId);
+
+      if (error) throw error;
+
+      setBills(prev => prev.filter(bill => bill.id !== billId));
+      toast({
+        title: "Bill Deleted",
+        description: "Bill has been deleted successfully."
+      });
+    } catch (err) {
+      console.error('Error deleting bill:', err);
+      toast({
+        title: "Error",
+        description: "Failed to delete bill. Please try again.",
+        variant: "destructive"
+      });
+    }
+  }, [toast]);
+
+  const payBill = useCallback(async (billId: string, paymentMethod: string) => {
+    try {
+      const { data: user } = await supabase.auth.getUser();
+      if (!user.user) throw new Error('User not authenticated');
+
+      const bill = bills.find(b => b.id === billId);
+      if (!bill) throw new Error('Bill not found');
+
+      // Update bill status to paid
+      const { error: billError } = await supabase
+        .from('bills')
+        .update({ status: 'paid' })
+        .eq('id', billId);
+
+      if (billError) throw billError;
+
+      // Create transaction record
+      const { error: transactionError } = await supabase
+        .from('bill_transactions')
+        .insert([{
+          bill_id: billId,
+          user_id: user.user.id,
+          amount: bill.amount,
+          payment_date: new Date().toISOString().split('T')[0],
+          payment_method: paymentMethod,
+          transaction_status: 'completed'
+        }]);
+
+      if (transactionError) throw transactionError;
+
+      // Refresh data
+      await Promise.all([fetchBills(), fetchTransactions()]);
+      
+      toast({
+        title: "Payment Processed",
+        description: `Payment for ${bill.biller_name} has been recorded.`
+      });
+    } catch (err) {
+      console.error('Error paying bill:', err);
+      toast({
+        title: "Error",
+        description: "Failed to process payment. Please try again.",
+        variant: "destructive"
+      });
+    }
+  }, [bills, fetchBills, fetchTransactions, toast]);
+
+  const toggleAutoPay = useCallback(async (billId: string, enabled: boolean) => {
+    try {
+      await updateBill(billId, { is_auto_pay: enabled });
+      toast({
+        title: "Auto Pay Updated",
+        description: `Auto pay has been ${enabled ? 'enabled' : 'disabled'}.`
+      });
+    } catch (err) {
+      console.error('Error toggling autopay:', err);
+    }
+  }, [updateBill, toast]);
 
   const getBillsByCategory = useCallback((category: string) => {
     return bills.filter(bill => bill.category === category);
@@ -165,7 +350,7 @@ export const useBillPayData = () => {
   const searchBills = useCallback((query: string) => {
     const lowercaseQuery = query.toLowerCase();
     return bills.filter(bill => 
-      bill.name.toLowerCase().includes(lowercaseQuery) ||
+      bill.biller_name.toLowerCase().includes(lowercaseQuery) ||
       bill.category.toLowerCase().includes(lowercaseQuery)
     );
   }, [bills]);
@@ -183,6 +368,7 @@ export const useBillPayData = () => {
     // Data
     bills,
     transactions,
+    vendors,
     analytics,
     upcomingBills,
     overdueBills,
@@ -195,13 +381,16 @@ export const useBillPayData = () => {
     toggleAutoPay,
     getBillsByCategory,
     searchBills,
+    fetchBills,
+    fetchTransactions,
+    fetchVendors,
     
     // Feature flags
     hasAutomatedPayments,
     hasAdvancedAnalytics,
     
-    // Loading states (for real API integration)
-    isLoading: false,
-    error: null
+    // Loading states
+    isLoading,
+    error
   };
 };

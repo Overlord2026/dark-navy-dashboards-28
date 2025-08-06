@@ -30,26 +30,28 @@ import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 
 const billFormSchema = z.object({
-  name: z.string().min(2, {
+  biller_name: z.string().min(2, {
     message: "Bill name must be at least 2 characters.",
   }),
   amount: z.string().refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
     message: "Amount must be a positive number.",
   }),
-  dueDate: z.date({
+  due_date: z.date({
     required_error: "Due date is required.",
   }),
-  category: z.string().min(1, {
-    message: "Category is required.",
+  category: z.enum(['utilities', 'mortgage', 'insurance', 'tuition', 'loans', 'subscriptions', 'transportation', 'healthcare', 'entertainment', 'other'], {
+    message: "Please select a valid category.",
   }),
+  frequency: z.enum(['one_time', 'weekly', 'monthly', 'quarterly', 'annual']).default('monthly'),
 });
 
 type BillFormValues = z.infer<typeof billFormSchema>;
 
 const defaultValues: Partial<BillFormValues> = {
-  name: "",
+  biller_name: "",
   amount: "",
-  category: "Utilities",
+  category: "utilities",
+  frequency: "monthly",
 };
 
 interface AddBillDialogProps {
@@ -67,29 +69,31 @@ export function AddBillDialog({ isOpen, onClose, onAddBill }: AddBillDialogProps
     defaultValues,
   });
 
-  function onSubmit(data: BillFormValues) {
+  async function onSubmit(data: BillFormValues) {
     setIsSubmitting(true);
     
-    // Convert amount string to number
-    const newBill = {
-      id: Date.now(), // Simple ID generation
-      name: data.name,
-      amount: parseFloat(data.amount),
-      dueDate: format(data.dueDate, "yyyy-MM-dd"),
-      category: data.category
-    };
-    
-    // Simulate API delay
-    setTimeout(() => {
-      onAddBill(newBill);
-      setIsSubmitting(false);
+    try {
+      // Convert data to match the API interface
+      const billData = {
+        biller_name: data.biller_name,
+        amount: parseFloat(data.amount),
+        due_date: format(data.due_date, "yyyy-MM-dd"),
+        category: data.category,
+        frequency: data.frequency,
+      };
+      
+      await onAddBill(billData);
       form.reset(defaultValues);
       toast({
         title: "Bill created",
-        description: `${data.name} was added successfully.`,
+        description: `${data.biller_name} was added successfully.`,
       });
       onClose();
-    }, 600);
+    } catch (error) {
+      // Error is already handled in the hook
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -106,7 +110,7 @@ export function AddBillDialog({ isOpen, onClose, onAddBill }: AddBillDialogProps
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
               control={form.control}
-              name="name"
+              name="biller_name"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Bill Name</FormLabel>
@@ -134,7 +138,7 @@ export function AddBillDialog({ isOpen, onClose, onAddBill }: AddBillDialogProps
             
             <FormField
               control={form.control}
-              name="dueDate"
+              name="due_date"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
                   <FormLabel>Due Date</FormLabel>
@@ -166,6 +170,7 @@ export function AddBillDialog({ isOpen, onClose, onAddBill }: AddBillDialogProps
                           date < new Date(new Date().setHours(0, 0, 0, 0))
                         }
                         initialFocus
+                        className="p-3 pointer-events-auto"
                       />
                     </PopoverContent>
                   </Popover>
@@ -185,12 +190,39 @@ export function AddBillDialog({ isOpen, onClose, onAddBill }: AddBillDialogProps
                       className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                       {...field}
                     >
-                      <option value="Utilities">Utilities</option>
-                      <option value="Housing">Housing</option>
-                      <option value="Entertainment">Entertainment</option>
-                      <option value="Insurance">Insurance</option>
-                      <option value="Transportation">Transportation</option>
-                      <option value="Other">Other</option>
+                      <option value="utilities">Utilities</option>
+                      <option value="mortgage">Mortgage</option>
+                      <option value="insurance">Insurance</option>
+                      <option value="tuition">Tuition</option>
+                      <option value="loans">Loans</option>
+                      <option value="subscriptions">Subscriptions</option>
+                      <option value="transportation">Transportation</option>
+                      <option value="healthcare">Healthcare</option>
+                      <option value="entertainment">Entertainment</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            
+            <FormField
+              control={form.control}
+              name="frequency"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Frequency</FormLabel>
+                  <FormControl>
+                    <select
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                      {...field}
+                    >
+                      <option value="one_time">One Time</option>
+                      <option value="weekly">Weekly</option>
+                      <option value="monthly">Monthly</option>
+                      <option value="quarterly">Quarterly</option>
+                      <option value="annual">Annual</option>
                     </select>
                   </FormControl>
                   <FormMessage />
