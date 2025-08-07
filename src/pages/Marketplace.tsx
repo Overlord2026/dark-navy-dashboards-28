@@ -1,9 +1,9 @@
 
 import React, { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
-import { MarketplaceHeader } from "@/components/marketplace/MarketplaceHeader";
+import { EliteMarketplaceHeader } from "@/components/marketplace/EliteMarketplaceHeader";
 import { MarketplaceNavigation, serviceCategories } from "@/components/marketplace/MarketplaceNavigation";
-import { MarketplaceContent } from "@/components/marketplace/MarketplaceContent";
+import { EliteDirectory } from "@/components/marketplace/EliteDirectory";
 import { useMarketplace } from "@/hooks/useMarketplace";
 
 export default function Marketplace() {
@@ -66,7 +66,7 @@ export default function Marketplace() {
   return (
     <ThreeColumnLayout title="Family Office Marketplace">
       <div className="space-y-6 px-4 py-6 max-w-7xl mx-auto">
-        <MarketplaceHeader 
+        <EliteMarketplaceHeader 
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
         />
@@ -82,13 +82,7 @@ export default function Marketplace() {
           </div>
           
           <div className="md:col-span-3">
-            <MarketplaceContent 
-              activeCategory={activeCategory}
-              activeSubcategory={activeSubcategory}
-              serviceCategories={serviceCategories}
-              filteredListings={filteredListings}
-              isSearching={searchQuery.trim() !== ""}
-            />
+            <EliteDirectory searchQuery={searchQuery} />
           </div>
         </div>
       </div>
