@@ -12,6 +12,8 @@ import { PropertyEducationCenter } from "./PropertyEducationCenter";
 import { PropertyPersonaSwitcher } from "./PropertyPersonaSwitcher";
 import { FloatingListButton } from "./FloatingListButton";
 import { PropertyHero } from "./PropertyHero";
+import { RealtorPracticeDashboard } from "./RealtorPracticeDashboard";
+import { PropertyManagerDashboard } from "./PropertyManagerDashboard";
 import { useSubscriptionAccess } from "@/hooks/useSubscriptionAccess";
 
 interface PropertyDashboardProps {
@@ -33,6 +35,23 @@ export const PropertyDashboard: React.FC<PropertyDashboardProps> = ({ initialFil
   const handleAddProperty = () => {
     setActiveTab("properties");
   };
+
+  // Show specialized dashboards for realtor and property manager personas
+  if (currentPersona === 'realtor') {
+    return (
+      <div className="container mx-auto p-6">
+        <RealtorPracticeDashboard />
+      </div>
+    );
+  }
+
+  if (currentPersona === 'property_manager') {
+    return (
+      <div className="container mx-auto p-6">
+        <PropertyManagerDashboard />
+      </div>
+    );
+  }
   
   if (showListingForm) {
     return (

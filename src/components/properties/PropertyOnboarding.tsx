@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { CheckCircle, Building, Users, TrendingUp, Shield, FileText, MapPin } from "lucide-react";
 import { useSubscriptionAccess } from "@/hooks/useSubscriptionAccess";
+import { RealtorPropertyManagerOnboarding } from "./RealtorPropertyManagerOnboarding";
 
 interface PropertyOnboardingProps {
   onComplete: () => void;
