@@ -28,6 +28,7 @@ import {
 import { LeadSourcesManager } from "@/components/leads/LeadSourcesManager";
 import { UniversalLeadPipeline } from "@/components/personas/UniversalLeadPipeline";
 import { InAppSupport } from "@/components/support/InAppSupport";
+import { OnboardingTrigger } from "@/components/onboarding/OnboardingTrigger";
 
 export const AdvisorPracticeDashboard: React.FC = () => {
   const user = null; // TODO: Connect to actual user context
@@ -266,6 +267,8 @@ export const AdvisorPracticeDashboard: React.FC = () => {
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6">
+          <OnboardingTrigger />
+          
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
