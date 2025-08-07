@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { WelcomeStep } from './steps/WelcomeStep';
 import { SecureAccountStep } from './steps/SecureAccountStep';
+import { DashboardTourStep } from './steps/DashboardTourStep';
 import { OptionalAccountLinkingStep } from './steps/OptionalAccountLinkingStep';
 import { FamilyGoalsStep } from './steps/FamilyGoalsStep';
 import { WelcomeCallStep } from './steps/WelcomeCallStep';
@@ -91,14 +92,15 @@ export const ClientOnboardingFlow: React.FC<ClientOnboardingFlowProps> = ({
     localStorage.setItem('onboarding-data', JSON.stringify(data));
   }, [data]);
 
-  // Simplified step configuration for basic onboarding
+  // Updated step configuration for optimized onboarding flow
   const defaultSteps = [
     { id: 'welcome', name: 'Welcome', title: 'Welcome', description: 'Get started', enabled: true, required: true, order: 0 },
-    { id: 'secure-account', name: 'Create Account', title: 'Create Your Secure Account', description: 'Basic account setup', enabled: true, required: true, order: 1 },
-    { id: 'optional-linking', name: 'Add Account', title: 'Add Account (Optional)', description: 'Connect or add accounts', enabled: true, required: false, order: 2 },
-    { id: 'family-goals', name: 'Family & Goals', title: 'Set Up Your Family/Goals', description: 'Optional family and goal setup', enabled: true, required: false, order: 3 },
-    { id: 'welcome-call', name: 'Welcome Call', title: 'Book a Welcome Call', description: 'Optional consultation', enabled: true, required: false, order: 4 },
-    { id: 'completion', name: 'Complete', title: 'You\'re All Set!', description: 'Access your dashboard', enabled: true, required: true, order: 5 }
+    { id: 'secure-account', name: 'Create Account', title: 'Create Your Portal', description: 'Basic account setup', enabled: true, required: true, order: 1 },
+    { id: 'dashboard-tour', name: 'Dashboard Tour', title: 'Your Command Center', description: 'See what you can do', enabled: true, required: false, order: 2 },
+    { id: 'optional-linking', name: 'Add Account', title: 'Connect Accounts (Optional)', description: 'Link your financial accounts', enabled: true, required: false, order: 3 },
+    { id: 'family-goals', name: 'Family & Goals', title: 'Family & Goals (Optional)', description: 'Set up family and goals', enabled: true, required: false, order: 4 },
+    { id: 'welcome-call', name: 'Welcome Call', title: 'Book Welcome Call (Optional)', description: 'Optional consultation', enabled: true, required: false, order: 5 },
+    { id: 'completion', name: 'Complete', title: 'You\'re All Set!', description: 'Access your dashboard', enabled: true, required: true, order: 6 }
   ];
 
   const activeSteps = (customStepsConfig || defaultSteps)
@@ -207,6 +209,8 @@ export const ClientOnboardingFlow: React.FC<ClientOnboardingFlowProps> = ({
         return <WelcomeStep {...commonProps} />;
       case 'secure-account':
         return <SecureAccountStep {...stepProps} />;
+      case 'dashboard-tour':
+        return <DashboardTourStep {...stepProps} />;
       case 'optional-linking':
         return <OptionalAccountLinkingStep {...stepProps} />;
       case 'family-goals':

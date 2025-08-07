@@ -27,19 +27,47 @@ export const OptionalAccountLinkingStep: React.FC<OptionalAccountLinkingStepProp
     setSelectedMethod(method);
     
     if (method === 'plaid') {
-      // TODO: Implement Plaid connection
-      console.log('Plaid integration coming soon');
+      // TODO: Implement Plaid integration
+      console.log('Plaid integration placeholder - connecting...');
+      // Simulate successful connection
+      setTimeout(() => {
+        onComplete({
+          assetLinking: {
+            method: 'plaid',
+            plaidConnected: true,
+            connectedAccounts: [
+              { id: '1', name: 'Chase Checking', type: 'checking', balance: 5000 },
+              { id: '2', name: 'Savings Account', type: 'savings', balance: 25000 }
+            ],
+            timestamp: new Date().toISOString()
+          }
+        });
+      }, 1000);
     } else if (method === 'manual') {
-      // TODO: Open manual entry form
-      console.log('Manual entry form coming soon');
+      // TODO: Implement manual entry form
+      console.log('Manual entry placeholder - opening form...');
+      // Simulate manual entry
+      setTimeout(() => {
+        onComplete({
+          assetLinking: {
+            method: 'manual',
+            manualAssets: [
+              { id: '1', name: 'Investment Account', type: 'investment', value: 100000, institution: 'Vanguard' }
+            ],
+            timestamp: new Date().toISOString()
+          }
+        });
+      }, 500);
+    } else {
+      // Skip - proceed immediately
+      onComplete({
+        assetLinking: {
+          method: null,
+          skipped: true,
+          timestamp: new Date().toISOString()
+        }
+      });
     }
-    
-    onComplete({
-      assetLinking: {
-        method: method === 'skip' ? null : method,
-        skipped: method === 'skip'
-      }
-    });
   };
 
   return (
@@ -169,9 +197,9 @@ export const OptionalAccountLinkingStep: React.FC<OptionalAccountLinkingStepProp
         <Button
           onClick={() => selectedMethod && handleSelection(selectedMethod)}
           disabled={!selectedMethod}
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 btn-primary-gold"
         >
-          Continue
+          {selectedMethod === 'skip' ? 'Skip for Now' : 'Continue'}
           <ChevronRight className="w-4 h-4" />
         </Button>
       </div>
