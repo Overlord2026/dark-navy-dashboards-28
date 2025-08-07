@@ -5,6 +5,8 @@ import { Badge } from '@/components/ui/badge';
 import { AdvisorOnboardingSlides } from './AdvisorOnboardingSlides';
 import { CPAOnboardingSlides } from './CPAOnboardingSlides';
 import { AttorneyOnboardingSlides } from './AttorneyOnboardingSlides';
+import { RealtorOnboardingSlides } from './RealtorOnboardingSlides';
+import { HealthcareOnboardingSlides } from './HealthcareOnboardingSlides';
 import { 
   Play, 
   Star, 
@@ -55,15 +57,15 @@ const personaConfig = {
     features: ["Property Management", "Lead Pipeline", "Campaign Tools"],
     icons: [<Home className="h-4 w-4 text-primary" />, <Target className="h-4 w-4 text-primary" />, <BarChart3 className="h-4 w-4 text-primary" />],
     premiumFeature: "Lead Engine, Campaign Automation, eSign, Analytics",
-    component: AdvisorOnboardingSlides // Using advisor as placeholder
+    component: RealtorOnboardingSlides
   },
   consultant: {
-    title: "New to Consultant Practice Suite?",
-    description: "Master your consulting practice with our comprehensive walkthrough. Learn client management, outcome tracking, and growth tools.",
+    title: "New to Healthcare & Consultant Suite?",
+    description: "Master your healthcare or consulting practice with our comprehensive walkthrough. Learn client management, outcome tracking, and growth tools.",
     features: ["Client Management", "Outcome Analytics", "Growth Tools"],
     icons: [<Heart className="h-4 w-4 text-primary" />, <BarChart3 className="h-4 w-4 text-primary" />, <Target className="h-4 w-4 text-primary" />],
-    premiumFeature: "Lead Engine, Bulk Operations, CE Tracking, Analytics",
-    component: AdvisorOnboardingSlides // Using advisor as placeholder
+    premiumFeature: "Health Marketplace, Legacy Vault, Advanced Analytics",
+    component: HealthcareOnboardingSlides
   }
 };
 
