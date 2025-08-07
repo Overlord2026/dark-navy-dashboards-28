@@ -105,6 +105,7 @@ import PlatformMap from './pages/PlatformMap';
 import NILEducationCenter from './pages/athletes/NILEducationCenter';
 import NILOnboarding from './pages/athletes/NILOnboarding';
 import NILLandingPage from './pages/athletes/NILLandingPage';
+import { PersonaLandingPage } from './pages/PersonaLandingPage';
 
 const queryClient = new QueryClient();
 
@@ -130,7 +131,7 @@ function App() {
                           <StickyTopBanner />
                           <APIWarningBanner />
                           <ReferralTracker />
-                          <Routes>
+                           <Routes>
         <Route path="/wireframe" element={<WireframePage />} />
                            <Route path="/platform-map" element={<PlatformMap />} />
                            <Route path="/athletes/nil-education" element={<NILEducationCenter />} />
@@ -138,6 +139,7 @@ function App() {
                            <Route path="/athletes/nil-landing" element={<NILLandingPage />} />
         <Route path="/lending-wireframe" element={<LendingWireframePage />} />
         <Route path="/image-generator" element={<ImageGeneratorPage />} />
+                            <Route path="/persona-landing" element={<PersonaLandingPage />} />
                             <Route path="/" element={<Index />} />
                            <Route path="/marketplace" element={<FamilyOfficeMarketplacePage />} />
                            <Route path="/welcome" element={<WelcomePage />} />
