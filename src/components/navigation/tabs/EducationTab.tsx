@@ -9,6 +9,11 @@ export const educationNavItems: NavItem[] = [
     title: "Education Center", 
     href: "/client-education", 
     icon: GraduationCapIcon 
+  },
+  { 
+    title: "NIL Education", 
+    href: "/athletes/nil-landing", 
+    icon: GraduationCapIcon 
   }
 ];
 

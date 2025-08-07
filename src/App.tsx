@@ -101,6 +101,9 @@ import GlobalOutreach from './pages/GlobalOutreach';
 import GlobalPressKit from './pages/GlobalPressKit';
 import SharkTankPitch from './pages/SharkTankPitch';
 import PlatformMap from './pages/PlatformMap';
+import NILEducationCenter from './pages/athletes/NILEducationCenter';
+import NILOnboarding from './pages/athletes/NILOnboarding';
+import NILLandingPage from './pages/athletes/NILLandingPage';
 
 const queryClient = new QueryClient();
 
@@ -128,7 +131,10 @@ function App() {
                           <ReferralTracker />
                           <Routes>
         <Route path="/wireframe" element={<WireframePage />} />
-        <Route path="/platform-map" element={<PlatformMap />} />
+                           <Route path="/platform-map" element={<PlatformMap />} />
+                           <Route path="/athletes/nil-education" element={<NILEducationCenter />} />
+                           <Route path="/athletes/nil-onboarding" element={<NILOnboarding />} />
+                           <Route path="/athletes/nil-landing" element={<NILLandingPage />} />
         <Route path="/lending-wireframe" element={<LendingWireframePage />} />
         <Route path="/image-generator" element={<ImageGeneratorPage />} />
                             <Route path="/" element={<Index />} />
