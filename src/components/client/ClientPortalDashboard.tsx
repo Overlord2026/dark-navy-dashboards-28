@@ -70,6 +70,34 @@ const premiumModules: PremiumModule[] = [
     ]
   },
   {
+    id: 'business-entity-management',
+    title: 'Business & Entity Management',
+    description: 'Comprehensive management for all family business entities',
+    icon: Briefcase,
+    color: 'text-slate-600',
+    bgColor: 'bg-slate-50',
+    status: 'premium',
+    route: '/business-entities',
+    basicFeatures: [
+      'Basic entity dashboard (up to 3 entities)',
+      'Simple document storage',
+      'Basic filing reminders'
+    ],
+    features: [
+      'Unlimited family business and entity tracking',
+      'Advanced compliance calendar with automation',
+      'Ownership & asset protection tracker',
+      'Entity-property integration and titling ledger',
+      'Business advisor and contact management',
+      'Automated alerts and deadline tracking',
+      'Full audit trail and change history',
+      'Integrated with Secure Family Vault™',
+      'Collaborative access for family and advisors',
+      'Entity structure visualization ("family tree")',
+      'Advanced reporting and compliance checklists'
+    ]
+  },
+  {
     id: 'advanced-properties',
     title: 'Advanced Properties Management',
     description: 'Unlimited real estate tracking with analytics',

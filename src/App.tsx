@@ -51,6 +51,7 @@ import PremiumOnboardingPage from "./pages/PremiumOnboardingPage";
 import RoleBasedOnboardingPage from "./pages/RoleBasedOnboardingPage";
 import { ClientDashboard } from "./pages/ClientDashboard";
 import ClientPortalPage from "./pages/ClientPortalPage";
+import BusinessEntitiesPage from "./pages/BusinessEntitiesPage";
 import AdvisorDashboard from "./pages/AdvisorDashboard";
 import AdvisorBillingPage from "./pages/advisor/AdvisorBillingPage";
 import AdvisorCompliancePage from "./pages/advisor/AdvisorCompliancePage";
@@ -167,8 +168,13 @@ function App() {
                            <Route path="/client-portal" element={
                              <AuthWrapper requireAuth={true} allowedRoles={['client', 'admin', 'system_administrator', 'tenant_admin']}>
                                <ClientPortalPage />
-                             </AuthWrapper>
-                           } />
+                              </AuthWrapper>
+                            } />
+                            <Route path="/business-entities" element={
+                              <AuthWrapper requireAuth={true} allowedRoles={['client', 'admin', 'system_administrator', 'tenant_admin']}>
+                                <BusinessEntitiesPage />
+                              </AuthWrapper>
+                            } />
                           <Route path="/advisor" element={
                             <AuthWrapper requireAuth={true} allowedRoles={getAdvisorAccessRoles()}>
                               <AdvisorDashboard />
