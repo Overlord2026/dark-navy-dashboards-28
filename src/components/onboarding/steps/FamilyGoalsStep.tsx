@@ -24,12 +24,28 @@ export const FamilyGoalsStep: React.FC<FamilyGoalsStepProps> = ({
   currentStep,
   totalSteps
 }) => {
+  // Load saved data from localStorage if available
+  const loadSavedData = () => {
+    const saved = localStorage.getItem('onboarding-family-goals');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch {
+        return null;
+      }
+    }
+    return null;
+  };
+
+  const savedData = loadSavedData();
+  
   const [familyMembers, setFamilyMembers] = React.useState<string[]>(
+    savedData?.clientInfo?.householdMembers?.map((m: any) => `${m.firstName} ${m.lastName}`) ||
     data?.clientInfo?.householdMembers?.map((m: any) => `${m.firstName} ${m.lastName}`) || []
   );
   const [newMember, setNewMember] = React.useState('');
   const [selectedGoals, setSelectedGoals] = React.useState<string[]>(
-    data?.goals?.selected || []
+    savedData?.goals?.selected || data?.goals?.selected || []
   );
   const [customGoal, setCustomGoal] = React.useState('');
 
@@ -46,8 +62,28 @@ export const FamilyGoalsStep: React.FC<FamilyGoalsStepProps> = ({
 
   const addFamilyMember = () => {
     if (newMember.trim()) {
-      setFamilyMembers([...familyMembers, newMember.trim()]);
+      const newFamilyMembers = [...familyMembers, newMember.trim()];
+      setFamilyMembers(newFamilyMembers);
       setNewMember('');
+      
+      // Auto-save to localStorage
+      const currentData = {
+        clientInfo: {
+          ...data?.clientInfo,
+          householdMembers: newFamilyMembers.map(name => {
+            const [firstName, ...lastNameParts] = name.split(' ');
+            return {
+              firstName,
+              lastName: lastNameParts.join(' ') || '',
+              relationship: 'Family Member'
+            };
+          })
+        },
+        goals: {
+          selected: selectedGoals
+        }
+      };
+      localStorage.setItem('onboarding-family-goals', JSON.stringify(currentData));
     }
   };
 
@@ -56,11 +92,30 @@ export const FamilyGoalsStep: React.FC<FamilyGoalsStepProps> = ({
   };
 
   const toggleGoal = (goal: string) => {
-    setSelectedGoals(prev => 
-      prev.includes(goal) 
-        ? prev.filter(g => g !== goal)
-        : [...prev, goal]
-    );
+    const newSelectedGoals = selectedGoals.includes(goal) 
+      ? selectedGoals.filter(g => g !== goal)
+      : [...selectedGoals, goal];
+      
+    setSelectedGoals(newSelectedGoals);
+    
+    // Auto-save to localStorage
+    const currentData = {
+      clientInfo: {
+        ...data?.clientInfo,
+        householdMembers: familyMembers.map(name => {
+          const [firstName, ...lastNameParts] = name.split(' ');
+          return {
+            firstName,
+            lastName: lastNameParts.join(' ') || '',
+            relationship: 'Family Member'
+          };
+        })
+      },
+      goals: {
+        selected: newSelectedGoals
+      }
+    };
+    localStorage.setItem('onboarding-family-goals', JSON.stringify(currentData));
   };
 
   const addCustomGoal = () => {
@@ -71,7 +126,7 @@ export const FamilyGoalsStep: React.FC<FamilyGoalsStepProps> = ({
   };
 
   const handleSubmit = () => {
-    onComplete({
+    const formData = {
       clientInfo: {
         ...data?.clientInfo,
         householdMembers: familyMembers.map(name => {
@@ -86,7 +141,11 @@ export const FamilyGoalsStep: React.FC<FamilyGoalsStepProps> = ({
       goals: {
         selected: selectedGoals
       }
-    });
+    };
+    
+    // Save data locally before completing
+    localStorage.setItem('onboarding-family-goals', JSON.stringify(formData));
+    onComplete(formData);
   };
 
   return (
