@@ -51,11 +51,11 @@ export const WelcomeStep: React.FC<WelcomeStepProps> = ({
         )}
         
         <h1 className="text-4xl font-display font-bold text-foreground">
-          Welcome to {companyName}
+          Welcome to Your Boutique Family Office™ Portal
         </h1>
         
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-          {welcomeMessage}
+          Discover a New Standard in Wealth & Well-being
         </p>
         
         <div className="flex justify-center">
@@ -111,79 +111,90 @@ export const WelcomeStep: React.FC<WelcomeStepProps> = ({
         </Card>
       </div>
 
-      {/* Process Overview */}
+      {/* Benefits Overview */}
       <Card className="premium-card">
         <CardHeader>
-          <CardTitle>What to Expect</CardTitle>
+          <CardTitle className="text-center">Here's what you can look forward to as you get started:</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
+          <div className="space-y-6">
             <div className="flex items-start gap-4">
-              <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">
-                1
-              </div>
+              <div className="flex-shrink-0 w-3 h-3 bg-primary rounded-full mt-2"></div>
               <div>
-                <h4 className="font-semibold text-foreground">Personal Information</h4>
-                <p className="text-muted-foreground">Tell us about yourself and your household members.</p>
+                <h4 className="font-semibold text-foreground mb-1">Complete Financial Picture</h4>
+                <p className="text-muted-foreground">Securely view and manage all your accounts, investments, and important documents in one place.</p>
               </div>
             </div>
             
             <div className="flex items-start gap-4">
-              <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">
-                2
-              </div>
+              <div className="flex-shrink-0 w-3 h-3 bg-primary rounded-full mt-2"></div>
               <div>
-                <h4 className="font-semibold text-foreground">Choose Your Custodian</h4>
-                <p className="text-muted-foreground">Select where you'd like to custody your assets (Schwab, Fidelity, etc.).</p>
+                <h4 className="font-semibold text-foreground mb-1">Total Privacy & Control</h4>
+                <p className="text-muted-foreground">You choose what to share and when. No personal details are required until you decide to take action or become a client.</p>
               </div>
             </div>
             
             <div className="flex items-start gap-4">
-              <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">
-                3
-              </div>
+              <div className="flex-shrink-0 w-3 h-3 bg-primary rounded-full mt-2"></div>
               <div>
-                <h4 className="font-semibold text-foreground">Upload Documents</h4>
-                <p className="text-muted-foreground">Securely upload statements and identification documents.</p>
+                <h4 className="font-semibold text-foreground mb-1">Trusted Advisors On-Demand</h4>
+                <p className="text-muted-foreground">Connect instantly with vetted advisors, accountants, attorneys, and other professionals—always guided by our Fiduciary Duty Principles™.</p>
               </div>
             </div>
             
             <div className="flex items-start gap-4">
-              <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">
-                4
-              </div>
+              <div className="flex-shrink-0 w-3 h-3 bg-primary rounded-full mt-2"></div>
               <div>
-                <h4 className="font-semibold text-foreground">Digital Applications</h4>
-                <p className="text-muted-foreground">Complete and sign your account applications electronically.</p>
+                <h4 className="font-semibold text-foreground mb-1">Exclusive Opportunities & Services</h4>
+                <p className="text-muted-foreground">Unlock curated investments, lending, insurance, healthcare, and concierge-level offerings—tailored for your needs.</p>
               </div>
             </div>
             
             <div className="flex items-start gap-4">
-              <div className="flex-shrink-0 w-8 h-8 bg-emerald text-emerald-foreground rounded-full flex items-center justify-center">
-                <CheckCircle className="h-4 w-4" />
-              </div>
+              <div className="flex-shrink-0 w-3 h-3 bg-primary rounded-full mt-2"></div>
               <div>
-                <h4 className="font-semibold text-foreground">Welcome Call</h4>
-                <p className="text-muted-foreground">Schedule your first meeting with your advisor.</p>
+                <h4 className="font-semibold text-foreground mb-1">Family Office Marketplace</h4>
+                <p className="text-muted-foreground">Access premium solutions for your family, business, and legacy—all in one secure platform.</p>
+              </div>
+            </div>
+            
+            <div className="flex items-start gap-4">
+              <div className="flex-shrink-0 w-3 h-3 bg-primary rounded-full mt-2"></div>
+              <div>
+                <h4 className="font-semibold text-foreground mb-1">Ongoing Learning & Insights</h4>
+                <p className="text-muted-foreground">Explore educational resources, proactive tax planning, and wellness tools to optimize your wealth and health journey.</p>
               </div>
             </div>
           </div>
         </CardContent>
       </Card>
 
+      {/* Getting Started */}
+      <Card className="premium-card bg-gradient-to-r from-primary/5 to-accent/5 border-primary/20">
+        <CardContent className="pt-6">
+          <div className="text-center space-y-4">
+            <h3 className="text-xl font-semibold text-foreground">Getting Started is Simple:</h3>
+            <p className="text-muted-foreground">Just set up your secure portal with your name and email. Everything else is up to you!</p>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Call to Action */}
-      <div className="text-center space-y-4">
-        <Button 
-          onClick={handleStartOnboarding}
-          size="lg"
-          className="btn-primary-gold text-lg px-8 py-3"
-        >
-          Start Your Onboarding Journey
-        </Button>
+      <div className="text-center space-y-6">
+        <div className="space-y-2">
+          <h3 className="text-xl font-semibold text-foreground">Ready to take control?</h3>
+          <p className="text-muted-foreground">Press "Continue" to begin exploring. No commitment or sensitive info required to start!</p>
+        </div>
         
-        <p className="text-sm text-muted-foreground">
-          Need help? Our AI assistant Linda is here to guide you through every step.
-        </p>
+        <div className="flex justify-center gap-4">
+          <Button 
+            onClick={handleStartOnboarding}
+            size="lg"
+            className="btn-primary-gold text-lg px-8 py-3"
+          >
+            Continue
+          </Button>
+        </div>
         
         <div className="flex justify-center items-center gap-4 text-xs text-muted-foreground">
           <span className="flex items-center gap-1">
@@ -191,10 +202,7 @@ export const WelcomeStep: React.FC<WelcomeStepProps> = ({
             SSL Encrypted
           </span>
           <span>•</span>
-          <span className="flex items-center gap-1">
-            <Clock className="h-3 w-3" />
-            15-20 minutes
-          </span>
+          <span>No Sensitive Info Required</span>
           <span>•</span>
           <span>FINRA Regulated</span>
         </div>
