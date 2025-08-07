@@ -221,156 +221,239 @@ export const getPersonaAppSections = (persona: string): AppSection[] => {
     ],
     advisor: [
       {
-        id: 'client-management',
-        title: 'Client Management',
+        id: 'practice-management',
+        title: 'Practice Management',
         modules: [
           {
-            id: 'client-overview',
-            title: 'Client Overview',
-            description: 'Manage all your client relationships',
+            id: 'client-households',
+            title: 'Client Households',
+            description: 'Manage client families and accounts',
             icon: Users,
-            href: '/advisor/clients',
+            href: '/advisor/households',
             color: 'text-primary'
           },
           {
-            id: 'prospect-pipeline',
-            title: 'Prospect Pipeline',
-            description: 'Track and nurture prospects',
-            icon: Target,
-            href: '/advisor/prospects',
+            id: 'accounts',
+            title: 'Accounts',
+            description: 'Portfolio and account management',
+            icon: CreditCard,
+            href: '/advisor/accounts',
             color: 'text-emerald'
           },
           {
-            id: 'client-onboarding',
-            title: 'Client Onboarding',
-            description: 'Streamlined new client setup',
-            icon: UserPlus,
-            href: '/advisor/onboarding',
+            id: 'billing-center',
+            title: 'Billing Center',
+            description: 'Fee billing and payment processing',
+            icon: DollarSign,
+            href: '/advisor/billing',
             color: 'text-accent'
           },
           {
-            id: 'referral-tracking',
-            title: 'Referral Network',
-            description: 'Track referrals and partner relationships',
-            icon: Share,
-            href: '/advisor/referrals',
+            id: 'reporting-center',
+            title: 'Reporting Center',
+            description: 'Client reports and analytics',
+            icon: FileText,
+            href: '/advisor/reports',
             color: 'text-gold'
+          },
+          {
+            id: 'proposals',
+            title: 'Proposals & Composites',
+            description: 'Investment proposals and model portfolios',
+            icon: Target,
+            href: '/advisor/proposals',
+            color: 'text-primary'
           }
         ]
       },
       {
-        id: 'portfolio-management',
-        title: 'Portfolio Management',
+        id: 'client-value-tools',
+        title: 'Client Value Tools',
         modules: [
           {
-            id: 'aum-tracking',
-            title: 'AUM Tracking',
-            description: 'Monitor assets under management',
-            icon: TrendingUp,
-            href: '/advisor/aum',
-            color: 'text-primary'
-          },
-          {
-            id: 'performance-reporting',
-            title: 'Performance Reports',
-            description: 'Generate client performance reports',
-            icon: PieChart,
-            href: '/advisor/performance',
+            id: 'tax-return-scan',
+            title: 'Scan Client Tax Return',
+            description: 'AI-powered tax return analysis and insights',
+            icon: Calculator,
+            href: '/advisor/tax-scan',
+            status: 'premium',
+            badge: 'NEW',
             color: 'text-emerald'
           },
           {
-            id: 'risk-analysis',
-            title: 'Risk Analysis',
-            description: 'Portfolio risk assessment tools',
+            id: 'estate-plan-creator',
+            title: 'Create Estate Plan',
+            description: 'Digital estate planning collaboration tool',
             icon: Shield,
-            href: '/advisor/risk',
+            href: '/advisor/estate-planning',
+            status: 'premium',
+            badge: 'NEW',
+            color: 'text-gold'
+          },
+          {
+            id: 'portfolio-analyzer',
+            title: 'Portfolio Analyzer',
+            description: 'Advanced portfolio analysis and optimization',
+            icon: PieChart,
+            href: '/advisor/portfolio-analyzer',
+            color: 'text-primary'
+          },
+          {
+            id: 'model-portfolios',
+            title: 'Model Portfolios',
+            description: 'Create and manage investment models',
+            icon: TrendingUp,
+            href: '/advisor/models',
             color: 'text-accent'
           },
           {
-            id: 'rebalancing',
-            title: 'Rebalancing',
-            description: 'Portfolio rebalancing recommendations',
-            icon: Calculator,
-            href: '/advisor/rebalancing',
+            id: 'swag-lead-score',
+            title: 'SWAG Lead Score',
+            description: 'AI-powered prospect scoring system',
+            icon: Star,
+            href: '/advisor/lead-scoring',
             status: 'premium',
             color: 'text-gold'
           }
         ]
       },
       {
-        id: 'business-tools',
-        title: 'Practice Management',
+        id: 'lead-to-sales-engine',
+        title: 'Lead to Sales Engine',
         modules: [
           {
-            id: 'billing',
-            title: 'Billing & Invoicing',
-            description: 'Manage client billing and payments',
-            icon: CreditCard,
-            href: '/advisor/billing',
+            id: 'create-campaign',
+            title: 'Create Campaign',
+            description: 'Launch marketing and nurture campaigns',
+            icon: Target,
+            href: '/advisor/campaigns/create',
+            color: 'text-primary'
+          },
+          {
+            id: 'track-leads',
+            title: 'Track Leads',
+            description: 'Monitor lead sources and conversion',
+            icon: Users,
+            href: '/advisor/leads',
+            color: 'text-emerald'
+          },
+          {
+            id: 'nurture-pipeline',
+            title: 'Lead Nurture Pipeline',
+            description: 'Automated lead nurturing workflows',
+            icon: Target,
+            href: '/advisor/nurture',
+            color: 'text-accent'
+          },
+          {
+            id: 'referral-dashboard',
+            title: 'Referral Dashboard',
+            description: 'Track referrals and partner credits',
+            icon: Share,
+            href: '/advisor/referrals',
+            color: 'text-gold'
+          },
+          {
+            id: 'email-sms-marketing',
+            title: 'Email/SMS Marketing',
+            description: 'Multi-channel marketing automation',
+            icon: MessageSquare,
+            href: '/advisor/marketing',
+            status: 'premium',
+            color: 'text-primary'
+          }
+        ]
+      },
+      {
+        id: 'activity-management',
+        title: 'Activity Management',
+        modules: [
+          {
+            id: 'contacts',
+            title: 'Contacts',
+            description: 'Comprehensive contact management',
+            icon: Users,
+            href: '/advisor/contacts',
             color: 'text-primary'
           },
           {
             id: 'calendar',
-            title: 'Calendar & Meetings',
-            description: 'Schedule and manage appointments',
+            title: 'Calendar',
+            description: 'Schedule meetings and appointments',
             icon: Calendar,
             href: '/advisor/calendar',
             color: 'text-emerald'
           },
           {
-            id: 'compliance',
-            title: 'Compliance Center',
-            description: 'Regulatory compliance tools',
-            icon: Shield,
-            href: '/advisor/compliance',
+            id: 'email',
+            title: 'Email',
+            description: 'Integrated email management',
+            icon: Mail,
+            href: '/advisor/email',
             color: 'text-accent'
           },
           {
-            id: 'marketing',
-            title: 'Marketing Hub',
-            description: 'Marketing and communication tools',
-            icon: MessageSquare,
-            href: '/advisor/marketing',
-            status: 'premium',
+            id: 'notes',
+            title: 'Notes',
+            description: 'Client notes and meeting records',
+            icon: FileText,
+            href: '/advisor/notes',
             color: 'text-gold'
+          },
+          {
+            id: 'workflows',
+            title: 'Workflows',
+            description: 'Automated business processes',
+            icon: Target,
+            href: '/advisor/workflows',
+            color: 'text-primary'
+          },
+          {
+            id: 'tasks-opportunities',
+            title: 'Tasks & Opportunities',
+            description: 'Track tasks and business opportunities',
+            icon: Check,
+            href: '/advisor/tasks',
+            color: 'text-emerald'
           }
         ]
       },
       {
-        id: 'resources',
-        title: 'Resources & Analytics',
+        id: 'compliance-support',
+        title: 'Compliance & Support',
         modules: [
           {
-            id: 'marketplace',
-            title: 'Professional Network',
-            description: 'Connect with other professionals',
-            icon: Crown,
-            href: '/marketplace',
-            color: 'text-gold'
-          },
-          {
-            id: 'continuing-education',
-            title: 'Continuing Education',
-            description: 'CE credits and professional development',
-            icon: BookOpen,
-            href: '/advisor/education',
-            color: 'text-emerald'
-          },
-          {
-            id: 'business-analytics',
-            title: 'Business Analytics',
-            description: 'Practice performance insights',
-            icon: TrendingUp,
-            href: '/advisor/analytics',
+            id: 'alerts-announcements',
+            title: 'Alerts & Announcements',
+            description: 'Important updates and notifications',
+            icon: Bell,
+            href: '/advisor/alerts',
             color: 'text-primary'
           },
           {
-            id: 'document-library',
-            title: 'Document Library',
-            description: 'Shared resources and templates',
-            icon: FileText,
-            href: '/advisor/documents',
+            id: 'document-vault',
+            title: 'Secure Document Vault',
+            description: 'Encrypted document storage and sharing',
+            icon: Lock,
+            href: '/advisor/vault',
+            color: 'text-emerald'
+          },
+          {
+            id: 'user-settings',
+            title: 'User Settings',
+            description: 'Profile and system preferences',
+            icon: Settings,
+            href: '/advisor/settings',
             color: 'text-accent'
+          },
+          {
+            id: 'ai-concierge',
+            title: 'Support & AI Concierge',
+            description: 'Get help from Linda AI assistant',
+            icon: MessageSquare,
+            href: '/advisor/support',
+            badge: 'Ask Linda',
+            color: 'text-gold'
           }
         ]
       }

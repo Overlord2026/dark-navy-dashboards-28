@@ -45,12 +45,12 @@ export const PersonaPracticeManagement: React.FC<PersonaPracticeManagementProps>
     const modulesByPersona: Record<string, PracticeModule[]> = {
       advisor: [
         {
-          id: 'client-management',
-          title: 'Client Management',
-          description: 'Manage all client relationships and portfolios',
+          id: 'client-households',
+          title: 'Client Households',
+          description: 'Manage client families and accounts',
           icon: Users,
-          href: '/advisor/clients',
-          metrics: { value: '42', label: 'Active Clients', trend: 'up' }
+          href: '/advisor/households',
+          metrics: { value: '42', label: 'Active Households', trend: 'up' }
         },
         {
           id: 'aum-tracking',
@@ -61,9 +61,43 @@ export const PersonaPracticeManagement: React.FC<PersonaPracticeManagementProps>
           metrics: { value: '$347.9M', label: 'Total AUM', trend: 'up' }
         },
         {
+          id: 'tax-return-scan',
+          title: 'Scan Tax Return',
+          description: 'AI-powered tax analysis and insights',
+          icon: Calculator,
+          href: '/advisor/tax-scan',
+          status: 'premium',
+          metrics: { value: '15', label: 'Scans This Month', trend: 'up' }
+        },
+        {
+          id: 'estate-planning',
+          title: 'Create Estate Plan',
+          description: 'Digital estate planning collaboration',
+          icon: Shield,
+          href: '/advisor/estate-planning',
+          status: 'premium'
+        },
+        {
+          id: 'lead-campaigns',
+          title: 'Lead Campaigns',
+          description: 'Marketing campaigns and lead tracking',
+          icon: Target,
+          href: '/advisor/campaigns',
+          metrics: { value: '3', label: 'Active Campaigns', trend: 'up' }
+        },
+        {
+          id: 'referral-tracking',
+          title: 'Referral Dashboard',
+          description: 'Track referrals and partner credits',
+          icon: Crown,
+          href: '/advisor/referrals',
+          status: 'premium',
+          metrics: { value: '8', label: 'Pending Referrals', trend: 'neutral' }
+        },
+        {
           id: 'billing',
-          title: 'Billing & Invoicing',
-          description: 'Manage client billing and fee collection',
+          title: 'Billing Center',
+          description: 'Fee billing and payment processing',
           icon: CreditCard,
           href: '/advisor/billing'
         },
@@ -73,14 +107,6 @@ export const PersonaPracticeManagement: React.FC<PersonaPracticeManagementProps>
           description: 'Regulatory compliance and reporting',
           icon: Shield,
           href: '/advisor/compliance',
-          status: 'premium'
-        },
-        {
-          id: 'marketing',
-          title: 'Marketing Hub',
-          description: 'Client communications and marketing',
-          icon: MessageSquare,
-          href: '/advisor/marketing',
           status: 'premium'
         },
         {
