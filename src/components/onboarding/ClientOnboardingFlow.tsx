@@ -8,7 +8,8 @@ import { WelcomeStep } from './steps/WelcomeStep';
 import { SecureAccountStep } from './steps/SecureAccountStep';
 import { DashboardTourStep } from './steps/DashboardTourStep';
 import { OptionalAccountLinkingStep } from './steps/OptionalAccountLinkingStep';
-import { FamilyGoalsStep } from './steps/FamilyGoalsStep';
+import { GoalSettingStep } from './steps/GoalSettingStep';
+import { FamilySetupStep } from './steps/FamilySetupStep';
 import { WelcomeCallStep } from './steps/WelcomeCallStep';
 import { CompletionStep } from './steps/CompletionStep';
 import { AIAssistant } from './AIAssistant';
@@ -213,8 +214,10 @@ export const ClientOnboardingFlow: React.FC<ClientOnboardingFlowProps> = ({
         return <DashboardTourStep {...stepProps} />;
       case 'optional-linking':
         return <OptionalAccountLinkingStep {...stepProps} />;
-      case 'family-goals':
-        return <FamilyGoalsStep {...stepProps} />;
+      case 'goals':
+        return <GoalSettingStep {...stepProps} />;
+      case 'family':
+        return <FamilySetupStep {...stepProps} />;
       case 'welcome-call':
         return <WelcomeCallStep {...stepProps} />;
       case 'completion':

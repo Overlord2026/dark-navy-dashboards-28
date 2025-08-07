@@ -50,20 +50,16 @@ export const WelcomeStep: React.FC<WelcomeStepProps> = ({
           </div>
         )}
         
-        <div className="text-5xl mb-2">🎉</div>
         <h1 className="text-4xl font-display font-bold text-foreground">
-          Welcome to Your Boutique Family Office™ Portal
+          🎉 Welcome to Your Boutique Family Office™ Portal
         </h1>
         
-        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-          Discover a New Standard in Wealth & Well-being
-        </p>
-        
-        <div className="flex justify-center">
-          <Badge variant="secondary" className="text-sm px-4 py-2">
-            <Shield className="h-4 w-4 mr-2" />
-            Bank-Level Security & Encryption
-          </Badge>
+        <div className="space-y-2 text-lg text-muted-foreground max-w-3xl mx-auto">
+          <p>• Discover a New Standard in Wealth & Well-being</p>
+          <p>• Bank-Level Security & Encryption</p>
+          <p>• Quick & Easy: Set up your portal in minutes.</p>
+          <p>• Secure & Private: Only share what you choose. No sensitive info required unless you engage an advisor.</p>
+          <p>• Expert Support: Friendly, non-salesy help if you need it.</p>
         </div>
       </div>
 
