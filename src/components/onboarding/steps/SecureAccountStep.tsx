@@ -23,12 +23,42 @@ export const SecureAccountStep: React.FC<SecureAccountStepProps> = ({
   currentStep,
   totalSteps
 }) => {
-  const [formData, setFormData] = React.useState({
-    firstName: data?.clientInfo?.primaryClient?.firstName || '',
-    lastName: data?.clientInfo?.primaryClient?.lastName || '',
-    email: data?.clientInfo?.primaryClient?.email || '',
-    phone: data?.clientInfo?.primaryClient?.phone || ''
+  const [formData, setFormData] = React.useState(() => {
+    // Load from localStorage first
+    const saved = localStorage.getItem('onboarding-data');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        const client = parsed?.clientInfo?.primaryClient;
+        if (client) {
+          return {
+            firstName: client.firstName || '',
+            lastName: client.lastName || '',
+            email: client.email || '',
+            phone: client.phone || ''
+          };
+        }
+      } catch {}
+    }
+    return {
+      firstName: data?.clientInfo?.primaryClient?.firstName || '',
+      lastName: data?.clientInfo?.primaryClient?.lastName || '',
+      email: data?.clientInfo?.primaryClient?.email || '',
+      phone: data?.clientInfo?.primaryClient?.phone || ''
+    };
   });
+
+  // Auto-save to localStorage on form changes
+  React.useEffect(() => {
+    const currentData = JSON.parse(localStorage.getItem('onboarding-data') || '{}');
+    localStorage.setItem('onboarding-data', JSON.stringify({
+      ...currentData,
+      clientInfo: {
+        ...currentData.clientInfo,
+        primaryClient: formData
+      }
+    }));
+  }, [formData]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

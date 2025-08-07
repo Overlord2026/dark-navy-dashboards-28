@@ -25,6 +25,15 @@ export const OptionalAccountLinkingStep: React.FC<OptionalAccountLinkingStepProp
 
   const handleSelection = (method: 'plaid' | 'manual' | 'skip') => {
     setSelectedMethod(method);
+    
+    if (method === 'plaid') {
+      // TODO: Implement Plaid connection
+      console.log('Plaid integration coming soon');
+    } else if (method === 'manual') {
+      // TODO: Open manual entry form
+      console.log('Manual entry form coming soon');
+    }
+    
     onComplete({
       assetLinking: {
         method: method === 'skip' ? null : method,

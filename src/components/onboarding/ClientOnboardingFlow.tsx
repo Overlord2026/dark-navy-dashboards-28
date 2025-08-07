@@ -61,17 +61,35 @@ export const ClientOnboardingFlow: React.FC<ClientOnboardingFlowProps> = ({
     }
   };
 
-  const [data, setData] = useState<OnboardingStepData>(
-    hasExistingProgress && progress?.stepData ? progress.stepData : initialData
-  );
+  const [data, setData] = useState<OnboardingStepData>(() => {
+    // Load from localStorage first, then progress, then initial data
+    const savedData = localStorage.getItem('onboarding-data');
+    if (savedData) {
+      try {
+        return JSON.parse(savedData);
+      } catch {
+        // Fall through to other sources
+      }
+    }
+    return hasExistingProgress && progress?.stepData ? progress.stepData : initialData;
+  });
 
   // Restore progress if exists
   useEffect(() => {
     if (progress && hasExistingProgress) {
       setCurrentStep(progress.currentStep);
-      setData(progress.stepData);
+      // Only update data if we don't have more recent localStorage data
+      const savedData = localStorage.getItem('onboarding-data');
+      if (!savedData) {
+        setData(progress.stepData);
+      }
     }
   }, [progress, hasExistingProgress]);
+
+  // Save to localStorage whenever data changes
+  useEffect(() => {
+    localStorage.setItem('onboarding-data', JSON.stringify(data));
+  }, [data]);
 
   // Simplified step configuration for basic onboarding
   const defaultSteps = [
@@ -114,10 +132,13 @@ export const ClientOnboardingFlow: React.FC<ClientOnboardingFlowProps> = ({
   const handleComplete = async (stepData: Partial<OnboardingStepData>) => {
     const updatedData = { ...data, ...stepData };
     setData(updatedData);
+    
+    // Save to localStorage immediately
+    localStorage.setItem('onboarding-data', JSON.stringify(updatedData));
 
     const nextStep = currentStep + 1;
     
-    // Save progress
+    // Save progress to database
     await saveProgress(
       nextStep,
       stepTitles.length,
@@ -130,6 +151,9 @@ export const ClientOnboardingFlow: React.FC<ClientOnboardingFlowProps> = ({
     } else {
       // Mark as completed
       await markCompleted();
+      
+      // Clear localStorage since we're done
+      localStorage.removeItem('onboarding-data');
       
       const finalState: OnboardingState = {
         ...updatedData,
@@ -149,12 +173,21 @@ export const ClientOnboardingFlow: React.FC<ClientOnboardingFlowProps> = ({
     }
   };
 
+  // Handle navigation with data preservation
+  const handlePrevious = () => {
+    setCurrentStep(Math.max(currentStep - 1, 0));
+  };
+
+  const handleNext = () => {
+    setCurrentStep(Math.min(currentStep + 1, stepTitles.length - 1));
+  };
+
   const renderCurrentStep = () => {
     const commonProps = {
       data,
       onComplete: handleComplete,
-      onNext: () => setCurrentStep(Math.min(currentStep + 1, stepTitles.length - 1)),
-      onPrevious: () => setCurrentStep(Math.max(currentStep - 1, 0)),
+      onNext: handleNext,
+      onPrevious: handlePrevious,
       isLoading,
       whiteLabelConfig: effectiveBrandConfig,
       referralInfo,
@@ -243,7 +276,7 @@ export const ClientOnboardingFlow: React.FC<ClientOnboardingFlowProps> = ({
           {/* Mobile-First Navigation */}
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <Button
-              onClick={() => setCurrentStep(Math.max(currentStep - 1, 0))}
+              onClick={handlePrevious}
               disabled={currentStep === 0}
               variant="outline"
               className="w-full md:w-auto flex items-center gap-2 order-2 md:order-1"
@@ -272,7 +305,7 @@ export const ClientOnboardingFlow: React.FC<ClientOnboardingFlowProps> = ({
             )}
 
             <Button
-              onClick={() => setCurrentStep(Math.min(currentStep + 1, stepTitles.length - 1))}
+              onClick={handleNext}
               disabled={currentStep === stepTitles.length - 1}
               className="w-full md:w-auto btn-primary-gold flex items-center gap-2 order-3"
             >
