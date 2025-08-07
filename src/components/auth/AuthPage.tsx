@@ -8,7 +8,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Loader2, Eye, EyeOff } from 'lucide-react';
-// import { ReCaptchaComponent, ReCaptchaRef } from './ReCaptcha'; // Disabled for now
 
 export function AuthPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -19,9 +18,6 @@ export function AuthPage() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  // const [captchaToken, setCaptchaToken] = useState<string | null>(null);
-  // const signInCaptchaRef = useRef<ReCaptchaRef>(null);
-  // const signUpCaptchaRef = useRef<ReCaptchaRef>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -49,7 +45,6 @@ export function AuthPage() {
 
     setIsLoading(true);
     try {
-      // CAPTCHA disabled for now
       const { error } = await supabase.auth.signInWithPassword({
         email: email.trim(),
         password
@@ -126,7 +121,6 @@ export function AuthPage() {
 
     setIsLoading(true);
     try {
-      // CAPTCHA disabled for now
       const { error } = await supabase.auth.signUp({
         email: email.trim(),
         password,
@@ -283,8 +277,6 @@ export function AuthPage() {
                   </div>
                 </div>
                 
-                {/* CAPTCHA disabled for now */}
-                
                 <Button type="submit" className="w-full" disabled={isLoading}>
                   {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   Sign In
@@ -397,8 +389,6 @@ export function AuthPage() {
                     </Button>
                   </div>
                 </div>
-                
-                {/* CAPTCHA disabled for now */}
                 
                 <Button type="submit" className="w-full" disabled={isLoading}>
                   {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}

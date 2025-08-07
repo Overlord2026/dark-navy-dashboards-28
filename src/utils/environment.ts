@@ -10,11 +10,11 @@ export const getEnvironmentConfig = (): EnvironmentConfig => {
   const hostname = typeof window !== 'undefined' ? window.location.hostname : '';
   const origin = typeof window !== 'undefined' ? window.location.origin : '';
   
-  // Detect production environment
-  const isProduction = hostname.includes('mybfocfo.com') || hostname.includes('production');
+  // Detect production environment (only my.bfocfo.com without subdomains)
+  const isProduction = hostname === 'my.bfocfo.com' && !hostname.includes('preview') && !hostname.includes('sandbox');
   
-  // Detect sandbox/staging
-  const isSandbox = hostname.includes('sandbox') || hostname.includes('lovableproject.com');
+  // Detect sandbox/staging (includes all preview and development environments)
+  const isSandbox = hostname.includes('lovableproject.com') || hostname.includes('my.bfocfo.com');
   const isStaging = hostname.includes('staging') || hostname.includes('preview');
   
   // Development is anything else (localhost, etc.)
@@ -32,7 +32,7 @@ export const getEnvironmentConfig = (): EnvironmentConfig => {
   };
 };
 
-// SECURITY: Removed hardcoded bypass email
+// SECURITY: CAPTCHA is disabled in all non-production environments for QA
 export const QA_BYPASS_EMAIL = import.meta.env.DEV ? import.meta.env.VITE_QA_BYPASS_EMAIL || '' : '';
 
 export const isQABypassAllowed = (userEmail?: string): boolean => {

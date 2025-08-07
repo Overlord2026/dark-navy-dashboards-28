@@ -63,7 +63,7 @@ export function AuthPage() {
     setError(null);
 
     try {
-      // Standard Supabase login without CAPTCHA for development
+      // Standard Supabase login for QA environment
       const { data, error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,

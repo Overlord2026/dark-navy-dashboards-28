@@ -7,17 +7,17 @@ import { OnboardingSlideExport } from '@/components/onboarding/OnboardingSlideEx
 import { Users, Activity, AlertTriangle, CheckCircle, Settings, Download } from 'lucide-react';
 
 export function AdminDashboard() {
-  const [captchaDisabled, setCaptchaDisabled] = useState(true); // QA mode
+  const [qaMode, setQaMode] = useState(true); // QA mode
 
   return (
     <PersonaDashboardLayout>
-      {/* CAPTCHA Warning */}
-      {captchaDisabled && (
+      {/* QA Mode Warning */}
+      {qaMode && (
         <Card className="border-amber-200 bg-amber-50 dark:bg-amber-950/20">
           <CardContent className="p-4">
             <div className="flex items-center gap-2 text-amber-800 dark:text-amber-300">
               <AlertTriangle className="h-5 w-5" />
-              <p className="font-medium">⚠️ CAPTCHA Disabled for QA Environment</p>
+              <p className="font-medium">⚠️ QA Mode Active - Development Environment</p>
             </div>
           </CardContent>
         </Card>

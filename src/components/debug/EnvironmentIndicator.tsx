@@ -15,28 +15,28 @@ export function EnvironmentIndicator() {
         env: 'Local Development',
         color: 'bg-blue-500',
         icon: <Info className="h-4 w-4" />,
-        message: 'Running on localhost - All CAPTCHA bypassed'
+        message: 'Running on localhost - Development environment'
       };
     } else if (hostname.includes('lovableproject.com')) {
       return {
         env: 'Lovable Preview',
         color: 'bg-purple-500',
         icon: <Info className="h-4 w-4" />,
-        message: 'Preview environment - CAPTCHA bypassed for QA'
+        message: 'Preview environment - QA mode active'
       };
     } else if (hostname.includes('my.bfocfo.com')) {
       return {
         env: 'Staging/QA',
         color: 'bg-yellow-500',
         icon: <AlertTriangle className="h-4 w-4" />,
-        message: 'QA environment - CAPTCHA bypassed for testing'
+        message: 'QA environment - Testing mode active'
       };
     } else {
       return {
         env: 'Production',
         color: 'bg-green-500',
         icon: <CheckCircle className="h-4 w-4" />,
-        message: 'Production environment - Full CAPTCHA verification active'
+        message: 'Production environment - Full security active'
       };
     }
   };
