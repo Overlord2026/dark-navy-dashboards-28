@@ -47,6 +47,7 @@ import PublicTaxCenter from "./pages/PublicTaxCenter";
 import { AuthPage } from "./pages/AuthPage";
 import { SecuritySettingsPage } from "./pages/SecuritySettingsPage";
 import OnboardingPage from "./pages/OnboardingPage";
+import ClientWelcomeOnboardingPage from "./pages/ClientWelcomeOnboardingPage";
 import PremiumOnboardingPage from "./pages/PremiumOnboardingPage";
 import RoleBasedOnboardingPage from "./pages/RoleBasedOnboardingPage";
 import { ClientDashboard } from "./pages/ClientDashboard";
@@ -150,7 +151,8 @@ function App() {
                            <Route path="/auth" element={<AuthPage />} />
                             <Route path="/auth/:authType" element={<AuthPage />} />
                             <Route path="/auth/:authType/:tenantId" element={<AuthPage />} />
-                             <Route path="/onboarding" element={<OnboardingPage />} />
+        <Route path="/onboarding" element={<OnboardingPage />} />
+        <Route path="/welcome-onboarding" element={<ClientWelcomeOnboardingPage />} />
         <Route path="/premium-onboarding" element={<PremiumOnboardingPage />} />
         <Route path="/professional-onboarding/:role" element={<RoleBasedOnboardingPage />} />
                             <Route path="/dynamic-landing" element={<DynamicLandingController><div /></DynamicLandingController>} />
