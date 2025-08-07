@@ -13,7 +13,7 @@ interface AuthContextType {
   isLoading: boolean;
   isEmailConfirmed: boolean;
   isQABypassActive: boolean;
-  login: (email: string, password: string, captchaToken?: string) => Promise<{ success: boolean; error?: string; requires2FA?: boolean; userId?: string }>;
+  login: (email: string, password: string) => Promise<{ success: boolean; error?: string; requires2FA?: boolean; userId?: string }>;
   signup: (email: string, password: string, userData?: any) => Promise<{ success: boolean; error?: string }>;
   signInWithGoogle: () => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
@@ -157,7 +157,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     return () => subscription.unsubscribe();
   }, []);
 
-  const login = async (email: string, password: string, captchaToken?: string): Promise<{ success: boolean; error?: string; requires2FA?: boolean; userId?: string }> => {
+  const login = async (email: string, password: string): Promise<{ success: boolean; error?: string; requires2FA?: boolean; userId?: string }> => {
     try {
       setIsLoading(true);
       setIsChecking2FA(true); // Set flag to prevent redirect during 2FA check
@@ -167,9 +167,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
-        options: {
-          captchaToken,
-        },
       });
       
       if (error) {
@@ -242,7 +239,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         options: {
           data: userData,
           emailRedirectTo: `${window.location.origin}/`,
-          captchaToken: userData?.captcha_token
         }
       });
       
