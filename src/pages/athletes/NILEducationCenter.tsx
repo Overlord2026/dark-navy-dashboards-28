@@ -40,6 +40,9 @@ import { motion } from 'framer-motion';
 import { NILInviteSystem } from '@/components/education/NILInviteSystem';
 import { NILCertificationBadges } from '@/components/education/NILCertificationBadges';
 import { NILResourceLibrary } from '@/components/education/NILResourceLibrary';
+import NILCurriculumDownloads from '@/components/education/NILCurriculumDownloads';
+import AthleteReferralWallet from '@/components/education/AthleteReferralWallet';
+import NILLanguageToggle from '@/components/education/NILLanguageToggle';
 
 interface NILModule {
   id: string;
@@ -582,7 +585,7 @@ const NILEducationCenter = () => {
       {/* Main Content */}
       <div className="container mx-auto px-4 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-5 lg:grid-cols-10 mb-8">
+          <TabsList className="grid w-full grid-cols-6 lg:grid-cols-12 mb-8">
             <TabsTrigger value="welcome" className="text-xs">Welcome</TabsTrigger>
             <TabsTrigger value="basics" className="text-xs">Basics</TabsTrigger>
             <TabsTrigger value="financial" className="text-xs">Financial</TabsTrigger>
@@ -593,6 +596,8 @@ const NILEducationCenter = () => {
             <TabsTrigger value="family" className="text-xs">Family</TabsTrigger>
             <TabsTrigger value="stories" className="text-xs">Stories</TabsTrigger>
             <TabsTrigger value="resources" className="text-xs">Resources</TabsTrigger>
+            <TabsTrigger value="downloads" className="text-xs">Downloads</TabsTrigger>
+            <TabsTrigger value="wallet" className="text-xs">Wallet</TabsTrigger>
           </TabsList>
 
           <TabsContent value="welcome">
@@ -1047,39 +1052,17 @@ const NILEducationCenter = () => {
                   </div>
                   
                   <NILInviteSystem />
-                  
-                  <div className="mt-8">
-                    <h4 className="text-lg font-semibold mb-4">Frequently Asked Questions</h4>
-                    <div className="space-y-4">
-                      <Card>
-                        <CardContent className="pt-6">
-                          <h5 className="font-semibold mb-2">How do I know if an NIL deal is legitimate?</h5>
-                          <p className="text-sm text-muted-foreground">
-                            Look for verified companies, clear contract terms, and always consult with your compliance office before signing anything.
-                          </p>
-                        </CardContent>
-                      </Card>
-                      <Card>
-                        <CardContent className="pt-6">
-                          <h5 className="font-semibold mb-2">Do I need to pay taxes on NIL income?</h5>
-                          <p className="text-sm text-muted-foreground">
-                            Yes, NIL income is taxable. You'll need to track earnings and may need to make quarterly payments. See our Financial module for details.
-                          </p>
-                        </CardContent>
-                      </Card>
-                      <Card>
-                        <CardContent className="pt-6">
-                          <h5 className="font-semibold mb-2">Can my school help me with NIL deals?</h5>
-                          <p className="text-sm text-muted-foreground">
-                            Schools can provide educational resources and compliance guidance but cannot arrange deals or negotiate on your behalf.
-                          </p>
-                        </CardContent>
-                      </Card>
-                    </div>
-                  </div>
                 </CardContent>
               </Card>
             </div>
+          </TabsContent>
+
+          <TabsContent value="downloads">
+            <NILCurriculumDownloads />
+          </TabsContent>
+
+          <TabsContent value="wallet">
+            <AthleteReferralWallet />
           </TabsContent>
         </Tabs>
 
