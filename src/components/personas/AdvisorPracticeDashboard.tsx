@@ -20,8 +20,14 @@ import {
   Target,
   DollarSign,
   BookOpen,
-  Shield
+  Shield,
+  Scan,
+  FileSearch,
+  HelpCircle
 } from "lucide-react";
+import { LeadSourcesManager } from "@/components/leads/LeadSourcesManager";
+import { UniversalLeadPipeline } from "@/components/personas/UniversalLeadPipeline";
+import { InAppSupport } from "@/components/support/InAppSupport";
 
 export const AdvisorPracticeDashboard: React.FC = () => {
   const user = null; // TODO: Connect to actual user context
@@ -246,50 +252,17 @@ export const AdvisorPracticeDashboard: React.FC = () => {
         )}
       </div>
 
-      {/* Tier Status */}
-      <Card className={isPremium ? "border-primary bg-primary/5" : "border-muted"}>
-        <CardContent className="pt-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="font-semibold flex items-center gap-2">
-                {isPremium ? (
-                  <>
-                    <Crown className="h-5 w-5 text-primary" />
-                    Premium Advisor Plan
-                  </>
-                ) : (
-                  <>
-                    <Shield className="h-5 w-5 text-muted-foreground" />
-                    Basic Advisor Plan
-                  </>
-                )}
-              </h3>
-              <p className="text-sm text-muted-foreground">
-                {isPremium 
-                  ? "Full access to all premium features including CE automation, lead engine, and AI copilot"
-                  : "Essential practice management tools. Upgrade for advanced features and automation"
-                }
-              </p>
-            </div>
-            {!isPremium && (
-              <Button className="gap-2">
-                <Crown className="h-4 w-4" />
-                Upgrade to Premium
-              </Button>
-            )}
-          </div>
-        </CardContent>
-      </Card>
-
       <Tabs defaultValue="overview" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-6">
           <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="basic">Basic Features</TabsTrigger>
+          <TabsTrigger value="leads">Lead Sources</TabsTrigger>
+          <TabsTrigger value="pipeline">Pipeline</TabsTrigger>
           <TabsTrigger value="premium">
-            Premium Features
+            Premium
             {!isPremium && <Lock className="h-3 w-3 ml-1" />}
           </TabsTrigger>
           <TabsTrigger value="training">Training</TabsTrigger>
+          <TabsTrigger value="support">Support</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6">
@@ -339,41 +312,70 @@ export const AdvisorPracticeDashboard: React.FC = () => {
             </Card>
           </div>
 
-          {/* Quick Actions */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Quick Actions</CardTitle>
-              <CardDescription>Common practice management tasks</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <Button variant="outline" className="h-20 flex flex-col gap-2">
-                  <Users className="h-6 w-6" />
-                  Add Client
-                </Button>
-                <Button variant="outline" className="h-20 flex flex-col gap-2">
-                  <Calendar className="h-6 w-6" />
-                  Schedule Meeting
-                </Button>
-                <Button variant="outline" className="h-20 flex flex-col gap-2">
-                  <FileText className="h-6 w-6" />
-                  Upload Document
-                </Button>
-                <Button variant="outline" className="h-20 flex flex-col gap-2">
-                  <MessageSquare className="h-6 w-6" />
-                  Send Message
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+          {/* Quick Actions with AI Tools */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Quick Actions</CardTitle>
+                <CardDescription>Essential practice management tasks</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 gap-4">
+                  <Button variant="outline" className="h-20 flex flex-col gap-2">
+                    <Users className="h-6 w-6" />
+                    Add Client
+                  </Button>
+                  <Button variant="outline" className="h-20 flex flex-col gap-2">
+                    <Calendar className="h-6 w-6" />
+                    Schedule Meeting
+                  </Button>
+                  <Button variant="outline" className="h-20 flex flex-col gap-2">
+                    <FileText className="h-6 w-6" />
+                    Upload Document
+                  </Button>
+                  <Button variant="outline" className="h-20 flex flex-col gap-2">
+                    <MessageSquare className="h-6 w-6" />
+                    Send Message
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>AI-Powered Tools</CardTitle>
+                <CardDescription>Instant analysis and document generation</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 gap-4">
+                  <Button className="h-20 flex flex-col gap-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700">
+                    <Scan className="h-6 w-6" />
+                    Tax Scan
+                  </Button>
+                  <Button className="h-20 flex flex-col gap-2 bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700">
+                    <FileSearch className="h-6 w-6" />
+                    Estate Plan
+                  </Button>
+                  <Button variant="outline" className="h-20 flex flex-col gap-2">
+                    <Brain className="h-6 w-6" />
+                    AI Analysis
+                  </Button>
+                  <Button variant="outline" className="h-20 flex flex-col gap-2">
+                    <Target className="h-6 w-6" />
+                    Risk Profile
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </TabsContent>
 
-        <TabsContent value="basic" className="space-y-6">
-          <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold">Basic Plan Features</h3>
-            <Badge variant="outline">Included in your plan</Badge>
-          </div>
-          <BasicFeatures />
+        <TabsContent value="leads" className="space-y-6">
+          <LeadSourcesManager />
+        </TabsContent>
+
+        <TabsContent value="pipeline" className="space-y-6">
+          <UniversalLeadPipeline persona="advisor" isPremium={isPremium} />
         </TabsContent>
 
         <TabsContent value="premium" className="space-y-6">
@@ -392,87 +394,13 @@ export const AdvisorPracticeDashboard: React.FC = () => {
         </TabsContent>
 
         <TabsContent value="training" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <BookOpen className="h-5 w-5" />
-                Training & Resources
-              </CardTitle>
-              <CardDescription>Get up to speed with your practice management tools</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Button variant="outline" className="h-20 flex flex-col gap-2">
-                  <FileText className="h-6 w-6" />
-                  Getting Started Guide
-                </Button>
-                <Button variant="outline" className="h-20 flex flex-col gap-2">
-                  <Users className="h-6 w-6" />
-                  Client Onboarding Training
-                </Button>
-                <Button variant="outline" className="h-20 flex flex-col gap-2">
-                  <Shield className="h-6 w-6" />
-                  Compliance Best Practices
-                </Button>
-                <Button variant="outline" className="h-20 flex flex-col gap-2">
-                  <TrendingUp className="h-6 w-6" />
-                  Growth Strategies
-                </Button>
-              </div>
-              
-              <div className="mt-6 p-4 bg-muted/50 rounded-lg">
-                <h4 className="font-semibold mb-2">What's Included:</h4>
-                <ul className="space-y-1 text-sm text-muted-foreground">
-                  <li>• Step-by-step onboarding videos</li>
-                  <li>• Best practices documentation</li>
-                  <li>• Live training webinars</li>
-                  <li>• Compliance templates and checklists</li>
-                  {isPremium && <li>• Premium feature deep-dives</li>}
-                  {isPremium && <li>• One-on-one consultation calls</li>}
-                </ul>
-              </div>
-            </CardContent>
-          </Card>
+          <BasicFeatures />
+        </TabsContent>
+
+        <TabsContent value="support" className="space-y-6">
+          <InAppSupport />
         </TabsContent>
       </Tabs>
-
-      {/* Upgrade CTA for Basic Users */}
-      {!isPremium && (
-        <Card className="border-primary bg-gradient-to-r from-primary/5 to-accent/5">
-          <CardContent className="pt-6">
-            <div className="text-center space-y-4">
-              <Crown className="h-12 w-12 text-primary mx-auto" />
-              <h3 className="text-xl font-semibold">Unlock Your Practice's Full Potential</h3>
-              <p className="text-muted-foreground max-w-2xl mx-auto">
-                Upgrade to Premium for CE automation, advanced lead generation, AI-powered insights, 
-                campaign management, custom reporting, and dedicated support.
-              </p>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto text-sm">
-                <div className="flex items-center gap-2">
-                  <Award className="h-4 w-4 text-primary" />
-                  CE Automation
-                </div>
-                <div className="flex items-center gap-2">
-                  <Target className="h-4 w-4 text-primary" />
-                  Lead Engine
-                </div>
-                <div className="flex items-center gap-2">
-                  <Brain className="h-4 w-4 text-primary" />
-                  AI Copilot
-                </div>
-                <div className="flex items-center gap-2">
-                  <TrendingUp className="h-4 w-4 text-primary" />
-                  Advanced Analytics
-                </div>
-              </div>
-              <Button size="lg" className="gap-2">
-                <Crown className="h-4 w-4" />
-                Upgrade to Premium
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      )}
     </div>
   );
 };
