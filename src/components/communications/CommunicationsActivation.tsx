@@ -11,18 +11,22 @@ import {
   Users, 
   CheckCircle,
   ArrowRight,
-  Sparkles
+  Sparkles,
+  PlayCircle
 } from 'lucide-react';
 import { NumberPortingWizard } from './NumberPortingWizard';
 import { CommunicationsDashboard } from './CommunicationsDashboard';
+import { CommunicationsWalkthrough } from './CommunicationsWalkthrough';
+import { BFOTrainingDashboard } from './BFOTrainingDashboard';
 
 interface CommunicationsActivationProps {
   persona: 'advisor' | 'attorney' | 'cpa' | 'client';
 }
 
 export function CommunicationsActivation({ persona }: CommunicationsActivationProps) {
-  const [activationStep, setActivationStep] = useState<'intro' | 'setup' | 'active'>('intro');
+  const [activationStep, setActivationStep] = useState<'intro' | 'setup' | 'active' | 'training'>('intro');
   const [phoneNumber, setPhoneNumber] = useState<string | null>(null);
+  const [showWalkthrough, setShowWalkthrough] = useState(false);
 
   const features = [
     {
@@ -92,8 +96,32 @@ export function CommunicationsActivation({ persona }: CommunicationsActivationPr
 
   const content = personaContent[persona];
 
+  if (activationStep === 'training') {
+    return (
+      <BFOTrainingDashboard 
+        onStartTraining={(featureId) => {
+          console.log('Starting training for:', featureId);
+          setShowWalkthrough(true);
+        }}
+      />
+    );
+  }
+
   if (activationStep === 'active') {
-    return <CommunicationsDashboard persona={persona} />;
+    return (
+      <>
+        <CommunicationsDashboard persona={persona} />
+        <CommunicationsWalkthrough
+          isOpen={showWalkthrough}
+          onClose={() => setShowWalkthrough(false)}
+          onComplete={() => {
+            setShowWalkthrough(false);
+            // Could show completion celebration here
+          }}
+          persona={persona}
+        />
+      </>
+    );
   }
 
   if (activationStep === 'setup') {
@@ -158,16 +186,28 @@ export function CommunicationsActivation({ persona }: CommunicationsActivationPr
             </div>
           </div>
 
-          <div className="text-center pt-6 border-t">
-            <Button 
-              size="lg" 
-              onClick={() => setActivationStep('setup')}
-              className="text-lg px-8"
-            >
-              Activate Communications
-              <ArrowRight className="h-5 w-5 ml-2" />
-            </Button>
-            <p className="text-sm text-muted-foreground mt-3">
+          <div className="text-center pt-6 border-t space-y-4">
+            <div className="flex gap-3 justify-center">
+              <Button 
+                size="lg" 
+                onClick={() => setActivationStep('setup')}
+                className="text-lg px-8"
+              >
+                Activate Communications
+                <ArrowRight className="h-5 w-5 ml-2" />
+              </Button>
+              
+              <Button 
+                variant="outline"
+                size="lg" 
+                onClick={() => setActivationStep('training')}
+                className="text-lg px-6"
+              >
+                <PlayCircle className="h-5 w-5 mr-2" />
+                View Training
+              </Button>
+            </div>
+            <p className="text-sm text-muted-foreground">
               Setup takes less than 5 minutes • No contracts required • Cancel anytime
             </p>
           </div>
