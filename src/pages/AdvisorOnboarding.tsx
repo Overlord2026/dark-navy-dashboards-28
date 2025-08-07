@@ -4,21 +4,29 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { AdvisorWelcomeModal } from "@/components/advisor/AdvisorWelcomeModal";
-import { AdvisorSetupFlow } from "@/components/advisor/AdvisorSetupFlow";
+import { AdvisorOnboardingWizard } from "@/components/advisor/AdvisorOnboardingWizard";
+import { LindaAIAssistant } from "@/components/advisor/LindaAIAssistant";
 import { PageTransition, StaggerContainer } from "@/components/animations/PageTransition";
 
 export default function AdvisorOnboarding() {
   const navigate = useNavigate();
   const [showWelcomeModal, setShowWelcomeModal] = useState(true);
   const [setupStarted, setSetupStarted] = useState(false);
+  const [showLinda, setShowLinda] = useState(false);
+  const [lindaMinimized, setLindaMinimized] = useState(false);
 
   const handleStartSetup = () => {
     setShowWelcomeModal(false);
     setSetupStarted(true);
+    setShowLinda(true);
   };
 
   const handleSkipForNow = () => {
     setShowWelcomeModal(false);
+    navigate("/advisor-dashboard");
+  };
+
+  const handleOnboardingComplete = () => {
     navigate("/advisor-dashboard");
   };
 
@@ -34,7 +42,7 @@ export default function AdvisorOnboarding() {
         
         {setupStarted && (
           <PageTransition delay={0.2}>
-            <AdvisorSetupFlow />
+            <AdvisorOnboardingWizard onComplete={handleOnboardingComplete} />
           </PageTransition>
         )}
         
@@ -70,6 +78,15 @@ export default function AdvisorOnboarding() {
           </StaggerContainer>
         )}
       </div>
+
+      {/* Linda AI Assistant */}
+      {showLinda && (
+        <LindaAIAssistant
+          isMinimized={lindaMinimized}
+          onToggleMinimize={() => setLindaMinimized(!lindaMinimized)}
+          onClose={() => setShowLinda(false)}
+        />
+      )}
     </ThreeColumnLayout>
   );
 }
