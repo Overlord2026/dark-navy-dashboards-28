@@ -1,14 +1,20 @@
 
 import React, { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
+import { MarketplaceShowcase } from "@/components/marketplace/MarketplaceShowcase";
 import { EliteMarketplaceHeader } from "@/components/marketplace/EliteMarketplaceHeader";
 import { MarketplaceNavigation, serviceCategories } from "@/components/marketplace/MarketplaceNavigation";
 import { EliteDirectory } from "@/components/marketplace/EliteDirectory";
 import { useMarketplace } from "@/hooks/useMarketplace";
 
 export default function Marketplace() {
-  // Default to first category
-  const [activeCategory, setActiveCategory] = useState<string>(serviceCategories[0].id);
+  const [searchParams] = useSearchParams();
+  const categoryParam = searchParams.get('category');
+  
+  // Show showcase if no category is selected
+  const [showShowcase, setShowShowcase] = useState(!categoryParam);
+  const [activeCategory, setActiveCategory] = useState<string>(categoryParam || serviceCategories[0].id);
   const [activeSubcategory, setActiveSubcategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const { categories, listings } = useMarketplace();
@@ -45,9 +51,9 @@ export default function Marketplace() {
 
   const handleCategoryChange = (categoryId: string) => {
     setActiveCategory(categoryId);
-    setActiveSubcategory(null); // Reset subcategory when category changes
+    setActiveSubcategory(null);
+    setShowShowcase(false);
     
-    // Clear search when changing categories
     if (searchQuery) {
       setSearchQuery("");
     }
@@ -56,19 +62,36 @@ export default function Marketplace() {
   const handleSubcategoryChange = (categoryId: string, subcategoryId: string) => {
     setActiveCategory(categoryId);
     setActiveSubcategory(subcategoryId);
+    setShowShowcase(false);
     
-    // Clear search when changing subcategories
     if (searchQuery) {
       setSearchQuery("");
     }
   };
+
+  const handleSearchChange = (query: string) => {
+    setSearchQuery(query);
+    if (query.trim()) {
+      setShowShowcase(false);
+    }
+  };
+
+  if (showShowcase) {
+    return (
+      <ThreeColumnLayout title="Family Office Marketplace">
+        <div className="space-y-6 px-4 py-6 max-w-7xl mx-auto">
+          <MarketplaceShowcase />
+        </div>
+      </ThreeColumnLayout>
+    );
+  }
 
   return (
     <ThreeColumnLayout title="Family Office Marketplace">
       <div className="space-y-6 px-4 py-6 max-w-7xl mx-auto">
         <EliteMarketplaceHeader 
           searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
+          setSearchQuery={handleSearchChange}
         />
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">

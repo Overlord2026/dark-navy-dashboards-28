@@ -6,9 +6,11 @@ import { Badge } from '@/components/ui/badge';
 import { PersonaOnboardingFlow } from '@/components/onboarding/PersonaOnboardingFlow';
 import { InviteFlowModal } from '@/components/viral/InviteFlowModal';
 import { VIPBadge, getVIPStatus } from '@/components/badges/VIPBadgeSystem';
+import { AppDrawerLayout } from '@/components/dashboard/AppDrawerLayout';
 import { useUser } from '@/context/UserContext';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { PersonaType } from '@/types/personas';
+import { getPersonaAppSections } from '@/data/personaAppModules';
 import { 
   TrendingUp, 
   Users, 
@@ -312,8 +314,51 @@ export const PersonaDashboardLayout: React.FC<PersonaDashboardLayoutProps> = ({ 
   const highPrioritySections = sections.filter(s => s.priority === 'high');
   const mediumPrioritySections = sections.filter(s => s.priority === 'medium');
 
+  // Get app sections for persona
+  const appSections = getPersonaAppSections(role);
+  
+  // Mock quick stats based on persona
+  const getQuickStats = () => {
+    switch (role) {
+      case 'advisor':
+        return [
+          { label: 'Total AUM', value: '$347.9M', trend: 'up' as const },
+          { label: 'Active Clients', value: '42', trend: 'up' as const },
+          { label: 'YTD Performance', value: '+12.8%', trend: 'up' as const }
+        ];
+      case 'accountant':
+        return [
+          { label: 'Active Clients', value: '67', trend: 'up' as const },
+          { label: 'Returns Filed', value: '145', trend: 'up' as const },
+          { label: 'Upcoming Deadlines', value: '7', trend: 'neutral' as const }
+        ];
+      case 'attorney':
+        return [
+          { label: 'Active Cases', value: '23', trend: 'up' as const },
+          { label: 'Billable Hours', value: '156', trend: 'up' as const },
+          { label: 'Documents Pending', value: '12', trend: 'neutral' as const }
+        ];
+      default:
+        return [
+          { label: 'Net Worth', value: '$2.4M', trend: 'up' as const },
+          { label: 'YTD Return', value: '+8.7%', trend: 'up' as const },
+          { label: 'Goal Progress', value: '73%', trend: 'up' as const }
+        ];
+    }
+  };
+
+  const quickStats = getQuickStats();
+
   return (
     <MainLayout>
+      <AppDrawerLayout
+        sections={appSections}
+        welcomeTitle={`Welcome back, ${role === 'client' ? 'Family' : role.charAt(0).toUpperCase() + role.slice(1)}`}
+        welcomeDescription={`Your ${role === 'client' ? 'family office' : 'practice management'} dashboard`}
+        quickStats={quickStats}
+        className="container mx-auto"
+      />
+      
       <div className="container mx-auto p-6 space-y-6">
         {/* Welcome Header */}
         <div className="flex items-center justify-between">
