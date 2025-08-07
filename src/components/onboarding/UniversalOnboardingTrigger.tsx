@@ -7,6 +7,8 @@ import { CPAOnboardingSlides } from './CPAOnboardingSlides';
 import { AttorneyOnboardingSlides } from './AttorneyOnboardingSlides';
 import { RealtorOnboardingSlides } from './RealtorOnboardingSlides';
 import { HealthcareOnboardingSlides } from './HealthcareOnboardingSlides';
+import { FamilyOfficeOnboardingSlides } from './FamilyOfficeOnboardingSlides';
+import { InsuranceOnboardingSlides } from './InsuranceOnboardingSlides';
 import { 
   Play, 
   Star, 
@@ -23,7 +25,7 @@ import {
 } from 'lucide-react';
 
 interface UniversalOnboardingTriggerProps {
-  persona: 'advisor' | 'cpa' | 'attorney' | 'realtor' | 'consultant';
+  persona: 'advisor' | 'cpa' | 'attorney' | 'realtor' | 'consultant' | 'family_office' | 'insurance';
 }
 
 const personaConfig = {
@@ -66,6 +68,22 @@ const personaConfig = {
     icons: [<Heart className="h-4 w-4 text-primary" />, <BarChart3 className="h-4 w-4 text-primary" />, <Target className="h-4 w-4 text-primary" />],
     premiumFeature: "Health Marketplace, Legacy Vault, Advanced Analytics",
     component: HealthcareOnboardingSlides
+  },
+  family_office: {
+    title: "New to Family Office Platform?",
+    description: "Master your family's wealth, legacy, and communication with our comprehensive platform. Learn dashboard navigation, vault management, and family coordination.",
+    features: ["Wealth Dashboard", "Legacy Vault", "Family Coordination"],
+    icons: [<Crown className="h-4 w-4 text-primary" />, <Users className="h-4 w-4 text-primary" />, <BarChart3 className="h-4 w-4 text-primary" />],
+    premiumFeature: "Legacy Vault, Marketplace Access, Family Council Tools",
+    component: FamilyOfficeOnboardingSlides
+  },
+  insurance: {
+    title: "New to Insurance Hub?",
+    description: "Master your insurance practice with our comprehensive platform. Learn client management, quoting systems, and compliance tracking.",
+    features: ["Practice Dashboard", "Multi-Product Quoting", "Compliance Tracking"],
+    icons: [<BarChart3 className="h-4 w-4 text-primary" />, <Users className="h-4 w-4 text-primary" />, <Target className="h-4 w-4 text-primary" />],
+    premiumFeature: "Agency Tools, Marketplace Referrals, Advanced Analytics",
+    component: InsuranceOnboardingSlides
   }
 };
 
