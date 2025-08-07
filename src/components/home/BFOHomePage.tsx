@@ -4,6 +4,7 @@ import { ArrowRight, Users, Shield } from 'lucide-react';
 import { getLogoConfig } from '@/assets/logos';
 import { useNavigate } from 'react-router-dom';
 import { QuickAPITestRunner } from '@/components/admin/QuickAPITestRunner';
+import { PlatformMapQAChecklist } from '@/components/qa/PlatformMapQAChecklist';
 
 export function BFOHomePage() {
   const navigate = useNavigate();
@@ -117,6 +118,17 @@ export function BFOHomePage() {
               </div>
             </div>
             <QuickAPITestRunner />
+          </div>
+        </div>
+
+        {/* Platform Map QA Testing Section */}
+        <div className="mt-8 w-full max-w-4xl mx-auto">
+          <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
+            <div className="flex items-center gap-2 mb-4">
+              <Shield className="h-5 w-5 text-gold" />
+              <h2 className="text-xl font-semibold text-white">Platform Map QA Checklist</h2>
+            </div>
+            <PlatformMapQAChecklist />
           </div>
         </div>
       </div>
