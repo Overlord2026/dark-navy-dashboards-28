@@ -16,6 +16,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { TopNavigationBar } from "@/components/navigation/TopNavigationBar";
 
 interface ThreeColumnLayoutProps {
   children: ReactNode;
@@ -218,6 +219,11 @@ export function ThreeColumnLayout({
         )}
 
         <div className="flex-1 flex flex-col overflow-hidden bg-background">
+          {/* Top Navigation Bar */}
+          {(isDashboardPage || location.pathname.includes('education') || location.pathname.includes('marketplace') || location.pathname.includes('healthcare') || location.pathname.includes('lending') || location.pathname.includes('insurance') || location.pathname.includes('estate') || location.pathname.includes('profile')) && (
+            <TopNavigationBar />
+          )}
+          
           {isHomePage ? (
             <div className="flex flex-col items-center w-full">
             </div>
