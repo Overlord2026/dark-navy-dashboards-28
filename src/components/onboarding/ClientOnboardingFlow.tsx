@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Progress } from '@/components/ui/progress';
 import { Card, CardContent } from '@/components/ui/card';
-import { ChevronLeft, ChevronRight, MessageCircle, Sparkles } from 'lucide-react';
+import { ChevronLeft, ChevronRight, MessageCircle, Sparkles, Archive } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { WelcomeStep } from './steps/WelcomeStep';
@@ -280,8 +280,8 @@ export const ClientOnboardingFlow: React.FC<ClientOnboardingFlowProps> = ({
             </CardContent>
           </Card>
 
-          {/* Mobile-First Navigation */}
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+          {/* Enhanced Navigation with Save Progress */}
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4 p-4 bg-muted/30 rounded-lg">
             <Button
               onClick={handlePrevious}
               disabled={currentStep === 0}
@@ -292,12 +292,23 @@ export const ClientOnboardingFlow: React.FC<ClientOnboardingFlowProps> = ({
               Previous
             </Button>
 
-            {/* AI Assistant Button - Prominent on Mobile */}
-            {effectiveBrandConfig.features.aiAssistant && (
-              <div className="flex items-center gap-2 order-1 md:order-2">
-                <span className="text-sm text-muted-foreground hidden md:block">
-                  Need help?
-                </span>
+            <div className="flex flex-col md:flex-row items-center gap-3 order-1 md:order-2">
+              {/* Save Progress Button */}
+              <Button
+                variant="ghost"
+                size="sm"
+                className="flex items-center gap-2 text-muted-foreground hover:text-foreground"
+                onClick={() => {
+                  localStorage.setItem('onboarding-data', JSON.stringify(data));
+                  // Could add toast notification here
+                }}
+              >
+                <Archive className="h-4 w-4" />
+                <span className="text-xs">Progress Saved</span>
+              </Button>
+
+              {/* AI Assistant Button */}
+              {effectiveBrandConfig.features.aiAssistant && (
                 <Button
                   onClick={() => setShowAIAssistant(true)}
                   variant="ghost"
@@ -308,8 +319,8 @@ export const ClientOnboardingFlow: React.FC<ClientOnboardingFlowProps> = ({
                   <span className="md:hidden">Chat with Linda</span>
                   <span className="hidden md:inline">Ask Linda</span>
                 </Button>
-              </div>
-            )}
+              )}
+            </div>
 
             <Button
               onClick={handleNext}
