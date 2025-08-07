@@ -1,0 +1,83 @@
+{
+  "navigation": {
+    "home": "Startseite",
+    "dashboard": "Dashboard",
+    "vault": "Sicherer Vermächtnisspeicher™",
+    "settings": "Einstellungen",
+    "help": "Hilfe",
+    "outreach": "Globale Reichweite",
+    "pressKit": "Pressepaket"
+  },
+  "vault": {
+    "title": "Sicherer Vermächtnisspeicher™",
+    "tagline": "Schützen Sie, was wichtig ist. Geben Sie es weiter—sicher, für Generationen.",
+    "patentPending": "Patent Angemeldet"
+  },
+  "campaign": {
+    "globalBanner": "🌎 Jetzt weltweit verfügbar—in Ihrer Sprache!",
+    "hero": {
+      "headline": "Jede Familie Verdient ein Boutique Family Office—Jetzt Weltweit",
+      "subheadline": "Ihr Vermögen. Ihr Erbe. Ihr privates digitales Family Office—jetzt verfügbar in Spanisch/Französisch/Portugiesisch/Chinesisch/Arabisch/Ihrer-Sprache."
+    },
+    "benefits": {
+      "global": "Sehen Sie alles was Sie besitzen, wo immer Sie leben",
+      "secure": "Arbeiten Sie mit vertrauenswürdigen Fachleuten, in Ihrer Sprache",
+      "collaborative": "Kontrollieren Sie Datenschutz, Compliance und globalen Zugang",
+      "ai": "Basierend auf unseren Treuhandpflicht-Prinzipien™"
+    },
+    "cta": {
+      "getStarted": "Kostenlos Beginnen",
+      "watchDemo": "Demo Ansehen"
+    },
+    "trust": {
+      "fiduciary": "Basierend auf unseren Treuhandpflicht-Prinzipien™—Ihre Interessen zuerst",
+      "bankGrade": "Bankenklasse-Sicherheit",
+      "multiLanguage": "Mehrsprachiger Support",
+      "compliant": "Globale Compliance"
+    }
+  },
+  "outreach": {
+    "title": "Globale Redaktionelle Reichweite",
+    "subtitle": "VIP-Medienkampagnen und Presseberichterstattung verwalten",
+    "uploadContacts": "Kontaktliste Hochladen",
+    "sendInvites": "Personalisierte Einladungen Senden",
+    "trackEngagement": "Engagement Verfolgen",
+    "manageFollowups": "Nachfassaktionen Verwalten",
+    "campaignMetrics": "Kampagnen-Metriken",
+    "editorialAccess": "VIP-Redaktionszugang",
+    "pressInquiries": "Presseanfragen",
+    "founderInterview": "Gründer-Interview",
+    "downloadPressKit": "Pressepaket Herunterladen"
+  },
+  "pressKit": {
+    "title": "Globales Pressepaket",
+    "subtitle": "Medien-Assets und Vorlagen für internationale Berichterstattung",
+    "mediaAssets": "Medien-Assets",
+    "pressRelease": "Pressemitteilung",
+    "brandGuidelines": "Markenrichtlinien",
+    "emailTemplates": "E-Mail-Vorlagen",
+    "downloadAll": "Alle Assets Herunterladen",
+    "shareKit": "Pressepaket Teilen",
+    "customizeMessage": "Nachricht Anpassen",
+    "globalLaunch": "Globale Launch-Ankündigung"
+  },
+  "common": {
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "add": "Hinzufügen",
+    "remove": "Entfernen",
+    "confirm": "Bestätigen",
+    "loading": "Laden...",
+    "error": "Fehler",
+    "success": "Erfolg",
+    "continue": "Weiter",
+    "back": "Zurück",
+    "next": "Nächste",
+    "finish": "Beenden",
+    "close": "Schließen",
+    "download": "Herunterladen",
+    "upload": "Hochladen"
+  }
+}

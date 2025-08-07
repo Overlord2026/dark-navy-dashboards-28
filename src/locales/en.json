@@ -4,7 +4,9 @@
     "dashboard": "Dashboard", 
     "vault": "Secure Legacy Vault™",
     "settings": "Settings",
-    "help": "Help"
+    "help": "Help",
+    "outreach": "Global Outreach",
+    "pressKit": "Press Kit"
   },
   "vault": {
     "title": "Secure Legacy Vault™",
@@ -159,5 +161,30 @@
       "title": "Global Campaign Materials",
       "description": "Ready-to-use templates for international outreach and marketing"
     }
+  },
+  "outreach": {
+    "title": "Global Editorial Outreach",
+    "subtitle": "Manage VIP media campaigns and press coverage",
+    "uploadContacts": "Upload Contact List",
+    "sendInvites": "Send Personalized Invites",
+    "trackEngagement": "Track Engagement",
+    "manageFollowups": "Manage Follow-ups",
+    "campaignMetrics": "Campaign Metrics",
+    "editorialAccess": "VIP Editorial Access",
+    "pressInquiries": "Press Inquiries",
+    "founderInterview": "Founder Interview",
+    "downloadPressKit": "Download Press Kit"
+  },
+  "pressKit": {
+    "title": "Global Press Kit",
+    "subtitle": "Media assets and templates for international coverage",
+    "mediaAssets": "Media Assets",
+    "pressRelease": "Press Release",
+    "brandGuidelines": "Brand Guidelines",
+    "emailTemplates": "Email Templates",
+    "downloadAll": "Download All Assets",
+    "shareKit": "Share Press Kit",
+    "customizeMessage": "Customize Message",
+    "globalLaunch": "Global Launch Announcement"
   }
 }
