@@ -6,6 +6,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PremiumFeatureGate } from "@/components/premium/PremiumFeatureGate";
 import { FeatureAccessIndicator } from "@/components/navigation/FeatureAccessIndicator";
 import { isPremiumClient } from "@/utils/tierUtils";
+import { LeadSourcesManager } from "@/components/leads/LeadSourcesManager";
+import { UniversalLeadPipeline } from "@/components/personas/UniversalLeadPipeline";
+import { InAppSupport } from "@/components/support/InAppSupport";
+import { ResponsiveDashboard } from "@/components/mobile/ResponsiveDashboard";
 import { 
   Scale, 
   Users, 
@@ -229,7 +233,9 @@ export const AttorneyPracticeDashboard: React.FC = () => {
   );
 
   return (
-    <div className="space-y-6">
+    <ResponsiveDashboard persona="attorney">
+      <InAppSupport />
+      <div className="space-y-6">
       {/* Welcome Header */}
       <div className="bg-gradient-primary rounded-lg p-6 text-white">
         <h1 className="text-2xl font-bold mb-2">
@@ -285,13 +291,15 @@ export const AttorneyPracticeDashboard: React.FC = () => {
       </Card>
 
       <Tabs defaultValue="overview" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-6">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="basic">Basic Features</TabsTrigger>
           <TabsTrigger value="premium">
             Premium Features
             {!isPremium && <Lock className="h-3 w-3 ml-1" />}
           </TabsTrigger>
+          <TabsTrigger value="leads">Leads</TabsTrigger>
+          <TabsTrigger value="ai-tools">AI Tools</TabsTrigger>
           <TabsTrigger value="training">Training</TabsTrigger>
         </TabsList>
 
@@ -394,6 +402,67 @@ export const AttorneyPracticeDashboard: React.FC = () => {
           <PremiumFeatures />
         </TabsContent>
 
+        <TabsContent value="leads" className="space-y-6">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold">Lead Management</h3>
+            {isPremium ? (
+              <Badge className="bg-primary text-primary-foreground">Premium Active</Badge>
+            ) : (
+              <Badge variant="outline" className="border-primary text-primary">
+                <Lock className="h-3 w-3 mr-1" />
+                Premium Feature
+              </Badge>
+            )}
+          </div>
+          <LeadSourcesManager />
+          <UniversalLeadPipeline persona="attorney" />
+        </TabsContent>
+
+        <TabsContent value="ai-tools" className="space-y-6">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold">AI Legal Tools</h3>
+            <Badge className="bg-primary text-primary-foreground">New</Badge>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card className="border-primary/20 bg-primary/5">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <FileText className="h-5 w-5 text-primary" />
+                  Contract Generator
+                </CardTitle>
+                <CardDescription>AI-powered contract and document creation</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button className="w-full mb-3">Generate Contract</Button>
+                <div className="text-sm text-muted-foreground space-y-1">
+                  <p>• Create custom legal documents</p>
+                  <p>• Review and analyze contracts</p>
+                  <p>• Compliance checking</p>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-primary/20 bg-primary/5">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Scale className="h-5 w-5 text-primary" />
+                  Estate Plan Creator
+                </CardTitle>
+                <CardDescription>Automated estate planning documents</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button className="w-full mb-3">Create Estate Plan</Button>
+                <div className="text-sm text-muted-foreground space-y-1">
+                  <p>• Generate wills and trusts</p>
+                  <p>• Power of attorney documents</p>
+                  <p>• Estate tax planning</p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
         <TabsContent value="training" className="space-y-6">
           <Card>
             <CardHeader>
@@ -477,6 +546,7 @@ export const AttorneyPracticeDashboard: React.FC = () => {
           </CardContent>
         </Card>
       )}
-    </div>
+      </div>
+    </ResponsiveDashboard>
   );
 };

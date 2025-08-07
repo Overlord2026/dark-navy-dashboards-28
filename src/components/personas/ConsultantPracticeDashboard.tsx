@@ -6,6 +6,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PremiumFeatureGate } from "@/components/premium/PremiumFeatureGate";
 import { FeatureAccessIndicator } from "@/components/navigation/FeatureAccessIndicator";
 import { isPremiumClient } from "@/utils/tierUtils";
+import { LeadSourcesManager } from "@/components/leads/LeadSourcesManager";
+import { UniversalLeadPipeline } from "@/components/personas/UniversalLeadPipeline";
+import { InAppSupport } from "@/components/support/InAppSupport";
+import { ResponsiveDashboard } from "@/components/mobile/ResponsiveDashboard";
 import { 
   Users, 
   BookOpen, 
@@ -229,7 +233,9 @@ export const ConsultantPracticeDashboard: React.FC = () => {
   );
 
   return (
-    <div className="space-y-6">
+    <ResponsiveDashboard persona="consultant">
+      <InAppSupport />
+      <div className="space-y-6">
       {/* Welcome Header */}
       <div className="bg-gradient-primary rounded-lg p-6 text-white">
         <h1 className="text-2xl font-bold mb-2 flex items-center gap-2">
@@ -286,13 +292,15 @@ export const ConsultantPracticeDashboard: React.FC = () => {
       </Card>
 
       <Tabs defaultValue="overview" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-6">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="basic">Basic Features</TabsTrigger>
           <TabsTrigger value="premium">
             Premium Features
             {!isPremium && <Lock className="h-3 w-3 ml-1" />}
           </TabsTrigger>
+          <TabsTrigger value="leads">Leads</TabsTrigger>
+          <TabsTrigger value="ai-tools">AI Tools</TabsTrigger>
           <TabsTrigger value="training">Training</TabsTrigger>
         </TabsList>
 
@@ -439,6 +447,27 @@ export const ConsultantPracticeDashboard: React.FC = () => {
             </CardContent>
           </Card>
         </TabsContent>
+
+        <TabsContent value="leads" className="space-y-6">
+          <LeadSourcesManager />
+          <UniversalLeadPipeline persona="consultant" />
+        </TabsContent>
+
+        <TabsContent value="ai-tools" className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card className="border-primary/20 bg-primary/5">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Brain className="h-5 w-5 text-primary" />
+                  Treatment Plan AI
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Button className="w-full">Generate Plan</Button>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
       </Tabs>
 
       {/* Upgrade CTA for Basic Users */}
@@ -478,6 +507,7 @@ export const ConsultantPracticeDashboard: React.FC = () => {
           </CardContent>
         </Card>
       )}
-    </div>
+      </div>
+    </ResponsiveDashboard>
   );
 };
