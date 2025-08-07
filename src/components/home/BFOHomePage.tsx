@@ -90,9 +90,31 @@ export function BFOHomePage() {
         {/* API Testing Section - Only show for development/testing */}
         <div className="mt-16 w-full max-w-4xl mx-auto">
           <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
-            <div className="flex items-center gap-2 mb-4">
-              <Shield className="h-5 w-5 text-gold" />
-              <h2 className="text-xl font-semibold text-white">API Integration Status</h2>
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <Shield className="h-5 w-5 text-gold" />
+                <h2 className="text-xl font-semibold text-white">API Integration Status</h2>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="text-xs text-white/60">
+                  Platform Map Last Updated: {new Date().toLocaleDateString()}
+                </div>
+                <Button
+                  onClick={() => window.open('/platform-map', '_blank')}
+                  variant="outline"
+                  size="sm"
+                  className="bg-gold/20 border-gold text-gold hover:bg-gold hover:text-navy transition-all duration-200 font-medium"
+                  title="Visualize your platform's architecture, personas, and module access"
+                >
+                  <img 
+                    src={brandLogoConfig.src}
+                    alt=""
+                    className="w-4 h-4 mr-2"
+                    style={{ filter: 'brightness(0) saturate(100%) invert(75%) sepia(82%) saturate(2027%) hue-rotate(13deg) brightness(103%) contrast(102%)' }}
+                  />
+                  Platform Map & Wireframe
+                </Button>
+              </div>
             </div>
             <QuickAPITestRunner />
           </div>
