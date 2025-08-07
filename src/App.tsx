@@ -96,6 +96,10 @@ import HealthcareDashboardPage from "./pages/HealthcareDashboardPage";
 import WireframePage from "./pages/WireframePage";
 import ImageGeneratorPage from "./pages/ImageGeneratorPage";
 import LendingWireframePage from "./pages/LendingWireframePage";
+import CampaignVipEditorial from './pages/CampaignVipEditorial';
+import GlobalOutreach from './pages/GlobalOutreach';
+import GlobalPressKit from './pages/GlobalPressKit';
+import SharkTankPitch from './pages/SharkTankPitch';
 
 const queryClient = new QueryClient();
 
@@ -304,6 +308,7 @@ function App() {
           <Route path="/insurance-dashboard" element={<InsuranceDashboardPage />} />
           <Route path="/healthcare-onboarding" element={<HealthcareOnboardingPage />} />
           <Route path="/healthcare-dashboard" element={<HealthcareDashboardPage />} />
+          <Route path="/shark-tank-pitch" element={<SharkTankPitch />} />
 
                          </Routes>
                         <Navigation />
