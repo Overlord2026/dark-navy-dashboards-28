@@ -100,6 +100,7 @@ import CampaignVipEditorial from './pages/CampaignVipEditorial';
 import GlobalOutreach from './pages/GlobalOutreach';
 import GlobalPressKit from './pages/GlobalPressKit';
 import SharkTankPitch from './pages/SharkTankPitch';
+import PlatformMap from './pages/PlatformMap';
 
 const queryClient = new QueryClient();
 
@@ -127,6 +128,7 @@ function App() {
                           <ReferralTracker />
                           <Routes>
         <Route path="/wireframe" element={<WireframePage />} />
+        <Route path="/platform-map" element={<PlatformMap />} />
         <Route path="/lending-wireframe" element={<LendingWireframePage />} />
         <Route path="/image-generator" element={<ImageGeneratorPage />} />
                             <Route path="/" element={<Index />} />
