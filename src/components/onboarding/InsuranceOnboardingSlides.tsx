@@ -19,7 +19,11 @@ import {
   Calendar,
   Star,
   TrendingUp,
-  CheckCircle
+  CheckCircle,
+  DollarSign,
+  Vault,
+  Target,
+  Award
 } from 'lucide-react';
 
 interface InsuranceOnboardingSlidesProps {
@@ -30,127 +34,128 @@ interface InsuranceOnboardingSlidesProps {
 const slides = [
   {
     id: 1,
-    title: "Welcome to the BFO Insurance Hub™",
-    subtitle: "A Modern Home for Elite Insurance Professionals",
-    description: "Deliver outstanding value to families and business clients—all within the Boutique Family Office Marketplace.",
+    title: "Welcome to Your Insurance Practice Hub™",
+    subtitle: "Power Up Your Insurance Business—The Family Office Way",
+    description: "A premium platform for agents, IMOs, and FMOs to scale, automate, and serve families and business owners with trust and compliance.",
     icon: <Shield className="h-8 w-8 text-primary" />,
     features: [],
     isPremium: false
   },
   {
     id: 2,
-    title: "Smart Insurance Dashboard",
-    subtitle: "Complete Practice Overview",
-    description: "Manage your entire insurance practice from one powerful dashboard.",
-    icon: <BarChart3 className="h-8 w-8 text-primary" />,
+    title: "Centralized Client Management",
+    subtitle: "All Your Clients in One Place",
+    description: "Unified dashboard for managing your entire book of business.",
+    icon: <Users className="h-8 w-8 text-primary" />,
     features: [
-      "Track all clients, policies, quotes, renewals, and commission status in one place",
-      "Automated reminders for renewals, CE credits, and regulatory updates",
-      "Analytics: production, persistency, cross-sell rates"
+      "Unified dashboard for all clients, prospects, and policyholders",
+      "Quick access to case notes, insurance documents, communications, and reminders",
+      "Client segmentation (by product, risk, renewal date, or custom tags)"
     ],
     isPremium: false
   },
   {
     id: 3,
-    title: "Multi-Product Quoting & Onboarding",
-    subtitle: "Streamlined Sales Process",
-    description: "Generate quotes and onboard clients with lightning speed.",
-    icon: <FileText className="h-8 w-8 text-primary" />,
+    title: "Digital Policy Vault & Secure Sharing",
+    subtitle: "Secure Document Management",
+    description: "Store, organize, and share policies with bank-level security.",
+    icon: <Vault className="h-8 w-8 text-primary" />,
     features: [
-      "Instantly generate quotes for life, annuity, LTC, disability, and health",
-      "Submit applications via e-signature; automated status tracking",
-      "Pre-built onboarding templates for clients and households"
+      "Store and retrieve life, health, annuity, LTC, disability, and business policies",
+      "Secure document vault with client and advisor permission controls",
+      "Instant policy sharing and e-signature requests for quick action"
     ],
     isPremium: false
   },
   {
     id: 4,
-    title: "Compliance & Continuing Education",
-    subtitle: "Stay Compliant Automatically",
-    description: "Never miss a deadline or requirement again.",
-    icon: <CheckCircle className="h-8 w-8 text-primary" />,
+    title: "Automated Lead-to-Sale Engine",
+    subtitle: "AI-Powered Prospecting",
+    description: "Transform prospects into clients with intelligent automation.",
+    icon: <Target className="h-8 w-8 text-primary" />,
     features: [
-      "Track CE credits and state licensing renewals automatically",
-      "Automated compliance alerts for each agent and state",
-      "Store E&O, license docs, and compliance manuals in secure vault"
+      "Run campaigns, track leads, and monitor your entire sales funnel",
+      "AI-powered SWAG Lead Score™ for high-value prospecting",
+      "Automated reminders, meeting scheduling, and lead source analytics"
     ],
     isPremium: true
   },
   {
     id: 5,
-    title: "Client Engagement & Communication",
-    subtitle: "Seamless Client Connections",
-    description: "Keep clients engaged with automated, compliant communications.",
-    icon: <MessageCircle className="h-8 w-8 text-primary" />,
+    title: "Compliance & Licensing Automation",
+    subtitle: "Stay Compliant Effortlessly",
+    description: "Never miss a deadline or requirement with automated tracking.",
+    icon: <CheckCircle className="h-8 w-8 text-primary" />,
     features: [
-      "SMS, email, and voice reminders for clients—powered by Twilio",
-      "Secure document sharing for policies and claims",
-      "Personalized video messaging for key milestones"
-    ],
-    isPremium: false
-  },
-  {
-    id: 6,
-    title: "Agency, IMO, and FMO Tools",
-    subtitle: "Team Management Made Simple",
-    description: "Recruit, train, and manage your entire organization.",
-    icon: <Users className="h-8 w-8 text-primary" />,
-    features: [
-      "Recruit, onboard, and manage downline agents",
-      "Track agent production, compliance, and CE status",
-      "Co-op marketing campaign management and lead distribution"
+      "Real-time CE tracking, multi-state licensing alerts, and renewal reminders",
+      "Automated compliance documentation and audit logs",
+      "Mock audit center for regulatory readiness (SOC2, DOL, NAIC, etc.)"
     ],
     isPremium: true
   },
   {
-    id: 7,
-    title: "Integrated Marketplace & Referral Engine",
-    subtitle: "Expand Your Revenue Streams",
-    description: "Connect with other professionals and grow through referrals.",
-    icon: <TrendingUp className="h-8 w-8 text-primary" />,
+    id: 6,
+    title: "Commission, Revenue & Growth Analytics",
+    subtitle: "Real-Time Performance Insights",
+    description: "Track commissions, production, and downline performance.",
+    icon: <DollarSign className="h-8 w-8 text-primary" />,
     features: [
-      "Refer clients for wealth, tax, and legal planning within the platform",
-      "Receive leads from CPAs, attorneys, and family office advisors",
-      "Earn referral credits and track revenue sharing"
+      "View real-time commission reports and production dashboards",
+      "Track downline performance for IMOs/FMOs",
+      "Exportable analytics for payroll, override, and bonus calculations"
+    ],
+    isPremium: false
+  },
+  {
+    id: 7,
+    title: "Marketplace & Concierge Services",
+    subtitle: "Premium Professional Network",
+    description: "Access elite partners and white-glove support services.",
+    icon: <Award className="h-8 w-8 text-primary" />,
+    features: [
+      "Access curated partners for health, annuity, and wealth solutions",
+      "Connect with top CPAs, attorneys, and family offices for joint cases",
+      "Request custom illustrations, case design, or premium finance support"
     ],
     isPremium: true
   },
   {
     id: 8,
-    title: "Growth & Education Center",
-    subtitle: "Continuous Professional Development",
-    description: "Access training, resources, and marketing tools.",
-    icon: <GraduationCap className="h-8 w-8 text-primary" />,
+    title: "Integrated Communication Suite",
+    subtitle: "Seamless Client Connections",
+    description: "Multi-channel communications with AI assistance.",
+    icon: <MessageCircle className="h-8 w-8 text-primary" />,
     features: [
-      "Access ongoing training, product updates, and compliance webinars",
-      "Marketplace for advanced products (e.g., LTC hybrids, premium finance)",
-      "Marketing resources and prebuilt social/email campaigns"
+      "Send SMS, email, or VOIP calls to clients in one click",
+      "Automated meeting confirmations and reminders via \"Linda\" AI assistant",
+      "Click-to-call, click-to-text, and compliance-logged communications"
     ],
     isPremium: false
   },
   {
     id: 9,
-    title: "Security, Privacy, & Audit Trails",
-    subtitle: "Enterprise-Grade Protection",
-    description: "Protect your clients and practice with advanced security.",
-    icon: <Shield className="h-8 w-8 text-primary" />,
+    title: "White-Label and VIP Growth Opportunities",
+    subtitle: "Scale Your Practice",
+    description: "Brand your portal and grow your organization.",
+    icon: <Crown className="h-8 w-8 text-primary" />,
     features: [
-      "Role-based access controls for agents, managers, and staff",
-      "Full audit logs on all client and agent actions",
-      "SOC2, HIPAA, and GDPR-ready data architecture"
+      "Offer your own branded portal to agents or clients",
+      "Early-adopter \"VIP Wall\" recognition and referral credits",
+      "Tiered access for downline agents and partner firms"
     ],
-    isPremium: false
+    isPremium: true
   },
   {
     id: 10,
     title: "Get Started",
-    subtitle: "Your Insurance Hub Awaits",
-    description: "Begin transforming your insurance practice today.",
+    subtitle: "Launch Your Insurance Hub Today",
+    description: "Begin transforming your insurance practice in minutes.",
     icon: <Star className="h-8 w-8 text-primary" />,
     features: [
-      "Set Up My Insurance Portal",
-      "Add My First Client",
-      "Connect with IMO/FMO Concierge"
+      "Add Your Book of Business",
+      "Set Up Policy Vault",
+      "Invite Downline / Team",
+      "Schedule Concierge Onboarding"
     ],
     isPremium: false
   }
@@ -239,24 +244,28 @@ export const InsuranceOnboardingSlides: React.FC<InsuranceOnboardingSlidesProps>
                 <div className="mt-6 p-4 bg-muted/30 rounded-lg">
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <PlayCircle className="h-4 w-4 text-primary" />
-                    <span>This 3-minute tour will show you how to transform your insurance practice</span>
+                    <span>This 3-minute tour will show you how to power up your insurance business the family office way</span>
                   </div>
                 </div>
               )}
 
               {currentSlide === slides.length - 1 && (
-                <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <Button className="w-full gap-2">
-                    <Shield className="h-4 w-4" />
-                    Set Up Portal
+                <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3">
+                  <Button className="w-full gap-2 text-xs">
+                    <FileText className="h-4 w-4" />
+                    Add Book of Business
                   </Button>
-                  <Button variant="outline" className="w-full gap-2">
+                  <Button variant="outline" className="w-full gap-2 text-xs">
+                    <Vault className="h-4 w-4" />
+                    Set Up Vault
+                  </Button>
+                  <Button variant="outline" className="w-full gap-2 text-xs">
                     <Users className="h-4 w-4" />
-                    Add First Client
+                    Invite Team
                   </Button>
-                  <Button variant="outline" className="w-full gap-2">
-                    <MessageCircle className="h-4 w-4" />
-                    IMO Concierge
+                  <Button variant="outline" className="w-full gap-2 text-xs">
+                    <Calendar className="h-4 w-4" />
+                    Schedule Onboarding
                   </Button>
                 </div>
               )}
