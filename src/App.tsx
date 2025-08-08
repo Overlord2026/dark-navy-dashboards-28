@@ -129,6 +129,8 @@ import { PersonaLandingPage } from './pages/PersonaLandingPage';
 import { UniversalLandingPage } from './pages/UniversalLandingPage';
 import { PersonaPreviewPage } from './pages/PersonaPreviewPage';
 import { MarketplaceLandingPage } from './components/marketplace/MarketplaceLandingPage';
+import { PublicLandingPage } from './components/marketplace/PublicLandingPage';
+import { DemoCalculator } from './components/demo/DemoCalculator';
 import AdminLayoutSettings from './pages/AdminLayoutSettings';
 import CFODashboard from './pages/CFODashboard';
 import AdminControlsPage from './pages/AdminControlsPage';
@@ -175,7 +177,9 @@ function App() {
         <Route path="/image-generator" element={<ImageGeneratorPage />} />
                              <Route path="/persona-landing" element={<PersonaLandingPage />} />
                              <Route path="/persona-preview/:personaId" element={<PersonaPreviewPage />} />
-                              <Route path="/" element={<MarketplaceLandingPage />} />
+                               <Route path="/" element={<PublicLandingPage />} />
+                               <Route path="/marketplace-demo" element={<MarketplaceLandingPage />} />
+                               <Route path="/demo" element={<div className="min-h-screen bg-background p-8"><DemoCalculator /></div>} />
                               <Route path="/universal" element={<UniversalLandingPage />} />
                            <Route path="/marketplace" element={<FamilyOfficeMarketplacePage />} />
                            <Route path="/welcome" element={<WelcomePage />} />
