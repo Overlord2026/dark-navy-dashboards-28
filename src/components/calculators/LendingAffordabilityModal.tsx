@@ -524,14 +524,13 @@ This analysis is for educational purposes only. Consult with a qualified mortgag
                       {pieData.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={entry.color} />
                       ))}
-                    </RechartsPieChart>
-                      <Tooltip formatter={(value) => formatCurrency(Number(value))} />
-                    </RechartsPieChart>
-                  </ResponsiveContainer>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
+                       <Tooltip formatter={(value) => formatCurrency(Number(value))} />
+                     </RechartsPieChart>
+                   </ResponsiveContainer>
+                 </CardContent>
+               </Card>
+             </div>
+           </TabsContent>
 
           <TabsContent value="affordability" className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
