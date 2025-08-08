@@ -12,13 +12,9 @@ export default function FeeComparisonPage() {
   const { toast } = useToast();
 
   useEffect(() => {
-    fetchFeeModels();
+    // TODO: Implement fetchFeeModels when fee_models table is created
+    setFeeModels([]);
   }, []);
-
-  const fetchFeeModels = async () => {
-    const { data } = await supabase.from('fee_models').select('*');
-    setFeeModels(data || []);
-  };
 
   const handleCalculate = async (calculationData: any) => {
     try {
