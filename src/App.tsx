@@ -112,8 +112,9 @@ import ConsultantDashboardPage from "./pages/ConsultantDashboardPage";
 import EliteFamilyOfficePersonaLandingPage from "./pages/EliteFamilyOfficePersonaLandingPage";
 import EliteFamilyOfficeOnboardingPage from "./pages/EliteFamilyOfficeOnboardingPage";
 import EliteFamilyOfficeDashboardPage from "./pages/EliteFamilyOfficeDashboardPage";
-import RealtorPersonaLandingPage from "./pages/RealtorPersonaLandingPage";
-import RealtorOnboardingPage from "./pages/RealtorOnboardingPage";
+import RealtorPersonaLanding from "./pages/realtor/RealtorPersonaLanding";
+import RealtorOnboarding from "./pages/realtor/RealtorOnboarding";
+import RealtorDashboard from "./pages/realtor/RealtorDashboard";
 import CoachPersonaLandingPage from "./pages/CoachPersonaLandingPage";
 import CoachOnboardingPage from "./pages/CoachOnboardingPage";
 import SportsAgentPersonaLandingPage from "./pages/SportsAgentPersonaLandingPage";
@@ -218,6 +219,11 @@ function App() {
         {/* Life Insurance & Annuity routes */}
         <Route path="/insurance-life-annuity" element={<InsuranceLifeAnnuityLanding />} />
         <Route path="/insurance-life-annuity/onboarding" element={<InsuranceLifeAnnuityOnboarding />} />
+        
+        {/* Realtor/Property Manager routes */}
+        <Route path="/personas/realtor" element={<RealtorPersonaLanding />} />
+        <Route path="/realtor/onboarding" element={<RealtorOnboarding />} />
+        <Route path="/realtor/dashboard" element={<RealtorDashboard />} />
         <Route path="/lending-wireframe" element={<LendingWireframePage />} />
         <Route path="/image-generator" element={<ImageGeneratorPage />} />
                              <Route path="/persona-landing" element={<PersonaLandingPage />} />
