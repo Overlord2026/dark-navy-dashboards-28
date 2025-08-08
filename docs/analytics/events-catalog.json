@@ -1,0 +1,303 @@
+{
+  "analytics_provider": "PostHog",
+  "last_updated": "2024-12-20",
+  "event_schema": {
+    "page_view": {
+      "event_name": "$pageview",
+      "properties": {
+        "$current_url": "string",
+        "page_name": "string",
+        "persona": "string (optional)",
+        "user_tier": "string (optional)"
+      }
+    },
+    "conversion": {
+      "event_name": "conversion",
+      "properties": {
+        "conversion_type": "string",
+        "value": "number (optional)",
+        "currency": "string (optional)",
+        "persona": "string"
+      }
+    },
+    "feature_usage": {
+      "event_name": "feature_used",
+      "properties": {
+        "feature_name": "string",
+        "persona": "string",
+        "session_duration": "number (optional)",
+        "success": "boolean (optional)"
+      }
+    }
+  },
+  "implemented_events": {
+    "authentication": [
+      {
+        "event": "persona_claimed",
+        "properties": ["persona_type", "user_id", "timestamp"],
+        "trigger": "User selects persona during onboarding",
+        "file_location": "src/lib/analytics.ts"
+      },
+      {
+        "event": "onboarding_started", 
+        "properties": ["persona", "segment", "timestamp"],
+        "trigger": "User begins onboarding flow"
+      },
+      {
+        "event": "onboarding_completed",
+        "properties": ["persona", "segment", "referrer", "timestamp"],
+        "trigger": "User completes onboarding"
+      },
+      {
+        "event": "onboarding_step",
+        "properties": ["step_name", "persona_type", "user_id", "completed", "timestamp"],
+        "trigger": "User progresses through onboarding steps"
+      }
+    ],
+    "calculators": [
+      {
+        "event": "calculate_clicked",
+        "properties": ["calculator_type", "input_values", "results"],
+        "trigger": "User runs any calculator",
+        "file_location": "src/components/ValueDrivenSavingsCalculator.tsx"
+      },
+      {
+        "event": "retirement_analyzer_used",
+        "properties": ["swag_score", "monte_carlo_success", "scenario_type"],
+        "trigger": "User completes retirement analysis"
+      },
+      {
+        "event": "swag_score_calculated", 
+        "properties": ["score", "user_age", "retirement_age", "assets_total"],
+        "trigger": "SWAG Score™ calculation completes"
+      },
+      {
+        "event": "scenario_compared",
+        "properties": ["base_scenario", "comparison_scenario", "score_difference"],
+        "trigger": "User compares retirement scenarios"
+      }
+    ],
+    "content_engagement": [
+      {
+        "event": "pdf_exported",
+        "properties": ["report_type", "persona", "page_count"],
+        "trigger": "User exports PDF report"
+      },
+      {
+        "event": "deck_viewed",
+        "properties": ["deck_type", "persona", "slide_count", "view_duration"],
+        "trigger": "User views marketing deck"
+      },
+      {
+        "event": "faq_opened",
+        "properties": ["persona", "segment", "page", "timestamp"],
+        "trigger": "User opens FAQ section"
+      },
+      {
+        "event": "faq_searched",
+        "properties": ["persona", "segment", "query", "timestamp"],
+        "trigger": "User searches FAQ"
+      }
+    ],
+    "social_viral": [
+      {
+        "event": "viral_share_clicked",
+        "properties": ["platform", "persona_type", "user_id", "timestamp"],
+        "trigger": "User clicks social share button",
+        "file_location": "src/lib/analytics.ts"
+      },
+      {
+        "event": "share_completed",
+        "properties": ["platform", "content_type", "success"],
+        "trigger": "Share action completes",
+        "file_location": "src/components/ValueDrivenSavingsCalculator.tsx"
+      }
+    ],
+    "financial_planning": [
+      {
+        "event": "goal_created",
+        "properties": ["goal_type", "target_amount", "timeline", "persona"],
+        "trigger": "User creates financial goal"
+      },
+      {
+        "event": "goal_completed",
+        "properties": ["goal_type", "actual_amount", "time_to_complete"],
+        "trigger": "User marks goal as completed"
+      },
+      {
+        "event": "account_connected",
+        "properties": ["account_type", "provider", "balance_range"],
+        "trigger": "User connects external account"
+      },
+      {
+        "event": "plan_imported",
+        "properties": ["plan_type", "ai_analysis_success", "data_points_extracted"],
+        "trigger": "User imports retirement plan via AI"
+      }
+    ],
+    "advisor_interactions": [
+      {
+        "event": "advisor_meeting_requested",
+        "properties": ["advisor_id", "meeting_type", "calendar_provider"],
+        "trigger": "Client requests advisor meeting"
+      },
+      {
+        "event": "advisor_matched",
+        "properties": ["advisor_id", "match_score", "specializations"],
+        "trigger": "Client matched with advisor"
+      },
+      {
+        "event": "proposal_viewed",
+        "properties": ["proposal_id", "advisor_id", "view_duration"],
+        "trigger": "Client views advisor proposal"
+      }
+    ],
+    "subscription_monetization": [
+      {
+        "event": "premium_feature_previewed",
+        "properties": ["feature_name", "persona", "preview_duration"],
+        "trigger": "User previews premium feature"
+      },
+      {
+        "event": "upgrade_clicked",
+        "properties": ["current_tier", "target_tier", "persona"],
+        "trigger": "User clicks upgrade button"
+      },
+      {
+        "event": "subscription_started",
+        "properties": ["plan_name", "price", "billing_frequency"],
+        "trigger": "User completes subscription"
+      }
+    ],
+    "persona_specific": {
+      "advisor": [
+        {
+          "event": "client_invited",
+          "properties": ["invitation_method", "client_tier", "invitation_code"],
+          "trigger": "Advisor sends client invitation"
+        },
+        {
+          "event": "roi_dashboard_viewed",
+          "properties": ["time_period", "metrics_viewed"],
+          "trigger": "Advisor views ROI dashboard"
+        }
+      ],
+      "realtor": [
+        {
+          "event": "listing_created",
+          "properties": ["property_type", "list_price", "cap_rate"],
+          "trigger": "Realtor creates property listing"
+        },
+        {
+          "event": "owner_portal_invited",
+          "properties": ["property_count", "owner_type"],
+          "trigger": "Realtor invites property owner to portal"
+        },
+        {
+          "event": "cap_rate_calculated",
+          "properties": ["property_id", "cap_rate", "cash_on_cash"],
+          "trigger": "Cap rate calculation performed"
+        }
+      ],
+      "cpa": [
+        {
+          "event": "ce_tracking_updated",
+          "properties": ["hours_added", "provider", "state"],
+          "trigger": "CPA updates CE hours"
+        },
+        {
+          "event": "entity_created",
+          "properties": ["entity_type", "state", "ownership_structure"],
+          "trigger": "CPA creates business entity"
+        }
+      ],
+      "attorney": [
+        {
+          "event": "document_uploaded",
+          "properties": ["document_type", "classification", "security_level"],
+          "trigger": "Attorney uploads client document"
+        },
+        {
+          "event": "client_portal_shared",
+          "properties": ["document_count", "access_level"],
+          "trigger": "Attorney shares documents with client"
+        }
+      ]
+    }
+  },
+  "tracking_implementation": {
+    "primary_file": "src/lib/analytics.ts",
+    "provider_config": {
+      "posthog_key": "phc_Yc8jTGjpIN3vMS0YSvT6ZpOZ7UhEwnyBaUhI2i8ec46",
+      "host": "https://us.i.posthog.com",
+      "privacy_settings": {
+        "respect_dnt": true,
+        "capture_pageview": false,
+        "capture_pageleave": true
+      }
+    },
+    "custom_hooks": [
+      "useEventTracking",
+      "useAnalytics", 
+      "usePageTracking"
+    ]
+  },
+  "conversion_funnels": {
+    "client_onboarding": [
+      "persona_claimed",
+      "onboarding_started", 
+      "account_connected",
+      "goal_created",
+      "onboarding_completed"
+    ],
+    "advisor_client_acquisition": [
+      "advisor_matched",
+      "advisor_meeting_requested",
+      "proposal_viewed",
+      "client_invited"
+    ],
+    "premium_conversion": [
+      "premium_feature_previewed",
+      "upgrade_clicked",
+      "subscription_started"
+    ],
+    "retirement_planning": [
+      "retirement_analyzer_used",
+      "swag_score_calculated",
+      "scenario_compared",
+      "plan_imported",
+      "pdf_exported"
+    ]
+  },
+  "recommended_additions": {
+    "high_priority": [
+      {
+        "event": "page_exit",
+        "purpose": "Track where users drop off",
+        "properties": ["page_name", "time_on_page", "exit_reason"]
+      },
+      {
+        "event": "error_encountered",
+        "purpose": "Track application errors", 
+        "properties": ["error_type", "error_message", "component", "user_action"]
+      },
+      {
+        "event": "performance_metric",
+        "purpose": "Track performance issues",
+        "properties": ["metric_name", "value", "page", "browser"]
+      }
+    ],
+    "medium_priority": [
+      {
+        "event": "feature_discovery",
+        "purpose": "Track how users discover features",
+        "properties": ["feature_name", "discovery_method", "time_to_discover"]
+      },
+      {
+        "event": "help_requested",
+        "purpose": "Track support needs",
+        "properties": ["help_type", "context", "resolution_method"]
+      }
+    ]
+  }
+}

@@ -1,0 +1,280 @@
+{
+  "platform": "BFO (Boutique Family Office)",
+  "domain": "my.bfocfo.com",
+  "lastUpdated": "2024-12-20",
+  "routes": {
+    "public": {
+      "landing": [
+        {
+          "path": "/",
+          "component": "PublicLandingPage",
+          "description": "Main entry point with persona selector",
+          "file": "src/components/marketplace/PublicLandingPage.tsx"
+        },
+        {
+          "path": "/universal",
+          "component": "UniversalLandingPage",
+          "description": "Universal persona selector",
+          "file": "src/pages/UniversalLandingPage.tsx"
+        },
+        {
+          "path": "/marketplace-demo",
+          "component": "MarketplaceLandingPage",
+          "description": "Marketplace demonstration",
+          "file": "src/components/marketplace/MarketplaceLandingPage.tsx"
+        }
+      ],
+      "calculators": [
+        {
+          "path": "/value-calculator",
+          "component": "EnhancedValueCalculator",
+          "description": "Fee and expense calculator",
+          "file": "src/pages/EnhancedValueCalculator.tsx",
+          "features": ["fee_comparison", "expense_analysis"]
+        },
+        {
+          "path": "/retirement-analyzer",
+          "component": "RetirementAnalyzerDemo",
+          "description": "SWAG™ Retirement Analyzer with Monte Carlo",
+          "file": "src/pages/RetirementAnalyzerDemo.tsx",
+          "features": ["monte_carlo", "scenario_modeling", "pdf_export"]
+        },
+        {
+          "path": "/analyzer/retirement-income-gap",
+          "component": "RetirementIncomeGapAnalyzer",
+          "description": "Income gap analysis tool",
+          "file": "src/pages/RetirementIncomeGapAnalyzer.tsx"
+        },
+        {
+          "path": "/scorecard/retirement-confidence",
+          "component": "RetirementConfidenceScorecard",
+          "description": "Retirement confidence assessment",
+          "file": "src/pages/RetirementConfidenceScorecard.tsx"
+        }
+      ],
+      "marketing": [
+        {
+          "path": "/education-hub",
+          "component": "EducationHub",
+          "description": "Educational content center",
+          "file": "src/pages/EducationHub.tsx"
+        },
+        {
+          "path": "/solutions-hub",
+          "component": "SolutionsHub",
+          "description": "Solutions showcase",
+          "file": "src/pages/SolutionsHub.tsx"
+        }
+      ]
+    },
+    "authentication": {
+      "auth_flow": [
+        {
+          "path": "/auth",
+          "component": "AuthPage",
+          "description": "Unified authentication entry",
+          "file": "src/pages/AuthPage.tsx",
+          "variants": ["/auth/:authType", "/auth/:authType/:tenantId"]
+        }
+      ],
+      "onboarding": [
+        {
+          "path": "/onboarding/:personaId",
+          "component": "PersonaOnboardingFlow",
+          "description": "Persona-specific onboarding",
+          "file": "src/components/onboarding/PersonaOnboardingFlow.tsx",
+          "lazy_loaded": true
+        }
+      ]
+    },
+    "personas": {
+      "client_family": {
+        "dashboard": "/client",
+        "component": "ClientDashboard",
+        "file": "src/pages/ClientDashboard.tsx",
+        "routes": [
+          {
+            "path": "/client-portal",
+            "component": "ClientPortalPage",
+            "description": "Client portal interface"
+          },
+          {
+            "path": "/goals",
+            "component": "GoalsPage",
+            "description": "Financial goals management"
+          },
+          {
+            "path": "/business-entities",
+            "component": "BusinessEntitiesPage",
+            "description": "Business entity management"
+          }
+        ],
+        "role_requirements": ["client", "admin", "system_administrator", "tenant_admin"]
+      },
+      "advisor": {
+        "dashboard": "/advisor",
+        "component": "AdvisorDashboard",
+        "file": "src/pages/AdvisorDashboard.tsx",
+        "onboarding": "/advisor/onboarding",
+        "routes": [
+          {
+            "path": "/advisor/billing",
+            "component": "AdvisorBillingPage",
+            "description": "Billing and subscription management"
+          },
+          {
+            "path": "/advisor/compliance",
+            "component": "AdvisorCompliancePage",
+            "description": "Compliance tracking and reporting"
+          },
+          {
+            "path": "/advisor-roi",
+            "component": "AdvisorROIDashboard",
+            "description": "ROI analytics dashboard"
+          }
+        ],
+        "role_requirements": "getAdvisorAccessRoles()"
+      },
+      "cpa_accountant": {
+        "dashboard": "/accountant",
+        "component": "AccountantDashboard",
+        "file": "src/pages/AccountantDashboard.tsx",
+        "onboarding": "/accountant/onboarding",
+        "features": [
+          "tax_planning",
+          "entity_management", 
+          "ce_tracking",
+          "client_automation"
+        ]
+      },
+      "estate_attorney": {
+        "landing": "/estate-attorney",
+        "component": "EstateAttorneyLanding",
+        "file": "src/pages/estate-attorney/EstateAttorneyLanding.tsx",
+        "dashboard": "/estate-attorney/dashboard",
+        "onboarding": "/estate-attorney/onboarding",
+        "marketing_deck": "/estate-attorney/marketing-deck"
+      },
+      "litigation_attorney": {
+        "landing": "/litigation-attorney",
+        "component": "LitigationAttorneyLanding",
+        "file": "src/pages/litigation-attorney/LitigationAttorneyLanding.tsx",
+        "dashboard": "/litigation-attorney/dashboard",
+        "onboarding": "/litigation-attorney/onboarding",
+        "marketing_deck": "/litigation-attorney/marketing-deck"
+      },
+      "insurance_medicare": {
+        "landing": "/insurance-medicare",
+        "component": "InsuranceMedicareLanding",
+        "file": "src/pages/insurance-medicare/InsuranceMedicareLanding.tsx",
+        "onboarding": "/insurance-medicare/onboarding"
+      },
+      "insurance_life_annuity": {
+        "landing": "/insurance-life-annuity",
+        "component": "InsuranceLifeAnnuityLanding",
+        "file": "src/pages/insurance-life-annuity/InsuranceLifeAnnuityLanding.tsx",
+        "onboarding": "/insurance-life-annuity/onboarding"
+      },
+      "realtor_property_manager": {
+        "public_landing": "/personas/realtor",
+        "component": "RealtorPersonaLanding", 
+        "file": "src/pages/personas/RealtorPersonaLanding.tsx",
+        "dashboard": "/realtor/dashboard",
+        "onboarding": "/realtor/onboarding",
+        "features": [
+          "mls_integration",
+          "property_listings",
+          "owner_crm",
+          "cap_rate_analytics",
+          "vault_integration"
+        ]
+      },
+      "healthcare": {
+        "onboarding": "/healthcare/onboarding",
+        "dashboard": "/healthcare/dashboard"
+      },
+      "sports_agent": {
+        "landing": "/sports-agent",
+        "onboarding": "/sports-agent/onboarding"
+      },
+      "coach": {
+        "landing": "/coach",
+        "onboarding": "/coach/onboarding"
+      }
+    },
+    "admin": {
+      "super_admin": [
+        {
+          "path": "/admin",
+          "component": "AdminDashboard",
+          "description": "Super admin dashboard",
+          "role_requirements": ["admin", "system_administrator", "tenant_admin"]
+        }
+      ],
+      "cfo": [
+        {
+          "path": "/cfo",
+          "component": "CFODashboard",
+          "description": "CFO analytics dashboard"
+        }
+      ]
+    },
+    "retirement_roadmap": {
+      "core_components": [
+        {
+          "component": "RetirementCalculatorEngine",
+          "file": "src/components/retirement/RetirementCalculatorEngine.tsx",
+          "description": "Core calculation engine"
+        },
+        {
+          "component": "ScenarioBuilder",
+          "file": "src/components/retirement/ScenarioBuilder.tsx",
+          "description": "Scenario modeling tool"
+        },
+        {
+          "component": "RetirementPDFExport",
+          "file": "src/components/retirement/RetirementPDFExport.tsx",
+          "description": "PDF generation and export"
+        },
+        {
+          "component": "PlanImportWizard",
+          "file": "src/components/retirement/PlanImportWizard.tsx",
+          "description": "Plan import with AI analysis"
+        }
+      ],
+      "phase_model": {
+        "income_now": "Years 1-2",
+        "income_later": "Years 3-12", 
+        "growth": "12+ years",
+        "legacy": "Ongoing inheritance planning"
+      }
+    },
+    "integrations": {
+      "supabase": {
+        "authentication": true,
+        "storage": true,
+        "edge_functions": true,
+        "real_time": true
+      },
+      "third_party": {
+        "openai": "PDF plan import analysis",
+        "calendly": "Appointment booking",
+        "stripe": "Subscription management (placeholder)",
+        "twilio": "SMS/voice communications",
+        "mls_reso": "Real estate data (realtor persona)"
+      }
+    },
+    "analytics": {
+      "provider": "PostHog",
+      "events": [
+        "persona_claimed",
+        "onboarding_step",
+        "feature_used", 
+        "conversion",
+        "calculator_used",
+        "pdf_exported",
+        "viral_share_clicked"
+      ]
+    }
+  }
+}
