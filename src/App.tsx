@@ -139,6 +139,9 @@ import AccountantDeck from './pages/accountant/AccountantDeck';
 import EstateAttorneyLanding from './pages/estate-attorney/EstateAttorneyLanding';
 import EstateAttorneyOnboarding from './pages/estate-attorney/EstateAttorneyOnboarding';
 import EstateAttorneyDashboard from './pages/estate-attorney/EstateAttorneyDashboard';
+import LitigationAttorneyLanding from './pages/litigation-attorney/LitigationAttorneyLanding';
+import LitigationAttorneyOnboarding from './pages/litigation-attorney/LitigationAttorneyOnboarding';
+import LitigationAttorneyDashboard from './pages/litigation-attorney/LitigationAttorneyDashboard';
 import { PersonaLandingPage } from './pages/PersonaLandingPage';
 import { UniversalLandingPage } from './pages/UniversalLandingPage';
 import { PersonaPreviewPage } from './pages/PersonaPreviewPage';
@@ -196,6 +199,9 @@ function App() {
         <Route path="/estate-attorney" element={<EstateAttorneyLanding />} />
         <Route path="/estate-attorney/onboarding" element={<EstateAttorneyOnboarding />} />
         <Route path="/estate-attorney/dashboard" element={<EstateAttorneyDashboard />} />
+        <Route path="/litigation-attorney" element={<LitigationAttorneyLanding />} />
+        <Route path="/litigation-attorney/onboarding" element={<LitigationAttorneyOnboarding />} />
+        <Route path="/litigation-attorney/dashboard" element={<LitigationAttorneyDashboard />} />
         <Route path="/lending-wireframe" element={<LendingWireframePage />} />
         <Route path="/image-generator" element={<ImageGeneratorPage />} />
                              <Route path="/persona-landing" element={<PersonaLandingPage />} />
