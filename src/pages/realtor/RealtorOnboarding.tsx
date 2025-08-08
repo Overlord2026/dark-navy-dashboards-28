@@ -447,7 +447,7 @@ const RealtorOnboarding: React.FC = () => {
                     </div>
                     <Checkbox
                       checked={data.sampleData.listings}
-                      onCheckedChange={(checked) => updateSampleData('listings', checked)}
+                      onCheckedChange={(checked) => updateSampleData('listings', !!checked)}
                     />
                   </div>
 
@@ -458,7 +458,7 @@ const RealtorOnboarding: React.FC = () => {
                     </div>
                     <Checkbox
                       checked={data.sampleData.owners}
-                      onCheckedChange={(checked) => updateSampleData('owners', checked)}
+                      onCheckedChange={(checked) => updateSampleData('owners', !!checked)}
                     />
                   </div>
 
@@ -469,7 +469,7 @@ const RealtorOnboarding: React.FC = () => {
                     </div>
                     <Checkbox
                       checked={data.sampleData.entities}
-                      onCheckedChange={(checked) => updateSampleData('entities', checked)}
+                      onCheckedChange={(checked) => updateSampleData('entities', !!checked)}
                     />
                   </div>
 
@@ -480,7 +480,7 @@ const RealtorOnboarding: React.FC = () => {
                     </div>
                     <Checkbox
                       checked={data.sampleData.scenarios}
-                      onCheckedChange={(checked) => updateSampleData('scenarios', checked)}
+                      onCheckedChange={(checked) => updateSampleData('scenarios', !!checked)}
                     />
                   </div>
                 </div>

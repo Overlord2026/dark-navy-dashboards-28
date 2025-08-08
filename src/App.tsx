@@ -112,7 +112,7 @@ import ConsultantDashboardPage from "./pages/ConsultantDashboardPage";
 import EliteFamilyOfficePersonaLandingPage from "./pages/EliteFamilyOfficePersonaLandingPage";
 import EliteFamilyOfficeOnboardingPage from "./pages/EliteFamilyOfficeOnboardingPage";
 import EliteFamilyOfficeDashboardPage from "./pages/EliteFamilyOfficeDashboardPage";
-import RealtorPersonaLanding from "./pages/realtor/RealtorPersonaLanding";
+import RealtorPersonaLanding from "./pages/personas/RealtorPersonaLanding";
 import RealtorOnboarding from "./pages/realtor/RealtorOnboarding";
 import RealtorDashboard from "./pages/realtor/RealtorDashboard";
 import CoachPersonaLandingPage from "./pages/CoachPersonaLandingPage";
@@ -454,8 +454,8 @@ function App() {
                            <Route path="/elite-family-office-persona" element={<EliteFamilyOfficePersonaLandingPage />} />
                            <Route path="/elite-family-office-onboarding" element={<EliteFamilyOfficeOnboardingPage />} />
                            <Route path="/elite-family-office-dashboard" element={<EliteFamilyOfficeDashboardPage />} />
-                           <Route path="/realtor-persona" element={<RealtorPersonaLandingPage />} />
-                           <Route path="/realtor-onboarding" element={<RealtorOnboardingPage />} />
+                            <Route path="/realtor-persona" element={<RealtorPersonaLanding />} />
+                            <Route path="/realtor-onboarding" element={<RealtorOnboarding />} />
                             <Route path="/coach-persona" element={<CoachPersonaLandingPage />} />
                             <Route path="/coach-onboarding" element={<CoachOnboardingPage />} />
                             <Route path="/sports-agent-persona" element={<SportsAgentPersonaLandingPage />} />
