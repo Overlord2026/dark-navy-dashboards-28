@@ -8723,6 +8723,47 @@ export type Database = {
         }
         Relationships: []
       }
+      estate_audit_log: {
+        Row: {
+          action: string | null
+          actor_role: string | null
+          created_at: string | null
+          details: Json | null
+          id: string
+          ip: unknown | null
+          request_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action?: string | null
+          actor_role?: string | null
+          created_at?: string | null
+          details?: Json | null
+          id?: string
+          ip?: unknown | null
+          request_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string | null
+          actor_role?: string | null
+          created_at?: string | null
+          details?: Json | null
+          id?: string
+          ip?: unknown | null
+          request_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "estate_audit_log_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "estate_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       estate_document_reminders: {
         Row: {
           created_at: string | null
@@ -8826,6 +8867,53 @@ export type Database = {
           },
         ]
       }
+      estate_filings: {
+        Row: {
+          created_at: string | null
+          filing_type: string | null
+          id: string
+          method: string | null
+          receipt_url: string | null
+          rejection_reason: string | null
+          request_id: string | null
+          state_code: string | null
+          status: string | null
+          submitted_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          filing_type?: string | null
+          id?: string
+          method?: string | null
+          receipt_url?: string | null
+          rejection_reason?: string | null
+          request_id?: string | null
+          state_code?: string | null
+          status?: string | null
+          submitted_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          filing_type?: string | null
+          id?: string
+          method?: string | null
+          receipt_url?: string | null
+          rejection_reason?: string | null
+          request_id?: string | null
+          state_code?: string | null
+          status?: string | null
+          submitted_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "estate_filings_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "estate_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       estate_intake: {
         Row: {
           assessment_results: Json | null
@@ -8877,6 +8965,50 @@ export type Database = {
         }
         Relationships: []
       }
+      estate_notaries: {
+        Row: {
+          completed_at: string | null
+          created_at: string | null
+          credential_id: string | null
+          id: string
+          kyc_status: string | null
+          notary_name: string | null
+          provider: string | null
+          request_id: string | null
+          scheduled_at: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string | null
+          credential_id?: string | null
+          id?: string
+          kyc_status?: string | null
+          notary_name?: string | null
+          provider?: string | null
+          request_id?: string | null
+          scheduled_at?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string | null
+          credential_id?: string | null
+          id?: string
+          kyc_status?: string | null
+          notary_name?: string | null
+          provider?: string | null
+          request_id?: string | null
+          scheduled_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "estate_notaries_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "estate_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       estate_planning_documents: {
         Row: {
           content_type: string | null
@@ -8921,6 +9053,154 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      estate_requests: {
+        Row: {
+          advisor_id: string | null
+          attorney_id: string | null
+          compliance: Json
+          created_at: string | null
+          docs: Json
+          household_id: string | null
+          id: string
+          intake: Json
+          matter_type: string
+          priority: string
+          state_code: string
+          status: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          advisor_id?: string | null
+          attorney_id?: string | null
+          compliance?: Json
+          created_at?: string | null
+          docs?: Json
+          household_id?: string | null
+          id?: string
+          intake?: Json
+          matter_type: string
+          priority?: string
+          state_code: string
+          status?: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          advisor_id?: string | null
+          attorney_id?: string | null
+          compliance?: Json
+          created_at?: string | null
+          docs?: Json
+          household_id?: string | null
+          id?: string
+          intake?: Json
+          matter_type?: string
+          priority?: string
+          state_code?: string
+          status?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      estate_sessions: {
+        Row: {
+          created_at: string | null
+          ended_at: string | null
+          id: string
+          notes: string | null
+          provider: string | null
+          provider_session_id: string | null
+          recording_url: string | null
+          request_id: string | null
+          scheduled_at: string | null
+          session_type: string
+          started_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          ended_at?: string | null
+          id?: string
+          notes?: string | null
+          provider?: string | null
+          provider_session_id?: string | null
+          recording_url?: string | null
+          request_id?: string | null
+          scheduled_at?: string | null
+          session_type: string
+          started_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          ended_at?: string | null
+          id?: string
+          notes?: string | null
+          provider?: string | null
+          provider_session_id?: string | null
+          recording_url?: string | null
+          request_id?: string | null
+          scheduled_at?: string | null
+          session_type?: string
+          started_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "estate_sessions_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "estate_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      estate_witnesses: {
+        Row: {
+          created_at: string | null
+          email: string | null
+          full_name: string | null
+          id: string
+          invited_at: string | null
+          joined_at: string | null
+          kyc_status: string | null
+          phone: string | null
+          request_id: string | null
+          verified_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          invited_at?: string | null
+          joined_at?: string | null
+          kyc_status?: string | null
+          phone?: string | null
+          request_id?: string | null
+          verified_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          invited_at?: string | null
+          joined_at?: string | null
+          kyc_status?: string | null
+          phone?: string | null
+          request_id?: string | null
+          verified_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "estate_witnesses_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "estate_requests"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       exercise_entries: {
         Row: {
