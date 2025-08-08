@@ -229,9 +229,10 @@ function App() {
                              <Route path="/persona-landing" element={<PersonaLandingPage />} />
                              <Route path="/persona-preview/:personaId" element={<PersonaPreviewPage />} />
                                 <Route path="/" element={<PublicLandingPage />} />
+                                <Route path="/calculator" element={<PublicFeeCalculator />} />
+                                <Route path="/demo" element={<div className="min-h-screen bg-background p-8"><DemoCalculator /></div>} />
                                 <Route path="/lead-magnet" element={<LeadMagnetPage />} />
                                 <Route path="/marketplace-demo" element={<MarketplaceLandingPage />} />
-                                <Route path="/demo" element={<div className="min-h-screen bg-background p-8"><DemoCalculator /></div>} />
                                <Route path="/universal" element={<UniversalLandingPage />} />
                            <Route path="/marketplace" element={<FamilyOfficeMarketplacePage />} />
                            <Route path="/welcome" element={<WelcomePage />} />
