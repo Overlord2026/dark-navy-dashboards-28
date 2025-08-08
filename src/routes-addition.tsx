@@ -23,8 +23,10 @@ import { AttorneyOnboarding } from '@/pages/AttorneyOnboarding';
 import MobileQATestPage from '@/pages/MobileQATestPage';
 import MobileMore from '@/pages/mobile/MobileMore';
 import MobileMobileQATest from '@/pages/mobile/MobileMobileQATest';
-import MasterLanding from '@/pages/MasterLanding';
-import ValueCalculator from '@/pages/ValueCalculator';
+import LandingPage from '@/pages/LandingPage';
+import EnhancedValueCalculator from '@/pages/EnhancedValueCalculator';
+import EducationHub from '@/pages/EducationHub';
+import SolutionsHub from '@/pages/SolutionsHub';
 import AdminHome from '@/pages/admin/AdminHome';
 import { WithRole } from '@/components/auth/withRole';
 
@@ -33,11 +35,19 @@ const additionalRoutes = [
   // Public Routes
   {
     path: '/',
-    element: <MasterLanding />
+    element: <LandingPage />
   },
   {
     path: '/value-calculator',
-    element: <ValueCalculator />
+    element: <EnhancedValueCalculator />
+  },
+  {
+    path: '/education-hub',
+    element: <EducationHub />
+  },
+  {
+    path: '/solutions-hub',
+    element: <SolutionsHub />
   },
   {
     path: '/marketplace',
