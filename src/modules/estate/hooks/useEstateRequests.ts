@@ -48,7 +48,12 @@ export const useEstateRequests = () => {
         return;
       }
 
-      setRequests(data || []);
+      setRequests((data || []).map(item => ({
+        ...item,
+        docs: Array.isArray(item.docs) ? item.docs : [],
+        intake: typeof item.intake === 'object' ? item.intake : {},
+        compliance: typeof item.compliance === 'object' ? item.compliance : {}
+      })));
     } catch (error) {
       console.error('Error fetching estate requests:', error);
       toast.error('Failed to fetch estate requests');
@@ -79,7 +84,12 @@ export const useEstateRequests = () => {
         throw error;
       }
 
-      setRequests(prev => [newRequest, ...prev]);
+      setRequests(prev => [{
+        ...newRequest,
+        docs: Array.isArray(newRequest.docs) ? newRequest.docs : [],
+        intake: typeof newRequest.intake === 'object' ? newRequest.intake : {},
+        compliance: typeof newRequest.compliance === 'object' ? newRequest.compliance : {}
+      }, ...prev]);
       toast.success('Estate planning request created successfully');
       return newRequest;
     } catch (error) {
@@ -107,7 +117,12 @@ export const useEstateRequests = () => {
       }
 
       setRequests(prev => 
-        prev.map(req => req.id === id ? updatedRequest : req)
+        prev.map(req => req.id === id ? {
+          ...updatedRequest,
+          docs: Array.isArray(updatedRequest.docs) ? updatedRequest.docs : [],
+          intake: typeof updatedRequest.intake === 'object' ? updatedRequest.intake : {},
+          compliance: typeof updatedRequest.compliance === 'object' ? updatedRequest.compliance : {}
+        } : req)
       );
       toast.success('Estate request updated successfully');
       return updatedRequest;
