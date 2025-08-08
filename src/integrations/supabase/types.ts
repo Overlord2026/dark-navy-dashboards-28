@@ -15896,43 +15896,25 @@ export type Database = {
       }
       onboarding_steps: {
         Row: {
-          app_id: string
-          component_name: string | null
           created_at: string
-          description: string | null
-          estimated_minutes: number | null
-          help_text: string | null
           id: string
-          is_required: boolean | null
-          step_key: string
-          step_number: number
-          title: string
+          status: string
+          step: string
+          user_id: string
         }
         Insert: {
-          app_id: string
-          component_name?: string | null
           created_at?: string
-          description?: string | null
-          estimated_minutes?: number | null
-          help_text?: string | null
           id?: string
-          is_required?: boolean | null
-          step_key: string
-          step_number: number
-          title: string
+          status: string
+          step: string
+          user_id: string
         }
         Update: {
-          app_id?: string
-          component_name?: string | null
           created_at?: string
-          description?: string | null
-          estimated_minutes?: number | null
-          help_text?: string | null
           id?: string
-          is_required?: boolean | null
-          step_key?: string
-          step_number?: number
-          title?: string
+          status?: string
+          step?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -25726,49 +25708,38 @@ export type Database = {
       vault_activity_log: {
         Row: {
           action_type: string
-          created_at: string | null
-          details: Json | null
+          created_at: string
+          details: Json
           id: string
           ip_address: unknown | null
           resource_id: string | null
           resource_type: string
-          user_agent: string | null
-          user_id: string | null
+          user_id: string
           vault_id: string
         }
         Insert: {
           action_type: string
-          created_at?: string | null
-          details?: Json | null
+          created_at?: string
+          details?: Json
           id?: string
           ip_address?: unknown | null
           resource_id?: string | null
           resource_type: string
-          user_agent?: string | null
-          user_id?: string | null
+          user_id: string
           vault_id: string
         }
         Update: {
           action_type?: string
-          created_at?: string | null
-          details?: Json | null
+          created_at?: string
+          details?: Json
           id?: string
           ip_address?: unknown | null
           resource_id?: string | null
           resource_type?: string
-          user_agent?: string | null
-          user_id?: string | null
+          user_id?: string
           vault_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "vault_activity_log_vault_id_fkey"
-            columns: ["vault_id"]
-            isOneToOne: false
-            referencedRelation: "family_vaults"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       vault_audit_log: {
         Row: {
