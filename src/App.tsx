@@ -144,6 +144,8 @@ import LitigationAttorneyLanding from './pages/litigation-attorney/LitigationAtt
 import LitigationAttorneyOnboarding from './pages/litigation-attorney/LitigationAttorneyOnboarding';
 import LitigationAttorneyDashboard from './pages/litigation-attorney/LitigationAttorneyDashboard';
 import LitigationAttorneyMarketingDeck from './pages/litigation-attorney/LitigationAttorneyMarketingDeck';
+import InsuranceMedicareLanding from './pages/insurance-medicare/InsuranceMedicareLanding';
+import InsuranceMedicareOnboarding from './pages/insurance-medicare/InsuranceMedicareOnboarding';
 import { PersonaLandingPage } from './pages/PersonaLandingPage';
 import { UniversalLandingPage } from './pages/UniversalLandingPage';
 import { PersonaPreviewPage } from './pages/PersonaPreviewPage';
@@ -206,6 +208,10 @@ function App() {
         <Route path="/litigation-attorney/dashboard" element={<LitigationAttorneyDashboard />} />
         <Route path="/litigation-attorney/marketing-deck" element={<LitigationAttorneyMarketingDeck />} />
         <Route path="/estate-attorney/marketing-deck" element={<EstateAttorneyMarketingDeck />} />
+        
+        {/* Insurance & Medicare routes */}
+        <Route path="/insurance-medicare" element={<InsuranceMedicareLanding />} />
+        <Route path="/insurance-medicare/onboarding" element={<InsuranceMedicareOnboarding />} />
         <Route path="/lending-wireframe" element={<LendingWireframePage />} />
         <Route path="/image-generator" element={<ImageGeneratorPage />} />
                              <Route path="/persona-landing" element={<PersonaLandingPage />} />
