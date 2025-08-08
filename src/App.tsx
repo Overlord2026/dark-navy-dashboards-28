@@ -89,6 +89,7 @@ import HealthcareQAPage from "./pages/HealthcareQAPage";
 import AdvisorOnboardingPage from "./pages/AdvisorOnboardingPage";
 import AdvisorOnboardingSequencePage from "./pages/AdvisorOnboardingSequencePage";
 import AccountantOnboardingSequencePage from "./pages/AccountantOnboardingSequencePage";
+import AttorneyOnboardingSequencePage from "./pages/AttorneyOnboardingSequencePage";
 import AttorneyOnboardingPage from "./pages/AttorneyOnboardingPage";
 import AccountantOnboardingPage from "./pages/AccountantOnboardingPage";
 import AccountantDashboardPage from "./pages/AccountantDashboardPage";
@@ -330,6 +331,7 @@ function App() {
             <Route path="/advisor-onboarding" element={<AdvisorOnboardingPage />} />
         <Route path="/advisor-onboarding-sequence" element={<AdvisorOnboardingSequencePage />} />
         <Route path="/accountant-onboarding-sequence" element={<AccountantOnboardingSequencePage />} />
+        <Route path="/attorney-onboarding-sequence" element={<AttorneyOnboardingSequencePage />} />
             <Route path="/attorney-onboarding" element={<AttorneyOnboardingPage />} />
             <Route path="/accountant-onboarding" element={<AccountantOnboardingPage />} />
             <Route path="/accountant-dashboard" element={<AccountantDashboardPage />} />
