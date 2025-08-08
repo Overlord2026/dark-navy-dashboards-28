@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useNavigate } from 'react-router-dom';
-import { useAppEventTracking } from '@/hooks/useEventTracking';
+import { useEventTracking } from '@/hooks/useEventTracking';
 import { 
   Calculator, 
   Users, 
@@ -80,7 +80,7 @@ const secondRowPersonas = [
 
 export default function MasterLanding() {
   const navigate = useNavigate();
-  const { trackLandingView, trackPersonaCardClick, trackCtaClick } = useAppEventTracking();
+  const { trackLandingView, trackPersonaCardClick, trackCtaClick } = useEventTracking();
 
   useEffect(() => {
     trackLandingView();

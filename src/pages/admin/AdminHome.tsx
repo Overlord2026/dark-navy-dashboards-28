@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useUser } from '@/context/UserContext';
-import { useAppEventTracking } from '@/hooks/useEventTracking';
+import { useEventTracking } from '@/hooks/useEventTracking';
 import { 
   DollarSign, 
   TrendingUp, 
@@ -21,7 +21,7 @@ const adminTiles = [
     description: 'KPIs, revenue, CAC/LTV, cohort analysis, MRR/ARR',
     icon: DollarSign,
     route: '/admin/cfo',
-    roles: ['admin', 'cfo']
+    roles: ['system_administrator']
   },
   {
     id: 'marketing',
@@ -29,7 +29,7 @@ const adminTiles = [
     description: 'Campaigns, UTMs, funnels, email/SMS management',
     icon: TrendingUp,
     route: '/admin/marketing',
-    roles: ['admin', 'marketing', 'cfo']
+    roles: ['system_administrator']
   },
   {
     id: 'security',
@@ -37,7 +37,7 @@ const adminTiles = [
     description: 'Audit logs, RLS checks, security incidents',
     icon: Shield,
     route: '/admin/security',
-    roles: ['admin', 'compliance', 'cfo']
+    roles: ['system_administrator']
   },
   {
     id: 'vetting',
@@ -45,7 +45,7 @@ const adminTiles = [
     description: 'Review and approve professional applications',
     icon: FileCheck,
     route: '/admin/vetting',
-    roles: ['admin', 'compliance']
+    roles: ['system_administrator']
   },
   {
     id: 'operations',
@@ -53,7 +53,7 @@ const adminTiles = [
     description: 'Tasks, tickets, bulk invites, seat management',
     icon: Settings,
     route: '/admin/operations',
-    roles: ['admin', 'cfo']
+    roles: ['system_administrator']
   },
   {
     id: 'analytics',
@@ -61,14 +61,14 @@ const adminTiles = [
     description: 'User behavior, event tracking, performance metrics',
     icon: BarChart3,
     route: '/admin/analytics',
-    roles: ['admin', 'marketing', 'cfo']
+    roles: ['system_administrator']
   }
 ];
 
 export default function AdminHome() {
   const navigate = useNavigate();
   const { userProfile } = useUser();
-  const { trackAdminView } = useAppEventTracking();
+  const { trackAdminView } = useEventTracking();
 
   useEffect(() => {
     trackAdminView('home');
@@ -86,9 +86,7 @@ export default function AdminHome() {
 
   // Sort tiles by user role priority
   const sortedTiles = availableTiles.sort((a, b) => {
-    if (userProfile?.role === 'cfo' && a.id === 'cfo') return -1;
-    if (userProfile?.role === 'marketing' && a.id === 'marketing') return -1;
-    if (userProfile?.role === 'compliance' && a.id === 'security') return -1;
+    if (userProfile?.role === 'system_administrator' && a.id === 'cfo') return -1;
     return 0;
   });
 

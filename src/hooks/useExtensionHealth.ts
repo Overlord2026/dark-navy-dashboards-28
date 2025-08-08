@@ -32,7 +32,7 @@ export function useExtensionHealth(): UseExtensionHealthResult {
           throw healthError;
         }
 
-        setHealth(data as ExtensionHealth);
+        setHealth(data as unknown as ExtensionHealth);
         setError(null);
       } catch (err) {
         console.error('Extension health check failed:', err);

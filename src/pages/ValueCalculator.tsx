@@ -7,7 +7,7 @@ import { Slider } from '@/components/ui/slider';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Celebration } from '@/components/ConfettiAnimation';
-import { useAppEventTracking } from '@/hooks/useEventTracking';
+import { useEventTracking } from '@/hooks/useEventTracking';
 import { useAuth } from '@/context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Download, TrendingUp, DollarSign, Calendar, Volume2, VolumeX } from 'lucide-react';
@@ -40,7 +40,7 @@ export default function ValueCalculator() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { toast } = useToast();
-  const { trackCalculatorView, trackCalculatorRun, trackCalculatorDownloadPdf, trackCalculatorCtaClicked } = useAppEventTracking();
+  const { trackCalculatorView, trackCalculatorRun, trackCalculatorDownloadPdf, trackCalculatorCtaClicked } = useEventTracking();
   
   const [inputs, setInputs] = useState<CalculatorInputs>({
     portfolioValue: 1000000,

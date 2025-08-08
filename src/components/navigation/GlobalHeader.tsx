@@ -22,7 +22,7 @@ export const GlobalHeader: React.FC = () => {
     { label: 'Get Started', path: '/auth/signup' }
   ];
 
-  const adminRoles = ['admin', 'cfo', 'marketing', 'compliance'];
+  const adminRoles = ['system_administrator', 'tenant_admin'];
   const showAdminMenu = userProfile?.role && adminRoles.includes(userProfile.role);
 
   return (
@@ -63,17 +63,17 @@ export const GlobalHeader: React.FC = () => {
                   <DropdownMenuItem onClick={() => navigate('/admin')}>
                     Dashboard
                   </DropdownMenuItem>
-                  {(userProfile?.role === 'admin' || userProfile?.role === 'cfo') && (
+                  {userProfile?.role === 'system_administrator' && (
                     <DropdownMenuItem onClick={() => navigate('/admin/cfo')}>
                       CFO Center
                     </DropdownMenuItem>
                   )}
-                  {(userProfile?.role === 'admin' || userProfile?.role === 'marketing') && (
+                  {userProfile?.role === 'system_administrator' && (
                     <DropdownMenuItem onClick={() => navigate('/admin/marketing')}>
                       Marketing
                     </DropdownMenuItem>
                   )}
-                  {(userProfile?.role === 'admin' || userProfile?.role === 'compliance') && (
+                  {userProfile?.role === 'system_administrator' && (
                     <>
                       <DropdownMenuItem onClick={() => navigate('/admin/security')}>
                         Security
