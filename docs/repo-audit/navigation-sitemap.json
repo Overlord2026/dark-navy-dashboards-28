@@ -1,0 +1,322 @@
+{
+  "sitemap": {
+    "public_routes": {
+      "marketing": [
+        {
+          "path": "/",
+          "component": "PublicLandingPage.tsx",
+          "auth_required": false,
+          "primary_cta": "Get Started",
+          "secondary_cta": "See Demo"
+        },
+        {
+          "path": "/welcome",
+          "component": "WelcomePage.tsx", 
+          "auth_required": false,
+          "primary_cta": "Choose Your Path"
+        },
+        {
+          "path": "/universal",
+          "component": "UniversalLandingPage.tsx",
+          "auth_required": false,
+          "primary_cta": "Get Started"
+        },
+        {
+          "path": "/marketplace",
+          "component": "FamilyOfficeMarketplacePage.tsx",
+          "auth_required": false,
+          "primary_cta": "Explore Marketplace"
+        },
+        {
+          "path": "/lead-magnet", 
+          "component": "LeadMagnetPage.tsx",
+          "auth_required": false,
+          "primary_cta": "Download Resource"
+        }
+      ],
+      "calculators": [
+        {
+          "path": "/demo",
+          "component": "DemoCalculator.tsx",
+          "auth_required": false,
+          "primary_cta": "Get Full Analysis"
+        },
+        {
+          "path": "/retirement-analyzer",
+          "component": "RetirementAnalyzerDemo.tsx", 
+          "auth_required": false,
+          "primary_cta": "See Your SWAG™ Score"
+        },
+        {
+          "path": "/analyzer/retirement-income-gap",
+          "component": "RetirementIncomeGapAnalyzer.tsx",
+          "auth_required": false,
+          "primary_cta": "Calculate Gap"
+        },
+        {
+          "path": "/scorecard/retirement-confidence",
+          "component": "RetirementConfidenceScorecard.tsx",
+          "auth_required": false, 
+          "primary_cta": "Get Scorecard"
+        }
+      ],
+      "persona_landings": [
+        {
+          "path": "/estate-attorney",
+          "component": "EstateAttorneyLanding.tsx",
+          "persona": "attorney_estate",
+          "auth_required": false,
+          "primary_cta": "Start Onboarding"
+        },
+        {
+          "path": "/litigation-attorney", 
+          "component": "LitigationAttorneyLanding.tsx",
+          "persona": "attorney_litigation",
+          "auth_required": false,
+          "primary_cta": "Start Onboarding"
+        },
+        {
+          "path": "/insurance-medicare",
+          "component": "InsuranceMedicareLanding.tsx",
+          "persona": "insurance_medicare",
+          "auth_required": false,
+          "primary_cta": "Start Onboarding"
+        },
+        {
+          "path": "/personas/realtor",
+          "component": "RealtorPersonaLanding.tsx",
+          "persona": "realtor",
+          "auth_required": false,
+          "primary_cta": "Start Onboarding"
+        }
+      ]
+    },
+    "auth_routes": {
+      "authentication": [
+        {
+          "path": "/auth",
+          "component": "AuthPage.tsx",
+          "auth_required": false,
+          "primary_cta": "Sign In"
+        },
+        {
+          "path": "/auth/:authType",
+          "component": "AuthPage.tsx", 
+          "auth_required": false,
+          "dynamic": true
+        },
+        {
+          "path": "/security",
+          "component": "SecuritySettingsPage.tsx",
+          "auth_required": true,
+          "allowed_roles": ["all"]
+        }
+      ],
+      "onboarding": [
+        {
+          "path": "/onboarding",
+          "component": "OnboardingPage.tsx",
+          "auth_required": true,
+          "primary_cta": "Continue"
+        },
+        {
+          "path": "/onboarding/:personaId",
+          "component": "PersonaOnboardingFlow.tsx",
+          "auth_required": true,
+          "dynamic": true,
+          "lazy_loaded": true
+        },
+        {
+          "path": "/welcome-onboarding",
+          "component": "ClientWelcomeOnboardingPage.tsx",
+          "auth_required": true,
+          "persona": "client"
+        }
+      ]
+    },
+    "app_routes": {
+      "dashboards": [
+        {
+          "path": "/dashboard",
+          "component": "Dashboard.tsx",
+          "auth_required": true,
+          "role_based_routing": true
+        },
+        {
+          "path": "/client",
+          "component": "ClientDashboard.tsx",
+          "auth_required": true,
+          "allowed_roles": ["client", "admin", "system_administrator", "tenant_admin"]
+        },
+        {
+          "path": "/advisor",
+          "component": "AdvisorDashboard.tsx", 
+          "auth_required": true,
+          "allowed_roles": "getAdvisorAccessRoles()"
+        },
+        {
+          "path": "/accountant",
+          "component": "AccountantDashboard.tsx",
+          "auth_required": true,
+          "allowed_roles": ["accountant", "admin"]
+        }
+      ],
+      "retirement_planning": [
+        {
+          "path": "/retirement-roadmap",
+          "component": "SwagRetirementRoadmap.tsx",
+          "auth_required": true,
+          "feature": "swag_roadmap"
+        },
+        {
+          "path": "/investment-allocation", 
+          "component": "InvestmentAllocationDashboard.tsx",
+          "auth_required": true,
+          "feature": "investment_allocation"
+        }
+      ]
+    },
+    "admin_routes": {
+      "core_admin": [
+        {
+          "path": "/admin",
+          "component": "AdminDashboard.tsx",
+          "auth_required": true, 
+          "allowed_roles": ["admin", "system_administrator", "tenant_admin"]
+        },
+        {
+          "path": "/admin/layout",
+          "component": "AdminLayoutSettings.tsx",
+          "auth_required": true,
+          "allowed_roles": ["admin", "system_administrator", "tenant_admin"]
+        },
+        {
+          "path": "/admin/controls",
+          "component": "AdminControlsPage.tsx",
+          "auth_required": true,
+          "allowed_roles": ["admin", "system_administrator", "tenant_admin"]
+        }
+      ],
+      "qa_testing": [
+        {
+          "path": "/qa-testing",
+          "component": "QATestingPage.tsx",
+          "auth_required": true,
+          "allowed_roles": ["admin", "system_administrator"]
+        },
+        {
+          "path": "/end-to-end-qa",
+          "component": "EndToEndQAPage.tsx", 
+          "auth_required": true,
+          "allowed_roles": ["admin", "system_administrator"]
+        }
+      ]
+    },
+    "persona_routes": {
+      "client_family": {
+        "onboarding": "/client-family/onboarding",
+        "deck": "/family/client-deck",
+        "component_paths": [
+          "ClientFamilyOnboardingPage.tsx",
+          "ClientFamilyDeck.tsx"
+        ]
+      },
+      "advisor": {
+        "onboarding": "/advisor/onboarding", 
+        "dashboard": "/advisor",
+        "deck": "/sales/advisor-deck",
+        "component_paths": [
+          "AdvisorOnboardingPage.tsx",
+          "AdvisorDashboard.tsx",
+          "AdvisorDeck.tsx"
+        ]
+      },
+      "cpa_accountant": {
+        "onboarding": "/accountant/onboarding",
+        "dashboard": "/accountant",
+        "deck": "/accountant/deck",
+        "component_paths": [
+          "AccountantOnboardingPage.tsx", 
+          "AccountantDashboard.tsx",
+          "AccountantDeck.tsx"
+        ]
+      },
+      "attorney_estate": {
+        "landing": "/estate-attorney",
+        "onboarding": "/estate-attorney/onboarding", 
+        "dashboard": "/estate-attorney/dashboard",
+        "deck": "/estate-attorney/marketing-deck"
+      },
+      "attorney_litigation": {
+        "landing": "/litigation-attorney",
+        "onboarding": "/litigation-attorney/onboarding",
+        "dashboard": "/litigation-attorney/dashboard", 
+        "deck": "/litigation-attorney/marketing-deck"
+      },
+      "insurance_medicare": {
+        "landing": "/insurance-medicare",
+        "onboarding": "/insurance-medicare/onboarding",
+        "dashboard": "/medicare/dashboard"
+      },
+      "insurance_life_annuity": {
+        "landing": "/insurance-life-annuity", 
+        "onboarding": "/insurance-life-annuity/onboarding",
+        "dashboard": "/insurance/dashboard"
+      },
+      "realtor": {
+        "landing": "/personas/realtor",
+        "onboarding": "/realtor/onboarding",
+        "dashboard": "/realtor/dashboard"
+      },
+      "healthcare": {
+        "onboarding": "/healthcare/onboarding",
+        "dashboard": "/healthcare/dashboard"
+      },
+      "elite_family_office": {
+        "onboarding": "/elite-family-office/onboarding",
+        "dashboard": "/elite-family-office/dashboard"
+      },
+      "sports_agent": {
+        "onboarding": "/sports-agent/onboarding"
+      },
+      "athlete_nil": {
+        "landing": "/athletes/nil-landing",
+        "onboarding": "/athletes/nil-onboarding",
+        "deck": "/athletes/wealth-deck"
+      }
+    },
+    "feature_flags": {
+      "swag_roadmap": {
+        "enabled": true,
+        "routes": ["/retirement-roadmap", "/retirement-analyzer"]
+      },
+      "plan_import": {
+        "enabled": true,
+        "component": "PlanImportWizard"
+      },
+      "premium_features": {
+        "subscription_gated": true,
+        "features": ["advanced_analytics", "white_label", "api_access"]
+      }
+    },
+    "integrations": {
+      "supabase": {
+        "auth": true,
+        "database": true,
+        "storage": true,
+        "edge_functions": true
+      },
+      "stripe": {
+        "subscriptions": true,
+        "payments": true
+      },
+      "calendly": {
+        "booking_integration": true
+      },
+      "plaid": {
+        "account_linking": true,
+        "status": "sandbox"
+      }
+    }
+  }
+}

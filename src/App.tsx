@@ -374,7 +374,22 @@ function App() {
                           <Route path="/calculator/fee" element={<PublicFeeCalculator />} />
                            <Route path="/analyzer/retirement-income-gap" element={<RetirementIncomeGapAnalyzer />} />
                            <Route path="/info/retirement-roadmap" element={<RetirementRoadmapInfo />} />
-                           <Route path="/retirement-analyzer" element={<RetirementAnalyzerDemo />} />
+                            <Route path="/retirement-analyzer" element={<RetirementAnalyzerDemo />} />
+                            <Route path="/value-calculator" element={
+                              <React.Suspense fallback={<div>Loading...</div>}>
+                                {React.createElement(React.lazy(() => import('./pages/value-calculator')))}
+                              </React.Suspense>
+                            } />
+                            <Route path="/admin/qa-center" element={
+                              <AuthWrapper requireAuth={true} allowedRoles={['admin', 'system_administrator', 'tenant_admin']}>
+                                {React.createElement(React.lazy(() => import('./pages/admin/QACenter')))}
+                              </AuthWrapper>
+                            } />
+                            <Route path="/admin/deck-hub" element={
+                              <AuthWrapper requireAuth={true} allowedRoles={['admin', 'system_administrator', 'tenant_admin']}>
+                                {React.createElement(React.lazy(() => import('./pages/admin/DeckHub')))}
+                              </AuthWrapper>
+                            } />
                            <Route path="/tax-center" element={<PublicTaxCenter />} />
                             <Route path="/linkedin-import" element={<LinkedInImport />} />
                             <Route path="/pro-onboarding" element={<ProOnboarding />} />
