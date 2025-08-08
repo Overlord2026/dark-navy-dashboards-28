@@ -177,3 +177,14 @@ verify_jwt = false
 [functions.test-api-integrations]
 verify_jwt = false
 # @public-ok - API integration testing suite for QA
+
+[functions.brand-get]
+verify_jwt = false
+# @public-ok - Public branding API
+
+[functions.fees-calc]
+verify_jwt = false
+# @public-ok - Fee calculation with demo mode
+
+[functions.brand-upload-logo]
+verify_jwt = true

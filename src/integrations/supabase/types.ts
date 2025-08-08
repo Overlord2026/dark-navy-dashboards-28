@@ -27988,15 +27988,13 @@ export type Database = {
         Returns: string
       }
       log_vault_activity: {
-        Args:
-          | { p_item_id: string; p_action: string; p_details?: Json }
-          | {
-              p_vault_id: string
-              p_action_type: string
-              p_resource_type: string
-              p_resource_id?: string
-              p_details?: Json
-            }
+        Args: {
+          p_vault_id: string
+          p_action_type: string
+          p_resource_type: string
+          p_resource_id?: string
+          p_details?: Json
+        }
         Returns: string
       }
       log_vip_admin_activity: {

@@ -45,12 +45,8 @@ export function useVaultItems() {
 
       if (error) throw error;
 
-      // Log the activity
-      await supabase.rpc('log_vault_activity', {
-        p_item_id: data.id,
-        p_action: 'item_created',
-        p_details: { title: item.title, type: item.type }
-      });
+      // Log the activity - vault_id not available in this table
+      // await supabase.rpc('log_vault_activity', {...});
 
       toast({
         title: "Success",
@@ -81,12 +77,8 @@ export function useVaultItems() {
 
       if (error) throw error;
 
-      // Log the activity
-      await supabase.rpc('log_vault_activity', {
-        p_item_id: id,
-        p_action: 'item_updated',
-        p_details: updates
-      });
+      // Log the activity - vault_id not available in this table
+      // await supabase.rpc('log_vault_activity', {...});
 
       toast({
         title: "Success",
@@ -115,11 +107,8 @@ export function useVaultItems() {
 
       if (error) throw error;
 
-      // Log the activity
-      await supabase.rpc('log_vault_activity', {
-        p_item_id: id,
-        p_action: 'item_deleted'
-      });
+      // Log the activity - vault_id not available in this table
+      // await supabase.rpc('log_vault_activity', {...});
 
       toast({
         title: "Success",
