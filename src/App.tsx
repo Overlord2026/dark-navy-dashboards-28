@@ -102,7 +102,9 @@ import AccountantOnboardingPage from "./pages/AccountantOnboardingPage";
 import AccountantDashboardPage from "./pages/AccountantDashboardPage";
 import ConsultantOnboardingPage from "./pages/ConsultantOnboardingPage";
 import ConsultantDashboardPage from "./pages/ConsultantDashboardPage";
-import InsuranceOnboardingPage from "./pages/InsuranceOnboardingPage";
+import EliteFamilyOfficePersonaLandingPage from "./pages/EliteFamilyOfficePersonaLandingPage";
+import EliteFamilyOfficeOnboardingPage from "./pages/EliteFamilyOfficeOnboardingPage";
+import EliteFamilyOfficeDashboardPage from "./pages/EliteFamilyOfficeDashboardPage";
 import InsuranceDashboardPage from "./pages/InsuranceDashboardPage";
 import HealthcareOnboardingPage from "./pages/HealthcareOnboardingPage";
 import HealthcareDashboardPage from "./pages/HealthcareDashboardPage";
@@ -344,8 +346,11 @@ function App() {
         <Route path="/medicare-onboarding" element={<MedicareOnboardingPage />} />
           <Route path="/medicare-dashboard" element={<MedicareDashboardPage />} />
           <Route path="/medicare-marketing-kit" element={<MedicareMarketingKitPage />} />
-          <Route path="/insurance-persona" element={<InsurancePersonaLandingPage />} />
-          <Route path="/insurance-onboarding" element={<InsuranceOnboardingPage />} />
+                           <Route path="/insurance-persona" element={<InsurancePersonaLandingPage />} />
+                           <Route path="/insurance-onboarding" element={<InsuranceOnboardingPage />} />
+                           <Route path="/elite-family-office-persona" element={<EliteFamilyOfficePersonaLandingPage />} />
+                           <Route path="/elite-family-office-onboarding" element={<EliteFamilyOfficeOnboardingPage />} />
+                           <Route path="/elite-family-office-dashboard" element={<EliteFamilyOfficeDashboardPage />} />
             <Route path="/attorney-onboarding" element={<AttorneyOnboardingPage />} />
             <Route path="/accountant-onboarding" element={<AccountantOnboardingPage />} />
             <Route path="/accountant-dashboard" element={<AccountantDashboardPage />} />
