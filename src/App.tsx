@@ -128,6 +128,7 @@ import NILLandingPage from './pages/athletes/NILLandingPage';
 import { PersonaLandingPage } from './pages/PersonaLandingPage';
 import { UniversalLandingPage } from './pages/UniversalLandingPage';
 import { PersonaPreviewPage } from './pages/PersonaPreviewPage';
+import { MarketplaceLandingPage } from './components/marketplace/MarketplaceLandingPage';
 
 const queryClient = new QueryClient();
 
@@ -163,7 +164,8 @@ function App() {
         <Route path="/image-generator" element={<ImageGeneratorPage />} />
                              <Route path="/persona-landing" element={<PersonaLandingPage />} />
                              <Route path="/persona-preview/:personaId" element={<PersonaPreviewPage />} />
-                             <Route path="/" element={<UniversalLandingPage />} />
+                              <Route path="/" element={<MarketplaceLandingPage />} />
+                              <Route path="/universal" element={<UniversalLandingPage />} />
                            <Route path="/marketplace" element={<FamilyOfficeMarketplacePage />} />
                            <Route path="/welcome" element={<WelcomePage />} />
                            <Route path="/auth" element={<AuthPage />} />
