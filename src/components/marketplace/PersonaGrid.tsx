@@ -53,7 +53,7 @@ export const PersonaGrid: React.FC<PersonaGridProps> = ({ compact = false }) => 
         'Client vault & CLE tracking',
         'Legal compliance tools'
       ],
-      route: '/attorney-onboarding',
+      route: '/attorney-onboarding-flow',
       learnMoreRoute: '/attorney-persona'
     },
     {
