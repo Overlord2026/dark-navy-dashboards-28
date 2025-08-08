@@ -28269,6 +28269,10 @@ export type Database = {
         Args: { p_application_id: string; p_action: string; p_notes?: string }
         Returns: boolean
       }
+      readonly_graphql_schema_version: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
       request_compliance_export: {
         Args: {
           p_export_type: string
