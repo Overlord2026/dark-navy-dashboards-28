@@ -28324,8 +28324,29 @@ export type Database = {
           notes: string
         }[]
       }
+      safe_graphql_schema_version: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
       schedule_follow_up: {
         Args: { p_lead_id: string; p_stage: string }
+        Returns: undefined
+      }
+      secure_create_secret: {
+        Args: {
+          new_secret: string
+          new_name?: string
+          new_description?: string
+        }
+        Returns: string
+      }
+      secure_update_secret: {
+        Args: {
+          secret_id: string
+          new_secret?: string
+          new_name?: string
+          new_description?: string
+        }
         Returns: undefined
       }
       send_onboarding_reminder: {
