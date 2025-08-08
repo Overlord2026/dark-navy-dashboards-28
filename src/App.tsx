@@ -95,6 +95,8 @@ import MedicarePersonaLandingPage from "./pages/MedicarePersonaLandingPage";
 import MedicareOnboardingPage from "./pages/MedicareOnboardingPage";
 import MedicareDashboardPage from "./pages/MedicareDashboardPage";
 import MedicareMarketingKitPage from "./pages/MedicareMarketingKitPage";
+import InsurancePersonaLandingPage from "./pages/InsurancePersonaLandingPage";
+import InsuranceOnboardingPage from "./pages/InsuranceOnboardingPage";
 import AttorneyOnboardingPage from "./pages/AttorneyOnboardingPage";
 import AccountantOnboardingPage from "./pages/AccountantOnboardingPage";
 import AccountantDashboardPage from "./pages/AccountantDashboardPage";
@@ -342,6 +344,8 @@ function App() {
         <Route path="/medicare-onboarding" element={<MedicareOnboardingPage />} />
           <Route path="/medicare-dashboard" element={<MedicareDashboardPage />} />
           <Route path="/medicare-marketing-kit" element={<MedicareMarketingKitPage />} />
+          <Route path="/insurance-persona" element={<InsurancePersonaLandingPage />} />
+          <Route path="/insurance-onboarding" element={<InsuranceOnboardingPage />} />
             <Route path="/attorney-onboarding" element={<AttorneyOnboardingPage />} />
             <Route path="/accountant-onboarding" element={<AccountantOnboardingPage />} />
             <Route path="/accountant-dashboard" element={<AccountantDashboardPage />} />
