@@ -1,318 +1,181 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.38.4';
 import { Resend } from "npm:resend@2.0.0";
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.8';
-
-const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
-const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-const supabase = createClient(supabaseUrl, supabaseKey);
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-interface EmailRequest {
-  campaign_id?: string;
-  lead_id?: string;
+interface EmailAutomationRequest {
+  action: 'enroll_in_sequence' | 'send_scheduled_emails' | 'process_engagement';
   email?: string;
-  type: 'campaign' | 'followup' | 'test';
-  trigger_data?: any;
+  sequenceName?: string;
+  submissionId?: string;
+  engagementData?: any;
 }
 
 const handler = async (req: Request): Promise<Response> => {
-  if (req.method === "OPTIONS") {
+  // Handle CORS preflight requests
+  if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const { campaign_id, lead_id, email, type, trigger_data }: EmailRequest = await req.json();
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    const resendApiKey = Deno.env.get('RESEND_API_KEY');
+    
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+    
+    const { action, email, sequenceName, submissionId, engagementData }: EmailAutomationRequest = await req.json();
+    
+    console.log('Email automation request:', { action, email, sequenceName });
 
-    if (type === 'campaign') {
-      return await sendCampaignEmail(campaign_id!, lead_id, trigger_data);
-    } else if (type === 'followup') {
-      return await sendFollowUpEmail(lead_id!, trigger_data);
-    } else if (type === 'test') {
-      return await sendTestEmail(campaign_id!, email!);
-    }
-
-    return new Response(JSON.stringify({ error: 'Invalid request type' }), {
-      status: 400,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
-
-  } catch (error: any) {
-    console.error("Error in email-automation:", error);
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
-  }
-};
-
-const sendCampaignEmail = async (campaignId: string, leadId?: string, triggerData?: any) => {
-  try {
-    // Get campaign details
-    const { data: campaign, error: campaignError } = await supabase
-      .from('email_campaigns')
-      .select('*')
-      .eq('id', campaignId)
-      .single();
-
-    if (campaignError || !campaign) {
-      throw new Error('Campaign not found');
-    }
-
-    if (campaign.status !== 'active') {
-      return new Response(JSON.stringify({ message: 'Campaign not active' }), {
-        status: 200,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
-
-    let recipients = [];
-
-    if (leadId) {
-      // Send to specific lead
-      const { data: lead } = await supabase
-        .from('leads')
+    if (action === 'enroll_in_sequence' && email && sequenceName && submissionId) {
+      // Find the email sequence
+      const { data: sequence, error: sequenceError } = await supabase
+        .from('email_sequences')
         .select('*')
-        .eq('id', leadId)
+        .eq('name', sequenceName)
+        .eq('is_active', true)
         .single();
 
-      if (lead) {
-        recipients = [lead];
+      if (sequenceError || !sequence) {
+        console.error('Email sequence not found:', sequenceError);
+        return new Response(
+          JSON.stringify({ error: 'Email sequence not found' }),
+          { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
       }
-    } else {
-      // Send to leads matching trigger criteria
-      const { data: leads } = await supabase
-        .from('leads')
-        .select('*')
-        .eq('advisor_id', campaign.advisor_id);
 
-      recipients = leads?.filter(lead => matchesTriggerCriteria(lead, campaign.trigger_config)) || [];
-    }
+      // Check if user is already enrolled
+      const { data: existingEnrollment } = await supabase
+        .from('email_sequence_enrollments')
+        .select('id')
+        .eq('sequence_id', sequence.id)
+        .eq('submission_id', submissionId)
+        .single();
 
-    const results = [];
-    for (const lead of recipients) {
-      try {
-        const personalizedContent = personalizeSendEmail(campaign.content, lead);
-        const personalizedSubject = personalizeSendEmail(campaign.subject, lead);
+      if (!existingEnrollment) {
+        // Enroll user in sequence
+        const { error: enrollmentError } = await supabase
+          .from('email_sequence_enrollments')
+          .insert({
+            sequence_id: sequence.id,
+            submission_id: submissionId,
+            email: email,
+            current_step: 1,
+            status: 'active'
+          });
 
-        const emailResponse = await resend.emails.send({
-          from: "Financial Advisor <onboarding@resend.dev>",
-          to: [lead.email],
-          subject: personalizedSubject,
-          html: personalizedContent,
-        });
+        if (enrollmentError) {
+          console.error('Error enrolling in sequence:', enrollmentError);
+          return new Response(
+            JSON.stringify({ error: 'Failed to enroll in sequence' }),
+            { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          );
+        }
 
-        // Log email send
-        await supabase
-          .from('email_sends')
-          .insert([{
-            campaign_id: campaignId,
-            lead_id: lead.id,
-            email: lead.email,
-            subject: personalizedSubject,
-            content: personalizedContent,
-            resend_id: emailResponse.data?.id,
-            status: 'sent'
-          }]);
-
-        results.push({ lead_id: lead.id, status: 'sent', resend_id: emailResponse.data?.id });
-      } catch (error) {
-        console.error(`Error sending to ${lead.email}:`, error);
-        results.push({ lead_id: lead.id, status: 'error', error: error.message });
+        console.log('User enrolled in email sequence:', sequenceName);
       }
     }
 
-    // Update campaign stats
-    await supabase
-      .from('email_campaigns')
-      .update({ 
-        send_count: campaign.send_count + results.filter(r => r.status === 'sent').length 
-      })
-      .eq('id', campaignId);
+    if (action === 'send_scheduled_emails') {
+      // This would be called by a cron job to send scheduled emails
+      console.log('Processing scheduled emails...');
+      
+      // Get all pending email deliveries that are due
+      const { data: pendingDeliveries, error: deliveriesError } = await supabase
+        .from('email_sequence_deliveries')
+        .select(`
+          *,
+          email_sequence_steps (subject, content),
+          email_sequence_enrollments (email)
+        `)
+        .eq('status', 'pending')
+        .lte('scheduled_for', new Date().toISOString());
 
-    return new Response(JSON.stringify({ 
-      message: 'Campaign emails sent',
-      results: results,
-      sent_count: results.filter(r => r.status === 'sent').length
-    }), {
-      status: 200,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+      if (deliveriesError) {
+        console.error('Error fetching pending deliveries:', deliveriesError);
+        return new Response(
+          JSON.stringify({ error: 'Failed to fetch deliveries' }),
+          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
 
-  } catch (error) {
-    console.error('Error sending campaign email:', error);
-    throw error;
-  }
-};
+      // Send each email
+      if (resendApiKey && pendingDeliveries) {
+        const resend = new Resend(resendApiKey);
+        
+        for (const delivery of pendingDeliveries) {
+          try {
+            // Replace template variables
+            let emailContent = delivery.content;
+            let emailSubject = delivery.subject;
+            
+            // Basic template variable replacement
+            emailContent = emailContent.replace(/\{\{dashboard_url\}\}/g, `${supabaseUrl.replace('/supabase', '')}/cpa/dashboard`);
+            emailContent = emailContent.replace(/\{\{video_url\}\}/g, 'https://youtu.be/demo-video');
+            emailContent = emailContent.replace(/\{\{trial_url\}\}/g, `${supabaseUrl.replace('/supabase', '')}/cpa/upgrade?trial=true`);
+            emailContent = emailContent.replace(/\{\{upgrade_url\}\}/g, `${supabaseUrl.replace('/supabase', '')}/cpa/upgrade`);
+            emailContent = emailContent.replace(/\{\{calendar_url\}\}/g, 'https://calendly.com/bfo-team/strategy-call');
 
-const sendFollowUpEmail = async (leadId: string, triggerData: any) => {
-  try {
-    // Get lead details
-    const { data: lead } = await supabase
-      .from('leads')
-      .select('*')
-      .eq('id', leadId)
-      .single();
+            await resend.emails.send({
+              from: 'BFO CPA Team <onboarding@resend.dev>',
+              to: [delivery.email_sequence_enrollments.email],
+              subject: emailSubject,
+              text: emailContent,
+            });
 
-    if (!lead) {
-      throw new Error('Lead not found');
+            // Mark as sent
+            await supabase
+              .from('email_sequence_deliveries')
+              .update({
+                status: 'sent',
+                sent_at: new Date().toISOString()
+              })
+              .eq('id', delivery.id);
+
+            console.log('Email sent successfully:', delivery.id);
+            
+          } catch (emailError) {
+            console.error('Error sending email:', emailError);
+            
+            // Mark as failed
+            await supabase
+              .from('email_sequence_deliveries')
+              .update({
+                status: 'failed',
+                failed_reason: emailError.message
+              })
+              .eq('id', delivery.id);
+          }
+        }
+      }
     }
 
-    // Get advisor's follow-up template
-    const { data: template } = await supabase
-      .from('advisor_email_templates')
-      .select('*')
-      .eq('advisor_id', lead.advisor_id)
-      .eq('template_type', 'follow_up')
-      .eq('is_active', true)
-      .single();
+    return new Response(
+      JSON.stringify({ 
+        success: true, 
+        message: 'Email automation processed successfully'
+      }),
+      { 
+        status: 200, 
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+      }
+    );
 
-    if (!template) {
-      // Use default follow-up template
-      const defaultSubject = 'Following up on our conversation';
-      const defaultContent = `
-        <p>Hi {{first_name}},</p>
-        <p>I wanted to follow up on our recent conversation about your financial planning needs.</p>
-        <p>I'm here to help answer any questions you might have and discuss how we can work together to achieve your financial goals.</p>
-        <p>Please feel free to reply to this email or give me a call at your convenience.</p>
-        <p>Best regards,<br>Your Financial Advisor</p>
-      `;
-
-      const personalizedSubject = personalizeSendEmail(defaultSubject, lead);
-      const personalizedContent = personalizeSendEmail(defaultContent, lead);
-
-      const emailResponse = await resend.emails.send({
-        from: "Financial Advisor <onboarding@resend.dev>",
-        to: [lead.email],
-        subject: personalizedSubject,
-        html: personalizedContent,
-      });
-
-      return new Response(JSON.stringify({ 
-        message: 'Follow-up email sent',
-        resend_id: emailResponse.data?.id
-      }), {
-        status: 200,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
-
-    const personalizedSubject = personalizeSendEmail(template.subject_template, lead);
-    const personalizedContent = personalizeSendEmail(template.body_template, lead);
-
-    const emailResponse = await resend.emails.send({
-      from: "Financial Advisor <onboarding@resend.dev>",
-      to: [lead.email],
-      subject: personalizedSubject,
-      html: personalizedContent,
-    });
-
-    // Log follow-up email
-    await supabase
-      .from('followup_emails')
-      .insert([{
-        lead_id: leadId,
-        template_id: template.id,
-        email: lead.email,
-        subject: personalizedSubject,
-        content: personalizedContent,
-        resend_id: emailResponse.data?.id,
-        trigger_data: triggerData
-      }]);
-
-    return new Response(JSON.stringify({ 
-      message: 'Follow-up email sent',
-      resend_id: emailResponse.data?.id
-    }), {
-      status: 200,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
-
-  } catch (error) {
-    console.error('Error sending follow-up email:', error);
-    throw error;
+  } catch (error: any) {
+    console.error('Error in email-automation function:', error);
+    return new Response(
+      JSON.stringify({ error: error.message }),
+      {
+        status: 500,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      }
+    );
   }
-};
-
-const sendTestEmail = async (campaignId: string, testEmail: string) => {
-  try {
-    const { data: campaign } = await supabase
-      .from('email_campaigns')
-      .select('*')
-      .eq('id', campaignId)
-      .single();
-
-    if (!campaign) {
-      throw new Error('Campaign not found');
-    }
-
-    // Use placeholder data for test
-    const testLead = {
-      first_name: 'John',
-      last_name: 'Doe',
-      email: testEmail,
-      company: 'Test Company'
-    };
-
-    const personalizedSubject = personalizeSendEmail(campaign.subject, testLead);
-    const personalizedContent = personalizeSendEmail(campaign.content, testLead);
-
-    const emailResponse = await resend.emails.send({
-      from: "Financial Advisor <onboarding@resend.dev>",
-      to: [testEmail],
-      subject: `[TEST] ${personalizedSubject}`,
-      html: personalizedContent,
-    });
-
-    return new Response(JSON.stringify({ 
-      message: 'Test email sent',
-      resend_id: emailResponse.data?.id
-    }), {
-      status: 200,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
-
-  } catch (error) {
-    console.error('Error sending test email:', error);
-    throw error;
-  }
-};
-
-const personalizeSendEmail = (content: string, lead: any): string => {
-  return content
-    .replace(/\{\{first_name\}\}/g, lead.first_name || '')
-    .replace(/\{\{last_name\}\}/g, lead.last_name || '')
-    .replace(/\{\{name\}\}/g, `${lead.first_name || ''} ${lead.last_name || ''}`.trim())
-    .replace(/\{\{email\}\}/g, lead.email || '')
-    .replace(/\{\{company\}\}/g, lead.company || '')
-    .replace(/\{\{lead_value\}\}/g, lead.lead_value ? `$${lead.lead_value.toLocaleString()}` : '');
-};
-
-const matchesTriggerCriteria = (lead: any, triggerConfig: any): boolean => {
-  if (!triggerConfig) return false;
-
-  // Lead status change trigger
-  if (triggerConfig.from_status && triggerConfig.to_status) {
-    return lead.lead_status === triggerConfig.to_status;
-  }
-
-  // Time-based trigger
-  if (triggerConfig.days_since_created) {
-    const createdDate = new Date(lead.created_at);
-    const daysSince = (Date.now() - createdDate.getTime()) / (1000 * 60 * 60 * 24);
-    return daysSince >= triggerConfig.days_since_created;
-  }
-
-  // Engagement-based trigger
-  if (triggerConfig.min_score) {
-    return lead.lead_score >= triggerConfig.min_score;
-  }
-
-  return false;
 };
 
 serve(handler);

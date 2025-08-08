@@ -188,3 +188,11 @@ verify_jwt = false
 
 [functions.brand-upload-logo]
 verify_jwt = true
+
+[functions.process-lead-magnet]
+verify_jwt = false
+# @public-ok - Lead magnet processing needs to be public
+
+[functions.email-automation]
+verify_jwt = false
+# @public-ok - Email automation service
