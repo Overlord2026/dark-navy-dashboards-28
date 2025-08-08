@@ -331,7 +331,7 @@ export default function CourseViewer() {
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
-                      <Tool className="h-5 w-5" />
+                      <Wrench className="h-5 w-5" />
                       Interactive Tools
                     </CardTitle>
                   </CardHeader>
@@ -416,7 +416,7 @@ export default function CourseViewer() {
                 <Card key={tool.name} className="cursor-pointer hover:shadow-lg transition-shadow">
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
-                      <Tool className="h-5 w-5" />
+                      <Wrench className="h-5 w-5" />
                       {tool.name}
                     </CardTitle>
                   </CardHeader>
