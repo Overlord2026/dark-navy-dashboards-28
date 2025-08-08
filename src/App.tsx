@@ -130,6 +130,9 @@ import { UniversalLandingPage } from './pages/UniversalLandingPage';
 import { PersonaPreviewPage } from './pages/PersonaPreviewPage';
 import { MarketplaceLandingPage } from './components/marketplace/MarketplaceLandingPage';
 import AdminLayoutSettings from './pages/AdminLayoutSettings';
+import CFODashboard from './pages/CFODashboard';
+import AdminControlsPage from './pages/AdminControlsPage';
+import VettingApplicationPage from './pages/VettingApplicationPage';
 
 // Import onboarding flow component
 const PersonaOnboardingFlow = React.lazy(() => 
@@ -222,11 +225,22 @@ function App() {
                                <AdminDashboard />
                              </AuthWrapper>
                            } />
-                           <Route path="/admin/layout" element={
-                             <AuthWrapper requireAuth={true} allowedRoles={['admin', 'system_administrator', 'tenant_admin']}>
-                               <AdminLayoutSettings />
-                             </AuthWrapper>
-                           } />
+                            <Route path="/admin/layout" element={
+                              <AuthWrapper requireAuth={true} allowedRoles={['admin', 'system_administrator', 'tenant_admin']}>
+                                <AdminLayoutSettings />
+                              </AuthWrapper>
+                            } />
+                            <Route path="/admin/controls" element={
+                              <AuthWrapper requireAuth={true} allowedRoles={['admin', 'system_administrator', 'tenant_admin']}>
+                                <AdminControlsPage />
+                              </AuthWrapper>
+                            } />
+                            <Route path="/cfo-dashboard" element={
+                              <AuthWrapper requireAuth={true} allowedRoles={['admin', 'system_administrator', 'tenant_admin']}>
+                                <CFODashboard />
+                              </AuthWrapper>
+                            } />
+                            <Route path="/apply-vetting" element={<VettingApplicationPage />} />
                           <Route path="/accountant" element={
                             <AuthWrapper requireAuth={true} allowedRoles={['accountant', 'admin', 'system_administrator', 'tenant_admin']}>
                               <AccountantDashboard />
