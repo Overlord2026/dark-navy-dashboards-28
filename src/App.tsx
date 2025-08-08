@@ -107,6 +107,8 @@ import EliteFamilyOfficeOnboardingPage from "./pages/EliteFamilyOfficeOnboarding
 import EliteFamilyOfficeDashboardPage from "./pages/EliteFamilyOfficeDashboardPage";
 import RealtorPersonaLandingPage from "./pages/RealtorPersonaLandingPage";
 import RealtorOnboardingPage from "./pages/RealtorOnboardingPage";
+import CoachPersonaLandingPage from "./pages/CoachPersonaLandingPage";
+import CoachOnboardingPage from "./pages/CoachOnboardingPage";
 import InsuranceDashboardPage from "./pages/InsuranceDashboardPage";
 import HealthcareOnboardingPage from "./pages/HealthcareOnboardingPage";
 import HealthcareDashboardPage from "./pages/HealthcareDashboardPage";
@@ -355,6 +357,8 @@ function App() {
                            <Route path="/elite-family-office-dashboard" element={<EliteFamilyOfficeDashboardPage />} />
                            <Route path="/realtor-persona" element={<RealtorPersonaLandingPage />} />
                            <Route path="/realtor-onboarding" element={<RealtorOnboardingPage />} />
+                           <Route path="/coach-persona" element={<CoachPersonaLandingPage />} />
+                           <Route path="/coach-onboarding" element={<CoachOnboardingPage />} />
             <Route path="/attorney-onboarding" element={<AttorneyOnboardingPage />} />
             <Route path="/accountant-onboarding" element={<AccountantOnboardingPage />} />
             <Route path="/accountant-dashboard" element={<AccountantDashboardPage />} />
