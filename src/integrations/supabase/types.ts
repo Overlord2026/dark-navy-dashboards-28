@@ -1807,6 +1807,42 @@ export type Database = {
         }
         Relationships: []
       }
+      app_events: {
+        Row: {
+          context: Json
+          created_at: string
+          event_type: string
+          id: string
+          page: string | null
+          referrer: string | null
+          session_id: string | null
+          user_id: string | null
+          utm: Json | null
+        }
+        Insert: {
+          context?: Json
+          created_at?: string
+          event_type: string
+          id?: string
+          page?: string | null
+          referrer?: string | null
+          session_id?: string | null
+          user_id?: string | null
+          utm?: Json | null
+        }
+        Update: {
+          context?: Json
+          created_at?: string
+          event_type?: string
+          id?: string
+          page?: string | null
+          referrer?: string | null
+          session_id?: string | null
+          user_id?: string | null
+          utm?: Json | null
+        }
+        Relationships: []
+      }
       appointments: {
         Row: {
           cost: number | null

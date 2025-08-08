@@ -5,6 +5,10 @@ import { useAuth } from '@/context/AuthContext';
 import { useTenant } from '@/context/TenantContext';
 import { useAnalyticsTracking } from './useAnalytics';
 
+export interface AppEventContext {
+  [key: string]: any;
+}
+
 export interface EventTrackingOptions {
   userId?: string;
   tenantId?: string;
@@ -122,8 +126,109 @@ export const useEventTracking = () => {
     return trackEventDual('calculator.used', `Calculator Used: ${calculatorType}`, { calculatorType, ...calculatorData });
   }, [trackEventDual, trackFeatureUsage]);
 
+  // App-specific event tracking functions
+  const trackAppEvent = useCallback(async (
+    eventType: string,
+    context: AppEventContext = {},
+    page?: string
+  ) => {
+    try {
+      // Extract UTM parameters from URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const utm = {
+        source: urlParams.get('utm_source'),
+        medium: urlParams.get('utm_medium'),
+        campaign: urlParams.get('utm_campaign'),
+        term: urlParams.get('utm_term'),
+        content: urlParams.get('utm_content')
+      };
+
+      // Filter out null values
+      const filteredUtm = Object.fromEntries(
+        Object.entries(utm).filter(([_, value]) => value !== null)
+      );
+
+      const eventData = {
+        user_id: user?.id || null,
+        session_id: sessionStorage.getItem('session_id') || crypto.randomUUID(),
+        event_type: eventType,
+        context: {
+          ...context,
+          timestamp: new Date().toISOString(),
+          user_agent: navigator.userAgent,
+          screen_resolution: `${window.screen.width}x${window.screen.height}`,
+          viewport: `${window.innerWidth}x${window.innerHeight}`
+        },
+        referrer: document.referrer || null,
+        utm: Object.keys(filteredUtm).length > 0 ? filteredUtm : null,
+        page: page || window.location.pathname
+      };
+
+      // Store session ID for consistency
+      if (!sessionStorage.getItem('session_id')) {
+        sessionStorage.setItem('session_id', eventData.session_id);
+      }
+
+      // QA Mode logging
+      if (process.env.NODE_ENV === 'development') {
+        console.log('🎯 App Event Tracked:', eventData);
+      }
+
+      const { error } = await supabase
+        .from('app_events')
+        .insert(eventData);
+
+      if (error) {
+        console.error('App event tracking error:', error);
+        // Don't throw - event tracking should never break the app
+      }
+
+    } catch (error) {
+      console.error('Failed to track app event:', error);
+      // Graceful failure - continue app operation
+    }
+  }, [user?.id]);
+
+  // Predefined app event tracking functions
+  const trackLandingView = useCallback(() => {
+    trackAppEvent('landing_view');
+  }, [trackAppEvent]);
+
+  const trackPersonaCardClick = useCallback((persona: string) => {
+    trackAppEvent('persona_card_click', { persona });
+  }, [trackAppEvent]);
+
+  const trackCtaClick = useCallback((cta: string, destination?: string) => {
+    trackAppEvent('cta_click', { cta, destination });
+  }, [trackAppEvent]);
+
+  const trackCalculatorView = useCallback(() => {
+    trackAppEvent('calculator_view');
+  }, [trackAppEvent]);
+
+  const trackCalculatorRun = useCallback((inputs: any, results: any) => {
+    trackAppEvent('calculator_run', { inputs, results });
+  }, [trackAppEvent]);
+
+  const trackCalculatorDownloadPdf = useCallback(() => {
+    trackAppEvent('calculator_download_pdf');
+  }, [trackAppEvent]);
+
+  const trackCalculatorCtaClicked = useCallback((cta: string) => {
+    trackAppEvent('calculator_cta_clicked', { cta });
+  }, [trackAppEvent]);
+
+  const trackAdminView = useCallback((section: string) => {
+    trackAppEvent('admin_view', { section });
+  }, [trackAppEvent]);
+
+  const trackMarketingCampaignCreated = useCallback((campaignData: any) => {
+    trackAppEvent('marketing_campaign_created', campaignData);
+  }, [trackAppEvent]);
+
   return {
     trackEvent: trackEventDual,
+    trackAppEvent,
     isTracking,
     // Predefined tracking functions
     trackUserRegistration,
@@ -136,6 +241,16 @@ export const useEventTracking = () => {
     trackFeatureUsed,
     trackProfileUpdated,
     trackDocumentUploaded,
-    trackCalculatorUsed
+    trackCalculatorUsed,
+    // App-specific tracking functions
+    trackLandingView,
+    trackPersonaCardClick,
+    trackCtaClick,
+    trackCalculatorView,
+    trackCalculatorRun,
+    trackCalculatorDownloadPdf,
+    trackCalculatorCtaClicked,
+    trackAdminView,
+    trackMarketingCampaignCreated
   };
 };
