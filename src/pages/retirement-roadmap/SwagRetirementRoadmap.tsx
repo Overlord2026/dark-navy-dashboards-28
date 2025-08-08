@@ -224,6 +224,11 @@ export default function SwagRetirementRoadmap() {
     }
   });
 
+  const handleSaveProfile = () => {
+    console.log('Profile saved:', profile);
+    // TODO: Save to backend
+  };
+
   const handleRunAnalysis = async () => {
     try {
       setActiveStep('analysis');
@@ -363,6 +368,7 @@ export default function SwagRetirementRoadmap() {
                 <EnhancedProfileForm
                   profile={profile}
                   onProfileChange={setProfile}
+                  onSave={handleSaveProfile}
                 />
                 <div className="flex justify-end mt-6">
                   <Button onClick={() => setActiveStep('analysis')} className="gap-2">
