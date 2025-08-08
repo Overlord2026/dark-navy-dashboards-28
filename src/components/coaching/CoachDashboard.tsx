@@ -1,6 +1,6 @@
 import React from 'react';
 import { DashboardHeader } from '@/components/ui/DashboardHeader';
-import { InteractiveProfessionalDemo } from '../professionals/InteractiveProfessionalDemo';
+import { CoachDashboardTabs } from '@/components/coach/CoachDashboardTabs';
 import { useAuth } from '@/context/AuthContext';
 
 export function CoachDashboard() {
@@ -13,7 +13,7 @@ export function CoachDashboard() {
         text={`Welcome ${userProfile?.firstName || userProfile?.first_name || 'Coach'}! Track your coaching progress and client success.`}
       />
       
-      <InteractiveProfessionalDemo role="coach" />
+      <CoachDashboardTabs />
     </div>
   );
 }
