@@ -91,6 +91,9 @@ import AdvisorOnboardingSequencePage from "./pages/AdvisorOnboardingSequencePage
 import AccountantOnboardingSequencePage from "./pages/AccountantOnboardingSequencePage";
 import AttorneyOnboardingSequencePage from "./pages/AttorneyOnboardingSequencePage";
 import ClientFamilyOnboardingPage from "./pages/ClientFamilyOnboardingPage";
+import MedicarePersonaLandingPage from "./pages/MedicarePersonaLandingPage";
+import MedicareOnboardingPage from "./pages/MedicareOnboardingPage";
+import MedicareDashboardPage from "./pages/MedicareDashboardPage";
 import AttorneyOnboardingPage from "./pages/AttorneyOnboardingPage";
 import AccountantOnboardingPage from "./pages/AccountantOnboardingPage";
 import AccountantDashboardPage from "./pages/AccountantDashboardPage";
@@ -334,6 +337,9 @@ function App() {
         <Route path="/accountant-onboarding-sequence" element={<AccountantOnboardingSequencePage />} />
         <Route path="/attorney-onboarding-sequence" element={<AttorneyOnboardingSequencePage />} />
         <Route path="/client-family-onboarding" element={<ClientFamilyOnboardingPage />} />
+        <Route path="/medicare-persona" element={<MedicarePersonaLandingPage />} />
+        <Route path="/medicare-onboarding" element={<MedicareOnboardingPage />} />
+        <Route path="/medicare-dashboard" element={<MedicareDashboardPage />} />
             <Route path="/attorney-onboarding" element={<AttorneyOnboardingPage />} />
             <Route path="/accountant-onboarding" element={<AccountantOnboardingPage />} />
             <Route path="/accountant-dashboard" element={<AccountantDashboardPage />} />
