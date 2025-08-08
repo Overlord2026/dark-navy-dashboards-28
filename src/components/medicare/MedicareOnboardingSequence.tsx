@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { MedicareWelcomeStep } from './onboarding/MedicareWelcomeStep';
-import { MedicareFeaturesStep } from './onboarding/MedicareFeaturesStep';
-import { MedicareAccountSetupStep } from './onboarding/MedicareAccountSetupStep';
+import { MedicareComplianceSetupStep } from './onboarding/MedicareComplianceSetupStep';
+import { MedicareClientProfileStep } from './onboarding/MedicareClientProfileStep';
+import { MedicareMarketingStep } from './onboarding/MedicareMarketingStep';
+import { MedicareDashboardTourStep } from './onboarding/MedicareDashboardTourStep';
 
 export const MedicareOnboardingSequence = () => {
   const [currentStep, setCurrentStep] = useState(1);
-  const totalSteps = 3;
+  const totalSteps = 5;
 
   const nextStep = () => {
     if (currentStep < totalSteps) {
@@ -24,9 +26,13 @@ export const MedicareOnboardingSequence = () => {
       case 1:
         return <MedicareWelcomeStep />;
       case 2:
-        return <MedicareFeaturesStep />;
+        return <MedicareComplianceSetupStep />;
       case 3:
-        return <MedicareAccountSetupStep />;
+        return <MedicareClientProfileStep />;
+      case 4:
+        return <MedicareMarketingStep />;
+      case 5:
+        return <MedicareDashboardTourStep />;
       default:
         return <MedicareWelcomeStep />;
     }
@@ -36,9 +42,9 @@ export const MedicareOnboardingSequence = () => {
     <div className="min-h-screen bg-gradient-to-br from-background to-secondary/20">
       <div className="container mx-auto px-4 py-8">
         {/* Progress Indicator */}
-        <div className="max-w-3xl mx-auto mb-8">
+        <div className="max-w-5xl mx-auto mb-8">
           <div className="flex items-center justify-between mb-4">
-            {[1, 2, 3].map((step) => (
+            {[1, 2, 3, 4, 5].map((step) => (
               <div key={step} className="flex items-center">
                 <div 
                   className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold ${
@@ -49,7 +55,7 @@ export const MedicareOnboardingSequence = () => {
                 >
                   {step}
                 </div>
-                {step < 3 && (
+                {step < 5 && (
                   <div 
                     className={`h-1 w-full mx-4 ${
                       step < currentStep ? 'bg-primary' : 'bg-muted'
@@ -65,12 +71,12 @@ export const MedicareOnboardingSequence = () => {
         </div>
 
         {/* Step Content */}
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           {renderStep()}
         </div>
 
         {/* Navigation */}
-        <div className="max-w-4xl mx-auto mt-8 flex justify-between">
+        <div className="max-w-6xl mx-auto mt-8 flex justify-between">
           <button
             onClick={prevStep}
             disabled={currentStep === 1}

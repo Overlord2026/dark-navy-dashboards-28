@@ -18,24 +18,52 @@ export const MedicarePersonaLanding = () => {
 
   const benefits = [
     {
-      icon: <CheckCircle2 className="h-8 w-8 text-emerald-600" />,
-      title: "Compliance-Ready from Day One",
-      description: "Built-in CMS compliance tools and workflows"
-    },
-    {
       icon: <PhoneCall className="h-8 w-8 text-blue-600" />,
-      title: "Automatic Call Recording & Storage",
-      description: "Secure, timestamped recordings in your vault"
+      title: "Call Recording & Archiving",
+      description: "CMS-compliant recording with secure storage"
     },
     {
-      icon: <Users className="h-8 w-8 text-purple-600" />,
-      title: "Client & Lead Management",
-      description: "CRM designed for Medicare agents"
+      icon: <Shield className="h-8 w-8 text-emerald-600" />,
+      title: "Secure Document Vault",
+      description: "Bank-level storage for client files"
+    },
+    {
+      icon: <CheckCircle2 className="h-8 w-8 text-purple-600" />,
+      title: "Integrated SMS & Voice",
+      description: "Twilio-powered communication platform"
     },
     {
       icon: <TrendingUp className="h-8 w-8 text-green-600" />,
-      title: "Growth Tools",
-      description: "Marketing automation to expand your book"
+      title: "Lead-to-Sales Engine",
+      description: "Multi-channel marketing automation"
+    },
+    {
+      icon: <Users className="h-8 w-8 text-amber-600" />,
+      title: "Client Portal Access",
+      description: "Education hub and secure communication"
+    }
+  ];
+
+  const howItWorksSteps = [
+    {
+      step: 1,
+      title: "Onboard & Import Clients",
+      description: "Set up your compliance-ready workspace"
+    },
+    {
+      step: 2,
+      title: "Set Up Compliance Recording",
+      description: "Connect Twilio for automatic call capture"
+    },
+    {
+      step: 3,
+      title: "Share Educational Content",
+      description: "Provide value through client portal"
+    },
+    {
+      step: 4,
+      title: "Track Leads & Conversions",
+      description: "Monitor performance with built-in analytics"
     }
   ];
 
@@ -48,10 +76,10 @@ export const MedicarePersonaLanding = () => {
             Medicare Insurance Professional
           </Badge>
           <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
-            Your All-In-One Medicare Compliance & Growth Hub
+            Compliance, Connection, and Client Care — All in One Platform
           </h1>
           <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
-            Stay compliant, close more sales, and grow your Medicare book with ease.
+            Designed for Medicare specialists who demand efficiency, compliance, and client trust.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
@@ -90,22 +118,52 @@ export const MedicarePersonaLanding = () => {
           </Card>
         </div>
 
-        {/* Benefits Highlights */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+        {/* Benefits Strip */}
+        <div className="grid md:grid-cols-3 lg:grid-cols-5 gap-4 mb-16">
           {benefits.map((benefit, index) => (
             <Card key={index} className="text-center hover:shadow-lg transition-shadow cursor-pointer group">
-              <CardHeader>
-                <div className="flex justify-center mb-4 group-hover:scale-110 transition-transform">
+              <CardContent className="p-6">
+                <div className="flex justify-center mb-3 group-hover:scale-110 transition-transform">
                   {benefit.icon}
                 </div>
-                <CardTitle className="text-lg">{benefit.title}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">{benefit.description}</p>
+                <h3 className="font-semibold text-sm mb-2">{benefit.title}</h3>
+                <p className="text-xs text-muted-foreground">{benefit.description}</p>
               </CardContent>
             </Card>
           ))}
         </div>
+
+        {/* How It Works Section */}
+        <div className="mb-16">
+          <h2 className="text-3xl font-bold text-center mb-12">How It Works</h2>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {howItWorksSteps.map((step, index) => (
+              <Card key={index} className="text-center">
+                <CardContent className="p-6">
+                  <div className="w-12 h-12 bg-primary text-primary-foreground rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
+                    {step.step}
+                  </div>
+                  <h3 className="font-semibold mb-2">{step.title}</h3>
+                  <p className="text-sm text-muted-foreground">{step.description}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+
+        {/* Marketplace Teaser */}
+        <Card className="mb-16 bg-gradient-to-r from-emerald-50 to-blue-50 border-emerald-200">
+          <CardContent className="p-8 text-center">
+            <h3 className="text-2xl font-bold mb-4 text-emerald-800">Expand Your Network</h3>
+            <p className="text-lg text-emerald-700 mb-6">
+              Connect with Advisors, Attorneys, and CPAs to expand your referral network 
+              and provide comprehensive service to your Medicare clients.
+            </p>
+            <Button variant="outline" className="border-emerald-300 text-emerald-700 hover:bg-emerald-100">
+              Explore Marketplace
+            </Button>
+          </CardContent>
+        </Card>
 
         {/* Persona Selector */}
         <div className="text-center">
