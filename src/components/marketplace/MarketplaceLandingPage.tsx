@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AnimatedTreeHero } from './AnimatedTreeHero';
 import { PersonaGrid } from './PersonaGrid';
 import { PlatformBenefits } from './PlatformBenefits';
@@ -7,7 +7,45 @@ import { LandingNavigation } from './LandingNavigation';
 import { BrandedFooter } from '@/components/ui/BrandedFooter';
 
 export const MarketplaceLandingPage: React.FC = () => {
-  const [layoutOption, setLayoutOption] = useState<'full-tree' | 'split'>('full-tree');
+  const [layoutOption, setLayoutOption] = useState<'full-tree' | 'split'>(() => {
+    // Load layout preference from localStorage
+    const savedSettings = localStorage.getItem('bfo-layout-settings');
+    if (savedSettings) {
+      const parsed = JSON.parse(savedSettings);
+      return parsed.landingLayout || 'full-tree';
+    }
+    return 'full-tree';
+  });
+
+  // Listen for layout changes from admin panel
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const savedSettings = localStorage.getItem('bfo-layout-settings');
+      if (savedSettings) {
+        const parsed = JSON.parse(savedSettings);
+        setLayoutOption(parsed.landingLayout || 'full-tree');
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    
+    // Also check periodically for changes (in case same tab)
+    const interval = setInterval(() => {
+      const savedSettings = localStorage.getItem('bfo-layout-settings');
+      if (savedSettings) {
+        const parsed = JSON.parse(savedSettings);
+        const newLayout = parsed.landingLayout || 'full-tree';
+        if (newLayout !== layoutOption) {
+          setLayoutOption(newLayout);
+        }
+      }
+    }, 1000);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      clearInterval(interval);
+    };
+  }, [layoutOption]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-navy via-background to-navy">

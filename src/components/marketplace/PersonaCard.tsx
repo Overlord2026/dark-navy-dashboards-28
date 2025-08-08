@@ -15,6 +15,7 @@ interface PersonaCardProps {
 }
 
 export const PersonaCard: React.FC<PersonaCardProps> = ({
+  id,
   title,
   icon: Icon,
   benefits,
@@ -29,7 +30,7 @@ export const PersonaCard: React.FC<PersonaCardProps> = ({
       className={`group relative bg-white/95 backdrop-blur-sm border-2 border-gold/20 rounded-xl ${
         compact ? 'p-4' : 'p-6'
       } shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 cursor-pointer overflow-hidden`}
-      onClick={() => navigate(route)}
+      onClick={() => navigate(`/onboarding/${id}`)}
     >
       {/* Golden Tree Watermark */}
       <div className="absolute top-2 right-2 opacity-10 group-hover:opacity-20 transition-opacity duration-300">
@@ -79,7 +80,7 @@ export const PersonaCard: React.FC<PersonaCardProps> = ({
           <Button
             onClick={(e) => {
               e.stopPropagation();
-              navigate(route);
+              navigate(`/onboarding/${id}`);
             }}
             size={compact ? "sm" : "default"}
             className="flex-1 bg-gradient-to-r from-gold to-gold/90 text-navy font-bold hover:from-gold/90 hover:to-gold hover:shadow-lg transition-all duration-300"

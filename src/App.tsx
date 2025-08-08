@@ -129,6 +129,14 @@ import { PersonaLandingPage } from './pages/PersonaLandingPage';
 import { UniversalLandingPage } from './pages/UniversalLandingPage';
 import { PersonaPreviewPage } from './pages/PersonaPreviewPage';
 import { MarketplaceLandingPage } from './components/marketplace/MarketplaceLandingPage';
+import AdminLayoutSettings from './pages/AdminLayoutSettings';
+
+// Import onboarding flow component
+const PersonaOnboardingFlow = React.lazy(() => 
+  import('./components/onboarding/PersonaOnboardingFlow').then(module => ({
+    default: module.PersonaOnboardingFlow
+  }))
+);
 
 const queryClient = new QueryClient();
 
@@ -169,8 +177,15 @@ function App() {
                            <Route path="/marketplace" element={<FamilyOfficeMarketplacePage />} />
                            <Route path="/welcome" element={<WelcomePage />} />
                            <Route path="/auth" element={<AuthPage />} />
-                            <Route path="/auth/:authType" element={<AuthPage />} />
-                            <Route path="/auth/:authType/:tenantId" element={<AuthPage />} />
+                           <Route path="/auth/:authType" element={<AuthPage />} />
+                             <Route path="/auth/:authType/:tenantId" element={<AuthPage />} />
+                             
+                             {/* Persona Onboarding Routes */}
+                             <Route path="/onboarding/:personaId" element={
+                               <React.Suspense fallback={<div>Loading...</div>}>
+                                 <PersonaOnboardingFlow />
+                               </React.Suspense>
+                             } />
         <Route path="/onboarding" element={<OnboardingPage />} />
         <Route path="/welcome-onboarding" element={<ClientWelcomeOnboardingPage />} />
         <Route path="/premium-onboarding" element={<PremiumOnboardingPage />} />
@@ -202,11 +217,16 @@ function App() {
                               <AdvisorDashboard />
                             </AuthWrapper>
                           } />
-                          <Route path="/admin" element={
-                            <AuthWrapper requireAuth={true} allowedRoles={['admin', 'system_administrator', 'tenant_admin']}>
-                              <AdminDashboard />
-                            </AuthWrapper>
-                          } />
+                           <Route path="/admin" element={
+                             <AuthWrapper requireAuth={true} allowedRoles={['admin', 'system_administrator', 'tenant_admin']}>
+                               <AdminDashboard />
+                             </AuthWrapper>
+                           } />
+                           <Route path="/admin/layout" element={
+                             <AuthWrapper requireAuth={true} allowedRoles={['admin', 'system_administrator', 'tenant_admin']}>
+                               <AdminLayoutSettings />
+                             </AuthWrapper>
+                           } />
                           <Route path="/accountant" element={
                             <AuthWrapper requireAuth={true} allowedRoles={['accountant', 'admin', 'system_administrator', 'tenant_admin']}>
                               <AccountantDashboard />
