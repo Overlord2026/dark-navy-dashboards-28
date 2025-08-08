@@ -178,7 +178,12 @@ const personaData: Record<string, PersonaData> = {
   }
 };
 
-export const PersonaOnboardingFlow: React.FC = () => {
+interface PersonaOnboardingFlowProps {
+  isOpen?: boolean;
+  onClose?: () => void;
+}
+
+export const PersonaOnboardingFlow: React.FC<PersonaOnboardingFlowProps> = ({ isOpen, onClose }) => {
   const { personaId } = useParams<{ personaId: string }>();
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
