@@ -27638,6 +27638,10 @@ export type Database = {
           status: string
         }[]
       }
+      check_extension_health: {
+        Args: Record<PropertyKey, never>
+        Returns: Json
+      }
       check_impact_milestones: {
         Args: { p_user_id: string }
         Returns: undefined
@@ -28326,7 +28330,7 @@ export type Database = {
       }
       safe_graphql_schema_version: {
         Args: Record<PropertyKey, never>
-        Returns: number
+        Returns: string
       }
       schedule_follow_up: {
         Args: { p_lead_id: string; p_stage: string }

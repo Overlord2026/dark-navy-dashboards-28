@@ -22,6 +22,7 @@ import { StickyTopBanner } from "@/components/layout/StickyTopBanner";
 import ReferralTracker from "@/components/tracking/ReferralTracker";
 import { QABypassIndicator } from "@/components/security/QABypassIndicator";
 import { APIWarningBanner } from "@/components/admin/APIWarningBanner";
+import { ExtensionHealthBanner } from "@/components/ExtensionHealthBanner";
 import { BrandedFooter } from "@/components/ui/BrandedFooter";
 import { LeadIntakeForm } from "@/pages/leads/LeadIntakeForm";
 import { LeadConfirmation } from "@/pages/leads/LeadConfirmation";
@@ -170,6 +171,7 @@ function App() {
                         <BrowserRouter>
                           <StickyTopBanner />
                           <APIWarningBanner />
+                          <ExtensionHealthBanner />
                           <ReferralTracker />
                            <Routes>
         <Route path="/wireframe" element={<WireframePage />} />

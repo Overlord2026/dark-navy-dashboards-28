@@ -67,3 +67,31 @@ Simply open [Lovable](https://lovable.dev/projects/00a95494-1379-485c-9fca-9a213
 ## I want to use a custom domain - is that possible?
 
 We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+
+## Database Security & Extension Access
+
+**IMPORTANT:** This application uses Supabase extensions (Vault and GraphQL) through secure public wrapper functions. Do NOT call extension schemas directly.
+
+### Extension Wrapper Functions
+
+All access to `vault.*` and `graphql.*` functions must go through these public wrappers:
+
+- `public.secure_create_secret(new_secret, new_name, new_description)` - Replaces `vault.create_secret`
+- `public.secure_update_secret(secret_id, new_secret, new_name, new_description)` - Replaces `vault.update_secret` 
+- `public.safe_graphql_schema_version()` - Replaces `graphql.get_schema_version`
+
+### Health Monitoring
+
+The app includes automatic extension health checking:
+- `public.check_extension_health()` - Returns status of all extensions
+- Admin-only banner appears if extensions are inaccessible
+- Health check runs on app startup
+
+### Security Guidelines
+
+1. **Never modify functions in `vault` or `graphql` schemas directly**
+2. **All app functions use `SECURITY INVOKER` with `set search_path = ''`**
+3. **Extension access requires proper role permissions**
+4. **Health check alerts admins to access issues**
+
+If you see "GraphQL schema access denied" errors, contact your database administrator to run the necessary grants.
