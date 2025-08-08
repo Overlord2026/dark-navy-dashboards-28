@@ -45,6 +45,9 @@ import RetirementIncomeGapAnalyzer from "./pages/RetirementIncomeGapAnalyzer";
 import RetirementRoadmapInfo from "./pages/RetirementRoadmapInfo";
 import RetirementAnalyzerDemo from "./pages/RetirementAnalyzerDemo";
 import PublicTaxCenter from "./pages/PublicTaxCenter";
+import SwagRetirementRoadmap from "./pages/retirement-roadmap/SwagRetirementRoadmap";
+import InvestmentAllocationDashboard from "./pages/retirement-roadmap/InvestmentAllocationDashboard";
+import SwagRoadmapSettings from "./pages/admin/SwagRoadmapSettings";
 import { AuthPage } from "./pages/AuthPage";
 import { SecuritySettingsPage } from "./pages/SecuritySettingsPage";
 import OnboardingPage from "./pages/OnboardingPage";
@@ -241,11 +244,16 @@ function App() {
                                 <AdminLayoutSettings />
                               </AuthWrapper>
                             } />
-                            <Route path="/admin/controls" element={
-                              <AuthWrapper requireAuth={true} allowedRoles={['admin', 'system_administrator', 'tenant_admin']}>
-                                <AdminControlsPage />
-                              </AuthWrapper>
-                            } />
+                             <Route path="/admin/controls" element={
+                               <AuthWrapper requireAuth={true} allowedRoles={['admin', 'system_administrator', 'tenant_admin']}>
+                                 <AdminControlsPage />
+                               </AuthWrapper>
+                             } />
+                             <Route path="/admin/roadmap-settings" element={
+                               <AuthWrapper requireAuth={true} allowedRoles={['admin', 'system_administrator', 'tenant_admin']}>
+                                 <SwagRoadmapSettings />
+                               </AuthWrapper>
+                             } />
                             <Route path="/cfo-dashboard" element={
                               <AuthWrapper requireAuth={true} allowedRoles={['admin', 'system_administrator', 'tenant_admin']}>
                                 <CFODashboard />
