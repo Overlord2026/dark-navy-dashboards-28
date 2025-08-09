@@ -46,7 +46,7 @@ import RetirementRoadmapInfo from "./pages/RetirementRoadmapInfo";
 import RetirementAnalyzerDemo from "./pages/RetirementAnalyzerDemo";
 import PublicTaxCenter from "./pages/PublicTaxCenter";
 import SwagRetirementRoadmap from "./pages/retirement-roadmap/SwagRetirementRoadmap";
-import { SwagRetirementRoadmapPage } from "./pages/roadmap/SwagRetirementRoadmapPage";
+import SwagRetirementRoadmapPage from "./pages/roadmap/SwagRetirementRoadmapPage";
 import InvestmentAllocationDashboard from "./pages/retirement-roadmap/InvestmentAllocationDashboard";
 import SwagRoadmapSettings from "./pages/admin/SwagRoadmapSettings";
 import { AuthPage } from "./pages/AuthPage";

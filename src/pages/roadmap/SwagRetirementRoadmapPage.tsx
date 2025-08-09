@@ -1,579 +1,570 @@
-import React, { useState, useEffect } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import { ArrowLeft, ArrowRight, CheckCircle, Clock, AlertTriangle } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/hooks/use-toast';
+import React, { useMemo, useState } from "react";
 
-interface RoadmapFormData {
-  // Personal Info
+/**
+ * SWAG™ Retirement Roadmap — Intake + Results + Confidence Score (one-file, persona-agnostic)
+ * - Four-phase inputs: Income Now, Income Later, Growth, Legacy
+ * - Computes a simple, explainable Retirement Confidence Score (0–100)
+ * - Shows recommendations + CTAs (Book a Meeting, Save/Export, Start Over)
+ * - No external deps; Tailwind-style utility classes (safe to strip/replace)
+ *
+ * Optionally wire CTAs to:
+ *  - /book?intent=retirement-roadmap
+ *  - /signup?from=swag-roadmap
+ *  - Edge functions for saving lead payloads
+ */
+
+type RoadmapForm = {
   name: string;
   email: string;
   age: string;
   retirementAge: string;
   state: string;
-  
-  // Income Now (Years 1-2)
+
+  // Income Now (Years 1–2)
   incomeNow: {
-    monthlyExpenses: string;
-    incomeSources: string;
-    ssAmount: string;
-    pensionAmount: string;
-    status: 'green' | 'amber' | 'red' | '';
+    monthlyExpenses: string;        // $
+    guaranteedMonthlyIncome: string; // e.g., SS/Pension ann. today $
+    cashBufferMonths: string;       // months of liquidity for emergencies
   };
-  
-  // Income Later (Years 3-12)
+
+  // Income Later (Years 3–12)
   incomeLater: {
-    discretionaryBudget: string;
-    travelBudget: string;
-    rmdEstimate: string;
-    sequenceRiskProtection: boolean;
-    status: 'green' | 'amber' | 'red' | '';
+    discretionaryBudgetYearly: string; // $
+    travelBudgetYearly: string;        // $
+    rmdEstimateYearly: string;         // $
   };
-  
-  // Growth (12+ Years)
+
+  // Growth (12+)
   growth: {
-    portfolioValue: string;
-    contributions: string;
-    growthRate: string;
-    riskBand: 'conservative' | 'moderate' | 'moderate_aggressive' | '';
-    rebalanceCadence: 'monthly' | 'quarterly' | 'annually' | '';
-    status: 'green' | 'amber' | 'red' | '';
+    portfolioValue: string;    // $
+    annualContributions: string; // $
+    assumedGrowthRatePct: string; // %
+    riskAlignment: "conservative" | "balanced" | "growth" | ""; // self-assessed
   };
-  
-  // Legacy
+
+  // Legacy (ongoing)
   legacy: {
-    estatePlanDocs: string;
-    beneficiaries: string;
-    charitableGoals: string;
-    legacyVaultNeeded: boolean;
-    status: 'green' | 'amber' | 'red' | '';
+    estatePlanDocs: "none" | "will" | "trust" | "will+trust" | "";
+    beneficiariesListed: "yes" | "no" | "";
+    charitableGoals: string; // text
   };
-  
-  // Additional Planning
-  healthcare: {
-    ltcPlan: string;
-    stressTestEnabled: boolean;
-    status: 'green' | 'amber' | 'red' | '';
-  };
-  
-  taxes: {
-    withdrawalSequence: string;
-    rothConversions: string;
-    conversionTileEnabled: boolean;
-    status: 'green' | 'amber' | 'red' | '';
-  };
-  
-  liquidity: {
-    cashBufferMonths: number;
-    adequate: boolean;
-  };
+};
+
+function n(x?: string) {
+  const v = Number(String(x ?? "").toString().replace(/[^0-9.\-]/g, ""));
+  return Number.isFinite(v) ? v : 0;
 }
 
-export const SwagRetirementRoadmapPage: React.FC = () => {
-  const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
-  const { toast } = useToast();
-  
-  const [currentStep, setCurrentStep] = useState(0);
-  const [formData, setFormData] = useState<RoadmapFormData>({
-    name: '',
-    email: '',
-    age: '',
-    retirementAge: '',
-    state: '',
+function clamp(v: number, min = 0, max = 100) {
+  return Math.max(min, Math.min(max, v));
+}
+
+function pct(v: number) {
+  return `${Math.round(v)}%`;
+}
+
+export default function SwagRetirementRoadmapWithScore() {
+  const [formData, setFormData] = useState<RoadmapForm>({
+    name: "",
+    email: "",
+    age: "",
+    retirementAge: "",
+    state: "",
+
     incomeNow: {
-      monthlyExpenses: '',
-      incomeSources: '',
-      ssAmount: '',
-      pensionAmount: '',
-      status: ''
+      monthlyExpenses: "",
+      guaranteedMonthlyIncome: "",
+      cashBufferMonths: "",
     },
+
     incomeLater: {
-      discretionaryBudget: '',
-      travelBudget: '',
-      rmdEstimate: '',
-      sequenceRiskProtection: false,
-      status: ''
+      discretionaryBudgetYearly: "",
+      travelBudgetYearly: "",
+      rmdEstimateYearly: "",
     },
+
     growth: {
-      portfolioValue: '',
-      contributions: '',
-      growthRate: '',
-      riskBand: '',
-      rebalanceCadence: '',
-      status: ''
+      portfolioValue: "",
+      annualContributions: "",
+      assumedGrowthRatePct: "",
+      riskAlignment: "",
     },
+
     legacy: {
-      estatePlanDocs: '',
-      beneficiaries: '',
-      charitableGoals: '',
-      legacyVaultNeeded: false,
-      status: ''
+      estatePlanDocs: "",
+      beneficiariesListed: "",
+      charitableGoals: "",
     },
-    healthcare: {
-      ltcPlan: '',
-      stressTestEnabled: false,
-      status: ''
-    },
-    taxes: {
-      withdrawalSequence: '',
-      rothConversions: '',
-      conversionTileEnabled: false,
-      status: ''
-    },
-    liquidity: {
-      cashBufferMonths: 0,
-      adequate: false
-    }
   });
-  
+
   const [showResults, setShowResults] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Handle prefill from scorecard
-  useEffect(() => {
-    const prefill = searchParams.get('prefill');
-    const source = searchParams.get('source');
-    
-    if (prefill === 'true' && source === 'scorecard') {
-      // Extract prefill data from URL params
-      const prefillData: any = {};
-      for (const [key, value] of searchParams.entries()) {
-        if (key !== 'prefill' && key !== 'source') {
-          prefillData[key] = value;
-        }
+  const handle = (path: (string | number)[], value: string) => {
+    setFormData((prev) => {
+      const next: any = { ...prev };
+      let cur: any = next;
+      for (let i = 0; i < path.length - 1; i++) {
+        const k = path[i];
+        cur[k] = { ...cur[k] };
+        cur = cur[k];
       }
-      
-      // Apply prefill data to form
-      setFormData(prev => ({
-        ...prev,
-        incomeNow: {
-          ...prev.incomeNow,
-          status: prefillData.income_now_phase_status || ''
-        },
-        incomeLater: {
-          ...prev.incomeLater,
-          status: prefillData.income_later_phase_status || '',
-          sequenceRiskProtection: prefillData.income_later_sequence_risk_protection === 'true'
-        },
-        growth: {
-          ...prev.growth,
-          status: prefillData.growth_phase_status || '',
-          riskBand: prefillData.growth_risk_band_suggestion || '',
-          rebalanceCadence: prefillData.growth_rebalance_cadence || ''
-        },
-        legacy: {
-          ...prev.legacy,
-          status: prefillData.legacy_phase_status || '',
-          legacyVaultNeeded: prefillData.legacy_vault_nudge === 'true'
-        },
-        healthcare: {
-          ...prev.healthcare,
-          status: prefillData.healthcare_ltc_status || '',
-          stressTestEnabled: prefillData.healthcare_stress_test_enabled === 'true'
-        },
-        taxes: {
-          ...prev.taxes,
-          status: prefillData.tax_strategy_status || '',
-          conversionTileEnabled: prefillData.roth_conversion_tile_enabled === 'true'
-        },
-        liquidity: {
-          cashBufferMonths: parseInt(prefillData.liquidity_buffer_months) || 0,
-          adequate: prefillData.liquidity_cash_buffer_adequate === 'true'
-        }
-      }));
-
-      toast({
-        title: "Scorecard Data Loaded",
-        description: "Your retirement confidence scorecard responses have been pre-filled.",
-      });
-    }
-  }, [searchParams, toast]);
-
-  const steps = [
-    'Personal Info',
-    'Income Now (1-2 Years)',
-    'Income Later (3-12 Years)', 
-    'Growth (12+ Years)',
-    'Legacy Planning',
-    'Additional Planning'
-  ];
-
-  const progress = ((currentStep + 1) / steps.length) * 100;
-
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case 'green': return <CheckCircle className="h-5 w-5 text-success" />;
-      case 'amber': return <Clock className="h-5 w-5 text-warning" />;
-      case 'red': return <AlertTriangle className="h-5 w-5 text-destructive" />;
-      default: return null;
-    }
+      cur[path[path.length - 1]] = value;
+      return next;
+    });
   };
 
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'green': return <Badge className="bg-success text-success-foreground">On Track</Badge>;
-      case 'amber': return <Badge className="bg-warning text-warning-foreground">Needs Attention</Badge>;
-      case 'red': return <Badge className="bg-destructive text-destructive-foreground">Priority</Badge>;
-      default: return null;
+  // --- Confidence Model (simple, explainable, editable) ---
+  const score = useMemo(() => {
+    // 1) Income Now coverage (weight 40)
+    const expenses = n(formData.incomeNow.monthlyExpenses);
+    const guaranteed = n(formData.incomeNow.guaranteedMonthlyIncome);
+    const coverage = expenses > 0 ? clamp((guaranteed / expenses) * 100, 0, 130) : 0; // 100% = fully covered
+    const coverageScore = clamp((coverage / 100) * 100, 0, 100); // normalize
+
+    // Liquidity buffer bonus: target 6–12 months
+    const bufferMonths = n(formData.incomeNow.cashBufferMonths);
+    const bufferScore = clamp((Math.min(bufferMonths, 12) / 12) * 100, 0, 100);
+
+    const incomeNowScore = 0.75 * coverageScore + 0.25 * bufferScore; // weighted
+
+    // 2) Growth resilience (weight 35)
+    const port = n(formData.growth.portfolioValue);
+    const contrib = n(formData.growth.annualContributions);
+    const gr = n(formData.growth.assumedGrowthRatePct);
+    const risk = formData.growth.riskAlignment;
+
+    // Heuristics: nonzero portfolio & modest growth assumption are healthier.
+    const sizeScore = clamp(Math.log10(Math.max(port, 1)) * 20, 0, 100); // log-scaled
+    const contribScore = clamp(Math.min(contrib / 12000, 1) * 100, 0, 100); // $12k+/yr ≈ full credit
+    const growthAssumptionPenalty = gr > 8 ? clamp(100 - (gr - 8) * 10, 0, 100) : 100; // penalize >8%
+    const riskMatch =
+      risk === "balanced" || risk === "growth" ? 100 : risk === "conservative" ? 70 : 50;
+    const growthScore =
+      0.35 * sizeScore +
+      0.25 * contribScore +
+      0.25 * growthAssumptionPenalty +
+      0.15 * riskMatch;
+
+    // 3) Legacy readiness (weight 15)
+    const docs = formData.legacy.estatePlanDocs;
+    const bens = formData.legacy.beneficiariesListed;
+    const docsScore =
+      docs === "will+trust" ? 100 : docs === "trust" ? 85 : docs === "will" ? 70 : 30;
+    const benScore = bens === "yes" ? 100 : 40;
+    const legacyScore = 0.7 * docsScore + 0.3 * benScore;
+
+    // Aggregate with weights
+    const total =
+      0.4 * incomeNowScore +
+      0.35 * growthScore +
+      0.15 * legacyScore +
+      0.1 * clamp((Boolean(formData.email) ? 100 : 0), 0, 100); // small nudge if contactable
+
+    // Label
+    const label =
+      total >= 85
+        ? "Excellent"
+        : total >= 70
+        ? "Strong"
+        : total >= 55
+        ? "Developing"
+        : "Needs Attention";
+
+    return {
+      total: Math.round(clamp(total, 0, 100)),
+      label,
+      parts: {
+        incomeNowScore: Math.round(incomeNowScore),
+        growthScore: Math.round(growthScore),
+        legacyScore: Math.round(legacyScore),
+      },
+      coveragePct: Math.round(coverage),
+    };
+  }, [formData]);
+
+  const recommendations = useMemo(() => {
+    const recs: string[] = [];
+    // Income Now
+    if (score.coveragePct < 100) {
+      recs.push(
+        "Increase reliable income for Years 1–2 or lower core expenses until coverage ≥ 100%."
+      );
     }
+    if (n(formData.incomeNow.cashBufferMonths) < 6) {
+      recs.push("Target at least 6 months of cash buffer for emergencies.");
+    }
+
+    // Growth
+    const gr = n(formData.growth.assumedGrowthRatePct);
+    if (gr > 8) recs.push("Stress-test plan with a more conservative growth rate (≤ 8%).");
+    if (n(formData.growth.portfolioValue) <= 0)
+      recs.push("Fund the growth bucket (Year 12+) to support long-horizon goals.");
+
+    // Legacy
+    const docs = formData.legacy.estatePlanDocs;
+    const bens = formData.legacy.beneficiariesListed;
+    if (!docs || docs === "none") recs.push("Establish at least a will; consider a trust.");
+    if (bens !== "yes") recs.push("Add/verify beneficiaries across all accounts & policies.");
+
+    // Call-to-action
+    recs.push("Generate a personalized SWAG™ Retirement Roadmap with a professional.");
+    return recs;
+  }, [formData, score]);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setShowResults(true);
   };
 
-  const handleInputChange = (section: keyof RoadmapFormData, field: string, value: any) => {
-    if (section === 'name' || section === 'email' || section === 'age' || section === 'retirementAge' || section === 'state') {
-      setFormData(prev => ({
-        ...prev,
-        [section]: value
-      }));
-    } else if (typeof formData[section] === 'object' && formData[section] !== null) {
-      setFormData(prev => ({
-        ...prev,
-        [section]: {
-          ...(prev[section] as any),
-          [field]: value
-        }
-      }));
-    }
+  const reset = () => setShowResults(false);
+
+  const exportJson = () => {
+    const blob = new Blob([JSON.stringify({ formData, score }, null, 2)], {
+      type: "application/json",
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `swag-roadmap-${(formData.name || "client").replace(/\s+/g, "-").toLowerCase()}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
   };
-
-  const handleNext = () => {
-    if (currentStep < steps.length - 1) {
-      setCurrentStep(prev => prev + 1);
-    } else {
-      handleSubmit();
-    }
-  };
-
-  const handlePrevious = () => {
-    if (currentStep > 0) {
-      setCurrentStep(prev => prev - 1);
-    }
-  };
-
-  const handleSubmit = async () => {
-    setIsSubmitting(true);
-    
-    try {
-      // Store roadmap intake session
-      const { error } = await supabase.from('roadmap_intake_sessions').insert({
-        persona: 'client-family',
-        intake_data: formData,
-        status: 'completed',
-        source: searchParams.get('source') || 'direct'
-      });
-
-      if (error) {
-        console.error('Roadmap submission error:', error);
-        toast({
-          title: "Submission Error",
-          description: "There was an issue saving your roadmap. Please try again.",
-          variant: "destructive"
-        });
-      } else {
-        toast({
-          title: "Roadmap Created!",
-          description: "Your SWAG™ Retirement Roadmap has been generated successfully.",
-        });
-        setShowResults(true);
-      }
-    } catch (error) {
-      console.error('Roadmap submission error:', error);
-      toast({
-        title: "Error",
-        description: "Something went wrong. Please try again.",
-        variant: "destructive"
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const renderPersonalInfo = () => (
-    <div className="space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <Label htmlFor="name">Full Name</Label>
-          <Input
-            id="name"
-            value={formData.name}
-            onChange={(e) => handleInputChange('name' as any, '', e.target.value)}
-            placeholder="Enter your full name"
-          />
-        </div>
-        <div>
-          <Label htmlFor="email">Email Address</Label>
-          <Input
-            id="email"
-            type="email"
-            value={formData.email}
-            onChange={(e) => handleInputChange('email' as any, '', e.target.value)}
-            placeholder="Enter your email"
-          />
-        </div>
-        <div>
-          <Label htmlFor="age">Current Age</Label>
-          <Input
-            id="age"
-            type="number"
-            value={formData.age}
-            onChange={(e) => handleInputChange('age' as any, '', e.target.value)}
-            placeholder="Enter your current age"
-          />
-        </div>
-        <div>
-          <Label htmlFor="retirementAge">Target Retirement Age</Label>
-          <Input
-            id="retirementAge"
-            type="number"
-            value={formData.retirementAge}
-            onChange={(e) => handleInputChange('retirementAge' as any, '', e.target.value)}
-            placeholder="When do you plan to retire?"
-          />
-        </div>
-        <div className="md:col-span-2">
-          <Label htmlFor="state">State of Residence</Label>
-          <Input
-            id="state"
-            value={formData.state}
-            onChange={(e) => handleInputChange('state' as any, '', e.target.value)}
-            placeholder="Enter your state"
-          />
-        </div>
-      </div>
-    </div>
-  );
-
-  const renderIncomeNow = () => (
-    <div className="space-y-4">
-      <div className="flex items-center gap-2 mb-4">
-        <h3 className="text-lg font-semibold">Income Now (Years 1-2)</h3>
-        {getStatusIcon(formData.incomeNow.status)}
-        {getStatusBadge(formData.incomeNow.status)}
-      </div>
-      <p className="text-muted-foreground mb-4">
-        Essential monthly expenses covered by safe income sources during your first 1-2 years of retirement.
-      </p>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <Label htmlFor="monthlyExpenses">Monthly Core Expenses ($)</Label>
-          <Input
-            id="monthlyExpenses"
-            type="number"
-            value={formData.incomeNow.monthlyExpenses}
-            onChange={(e) => handleInputChange('incomeNow', 'monthlyExpenses', e.target.value)}
-            placeholder="Enter monthly expenses"
-          />
-        </div>
-        <div>
-          <Label htmlFor="ssAmount">Social Security ($/month)</Label>
-          <Input
-            id="ssAmount"
-            type="number"
-            value={formData.incomeNow.ssAmount}
-            onChange={(e) => handleInputChange('incomeNow', 'ssAmount', e.target.value)}
-            placeholder="Expected SS benefits"
-          />
-        </div>
-        <div>
-          <Label htmlFor="pensionAmount">Pension Income ($/month)</Label>
-          <Input
-            id="pensionAmount"
-            type="number"
-            value={formData.incomeNow.pensionAmount}
-            onChange={(e) => handleInputChange('incomeNow', 'pensionAmount', e.target.value)}
-            placeholder="Pension benefits"
-          />
-        </div>
-      </div>
-      
-      <div>
-        <Label htmlFor="incomeSources">Other Income Sources</Label>
-        <Textarea
-          id="incomeSources"
-          value={formData.incomeNow.incomeSources}
-          onChange={(e) => handleInputChange('incomeNow', 'incomeSources', e.target.value)}
-          placeholder="List any other reliable income sources (rental income, annuities, part-time work, etc.)"
-          className="h-20"
-        />
-      </div>
-    </div>
-  );
-
-  const renderResults = () => (
-    <div className="space-y-6">
-      <div className="text-center">
-        <h1 className="text-3xl font-bold mb-4">Your SWAG™ Retirement Roadmap</h1>
-        <p className="text-lg text-muted-foreground">
-          A comprehensive view of your retirement strategy across all four phases
-        </p>
-      </div>
-
-      {/* Personal Overview */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Personal Overview</CardTitle>
-        </CardHeader>
-        <CardContent className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div>
-            <p className="text-sm text-muted-foreground">Name</p>
-            <p className="font-semibold">{formData.name}</p>
-          </div>
-          <div>
-            <p className="text-sm text-muted-foreground">Current Age</p>
-            <p className="font-semibold">{formData.age}</p>
-          </div>
-          <div>
-            <p className="text-sm text-muted-foreground">Retirement Age</p>
-            <p className="font-semibold">{formData.retirementAge}</p>
-          </div>
-          <div>
-            <p className="text-sm text-muted-foreground">State</p>
-            <p className="font-semibold">{formData.state}</p>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Phase Analysis */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-lg">Income Now (Years 1-2)</CardTitle>
-            {getStatusIcon(formData.incomeNow.status)}
-          </CardHeader>
-          <CardContent className="space-y-2">
-            <p><strong>Monthly Expenses:</strong> ${formData.incomeNow.monthlyExpenses}</p>
-            <p><strong>Social Security:</strong> ${formData.incomeNow.ssAmount}</p>
-            <p><strong>Pension:</strong> ${formData.incomeNow.pensionAmount}</p>
-            {getStatusBadge(formData.incomeNow.status)}
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-lg">Income Later (Years 3-12)</CardTitle>
-            {getStatusIcon(formData.incomeLater.status)}
-          </CardHeader>
-          <CardContent className="space-y-2">
-            <p><strong>Discretionary Budget:</strong> ${formData.incomeLater.discretionaryBudget}</p>
-            <p><strong>Travel Budget:</strong> ${formData.incomeLater.travelBudget}</p>
-            {getStatusBadge(formData.incomeLater.status)}
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-lg">Growth (12+ Years)</CardTitle>
-            {getStatusIcon(formData.growth.status)}
-          </CardHeader>
-          <CardContent className="space-y-2">
-            <p><strong>Portfolio Value:</strong> ${formData.growth.portfolioValue}</p>
-            <p><strong>Risk Band:</strong> {formData.growth.riskBand}</p>
-            <p><strong>Rebalance:</strong> {formData.growth.rebalanceCadence}</p>
-            {getStatusBadge(formData.growth.status)}
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-lg">Legacy Planning</CardTitle>
-            {getStatusIcon(formData.legacy.status)}
-          </CardHeader>
-          <CardContent className="space-y-2">
-            <p><strong>Estate Docs:</strong> {formData.legacy.estatePlanDocs}</p>
-            <p><strong>Vault Needed:</strong> {formData.legacy.legacyVaultNeeded ? 'Yes' : 'No'}</p>
-            {getStatusBadge(formData.legacy.status)}
-          </CardContent>
-        </Card>
-      </div>
-
-      <div className="text-center space-y-4">
-        <Button onClick={() => setShowResults(false)} variant="outline" size="lg">
-          <ArrowLeft className="mr-2 h-4 w-4" /> Back to Edit
-        </Button>
-        <div>
-          <p className="text-sm text-muted-foreground mb-4">
-            Ready to refine your roadmap with a fiduciary advisor?
-          </p>
-          <Button size="lg">
-            Schedule Planning Session <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
-
-  if (showResults) {
-    return (
-      <div className="min-h-screen bg-background py-8 px-4">
-        <div className="max-w-6xl mx-auto">
-          {renderResults()}
-        </div>
-      </div>
-    );
-  }
 
   return (
-    <div className="min-h-screen bg-background py-8 px-4">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-serif font-bold mb-4">SWAG™ Retirement Roadmap</h1>
-          <p className="text-xl text-muted-foreground mb-6">
-            Build your personalized retirement strategy across all four phases
-          </p>
-          
-          {/* Progress */}
-          <div className="space-y-2">
-            <div className="flex justify-between text-sm text-muted-foreground">
-              <span>Step {currentStep + 1} of {steps.length}: {steps[currentStep]}</span>
-              <span>{Math.round(progress)}% Complete</span>
+    <div className="max-w-4xl mx-auto p-6 bg-background rounded-xl shadow">
+      {!showResults ? (
+        <form onSubmit={handleSubmit} className="space-y-8">
+          <header>
+            <h1 className="text-2xl font-bold text-foreground">SWAG™ Retirement Roadmap Intake</h1>
+            <p className="text-muted-foreground mt-1">
+              Complete the four phases below. You'll get a Retirement Confidence Score and
+              clear next steps.
+            </p>
+          </header>
+
+          {/* Contact / Meta */}
+          <section className="grid md:grid-cols-2 gap-4">
+            <input
+              className="border border-border p-2 rounded bg-background text-foreground"
+              placeholder="Full Name"
+              value={formData.name}
+              onChange={(e) => handle(["name"], e.target.value)}
+            />
+            <input
+              className="border border-border p-2 rounded bg-background text-foreground"
+              placeholder="Email (for results)"
+              value={formData.email}
+              onChange={(e) => handle(["email"], e.target.value)}
+              type="email"
+            />
+            <input
+              className="border border-border p-2 rounded bg-background text-foreground"
+              placeholder="Current Age"
+              value={formData.age}
+              onChange={(e) => handle(["age"], e.target.value)}
+              type="number"
+            />
+            <input
+              className="border border-border p-2 rounded bg-background text-foreground"
+              placeholder="Planned Retirement Age"
+              value={formData.retirementAge}
+              onChange={(e) => handle(["retirementAge"], e.target.value)}
+              type="number"
+            />
+            <input
+              className="border border-border p-2 rounded md:col-span-2 bg-background text-foreground"
+              placeholder="State of Residence"
+              value={formData.state}
+              onChange={(e) => handle(["state"], e.target.value)}
+            />
+          </section>
+
+          {/* Income Now */}
+          <section>
+            <h2 className="text-xl font-semibold text-foreground">Income Now (Years 1–2)</h2>
+            <div className="grid md:grid-cols-3 gap-4 mt-2">
+              <input
+                className="border border-border p-2 rounded bg-background text-foreground"
+                placeholder="Monthly Core Expenses ($)"
+                value={formData.incomeNow.monthlyExpenses}
+                onChange={(e) => handle(["incomeNow", "monthlyExpenses"], e.target.value)}
+                type="number"
+                min="0"
+              />
+              <input
+                className="border border-border p-2 rounded bg-background text-foreground"
+                placeholder="Guaranteed Monthly Income ($)"
+                value={formData.incomeNow.guaranteedMonthlyIncome}
+                onChange={(e) =>
+                  handle(["incomeNow", "guaranteedMonthlyIncome"], e.target.value)
+                }
+                type="number"
+                min="0"
+              />
+              <input
+                className="border border-border p-2 rounded bg-background text-foreground"
+                placeholder="Cash Buffer (months)"
+                value={formData.incomeNow.cashBufferMonths}
+                onChange={(e) => handle(["incomeNow", "cashBufferMonths"], e.target.value)}
+                type="number"
+                min="0"
+              />
             </div>
-            <Progress value={progress} className="h-2" />
+            <p className="text-sm text-muted-foreground mt-1">
+              Tip: Aim for 100% coverage of core expenses with reliable income + a 6–12 month cash buffer.
+            </p>
+          </section>
+
+          {/* Income Later */}
+          <section>
+            <h2 className="text-xl font-semibold text-foreground">Income Later (Years 3–12)</h2>
+            <div className="grid md:grid-cols-3 gap-4 mt-2">
+              <input
+                className="border border-border p-2 rounded bg-background text-foreground"
+                placeholder="Discretionary Budget ($/yr)"
+                value={formData.incomeLater.discretionaryBudgetYearly}
+                onChange={(e) =>
+                  handle(["incomeLater", "discretionaryBudgetYearly"], e.target.value)
+                }
+                type="number"
+                min="0"
+              />
+              <input
+                className="border border-border p-2 rounded bg-background text-foreground"
+                placeholder="Travel Budget ($/yr)"
+                value={formData.incomeLater.travelBudgetYearly}
+                onChange={(e) => handle(["incomeLater", "travelBudgetYearly"], e.target.value)}
+                type="number"
+                min="0"
+              />
+              <input
+                className="border border-border p-2 rounded bg-background text-foreground"
+                placeholder="Estimated RMDs ($/yr)"
+                value={formData.incomeLater.rmdEstimateYearly}
+                onChange={(e) => handle(["incomeLater", "rmdEstimateYearly"], e.target.value)}
+                type="number"
+                min="0"
+              />
+            </div>
+          </section>
+
+          {/* Growth */}
+          <section>
+            <h2 className="text-xl font-semibold text-foreground">Growth (Year 12+)</h2>
+            <div className="grid md:grid-cols-4 gap-4 mt-2">
+              <input
+                className="border border-border p-2 rounded bg-background text-foreground"
+                placeholder="Portfolio Value ($)"
+                value={formData.growth.portfolioValue}
+                onChange={(e) => handle(["growth", "portfolioValue"], e.target.value)}
+                type="number"
+                min="0"
+              />
+              <input
+                className="border border-border p-2 rounded bg-background text-foreground"
+                placeholder="Annual Contributions ($)"
+                value={formData.growth.annualContributions}
+                onChange={(e) => handle(["growth", "annualContributions"], e.target.value)}
+                type="number"
+                min="0"
+              />
+              <input
+                className="border border-border p-2 rounded bg-background text-foreground"
+                placeholder="Assumed Growth Rate (%)"
+                value={formData.growth.assumedGrowthRatePct}
+                onChange={(e) => handle(["growth", "assumedGrowthRatePct"], e.target.value)}
+                type="number"
+                min="0"
+              />
+              <select
+                className="border border-border p-2 rounded bg-background text-foreground"
+                value={formData.growth.riskAlignment}
+                onChange={(e) => handle(["growth", "riskAlignment"], e.target.value)}
+              >
+                <option value="">Risk Alignment</option>
+                <option value="conservative">Conservative</option>
+                <option value="balanced">Balanced</option>
+                <option value="growth">Growth</option>
+              </select>
+            </div>
+          </section>
+
+          {/* Legacy */}
+          <section>
+            <h2 className="text-xl font-semibold text-foreground">Legacy (Ongoing)</h2>
+            <div className="grid md:grid-cols-3 gap-4 mt-2">
+              <select
+                className="border border-border p-2 rounded bg-background text-foreground"
+                value={formData.legacy.estatePlanDocs}
+                onChange={(e) => handle(["legacy", "estatePlanDocs"], e.target.value)}
+              >
+                <option value="">Estate Docs</option>
+                <option value="none">None</option>
+                <option value="will">Will</option>
+                <option value="trust">Trust</option>
+                <option value="will+trust">Will + Trust</option>
+              </select>
+              <select
+                className="border border-border p-2 rounded bg-background text-foreground"
+                value={formData.legacy.beneficiariesListed}
+                onChange={(e) => handle(["legacy", "beneficiariesListed"], e.target.value)}
+              >
+                <option value="">Beneficiaries Listed?</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+              </select>
+              <input
+                className="border border-border p-2 rounded bg-background text-foreground"
+                placeholder="Charitable Goals (optional)"
+                value={formData.legacy.charitableGoals}
+                onChange={(e) => handle(["legacy", "charitableGoals"], e.target.value)}
+              />
+            </div>
+          </section>
+
+          <div className="flex gap-3 pt-2">
+            <button
+              type="submit"
+              className="bg-primary text-primary-foreground px-4 py-2 rounded hover:bg-primary/90"
+            >
+              View My Results
+            </button>
+            <button
+              type="button"
+              onClick={exportJson}
+              className="border border-border px-4 py-2 rounded hover:bg-muted bg-background text-foreground"
+            >
+              Save Draft (JSON)
+            </button>
           </div>
-        </div>
+        </form>
+      ) : (
+        <div>
+          <header className="flex items-center justify-between gap-4 flex-wrap">
+            <div>
+              <h1 className="text-2xl font-bold text-foreground">Your SWAG™ Retirement Roadmap</h1>
+              <p className="text-muted-foreground">
+                Hi {formData.name || "there"} — here's your summary and{" "}
+                <strong>Retirement Confidence Score</strong>.
+              </p>
+            </div>
+            <ScoreBadge score={score.total} label={score.label} />
+          </header>
 
-        {/* Form Card */}
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle className="text-2xl">{steps[currentStep]}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {currentStep === 0 && renderPersonalInfo()}
-            {currentStep === 1 && renderIncomeNow()}
-            {/* Add other step renderers here */}
-          </CardContent>
-        </Card>
+          {/* Snapshot */}
+          <div className="grid md:grid-cols-3 gap-4 mt-6">
+            <Card title="Income Now (1–2 yrs)">
+              <Line label="Monthly Expenses" value={`$${n(formData.incomeNow.monthlyExpenses).toLocaleString()}`} />
+              <Line label="Guaranteed Income" value={`$${n(formData.incomeNow.guaranteedMonthlyIncome).toLocaleString()}`} />
+              <Line label="Coverage" value={pct(score.coveragePct)} />
+              <Line label="Cash Buffer" value={`${n(formData.incomeNow.cashBufferMonths)} months`} />
+              <Meter value={score.parts.incomeNowScore} />
+            </Card>
 
-        {/* Navigation */}
-        <div className="flex justify-between">
-          <Button
-            onClick={handlePrevious}
-            disabled={currentStep === 0}
-            variant="outline"
-          >
-            <ArrowLeft className="mr-2 h-4 w-4" /> Previous
-          </Button>
-          
-          <Button
-            onClick={handleNext}
-            disabled={isSubmitting}
-          >
-            {currentStep === steps.length - 1 ? (
-              isSubmitting ? 'Creating Roadmap...' : 'Complete Roadmap'
-            ) : (
-              <>Next <ArrowRight className="ml-2 h-4 w-4" /></>
-            )}
-          </Button>
+            <Card title="Income Later (3–12 yrs)">
+              <Line label="Discretionary" value={`$${n(formData.incomeLater.discretionaryBudgetYearly).toLocaleString()}/yr`} />
+              <Line label="Travel" value={`$${n(formData.incomeLater.travelBudgetYearly).toLocaleString()}/yr`} />
+              <Line label="RMD Est." value={`$${n(formData.incomeLater.rmdEstimateYearly).toLocaleString()}/yr`} />
+              <Line label="Assumed Growth" value={`${n(formData.growth.assumedGrowthRatePct)}%`} />
+              <Meter value={score.parts.growthScore} />
+            </Card>
+
+            <Card title="Legacy (ongoing)">
+              <Line label="Estate Docs" value={formData.legacy.estatePlanDocs || "—"} />
+              <Line label="Beneficiaries" value={formData.legacy.beneficiariesListed || "—"} />
+              <Line label="Charitable" value={formData.legacy.charitableGoals || "—"} />
+              <Meter value={score.parts.legacyScore} />
+            </Card>
+          </div>
+
+          {/* Recommendations */}
+          <div className="mt-6">
+            <h2 className="text-xl font-semibold text-foreground mb-2">Suggested Next Steps</h2>
+            <ul className="list-disc pl-6 space-y-1 text-foreground">
+              {recommendations.map((r, i) => (
+                <li key={i}>{r}</li>
+              ))}
+            </ul>
+          </div>
+
+          {/* CTAs */}
+          <div className="flex flex-wrap gap-3 mt-6">
+            <a
+              href="/book?intent=retirement-roadmap"
+              className="bg-primary text-primary-foreground px-4 py-2 rounded hover:bg-primary/90"
+            >
+              Book a 30‑min Review
+            </a>
+            <a
+              href={`/signup?from=swag-roadmap&email=${encodeURIComponent(formData.email || "")}`}
+              className="border border-border px-4 py-2 rounded hover:bg-muted bg-background text-foreground"
+            >
+              Save to My Portal
+            </a>
+            <button onClick={exportJson} className="border border-border px-4 py-2 rounded hover:bg-muted bg-background text-foreground">
+              Download JSON
+            </button>
+            <button
+              onClick={reset}
+              className="border border-border px-4 py-2 rounded hover:bg-muted bg-background text-foreground"
+            >
+              Edit Inputs
+            </button>
+          </div>
+
+          {/* Disclosure */}
+          <p className="text-xs text-muted-foreground mt-6">
+            Educational only; not investment, tax, or legal advice. Confidence Score is a
+            simplified indicator and not a guarantee. Consider a comprehensive plan review.
+          </p>
         </div>
-      </div>
+      )}
     </div>
   );
-};
+}
+
+// ----------------- UI Bits -----------------
+function Card({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <div className="border border-border rounded-lg p-4 bg-card">
+      <h3 className="font-semibold mb-2 text-card-foreground">{title}</h3>
+      <div className="space-y-1">{children}</div>
+    </div>
+  );
+}
+
+function Line({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex justify-between text-sm">
+      <span className="text-muted-foreground">{label}</span>
+      <span className="font-medium text-card-foreground">{value}</span>
+    </div>
+  );
+}
+
+function Meter({ value }: { value: number }) {
+  const w = clamp(value);
+  const color =
+    w >= 85 ? "bg-emerald-600" : w >= 70 ? "bg-emerald-500" : w >= 55 ? "bg-amber-500" : "bg-destructive";
+  return (
+    <div className="mt-2">
+      <div className="w-full h-2 bg-muted rounded">
+        <div className={`h-2 ${color} rounded`} style={{ width: `${w}%` }} />
+      </div>
+      <div className="text-right text-xs text-muted-foreground mt-1">{w}/100</div>
+    </div>
+  );
+}
+
+function ScoreBadge({ score, label }: { score: number; label: string }) {
+  const color =
+    score >= 85 ? "bg-emerald-100 text-emerald-700" :
+    score >= 70 ? "bg-emerald-100 text-emerald-700" :
+    score >= 55 ? "bg-amber-100 text-amber-700" :
+                  "bg-red-100 text-red-700";
+  return (
+    <div className={`px-3 py-2 rounded-lg ${color} text-sm font-semibold`}>
+      Confidence: {score}/100 · {label}
+    </div>
+  );
+}
