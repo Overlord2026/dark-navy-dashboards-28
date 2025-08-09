@@ -28664,6 +28664,10 @@ export type Database = {
           function_name: string
         }[]
       }
+      get_user_organization_id: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
       has_any_role: {
         Args: { roles: string[] }
         Returns: boolean
@@ -28674,6 +28678,10 @@ export type Database = {
       }
       has_cpa_permission: {
         Args: { staff_user_id: string; permission_name: string }
+        Returns: boolean
+      }
+      has_org_role: {
+        Args: { required_roles: string[] }
         Returns: boolean
       }
       has_premium_access: {
