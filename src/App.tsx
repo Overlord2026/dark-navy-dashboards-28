@@ -239,6 +239,48 @@ function App() {
                              <Route path="/persona-landing" element={<PersonaLandingPage />} />
                              <Route path="/persona-preview/:personaId" element={<PersonaPreviewPage />} />
                                 <Route path="/" element={<PublicLandingPage />} />
+                                
+                                {/* Persona intro dashboard routes */}
+                                <Route path="/persona/client" element={
+                                  <React.Suspense fallback={<div>Loading...</div>}>
+                                    {React.createElement(React.lazy(() => import('./pages/persona/ClientPersonaPage').then(m => ({ default: m.ClientPersonaPage }))))}
+                                  </React.Suspense>
+                                } />
+                                <Route path="/persona/advisor" element={
+                                  <React.Suspense fallback={<div>Loading...</div>}>
+                                    {React.createElement(React.lazy(() => import('./pages/persona/AdvisorPersonaPage').then(m => ({ default: m.AdvisorPersonaPage }))))}
+                                  </React.Suspense>
+                                } />
+                                <Route path="/persona/cpa" element={
+                                  <React.Suspense fallback={<div>Loading...</div>}>
+                                    {React.createElement(React.lazy(() => import('./pages/persona/CPAPersonaPage').then(m => ({ default: m.CPAPersonaPage }))))}
+                                  </React.Suspense>
+                                } />
+                                <Route path="/persona/attorney" element={
+                                  <React.Suspense fallback={<div>Loading...</div>}>
+                                    {React.createElement(React.lazy(() => import('./pages/persona/AttorneyPersonaPage').then(m => ({ default: m.AttorneyPersonaPage }))))}
+                                  </React.Suspense>
+                                } />
+                                <Route path="/persona/insurance" element={
+                                  <React.Suspense fallback={<div>Loading...</div>}>
+                                    {React.createElement(React.lazy(() => import('./pages/persona/InsurancePersonaPage').then(m => ({ default: m.InsurancePersonaPage }))))}
+                                  </React.Suspense>
+                                } />
+                                <Route path="/persona/healthcare" element={
+                                  <React.Suspense fallback={<div>Loading...</div>}>
+                                    {React.createElement(React.lazy(() => import('./pages/persona/HealthcarePersonaPage').then(m => ({ default: m.HealthcarePersonaPage }))))}
+                                  </React.Suspense>
+                                } />
+                                <Route path="/persona/realtor" element={
+                                  <React.Suspense fallback={<div>Loading...</div>}>
+                                    {React.createElement(React.lazy(() => import('./pages/persona/RealtorPersonaPage').then(m => ({ default: m.RealtorPersonaPage }))))}
+                                  </React.Suspense>
+                                } />
+                                <Route path="/persona/org" element={
+                                  <React.Suspense fallback={<div>Loading...</div>}>
+                                    {React.createElement(React.lazy(() => import('./pages/persona/OrgPersonaPage').then(m => ({ default: m.OrgPersonaPage }))))}
+                                  </React.Suspense>
+                                } />
                                 <Route path="/calculator" element={<PublicFeeCalculator />} />
                                 <Route path="/demo" element={<div className="min-h-screen bg-background p-8"><DemoCalculator /></div>} />
                                 <Route path="/lead-magnet" element={<LeadMagnetPage />} />

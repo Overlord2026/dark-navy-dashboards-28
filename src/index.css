@@ -59,7 +59,6 @@
 
   /* Touch Targets */
   --touch-target: 44px; /* iOS Human Interface Guidelines minimum */
-    --warning-foreground: 216 29% 11%;
 
     --destructive: 0 84% 60%; /* Red for errors */
     --destructive-foreground: 0 0% 100%;

@@ -4,9 +4,11 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { AnimatedTreeHero } from './AnimatedTreeHero';
 import { LandingNavigation } from './LandingNavigation';
 import { BrandedFooter } from '@/components/ui/BrandedFooter';
+import { PersonaGrid } from '../marketing/PersonaGrid';
+import { HeroCTA } from '../marketing/HeroCTA';
+import { HowItWorksSection } from '../marketing/HowItWorksSection';
 import { withTrademarks } from '@/utils/trademark';
 import { 
   Shield, 
@@ -31,6 +33,12 @@ export const PublicLandingPage: React.FC = () => {
   const [showCalculation, setShowCalculation] = useState(false);
   const [email, setEmail] = useState('');
   const [guideDownloaded, setGuideDownloaded] = useState(false);
+
+  const scrollToHowItWorks = () => {
+    document.getElementById('how-it-works')?.scrollIntoView({ 
+      behavior: 'smooth' 
+    });
+  };
 
   const calculateSavings = () => {
     const portfolio = parseFloat(portfolioValue.replace(/[,$]/g, ''));
@@ -106,59 +114,54 @@ export const PublicLandingPage: React.FC = () => {
       <LandingNavigation />
       
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center px-4">
-        <div className="absolute inset-0 opacity-20">
-          <AnimatedTreeHero />
-        </div>
+      <section className="relative py-20 px-4 overflow-hidden">
+        {/* Gradient background effect */}
+        <div className="absolute inset-0 bg-gradient-to-r from-gold/5 via-transparent to-emerald/5 opacity-50" />
         
-        <div className="container mx-auto grid lg:grid-cols-2 gap-12 items-center relative z-10">
-          {/* Left: Headlines */}
+        <div className="container mx-auto max-w-7xl relative z-10">
           <motion.div 
-            className="text-center lg:text-left space-y-8"
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
+            className="text-center space-y-8 max-w-5xl mx-auto"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <div className="space-y-4">
+            <div className="space-y-6">
               <h1 className="font-serif text-5xl lg:text-7xl font-bold text-foreground leading-tight">
-                {withTrademarks("Boutique Family Office")} for Millionaires Next Door
+                Your Strategic Wealth Alpha GPS™
               </h1>
-              <p className="text-xl lg:text-2xl text-muted-foreground leading-relaxed">
-                Retire once. Stay retired. Unlock a full suite of family office services—traditionally reserved for the ultra-wealthy—delivered with transparency, trust, and your interests first.
+              <p className="text-xl lg:text-2xl text-muted-foreground leading-relaxed max-w-4xl mx-auto">
+                One platform for clients, advisors, CPAs, attorneys, insurance, healthcare, and organizations.
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <Button 
-                size="lg" 
-                className="bg-gradient-primary hover:bg-gradient-primary/90 text-white shadow-elegant px-8 py-4 text-lg"
-                onClick={() => document.getElementById('calculator')?.scrollIntoView({ behavior: 'smooth' })}
-              >
-                Discover Your Family Office Advantage
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-              <Button 
-                size="lg" 
-                variant="outline" 
-                className="border-gold/50 text-gold hover:bg-gold/10 px-8 py-4 text-lg"
-                asChild
-              >
-                <Link to="/about#how-it-works">How It Works</Link>
-              </Button>
-            </div>
-          </motion.div>
-
-          {/* Right: Tree Animation */}
-          <motion.div 
-            className="relative h-[400px] lg:h-[600px]"
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-          >
-            <AnimatedTreeHero />
+            <HeroCTA onHowItWorksClick={scrollToHowItWorks} />
           </motion.div>
         </div>
       </section>
+
+      {/* Persona Grid Section */}
+      <section className="py-24 bg-card/30">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="font-serif text-4xl lg:text-5xl font-bold text-foreground mb-6">
+              Choose Your Professional Path
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              Each persona is designed with specialized tools, compliance features, and growth engines tailored to your profession.
+            </p>
+          </motion.div>
+
+          <PersonaGrid />
+        </div>
+      </section>
+
+      {/* How It Works Section */}
+      <HowItWorksSection />
 
       {/* How We're Different Section */}
       <section className="py-24 bg-card/30" id="differentiators">
