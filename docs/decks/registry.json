@@ -47,6 +47,18 @@
       "file_path": "/docs/decks/attorney-persona-deck/",
       "formats": ["JSON", "PNG"],
       "tags": ["attorney", "legal", "estate planning", "compliance", "CRM", "practice management", "automation", "AI"]
+    },
+    {
+      "id": "swag-retirement-roadmap-deck",
+      "title": "SWAG™ Retirement Roadmap Deck",
+      "description": "GPS for Your Financial Future - Comprehensive 4-Phase Retirement Analysis",
+      "category": "Client Solutions",
+      "target_audience": "Retirement Planning Clients, Financial Advisors, Pre-retirees",
+      "slides": 6,
+      "created_date": "2025-01-09",
+      "file_path": "/docs/decks/swag-retirement-roadmap/",
+      "formats": ["JSON", "PNG", "PDF"],
+      "tags": ["retirement", "SWAG GPS", "Monte Carlo", "confidence score", "estate planning", "tax optimization", "roadmap"]
     }
   ]
 }
