@@ -187,5 +187,54 @@ export const analytics = {
       channel,
       timestamp: Date.now()
     });
+  },
+
+  // Lead-to-Sales Closure Events
+  trackLeadQuickAction: (action: string, leadId: string) => {
+    posthog.capture('lead_quick_action_clicked', {
+      action,
+      leadId,
+      timestamp: Date.now()
+    });
+  },
+
+  trackLeadOutcome: (outcome: string, leadId: string) => {
+    posthog.capture('lead_outcome_set', {
+      outcome,
+      leadId,
+      timestamp: Date.now()
+    });
+  },
+
+  trackAIObjection: (type: string, confidence: number) => {
+    posthog.capture('ai_objection_detected', {
+      type,
+      confidence,
+      timestamp: Date.now()
+    });
+  },
+
+  trackSmartCadence: (reason: string, templateId: string) => {
+    posthog.capture('smart_cadence_triggered', {
+      reason,
+      templateId,
+      timestamp: Date.now()
+    });
+  },
+
+  trackComplianceReview: (leadId: string, flags: any[]) => {
+    posthog.capture('compliance_review_requested', {
+      leadId,
+      flags,
+      timestamp: Date.now()
+    });
+  },
+
+  trackWinLossReason: (reason: string, stage: string) => {
+    posthog.capture('win_loss_reason_selected', {
+      reason,
+      stage,
+      timestamp: Date.now()
+    });
   }
 };

@@ -1,0 +1,103 @@
+{
+  "keywords": [
+    {
+      "category": "regulatory",
+      "severity": "high",
+      "keywords": [
+        "guaranteed returns",
+        "no risk",
+        "can't lose",
+        "risk-free",
+        "guaranteed profit",
+        "sure thing",
+        "100% safe",
+        "no downside"
+      ],
+      "description": "Potentially misleading investment promises"
+    },
+    {
+      "category": "fiduciary",
+      "severity": "medium",
+      "keywords": [
+        "trust me",
+        "take my word",
+        "don't worry about",
+        "just sign here",
+        "you don't need to read",
+        "standard contract",
+        "everyone does this"
+      ],
+      "description": "Potential fiduciary duty concerns"
+    },
+    {
+      "category": "pressure_tactics",
+      "severity": "medium",
+      "keywords": [
+        "limited time offer",
+        "today only",
+        "must decide now",
+        "opportunity expires",
+        "won't be available tomorrow",
+        "exclusive deal",
+        "special pricing ends"
+      ],
+      "description": "High-pressure sales tactics"
+    },
+    {
+      "category": "unlicensed_advice",
+      "severity": "high",
+      "keywords": [
+        "tax advice",
+        "legal recommendation",
+        "estate planning",
+        "trust structure",
+        "tax strategy",
+        "legal opinion",
+        "you should definitely"
+      ],
+      "description": "Potential unlicensed professional advice"
+    },
+    {
+      "category": "performance_claims",
+      "severity": "medium",
+      "keywords": [
+        "always profitable",
+        "never lost money",
+        "beats the market",
+        "outperforms everything",
+        "consistent returns",
+        "proven track record",
+        "historical performance"
+      ],
+      "description": "Unsubstantiated performance claims"
+    },
+    {
+      "category": "personal_info",
+      "severity": "low",
+      "keywords": [
+        "social security number",
+        "SSN",
+        "bank account details",
+        "routing number",
+        "password",
+        "PIN",
+        "account number"
+      ],
+      "description": "Sensitive personal information disclosure"
+    }
+  ],
+  "patterns": [
+    {
+      "name": "percentage_promises",
+      "regex": "\\b([0-9]+)%\\s+(return|profit|gain|guaranteed)",
+      "severity": "high",
+      "description": "Specific percentage return promises"
+    },
+    {
+      "name": "timeframe_guarantees",
+      "regex": "\\bin\\s+([0-9]+)\\s+(days?|weeks?|months?)\\s+(guaranteed|promise|assure)",
+      "severity": "medium",
+      "description": "Time-based guarantees"
+    }
+  ]
+}
