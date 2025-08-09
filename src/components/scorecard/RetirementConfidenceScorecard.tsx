@@ -325,6 +325,7 @@ export const RetirementConfidenceScorecard: React.FC = () => {
   const generatePrefillData = () => {
     const prefillData: Record<string, any> = {};
     
+    // Map scorecard answers to roadmap intake fields with detailed SWAG™ phases
     SCORECARD_CONFIG.questions.forEach(question => {
       const answer = answers[question.id];
       if (answer && question.prefill_map) {
@@ -335,8 +336,65 @@ export const RetirementConfidenceScorecard: React.FC = () => {
         });
       }
     });
+
+    // Enhanced prefill mapping for SWAG™ Retirement Roadmap phases
+    const enhancedPrefill: Record<string, any> = {
+      ...prefillData,
+      // Income Now (Years 1-2) - Essential monthly expenses + SS/Pension coverage
+      income_now_phase_status: answers['income_now_gap'] === 'covered' ? 'green' : 
+                               answers['income_now_gap'] === 'partial' ? 'amber' : 'red',
+      income_now_prompt_monthly_expenses: answers['expense_plan_monthly'] !== 'dialed',
+      income_now_prompt_ss_pension: answers['income_now_gap'] !== 'covered',
+      
+      // Income Later (Years 3-12) - Capital preservation template
+      income_later_phase_status: answers['income_later_buffer'] === 'yes' ? 'green' :
+                                 answers['income_later_buffer'] === 'working' ? 'amber' : 'red',
+      income_later_template: 'capital_preservation_lower_drawdown',
+      income_later_sequence_risk_protection: answers['income_later_buffer'] !== 'yes',
+      
+      // Growth (12+ Years) - Risk band and rebalance cadence
+      growth_phase_status: answers['growth_allocation'] === 'aligned' ? 'green' :
+                          answers['growth_allocation'] === 'somewhat' ? 'amber' : 'red',
+      growth_risk_band_suggestion: answers['growth_allocation'] === 'aligned' ? 'moderate_aggressive' :
+                                  answers['growth_allocation'] === 'somewhat' ? 'moderate' : 'conservative',
+      growth_rebalance_cadence: answers['growth_allocation'] === 'aligned' ? 'quarterly' : 'monthly',
+      
+      // Legacy - Secure Legacy Vault™ integration
+      legacy_phase_status: answers['legacy_intent'] === 'docs_set' ? 'green' :
+                          answers['legacy_intent'] === 'in_progress' ? 'amber' : 'red',
+      legacy_vault_nudge: answers['legacy_intent'] !== 'docs_set',
+      legacy_beneficiaries_needed: answers['legacy_intent'] === 'no',
+      legacy_documents_needed: answers['legacy_intent'] !== 'docs_set',
+      
+      // Healthcare/LTC - Stress test tile
+      healthcare_ltc_status: answers['healthcare_ltc'] === 'solid' ? 'green' :
+                            answers['healthcare_ltc'] === 'partial' ? 'amber' : 'red',
+      healthcare_stress_test_enabled: answers['healthcare_ltc'] !== 'solid',
+      
+      // Taxes - Roth conversion timing
+      tax_strategy_status: answers['tax_strategy'] === 'yes' ? 'green' :
+                          answers['tax_strategy'] === 'some' ? 'amber' : 'red',
+      roth_conversion_tile_enabled: answers['tax_strategy'] !== 'yes',
+      tax_withdrawal_sequence_needed: answers['tax_strategy'] === 'no',
+      
+      // Liquidity - Cash buffer months
+      liquidity_buffer_months: answers['cash_buffer'] === '12mo' ? 12 :
+                              answers['cash_buffer'] === '6mo' ? 6 : 0,
+      liquidity_cash_buffer_adequate: answers['cash_buffer'] !== 'low',
+      
+      // Income Sources Documentation
+      income_sources_status: answers['income_sources_known'] === 'complete' ? 'green' :
+                           answers['income_sources_known'] === 'partial' ? 'amber' : 'red',
+      income_sources_documentation_needed: answers['income_sources_known'] !== 'complete',
+      
+      // Overall readiness indicators
+      retirement_readiness_score: score,
+      scorecard_completion_date: new Date().toISOString(),
+      lead_source: 'Retirement Confidence Scorecard',
+      persona: persona
+    };
     
-    return prefillData;
+    return enhancedPrefill;
   };
 
   const handleGoToRoadmap = async () => {
