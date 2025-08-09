@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from "react";
+import { track } from "@/lib/analytics/track";
 
 /**
  * SWAG™ Retirement Roadmap — Intake + Results + Confidence Score (one-file, persona-agnostic)
@@ -213,12 +214,30 @@ export default function SwagRetirementRoadmapWithScore() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Track roadmap submission
+    track("roadmap_submitted", {
+      score: score.total,
+      score_label: score.label,
+      portfolio_value: n(formData.growth.portfolioValue),
+      risk_alignment: formData.growth.riskAlignment || "unknown",
+      has_estate_docs: formData.legacy.estatePlanDocs !== "" && formData.legacy.estatePlanDocs !== "none",
+      coverage_percentage: score.coveragePct
+    });
+    
     setShowResults(true);
   };
 
   const reset = () => setShowResults(false);
 
   const exportJson = () => {
+    // Track export event
+    track("roadmap_exported", {
+      score: score.total,
+      format: "json",
+      portfolio_value: n(formData.growth.portfolioValue)
+    });
+    
     const blob = new Blob([JSON.stringify({ formData, score }, null, 2)], {
       type: "application/json",
     });
@@ -492,20 +511,38 @@ export default function SwagRetirementRoadmapWithScore() {
             <a
               href="/book?intent=retirement-roadmap"
               className="bg-primary text-primary-foreground px-4 py-2 rounded hover:bg-primary/90"
+              onClick={() => track("roadmap_book_clicked", {
+                score: score.total,
+                intent: "retirement-roadmap",
+                source: "roadmap_results"
+              })}
             >
               Book a 30‑min Review
             </a>
             <a
               href={`/signup?from=swag-roadmap&email=${encodeURIComponent(formData.email || "")}`}
               className="border border-border px-4 py-2 rounded hover:bg-muted bg-background text-foreground"
+              onClick={() => track("roadmap_signup_clicked", {
+                score: score.total,
+                source: "roadmap_results"
+              })}
             >
               Save to My Portal
             </a>
-            <button onClick={exportJson} className="border border-border px-4 py-2 rounded hover:bg-muted bg-background text-foreground">
+            <button 
+              onClick={exportJson} 
+              className="border border-border px-4 py-2 rounded hover:bg-muted bg-background text-foreground"
+            >
               Download JSON
             </button>
             <button
-              onClick={reset}
+              onClick={() => {
+                track("roadmap_edit_clicked", {
+                  score: score.total,
+                  source: "roadmap_results"
+                });
+                reset();
+              }}
               className="border border-border px-4 py-2 rounded hover:bg-muted bg-background text-foreground"
             >
               Edit Inputs
