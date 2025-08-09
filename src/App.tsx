@@ -329,6 +329,16 @@ function App() {
                                     {React.createElement(React.lazy(() => import('./pages/persona/IMOFMOOrganizationPersonaPage').then(m => ({ default: m.IMOFMOOrganizationPersonaPage }))))}
                                   </React.Suspense>
                                 } />
+                                <Route path="/persona/business-owners-entrepreneurs" element={
+                                  <React.Suspense fallback={<div>Loading...</div>}>
+                                    {React.createElement(React.lazy(() => import('./pages/persona/BusinessOwnersEntrepreneursPersonaPage').then(m => ({ default: m.BusinessOwnersEntrepreneursPersonaPage }))))}
+                                  </React.Suspense>
+                                } />
+                                <Route path="/persona/independent-women-business-owners" element={
+                                  <React.Suspense fallback={<div>Loading...</div>}>
+                                    {React.createElement(React.lazy(() => import('./pages/persona/IndependentWomenBusinessOwnersPersonaPage').then(m => ({ default: m.IndependentWomenBusinessOwnersPersonaPage }))))}
+                                  </React.Suspense>
+                                } />
                                 <Route path="/persona/cpa" element={
                                   <React.Suspense fallback={<div>Loading...</div>}>
                                     {React.createElement(React.lazy(() => import('./pages/persona/CPAPersonaPage').then(m => ({ default: m.CPAPersonaPage }))))}
