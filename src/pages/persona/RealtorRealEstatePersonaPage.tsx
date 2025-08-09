@@ -1,293 +1,432 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Home, Users, Brain, Map, Star, Calendar, FileText, Shield, MessageSquare, TrendingUp, Award } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
+import { 
+  Home, 
+  Users, 
+  MessageSquare, 
+  Star, 
+  Brain, 
+  Shield, 
+  Calendar, 
+  Phone,
+  BarChart3,
+  FileText,
+  CreditCard,
+  Target,
+  ArrowRight,
+  PlayCircle,
+  DollarSign,
+  CheckCircle,
+  Zap,
+  Globe,
+  UserPlus,
+  Clock,
+  Building,
+  Key,
+  MapPin,
+  Handshake
+} from 'lucide-react';
+import { LandingNavigation } from '@/components/marketplace/LandingNavigation';
+import { BrandedFooter } from '@/components/ui/BrandedFooter';
 
-export const RealtorRealEstatePersonaPage = () => {
-  const testimonials = [
-    "I converted more leads in my first month using the AI lead scoring than in the previous three combined.",
-    "The property management dashboard keeps every transaction step in order — no missed deadlines.",
-    "Clients love the instant updates and personalized reports."
+export const RealtorRealEstatePersonaPage: React.FC = () => {
+  const navigate = useNavigate();
+
+  const valueProps = [
+    {
+      icon: UserPlus,
+      title: 'Lead Capture & Nurturing',
+      description: 'Integrated lead intake forms, CRM, and automated follow-ups.'
+    },
+    {
+      icon: Building,
+      title: 'Property & Transaction Management',
+      description: 'Centralized listing info, document storage, and transaction tracking.'
+    },
+    {
+      icon: MessageSquare,
+      title: 'Client Communication Hub',
+      description: 'Twilio-powered calls, texts, and email from one dashboard.'
+    }
   ];
 
-  const [currentTestimonial, setCurrentTestimonial] = React.useState(0);
+  const keyFeatures = [
+    { icon: Star, text: 'CRM with SWAG Lead Score™ for prioritizing hot prospects' },
+    { icon: Brain, text: 'AI-powered meeting & showing summaries' },
+    { icon: Shield, text: 'Secure document vault for contracts and disclosures' },
+    { icon: Calendar, text: 'Integrated appointment and showing scheduler' },
+    { icon: Phone, text: 'Twilio SMS/voice reminders for showings and deadlines' },
+    { icon: BarChart3, text: 'Pipeline tracking from lead to closing' },
+    { icon: FileText, text: 'Built-in compliance tools for real estate regulations' },
+    { icon: CreditCard, text: 'Billing and commission tracking' }
+  ];
 
-  React.useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
-    }, 4000);
-    return () => clearInterval(timer);
-  }, [testimonials.length]);
+  const integratedTools = [
+    {
+      title: 'Operations Management System',
+      description: 'Manage team members, roles, and sales projects'
+    },
+    {
+      title: 'Built-in Learning Management System (LMS)',
+      description: 'Train new agents with pre-loaded "Real Estate Sales Excellence" starter course pack'
+    },
+    {
+      title: 'Linda AI Assistant',
+      description: 'For creating listing descriptions, market updates, and follow-up scripts'
+    },
+    {
+      title: 'Marketplace Access',
+      description: 'For vetted legal, title, staging, and marketing vendors'
+    }
+  ];
+
+  const testimonials = [
+    {
+      quote: "The lead scoring system helps me focus on the clients most likely to close.",
+      author: "Top Producer, Residential Sales"
+    },
+    {
+      quote: "Linda AI writes my property descriptions in minutes.",
+      author: "Listing Specialist, Luxury Properties"
+    },
+    {
+      quote: "The integrated operations tools keep my team aligned through every deal.",
+      author: "Brokerage Owner, Multi-Agent Team"
+    }
+  ];
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* SEO Meta Tags */}
-      <head>
-        <title>Real Estate Agent & Realtor Business Platform | BFOCFO</title>
-        <meta name="description" content="Lead management, property tracking, AI client updates, and compliance tools for real estate professionals — all in one secure platform." />
-      </head>
-
+    <div className="min-h-screen bg-gradient-to-br from-navy via-background to-navy">
+      <LandingNavigation />
+      
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-primary/10 via-background to-secondary/10 py-20 px-4">
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width=%2260%22%20height=%2260%22%20viewBox=%220%200%2060%2060%22%20xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cg%20fill=%22none%22%20fill-rule=%22evenodd%22%3E%3Cg%20fill=%22%23000000%22%20fill-opacity=%220.05%22%3E%3Ccircle%20cx=%227%22%20cy=%227%22%20r=%221%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-50" />
-        
-        <div className="relative max-w-6xl mx-auto text-center">
-          <div className="mb-8">
-            <Home className="w-16 h-16 text-primary mx-auto mb-6" />
-          </div>
-          
-          <h1 className="font-serif text-4xl lg:text-6xl font-bold text-foreground mb-6 leading-tight">
-            Close More Deals and Manage Your Real Estate Business in One Powerful Platform
-          </h1>
-          
-          <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
-            From lead capture to client communication, property tracking, and closing coordination — streamline your workflow with AI-driven tools.
-          </p>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <Button 
-              size="lg" 
-              className="bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-6 text-lg"
-              onClick={() => window.location.href = '/signup?persona=realtor-real-estate-professional'}
-            >
-              Start Your Free Trial
-              <ArrowRight className="ml-2 w-5 h-5" />
-            </Button>
-            <Button 
-              variant="outline" 
-              size="lg" 
-              className="border-primary text-primary hover:bg-primary hover:text-primary-foreground px-8 py-6 text-lg"
-            >
-              See How It Works
-            </Button>
-          </div>
+      <section className="py-20 px-4">
+        <div className="container mx-auto max-w-6xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center space-y-8"
+          >
+            <Badge className="bg-gold/20 text-gold border-gold/30 px-4 py-2">
+              <Home className="w-4 h-4 mr-2" />
+              Real Estate Professionals
+            </Badge>
+            
+            <div className="space-y-6">
+              <h1 className="font-serif text-5xl lg:text-6xl font-bold text-foreground">
+                Close More Deals and Manage Your Real Estate Business Seamlessly
+              </h1>
+              <p className="text-xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
+                From lead capture to client communication, property management, and closings — all in one secure platform.
+              </p>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button 
+                size="lg"
+                onClick={() => navigate('/signup?persona=realtor-real-estate-professional')}
+                className="bg-gradient-to-r from-gold to-gold/90 hover:from-gold/90 hover:to-gold text-navy font-bold px-8 py-4 text-lg"
+              >
+                Start Your Free Trial
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </Button>
+              
+              <Button 
+                size="lg"
+                variant="outline"
+                onClick={() => navigate('#features')}
+                className="border-emerald text-emerald hover:bg-emerald/10 px-8 py-4 text-lg"
+              >
+                See How It Works
+                <PlayCircle className="w-5 h-5 ml-2" />
+              </Button>
+            </div>
+          </motion.div>
         </div>
       </section>
 
       {/* Value Proposition Blocks */}
-      <section className="py-16 px-4 bg-muted/30">
-        <div className="max-w-6xl mx-auto">
+      <section className="py-24 bg-card/30">
+        <div className="container mx-auto max-w-6xl px-4">
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center p-6 bg-card rounded-lg shadow-sm border">
-              <Users className="w-12 h-12 text-primary mx-auto mb-4" />
-              <h3 className="font-serif text-xl font-bold text-foreground mb-3">Lead Capture & Nurturing</h3>
-              <p className="text-muted-foreground">
-                Collect, score, and follow up with buyer and seller leads automatically.
-              </p>
-            </div>
-            
-            <div className="text-center p-6 bg-card rounded-lg shadow-sm border">
-              <Map className="w-12 h-12 text-primary mx-auto mb-4" />
-              <h3 className="font-serif text-xl font-bold text-foreground mb-3">Property & Transaction Management</h3>
-              <p className="text-muted-foreground">
-                Track listings, showings, offers, and closing steps in one place.
-              </p>
-            </div>
-            
-            <div className="text-center p-6 bg-card rounded-lg shadow-sm border">
-              <Brain className="w-12 h-12 text-primary mx-auto mb-4" />
-              <h3 className="font-serif text-xl font-bold text-foreground mb-3">AI-Powered Client Communication</h3>
-              <p className="text-muted-foreground">
-                Generate personalized property updates, follow-ups, and market insights.
-              </p>
-            </div>
+            {valueProps.map((prop, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.2 }}
+              >
+                <Card className="h-full bg-card/50 backdrop-blur-sm border border-border hover:border-gold/30 transition-all duration-300">
+                  <CardHeader className="text-center">
+                    <div className="w-16 h-16 bg-gradient-to-br from-gold to-gold/80 rounded-xl flex items-center justify-center shadow-lg mx-auto mb-4">
+                      <prop.icon className="w-8 h-8 text-navy" />
+                    </div>
+                    <CardTitle className="text-xl">{prop.title}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground leading-relaxed text-center">
+                      {prop.description}
+                    </p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Key Features Section */}
-      <section className="py-16 px-4">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="font-serif text-3xl lg:text-4xl font-bold text-foreground mb-4">
-              Everything You Need to Succeed in Real Estate
+      <section id="features" className="py-24">
+        <div className="container mx-auto max-w-6xl px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="font-serif text-4xl font-bold text-foreground mb-4">
+              Everything You Need to Dominate Your Market
             </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Comprehensive tools designed specifically for modern real estate professionals
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              Comprehensive real estate tools designed to help you close more deals and grow your business
             </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+            {keyFeatures.map((feature, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                className="flex items-center gap-4 p-4 rounded-lg bg-card/30 border border-border"
+              >
+                <div className="w-10 h-10 bg-emerald/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <feature.icon className="w-5 h-5 text-emerald" />
+                </div>
+                <span className="text-foreground">{feature.text}</span>
+              </motion.div>
+            ))}
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="flex items-start gap-4 p-6 bg-card rounded-lg border">
-              <Map className="w-8 h-8 text-primary flex-shrink-0 mt-1" />
-              <div>
-                <h3 className="font-semibold text-foreground mb-2">Integrated MLS Data Feed</h3>
-                <p className="text-sm text-muted-foreground">Real-time property tracking and market data</p>
+          {/* Feature Icons Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16 max-w-4xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              className="text-center"
+            >
+              <div className="w-16 h-16 bg-emerald/20 rounded-xl flex items-center justify-center mx-auto mb-3">
+                <MapPin className="w-8 h-8 text-emerald" />
               </div>
-            </div>
-
-            <div className="flex items-start gap-4 p-6 bg-card rounded-lg border">
-              <Star className="w-8 h-8 text-primary flex-shrink-0 mt-1" />
-              <div>
-                <h3 className="font-semibold text-foreground mb-2">AI-Driven Lead Scoring</h3>
-                <p className="text-sm text-muted-foreground">Priority ranking and automated follow-up</p>
+              <p className="text-sm text-muted-foreground">Property Listings</p>
+            </motion.div>
+            
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="text-center"
+            >
+              <div className="w-16 h-16 bg-emerald/20 rounded-xl flex items-center justify-center mx-auto mb-3">
+                <Key className="w-8 h-8 text-emerald" />
               </div>
-            </div>
-
-            <div className="flex items-start gap-4 p-6 bg-card rounded-lg border">
-              <Calendar className="w-8 h-8 text-primary flex-shrink-0 mt-1" />
-              <div>
-                <h3 className="font-semibold text-foreground mb-2">Automated Showing Scheduling</h3>
-                <p className="text-sm text-muted-foreground">Smart calendar with client reminders</p>
+              <p className="text-sm text-muted-foreground">Showings</p>
+            </motion.div>
+            
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              className="text-center"
+            >
+              <div className="w-16 h-16 bg-emerald/20 rounded-xl flex items-center justify-center mx-auto mb-3">
+                <FileText className="w-8 h-8 text-emerald" />
               </div>
-            </div>
-
-            <div className="flex items-start gap-4 p-6 bg-card rounded-lg border">
-              <FileText className="w-8 h-8 text-primary flex-shrink-0 mt-1" />
-              <div>
-                <h3 className="font-semibold text-foreground mb-2">Secure Document Vault</h3>
-                <p className="text-sm text-muted-foreground">Contracts, disclosures, and transaction records</p>
+              <p className="text-sm text-muted-foreground">Contracts</p>
+            </motion.div>
+            
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3 }}
+              className="text-center"
+            >
+              <div className="w-16 h-16 bg-emerald/20 rounded-xl flex items-center justify-center mx-auto mb-3">
+                <Handshake className="w-8 h-8 text-emerald" />
               </div>
-            </div>
-
-            <div className="flex items-start gap-4 p-6 bg-card rounded-lg border">
-              <TrendingUp className="w-8 h-8 text-primary flex-shrink-0 mt-1" />
-              <div>
-                <h3 className="font-semibold text-foreground mb-2">Pipeline Kanban Board</h3>
-                <p className="text-sm text-muted-foreground">Track buyer and seller clients visually</p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-4 p-6 bg-card rounded-lg border">
-              <MessageSquare className="w-8 h-8 text-primary flex-shrink-0 mt-1" />
-              <div>
-                <h3 className="font-semibold text-foreground mb-2">Marketing Automation</h3>
-                <p className="text-sm text-muted-foreground">Listings and open house promotion</p>
-              </div>
-            </div>
+              <p className="text-sm text-muted-foreground">Closings</p>
+            </motion.div>
           </div>
         </div>
       </section>
 
       {/* Integrated Tools Callout */}
-      <section className="py-16 px-4 bg-muted/30">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="font-serif text-3xl font-bold text-foreground mb-4">
-              Integrated Professional Tools
+      <section className="py-24 bg-card/30">
+        <div className="container mx-auto max-w-6xl px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="font-serif text-4xl font-bold text-foreground mb-4">
+              Complete Real Estate Business Management
             </h2>
-            <p className="text-lg text-muted-foreground">
-              Advanced features that work seamlessly together
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              Beyond transactions — team management, agent training, AI assistance, and vendor marketplace
             </p>
-          </div>
+          </motion.div>
 
           <div className="grid md:grid-cols-2 gap-8">
-            <div className="p-6 bg-card rounded-lg border">
-              <Brain className="w-10 h-10 text-primary mb-4" />
-              <h3 className="font-semibold text-foreground mb-2">Linda AI Assistant</h3>
-              <p className="text-muted-foreground">Create property descriptions, follow-up messages, and market reports</p>
-            </div>
-
-            <div className="p-6 bg-card rounded-lg border">
-              <MessageSquare className="w-10 h-10 text-primary mb-4" />
-              <h3 className="font-semibold text-foreground mb-2">Twilio Integration</h3>
-              <p className="text-muted-foreground">Instant SMS/voice updates to clients about properties and showings</p>
-            </div>
-
-            <div className="p-6 bg-card rounded-lg border">
-              <TrendingUp className="w-10 h-10 text-primary mb-4" />
-              <h3 className="font-semibold text-foreground mb-2">Lead-to-Sales Closure Engine</h3>
-              <p className="text-muted-foreground">Track every lead from inquiry to signed contract</p>
-            </div>
-
-            <div className="p-6 bg-card rounded-lg border">
-              <Shield className="w-10 h-10 text-primary mb-4" />
-              <h3 className="font-semibold text-foreground mb-2">Built-in Compliance Platform</h3>
-              <p className="text-muted-foreground">Meet state and brokerage record-keeping regulations</p>
-            </div>
+            {integratedTools.map((tool, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.2 }}
+              >
+                <Card className="h-full bg-gradient-to-br from-card to-card/50 border border-gold/20">
+                  <CardContent className="p-6">
+                    <div className="flex items-start gap-4">
+                      <Zap className="w-8 h-8 text-gold flex-shrink-0 mt-1" />
+                      <div>
+                        <h3 className="text-lg font-bold text-foreground mb-2">{tool.title}</h3>
+                        <p className="text-muted-foreground">{tool.description}</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Testimonials Slider */}
-      <section className="py-16 px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="font-serif text-3xl font-bold text-foreground mb-12">
-            What Real Estate Professionals Say
-          </h2>
-          
-          <div className="relative h-32 flex items-center justify-center">
-            <div className="absolute inset-0 flex items-center justify-center transition-opacity duration-500">
-              <blockquote className="text-xl text-muted-foreground italic max-w-2xl">
-                "{testimonials[currentTestimonial]}"
-              </blockquote>
-            </div>
-          </div>
-          
-          <div className="flex justify-center gap-2 mt-8">
-            {testimonials.map((_, index) => (
-              <button
+      <section className="py-24">
+        <div className="container mx-auto max-w-5xl px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="font-serif text-4xl font-bold text-foreground mb-4">
+              Trusted by Real Estate Professionals
+            </h2>
+          </motion.div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {testimonials.map((testimonial, index) => (
+              <motion.div
                 key={index}
-                className={`w-3 h-3 rounded-full transition-colors ${
-                  index === currentTestimonial ? 'bg-primary' : 'bg-muted'
-                }`}
-                onClick={() => setCurrentTestimonial(index)}
-              />
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.2 }}
+              >
+                <Card className="h-full p-6 bg-card border border-gold/20">
+                  <div className="flex flex-col h-full">
+                    <div className="flex items-center gap-2 mb-4">
+                      <Star className="w-5 h-5 text-gold" />
+                      <Star className="w-5 h-5 text-gold" />
+                      <Star className="w-5 h-5 text-gold" />
+                      <Star className="w-5 h-5 text-gold" />
+                      <Star className="w-5 h-5 text-gold" />
+                    </div>
+                    <blockquote className="text-foreground mb-4 italic flex-1">
+                      "{testimonial.quote}"
+                    </blockquote>
+                    <cite className="text-muted-foreground text-sm">— {testimonial.author}</cite>
+                  </div>
+                </Card>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
       {/* Pricing Teaser */}
-      <section className="py-16 px-4 bg-muted/30">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="font-serif text-3xl font-bold text-foreground mb-4">
-            Flexible Pricing for Growing Agents
-          </h2>
-          <p className="text-xl text-muted-foreground mb-8">
-            Plans starting at $39/month — upgrade as your portfolio grows.
-          </p>
-          <Button 
-            size="lg" 
-            variant="outline"
-            className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+      <section className="py-24 bg-card/30">
+        <div className="container mx-auto max-w-4xl px-4 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
           >
-            View Plans & Features
-          </Button>
+            <DollarSign className="w-16 h-16 text-gold mx-auto mb-6" />
+            <h2 className="font-serif text-3xl font-bold text-foreground mb-4">
+              Plans starting at $39/month — scale as your brokerage grows
+            </h2>
+            <p className="text-xl text-muted-foreground mb-8">
+              Professional real estate tools that scale from individual agents to large brokerages
+            </p>
+            
+            <Button 
+              size="lg"
+              onClick={() => navigate('/pricing')}
+              className="bg-gradient-to-r from-emerald to-emerald/90 hover:from-emerald/90 hover:to-emerald text-background font-bold px-8 py-4 text-lg"
+            >
+              View Plans & Features
+              <ArrowRight className="w-5 h-5 ml-2" />
+            </Button>
+          </motion.div>
         </div>
       </section>
 
       {/* Final CTA Section */}
-      <section className="py-20 px-4 bg-gradient-to-br from-primary/10 to-secondary/10">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="font-serif text-4xl font-bold text-foreground mb-4">
-            Streamline Your Real Estate Success
-          </h2>
-          <p className="text-xl text-muted-foreground mb-8">
-            Manage leads, clients, and closings with a platform built for modern real estate professionals.
-          </p>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button 
-              size="lg" 
-              className="bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-6 text-lg"
-              onClick={() => window.location.href = '/signup?persona=realtor-real-estate-professional'}
-            >
-              Start Now
-              <ArrowRight className="ml-2 w-5 h-5" />
-            </Button>
-            <Button 
-              variant="outline" 
-              size="lg" 
-              className="border-primary text-primary hover:bg-primary hover:text-primary-foreground px-8 py-6 text-lg"
-            >
-              Book a Demo
-            </Button>
-          </div>
+      <section className="py-24">
+        <div className="container mx-auto max-w-6xl px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center space-y-8"
+          >
+            <h2 className="font-serif text-5xl font-bold text-foreground">
+              Elevate Your Real Estate Business
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              Close more deals, build stronger client relationships, and simplify your operations.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button 
+                size="lg"
+                onClick={() => navigate('/signup?persona=realtor-real-estate-professional')}
+                className="bg-gradient-to-r from-gold to-gold/90 hover:from-gold/90 hover:to-gold text-navy font-bold px-8 py-4 text-lg"
+              >
+                Start Now
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </Button>
+              
+              <Button 
+                size="lg"
+                variant="outline"
+                onClick={() => navigate('/demo/request')}
+                className="border-emerald text-emerald hover:bg-emerald/10 px-8 py-4 text-lg"
+              >
+                Book a Demo
+                <Globe className="w-5 h-5 ml-2" />
+              </Button>
+            </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* Compliance Footer */}
-      <section className="py-8 px-4 bg-muted/50 border-t">
-        <div className="max-w-6xl mx-auto text-center">
-          <div className="flex items-center justify-center gap-2 mb-2">
-            <Award className="w-5 h-5 text-primary" />
-            <span className="text-sm font-semibold text-foreground">Real Estate Compliance Ready</span>
-          </div>
-          <p className="text-sm text-muted-foreground">
-            Meeting state and brokerage record-keeping regulations with secure transaction management
-          </p>
-        </div>
-      </section>
+      <BrandedFooter />
     </div>
   );
 };
