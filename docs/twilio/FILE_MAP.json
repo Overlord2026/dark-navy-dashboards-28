@@ -1,0 +1,162 @@
+[
+  {
+    "path": "supabase/functions/twilio-send-sms/index.ts",
+    "purpose": "Core SMS sending functionality with advisor phone number lookup",
+    "capability": "SMS messaging",
+    "routes": ["/functions/v1/twilio-send-sms"],
+    "webhooks": ["twilio-sms-webhook for delivery status"],
+    "envKeysUsed": ["TWILIO_ACCOUNT_SID", "TWILIO_AUTH_TOKEN"],
+    "personas": ["advisor", "cpa", "attorney", "insurance", "all"],
+    "notes": "Supports advisor-specific phone numbers, logs to sms_logs table"
+  },
+  {
+    "path": "supabase/functions/twilio-click-to-call/index.ts", 
+    "purpose": "Initiate outbound calls from CRM interface",
+    "capability": "Voice calling",
+    "routes": ["/functions/v1/twilio-click-to-call"],
+    "webhooks": ["twilio-voice-webhook for call status"],
+    "envKeysUsed": ["TWILIO_ACCOUNT_SID", "TWILIO_AUTH_TOKEN"],
+    "personas": ["advisor", "insurance", "attorney"],
+    "notes": "Integrates with call routing table, supports recording"
+  },
+  {
+    "path": "supabase/functions/twilio-voice-webhook/index.ts",
+    "purpose": "Handle Twilio voice webhooks for call status and routing",
+    "capability": "Voice webhook processing",
+    "routes": ["/functions/v1/twilio-voice-webhook"],
+    "webhooks": ["Receives webhooks from Twilio voice API"],
+    "envKeysUsed": ["SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY"],
+    "personas": ["all"],
+    "notes": "Handles inbound/outbound calls, business hours routing, voicemail"
+  },
+  {
+    "path": "supabase/functions/twilio-phone-manager/index.ts",
+    "purpose": "Manage phone number lifecycle (search, purchase, release)",
+    "capability": "Phone number management", 
+    "routes": ["/functions/v1/twilio-phone-manager"],
+    "webhooks": [],
+    "envKeysUsed": ["TWILIO_ACCOUNT_SID", "TWILIO_AUTH_TOKEN"],
+    "personas": ["advisor", "cpa", "attorney", "enterprise"],
+    "notes": "CRUD operations on phone numbers, tenant isolation"
+  },
+  {
+    "path": "supabase/functions/twilio-search-numbers/index.ts",
+    "purpose": "Search available phone numbers by area code",
+    "capability": "Phone number search",
+    "routes": ["/functions/v1/twilio-search-numbers"],
+    "webhooks": [],
+    "envKeysUsed": ["TWILIO_ACCOUNT_SID", "TWILIO_AUTH_TOKEN"],
+    "personas": ["advisor", "cpa", "attorney"],
+    "notes": "Area code based search, returns available numbers list"
+  },
+  {
+    "path": "supabase/functions/twilio-port-number/index.ts",
+    "purpose": "Handle number porting requests and workflows",
+    "capability": "Number porting",
+    "routes": ["/functions/v1/twilio-port-number"],
+    "webhooks": ["send-port-confirmation for notifications"],
+    "envKeysUsed": [],
+    "personas": ["advisor", "cpa", "attorney", "enterprise"],
+    "notes": "Stores port requests, integrates with compliance tracking"
+  },
+  {
+    "path": "supabase/functions/twilio-call-connect/index.ts",
+    "purpose": "TwiML response for connecting calls between parties",
+    "capability": "Call connection",
+    "routes": ["/functions/v1/twilio-call-connect"],
+    "webhooks": ["Called by Twilio during call flow"],
+    "envKeysUsed": [],
+    "personas": ["all"],
+    "notes": "Simple TwiML generation for call bridging"
+  },
+  {
+    "path": "src/components/communications/CommunicationsDashboard.tsx",
+    "purpose": "UI for communication management and controls",
+    "capability": "Communication UI",
+    "routes": ["/communications"],
+    "webhooks": [],
+    "envKeysUsed": [],
+    "personas": ["advisor", "cpa", "attorney"],
+    "notes": "Integrates with all Twilio edge functions, phone number management"
+  },
+  {
+    "path": "src/components/communications/NumberPortingWizard.tsx",
+    "purpose": "UI wizard for number porting workflow",
+    "capability": "Number porting UI",
+    "routes": ["/communications/port"],
+    "webhooks": [],
+    "envKeysUsed": [],
+    "personas": ["advisor", "cpa", "attorney"],
+    "notes": "Multi-step wizard, form validation, progress tracking"
+  },
+  {
+    "path": "src/components/communications/BFOTrainingDashboard.tsx",
+    "purpose": "Training interface for Twilio feature adoption",
+    "capability": "Training and onboarding",
+    "routes": ["/training/communications"],
+    "webhooks": [],
+    "envKeysUsed": [],
+    "personas": ["all"],
+    "notes": "Feature discovery, training progress tracking"
+  },
+  {
+    "path": "src/components/crm/LeadCard.tsx",
+    "purpose": "Lead card with communication quick actions",
+    "capability": "CRM communication integration",
+    "routes": ["/crm", "/pipeline"],
+    "webhooks": [],
+    "envKeysUsed": [],
+    "personas": ["advisor", "cpa", "attorney"],
+    "notes": "Quick actions for call, SMS, email from lead cards"
+  },
+  {
+    "path": "src/services/integrations/ZoomIntegration.ts",
+    "purpose": "Meeting scheduling and recording integration",
+    "capability": "Meeting recording",
+    "routes": [],
+    "webhooks": ["webhook-recording-zoom"],
+    "envKeysUsed": [],
+    "personas": ["advisor", "attorney", "cpa"],
+    "notes": "Complements Twilio voice with video meeting recording"
+  },
+  {
+    "path": "supabase/functions/webhook-recording-zoom/index.ts",
+    "purpose": "Process Zoom meeting recordings",
+    "capability": "Meeting recording processing",
+    "routes": ["/functions/v1/webhook-recording-zoom"],
+    "webhooks": ["Receives Zoom recording webhooks"],
+    "envKeysUsed": [],
+    "personas": ["all"],
+    "notes": "Downloads and processes meeting recordings, stores in Supabase storage"
+  },
+  {
+    "path": "supabase/functions/automated-follow-up/index.ts",
+    "purpose": "Automated SMS and email follow-up campaigns",
+    "capability": "Marketing automation",
+    "routes": ["/functions/v1/automated-follow-up"],
+    "webhooks": [],
+    "envKeysUsed": [],
+    "personas": ["advisor", "cpa", "attorney"],
+    "notes": "Integrates with Twilio for SMS sequences, email automation"
+  },
+  {
+    "path": "src/components/admin/APIIntegrationAudit.tsx",
+    "purpose": "Admin interface for Twilio API monitoring",
+    "capability": "Integration monitoring",
+    "routes": ["/admin/integrations"],
+    "webhooks": [],
+    "envKeysUsed": ["TWILIO_ACCOUNT_SID", "TWILIO_AUTH_TOKEN", "TWILIO_MESSAGING_SID"],
+    "personas": ["admin"],
+    "notes": "Monitors Twilio API health, credentials validation"
+  },
+  {
+    "path": "src/components/admin/QAWarningBanner.tsx",
+    "purpose": "QA environment detection for Twilio testing",
+    "capability": "Testing and QA",
+    "routes": ["/*"],
+    "webhooks": [],
+    "envKeysUsed": ["TWILIO_ACCOUNT_SID", "TWILIO_AUTH_TOKEN", "TWILIO_MESSAGING_SID"],
+    "personas": ["admin", "qa"],
+    "notes": "Warns about missing Twilio configuration in test environments"
+  }
+]

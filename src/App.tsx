@@ -240,10 +240,20 @@ function App() {
                                <React.Suspense fallback={<div>Loading...</div>}>
                                  {React.createElement(React.lazy(() => import('./pages/ValueCalculator')))}
                                </React.Suspense>
-                             } />
-                           <Route path="/auth" element={<AuthPage />} />
-                           <Route path="/auth/:authType" element={<AuthPage />} />
-                             <Route path="/auth/:authType/:tenantId" element={<AuthPage />} />
+                           } />
+                            <Route path="/auth" element={<AuthPage />} />
+                            <Route path="/auth/:authType" element={<AuthPage />} />
+                              <Route path="/auth/:authType/:tenantId" element={<AuthPage />} />
+                              <Route path="/settings/automation" element={
+                                <AuthWrapper requireAuth={true}>
+                                  {React.createElement(React.lazy(() => import('./pages/settings/AutomationSettings')))}
+                                </AuthWrapper>
+                              } />
+                              <Route path="/admin/insights/win-loss" element={
+                                <AuthWrapper requireAuth={true} allowedRoles={['admin', 'system_administrator', 'tenant_admin']}>
+                                  {React.createElement(React.lazy(() => import('./pages/admin/insights/WinLossInsights')))}
+                                </AuthWrapper>
+                              } />
                              
                              {/* Persona Onboarding Routes */}
                              <Route path="/onboarding/:personaId" element={

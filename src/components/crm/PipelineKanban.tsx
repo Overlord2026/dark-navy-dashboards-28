@@ -25,6 +25,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { format } from 'date-fns';
 import { useCelebration } from '@/hooks/useCelebration';
 import { useLeadScoring } from '@/hooks/useLeadScoring';
+import { LeadCard } from './LeadCard';
 import familyOfficeIcons from '@/assets/family-office-icons.png';
 
 interface Lead {
@@ -63,7 +64,8 @@ interface LeadCardProps {
   isMobile: boolean;
 }
 
-function LeadCard({ lead, onEdit, onDelete, onStatusChange, isMobile }: LeadCardProps) {
+// Use imported LeadCard component instead of defining here
+function OldLeadCard({ lead, onEdit, onDelete, onStatusChange, isMobile }: LeadCardProps) {
   const getSWAGScoreBand = (score: number) => {
     if (score >= 85) return { band: 'Gold', color: 'bg-yellow-500/20 text-yellow-700 border-yellow-500/30' };
     if (score >= 70) return { band: 'Silver', color: 'bg-gray-400/20 text-gray-700 border-gray-400/30' };
