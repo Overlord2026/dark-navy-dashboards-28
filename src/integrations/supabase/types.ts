@@ -1657,6 +1657,44 @@ export type Database = {
           },
         ]
       }
+      analytics_scorecard_events: {
+        Row: {
+          created_at: string
+          event_data: Json | null
+          event_type: string
+          id: string
+          session_id: string | null
+          submission_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          event_data?: Json | null
+          event_type: string
+          id?: string
+          session_id?: string | null
+          submission_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          event_data?: Json | null
+          event_type?: string
+          id?: string
+          session_id?: string | null
+          submission_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "analytics_scorecard_events_submission_id_fkey"
+            columns: ["submission_id"]
+            isOneToOne: false
+            referencedRelation: "retirement_confidence_submissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       annual_reviews: {
         Row: {
           areas_for_improvement: string[] | null
@@ -6388,6 +6426,60 @@ export type Database = {
           task_type?: string
           title?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      contacts: {
+        Row: {
+          assigned_advisor_id: string | null
+          created_at: string
+          email: string
+          first_name: string | null
+          follow_up_opt_in: boolean | null
+          id: string
+          last_name: string | null
+          lead_score: number | null
+          lead_source: string | null
+          marketing_opt_in: boolean | null
+          metadata: Json | null
+          phone: string | null
+          pipeline_stage: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          assigned_advisor_id?: string | null
+          created_at?: string
+          email: string
+          first_name?: string | null
+          follow_up_opt_in?: boolean | null
+          id?: string
+          last_name?: string | null
+          lead_score?: number | null
+          lead_source?: string | null
+          marketing_opt_in?: boolean | null
+          metadata?: Json | null
+          phone?: string | null
+          pipeline_stage?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          assigned_advisor_id?: string | null
+          created_at?: string
+          email?: string
+          first_name?: string | null
+          follow_up_opt_in?: boolean | null
+          id?: string
+          last_name?: string | null
+          lead_score?: number | null
+          lead_source?: string | null
+          marketing_opt_in?: boolean | null
+          metadata?: Json | null
+          phone?: string | null
+          pipeline_stage?: string | null
+          updated_at?: string
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -21183,6 +21275,57 @@ export type Database = {
         }
         Relationships: []
       }
+      retirement_confidence_submissions: {
+        Row: {
+          answers_json: Json
+          created_at: string
+          email: string | null
+          first_name: string | null
+          follow_up_opt_in: boolean | null
+          id: string
+          last_name: string | null
+          lead_source: string
+          marketing_opt_in: boolean | null
+          persona: string
+          phone: string | null
+          score: number
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          answers_json: Json
+          created_at?: string
+          email?: string | null
+          first_name?: string | null
+          follow_up_opt_in?: boolean | null
+          id?: string
+          last_name?: string | null
+          lead_source?: string
+          marketing_opt_in?: boolean | null
+          persona?: string
+          phone?: string | null
+          score: number
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          answers_json?: Json
+          created_at?: string
+          email?: string | null
+          first_name?: string | null
+          follow_up_opt_in?: boolean | null
+          id?: string
+          last_name?: string | null
+          lead_source?: string
+          marketing_opt_in?: boolean | null
+          persona?: string
+          phone?: string | null
+          score?: number
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       retirement_plans: {
         Row: {
           balance: number
@@ -21684,6 +21827,50 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      roadmap_intake_sessions: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          id: string
+          pre_filled: boolean | null
+          scorecard_submission_id: string | null
+          session_data: Json
+          status: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          pre_filled?: boolean | null
+          scorecard_submission_id?: string | null
+          session_data?: Json
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          pre_filled?: boolean | null
+          scorecard_submission_id?: string | null
+          session_data?: Json
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "roadmap_intake_sessions_scorecard_submission_id_fkey"
+            columns: ["scorecard_submission_id"]
+            isOneToOne: false
+            referencedRelation: "retirement_confidence_submissions"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       rollup_analytics: {
         Row: {
@@ -28209,6 +28396,10 @@ export type Database = {
       calculate_reserved_profile_analytics: {
         Args: { p_date?: string }
         Returns: undefined
+      }
+      calculate_retirement_confidence_score: {
+        Args: { answers: Json }
+        Returns: number
       }
       calculate_security_score: {
         Args: Record<PropertyKey, never>
