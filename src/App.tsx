@@ -236,7 +236,11 @@ function App() {
                                <Route path="/universal" element={<UniversalLandingPage />} />
                            <Route path="/marketplace" element={<FamilyOfficeMarketplacePage />} />
                             <Route path="/welcome" element={<WelcomePage />} />
-                            <Route path="/value-calculator" element={<ValueCalculator />} />
+                             <Route path="/value-calculator" element={
+                               <React.Suspense fallback={<div>Loading...</div>}>
+                                 {React.createElement(React.lazy(() => import('./pages/ValueCalculator')))}
+                               </React.Suspense>
+                             } />
                            <Route path="/auth" element={<AuthPage />} />
                            <Route path="/auth/:authType" element={<AuthPage />} />
                              <Route path="/auth/:authType/:tenantId" element={<AuthPage />} />
