@@ -1,0 +1,16 @@
+{
+  "decks": [
+    {
+      "id": "client-family-solutions-platform",
+      "title": "Client & Family Solutions – All-in-One Wealth, Health & Legacy Platform",
+      "description": "Comprehensive presentation deck showcasing the all-in-one platform for families to manage wealth, health, and legacy planning",
+      "category": "Client Solutions",
+      "target_audience": "Families, High Net Worth Clients, Pre-retirees, Next-gen",
+      "slides": 8,
+      "created_date": "2025-01-09",
+      "file_path": "/docs/decks/client-family-solutions-platform/",
+      "formats": ["JSON", "PNG"],
+      "tags": ["family", "wealth management", "estate planning", "retirement", "all-in-one", "pricing"]
+    }
+  ]
+}

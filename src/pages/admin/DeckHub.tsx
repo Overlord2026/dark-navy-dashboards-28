@@ -48,6 +48,19 @@ interface Deck {
 // Mock deck data - In production, this would come from Supabase or local storage
 const mockDecks: Deck[] = [
   {
+    id: 'client-family-solutions-platform',
+    title: 'Client & Family Solutions – All-in-One Wealth, Health & Legacy Platform',
+    description: 'Comprehensive presentation deck showcasing the all-in-one platform for families to manage wealth, health, and legacy planning',
+    personas: ['client', 'family', 'hnw_client', 'pre_retiree'],
+    tags: ['family', 'wealth management', 'estate planning', 'retirement', 'all-in-one', 'pricing'],
+    fileType: 'pptx',
+    owner: 'Admin',
+    createdAt: '2025-01-09T00:00:00Z',
+    updatedAt: '2025-01-09T00:00:00Z',
+    status: 'active',
+    route: '/decks/client-family-solutions'
+  },
+  {
     id: 'advisor-sales-deck',
     title: 'Financial Advisor Sales Deck',
     description: 'Complete SWAG™ GPS™ presentation for advisor prospects',

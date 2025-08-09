@@ -1,0 +1,252 @@
+{
+  "title": "Client & Family Solutions – All-in-One Wealth, Health & Legacy Platform",
+  "description": "Your Entire Family's Wealth, Health & Legacy — In One Secure Platform",
+  "brand": "Advanced Wealth Management",
+  "colors": {
+    "primary": "#172042",
+    "secondary": "#00D2FF", 
+    "accent": "#FFC700",
+    "text": "#FFFFFF",
+    "background": "#1E2333"
+  },
+  "slides": [
+    {
+      "id": 1,
+      "title": "Your Entire Family's Wealth, Health & Legacy — In One Secure Platform",
+      "type": "title",
+      "content": {
+        "headline": "Your Entire Family's Wealth, Health & Legacy — In One Secure Platform",
+        "tagline": "From daily finances to 100-year plans, everything you need to protect and grow your life's work.",
+        "hero_image": "/api/placeholder/800/400",
+        "cta": {
+          "text": "Start with a 90-day free trial",
+          "style": "primary-gold",
+          "action": "signup"
+        }
+      }
+    },
+    {
+      "id": 2,
+      "title": "The Problems Families Face",
+      "type": "problem",
+      "content": {
+        "headline": "The Problems Families Face",
+        "problems": [
+          "Scattered accounts, documents, and advisors",
+          "Multiple logins and subscriptions for budgeting, retirement planning, estate planning, and property management",
+          "No single place to track, store, and plan",
+          "Expensive, redundant tools without integration"
+        ],
+        "background_image": "/api/placeholder/1200/600",
+        "visual_style": "dark_overlay"
+      }
+    },
+    {
+      "id": 3,
+      "title": "Our All-in-One Solution",
+      "type": "solution",
+      "content": {
+        "headline": "Our All-in-One Solution",
+        "features": [
+          {
+            "name": "Family Vault™",
+            "description": "Secure storage for wills, trusts, healthcare directives",
+            "icon": "vault"
+          },
+          {
+            "name": "Property & Asset Manager", 
+            "description": "Track homes, rentals, collectibles, digital assets",
+            "icon": "property"
+          },
+          {
+            "name": "SWAG™ Retirement Roadmap",
+            "description": "Stress test and scenario model your future",
+            "icon": "roadmap"
+          },
+          {
+            "name": "Advanced Tax Planning",
+            "description": "Roth conversion analyzer, state residency optimization",
+            "icon": "tax"
+          },
+          {
+            "name": "Estate Planning Suite",
+            "description": "From basic wills to advanced trust calculators",
+            "icon": "estate"
+          },
+          {
+            "name": "Integrated Family Calendar & Budgeting",
+            "description": "Unified financial and life management tools",
+            "icon": "calendar"
+          }
+        ]
+      }
+    },
+    {
+      "id": 4,
+      "title": "Platform in Action",
+      "type": "workflow",
+      "content": {
+        "headline": "Platform in Action",
+        "workflow": [
+          {
+            "step": 1,
+            "title": "Log in to your Family Dashboard",
+            "description": "Single secure access point",
+            "image": "/api/placeholder/300/200"
+          },
+          {
+            "step": 2,
+            "title": "View Net Worth & Key Alerts",
+            "description": "e.g., upcoming tax deadlines",
+            "image": "/api/placeholder/300/200"
+          },
+          {
+            "step": 3,
+            "title": "Scenario Test Your Retirement in SWAG",
+            "description": "Model different scenarios",
+            "image": "/api/placeholder/300/200"
+          },
+          {
+            "step": 4,
+            "title": "Store or Update Estate Documents",
+            "description": "In Family Vault",
+            "image": "/api/placeholder/300/200"
+          },
+          {
+            "step": 5,
+            "title": "Share Access with Trusted Advisors",
+            "description": "Or heirs securely",
+            "image": "/api/placeholder/300/200"
+          }
+        ]
+      }
+    },
+    {
+      "id": 5,
+      "title": "Core Features by Tier",
+      "type": "pricing_matrix",
+      "content": {
+        "headline": "Core Features by Tier",
+        "tiers": [
+          {
+            "name": "Basic",
+            "price": "$19/mo",
+            "features": {
+              "net_worth_tracking": true,
+              "family_vault_storage": true,
+              "budget_tool": true,
+              "swag_retirement_roadmap": false,
+              "advanced_tax_planning": false,
+              "property_manager": false,
+              "dedicated_advisor_access": false,
+              "custom_reports": false,
+              "unlimited_storage_concierge": false
+            }
+          },
+          {
+            "name": "Premium",
+            "price": "$49/mo",
+            "popular": true,
+            "features": {
+              "net_worth_tracking": true,
+              "family_vault_storage": true,
+              "budget_tool": true,
+              "swag_retirement_roadmap": true,
+              "advanced_tax_planning": true,
+              "property_manager": true,
+              "dedicated_advisor_access": true,
+              "custom_reports": false,
+              "unlimited_storage_concierge": false
+            }
+          },
+          {
+            "name": "Elite",
+            "price": "$99/mo",
+            "features": {
+              "net_worth_tracking": true,
+              "family_vault_storage": true,
+              "budget_tool": true,
+              "swag_retirement_roadmap": true,
+              "advanced_tax_planning": true,
+              "property_manager": true,
+              "dedicated_advisor_access": true,
+              "custom_reports": true,
+              "unlimited_storage_concierge": true
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": 6,
+      "title": "Pricing & Savings",
+      "type": "pricing",
+      "content": {
+        "headline": "Pricing & Savings",
+        "billing_options": {
+          "monthly": {
+            "basic": "$19",
+            "premium": "$49",
+            "elite": "$99"
+          },
+          "annual": {
+            "basic": "$200",
+            "premium": "$500", 
+            "elite": "$1,000"
+          }
+        },
+        "savings_callout": "Save up to 16% when billed annually",
+        "savings_style": "green_highlight"
+      }
+    },
+    {
+      "id": 7,
+      "title": "Compliance & Security",
+      "type": "security",
+      "content": {
+        "headline": "Compliance & Security",
+        "security_features": [
+          "End-to-end encryption",
+          "FINRA & SEC best-practice compliant for financial data retention",
+          "HIPAA-aligned health records protection",
+          "Audit-ready storage and activity logs"
+        ],
+        "background_graphic": "shield_lock",
+        "visual_style": "security_focused"
+      }
+    },
+    {
+      "id": 8,
+      "title": "TCO Advantage: All-in-One vs Separate Tools",
+      "type": "comparison",
+      "content": {
+        "headline": "TCO Advantage: All-in-One vs Separate Tools",
+        "comparison": {
+          "without_us": {
+            "title": "Without Us",
+            "tools": [
+              {"name": "Budgeting App", "cost": "$10/mo"},
+              {"name": "Retirement Planner", "cost": "$30/mo"},
+              {"name": "Estate Planning Service", "cost": "$25/mo"},
+              {"name": "Secure Document Vault", "cost": "$15/mo"},
+              {"name": "Tax Planning Tool", "cost": "$20/mo"}
+            ],
+            "total": "~$1,200/year"
+          },
+          "with_us": {
+            "title": "With Us",
+            "plan": "Premium Plan: $500/year",
+            "savings": "~$700/year + full integration, single login, compliance included"
+          }
+        },
+        "final_cta": {
+          "text": "Join Now – Your First 90 Days Are On Us",
+          "style": "primary_action"
+        }
+      }
+    }
+  ],
+  "export_formats": ["JSON", "PNG"],
+  "created_date": "2025-01-09",
+  "version": "1.0"
+}

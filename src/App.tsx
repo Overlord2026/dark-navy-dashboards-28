@@ -137,6 +137,7 @@ import AthleteWealthDeck from './pages/athletes/AthleteWealthDeck';
 import AdvisorDeck from './pages/sales/AdvisorDeck';
 import ClientFamilyDeck from './pages/family/ClientFamilyDeck';
 import AccountantDeck from './pages/accountant/AccountantDeck';
+import ClientFamilySolutionsDeck from '@/components/decks/ClientFamilySolutionsDeck';
 import EstateAttorneyLanding from './pages/estate-attorney/EstateAttorneyLanding';
 import EstateAttorneyOnboarding from './pages/estate-attorney/EstateAttorneyOnboarding';
 import EstateAttorneyDashboard from './pages/estate-attorney/EstateAttorneyDashboard';
@@ -203,6 +204,7 @@ function App() {
         <Route path="/sales/advisor-deck" element={<AdvisorDeck />} />
         <Route path="/family/client-deck" element={<ClientFamilyDeck />} />
         <Route path="/accountant/deck" element={<AccountantDeck />} />
+        <Route path="/decks/client-family-solutions" element={<ClientFamilySolutionsDeck />} />
         <Route path="/estate-attorney" element={<EstateAttorneyLanding />} />
         <Route path="/estate-attorney/onboarding" element={<EstateAttorneyOnboarding />} />
         <Route path="/estate-attorney/dashboard" element={<EstateAttorneyDashboard />} />
