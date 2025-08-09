@@ -280,8 +280,13 @@ function App() {
                                   <React.Suspense fallback={<div>Loading...</div>}>
                                     {React.createElement(React.lazy(() => import('./pages/persona/OrgPersonaPage').then(m => ({ default: m.OrgPersonaPage }))))}
                                   </React.Suspense>
-                                } />
-                                <Route path="/calculator" element={<PublicFeeCalculator />} />
+                                 } />
+                                 <Route path="/client-family-intro" element={
+                                   <React.Suspense fallback={<div>Loading...</div>}>
+                                     {React.createElement(React.lazy(() => import('./pages/ClientFamilyIntroPage').then(m => ({ default: m.ClientFamilyIntroPage }))))}
+                                   </React.Suspense>
+                                 } />
+                                 <Route path="/calculator" element={<PublicFeeCalculator />} />
                                 <Route path="/demo" element={<div className="min-h-screen bg-background p-8"><DemoCalculator /></div>} />
                                 <Route path="/lead-magnet" element={<LeadMagnetPage />} />
                                 <Route path="/marketplace-demo" element={<MarketplaceLandingPage />} />
