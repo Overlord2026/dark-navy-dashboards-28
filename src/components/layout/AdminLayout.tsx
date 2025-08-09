@@ -30,6 +30,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
 
   const adminNavItems = [
     { href: '/admin', icon: Home, label: 'Dashboard' },
+    { href: '/admin/ai-marketing-engine', icon: MessageSquare, label: 'AI Marketing' },
     { href: '/admin/faqs', icon: HelpCircle, label: 'Manage FAQs' },
     { href: '/admin/users', icon: Users, label: 'Users' },
     { href: '/admin/settings', icon: Settings, label: 'Settings' },

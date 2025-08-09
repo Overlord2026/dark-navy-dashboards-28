@@ -65,6 +65,7 @@ import { AdvisorCPARiskDashboard } from "./pages/AdvisorCPARiskDashboard";
 import { TaxRulesAdminPage } from "./pages/TaxRulesAdminPage";
 import { TaxPlatformQAPage } from "./pages/TaxPlatformQAPage";
 import { AdminDashboard } from "./pages/AdminDashboard";
+import { EngineDashboard } from "./pages/marketing/EngineDashboard";
 import CRMDashboardPage from "./pages/CRMDashboardPage";
 import { AccountantDashboard } from "./pages/AccountantDashboard";
 import { ConsultantDashboard } from "./pages/ConsultantDashboard";
@@ -393,6 +394,11 @@ function App() {
                                <AdminDashboard />
                              </AuthWrapper>
                            } />
+                            <Route path="/admin/ai-marketing-engine" element={
+                              <AuthWrapper requireAuth={true} allowedRoles={['admin', 'system_administrator', 'tenant_admin', 'marketing_manager', 'compliance_officer']}>
+                                <EngineDashboard />
+                              </AuthWrapper>
+                            } />
                             <Route path="/admin/layout" element={
                               <AuthWrapper requireAuth={true} allowedRoles={['admin', 'system_administrator', 'tenant_admin']}>
                                 <AdminLayoutSettings />

@@ -27767,7 +27767,7 @@ export type Database = {
         Returns: string
       }
       create_default_onboarding_steps: {
-        Args: { p_user_id: string }
+        Args: { p_user_id?: string }
         Returns: undefined
       }
       create_franchise_referral_payout: {
