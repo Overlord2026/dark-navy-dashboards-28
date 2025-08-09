@@ -1,0 +1,305 @@
+{
+  "deck_id": "attorney-persona-deck",
+  "title": "Attorney Persona Deck – Complete Legal Practice Platform",
+  "description": "Modernize Your Practice Without Adding More Software",
+  "category": "Professional Services",
+  "target_audience": "Attorneys, Estate Planning Lawyers, Legal Practices, Law Firms",
+  "created_date": "2025-01-09",
+  "slides": [
+    {
+      "slide_number": 1,
+      "title": "Attorney Pain Points & Market Context",
+      "content": {
+        "pain_points": [
+          {
+            "category": "Client Expectations",
+            "description": "Increasing demand for digital engagement, secure portals, and real-time communication",
+            "impact": "Client satisfaction and retention challenges"
+          },
+          {
+            "category": "Compliance Burden", 
+            "description": "Rising requirements for document retention, communication logging, and audit trails",
+            "impact": "Increased administrative overhead and liability risk"
+          },
+          {
+            "category": "Fragmented Tools",
+            "description": "Separate CRM, document automation, compliance tracking, and billing systems",
+            "impact": "Operational inefficiency and increased costs"
+          }
+        ],
+        "market_context": "Legal practices need integrated solutions that maintain compliance while delivering modern client experiences and operational efficiency.",
+        "key_stats": [
+          "73% of legal clients expect secure digital portals",
+          "Average firm uses 8+ separate software tools",
+          "Compliance prep takes 40+ hours per audit cycle"
+        ]
+      }
+    },
+    {
+      "slide_number": 2,
+      "title": "Platform Capabilities for Attorneys",
+      "content": {
+        "core_features": [
+          {
+            "feature": "Legal CRM",
+            "description": "Client intake, matter tracking, secure messaging, and billing integration",
+            "benefits": ["Centralized client management", "Automated workflows", "Secure communications"]
+          },
+          {
+            "feature": "Estate Planning Suite",
+            "description": "Advanced calculators, workflow automation, and document generation",
+            "benefits": ["Streamlined estate planning", "Automated document creation", "Compliance tracking"]
+          },
+          {
+            "feature": "SWAG™ Retirement Roadmap",
+            "description": "Integrated legal/financial planning for HNW clients",
+            "benefits": ["Cross-disciplinary planning", "New revenue streams", "Client value enhancement"]
+          },
+          {
+            "feature": "Linda AI Assistant",
+            "description": "Voice/SMS scheduling, meeting summaries, and automated follow-up",
+            "benefits": ["24/7 client service", "Automated scheduling", "Meeting documentation"]
+          }
+        ],
+        "additional_capabilities": [
+          "Automated profile creation from referral/intake data",
+          "Document Vault with privilege protection and audit trails",
+          "Comprehensive compliance automation and reporting",
+          "White-label client portal and branding options"
+        ]
+      }
+    },
+    {
+      "slide_number": 3,
+      "title": "Attorney Workflow Example",
+      "content": {
+        "workflow_stages": [
+          {
+            "stage": 1,
+            "title": "Client Referral",
+            "description": "Referral form or campaign capture with automated UTM tracking"
+          },
+          {
+            "stage": 2,
+            "title": "Auto Profile",
+            "description": "Automated intake form processing and matter tagging"
+          },
+          {
+            "stage": 3,
+            "title": "Portal Invite",
+            "description": "Secure portal invitation with document request checklist"
+          },
+          {
+            "stage": 4,
+            "title": "AI Scheduling",
+            "description": "Linda AI books initial consultation and sends confirmations"
+          },
+          {
+            "stage": 5,
+            "title": "Estate Planning",
+            "description": "Suite engagement with document automation and workflow"
+          },
+          {
+            "stage": 6,
+            "title": "SWAG™ Integration",
+            "description": "Financial planning crossover for high-value clients"
+          },
+          {
+            "stage": 7,
+            "title": "Compliance Archive",
+            "description": "Automated documentation and retention compliance"
+          }
+        ],
+        "key_benefits": [
+          "Reduced client onboarding time from hours to minutes",
+          "Automated compliance documentation throughout process",
+          "Seamless integration between legal and financial planning"
+        ]
+      }
+    },
+    {
+      "slide_number": 4,
+      "title": "ROI & TCO Comparison",
+      "content": {
+        "current_costs": {
+          "clio_case_management": "$89/month",
+          "estate_planning_software": "$129/month", 
+          "compliance_tools": "$79/month",
+          "document_storage": "$39/month",
+          "total_monthly": "$336/month",
+          "total_annual": "$4,032/year"
+        },
+        "our_platform": {
+          "premium_plan": "$199/month",
+          "total_annual": "$2,388/year",
+          "monthly_savings": "$137/month",
+          "annual_savings": "$1,644/year",
+          "percentage_savings": "40.8%"
+        },
+        "competitive_analysis": [
+          {
+            "competitor": "Clio",
+            "strengths": "Strong case management",
+            "weaknesses": "Lacks integrated financial planning tools"
+          },
+          {
+            "competitor": "PracticePanther", 
+            "strengths": "Solid automation features",
+            "weaknesses": "Limited estate planning depth and cross-disciplinary tools"
+          },
+          {
+            "competitor": "WealthCounsel",
+            "strengths": "Strong estate planning documents",
+            "weaknesses": "Lacks CRM integration and marketing automation"
+          }
+        ],
+        "value_proposition": "Full legal CRM + estate suite + financial crossover tools in one integrated platform"
+      }
+    },
+    {
+      "slide_number": 5,
+      "title": "Case Study Example",
+      "content": {
+        "client_profile": {
+          "firm_type": "Estate Planning Firm",
+          "size": "15 attorneys",
+          "location": "Mid-sized metropolitan area"
+        },
+        "results": [
+          {
+            "metric": "Client Throughput",
+            "improvement": "35% increase",
+            "description": "Automated workflows enabled handling more clients with same staff"
+          },
+          {
+            "metric": "Compliance Prep Time",
+            "improvement": "2 weeks → 2 days",
+            "description": "Automated audit preparation and documentation"
+          },
+          {
+            "metric": "New Revenue",
+            "improvement": "$750K annual",
+            "description": "Cross-selling financial planning services to estate clients"
+          }
+        ],
+        "implementation_timeline": [
+          {
+            "phase": "Month 1-2",
+            "focus": "Setup & Training",
+            "activities": ["Platform configuration", "Data migration", "Team training"]
+          },
+          {
+            "phase": "Month 3-6", 
+            "focus": "Process Optimization",
+            "activities": ["Workflow refinement", "Automation deployment", "Client onboarding"]
+          },
+          {
+            "phase": "Month 6+",
+            "focus": "Scale & Expand",
+            "activities": ["Full ROI realization", "New service offerings", "Advanced features"]
+          }
+        ]
+      }
+    },
+    {
+      "slide_number": 6,
+      "title": "Attorney Pricing & Bundles",
+      "content": {
+        "pricing_tiers": [
+          {
+            "plan": "Basic",
+            "price": "$69/month",
+            "target": "Solo practitioners",
+            "features": [
+              "Secure Client Portal",
+              "CLE Tracking", 
+              "Document Vault",
+              "Basic Compliance Tools",
+              "Email Support"
+            ]
+          },
+          {
+            "plan": "Pro",
+            "price": "$129/month",
+            "target": "Growing practices",
+            "popular": true,
+            "features": [
+              "Everything in Basic",
+              "Legal CRM",
+              "Document Automation",
+              "Advanced Estate Planning Calculators",
+              "Workflow Automation",
+              "Phone Support"
+            ]
+          },
+          {
+            "plan": "Premium", 
+            "price": "$199/month",
+            "target": "Full-service firms",
+            "features": [
+              "Everything in Pro",
+              "SWAG™ Retirement Roadmap",
+              "Linda AI Assistant",
+              "White-label Branding",
+              "Advanced Analytics",
+              "Dedicated Success Manager"
+            ]
+          }
+        ],
+        "trial_offer": {
+          "duration": "30 days",
+          "access": "Full access to all features",
+          "requirement": "No credit card required"
+        }
+      }
+    },
+    {
+      "slide_number": 7,
+      "title": "Compliance & Security",
+      "content": {
+        "legal_compliance": [
+          {
+            "standard": "ABA Model Rule 1.6",
+            "description": "Client confidentiality protection with privilege safeguards"
+          },
+          {
+            "standard": "State Bar Compliance",
+            "description": "Meets requirements in all 50 states for attorney practice"
+          },
+          {
+            "standard": "SEC/FINRA Ready",
+            "description": "Supports dual-licensed advisors with integrated compliance"
+          },
+          {
+            "standard": "Automated Retention",
+            "description": "Document lifecycle management with scheduled destruction"
+          }
+        ],
+        "data_security": [
+          {
+            "certification": "SOC 2 Type II",
+            "description": "Certified secure cloud storage with annual audits"
+          },
+          {
+            "certification": "GDPR/CCPA",
+            "description": "Privacy regulation compliant with data protection controls"
+          },
+          {
+            "certification": "End-to-End Encryption",
+            "description": "All data encrypted in transit and at rest"
+          },
+          {
+            "certification": "Complete Audit Trails",
+            "description": "Every action, communication, and document change logged"
+          }
+        ],
+        "compliance_automation": [
+          "Scheduled retention policies and destruction workflows",
+          "Complete audit trails for all system activity",
+          "Attorney-client privilege protection built into every feature",
+          "Comprehensive compliance reports generated in minutes"
+        ]
+      }
+    }
+  ]
+}

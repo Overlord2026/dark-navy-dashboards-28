@@ -35,6 +35,18 @@
       "file_path": "/docs/decks/cpa-persona-deck/",
       "formats": ["JSON", "PNG", "PDF"],
       "tags": ["cpa", "accounting", "tax planning", "compliance", "practice management", "ROI", "automation", "advisory"]
+    },
+    {
+      "id": "attorney-persona-deck",
+      "title": "Attorney Persona Deck – Complete Legal Practice Platform",
+      "description": "Modernize Your Practice Without Adding More Software",
+      "category": "Professional Services",
+      "target_audience": "Attorneys, Estate Planning Lawyers, Legal Practices, Law Firms",
+      "slides": 7,
+      "created_date": "2025-01-09",
+      "file_path": "/docs/decks/attorney-persona-deck/",
+      "formats": ["JSON", "PNG"],
+      "tags": ["attorney", "legal", "estate planning", "compliance", "CRM", "practice management", "automation", "AI"]
     }
   ]
 }
