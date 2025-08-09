@@ -1,0 +1,50 @@
+More Revenue, Less Admin — Here's How
+
+Hi {{first_name}},
+
+Yesterday I showed you how CPAs are losing $150K annually to inefficient systems. Today, let me show you exactly how our integrated platform stacks up against what you're probably using now.
+
+THE CURRENT CPA SOFTWARE LANDSCAPE:
+
+Thomson Reuters Onvio: $89/mo
+• What you get: Tax compliance, workflow
+• What's missing: No wealth tools, limited automation
+
+Intuit ProConnect: $55/mo  
+• What you get: Tax prep, user-friendly
+• What's missing: No CRM, no automation, no advisory
+
+Xero Practice Manager: $70/mo
+• What you get: Good accounting integration  
+• What's missing: Limited client tools, no advisory
+
++ Document Storage: $25/mo
++ CRM System: $45/mo
+
+TOTAL CURRENT COST: $284/mo ($3,408/year)
+
+OUR INTEGRATED PLATFORM: $99/mo
+✓ Everything above included
+✓ AI automation  
+✓ Built-in compliance
+✓ Advisory tools
+✓ Unified workflow
+
+YOUR ANNUAL SAVINGS: $2,220 (65% reduction)
+Plus: Unified workflow, automatic compliance, and advisory revenue opportunities
+
+REAL CPA SUCCESS STORY:
+"We consolidated from 5 different systems to one platform. Not only did we save $2,200 annually, but we increased our advisory revenue by $75K in the first 6 months. The automation features gave us back 4 hours per day."
+— Sarah Peterson, Peterson & Associates CPA (250 clients)
+
+BOOK YOUR 15-MINUTE DEMO:
+{{demo_link}}
+
+In tomorrow's email: I'll share the exact ROI calculations and show you how to calculate your potential growth with our free ROI tool.
+
+Best regards,
+{{sender_name}}
+CPA Practice Growth Specialist
+
+Advanced Wealth Management | Built for CPA Practices
+Unsubscribe: {{unsubscribe_link}} | Compliance: {{compliance_link}}

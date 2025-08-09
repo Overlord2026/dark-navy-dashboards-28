@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>More Revenue, Less Admin</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; }
+        .header { background: #172042; color: white; padding: 20px; text-align: center; }
+        .content { padding: 20px; }
+        .cta { background: #FFC700; color: #172042; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block; margin: 20px 0; }
+        .comparison-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .comparison-table th, .comparison-table td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        .comparison-table th { background: #172042; color: white; }
+        .our-solution { background: #e8f5e8; }
+        .competitor { background: #fff2f2; }
+        .footer { background: #f1f1f1; padding: 20px; text-align: center; font-size: 12px; color: #666; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>More Revenue, Less Admin — Here's How</h1>
+    </div>
+    
+    <div class="content">
+        <p>Hi {{first_name}},</p>
+        
+        <p>Yesterday I showed you how CPAs are losing $150K annually to inefficient systems. Today, let me show you exactly how our integrated platform stacks up against what you're probably using now.</p>
+        
+        <h3>The Current CPA Software Landscape:</h3>
+        
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Platform</th>
+                    <th>Monthly Cost</th>
+                    <th>What You Get</th>
+                    <th>What's Missing</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="competitor">
+                    <td><strong>Thomson Reuters Onvio</strong></td>
+                    <td>$89/mo</td>
+                    <td>Tax compliance, workflow</td>
+                    <td>No wealth tools, limited automation</td>
+                </tr>
+                <tr class="competitor">
+                    <td><strong>Intuit ProConnect</strong></td>
+                    <td>$55/mo</td>
+                    <td>Tax prep, user-friendly</td>
+                    <td>No CRM, no automation, no advisory</td>
+                </tr>
+                <tr class="competitor">
+                    <td><strong>Xero Practice Manager</strong></td>
+                    <td>$70/mo</td>
+                    <td>Good accounting integration</td>
+                    <td>Limited client tools, no advisory</td>
+                </tr>
+                <tr class="competitor">
+                    <td><strong>+ Document Storage</strong></td>
+                    <td>$25/mo</td>
+                    <td>File storage</td>
+                    <td>No integration, basic security</td>
+                </tr>
+                <tr class="competitor">
+                    <td><strong>+ CRM System</strong></td>
+                    <td>$45/mo</td>
+                    <td>Client management</td>
+                    <td>Not CPA-specific, no compliance</td>
+                </tr>
+                <tr style="border-top: 3px solid #172042;">
+                    <td><strong>TOTAL CURRENT COST</strong></td>
+                    <td><strong>$284/mo</strong></td>
+                    <td colspan="2"><strong>$3,408/year for disconnected tools</strong></td>
+                </tr>
+                <tr class="our-solution">
+                    <td><strong>Our Integrated Platform</strong></td>
+                    <td><strong>$99/mo</strong></td>
+                    <td><strong>Everything above + AI automation + compliance + advisory tools</strong></td>
+                    <td><strong>Nothing — it's all included</strong></td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div style="background: #e8f5e8; padding: 20px; border-radius: 8px; text-align: center; margin: 20px 0;">
+            <h3 style="color: #2d5a2d; margin-top: 0;">Your Annual Savings: $2,220 (65% reduction)</h3>
+            <p style="margin-bottom: 0;"><strong>Plus:</strong> Unified workflow, automatic compliance, and advisory revenue opportunities</p>
+        </div>
+        
+        <h3>Real CPA Success Story:</h3>
+        <p><em>"We consolidated from 5 different systems to one platform. Not only did we save $2,200 annually, but we increased our advisory revenue by $75K in the first 6 months. The automation features gave us back 4 hours per day."</em></p>
+        <p><strong>— Sarah Peterson, Peterson & Associates CPA (250 clients)</strong></p>
+        
+        <div style="text-align: center;">
+            <a href="{{demo_link}}" class="cta">Book Your 15-Minute Demo</a>
+        </div>
+        
+        <p><strong>In tomorrow's email:</strong> I'll share the exact ROI calculations and show you how to calculate your potential growth with our free ROI tool.</p>
+        
+        <p>Best regards,<br>
+        {{sender_name}}<br>
+        CPA Practice Growth Specialist</p>
+    </div>
+    
+    <div class="footer">
+        <p>Advanced Wealth Management | Built for CPA Practices<br>
+        <a href="{{unsubscribe_link}}">Unsubscribe</a> | <a href="{{compliance_link}}">Compliance</a></p>
+    </div>
+</body>
+</html>

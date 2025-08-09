@@ -1,0 +1,615 @@
+{
+  "workflow_name": "CPA Persona Onboarding",
+  "description": "Complete onboarding workflow for CPAs and accounting professionals",
+  "target_persona": "cpa_accountant",
+  "stages": [
+    {
+      "stage_id": 1,
+      "stage_name": "Lead Capture",
+      "duration": "Day 0",
+      "triggers": {
+        "marketing_sources": [
+          {
+            "source": "linkedin_ads",
+            "utm_parameters": "?utm_source=linkedin&utm_medium=cpc&utm_campaign=cpa_acquisition",
+            "landing_page": "/cpa-solutions",
+            "lead_score_boost": 10
+          },
+          {
+            "source": "professional_referral",
+            "utm_parameters": "?utm_source=referral&utm_medium=professional&utm_campaign=cpa_referral",
+            "landing_page": "/cpa-referral",
+            "lead_score_boost": 25
+          },
+          {
+            "source": "accounting_association",
+            "utm_parameters": "?utm_source=association&utm_medium=event&utm_campaign=cpa_events",
+            "landing_page": "/cpa-association",
+            "lead_score_boost": 15
+          }
+        ],
+        "form_fields": [
+          "first_name",
+          "last_name",
+          "email",
+          "phone",
+          "firm_name",
+          "practice_size",
+          "current_software",
+          "primary_challenge"
+        ]
+      },
+      "automations": [
+        {
+          "action": "lead_scoring",
+          "criteria": {
+            "firm_size_large": 20,
+            "existing_advisory_services": 15,
+            "current_software_gaps": 10,
+            "geographic_location": 5
+          }
+        },
+        {
+          "action": "persona_tagging",
+          "tags": ["cpa", "tax_professional", "accounting_firm"]
+        },
+        {
+          "action": "crm_creation",
+          "platform": "integrated_crm",
+          "data_mapping": {
+            "contact_type": "cpa_prospect",
+            "lead_source": "utm_source",
+            "practice_profile": "form_responses"
+          }
+        }
+      ],
+      "next_stage_triggers": [
+        {
+          "condition": "form_submitted",
+          "delay": "immediate",
+          "action": "advance_to_stage_2"
+        }
+      ]
+    },
+    {
+      "stage_id": 2,
+      "stage_name": "Automated Profile Creation",
+      "duration": "Day 0-1",
+      "triggers": {
+        "data_enrichment": [
+          {
+            "source": "linkedin_api",
+            "fields": ["company_size", "industry_specialization", "professional_background"]
+          },
+          {
+            "source": "firmographic_data",
+            "fields": ["annual_revenue", "client_count", "service_offerings"]
+          }
+        ]
+      },
+      "automations": [
+        {
+          "action": "profile_completion",
+          "data_sources": [
+            "form_submission",
+            "linkedin_enrichment",
+            "public_business_records"
+          ],
+          "profile_fields": {
+            "practice_specialty": ["tax_prep", "advisory", "bookkeeping", "audit"],
+            "client_types": ["individual", "small_business", "corporate"],
+            "technology_stack": ["current_software", "integration_needs"],
+            "growth_goals": ["expand_advisory", "increase_efficiency", "compliance_automation"]
+          }
+        },
+        {
+          "action": "segmentation",
+          "segments": [
+            {
+              "name": "solo_practitioner",
+              "criteria": "employees <= 2",
+              "workflow": "solo_cpa_track"
+            },
+            {
+              "name": "small_firm",
+              "criteria": "employees 3-10",
+              "workflow": "small_firm_track"
+            },
+            {
+              "name": "mid_size_firm",
+              "criteria": "employees 11-50",
+              "workflow": "mid_firm_track"
+            },
+            {
+              "name": "large_firm",
+              "criteria": "employees > 50",
+              "workflow": "enterprise_track"
+            }
+          ]
+        }
+      ],
+      "deliverables": [
+        {
+          "type": "welcome_email",
+          "template": "cpa_welcome_sequence_1",
+          "personalization": ["first_name", "firm_name", "practice_size"]
+        },
+        {
+          "type": "resource_packet",
+          "content": [
+            "CPA Platform Overview PDF",
+            "Compliance Checklist",
+            "ROI Calculator Spreadsheet"
+          ]
+        }
+      ],
+      "next_stage_triggers": [
+        {
+          "condition": "profile_completed",
+          "delay": "4_hours",
+          "action": "advance_to_stage_3"
+        }
+      ]
+    },
+    {
+      "stage_id": 3,
+      "stage_name": "Demo Scheduling",
+      "duration": "Day 1-3",
+      "triggers": {
+        "calendar_integration": {
+          "platform": "calendly_api",
+          "demo_types": [
+            {
+              "type": "standard_demo",
+              "duration": 30,
+              "focus": "platform_overview"
+            },
+            {
+              "type": "workflow_demo",
+              "duration": 45,
+              "focus": "specific_use_cases"
+            },
+            {
+              "type": "technical_demo",
+              "duration": 60,
+              "focus": "integration_migration"
+            }
+          ]
+        }
+      },
+      "automations": [
+        {
+          "action": "demo_preparation",
+          "customization": {
+            "demo_script": "cpa_persona_specific",
+            "use_cases": "practice_size_appropriate",
+            "roi_examples": "segment_specific"
+          }
+        },
+        {
+          "action": "pre_demo_email",
+          "send_time": "24_hours_before",
+          "content": [
+            "Demo agenda",
+            "Questions to consider",
+            "Current state assessment"
+          ]
+        },
+        {
+          "action": "reminder_sequence",
+          "reminders": [
+            {
+              "time": "24_hours",
+              "method": "email",
+              "template": "demo_reminder_1"
+            },
+            {
+              "time": "2_hours",
+              "method": "sms",
+              "template": "demo_reminder_sms"
+            }
+          ]
+        }
+      ],
+      "next_stage_triggers": [
+        {
+          "condition": "demo_scheduled",
+          "delay": "immediate",
+          "action": "advance_to_stage_4"
+        },
+        {
+          "condition": "no_response_72_hours",
+          "delay": "72_hours",
+          "action": "nurture_sequence"
+        }
+      ]
+    },
+    {
+      "stage_id": 4,
+      "stage_name": "Document Request & Portal Setup",
+      "duration": "Day 2-5",
+      "triggers": {
+        "demo_completion": {
+          "qualified": true,
+          "interest_level": "high"
+        }
+      },
+      "automations": [
+        {
+          "action": "secure_portal_creation",
+          "security_settings": {
+            "encryption": "AES_256",
+            "access_controls": "role_based",
+            "audit_logging": "enabled",
+            "retention_policy": "7_years"
+          }
+        },
+        {
+          "action": "document_request_templates",
+          "templates": [
+            {
+              "name": "tax_document_checklist",
+              "documents": [
+                "Prior year tax returns",
+                "Financial statements",
+                "Chart of accounts",
+                "Client list (anonymized)",
+                "Current software exports"
+              ]
+            },
+            {
+              "name": "practice_assessment_form",
+              "sections": [
+                "Current workflow",
+                "Pain points",
+                "Technology needs",
+                "Growth objectives"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "compliance_setup",
+          "configurations": [
+            {
+              "irs_publication_4557": "enabled",
+              "state_requirements": "auto_detect",
+              "retention_policies": "automatic",
+              "audit_trails": "comprehensive"
+            }
+          ]
+        }
+      ],
+      "deliverables": [
+        {
+          "type": "secure_portal_access",
+          "credentials": "encrypted_delivery",
+          "setup_guide": "step_by_step_video"
+        },
+        {
+          "type": "migration_planning",
+          "content": [
+            "Data migration checklist",
+            "Timeline estimation",
+            "Support resources"
+          ]
+        }
+      ],
+      "next_stage_triggers": [
+        {
+          "condition": "documents_uploaded",
+          "delay": "immediate",
+          "action": "advance_to_stage_5"
+        }
+      ]
+    },
+    {
+      "stage_id": 5,
+      "stage_name": "AI Meeting Summary & Task Assignment",
+      "duration": "Day 3-7",
+      "triggers": {
+        "meeting_completion": {
+          "type": "discovery_meeting",
+          "recording_available": true
+        }
+      },
+      "automations": [
+        {
+          "action": "linda_ai_processing",
+          "capabilities": [
+            {
+              "function": "meeting_transcription",
+              "accuracy": "95_percent",
+              "turnaround": "30_minutes"
+            },
+            {
+              "function": "action_item_extraction",
+              "categories": ["follow_ups", "technical_requirements", "decision_points"]
+            },
+            {
+              "function": "sentiment_analysis",
+              "metrics": ["interest_level", "objections", "urgency"]
+            }
+          ]
+        },
+        {
+          "action": "task_creation",
+          "task_types": [
+            {
+              "category": "technical_setup",
+              "assignee": "implementation_team",
+              "priority": "high"
+            },
+            {
+              "category": "follow_up_questions",
+              "assignee": "account_manager",
+              "priority": "medium"
+            },
+            {
+              "category": "proposal_customization",
+              "assignee": "sales_engineer",
+              "priority": "high"
+            }
+          ]
+        },
+        {
+          "action": "crm_update",
+          "fields": [
+            "opportunity_stage",
+            "decision_timeline",
+            "budget_confirmed",
+            "technical_requirements",
+            "key_stakeholders"
+          ]
+        }
+      ],
+      "deliverables": [
+        {
+          "type": "meeting_summary",
+          "recipients": ["prospect", "internal_team"],
+          "sections": ["discussion_points", "action_items", "next_steps"]
+        },
+        {
+          "type": "custom_proposal",
+          "components": [
+            "Pricing based on practice size",
+            "Implementation timeline",
+            "ROI projections",
+            "Compliance benefits"
+          ]
+        }
+      ],
+      "next_stage_triggers": [
+        {
+          "condition": "proposal_delivered",
+          "delay": "24_hours",
+          "action": "advance_to_stage_6"
+        }
+      ]
+    },
+    {
+      "stage_id": 6,
+      "stage_name": "Tax Strategy Delivery & Upsell",
+      "duration": "Day 5-10",
+      "triggers": {
+        "proposal_interest": {
+          "level": "qualified",
+          "budget_confirmed": true
+        }
+      },
+      "automations": [
+        {
+          "action": "tax_strategy_report",
+          "components": [
+            {
+              "section": "multi_year_planning",
+              "analysis": [
+                "Income projection",
+                "Deduction optimization",
+                "Entity structure review"
+              ]
+            },
+            {
+              "section": "roth_conversion_analysis",
+              "scenarios": [
+                "Current strategy",
+                "Optimized conversion schedule",
+                "Tax savings projection"
+              ]
+            },
+            {
+              "section": "state_residency_optimization",
+              "considerations": [
+                "Tax implications",
+                "Compliance requirements",
+                "Timing strategies"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "advisory_service_introduction",
+          "services": [
+            {
+              "name": "SWAG Retirement Roadmap",
+              "value_prop": "Expand beyond tax prep to full retirement planning",
+              "revenue_potential": "$500_per_client_annually"
+            },
+            {
+              "name": "Estate Planning Suite",
+              "value_prop": "Complete estate planning automation",
+              "revenue_potential": "$1000_per_estate_plan"
+            }
+          ]
+        },
+        {
+          "action": "roi_demonstration",
+          "calculations": [
+            {
+              "metric": "time_savings",
+              "current_hours": "manual_calculation",
+              "automated_hours": "platform_calculation",
+              "hourly_rate": "cpa_billing_rate"
+            },
+            {
+              "metric": "revenue_opportunity",
+              "current_services": "tax_only",
+              "expanded_services": "advisory_included",
+              "client_retention": "improvement_percentage"
+            }
+          ]
+        }
+      ],
+      "deliverables": [
+        {
+          "type": "comprehensive_tax_strategy",
+          "format": "branded_pdf_report",
+          "customization": "firm_specific"
+        },
+        {
+          "type": "advisory_service_overview",
+          "content": [
+            "Service expansion roadmap",
+            "Training and certification paths",
+            "Marketing support materials"
+          ]
+        }
+      ],
+      "next_stage_triggers": [
+        {
+          "condition": "positive_response",
+          "delay": "immediate",
+          "action": "advance_to_stage_7"
+        },
+        {
+          "condition": "additional_consideration_needed",
+          "delay": "48_hours",
+          "action": "extended_nurture"
+        }
+      ]
+    },
+    {
+      "stage_id": 7,
+      "stage_name": "Quarterly Engagement & ROI Tracking",
+      "duration": "Ongoing",
+      "triggers": {
+        "contract_signed": true,
+        "implementation_complete": true
+      },
+      "automations": [
+        {
+          "action": "quarterly_review_scheduling",
+          "cadence": "every_90_days",
+          "meeting_types": [
+            {
+              "type": "performance_review",
+              "metrics": ["usage_analytics", "roi_achievement", "client_satisfaction"]
+            },
+            {
+              "type": "growth_planning",
+              "focus": ["service_expansion", "efficiency_improvements", "technology_updates"]
+            }
+          ]
+        },
+        {
+          "action": "roi_tracking",
+          "metrics": [
+            {
+              "category": "time_savings",
+              "measurements": ["onboarding_time", "document_processing", "report_generation"]
+            },
+            {
+              "category": "revenue_growth",
+              "measurements": ["new_advisory_clients", "service_expansion", "client_retention"]
+            },
+            {
+              "category": "compliance_efficiency",
+              "measurements": ["audit_preparation_time", "error_reduction", "client_satisfaction"]
+            }
+          ]
+        },
+        {
+          "action": "expansion_opportunities",
+          "triggers": [
+            {
+              "condition": "high_usage_adoption",
+              "recommendation": "premium_tier_upgrade"
+            },
+            {
+              "condition": "team_growth",
+              "recommendation": "additional_user_licenses"
+            },
+            {
+              "condition": "service_diversification",
+              "recommendation": "estate_planning_module"
+            }
+          ]
+        }
+      ],
+      "success_metrics": [
+        {
+          "metric": "onboarding_time_reduction",
+          "target": "90_percent_improvement",
+          "measurement": "hours_to_minutes"
+        },
+        {
+          "metric": "advisory_revenue_increase",
+          "target": "$50000_annual_minimum",
+          "measurement": "new_service_revenue"
+        },
+        {
+          "metric": "client_satisfaction",
+          "target": "90_percent_satisfaction",
+          "measurement": "quarterly_surveys"
+        },
+        {
+          "metric": "compliance_confidence",
+          "target": "100_percent_audit_readiness",
+          "measurement": "compliance_score"
+        }
+      ]
+    }
+  ],
+  "integration_points": {
+    "crm": {
+      "platform": "integrated_system",
+      "data_sync": "real_time",
+      "lead_scoring": "automatic"
+    },
+    "email_automation": {
+      "platform": "resend_integration",
+      "personalization": "dynamic",
+      "tracking": "comprehensive"
+    },
+    "calendar": {
+      "scheduling": "automated",
+      "reminders": "multi_channel",
+      "timezone_handling": "automatic"
+    },
+    "document_management": {
+      "security": "enterprise_grade",
+      "compliance": "automatic",
+      "audit_trails": "complete"
+    }
+  },
+  "fallback_sequences": {
+    "no_response": {
+      "trigger": "72_hours_no_engagement",
+      "action": "nurture_sequence",
+      "duration": "30_days",
+      "touchpoints": ["educational_content", "case_studies", "industry_insights"]
+    },
+    "not_qualified": {
+      "trigger": "budget_mismatch",
+      "action": "long_term_nurture",
+      "duration": "6_months",
+      "touchpoints": ["industry_updates", "educational_webinars", "competitive_intelligence"]
+    },
+    "competitor_evaluation": {
+      "trigger": "considering_alternatives",
+      "action": "competitive_comparison",
+      "duration": "14_days",
+      "touchpoints": ["feature_comparisons", "roi_analysis", "migration_case_studies"]
+    }
+  }
+}

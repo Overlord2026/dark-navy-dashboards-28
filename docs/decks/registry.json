@@ -23,6 +23,18 @@
       "file_path": "/docs/decks/advisor-persona-deck/",
       "formats": ["JSON", "PNG"],
       "tags": ["advisor", "financial planning", "compliance", "CRM", "lead generation", "ROI", "automation", "AI"]
+    },
+    {
+      "id": "cpa-persona-deck",
+      "title": "CPA/Accountant Go-To-Market Deck",
+      "description": "CPA Practice Transformation: From Overwhelmed to Optimized",
+      "category": "Professional Services",
+      "target_audience": "CPAs, Accounting Firms, Tax Professionals, Bookkeepers",
+      "slides": 7,
+      "created_date": "2025-01-09",
+      "file_path": "/docs/decks/cpa-persona-deck/",
+      "formats": ["JSON", "PNG", "PDF"],
+      "tags": ["cpa", "accounting", "tax planning", "compliance", "practice management", "ROI", "automation", "advisory"]
     }
   ]
 }

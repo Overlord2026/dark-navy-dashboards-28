@@ -1,0 +1,304 @@
+{
+  "title": "CPA/Accountant Go-To-Market Deck",
+  "description": "CPA Practice Transformation: From Overwhelmed to Optimized",
+  "brand": "Advanced Wealth Management",
+  "target_audience": "CPAs, Accounting Firms, Tax Professionals, Bookkeepers",
+  "colors": {
+    "primary": "#172042",
+    "secondary": "#00D2FF", 
+    "accent": "#FFC700",
+    "text": "#FFFFFF",
+    "background": "#1E2333"
+  },
+  "slides": [
+    {
+      "id": 1,
+      "title": "CPA Pain Points & Industry Context",
+      "type": "problem_analysis",
+      "content": {
+        "headline": "CPA Practice Transformation: From Overwhelmed to Optimized",
+        "subhead": "Stop juggling multiple systems and start delivering strategic value to your clients",
+        "pain_points": [
+          {
+            "category": "Seasonal Workload Spikes",
+            "description": "80+ hour weeks during tax season",
+            "impact": "Burnout and reduced service quality"
+          },
+          {
+            "category": "Client Data Chaos",
+            "description": "Scattered documents, multiple systems",
+            "impact": "Inefficient workflow and errors"
+          },
+          {
+            "category": "Limited Cross-Sell Services",
+            "description": "Stuck in compliance-only mode",
+            "impact": "$150K average lost revenue per year"
+          },
+          {
+            "category": "Compliance Burden",
+            "description": "IRS/state regulations, retention rules",
+            "impact": "Risk of penalties and audit failures"
+          }
+        ],
+        "industry_stats": {
+          "workload": "73% of CPAs work 50+ hours during peak season",
+          "lost_revenue": "$150K average lost revenue per year from missed advisory opportunities",
+          "retention_improvement": "45% client retention improvement with integrated wealth planning"
+        }
+      }
+    },
+    {
+      "id": 2,
+      "title": "Platform Capabilities for CPAs",
+      "type": "solution_overview",
+      "content": {
+        "headline": "Everything CPAs need to scale and serve",
+        "subhead": "Integrated tools that transform your practice from reactive to strategic",
+        "capabilities": [
+          {
+            "name": "Secure Client Portal",
+            "description": "Encrypted document vault with permission-based access and audit trails",
+            "icon": "lock"
+          },
+          {
+            "name": "Advanced Tax Planning",
+            "description": "Multi-year forecasting, Roth conversions, state residency optimization",
+            "icon": "calculator"
+          },
+          {
+            "name": "SWAG™ Retirement Roadmap",
+            "description": "Integrated wealth planning for client advisory services",
+            "icon": "trending_up"
+          },
+          {
+            "name": "Linda AI Assistant",
+            "description": "Voice/SMS automation for scheduling and client follow-ups",
+            "icon": "zap"
+          },
+          {
+            "name": "Lead-to-Sales CRM",
+            "description": "ROI analytics and smart cadences for practice growth",
+            "icon": "users"
+          },
+          {
+            "name": "Estate Planning Suite",
+            "description": "Cross-service opportunities with trust and will automation",
+            "icon": "file_text"
+          }
+        ]
+      }
+    },
+    {
+      "id": 3,
+      "title": "CPA Workflow Example",
+      "type": "workflow_demonstration",
+      "content": {
+        "headline": "From Lead to Strategic Advisory — Fully Automated",
+        "workflow_steps": [
+          {
+            "step": 1,
+            "title": "Lead Capture",
+            "description": "Ad/referral with UTM tracking",
+            "automation": "Automatic lead scoring and routing"
+          },
+          {
+            "step": 2,
+            "title": "Profile Creation",
+            "description": "Automated client onboarding",
+            "automation": "CPA-specific intake forms and document requests"
+          },
+          {
+            "step": 3,
+            "title": "Document Request",
+            "description": "Secure portal templates",
+            "automation": "Tax document checklists and compliance reminders"
+          },
+          {
+            "step": 4,
+            "title": "AI Meeting Summary",
+            "description": "Auto task creation",
+            "automation": "Linda AI transcription and action items"
+          },
+          {
+            "step": 5,
+            "title": "Tax Strategy",
+            "description": "Multi-year planning reports",
+            "automation": "Automated scenario modeling and optimization"
+          },
+          {
+            "step": 6,
+            "title": "Compliance Storage",
+            "description": "Audit-ready archives",
+            "automation": "Automatic retention policies and backup"
+          }
+        ],
+        "key_benefits": {
+          "onboarding_time": "2 hours → 20 min",
+          "advisory_revenue": "$75K+ additional revenue",
+          "compliance_automation": "100% automated compliance"
+        }
+      }
+    },
+    {
+      "id": 4,
+      "title": "ROI & TCO Comparison",
+      "type": "cost_analysis",
+      "content": {
+        "headline": "Stop paying multiple vendors for less",
+        "current_costs": {
+          "thomson_reuters_onvio": "$89/mo",
+          "intuit_proconnect": "$55/mo",
+          "xero_practice_manager": "$70/mo",
+          "document_storage": "$25/mo",
+          "crm_system": "$45/mo",
+          "total_monthly": "$284/mo",
+          "total_annual": "$3,408/year"
+        },
+        "our_solution": {
+          "pro_plan": "$99/mo",
+          "annual_cost": "$1,188/year",
+          "savings": "$2,220/year (65%)",
+          "included_features": [
+            "Secure client portal & document vault",
+            "Advanced tax planning tools",
+            "SWAG™ Retirement Roadmap",
+            "Linda AI automation",
+            "CRM with ROI analytics",
+            "Full compliance automation"
+          ]
+        }
+      }
+    },
+    {
+      "id": 5,
+      "title": "Case Study: Peterson & Associates CPA",
+      "type": "case_study",
+      "content": {
+        "headline": "Real Results: Peterson & Associates CPA",
+        "subhead": "How a 250-client firm transformed their practice in 6 months",
+        "before_metrics": {
+          "onboarding_time": "2 hours",
+          "software_costs": "$284/mo",
+          "advisory_clients": "15%",
+          "admin_time": "6 hours/week"
+        },
+        "after_metrics": {
+          "onboarding_time": "20 minutes",
+          "software_costs": "$99/mo",
+          "advisory_clients": "65%",
+          "admin_time": "2 hours/week"
+        },
+        "six_month_results": {
+          "new_revenue": "$75K",
+          "client_satisfaction": "92%",
+          "daily_time_savings": "4 hours"
+        }
+      }
+    },
+    {
+      "id": 6,
+      "title": "CPA Pricing & Bundles",
+      "type": "pricing",
+      "content": {
+        "headline": "Choose your CPA growth plan",
+        "subhead": "Designed specifically for accounting practices",
+        "tiers": [
+          {
+            "name": "Basic",
+            "price": "$49/mo",
+            "description": "Essential tools for client management",
+            "features": {
+              "secure_client_portal": true,
+              "document_vault": true,
+              "ce_tracking": true,
+              "tax_optimization_workflows": false,
+              "linda_ai_automation": false,
+              "swag_retirement_roadmap": false,
+              "estate_planning_suite": false,
+              "white_label_portal": false
+            }
+          },
+          {
+            "name": "Pro",
+            "price": "$99/mo",
+            "description": "Complete practice automation",
+            "popular": true,
+            "features": {
+              "secure_client_portal": true,
+              "document_vault": true,
+              "ce_tracking": true,
+              "tax_optimization_workflows": true,
+              "linda_ai_automation": true,
+              "workflow_automation": true,
+              "crm_roi_analytics": true,
+              "swag_retirement_roadmap": false,
+              "estate_planning_suite": false,
+              "white_label_portal": false
+            }
+          },
+          {
+            "name": "Premium",
+            "price": "$159/mo",
+            "description": "Full advisory practice suite",
+            "features": {
+              "everything_in_pro": true,
+              "swag_retirement_roadmap": true,
+              "estate_planning_suite": true,
+              "white_label_portal": true,
+              "priority_support": true
+            }
+          }
+        ],
+        "guarantee": "All plans include free migration assistance and 30-day money-back guarantee"
+      }
+    },
+    {
+      "id": 7,
+      "title": "Compliance & Security",
+      "type": "compliance_overview",
+      "content": {
+        "headline": "Compliance-first platform design",
+        "subhead": "Built for CPA practices with regulatory requirements in mind",
+        "regulatory_compliance": [
+          "IRS Publication 4557 safeguards",
+          "State-specific requirements built-in",
+          "Automatic record retention policies",
+          "AICPA standards alignment"
+        ],
+        "security_privacy": [
+          "SOC 2 Type II certified",
+          "GDPR & CCPA data privacy",
+          "End-to-end encryption",
+          "Audit-ready activity logs"
+        ],
+        "audit_trail": "Every client communication, document access, and system action is automatically logged with timestamps, user identification, and IP addresses. Generate compliance reports in seconds, not hours."
+      }
+    }
+  ],
+  "competitive_analysis": {
+    "competitors": [
+      {
+        "name": "Thomson Reuters Onvio",
+        "strengths": ["Strong tax compliance", "Professional workflow"],
+        "weaknesses": ["Weak integrated wealth tools", "Limited automation"],
+        "pricing": "$89/mo"
+      },
+      {
+        "name": "Intuit ProConnect",
+        "strengths": ["Great for tax prep", "User-friendly interface"],
+        "weaknesses": ["Lacks CRM & automation", "No wealth planning"],
+        "pricing": "$55/mo"
+      },
+      {
+        "name": "Xero Practice Manager",
+        "strengths": ["Solid accounting integration", "Good client management"],
+        "weaknesses": ["Limited client-facing tools", "No advisory services"],
+        "pricing": "$70/mo"
+      }
+    ],
+    "our_advantage": "Integrated CRM, tax, estate, and retirement tools with compliance built in"
+  },
+  "export_formats": ["JSON", "PNG", "PDF"],
+  "created_date": "2025-01-09",
+  "version": "1.0"
+}

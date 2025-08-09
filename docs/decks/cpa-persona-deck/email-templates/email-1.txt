@@ -1,0 +1,31 @@
+Transform Your CPA Practice — Save Hours, Serve More Clients
+
+Hi {{first_name}},
+
+Tax season is over, but the overwhelm doesn't have to continue. If you're like most CPAs, you're spending too many hours on administrative tasks and missing opportunities to serve clients strategically.
+
+THE REALITY FOR MOST CPA PRACTICES:
+• 73% work 50+ hours during peak season
+• $150K average lost revenue from missed advisory opportunities  
+• 6+ hours weekly lost to administrative tasks
+• Multiple systems creating inefficiency and compliance risk
+
+What if you could:
+• Reduce client onboarding from 2 hours to 20 minutes?
+• Add $75K+ in advisory revenue without hiring more staff?
+• Automate compliance and document management completely?
+• Replace 4-5 software subscriptions with one integrated platform?
+
+Our CPA Growth Toolkit combines secure client portals, advanced tax planning tools, AI automation, and built-in compliance into one powerful platform designed specifically for accounting practices.
+
+SEE THE CPA GROWTH TOOLKIT IN ACTION:
+{{demo_link}}
+
+P.S. We've helped practices like Peterson & Associates (250 clients) save $2,220 annually on software costs while increasing advisory revenue by $75K in just 6 months.
+
+Best regards,
+{{sender_name}}
+CPA Practice Growth Specialist
+
+Advanced Wealth Management | Built for CPA Practices
+Unsubscribe: {{unsubscribe_link}} | Compliance: {{compliance_link}}

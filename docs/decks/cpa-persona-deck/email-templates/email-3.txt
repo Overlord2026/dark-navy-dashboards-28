@@ -1,0 +1,54 @@
+Proven ROI for Firms Like Yours
+
+Hi {{first_name}},
+
+Over the past two days, I've shown you the problems CPA practices face and how our platform solves them. Today, let me share the real numbers from practices just like {{firm_name}}.
+
+PETERSON & ASSOCIATES CPA — 6-MONTH RESULTS
+250 clients • Mid-size firm • Tax & advisory services
+
+BEFORE vs AFTER:
+• Client onboarding: 2 hours → 20 minutes
+• Advisory clients: 15% → 65%
+• Software costs: $284/mo → $99/mo
+• Admin time: 6 hrs/week → 2 hrs/week
+
+6-MONTH FINANCIAL IMPACT:
+✓ $75,000 new advisory revenue
+✓ $2,220 annual software savings  
+✓ 4 hours daily time savings
+✓ 92% client satisfaction score
+
+CALCULATE YOUR POTENTIAL ROI:
+Every CPA practice is different. Use our free ROI calculator to see your specific potential based on:
+
+• Your current client count and onboarding time
+• Your billing rates and efficiency goals
+• Your software costs and integration needs  
+• Your advisory ambitions and growth targets
+
+CALCULATE YOUR ROI (FREE TOOL):
+{{roi_calculator_link}}
+
+⏰ LIMITED-TIME OFFER FOR CPA PRACTICES
+We're offering the first 25 CPA firms a 30-day free trial plus free migration assistance (normally $500 value). This offer expires Friday.
+
+What's included:
+• Complete data migration from your current systems
+• Custom workflow setup for your practice
+• Team training and support
+• 30-day money-back guarantee
+
+START YOUR 30-DAY TRIAL TODAY:
+{{trial_link}}
+
+Questions? Reply to this email or call me directly at {{phone_number}}. I'm here to help you transform your practice.
+
+Best regards,
+{{sender_name}}
+CPA Practice Growth Specialist
+
+P.S. Don't let another tax season overwhelm your team. The practices that start now will be prepared for peak season with automated workflows and advisory revenue streams already in place.
+
+Advanced Wealth Management | Built for CPA Practices
+Unsubscribe: {{unsubscribe_link}} | Compliance: {{compliance_link}}
