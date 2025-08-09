@@ -169,6 +169,7 @@ import { ClientFamilyIntroPage } from '@/pages/ClientFamilyIntroPage';
 import { FinancialAdvisorIntroPage } from '@/pages/FinancialAdvisorIntroPage';
 import { CPAAccountantIntroPage } from '@/pages/CPAAccountantIntroPage';
 import { EstatePlanningAttorneyIntroPage } from '@/pages/EstatePlanningAttorneyIntroPage';
+import { LitigationAttorneyIntroPage } from '@/pages/LitigationAttorneyIntroPage';
 
 // Import onboarding flow component
 const PersonaOnboardingFlow = React.lazy(() => 
@@ -289,6 +290,7 @@ function App() {
                                   <Route path="/financial-advisor-intro" element={<FinancialAdvisorIntroPage />} />
                                   <Route path="/cpa-accountant-intro" element={<CPAAccountantIntroPage />} />
                                   <Route path="/estate-planning-attorney-intro" element={<EstatePlanningAttorneyIntroPage />} />
+                                  <Route path="/litigation-attorney-intro" element={<LitigationAttorneyIntroPage />} />
                                  <Route path="/calculator" element={<PublicFeeCalculator />} />
                                 <Route path="/demo" element={<div className="min-h-screen bg-background p-8"><DemoCalculator /></div>} />
                                 <Route path="/lead-magnet" element={<LeadMagnetPage />} />
