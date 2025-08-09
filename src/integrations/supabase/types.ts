@@ -1657,6 +1657,85 @@ export type Database = {
           },
         ]
       }
+      annual_reviews: {
+        Row: {
+          areas_for_improvement: string[] | null
+          comments: string | null
+          created_at: string
+          employee_id: string
+          goals: Json | null
+          id: string
+          organization_id: string
+          performance_score: number | null
+          recommended_courses: string[] | null
+          review_period_end: string
+          review_period_start: string
+          reviewer_id: string
+          skill_gaps: string[] | null
+          status: string
+          strengths: string[] | null
+          updated_at: string
+        }
+        Insert: {
+          areas_for_improvement?: string[] | null
+          comments?: string | null
+          created_at?: string
+          employee_id: string
+          goals?: Json | null
+          id?: string
+          organization_id: string
+          performance_score?: number | null
+          recommended_courses?: string[] | null
+          review_period_end: string
+          review_period_start: string
+          reviewer_id: string
+          skill_gaps?: string[] | null
+          status?: string
+          strengths?: string[] | null
+          updated_at?: string
+        }
+        Update: {
+          areas_for_improvement?: string[] | null
+          comments?: string | null
+          created_at?: string
+          employee_id?: string
+          goals?: Json | null
+          id?: string
+          organization_id?: string
+          performance_score?: number | null
+          recommended_courses?: string[] | null
+          review_period_end?: string
+          review_period_start?: string
+          reviewer_id?: string
+          skill_gaps?: string[] | null
+          status?: string
+          strengths?: string[] | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "annual_reviews_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "annual_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "annual_reviews_reviewer_id_fkey"
+            columns: ["reviewer_id"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       api_integration_configs: {
         Row: {
           api_endpoints: Json | null
@@ -4074,6 +4153,60 @@ export type Database = {
         }
         Relationships: []
       }
+      certificates: {
+        Row: {
+          ce_hours: number
+          certificate_url: string
+          course_id: string
+          created_at: string
+          employee_id: string
+          expiry_date: string | null
+          id: string
+          is_valid: boolean
+          issued_date: string
+          verification_code: string
+        }
+        Insert: {
+          ce_hours: number
+          certificate_url: string
+          course_id: string
+          created_at?: string
+          employee_id: string
+          expiry_date?: string | null
+          id?: string
+          is_valid?: boolean
+          issued_date?: string
+          verification_code: string
+        }
+        Update: {
+          ce_hours?: number
+          certificate_url?: string
+          course_id?: string
+          created_at?: string
+          employee_id?: string
+          expiry_date?: string | null
+          id?: string
+          is_valid?: boolean
+          issued_date?: string
+          verification_code?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "certificates_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "certificates_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       charities: {
         Row: {
           annual_goal: number | null
@@ -6053,6 +6186,70 @@ export type Database = {
         }
         Relationships: []
       }
+      compliance_records: {
+        Row: {
+          audit_trail: Json
+          ce_hours: number
+          certificate_url: string | null
+          completion_date: string
+          course_id: string
+          created_at: string
+          employee_id: string
+          expiry_date: string | null
+          id: string
+          organization_id: string
+          retention_until: string
+        }
+        Insert: {
+          audit_trail?: Json
+          ce_hours: number
+          certificate_url?: string | null
+          completion_date: string
+          course_id: string
+          created_at?: string
+          employee_id: string
+          expiry_date?: string | null
+          id?: string
+          organization_id: string
+          retention_until: string
+        }
+        Update: {
+          audit_trail?: Json
+          ce_hours?: number
+          certificate_url?: string | null
+          completion_date?: string
+          course_id?: string
+          created_at?: string
+          employee_id?: string
+          expiry_date?: string | null
+          id?: string
+          organization_id?: string
+          retention_until?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "compliance_records_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "compliance_records_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "compliance_records_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       compliance_risk_assessments: {
         Row: {
           approved_by: string | null
@@ -6234,6 +6431,159 @@ export type Database = {
             columns: ["content_id"]
             isOneToOne: false
             referencedRelation: "education_content"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      course_enrollments: {
+        Row: {
+          assigned_by: string | null
+          ce_hours_earned: number | null
+          certificate_url: string | null
+          completed_date: string | null
+          course_id: string
+          created_at: string
+          due_date: string | null
+          employee_id: string
+          enrolled_date: string
+          id: string
+          progress_percentage: number
+          score: number | null
+          started_date: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          assigned_by?: string | null
+          ce_hours_earned?: number | null
+          certificate_url?: string | null
+          completed_date?: string | null
+          course_id: string
+          created_at?: string
+          due_date?: string | null
+          employee_id: string
+          enrolled_date?: string
+          id?: string
+          progress_percentage?: number
+          score?: number | null
+          started_date?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          assigned_by?: string | null
+          ce_hours_earned?: number | null
+          certificate_url?: string | null
+          completed_date?: string | null
+          course_id?: string
+          created_at?: string
+          due_date?: string | null
+          employee_id?: string
+          enrolled_date?: string
+          id?: string
+          progress_percentage?: number
+          score?: number | null
+          started_date?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_enrollments_assigned_by_fkey"
+            columns: ["assigned_by"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_enrollments_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_enrollments_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      courses: {
+        Row: {
+          ce_hours: number | null
+          certificate_template_id: string | null
+          content: Json
+          course_type: string
+          created_at: string
+          created_by: string
+          description: string | null
+          estimated_duration_minutes: number
+          id: string
+          is_required: boolean
+          organization_id: string
+          persona: string
+          prerequisites: string[] | null
+          quiz: Json | null
+          required_approval: boolean
+          status: string
+          tags: string[] | null
+          thumbnail_url: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          ce_hours?: number | null
+          certificate_template_id?: string | null
+          content?: Json
+          course_type?: string
+          created_at?: string
+          created_by: string
+          description?: string | null
+          estimated_duration_minutes?: number
+          id?: string
+          is_required?: boolean
+          organization_id: string
+          persona: string
+          prerequisites?: string[] | null
+          quiz?: Json | null
+          required_approval?: boolean
+          status?: string
+          tags?: string[] | null
+          thumbnail_url?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          ce_hours?: number | null
+          certificate_template_id?: string | null
+          content?: Json
+          course_type?: string
+          created_at?: string
+          created_by?: string
+          description?: string | null
+          estimated_duration_minutes?: number
+          id?: string
+          is_required?: boolean
+          organization_id?: string
+          persona?: string
+          prerequisites?: string[] | null
+          quiz?: Json | null
+          required_approval?: boolean
+          status?: string
+          tags?: string[] | null
+          thumbnail_url?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "courses_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]
@@ -8557,6 +8907,84 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      employees: {
+        Row: {
+          created_at: string
+          current_projects: string[] | null
+          department: string | null
+          email: string
+          employee_number: string | null
+          first_name: string
+          id: string
+          job_title: string
+          last_name: string
+          manager_id: string | null
+          organization_id: string
+          phone: string | null
+          profile_image_url: string | null
+          role: string
+          start_date: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          current_projects?: string[] | null
+          department?: string | null
+          email: string
+          employee_number?: string | null
+          first_name: string
+          id?: string
+          job_title: string
+          last_name: string
+          manager_id?: string | null
+          organization_id: string
+          phone?: string | null
+          profile_image_url?: string | null
+          role?: string
+          start_date: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          current_projects?: string[] | null
+          department?: string | null
+          email?: string
+          employee_number?: string | null
+          first_name?: string
+          id?: string
+          job_title?: string
+          last_name?: string
+          manager_id?: string | null
+          organization_id?: string
+          phone?: string | null
+          profile_image_url?: string | null
+          role?: string
+          start_date?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "employees_manager_id_fkey"
+            columns: ["manager_id"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "employees_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       entity_documents: {
         Row: {
@@ -12902,6 +13330,50 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "referral_leaderboard"
             referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      job_ladders: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          is_default: boolean
+          levels: Json
+          organization_id: string
+          persona: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_default?: boolean
+          levels?: Json
+          organization_id: string
+          persona: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_default?: boolean
+          levels?: Json
+          organization_id?: string
+          persona?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "job_ladders_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -24026,6 +24498,65 @@ export type Database = {
           },
         ]
       }
+      training_library: {
+        Row: {
+          created_at: string
+          description: string | null
+          file_size: number
+          file_url: string
+          id: string
+          is_public: boolean
+          mime_type: string
+          organization_id: string
+          persona: string
+          tags: string[] | null
+          title: string
+          type: string
+          updated_at: string
+          uploaded_by: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          file_size: number
+          file_url: string
+          id?: string
+          is_public?: boolean
+          mime_type: string
+          organization_id: string
+          persona: string
+          tags?: string[] | null
+          title: string
+          type?: string
+          updated_at?: string
+          uploaded_by: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          file_size?: number
+          file_url?: string
+          id?: string
+          is_public?: boolean
+          mime_type?: string
+          organization_id?: string
+          persona?: string
+          tags?: string[] | null
+          title?: string
+          type?: string
+          updated_at?: string
+          uploaded_by?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "training_library_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       training_modules: {
         Row: {
           category: string
@@ -27451,6 +27982,50 @@ export type Database = {
             columns: ["cpa_partner_id"]
             isOneToOne: false
             referencedRelation: "cpa_partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      workflow_templates: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          is_default: boolean
+          name: string
+          organization_id: string
+          persona: string
+          steps: Json
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_default?: boolean
+          name: string
+          organization_id: string
+          persona: string
+          steps?: Json
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_default?: boolean
+          name?: string
+          organization_id?: string
+          persona?: string
+          steps?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workflow_templates_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]
