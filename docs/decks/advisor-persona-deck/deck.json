@@ -1,0 +1,295 @@
+{
+  "title": "Advisor Persona Deck – Full Copy + Visual Guide",
+  "description": "Stop juggling tools. Start growing your book of business.",
+  "brand": "Advanced Wealth Management",
+  "target_audience": "Financial Advisors, RIAs, Broker-Dealers, Wealth Management Firms",
+  "colors": {
+    "primary": "#172042",
+    "secondary": "#00D2FF", 
+    "accent": "#FFC700",
+    "text": "#FFFFFF",
+    "background": "#1E2333"
+  },
+  "slides": [
+    {
+      "id": 1,
+      "title": "Hook & Pain Points",
+      "type": "problem_solution",
+      "content": {
+        "headline": "Stop juggling tools. Start growing your book of business.",
+        "subhead": "Advisors lose 30% of their opportunities to disconnected systems and missed follow-ups. We fix that.",
+        "pain_points": [
+          "Wasted hours on manual follow-up",
+          "Leads slipping through the cracks",
+          "Paying for 4–5 separate subscriptions",
+          "Compliance headaches and audit risk"
+        ],
+        "visual_direction": {
+          "left": "Messy spaghetti diagram showing multiple logos (CRM, email, compliance, calendar)",
+          "right": "Clean single-dashboard screenshot of our platform"
+        }
+      }
+    },
+    {
+      "id": 2,
+      "title": "Core Advisor Tools",
+      "type": "features",
+      "content": {
+        "headline": "Everything you need to win more clients, in one place.",
+        "tools": [
+          {
+            "name": "SWAG Lead Score™",
+            "description": "Auto-scoring leads 0–100, gold/silver/bronze tiers",
+            "icon": "target"
+          },
+          {
+            "name": "CRM Pipeline + Smart Cadences",
+            "description": "Call, SMS, email, tasks all in one",
+            "icon": "users"
+          },
+          {
+            "name": "ROI Dashboard",
+            "description": "Campaign cost per lead, conversion rate, time-to-close",
+            "icon": "bar_chart"
+          },
+          {
+            "name": "Compliance Overlay",
+            "description": "FINRA/DOL keyword flagging & activity logs",
+            "icon": "shield"
+          }
+        ],
+        "visual_direction": "4 icons for each tool, labeled, with short animated tooltips in presentation mode"
+      }
+    },
+    {
+      "id": 3,
+      "title": "Cross-Persona Power Stack",
+      "type": "stack",
+      "content": {
+        "headline": "Your entire practice, powered by AI & automation.",
+        "stack_layers": [
+          {
+            "name": "Linda AI Voice/SMS Assistant",
+            "description": "Call notes, instant SMS summaries, auto follow-up",
+            "icon": "brain"
+          },
+          {
+            "name": "SWAG™ Retirement Roadmap",
+            "description": "Monte Carlo, scenario modeling, PDF export",
+            "icon": "trending_up"
+          },
+          {
+            "name": "Estate Planning Suite",
+            "description": "Trust/will automation, advanced calculators, secure vault",
+            "icon": "file_text"
+          },
+          {
+            "name": "Twilio Lead-to-Sales Engine",
+            "description": "Calls/SMS/voice from lead to closed sale",
+            "icon": "phone"
+          },
+          {
+            "name": "Family Vault & Property Manager",
+            "description": "Household asset tracking",
+            "icon": "check_circle"
+          }
+        ],
+        "visual_direction": "Stack graphic with each layer named and iconized"
+      }
+    },
+    {
+      "id": 4,
+      "title": "Workflow Example",
+      "type": "workflow",
+      "content": {
+        "headline": "From ad click to closed client — fully automated.",
+        "workflow_steps": [
+          {
+            "step": 1,
+            "title": "Facebook Ad or LinkedIn Campaign",
+            "stage": "Marketing",
+            "color": "blue"
+          },
+          {
+            "step": 2,
+            "title": "Lead Intake Form auto-scores via SWAG Lead Score™",
+            "stage": "Marketing",
+            "color": "blue"
+          },
+          {
+            "step": 3,
+            "title": "Auto-assigned to best-fit advisor",
+            "stage": "Sales",
+            "color": "green"
+          },
+          {
+            "step": 4,
+            "title": "Linda AI calls, records meeting, sends follow-up SMS",
+            "stage": "Sales",
+            "color": "green"
+          },
+          {
+            "step": 5,
+            "title": "Proposal sent from CRM",
+            "stage": "Sales",
+            "color": "green"
+          },
+          {
+            "step": 6,
+            "title": "Client onboarded + given portal access",
+            "stage": "Client Service",
+            "color": "gold"
+          },
+          {
+            "step": 7,
+            "title": "SWAG Retirement Plan delivered",
+            "stage": "Client Service",
+            "color": "gold"
+          }
+        ],
+        "visual_direction": "Horizontal flow diagram with icons for each step. Color-coded stages: Marketing (blue), Sales (green), Client Service (gold)"
+      }
+    },
+    {
+      "id": 5,
+      "title": "Compliance-First Advantage",
+      "type": "compliance",
+      "content": {
+        "headline": "Built for regulated industries.",
+        "compliance_features": [
+          "FINRA + SEC Investment Advisor Act compliance baked in",
+          "DOL Fiduciary standards met",
+          "GDPR + CCPA data privacy compliance",
+          "Audit-ready logs for all client communications & documents"
+        ],
+        "tagline": "Your tech stack should protect your license, not risk it.",
+        "visual_direction": "Shield icon with checklist overlay"
+      }
+    },
+    {
+      "id": 6,
+      "title": "Pricing & Annual Discount",
+      "type": "pricing",
+      "content": {
+        "headline": "Start closing more deals today.",
+        "tiers": [
+          {
+            "name": "Basic",
+            "monthly": "$59",
+            "annual": "$600",
+            "best_for": "New advisors, basic CRM & SWAG Score"
+          },
+          {
+            "name": "Pro",
+            "monthly": "$119",
+            "annual": "$1,200",
+            "best_for": "Growth-focused practices, Smart Cadences, ROI Dashboard",
+            "popular": true
+          },
+          {
+            "name": "Premium",
+            "monthly": "$199",
+            "annual": "$2,000",
+            "best_for": "Full AI + automation stack, Estate & SWAG tools"
+          }
+        ],
+        "footnote": "Annual plans include 2 months free — save up to $398/year.",
+        "visual_direction": "Table format with Pro highlighted as Most Popular"
+      }
+    },
+    {
+      "id": 7,
+      "title": "TCO vs Competitors",
+      "type": "comparison",
+      "content": {
+        "headline": "Why pay more for less?",
+        "comparison_table": {
+          "headers": ["Platform", "Monthly Cost", "Tools Included", "Compliance", "AI/Automation"],
+          "rows": [
+            {
+              "platform": "Ours",
+              "monthly_cost": "$119",
+              "tools_included": "12+",
+              "compliance": true,
+              "ai_automation": true,
+              "highlight": true
+            },
+            {
+              "platform": "Zocks",
+              "monthly_cost": "$250+",
+              "tools_included": "4",
+              "compliance": false,
+              "ai_automation": false
+            },
+            {
+              "platform": "Jump",
+              "monthly_cost": "$300+",
+              "tools_included": "5",
+              "compliance": false,
+              "ai_automation": false
+            },
+            {
+              "platform": "Redtail CRM",
+              "monthly_cost": "$99",
+              "tools_included": "1",
+              "compliance": true,
+              "ai_automation": false
+            },
+            {
+              "platform": "MoneyGuidePro",
+              "monthly_cost": "$150",
+              "tools_included": "1",
+              "compliance": false,
+              "ai_automation": false
+            }
+          ]
+        },
+        "savings_highlight": "Total savings: $300–$500/month vs separate tools",
+        "visual_direction": "Highlight total savings: $300–$500/month vs separate tools"
+      }
+    }
+  ],
+  "email_sequence": {
+    "trigger": "Advisor lead tagged in CRM",
+    "emails": [
+      {
+        "day": 0,
+        "subject": "Here's how to close more clients without more hours",
+        "content": {
+          "elements": ["Deck link", "2-sentence pain + solution", "CTA to book demo"]
+        }
+      },
+      {
+        "day": 1,
+        "subject": "See how Jane grew her book 2x in 6 months",
+        "content": {
+          "elements": ["Case study of advisor using SWAG + Linda AI", "ROI numbers", "Demo CTA"]
+        }
+      },
+      {
+        "day": 3,
+        "subject": "What's your ROI potential?",
+        "content": {
+          "elements": ["Link to ROI calculator", "Simple steps to see their potential growth"]
+        }
+      },
+      {
+        "day": 5,
+        "subject": "Your compliance shield + client growth engine",
+        "content": {
+          "elements": ["Spotlight on compliance + AI automation combo"]
+        }
+      },
+      {
+        "day": 7,
+        "subject": "Last chance to claim your annual discount",
+        "content": {
+          "elements": ["Urgency email with discount reminder"]
+        }
+      }
+    ]
+  },
+  "export_formats": ["JSON", "PNG"],
+  "created_date": "2025-01-09",
+  "version": "1.0"
+}

@@ -11,6 +11,18 @@
       "file_path": "/docs/decks/client-family-solutions-platform/",
       "formats": ["JSON", "PNG"],
       "tags": ["family", "wealth management", "estate planning", "retirement", "all-in-one", "pricing"]
+    },
+    {
+      "id": "advisor-persona-deck",
+      "title": "Advisor Persona Deck – Full Copy + Visual Guide",
+      "description": "Stop juggling tools. Start growing your book of business.",
+      "category": "Professional Services",
+      "target_audience": "Financial Advisors, RIAs, Broker-Dealers, Wealth Management Firms",
+      "slides": 7,
+      "created_date": "2025-01-09",
+      "file_path": "/docs/decks/advisor-persona-deck/",
+      "formats": ["JSON", "PNG"],
+      "tags": ["advisor", "financial planning", "compliance", "CRM", "lead generation", "ROI", "automation", "AI"]
     }
   ]
 }
