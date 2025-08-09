@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/context/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
-import { Employee, Organization } from '@/types/operations';
+import { Employee, Organization, OrganizationRole } from '@/types/operations';
 
 export const useOrganization = () => {
   const { user } = useAuth();
@@ -36,7 +36,7 @@ export const useOrganization = () => {
           return;
         }
 
-        setCurrentEmployee(employeeData);
+        setCurrentEmployee(employeeData as Employee);
 
         // Then get the organization data
         const { data: orgData, error: orgError } = await supabase
@@ -48,7 +48,7 @@ export const useOrganization = () => {
         if (orgError) {
           setError(orgError.message);
         } else {
-          setOrganization(orgData);
+          setOrganization(orgData as Organization);
         }
       } catch (err) {
         setError('Failed to load organization data');

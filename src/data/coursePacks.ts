@@ -1,6 +1,6 @@
 // Pre-seeded course packs for different personas
-import { Course, Persona } from '@/types/lms';
-import { OrganizationRole } from '@/types/operations';
+import { Course } from '@/types/lms';
+import { OrganizationRole, Persona } from '@/types/operations';
 
 export interface CoursePackTemplate {
   persona: Persona;
