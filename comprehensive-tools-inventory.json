@@ -1,0 +1,324 @@
+{
+  "inventory_metadata": {
+    "generated_date": "2025-01-08",
+    "total_tools": 28,
+    "total_edge_functions": 87,
+    "total_components": 500,
+    "personas_served": 12
+  },
+  "tools_by_category": {
+    "acquisition_marketing": [
+      {
+        "name": "SWAG Lead Scoring Engine",
+        "files": ["src/components/leads/SWAGLeadScoreCard.tsx", "src/hooks/useLeadScoring.ts"],
+        "purpose": "AI-powered lead qualification and scoring system",
+        "personas": ["Advisor", "Agency"],
+        "dependencies": ["CRM integration", "Analytics"],
+        "api_integrations": ["None"],
+        "database_tables": ["leads", "lead_engagement_tracking"],
+        "compliance": "Privacy compliance"
+      },
+      {
+        "name": "Public Fee Calculator",
+        "files": ["src/pages/PublicFeeCalculator.tsx", "src/components/PublicValueCalculator.tsx"],
+        "purpose": "Public-facing fee impact calculator for lead generation",
+        "personas": ["Prospects", "All Personas"],
+        "dependencies": ["Analytics tracking"],
+        "api_integrations": ["Calendly API"],
+        "database_tables": ["leads", "analytics_events"],
+        "compliance": "Consumer protection disclosures"
+      },
+      {
+        "name": "Linda AI Assistant",
+        "files": ["src/components/ai/AIChatWidget.tsx", "supabase/functions/ai-analysis/", "supabase/functions/ai-chat-assistant/"],
+        "purpose": "AI-powered analysis, chat assistant, and smart alerts",
+        "personas": ["All Personas"],
+        "dependencies": ["OpenAI API", "Analytics"],
+        "api_integrations": ["OpenAI GPT-4"],
+        "database_tables": ["ai_interactions", "analytics_events"],
+        "compliance": "AI disclosure requirements"
+      }
+    ],
+    "planning_advisory": [
+      {
+        "name": "SWAG™ Retirement Roadmap",
+        "files": ["src/pages/retirement-roadmap/SwagRetirementRoadmap.tsx", "src/components/retirement/SWAGRetirementRoadmap.tsx"],
+        "purpose": "Comprehensive retirement planning with stress testing and Monte Carlo analysis",
+        "personas": ["Client/Family", "Advisor"],
+        "dependencies": ["RetirementCalculatorEngine", "StressTestPreview", "PDF Export"],
+        "api_integrations": ["None (client-side)"],
+        "database_tables": ["retirement_plans", "user_goals"],
+        "compliance": "Fiduciary compliance for projections"
+      },
+      {
+        "name": "Value-Driven Savings Calculator",
+        "files": ["src/components/ValueDrivenSavingsCalculator.tsx", "src/pages/ValueCalculator.tsx"],
+        "purpose": "Fee comparison and wealth impact analysis with celebration animations",
+        "personas": ["All Personas"],
+        "dependencies": ["ConfettiAnimation", "PrizeModal", "Analytics"],
+        "api_integrations": ["None"],
+        "database_tables": ["analytics_events"],
+        "compliance": "Fee disclosure regulations"
+      },
+      {
+        "name": "Estate Planning Suite",
+        "files": ["src/components/estate-planning/ (14 files)", "src/pages/estate-planning/EstatePlanningPage.tsx"],
+        "purpose": "Complete estate planning tools including document vault and collaboration",
+        "personas": ["Attorney", "Client/Family"],
+        "dependencies": ["DocumentManagement", "Vault"],
+        "api_integrations": ["None"],
+        "database_tables": ["estate_planning_documents", "attorney_documents_metadata"],
+        "compliance": "Bar compliance, privilege protection"
+      },
+      {
+        "name": "Advanced Estate Calculators",
+        "files": ["src/components/estate-planning/AdvancedEstateCalculators.tsx"],
+        "purpose": "Sophisticated estate tax and trust planning calculations",
+        "personas": ["Attorney", "Elite Family Office"],
+        "dependencies": ["Estate Planning Suite"],
+        "api_integrations": ["None"],
+        "database_tables": ["estate_planning_documents"],
+        "compliance": "Tax law compliance"
+      },
+      {
+        "name": "Healthcare Savings Calculator",
+        "files": ["src/components/HealthcareSavingsCalculator.tsx"],
+        "purpose": "HSA, healthcare cost projection, and longevity planning",
+        "personas": ["All Personas", "Healthcare"],
+        "dependencies": ["Longevity scoring"],
+        "api_integrations": ["None"],
+        "database_tables": ["healthcare_data"],
+        "compliance": "HIPAA considerations"
+      },
+      {
+        "name": "Tax Planning Suite",
+        "files": ["src/components/tax-planning/", "src/pages/TaxPlanning.tsx"],
+        "purpose": "Multi-year tax planning with Roth conversion analysis",
+        "personas": ["CPA", "Client/Family"],
+        "dependencies": ["Financial planning integration"],
+        "api_integrations": ["None"],
+        "database_tables": ["tax_scenarios", "financial_plans"],
+        "compliance": "Tax preparation regulations"
+      },
+      {
+        "name": "Investment Portfolio Builder",
+        "files": ["src/pages/InvestmentBuilder.tsx", "src/components/portfolio/"],
+        "purpose": "Portfolio construction and optimization tools",
+        "personas": ["Advisor", "Elite Family Office"],
+        "dependencies": ["Market data", "Analytics"],
+        "api_integrations": ["Market APIs"],
+        "database_tables": ["investment_accounts", "portfolio_allocations"],
+        "compliance": "Investment advisor fiduciary duty"
+      },
+      {
+        "name": "Anody Investment Analysis",
+        "files": ["Multiple calculator modules", "src/components/investments/"],
+        "purpose": "Sophisticated investment analysis and portfolio optimization",
+        "personas": ["Elite Family Office", "Advisor"],
+        "dependencies": ["Market data integration"],
+        "api_integrations": ["Market data APIs"],
+        "database_tables": ["investment_accounts", "portfolio_data"],
+        "compliance": "Investment advisor registration"
+      }
+    ],
+    "practice_management": [
+      {
+        "name": "CRM & Lead Management",
+        "files": ["src/components/crm/ (17 files)", "src/components/leads/ (11 files)"],
+        "purpose": "Complete CRM with pipeline, lead scoring, AI insights",
+        "personas": ["Advisor", "Agency"],
+        "dependencies": ["AI analytics", "Twilio SMS/Voice"],
+        "api_integrations": ["Twilio", "AI services"],
+        "database_tables": ["leads", "advisor_client_links", "lead_engagement_tracking"],
+        "compliance": "Privacy regulations"
+      },
+      {
+        "name": "Professional Marketplace",
+        "files": ["src/components/marketplace/ (47 files)", "src/pages/Marketplace.tsx"],
+        "purpose": "Complete professional directory and services marketplace",
+        "personas": ["All Professional Personas"],
+        "dependencies": ["Directory", "Vetting"],
+        "api_integrations": ["Payment APIs"],
+        "database_tables": ["professional_profiles", "marketplace_listings"],
+        "compliance": "Professional licensing verification"
+      },
+      {
+        "name": "Document Vault & Management",
+        "files": ["src/components/vault/", "src/hooks/useVaultItems.ts"],
+        "purpose": "Secure document storage with sharing capabilities",
+        "personas": ["All Personas"],
+        "dependencies": ["Encryption", "Access control"],
+        "api_integrations": ["Supabase Storage"],
+        "database_tables": ["vault_sessions", "file_access_log"],
+        "compliance": "Privacy and security compliance"
+      },
+      {
+        "name": "Meeting Management & Recording",
+        "files": ["src/components/recording/", "src/pages/RecordingsPage.tsx"],
+        "purpose": "Meeting scheduling, recording, and AI summary generation",
+        "personas": ["Advisor", "Professional"],
+        "dependencies": ["Twilio", "AI analysis"],
+        "api_integrations": ["Twilio", "OpenAI"],
+        "database_tables": ["meeting_summaries", "recording_metadata"],
+        "compliance": "Recording consent laws"
+      },
+      {
+        "name": "Communication Suite",
+        "files": ["src/components/messaging/", "src/components/communications/"],
+        "purpose": "SMS, email, and in-app messaging",
+        "personas": ["All Personas"],
+        "dependencies": ["Twilio", "Email services"],
+        "api_integrations": ["Twilio", "Resend"],
+        "database_tables": ["communication_logs", "message_templates"],
+        "compliance": "Communications regulations"
+      },
+      {
+        "name": "ROI & Performance Tracking",
+        "files": ["src/pages/ROIDashboard.tsx", "src/components/roi/"],
+        "purpose": "Return on investment and performance analytics",
+        "personas": ["Advisor", "Agency"],
+        "dependencies": ["CRM integration"],
+        "api_integrations": ["None"],
+        "database_tables": ["advisor_performance_metrics", "campaign_data"],
+        "compliance": "Performance reporting standards"
+      }
+    ],
+    "compliance_recordkeeping": [
+      {
+        "name": "Compliance Platform",
+        "files": ["src/components/compliance/ (19 files)", "src/pages/ComplianceDashboard.tsx"],
+        "purpose": "Complete compliance management with CE tracking",
+        "personas": ["CPA", "Attorney", "Advisor"],
+        "dependencies": ["Document management"],
+        "api_integrations": ["None"],
+        "database_tables": ["accountant_ce_records", "compliance_audit_logs"],
+        "compliance": "Regulatory compliance"
+      },
+      {
+        "name": "Security & Audit System",
+        "files": ["src/components/security/", "src/services/security/"],
+        "purpose": "Security monitoring and audit logging",
+        "personas": ["Admin", "Compliance"],
+        "dependencies": ["Encryption", "Monitoring"],
+        "api_integrations": ["None"],
+        "database_tables": ["security_audit_logs", "access_logs"],
+        "compliance": "Security compliance frameworks"
+      },
+      {
+        "name": "Analytics & Reporting Engine",
+        "files": ["src/components/analytics/ (12 files)", "src/lib/analytics.ts"],
+        "purpose": "Comprehensive analytics with custom dashboards",
+        "personas": ["Admin", "All Personas"],
+        "dependencies": ["Event tracking", "Metrics"],
+        "api_integrations": ["PostHog", "Custom"],
+        "database_tables": ["analytics_events", "analytics_dashboards"],
+        "compliance": "Data privacy regulations"
+      }
+    ],
+    "supporting_infrastructure": [
+      {
+        "name": "Billing & Payments",
+        "files": ["src/components/billpay/", "src/pages/BillPay.tsx"],
+        "purpose": "Integrated billing and payment processing",
+        "personas": ["All Personas"],
+        "dependencies": ["Stripe integration"],
+        "api_integrations": ["Stripe API"],
+        "database_tables": ["billing_transactions", "payment_methods"],
+        "compliance": "Financial services compliance"
+      },
+      {
+        "name": "Subscription Management",
+        "files": ["src/pages/Subscription.tsx", "src/components/subscription/"],
+        "purpose": "Tiered subscription and billing management",
+        "personas": ["All Personas"],
+        "dependencies": ["Payment processing"],
+        "api_integrations": ["Stripe API"],
+        "database_tables": ["subscription_analytics", "billing_data"],
+        "compliance": "Subscription law compliance"
+      },
+      {
+        "name": "Onboarding Automation",
+        "files": ["src/components/onboarding/", "src/pages/OnboardingPage.tsx"],
+        "purpose": "Persona-specific onboarding flows",
+        "personas": ["All Personas"],
+        "dependencies": ["Progressive disclosure"],
+        "api_integrations": ["Email services"],
+        "database_tables": ["onboarding_progress", "user_journey"],
+        "compliance": "User experience compliance"
+      },
+      {
+        "name": "Mobile Optimization",
+        "files": ["src/components/mobile/", "src/hooks/use-mobile.tsx"],
+        "purpose": "Mobile-responsive design and PWA features",
+        "personas": ["All Personas"],
+        "dependencies": ["Responsive design"],
+        "api_integrations": ["None"],
+        "database_tables": ["mobile_analytics"],
+        "compliance": "Mobile accessibility"
+      }
+    ]
+  },
+  "edge_functions_summary": {
+    "total_functions": 87,
+    "categories": {
+      "ai_services": ["ai-analysis", "ai-bookkeeping", "ai-chat-assistant", "ai-nudge", "ai-smart-alerts", "ai-tax-analysis"],
+      "communications": ["twilio-send-sms", "twilio-voice-webhook", "send-email", "send-follow-up-email", "send-meeting-summary-email"],
+      "integrations": ["plaid-sync-accounts", "stripe-webhook", "linkedin-import", "oauth-integration"],
+      "compliance": ["compliance-action", "export-compliance-report", "verify-professionals"],
+      "analytics": ["track-event", "track-referral", "generate-meeting-summary"],
+      "automation": ["automated-follow-up", "engagement-automation", "onboarding-automation"]
+    }
+  },
+  "api_integrations": {
+    "twilio": {
+      "purpose": "SMS, Voice, Recording",
+      "security_level": "High",
+      "functions_using": ["twilio-send-sms", "twilio-voice-webhook", "twilio-phone-manager"]
+    },
+    "openai": {
+      "purpose": "AI Analysis, Chat Assistant",
+      "security_level": "High",
+      "functions_using": ["ai-analysis", "ai-chat-assistant", "generate-meeting-summary"]
+    },
+    "stripe": {
+      "purpose": "Payment Processing",
+      "security_level": "High",
+      "functions_using": ["stripe-webhook", "stripe-ach-transfer", "create-checkout"]
+    },
+    "plaid": {
+      "purpose": "Bank Account Linking",
+      "security_level": "High",
+      "functions_using": ["plaid-sync-accounts", "plaid-create-link-token"]
+    }
+  },
+  "persona_mapping": {
+    "Client_Family": ["SWAG Retirement Roadmap", "Estate Planning Suite", "Healthcare Calculator", "Document Vault"],
+    "Advisor": ["CRM & Lead Management", "Professional Marketplace", "ROI Tracking", "Meeting Management"],
+    "CPA": ["Tax Planning Suite", "Compliance Platform", "Business Entity Management"],
+    "Attorney": ["Estate Planning Suite", "Advanced Estate Calculators", "Document Management"],
+    "Insurance_Agent": ["Insurance Management", "Healthcare Calculator"],
+    "Elite_Family_Office": ["Anody Investment Analysis", "Advanced Estate Calculators", "Portfolio Builder"],
+    "Agency": ["CRM & Lead Management", "Linda AI Assistant", "ROI Tracking"],
+    "Realtor": ["Property Management Suite", "CRM Tools"],
+    "Healthcare_Professional": ["Healthcare Calculator", "Document Management"],
+    "Coach": ["Client Management Tools", "Progress Tracking"],
+    "Consultant": ["Professional Tools", "Analytics"],
+    "Admin": ["Analytics Engine", "Security System", "Compliance Platform"]
+  },
+  "competitive_differentiators": {
+    "vs_zocks_jump": {
+      "integrated_ecosystem": "Complete workflow vs point solutions",
+      "ai_powered_insights": "Linda AI vs basic automation",
+      "multi_persona_platform": "Single solution vs multiple tools",
+      "compliance_builtin": "Native compliance vs bolt-on solutions",
+      "total_cost_ownership": "Lower overall cost vs multiple subscriptions"
+    },
+    "technical_advantages": [
+      "Real-time collaboration capabilities",
+      "Advanced security and audit trails",
+      "Mobile-first responsive design",
+      "Comprehensive API ecosystem",
+      "White-label capabilities"
+    ]
+  }
+}
