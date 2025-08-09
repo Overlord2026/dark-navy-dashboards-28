@@ -1,319 +1,349 @@
 import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { 
-  Briefcase, 
-  Users, 
   TrendingUp, 
   Shield, 
-  Star,
+  Users, 
+  BarChart3, 
+  MessageSquare, 
+  FileText, 
+  Target, 
+  Briefcase,
   ArrowRight,
+  PlayCircle,
+  DollarSign,
+  Star,
   CheckCircle,
-  Play,
-  MessageSquare,
-  BarChart3,
-  FileText,
-  Zap
+  Zap,
+  Globe
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { LandingNavigation } from '@/components/marketplace/LandingNavigation';
+import { BrandedFooter } from '@/components/ui/BrandedFooter';
 
-export default function FinancialAdvisorPersonaPage() {
-  const features = [
+export const FinancialAdvisorPersonaPage: React.FC = () => {
+  const navigate = useNavigate();
+
+  const valueProps = [
     {
-      icon: <TrendingUp className="h-6 w-6" />,
-      title: "SWAG™ Retirement Roadmap",
-      description: "Advanced scenario modeling and stress testing for comprehensive retirement planning"
+      icon: TrendingUp,
+      title: 'Unified Workflows',
+      description: 'From lead capture to close and onboarding.'
     },
     {
-      icon: <Users className="h-6 w-6" />,
-      title: "Lead-to-Close CRM",
-      description: "Integrated SMS/voice communication with automated follow-up sequences"
+      icon: Shield,
+      title: 'Built-in Compliance',
+      description: 'SEC/FINRA/DOL-ready workflows.'
     },
     {
-      icon: <Shield className="h-6 w-6" />,
-      title: "Marketing Compliance",
-      description: "SEC/FINRA approval workflows with 7-year retention archive"
-    },
-    {
-      icon: <Star className="h-6 w-6" />,
-      title: "CE Tracking & Certificates",
-      description: "Automated continuing education management with certificate generation"
-    },
-    {
-      icon: <FileText className="h-6 w-6" />,
-      title: "Deck Hub",
-      description: "Consistent client presentations with compliance-approved templates"
-    },
-    {
-      icon: <BarChart3 className="h-6 w-6" />,
-      title: "Role-Based Access",
-      description: "Secure audit logs and granular permissions for team management"
+      icon: Users,
+      title: 'Team Growth',
+      description: 'Onboard assistants to partners with career tracks.'
     }
   ];
 
-  const tools = [
+  const keyFeatures = [
+    'SWAG™ Retirement Roadmap analyzer',
+    'Lead-to-Close CRM with SMS/voice integration',
+    'Marketing approval and retention archive',
+    'CE tracking and certificates',
+    'Deck Hub for consistent client presentations',
+    'Role-based access and audit logs'
+  ];
+
+  const integratedTools = [
     {
-      title: "Linda AI Assistant",
-      description: "AI-powered summaries, scripts, and training recommendations"
+      title: 'Linda AI Assistant',
+      description: 'For summaries, scripts, and training'
     },
     {
-      title: "Compliance Platform",
-      description: "Built-in 7-year retention defaults for SEC/FINRA requirements"
+      title: 'Compliance Platform',
+      description: 'With 7-year retention defaults'
     },
     {
-      title: "Expert Marketplace",
-      description: "Vetted network of legal, accounting, and tax professionals"
+      title: 'Expert Marketplace',
+      description: 'Vetted legal, accounting, and tax experts'
     }
   ];
 
   const testimonials = [
     {
-      quote: "Our team runs 30% more efficiently with streamlined workflows and automated compliance.",
-      author: "Sarah Chen",
-      role: "Senior Partner",
-      firm: "Wealth Strategies Group"
+      quote: "Our team runs 30% more efficiently.",
+      author: "Senior Partner, RIA Firm"
     },
     {
-      quote: "Compliance reviews that used to take days now happen in hours. Game changer.",
-      author: "Michael Rodriguez",
-      role: "Compliance Officer",
-      firm: "Advisory Partners LLC"
-    },
-    {
-      quote: "The career development tools helped us scale from 3 to 15 advisors seamlessly.",
-      author: "Jennifer Walsh",
-      role: "Managing Director",
-      firm: "Family Wealth Advisors"
+      quote: "Compliance reviews happen in hours, not days.",
+      author: "Compliance Officer, Advisory Practice"
     }
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-primary/5">
+    <div className="min-h-screen bg-gradient-to-br from-navy via-background to-navy">
+      <LandingNavigation />
+      
       {/* Hero Section */}
-      <section className="relative py-20 px-4 overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/assets/wealth-office-hero.jpg')] bg-cover bg-center opacity-10"></div>
-        <div className="relative max-w-7xl mx-auto text-center">
-          <div className="max-w-4xl mx-auto">
-            <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">
-              Run Your Advisory Firm
-              <span className="block text-primary">on Rails</span>
-            </h1>
-            <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
-              Workflows, compliance, training, and client engagement — all in one hub.
-              Transform your practice with enterprise-grade tools designed for growing advisory firms.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-              <Button size="lg" className="text-lg px-8 py-6" asChild>
-                <Link to="/signup?persona=financial-advisor">
-                  Start Your Free Trial
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
+      <section className="py-20 px-4">
+        <div className="container mx-auto max-w-6xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center space-y-8"
+          >
+            <Badge className="bg-gold/20 text-gold border-gold/30 px-4 py-2">
+              <Briefcase className="w-4 h-4 mr-2" />
+              Financial Advisors
+            </Badge>
+            
+            <div className="space-y-6">
+              <h1 className="font-serif text-5xl lg:text-6xl font-bold text-foreground">
+                Run Your Advisory Firm on Rails
+              </h1>
+              <p className="text-xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
+                Workflows, compliance, training, and client engagement — all in one hub.
+              </p>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button 
+                size="lg"
+                onClick={() => navigate('/signup?persona=financial-advisor')}
+                className="bg-gradient-to-r from-gold to-gold/90 hover:from-gold/90 hover:to-gold text-navy font-bold px-8 py-4 text-lg"
+              >
+                Start Your Free Trial
+                <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
-              <Button size="lg" variant="outline" className="text-lg px-8 py-6" asChild>
-                <Link to="#demo">
-                  <Play className="mr-2 h-5 w-5" />
-                  See How It Works
-                </Link>
+              
+              <Button 
+                size="lg"
+                variant="outline"
+                onClick={() => navigate('#features')}
+                className="border-emerald text-emerald hover:bg-emerald/10 px-8 py-4 text-lg"
+              >
+                See How It Works
+                <PlayCircle className="w-5 h-5 ml-2" />
               </Button>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* Value Propositions */}
-      <section className="py-16 px-4">
-        <div className="max-w-7xl mx-auto">
+      {/* Value Proposition Blocks */}
+      <section className="py-24 bg-card/30">
+        <div className="container mx-auto max-w-6xl px-4">
           <div className="grid md:grid-cols-3 gap-8">
-            <Card className="border-2 hover:border-primary/20 transition-colors">
-              <CardHeader>
-                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-                  <Zap className="h-6 w-6 text-primary" />
-                </div>
-                <CardTitle className="text-xl">Unified Workflows</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">
-                  From lead capture to close and onboarding — streamline every step of your client journey with automated workflows and smart integrations.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="border-2 hover:border-primary/20 transition-colors">
-              <CardHeader>
-                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-                  <Shield className="h-6 w-6 text-primary" />
-                </div>
-                <CardTitle className="text-xl">Built-in Compliance</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">
-                  SEC/FINRA/DOL-ready workflows with automated documentation, approval processes, and 7-year retention archives built right in.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="border-2 hover:border-primary/20 transition-colors">
-              <CardHeader>
-                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-                  <Users className="h-6 w-6 text-primary" />
-                </div>
-                <CardTitle className="text-xl">Team Growth</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">
-                  Onboard assistants to partners with structured career tracks, role-based training, and performance management tools.
-                </p>
-              </CardContent>
-            </Card>
+            {valueProps.map((prop, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.2 }}
+              >
+                <Card className="h-full bg-card/50 backdrop-blur-sm border border-border hover:border-gold/30 transition-all duration-300">
+                  <CardHeader className="text-center">
+                    <div className="w-16 h-16 bg-gradient-to-br from-gold to-gold/80 rounded-xl flex items-center justify-center shadow-lg mx-auto mb-4">
+                      <prop.icon className="w-8 h-8 text-navy" />
+                    </div>
+                    <CardTitle className="text-xl">{prop.title}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground leading-relaxed text-center">
+                      {prop.description}
+                    </p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Key Features */}
-      <section className="py-16 px-4 bg-muted/30">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+      {/* Key Features Section */}
+      <section id="features" className="py-24">
+        <div className="container mx-auto max-w-6xl px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="font-serif text-4xl font-bold text-foreground mb-4">
               Everything You Need to Scale
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Powerful tools designed specifically for financial advisory practices, 
-              from solo practitioners to multi-advisor firms.
+              Comprehensive tools designed specifically for financial advisory practices
             </p>
-          </div>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {features.map((feature, index) => (
-              <Card key={index} className="hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-                    {feature.icon}
-                  </div>
-                  <CardTitle className="text-lg">{feature.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground">{feature.description}</p>
-                </CardContent>
-              </Card>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+            {keyFeatures.map((feature, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                className="flex items-center gap-3 p-4 rounded-lg bg-card/30 border border-border"
+              >
+                <CheckCircle className="w-5 h-5 text-emerald flex-shrink-0" />
+                <span className="text-foreground">{feature}</span>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Integrated Tools */}
-      <section className="py-16 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Integrated Intelligence
+      {/* Integrated Tools Callout */}
+      <section className="py-24 bg-card/30">
+        <div className="container mx-auto max-w-6xl px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="font-serif text-4xl font-bold text-foreground mb-4">
+              Integrated AI & Marketplace
             </h2>
-            <p className="text-xl text-muted-foreground">
-              AI-powered assistance and expert networks at your fingertips
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              Powered by advanced AI and connected to vetted professional networks
             </p>
-          </div>
-          
+          </motion.div>
+
           <div className="grid md:grid-cols-3 gap-8">
-            {tools.map((tool, index) => (
-              <div key={index} className="text-center p-6 rounded-lg border-2 border-dashed border-primary/20 hover:border-primary/40 transition-colors">
-                <h3 className="text-lg font-semibold mb-3">{tool.title}</h3>
-                <p className="text-muted-foreground">{tool.description}</p>
-              </div>
+            {integratedTools.map((tool, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.2 }}
+              >
+                <Card className="h-full bg-gradient-to-br from-card to-card/50 border border-gold/20">
+                  <CardContent className="p-6 text-center">
+                    <Zap className="w-12 h-12 text-gold mx-auto mb-4" />
+                    <h3 className="text-lg font-bold text-foreground mb-2">{tool.title}</h3>
+                    <p className="text-muted-foreground">{tool.description}</p>
+                  </CardContent>
+                </Card>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section className="py-16 px-4 bg-muted/30">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Trusted by Growing Firms
+      {/* Testimonials Slider */}
+      <section className="py-24">
+        <div className="container mx-auto max-w-4xl px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="font-serif text-4xl font-bold text-foreground mb-4">
+              Trusted by Advisory Firms
             </h2>
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-8">
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 gap-8">
             {testimonials.map((testimonial, index) => (
-              <Card key={index} className="hover:shadow-lg transition-shadow">
-                <CardContent className="pt-6">
-                  <div className="flex mb-4">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="h-4 w-4 fill-primary text-primary" />
-                    ))}
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.2 }}
+              >
+                <Card className="p-8 bg-card border border-gold/20">
+                  <div className="flex items-start gap-4">
+                    <Star className="w-6 h-6 text-gold flex-shrink-0 mt-1" />
+                    <div>
+                      <blockquote className="text-lg text-foreground mb-4 italic">
+                        "{testimonial.quote}"
+                      </blockquote>
+                      <cite className="text-muted-foreground">— {testimonial.author}</cite>
+                    </div>
                   </div>
-                  <blockquote className="text-lg mb-4 italic">
-                    "{testimonial.quote}"
-                  </blockquote>
-                  <div className="border-t pt-4">
-                    <div className="font-semibold">{testimonial.author}</div>
-                    <div className="text-sm text-muted-foreground">{testimonial.role}</div>
-                    <div className="text-sm text-muted-foreground">{testimonial.firm}</div>
-                  </div>
-                </CardContent>
-              </Card>
+                </Card>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
       {/* Pricing Teaser */}
-      <section className="py-16 px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          <Card className="border-2 border-primary/20 bg-gradient-to-br from-primary/5 to-primary/10">
-            <CardContent className="pt-8 pb-8">
-              <h2 className="text-2xl md:text-3xl font-bold mb-4">
-                Plans Starting at $99/Month
-              </h2>
-              <p className="text-lg text-muted-foreground mb-6">
-                Scale as you grow — from solo practices to enterprise firms
-              </p>
-              <Button size="lg" variant="outline" className="text-lg px-8 py-6" asChild>
-                <Link to="/pricing">
-                  View Plans & Features
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
-              </Button>
-            </CardContent>
-          </Card>
+      <section className="py-24 bg-card/30">
+        <div className="container mx-auto max-w-4xl px-4 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <DollarSign className="w-16 h-16 text-gold mx-auto mb-6" />
+            <h2 className="font-serif text-3xl font-bold text-foreground mb-4">
+              Plans starting at $99/month — scale as you grow
+            </h2>
+            <p className="text-xl text-muted-foreground mb-8">
+              Transparent pricing with no hidden fees or long-term contracts
+            </p>
+            
+            <Button 
+              size="lg"
+              onClick={() => navigate('/pricing')}
+              className="bg-gradient-to-r from-emerald to-emerald/90 hover:from-emerald/90 hover:to-emerald text-background font-bold px-8 py-4 text-lg"
+            >
+              View Plans & Features
+              <ArrowRight className="w-5 h-5 ml-2" />
+            </Button>
+          </motion.div>
         </div>
       </section>
 
-      {/* Final CTA */}
-      <section className="py-20 px-4 bg-primary text-primary-foreground">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl md:text-5xl font-bold mb-6">
-            Transform Your Advisory Practice
-          </h2>
-          <p className="text-xl mb-8 opacity-90">
-            Join hundreds of advisors who've streamlined their operations and accelerated growth
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button 
-              size="lg" 
-              variant="secondary" 
-              className="text-lg px-8 py-6 bg-background text-primary hover:bg-background/90" 
-              asChild
-            >
-              <Link to="/signup?persona=financial-advisor">
+      {/* Final CTA Section */}
+      <section className="py-24">
+        <div className="container mx-auto max-w-6xl px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center space-y-8"
+          >
+            <h2 className="font-serif text-5xl font-bold text-foreground">
+              Transform Your Advisory Practice
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              Join hundreds of advisory firms who've streamlined their operations and grown their business with our platform
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button 
+                size="lg"
+                onClick={() => navigate('/signup?persona=financial-advisor')}
+                className="bg-gradient-to-r from-gold to-gold/90 hover:from-gold/90 hover:to-gold text-navy font-bold px-8 py-4 text-lg"
+              >
                 Start Now
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
-            </Button>
-            <Button 
-              size="lg" 
-              variant="outline" 
-              className="text-lg px-8 py-6 border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary" 
-              asChild
-            >
-              <Link to="/demo">
-                <MessageSquare className="mr-2 h-5 w-5" />
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </Button>
+              
+              <Button 
+                size="lg"
+                variant="outline"
+                onClick={() => navigate('/demo/request')}
+                className="border-emerald text-emerald hover:bg-emerald/10 px-8 py-4 text-lg"
+              >
                 Book a Demo
-              </Link>
-            </Button>
-          </div>
+                <Globe className="w-5 h-5 ml-2" />
+              </Button>
+            </div>
+          </motion.div>
         </div>
       </section>
+
+      <BrandedFooter />
     </div>
   );
-}
+};

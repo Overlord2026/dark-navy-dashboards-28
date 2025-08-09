@@ -48,7 +48,18 @@ export const useOrganization = () => {
         if (orgError) {
           setError(orgError.message);
         } else {
-          setOrganization(orgData as Organization);
+          // Map the database response to our Organization type
+          const org: Organization = {
+            id: orgData.id,
+            name: orgData.name,
+            persona: orgData.organization_type as any, // Map organization_type to persona
+            logo_url: orgData.logo_url,
+            brand_colors: undefined, // Not available in database
+            retention_years: 7, // Default value
+            created_at: orgData.created_at,
+            updated_at: orgData.updated_at
+          };
+          setOrganization(org);
         }
       } catch (err) {
         setError('Failed to load organization data');
