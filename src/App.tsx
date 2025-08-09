@@ -314,6 +314,11 @@ function App() {
                                     {React.createElement(React.lazy(() => import('./pages/persona/DentistPersonaPage').then(m => ({ default: m.DentistPersonaPage }))))}
                                   </React.Suspense>
                                 } />
+                                <Route path="/persona/sports-agent" element={
+                                  <React.Suspense fallback={<div>Loading...</div>}>
+                                    {React.createElement(React.lazy(() => import('./pages/persona/SportsAgentPersonaPage').then(m => ({ default: m.SportsAgentPersonaPage }))))}
+                                  </React.Suspense>
+                                } />
                                 <Route path="/persona/cpa" element={
                                   <React.Suspense fallback={<div>Loading...</div>}>
                                     {React.createElement(React.lazy(() => import('./pages/persona/CPAPersonaPage').then(m => ({ default: m.CPAPersonaPage }))))}
