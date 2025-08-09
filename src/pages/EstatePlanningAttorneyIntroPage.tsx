@@ -24,39 +24,39 @@ import { motion } from 'framer-motion';
 export const EstatePlanningAttorneyIntroPage: React.FC = () => {
   const benefits = [
     {
-      icon: Calculator,
-      title: 'Advanced Estate Calculators',
-      description: 'Estate tax projections, GST planning, charitable trust calculations'
+      icon: FileText,
+      title: 'Estate Planning Suite',
+      description: 'Wills, trusts, powers of attorney, and healthcare directives in one toolkit'
     },
     {
-      icon: Building,
-      title: 'Entity & Trust Management',
-      description: 'Visualize and structure multi-entity family estates'
+      icon: Calculator,
+      title: 'Advanced Calculators',
+      description: 'Estate tax, gift tax, charitable giving strategies'
     },
     {
       icon: Lock,
       title: 'Secure Document Vault',
-      description: 'Privilege-protected uploads, version history, and client sharing'
+      description: 'Privilege-protected storage and easy sharing with clients'
     },
     {
       icon: Users,
-      title: 'Client Portals',
-      description: 'Branded logins for document access, task lists, and secure communications'
-    },
-    {
-      icon: Shield,
-      title: 'Compliance Platform',
-      description: 'ABA and state bar-aligned audit trails, SOC 2-ready'
+      title: 'Client Portal',
+      description: 'Real-time updates, document review, and communication'
     },
     {
       icon: TrendingUp,
-      title: 'Collaboration Tools',
-      description: 'Connect with financial advisors, CPAs, and insurance professionals'
+      title: 'Linda AI Assistant',
+      description: 'Draft clauses, summarize client meetings, and prepare follow-up emails'
+    },
+    {
+      icon: CheckCircle,
+      title: 'Compliance Tracking',
+      description: 'State bar requirements, CLE tracking, and audit-ready logs'
     },
     {
       icon: BarChart3,
-      title: 'SWAG™ Retirement Roadmap Integration',
-      description: 'Support clients\' retirement and legacy planning in one system'
+      title: 'Integrated Retirement Roadmap',
+      description: 'Provide financial context for estate strategies'
     }
   ];
 
@@ -64,27 +64,27 @@ export const EstatePlanningAttorneyIntroPage: React.FC = () => {
     {
       number: '1',
       title: 'Onboard Clients',
-      description: 'Digital intake forms and automated welcome sequences'
+      description: 'Digital intake forms and profile creation'
     },
     {
       number: '2',
-      title: 'Plan & Calculate',
-      description: 'Use estate tax calculators, charitable trust planners, and entity structuring tools'
+      title: 'Plan & Draft',
+      description: 'Use AI-assisted templates for wills, trusts, and directives'
     },
     {
       number: '3',
       title: 'Collaborate',
-      description: 'Share documents and insights with client\'s full professional team'
+      description: 'Securely share drafts and receive client feedback in real time'
     },
     {
       number: '4',
-      title: 'Stay Compliant',
-      description: 'Automated audit logs and privilege protection for sensitive data'
+      title: 'Finalize',
+      description: 'Generate complete document packages for signing'
     },
     {
       number: '5',
-      title: 'Deliver Results',
-      description: 'Provide visual estate plans and reports your clients can understand and act on'
+      title: 'Stay Compliant',
+      description: 'Track deadlines, CLEs, and maintain audit logs'
     }
   ];
 
@@ -95,8 +95,7 @@ export const EstatePlanningAttorneyIntroPage: React.FC = () => {
       annual: '$700',
       features: [
         'Client portal',
-        'CLE tracking',
-        'Secure document vault',
+        'Document vault',
         'Linda AI add-on ($10/mo)'
       ],
       popular: false
@@ -107,9 +106,9 @@ export const EstatePlanningAttorneyIntroPage: React.FC = () => {
       annual: '$1300',
       features: [
         'All Basic features',
-        'Advanced estate calculators',
-        'Entity/trust planning',
-        'SWAG™ Roadmap',
+        'Estate planning suite',
+        'Advanced calculators',
+        'CLE tracking',
         'Linda AI included'
       ],
       popular: true
@@ -120,9 +119,9 @@ export const EstatePlanningAttorneyIntroPage: React.FC = () => {
       annual: '$2000',
       features: [
         'All Pro features',
-        'AI legal assistant',
-        'Marketplace priority listing',
-        'Family office integration'
+        'Integrated Retirement Roadmap',
+        'Private client concierge',
+        'White-label option'
       ],
       popular: false
     }
@@ -147,21 +146,20 @@ export const EstatePlanningAttorneyIntroPage: React.FC = () => {
             
             <div className="space-y-6">
               <h1 className="font-serif text-5xl lg:text-6xl font-bold text-foreground">
-                Your Complete Estate Planning Practice Hub
+                Streamline Estate Planning with AI-Powered Client Management
               </h1>
               <p className="text-xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
-                Client management, advanced planning calculators, compliance tools, and collaborative workflows — 
-                all in one secure platform.
+                From intake to final documents — manage your practice, stay compliant, and serve clients faster.
               </p>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button 
                 size="lg"
-                onClick={() => window.location.href = 'https://my.bfocfo.com/onboarding/attorney-estate'}
+                onClick={() => window.location.href = 'https://my.bfocfo.com/onboarding/estate-attorney'}
                 className="bg-gradient-to-r from-emerald to-emerald/90 hover:from-emerald/90 hover:to-emerald text-navy font-bold px-8 py-4 text-lg"
               >
-                Get Started as an Estate Planner
+                Get Started as an Estate Planning Attorney
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
               
@@ -184,10 +182,7 @@ export const EstatePlanningAttorneyIntroPage: React.FC = () => {
         <div className="container mx-auto max-w-4xl px-4">
           <div className="text-center">
             <p className="text-lg text-muted-foreground leading-relaxed">
-              The <strong className="text-emerald">Estate Planning Attorney Command Center</strong> gives you every tool you need to 
-              serve your clients effectively, remain compliant, and grow your practice. From advanced trust and estate tax 
-              calculators to secure document sharing and collaborative case management, our platform simplifies the complex 
-              and elevates your client experience.
+              The <strong className="text-emerald">Estate Planning Practice Hub</strong> is built for attorneys who want to deliver exceptional client service while managing their practice efficiently. Automate intake, draft complex estate plans, and ensure compliance — all within one secure platform.
             </p>
           </div>
         </div>
@@ -329,7 +324,7 @@ export const EstatePlanningAttorneyIntroPage: React.FC = () => {
                     <Button 
                       className="w-full"
                       variant={tier.popular ? "default" : "outline"}
-                      onClick={() => window.location.href = 'https://my.bfocfo.com/onboarding/attorney-estate'}
+                      onClick={() => window.location.href = 'https://my.bfocfo.com/onboarding/estate-attorney'}
                     >
                       Get Started
                     </Button>
@@ -350,8 +345,7 @@ export const EstatePlanningAttorneyIntroPage: React.FC = () => {
               <h3 className="font-semibold text-lg">Compliance & Security</h3>
             </div>
             <p className="text-muted-foreground">
-              Aligned with <strong>ABA</strong>, <strong>state bar</strong>, <strong>GDPR</strong>, and <strong>CCPA</strong>. 
-              SOC 2-ready security framework.
+              Fully compliant with <strong>ABA Model Rules</strong>, <strong>state bar privacy requirements</strong>, <strong>GDPR</strong>, and <strong>CCPA</strong>.
             </p>
           </div>
         </div>
@@ -368,7 +362,7 @@ export const EstatePlanningAttorneyIntroPage: React.FC = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button 
                 size="lg"
-                onClick={() => window.location.href = 'https://my.bfocfo.com/onboarding/attorney-estate'}
+                onClick={() => window.location.href = 'https://my.bfocfo.com/onboarding/estate-attorney'}
                 className="bg-gradient-to-r from-emerald to-emerald/90 hover:from-emerald/90 hover:to-emerald text-navy font-bold px-8 py-4"
               >
                 Start My Free Trial
