@@ -183,6 +183,7 @@ import { DentistPersonaPage } from '@/pages/persona/DentistPersonaPage';
 import { IndustryAssociationPersonaPage } from '@/pages/persona/IndustryAssociationPersonaPage';
 import { ProAthletesNILPersonaPage } from '@/pages/persona/ProAthletesNILPersonaPage';
 import BusinessOwnerPersonaPage from '@/pages/persona/BusinessOwnerPersonaPage';
+import EntrepreneurFounderPersonaPage from '@/pages/persona/EntrepreneurFounderPersonaPage';
 
 // Import onboarding flow component
 const PersonaOnboardingFlow = React.lazy(() => 
@@ -317,6 +318,7 @@ function App() {
         <Route path="/persona/industry-association" element={<IndustryAssociationPersonaPage />} />
         <Route path="/persona/pro-athletes-nil" element={<ProAthletesNILPersonaPage />} />
         <Route path="/persona/business-owner" element={<BusinessOwnerPersonaPage />} />
+        <Route path="/persona/entrepreneur-founder" element={<EntrepreneurFounderPersonaPage />} />
                                  <Route path="/calculator" element={<PublicFeeCalculator />} />
                                 <Route path="/demo" element={<div className="min-h-screen bg-background p-8"><DemoCalculator /></div>} />
                                 <Route path="/lead-magnet" element={<LeadMagnetPage />} />
