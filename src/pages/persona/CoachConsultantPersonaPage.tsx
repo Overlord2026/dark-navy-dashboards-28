@@ -1,293 +1,378 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Users, Target, Brain, Calendar, FileText, CreditCard, Shield, MessageSquare, Phone, TrendingUp } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
+import { 
+  Users, 
+  Calendar, 
+  TrendingUp, 
+  MessageSquare, 
+  Brain, 
+  ClipboardList, 
+  Phone, 
+  BarChart3,
+  Shield,
+  CreditCard,
+  Target,
+  FileText,
+  ArrowRight,
+  PlayCircle,
+  DollarSign,
+  Star,
+  CheckCircle,
+  Zap,
+  Globe,
+  UserPlus,
+  Clock,
+  Settings,
+  BookOpen,
+  Briefcase
+} from 'lucide-react';
+import { LandingNavigation } from '@/components/marketplace/LandingNavigation';
+import { BrandedFooter } from '@/components/ui/BrandedFooter';
 
-export const CoachConsultantPersonaPage = () => {
-  const testimonials = [
-    "I save 5+ hours a week on admin tasks — more time with clients!",
-    "The AI follow-up summaries are a game changer for my coaching practice.",
-    "I can track progress and send reminders without juggling multiple tools."
+export const CoachConsultantPersonaPage: React.FC = () => {
+  const navigate = useNavigate();
+
+  const valueProps = [
+    {
+      icon: UserPlus,
+      title: 'Seamless Client Onboarding',
+      description: 'Intake forms, profile creation, and goal-setting tools.'
+    },
+    {
+      icon: Calendar,
+      title: 'Session Management',
+      description: 'Schedule, conduct, and record sessions with built-in notes and follow-ups.'
+    },
+    {
+      icon: TrendingUp,
+      title: 'Progress Tracking',
+      description: 'Visual dashboards to track client milestones and achievements.'
+    }
   ];
 
-  const [currentTestimonial, setCurrentTestimonial] = React.useState(0);
+  const keyFeatures = [
+    { icon: Shield, text: 'Client portal with secure document sharing' },
+    { icon: Brain, text: 'AI-powered meeting summaries & action item tracking' },
+    { icon: Clock, text: 'Integrated appointment scheduling with reminders' },
+    { icon: Phone, text: 'Twilio-powered SMS/voice notifications' },
+    { icon: BarChart3, text: 'Progress tracking dashboards for clients' },
+    { icon: FileText, text: 'Customizable coaching program templates' },
+    { icon: ClipboardList, text: 'Compliance tools for coaching ethics and client confidentiality' },
+    { icon: CreditCard, text: 'Billing & invoicing system' }
+  ];
 
-  React.useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
-    }, 4000);
-    return () => clearInterval(timer);
-  }, [testimonials.length]);
+  const integratedTools = [
+    {
+      title: 'Operations Management System',
+      description: 'Manage your team, roles, and projects'
+    },
+    {
+      title: 'Built-in Learning Management System (LMS)',
+      description: 'Create and deliver training to team members or clients; includes pre-loaded "Coaching Excellence" starter course pack'
+    },
+    {
+      title: 'Linda AI Assistant',
+      description: 'For meeting follow-ups, content drafting, and progress reports'
+    },
+    {
+      title: 'Marketplace Access',
+      description: 'For vetted legal, accounting, and marketing services'
+    }
+  ];
+
+  const testimonials = [
+    {
+      quote: "The integrated scheduling and follow-up tools have doubled my client retention.",
+      author: "Executive Coach, Leadership Development"
+    },
+    {
+      quote: "Linda AI handles my summaries and frees up my focus for coaching.",
+      author: "Business Consultant, Strategy & Growth"
+    },
+    {
+      quote: "The Operations Management system keeps my growing team on track.",
+      author: "Coaching Practice Owner"
+    }
+  ];
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* SEO Meta Tags */}
-      <head>
-        <title>Coach & Consultant Practice Platform | BFOCFO</title>
-        <meta name="description" content="Client onboarding, goal tracking, AI follow-ups, and payment tools for coaches and consultants — all in one secure platform." />
-      </head>
-
+    <div className="min-h-screen bg-gradient-to-br from-navy via-background to-navy">
+      <LandingNavigation />
+      
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-primary/10 via-background to-secondary/10 py-20 px-4">
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width=%2260%22%20height=%2260%22%20viewBox=%220%200%2060%2060%22%20xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cg%20fill=%22none%22%20fill-rule=%22evenodd%22%3E%3Cg%20fill=%22%23000000%22%20fill-opacity=%220.05%22%3E%3Ccircle%20cx=%227%22%20cy=%227%22%20r=%221%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-50" />
-        
-        <div className="relative max-w-6xl mx-auto text-center">
-          <div className="mb-8">
-            <Target className="w-16 h-16 text-primary mx-auto mb-6" />
-          </div>
-          
-          <h1 className="font-serif text-4xl lg:text-6xl font-bold text-foreground mb-6 leading-tight">
-            Grow Your Coaching & Consulting Business with an All-in-One Client Success Platform
-          </h1>
-          
-          <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
-            From onboarding to goal tracking, session notes, and payment management — everything you need in one secure, AI-powered hub.
-          </p>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <Button 
-              size="lg" 
-              className="bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-6 text-lg"
-              onClick={() => window.location.href = '/signup?persona=coach-consultant'}
-            >
-              Start Your Free Trial
-              <ArrowRight className="ml-2 w-5 h-5" />
-            </Button>
-            <Button 
-              variant="outline" 
-              size="lg" 
-              className="border-primary text-primary hover:bg-primary hover:text-primary-foreground px-8 py-6 text-lg"
-            >
-              See How It Works
-            </Button>
-          </div>
+      <section className="py-20 px-4">
+        <div className="container mx-auto max-w-6xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center space-y-8"
+          >
+            <Badge className="bg-gold/20 text-gold border-gold/30 px-4 py-2">
+              <Target className="w-4 h-4 mr-2" />
+              Coaches & Consultants
+            </Badge>
+            
+            <div className="space-y-6">
+              <h1 className="font-serif text-5xl lg:text-6xl font-bold text-foreground">
+                Streamline Your Coaching Practice and Empower Your Clients
+              </h1>
+              <p className="text-xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
+                From client onboarding to session management, follow-up, and growth tracking — all in one secure platform.
+              </p>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button 
+                size="lg"
+                onClick={() => navigate('/signup?persona=coach-consultant')}
+                className="bg-gradient-to-r from-gold to-gold/90 hover:from-gold/90 hover:to-gold text-navy font-bold px-8 py-4 text-lg"
+              >
+                Start Your Free Trial
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </Button>
+              
+              <Button 
+                size="lg"
+                variant="outline"
+                onClick={() => navigate('#features')}
+                className="border-emerald text-emerald hover:bg-emerald/10 px-8 py-4 text-lg"
+              >
+                See How It Works
+                <PlayCircle className="w-5 h-5 ml-2" />
+              </Button>
+            </div>
+          </motion.div>
         </div>
       </section>
 
       {/* Value Proposition Blocks */}
-      <section className="py-16 px-4 bg-muted/30">
-        <div className="max-w-6xl mx-auto">
+      <section className="py-24 bg-card/30">
+        <div className="container mx-auto max-w-6xl px-4">
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center p-6 bg-card rounded-lg shadow-sm border">
-              <Users className="w-12 h-12 text-primary mx-auto mb-4" />
-              <h3 className="font-serif text-xl font-bold text-foreground mb-3">Client Onboarding & Profiles</h3>
-              <p className="text-muted-foreground">
-                Quickly capture client goals, background, and preferences in a secure profile.
-              </p>
-            </div>
-            
-            <div className="text-center p-6 bg-card rounded-lg shadow-sm border">
-              <TrendingUp className="w-12 h-12 text-primary mx-auto mb-4" />
-              <h3 className="font-serif text-xl font-bold text-foreground mb-3">Goal & Progress Tracking</h3>
-              <p className="text-muted-foreground">
-                Set milestones, track results, and share visual progress updates.
-              </p>
-            </div>
-            
-            <div className="text-center p-6 bg-card rounded-lg shadow-sm border">
-              <Brain className="w-12 h-12 text-primary mx-auto mb-4" />
-              <h3 className="font-serif text-xl font-bold text-foreground mb-3">AI-Powered Session Support</h3>
-              <p className="text-muted-foreground">
-                Auto-generate follow-up notes, resources, and action items from each meeting.
-              </p>
-            </div>
+            {valueProps.map((prop, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.2 }}
+              >
+                <Card className="h-full bg-card/50 backdrop-blur-sm border border-border hover:border-gold/30 transition-all duration-300">
+                  <CardHeader className="text-center">
+                    <div className="w-16 h-16 bg-gradient-to-br from-gold to-gold/80 rounded-xl flex items-center justify-center shadow-lg mx-auto mb-4">
+                      <prop.icon className="w-8 h-8 text-navy" />
+                    </div>
+                    <CardTitle className="text-xl">{prop.title}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground leading-relaxed text-center">
+                      {prop.description}
+                    </p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Key Features Section */}
-      <section className="py-16 px-4">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="font-serif text-3xl lg:text-4xl font-bold text-foreground mb-4">
+      <section id="features" className="py-24">
+        <div className="container mx-auto max-w-6xl px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="font-serif text-4xl font-bold text-foreground mb-4">
               Everything You Need to Scale Your Practice
             </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Comprehensive tools designed specifically for coaches and consultants
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              Comprehensive coaching tools designed to help you deliver exceptional client experiences
             </p>
-          </div>
+          </motion.div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="flex items-start gap-4 p-6 bg-card rounded-lg border">
-              <FileText className="w-8 h-8 text-primary flex-shrink-0 mt-1" />
-              <div>
-                <h3 className="font-semibold text-foreground mb-2">Customizable Client Intake Forms</h3>
-                <p className="text-sm text-muted-foreground">Streamline onboarding with tailored questionnaires</p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-4 p-6 bg-card rounded-lg border">
-              <Calendar className="w-8 h-8 text-primary flex-shrink-0 mt-1" />
-              <div>
-                <h3 className="font-semibold text-foreground mb-2">Session Scheduling with Reminders</h3>
-                <p className="text-sm text-muted-foreground">Integrated calendar with automated notifications</p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-4 p-6 bg-card rounded-lg border">
-              <Brain className="w-8 h-8 text-primary flex-shrink-0 mt-1" />
-              <div>
-                <h3 className="font-semibold text-foreground mb-2">AI-Generated Meeting Summaries</h3>
-                <p className="text-sm text-muted-foreground">Auto-create notes and resource recommendations</p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-4 p-6 bg-card rounded-lg border">
-              <Target className="w-8 h-8 text-primary flex-shrink-0 mt-1" />
-              <div>
-                <h3 className="font-semibold text-foreground mb-2">Goal Tracking Dashboard</h3>
-                <p className="text-sm text-muted-foreground">Visual progress tracking with milestone celebrations</p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-4 p-6 bg-card rounded-lg border">
-              <FileText className="w-8 h-8 text-primary flex-shrink-0 mt-1" />
-              <div>
-                <h3 className="font-semibold text-foreground mb-2">Secure Document Sharing</h3>
-                <p className="text-sm text-muted-foreground">Collaboration tools with privacy protection</p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-4 p-6 bg-card rounded-lg border">
-              <CreditCard className="w-8 h-8 text-primary flex-shrink-0 mt-1" />
-              <div>
-                <h3 className="font-semibold text-foreground mb-2">Built-in Invoicing & Payments</h3>
-                <p className="text-sm text-muted-foreground">Streamlined billing with payment tracking</p>
-              </div>
-            </div>
+          <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+            {keyFeatures.map((feature, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                className="flex items-center gap-4 p-4 rounded-lg bg-card/30 border border-border"
+              >
+                <div className="w-10 h-10 bg-emerald/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <feature.icon className="w-5 h-5 text-emerald" />
+                </div>
+                <span className="text-foreground">{feature.text}</span>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Integrated Tools Callout */}
-      <section className="py-16 px-4 bg-muted/30">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="font-serif text-3xl font-bold text-foreground mb-4">
-              Integrated Professional Tools
+      <section className="py-24 bg-card/30">
+        <div className="container mx-auto max-w-6xl px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="font-serif text-4xl font-bold text-foreground mb-4">
+              Integrated Business Management Tools
             </h2>
-            <p className="text-lg text-muted-foreground">
-              Advanced features that work seamlessly together
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              Beyond coaching — complete business operations, learning management, and AI assistance
             </p>
-          </div>
+          </motion.div>
 
           <div className="grid md:grid-cols-2 gap-8">
-            <div className="p-6 bg-card rounded-lg border">
-              <Brain className="w-10 h-10 text-primary mb-4" />
-              <h3 className="font-semibold text-foreground mb-2">Linda AI Assistant</h3>
-              <p className="text-muted-foreground">Session prep, follow-ups, and personalized content generation</p>
-            </div>
-
-            <div className="p-6 bg-card rounded-lg border">
-              <MessageSquare className="w-10 h-10 text-primary mb-4" />
-              <h3 className="font-semibold text-foreground mb-2">Twilio Integration</h3>
-              <p className="text-muted-foreground">SMS/voice reminders and quick client touchpoints</p>
-            </div>
-
-            <div className="p-6 bg-card rounded-lg border">
-              <TrendingUp className="w-10 h-10 text-primary mb-4" />
-              <h3 className="font-semibold text-foreground mb-2">Lead-to-Sales Closure Engine</h3>
-              <p className="text-muted-foreground">For consultants managing their own client acquisition funnels</p>
-            </div>
-
-            <div className="p-6 bg-card rounded-lg border">
-              <Target className="w-10 h-10 text-primary mb-4" />
-              <h3 className="font-semibold text-foreground mb-2">SWAG™ Retirement Roadmap</h3>
-              <p className="text-muted-foreground">Optional tool for consultants offering financial wellness guidance</p>
-            </div>
+            {integratedTools.map((tool, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.2 }}
+              >
+                <Card className="h-full bg-gradient-to-br from-card to-card/50 border border-gold/20">
+                  <CardContent className="p-6">
+                    <div className="flex items-start gap-4">
+                      <Zap className="w-8 h-8 text-gold flex-shrink-0 mt-1" />
+                      <div>
+                        <h3 className="text-lg font-bold text-foreground mb-2">{tool.title}</h3>
+                        <p className="text-muted-foreground">{tool.description}</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Testimonials Slider */}
-      <section className="py-16 px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="font-serif text-3xl font-bold text-foreground mb-12">
-            What Coaches & Consultants Say
-          </h2>
-          
-          <div className="relative h-32 flex items-center justify-center">
-            <div className="absolute inset-0 flex items-center justify-center transition-opacity duration-500">
-              <blockquote className="text-xl text-muted-foreground italic max-w-2xl">
-                "{testimonials[currentTestimonial]}"
-              </blockquote>
-            </div>
-          </div>
-          
-          <div className="flex justify-center gap-2 mt-8">
-            {testimonials.map((_, index) => (
-              <button
+      <section className="py-24">
+        <div className="container mx-auto max-w-5xl px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="font-serif text-4xl font-bold text-foreground mb-4">
+              Trusted by Coaches & Consultants
+            </h2>
+          </motion.div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {testimonials.map((testimonial, index) => (
+              <motion.div
                 key={index}
-                className={`w-3 h-3 rounded-full transition-colors ${
-                  index === currentTestimonial ? 'bg-primary' : 'bg-muted'
-                }`}
-                onClick={() => setCurrentTestimonial(index)}
-              />
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.2 }}
+              >
+                <Card className="h-full p-6 bg-card border border-gold/20">
+                  <div className="flex flex-col h-full">
+                    <div className="flex items-center gap-2 mb-4">
+                      <Star className="w-5 h-5 text-gold" />
+                      <Star className="w-5 h-5 text-gold" />
+                      <Star className="w-5 h-5 text-gold" />
+                      <Star className="w-5 h-5 text-gold" />
+                      <Star className="w-5 h-5 text-gold" />
+                    </div>
+                    <blockquote className="text-foreground mb-4 italic flex-1">
+                      "{testimonial.quote}"
+                    </blockquote>
+                    <cite className="text-muted-foreground text-sm">— {testimonial.author}</cite>
+                  </div>
+                </Card>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
       {/* Pricing Teaser */}
-      <section className="py-16 px-4 bg-muted/30">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="font-serif text-3xl font-bold text-foreground mb-4">
-            Simple, Scalable Pricing
-          </h2>
-          <p className="text-xl text-muted-foreground mb-8">
-            Plans starting at $29/month — scale your coaching business with tools that grow with you.
-          </p>
-          <Button 
-            size="lg" 
-            variant="outline"
-            className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+      <section className="py-24 bg-card/30">
+        <div className="container mx-auto max-w-4xl px-4 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
           >
-            View Plans & Features
-          </Button>
+            <DollarSign className="w-16 h-16 text-gold mx-auto mb-6" />
+            <h2 className="font-serif text-3xl font-bold text-foreground mb-4">
+              Plans starting at $29/month — scale as your practice grows
+            </h2>
+            <p className="text-xl text-muted-foreground mb-8">
+              Affordable coaching tools that grow with your client base and business needs
+            </p>
+            
+            <Button 
+              size="lg"
+              onClick={() => navigate('/pricing')}
+              className="bg-gradient-to-r from-emerald to-emerald/90 hover:from-emerald/90 hover:to-emerald text-background font-bold px-8 py-4 text-lg"
+            >
+              View Plans & Features
+              <ArrowRight className="w-5 h-5 ml-2" />
+            </Button>
+          </motion.div>
         </div>
       </section>
 
       {/* Final CTA Section */}
-      <section className="py-20 px-4 bg-gradient-to-br from-primary/10 to-secondary/10">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="font-serif text-4xl font-bold text-foreground mb-4">
-            Empower Your Coaching & Consulting Practice
-          </h2>
-          <p className="text-xl text-muted-foreground mb-8">
-            Streamline client management, boost engagement, and scale with confidence.
-          </p>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button 
-              size="lg" 
-              className="bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-6 text-lg"
-              onClick={() => window.location.href = '/signup?persona=coach-consultant'}
-            >
-              Start Now
-              <ArrowRight className="ml-2 w-5 h-5" />
-            </Button>
-            <Button 
-              variant="outline" 
-              size="lg" 
-              className="border-primary text-primary hover:bg-primary hover:text-primary-foreground px-8 py-6 text-lg"
-            >
-              Book a Demo
-            </Button>
-          </div>
+      <section className="py-24">
+        <div className="container mx-auto max-w-6xl px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center space-y-8"
+          >
+            <h2 className="font-serif text-5xl font-bold text-foreground">
+              Grow Your Coaching Practice With Confidence
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              Empower clients, streamline operations, and scale with ease.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button 
+                size="lg"
+                onClick={() => navigate('/signup?persona=coach-consultant')}
+                className="bg-gradient-to-r from-gold to-gold/90 hover:from-gold/90 hover:to-gold text-navy font-bold px-8 py-4 text-lg"
+              >
+                Start Now
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </Button>
+              
+              <Button 
+                size="lg"
+                variant="outline"
+                onClick={() => navigate('/demo/request')}
+                className="border-emerald text-emerald hover:bg-emerald/10 px-8 py-4 text-lg"
+              >
+                Book a Demo
+                <Globe className="w-5 h-5 ml-2" />
+              </Button>
+            </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* Compliance Footer */}
-      <section className="py-8 px-4 bg-muted/50 border-t">
-        <div className="max-w-6xl mx-auto text-center">
-          <div className="flex items-center justify-center gap-2 mb-2">
-            <Shield className="w-5 h-5 text-primary" />
-            <span className="text-sm font-semibold text-foreground">Compliance Ready</span>
-          </div>
-          <p className="text-sm text-muted-foreground">
-            Fully compliant with GDPR, CCPA, and data privacy regulations
-          </p>
-        </div>
-      </section>
+      <BrandedFooter />
     </div>
   );
 };
