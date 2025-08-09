@@ -46,6 +46,7 @@ import RetirementRoadmapInfo from "./pages/RetirementRoadmapInfo";
 import RetirementAnalyzerDemo from "./pages/RetirementAnalyzerDemo";
 import PublicTaxCenter from "./pages/PublicTaxCenter";
 import SwagRetirementRoadmap from "./pages/retirement-roadmap/SwagRetirementRoadmap";
+import { SwagRetirementRoadmapPage } from "./pages/roadmap/SwagRetirementRoadmapPage";
 import InvestmentAllocationDashboard from "./pages/retirement-roadmap/InvestmentAllocationDashboard";
 import SwagRoadmapSettings from "./pages/admin/SwagRoadmapSettings";
 import { AuthPage } from "./pages/AuthPage";
@@ -672,6 +673,7 @@ function App() {
           <Route path="/shark-tank-pitch" element={<SharkTankPitch />} />
           <Route path="/tools/retirement-confidence-scorecard" element={<RetirementConfidenceScorecardPage />} />
           <Route path="/scorecard/start" element={<ScorecardStartPage />} />
+          <Route path="/roadmap/intake" element={<SwagRetirementRoadmapPage />} />
 
                          </Routes>
                         <Navigation />
