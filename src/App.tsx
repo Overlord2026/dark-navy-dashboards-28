@@ -137,6 +137,7 @@ import AthleteWealthDeck from './pages/athletes/AthleteWealthDeck';
 import AdvisorDeck from './pages/sales/AdvisorDeck';
 import AdvisorPersonaDeck from './components/decks/AdvisorPersonaDeck';
 import AdvisorEmailSequence from './components/advisor/AdvisorEmailSequence';
+import AdvisorEmailTester from './components/advisor/AdvisorEmailTester';
 import ClientFamilyDeck from './pages/family/ClientFamilyDeck';
 import AccountantDeck from './pages/accountant/AccountantDeck';
 import ClientFamilySolutionsDeck from '@/components/decks/ClientFamilySolutionsDeck';
@@ -206,6 +207,7 @@ function App() {
           <Route path="/sales/advisor-deck" element={<AdvisorDeck />} />
           <Route path="/decks/advisor-persona" element={<AdvisorPersonaDeck />} />
           <Route path="/advisor/email-sequence" element={<AdvisorEmailSequence />} />
+          <Route path="/advisor/email-tester" element={<AdvisorEmailTester />} />
         <Route path="/family/client-deck" element={<ClientFamilyDeck />} />
         <Route path="/accountant/deck" element={<AccountantDeck />} />
         <Route path="/decks/client-family-solutions" element={<ClientFamilySolutionsDeck />} />
