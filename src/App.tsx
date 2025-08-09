@@ -178,6 +178,7 @@ import { HealthcareLongevityExpertPersonaPage } from '@/pages/persona/Healthcare
 import { CoachConsultantPersonaPage } from '@/pages/persona/CoachConsultantPersonaPage';
 import { RealtorRealEstatePersonaPage } from '@/pages/persona/RealtorRealEstatePersonaPage';
 import { MarketingLeadGenAgencyPersonaPage } from '@/pages/persona/MarketingLeadGenAgencyPersonaPage';
+import { PhysicianPersonaPage } from '@/pages/persona/PhysicianPersonaPage';
 
 // Import onboarding flow component
 const PersonaOnboardingFlow = React.lazy(() => 
@@ -307,6 +308,7 @@ function App() {
         <Route path="/persona/coach-consultant" element={<CoachConsultantPersonaPage />} />
         <Route path="/persona/realtor-real-estate-professional" element={<RealtorRealEstatePersonaPage />} />
         <Route path="/persona/marketing-lead-gen-agency" element={<MarketingLeadGenAgencyPersonaPage />} />
+        <Route path="/persona/physician" element={<PhysicianPersonaPage />} />
                                  <Route path="/calculator" element={<PublicFeeCalculator />} />
                                 <Route path="/demo" element={<div className="min-h-screen bg-background p-8"><DemoCalculator /></div>} />
                                 <Route path="/lead-magnet" element={<LeadMagnetPage />} />
