@@ -1,16 +1,106 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Logo } from '@/components/ui/Logo';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { useNavigate } from 'react-router-dom';
-import { Calculator, Trophy, TrendingUp, Shield, Calendar, ArrowRight, CheckCircle, Star, Award, Users } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { useNavigate, Link } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  Calculator, Trophy, TrendingUp, Shield, Calendar, ArrowRight, CheckCircle, Star, Award, Users,
+  FileText, Heart, Sparkles, TreePine
+} from 'lucide-react';
 import { withTrademarks } from '@/utils/trademark';
 import { useEventTracking } from '@/hooks/useEventTracking';
 import { InAppNotificationBanner } from '@/components/ui/InAppNotificationBanner';
+import { analytics } from '@/lib/analytics';
+
+const PersonaCard: React.FC<{
+  title: string;
+  description: string;
+  icon: React.ReactNode;
+  route: string;
+  featured?: boolean;
+  delay?: number;
+}> = ({ title, description, icon, route, featured = false, delay = 0 }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.5, delay }}
+  >
+    <Link to={route} onClick={() => analytics.track('persona_card_clicked', { persona: title })}>
+      <Card className={`h-full hover:shadow-lg transition-all duration-300 group ${featured ? 'ring-2 ring-primary' : ''}`}>
+        <CardHeader className="text-center">
+          <div className="mx-auto mb-2 p-3 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors">
+            {icon}
+          </div>
+          <CardTitle className="text-lg">{title}</CardTitle>
+          {featured && <Badge variant="default" className="mx-auto">Popular</Badge>}
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-muted-foreground text-center">{description}</p>
+        </CardContent>
+      </Card>
+    </Link>
+  </motion.div>
+);
+
+const AnimatedTree: React.FC = () => (
+  <motion.div
+    initial={{ scale: 0, rotate: -10 }}
+    animate={{ scale: 1, rotate: 0 }}
+    transition={{ duration: 1, ease: "easeOut" }}
+    className="relative"
+  >
+    <div className="w-32 h-32 mx-auto mb-6 relative">
+      <motion.div
+        animate={{ 
+          background: [
+            'linear-gradient(135deg, #FFD700 0%, #FFA500 100%)',
+            'linear-gradient(135deg, #FFA500 0%, #FFD700 100%)',
+            'linear-gradient(135deg, #FFD700 0%, #FFA500 100%)'
+          ]
+        }}
+        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+        className="w-full h-full rounded-full flex items-center justify-center shadow-lg"
+      >
+        <TreePine className="h-16 w-16 text-white" />
+      </motion.div>
+      
+      {/* Floating sparkles */}
+      {[...Array(6)].map((_, i) => (
+        <motion.div
+          key={i}
+          className="absolute"
+          style={{
+            top: `${20 + (i * 10)}%`,
+            left: `${15 + (i * 12)}%`,
+          }}
+          animate={{
+            y: [-10, 10, -10],
+            opacity: [0.3, 1, 0.3],
+            rotate: [0, 180, 360]
+          }}
+          transition={{
+            duration: 2 + (i * 0.3),
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        >
+          <Sparkles className="h-3 w-3 text-yellow-400" />
+        </motion.div>
+      ))}
+    </div>
+  </motion.div>
+);
 
 export default function WelcomePage() {
   const navigate = useNavigate();
   const { trackFeatureUsed, trackPageView } = useEventTracking();
+  const [showAllPersonas, setShowAllPersonas] = useState(false);
+
+  useEffect(() => {
+    analytics.trackPageView('/welcome');
+  }, []);
 
   const handleScheduleReview = () => {
     trackFeatureUsed('schedule_consultation', { source: 'welcome_page' });
@@ -21,6 +111,76 @@ export default function WelcomePage() {
     trackFeatureUsed('public_tool_access', { tool, source: 'welcome_page' });
     navigate(path);
   };
+
+  const handleCalculatorClick = () => {
+    analytics.track('hero_cta_clicked', { cta_type: 'calculator' });
+  };
+
+  const handleMeetTeamClick = () => {
+    analytics.track('hero_cta_clicked', { cta_type: 'meet_team' });
+    document.getElementById('persona-cards')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const primaryPersonas = [
+    {
+      title: 'Client Family',
+      description: 'Comprehensive wealth management for families',
+      icon: <Users className="h-6 w-6 text-primary" />,
+      route: '/onboarding/client-family',
+      featured: true
+    },
+    {
+      title: 'Financial Advisor',
+      description: 'Tools and resources for financial advisors',
+      icon: <TrendingUp className="h-6 w-6 text-primary" />,
+      route: '/onboarding/advisor'
+    },
+    {
+      title: 'Accountant',
+      description: 'Tax and accounting services integration',
+      icon: <FileText className="h-6 w-6 text-primary" />,
+      route: '/onboarding/accountant'
+    },
+    {
+      title: 'Attorney',
+      description: 'Legal planning and estate services',
+      icon: <Shield className="h-6 w-6 text-primary" />,
+      route: '/onboarding/attorney'
+    },
+    {
+      title: 'Healthcare',
+      description: 'Longevity and healthcare guidance',
+      icon: <Heart className="h-6 w-6 text-primary" />,
+      route: '/onboarding/healthcare'
+    },
+    {
+      title: 'Insurance',
+      description: 'Insurance and risk management',
+      icon: <Shield className="h-6 w-6 text-primary" />,
+      route: '/onboarding/insurance'
+    }
+  ];
+
+  const additionalPersonas = [
+    {
+      title: 'Medicare Specialist',
+      description: 'Medicare guidance and optimization',
+      icon: <Heart className="h-6 w-6 text-primary" />,
+      route: '/onboarding/medicare'
+    },
+    {
+      title: 'Coach/Consultant',
+      description: 'Business coaching and consulting',
+      icon: <TrendingUp className="h-6 w-6 text-primary" />,
+      route: '/onboarding/coach'
+    },
+    {
+      title: 'Sports Agent',
+      description: 'Athlete wealth management',
+      icon: <TrendingUp className="h-6 w-6 text-primary" />,
+      route: '/onboarding/sports-agent'
+    }
+  ];
 
   return (
     <div className="min-h-screen bg-background">
@@ -48,12 +208,119 @@ export default function WelcomePage() {
       </header>
 
       {/* Hero Section */}
-      <section className="container mx-auto px-4 py-16 text-center">
-        <InAppNotificationBanner />
+      <section className="pt-20 pb-16">
+        <div className="container mx-auto px-4 text-center">
+          <AnimatedTree />
+          
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+            className="space-y-6"
+          >
+            <h1 className="text-4xl md:text-6xl font-bold text-foreground">
+              Your Family Office.{' '}
+              <span className="bg-gradient-to-r from-primary to-yellow-500 bg-clip-text text-transparent">
+                Your Way.
+              </span>
+            </h1>
+            
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Boutique Family Office™ — one secure platform for your money, your health, 
+              and your team of vetted professionals.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <Button 
+                size="lg" 
+                onClick={handleMeetTeamClick}
+                className="text-lg px-8 py-6"
+              >
+                Meet Your Team
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+              
+              <Link to="/value-calculator">
+                <Button 
+                  variant="outline" 
+                  size="lg"
+                  onClick={handleCalculatorClick}
+                  className="text-lg px-8 py-6"
+                >
+                  <Calculator className="mr-2 h-5 w-5" />
+                  Try the SWAG™ Value Calculator
+                </Button>
+              </Link>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Persona Cards Section */}
+      <section id="persona-cards" className="py-16">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-3xl font-bold mb-4">Choose Your Path</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Every family office needs the right team. Find your perfect match.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            {primaryPersonas.map((persona, index) => (
+              <PersonaCard
+                key={persona.title}
+                {...persona}
+                delay={index * 0.1}
+              />
+            ))}
+          </div>
+
+          <AnimatePresence>
+            {showAllPersonas && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.5 }}
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8"
+              >
+                {additionalPersonas.map((persona, index) => (
+                  <PersonaCard
+                    key={persona.title}
+                    {...persona}
+                    delay={index * 0.1}
+                  />
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <div className="text-center">
+            <Button
+              variant="ghost"
+              onClick={() => {
+                setShowAllPersonas(!showAllPersonas);
+                analytics.track('show_more_personas_clicked', { expanded: !showAllPersonas });
+              }}
+            >
+              {showAllPersonas ? 'Show Less' : 'See All Solutions'}
+              <ArrowRight className={`ml-2 h-4 w-4 transition-transform ${showAllPersonas ? 'rotate-90' : ''}`} />
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Legacy Content (collapsed for brevity) */}
+      <section className="bg-muted/30 py-12" style={{ display: 'none' }}>
+        {/* Keep existing content but hidden for now */}
         <div className="max-w-4xl mx-auto space-y-8">
-          <h1 className="text-5xl md:text-7xl font-bold text-foreground leading-tight">
-            Retire once. Stay retired.
-          </h1>
           
           <div className="space-y-6">
             <div className="flex flex-wrap items-center justify-center gap-4 mb-6">
@@ -318,6 +585,28 @@ export default function WelcomePage() {
           </div>
         </div>
       </section>
+
+      {/* Sticky Calculator CTA */}
+      <div className="fixed bottom-6 right-6 z-50">
+        <Link to="/value-calculator">
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 2, type: "spring", stiffness: 200 }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Button 
+              size="lg" 
+              className="rounded-full shadow-lg hover:shadow-xl transition-shadow"
+              onClick={handleCalculatorClick}
+            >
+              <Calculator className="mr-2 h-5 w-5" />
+              Try SWAG™ Calculator
+            </Button>
+          </motion.div>
+        </Link>
+      </div>
 
       {/* Footer */}
       <footer className="border-t bg-card/30 py-8">

@@ -235,7 +235,8 @@ function App() {
                                 <Route path="/marketplace-demo" element={<MarketplaceLandingPage />} />
                                <Route path="/universal" element={<UniversalLandingPage />} />
                            <Route path="/marketplace" element={<FamilyOfficeMarketplacePage />} />
-                           <Route path="/welcome" element={<WelcomePage />} />
+                            <Route path="/welcome" element={<WelcomePage />} />
+                            <Route path="/value-calculator" element={<ValueCalculator />} />
                            <Route path="/auth" element={<AuthPage />} />
                            <Route path="/auth/:authType" element={<AuthPage />} />
                              <Route path="/auth/:authType/:tenantId" element={<AuthPage />} />

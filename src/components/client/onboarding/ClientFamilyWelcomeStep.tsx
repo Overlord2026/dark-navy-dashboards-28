@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -12,9 +12,37 @@ import {
   CheckCircle
 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { StressTestPreview } from '@/components/retirement/StressTestPreview';
+import { analytics } from '@/lib/analytics';
 
 export const ClientFamilyWelcomeStep: React.FC = () => {
   const [showVideoModal, setShowVideoModal] = useState(false);
+
+  // Demo inputs for stress test preview
+  const demoInputs = {
+    portfolioValue: 1500000,
+    annualFee: 20000,
+    growthRate: 8,
+    monthlySpending: 12000,
+    inflation: 2,
+    timeHorizon: 30
+  };
+
+  const handleCustomizeClick = (scenarioId: string) => {
+    analytics.track('onboarding_stress_preview_clicked', {
+      scenario: scenarioId,
+      step: 'welcome'
+    });
+    // This would typically advance to the next onboarding step
+    console.log('Customize clicked for scenario:', scenarioId);
+  };
+
+  useEffect(() => {
+    analytics.track('onboarding_step_viewed', {
+      stepId: 'welcome',
+      persona: 'client-family'
+    });
+  }, []);
 
   const benefits = [
     {
@@ -157,6 +185,21 @@ export const ClientFamilyWelcomeStep: React.FC = () => {
             </Button>
           </CardContent>
         </Card>
+      </motion.div>
+
+      {/* SWAG Roadmap Preview */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1.0, duration: 0.5 }}
+        className="max-w-6xl mx-auto"
+      >
+        <StressTestPreview
+          inputs={demoInputs}
+          onScenarioClick={handleCustomizeClick}
+          showBookingCTA={false}
+          demoMode={true}
+        />
       </motion.div>
 
       {/* Video Modal */}
