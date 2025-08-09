@@ -189,6 +189,7 @@ import IndependentWomanPersonaPage from '@/pages/persona/IndependentWomanPersona
 import CorporateExecutivePersonaPage from '@/pages/persona/CorporateExecutivePersonaPage';
 import PreRetireeRetireePersonaPage from '@/pages/persona/PreRetireeRetireePersonaPage';
 import RetirementConfidenceScorecardPage from './pages/tools/RetirementConfidenceScorecardPage';
+import { ScorecardStartPage } from './pages/scorecard/ScorecardStartPage';
 
 // Import onboarding flow component
 const PersonaOnboardingFlow = React.lazy(() => 
@@ -670,6 +671,7 @@ function App() {
           <Route path="/healthcare-dashboard" element={<HealthcareDashboardPage />} />
           <Route path="/shark-tank-pitch" element={<SharkTankPitch />} />
           <Route path="/tools/retirement-confidence-scorecard" element={<RetirementConfidenceScorecardPage />} />
+          <Route path="/scorecard/start" element={<ScorecardStartPage />} />
 
                          </Routes>
                         <Navigation />
