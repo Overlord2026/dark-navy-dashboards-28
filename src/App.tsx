@@ -284,6 +284,11 @@ function App() {
                                     {React.createElement(React.lazy(() => import('./pages/persona/AccountantCPAPersonaPage').then(m => ({ default: m.AccountantCPAPersonaPage }))))}
                                   </React.Suspense>
                                 } />
+                                <Route path="/persona/attorney-estate-planning" element={
+                                  <React.Suspense fallback={<div>Loading...</div>}>
+                                    {React.createElement(React.lazy(() => import('./pages/persona/AttorneyEstatePlanningPersonaPage').then(m => ({ default: m.AttorneyEstatePlanningPersonaPage }))))}
+                                  </React.Suspense>
+                                } />
                                 <Route path="/persona/cpa" element={
                                   <React.Suspense fallback={<div>Loading...</div>}>
                                     {React.createElement(React.lazy(() => import('./pages/persona/CPAPersonaPage').then(m => ({ default: m.CPAPersonaPage }))))}
