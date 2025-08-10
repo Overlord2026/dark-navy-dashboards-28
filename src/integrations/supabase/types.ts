@@ -3396,6 +3396,45 @@ export type Database = {
           },
         ]
       }
+      bill_pay: {
+        Row: {
+          amount: number
+          autopay: boolean | null
+          bill_name: string
+          category: string | null
+          created_at: string | null
+          due_date: string
+          id: string
+          last_paid: string | null
+          user_id: string
+          vendor: string | null
+        }
+        Insert: {
+          amount: number
+          autopay?: boolean | null
+          bill_name: string
+          category?: string | null
+          created_at?: string | null
+          due_date: string
+          id?: string
+          last_paid?: string | null
+          user_id: string
+          vendor?: string | null
+        }
+        Update: {
+          amount?: number
+          autopay?: boolean | null
+          bill_name?: string
+          category?: string | null
+          created_at?: string | null
+          due_date?: string
+          id?: string
+          last_paid?: string | null
+          user_id?: string
+          vendor?: string | null
+        }
+        Relationships: []
+      }
       bill_transactions: {
         Row: {
           amount: number
@@ -18726,6 +18765,78 @@ export type Database = {
         }
         Relationships: []
       }
+      practice_benchmarks: {
+        Row: {
+          created_at: string | null
+          id: string
+          metric: string
+          period: string
+          persona_type: string
+          source: string
+          value: number
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          metric: string
+          period: string
+          persona_type: string
+          source: string
+          value: number
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          metric?: string
+          period?: string
+          persona_type?: string
+          source?: string
+          value?: number
+        }
+        Relationships: []
+      }
+      practice_expenses: {
+        Row: {
+          amount: number
+          campaign_id: string | null
+          category: string
+          contract_end_date: string | null
+          created_at: string | null
+          description: string | null
+          expense_date: string
+          id: string
+          is_recurring: boolean | null
+          persona_type: string
+          vendor: string | null
+        }
+        Insert: {
+          amount: number
+          campaign_id?: string | null
+          category: string
+          contract_end_date?: string | null
+          created_at?: string | null
+          description?: string | null
+          expense_date: string
+          id?: string
+          is_recurring?: boolean | null
+          persona_type: string
+          vendor?: string | null
+        }
+        Update: {
+          amount?: number
+          campaign_id?: string | null
+          category?: string
+          contract_end_date?: string | null
+          created_at?: string | null
+          description?: string | null
+          expense_date?: string
+          id?: string
+          is_recurring?: boolean | null
+          persona_type?: string
+          vendor?: string | null
+        }
+        Relationships: []
+      }
       practice_metrics: {
         Row: {
           cpa_partner_id: string
@@ -18763,6 +18874,45 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      practice_revenue: {
+        Row: {
+          amount: number
+          campaign_id: string | null
+          category: string
+          client_id: string | null
+          created_at: string | null
+          description: string | null
+          id: string
+          persona_type: string
+          revenue_date: string
+          source_channel: string | null
+        }
+        Insert: {
+          amount: number
+          campaign_id?: string | null
+          category: string
+          client_id?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          persona_type: string
+          revenue_date: string
+          source_channel?: string | null
+        }
+        Update: {
+          amount?: number
+          campaign_id?: string | null
+          category?: string
+          client_id?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          persona_type?: string
+          revenue_date?: string
+          source_channel?: string | null
+        }
+        Relationships: []
       }
       prescriptions: {
         Row: {
@@ -20700,6 +20850,51 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      property_financials: {
+        Row: {
+          created_at: string | null
+          expense_amount: number | null
+          expense_category: string | null
+          expense_date: string | null
+          id: string
+          notes: string | null
+          owner_id: string
+          property_name: string | null
+          property_type: string | null
+          revenue_amount: number | null
+          revenue_date: string | null
+          vendor: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          expense_amount?: number | null
+          expense_category?: string | null
+          expense_date?: string | null
+          id?: string
+          notes?: string | null
+          owner_id: string
+          property_name?: string | null
+          property_type?: string | null
+          revenue_amount?: number | null
+          revenue_date?: string | null
+          vendor?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          expense_amount?: number | null
+          expense_category?: string | null
+          expense_date?: string | null
+          id?: string
+          notes?: string | null
+          owner_id?: string
+          property_name?: string | null
+          property_type?: string | null
+          revenue_amount?: number | null
+          revenue_date?: string | null
+          vendor?: string | null
+        }
+        Relationships: []
       }
       property_improvements: {
         Row: {
@@ -27401,6 +27596,36 @@ export type Database = {
           user_agent?: string | null
           user_id?: string
           vault_id?: string
+        }
+        Relationships: []
+      }
+      vendor_benchmarks: {
+        Row: {
+          avg_cost: number | null
+          category: string
+          created_at: string | null
+          currency: string | null
+          id: string
+          source: string
+          vendor_name: string
+        }
+        Insert: {
+          avg_cost?: number | null
+          category: string
+          created_at?: string | null
+          currency?: string | null
+          id?: string
+          source: string
+          vendor_name: string
+        }
+        Update: {
+          avg_cost?: number | null
+          category?: string
+          created_at?: string | null
+          currency?: string | null
+          id?: string
+          source?: string
+          vendor_name?: string
         }
         Relationships: []
       }
