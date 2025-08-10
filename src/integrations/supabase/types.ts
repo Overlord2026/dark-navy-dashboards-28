@@ -17504,6 +17504,45 @@ export type Database = {
           },
         ]
       }
+      overview_analytics: {
+        Row: {
+          action: string | null
+          created_at: string | null
+          id: string
+          ip_address: unknown | null
+          segment: string | null
+          user_agent: string | null
+          utm_campaign: string | null
+          utm_content: string | null
+          utm_medium: string | null
+          utm_source: string | null
+        }
+        Insert: {
+          action?: string | null
+          created_at?: string | null
+          id?: string
+          ip_address?: unknown | null
+          segment?: string | null
+          user_agent?: string | null
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Update: {
+          action?: string | null
+          created_at?: string | null
+          id?: string
+          ip_address?: unknown | null
+          segment?: string | null
+          user_agent?: string | null
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Relationships: []
+      }
       partner_applications: {
         Row: {
           address: Json | null

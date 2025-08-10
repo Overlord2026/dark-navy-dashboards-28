@@ -192,6 +192,7 @@ import PreRetireeRetireePersonaPage from '@/pages/persona/PreRetireeRetireePerso
 import RetirementConfidenceScorecardPage from './pages/tools/RetirementConfidenceScorecardPage';
 import { ScorecardStartPage } from './pages/scorecard/ScorecardStartPage';
 import SportsFounding20 from './pages/founding20/SportsFounding20';
+import Founding20OverviewPage from './pages/founding20/Founding20OverviewPage';
 import Founding20MasterDashboard from './pages/admin/Founding20MasterDashboard';
 
 // Import onboarding flow component
@@ -680,6 +681,7 @@ function App() {
           {/* Founding 20 Campaign Routes */}
           <Route path="/founding20/sports" element={<SportsFounding20 />} />
           <Route path="/founding20-sports" element={<SportsFounding20 />} />
+          <Route path="/founding20/overview" element={<Founding20OverviewPage />} />
           <Route path="/admin/founding20-dashboard" element={<Founding20MasterDashboard />} />
 
                          </Routes>
