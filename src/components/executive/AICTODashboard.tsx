@@ -1,12 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Server, Shield, Zap, Activity } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Server, Shield, Zap, Activity, Eye, Search, Globe } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 
 interface TechMetrics {
   system_health: number;
   feature_adoption: number;
   security_score: number;
   uptime: number;
+}
+
+interface IpWatchLog {
+  id: string;
+  type: string;
+  term: string;
+  source: string;
+  date_found: string;
+  risk_level: string;
+  link: string;
+  created_at: string;
 }
 
 export function AICTODashboard() {
@@ -16,6 +30,63 @@ export function AICTODashboard() {
     security_score: 94,
     uptime: 99.9
   });
+
+  const [ipWatchData, setIpWatchData] = useState<IpWatchLog[]>([]);
+  const [isScanning, setIsScanning] = useState(false);
+
+  useEffect(() => {
+    fetchIpWatchData();
+  }, []);
+
+  const fetchIpWatchData = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('ip_watch_logs')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(10);
+      
+      if (error) throw error;
+      setIpWatchData(data || []);
+    } catch (error) {
+      console.error('Error fetching IP Watch data:', error);
+    }
+  };
+
+  const runIpScan = async () => {
+    setIsScanning(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('ip-watch-scan');
+      if (error) throw error;
+      await fetchIpWatchData(); // Refresh data
+    } catch (error) {
+      console.error('Error running IP scan:', error);
+    } finally {
+      setIsScanning(false);
+    }
+  };
+
+  const runContentScan = async () => {
+    setIsScanning(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('content-fingerprint-scan');
+      if (error) throw error;
+      await fetchIpWatchData(); // Refresh data
+    } catch (error) {
+      console.error('Error running content scan:', error);
+    } finally {
+      setIsScanning(false);
+    }
+  };
+
+  const getRiskBadgeVariant = (riskLevel: string) => {
+    switch (riskLevel) {
+      case 'critical': return 'destructive';
+      case 'warning': return 'default';
+      case 'info': return 'secondary';
+      default: return 'outline';
+    }
+  };
 
   const formatPercentage = (value: number) => `${value.toFixed(1)}%`;
 
@@ -140,11 +211,106 @@ export function AICTODashboard() {
         </Card>
 
         <Card className="bg-card border border-border/30 rounded-2xl shadow-lg">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+            <div>
+              <CardTitle className="text-lg font-semibold flex items-center gap-2">
+                <Eye className="h-5 w-5 text-primary" />
+                IP Watch
+              </CardTitle>
+              <p className="text-sm text-muted-foreground">
+                Monitor intellectual property and brand protection
+              </p>
+            </div>
+            <div className="flex gap-2">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={runIpScan}
+                disabled={isScanning}
+              >
+                <Search className="h-4 w-4 mr-1" />
+                {isScanning ? 'Scanning...' : 'IP Scan'}
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={runContentScan}
+                disabled={isScanning}
+              >
+                <Globe className="h-4 w-4 mr-1" />
+                {isScanning ? 'Scanning...' : 'Content'}
+              </Button>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="grid grid-cols-4 gap-4 text-sm">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-foreground">
+                    {ipWatchData.filter(item => item.risk_level === 'critical').length}
+                  </div>
+                  <div className="text-muted-foreground">Critical</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-foreground">
+                    {ipWatchData.filter(item => item.risk_level === 'warning').length}
+                  </div>
+                  <div className="text-muted-foreground">Warning</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-foreground">
+                    {ipWatchData.filter(item => item.risk_level === 'info').length}
+                  </div>
+                  <div className="text-muted-foreground">Info</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-foreground">
+                    {ipWatchData.length}
+                  </div>
+                  <div className="text-muted-foreground">Total</div>
+                </div>
+              </div>
+
+              <div className="border-t pt-4">
+                <h4 className="font-medium mb-3">Recent Findings</h4>
+                <div className="space-y-2 max-h-48 overflow-y-auto">
+                  {ipWatchData.slice(0, 5).map((item, index) => (
+                    <div key={index} className="flex items-center justify-between p-2 bg-muted/30 rounded">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <Badge variant={getRiskBadgeVariant(item.risk_level)}>
+                            {item.risk_level}
+                          </Badge>
+                          <span className="text-sm font-medium">{item.type}</span>
+                        </div>
+                        <div className="text-xs text-muted-foreground mt-1">
+                          {item.term} • {item.source}
+                        </div>
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        {new Date(item.date_found).toLocaleDateString()}
+                      </div>
+                    </div>
+                  ))}
+                  {ipWatchData.length === 0 && (
+                    <div className="text-center text-muted-foreground text-sm py-4">
+                      No IP Watch findings yet. Run a scan to start monitoring.
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-1 gap-6">
+        <Card className="bg-card border border-border/30 rounded-2xl shadow-lg">
           <CardHeader>
             <CardTitle className="text-lg font-semibold text-foreground">Technical Roadmap</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-3">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               <div className="p-3 bg-blue-50 dark:bg-blue-950/20 rounded-lg border border-blue-200 dark:border-blue-800">
                 <p className="text-sm font-medium text-blue-900 dark:text-blue-100">
                   AI Assistant Integration

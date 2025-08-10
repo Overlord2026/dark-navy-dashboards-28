@@ -13641,6 +13641,39 @@ export type Database = {
           },
         ]
       }
+      ip_watch_logs: {
+        Row: {
+          created_at: string | null
+          date_found: string | null
+          id: string
+          link: string | null
+          risk_level: string | null
+          source: string | null
+          term: string | null
+          type: string
+        }
+        Insert: {
+          created_at?: string | null
+          date_found?: string | null
+          id?: string
+          link?: string | null
+          risk_level?: string | null
+          source?: string | null
+          term?: string | null
+          type: string
+        }
+        Update: {
+          created_at?: string | null
+          date_found?: string | null
+          id?: string
+          link?: string | null
+          risk_level?: string | null
+          source?: string | null
+          term?: string | null
+          type?: string
+        }
+        Relationships: []
+      }
       job_ladders: {
         Row: {
           created_at: string
