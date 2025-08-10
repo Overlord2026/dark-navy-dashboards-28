@@ -173,9 +173,19 @@ export const EmailCampaignManager: React.FC = () => {
         if (error) throw error;
         track('email_template_updated', { template_id: template.id, segment: template.segment });
       } else {
+        const templateData = {
+          campaign_name: template.campaign_name || '',
+          segment: template.segment || '',
+          template_type: template.template_type || 'cold_outreach',
+          subject_line: template.subject_line || '',
+          template_content: template.template_content || '',
+          sender_name: template.sender_name || '',
+          sender_email: template.sender_email || '',
+          is_active: template.is_active ?? true
+        };
         const { error } = await supabase
           .from('f20_email_campaigns')
-          .insert(template);
+          .insert(templateData);
         if (error) throw error;
         track('email_template_created', { segment: template.segment, type: template.template_type });
       }
