@@ -13523,6 +13523,120 @@ export type Database = {
         }
         Relationships: []
       }
+      launch_checklist_items: {
+        Row: {
+          assigned_at: string | null
+          completed_at: string | null
+          created_at: string | null
+          id: string
+          key_actions: string[] | null
+          notes: string | null
+          owner: string | null
+          segment: string
+          status: string | null
+          target_name: string
+          target_type: string | null
+          tier: string
+          updated_at: string | null
+          week: string
+        }
+        Insert: {
+          assigned_at?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          id?: string
+          key_actions?: string[] | null
+          notes?: string | null
+          owner?: string | null
+          segment: string
+          status?: string | null
+          target_name: string
+          target_type?: string | null
+          tier: string
+          updated_at?: string | null
+          week: string
+        }
+        Update: {
+          assigned_at?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          id?: string
+          key_actions?: string[] | null
+          notes?: string | null
+          owner?: string | null
+          segment?: string
+          status?: string | null
+          target_name?: string
+          target_type?: string | null
+          tier?: string
+          updated_at?: string | null
+          week?: string
+        }
+        Relationships: []
+      }
+      launch_checklist_progress: {
+        Row: {
+          completed_items: number | null
+          completion_percentage: number | null
+          created_at: string | null
+          id: string
+          last_updated: string | null
+          segment: string
+          tier: string
+          total_items: number | null
+          week: string
+        }
+        Insert: {
+          completed_items?: number | null
+          completion_percentage?: number | null
+          created_at?: string | null
+          id?: string
+          last_updated?: string | null
+          segment: string
+          tier: string
+          total_items?: number | null
+          week: string
+        }
+        Update: {
+          completed_items?: number | null
+          completion_percentage?: number | null
+          created_at?: string | null
+          id?: string
+          last_updated?: string | null
+          segment?: string
+          tier?: string
+          total_items?: number | null
+          week?: string
+        }
+        Relationships: []
+      }
+      launch_digest_log: {
+        Row: {
+          content: Json | null
+          digest_type: string
+          id: string
+          recipients: string[] | null
+          sent_at: string | null
+          status: string | null
+        }
+        Insert: {
+          content?: Json | null
+          digest_type: string
+          id?: string
+          recipients?: string[] | null
+          sent_at?: string | null
+          status?: string | null
+        }
+        Update: {
+          content?: Json | null
+          digest_type?: string
+          id?: string
+          recipients?: string[] | null
+          sent_at?: string | null
+          status?: string | null
+        }
+        Relationships: []
+      }
       lead_engagement_tracking: {
         Row: {
           created_at: string | null

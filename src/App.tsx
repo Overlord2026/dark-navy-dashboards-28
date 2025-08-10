@@ -192,6 +192,7 @@ import PreRetireeRetireePersonaPage from '@/pages/persona/PreRetireeRetireePerso
 import RetirementConfidenceScorecardPage from './pages/tools/RetirementConfidenceScorecardPage';
 import { ScorecardStartPage } from './pages/scorecard/ScorecardStartPage';
 import SportsFounding20LandingPage from './pages/founding20/SportsFounding20LandingPage';
+import Founding20MasterDashboard from './pages/admin/Founding20MasterDashboard';
 
 // Import onboarding flow component
 const PersonaOnboardingFlow = React.lazy(() => 
@@ -679,6 +680,7 @@ function App() {
           {/* Founding 20 Campaign Routes */}
           <Route path="/founding20/sports" element={<SportsFounding20LandingPage />} />
           <Route path="/founding20-sports" element={<SportsFounding20LandingPage />} />
+          <Route path="/admin/founding20-dashboard" element={<Founding20MasterDashboard />} />
 
                          </Routes>
                         <Navigation />
