@@ -236,5 +236,60 @@ export const analytics = {
       stage,
       timestamp: Date.now()
     });
+  },
+
+  // Portfolio Navigator GPS Analytics
+  trackOptimizationRun: (userId: string, phaseName: string, riskBudget: number) => {
+    posthog.capture('optimization_run', {
+      user_id: userId,
+      phase_name: phaseName,
+      risk_budget: riskBudget,
+      timestamp: Date.now()
+    });
+  },
+
+  trackRebalancingTicketCreated: (userId: string, tradesCount: number, totalValue: number) => {
+    posthog.capture('rebalancing_ticket_created', {
+      user_id: userId,
+      trades_count: tradesCount,
+      total_value: totalValue,
+      timestamp: Date.now()
+    });
+  },
+
+  trackMcPacRun: (userId: string, successProbability: number, timeHorizon: number) => {
+    posthog.capture('mc_pac_run', {
+      user_id: userId,
+      success_probability: successProbability,
+      time_horizon: timeHorizon,
+      timestamp: Date.now()
+    });
+  },
+
+  trackPM3Updated: (fundId: string, pm3Score: number, bucketTilt: string) => {
+    posthog.capture('pm3_updated', {
+      fund_id: fundId,
+      pm3_score: pm3Score,
+      bucket_tilt: bucketTilt,
+      timestamp: Date.now()
+    });
+  },
+
+  trackPhasePolicyApplied: (userId: string, phaseName: string, riskAdjustment: number) => {
+    posthog.capture('phase_policy_applied', {
+      user_id: userId,
+      phase_name: phaseName,
+      risk_adjustment: riskAdjustment,
+      timestamp: Date.now()
+    });
+  },
+
+  trackRecommendationViewed: (userId: string, recommendationType: string, confidence: number) => {
+    posthog.capture('recommendation_viewed', {
+      user_id: userId,
+      recommendation_type: recommendationType,
+      confidence,
+      timestamp: Date.now()
+    });
   }
 };
