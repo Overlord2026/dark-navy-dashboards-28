@@ -110,8 +110,8 @@ export const LaunchChecklistInterface: React.FC = () => {
         return;
       }
 
-      setItems(data);
-      calculateProgress(data);
+      setItems(data as ChecklistItem[]);
+      calculateProgress(data as ChecklistItem[]);
     } catch (error) {
       console.error('Error loading checklist:', error);
     } finally {
@@ -153,8 +153,8 @@ export const LaunchChecklistInterface: React.FC = () => {
 
       if (error) throw error;
 
-      setItems(data);
-      calculateProgress(data);
+      setItems(data as ChecklistItem[]);
+      calculateProgress(data as ChecklistItem[]);
     } catch (error) {
       console.error('Error initializing checklist:', error);
     }

@@ -1,9 +1,9 @@
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { PDFGenerator } from '@/components/founding20/PDFGenerator';
+import { SportsPDFGenerator } from '@/components/founding20/SportsPDFGenerator';
 import { EmailTemplates } from '@/components/founding20/EmailTemplates';
-import { QRCodeGenerator } from '@/components/founding20/QRCodeGenerator';
+import { SportsQRGenerator } from '@/components/founding20/SportsQRGenerator';
 import { BarChart, Mail, QrCode, FileText, Users, TrendingUp } from 'lucide-react';
 
 const SportsFounding20Dashboard: React.FC = () => {
@@ -105,7 +105,7 @@ const SportsFounding20Dashboard: React.FC = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <PDFGenerator theme="print" segment="sports" />
+                <SportsPDFGenerator theme="print" />
               </CardContent>
             </Card>
           </TabsContent>
@@ -133,7 +133,7 @@ const SportsFounding20Dashboard: React.FC = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <QRCodeGenerator segment="sports" />
+                <SportsQRGenerator />
               </CardContent>
             </Card>
           </TabsContent>

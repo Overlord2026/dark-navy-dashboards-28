@@ -191,7 +191,7 @@ import CorporateExecutivePersonaPage from '@/pages/persona/CorporateExecutivePer
 import PreRetireeRetireePersonaPage from '@/pages/persona/PreRetireeRetireePersonaPage';
 import RetirementConfidenceScorecardPage from './pages/tools/RetirementConfidenceScorecardPage';
 import { ScorecardStartPage } from './pages/scorecard/ScorecardStartPage';
-import SportsFounding20LandingPage from './pages/founding20/SportsFounding20LandingPage';
+import SportsFounding20 from './pages/founding20/SportsFounding20';
 import Founding20MasterDashboard from './pages/admin/Founding20MasterDashboard';
 
 // Import onboarding flow component
@@ -678,8 +678,8 @@ function App() {
           <Route path="/roadmap/intake" element={<SwagRetirementRoadmapPage />} />
           
           {/* Founding 20 Campaign Routes */}
-          <Route path="/founding20/sports" element={<SportsFounding20LandingPage />} />
-          <Route path="/founding20-sports" element={<SportsFounding20LandingPage />} />
+          <Route path="/founding20/sports" element={<SportsFounding20 />} />
+          <Route path="/founding20-sports" element={<SportsFounding20 />} />
           <Route path="/admin/founding20-dashboard" element={<Founding20MasterDashboard />} />
 
                          </Routes>
