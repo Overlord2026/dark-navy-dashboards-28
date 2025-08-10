@@ -17301,6 +17301,95 @@ export type Database = {
         }
         Relationships: []
       }
+      outreach_contacts: {
+        Row: {
+          contact_type: string | null
+          created_at: string | null
+          email: string | null
+          first_name: string | null
+          id: string
+          influence_level: number | null
+          org_name: string
+          personal_hook: string | null
+          phone: string | null
+          segment: string
+          status: string | null
+          updated_at: string | null
+          utm_campaign: string | null
+          utm_content: string | null
+          utm_medium: string | null
+          utm_source: string | null
+        }
+        Insert: {
+          contact_type?: string | null
+          created_at?: string | null
+          email?: string | null
+          first_name?: string | null
+          id?: string
+          influence_level?: number | null
+          org_name: string
+          personal_hook?: string | null
+          phone?: string | null
+          segment: string
+          status?: string | null
+          updated_at?: string | null
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Update: {
+          contact_type?: string | null
+          created_at?: string | null
+          email?: string | null
+          first_name?: string | null
+          id?: string
+          influence_level?: number | null
+          org_name?: string
+          personal_hook?: string | null
+          phone?: string | null
+          segment?: string
+          status?: string | null
+          updated_at?: string | null
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Relationships: []
+      }
+      outreach_events: {
+        Row: {
+          contact_id: string | null
+          created_at: string | null
+          event_name: string
+          id: string
+          payload: Json | null
+        }
+        Insert: {
+          contact_id?: string | null
+          created_at?: string | null
+          event_name: string
+          id?: string
+          payload?: Json | null
+        }
+        Update: {
+          contact_id?: string | null
+          created_at?: string | null
+          event_name?: string
+          id?: string
+          payload?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "outreach_events_contact_id_fkey"
+            columns: ["contact_id"]
+            isOneToOne: false
+            referencedRelation: "outreach_contacts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       partner_applications: {
         Row: {
           address: Json | null
