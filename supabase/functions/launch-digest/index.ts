@@ -12,12 +12,7 @@ const supabase = createClient(
   Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
 );
 
-const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
-
-interface DigestRequest {
-  type?: 'weekly' | 'milestone';
-  recipients?: string[];
-}
+const resend = new Resend(Deno.env.get('RESEND_API_KEY'));
 
 const handler = async (req: Request): Promise<Response> => {
   if (req.method === 'OPTIONS') {
@@ -25,208 +20,124 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const { type = 'weekly', recipients = ['tony@awmfl.com', 'heather@awmfl.com', 'jamie@awmfl.com'] }: DigestRequest = 
+    const { type = 'weekly', force = false, recipients = [] } = 
       await req.json().catch(() => ({}));
 
-    console.log(`Generating ${type} digest for ${recipients.length} recipients`);
+    console.log(`Generating ${type} digest, force: ${force}`);
 
-    // Get progress data from database
+    // Get progress data from Supabase
     const { data: progressData, error: progressError } = await supabase
       .from('launch_checklist_progress')
       .select('*')
-      .order('segment', { ascending: true })
-      .order('tier', { ascending: true });
+      .order('segment, tier, week');
 
     if (progressError) {
       throw new Error(`Failed to fetch progress data: ${progressError.message}`);
     }
 
-    // Calculate tier completion percentages
-    const tierProgress = {
-      gold: { total: 0, completed: 0, percentage: 0 },
-      silver: { total: 0, completed: 0, percentage: 0 },
-      bronze: { total: 0, completed: 0, percentage: 0 }
-    };
-
-    const segmentProgress = {
-      sports: { total: 0, completed: 0, percentage: 0 },
-      longevity: { total: 0, completed: 0, percentage: 0 },
-      ria: { total: 0, completed: 0, percentage: 0 }
-    };
-
-    progressData?.forEach(item => {
-      // Tier progress
-      if (tierProgress[item.tier]) {
-        tierProgress[item.tier].total += item.total_items;
-        tierProgress[item.tier].completed += item.completed_items;
-      }
-
-      // Segment progress  
-      if (segmentProgress[item.segment]) {
-        segmentProgress[item.segment].total += item.total_items;
-        segmentProgress[item.segment].completed += item.completed_items;
-      }
-    });
-
-    // Calculate percentages
-    Object.keys(tierProgress).forEach(tier => {
-      const data = tierProgress[tier];
-      data.percentage = data.total > 0 ? Math.round((data.completed / data.total) * 100) : 0;
-    });
-
-    Object.keys(segmentProgress).forEach(segment => {
-      const data = segmentProgress[segment];
-      data.percentage = data.total > 0 ? Math.round((data.completed / data.total) * 100) : 0;
-    });
-
+    // Calculate overall progress by segment and tier
+    const segmentProgress = calculateSegmentProgress(progressData || []);
+    
     // Generate email content
-    const checklistLink = "https://my.bfocfo.com/admin/founding20-dashboard";
-    const timestamp = new Date().toLocaleDateString('en-US', { 
-      weekday: 'long', 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
+    const emailContent = generateDigestEmail(segmentProgress);
+    
+    const finalRecipients = recipients.length > 0 ? recipients : [
+      'tony@awmfl.com', 'heather@awmfl.com', 'jamie@awmfl.com'
+    ];
+
+    // Send digest email
+    const emailResponse = await resend.emails.send({
+      from: 'BFO Automation <automation@my.bfocfo.com>',
+      to: finalRecipients,
+      subject: `Founding 20 Launch Status Digest - ${new Date().toLocaleDateString()}`,
+      html: emailContent.html,
+      text: emailContent.text
     });
 
-    const emailBody = `Hi Team,
-
-Here's the current progress for the Founding 20 launch as of ${timestamp}:
-
-🥇 **Gold Tier:** ${tierProgress.gold.percentage}% complete (${tierProgress.gold.completed}/${tierProgress.gold.total})
-🥈 **Silver Tier:** ${tierProgress.silver.percentage}% complete (${tierProgress.silver.completed}/${tierProgress.silver.total})  
-🥉 **Bronze Tier:** ${tierProgress.bronze.percentage}% complete (${tierProgress.bronze.completed}/${tierProgress.bronze.total})
-
-**Segment Breakdown:**
-🏆 Sports: ${segmentProgress.sports.percentage}% complete (${segmentProgress.sports.completed}/${segmentProgress.sports.total})
-🧬 Longevity: ${segmentProgress.longevity.percentage}% complete (${segmentProgress.longevity.completed}/${segmentProgress.longevity.total})
-💼 RIA: ${segmentProgress.ria.percentage}% complete (${segmentProgress.ria.completed}/${segmentProgress.ria.total})
-
-**Next Actions:**
-• Continue Gold tier outreach this week
-• Prepare Silver tier materials 
-• Schedule follow-up calls with interested prospects
-
-View the detailed checklist: ${checklistLink}
-
-— BFO Launch Automation`;
-
-    // Send emails to each recipient
-    for (const recipient of recipients) {
-      const emailResult = await resend.emails.send({
-        from: "BFO Ops <ops@my.bfocfo.com>",
-        to: [recipient],
-        subject: `Founding 20 Launch Status Digest - ${timestamp}`,
-        text: emailBody,
-        html: `
-          <div style="font-family: Inter, sans-serif; max-width: 600px; margin: 0 auto; background: #000000; color: #ffffff; padding: 40px 20px;">
-            <div style="text-align: center; margin-bottom: 40px; border-bottom: 2px solid #FFD700; padding-bottom: 20px;">
-              <h1 style="color: #FFD700; font-family: 'Playfair Display', serif; margin: 0;">Boutique Family Office™</h1>
-              <p style="color: #046B4D; margin: 5px 0 0 0;">Healthspan + Wealthspan. One Platform.</p>
-            </div>
-            
-            <h2 style="color: #FFD700; margin-bottom: 20px;">Founding 20 Launch Progress</h2>
-            <p style="color: #ffffff; margin-bottom: 30px;">Here's the current status as of ${timestamp}:</p>
-            
-            <div style="background: #1a1a1a; border: 1px solid #FFD700; border-radius: 8px; padding: 20px; margin-bottom: 30px;">
-              <h3 style="color: #FFD700; margin-top: 0;">Tier Progress</h3>
-              <div style="margin-bottom: 15px;">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                  <span>🥇 Gold Tier</span>
-                  <span>${tierProgress.gold.percentage}%</span>
-                </div>
-                <div style="background: #333; height: 8px; border-radius: 4px;">
-                  <div style="background: #FFD700; height: 100%; width: ${tierProgress.gold.percentage}%; border-radius: 4px;"></div>
-                </div>
-              </div>
-              
-              <div style="margin-bottom: 15px;">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                  <span>🥈 Silver Tier</span>
-                  <span>${tierProgress.silver.percentage}%</span>
-                </div>
-                <div style="background: #333; height: 8px; border-radius: 4px;">
-                  <div style="background: #C0C0C0; height: 100%; width: ${tierProgress.silver.percentage}%; border-radius: 4px;"></div>
-                </div>
-              </div>
-              
-              <div style="margin-bottom: 0;">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                  <span>🥉 Bronze Tier</span>
-                  <span>${tierProgress.bronze.percentage}%</span>
-                </div>
-                <div style="background: #333; height: 8px; border-radius: 4px;">
-                  <div style="background: #CD7F32; height: 100%; width: ${tierProgress.bronze.percentage}%; border-radius: 4px;"></div>
-                </div>
-              </div>
-            </div>
-            
-            <div style="background: #1a1a1a; border: 1px solid #046B4D; border-radius: 8px; padding: 20px; margin-bottom: 30px;">
-              <h3 style="color: #046B4D; margin-top: 0;">Segment Breakdown</h3>
-              <div style="margin-bottom: 10px;">🏆 Sports: ${segmentProgress.sports.percentage}% (${segmentProgress.sports.completed}/${segmentProgress.sports.total})</div>
-              <div style="margin-bottom: 10px;">🧬 Longevity: ${segmentProgress.longevity.percentage}% (${segmentProgress.longevity.completed}/${segmentProgress.longevity.total})</div>
-              <div>💼 RIA: ${segmentProgress.ria.percentage}% (${segmentProgress.ria.completed}/${segmentProgress.ria.total})</div>
-            </div>
-            
-            <div style="text-align: center; margin-bottom: 30px;">
-              <a href="${checklistLink}" style="background: #FFD700; color: #000000; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-weight: bold; display: inline-block;">
-                View Detailed Checklist
-              </a>
-            </div>
-            
-            <div style="text-align: center; color: #999999; font-size: 12px; border-top: 1px solid #333; padding-top: 20px;">
-              <p>Boutique Family Office™ | Launch Automation</p>
-            </div>
-          </div>
-        `
-      });
-
-      if (emailResult.error) {
-        console.error(`Failed to send email to ${recipient}:`, emailResult.error);
-      } else {
-        console.log(`Digest sent successfully to ${recipient}`);
-      }
-    }
-
-    // Log the digest
-    const { error: logError } = await supabase
-      .from('launch_digest_log')
-      .insert({
-        digest_type: type,
-        recipients,
-        content: {
-          tierProgress,
-          segmentProgress,
-          timestamp: new Date().toISOString()
-        },
-        status: 'sent'
-      });
-
-    if (logError) {
-      console.error('Failed to log digest:', logError);
-    }
-
-    return new Response(JSON.stringify({ 
-      success: true, 
-      recipients: recipients.length,
-      progress: { tierProgress, segmentProgress }
+    return new Response(JSON.stringify({
+      success: true,
+      digest_type: type,
+      recipients: finalRecipients,
+      email_id: emailResponse.data?.id,
+      segment_progress: segmentProgress
     }), {
       status: 200,
-      headers: {
-        'Content-Type': 'application/json',
-        ...corsHeaders,
-      },
+      headers: { 'Content-Type': 'application/json', ...corsHeaders },
     });
 
   } catch (error: any) {
     console.error('Error in launch-digest function:', error);
     return new Response(
       JSON.stringify({ error: error.message }),
-      {
-        status: 500,
-        headers: { 'Content-Type': 'application/json', ...corsHeaders },
-      }
+      { status: 500, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
     );
   }
 };
+
+function calculateSegmentProgress(progressData: any[]): any {
+  const result: any = {
+    overall: { total: 0, completed: 0, percentage: 0 },
+    by_segment: { sports: {}, longevity: {}, ria: {} },
+    by_tier: { gold: {}, silver: {}, bronze: {} }
+  };
+
+  let totalItems = 0;
+  let totalCompleted = 0;
+
+  ['sports', 'longevity', 'ria'].forEach(segment => {
+    const segmentData = progressData.filter(p => p.segment === segment);
+    const segmentTotal = segmentData.reduce((sum, p) => sum + (p.total_items || 0), 0);
+    const segmentCompleted = segmentData.reduce((sum, p) => sum + (p.completed_items || 0), 0);
+    
+    result.by_segment[segment] = {
+      total: segmentTotal,
+      completed: segmentCompleted,
+      percentage: segmentTotal > 0 ? Math.round((segmentCompleted / segmentTotal) * 100) : 0
+    };
+
+    totalItems += segmentTotal;
+    totalCompleted += segmentCompleted;
+  });
+
+  result.overall = {
+    total: totalItems,
+    completed: totalCompleted,
+    percentage: totalItems > 0 ? Math.round((totalCompleted / totalItems) * 100) : 0
+  };
+
+  return result;
+}
+
+function generateDigestEmail(segmentProgress: any): { html: string; text: string } {
+  const { overall, by_segment } = segmentProgress;
+
+  const html = `
+<!DOCTYPE html>
+<html>
+<head><title>Founding 20 Launch Status</title></head>
+<body style="font-family: Inter, sans-serif; background: #000; color: #fff; padding: 20px;">
+  <div style="max-width: 600px; margin: 0 auto; border: 1px solid #FFD700; border-radius: 8px;">
+    <div style="background: linear-gradient(135deg, #000 0%, #1a1a1a 100%); padding: 30px; text-align: center; border-bottom: 2px solid #FFD700;">
+      <h1 style="color: #FFD700; margin: 0;">Founding 20 Launch Status</h1>
+      <p style="color: #999; margin: 5px 0 0 0;">Weekly Progress Digest</p>
+    </div>
+    <div style="padding: 30px;">
+      <h2 style="color: #FFD700;">Overall Progress: ${overall.percentage}%</h2>
+      <h3 style="color: #046B4D;">🏃 Sports: ${by_segment.sports?.percentage || 0}%</h3>
+      <h3 style="color: #0A152E;">🧬 Longevity: ${by_segment.longevity?.percentage || 0}%</h3>
+      <h3 style="color: #A6192E;">💼 RIA: ${by_segment.ria?.percentage || 0}%</h3>
+      <p style="text-align: center; margin-top: 30px; color: #999;">
+        <a href="https://my.bfocfo.com/admin/founding20-checklist" style="color: #FFD700;">View Dashboard</a><br>
+        — Lovable Automation
+      </p>
+    </div>
+  </div>
+</body>
+</html>`;
+
+  const text = `Founding 20 Launch Status Digest\n\nOverall: ${overall.percentage}%\nSports: ${by_segment.sports?.percentage || 0}%\nLongevity: ${by_segment.longevity?.percentage || 0}%\nRIA: ${by_segment.ria?.percentage || 0}%`;
+
+  return { html, text };
+}
 
 serve(handler);
