@@ -1,3 +1,7 @@
+export interface RegimeInput {
+  marketData: Array<{date: string; price: number; volume: number}>;
+}
+
 export interface MarketRegime {
   regime: 'bull' | 'bear' | 'sideways' | 'volatile';
   confidence: number;

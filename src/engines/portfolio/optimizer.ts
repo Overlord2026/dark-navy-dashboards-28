@@ -1,9 +1,22 @@
-export interface OptimizationResult {
+export interface OptimizationInput {
+  assets: Array<{symbol: string; expectedReturn: number; risk: number}>;
+  constraints: {riskTolerance: number; minAllocation?: number; maxAllocation?: number};
+}
+
+export interface OptimizationOutput {
   allocations: Record<string, number>;
   expectedReturn: number;
   expectedRisk: number;
   sharpeRatio: number;
   metadata: { method: string; iterations: number; convergence: boolean; };
+}
+
+export interface OptimizationResult extends OptimizationOutput {}
+
+export class PortfolioOptimizer {
+  static async optimize(input: OptimizationInput): Promise<OptimizationOutput> {
+    return optimizePortfolio(input.assets, input.constraints);
+  }
 }
 
 export const optimizePortfolio = async (

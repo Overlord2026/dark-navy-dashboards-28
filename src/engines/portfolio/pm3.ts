@@ -1,3 +1,12 @@
+export interface PM3Input {
+  portfolio: { 
+    returns: number[]; 
+    benchmark: number[]; 
+    fees: number; 
+    holdings: Array<{symbol: string; weight: number}>; 
+  };
+}
+
 export interface PM3Score {
   overall: number;
   performance: number;
