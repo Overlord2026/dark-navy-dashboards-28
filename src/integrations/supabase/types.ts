@@ -8090,6 +8090,33 @@ export type Database = {
         }
         Relationships: []
       }
+      dd_packages: {
+        Row: {
+          artifact_urls: Json | null
+          created_at: string | null
+          fund_id: string
+          id: string
+          snapshot: Json
+          user_id: string
+        }
+        Insert: {
+          artifact_urls?: Json | null
+          created_at?: string | null
+          fund_id: string
+          id?: string
+          snapshot: Json
+          user_id: string
+        }
+        Update: {
+          artifact_urls?: Json | null
+          created_at?: string | null
+          fund_id?: string
+          id?: string
+          snapshot?: Json
+          user_id?: string
+        }
+        Relationships: []
+      }
       demo_data_sets: {
         Row: {
           category: string
@@ -11398,6 +11425,75 @@ export type Database = {
           utm_medium?: string | null
           utm_source?: string | null
           utm_term?: string | null
+        }
+        Relationships: []
+      }
+      fund_holdings_lookup: {
+        Row: {
+          as_of_date: string
+          country: string | null
+          created_at: string | null
+          fund_id: string
+          holding_id: string
+          holding_name: string
+          holding_type: string | null
+          id: string
+          sector: string | null
+          updated_at: string | null
+          weight_pct: number | null
+        }
+        Insert: {
+          as_of_date?: string
+          country?: string | null
+          created_at?: string | null
+          fund_id: string
+          holding_id: string
+          holding_name: string
+          holding_type?: string | null
+          id?: string
+          sector?: string | null
+          updated_at?: string | null
+          weight_pct?: number | null
+        }
+        Update: {
+          as_of_date?: string
+          country?: string | null
+          created_at?: string | null
+          fund_id?: string
+          holding_id?: string
+          holding_name?: string
+          holding_type?: string | null
+          id?: string
+          sector?: string | null
+          updated_at?: string | null
+          weight_pct?: number | null
+        }
+        Relationships: []
+      }
+      fund_holdings_overlap: {
+        Row: {
+          created_at: string | null
+          id: string
+          overlap_metrics: Json
+          portfolio_id: string | null
+          scope: Json
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          overlap_metrics: Json
+          portfolio_id?: string | null
+          scope: Json
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          overlap_metrics?: Json
+          portfolio_id?: string | null
+          scope?: Json
+          user_id?: string
         }
         Relationships: []
       }
@@ -14734,6 +14830,66 @@ export type Database = {
           status?: string | null
           title?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      liquidity_events: {
+        Row: {
+          created_at: string | null
+          details: Json | null
+          event_date: string
+          event_type: string
+          fund_id: string
+          id: string
+        }
+        Insert: {
+          created_at?: string | null
+          details?: Json | null
+          event_date: string
+          event_type: string
+          fund_id: string
+          id?: string
+        }
+        Update: {
+          created_at?: string | null
+          details?: Json | null
+          event_date?: string
+          event_type?: string
+          fund_id?: string
+          id?: string
+        }
+        Relationships: []
+      }
+      liquidity_scores: {
+        Row: {
+          as_of_date: string
+          breakdown: Json
+          created_at: string | null
+          fund_id: string
+          id: string
+          inputs: Json
+          score: number
+          user_id: string
+        }
+        Insert: {
+          as_of_date?: string
+          breakdown: Json
+          created_at?: string | null
+          fund_id: string
+          id?: string
+          inputs: Json
+          score: number
+          user_id: string
+        }
+        Update: {
+          as_of_date?: string
+          breakdown?: Json
+          created_at?: string | null
+          fund_id?: string
+          id?: string
+          inputs?: Json
+          score?: number
+          user_id?: string
         }
         Relationships: []
       }

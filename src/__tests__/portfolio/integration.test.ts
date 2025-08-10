@@ -1,4 +1,4 @@
-import { describe, test, expect, beforeEach, vi } from '@jest/globals';
+import { describe, test, expect, beforeEach, vi } from 'vitest';
 import { createClient } from '@supabase/supabase-js';
 
 // Mock Supabase for integration tests
@@ -48,6 +48,7 @@ describe('Portfolio Integration Tests', () => {
     // Attempt to insert with different user_id (should fail)
     const result = await supabase.from('portfolio_positions').insert({
       user_id: 'different-user',
+      account_id: 'test-account',
       asset_class: 'us_equity',
       symbol: 'SPY',
       quantity: 100,
@@ -86,6 +87,7 @@ describe('Portfolio Integration Tests', () => {
     
     const result = await supabase.from('portfolio_positions').insert({
       user_id: userId,
+      account_id: 'test-account',
       asset_class: 'us_equity',
       symbol: 'SPY',
       quantity: 100,
@@ -96,6 +98,7 @@ describe('Portfolio Integration Tests', () => {
     expect(result.data).toBeTruthy();
     expect(insertSpy).toHaveBeenCalledWith({
       user_id: userId,
+      account_id: 'test-account',
       asset_class: 'us_equity',
       symbol: 'SPY',
       quantity: 100,
@@ -118,6 +121,7 @@ describe('Portfolio Integration Tests', () => {
     // Attempt to insert negative quantity (should fail)
     const result = await supabase.from('portfolio_positions').insert({
       user_id: 'user-123',
+      account_id: 'test-account',
       asset_class: 'us_equity',
       symbol: 'SPY',
       quantity: -100, // Invalid negative quantity
@@ -163,9 +167,10 @@ describe('Portfolio Integration Tests', () => {
 
     const result = await supabase.from('rebalancing_events').insert({
       user_id: userId,
+      account_id: 'test-account',
       trigger_type: 'drift',
       trades,
-      status: 'pending',
+      execution_status: 'pending',
       rationale: 'Drift correction required'
     });
 
@@ -173,9 +178,10 @@ describe('Portfolio Integration Tests', () => {
     expect(result.data).toBeTruthy();
     expect(insertSpy).toHaveBeenCalledWith({
       user_id: userId,
+      account_id: 'test-account',
       trigger_type: 'drift',
       trades,
-      status: 'pending',
+      execution_status: 'pending',
       rationale: 'Drift correction required'
     });
   });
