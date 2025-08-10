@@ -14964,6 +14964,39 @@ export type Database = {
         }
         Relationships: []
       }
+      manager_signals: {
+        Row: {
+          confidence_level: number | null
+          created_at: string | null
+          data_source: string | null
+          id: string
+          manager_name: string
+          signal_date: string
+          signal_type: string
+          signal_value: number | null
+        }
+        Insert: {
+          confidence_level?: number | null
+          created_at?: string | null
+          data_source?: string | null
+          id?: string
+          manager_name: string
+          signal_date: string
+          signal_type: string
+          signal_value?: number | null
+        }
+        Update: {
+          confidence_level?: number | null
+          created_at?: string | null
+          data_source?: string | null
+          id?: string
+          manager_name?: string
+          signal_date?: string
+          signal_type?: string
+          signal_value?: number | null
+        }
+        Relationships: []
+      }
       market_data_cache: {
         Row: {
           alpha: number | null
@@ -18798,6 +18831,102 @@ export type Database = {
         }
         Relationships: []
       }
+      portfolio_positions: {
+        Row: {
+          account_id: string | null
+          asset_class: string
+          cost_basis: number | null
+          created_at: string | null
+          current_value: number
+          current_weight: number
+          id: string
+          last_price: number | null
+          quantity: number
+          swag_phase: string | null
+          symbol: string
+          target_weight: number | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          account_id?: string | null
+          asset_class: string
+          cost_basis?: number | null
+          created_at?: string | null
+          current_value?: number
+          current_weight?: number
+          id?: string
+          last_price?: number | null
+          quantity?: number
+          swag_phase?: string | null
+          symbol: string
+          target_weight?: number | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          account_id?: string | null
+          asset_class?: string
+          cost_basis?: number | null
+          created_at?: string | null
+          current_value?: number
+          current_weight?: number
+          id?: string
+          last_price?: number | null
+          quantity?: number
+          swag_phase?: string | null
+          symbol?: string
+          target_weight?: number | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      portfolio_targets: {
+        Row: {
+          asset_class: string
+          created_at: string | null
+          fee_cap: number | null
+          id: string
+          liquidity_requirement: number | null
+          max_allocation: number | null
+          min_allocation: number | null
+          rebalance_threshold: number | null
+          swag_phase: string
+          target_allocation: number
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          asset_class: string
+          created_at?: string | null
+          fee_cap?: number | null
+          id?: string
+          liquidity_requirement?: number | null
+          max_allocation?: number | null
+          min_allocation?: number | null
+          rebalance_threshold?: number | null
+          swag_phase: string
+          target_allocation: number
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          asset_class?: string
+          created_at?: string | null
+          fee_cap?: number | null
+          id?: string
+          liquidity_requirement?: number | null
+          max_allocation?: number | null
+          min_allocation?: number | null
+          rebalance_threshold?: number | null
+          swag_phase?: string
+          target_allocation?: number
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       practice_benchmarks: {
         Row: {
           created_at: string | null
@@ -19019,6 +19148,54 @@ export type Database = {
           updated_at?: string
           user_id?: string
           valuation?: number
+        }
+        Relationships: []
+      }
+      private_fund_holdings: {
+        Row: {
+          called_amount: number | null
+          commitment_amount: number
+          created_at: string | null
+          current_value: number | null
+          fund_name: string
+          fund_type: string
+          id: string
+          liquidity_status: string | null
+          pm3_score: number | null
+          swag_phase: string | null
+          updated_at: string | null
+          user_id: string
+          vintage_year: number | null
+        }
+        Insert: {
+          called_amount?: number | null
+          commitment_amount: number
+          created_at?: string | null
+          current_value?: number | null
+          fund_name: string
+          fund_type: string
+          id?: string
+          liquidity_status?: string | null
+          pm3_score?: number | null
+          swag_phase?: string | null
+          updated_at?: string | null
+          user_id: string
+          vintage_year?: number | null
+        }
+        Update: {
+          called_amount?: number | null
+          commitment_amount?: number
+          created_at?: string | null
+          current_value?: number | null
+          fund_name?: string
+          fund_type?: string
+          id?: string
+          liquidity_status?: string | null
+          pm3_score?: number | null
+          swag_phase?: string | null
+          updated_at?: string | null
+          user_id?: string
+          vintage_year?: number | null
         }
         Relationships: []
       }
@@ -21346,6 +21523,104 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      rebalancing_events: {
+        Row: {
+          created_at: string | null
+          current_positions: Json
+          executed_at: string | null
+          execution_cost: number | null
+          id: string
+          recommended_trades: Json
+          status: string | null
+          target_weights: Json
+          tax_impact: number | null
+          trade_rationale: string | null
+          trigger_data: Json | null
+          trigger_type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          current_positions: Json
+          executed_at?: string | null
+          execution_cost?: number | null
+          id?: string
+          recommended_trades: Json
+          status?: string | null
+          target_weights: Json
+          tax_impact?: number | null
+          trade_rationale?: string | null
+          trigger_data?: Json | null
+          trigger_type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          current_positions?: Json
+          executed_at?: string | null
+          execution_cost?: number | null
+          id?: string
+          recommended_trades?: Json
+          status?: string | null
+          target_weights?: Json
+          tax_impact?: number | null
+          trade_rationale?: string | null
+          trigger_data?: Json | null
+          trigger_type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      recommendation_audit: {
+        Row: {
+          confidence_score: number | null
+          created_at: string | null
+          id: string
+          input_hash: string | null
+          input_snapshot: Json
+          model_version: string | null
+          output_data: Json
+          rationale: string | null
+          rebalancing_event_id: string | null
+          recommendation_type: string
+          user_id: string
+        }
+        Insert: {
+          confidence_score?: number | null
+          created_at?: string | null
+          id?: string
+          input_hash?: string | null
+          input_snapshot: Json
+          model_version?: string | null
+          output_data: Json
+          rationale?: string | null
+          rebalancing_event_id?: string | null
+          recommendation_type: string
+          user_id: string
+        }
+        Update: {
+          confidence_score?: number | null
+          created_at?: string | null
+          id?: string
+          input_hash?: string | null
+          input_snapshot?: Json
+          model_version?: string | null
+          output_data?: Json
+          rationale?: string | null
+          rebalancing_event_id?: string | null
+          recommendation_type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "recommendation_audit_rebalancing_event_id_fkey"
+            columns: ["rebalancing_event_id"]
+            isOneToOne: false
+            referencedRelation: "rebalancing_events"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       referral_payouts: {
         Row: {
