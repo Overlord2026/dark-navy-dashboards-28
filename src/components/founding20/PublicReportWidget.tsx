@@ -7,6 +7,9 @@ import { track } from '@/lib/analytics/track';
 
 interface PublicReportWidgetProps {
   segment?: string;
+  utm_source?: string;
+  utm_medium?: string;
+  utm_campaign?: string;
   style?: {
     bg?: string;
     title_color?: string;
@@ -19,6 +22,9 @@ interface PublicReportWidgetProps {
 
 export const PublicReportWidget: React.FC<PublicReportWidgetProps> = ({
   segment = 'founding20',
+  utm_source = 'founding20_page',
+  utm_medium = 'cta',
+  utm_campaign = 'public_wrapup_report',
   style = {
     bg: 'black',
     title_color: 'gold',
@@ -49,9 +55,9 @@ export const PublicReportWidget: React.FC<PublicReportWidgetProps> = ({
     track('public_report_viewed', {
       segment,
       placement,
-      utm_source: placement === 'page' ? 'founding20_page' : 'founding20_email',
-      utm_medium: 'cta',
-      utm_campaign: 'public_wrapup_report'
+      utm_source,
+      utm_medium,
+      utm_campaign
     });
 
     // Open report in new tab

@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 import SportsFounding20Landing from '@/components/founding20/SportsFounding20Landing';
 import { LaunchChecklistInterface } from '@/components/founding20/LaunchChecklistInterface';
-import { OnepageOverviewGenerator } from '@/components/founding20/OnepageOverviewGenerator';
+import { OnePageOverviewGenerator } from '@/components/founding20/OnePageOverviewGenerator';
 import { LeadershipDeckGenerator } from '@/components/founding20/LeadershipDeckGenerator';
 import { EmailCampaignManager } from '@/components/founding20/EmailCampaignManager';
 import { QATestSuiteStandalone } from '@/components/founding20/QATestSuiteStandalone';
@@ -245,7 +245,7 @@ export default function Founding20MasterDashboard() {
           </TabsContent>
 
           <TabsContent value="overview_gen">
-            <OnepageOverviewGenerator />
+            <OnePageOverviewGenerator format="pdf" theme="digital" />
           </TabsContent>
 
           <TabsContent value="deck">

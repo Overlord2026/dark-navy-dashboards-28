@@ -7,7 +7,27 @@ import { ExternalLink, Download, FileText, Database, Share } from 'lucide-react'
 import { track } from '@/lib/analytics/track';
 import { toast } from 'sonner';
 
-const notionBoards = {
+interface NotionBoardBase {
+  name: string;
+  columns: string[];
+  description: string;
+  data_source: string;
+}
+
+interface NotionBoardWithFields extends NotionBoardBase {
+  fields: string[];
+  pin_top_5?: boolean;
+  auto_update?: boolean;
+  cards_count?: number;
+}
+
+interface NotionBoardWithCards extends NotionBoardBase {
+  cards: { name: string; link: string }[];
+}
+
+type NotionBoard = NotionBoardWithFields | NotionBoardWithCards;
+
+const notionBoards: Record<string, NotionBoard> = {
   sports_sprint: {
     name: "Founding 20 — Sports Sprint",
     columns: ["Backlog", "Outreach Prep", "Active Outreach", "Demo Scheduled", "Negotiation", "Confirmed Partner"],
@@ -66,25 +86,21 @@ export const NotionExportManager: React.FC = () => {
     try {
       track('notion_export_started', { board_id: boardId });
       
-      const board = notionBoards[boardId as keyof typeof notionBoards];
+      const board = notionBoards[boardId];
       
       // Simulate export process
       setExportStatus(prev => ({ ...prev, [boardId]: 'exporting' }));
-      
-      // In a real implementation, this would:
-      // 1. Query the relevant Supabase tables
-      // 2. Format the data according to the board structure
-      // 3. Use Notion API to create/update the board
-      // 4. Handle pagination for large datasets
       
       await new Promise(resolve => setTimeout(resolve, 2000));
       
       setExportStatus(prev => ({ ...prev, [boardId]: 'success' }));
       
+      const cardsCount = 'cards' in board ? board.cards.length : 'cards_count' in board ? board.cards_count || 0 : 0;
+      
       track('notion_export_completed', { 
         board_id: boardId, 
         board_name: board.name,
-        cards_exported: 'cards_count' in board ? board.cards_count : board.cards?.length || 0
+        cards_exported: cardsCount
       });
       
       toast.success(`Exported ${board.name} to Notion`);
@@ -103,7 +119,6 @@ export const NotionExportManager: React.FC = () => {
     
     for (const boardId of Object.keys(notionBoards)) {
       await exportToNotion(boardId);
-      // Small delay between exports
       await new Promise(resolve => setTimeout(resolve, 500));
     }
     
@@ -111,30 +126,34 @@ export const NotionExportManager: React.FC = () => {
   };
 
   const generateExportSummary = () => {
+    const totalCards = Object.values(notionBoards).reduce((sum, board) => {
+      if ('cards' in board) return sum + board.cards.length;
+      if ('cards_count' in board) return sum + (board.cards_count || 0);
+      return sum;
+    }, 0);
+
     const summary = {
       total_boards: Object.keys(notionBoards).length,
-      total_cards: Object.values(notionBoards).reduce((sum, board) => 
-        sum + ('cards_count' in board ? board.cards_count || 0 : board.cards?.length || 0), 0
-      ),
-      data_sources: [...new Set(Object.values(notionBoards).map(board => board.data_source))],
+      total_cards: totalCards,
+      data_sources: [...new Set(Object.values(notionBoards).map(board => board.data_source))].join(','),
       export_timestamp: new Date().toISOString()
     };
 
     track('notion_export_summary_generated', summary);
 
-    // Generate downloadable summary
     const summaryText = `
 Founding 20 Notion Export Summary
 Generated: ${new Date().toLocaleString()}
 
 Boards: ${summary.total_boards}
 Total Cards: ${summary.total_cards}
-Data Sources: ${summary.data_sources.join(', ')}
+Data Sources: ${summary.data_sources}
 
 Board Details:
-${Object.entries(notionBoards).map(([id, board]) => 
-  `- ${board.name}: ${'cards_count' in board ? board.cards_count : board.cards?.length || 0} cards`
-).join('\n')}
+${Object.entries(notionBoards).map(([id, board]) => {
+  const cardCount = 'cards' in board ? board.cards.length : 'cards_count' in board ? board.cards_count || 0 : 0;
+  return `- ${board.name}: ${cardCount} cards`;
+}).join('\n')}
     `;
 
     const blob = new Blob([summaryText], { type: 'text/plain' });
@@ -206,11 +225,12 @@ ${Object.entries(notionBoards).map(([id, board]) =>
           <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
             {Object.entries(notionBoards).map(([boardId, board]) => {
               const status = exportStatus[boardId] || 'ready';
+              const cardCount = 'cards' in board ? board.cards.length : 'cards_count' in board ? board.cards_count || 0 : 0;
               
               return (
                 <div key={boardId} className="text-center">
                   <div className="text-lg font-bold text-white mb-1">
-                    {'cards_count' in board ? board.cards_count : board.cards?.length || 0}
+                    {cardCount}
                   </div>
                   <div className="text-xs text-white/70 mb-2">
                     {board.name.split(' — ')[1]}
@@ -269,7 +289,7 @@ ${Object.entries(notionBoards).map(([id, board]) =>
                   </div>
                 </div>
 
-                {board.fields && (
+                {'fields' in board && board.fields && (
                   <div>
                     <h4 className="font-semibold text-white mb-2">Card Fields</h4>
                     <div className="flex flex-wrap gap-1 text-sm">
@@ -282,7 +302,7 @@ ${Object.entries(notionBoards).map(([id, board]) =>
                   </div>
                 )}
 
-                {board.cards && (
+                {'cards' in board && board.cards && (
                   <div>
                     <h4 className="font-semibold text-white mb-2">Static Cards</h4>
                     <div className="space-y-2">
@@ -301,17 +321,17 @@ ${Object.entries(notionBoards).map(([id, board]) =>
                 <div className="flex items-center justify-between text-sm text-white/70">
                   <span><strong>Data Source:</strong> {board.data_source}</span>
                   <span>
-                    <strong>Cards:</strong> {'cards_count' in board ? board.cards_count : board.cards?.length || 0}
+                    <strong>Cards:</strong> {'cards' in board ? board.cards.length : 'cards_count' in board ? board.cards_count || 0 : 0}
                   </span>
                 </div>
 
-                {board.pin_top_5 && (
+                {'pin_top_5' in board && board.pin_top_5 && (
                   <div className="text-sm text-yellow-400">
                     ⭐ Top 5 cards will be pinned to top of board
                   </div>
                 )}
 
-                {board.auto_update && (
+                {'auto_update' in board && board.auto_update && (
                   <div className="text-sm text-blue-400">
                     🔄 Board will auto-update with live data
                   </div>

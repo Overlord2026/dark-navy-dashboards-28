@@ -191,10 +191,12 @@ import CorporateExecutivePersonaPage from '@/pages/persona/CorporateExecutivePer
 import PreRetireeRetireePersonaPage from '@/pages/persona/PreRetireeRetireePersonaPage';
 import RetirementConfidenceScorecardPage from './pages/tools/RetirementConfidenceScorecardPage';
 import { ScorecardStartPage } from './pages/scorecard/ScorecardStartPage';
-import SportsFounding20 from './pages/founding20/SportsFounding20';
+import SportsFounding20Landing from '@/components/founding20/SportsFounding20Landing';
+import Founding20LongevityLanding from '@/pages/founding20/Founding20LongevityLanding';
+import Founding20RIALanding from '@/pages/founding20/Founding20RIALanding';
 import Founding20OverviewPage from './pages/founding20/Founding20OverviewPage';
 import Founding20LeadershipDeckPage from './pages/founding20/Founding20LeadershipDeckPage';
-import Founding20MasterDashboard from './pages/admin/Founding20MasterDashboard';
+import Founding20MasterDashboard from './pages/founding20/Founding20MasterDashboard';
 import Founding20LaunchDashboard from './pages/admin/Founding20LaunchDashboard';
 
 // Import onboarding flow component
@@ -681,8 +683,10 @@ function App() {
           <Route path="/roadmap/intake" element={<SwagRetirementRoadmapPage />} />
           
           {/* Founding 20 Campaign Routes */}
-          <Route path="/founding20/sports" element={<SportsFounding20 />} />
-          <Route path="/founding20-sports" element={<SportsFounding20 />} />
+          <Route path="/founding20/sports" element={<SportsFounding20Landing />} />
+          <Route path="/founding20-sports" element={<SportsFounding20Landing />} />
+          <Route path="/founding20/longevity" element={<Founding20LongevityLanding />} />
+          <Route path="/founding20/ria" element={<Founding20RIALanding />} />
           <Route path="/founding20/overview" element={<Founding20OverviewPage />} />
           <Route path="/founding20/leadership-briefing-deck" element={<Founding20LeadershipDeckPage />} />
           <Route path="/admin/founding20-dashboard" element={<Founding20MasterDashboard />} />
