@@ -9845,6 +9845,183 @@ export type Database = {
         }
         Relationships: []
       }
+      f20_analytics: {
+        Row: {
+          created_at: string | null
+          event_data: Json | null
+          event_type: string
+          id: string
+          ip_address: unknown | null
+          segment: string | null
+          session_id: string | null
+          target_name: string | null
+          user_agent: string | null
+          user_id: string | null
+          utm_campaign: string | null
+          utm_content: string | null
+          utm_medium: string | null
+          utm_source: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          event_data?: Json | null
+          event_type: string
+          id?: string
+          ip_address?: unknown | null
+          segment?: string | null
+          session_id?: string | null
+          target_name?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          event_data?: Json | null
+          event_type?: string
+          id?: string
+          ip_address?: unknown | null
+          segment?: string | null
+          session_id?: string | null
+          target_name?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Relationships: []
+      }
+      f20_assets: {
+        Row: {
+          asset_name: string
+          asset_type: string
+          created_at: string | null
+          download_count: number | null
+          file_path: string | null
+          file_size_bytes: number | null
+          file_url: string | null
+          generation_status: string
+          id: string
+          last_downloaded_at: string | null
+          segment: string | null
+        }
+        Insert: {
+          asset_name: string
+          asset_type: string
+          created_at?: string | null
+          download_count?: number | null
+          file_path?: string | null
+          file_size_bytes?: number | null
+          file_url?: string | null
+          generation_status?: string
+          id?: string
+          last_downloaded_at?: string | null
+          segment?: string | null
+        }
+        Update: {
+          asset_name?: string
+          asset_type?: string
+          created_at?: string | null
+          download_count?: number | null
+          file_path?: string | null
+          file_size_bytes?: number | null
+          file_url?: string | null
+          generation_status?: string
+          id?: string
+          last_downloaded_at?: string | null
+          segment?: string | null
+        }
+        Relationships: []
+      }
+      f20_email_campaigns: {
+        Row: {
+          campaign_name: string
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          segment: string
+          sender_email: string
+          sender_name: string
+          subject_line: string
+          template_content: string
+          template_type: string
+          updated_at: string | null
+        }
+        Insert: {
+          campaign_name: string
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          segment: string
+          sender_email?: string
+          sender_name?: string
+          subject_line: string
+          template_content: string
+          template_type: string
+          updated_at?: string | null
+        }
+        Update: {
+          campaign_name?: string
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          segment?: string
+          sender_email?: string
+          sender_name?: string
+          subject_line?: string
+          template_content?: string
+          template_type?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      f20_qr_codes: {
+        Row: {
+          created_at: string | null
+          id: string
+          last_scanned_at: string | null
+          qr_url: string
+          scan_count: number | null
+          segment: string
+          target_name: string
+          utm_campaign: string | null
+          utm_content: string | null
+          utm_medium: string | null
+          utm_source: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          last_scanned_at?: string | null
+          qr_url: string
+          scan_count?: number | null
+          segment: string
+          target_name: string
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          last_scanned_at?: string | null
+          qr_url?: string
+          scan_count?: number | null
+          segment?: string
+          target_name?: string
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Relationships: []
+      }
       failed_login_attempts: {
         Row: {
           attempted_at: string | null

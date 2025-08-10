@@ -193,7 +193,9 @@ import RetirementConfidenceScorecardPage from './pages/tools/RetirementConfidenc
 import { ScorecardStartPage } from './pages/scorecard/ScorecardStartPage';
 import SportsFounding20 from './pages/founding20/SportsFounding20';
 import Founding20OverviewPage from './pages/founding20/Founding20OverviewPage';
+import Founding20LeadershipDeckPage from './pages/founding20/Founding20LeadershipDeckPage';
 import Founding20MasterDashboard from './pages/admin/Founding20MasterDashboard';
+import Founding20LaunchDashboard from './pages/admin/Founding20LaunchDashboard';
 
 // Import onboarding flow component
 const PersonaOnboardingFlow = React.lazy(() => 
@@ -682,7 +684,9 @@ function App() {
           <Route path="/founding20/sports" element={<SportsFounding20 />} />
           <Route path="/founding20-sports" element={<SportsFounding20 />} />
           <Route path="/founding20/overview" element={<Founding20OverviewPage />} />
+          <Route path="/founding20/leadership-briefing-deck" element={<Founding20LeadershipDeckPage />} />
           <Route path="/admin/founding20-dashboard" element={<Founding20MasterDashboard />} />
+          <Route path="/admin/founding20-checklist" element={<Founding20LaunchDashboard />} />
 
                          </Routes>
                         <Navigation />
