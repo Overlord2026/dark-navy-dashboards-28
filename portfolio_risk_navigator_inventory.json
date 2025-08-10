@@ -1,0 +1,523 @@
+{
+  "executive_summary": {
+    "system_name": "Portfolio Risk Navigator GPS",
+    "total_artifacts": 85,
+    "patent_defensibility_rating": "VERY HIGH",
+    "unique_innovations": [
+      "SWAG Phase Policy Engine with 4-phase lifecycle optimization",
+      "LARB (Liquidity-Adjusted Risk Budget) Calculator with regime-aware adjustments",
+      "PM3 (Private Manager Momentum) scoring for alternative investments",
+      "Fee-aware utility optimization with phase-specific penalty weights",
+      "Regime-based asset class adjustments with transition probabilities",
+      "Monte Carlo simulation with health scoring and probability bands"
+    ],
+    "ip_hardening_priority": "HIGH - Novel portfolio optimization stack with multiple patentable innovations"
+  },
+  "artifact_inventory": [
+    {
+      "artifact_id": "swag_phase_policy_engine",
+      "path": "src/engines/portfolio/phasePolicy.ts",
+      "type": "Algorithm Engine",
+      "exports": ["PhasePolicy", "SWAG_PHASE_CONFIGS", "AdvisorConstraintOverlay"],
+      "routes": [],
+      "db_tables": ["portfolio_targets", "portfolio_positions"],
+      "env": [],
+      "edge_functions": [],
+      "analytics": ["phase_transitions", "allocation_violations"],
+      "todos": []
+    },
+    {
+      "artifact_id": "larb_calculator",
+      "path": "src/engines/portfolio/larb.ts",
+      "type": "Risk Algorithm",
+      "exports": ["LARBCalculator", "LARBInput", "LARBOutput"],
+      "routes": [],
+      "db_tables": [],
+      "env": [],
+      "edge_functions": [],
+      "analytics": ["risk_adjustments", "liquidity_constraints"],
+      "todos": []
+    },
+    {
+      "artifact_id": "portfolio_optimizer",
+      "path": "src/engines/portfolio/optimizer.ts",
+      "type": "Optimization Engine",
+      "exports": ["PortfolioOptimizer", "OptimizationInput", "OptimizationOutput"],
+      "routes": [],
+      "db_tables": ["portfolio_positions", "portfolio_targets"],
+      "env": [],
+      "edge_functions": ["rebalance"],
+      "analytics": ["optimization_results", "drift_detection"],
+      "todos": []
+    },
+    {
+      "artifact_id": "regime_classifier",
+      "path": "src/engines/portfolio/regime.ts",
+      "type": "Market Intelligence",
+      "exports": ["RegimeClassifier", "RegimeInput", "RegimeOutput"],
+      "routes": [],
+      "db_tables": ["market_data_cache"],
+      "env": [],
+      "edge_functions": ["market-data"],
+      "analytics": ["regime_transitions", "market_signals"],
+      "todos": []
+    },
+    {
+      "artifact_id": "pm3_calculator",
+      "path": "src/engines/portfolio/pm3.ts",
+      "type": "Private Funds Algorithm",
+      "exports": ["PM3Calculator", "PM3Input", "PM3Output"],
+      "routes": [],
+      "db_tables": ["private_fund_holdings"],
+      "env": [],
+      "edge_functions": [],
+      "analytics": ["manager_scores", "gating_events"],
+      "todos": []
+    },
+    {
+      "artifact_id": "utility_calculator",
+      "path": "src/engines/portfolio/utility.ts",
+      "type": "Fee-Aware Optimization",
+      "exports": ["UtilityCalculator", "UtilityInput", "UtilityOutput"],
+      "routes": [],
+      "db_tables": [],
+      "env": [],
+      "edge_functions": [],
+      "analytics": ["utility_scores", "fee_impact"],
+      "todos": []
+    },
+    {
+      "artifact_id": "monte_carlo_engine",
+      "path": "src/components/portfolio/MonteCarloSimulation.tsx",
+      "type": "Simulation Component",
+      "exports": ["MonteCarloSimulation"],
+      "routes": [],
+      "db_tables": [],
+      "env": [],
+      "edge_functions": [],
+      "analytics": ["simulation_results", "health_scores"],
+      "todos": []
+    },
+    {
+      "artifact_id": "portfolio_hook",
+      "path": "src/hooks/usePortfolio.ts",
+      "type": "Portfolio Management Hook",
+      "exports": ["usePortfolio", "PortfolioData", "OptimizationProposal"],
+      "routes": [],
+      "db_tables": ["portfolio_positions", "portfolio_targets", "rebalancing_events", "private_fund_holdings"],
+      "env": [],
+      "edge_functions": ["rebalance"],
+      "analytics": ["portfolio_actions", "rebalancing_events"],
+      "todos": []
+    },
+    {
+      "artifact_id": "rebalance_edge_function",
+      "path": "supabase/functions/rebalance",
+      "type": "Edge Function",
+      "exports": [],
+      "routes": ["POST /rebalance"],
+      "db_tables": ["portfolio_positions", "portfolio_targets", "rebalancing_events"],
+      "env": ["SUPABASE_URL", "SUPABASE_ANON_KEY"],
+      "edge_functions": ["rebalance"],
+      "analytics": ["rebalancing_requests", "optimization_performance"],
+      "todos": []
+    },
+    {
+      "artifact_id": "rebalance_execute_function",
+      "path": "supabase/functions/rebalance-execute",
+      "type": "Edge Function",
+      "exports": [],
+      "routes": ["POST /rebalance-execute"],
+      "db_tables": ["rebalancing_events"],
+      "env": ["SUPABASE_URL", "SUPABASE_ANON_KEY"],
+      "edge_functions": ["rebalance-execute"],
+      "analytics": ["execution_results", "trade_confirmations"],
+      "todos": []
+    },
+    {
+      "artifact_id": "portfolio_phase_selector",
+      "path": "src/components/portfolio/PortfolioPhaseSelector.tsx",
+      "type": "UI Component",
+      "exports": ["PortfolioPhaseSelector"],
+      "routes": [],
+      "db_tables": [],
+      "env": [],
+      "edge_functions": [],
+      "analytics": ["phase_selections"],
+      "todos": []
+    },
+    {
+      "artifact_id": "enhanced_portfolio_generator",
+      "path": "src/components/portfolio/EnhancedPortfolioReviewGenerator.tsx",
+      "type": "Report Generator",
+      "exports": ["EnhancedPortfolioReviewGenerator"],
+      "routes": [],
+      "db_tables": [],
+      "env": [],
+      "edge_functions": [],
+      "analytics": ["report_generations"],
+      "todos": []
+    },
+    {
+      "artifact_id": "portfolio_analysis",
+      "path": "src/components/portfolio/PortfolioAnalysis.tsx",
+      "type": "Analysis Component",
+      "exports": ["PortfolioAnalysis"],
+      "routes": [],
+      "db_tables": [],
+      "env": [],
+      "edge_functions": [],
+      "analytics": ["analysis_views"],
+      "todos": []
+    },
+    {
+      "artifact_id": "benchmark_comparison",
+      "path": "src/components/portfolio/BenchmarkComparison.tsx",
+      "type": "Performance Component",
+      "exports": ["BenchmarkComparison"],
+      "routes": [],
+      "db_tables": [],
+      "env": [],
+      "edge_functions": [],
+      "analytics": ["benchmark_comparisons"],
+      "todos": []
+    },
+    {
+      "artifact_id": "optimization_results",
+      "path": "src/components/portfolio/OptimizationResults.tsx",
+      "type": "Results Component",
+      "exports": ["OptimizationResults"],
+      "routes": [],
+      "db_tables": [],
+      "env": [],
+      "edge_functions": [],
+      "analytics": ["optimization_views"],
+      "todos": []
+    },
+    {
+      "artifact_id": "risk_calculator",
+      "path": "src/components/portfolio/RiskScoreCalculator.tsx",
+      "type": "Risk Component",
+      "exports": ["RiskScoreCalculator"],
+      "routes": [],
+      "db_tables": [],
+      "env": [],
+      "edge_functions": [],
+      "analytics": ["risk_calculations"],
+      "todos": []
+    },
+    {
+      "artifact_id": "portfolio_charts",
+      "path": "src/components/portfolio/PortfolioCharts.tsx",
+      "type": "Visualization Component",
+      "exports": ["PortfolioCharts"],
+      "routes": [],
+      "db_tables": [],
+      "env": [],
+      "edge_functions": [],
+      "analytics": ["chart_interactions"],
+      "todos": []
+    },
+    {
+      "artifact_id": "market_data_service",
+      "path": "src/components/portfolio/MarketDataService.tsx",
+      "type": "Data Service",
+      "exports": ["MarketDataService"],
+      "routes": [],
+      "db_tables": ["market_data_cache"],
+      "env": [],
+      "edge_functions": ["market-data"],
+      "analytics": ["data_fetches"],
+      "todos": []
+    },
+    {
+      "artifact_id": "fee_comparison",
+      "path": "src/components/portfolio/FeeExpenseComparison.tsx",
+      "type": "Fee Analysis Component",
+      "exports": ["FeeExpenseComparison"],
+      "routes": [],
+      "db_tables": [],
+      "env": [],
+      "edge_functions": [],
+      "analytics": ["fee_comparisons"],
+      "todos": []
+    },
+    {
+      "artifact_id": "model_comparison",
+      "path": "src/components/portfolio/ModelComparison.tsx",
+      "type": "Model Component",
+      "exports": ["ModelComparison"],
+      "routes": [],
+      "db_tables": [],
+      "env": [],
+      "edge_functions": [],
+      "analytics": ["model_comparisons"],
+      "todos": []
+    },
+    {
+      "artifact_id": "portfolio_models_data",
+      "path": "src/components/investments/data/portfolioModels.ts",
+      "type": "Data Model",
+      "exports": ["portfolioModels", "PortfolioModel"],
+      "routes": [],
+      "db_tables": [],
+      "env": [],
+      "edge_functions": [],
+      "analytics": [],
+      "todos": []
+    },
+    {
+      "artifact_id": "portfolio_test_suite",
+      "path": "src/__tests__/portfolio/",
+      "type": "Test Suite",
+      "exports": [],
+      "routes": [],
+      "db_tables": ["portfolio_positions", "portfolio_targets", "rebalancing_events"],
+      "env": [],
+      "edge_functions": [],
+      "analytics": ["test_coverage"],
+      "todos": []
+    }
+  ],
+  "database_tables": [
+    {
+      "table_name": "portfolio_positions",
+      "key_columns": [
+        "id (uuid, primary key)",
+        "user_id (uuid, references auth.users)",
+        "asset_class (text)",
+        "symbol (text)",
+        "quantity (numeric)",
+        "market_value (numeric)",
+        "cost_basis (numeric)",
+        "swag_phase (text)",
+        "as_of_date (date)",
+        "created_at (timestamp)",
+        "updated_at (timestamp)"
+      ]
+    },
+    {
+      "table_name": "portfolio_targets",
+      "key_columns": [
+        "id (uuid, primary key)",
+        "user_id (uuid, references auth.users)",
+        "asset_class (text)",
+        "target_weight (numeric)",
+        "phase (text)",
+        "model_name (text)",
+        "created_at (timestamp)",
+        "updated_at (timestamp)"
+      ]
+    },
+    {
+      "table_name": "rebalancing_events",
+      "key_columns": [
+        "id (uuid, primary key)",
+        "user_id (uuid, references auth.users)",
+        "trigger_type (text)",
+        "trades (jsonb)",
+        "status (text)",
+        "rationale (text)",
+        "expected_impact (jsonb)",
+        "executed_at (timestamp)",
+        "created_at (timestamp)"
+      ]
+    },
+    {
+      "table_name": "private_fund_holdings",
+      "key_columns": [
+        "id (uuid, primary key)",
+        "user_id (uuid, references auth.users)",
+        "fund_name (text)",
+        "manager_name (text)",
+        "commitment_amount (numeric)",
+        "called_amount (numeric)",
+        "nav_per_share (numeric)",
+        "shares_held (numeric)",
+        "vintage_year (integer)",
+        "fund_type (text)",
+        "gating_info (jsonb)",
+        "performance_metrics (jsonb)",
+        "created_at (timestamp)"
+      ]
+    },
+    {
+      "table_name": "market_data_cache",
+      "key_columns": [
+        "id (uuid, primary key)",
+        "symbol (text)",
+        "data_type (text)",
+        "data_value (jsonb)",
+        "source (text)",
+        "updated_at (timestamp)",
+        "expires_at (timestamp)"
+      ]
+    }
+  ],
+  "api_endpoints": [
+    {
+      "endpoint": "POST /supabase/functions/v1/rebalance",
+      "description": "Portfolio optimization and rebalancing recommendations",
+      "parameters": ["accountId", "currentPositions", "targetWeights", "triggers", "phase"]
+    },
+    {
+      "endpoint": "POST /supabase/functions/v1/rebalance-execute",
+      "description": "Execute approved rebalancing transactions",
+      "parameters": ["eventId", "approvedTrades"]
+    },
+    {
+      "endpoint": "POST /supabase/functions/v1/market-data",
+      "description": "Market data ingestion and regime classification",
+      "parameters": ["symbols", "dataTypes", "source"]
+    }
+  ],
+  "analytics_events": [
+    {
+      "event_name": "portfolio_optimization_requested",
+      "parameters": ["user_id", "phase", "current_allocation", "optimization_type"]
+    },
+    {
+      "event_name": "rebalancing_triggered",
+      "parameters": ["user_id", "trigger_type", "drift_amount", "threshold"]
+    },
+    {
+      "event_name": "swag_phase_changed",
+      "parameters": ["user_id", "from_phase", "to_phase", "reason"]
+    },
+    {
+      "event_name": "regime_classified",
+      "parameters": ["regime", "confidence", "signals", "transition_probability"]
+    },
+    {
+      "event_name": "pm3_score_calculated",
+      "parameters": ["manager_name", "overall_score", "component_scores", "bucket_tilt"]
+    },
+    {
+      "event_name": "monte_carlo_simulation",
+      "parameters": ["user_id", "scenarios_count", "time_horizon", "success_rate"]
+    },
+    {
+      "event_name": "utility_optimization",
+      "parameters": ["user_id", "utility_score", "expected_return", "risk_penalty"]
+    }
+  ],
+  "missing_components": [
+    {
+      "component": "McPAC (Monte Carlo Portfolio Analysis & Calibration) Engine",
+      "description": "Advanced Monte Carlo engine with historical scenario calibration",
+      "priority": "HIGH",
+      "patent_value": "VERY HIGH"
+    },
+    {
+      "component": "Dynamic Fee Optimization Module",
+      "description": "Real-time fee analysis with tax-loss harvesting integration",
+      "priority": "MEDIUM",
+      "patent_value": "HIGH"
+    },
+    {
+      "component": "Stress Testing Workflow Engine",
+      "description": "Automated stress testing with regulatory scenario compliance",
+      "priority": "MEDIUM",
+      "patent_value": "MEDIUM"
+    },
+    {
+      "component": "Alternative Asset Liquidity Predictor",
+      "description": "ML-based liquidity forecasting for private investments",
+      "priority": "HIGH",
+      "patent_value": "VERY HIGH"
+    },
+    {
+      "component": "Cross-Asset Momentum Detector",
+      "description": "Multi-asset momentum analysis with regime integration",
+      "priority": "MEDIUM",
+      "patent_value": "HIGH"
+    }
+  ],
+  "patent_gaps": [
+    {
+      "gap": "Automated Drift Detection with Adaptive Thresholds",
+      "description": "Self-adjusting drift thresholds based on market conditions and client behavior",
+      "file_path": "src/engines/portfolio/driftDetector.ts",
+      "function_signature": "adaptiveDriftDetection(positions, targets, marketRegime, clientRisk)"
+    },
+    {
+      "gap": "Multi-Asset Class Momentum Integration",
+      "description": "Cross-asset momentum signals integrated with portfolio optimization",
+      "file_path": "src/engines/portfolio/momentumIntegrator.ts",
+      "function_signature": "integrateMomentumSignals(assetClasses, lookbackPeriods, regimeAdjustments)"
+    },
+    {
+      "gap": "Alternative Investment Gating Predictor",
+      "description": "ML model to predict private fund gating events",
+      "file_path": "src/engines/portfolio/gatingPredictor.ts",
+      "function_signature": "predictGatingRisk(fundMetrics, marketStress, managerBehavior)"
+    },
+    {
+      "gap": "Tax-Aware Rebalancing Engine",
+      "description": "Portfolio rebalancing with tax-loss harvesting optimization",
+      "file_path": "src/engines/portfolio/taxOptimizer.ts",
+      "function_signature": "optimizeWithTaxLoss(positions, targets, taxBracket, harvestingRules)"
+    }
+  ],
+  "algorithm_hotspots": [
+    {
+      "algorithm": "SWAG Phase Policy Engine",
+      "file_path": "src/engines/portfolio/phasePolicy.ts",
+      "function_names": ["getPhaseConfig", "validatePhaseAllocation", "applyAdvisorOverlay"],
+      "innovation_level": "VERY HIGH"
+    },
+    {
+      "algorithm": "LARB (Liquidity-Adjusted Risk Budget) Calculator",
+      "file_path": "src/engines/portfolio/larb.ts",
+      "function_names": ["calculate", "getAssetClassRiskAdjustments", "calculateConfidence"],
+      "innovation_level": "VERY HIGH"
+    },
+    {
+      "algorithm": "PM3 (Private Manager Momentum) Scoring",
+      "file_path": "src/engines/portfolio/pm3.ts",
+      "function_names": ["calculate", "calculateGatingSignal", "calculateSecondarySignal"],
+      "innovation_level": "VERY HIGH"
+    },
+    {
+      "algorithm": "Fee-Aware Utility Maximization",
+      "file_path": "src/engines/portfolio/utility.ts",
+      "function_names": ["calculate", "compareAllocations", "calculateBreakEvenFee"],
+      "innovation_level": "HIGH"
+    },
+    {
+      "algorithm": "Market Regime Classification",
+      "file_path": "src/engines/portfolio/regime.ts",
+      "function_names": ["classify", "analyzeSignals", "estimateTransitionProbabilities"],
+      "innovation_level": "HIGH"
+    },
+    {
+      "algorithm": "Portfolio Mean-Variance Optimization",
+      "file_path": "src/engines/portfolio/optimizer.ts",
+      "function_names": ["optimize", "optimizeWeights", "calculatePortfolioMetrics"],
+      "innovation_level": "MEDIUM"
+    },
+    {
+      "algorithm": "Monte Carlo Wealth Projection",
+      "file_path": "src/components/portfolio/MonteCarloSimulation.tsx",
+      "function_names": ["generateScenarios", "generateHealthScore"],
+      "innovation_level": "MEDIUM"
+    }
+  ],
+  "recommendations": {
+    "immediate_priorities": [
+      "File patent application for SWAG Phase Policy Engine",
+      "Secure IP protection for LARB Calculator methodology",
+      "Document PM3 scoring algorithm for patent submission"
+    ],
+    "medium_term_enhancements": [
+      "Implement McPAC engine for advanced Monte Carlo analysis",
+      "Add tax-aware rebalancing optimization",
+      "Build alternative asset liquidity prediction models"
+    ],
+    "long_term_strategic": [
+      "Develop AI-powered regime prediction using external data feeds",
+      "Create blockchain-based portfolio audit trail",
+      "Build cross-platform portfolio synchronization engine"
+    ]
+  }
+}
