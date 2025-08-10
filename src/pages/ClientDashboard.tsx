@@ -14,11 +14,14 @@ import { MilestoneTracker } from '@/components/client/MilestoneTracker';
 import { RetirementTimeline } from '@/components/client/RetirementTimeline';
 import { useDashboardMetrics } from '@/hooks/useDashboardMetrics';
 import { usePersona } from '@/hooks/usePersona';
+import { CEUpsellCard } from '@/components/compliance/CEUpsellCard';
+import { usePersonaRole } from '@/hooks/usePersonaRole';
 
 export function ClientDashboard() {
   // Track dashboard metrics for A/B testing
   useDashboardMetrics();
   const { personaConfig } = usePersona();
+  const { persona: cePersona, isEligibleForCE } = usePersonaRole();
 
   return (
     <PersonaDashboardLayout>
@@ -28,6 +31,11 @@ export function ClientDashboard() {
 
         {/* Personalized CTA */}
         <PersonalizedCTA />
+
+        {/* CE Upsell Card - Above the fold for eligible personas */}
+        {isEligibleForCE && cePersona && (
+          <CEUpsellCard userPersona={cePersona} />
+        )}
 
         {/* Dashboard Metrics - Top Row */}
         <DashboardMetrics />
