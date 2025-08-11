@@ -218,6 +218,7 @@ export default function ValueCalculator() {
             <Button 
               onClick={handleCalculate}
               disabled={isCalculating}
+              variant="high-contrast"
               size="lg"
               className="w-full text-lg py-6"
             >
@@ -258,7 +259,15 @@ export default function ValueCalculator() {
                     </CardContent>
                   </Card>
 
-                  <Button size="lg" className="w-full">
+                  <Button 
+                    size="lg" 
+                    variant="high-contrast"
+                    className="w-full"
+                    onClick={() => {
+                      analytics.track('roadmap_booking_clicked', { source: 'value_calculator' });
+                      window.open('/schedule', '_blank');
+                    }}
+                  >
                     <TrendingUp className="mr-2 h-5 w-5" />
                     Book Your Full SWAG™ Retirement Roadmap
                   </Button>

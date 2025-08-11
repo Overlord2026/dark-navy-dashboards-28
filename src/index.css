@@ -18,9 +18,9 @@
     --popover: 216 25% 14%; /* Surface color */
     --popover-foreground: 0 0% 100%;
 
-    /* Primary - Gold #FFD700 */
-    --primary: 51 100% 50%; /* Gold #FFD700 */
-    --primary-foreground: 216 29% 11%; /* Deep Blue text on gold */
+    /* Primary - High Contrast Gold for Senior Accessibility */
+    --primary: 45 85% 35%; /* Darker Gold #B8860B for better contrast */
+    --primary-foreground: 0 0% 100%; /* White text on darker gold */
 
     /* Secondary - Deep Blue #14213D */
     --secondary: 216 29% 11%; /* Deep Blue #14213D */
@@ -33,9 +33,9 @@
     --accent: 158 64% 52%; /* Emerald #169873 */
     --accent-foreground: 0 0% 100%; /* White text on emerald */
 
-    /* Marketplace Colors */
-    --gold: 51 100% 50%; /* Gold #FFD700 */
-    --gold-foreground: 216 29% 11%; /* Deep Blue text on gold */
+    /* Marketplace Colors - High Contrast for Accessibility */
+    --gold: 45 85% 35%; /* Darker Gold #B8860B for better contrast */
+    --gold-foreground: 0 0% 100%; /* White text on darker gold */
 
     --navy: 216 29% 11%; /* Deep Blue #14213D */
     --navy-foreground: 0 0% 100%; /* White text on navy */
@@ -54,8 +54,8 @@
   --success: 158 64% 52%; /* Emerald #169873 */
   --success-foreground: 0 0% 100%;
   
-  --warning: 51 100% 50%; /* Gold #FFD700 */
-  --warning-foreground: 216 29% 11%;
+  --warning: 45 85% 35%; /* Darker Gold for better contrast */
+  --warning-foreground: 0 0% 100%; /* White text */
 
   /* Touch Targets */
   --touch-target: 44px; /* iOS Human Interface Guidelines minimum */
@@ -100,9 +100,9 @@
     --popover: 216 25% 14%; /* Surface color */
     --popover-foreground: 0 0% 100%;
 
-    /* Primary - Gold #FFD700 */
-    --primary: 51 100% 50%; /* Gold #FFD700 */
-    --primary-foreground: 216 29% 11%; /* Deep Blue text on gold */
+    /* Primary - High Contrast Gold for Senior Accessibility */
+    --primary: 45 85% 35%; /* Darker Gold #B8860B for better contrast */
+    --primary-foreground: 0 0% 100%; /* White text on darker gold */
 
     /* Secondary - Deep Blue #14213D */
     --secondary: 216 29% 11%; /* Deep Blue #14213D */
@@ -115,9 +115,9 @@
     --accent: 158 64% 52%; /* Emerald #169873 */
     --accent-foreground: 0 0% 100%;
 
-    /* Marketplace Colors */
-    --gold: 51 100% 50%; /* Gold #FFD700 */
-    --gold-foreground: 216 29% 11%;
+    /* Marketplace Colors - High Contrast for Accessibility */
+    --gold: 45 85% 35%; /* Darker Gold #B8860B for better contrast */
+    --gold-foreground: 0 0% 100%; /* White text on darker gold */
 
     --navy: 216 29% 11%; /* Deep Blue #14213D */
     --navy-foreground: 0 0% 100%;
@@ -135,8 +135,8 @@
     --success: 158 64% 52%;
     --success-foreground: 0 0% 100%;
     
-    --warning: 51 100% 50%;
-    --warning-foreground: 216 29% 11%;
+    --warning: 45 85% 35%; /* Darker Gold for better contrast */
+    --warning-foreground: 0 0% 100%; /* White text */
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;

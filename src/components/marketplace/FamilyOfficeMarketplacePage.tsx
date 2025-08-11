@@ -37,7 +37,11 @@ export function FamilyOfficeMarketplacePage() {
   ];
 
   const handleGetStarted = () => {
-    navigate('/auth');
+    navigate('/auth/signup');
+  };
+
+  const handleScheduleCall = () => {
+    window.open('https://calendly.com/tonygomes/talk-with-tony', '_blank');
   };
 
   return (
@@ -105,16 +109,18 @@ export function FamilyOfficeMarketplacePage() {
             <Button
               onClick={handleGetStarted}
               size="lg"
-              className="bg-gradient-to-r from-gold to-yellow-400 hover:from-yellow-400 hover:to-gold text-navy font-bold text-lg px-8 py-4 rounded-lg shadow-gold hover:shadow-xl transition-all duration-300"
+              variant="high-contrast"
+              className="font-bold text-lg px-8 py-4 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
             >
               <TreePine className="w-5 h-5 mr-2" />
               Get Started
             </Button>
             
             <Button
+              onClick={handleScheduleCall}
               size="lg"
-              variant="outline"
-              className="border-emerald text-emerald hover:bg-emerald hover:text-white font-bold text-lg px-8 py-4 rounded-lg transition-all duration-300"
+              variant="success"
+              className="font-bold text-lg px-8 py-4 rounded-lg transition-all duration-300"
             >
               <Phone className="w-5 h-5 mr-2" />
               Schedule Call

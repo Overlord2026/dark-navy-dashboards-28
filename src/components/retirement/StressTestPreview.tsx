@@ -131,11 +131,11 @@ export const StressTestPreview: React.FC<StressTestPreviewProps> = ({
     } else if (showBookingCTA) {
       // Default action - open booking modal or route to signup
       if (demoMode) {
-        // In demo mode, show a message or route to signup
-        console.log('Demo mode: would route to signup');
+        // In demo mode, route to signup
+        window.location.href = '/auth/signup';
       } else {
-        // Open booking modal or external link
-        window.open('/schedule', '_blank');
+        // Open booking link
+        window.open('https://calendly.com/tonygomes/talk-with-tony', '_blank');
       }
     }
   };
