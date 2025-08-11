@@ -16640,6 +16640,448 @@ export type Database = {
         }
         Relationships: []
       }
+      nil_compliance_snapshots: {
+        Row: {
+          active_deals_count: number | null
+          athlete_id: string
+          compliance_score: number | null
+          created_at: string
+          id: string
+          ncaa_status: string | null
+          recommendations: Json | null
+          snapshot_date: string
+          state_compliance: Json | null
+          tenant_id: string | null
+          total_earnings: number | null
+          violations: Json | null
+        }
+        Insert: {
+          active_deals_count?: number | null
+          athlete_id: string
+          compliance_score?: number | null
+          created_at?: string
+          id?: string
+          ncaa_status?: string | null
+          recommendations?: Json | null
+          snapshot_date: string
+          state_compliance?: Json | null
+          tenant_id?: string | null
+          total_earnings?: number | null
+          violations?: Json | null
+        }
+        Update: {
+          active_deals_count?: number | null
+          athlete_id?: string
+          compliance_score?: number | null
+          created_at?: string
+          id?: string
+          ncaa_status?: string | null
+          recommendations?: Json | null
+          snapshot_date?: string
+          state_compliance?: Json | null
+          tenant_id?: string | null
+          total_earnings?: number | null
+          violations?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "nil_compliance_snapshots_athlete_id_fkey"
+            columns: ["athlete_id"]
+            isOneToOne: false
+            referencedRelation: "nil_parties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      nil_deals: {
+        Row: {
+          athlete_id: string
+          brand_id: string
+          compliance_approved: boolean | null
+          contract_terms: Json | null
+          created_at: string
+          deal_description: string | null
+          deal_status: Database["public"]["Enums"]["nil_deal_status"]
+          deal_title: string
+          deal_value: number | null
+          deliverables_count: number | null
+          end_date: string | null
+          id: string
+          smart_contract_address: string | null
+          start_date: string | null
+          tenant_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          athlete_id: string
+          brand_id: string
+          compliance_approved?: boolean | null
+          contract_terms?: Json | null
+          created_at?: string
+          deal_description?: string | null
+          deal_status?: Database["public"]["Enums"]["nil_deal_status"]
+          deal_title: string
+          deal_value?: number | null
+          deliverables_count?: number | null
+          end_date?: string | null
+          id?: string
+          smart_contract_address?: string | null
+          start_date?: string | null
+          tenant_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          athlete_id?: string
+          brand_id?: string
+          compliance_approved?: boolean | null
+          contract_terms?: Json | null
+          created_at?: string
+          deal_description?: string | null
+          deal_status?: Database["public"]["Enums"]["nil_deal_status"]
+          deal_title?: string
+          deal_value?: number | null
+          deliverables_count?: number | null
+          end_date?: string | null
+          id?: string
+          smart_contract_address?: string | null
+          start_date?: string | null
+          tenant_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "nil_deals_athlete_id_fkey"
+            columns: ["athlete_id"]
+            isOneToOne: false
+            referencedRelation: "nil_parties"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "nil_deals_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "nil_parties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      nil_deliverables: {
+        Row: {
+          approved_at: string | null
+          authenticity_score: number | null
+          content_hash: string | null
+          created_at: string
+          deal_id: string
+          deliverable_status: Database["public"]["Enums"]["nil_deliverable_status"]
+          deliverable_type: string
+          description: string | null
+          due_date: string | null
+          id: string
+          requirements: Json | null
+          review_notes: string | null
+          submitted_at: string | null
+          submitted_content: Json | null
+          tenant_id: string | null
+          title: string
+          updated_at: string
+          watermark_id: string | null
+        }
+        Insert: {
+          approved_at?: string | null
+          authenticity_score?: number | null
+          content_hash?: string | null
+          created_at?: string
+          deal_id: string
+          deliverable_status?: Database["public"]["Enums"]["nil_deliverable_status"]
+          deliverable_type: string
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          requirements?: Json | null
+          review_notes?: string | null
+          submitted_at?: string | null
+          submitted_content?: Json | null
+          tenant_id?: string | null
+          title: string
+          updated_at?: string
+          watermark_id?: string | null
+        }
+        Update: {
+          approved_at?: string | null
+          authenticity_score?: number | null
+          content_hash?: string | null
+          created_at?: string
+          deal_id?: string
+          deliverable_status?: Database["public"]["Enums"]["nil_deliverable_status"]
+          deliverable_type?: string
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          requirements?: Json | null
+          review_notes?: string | null
+          submitted_at?: string | null
+          submitted_content?: Json | null
+          tenant_id?: string | null
+          title?: string
+          updated_at?: string
+          watermark_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "nil_deliverables_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "nil_deals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      nil_eligibility: {
+        Row: {
+          athlete_id: string
+          created_at: string
+          eligibility_status: Database["public"]["Enums"]["nil_eligibility_status"]
+          expires_at: string | null
+          id: string
+          institution: string
+          last_verified_at: string | null
+          ncaa_compliance: Json | null
+          sport: string
+          state_regulations: Json | null
+          tenant_id: string | null
+          updated_at: string
+          verification_notes: string | null
+        }
+        Insert: {
+          athlete_id: string
+          created_at?: string
+          eligibility_status?: Database["public"]["Enums"]["nil_eligibility_status"]
+          expires_at?: string | null
+          id?: string
+          institution: string
+          last_verified_at?: string | null
+          ncaa_compliance?: Json | null
+          sport: string
+          state_regulations?: Json | null
+          tenant_id?: string | null
+          updated_at?: string
+          verification_notes?: string | null
+        }
+        Update: {
+          athlete_id?: string
+          created_at?: string
+          eligibility_status?: Database["public"]["Enums"]["nil_eligibility_status"]
+          expires_at?: string | null
+          id?: string
+          institution?: string
+          last_verified_at?: string | null
+          ncaa_compliance?: Json | null
+          sport?: string
+          state_regulations?: Json | null
+          tenant_id?: string | null
+          updated_at?: string
+          verification_notes?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "nil_eligibility_athlete_id_fkey"
+            columns: ["athlete_id"]
+            isOneToOne: false
+            referencedRelation: "nil_parties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      nil_events: {
+        Row: {
+          authenticity_score: number | null
+          chain_anchor_tx: string | null
+          content_hash: string | null
+          created_at: string
+          deal_id: string | null
+          deliverable_id: string | null
+          event_data: Json | null
+          event_type: Database["public"]["Enums"]["nil_event_type"]
+          id: string
+          merkle_root: string | null
+          party_id: string | null
+          tenant_id: string | null
+          verification_metadata: Json | null
+          watermark_id: string | null
+          zk_receipt: string | null
+        }
+        Insert: {
+          authenticity_score?: number | null
+          chain_anchor_tx?: string | null
+          content_hash?: string | null
+          created_at?: string
+          deal_id?: string | null
+          deliverable_id?: string | null
+          event_data?: Json | null
+          event_type: Database["public"]["Enums"]["nil_event_type"]
+          id?: string
+          merkle_root?: string | null
+          party_id?: string | null
+          tenant_id?: string | null
+          verification_metadata?: Json | null
+          watermark_id?: string | null
+          zk_receipt?: string | null
+        }
+        Update: {
+          authenticity_score?: number | null
+          chain_anchor_tx?: string | null
+          content_hash?: string | null
+          created_at?: string
+          deal_id?: string | null
+          deliverable_id?: string | null
+          event_data?: Json | null
+          event_type?: Database["public"]["Enums"]["nil_event_type"]
+          id?: string
+          merkle_root?: string | null
+          party_id?: string | null
+          tenant_id?: string | null
+          verification_metadata?: Json | null
+          watermark_id?: string | null
+          zk_receipt?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "nil_events_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "nil_deals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "nil_events_deliverable_id_fkey"
+            columns: ["deliverable_id"]
+            isOneToOne: false
+            referencedRelation: "nil_deliverables"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "nil_events_party_id_fkey"
+            columns: ["party_id"]
+            isOneToOne: false
+            referencedRelation: "nil_parties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      nil_parties: {
+        Row: {
+          created_at: string
+          email: string | null
+          id: string
+          kyc_data: Json | null
+          legal_documents: Json | null
+          name: string
+          party_type: Database["public"]["Enums"]["nil_party_type"]
+          phone: string | null
+          social_media_handles: Json | null
+          tenant_id: string | null
+          updated_at: string
+          verification_status: string | null
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          kyc_data?: Json | null
+          legal_documents?: Json | null
+          name: string
+          party_type: Database["public"]["Enums"]["nil_party_type"]
+          phone?: string | null
+          social_media_handles?: Json | null
+          tenant_id?: string | null
+          updated_at?: string
+          verification_status?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          kyc_data?: Json | null
+          legal_documents?: Json | null
+          name?: string
+          party_type?: Database["public"]["Enums"]["nil_party_type"]
+          phone?: string | null
+          social_media_handles?: Json | null
+          tenant_id?: string | null
+          updated_at?: string
+          verification_status?: string | null
+        }
+        Relationships: []
+      }
+      nil_payouts: {
+        Row: {
+          athlete_id: string
+          compliance_checks: Json | null
+          created_at: string
+          deal_id: string
+          fees: number | null
+          id: string
+          net_amount: number | null
+          payment_method: string | null
+          payout_amount: number
+          payout_date: string | null
+          payout_status: Database["public"]["Enums"]["nil_payout_status"]
+          tax_withholding: number | null
+          tenant_id: string | null
+          transaction_hash: string | null
+          updated_at: string
+        }
+        Insert: {
+          athlete_id: string
+          compliance_checks?: Json | null
+          created_at?: string
+          deal_id: string
+          fees?: number | null
+          id?: string
+          net_amount?: number | null
+          payment_method?: string | null
+          payout_amount: number
+          payout_date?: string | null
+          payout_status?: Database["public"]["Enums"]["nil_payout_status"]
+          tax_withholding?: number | null
+          tenant_id?: string | null
+          transaction_hash?: string | null
+          updated_at?: string
+        }
+        Update: {
+          athlete_id?: string
+          compliance_checks?: Json | null
+          created_at?: string
+          deal_id?: string
+          fees?: number | null
+          id?: string
+          net_amount?: number | null
+          payment_method?: string | null
+          payout_amount?: number
+          payout_date?: string | null
+          payout_status?: Database["public"]["Enums"]["nil_payout_status"]
+          tax_withholding?: number | null
+          tenant_id?: string | null
+          transaction_hash?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "nil_payouts_athlete_id_fkey"
+            columns: ["athlete_id"]
+            isOneToOne: false
+            referencedRelation: "nil_parties"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "nil_payouts_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "nil_deals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       notifications: {
         Row: {
           body: string
@@ -31559,6 +32001,35 @@ export type Database = {
         | "investment_management"
         | "lending"
         | "vault_premium"
+      nil_deal_status:
+        | "draft"
+        | "active"
+        | "completed"
+        | "cancelled"
+        | "disputed"
+      nil_deliverable_status:
+        | "pending"
+        | "in_progress"
+        | "submitted"
+        | "approved"
+        | "rejected"
+      nil_eligibility_status:
+        | "eligible"
+        | "ineligible"
+        | "pending"
+        | "suspended"
+      nil_event_type:
+        | "content_upload"
+        | "authenticity_verification"
+        | "compliance_check"
+        | "payout_processed"
+      nil_party_type: "athlete" | "brand" | "agency" | "institution" | "advisor"
+      nil_payout_status:
+        | "pending"
+        | "processing"
+        | "completed"
+        | "failed"
+        | "disputed"
       organization_type:
         | "broker_dealer"
         | "ria"
@@ -31845,6 +32316,40 @@ export const Constants = {
         "investment_management",
         "lending",
         "vault_premium",
+      ],
+      nil_deal_status: [
+        "draft",
+        "active",
+        "completed",
+        "cancelled",
+        "disputed",
+      ],
+      nil_deliverable_status: [
+        "pending",
+        "in_progress",
+        "submitted",
+        "approved",
+        "rejected",
+      ],
+      nil_eligibility_status: [
+        "eligible",
+        "ineligible",
+        "pending",
+        "suspended",
+      ],
+      nil_event_type: [
+        "content_upload",
+        "authenticity_verification",
+        "compliance_check",
+        "payout_processed",
+      ],
+      nil_party_type: ["athlete", "brand", "agency", "institution", "advisor"],
+      nil_payout_status: [
+        "pending",
+        "processing",
+        "completed",
+        "failed",
+        "disputed",
       ],
       organization_type: [
         "broker_dealer",
