@@ -7,7 +7,13 @@ export interface OptimizationOutput {
   allocations: Record<string, number>;
   expectedReturn: number;
   expectedRisk: number;
+  expectedVolatility: number;
   sharpeRatio: number;
+  utilityScore: number;
+  rebalanceNeeded: boolean;
+  targetWeights: Record<string, number>;
+  recommendations: string[];
+  rationale: string;
   metadata: { method: string; iterations: number; convergence: boolean; };
 }
 
@@ -22,7 +28,7 @@ export class PortfolioOptimizer {
 export const optimizePortfolio = async (
   assets: Array<{symbol: string; expectedReturn: number; risk: number}>,
   constraints: {riskTolerance: number; minAllocation?: number; maxAllocation?: number}
-): Promise<OptimizationResult> => {
+): Promise<OptimizationOutput> => {
   const totalReturn = assets.reduce((sum, asset) => sum + asset.expectedReturn, 0);
   const weightedAllocations = assets.reduce((acc, asset) => {
     const weight = asset.expectedReturn / totalReturn;

@@ -81,11 +81,16 @@ export async function computeOverlap(input: OverlapInput): Promise<OverlapResult
   }
 
   if (!holdings || holdings.length === 0) {
-    return {
-      pairwise: {},
-      topContributors: [],
-      sectorHeatmap: {}
-    };
+  return {
+    pairwise: {},
+    topContributors: [],
+    sectorHeatmap: {},
+    algorithmMetadata: {
+      weightingMethod: 'jaccard',
+      normalizationApplied: true,
+      confidenceLevel: 0.95
+    }
+  };
   }
 
   // Group holdings by fund
