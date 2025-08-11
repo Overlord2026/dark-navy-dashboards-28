@@ -2,6 +2,7 @@
  * Secure localStorage with AES-GCM encryption
  * Encrypts sensitive data before storing in localStorage
  */
+import { get as idbGet, set as idbSet } from 'idb-keyval';
 
 interface EncryptedData {
   data: string;
@@ -10,32 +11,43 @@ interface EncryptedData {
 }
 
 class SecureStorage {
-  private async getKey(): Promise<CryptoKey> {
-    // In production, this should be derived from user session or other secure source
-    const keyMaterial = await crypto.subtle.importKey(
-      'raw',
-      new TextEncoder().encode('secure-storage-key-32-chars-long'), // 32 chars for AES-256
-      'PBKDF2',
-      false,
-      ['deriveKey']
-    );
-    
-    return crypto.subtle.deriveKey(
-      {
-        name: 'PBKDF2',
-        salt: new TextEncoder().encode('secure-salt'),
-        iterations: 100000,
-        hash: 'SHA-256'
-      },
-      keyMaterial,
+  private async getKey(userId?: string): Promise<CryptoKey> {
+    // Per-user, per-origin AES-GCM key persisted in IndexedDB (no hardcoded secret)
+    const storageKey = `secure_storage_key:${userId || 'anon'}`;
+
+    try {
+      const jwk = await idbGet(storageKey);
+      if (jwk) {
+        return await crypto.subtle.importKey(
+          'jwk',
+          jwk,
+          { name: 'AES-GCM' },
+          true,
+          ['encrypt', 'decrypt']
+        );
+      }
+    } catch (e) {
+      // Fallback to generating a new key if IndexedDB read fails
+      console.warn('SecureStorage: failed to load key from IndexedDB, regenerating key');
+    }
+
+    // Generate and persist a new key
+    const key = await crypto.subtle.generateKey(
       { name: 'AES-GCM', length: 256 },
-      false,
+      true,
       ['encrypt', 'decrypt']
     );
+    const exported = await crypto.subtle.exportKey('jwk', key);
+    try {
+      await idbSet(storageKey, exported);
+    } catch (e) {
+      console.error('SecureStorage: failed to persist key to IndexedDB', e);
+    }
+    return key;
   }
 
-  async encrypt(data: string): Promise<string> {
-    const key = await this.getKey();
+  async encrypt(data: string, userId?: string): Promise<string> {
+    const key = await this.getKey(userId);
     const iv = crypto.getRandomValues(new Uint8Array(12));
     const encodedData = new TextEncoder().encode(data);
     
@@ -54,10 +66,10 @@ class SecureStorage {
     return JSON.stringify(encryptedData);
   }
 
-  async decrypt(encryptedString: string): Promise<string> {
+  async decrypt(encryptedString: string, userId?: string): Promise<string> {
     try {
       const encryptedData: EncryptedData = JSON.parse(encryptedString);
-      const key = await this.getKey();
+      const key = await this.getKey(userId);
       
       const iv = new Uint8Array(encryptedData.iv.match(/.{2}/g)!.map(byte => parseInt(byte, 16)));
       const data = new Uint8Array(encryptedData.data.match(/.{2}/g)!.map(byte => parseInt(byte, 16)));
@@ -77,7 +89,7 @@ class SecureStorage {
 
   async setItem(key: string, value: string, userId?: string): Promise<void> {
     try {
-      const encrypted = await this.encrypt(value);
+      const encrypted = await this.encrypt(value, userId);
       localStorage.setItem(key, encrypted);
       
       // Audit log for encrypted storage
@@ -98,7 +110,7 @@ class SecureStorage {
       const encrypted = localStorage.getItem(key);
       if (!encrypted) return null;
       
-      const decrypted = await this.decrypt(encrypted);
+      const decrypted = await this.decrypt(encrypted, userId);
       
       // Audit log for encrypted retrieval
       if (userId) {
