@@ -499,6 +499,3 @@ export class ScopeUtils {
     return actionSubsumes && resourceSubsumes;
   }
 }
-
-// Export the class
-export { TokenService };

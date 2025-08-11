@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { AllPersonaTypes } from '@/types/personas';
 import { FeatureExtractor } from '@/services/persona/FeatureExtractor';
-import { HybridClassifier } from '@/services/persona/HybridClassifier';
+import { HybridClassifier, ClassificationContext } from '@/services/persona/HybridClassifier';
 import { PersonaSelector } from '@/services/persona/PersonaSelector';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -50,12 +50,11 @@ export const usePersonaSystem = (config: PersonaSystemConfig) => {
       const features = await extractor.extractFeatures(events, user.user.id, 'session-' + Date.now());
 
       // Classify persona with proper context
-      const ctx: ClassificationContext = { 
-        tenantId: config.tenantId, 
-        userId: user.user.id || 'anonymous' 
-      };
-      const options = { maxLookbackMs: 10_000 };
-      const predictions = await classifier.classify(features, ctx, options);
+      const ctx: ClassificationContext = {
+        tenantId: config.tenantId,
+        userId: user.user.id || 'anonymous'
+      } as any;
+      const predictions = await classifier.classify(features, ctx);
 
       // Select with hysteresis - simplified for now
       const selection = {

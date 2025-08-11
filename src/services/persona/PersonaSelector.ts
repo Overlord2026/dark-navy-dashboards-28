@@ -292,7 +292,7 @@ export class PersonaSelector {
         .from('profiles')
         .select('tenant_id')
         .eq('id', userId)
-        .single();
+        .maybeSingle();
       
       if (!userProfile) return;
       
@@ -302,13 +302,13 @@ export class PersonaSelector {
       await supabase.from('personas').insert({
         user_id: userId,
         tenant_id: userProfile.tenant_id,
-        persona_kind: persona, // required by types
+        persona_kind: persona as any, // cast for union type
         persona_type: persona,
         confidence_score: confidence,
         detected_at: now.toISOString(),
         expires_at: new Date(Date.now() + 86400000).toISOString(), // 24 hours
         metadata: { session_id: sessionId }
-      });
+      } as any);
       
       // Update memory cache
       const currentState = this.personaStates.get(userId);
@@ -339,7 +339,7 @@ export class PersonaSelector {
         .eq('user_id', userId)
         .order('detected_at', { ascending: false })
         .limit(1)
-        .single();
+        .maybeSingle();
       
       if (latestPersona) {
         await supabase

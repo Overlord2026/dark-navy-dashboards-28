@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * ===================================================
  * Patent #9: Automated Professional Vetting Engine

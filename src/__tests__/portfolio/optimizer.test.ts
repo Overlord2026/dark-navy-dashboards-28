@@ -26,7 +26,7 @@ describe('PortfolioOptimizer', () => {
 
   beforeEach(() => {
     mockInput = {
-      currentPositions: [],
+      assets: [{ symbol: 'A', expectedReturn: 0.1, risk: 0.2 }],
       constraints: { riskTolerance: 0.5 } as any
     };
   });

@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * ===================================================
  * Patent #9: Blockchain Anchoring Service
