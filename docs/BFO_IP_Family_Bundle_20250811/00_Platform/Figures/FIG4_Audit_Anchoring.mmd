@@ -1,0 +1,23 @@
+%% FIG4_Audit_Anchoring — Mermaid
+%% Black/white line art; render to SVG for filing
+
+sequenceDiagram
+  participant S as Subsystem (Module)
+  participant B as Builder (Artifact)
+  participant H as Hasher
+  participant M as Merkle
+  participant C as Chain Anchor
+  participant V as Verifier
+
+  S->>B: generate decision + rationale
+  B->>H: serialize artifact
+  H->>H: SHA-256 hash
+  H->>M: submit leaf
+  M->>M: build Merkle root + proof
+  M->>C: anchor root (tx)
+  C-->>M: anchor receipt (txid, timestamp)
+  M-->>B: inclusion proof + receipt
+  B-->>S: audit_artifact.json + rationale_hash.txt
+  V->>C: verify tx exists
+  V->>M: verify inclusion proof
+  V-->>S: verification result

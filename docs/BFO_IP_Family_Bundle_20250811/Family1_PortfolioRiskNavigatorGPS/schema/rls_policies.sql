@@ -1,0 +1,4 @@
+-- rls_policies.sql (synthesized)
+-- advisor_proposals: Advisors manage; Users can view their proposals
+-- advisor_performance_metrics: Advisors can view/manage their own metrics
+-- analytics_events: Users can insert/select within tenant; service role inserts

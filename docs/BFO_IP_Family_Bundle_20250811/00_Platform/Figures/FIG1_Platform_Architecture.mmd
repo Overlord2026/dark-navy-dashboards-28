@@ -1,0 +1,47 @@
+%% FIG1_Platform_Architecture — Mermaid
+%% Black/white line art; render to SVG for filing
+
+graph TD
+  subgraph Core[Multi-Persona OS Core]
+    A[Policy/ABAC Engine]
+    B[Persona Detector]
+    C[Consent Tokens]
+    D[Audit Ledger]
+  end
+
+  subgraph AnchorProof[AnchorProof Layer]
+    H[Artifact Hashing]
+    I[Merkle Batching]
+    J[Anchor Receipt]
+  end
+
+  A -->|guards| UI[UI Composition]
+  B --> A
+  C --> A
+  D --> A
+
+  %% Modules (representative)
+  M1[Compliance Console GPS]
+  M2[Liquidity Compass GPS]
+  M3[Diligence Compass GPS]
+  M4[Transition Pilot GPS]
+  M5[Portfolio Radar GPS]
+  M6[EpochVault]
+
+  UI -. orchestrates .-> M1
+  UI -. orchestrates .-> M2
+  UI -. orchestrates .-> M3
+  UI -. orchestrates .-> M4
+  UI -. orchestrates .-> M5
+  UI -. orchestrates .-> M6
+
+  %% Anchoring hookups
+  M1 --> H
+  M2 --> H
+  M3 --> H
+  M4 --> H
+  M5 --> H
+  M6 --> H
+
+  H --> I --> J
+  D -->|log refs| J

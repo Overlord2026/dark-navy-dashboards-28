@@ -1,0 +1,7 @@
+created: 2025-08-11
+inputs:
+  - supabase functions (policy/audit): public.create_audit_log, public.log_security_event
+  - code: src/config/patent-modules.ts (P3), src/hooks/usePersonaSystem.ts
+outputs:
+  - optimizer_output_example.json (redacted)
+notes: pseudocode provided in Algorithms.md at platform level

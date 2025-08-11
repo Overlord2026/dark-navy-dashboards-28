@@ -1,0 +1,4 @@
+-- schema.sql (synthesized)
+-- Tables relevant to portfolio/risk flows (selection based on current schema inventory)
+-- advisor_proposals, advisor_performance_metrics, analytics_events (see Supabase project)
+-- RLS is enabled per-table as defined in project policies.
