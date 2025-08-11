@@ -255,10 +255,9 @@ export const AIFilingHelper: React.FC = () => {
                         ? 'bg-primary text-primary-foreground' 
                         : 'bg-muted'
                     }`}>
-                      <div 
-                        className="text-sm"
-                        dangerouslySetInnerHTML={{ __html: formatMessageContent(message.content) }}
-                      />
+                      <div className="text-sm">
+                        {message.content}
+                      </div>
                       
                       {message.metadata && (
                         <div className="mt-3 space-y-2">

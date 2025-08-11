@@ -301,10 +301,9 @@ export const LindaVoiceAIFAQ = ({ userPersona = 'advisor' }: LindaVoiceAIFAQProp
                   </div>
                 </AccordionTrigger>
                 <AccordionContent>
-                  <div 
-                    className="prose prose-sm max-w-none text-muted-foreground"
-                    dangerouslySetInnerHTML={{ __html: faq.answer }}
-                  />
+                  <div className="prose prose-sm max-w-none text-muted-foreground">
+                    {faq.answer}
+                  </div>
                 </AccordionContent>
               </AccordionItem>
             ))}

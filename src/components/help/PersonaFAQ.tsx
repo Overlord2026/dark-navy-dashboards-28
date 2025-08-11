@@ -297,7 +297,9 @@ export const PersonaFAQ = ({ userPersona, isVIP = false }: PersonaFAQProps) => {
                         </div>
                       </AccordionTrigger>
                       <AccordionContent className="space-y-4">
-                        <div dangerouslySetInnerHTML={{ __html: faq.answer }} />
+                        <div className="prose prose-sm max-w-none text-muted-foreground">
+                          {faq.answer}
+                        </div>
                         
                         {/* Feedback */}
                         <div className="flex items-center justify-between pt-4 border-t">

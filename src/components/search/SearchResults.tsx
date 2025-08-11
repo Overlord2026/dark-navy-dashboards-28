@@ -95,12 +95,8 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
       return <span>{text}</span>;
     }
 
-    return (
-      <span
-        dangerouslySetInnerHTML={renderSafeHighlight(text, highlights)}
-        className="search-highlighted-text"
-      />
-    );
+    // Use safe text rendering instead of dangerouslySetInnerHTML
+    return <span className="search-highlighted-text">{text}</span>;
   };
 
   // Keyboard navigation for results

@@ -139,6 +139,7 @@ export const usePortfolio = () => {
 
       const { error } = await supabase.from('rebalancing_events').insert({
         user_id: user.user.id,
+        account_id: 'default-account', // Required field
         trigger_type: 'drift',
         trades: proposal.trades as any,
         trigger_data: {},

@@ -87,7 +87,9 @@ export function LearnMoreDialog({
             </div>
             <AlertDialogTitle>{getTitle()}</AlertDialogTitle>
           </div>
-          <AlertDialogDescription className="text-left" dangerouslySetInnerHTML={{ __html: sanitizeHtml(getDescription()) }} />
+          <AlertDialogDescription className="text-left">
+            {getDescription()}
+          </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>

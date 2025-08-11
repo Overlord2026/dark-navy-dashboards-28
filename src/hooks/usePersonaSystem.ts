@@ -50,7 +50,7 @@ export const usePersonaSystem = (config: PersonaSystemConfig) => {
       });
 
       // Classify persona
-      const predictions = await classifier.classify(features);
+      const predictions = await classifier.classify(features, config.tenantId);
 
       // Select with hysteresis - simplified for now
       const selection = {
