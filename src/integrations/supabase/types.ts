@@ -7546,6 +7546,72 @@ export type Database = {
           },
         ]
       }
+      credential_sources: {
+        Row: {
+          api_endpoint: string | null
+          auth_method: string | null
+          average_response_time_ms: number | null
+          circuit_breaker_config: Json | null
+          created_at: string
+          data_retention_days: number | null
+          health_status: string | null
+          id: string
+          is_active: boolean
+          jurisdiction: string | null
+          last_health_check: string | null
+          rate_limit_per_day: number | null
+          rate_limit_per_minute: number | null
+          reliability_score: number | null
+          source_name: string
+          source_type: string
+          supported_verifications: Json | null
+          timeout_seconds: number | null
+          updated_at: string
+        }
+        Insert: {
+          api_endpoint?: string | null
+          auth_method?: string | null
+          average_response_time_ms?: number | null
+          circuit_breaker_config?: Json | null
+          created_at?: string
+          data_retention_days?: number | null
+          health_status?: string | null
+          id?: string
+          is_active?: boolean
+          jurisdiction?: string | null
+          last_health_check?: string | null
+          rate_limit_per_day?: number | null
+          rate_limit_per_minute?: number | null
+          reliability_score?: number | null
+          source_name: string
+          source_type: string
+          supported_verifications?: Json | null
+          timeout_seconds?: number | null
+          updated_at?: string
+        }
+        Update: {
+          api_endpoint?: string | null
+          auth_method?: string | null
+          average_response_time_ms?: number | null
+          circuit_breaker_config?: Json | null
+          created_at?: string
+          data_retention_days?: number | null
+          health_status?: string | null
+          id?: string
+          is_active?: boolean
+          jurisdiction?: string | null
+          last_health_check?: string | null
+          rate_limit_per_day?: number | null
+          rate_limit_per_minute?: number | null
+          reliability_score?: number | null
+          source_name?: string
+          source_type?: string
+          supported_verifications?: Json | null
+          timeout_seconds?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       credit_cards: {
         Row: {
           apr: number | null
@@ -22362,6 +22428,109 @@ export type Database = {
           },
         ]
       }
+      registry_records: {
+        Row: {
+          cache_expires_at: string | null
+          cache_key: string | null
+          created_at: string
+          disciplinary_actions: Json | null
+          error_message: string | null
+          field_confidence: Json | null
+          id: string
+          identity_matches: Json | null
+          license_expiry: string | null
+          license_number: string | null
+          license_status: string | null
+          match_score: number | null
+          parsed_data: Json | null
+          professional_id: string
+          query_duration_ms: number | null
+          query_parameters: Json
+          raw_response: Json
+          response_code: number | null
+          retry_count: number | null
+          source_id: string
+          tenant_id: string | null
+          updated_at: string
+          verification_status: string
+          vetting_request_id: string
+        }
+        Insert: {
+          cache_expires_at?: string | null
+          cache_key?: string | null
+          created_at?: string
+          disciplinary_actions?: Json | null
+          error_message?: string | null
+          field_confidence?: Json | null
+          id?: string
+          identity_matches?: Json | null
+          license_expiry?: string | null
+          license_number?: string | null
+          license_status?: string | null
+          match_score?: number | null
+          parsed_data?: Json | null
+          professional_id: string
+          query_duration_ms?: number | null
+          query_parameters: Json
+          raw_response: Json
+          response_code?: number | null
+          retry_count?: number | null
+          source_id: string
+          tenant_id?: string | null
+          updated_at?: string
+          verification_status: string
+          vetting_request_id: string
+        }
+        Update: {
+          cache_expires_at?: string | null
+          cache_key?: string | null
+          created_at?: string
+          disciplinary_actions?: Json | null
+          error_message?: string | null
+          field_confidence?: Json | null
+          id?: string
+          identity_matches?: Json | null
+          license_expiry?: string | null
+          license_number?: string | null
+          license_status?: string | null
+          match_score?: number | null
+          parsed_data?: Json | null
+          professional_id?: string
+          query_duration_ms?: number | null
+          query_parameters?: Json
+          raw_response?: Json
+          response_code?: number | null
+          retry_count?: number | null
+          source_id?: string
+          tenant_id?: string | null
+          updated_at?: string
+          verification_status?: string
+          vetting_request_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "registry_records_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "registry_records_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "credential_sources"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "registry_records_vetting_request_id_fkey"
+            columns: ["vetting_request_id"]
+            isOneToOne: false
+            referencedRelation: "vetting_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       regulatory_alerts: {
         Row: {
           action_items: string[] | null
@@ -26455,6 +26624,83 @@ export type Database = {
           },
         ]
       }
+      trust_scores: {
+        Row: {
+          access_permissions: Json | null
+          base_score: number
+          component_scores: Json | null
+          computed_score: number
+          confidence_level: number | null
+          created_at: string
+          days_since_last_verification: number | null
+          decay_factor: number | null
+          flags: Json | null
+          id: string
+          last_adverse_event_date: string | null
+          last_verification_date: string | null
+          professional_id: string
+          score_history: Json | null
+          streak_bonus: number | null
+          streak_count: number
+          tenant_id: string | null
+          tier: string
+          tier_updated_at: string | null
+          updated_at: string
+        }
+        Insert: {
+          access_permissions?: Json | null
+          base_score?: number
+          component_scores?: Json | null
+          computed_score?: number
+          confidence_level?: number | null
+          created_at?: string
+          days_since_last_verification?: number | null
+          decay_factor?: number | null
+          flags?: Json | null
+          id?: string
+          last_adverse_event_date?: string | null
+          last_verification_date?: string | null
+          professional_id: string
+          score_history?: Json | null
+          streak_bonus?: number | null
+          streak_count?: number
+          tenant_id?: string | null
+          tier?: string
+          tier_updated_at?: string | null
+          updated_at?: string
+        }
+        Update: {
+          access_permissions?: Json | null
+          base_score?: number
+          component_scores?: Json | null
+          computed_score?: number
+          confidence_level?: number | null
+          created_at?: string
+          days_since_last_verification?: number | null
+          decay_factor?: number | null
+          flags?: Json | null
+          id?: string
+          last_adverse_event_date?: string | null
+          last_verification_date?: string | null
+          professional_id?: string
+          score_history?: Json | null
+          streak_bonus?: number | null
+          streak_count?: number
+          tenant_id?: string | null
+          tier?: string
+          tier_updated_at?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "trust_scores_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       twilio_phone_numbers: {
         Row: {
           advisor_id: string | null
@@ -28666,6 +28912,65 @@ export type Database = {
           website_url?: string | null
         }
         Relationships: []
+      }
+      vetting_requests: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          escalation_level: number | null
+          id: string
+          metadata: Json | null
+          priority: number
+          professional_id: string
+          request_type: string
+          requested_at: string
+          requested_by: string | null
+          sla_deadline: string | null
+          status: string
+          tenant_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          escalation_level?: number | null
+          id?: string
+          metadata?: Json | null
+          priority?: number
+          professional_id: string
+          request_type?: string
+          requested_at?: string
+          requested_by?: string | null
+          sla_deadline?: string | null
+          status?: string
+          tenant_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          escalation_level?: number | null
+          id?: string
+          metadata?: Json | null
+          priority?: number
+          professional_id?: string
+          request_type?: string
+          requested_at?: string
+          requested_by?: string | null
+          sla_deadline?: string | null
+          status?: string
+          tenant_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vetting_requests_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       video_meeting_integrations: {
         Row: {
