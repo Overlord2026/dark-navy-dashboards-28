@@ -74,6 +74,11 @@ import { AttorneyDashboard } from "./pages/AttorneyDashboard";
 import { CoachDashboard } from "./pages/CoachDashboard";
 import { ComplianceDashboard } from "./pages/ComplianceDashboard";
 import HealthcareLongevityCenter from "@/components/healthcare/HealthcareLongevityCenter";
+import EducationPage from "./pages/EducationPage";
+import { EducationGuidesPage } from "./pages/education/EducationGuidesPage";
+import { EducationVideosPage } from "./pages/education/EducationVideosPage";
+import ResourcesCatalog from "./pages/ResourcesCatalog";
+import TaxPlanningEducation from "./pages/TaxPlanningEducation";
 
 import { AuthTestPage } from "@/components/auth/AuthTestPage";
 import { AssetInventory } from "@/components/AssetInventory";
