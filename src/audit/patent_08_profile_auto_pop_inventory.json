@@ -1,0 +1,163 @@
+{
+  "patent_id": "08",
+  "title": "LinkedIn & External Profile Data Auto-Population",
+  "summary": "Complete inventory of components for automated professional profile data ingestion, mapping, entity resolution, and cross-directory publishing",
+  
+  "artifacts": [
+    {
+      "artifact_id": "linkedin_connect_button",
+      "path": "src/components/social/LinkedInConnectButton.tsx",
+      "type": "component",
+      "exports": ["LinkedInConnectButton"],
+      "routes": [],
+      "db_tables": [],
+      "storage_buckets": [],
+      "external_apis": ["LinkedIn OAuth"],
+      "secrets": [],
+      "tests": [],
+      "notes": "React component for initiating LinkedIn OAuth connection with simulation"
+    },
+    {
+      "artifact_id": "linkedin_import_function",
+      "path": "supabase/functions/linkedin-import/index.ts",
+      "type": "edge_function",
+      "exports": ["serve"],
+      "routes": ["/linkedin-import"],
+      "db_tables": [],
+      "storage_buckets": [],
+      "external_apis": ["LinkedIn OAuth API", "LinkedIn People API", "LinkedIn Email API"],
+      "secrets": ["LINKEDIN_CLIENT_SECRET"],
+      "tests": [],
+      "notes": "Edge function for exchanging OAuth code and fetching comprehensive LinkedIn profile data"
+    },
+    {
+      "artifact_id": "verify_professionals_function",
+      "path": "supabase/functions/verify-professionals/index.ts",
+      "type": "edge_function",
+      "exports": ["serve"],
+      "routes": ["/verify-professionals"],
+      "db_tables": ["professionals"],
+      "storage_buckets": [],
+      "external_apis": ["CFP Board API", "CAIS API", "Martindale API"],
+      "secrets": [],
+      "tests": [],
+      "notes": "Automated professional verification against multiple registry services"
+    },
+    {
+      "artifact_id": "verify_bar_license_function",
+      "path": "supabase/functions/verify-bar-license/index.ts",
+      "type": "edge_function",
+      "exports": ["serve"],
+      "routes": ["/verify-bar-license"],
+      "db_tables": ["attorney_onboarding", "attorney_onboarding_log"],
+      "storage_buckets": [],
+      "external_apis": ["State Bar APIs", "California Bar API", "New York Bar API", "Texas Bar API"],
+      "secrets": [],
+      "tests": [],
+      "notes": "Bar license verification across multiple jurisdictions with audit trail"
+    },
+    {
+      "artifact_id": "user_types",
+      "path": "src/types/user.ts",
+      "type": "type_def",
+      "exports": ["UserProfile", "Professional"],
+      "routes": [],
+      "db_tables": [],
+      "storage_buckets": [],
+      "external_apis": [],
+      "secrets": [],
+      "tests": [],
+      "notes": "Core user and professional profile type definitions with multi-platform field mapping"
+    },
+    {
+      "artifact_id": "professional_types",
+      "path": "src/types/professional.ts",
+      "type": "type_def",
+      "exports": ["ProfessionalType", "ProfessionalSegment", "Professional", "ProfessionalDashboardConfig"],
+      "routes": [],
+      "db_tables": [],
+      "storage_buckets": [],
+      "external_apis": [],
+      "secrets": [],
+      "tests": [],
+      "notes": "Professional taxonomy and segmentation types for classification and mapping"
+    },
+    {
+      "artifact_id": "professional_team_types",
+      "path": "src/types/professionalTeam.ts",
+      "type": "type_def",
+      "exports": ["ProfessionalAssignment", "ProfessionalReview", "ProfessionalInvitation", "EnhancedProfessional"],
+      "routes": [],
+      "db_tables": [],
+      "storage_buckets": [],
+      "external_apis": [],
+      "secrets": [],
+      "tests": [],
+      "notes": "Team assignment and relationship management types with entity resolution support"
+    }
+  ],
+  
+  "global_inventory": {
+    "db_tables": [
+      "profiles",
+      "advisor_profiles", 
+      "attorney_profiles",
+      "cpa_profiles",
+      "professionals",
+      "professional_assignments",
+      "professional_reviews",
+      "professional_invitations",
+      "professional_compliance",
+      "attorney_onboarding",
+      "attorney_onboarding_log"
+    ],
+    "edge_functions": [
+      "linkedin-import",
+      "verify-professionals", 
+      "verify-bar-license"
+    ],
+    "integration_apis": [
+      "LinkedIn OAuth v2",
+      "LinkedIn People API v2",
+      "LinkedIn Email API v2",
+      "CFP Board API",
+      "FINRA BrokerCheck API",
+      "IAPD API",
+      "State Bar APIs",
+      "NPI Registry API",
+      "NMLS Consumer Access API"
+    ],
+    "env_vars": [
+      "LINKEDIN_CLIENT_SECRET",
+      "CFP_API_KEY",
+      "FINRA_API_KEY",
+      "IAPD_API_KEY"
+    ],
+    "feature_flags": [
+      "linkedin_import_enabled",
+      "auto_verification_enabled",
+      "cross_directory_publishing",
+      "entity_resolution_active"
+    ]
+  },
+  
+  "coverage_analysis": {
+    "oauth_flow": 60,
+    "profile_mapping": 40,
+    "entity_resolution": 20,
+    "confidence_scoring": 15,
+    "registry_verification": 45,
+    "differential_sync": 10,
+    "cross_directory_publishing": 5,
+    "audit_trail": 35,
+    "consent_management": 25,
+    "rollback_capability": 10
+  },
+  
+  "patent_readiness": {
+    "novelty_score": 85,
+    "implementation_completeness": 35,
+    "prior_art_risk": "medium",
+    "enablement_level": "partial"
+  }
+}

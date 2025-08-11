@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="600" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <title>FIG.1: LinkedIn & External Profile Data Auto-Population - System Architecture</title>
+  
+  <!-- Background -->
+  <rect width="800" height="600" fill="white" stroke="black" stroke-width="2"/>
+  
+  <!-- Title -->
+  <text x="400" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="black">
+    FIG.1: SYSTEM ARCHITECTURE - PROFILE AUTO-POPULATION
+  </text>
+  
+  <!-- External Sources Section -->
+  <g id="external-sources">
+    <rect x="20" y="60" width="150" height="120" fill="white" stroke="black" stroke-width="2"/>
+    <text x="95" y="80" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="black">
+      EXTERNAL SOURCES
+    </text>
+    
+    <!-- LinkedIn API -->
+    <rect x="30" y="90" width="60" height="25" fill="white" stroke="black" stroke-width="1"/>
+    <text x="60" y="105" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="black">
+      LinkedIn API
+    </text>
+    
+    <!-- CFP Registry -->
+    <rect x="100" y="90" width="60" height="25" fill="white" stroke="black" stroke-width="1"/>
+    <text x="130" y="105" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="black">
+      CFP Registry
+    </text>
+    
+    <!-- FINRA API -->
+    <rect x="30" y="125" width="60" height="25" fill="white" stroke="black" stroke-width="1"/>
+    <text x="60" y="140" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="black">
+      FINRA API
+    </text>
+    
+    <!-- State Bar APIs -->
+    <rect x="100" y="125" width="60" height="25" fill="white" stroke="black" stroke-width="1"/>
+    <text x="130" y="140" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="black">
+      State Bar APIs
+    </text>
+  </g>
+  
+  <!-- OAuth & Consent Gateway -->
+  <g id="oauth-gateway">
+    <rect x="200" y="60" width="120" height="80" fill="white" stroke="black" stroke-width="2"/>
+    <text x="260" y="80" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="black">
+      OAUTH & CONSENT
+    </text>
+    <text x="260" y="95" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="black">
+      GATEWAY
+    </text>
+    
+    <!-- OAuth Flow -->
+    <rect x="210" y="105" width="45" height="15" fill="white" stroke="black" stroke-width="1"/>
+    <text x="232" y="115" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="black">
+      OAuth 2.0
+    </text>
+    
+    <!-- Consent Mgmt -->
+    <rect x="265" y="105" width="45" height="15" fill="white" stroke="black" stroke-width="1"/>
+    <text x="287" y="115" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="black">
+      Consent Mgmt
+    </text>
+  </g>
+  
+  <!-- Ingestion Pipeline -->
+  <g id="ingestion">
+    <rect x="350" y="60" width="120" height="120" fill="white" stroke="black" stroke-width="2"/>
+    <text x="410" y="80" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="black">
+      INGESTION PIPELINE
+    </text>
+    
+    <!-- Data Extractor -->
+    <rect x="360" y="90" width="100" height="20" fill="white" stroke="black" stroke-width="1"/>
+    <text x="410" y="103" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="black">
+      Data Extractor
+    </text>
+    
+    <!-- Field Mapper -->
+    <rect x="360" y="120" width="100" height="20" fill="white" stroke="black" stroke-width="1"/>
+    <text x="410" y="133" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="black">
+      Field Mapper
+    </text>
+    
+    <!-- Confidence Scorer -->
+    <rect x="360" y="150" width="100" height="20" fill="white" stroke="black" stroke-width="1"/>
+    <text x="410" y="163" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="black">
+      Confidence Scorer
+    </text>
+  </g>
+  
+  <!-- Entity Resolution Engine -->
+  <g id="entity-resolution">
+    <rect x="500" y="60" width="140" height="120" fill="white" stroke="black" stroke-width="2"/>
+    <text x="570" y="80" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="black">
+      ENTITY RESOLUTION
+    </text>
+    <text x="570" y="95" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="black">
+      ENGINE
+    </text>
+    
+    <!-- Similarity Calculator -->
+    <rect x="510" y="105" width="60" height="18" fill="white" stroke="black" stroke-width="1"/>
+    <text x="540" y="116" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="black">
+      Similarity Calc
+    </text>
+    
+    <!-- Duplicate Detector -->
+    <rect x="575" y="105" width="60" height="18" fill="white" stroke="black" stroke-width="1"/>
+    <text x="605" y="116" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="black">
+      Duplicate Detect
+    </text>
+    
+    <!-- Merge Decision -->
+    <rect x="510" y="130" width="60" height="18" fill="white" stroke="black" stroke-width="1"/>
+    <text x="540" y="141" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="black">
+      Merge Decision
+    </text>
+    
+    <!-- Review Queue -->
+    <rect x="575" y="130" width="60" height="18" fill="white" stroke="black" stroke-width="1"/>
+    <text x="605" y="141" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="black">
+      Review Queue
+    </text>
+    
+    <!-- Confidence Threshold -->
+    <rect x="510" y="155" width="125" height="18" fill="white" stroke="black" stroke-width="1"/>
+    <text x="572" y="166" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="black">
+      Confidence Thresholds
+    </text>
+  </g>
+  
+  <!-- Human Review Interface -->
+  <g id="human-review">
+    <rect x="660" y="60" width="120" height="80" fill="white" stroke="black" stroke-width="2"/>
+    <text x="720" y="80" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="black">
+      HUMAN REVIEW
+    </text>
+    <text x="720" y="95" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="black">
+      INTERFACE
+    </text>
+    
+    <!-- Approval UI -->
+    <rect x="670" y="105" width="45" height="15" fill="white" stroke="black" stroke-width="1"/>
+    <text x="692" y="115" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="black">
+      Approval UI
+    </text>
+    
+    <!-- Confidence Bars -->
+    <rect x="725" y="105" width="45" height="15" fill="white" stroke="black" stroke-width="1"/>
+    <text x="747" y="115" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="black">
+      Confidence
+    </text>
+  </g>
+  
+  <!-- Data Storage Layer -->
+  <g id="storage">
+    <rect x="50" y="220" width="700" height="80" fill="white" stroke="black" stroke-width="2"/>
+    <text x="400" y="240" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="black">
+      DATA STORAGE LAYER
+    </text>
+    
+    <!-- Profile Sources -->
+    <rect x="70" y="250" width="80" height="40" fill="white" stroke="black" stroke-width="1"/>
+    <text x="110" y="265" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="black">
+      Profile
+    </text>
+    <text x="110" y="277" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="black">
+      Sources
+    </text>
+    
+    <!-- Field Mappings -->
+    <rect x="160" y="250" width="80" height="40" fill="white" stroke="black" stroke-width="1"/>
+    <text x="200" y="265" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="black">
+      Field
+    </text>
+    <text x="200" y="277" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="black">
+      Mappings
+    </text>
+    
+    <!-- Merge Graph -->
+    <rect x="250" y="250" width="80" height="40" fill="white" stroke="black" stroke-width="1"/>
+    <text x="290" y="265" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="black">
+      Merge
+    </text>
+    <text x="290" y="277" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="black">
+      Graph
+    </text>
+    
+    <!-- Change Requests -->
+    <rect x="340" y="250" width="80" height="40" fill="white" stroke="black" stroke-width="1"/>
+    <text x="380" y="265" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="black">
+      Change
+    </text>
+    <text x="380" y="277" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="black">
+      Requests
+    </text>
+    
+    <!-- Privacy Consents -->
+    <rect x="430" y="250" width="80" height="40" fill="white" stroke="black" stroke-width="1"/>
+    <text x="470" y="265" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="black">
+      Privacy
+    </text>
+    <text x="470" y="277" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="black">
+      Consents
+    </text>
+    
+    <!-- Verification Results -->
+    <rect x="520" y="250" width="80" height="40" fill="white" stroke="black" stroke-width="1"/>
+    <text x="560" y="265" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="black">
+      Verification
+    </text>
+    <text x="560" y="277" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="black">
+      Results
+    </text>
+    
+    <!-- Audit Trail -->
+    <rect x="610" y="250" width="80" height="40" fill="white" stroke="black" stroke-width="1"/>
+    <text x="650" y="265" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="black">
+      Audit
+    </text>
+    <text x="650" y="277" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="black">
+      Trail
+    </text>
+  </g>
+  
+  <!-- Publishing Adapters -->
+  <g id="publishing">
+    <rect x="100" y="340" width="600" height="100" fill="white" stroke="black" stroke-width="2"/>
+    <text x="400" y="360" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="black">
+      CROSS-DIRECTORY PUBLISHING ADAPTERS
+    </text>
+    
+    <!-- LinkedIn Publisher -->
+    <rect x="120" y="375" width="90" height="50" fill="white" stroke="black" stroke-width="1"/>
+    <text x="165" y="395" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="black">
+      LinkedIn
+    </text>
+    <text x="165" y="407" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="black">
+      Publisher
+    </text>
+    
+    <!-- Firm Website -->
+    <rect x="220" y="375" width="90" height="50" fill="white" stroke="black" stroke-width="1"/>
+    <text x="265" y="395" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="black">
+      Firm Website
+    </text>
+    <text x="265" y="407" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="black">
+      API
+    </text>
+    
+    <!-- Marketplace -->
+    <rect x="320" y="375" width="90" height="50" fill="white" stroke="black" stroke-width="1"/>
+    <text x="365" y="395" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="black">
+      Marketplace
+    </text>
+    <text x="365" y="407" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="black">
+      Directory
+    </text>
+    
+    <!-- CFP Directory -->
+    <rect x="420" y="375" width="90" height="50" fill="white" stroke="black" stroke-width="1"/>
+    <text x="465" y="395" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="black">
+      CFP
+    </text>
+    <text x="465" y="407" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="black">
+      Directory
+    </text>
+    
+    <!-- Sync Engine -->
+    <rect x="520" y="375" width="90" height="50" fill="white" stroke="black" stroke-width="1"/>
+    <text x="565" y="395" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="black">
+      Differential
+    </text>
+    <text x="565" y="407" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="black">
+      Sync Engine
+    </text>
+    
+    <!-- Rollback -->
+    <rect x="620" y="375" width="70" height="50" fill="white" stroke="black" stroke-width="1"/>
+    <text x="655" y="395" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="black">
+      Rollback &
+    </text>
+    <text x="655" y="407" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="black">
+      Recovery
+    </text>
+  </g>
+  
+  <!-- Monitoring & Analytics -->
+  <g id="monitoring">
+    <rect x="150" y="480" width="500" height="80" fill="white" stroke="black" stroke-width="2"/>
+    <text x="400" y="500" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="black">
+      MONITORING & ANALYTICS
+    </text>
+    
+    <!-- Confidence Analytics -->
+    <rect x="170" y="515" width="90" height="35" fill="white" stroke="black" stroke-width="1"/>
+    <text x="215" y="530" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="black">
+      Confidence
+    </text>
+    <text x="215" y="542" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="black">
+      Analytics
+    </text>
+    
+    <!-- Quality Metrics -->
+    <rect x="270" y="515" width="90" height="35" fill="white" stroke="black" stroke-width="1"/>
+    <text x="315" y="530" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="black">
+      Quality
+    </text>
+    <text x="315" y="542" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="black">
+      Metrics
+    </text>
+    
+    <!-- Performance -->
+    <rect x="370" y="515" width="90" height="35" fill="white" stroke="black" stroke-width="1"/>
+    <text x="415" y="530" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="black">
+      Performance
+    </text>
+    <text x="415" y="542" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="black">
+      Monitoring
+    </text>
+    
+    <!-- Compliance -->
+    <rect x="470" y="515" width="90" height="35" fill="white" stroke="black" stroke-width="1"/>
+    <text x="515" y="530" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="black">
+      Compliance
+    </text>
+    <text x="515" y="542" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="black">
+      Reporting
+    </text>
+    
+    <!-- Error Tracking -->
+    <rect x="570" y="515" width="70" height="35" fill="white" stroke="black" stroke-width="1"/>
+    <text x="605" y="530" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="black">
+      Error
+    </text>
+    <text x="605" y="542" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="black">
+      Tracking
+    </text>
+  </g>
+  
+  <!-- Data Flow Arrows -->
+  <g id="flow-arrows" stroke="black" stroke-width="2" fill="none" marker-end="url(#arrowhead)">
+    <!-- External Sources to OAuth -->
+    <line x1="170" y1="120" x2="200" y2="100"/>
+    
+    <!-- OAuth to Ingestion -->
+    <line x1="320" y1="100" x2="350" y2="120"/>
+    
+    <!-- Ingestion to Entity Resolution -->
+    <line x1="470" y1="120" x2="500" y2="120"/>
+    
+    <!-- Entity Resolution to Human Review -->
+    <line x1="640" y1="120" x2="660" y2="120"/>
+    
+    <!-- To Storage -->
+    <line x1="410" y1="180" x2="410" y2="220"/>
+    
+    <!-- Storage to Publishing -->
+    <line x1="400" y1="300" x2="400" y2="340"/>
+    
+    <!-- Publishing to Monitoring -->
+    <line x1="400" y1="440" x2="400" y2="480"/>
+  </g>
+  
+  <!-- Arrow marker definition -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="black"/>
+    </marker>
+  </defs>
+  
+  <!-- Figure Reference -->
+  <text x="20" y="590" font-family="Arial, sans-serif" font-size="10" fill="black">
+    FIG.1 - System Architecture: OAuth consent gateway, multi-source ingestion, entity resolution with confidence scoring, human approval workflow, and cross-directory publishing with audit trail
+  </text>
+</svg>

@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="600" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <title>FIG.3: Probabilistic Entity Resolution Pipeline</title>
+  
+  <!-- Background -->
+  <rect width="800" height="600" fill="white" stroke="black" stroke-width="2"/>
+  
+  <!-- Title -->
+  <text x="400" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="black">
+    FIG.3: PROBABILISTIC ENTITY RESOLUTION PIPELINE
+  </text>
+  
+  <!-- Input Profiles Section -->
+  <g id="input-profiles">
+    <rect x="20" y="60" width="180" height="160" fill="white" stroke="black" stroke-width="2"/>
+    <text x="110" y="80" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="black">
+      INPUT PROFILES
+    </text>
+    
+    <!-- Profile A -->
+    <g id="profile-a">
+      <rect x="30" y="90" width="160" height="60" fill="white" stroke="blue" stroke-width="2"/>
+      <text x="35" y="105" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="blue">Profile A (LinkedIn)</text>
+      <text x="35" y="118" font-family="Arial, sans-serif" font-size="8" fill="black">Name: John Smith</text>
+      <text x="35" y="128" font-family="Arial, sans-serif" font-size="8" fill="black">Email: j.smith@abcfirm.com</text>
+      <text x="35" y="138" font-family="Arial, sans-serif" font-size="8" fill="black">License: CFP-12345</text>
+      <text x="35" y="148" font-family="Arial, sans-serif" font-size="8" fill="black">Firm: ABC Financial</text>
+    </g>
+    
+    <!-- Profile B -->
+    <g id="profile-b">
+      <rect x="30" y="160" width="160" height="60" fill="white" stroke="green" stroke-width="2"/>
+      <text x="35" y="175" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="green">Profile B (CFP Registry)</text>
+      <text x="35" y="188" font-family="Arial, sans-serif" font-size="8" fill="black">Name: Jonathan Smith</text>
+      <text x="35" y="198" font-family="Arial, sans-serif" font-size="8" fill="black">Email: jsmith@abcfirm.com</text>
+      <text x="35" y="208" font-family="Arial, sans-serif" font-size="8" fill="black">License: CFP-12345</text>
+      <text x="35" y="218" font-family="Arial, sans-serif" font-size="8" fill="black">Firm: ABC Financial Advisors</text>
+    </g>
+  </g>
+  
+  <!-- Blocking Algorithm Section -->
+  <g id="blocking">
+    <rect x="230" y="60" width="140" height="160" fill="white" stroke="black" stroke-width="2"/>
+    <text x="300" y="80" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="black">
+      BLOCKING ALGORITHM
+    </text>
+    
+    <!-- Blocking Keys -->
+    <text x="240" y="100" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="black">Blocking Keys:</text>
+    
+    <!-- Email Domain Block -->
+    <rect x="240" y="110" width="120" height="20" fill="white" stroke="black" stroke-width="1"/>
+    <text x="245" y="122" font-family="Arial, sans-serif" font-size="8" fill="black">Email Domain: abcfirm.com</text>
+    
+    <!-- License Block -->
+    <rect x="240" y="135" width="120" height="20" fill="white" stroke="black" stroke-width="1"/>
+    <text x="245" y="147" font-family="Arial, sans-serif" font-size="8" fill="black">License: CFP-12345</text>
+    
+    <!-- Name Soundex Block -->
+    <rect x="240" y="160" width="120" height="20" fill="white" stroke="black" stroke-width="1"/>
+    <text x="245" y="172" font-family="Arial, sans-serif" font-size="8" fill="black">Name Soundex: S530</text>
+    
+    <!-- Candidate Pairs -->
+    <text x="240" y="195" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="black">Candidate Pairs:</text>
+    <rect x="240" y="200" width="120" height="15" fill="yellow" stroke="black" stroke-width="1"/>
+    <text x="245" y="210" font-family="Arial, sans-serif" font-size="8" fill="black">(Profile A, Profile B)</text>
+  </g>
+  
+  <!-- Similarity Calculation Section -->
+  <g id="similarity">
+    <rect x="400" y="60" width="180" height="280" fill="white" stroke="black" stroke-width="2"/>
+    <text x="490" y="80" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="black">
+      SIMILARITY CALCULATION
+    </text>
+    
+    <!-- Name Similarity -->
+    <g id="name-similarity">
+      <text x="410" y="100" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="black">1. Name Similarity</text>
+      <rect x="410" y="105" width="160" height="35" fill="white" stroke="black" stroke-width="1"/>
+      <text x="415" y="118" font-family="Arial, sans-serif" font-size="8" fill="black">Jaro-Winkler("John Smith", "Jonathan Smith")</text>
+      <text x="415" y="128" font-family="Arial, sans-serif" font-size="8" fill="black">Score: 0.88</text>
+      <text x="415" y="137" font-family="Arial, sans-serif" font-size="8" fill="black">Weight: 0.3</text>
+    </g>
+    
+    <!-- Email Similarity -->
+    <g id="email-similarity">
+      <text x="410" y="155" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="black">2. Email Similarity</text>
+      <rect x="410" y="160" width="160" height="35" fill="white" stroke="black" stroke-width="1"/>
+      <text x="415" y="173" font-family="Arial, sans-serif" font-size="8" fill="black">EditDistance("j.smith@", "jsmith@")</text>
+      <text x="415" y="183" font-family="Arial, sans-serif" font-size="8" fill="black">Score: 0.85</text>
+      <text x="415" y="192" font-family="Arial, sans-serif" font-size="8" fill="black">Weight: 0.25</text>
+    </g>
+    
+    <!-- License Similarity -->
+    <g id="license-similarity">
+      <text x="410" y="210" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="black">3. License Similarity</text>
+      <rect x="410" y="215" width="160" height="35" fill="white" stroke="black" stroke-width="1"/>
+      <text x="415" y="228" font-family="Arial, sans-serif" font-size="8" fill="black">Exact("CFP-12345", "CFP-12345")</text>
+      <text x="415" y="238" font-family="Arial, sans-serif" font-size="8" fill="black">Score: 1.0</text>
+      <text x="415" y="247" font-family="Arial, sans-serif" font-size="8" fill="black">Weight: 0.35</text>
+    </g>
+    
+    <!-- Firm Similarity -->
+    <g id="firm-similarity">
+      <text x="410" y="265" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="black">4. Firm Similarity</text>
+      <rect x="410" y="270" width="160" height="35" fill="white" stroke="black" stroke-width="1"/>
+      <text x="415" y="283" font-family="Arial, sans-serif" font-size="8" fill="black">Fuzzy("ABC Financial", "ABC Financial Advisors")</text>
+      <text x="415" y="293" font-family="Arial, sans-serif" font-size="8" fill="black">Score: 0.92</text>
+      <text x="415" y="302" font-family="Arial, sans-serif" font-size="8" fill="black">Weight: 0.1</text>
+    </g>
+    
+    <!-- Weighted Composite -->
+    <g id="composite-score">
+      <text x="410" y="320" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="black">Weighted Composite:</text>
+      <rect x="410" y="325" width="160" height="25" fill="lightgreen" stroke="black" stroke-width="2"/>
+      <text x="415" y="337" font-family="Arial, sans-serif" font-size="9" fill="black">0.88×0.3 + 0.85×0.25 + 1.0×0.35 + 0.92×0.1</text>
+      <text x="490" y="347" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="black">= 0.916</text>
+    </g>
+  </g>
+  
+  <!-- Temporal Decay Section -->
+  <g id="temporal-decay">
+    <rect x="610" y="60" width="170" height="120" fill="white" stroke="black" stroke-width="2"/>
+    <text x="695" y="80" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="black">
+      TEMPORAL DECAY
+    </text>
+    
+    <!-- Decay Formula -->
+    <text x="620" y="100" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="black">Decay Factor:</text>
+    <rect x="620" y="105" width="150" height="30" fill="white" stroke="black" stroke-width="1"/>
+    <text x="625" y="118" font-family="Arial, sans-serif" font-size="8" fill="black">decay = exp(-λ × days_since_update)</text>
+    <text x="625" y="128" font-family="Arial, sans-serif" font-size="8" fill="black">λ = 0.001 (half-life ≈ 2 years)</text>
+    
+    <!-- Applied Decay -->
+    <text x="620" y="150" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="black">Applied:</text>
+    <rect x="620" y="155" width="150" height="20" fill="white" stroke="black" stroke-width="1"/>
+    <text x="625" y="167" font-family="Arial, sans-serif" font-size="8" fill="black">0.916 × exp(-0.001 × 30) = 0.889</text>
+  </g>
+  
+  <!-- Decision Tree Section -->
+  <g id="decision-tree">
+    <rect x="50" y="370" width="700" height="160" fill="white" stroke="black" stroke-width="2"/>
+    <text x="400" y="390" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="black">
+      MERGE DECISION TREE WITH CONFIDENCE THRESHOLDS
+    </text>
+    
+    <!-- Decision Flow -->
+    <g id="decision-flow">
+      <!-- Root Node -->
+      <rect x="80" y="410" width="100" height="30" fill="white" stroke="black" stroke-width="2"/>
+      <text x="130" y="422" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="black">Similarity = 0.889</text>
+      <text x="130" y="432" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="black">Score Input</text>
+      
+      <!-- High Confidence Branch -->
+      <rect x="220" y="400" width="80" height="25" fill="green" stroke="black" stroke-width="2"/>
+      <text x="260" y="410" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">≥ 0.9</text>
+      <text x="260" y="420" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">Auto-Merge</text>
+      
+      <!-- Medium Confidence Branch -->
+      <rect x="220" y="435" width="80" height="25" fill="orange" stroke="black" stroke-width="2"/>
+      <text x="260" y="445" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">0.7 - 0.9</text>
+      <text x="260" y="455" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">Human Review</text>
+      
+      <!-- Low Confidence Branch -->
+      <rect x="220" y="470" width="80" height="25" fill="red" stroke="black" stroke-width="2"/>
+      <text x="260" y="480" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">&lt; 0.7</text>
+      <text x="260" y="490" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">No Merge</text>
+      
+      <!-- Current Case -->
+      <rect x="340" y="435" width="120" height="25" fill="orange" stroke="black" stroke-width="3"/>
+      <text x="400" y="445" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="white">CURRENT: 0.889</text>
+      <text x="400" y="455" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="white">→ Human Review</text>
+      
+      <!-- Human Review Details -->
+      <rect x="490" y="410" width="180" height="50" fill="white" stroke="orange" stroke-width="2"/>
+      <text x="495" y="425" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="black">Human Review Queue</text>
+      <text x="495" y="437" font-family="Arial, sans-serif" font-size="8" fill="black">• Show side-by-side comparison</text>
+      <text x="495" y="447" font-family="Arial, sans-serif" font-size="8" fill="black">• Highlight confidence factors</text>
+      <text x="495" y="457" font-family="Arial, sans-serif" font-size="8" fill="black">• Require reviewer decision + reason</text>
+      
+      <!-- Decision Arrows -->
+      <g stroke="black" stroke-width="2" fill="none" marker-end="url(#arrowhead)">
+        <line x1="180" y1="425" x2="220" y2="412"/>
+        <line x1="180" y1="425" x2="220" y2="447"/>
+        <line x1="180" y1="425" x2="220" y2="482"/>
+        <line x1="300" y1="447" x2="340" y2="447"/>
+        <line x1="460" y1="447" x2="490" y2="435"/>
+      </g>
+    </g>
+    
+    <!-- Hysteresis Note -->
+    <text x="80" y="515" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="black">Hysteresis Prevention:</text>
+    <text x="80" y="527" font-family="Arial, sans-serif" font-size="9" fill="black">• Different thresholds for merge vs. un-merge decisions</text>
+    <text x="80" y="537" font-family="Arial, sans-serif" font-size="9" fill="black">• Once reviewed, require higher confidence to override human decision</text>
+  </g>
+  
+  <!-- Data Flow Arrows -->
+  <g id="main-flow" stroke="black" stroke-width="2" fill="none" marker-end="url(#arrowhead)">
+    <!-- Profiles to Blocking -->
+    <line x1="200" y1="140" x2="230" y2="140"/>
+    
+    <!-- Blocking to Similarity -->
+    <line x1="370" y1="140" x2="400" y2="140"/>
+    
+    <!-- Similarity to Temporal -->
+    <line x1="580" y1="140" x2="610" y2="120"/>
+    
+    <!-- Temporal to Decision -->
+    <line x1="695" y1="180" x2="695" y2="370"/>
+    <line x1="695" y1="370" x2="400" y2="370"/>
+  </g>
+  
+  <!-- Arrow marker definition -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="black"/>
+    </marker>
+  </defs>
+  
+  <!-- Algorithm Performance Metrics -->
+  <g id="performance-metrics">
+    <text x="50" y="560" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="black">
+      Performance Metrics:
+    </text>
+    <text x="50" y="572" font-family="Arial, sans-serif" font-size="9" fill="black">
+      • Blocking Efficiency: Reduces O(n²) to O(n×k) where k = avg candidates per block
+    </text>
+    <text x="50" y="582" font-family="Arial, sans-serif" font-size="9" fill="black">
+      • Similarity Accuracy: F1-score > 0.95 on manually labeled test set (n=1000)
+    </text>
+  </g>
+  
+  <!-- Figure Reference -->
+  <text x="20" y="595" font-family="Arial, sans-serif" font-size="10" fill="black">
+    FIG.3 - Entity Resolution: Blocking algorithm reduces candidate pairs, multi-dimensional similarity scoring with temporal decay, and confidence-based merge decisions
+  </text>
+</svg>

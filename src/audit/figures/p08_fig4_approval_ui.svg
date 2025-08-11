@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="600" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <title>FIG.4: Human-in-the-Loop Approval UI with Confidence Bars</title>
+  
+  <!-- Background -->
+  <rect width="800" height="600" fill="white" stroke="black" stroke-width="2"/>
+  
+  <!-- Title -->
+  <text x="400" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="black">
+    FIG.4: HUMAN-IN-THE-LOOP APPROVAL UI WITH CONFIDENCE BARS
+  </text>
+  
+  <!-- Browser Window Frame -->
+  <rect x="20" y="50" width="760" height="530" fill="white" stroke="black" stroke-width="2"/>
+  
+  <!-- Browser Header -->
+  <rect x="20" y="50" width="760" height="30" fill="lightgray" stroke="black" stroke-width="1"/>
+  <circle cx="35" cy="65" r="5" fill="red"/>
+  <circle cx="50" cy="65" r="5" fill="yellow"/>
+  <circle cx="65" cy="65" r="5" fill="green"/>
+  <text x="100" y="70" font-family="Arial, sans-serif" font-size="12" fill="black">Profile Review Dashboard - Merge Candidate #MM-2024-001</text>
+  
+  <!-- Main Content Area -->
+  <rect x="30" y="90" width="740" height="480" fill="white" stroke="black" stroke-width="1"/>
+  
+  <!-- Header Section -->
+  <g id="header">
+    <rect x="40" y="100" width="720" height="40" fill="lightblue" stroke="black" stroke-width="1"/>
+    <text x="50" y="115" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="black">
+      Merge Candidate Review - Confidence Score: 0.889
+    </text>
+    <text x="50" y="130" font-family="Arial, sans-serif" font-size="10" fill="black">
+      Two profile records have been identified as potential duplicates. Please review the comparison below and make a decision.
+    </text>
+  </g>
+  
+  <!-- Side-by-Side Profile Comparison -->
+  <g id="profile-comparison">
+    <!-- Profile A Column -->
+    <rect x="50" y="150" width="340" height="280" fill="white" stroke="blue" stroke-width="2"/>
+    <rect x="50" y="150" width="340" height="30" fill="lightblue" stroke="blue" stroke-width="1"/>
+    <text x="220" y="170" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="black">
+      Profile A (LinkedIn Source)
+    </text>
+    
+    <!-- Profile A Fields -->
+    <g id="profile-a-fields">
+      <!-- Name -->
+      <text x="60" y="195" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="black">Name:</text>
+      <text x="60" y="207" font-family="Arial, sans-serif" font-size="10" fill="black">John Smith</text>
+      
+      <!-- Email -->
+      <text x="60" y="225" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="black">Email:</text>
+      <text x="60" y="237" font-family="Arial, sans-serif" font-size="10" fill="black">j.smith@abcfirm.com</text>
+      
+      <!-- Professional Title -->
+      <text x="60" y="255" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="black">Title:</text>
+      <text x="60" y="267" font-family="Arial, sans-serif" font-size="10" fill="black">Senior Financial Advisor</text>
+      
+      <!-- License -->
+      <text x="60" y="285" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="black">License:</text>
+      <text x="60" y="297" font-family="Arial, sans-serif" font-size="10" fill="black">CFP-12345</text>
+      
+      <!-- Firm -->
+      <text x="60" y="315" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="black">Firm:</text>
+      <text x="60" y="327" font-family="Arial, sans-serif" font-size="10" fill="black">ABC Financial</text>
+      
+      <!-- Location -->
+      <text x="60" y="345" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="black">Location:</text>
+      <text x="60" y="357" font-family="Arial, sans-serif" font-size="10" fill="black">New York, NY</text>
+      
+      <!-- Experience -->
+      <text x="60" y="375" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="black">Experience:</text>
+      <text x="60" y="387" font-family="Arial, sans-serif" font-size="9" fill="black">Senior Financial Advisor at ABC Financial (2018-Present)</text>
+      <text x="60" y="398" font-family="Arial, sans-serif" font-size="9" fill="black">Financial Advisor at XYZ Corp (2015-2018)</text>
+      
+      <!-- Last Updated -->
+      <text x="60" y="415" font-family="Arial, sans-serif" font-size="9" font-style="italic" fill="gray">Last Updated: LinkedIn API sync 3 hours ago</text>
+    </g>
+    
+    <!-- Profile B Column -->
+    <rect x="410" y="150" width="340" height="280" fill="white" stroke="green" stroke-width="2"/>
+    <rect x="410" y="150" width="340" height="30" fill="lightgreen" stroke="green" stroke-width="1"/>
+    <text x="580" y="170" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="black">
+      Profile B (CFP Registry)
+    </text>
+    
+    <!-- Profile B Fields -->
+    <g id="profile-b-fields">
+      <!-- Name -->
+      <text x="420" y="195" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="black">Name:</text>
+      <text x="420" y="207" font-family="Arial, sans-serif" font-size="10" fill="black">Jonathan Smith</text>
+      
+      <!-- Email -->
+      <text x="420" y="225" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="black">Email:</text>
+      <text x="420" y="237" font-family="Arial, sans-serif" font-size="10" fill="black">jsmith@abcfirm.com</text>
+      
+      <!-- Professional Title -->
+      <text x="420" y="255" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="black">Title:</text>
+      <text x="420" y="267" font-family="Arial, sans-serif" font-size="10" fill="black">CERTIFIED FINANCIAL PLANNER</text>
+      
+      <!-- License -->
+      <text x="420" y="285" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="black">License:</text>
+      <text x="420" y="297" font-family="Arial, sans-serif" font-size="10" fill="black">CFP-12345</text>
+      
+      <!-- Firm -->
+      <text x="420" y="315" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="black">Firm:</text>
+      <text x="420" y="327" font-family="Arial, sans-serif" font-size="10" fill="black">ABC Financial Advisors LLC</text>
+      
+      <!-- Location -->
+      <text x="420" y="345" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="black">Location:</text>
+      <text x="420" y="357" font-family="Arial, sans-serif" font-size="10" fill="black">New York, NY 10001</text>
+      
+      <!-- Certifications -->
+      <text x="420" y="375" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="black">Certifications:</text>
+      <text x="420" y="387" font-family="Arial, sans-serif" font-size="9" fill="black">CFP - Certified Financial Planner (2017)</text>
+      <text x="420" y="398" font-family="Arial, sans-serif" font-size="9" fill="black">Series 7 - General Securities Representative (2015)</text>
+      
+      <!-- Last Updated -->
+      <text x="420" y="415" font-family="Arial, sans-serif" font-size="9" font-style="italic" fill="gray">Last Updated: CFP Registry sync 1 day ago</text>
+    </g>
+  </g>
+  
+  <!-- Confidence Scoring Section -->
+  <g id="confidence-section">
+    <rect x="50" y="450" width="700" height="80" fill="white" stroke="black" stroke-width="2"/>
+    <text x="60" y="470" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="black">
+      Confidence Analysis
+    </text>
+    
+    <!-- Confidence Bars -->
+    <g id="confidence-bars">
+      <!-- Name Similarity -->
+      <text x="70" y="490" font-family="Arial, sans-serif" font-size="10" fill="black">Name Similarity:</text>
+      <rect x="170" y="482" width="150" height="12" fill="lightgray" stroke="black" stroke-width="1"/>
+      <rect x="170" y="482" width="132" height="12" fill="orange" stroke="none"/>
+      <text x="330" y="492" font-family="Arial, sans-serif" font-size="9" fill="black">0.88 (Jaro-Winkler)</text>
+      
+      <!-- Email Similarity -->
+      <text x="70" y="507" font-family="Arial, sans-serif" font-size="10" fill="black">Email Similarity:</text>
+      <rect x="170" y="499" width="150" height="12" fill="lightgray" stroke="black" stroke-width="1"/>
+      <rect x="170" y="499" width="127" height="12" fill="orange" stroke="none"/>
+      <text x="330" y="509" font-family="Arial, sans-serif" font-size="9" fill="black">0.85 (Edit Distance)</text>
+      
+      <!-- License Match -->
+      <text x="70" y="524" font-family="Arial, sans-serif" font-size="10" fill="black">License Match:</text>
+      <rect x="170" y="516" width="150" height="12" fill="lightgray" stroke="black" stroke-width="1"/>
+      <rect x="170" y="516" width="150" height="12" fill="green" stroke="none"/>
+      <text x="330" y="526" font-family="Arial, sans-serif" font-size="9" fill="black">1.00 (Exact Match)</text>
+      
+      <!-- Firm Similarity -->
+      <text x="400" y="490" font-family="Arial, sans-serif" font-size="10" fill="black">Firm Similarity:</text>
+      <rect x="500" y="482" width="150" height="12" fill="lightgray" stroke="black" stroke-width="1"/>
+      <rect x="500" y="482" width="138" height="12" fill="green" stroke="none"/>
+      <text x="660" y="492" font-family="Arial, sans-serif" font-size="9" fill="black">0.92 (Fuzzy Match)</text>
+      
+      <!-- Overall Confidence -->
+      <text x="400" y="507" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="black">Overall Confidence:</text>
+      <rect x="500" y="499" width="150" height="12" fill="lightgray" stroke="black" stroke-width="2"/>
+      <rect x="500" y="499" width="133" height="12" fill="orange" stroke="none"/>
+      <text x="660" y="509" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="black">0.889</text>
+      
+      <!-- Risk Factors -->
+      <text x="400" y="524" font-family="Arial, sans-serif" font-size="10" fill="red">⚠ Risk: Name variation, Email format differences</text>
+    </g>
+  </g>
+  
+  <!-- Action Buttons Section -->
+  <g id="action-buttons">
+    <rect x="50" y="540" width="700" height="50" fill="lightgray" stroke="black" stroke-width="1"/>
+    
+    <!-- Approve Merge Button -->
+    <rect x="80" y="550" width="120" height="30" fill="green" stroke="black" stroke-width="2"/>
+    <text x="140" y="568" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="white">
+      APPROVE MERGE
+    </text>
+    
+    <!-- Reject Merge Button -->
+    <rect x="220" y="550" width="120" height="30" fill="red" stroke="black" stroke-width="2"/>
+    <text x="280" y="568" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="white">
+      REJECT MERGE
+    </text>
+    
+    <!-- Request More Info Button -->
+    <rect x="360" y="550" width="120" height="30" fill="blue" stroke="black" stroke-width="2"/>
+    <text x="420" y="565" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white">
+      REQUEST MORE
+    </text>
+    <text x="420" y="575" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white">
+      INFORMATION
+    </text>
+    
+    <!-- Skip for Now Button -->
+    <rect x="500" y="550" width="120" height="30" fill="gray" stroke="black" stroke-width="2"/>
+    <text x="560" y="568" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="white">
+      SKIP FOR NOW
+    </text>
+    
+    <!-- Batch Actions -->
+    <text x="650" y="560" font-family="Arial, sans-serif" font-size="10" fill="black">Batch Actions:</text>
+    <rect x="650" y="565" width="60" height="15" fill="white" stroke="black" stroke-width="1"/>
+    <text x="680" y="575" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="black">Auto-Approve</text>
+    <text x="720" y="575" font-family="Arial, sans-serif" font-size="8" fill="black">Similar (5)</text>
+  </g>
+  
+  <!-- Sidebar with Queue Information -->
+  <g id="sidebar-queue">
+    <rect x="770" y="90" width="150" height="480" fill="white" stroke="black" stroke-width="2"/>
+    <rect x="770" y="90" width="150" height="25" fill="darkblue" stroke="black" stroke-width="1"/>
+    <text x="845" y="107" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="white">
+      Review Queue
+    </text>
+    
+    <!-- Queue Stats -->
+    <text x="780" y="130" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="black">Today's Queue:</text>
+    <text x="780" y="142" font-family="Arial, sans-serif" font-size="9" fill="black">• Pending: 23</text>
+    <text x="780" y="152" font-family="Arial, sans-serif" font-size="9" fill="black">• Reviewed: 15</text>
+    <text x="780" y="162" font-family="Arial, sans-serif" font-size="9" fill="black">• Auto-approved: 8</text>
+    
+    <!-- Current Item -->
+    <text x="780" y="180" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="black">Current Item:</text>
+    <rect x="780" y="185" width="130" height="20" fill="yellow" stroke="black" stroke-width="1"/>
+    <text x="785" y="197" font-family="Arial, sans-serif" font-size="8" fill="black">MM-2024-001 (0.889)</text>
+    
+    <!-- Next Items -->
+    <text x="780" y="220" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="black">Next in Queue:</text>
+    
+    <rect x="780" y="225" width="130" height="15" fill="white" stroke="black" stroke-width="1"/>
+    <text x="785" y="235" font-family="Arial, sans-serif" font-size="8" fill="black">MM-2024-002 (0.876)</text>
+    
+    <rect x="780" y="245" width="130" height="15" fill="white" stroke="black" stroke-width="1"/>
+    <text x="785" y="255" font-family="Arial, sans-serif" font-size="8" fill="black">MM-2024-003 (0.832)</text>
+    
+    <rect x="780" y="265" width="130" height="15" fill="white" stroke="black" stroke-width="1"/>
+    <text x="785" y="275" font-family="Arial, sans-serif" font-size="8" fill="black">MM-2024-004 (0.798)</text>
+    
+    <!-- Performance Stats -->
+    <text x="780" y="300" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="black">Your Performance:</text>
+    <text x="780" y="312" font-family="Arial, sans-serif" font-size="8" fill="black">• Accuracy: 94.5%</text>
+    <text x="780" y="322" font-family="Arial, sans-serif" font-size="8" fill="black">• Avg Review Time: 2.3m</text>
+    <text x="780" y="332" font-family="Arial, sans-serif" font-size="8" fill="black">• Reviews Today: 15</text>
+    
+    <!-- Confidence Distribution -->
+    <text x="780" y="355" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="black">Confidence Dist:</text>
+    <rect x="780" y="360" width="130" height="8" fill="lightgray" stroke="black" stroke-width="1"/>
+    <rect x="780" y="360" width="40" height="8" fill="red" stroke="none"/>
+    <rect x="820" y="360" width="50" height="8" fill="orange" stroke="none"/>
+    <rect x="870" y="360" width="40" height="8" fill="green" stroke="none"/>
+    <text x="780" y="375" font-family="Arial, sans-serif" font-size="7" fill="black">&lt;0.7  0.7-0.9  &gt;0.9</text>
+  </g>
+  
+  <!-- Keyboard Shortcuts -->
+  <g id="keyboard-shortcuts">
+    <text x="30" y="595" font-family="Arial, sans-serif" font-size="9" fill="gray">
+      Shortcuts: A=Approve, R=Reject, I=More Info, S=Skip, ↑↓=Navigate, Ctrl+A=Auto-approve similar
+    </text>
+  </g>
+  
+  <!-- Figure Reference -->
+  <text x="780" y="595" font-family="Arial, sans-serif" font-size="10" fill="black">
+    FIG.4 - Approval UI: Side-by-side profile comparison with confidence scoring, action buttons, and review queue management
+  </text>
+</svg>
