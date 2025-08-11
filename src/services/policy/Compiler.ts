@@ -107,14 +107,18 @@ export class PolicyCompiler {
           if (nameCompare !== 0) return nameCompare;
           return (a.effect || '').localeCompare(b.effect || '');
         })
-        .map(s => ({
-          id: s.id,
-          effect: s.effect,
-          actions: s.actions ? [...s.actions].sort() : [],
-          resources: s.resources ? [...s.resources].sort() : [],
-          conditions: this.normalizeConditions(s.conditions || []),
-          priority: s.priority || 0
-        }))
+        .map((s, i) => {
+          const id = (s as any).id ?? `stmt_${i}`;
+          const priority = (s as any).priority ?? i;
+          return {
+            id,
+            effect: s.effect,
+            actions: s.actions ? [...s.actions].sort() : [],
+            resources: s.resources ? [...s.resources].sort() : [],
+            conditions: this.normalizeConditions(s.conditions || []),
+            priority
+          };
+        })
     };
     
     const canonicalJson = JSON.stringify(canonical, Object.keys(canonical).sort());

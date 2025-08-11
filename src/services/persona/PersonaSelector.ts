@@ -61,13 +61,18 @@ export class PersonaSelector {
       // Load thresholds with caching for database-driven hysteresis
       thresholds?.forEach(threshold => {
         // Map database snake_case to camelCase
+        const persona_type = (threshold as any).persona_type ?? (threshold as any).persona;
+        const switch_threshold = (threshold as any).switch_threshold ?? 0.2;
+        const hold_time_ms = (threshold as any).hold_time_ms ?? 5000;
+        const min_confidence = (threshold as any).min_confidence ?? 0.5;
+        
         const mappedThreshold = {
-          switch_threshold: Number((threshold as any).switch_threshold || threshold.delta_confidence),
-          hold_time_ms: (threshold as any).hold_time_ms || 30000,
-          min_confidence: Number((threshold as any).min_confidence || 0.6)
+          switch_threshold: Number(switch_threshold),
+          hold_time_ms,
+          min_confidence: Number(min_confidence)
         };
         
-        this.thresholds.set((threshold as any).persona_type || 'default', mappedThreshold);
+        this.thresholds.set(persona_type || 'default', mappedThreshold);
       });
 
       console.log(`Loaded ${thresholds?.length || 0} persona thresholds for tenant ${this.tenantId}`);
@@ -297,7 +302,7 @@ export class PersonaSelector {
       await supabase.from('personas').insert({
         user_id: userId,
         tenant_id: userProfile.tenant_id,
-        persona_kind: persona as any, // Map to persona_kind field
+        persona_kind: persona, // required by types
         persona_type: persona,
         confidence_score: confidence,
         detected_at: now.toISOString(),

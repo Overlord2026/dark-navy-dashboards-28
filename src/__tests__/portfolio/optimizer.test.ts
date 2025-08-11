@@ -26,13 +26,8 @@ describe('PortfolioOptimizer', () => {
 
   beforeEach(() => {
     mockInput = {
-      assets: [
-        { symbol: 'VTI', expectedReturn: 0.08, risk: 0.16 },
-        { symbol: 'VXUS', expectedReturn: 0.09, risk: 0.18 },
-        { symbol: 'VGIT', expectedReturn: 0.03, risk: 0.04 },
-        { symbol: 'VMFXX', expectedReturn: 0.01, risk: 0.001 }
-      ],
-      constraints: { riskTolerance: 0.5 }
+      currentPositions: [],
+      constraints: { riskTolerance: 0.5 } as any
     };
   });
 

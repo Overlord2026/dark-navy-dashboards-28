@@ -50,16 +50,12 @@ export const usePersonaSystem = (config: PersonaSystemConfig) => {
       const features = await extractor.extractFeatures(events, user.user.id, 'session-' + Date.now());
 
       // Classify persona with proper context
-      const classificationContext = {
-        userId: user.user.id,
-        tenantId: config.tenantId,
-        sessionId: 'session-' + Date.now(),
-        time_of_day: new Date().getHours(),
-        day_of_week: new Date().getDay(),
-        session_length: 0,
-        previous_classifications: []
+      const ctx: ClassificationContext = { 
+        tenantId: config.tenantId, 
+        userId: user.user.id || 'anonymous' 
       };
-      const predictions = await classifier.classify(features, classificationContext);
+      const options = { maxLookbackMs: 10_000 };
+      const predictions = await classifier.classify(features, ctx, options);
 
       // Select with hysteresis - simplified for now
       const selection = {

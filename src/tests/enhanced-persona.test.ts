@@ -1,4 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
+import { TokenService } from '@/services/policy/TokenService';
 
 // Mock Supabase
 vi.mock('@/integrations/supabase/client', () => ({

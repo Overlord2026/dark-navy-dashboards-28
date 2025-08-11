@@ -500,5 +500,5 @@ export class ScopeUtils {
   }
 }
 
-// Export singleton instance
-export const tokenService = new TokenService();
+// Export the class
+export { TokenService };

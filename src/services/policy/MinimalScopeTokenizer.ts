@@ -62,12 +62,11 @@ export class MinimalScopeTokenizer {
     const { data, error } = await supabase
       .from('policy_tokens')
       .insert({
-        tenant_id: request.tenantId,
-        token_hash: tokenHash,
-        token_body: tokenBody,
-        scopes: minimalScopes,
-        expires_at: request.expiresAt?.toISOString(),
-        user_id: request.userId || 'system'
+        token_hash: tokenHash, 
+        token_body: tokenBody, 
+        tenant_id: request.tenantId, 
+        user_id: request.userId || 'system', 
+        expires_at: request.expiresAt?.toISOString()
       })
       .select()
       .single();
