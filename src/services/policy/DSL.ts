@@ -2,12 +2,14 @@
 // Supports ALLOW, DENY, WHEN, JURISDICTION, REASON syntax
 
 export interface PolicyStatement {
+  id?: string;
   effect: 'ALLOW' | 'DENY';
   actions: string[];
   resources: string[];
   conditions?: PolicyCondition[];
   jurisdiction?: string;
   reason?: string;
+  priority?: number;
 }
 
 export interface PolicyCondition {

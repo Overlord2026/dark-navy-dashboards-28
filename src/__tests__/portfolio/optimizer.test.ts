@@ -26,7 +26,6 @@ describe('PortfolioOptimizer', () => {
 
   beforeEach(() => {
     mockInput = {
-      phaseId: 'income_now',
       currentPositions: {
         'us_equity': 0.4,
         'international_equity': 0.2,
@@ -136,10 +135,10 @@ describe('PortfolioOptimizer', () => {
   });
 
   test('should handle different phases correctly', async () => {
-    const growthInput = { ...mockInput, phaseId: 'growth' };
+    const growthInput = { ...mockInput };
     const growthResult = await PortfolioOptimizer.optimize(growthInput);
     
-    const incomeInput = { ...mockInput, phaseId: 'income_now' };
+    const incomeInput = { ...mockInput };
     const incomeResult = await PortfolioOptimizer.optimize(incomeInput);
     
     // Growth phase should have higher equity allocation

@@ -67,7 +67,7 @@ export class MinimalScopeTokenizer {
         token_body: tokenBody,
         scopes: minimalScopes,
         expires_at: request.expiresAt?.toISOString(),
-        created_by: request.userId
+        user_id: request.userId || 'system'
       })
       .select()
       .single();

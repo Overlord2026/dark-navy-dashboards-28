@@ -42,15 +42,20 @@ export const usePersonaSystem = (config: PersonaSystemConfig) => {
     setState(prev => ({ ...prev, isDetecting: true }));
 
     try {
-      // Extract features
-      const features = await extractor.extractFeatures(events, {
-        userId: 'current-user',
-        tenantId: config.tenantId,
-        timestamp: Date.now()
-      });
+      // Get current user
+      const { data: user } = await supabase.auth.getUser();
+      if (!user.user) return;
 
-      // Classify persona
-      const predictions = await classifier.classify(features, config.tenantId);
+      // Extract features
+      const features = await extractor.extractFeatures(events, user.user.id, 'session-' + Date.now());
+
+      // Classify persona with proper context
+      const classificationContext = {
+        userId: user.user.id,
+        tenantId: config.tenantId,
+        sessionId: 'session-' + Date.now()
+      };
+      const predictions = await classifier.classify(features, classificationContext, {});
 
       // Select with hysteresis - simplified for now
       const selection = {
@@ -69,7 +74,7 @@ export const usePersonaSystem = (config: PersonaSystemConfig) => {
 
       // Log persona change
       await supabase.from('persona_signals').insert({
-        user_id: 'current-user',
+        user_id: user.user.id,
         tenant_id: config.tenantId,
         signal_type: 'persona_switch',
         signal_value: {
@@ -87,6 +92,10 @@ export const usePersonaSystem = (config: PersonaSystemConfig) => {
   }, [config, state.isDetecting, extractor, classifier, selector, state.currentPersona]);
 
   const forcePersona = useCallback(async (persona: AllPersonaTypes) => {
+    // Get current user
+    const { data: user } = await supabase.auth.getUser();
+    if (!user.user) return;
+
     setState(prev => ({
       ...prev,
       currentPersona: persona,
@@ -97,7 +106,7 @@ export const usePersonaSystem = (config: PersonaSystemConfig) => {
 
     // Log manual override
     await supabase.from('persona_signals').insert({
-      user_id: 'current-user',
+      user_id: user.user.id,
       tenant_id: config.tenantId,
       signal_type: 'manual_override',
       signal_value: {

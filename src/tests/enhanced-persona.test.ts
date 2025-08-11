@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { PersonaSelector } from '@/services/persona/PersonaSelector';
 import { PolicyCompiler } from '@/services/policy/Compiler';
 import { TokenService } from '@/services/policy/TokenService';
+import { PolicyDocument } from '@/services/policy/DSL';
 
 // Mock Supabase
 vi.mock('@/integrations/supabase/client', () => ({
@@ -30,60 +31,80 @@ describe('Enhanced Persona System Tests', () => {
     });
 
     it('should cache by structural hash not just input identity', () => {
-      const policies1 = [
-        {
-          id: 'policy-1',
-          conditions: [{ type: 'ROLE', value: 'admin' }],
-          scopes: ['read:users'],
-          effect: 'allow' as const
-        }
-      ];
+      const policy1: PolicyDocument = {
+        name: 'test-policy-1',
+        version: '1.0',
+        statements: [
+          {
+            id: 'policy-1',
+            conditions: [{ type: 'WHEN', field: 'role', operator: 'eq', value: 'admin' }],
+            actions: ['read'],
+            resources: ['users'],
+            effect: 'ALLOW' as const
+          }
+        ]
+      };
 
-      const policies2 = [
-        {
-          id: 'policy-different-id',
-          conditions: [{ type: 'ROLE', value: 'admin' }],
-          scopes: ['read:users'],
-          effect: 'allow' as const
-        }
-      ];
+      const policy2: PolicyDocument = {
+        name: 'test-policy-2',
+        version: '1.0',
+        statements: [
+          {
+            id: 'policy-different-id',
+            conditions: [{ type: 'WHEN', field: 'role', operator: 'eq', value: 'admin' }],
+            actions: ['read'],
+            resources: ['users'],
+            effect: 'ALLOW' as const
+          }
+        ]
+      };
 
-      const graph1 = compiler.compile(policies1, 'tenant1', 'v1', 'US');
-      const graph2 = compiler.compile(policies2, 'tenant1', 'v1', 'US');
+      const graph1 = compiler.compile(policy1, 'tenant1', 'v1', 'US');
+      const graph2 = compiler.compile(policy2, 'tenant1', 'v1', 'US');
 
       // Different policy IDs but same structure should have same structural hash
       expect(graph1.structural_hash).toBe(graph2.structural_hash);
     });
 
     it('should generate different cache keys for different jurisdictions', () => {
-      const policies = [
-        {
-          id: 'test-policy',
-          conditions: [{ type: 'ROLE', value: 'admin' }],
-          scopes: ['read:users'],
-          effect: 'allow' as const
-        }
-      ];
+      const policy: PolicyDocument = {
+        name: 'test-policy',
+        version: '1.0',
+        statements: [
+          {
+            id: 'test-policy',
+            conditions: [{ type: 'WHEN', field: 'role', operator: 'eq', value: 'admin' }],
+            actions: ['read'],
+            resources: ['users'],
+            effect: 'ALLOW' as const
+          }
+        ]
+      };
 
-      const graphUS = compiler.compile(policies, 'tenant1', 'v1', 'US');
-      const graphEU = compiler.compile(policies, 'tenant1', 'v1', 'EU');
+      const graphUS = compiler.compile(policy, 'tenant1', 'v1', 'US');
+      const graphEU = compiler.compile(policy, 'tenant1', 'v1', 'EU');
 
       // Should be different cache entries
       expect(graphUS).not.toBe(graphEU);
     });
 
     it('should return identical objects for same structural hash', () => {
-      const policies = [
-        {
-          id: 'test-policy',
-          conditions: [{ type: 'ROLE', value: 'admin' }],
-          scopes: ['read:users'],
-          effect: 'allow' as const
-        }
-      ];
+      const policy: PolicyDocument = {
+        name: 'test-policy',
+        version: '1.0',
+        statements: [
+          {
+            id: 'test-policy',
+            conditions: [{ type: 'WHEN', field: 'role', operator: 'eq', value: 'admin' }],
+            actions: ['read'],
+            resources: ['users'],
+            effect: 'ALLOW' as const
+          }
+        ]
+      };
 
-      const graph1 = compiler.compile(policies, 'tenant1', 'v1', 'US');
-      const graph2 = compiler.compile(policies, 'tenant1', 'v1', 'US');
+      const graph1 = compiler.compile(policy, 'tenant1', 'v1', 'US');
+      const graph2 = compiler.compile(policy, 'tenant1', 'v1', 'US');
 
       // Should be identical objects from cache
       expect(graph1).toBe(graph2);

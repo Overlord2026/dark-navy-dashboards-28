@@ -35,7 +35,7 @@ export interface TokenRevocationResult {
   error?: string;
 }
 
-export class PolicyTokenService {
+export class TokenService {
   private static readonly DEFAULT_EXPIRY = 3600; // 1 hour
   private static readonly MAX_EXPIRY = 86400; // 24 hours
   private static readonly ISSUER = 'multi-persona-os';
@@ -267,7 +267,6 @@ export class PolicyTokenService {
     const bodyHash = await this.computeHash('sha256', canonicalBody);
     
     await supabase.from('policy_tokens').insert({
-      token_hash: tokenHash,
       user_id: payload.user_id,
       tenant_id: payload.tenant_id,
       persona_id: payload.persona_id,
@@ -376,7 +375,7 @@ export class TokenMiddleware {
       return { valid: false, error: 'Missing or invalid authorization header' };
     }
     
-    const validation = await PolicyTokenService.validateToken(token);
+    const validation = await TokenService.validateToken(token);
     if (!validation.valid) {
       return validation;
     }
@@ -500,3 +499,6 @@ export class ScopeUtils {
     return actionSubsumes && resourceSubsumes;
   }
 }
+
+// Export singleton instance
+export const tokenService = new TokenService();

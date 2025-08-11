@@ -55,6 +55,11 @@ export interface PersonaFeatures {
     activity_hours: number[];
     day_pattern: number[];
   };
+  model?: {
+    id: string;
+    version: string;
+    extractedAt: number;
+  };
 }
 
 export class FeatureExtractor {
@@ -300,6 +305,9 @@ export class FeatureExtractor {
     jurisdiction_count: number;
   }> {
     try {
+      // Type guard for database record - avoid deep type instantiation
+      type FlatRecord = Record<string, unknown>;
+      
       // Get compliance records
       const { data: complianceRecords } = await supabase
         .from('compliance_records')
@@ -310,26 +318,31 @@ export class FeatureExtractor {
         return { license_score: 0, ce_compliance: 0, cert_count: 0, jurisdiction_count: 0 };
       }
       
+      // Map records to flat objects to avoid type instantiation issues
+      const records = complianceRecords.map(r => r as FlatRecord);
+      
       // Calculate license score (active licenses / total licenses)
-      const totalLicenses = complianceRecords.filter(r => r.record_type === 'license').length;
-      const activeLicenses = complianceRecords.filter(r => 
-        r.record_type === 'license' && r.status === 'active'
+      const totalLicenses = records.filter(r => (r.record_type || r.type) === 'license').length;
+      const activeLicenses = records.filter(r => 
+        (r.record_type || r.type) === 'license' && 
+        (r.status || r.completion_status) === 'active'
       ).length;
       const licenseScore = totalLicenses > 0 ? activeLicenses / totalLicenses : 0;
       
       // Calculate CE compliance
-      const ceRecords = complianceRecords.filter(r => ['ce', 'cle', 'cpe'].includes(r.record_type));
-      const currentCE = ceRecords.filter(r => r.status === 'active').length;
+      const ceRecords = records.filter(r => ['ce', 'cle', 'cpe'].includes((r.record_type || r.type) as string));
+      const currentCE = ceRecords.filter(r => (r.status || r.completion_status) === 'active').length;
       const requiredCE = ceRecords.length;
       const ceCompliance = requiredCE > 0 ? currentCE / requiredCE : 0;
       
       // Count certifications
-      const certCount = complianceRecords.filter(r => 
-        r.record_type === 'certification' && r.status === 'active'
+      const certCount = records.filter(r => 
+        (r.record_type || r.type) === 'certification' && 
+        (r.status || r.completion_status) === 'active'
       ).length;
       
       // Count jurisdictions
-      const jurisdictions = new Set(complianceRecords.map(r => r.state_jurisdiction).filter(Boolean));
+      const jurisdictions = new Set(records.map(r => r.state_jurisdiction || r.state).filter(Boolean));
       const jurisdictionCount = jurisdictions.size;
       
       return {
