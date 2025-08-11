@@ -69,7 +69,7 @@ export function LiquidityScorecard({ fundId }: LiquidityScorecardProps) {
     setLoading(true);
     try {
       const scoreResult = await scoreLiquidity({ 
-        fundId,
+        fundId: String(fundId),
         events: events.length > 0 ? events : undefined
       });
       setResult(scoreResult);

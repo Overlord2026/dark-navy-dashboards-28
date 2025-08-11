@@ -114,13 +114,13 @@ export async function buildDDPackage(input: DDPackageInput): Promise<DDPackageRe
     // Get next version number
     const { data: existingPackages } = await supabase
       .from('dd_packages')
-      .select('version_number')
+      .select('id, fund_name, strategy_type, created_at, fund_details')
       .eq('user_id', userId)
       .eq('fund_id', fundId)
-      .order('version_number', { ascending: false })
+      .order('created_at', { ascending: false })
       .limit(1);
 
-    const nextVersion = (existingPackages?.[0]?.version_number || 0) + 1;
+    const nextVersion = (existingPackages?.length || 0) + 1;
 
     // Persist to database with enhanced metadata
     const { data, error } = await supabase
@@ -132,7 +132,7 @@ export async function buildDDPackage(input: DDPackageInput): Promise<DDPackageRe
         artifact_urls: JSON.stringify({ pdfUrl, zipUrl }),
         regulatory_standard: regulatoryStandard,
         package_hash: packageHash,
-        version_number: nextVersion,
+        // version_number: nextVersion, // Column doesn't exist
         compliance_metadata: JSON.stringify(complianceMetadata)
       })
       .select('id')
@@ -192,7 +192,12 @@ async function compileDDSnapshot(
       metadata: { regulatoryStandard, version: '1.0.0' }
     });
     
-    pm3Score = await calculatePM3Score(pm3Input);
+    pm3Score = await calculatePM3Score({
+      returns: pm3Input.performanceData.returns,
+      benchmark: pm3Input.performanceData.benchmarkReturns,
+      fees: pm3Input.performanceData.fees,
+      holdings: []
+    });
     
     // Update audit trail with output
     auditTrail[auditTrail.length - 1].outputs = pm3Score;

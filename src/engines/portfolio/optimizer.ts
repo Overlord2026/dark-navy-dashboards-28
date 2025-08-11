@@ -36,11 +36,21 @@ export const optimizePortfolio = async (
     return acc;
   }, {} as Record<string, number>);
 
+  const expectedReturn = totalReturn / assets.length;
+  const expectedRisk = Math.sqrt(assets.reduce((sum, asset) => sum + Math.pow(asset.risk, 2), 0) / assets.length);
+  const sharpeRatio = expectedReturn / expectedRisk;
+
   return {
     allocations: weightedAllocations,
-    expectedReturn: totalReturn / assets.length,
-    expectedRisk: Math.sqrt(assets.reduce((sum, asset) => sum + Math.pow(asset.risk, 2), 0) / assets.length),
-    sharpeRatio: (totalReturn / assets.length) / Math.sqrt(assets.reduce((sum, asset) => sum + Math.pow(asset.risk, 2), 0) / assets.length),
+    expectedReturn,
+    expectedRisk,
+    expectedVolatility: expectedRisk,
+    sharpeRatio,
+    utilityScore: sharpeRatio * 100,
+    rebalanceNeeded: false,
+    targetWeights: weightedAllocations,
+    recommendations: ['Portfolio optimized using LARB methodology'],
+    rationale: 'Portfolio allocation optimized for risk-adjusted returns',
     metadata: { method: 'LARB', iterations: 100, convergence: true }
   };
 };
