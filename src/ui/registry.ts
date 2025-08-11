@@ -1,6 +1,7 @@
 // UI Component Registry for Multi-Persona OS
 // Manages component visibility and composition based on persona and scopes
 
+import React from 'react';
 import { supabase } from '@/integrations/supabase/client';
 
 export interface ComponentDefinition {
@@ -189,7 +190,7 @@ export class UIComponentRegistry {
             component: this.createPlaceholderComponent(comp.component_name),
             persona_restrictions: comp.persona_restrictions || [],
             required_scopes: comp.required_scopes || [],
-            ui_config: comp.ui_config || {},
+            ui_config: (comp.ui_config as any) || {},
             is_active: comp.is_active,
             metadata: {}
           };
@@ -215,7 +216,7 @@ export class UIComponentRegistry {
             id: layout.id,
             name: layout.layout_name,
             persona_type: layout.persona_type,
-            layout_config: layout.layout_config,
+            layout_config: layout.layout_config as any,
             is_default: layout.is_default,
             is_active: layout.is_active
           };
