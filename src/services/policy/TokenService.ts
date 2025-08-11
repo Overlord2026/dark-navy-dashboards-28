@@ -102,6 +102,9 @@ export class PolicyTokenService {
       throw new Error(`Too many scopes: ${scopes.length} > ${options.max_scopes}`);
     }
     
+    // Minimize scopes before minting
+    const minimizedScopes = ScopeUtils.minimizeScopes(scopes);
+    
     // Generate token payload
     const now = Math.floor(Date.now() / 1000);
     const expiresIn = Math.min(
@@ -116,7 +119,7 @@ export class PolicyTokenService {
       tenant_id: tenantId,
       persona_id: personaId,
       user_id: userId,
-      scopes: scopes.slice(), // Clone array
+      scopes: minimizedScopes,
       iat: now,
       exp: expiresAt,
       jti,
@@ -137,7 +140,7 @@ export class PolicyTokenService {
     const signature = await this.createSignature(unsignedToken);
     const token = `${unsignedToken}.${signature}`;
     
-    // Store token metadata in database
+    // Store token metadata and body in database
     await this.storeTokenMetadata(payload, token);
     
     return {
@@ -258,6 +261,8 @@ export class PolicyTokenService {
     token: string
   ): Promise<void> {
     const tokenHash = this.hashJTI(payload.jti);
+    const canonicalBody = JSON.stringify(payload, Object.keys(payload).sort());
+    const bodyHash = await this.computeHash('sha256', canonicalBody);
     
     await supabase.from('policy_tokens').insert({
       token_hash: tokenHash,
@@ -267,11 +272,32 @@ export class PolicyTokenService {
       scopes: payload.scopes,
       issued_at: new Date(payload.iat * 1000).toISOString(),
       expires_at: new Date(payload.exp * 1000).toISOString(),
+      hash_alg: 'sha256',
+      token_body: canonicalBody,
+      token_hash: bodyHash,
       metadata: {
         audience: payload.aud,
         issuer: payload.iss
       }
     });
+  }
+
+  private static async computeHash(algorithm: string, data: string): Promise<string> {
+    if (typeof crypto !== 'undefined' && crypto.subtle) {
+      const encoder = new TextEncoder();
+      const hashBuffer = await crypto.subtle.digest('SHA-256', encoder.encode(data));
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+    
+    // Fallback for Node.js environments
+    let hash = 0;
+    for (let i = 0; i < data.length; i++) {
+      const char = data.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash; // Convert to 32-bit integer
+    }
+    return Math.abs(hash).toString(16);
   }
   
   private static async isTokenRevoked(jti: string): Promise<boolean> {

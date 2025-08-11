@@ -16395,6 +16395,42 @@ export type Database = {
         }
         Relationships: []
       }
+      models: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean
+          model_config: Json
+          model_name: string
+          model_type: string
+          tenant_id: string
+          updated_at: string
+          version: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          model_config?: Json
+          model_name: string
+          model_type: string
+          tenant_id: string
+          updated_at?: string
+          version: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          model_config?: Json
+          model_name?: string
+          model_type?: string
+          tenant_id?: string
+          updated_at?: string
+          version?: string
+        }
+        Relationships: []
+      }
       network_impact_summary: {
         Row: {
           calculated_at: string | null
@@ -18253,6 +18289,39 @@ export type Database = {
         }
         Relationships: []
       }
+      persona_thresholds: {
+        Row: {
+          created_at: string
+          delta_confidence: number
+          from_persona: Database["public"]["Enums"]["persona_kind"]
+          id: string
+          min_hold_seconds: number
+          tenant_id: string
+          to_persona: Database["public"]["Enums"]["persona_kind"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          delta_confidence?: number
+          from_persona: Database["public"]["Enums"]["persona_kind"]
+          id?: string
+          min_hold_seconds?: number
+          tenant_id: string
+          to_persona: Database["public"]["Enums"]["persona_kind"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          delta_confidence?: number
+          from_persona?: Database["public"]["Enums"]["persona_kind"]
+          id?: string
+          min_hold_seconds?: number
+          tenant_id?: string
+          to_persona?: Database["public"]["Enums"]["persona_kind"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
       personas: {
         Row: {
           confidence_score: number
@@ -18261,6 +18330,7 @@ export type Database = {
           expires_at: string | null
           id: string
           metadata: Json | null
+          persona_kind: Database["public"]["Enums"]["persona_kind"]
           persona_type: string
           tenant_id: string
           updated_at: string
@@ -18273,6 +18343,7 @@ export type Database = {
           expires_at?: string | null
           id?: string
           metadata?: Json | null
+          persona_kind: Database["public"]["Enums"]["persona_kind"]
           persona_type: string
           tenant_id: string
           updated_at?: string
@@ -18285,6 +18356,7 @@ export type Database = {
           expires_at?: string | null
           id?: string
           metadata?: Json | null
+          persona_kind?: Database["public"]["Enums"]["persona_kind"]
           persona_type?: string
           tenant_id?: string
           updated_at?: string
@@ -19092,6 +19164,7 @@ export type Database = {
       policy_tokens: {
         Row: {
           expires_at: string
+          hash_alg: string
           id: string
           issued_at: string
           metadata: Json | null
@@ -19099,11 +19172,13 @@ export type Database = {
           revoked_at: string | null
           scopes: string[]
           tenant_id: string
+          token_body: string
           token_hash: string
           user_id: string
         }
         Insert: {
           expires_at: string
+          hash_alg?: string
           id?: string
           issued_at?: string
           metadata?: Json | null
@@ -19111,11 +19186,13 @@ export type Database = {
           revoked_at?: string | null
           scopes?: string[]
           tenant_id: string
+          token_body?: string
           token_hash: string
           user_id: string
         }
         Update: {
           expires_at?: string
+          hash_alg?: string
           id?: string
           issued_at?: string
           metadata?: Json | null
@@ -19123,6 +19200,7 @@ export type Database = {
           revoked_at?: string | null
           scopes?: string[]
           tenant_id?: string
+          token_body?: string
           token_hash?: string
           user_id?: string
         }
@@ -26371,6 +26449,45 @@ export type Database = {
         }
         Relationships: []
       }
+      ui_layout_components: {
+        Row: {
+          component_id: string
+          created_at: string
+          id: string
+          layout_id: string
+          position: number
+        }
+        Insert: {
+          component_id: string
+          created_at?: string
+          id?: string
+          layout_id: string
+          position?: number
+        }
+        Update: {
+          component_id?: string
+          created_at?: string
+          id?: string
+          layout_id?: string
+          position?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ui_layout_components_component_id_fkey"
+            columns: ["component_id"]
+            isOneToOne: false
+            referencedRelation: "ui_components"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ui_layout_components_layout_id_fkey"
+            columns: ["layout_id"]
+            isOneToOne: false
+            referencedRelation: "ui_layouts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ui_layouts: {
         Row: {
           component_ids: string[] | null
@@ -30271,7 +30388,7 @@ export type Database = {
         Returns: string
       }
       has_any_role: {
-        Args: { roles: string[] }
+        Args: { required_roles: string[] }
         Returns: boolean
       }
       has_coach_access_to_advisor: {
@@ -30831,6 +30948,24 @@ export type Database = {
         | "family_office"
         | "wealth_management"
         | "financial_planning"
+      persona_kind:
+        | "client"
+        | "advisor"
+        | "attorney"
+        | "cpa"
+        | "insurance_agent"
+        | "consultant"
+        | "coach"
+        | "enterprise_admin"
+        | "accountant"
+        | "compliance"
+        | "imo_fmo"
+        | "agency"
+        | "organization"
+        | "healthcare_consultant"
+        | "realtor"
+        | "property_manager"
+        | "vip_reserved"
       persona_type:
         | "family_office"
         | "advisor"
@@ -31100,6 +31235,25 @@ export const Constants = {
         "family_office",
         "wealth_management",
         "financial_planning",
+      ],
+      persona_kind: [
+        "client",
+        "advisor",
+        "attorney",
+        "cpa",
+        "insurance_agent",
+        "consultant",
+        "coach",
+        "enterprise_admin",
+        "accountant",
+        "compliance",
+        "imo_fmo",
+        "agency",
+        "organization",
+        "healthcare_consultant",
+        "realtor",
+        "property_manager",
+        "vip_reserved",
       ],
       persona_type: [
         "family_office",

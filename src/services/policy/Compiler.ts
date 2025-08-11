@@ -64,19 +64,58 @@ export class PolicyCompiler {
   
   compile(
     policy: PolicyDocument, 
+    tenantId: string,
+    policyVersion: string,
+    jurisdiction: string = 'default',
     options: CompilationOptions = this.getDefaultOptions()
   ): DecisionGraph {
+    // Generate structural hash for cache key
+    const structuralHash = this.computeStructuralHash(policy);
+    const cacheKey = `${tenantId}:${policyVersion}:${jurisdiction}:${structuralHash}`;
+    
     // Check cache first
-    const cacheKey = this.getCacheKey(policy, options);
     if (options.enable_caching && this.compilationCache.has(cacheKey)) {
-      return this.compilationCache.get(cacheKey)!;
+      const cached = this.compilationCache.get(cacheKey)!;
+      console.log('Policy cache hit:', cacheKey);
+      return cached;
     }
     
     this.nodeCounter = 0;
+    
+    // Build canonical DAG
+    const decisionGraph = this.buildCanonicalDAG(policy, options);
+    
+    // Cache the compiled graph
+    this.compilationCache.set(cacheKey, decisionGraph);
+    console.log('Policy compiled and cached:', cacheKey);
+    
+    return decisionGraph;
+  }
+
+  private computeStructuralHash(policy: PolicyDocument): string {
+    // Create a canonical representation for hashing
+    const canonical = {
+      name: policy.name,
+      statements: policy.statements
+        .sort((a, b) => (a.id || '').localeCompare(b.id || '')) // Deterministic ordering
+        .map(s => ({
+          effect: s.effect,
+          actions: s.actions?.sort(),
+          resources: s.resources?.sort(),
+          conditions: this.normalizeConditions(s.conditions || [])
+        }))
+    };
+    
+    const canonicalJson = JSON.stringify(canonical);
+    return this.hash(canonicalJson);
+  }
+
+  private buildCanonicalDAG(policy: PolicyDocument, options: CompilationOptions): DecisionGraph {
     const nodes = new Map<string, DecisionNode>();
     
-    // Build decision tree from policy statements
-    const rootNodeId = this.buildDecisionTree(policy, nodes, options);
+    // Build decision tree from policy statements with topological ordering
+    const sortedStatements = this.topologicalSort(policy.statements);
+    const rootNodeId = this.buildDecisionTree({ ...policy, statements: sortedStatements }, nodes, options);
     
     // Optimize the tree
     if (options.optimization_level !== 'none') {
@@ -86,7 +125,7 @@ export class PolicyCompiler {
     // Calculate statistics
     const statistics = this.calculateStatistics(nodes, rootNodeId);
     
-    const decisionGraph: DecisionGraph = {
+    return {
       nodes,
       root_node_id: rootNodeId,
       policy_metadata: {
@@ -98,13 +137,42 @@ export class PolicyCompiler {
       },
       statistics
     };
-    
-    // Cache the result
-    if (options.enable_caching) {
-      this.compilationCache.set(cacheKey, decisionGraph);
+  }
+
+  private topologicalSort(statements: any[]): any[] {
+    // Simple topological sort by dependency chain length
+    return statements.sort((a, b) => {
+      const aDeps = (a.conditions?.length || 0);
+      const bDeps = (b.conditions?.length || 0);
+      return aDeps - bDeps;
+    });
+  }
+
+  private normalizeConditions(conditions: any[]): any[] {
+    // Normalize conditions for consistent hashing
+    return conditions.map(cond => {
+      if (typeof cond === 'object' && cond !== null) {
+        const keys = Object.keys(cond).sort();
+        const normalized: any = {};
+        keys.forEach(key => {
+          normalized[key] = cond[key];
+        });
+        return normalized;
+      }
+      return cond;
+    }).sort();
+  }
+
+  private hash(input: string): string {
+    // Simple hash function (in production, use crypto.subtle)
+    let hash = 0;
+    if (input.length === 0) return hash.toString();
+    for (let i = 0; i < input.length; i++) {
+      const char = input.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash; // Convert to 32-bit integer
     }
-    
-    return decisionGraph;
+    return Math.abs(hash).toString(16);
   }
   
   private buildDecisionTree(

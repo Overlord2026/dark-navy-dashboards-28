@@ -31,14 +31,60 @@ export interface PersonaSwitchResult {
 export class PersonaSelector {
   private config: HysteresisConfig;
   private personaStates: Map<string, PersonaState> = new Map();
+  private tenantId: string;
+  private thresholds: Map<string, any> = new Map();
 
-  constructor(config?: Partial<HysteresisConfig>) {
+  constructor(tenantId: string, config?: Partial<HysteresisConfig>) {
+    this.tenantId = tenantId;
     this.config = {
       confidence_delta_threshold: 0.15, // 15% confidence difference required
       min_elapsed_time_ms: 30000, // 30 seconds minimum between switches
       stability_period_ms: 300000, // 5 minutes to be considered stable
       max_switches_per_hour: 6, // Max 6 switches per hour
       ...config
+    };
+    this.loadPersonaThresholds();
+  }
+
+  private async loadPersonaThresholds(): Promise<void> {
+    try {
+      const { data: thresholds, error } = await supabase
+        .from('persona_thresholds')
+        .select('*')
+        .eq('tenant_id', this.tenantId);
+
+      if (error) {
+        console.warn('Failed to load persona thresholds:', error);
+        return;
+      }
+
+      thresholds?.forEach(threshold => {
+        const key = `${threshold.from_persona}->${threshold.to_persona}`;
+        this.thresholds.set(key, threshold);
+      });
+    } catch (error) {
+      console.warn('Error loading persona thresholds:', error);
+    }
+  }
+
+  private getThresholds(fromPersona: string, toPersona: string): {
+    deltaConfidence: number;
+    minHoldSeconds: number;
+  } {
+    const key = `${fromPersona}->${toPersona}`;
+    const threshold = this.thresholds.get(key);
+    
+    if (threshold) {
+      return {
+        deltaConfidence: Number(threshold.delta_confidence),
+        minHoldSeconds: threshold.min_hold_seconds
+      };
+    }
+
+    // Default thresholds for stability
+    return {
+      deltaConfidence: this.config.confidence_delta_threshold,
+      minHoldSeconds: this.config.min_elapsed_time_ms / 1000
     };
   }
 

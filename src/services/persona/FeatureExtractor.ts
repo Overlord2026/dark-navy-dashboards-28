@@ -60,6 +60,13 @@ export interface PersonaFeatures {
 export class FeatureExtractor {
   private pageSequenceVocab: Map<string, number> = new Map();
   private initialized = false;
+  private modelId: string;
+  private modelVersion: string;
+
+  constructor(modelId: string = 'default-extractor', modelVersion: string = '1.0.0') {
+    this.modelId = modelId;
+    this.modelVersion = modelVersion;
+  }
 
   async initialize(): Promise<void> {
     if (this.initialized) return;
@@ -112,7 +119,12 @@ export class FeatureExtractor {
       click_periodicity: clickPeriodicity,
       device_posture: devicePosture,
       compliance_features: complianceFeatures,
-      temporal_features: temporalFeatures
+      temporal_features: temporalFeatures,
+      model: {
+        id: this.modelId,
+        version: this.modelVersion,
+        extractedAt: Date.now()
+      }
     };
   }
 
