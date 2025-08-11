@@ -3,7 +3,7 @@
 ## BNF Grammar for Family Office Marketplace Policy Language
 
 ```bnf
-<policy> ::= <policy_statement>+
+<policy> ::= <policy_statement>+ <jurisdiction_overlay>?
 
 <policy_statement> ::= "POLICY" <identifier> "{" <policy_body> "}"
 
@@ -38,6 +38,12 @@
 <scope_list> ::= "[" <scope> ("," <scope>)* "]"
 
 <scope> ::= <string_literal>
+
+<jurisdiction_overlay> ::= "JURISDICTION" <jurisdiction_code> "{" <policy_statement>+ "}"
+
+<explain_clause> ::= "EXPLAIN" <policy_statement>
+
+<jurisdiction_code> ::= <string_literal>
 
 <identifier> ::= [a-zA-Z_][a-zA-Z0-9_]*
 

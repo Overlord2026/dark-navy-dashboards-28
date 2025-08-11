@@ -8159,6 +8159,39 @@ export type Database = {
         }
         Relationships: []
       }
+      denial_telemetry: {
+        Row: {
+          block_id: number | null
+          created_at: string | null
+          id: string
+          metadata: Json | null
+          policy_node_id: string
+          reason_code: string
+          tenant_id: string
+          user_id: string
+        }
+        Insert: {
+          block_id?: number | null
+          created_at?: string | null
+          id?: string
+          metadata?: Json | null
+          policy_node_id: string
+          reason_code: string
+          tenant_id: string
+          user_id: string
+        }
+        Update: {
+          block_id?: number | null
+          created_at?: string | null
+          id?: string
+          metadata?: Json | null
+          policy_node_id?: string
+          reason_code?: string
+          tenant_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       device_tokens: {
         Row: {
           access_token: string | null
@@ -29915,14 +29948,23 @@ export type Database = {
         Returns: string
       }
       calculate_audit_hash_sha3: {
-        Args: {
-          p_inputs_hash: string
-          p_outputs_hash: string
-          p_parent_hash: string
-          p_block_number: number
-          p_timestamp: string
-          p_salt?: string
-        }
+        Args:
+          | {
+              p_inputs_hash: string
+              p_outputs_hash: string
+              p_parent_hash: string
+              p_block_number: number
+              p_timestamp: string
+              p_salt?: string
+            }
+          | {
+              p_tenant_id: string
+              p_persona_id: string
+              p_event_type: string
+              p_inputs_hash: string
+              p_outputs_hash: string
+              p_salt?: string
+            }
         Returns: string
       }
       calculate_goal_progress: {

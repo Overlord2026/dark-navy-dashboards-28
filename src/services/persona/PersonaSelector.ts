@@ -387,13 +387,13 @@ export class PersonaSelector {
       const blockNumber = await this.getNextBlockNumber(userProfile.tenant_id);
       const timestamp = new Date();
       
-      // Calculate current hash
-      const { data: hashResult } = await supabase.rpc('calculate_audit_hash', {
+      // Calculate current hash using SHA3-256
+      const { data: hashResult } = await supabase.rpc('calculate_audit_hash_sha3', {
+        p_tenant_id: userProfile.tenant_id,
+        p_persona_id: userId,
+        p_event_type: 'persona_switch',
         p_inputs_hash: inputsHash,
-        p_outputs_hash: outputsHash,
-        p_parent_hash: parentHash,
-        p_block_number: blockNumber,
-        p_timestamp: timestamp.toISOString()
+        p_outputs_hash: outputsHash
       });
       
       // Insert audit record
@@ -429,14 +429,9 @@ export class PersonaSelector {
   }
 
   private hashObject(obj: any): string {
-    const canonical = JSON.stringify(obj, Object.keys(obj).sort());
-    let hash = 0;
-    for (let i = 0; i < canonical.length; i++) {
-      const char = canonical.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
-      hash = hash & hash;
-    }
-    return Math.abs(hash).toString(16);
+    // Use SHA3-256 for enhanced security and deterministic hashing
+    const { HashingService } = require('../crypto/HashingService');
+    return HashingService.sha3Hash(obj);
   }
 
   // Public method to get current persona for a user

@@ -96,27 +96,23 @@ export class PolicyGateway {
 
   private async logPolicyDenial(denial: PolicyDenial): Promise<void> {
     try {
-      // Enhanced telemetry logging to dedicated denial table
+      // Enhanced telemetry logging using new denial_telemetry table
       const denialRecord = {
         tenant_id: '00000000-0000-0000-0000-000000000000', // Default tenant
         user_id: denial.userId,
-        resource_type: denial.resource.split(':')[0] || 'unknown',
-        resource_id: denial.resource.split(':')[1] || null,
-        action_attempted: denial.action,
-        denial_reason: denial.reason,
-        required_scopes: denial.requiredScopes,
-        user_scopes: denial.userScopes,
-        ip_address: null, // Could be extracted from request context
-        user_agent: null, // Could be extracted from request context
+        policy_node_id: `${denial.resource}:${denial.action}`,
+        reason_code: denial.reason,
         metadata: {
-          timestamp: Date.now(),
+          required_scopes: denial.requiredScopes,
+          user_scopes: denial.userScopes,
           severity: this.calculateDenialSeverity(denial),
-          pattern_detected: this.detectAnomalousPattern(denial)
+          pattern_detected: this.detectAnomalousPattern(denial),
+          timestamp: Date.now()
         }
       };
 
-      // Log to denial telemetry table
-      await supabase.from('policy_denials').insert(denialRecord);
+      // Log to new denial telemetry table
+      await supabase.from('denial_telemetry').insert(denialRecord);
 
       // Also log structured denial to audit table for chain integrity
       const auditEntry = {
