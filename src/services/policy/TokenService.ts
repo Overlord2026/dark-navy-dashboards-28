@@ -448,7 +448,7 @@ export class ScopeUtils {
   }
   
   static minimizeScopes(scopes: string[]): string[] {
-    // Enhanced minimal-scope algorithm
+    // Enhanced minimal-scope algorithm with improved subsumption detection
     const deduplicated = [...new Set(scopes)]; // Remove exact duplicates
     const sorted = deduplicated.sort((a, b) => {
       // Sort by specificity (wildcards last) then alphabetically

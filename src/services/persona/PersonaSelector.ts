@@ -51,22 +51,19 @@ export class PersonaSelector {
       const { data: thresholds, error } = await supabase
         .from('persona_thresholds')
         .select('*')
-        .eq('tenant_id', this.tenantId)
-        .eq('is_active', true);
+        .eq('tenant_id', this.tenantId);
 
       if (error) {
         console.warn('Failed to load persona thresholds:', error);
         return;
       }
 
-      // Load thresholds with caching
+      // Load thresholds with caching for database-driven hysteresis
       thresholds?.forEach(threshold => {
-        const key = `${threshold.from_persona}->${threshold.to_persona}`;
-        this.thresholds.set(key, {
-          ...threshold,
-          deltaConfidence: Number(threshold.delta_confidence),
-          minHoldSeconds: threshold.min_hold_seconds,
-          stabilityMultiplier: threshold.stability_multiplier || 1.5
+        this.thresholds.set(threshold.persona_type, {
+          switch_threshold: Number(threshold.switch_threshold),
+          hold_time_ms: threshold.hold_time_ms,
+          min_confidence: Number(threshold.min_confidence)
         });
       });
 
@@ -76,24 +73,22 @@ export class PersonaSelector {
     }
   }
 
-  private getThresholds(fromPersona: string, toPersona: string): {
-    deltaConfidence: number;
-    minHoldSeconds: number;
+  private getThresholds(personaType: string): {
+    switch_threshold: number;
+    hold_time_ms: number;
+    min_confidence: number;
   } {
-    const key = `${fromPersona}->${toPersona}`;
-    const threshold = this.thresholds.get(key);
+    const threshold = this.thresholds.get(personaType);
     
     if (threshold) {
-      return {
-        deltaConfidence: Number(threshold.delta_confidence),
-        minHoldSeconds: threshold.min_hold_seconds
-      };
+      return threshold;
     }
 
     // Default thresholds for stability
     return {
-      deltaConfidence: this.config.confidence_delta_threshold,
-      minHoldSeconds: this.config.min_elapsed_time_ms / 1000
+      switch_threshold: this.config.confidence_delta_threshold,
+      hold_time_ms: this.config.min_elapsed_time_ms,
+      min_confidence: 0.60
     };
   }
 
@@ -186,11 +181,22 @@ export class PersonaSelector {
       };
     }
     
-    // Check confidence delta threshold
-    if (confidenceDelta < this.config.confidence_delta_threshold) {
+    // Get database-driven thresholds for target persona
+    const thresholds = this.getThresholds(newPersona);
+    
+    // Check minimum confidence requirement
+    if (newConfidence < thresholds.min_confidence) {
       return {
         allowed: false,
-        reason: `Confidence delta insufficient (${confidenceDelta.toFixed(3)} < ${this.config.confidence_delta_threshold})`
+        reason: `Below minimum confidence threshold (${newConfidence.toFixed(3)} < ${thresholds.min_confidence})`
+      };
+    }
+
+    // Check confidence delta threshold with hysteresis
+    if (confidenceDelta < thresholds.switch_threshold) {
+      return {
+        allowed: false,
+        reason: `Confidence delta insufficient (${confidenceDelta.toFixed(3)} < ${thresholds.switch_threshold})`
       };
     }
     
