@@ -54,7 +54,10 @@ export async function scoreLiquidity(input: LiquidityScoreInput): Promise<Liquid
       console.warn(`Failed to fetch liquidity events: ${error.message}`);
       liquidityEvents = [];
     } else {
-      liquidityEvents = data || [];
+      liquidityEvents = (data || []).map(event => ({
+        ...event,
+        event_type: event.event_type as 'pause' | 'resume' | 'gate' | 'partial-fill' | 'queue'
+      }));
     }
   }
 

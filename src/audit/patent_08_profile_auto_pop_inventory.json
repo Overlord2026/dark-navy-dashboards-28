@@ -142,21 +142,21 @@
   },
   
   "coverage_analysis": {
-    "oauth_flow": 60,
-    "profile_mapping": 40,
-    "entity_resolution": 20,
-    "confidence_scoring": 15,
-    "registry_verification": 45,
-    "differential_sync": 10,
-    "cross_directory_publishing": 5,
-    "audit_trail": 35,
-    "consent_management": 25,
-    "rollback_capability": 10
+    "oauth_flow": 50,
+    "profile_mapping": 30,
+    "entity_resolution": 15,
+    "confidence_scoring": 10,
+    "registry_verification": 70,
+    "differential_sync": 5,
+    "cross_directory_publishing": 10,
+    "audit_trail": 60,
+    "consent_management": 20,
+    "rollback_capability": 5
   },
   
   "patent_readiness": {
     "novelty_score": 85,
-    "implementation_completeness": 35,
+    "implementation_completeness": 28,
     "prior_art_risk": "medium",
     "enablement_level": "partial"
   }

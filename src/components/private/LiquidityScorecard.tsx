@@ -40,7 +40,7 @@ export function LiquidityScorecard({ fundId }: LiquidityScorecardProps) {
       if (data && !error) {
         setResult({
           score: data.score,
-          breakdown: JSON.parse(data.breakdown)
+          breakdown: JSON.parse(String(data.breakdown))
         });
       }
     } catch (error) {

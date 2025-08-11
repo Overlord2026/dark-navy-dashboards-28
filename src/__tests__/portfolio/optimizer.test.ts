@@ -26,7 +26,6 @@ describe('PortfolioOptimizer', () => {
 
   beforeEach(() => {
     mockInput = {
-      userId: 'test-user',
       phaseId: 'income_now',
       currentPositions: {
         'us_equity': 0.4,
