@@ -16533,6 +16533,65 @@ export type Database = {
         }
         Relationships: []
       }
+      monitoring_jobs: {
+        Row: {
+          created_at: string
+          enabled: boolean
+          error_count: number
+          frequency_days: number
+          id: string
+          job_type: string
+          last_run_at: string | null
+          max_retries: number
+          next_run_at: string | null
+          priority: number
+          professional_id: string
+          sla_hours: number
+          tenant_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          enabled?: boolean
+          error_count?: number
+          frequency_days?: number
+          id?: string
+          job_type: string
+          last_run_at?: string | null
+          max_retries?: number
+          next_run_at?: string | null
+          priority?: number
+          professional_id: string
+          sla_hours?: number
+          tenant_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          enabled?: boolean
+          error_count?: number
+          frequency_days?: number
+          id?: string
+          job_type?: string
+          last_run_at?: string | null
+          max_retries?: number
+          next_run_at?: string | null
+          priority?: number
+          professional_id?: string
+          sla_hours?: number
+          tenant_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "monitoring_jobs_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       network_impact_summary: {
         Row: {
           calculated_at: string | null
@@ -22220,6 +22279,62 @@ export type Database = {
         }
         Relationships: []
       }
+      reconciliation_logs: {
+        Row: {
+          conflict_reasons: Json | null
+          created_at: string
+          id: string
+          license_number_source: string | null
+          license_number_target: string | null
+          professional_id: string
+          reconciliation_status: string
+          resolution_method: string | null
+          resolved_at: string | null
+          resolved_by: string | null
+          source_jurisdiction: string
+          target_jurisdiction: string
+          tenant_id: string | null
+        }
+        Insert: {
+          conflict_reasons?: Json | null
+          created_at?: string
+          id?: string
+          license_number_source?: string | null
+          license_number_target?: string | null
+          professional_id: string
+          reconciliation_status: string
+          resolution_method?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          source_jurisdiction: string
+          target_jurisdiction: string
+          tenant_id?: string | null
+        }
+        Update: {
+          conflict_reasons?: Json | null
+          created_at?: string
+          id?: string
+          license_number_source?: string | null
+          license_number_target?: string | null
+          professional_id?: string
+          reconciliation_status?: string
+          resolution_method?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          source_jurisdiction?: string
+          target_jurisdiction?: string
+          tenant_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reconciliation_logs_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       referral_payouts: {
         Row: {
           advisor_override_id: string | null
@@ -23557,6 +23672,59 @@ export type Database = {
           total_users?: number
         }
         Relationships: []
+      }
+      sanction_hits: {
+        Row: {
+          created_at: string
+          description: string | null
+          detected_at: string
+          effective_date: string | null
+          id: string
+          impact_on_trust_score: number | null
+          professional_id: string
+          resolution_date: string | null
+          sanction_type: string | null
+          severity_level: number | null
+          source_registry: string
+          tenant_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          detected_at?: string
+          effective_date?: string | null
+          id?: string
+          impact_on_trust_score?: number | null
+          professional_id: string
+          resolution_date?: string | null
+          sanction_type?: string | null
+          severity_level?: number | null
+          source_registry: string
+          tenant_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          detected_at?: string
+          effective_date?: string | null
+          id?: string
+          impact_on_trust_score?: number | null
+          professional_id?: string
+          resolution_date?: string | null
+          sanction_type?: string | null
+          severity_level?: number | null
+          source_registry?: string
+          tenant_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sanction_hits_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       scheduled_meetings: {
         Row: {
@@ -30502,6 +30670,10 @@ export type Database = {
         }
         Returns: string
       }
+      current_tenant_id: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
       delete_attorney_document: {
         Args: { p_document_id: string }
         Returns: boolean
@@ -31042,6 +31214,10 @@ export type Database = {
       readonly_graphql_schema_version: {
         Args: Record<PropertyKey, never>
         Returns: number
+      }
+      recompute_trust_score: {
+        Args: { p_professional_id: string }
+        Returns: undefined
       }
       request_compliance_export: {
         Args: {
