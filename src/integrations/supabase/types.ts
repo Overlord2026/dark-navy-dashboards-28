@@ -18169,6 +18169,129 @@ export type Database = {
           },
         ]
       }
+      persona_audit: {
+        Row: {
+          block_number: number
+          created_at: string
+          current_hash: string
+          id: string
+          inputs_hash: string
+          metadata: Json | null
+          narrative: string | null
+          operation_type: string
+          outputs_hash: string
+          parent_hash: string | null
+          tenant_id: string
+          timestamp: string
+          user_id: string | null
+        }
+        Insert: {
+          block_number?: number
+          created_at?: string
+          current_hash: string
+          id?: string
+          inputs_hash: string
+          metadata?: Json | null
+          narrative?: string | null
+          operation_type: string
+          outputs_hash: string
+          parent_hash?: string | null
+          tenant_id: string
+          timestamp?: string
+          user_id?: string | null
+        }
+        Update: {
+          block_number?: number
+          created_at?: string
+          current_hash?: string
+          id?: string
+          inputs_hash?: string
+          metadata?: Json | null
+          narrative?: string | null
+          operation_type?: string
+          outputs_hash?: string
+          parent_hash?: string | null
+          tenant_id?: string
+          timestamp?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      persona_signals: {
+        Row: {
+          collected_at: string
+          confidence: number | null
+          created_at: string
+          id: string
+          session_id: string | null
+          signal_type: string
+          signal_value: Json
+          tenant_id: string
+          user_id: string
+        }
+        Insert: {
+          collected_at?: string
+          confidence?: number | null
+          created_at?: string
+          id?: string
+          session_id?: string | null
+          signal_type: string
+          signal_value: Json
+          tenant_id: string
+          user_id: string
+        }
+        Update: {
+          collected_at?: string
+          confidence?: number | null
+          created_at?: string
+          id?: string
+          session_id?: string | null
+          signal_type?: string
+          signal_value?: Json
+          tenant_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      personas: {
+        Row: {
+          confidence_score: number
+          created_at: string
+          detected_at: string
+          expires_at: string | null
+          id: string
+          metadata: Json | null
+          persona_type: string
+          tenant_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          confidence_score: number
+          created_at?: string
+          detected_at?: string
+          expires_at?: string | null
+          id?: string
+          metadata?: Json | null
+          persona_type: string
+          tenant_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          confidence_score?: number
+          created_at?: string
+          detected_at?: string
+          expires_at?: string | null
+          id?: string
+          metadata?: Json | null
+          persona_type?: string
+          tenant_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       phishing_simulation_results: {
         Row: {
           clicked_at: string | null
@@ -18914,6 +19037,96 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      policies: {
+        Row: {
+          compiled_graph: Json
+          created_at: string
+          created_by: string | null
+          effective_from: string
+          effective_until: string | null
+          id: string
+          is_active: boolean
+          jurisdiction: string | null
+          policy_dsl: Json
+          policy_name: string
+          target_resources: string[]
+          tenant_id: string
+          updated_at: string
+          version: number
+        }
+        Insert: {
+          compiled_graph: Json
+          created_at?: string
+          created_by?: string | null
+          effective_from?: string
+          effective_until?: string | null
+          id?: string
+          is_active?: boolean
+          jurisdiction?: string | null
+          policy_dsl: Json
+          policy_name: string
+          target_resources?: string[]
+          tenant_id: string
+          updated_at?: string
+          version?: number
+        }
+        Update: {
+          compiled_graph?: Json
+          created_at?: string
+          created_by?: string | null
+          effective_from?: string
+          effective_until?: string | null
+          id?: string
+          is_active?: boolean
+          jurisdiction?: string | null
+          policy_dsl?: Json
+          policy_name?: string
+          target_resources?: string[]
+          tenant_id?: string
+          updated_at?: string
+          version?: number
+        }
+        Relationships: []
+      }
+      policy_tokens: {
+        Row: {
+          expires_at: string
+          id: string
+          issued_at: string
+          metadata: Json | null
+          persona_id: string | null
+          revoked_at: string | null
+          scopes: string[]
+          tenant_id: string
+          token_hash: string
+          user_id: string
+        }
+        Insert: {
+          expires_at: string
+          id?: string
+          issued_at?: string
+          metadata?: Json | null
+          persona_id?: string | null
+          revoked_at?: string | null
+          scopes?: string[]
+          tenant_id: string
+          token_hash: string
+          user_id: string
+        }
+        Update: {
+          expires_at?: string
+          id?: string
+          issued_at?: string
+          metadata?: Json | null
+          persona_id?: string | null
+          revoked_at?: string | null
+          scopes?: string[]
+          tenant_id?: string
+          token_hash?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       policy_version_history: {
         Row: {
@@ -21626,6 +21839,48 @@ export type Database = {
           slow_query_threshold_exceeded?: boolean | null
           table_name?: string
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      rbac_roles: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          is_active: boolean
+          jurisdiction: string | null
+          permissions: Json
+          persona_types: string[]
+          role_name: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          jurisdiction?: string | null
+          permissions?: Json
+          persona_types?: string[]
+          role_name: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          jurisdiction?: string | null
+          permissions?: Json
+          persona_types?: string[]
+          role_name?: string
+          tenant_id?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -26077,6 +26332,84 @@ export type Database = {
         }
         Relationships: []
       }
+      ui_components: {
+        Row: {
+          component_name: string
+          component_type: string
+          created_at: string
+          id: string
+          is_active: boolean
+          persona_restrictions: string[] | null
+          required_scopes: string[]
+          tenant_id: string
+          ui_config: Json
+          updated_at: string
+        }
+        Insert: {
+          component_name: string
+          component_type: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          persona_restrictions?: string[] | null
+          required_scopes?: string[]
+          tenant_id: string
+          ui_config?: Json
+          updated_at?: string
+        }
+        Update: {
+          component_name?: string
+          component_type?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          persona_restrictions?: string[] | null
+          required_scopes?: string[]
+          tenant_id?: string
+          ui_config?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      ui_layouts: {
+        Row: {
+          component_ids: string[] | null
+          created_at: string
+          id: string
+          is_active: boolean
+          is_default: boolean
+          layout_config: Json
+          layout_name: string
+          persona_type: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          component_ids?: string[] | null
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          is_default?: boolean
+          layout_config: Json
+          layout_name: string
+          persona_type: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          component_ids?: string[] | null
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          is_default?: boolean
+          layout_config?: Json
+          layout_name?: string
+          persona_type?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_additional_info: {
         Row: {
           citizenship_status: string | null
@@ -29403,6 +29736,16 @@ export type Database = {
         Args: { p_agency_id: string }
         Returns: number
       }
+      calculate_audit_hash: {
+        Args: {
+          p_inputs_hash: string
+          p_outputs_hash: string
+          p_parent_hash: string
+          p_block_number: number
+          p_timestamp: string
+        }
+        Returns: string
+      }
       calculate_goal_progress: {
         Args: { goal_id: string }
         Returns: number
@@ -29831,6 +30174,10 @@ export type Database = {
           last_updated: string
           details: Json
         }[]
+      }
+      get_next_audit_block_number: {
+        Args: { p_tenant_id: string }
+        Returns: number
       }
       get_onboarding_documents: {
         Args: { p_onboarding_id: string }
