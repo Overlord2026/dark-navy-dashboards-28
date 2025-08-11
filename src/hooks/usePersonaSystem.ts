@@ -53,9 +53,13 @@ export const usePersonaSystem = (config: PersonaSystemConfig) => {
       const classificationContext = {
         userId: user.user.id,
         tenantId: config.tenantId,
-        sessionId: 'session-' + Date.now()
+        sessionId: 'session-' + Date.now(),
+        time_of_day: new Date().getHours(),
+        day_of_week: new Date().getDay(),
+        session_length: 0,
+        previous_classifications: []
       };
-      const predictions = await classifier.classify(features, classificationContext, {});
+      const predictions = await classifier.classify(features, classificationContext);
 
       // Select with hysteresis - simplified for now
       const selection = {
