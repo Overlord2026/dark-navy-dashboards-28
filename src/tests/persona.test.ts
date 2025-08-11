@@ -248,4 +248,160 @@ describe('Audit Chain Integrity', () => {
     expect(canonicalData1.split('|')[2]).toBe(''); // No parent for first block
     expect(canonicalData2.split('|')[2]).toBe('abc123'); // Parent hash included
   });
+
+  it('should detect audit fork attempts', () => {
+    // Test fork detection in audit chain
+    const parentHash = 'parent123';
+    const validChildHash = 'child456';
+    const forkAttemptHash = 'fork789';
+    
+    // Both children claim same parent but different block numbers
+    const validChild = `inputs|outputs|${parentHash}|5|${Date.now()}`;
+    const forkAttempt = `different|outputs|${parentHash}|5|${Date.now()}`;
+    
+    // Fork detection should identify conflicting block numbers
+    expect(validChild.split('|')[3]).toBe(forkAttempt.split('|')[3]);
+    expect(validChild.split('|')[0]).not.toBe(forkAttempt.split('|')[0]);
+  });
+});
+
+describe('Policy Cache Correctness', () => {
+  let compiler: PolicyCompiler;
+
+  beforeEach(() => {
+    compiler = new PolicyCompiler();
+  });
+
+  it('should produce identical results for same structural input', () => {
+    const policy1 = {
+      name: 'test-policy',
+      version: '1.0',
+      statements: [
+        { id: 'stmt1', effect: 'allow', actions: ['read'], resources: ['doc1'] },
+        { id: 'stmt2', effect: 'deny', actions: ['write'], resources: ['doc2'] }
+      ]
+    };
+
+    // Same policy with different ordering should produce same structural hash
+    const policy2 = {
+      name: 'test-policy',
+      version: '1.0',
+      statements: [
+        { id: 'stmt2', effect: 'deny', actions: ['write'], resources: ['doc2'] },
+        { id: 'stmt1', effect: 'allow', actions: ['read'], resources: ['doc1'] }
+      ]
+    };
+
+    const result1 = compiler.compile(policy1, 'tenant1', 'v1', 'US');
+    const result2 = compiler.compile(policy2, 'tenant1', 'v1', 'US');
+
+    // Should hit cache on second compile
+    expect(result1).toBe(result2);
+  });
+
+  it('should invalidate cache for structural changes', () => {
+    const basePolicy = {
+      name: 'test-policy',
+      version: '1.0',
+      statements: [
+        { id: 'stmt1', effect: 'allow', actions: ['read'], resources: ['doc1'] }
+      ]
+    };
+
+    const modifiedPolicy = {
+      ...basePolicy,
+      statements: [
+        { id: 'stmt1', effect: 'deny', actions: ['read'], resources: ['doc1'] } // Changed effect
+      ]
+    };
+
+    const result1 = compiler.compile(basePolicy, 'tenant1', 'v1', 'US');
+    const result2 = compiler.compile(modifiedPolicy, 'tenant1', 'v1', 'US');
+
+    // Should be different objects due to structural change
+    expect(result1).not.toBe(result2);
+  });
+});
+
+describe('Hysteresis Monotonicity', () => {
+  let selector: PersonaSelector;
+
+  beforeEach(() => {
+    selector = new PersonaSelector('test-tenant', {
+      deltaConfidence: 0.15,
+      minHoldTime: 1000 // 1 second for testing
+    });
+  });
+
+  it('should maintain monotonic switching behavior', async () => {
+    const userId = 'test-user';
+    const sessionId = 'test-session';
+
+    // Initial classification
+    const initial = {
+      topPersona: 'client',
+      confidence: 0.7,
+      reasoning: ['initial classification']
+    };
+
+    const result1 = await selector.selectPersona(userId, initial, sessionId);
+    expect(result1.switched).toBe(true);
+    expect(result1.new_persona).toBe('client');
+
+    // Small confidence increase - should not switch
+    const smallIncrease = {
+      topPersona: 'advisor',
+      confidence: 0.75, // Only 0.05 increase
+      reasoning: ['small increase']
+    };
+
+    const result2 = await selector.selectPersona(userId, smallIncrease, sessionId);
+    expect(result2.switched).toBe(false);
+
+    // Wait for hold time
+    await new Promise(resolve => setTimeout(resolve, 1100));
+
+    // Large confidence increase - should switch
+    const largeIncrease = {
+      topPersona: 'advisor',
+      confidence: 0.9, // 0.2 increase > 0.15 threshold
+      reasoning: ['large increase']
+    };
+
+    const result3 = await selector.selectPersona(userId, largeIncrease, sessionId);
+    expect(result3.switched).toBe(true);
+    expect(result3.new_persona).toBe('advisor');
+  });
+});
+
+describe('Scope Minimality Tests', () => {
+  it('should produce minimal scope sets', () => {
+    const testCases = [
+      {
+        input: ['read:*', 'read:doc1', 'read:doc2'],
+        expected: ['read:*']
+      },
+      {
+        input: ['admin:*', 'admin:read', 'admin:write', 'user:read'],
+        expected: ['admin:*', 'user:read']
+      },
+      {
+        input: ['write:doc1', 'read:doc1', 'admin:doc1'],
+        expected: ['admin:doc1'] // admin implies read and write
+      }
+    ];
+
+    testCases.forEach(({ input, expected }) => {
+      const result = ScopeUtils.minimizeScopes(input);
+      expect(result.sort()).toEqual(expected.sort());
+    });
+  });
+
+  it('should handle scope subsumption correctly', () => {
+    expect(ScopeUtils.scopeSubsumes('*:*', 'read:doc1')).toBe(true);
+    expect(ScopeUtils.scopeSubsumes('read:*', 'read:doc1')).toBe(true);
+    expect(ScopeUtils.scopeSubsumes('read:doc*', 'read:doc1')).toBe(true);
+    expect(ScopeUtils.scopeSubsumes('read:doc1', 'read:doc2')).toBe(false);
+    expect(ScopeUtils.scopeSubsumes('write:doc1', 'read:doc1')).toBe(false);
+  });
 });

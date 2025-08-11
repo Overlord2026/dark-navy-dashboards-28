@@ -261,7 +261,9 @@ export class PolicyTokenService {
     token: string
   ): Promise<void> {
     const tokenHash = this.hashJTI(payload.jti);
-    const canonicalBody = JSON.stringify(payload, Object.keys(payload).sort());
+    
+    // Canonical token body for consistency
+    const canonicalBody = this.canonicalizeTokenBody(payload);
     const bodyHash = await this.computeHash('sha256', canonicalBody);
     
     await supabase.from('policy_tokens').insert({
@@ -280,6 +282,23 @@ export class PolicyTokenService {
         issuer: payload.iss
       }
     });
+  }
+
+  private static canonicalizeTokenBody(payload: PolicyTokenPayload): string {
+    // Create deterministic, sorted representation
+    const canonical = {
+      aud: payload.aud,
+      exp: payload.exp,
+      iat: payload.iat,
+      iss: payload.iss,
+      jti: payload.jti,
+      persona_id: payload.persona_id,
+      scopes: [...payload.scopes].sort(), // Sort scopes for consistency
+      tenant_id: payload.tenant_id,
+      user_id: payload.user_id
+    };
+    
+    return JSON.stringify(canonical, Object.keys(canonical).sort());
   }
 
   private static async computeHash(algorithm: string, data: string): Promise<string> {
@@ -429,20 +448,55 @@ export class ScopeUtils {
   }
   
   static minimizeScopes(scopes: string[]): string[] {
-    // Remove redundant scopes (e.g., if 'read:*' is present, remove specific 'read:resource')
-    const sorted = scopes.sort((a, b) => a.length - b.length);
+    // Enhanced minimal-scope algorithm
+    const deduplicated = [...new Set(scopes)]; // Remove exact duplicates
+    const sorted = deduplicated.sort((a, b) => {
+      // Sort by specificity (wildcards last) then alphabetically
+      const aWildcard = a.includes('*') ? 1 : 0;
+      const bWildcard = b.includes('*') ? 1 : 0;
+      return aWildcard - bWildcard || a.localeCompare(b);
+    });
+    
     const minimal: string[] = [];
     
     for (const scope of sorted) {
-      const isRedundant = minimal.some(existing => 
-        this.scopeMatches(existing, scope) && existing !== scope
-      );
+      const isRedundant = minimal.some(existing => {
+        // Check if existing scope subsumes this one
+        return this.scopeSubsumes(existing, scope);
+      });
       
       if (!isRedundant) {
-        minimal.push(scope);
+        // Remove any existing scopes that this new scope subsumes
+        const nonSubsumed = minimal.filter(existing => 
+          !this.scopeSubsumes(scope, existing)
+        );
+        minimal.length = 0;
+        minimal.push(...nonSubsumed, scope);
       }
     }
     
-    return minimal;
+    return minimal.sort(); // Final alphabetical sort for determinism
+  }
+
+  static scopeSubsumes(broader: string, narrower: string): boolean {
+    if (broader === narrower) return true;
+    
+    // Parse scopes
+    const [broaderAction, broaderResource] = broader.split(':');
+    const [narrowerAction, narrowerResource] = narrower.split(':');
+    
+    // Check action subsumption
+    const actionSubsumes = broaderAction === '*' || 
+                          broaderAction === narrowerAction ||
+                          (broaderAction.endsWith('*') && 
+                           narrowerAction.startsWith(broaderAction.slice(0, -1)));
+    
+    // Check resource subsumption
+    const resourceSubsumes = broaderResource === '*' ||
+                            broaderResource === narrowerResource ||
+                            (broaderResource?.endsWith('*') && 
+                             narrowerResource?.startsWith(broaderResource.slice(0, -1)));
+    
+    return actionSubsumes && resourceSubsumes;
   }
 }

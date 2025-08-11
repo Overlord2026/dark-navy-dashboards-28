@@ -19161,6 +19161,57 @@ export type Database = {
         }
         Relationships: []
       }
+      policy_denials: {
+        Row: {
+          action_attempted: string
+          created_at: string
+          denial_reason: string
+          id: string
+          ip_address: unknown | null
+          metadata: Json | null
+          required_scopes: string[] | null
+          resource_id: string | null
+          resource_type: string
+          tenant_id: string
+          token_hash: string | null
+          user_agent: string | null
+          user_id: string | null
+          user_scopes: string[] | null
+        }
+        Insert: {
+          action_attempted: string
+          created_at?: string
+          denial_reason: string
+          id?: string
+          ip_address?: unknown | null
+          metadata?: Json | null
+          required_scopes?: string[] | null
+          resource_id?: string | null
+          resource_type: string
+          tenant_id: string
+          token_hash?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+          user_scopes?: string[] | null
+        }
+        Update: {
+          action_attempted?: string
+          created_at?: string
+          denial_reason?: string
+          id?: string
+          ip_address?: unknown | null
+          metadata?: Json | null
+          required_scopes?: string[] | null
+          resource_id?: string | null
+          resource_type?: string
+          tenant_id?: string
+          token_hash?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+          user_scopes?: string[] | null
+        }
+        Relationships: []
+      }
       policy_tokens: {
         Row: {
           expires_at: string
@@ -29860,6 +29911,17 @@ export type Database = {
           p_parent_hash: string
           p_block_number: number
           p_timestamp: string
+        }
+        Returns: string
+      }
+      calculate_audit_hash_sha3: {
+        Args: {
+          p_inputs_hash: string
+          p_outputs_hash: string
+          p_parent_hash: string
+          p_block_number: number
+          p_timestamp: string
+          p_salt?: string
         }
         Returns: string
       }

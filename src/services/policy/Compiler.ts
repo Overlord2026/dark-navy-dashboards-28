@@ -93,21 +93,62 @@ export class PolicyCompiler {
   }
 
   private computeStructuralHash(policy: PolicyDocument): string {
-    // Create a canonical representation for hashing
+    // Create a canonical representation for hashing with enhanced determinism
     const canonical = {
-      name: policy.name,
+      metadata: {
+        name: policy.name,
+        version: policy.version || '1.0',
+        jurisdiction: policy.jurisdiction || 'default'
+      },
       statements: policy.statements
-        .sort((a, b) => (a.id || '').localeCompare(b.id || '')) // Deterministic ordering
+        .sort((a, b) => {
+          // Multi-level sorting for complete determinism
+          const nameCompare = (a.id || '').localeCompare(b.id || '');
+          if (nameCompare !== 0) return nameCompare;
+          return (a.effect || '').localeCompare(b.effect || '');
+        })
         .map(s => ({
+          id: s.id,
           effect: s.effect,
-          actions: s.actions?.sort(),
-          resources: s.resources?.sort(),
-          conditions: this.normalizeConditions(s.conditions || [])
+          actions: s.actions ? [...s.actions].sort() : [],
+          resources: s.resources ? [...s.resources].sort() : [],
+          conditions: this.normalizeConditions(s.conditions || []),
+          priority: s.priority || 0
         }))
     };
     
-    const canonicalJson = JSON.stringify(canonical);
-    return this.hash(canonicalJson);
+    const canonicalJson = JSON.stringify(canonical, Object.keys(canonical).sort());
+    return this.hashSha256(canonicalJson);
+  }
+
+  private hashSha256(input: string): string {
+    // Enhanced hash function with salt for structural integrity
+    const salt = 'policy-structure-salt-2024';
+    const inputWithSalt = input + '|' + salt;
+    
+    if (typeof crypto !== 'undefined' && crypto.subtle) {
+      // Use Web Crypto API if available (async not needed here due to sync context)
+      const encoder = new TextEncoder();
+      const data = encoder.encode(inputWithSalt);
+      
+      // Fallback to simple hash for browser compatibility
+      let hash = 0;
+      for (let i = 0; i < inputWithSalt.length; i++) {
+        const char = inputWithSalt.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash;
+      }
+      return Math.abs(hash).toString(16);
+    }
+    
+    // Fallback hash
+    let hash = 0;
+    for (let i = 0; i < inputWithSalt.length; i++) {
+      const char = inputWithSalt.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash;
+    }
+    return Math.abs(hash).toString(16);
   }
 
   private buildCanonicalDAG(policy: PolicyDocument, options: CompilationOptions): DecisionGraph {

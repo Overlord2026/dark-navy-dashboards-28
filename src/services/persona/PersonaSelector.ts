@@ -51,17 +51,26 @@ export class PersonaSelector {
       const { data: thresholds, error } = await supabase
         .from('persona_thresholds')
         .select('*')
-        .eq('tenant_id', this.tenantId);
+        .eq('tenant_id', this.tenantId)
+        .eq('is_active', true);
 
       if (error) {
         console.warn('Failed to load persona thresholds:', error);
         return;
       }
 
+      // Load thresholds with caching
       thresholds?.forEach(threshold => {
         const key = `${threshold.from_persona}->${threshold.to_persona}`;
-        this.thresholds.set(key, threshold);
+        this.thresholds.set(key, {
+          ...threshold,
+          deltaConfidence: Number(threshold.delta_confidence),
+          minHoldSeconds: threshold.min_hold_seconds,
+          stabilityMultiplier: threshold.stability_multiplier || 1.5
+        });
       });
+
+      console.log(`Loaded ${thresholds?.length || 0} persona thresholds for tenant ${this.tenantId}`);
     } catch (error) {
       console.warn('Error loading persona thresholds:', error);
     }
