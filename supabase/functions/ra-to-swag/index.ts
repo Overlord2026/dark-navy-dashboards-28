@@ -1,18 +1,25 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import { getDocument } from "https://esm.sh/pdfjs-dist@4.4.168/legacy/build/pdf.mjs"
+import { parseRaTextToSwag } from "./parser.ts"
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
-interface RAImport {
-  id: string;
-  run_id: string;
-  raw_text: string;
-  sha256_hash: string;
-  parsed_data: any;
-  created_at: string;
+async function extractTextFromPdf(pdfData: Uint8Array): Promise<string> {
+  const pdf = await getDocument({ data: pdfData }).promise;
+  let fullText = "";
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page = await pdf.getPage(i);
+    const textContent = await page.getTextContent();
+    const pageText = textContent.items
+      .filter((item: any) => item.str)
+      .map((item: any) => item.str)
+      .join(" ");
+    fullText += "\n" + pageText;
+  }
+  return fullText;
 }
 
 Deno.serve(async (req) => {
@@ -43,27 +50,15 @@ Deno.serve(async (req) => {
       throw new Error('Either pdfBase64 or pdfUrl must be provided');
     }
 
-    // Parse PDF using pdfjs
-    const loadingTask = getDocument({ data: pdfData });
-    const pdfDocument = await loadingTask.promise;
-    
-    let fullText = '';
-    
-    // Extract text from all pages
-    for (let pageNum = 1; pageNum <= pdfDocument.numPages; pageNum++) {
-      const page = await pdfDocument.getPage(pageNum);
-      const textContent = await page.getTextContent();
-      const pageText = textContent.items
-        .filter((item: any) => item.str)
-        .map((item: any) => item.str)
-        .join(' ');
-      fullText += pageText + '\n';
-    }
+    console.log('Processing PDF, size:', pdfData.length, 'bytes');
 
-    console.log('Extracted PDF text length:', fullText.length);
+    // Extract text from PDF
+    const fullText = await extractTextFromPdf(pdfData);
+    console.log('Extracted text length:', fullText.length);
 
-    // Parse retirement analysis data from text
-    const parsedData = parseRetirementAnalysis(fullText);
+    // Parse using the dedicated parser
+    const parsedData = parseRaTextToSwag(fullText);
+    console.log('Parsed data:', JSON.stringify(parsedData, null, 2));
     
     // Generate SHA-256 hash
     const textEncoder = new TextEncoder();
@@ -74,6 +69,12 @@ Deno.serve(async (req) => {
 
     const runId = crypto.randomUUID();
 
+    // Get user from auth header
+    const authHeader = req.headers.get('authorization');
+    const { data: userData, error: userError } = await supabase.auth.getUser(
+      authHeader?.replace('Bearer ', '') || ''
+    );
+
     // Store in database
     const { error } = await supabase
       .from('imports_ra')
@@ -81,13 +82,16 @@ Deno.serve(async (req) => {
         run_id: runId,
         raw_text: fullText,
         sha256_hash: sha256Hash,
-        parsed_data: parsedData
+        parsed_data: parsedData,
+        user_id: userData?.user?.id
       });
 
     if (error) {
       console.error('Database error:', error);
       throw error;
     }
+
+    console.log('Successfully stored RA import with runId:', runId);
 
     return new Response(
       JSON.stringify({
@@ -106,7 +110,10 @@ Deno.serve(async (req) => {
   } catch (error) {
     console.error('Error processing PDF:', error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ 
+        error: error.message,
+        stack: error.stack 
+      }),
       { 
         status: 500,
         headers: { 
@@ -117,100 +124,3 @@ Deno.serve(async (req) => {
     );
   }
 });
-
-function parseRetirementAnalysis(text: string) {
-  // Extract client information
-  const clientMatch = text.match(/(?:Client|Name):\s*([A-Za-z]+)\s+([A-Za-z]+)/i);
-  const ageMatch = text.match(/(?:Age|Current Age):\s*(\d+)/i);
-  const spouseMatch = text.match(/(?:Spouse|Partner):\s*([A-Za-z]+)\s+([A-Za-z]+)/i);
-  const spouseAgeMatch = text.match(/(?:Spouse Age|Partner Age):\s*(\d+)/i);
-
-  // Extract Social Security information
-  const ssStartMatch = text.match(/(?:Social Security|SS).*?(?:Start|Age):\s*(\d+)/i);
-  const ssSpouseStartMatch = text.match(/(?:Spouse|Partner).*?(?:Social Security|SS).*?(?:Start|Age):\s*(\d+)/i);
-  const colaMatch = text.match(/(?:COLA|Cost of Living).*?(\d+(?:\.\d+)?)\s*%/i);
-
-  // Extract assets - look for common patterns
-  const assets = [];
-  const assetPatterns = [
-    /401\(k\).*?\$?([\d,]+)/gi,
-    /IRA.*?\$?([\d,]+)/gi,
-    /Roth.*?\$?([\d,]+)/gi,
-    /Brokerage.*?\$?([\d,]+)/gi,
-    /Taxable.*?\$?([\d,]+)/gi,
-    /Cash.*?\$?([\d,]+)/gi
-  ];
-
-  assetPatterns.forEach(pattern => {
-    const matches = text.matchAll(pattern);
-    for (const match of matches) {
-      const balance = parseFloat(match[1].replace(/,/g, ''));
-      if (balance > 0) {
-        let taxType = "taxable";
-        let name = match[0].split('$')[0].trim();
-        
-        if (name.toLowerCase().includes('401') || name.toLowerCase().includes('403')) {
-          taxType = "qualified";
-        } else if (name.toLowerCase().includes('roth')) {
-          taxType = "roth";
-        } else if (name.toLowerCase().includes('ira') && !name.toLowerCase().includes('roth')) {
-          taxType = "qualified";
-        }
-
-        assets.push({
-          name,
-          balance,
-          taxType,
-          produces1099: taxType === "taxable"
-        });
-      }
-    }
-  });
-
-  // Extract return assumptions
-  const inflationMatch = text.match(/(?:Inflation|CPI).*?(\d+(?:\.\d+)?)\s*%/i);
-  const returnsMatch = text.match(/(?:Return|Growth).*?(\d+(?:\.\d+)?)\s*%/i);
-
-  // Extract reserve amount
-  const reserveMatch = text.match(/(?:Reserve|Emergency|Cash Reserve).*?\$?([\d,]+)/i);
-
-  return {
-    profile: {
-      client: {
-        firstName: clientMatch?.[1] || "John",
-        lastName: clientMatch?.[2] || "Doe",
-        age: ageMatch ? parseInt(ageMatch[1]) : 65
-      },
-      spouse: spouseMatch ? {
-        firstName: spouseMatch[1],
-        lastName: spouseMatch[2],
-        age: spouseAgeMatch ? parseInt(spouseAgeMatch[1]) : undefined
-      } : {},
-      filingStatus: spouseMatch ? "married_joint" : "single"
-    },
-    socialSecurity: {
-      clientStartAge: ssStartMatch ? parseInt(ssStartMatch[1]) : 67,
-      spouseStartAge: ssSpouseStartMatch ? parseInt(ssSpouseStartMatch[1]) : undefined,
-      colaPct: colaMatch ? parseFloat(colaMatch[1]) : 2.0
-    },
-    assets: assets.length > 0 ? assets : [{
-      name: "Default Portfolio",
-      balance: 1000000,
-      taxType: "qualified",
-      produces1099: false
-    }],
-    assumptions: {
-      inflation: inflationMatch ? parseFloat(inflationMatch[1]) / 100 : 0.025,
-      returns: {
-        incomeNow: returnsMatch ? parseFloat(returnsMatch[1]) / 100 : 0.04,
-        incomeLater: returnsMatch ? parseFloat(returnsMatch[1]) / 100 : 0.06,
-        growth: returnsMatch ? parseFloat(returnsMatch[1]) / 100 : 0.08,
-        legacy: returnsMatch ? parseFloat(returnsMatch[1]) / 100 : 0.07
-      },
-      reserveAmount: reserveMatch ? parseFloat(reserveMatch[1].replace(/,/g, '')) : 0
-    },
-    liabilities: [],
-    stress: {},
-    taxYear: new Date().getFullYear()
-  };
-}

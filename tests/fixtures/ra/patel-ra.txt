@@ -1,0 +1,27 @@
+Client Summary
+Primary Client: Priya Patel  Age: 57
+Spouse: — (None)
+Filing Status: Single
+
+Assumptions
+Inflation: 3.0%
+Reserve Amount: $60,000
+Return Assumptions by Bucket
+Income Now: 3.8%   Income Later: 5.0%   Growth: 8.2%   Legacy: 6.3%
+
+Social Security
+Client Start Age: 70
+COLA: 2.4%
+
+Assets — Balances and Tax Type
+Private Credit Fund (1099 Heavy)            $300,000   Non-Qualified
+Traditional 401(k)                          $520,000   Qualified
+Roth 401(k)                                 $90,000    Roth
+Crypto — Bitcoin                            $40,000    Non-Qualified
+Crypto — Ethereum                           $25,000    Non-Qualified
+Cash Reserve                                $60,000    Non-Qualified
+
+Stress Scenarios
+LTC Event: Start Age 83  Duration 4 years  Monthly Cost $7,500
+
+Report Year: 2025

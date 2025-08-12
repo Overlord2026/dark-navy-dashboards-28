@@ -1,0 +1,27 @@
+Client Summary
+Primary Client: Luis Rivera  Age: 62
+Spouse: Elena Rivera  Age: 60
+Filing Status: Married Filing Joint
+
+Assumptions
+Inflation: 2.4%
+Reserve Amount: $120,000
+Return Assumptions by Bucket
+Income Now: 4.0%   Income Later: 5.2%   Growth: 7.1%   Legacy: 6.0%
+
+Social Security
+Client Start Age: 68
+Spouse Start Age: 67
+COLA: 2.0%
+
+Assets — Balances and Tax Type
+Taxable Brokerage (1099 Heavy Dividends)   $450,000   Non-Qualified
+Advisory ETF Account                        $380,000   Non-Qualified
+Traditional IRA (Client)                    $640,000   Qualified
+Roth IRA (Spouse)                           $210,000   Roth
+High-Yield Savings                          $75,000    Non-Qualified
+
+Liabilities
+Mortgage Balance: $280,000  Rate: 4.25%
+
+Report Year: 2025

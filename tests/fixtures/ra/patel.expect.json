@@ -1,0 +1,26 @@
+{
+  "profile": {
+    "client": { "firstName": "Priya", "lastName": "Patel", "age": 57 },
+    "spouse": {},
+    "filingStatus": "single"
+  },
+  "socialSecurity": { "clientStartAge": 70, "colaPct": 2.4 },
+  "assets": [
+    { "name": "Private Credit Fund", "balance": 300000, "taxType": "taxable", "produces1099": true },
+    { "name": "Traditional 401(k)", "balance": 520000, "taxType": "qualified", "produces1099": false },
+    { "name": "Roth 401(k)", "balance": 90000, "taxType": "roth", "produces1099": false },
+    { "name": "Crypto — Bitcoin", "balance": 40000, "taxType": "taxable", "produces1099": false },
+    { "name": "Crypto — Ethereum", "balance": 25000, "taxType": "taxable", "produces1099": false },
+    { "name": "Cash Reserve", "balance": 60000, "taxType": "taxable", "produces1099": false }
+  ],
+  "assumptions": {
+    "inflation": 3.0,
+    "returns": { "incomeNow": 3.8, "incomeLater": 5.0, "growth": 8.2, "legacy": 6.3 },
+    "reserveAmount": 60000
+  },
+  "liabilities": [],
+  "stress": {
+    "ltc": { "startAge": 83, "years": 4, "monthlyCost": 7500 }
+  },
+  "taxYear": 2025
+}

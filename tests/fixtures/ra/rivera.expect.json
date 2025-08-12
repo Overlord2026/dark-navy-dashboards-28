@@ -1,0 +1,23 @@
+{
+  "profile": {
+    "client": { "firstName": "Luis", "lastName": "Rivera", "age": 62 },
+    "spouse": { "firstName": "Elena", "lastName": "Rivera", "age": 60 },
+    "filingStatus": "married_joint"
+  },
+  "socialSecurity": { "clientStartAge": 68, "spouseStartAge": 67, "colaPct": 2.0 },
+  "assets": [
+    { "name": "Taxable Brokerage", "balance": 450000, "taxType": "taxable", "produces1099": true },
+    { "name": "Advisory ETF Account", "balance": 380000, "taxType": "taxable", "produces1099": false },
+    { "name": "Traditional IRA (Client)", "balance": 640000, "taxType": "qualified", "produces1099": false },
+    { "name": "Roth IRA (Spouse)", "balance": 210000, "taxType": "roth", "produces1099": false },
+    { "name": "High-Yield Savings", "balance": 75000, "taxType": "taxable", "produces1099": false }
+  ],
+  "assumptions": {
+    "inflation": 2.4,
+    "returns": { "incomeNow": 4.0, "incomeLater": 5.2, "growth": 7.1, "legacy": 6.0 },
+    "reserveAmount": 120000
+  },
+  "liabilities": [{ "type": "Mortgage", "balance": 280000, "rate": 4.25 }],
+  "stress": {},
+  "taxYear": 2025
+}
