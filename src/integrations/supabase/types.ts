@@ -363,6 +363,222 @@ export type Database = {
           },
         ]
       }
+      ad_accounts: {
+        Row: {
+          access_token_encrypted: string | null
+          account_name: string
+          account_status: string | null
+          capabilities: Json | null
+          created_at: string | null
+          created_by: string
+          id: string
+          platform: Database["public"]["Enums"]["ad_platform"]
+          platform_account_id: string
+          rate_limits: Json | null
+          tenant_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          access_token_encrypted?: string | null
+          account_name: string
+          account_status?: string | null
+          capabilities?: Json | null
+          created_at?: string | null
+          created_by: string
+          id?: string
+          platform: Database["public"]["Enums"]["ad_platform"]
+          platform_account_id: string
+          rate_limits?: Json | null
+          tenant_id?: string
+          updated_at?: string | null
+        }
+        Update: {
+          access_token_encrypted?: string | null
+          account_name?: string
+          account_status?: string | null
+          capabilities?: Json | null
+          created_at?: string | null
+          created_by?: string
+          id?: string
+          platform?: Database["public"]["Enums"]["ad_platform"]
+          platform_account_id?: string
+          rate_limits?: Json | null
+          tenant_id?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      ad_campaigns: {
+        Row: {
+          account_id: string
+          bid_strategy: Database["public"]["Enums"]["bidding_strategy"] | null
+          campaign_name: string
+          created_at: string | null
+          created_by: string
+          daily_budget: number | null
+          end_date: string | null
+          id: string
+          objective: string
+          platform_campaign_id: string | null
+          start_date: string | null
+          status: Database["public"]["Enums"]["ad_status"] | null
+          targeting_config: Json | null
+          tenant_id: string
+          total_budget: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          account_id: string
+          bid_strategy?: Database["public"]["Enums"]["bidding_strategy"] | null
+          campaign_name: string
+          created_at?: string | null
+          created_by: string
+          daily_budget?: number | null
+          end_date?: string | null
+          id?: string
+          objective: string
+          platform_campaign_id?: string | null
+          start_date?: string | null
+          status?: Database["public"]["Enums"]["ad_status"] | null
+          targeting_config?: Json | null
+          tenant_id?: string
+          total_budget?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          account_id?: string
+          bid_strategy?: Database["public"]["Enums"]["bidding_strategy"] | null
+          campaign_name?: string
+          created_at?: string | null
+          created_by?: string
+          daily_budget?: number | null
+          end_date?: string | null
+          id?: string
+          objective?: string
+          platform_campaign_id?: string | null
+          start_date?: string | null
+          status?: Database["public"]["Enums"]["ad_status"] | null
+          targeting_config?: Json | null
+          tenant_id?: string
+          total_budget?: number | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ad_campaigns_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "ad_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ad_rds: {
+        Row: {
+          ad_id: string
+          anchor_txid: string | null
+          approval_hash: string
+          created_at: string | null
+          explanation_json: Json | null
+          id: string
+          inputs_hash: string
+          merkle_root: string | null
+          platform_response: Json | null
+          policy_hash: string
+          sha256: string
+          tenant_id: string
+        }
+        Insert: {
+          ad_id: string
+          anchor_txid?: string | null
+          approval_hash: string
+          created_at?: string | null
+          explanation_json?: Json | null
+          id?: string
+          inputs_hash: string
+          merkle_root?: string | null
+          platform_response?: Json | null
+          policy_hash: string
+          sha256: string
+          tenant_id?: string
+        }
+        Update: {
+          ad_id?: string
+          anchor_txid?: string | null
+          approval_hash?: string
+          created_at?: string | null
+          explanation_json?: Json | null
+          id?: string
+          inputs_hash?: string
+          merkle_root?: string | null
+          platform_response?: Json | null
+          policy_hash?: string
+          sha256?: string
+          tenant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ad_rds_ad_id_fkey"
+            columns: ["ad_id"]
+            isOneToOne: false
+            referencedRelation: "ads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ad_sets: {
+        Row: {
+          adset_name: string
+          bid_amount: number | null
+          budget: number | null
+          campaign_id: string
+          created_at: string | null
+          id: string
+          optimization_goal: string | null
+          placement: Json | null
+          platform_adset_id: string | null
+          status: Database["public"]["Enums"]["ad_status"] | null
+          targeting: Json | null
+          updated_at: string | null
+        }
+        Insert: {
+          adset_name: string
+          bid_amount?: number | null
+          budget?: number | null
+          campaign_id: string
+          created_at?: string | null
+          id?: string
+          optimization_goal?: string | null
+          placement?: Json | null
+          platform_adset_id?: string | null
+          status?: Database["public"]["Enums"]["ad_status"] | null
+          targeting?: Json | null
+          updated_at?: string | null
+        }
+        Update: {
+          adset_name?: string
+          bid_amount?: number | null
+          budget?: number | null
+          campaign_id?: string
+          created_at?: string | null
+          id?: string
+          optimization_goal?: string | null
+          placement?: Json | null
+          platform_adset_id?: string | null
+          status?: Database["public"]["Enums"]["ad_status"] | null
+          targeting?: Json | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ad_sets_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "ad_campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ad_spend_tracking: {
         Row: {
           advisor_id: string
@@ -425,6 +641,66 @@ export type Database = {
             columns: ["campaign_id"]
             isOneToOne: false
             referencedRelation: "marketing_campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ads: {
+        Row: {
+          ad_name: string
+          adset_id: string
+          call_to_action: string | null
+          created_at: string | null
+          creative_id: string
+          description: string | null
+          headline: string | null
+          id: string
+          link_url: string | null
+          platform_ad_id: string | null
+          status: Database["public"]["Enums"]["ad_status"] | null
+          updated_at: string | null
+        }
+        Insert: {
+          ad_name: string
+          adset_id: string
+          call_to_action?: string | null
+          created_at?: string | null
+          creative_id: string
+          description?: string | null
+          headline?: string | null
+          id?: string
+          link_url?: string | null
+          platform_ad_id?: string | null
+          status?: Database["public"]["Enums"]["ad_status"] | null
+          updated_at?: string | null
+        }
+        Update: {
+          ad_name?: string
+          adset_id?: string
+          call_to_action?: string | null
+          created_at?: string | null
+          creative_id?: string
+          description?: string | null
+          headline?: string | null
+          id?: string
+          link_url?: string | null
+          platform_ad_id?: string | null
+          status?: Database["public"]["Enums"]["ad_status"] | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ads_adset_id_fkey"
+            columns: ["adset_id"]
+            isOneToOne: false
+            referencedRelation: "ad_sets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ads_creative_id_fkey"
+            columns: ["creative_id"]
+            isOneToOne: false
+            referencedRelation: "creatives"
             referencedColumns: ["id"]
           },
         ]
@@ -7750,6 +8026,124 @@ export type Database = {
           },
         ]
       }
+      creative_approvals: {
+        Row: {
+          approval_type: Database["public"]["Enums"]["approval_type"]
+          approved_at: string | null
+          approver_id: string
+          artifact_hash: string
+          comments: string | null
+          created_at: string | null
+          creative_id: string
+          id: string
+          policy_hash: string
+          status: string
+        }
+        Insert: {
+          approval_type: Database["public"]["Enums"]["approval_type"]
+          approved_at?: string | null
+          approver_id: string
+          artifact_hash: string
+          comments?: string | null
+          created_at?: string | null
+          creative_id: string
+          id?: string
+          policy_hash: string
+          status?: string
+        }
+        Update: {
+          approval_type?: Database["public"]["Enums"]["approval_type"]
+          approved_at?: string | null
+          approver_id?: string
+          artifact_hash?: string
+          comments?: string | null
+          created_at?: string | null
+          creative_id?: string
+          id?: string
+          policy_hash?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "creative_approvals_creative_id_fkey"
+            columns: ["creative_id"]
+            isOneToOne: false
+            referencedRelation: "creatives"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      creatives: {
+        Row: {
+          approval_hash: string | null
+          approval_status: Database["public"]["Enums"]["ad_status"] | null
+          artifact_hash: string | null
+          asset_metadata: Json | null
+          authenticity_score: number | null
+          created_at: string | null
+          created_by: string
+          creative_type: Database["public"]["Enums"]["creative_type"]
+          deepfake_checked: boolean | null
+          disclosures_json: Json
+          id: string
+          name: string
+          offer_id: string | null
+          provenance_json: Json
+          tenant_id: string
+          updated_at: string | null
+          url_or_blob: string | null
+          watermark_embedded: boolean | null
+        }
+        Insert: {
+          approval_hash?: string | null
+          approval_status?: Database["public"]["Enums"]["ad_status"] | null
+          artifact_hash?: string | null
+          asset_metadata?: Json | null
+          authenticity_score?: number | null
+          created_at?: string | null
+          created_by: string
+          creative_type: Database["public"]["Enums"]["creative_type"]
+          deepfake_checked?: boolean | null
+          disclosures_json?: Json
+          id?: string
+          name: string
+          offer_id?: string | null
+          provenance_json?: Json
+          tenant_id?: string
+          updated_at?: string | null
+          url_or_blob?: string | null
+          watermark_embedded?: boolean | null
+        }
+        Update: {
+          approval_hash?: string | null
+          approval_status?: Database["public"]["Enums"]["ad_status"] | null
+          artifact_hash?: string | null
+          asset_metadata?: Json | null
+          authenticity_score?: number | null
+          created_at?: string | null
+          created_by?: string
+          creative_type?: Database["public"]["Enums"]["creative_type"]
+          deepfake_checked?: boolean | null
+          disclosures_json?: Json
+          id?: string
+          name?: string
+          offer_id?: string | null
+          provenance_json?: Json
+          tenant_id?: string
+          updated_at?: string | null
+          url_or_blob?: string | null
+          watermark_embedded?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "creatives_offer_id_fkey"
+            columns: ["offer_id"]
+            isOneToOne: false
+            referencedRelation: "offers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       credential_sources: {
         Row: {
           api_endpoint: string | null
@@ -10302,6 +10696,71 @@ export type Database = {
           weekly_workouts?: number
         }
         Relationships: []
+      }
+      experiments: {
+        Row: {
+          arms: Json
+          campaign_id: string | null
+          confidence_threshold: number | null
+          created_at: string | null
+          created_by: string
+          end_date: string | null
+          experiment_name: string
+          experiment_type: Database["public"]["Enums"]["experiment_type"]
+          id: string
+          priors: Json | null
+          random_seed: number | null
+          start_date: string | null
+          status: string | null
+          tenant_id: string
+          traffic_allocation: Json | null
+          updated_at: string | null
+        }
+        Insert: {
+          arms: Json
+          campaign_id?: string | null
+          confidence_threshold?: number | null
+          created_at?: string | null
+          created_by: string
+          end_date?: string | null
+          experiment_name: string
+          experiment_type: Database["public"]["Enums"]["experiment_type"]
+          id?: string
+          priors?: Json | null
+          random_seed?: number | null
+          start_date?: string | null
+          status?: string | null
+          tenant_id?: string
+          traffic_allocation?: Json | null
+          updated_at?: string | null
+        }
+        Update: {
+          arms?: Json
+          campaign_id?: string | null
+          confidence_threshold?: number | null
+          created_at?: string | null
+          created_by?: string
+          end_date?: string | null
+          experiment_name?: string
+          experiment_type?: Database["public"]["Enums"]["experiment_type"]
+          id?: string
+          priors?: Json | null
+          random_seed?: number | null
+          start_date?: string | null
+          status?: string | null
+          tenant_id?: string
+          traffic_allocation?: Json | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "experiments_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "ad_campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       f20_analytics: {
         Row: {
@@ -14129,6 +14588,109 @@ export type Database = {
           },
         ]
       }
+      io_allocations: {
+        Row: {
+          allocated_budget: number
+          arm: string
+          campaign_id: string | null
+          created_at: string | null
+          end_date: string
+          exclusivity_constraints: Json | null
+          id: string
+          pacing_config: Json | null
+          spent_budget: number | null
+          start_date: string
+          tenant_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          allocated_budget: number
+          arm: string
+          campaign_id?: string | null
+          created_at?: string | null
+          end_date: string
+          exclusivity_constraints?: Json | null
+          id?: string
+          pacing_config?: Json | null
+          spent_budget?: number | null
+          start_date: string
+          tenant_id?: string
+          updated_at?: string | null
+        }
+        Update: {
+          allocated_budget?: number
+          arm?: string
+          campaign_id?: string | null
+          created_at?: string | null
+          end_date?: string
+          exclusivity_constraints?: Json | null
+          id?: string
+          pacing_config?: Json | null
+          spent_budget?: number | null
+          start_date?: string
+          tenant_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "io_allocations_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "ad_campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      io_rds: {
+        Row: {
+          allocation_algorithm: string
+          allocation_id: string
+          allocation_result: Json
+          anchor_txid: string | null
+          budget_inputs_hash: string
+          constraints_hash: string
+          created_at: string | null
+          id: string
+          merkle_root: string | null
+          sha256: string
+          tenant_id: string
+        }
+        Insert: {
+          allocation_algorithm: string
+          allocation_id: string
+          allocation_result: Json
+          anchor_txid?: string | null
+          budget_inputs_hash: string
+          constraints_hash: string
+          created_at?: string | null
+          id?: string
+          merkle_root?: string | null
+          sha256: string
+          tenant_id?: string
+        }
+        Update: {
+          allocation_algorithm?: string
+          allocation_id?: string
+          allocation_result?: Json
+          anchor_txid?: string | null
+          budget_inputs_hash?: string
+          constraints_hash?: string
+          created_at?: string | null
+          id?: string
+          merkle_root?: string | null
+          sha256?: string
+          tenant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "io_rds_allocation_id_fkey"
+            columns: ["allocation_id"]
+            isOneToOne: false
+            referencedRelation: "io_allocations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ip_watch_logs: {
         Row: {
           created_at: string | null
@@ -16557,6 +17119,93 @@ export type Database = {
         }
         Relationships: []
       }
+      metrics_daily: {
+        Row: {
+          ad_id: string | null
+          campaign_id: string | null
+          clicks: number | null
+          conversions: number | null
+          cpa: number | null
+          cpm: number | null
+          created_at: string | null
+          ctr: number | null
+          cvr: number | null
+          date: string
+          emv: number | null
+          engagement_rate: number | null
+          id: string
+          impressions: number | null
+          platform: Database["public"]["Enums"]["ad_platform"]
+          revenue: number | null
+          roas: number | null
+          spend: number | null
+          tenant_id: string
+          video_completion_rate: number | null
+          video_views: number | null
+        }
+        Insert: {
+          ad_id?: string | null
+          campaign_id?: string | null
+          clicks?: number | null
+          conversions?: number | null
+          cpa?: number | null
+          cpm?: number | null
+          created_at?: string | null
+          ctr?: number | null
+          cvr?: number | null
+          date: string
+          emv?: number | null
+          engagement_rate?: number | null
+          id?: string
+          impressions?: number | null
+          platform: Database["public"]["Enums"]["ad_platform"]
+          revenue?: number | null
+          roas?: number | null
+          spend?: number | null
+          tenant_id?: string
+          video_completion_rate?: number | null
+          video_views?: number | null
+        }
+        Update: {
+          ad_id?: string | null
+          campaign_id?: string | null
+          clicks?: number | null
+          conversions?: number | null
+          cpa?: number | null
+          cpm?: number | null
+          created_at?: string | null
+          ctr?: number | null
+          cvr?: number | null
+          date?: string
+          emv?: number | null
+          engagement_rate?: number | null
+          id?: string
+          impressions?: number | null
+          platform?: Database["public"]["Enums"]["ad_platform"]
+          revenue?: number | null
+          roas?: number | null
+          spend?: number | null
+          tenant_id?: string
+          video_completion_rate?: number | null
+          video_views?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "metrics_daily_ad_id_fkey"
+            columns: ["ad_id"]
+            isOneToOne: false
+            referencedRelation: "ads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "metrics_daily_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "ad_campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       mfa_bypass_audit: {
         Row: {
           bypass_reason: string
@@ -17618,6 +18267,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      offers: {
+        Row: {
+          created_at: string | null
+          created_by: string
+          description: string | null
+          id: string
+          name: string
+          status: string
+          tenant_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by: string
+          description?: string | null
+          id?: string
+          name: string
+          status?: string
+          tenant_id?: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string
+          description?: string | null
+          id?: string
+          name?: string
+          status?: string
+          tenant_id?: string
+          updated_at?: string | null
+        }
+        Relationships: []
       }
       onboarding_checklists: {
         Row: {
@@ -19057,6 +19739,59 @@ export type Database = {
         }
         Relationships: []
       }
+      payment_rds: {
+        Row: {
+          amount: number
+          anchor_txid: string | null
+          authorization_hash: string
+          campaign_id: string | null
+          created_at: string | null
+          id: string
+          merkle_root: string | null
+          payment_inputs_hash: string
+          payment_processor_response: Json | null
+          payment_type: string
+          sha256: string
+          tenant_id: string
+        }
+        Insert: {
+          amount: number
+          anchor_txid?: string | null
+          authorization_hash: string
+          campaign_id?: string | null
+          created_at?: string | null
+          id?: string
+          merkle_root?: string | null
+          payment_inputs_hash: string
+          payment_processor_response?: Json | null
+          payment_type: string
+          sha256: string
+          tenant_id?: string
+        }
+        Update: {
+          amount?: number
+          anchor_txid?: string | null
+          authorization_hash?: string
+          campaign_id?: string | null
+          created_at?: string | null
+          id?: string
+          merkle_root?: string | null
+          payment_inputs_hash?: string
+          payment_processor_response?: Json | null
+          payment_type?: string
+          sha256?: string
+          tenant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_rds_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "ad_campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       payout_notifications: {
         Row: {
           created_at: string
@@ -20080,6 +20815,63 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      platform_responses: {
+        Row: {
+          ad_id: string | null
+          campaign_id: string | null
+          created_at: string | null
+          error_code: string | null
+          error_details: Json | null
+          id: string
+          operation: string
+          platform: Database["public"]["Enums"]["ad_platform"]
+          platform_message: string | null
+          status: string
+          tenant_id: string
+        }
+        Insert: {
+          ad_id?: string | null
+          campaign_id?: string | null
+          created_at?: string | null
+          error_code?: string | null
+          error_details?: Json | null
+          id?: string
+          operation: string
+          platform: Database["public"]["Enums"]["ad_platform"]
+          platform_message?: string | null
+          status: string
+          tenant_id?: string
+        }
+        Update: {
+          ad_id?: string | null
+          campaign_id?: string | null
+          created_at?: string | null
+          error_code?: string | null
+          error_details?: Json | null
+          id?: string
+          operation?: string
+          platform?: Database["public"]["Enums"]["ad_platform"]
+          platform_message?: string | null
+          status?: string
+          tenant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "platform_responses_ad_id_fkey"
+            columns: ["ad_id"]
+            isOneToOne: false
+            referencedRelation: "ads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "platform_responses_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "ad_campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       playbooks: {
         Row: {
@@ -31310,6 +32102,10 @@ export type Database = {
             }
         Returns: string
       }
+      calculate_creative_artifact_hash: {
+        Args: { creative_data: Json }
+        Returns: string
+      }
       calculate_goal_progress: {
         Args: { goal_id: string }
         Returns: number
@@ -31381,6 +32177,10 @@ export type Database = {
           issues: string[]
           status: string
         }[]
+      }
+      can_publish_creative: {
+        Args: { p_creative_id: string }
+        Returns: boolean
       }
       check_extension_health: {
         Args: Record<PropertyKey, never>
@@ -31575,6 +32375,37 @@ export type Database = {
           p_description: string
         }
         Returns: Json
+      }
+      emit_ad_rds: {
+        Args: {
+          p_ad_id: string
+          p_inputs: Json
+          p_approvals: Json
+          p_policy_hash: string
+          p_explanation?: Json
+        }
+        Returns: string
+      }
+      emit_io_rds: {
+        Args: {
+          p_allocation_id: string
+          p_budget_inputs: Json
+          p_algorithm: string
+          p_constraints: Json
+          p_result: Json
+        }
+        Returns: string
+      }
+      emit_payment_rds: {
+        Args: {
+          p_campaign_id: string
+          p_payment_type: string
+          p_amount: number
+          p_inputs: Json
+          p_authorization: Json
+          p_processor_response?: Json
+        }
+        Returns: string
       }
       final_security_validation: {
         Args: Record<PropertyKey, never>
@@ -32296,6 +33127,13 @@ export type Database = {
         }
         Returns: undefined
       }
+      validate_creative_approval: {
+        Args: {
+          p_creative_id: string
+          p_approval_type: Database["public"]["Enums"]["approval_type"]
+        }
+        Returns: boolean
+      }
       validate_franchise_referral_creation: {
         Args: {
           p_referring_tenant_id: string
@@ -32351,6 +33189,23 @@ export type Database = {
       }
     }
     Enums: {
+      ad_platform:
+        | "meta"
+        | "google"
+        | "youtube"
+        | "linkedin"
+        | "twitter"
+        | "tiktok"
+        | "snapchat"
+      ad_status:
+        | "draft"
+        | "pending_approval"
+        | "approved"
+        | "rejected"
+        | "active"
+        | "paused"
+        | "completed"
+        | "archived"
       admin_role:
         | "admin"
         | "sub_admin"
@@ -32371,6 +33226,17 @@ export type Database = {
         | "advisor_agreement"
         | "compliance_disclosure"
       approval_status: "pending" | "approved" | "rejected" | "expired"
+      approval_type:
+        | "creative"
+        | "financial_promotion"
+        | "compliance"
+        | "brand_safety"
+      bidding_strategy:
+        | "cost_cap"
+        | "bid_cap"
+        | "target_cost"
+        | "lowest_cost"
+        | "value_optimization"
       bill_category:
         | "utilities"
         | "mortgage"
@@ -32396,7 +33262,15 @@ export type Database = {
         | "planning"
         | "admin"
         | "advisor"
+      creative_type:
+        | "image"
+        | "video"
+        | "carousel"
+        | "collection"
+        | "text"
+        | "audio"
       executive_role: "cmo" | "cfo" | "coo" | "clo" | "ceo"
+      experiment_type: "ab_test" | "bandit_thompson" | "bandit_ucb" | "holdout"
       funding_frequency: "monthly" | "quarterly" | "annually" | "one_time"
       goal_category:
         | "retirement"
@@ -32672,6 +33546,25 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      ad_platform: [
+        "meta",
+        "google",
+        "youtube",
+        "linkedin",
+        "twitter",
+        "tiktok",
+        "snapchat",
+      ],
+      ad_status: [
+        "draft",
+        "pending_approval",
+        "approved",
+        "rejected",
+        "active",
+        "paused",
+        "completed",
+        "archived",
+      ],
       admin_role: [
         "admin",
         "sub_admin",
@@ -32695,6 +33588,19 @@ export const Constants = {
         "compliance_disclosure",
       ],
       approval_status: ["pending", "approved", "rejected", "expired"],
+      approval_type: [
+        "creative",
+        "financial_promotion",
+        "compliance",
+        "brand_safety",
+      ],
+      bidding_strategy: [
+        "cost_cap",
+        "bid_cap",
+        "target_cost",
+        "lowest_cost",
+        "value_optimization",
+      ],
       bill_category: [
         "utilities",
         "mortgage",
@@ -32723,7 +33629,16 @@ export const Constants = {
         "admin",
         "advisor",
       ],
+      creative_type: [
+        "image",
+        "video",
+        "carousel",
+        "collection",
+        "text",
+        "audio",
+      ],
       executive_role: ["cmo", "cfo", "coo", "clo", "ceo"],
+      experiment_type: ["ab_test", "bandit_thompson", "bandit_ucb", "holdout"],
       funding_frequency: ["monthly", "quarterly", "annually", "one_time"],
       goal_category: [
         "retirement",
