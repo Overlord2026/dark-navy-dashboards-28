@@ -325,6 +325,708 @@ export type Database = {
           },
         ]
       }
+      accounting_clients: {
+        Row: {
+          address: Json | null
+          business_name: string | null
+          client_number: string | null
+          contact_name: string
+          created_at: string | null
+          email: string | null
+          id: string
+          kba_status: string | null
+          onboarding_status: string | null
+          persona_id: string | null
+          phone: string | null
+          risk_flags: Json | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          address?: Json | null
+          business_name?: string | null
+          client_number?: string | null
+          contact_name: string
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          kba_status?: string | null
+          onboarding_status?: string | null
+          persona_id?: string | null
+          phone?: string | null
+          risk_flags?: Json | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          address?: Json | null
+          business_name?: string | null
+          client_number?: string | null
+          contact_name?: string
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          kba_status?: string | null
+          onboarding_status?: string | null
+          persona_id?: string | null
+          phone?: string | null
+          risk_flags?: Json | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "accounting_clients_persona_id_fkey"
+            columns: ["persona_id"]
+            isOneToOne: false
+            referencedRelation: "personas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      accounting_documents: {
+        Row: {
+          created_at: string | null
+          document_name: string
+          document_type: string
+          engagement_id: string | null
+          entity_id: string | null
+          extracted_data: Json | null
+          file_hash: string | null
+          id: string
+          ocr_status: string | null
+          pii_level: string | null
+          retention_date: string | null
+          source: string | null
+          storage_url: string | null
+          task_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          document_name: string
+          document_type: string
+          engagement_id?: string | null
+          entity_id?: string | null
+          extracted_data?: Json | null
+          file_hash?: string | null
+          id?: string
+          ocr_status?: string | null
+          pii_level?: string | null
+          retention_date?: string | null
+          source?: string | null
+          storage_url?: string | null
+          task_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          document_name?: string
+          document_type?: string
+          engagement_id?: string | null
+          entity_id?: string | null
+          extracted_data?: Json | null
+          file_hash?: string | null
+          id?: string
+          ocr_status?: string | null
+          pii_level?: string | null
+          retention_date?: string | null
+          source?: string | null
+          storage_url?: string | null
+          task_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "accounting_documents_engagement_id_fkey"
+            columns: ["engagement_id"]
+            isOneToOne: false
+            referencedRelation: "accounting_engagements"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "accounting_documents_entity_id_fkey"
+            columns: ["entity_id"]
+            isOneToOne: false
+            referencedRelation: "accounting_entities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "accounting_documents_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "accounting_tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      accounting_engagements: {
+        Row: {
+          actual_fee: number | null
+          completed_date: string | null
+          consent_token_id: string | null
+          created_at: string | null
+          due_date: string | null
+          engagement_letter_signed: boolean | null
+          entity_id: string | null
+          estimated_fee: number | null
+          fee_model: string | null
+          id: string
+          scope_description: string | null
+          service_type: string
+          start_date: string | null
+          status: string | null
+          tax_year: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          actual_fee?: number | null
+          completed_date?: string | null
+          consent_token_id?: string | null
+          created_at?: string | null
+          due_date?: string | null
+          engagement_letter_signed?: boolean | null
+          entity_id?: string | null
+          estimated_fee?: number | null
+          fee_model?: string | null
+          id?: string
+          scope_description?: string | null
+          service_type: string
+          start_date?: string | null
+          status?: string | null
+          tax_year?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          actual_fee?: number | null
+          completed_date?: string | null
+          consent_token_id?: string | null
+          created_at?: string | null
+          due_date?: string | null
+          engagement_letter_signed?: boolean | null
+          entity_id?: string | null
+          estimated_fee?: number | null
+          fee_model?: string | null
+          id?: string
+          scope_description?: string | null
+          service_type?: string
+          start_date?: string | null
+          status?: string | null
+          tax_year?: number | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "accounting_engagements_consent_token_id_fkey"
+            columns: ["consent_token_id"]
+            isOneToOne: false
+            referencedRelation: "consent_tokens"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "accounting_engagements_entity_id_fkey"
+            columns: ["entity_id"]
+            isOneToOne: false
+            referencedRelation: "accounting_entities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      accounting_entities: {
+        Row: {
+          client_id: string | null
+          created_at: string | null
+          entity_name: string
+          entity_type: string
+          fiscal_year_end: string | null
+          formation_date: string | null
+          id: string
+          jurisdiction: string | null
+          metadata: Json | null
+          status: string | null
+          tax_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          client_id?: string | null
+          created_at?: string | null
+          entity_name: string
+          entity_type: string
+          fiscal_year_end?: string | null
+          formation_date?: string | null
+          id?: string
+          jurisdiction?: string | null
+          metadata?: Json | null
+          status?: string | null
+          tax_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          client_id?: string | null
+          created_at?: string | null
+          entity_name?: string
+          entity_type?: string
+          fiscal_year_end?: string | null
+          formation_date?: string | null
+          id?: string
+          jurisdiction?: string | null
+          metadata?: Json | null
+          status?: string | null
+          tax_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "accounting_entities_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "accounting_clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      accounting_invoices: {
+        Row: {
+          amount: number
+          created_at: string | null
+          currency: string | null
+          due_date: string | null
+          engagement_id: string | null
+          id: string
+          invoice_number: string
+          line_items: Json | null
+          paid_date: string | null
+          payment_terms: string | null
+          sent_date: string | null
+          status: string | null
+          stripe_invoice_id: string | null
+          tax_amount: number | null
+          total_amount: number
+          updated_at: string | null
+        }
+        Insert: {
+          amount: number
+          created_at?: string | null
+          currency?: string | null
+          due_date?: string | null
+          engagement_id?: string | null
+          id?: string
+          invoice_number: string
+          line_items?: Json | null
+          paid_date?: string | null
+          payment_terms?: string | null
+          sent_date?: string | null
+          status?: string | null
+          stripe_invoice_id?: string | null
+          tax_amount?: number | null
+          total_amount: number
+          updated_at?: string | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string | null
+          currency?: string | null
+          due_date?: string | null
+          engagement_id?: string | null
+          id?: string
+          invoice_number?: string
+          line_items?: Json | null
+          paid_date?: string | null
+          payment_terms?: string | null
+          sent_date?: string | null
+          status?: string | null
+          stripe_invoice_id?: string | null
+          tax_amount?: number | null
+          total_amount?: number
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "accounting_invoices_engagement_id_fkey"
+            columns: ["engagement_id"]
+            isOneToOne: false
+            referencedRelation: "accounting_engagements"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      accounting_outsourcing_routes: {
+        Row: {
+          cost: number | null
+          created_at: string | null
+          id: string
+          pii_mask_level: string | null
+          quality_score: number | null
+          status: string | null
+          task_description: string | null
+          task_id: string | null
+          tokenized_access_id: string | null
+          updated_at: string | null
+          vendor_id: string | null
+          vendor_name: string | null
+        }
+        Insert: {
+          cost?: number | null
+          created_at?: string | null
+          id?: string
+          pii_mask_level?: string | null
+          quality_score?: number | null
+          status?: string | null
+          task_description?: string | null
+          task_id?: string | null
+          tokenized_access_id?: string | null
+          updated_at?: string | null
+          vendor_id?: string | null
+          vendor_name?: string | null
+        }
+        Update: {
+          cost?: number | null
+          created_at?: string | null
+          id?: string
+          pii_mask_level?: string | null
+          quality_score?: number | null
+          status?: string | null
+          task_description?: string | null
+          task_id?: string | null
+          tokenized_access_id?: string | null
+          updated_at?: string | null
+          vendor_id?: string | null
+          vendor_name?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "accounting_outsourcing_routes_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "accounting_tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      accounting_payments: {
+        Row: {
+          amount: number
+          created_at: string | null
+          currency: string | null
+          id: string
+          invoice_id: string | null
+          payment_date: string | null
+          payment_method: string | null
+          receipt_anchor_id: string | null
+          reference_number: string | null
+          stripe_payment_id: string | null
+        }
+        Insert: {
+          amount: number
+          created_at?: string | null
+          currency?: string | null
+          id?: string
+          invoice_id?: string | null
+          payment_date?: string | null
+          payment_method?: string | null
+          receipt_anchor_id?: string | null
+          reference_number?: string | null
+          stripe_payment_id?: string | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string | null
+          currency?: string | null
+          id?: string
+          invoice_id?: string | null
+          payment_date?: string | null
+          payment_method?: string | null
+          receipt_anchor_id?: string | null
+          reference_number?: string | null
+          stripe_payment_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "accounting_payments_invoice_id_fkey"
+            columns: ["invoice_id"]
+            isOneToOne: false
+            referencedRelation: "accounting_invoices"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      accounting_receipts: {
+        Row: {
+          anchor_txid: string | null
+          content_hash: string
+          created_at: string | null
+          event_type: string
+          explanation: string | null
+          id: string
+          metadata: Json | null
+          reason_code: string | null
+          subject_id: string
+          subject_type: string
+        }
+        Insert: {
+          anchor_txid?: string | null
+          content_hash: string
+          created_at?: string | null
+          event_type: string
+          explanation?: string | null
+          id?: string
+          metadata?: Json | null
+          reason_code?: string | null
+          subject_id: string
+          subject_type: string
+        }
+        Update: {
+          anchor_txid?: string | null
+          content_hash?: string
+          created_at?: string | null
+          event_type?: string
+          explanation?: string | null
+          id?: string
+          metadata?: Json | null
+          reason_code?: string | null
+          subject_id?: string
+          subject_type?: string
+        }
+        Relationships: []
+      }
+      accounting_referrals: {
+        Row: {
+          consent_token_id: string | null
+          created_at: string | null
+          family_r_attribution_id: string | null
+          id: string
+          opportunity_code: string | null
+          opportunity_type: string | null
+          opportunity_value: number | null
+          revenue_split_percentage: number | null
+          source_entity_id: string | null
+          status: string | null
+          target_advisor_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          consent_token_id?: string | null
+          created_at?: string | null
+          family_r_attribution_id?: string | null
+          id?: string
+          opportunity_code?: string | null
+          opportunity_type?: string | null
+          opportunity_value?: number | null
+          revenue_split_percentage?: number | null
+          source_entity_id?: string | null
+          status?: string | null
+          target_advisor_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          consent_token_id?: string | null
+          created_at?: string | null
+          family_r_attribution_id?: string | null
+          id?: string
+          opportunity_code?: string | null
+          opportunity_type?: string | null
+          opportunity_value?: number | null
+          revenue_split_percentage?: number | null
+          source_entity_id?: string | null
+          status?: string | null
+          target_advisor_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "accounting_referrals_consent_token_id_fkey"
+            columns: ["consent_token_id"]
+            isOneToOne: false
+            referencedRelation: "consent_tokens"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "accounting_referrals_source_entity_id_fkey"
+            columns: ["source_entity_id"]
+            isOneToOne: false
+            referencedRelation: "accounting_entities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      accounting_returns: {
+        Row: {
+          created_at: string | null
+          due_date: string
+          efile_id: string | null
+          engagement_id: string | null
+          entity_id: string | null
+          extended_due_date: string | null
+          filing_status: string | null
+          form_type: string
+          id: string
+          jurisdiction: string | null
+          preparer_name: string | null
+          software_used: string | null
+          tax_year: number
+          updated_at: string | null
+          vault_document_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          due_date: string
+          efile_id?: string | null
+          engagement_id?: string | null
+          entity_id?: string | null
+          extended_due_date?: string | null
+          filing_status?: string | null
+          form_type: string
+          id?: string
+          jurisdiction?: string | null
+          preparer_name?: string | null
+          software_used?: string | null
+          tax_year: number
+          updated_at?: string | null
+          vault_document_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          due_date?: string
+          efile_id?: string | null
+          engagement_id?: string | null
+          entity_id?: string | null
+          extended_due_date?: string | null
+          filing_status?: string | null
+          form_type?: string
+          id?: string
+          jurisdiction?: string | null
+          preparer_name?: string | null
+          software_used?: string | null
+          tax_year?: number
+          updated_at?: string | null
+          vault_document_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "accounting_returns_engagement_id_fkey"
+            columns: ["engagement_id"]
+            isOneToOne: false
+            referencedRelation: "accounting_engagements"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "accounting_returns_entity_id_fkey"
+            columns: ["entity_id"]
+            isOneToOne: false
+            referencedRelation: "accounting_entities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      accounting_tasks: {
+        Row: {
+          actual_hours: number | null
+          assigned_to: string | null
+          created_at: string | null
+          description: string | null
+          due_date: string | null
+          engagement_id: string | null
+          estimated_hours: number | null
+          id: string
+          priority: string | null
+          qa_checklist: Json | null
+          sla_hours: number | null
+          status: string | null
+          task_type: string | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          actual_hours?: number | null
+          assigned_to?: string | null
+          created_at?: string | null
+          description?: string | null
+          due_date?: string | null
+          engagement_id?: string | null
+          estimated_hours?: number | null
+          id?: string
+          priority?: string | null
+          qa_checklist?: Json | null
+          sla_hours?: number | null
+          status?: string | null
+          task_type?: string | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          actual_hours?: number | null
+          assigned_to?: string | null
+          created_at?: string | null
+          description?: string | null
+          due_date?: string | null
+          engagement_id?: string | null
+          estimated_hours?: number | null
+          id?: string
+          priority?: string | null
+          qa_checklist?: Json | null
+          sla_hours?: number | null
+          status?: string | null
+          task_type?: string | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "accounting_tasks_engagement_id_fkey"
+            columns: ["engagement_id"]
+            isOneToOne: false
+            referencedRelation: "accounting_engagements"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      accounting_time_entries: {
+        Row: {
+          bill_rate: number | null
+          billable: boolean | null
+          created_at: string | null
+          date_worked: string | null
+          description: string | null
+          id: string
+          minutes: number
+          task_id: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          bill_rate?: number | null
+          billable?: boolean | null
+          created_at?: string | null
+          date_worked?: string | null
+          description?: string | null
+          id?: string
+          minutes: number
+          task_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          bill_rate?: number | null
+          billable?: boolean | null
+          created_at?: string | null
+          date_worked?: string | null
+          description?: string | null
+          id?: string
+          minutes?: number
+          task_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "accounting_time_entries_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "accounting_tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ach_events: {
         Row: {
           created_at: string | null
@@ -9674,6 +10376,57 @@ export type Database = {
           updated_at?: string | null
           video_url?: string | null
           view_count?: number | null
+        }
+        Relationships: []
+      }
+      education_resources: {
+        Row: {
+          category: string | null
+          created_at: string
+          description: string | null
+          file_path: string | null
+          file_size: number | null
+          file_url: string | null
+          id: string
+          is_active: boolean | null
+          is_featured: boolean | null
+          mime_type: string | null
+          resource_type: string
+          title: string
+          updated_at: string
+          uploaded_by: string | null
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          file_path?: string | null
+          file_size?: number | null
+          file_url?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_featured?: boolean | null
+          mime_type?: string | null
+          resource_type: string
+          title: string
+          updated_at?: string
+          uploaded_by?: string | null
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          file_path?: string | null
+          file_size?: number | null
+          file_url?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_featured?: boolean | null
+          mime_type?: string | null
+          resource_type?: string
+          title?: string
+          updated_at?: string
+          uploaded_by?: string | null
         }
         Relationships: []
       }

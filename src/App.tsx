@@ -74,7 +74,7 @@ import { AttorneyDashboard } from "./pages/AttorneyDashboard";
 import { CoachDashboard } from "./pages/CoachDashboard";
 import { ComplianceDashboard } from "./pages/ComplianceDashboard";
 import HealthcareLongevityCenter from "@/components/healthcare/HealthcareLongevityCenter";
-import EducationPage from "./pages/EducationPage";
+import Education from "./pages/Education";
 import { EducationGuidesPage } from "./pages/education/EducationGuidesPage";
 import { EducationVideosPage } from "./pages/education/EducationVideosPage";
 import ResourcesCatalog from "./pages/ResourcesCatalog";
@@ -646,8 +646,13 @@ function App() {
                          <AdvisorPracticeHome />
                        </AuthWrapper>
                      } 
-                   />
-                    <Route path="/healthcare" element={<HealthcareLongevityCenter />} />
+                    />
+                     <Route path="/education" element={
+                       <AuthWrapper requireAuth={true}>
+                         <Education />
+                       </AuthWrapper>
+                     } />
+                     <Route path="/healthcare" element={<HealthcareLongevityCenter />} />
                      <Route path="/healthcare-qa" element={<HealthcareQAPage />} />
                      <Route path="/auth-test" element={<AuthTestPage />} />
                      <Route path="/assets" element={<AssetInventory />} />
