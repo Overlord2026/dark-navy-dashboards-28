@@ -22,6 +22,7 @@ import { EducationResource } from '@/types/education';
 import { useUser } from '@/context/UserContext';
 import { EducationAdminPanel } from '@/components/education/EducationAdminPanel';
 import { getFeaturedCourses, getPopularCourses, getAllCourses } from '@/data/education/courseUtils';
+import HeroEducation from '@/components/education/HeroEducation';
 
 const PublicEducationPage = () => {
   const { resources, loading } = useEducationResources();
@@ -212,30 +213,12 @@ const PublicEducationPage = () => {
     <ThreeColumnLayout title="Education Center">
       <div className="space-y-6">
         {/* Hero Section */}
-        <div className="text-center bg-gradient-primary rounded-xl p-8 text-white">
-          <h1 className="text-3xl font-bold mb-4">Financial Education Center</h1>
-          <p className="text-lg opacity-90 mb-6">
-            Comprehensive guides, courses, and resources to enhance your financial knowledge
-          </p>
-          <div className="flex flex-wrap justify-center items-center gap-4 text-sm">
-            <div className="flex items-center gap-2">
-              <BookOpen className="h-4 w-4" />
-              Interactive Courses
-            </div>
-            <div className="flex items-center gap-2">
-              <FileText className="h-4 w-4" />
-              Expert Guides
-            </div>
-            <div className="flex items-center gap-2">
-              <Users className="h-4 w-4" />
-              Community Resources
-            </div>
-          </div>
-        </div>
+        <HeroEducation />
 
         {/* Search and Filters */}
-        <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
-          <div className="flex-1 max-w-md">
+        <div className="mt-8">
+          <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
+            <div className="flex-1 max-w-md">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
               <Input
@@ -294,6 +277,7 @@ const PublicEducationPage = () => {
               </Button>
             )}
           </div>
+        </div>
         </div>
 
         {/* Featured Courses */}
