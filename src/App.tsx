@@ -203,6 +203,7 @@ import Founding20OverviewPage from './pages/founding20/Founding20OverviewPage';
 import Founding20LeadershipDeckPage from './pages/founding20/Founding20LeadershipDeckPage';
 import Founding20MasterDashboard from './pages/founding20/Founding20MasterDashboard';
 import Founding20LaunchDashboard from './pages/admin/Founding20LaunchDashboard';
+import PMQPage from './pages/pmq/PMQPage';
 import ExecutiveSuite from './pages/ExecutiveSuite';
 
 // Import onboarding flow component
@@ -277,7 +278,8 @@ function App() {
         <Route path="/image-generator" element={<ImageGeneratorPage />} />
                              <Route path="/persona-landing" element={<PersonaLandingPage />} />
                              <Route path="/persona-preview/:personaId" element={<PersonaPreviewPage />} />
-                                <Route path="/" element={<PublicLandingPage />} />
+                                 <Route path="/" element={<PublicLandingPage />} />
+                                <Route path="/pmq/:fundId" element={<PMQPage />} />
                                 
                                 {/* Persona intro dashboard routes */}
                                 <Route path="/persona/client" element={
