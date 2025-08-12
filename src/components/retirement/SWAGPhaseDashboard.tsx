@@ -18,6 +18,8 @@ import {
   CheckCircle,
   Target
 } from 'lucide-react';
+import { MonitoringPanel } from './MonitoringPanel';
+import { ReceiptTable } from './ReceiptTable';
 
 interface PhaseData {
   id: string;
@@ -296,6 +298,8 @@ export const SWAGPhaseDashboard = () => {
                 <TabsTrigger value="allocation">Asset Allocation</TabsTrigger>
                 <TabsTrigger value="actions">Action Steps</TabsTrigger>
                 <TabsTrigger value="scenarios">Scenarios</TabsTrigger>
+                <TabsTrigger value="monitoring">Monitoring</TabsTrigger>
+                <TabsTrigger value="receipts">Receipts</TabsTrigger>
               </TabsList>
 
               <TabsContent value="overview" className="mt-6">
@@ -534,6 +538,24 @@ export const SWAGPhaseDashboard = () => {
                     </CardContent>
                   </Card>
                 </div>
+              </TabsContent>
+
+              <TabsContent value="monitoring" className="mt-6">
+                <MonitoringPanel 
+                  metrics={{
+                    ISP: 0.87,
+                    DGBP: 0.15,
+                    LCR: 1.24,
+                    LCI: 0.78,
+                    ATE: 0.82,
+                    OS: 84
+                  }}
+                  proposals={[]}
+                />
+              </TabsContent>
+
+              <TabsContent value="receipts" className="mt-6">
+                <ReceiptTable receipts={[]} />
               </TabsContent>
             </Tabs>
           </CardContent>
