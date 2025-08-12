@@ -5,10 +5,12 @@
 
 import { supabase } from '@/integrations/supabase/client';
 
+export type PolicyNodeType = 'condition' | 'action' | 'gate';
+
 export interface PolicyNode {
   id: string;
   tenant_id: string;
-  node_type: 'condition' | 'action' | 'gate';
+  node_type: PolicyNodeType;
   node_name: string;
   node_config: {
     evaluation_type?: string;
@@ -19,6 +21,8 @@ export interface PolicyNode {
   };
   evaluation_logic?: string;
   is_active: boolean;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface PolicyEdge {
@@ -66,11 +70,33 @@ export class CLOPolicyService {
     if (nodesResult.error) throw nodesResult.error;
     if (edgesResult.error) throw edgesResult.error;
 
-    const nodes = nodesResult.data || [];
-    const edges = edgesResult.data || [];
+    const nodesData = nodesResult.data || [];
+    const edgesData = edgesResult.data || [];
+
+    const nodes = nodesData.map(node => ({
+      id: node.id,
+      node_type: node.node_type as PolicyNodeType,
+      node_name: node.node_name,
+      evaluation_logic: node.evaluation_logic,
+      node_config: node.node_config,
+      is_active: node.is_active,
+      tenant_id: node.tenant_id,
+      created_at: node.created_at,
+      updated_at: node.updated_at
+    } as PolicyNode));
+
+    const edges = edgesData.map(edge => ({
+      id: edge.id,
+      tenant_id: edge.tenant_id,
+      from_node_id: edge.from_node_id,
+      to_node_id: edge.to_node_id,
+      edge_weight: edge.edge_weight,
+      condition_expression: edge.condition_expression,
+      is_active: edge.is_active
+    } as PolicyEdge));
 
     // Build policy DAG
-    const policyGraph = this.buildPolicyGraph(nodes as any, edges as any);
+    const policyGraph = this.buildPolicyGraph(nodes, edges);
     
     // Evaluate plan against graph
     const result = await this.evaluateAgainstGraph(planContent, policyGraph, planType);
@@ -251,8 +277,8 @@ export class CLOPolicyService {
     return {
       decision,
       confidence_score: finalScore,
-      triggered_rules,
-      risk_factors,
+      triggered_rules: triggeredRules,
+      risk_factors: riskFactors,
       recommendations,
       policy_hash: '' // Will be set by caller
     };
@@ -395,7 +421,7 @@ export class CLOPolicyService {
   private calculateFinalScore(graph: any, evaluationResults: Map<string, any>): number {
     // Find gate nodes (final decision points)
     const gateNodes = Array.from(graph.nodes.values())
-      .filter(node => node.node_type === 'gate');
+      .filter((node: any) => node.node_type === 'gate');
 
     if (gateNodes.length === 0) {
       // No gates, use simple average
@@ -404,12 +430,12 @@ export class CLOPolicyService {
     }
 
     // Use gate node evaluation
-    const gateNode = gateNodes[0]; // Use first gate node
+    const gateNode = gateNodes[0] as any; // Use first gate node
     const gateId = gateNode.id;
 
     // Get all edges leading to this gate
     const incomingEdges = Array.from(graph.edges.values())
-      .filter(edge => edge.to_node_id === gateId);
+      .filter((edge: any) => edge.to_node_id === gateId);
 
     if (incomingEdges.length === 0) {
       return 0.5; // Default neutral score
@@ -419,7 +445,7 @@ export class CLOPolicyService {
     let totalWeight = 0;
     let weightedSum = 0;
 
-    incomingEdges.forEach(edge => {
+    incomingEdges.forEach((edge: any) => {
       const nodeResult = evaluationResults.get(edge.from_node_id);
       if (nodeResult) {
         const weight = edge.edge_weight;
