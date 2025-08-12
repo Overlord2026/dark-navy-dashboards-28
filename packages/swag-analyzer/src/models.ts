@@ -3,7 +3,7 @@
  * Outcome-first stress testing across retirement phases
  */
 
-export type PhaseId = 'INCOME_NOW' | 'INCOME_LATER' | 'GROWTH' | 'LEGACY';
+export type PhaseId = 'income_now' | 'income_later' | 'growth' | 'legacy';
 
 export interface PhaseBudgets {
   bL: number; // Liquidity budget
