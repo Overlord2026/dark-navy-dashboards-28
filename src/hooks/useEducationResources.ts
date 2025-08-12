@@ -68,7 +68,12 @@ export function useEducationResources() {
       const { error } = await supabase
         .from('education_resources')
         .insert({
-          ...resource,
+          title: resource.title,
+          description: resource.description,
+          resource_type: resource.resource_type || 'pdf',
+          category: resource.category || 'general',
+          is_featured: resource.is_featured || false,
+          is_active: true,
           file_url: fileUrl,
           file_path: filePath,
           file_size: fileSize,

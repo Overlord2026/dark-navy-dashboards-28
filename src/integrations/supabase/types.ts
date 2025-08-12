@@ -10381,49 +10381,82 @@ export type Database = {
       }
       education_resources: {
         Row: {
+          author: string | null
           category: string | null
+          cover_image: string | null
           created_at: string
           description: string | null
+          difficulty: string | null
+          duration: string | null
           file_path: string | null
           file_size: number | null
           file_url: string | null
+          ghl_url: string | null
           id: string
+          image: string | null
           is_active: boolean | null
           is_featured: boolean | null
+          is_paid: boolean | null
+          level: string | null
           mime_type: string | null
+          persona: string | null
+          rating: number | null
           resource_type: string
+          tags: string[] | null
           title: string
           updated_at: string
           uploaded_by: string | null
         }
         Insert: {
+          author?: string | null
           category?: string | null
+          cover_image?: string | null
           created_at?: string
           description?: string | null
+          difficulty?: string | null
+          duration?: string | null
           file_path?: string | null
           file_size?: number | null
           file_url?: string | null
+          ghl_url?: string | null
           id?: string
+          image?: string | null
           is_active?: boolean | null
           is_featured?: boolean | null
+          is_paid?: boolean | null
+          level?: string | null
           mime_type?: string | null
+          persona?: string | null
+          rating?: number | null
           resource_type: string
+          tags?: string[] | null
           title: string
           updated_at?: string
           uploaded_by?: string | null
         }
         Update: {
+          author?: string | null
           category?: string | null
+          cover_image?: string | null
           created_at?: string
           description?: string | null
+          difficulty?: string | null
+          duration?: string | null
           file_path?: string | null
           file_size?: number | null
           file_url?: string | null
+          ghl_url?: string | null
           id?: string
+          image?: string | null
           is_active?: boolean | null
           is_featured?: boolean | null
+          is_paid?: boolean | null
+          level?: string | null
           mime_type?: string | null
+          persona?: string | null
+          rating?: number | null
           resource_type?: string
+          tags?: string[] | null
           title?: string
           updated_at?: string
           uploaded_by?: string | null
