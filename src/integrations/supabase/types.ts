@@ -1465,6 +1465,51 @@ export type Database = {
           },
         ]
       }
+      agent_capabilities: {
+        Row: {
+          approval_threshold: number | null
+          capability_config: Json
+          capability_name: string
+          created_at: string | null
+          created_by: string
+          executive_role: Database["public"]["Enums"]["executive_role"]
+          id: string
+          is_enabled: boolean | null
+          max_budget_per_action: number | null
+          requires_approval: boolean | null
+          tenant_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          approval_threshold?: number | null
+          capability_config?: Json
+          capability_name: string
+          created_at?: string | null
+          created_by: string
+          executive_role: Database["public"]["Enums"]["executive_role"]
+          id?: string
+          is_enabled?: boolean | null
+          max_budget_per_action?: number | null
+          requires_approval?: boolean | null
+          tenant_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          approval_threshold?: number | null
+          capability_config?: Json
+          capability_name?: string
+          created_at?: string | null
+          created_by?: string
+          executive_role?: Database["public"]["Enums"]["executive_role"]
+          id?: string
+          is_enabled?: boolean | null
+          max_budget_per_action?: number | null
+          requires_approval?: boolean | null
+          tenant_id?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       agreement_workflow_templates: {
         Row: {
           auto_send_triggers: Json | null
@@ -2020,6 +2065,81 @@ export type Database = {
             columns: ["reimburse_id"]
             isOneToOne: false
             referencedRelation: "hsa_expenses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      approvals: {
+        Row: {
+          approval_notes: string | null
+          approval_type: string
+          approved_at: string | null
+          approver_id: string
+          approver_role: Database["public"]["Enums"]["executive_role"]
+          artifact_hash: string
+          conditions: Json | null
+          created_at: string | null
+          expires_at: string | null
+          id: string
+          plan_id: string
+          policy_evaluation: Json | null
+          policy_hash: string
+          rejected_at: string | null
+          status: Database["public"]["Enums"]["approval_status"]
+          step_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          approval_notes?: string | null
+          approval_type: string
+          approved_at?: string | null
+          approver_id: string
+          approver_role: Database["public"]["Enums"]["executive_role"]
+          artifact_hash: string
+          conditions?: Json | null
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          plan_id: string
+          policy_evaluation?: Json | null
+          policy_hash: string
+          rejected_at?: string | null
+          status?: Database["public"]["Enums"]["approval_status"]
+          step_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          approval_notes?: string | null
+          approval_type?: string
+          approved_at?: string | null
+          approver_id?: string
+          approver_role?: Database["public"]["Enums"]["executive_role"]
+          artifact_hash?: string
+          conditions?: Json | null
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          plan_id?: string
+          policy_evaluation?: Json | null
+          policy_hash?: string
+          rejected_at?: string | null
+          status?: Database["public"]["Enums"]["approval_status"]
+          step_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "approvals_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "execution_plans"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "approvals_step_id_fkey"
+            columns: ["step_id"]
+            isOneToOne: false
+            referencedRelation: "plan_steps"
             referencedColumns: ["id"]
           },
         ]
@@ -5296,6 +5416,90 @@ export type Database = {
           success?: boolean | null
           timestamp?: string | null
           user_id?: string
+        }
+        Relationships: []
+      }
+      clo_policy_edges: {
+        Row: {
+          condition_expression: string | null
+          created_at: string | null
+          edge_weight: number | null
+          from_node_id: string
+          id: string
+          is_active: boolean | null
+          tenant_id: string
+          to_node_id: string
+        }
+        Insert: {
+          condition_expression?: string | null
+          created_at?: string | null
+          edge_weight?: number | null
+          from_node_id: string
+          id?: string
+          is_active?: boolean | null
+          tenant_id: string
+          to_node_id: string
+        }
+        Update: {
+          condition_expression?: string | null
+          created_at?: string | null
+          edge_weight?: number | null
+          from_node_id?: string
+          id?: string
+          is_active?: boolean | null
+          tenant_id?: string
+          to_node_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clo_policy_edges_from_node_id_fkey"
+            columns: ["from_node_id"]
+            isOneToOne: false
+            referencedRelation: "clo_policy_nodes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clo_policy_edges_to_node_id_fkey"
+            columns: ["to_node_id"]
+            isOneToOne: false
+            referencedRelation: "clo_policy_nodes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clo_policy_nodes: {
+        Row: {
+          created_at: string | null
+          evaluation_logic: string | null
+          id: string
+          is_active: boolean | null
+          node_config: Json
+          node_name: string
+          node_type: string
+          tenant_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          evaluation_logic?: string | null
+          id?: string
+          is_active?: boolean | null
+          node_config?: Json
+          node_name: string
+          node_type: string
+          tenant_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          evaluation_logic?: string | null
+          id?: string
+          is_active?: boolean | null
+          node_config?: Json
+          node_name?: string
+          node_type?: string
+          tenant_id?: string
+          updated_at?: string | null
         }
         Relationships: []
       }
@@ -9922,6 +10126,92 @@ export type Database = {
             columns: ["request_id"]
             isOneToOne: false
             referencedRelation: "estate_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      execution_plans: {
+        Row: {
+          activated_at: string | null
+          approved_at: string | null
+          artifact_hash: string | null
+          completed_at: string | null
+          created_at: string | null
+          created_by: string
+          estimated_budget: number | null
+          estimated_duration_days: number | null
+          executive_role: Database["public"]["Enums"]["executive_role"]
+          id: string
+          model_version: string | null
+          parent_plan_id: string | null
+          plan_content: Json
+          plan_description: string | null
+          plan_title: string
+          policy_hash: string | null
+          priority: number | null
+          status: Database["public"]["Enums"]["plan_status"]
+          target_end_date: string | null
+          target_start_date: string | null
+          tenant_id: string
+          updated_at: string | null
+          version_number: number | null
+        }
+        Insert: {
+          activated_at?: string | null
+          approved_at?: string | null
+          artifact_hash?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          created_by: string
+          estimated_budget?: number | null
+          estimated_duration_days?: number | null
+          executive_role: Database["public"]["Enums"]["executive_role"]
+          id?: string
+          model_version?: string | null
+          parent_plan_id?: string | null
+          plan_content?: Json
+          plan_description?: string | null
+          plan_title: string
+          policy_hash?: string | null
+          priority?: number | null
+          status?: Database["public"]["Enums"]["plan_status"]
+          target_end_date?: string | null
+          target_start_date?: string | null
+          tenant_id: string
+          updated_at?: string | null
+          version_number?: number | null
+        }
+        Update: {
+          activated_at?: string | null
+          approved_at?: string | null
+          artifact_hash?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          created_by?: string
+          estimated_budget?: number | null
+          estimated_duration_days?: number | null
+          executive_role?: Database["public"]["Enums"]["executive_role"]
+          id?: string
+          model_version?: string | null
+          parent_plan_id?: string | null
+          plan_content?: Json
+          plan_description?: string | null
+          plan_title?: string
+          policy_hash?: string | null
+          priority?: number | null
+          status?: Database["public"]["Enums"]["plan_status"]
+          target_end_date?: string | null
+          target_start_date?: string | null
+          tenant_id?: string
+          updated_at?: string | null
+          version_number?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "execution_plans_parent_plan_id_fkey"
+            columns: ["parent_plan_id"]
+            isOneToOne: false
+            referencedRelation: "execution_plans"
             referencedColumns: ["id"]
           },
         ]
@@ -19430,6 +19720,62 @@ export type Database = {
           },
         ]
       }
+      plan_rds: {
+        Row: {
+          anchor_txid: string | null
+          anchored_at: string | null
+          approvals_hash: string
+          artifact_hash: string
+          explanation_json: Json
+          generated_at: string | null
+          id: string
+          inputs_hash: string
+          merkle_root: string | null
+          model_version: string
+          plan_id: string
+          policy_selection_hash: string
+          sha256_hash: string
+        }
+        Insert: {
+          anchor_txid?: string | null
+          anchored_at?: string | null
+          approvals_hash: string
+          artifact_hash: string
+          explanation_json: Json
+          generated_at?: string | null
+          id?: string
+          inputs_hash: string
+          merkle_root?: string | null
+          model_version: string
+          plan_id: string
+          policy_selection_hash: string
+          sha256_hash: string
+        }
+        Update: {
+          anchor_txid?: string | null
+          anchored_at?: string | null
+          approvals_hash?: string
+          artifact_hash?: string
+          explanation_json?: Json
+          generated_at?: string | null
+          id?: string
+          inputs_hash?: string
+          merkle_root?: string | null
+          model_version?: string
+          plan_id?: string
+          policy_selection_hash?: string
+          sha256_hash?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "plan_rds_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "execution_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       plan_savings: {
         Row: {
           account_id: string
@@ -19471,6 +19817,81 @@ export type Database = {
             columns: ["plan_id"]
             isOneToOne: false
             referencedRelation: "financial_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      plan_steps: {
+        Row: {
+          approval_required: boolean | null
+          assigned_to: string | null
+          completed_at: string | null
+          created_at: string | null
+          deliverables: Json | null
+          dependencies: Json | null
+          estimated_cost: number | null
+          estimated_duration_hours: number | null
+          id: string
+          plan_id: string
+          responsible_role: Database["public"]["Enums"]["executive_role"] | null
+          started_at: string | null
+          status: Database["public"]["Enums"]["step_status"]
+          step_data: Json | null
+          step_description: string | null
+          step_order: number
+          step_title: string
+          updated_at: string | null
+        }
+        Insert: {
+          approval_required?: boolean | null
+          assigned_to?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          deliverables?: Json | null
+          dependencies?: Json | null
+          estimated_cost?: number | null
+          estimated_duration_hours?: number | null
+          id?: string
+          plan_id: string
+          responsible_role?:
+            | Database["public"]["Enums"]["executive_role"]
+            | null
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["step_status"]
+          step_data?: Json | null
+          step_description?: string | null
+          step_order: number
+          step_title: string
+          updated_at?: string | null
+        }
+        Update: {
+          approval_required?: boolean | null
+          assigned_to?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          deliverables?: Json | null
+          dependencies?: Json | null
+          estimated_cost?: number | null
+          estimated_duration_hours?: number | null
+          id?: string
+          plan_id?: string
+          responsible_role?:
+            | Database["public"]["Enums"]["executive_role"]
+            | null
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["step_status"]
+          step_data?: Json | null
+          step_description?: string | null
+          step_order?: number
+          step_title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "plan_steps_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "execution_plans"
             referencedColumns: ["id"]
           },
         ]
@@ -30855,6 +31276,10 @@ export type Database = {
         Args: { p_agency_id: string }
         Returns: number
       }
+      calculate_artifact_hash: {
+        Args: { content: Json }
+        Returns: string
+      }
       calculate_audit_hash: {
         Args: {
           p_inputs_hash: string
@@ -31189,6 +31614,16 @@ export type Database = {
       }
       generate_organization_referral_code: {
         Args: { p_organization_id: string; p_prefix?: string }
+        Returns: string
+      }
+      generate_plan_rds: {
+        Args: {
+          p_plan_id: string
+          p_inputs_hash: string
+          p_model_version: string
+          p_policy_selection_hash: string
+          p_explanation: Json
+        }
         Returns: string
       }
       generate_referral_code: {
@@ -31873,6 +32308,10 @@ export type Database = {
         Args: { p_user_id: string; p_otp_code: string }
         Returns: boolean
       }
+      validate_plan_activation: {
+        Args: { plan_id: string }
+        Returns: boolean
+      }
       validate_referral_creation: {
         Args: {
           p_referrer_id: string
@@ -31931,6 +32370,7 @@ export type Database = {
         | "terms_of_service"
         | "advisor_agreement"
         | "compliance_disclosure"
+      approval_status: "pending" | "approved" | "rejected" | "expired"
       bill_category:
         | "utilities"
         | "mortgage"
@@ -31956,6 +32396,7 @@ export type Database = {
         | "planning"
         | "admin"
         | "advisor"
+      executive_role: "cmo" | "cfo" | "coo" | "clo" | "ceo"
       funding_frequency: "monthly" | "quarterly" | "annually" | "one_time"
       goal_category:
         | "retirement"
@@ -32067,6 +32508,13 @@ export type Database = {
         | "consultant"
         | "coach"
         | "other"
+      plan_status:
+        | "draft"
+        | "pending_approval"
+        | "approved"
+        | "active"
+        | "rejected"
+        | "archived"
       professional_persona:
         | "advisor"
         | "attorney"
@@ -32075,6 +32523,12 @@ export type Database = {
         | "consultant"
         | "coach"
         | "enterprise_admin"
+      step_status:
+        | "pending"
+        | "in_progress"
+        | "completed"
+        | "failed"
+        | "blocked"
       vault_permission_level:
         | "owner"
         | "admin"
@@ -32240,6 +32694,7 @@ export const Constants = {
         "advisor_agreement",
         "compliance_disclosure",
       ],
+      approval_status: ["pending", "approved", "rejected", "expired"],
       bill_category: [
         "utilities",
         "mortgage",
@@ -32268,6 +32723,7 @@ export const Constants = {
         "admin",
         "advisor",
       ],
+      executive_role: ["cmo", "cfo", "coo", "clo", "ceo"],
       funding_frequency: ["monthly", "quarterly", "annually", "one_time"],
       goal_category: [
         "retirement",
@@ -32391,6 +32847,14 @@ export const Constants = {
         "coach",
         "other",
       ],
+      plan_status: [
+        "draft",
+        "pending_approval",
+        "approved",
+        "active",
+        "rejected",
+        "archived",
+      ],
       professional_persona: [
         "advisor",
         "attorney",
@@ -32400,6 +32864,7 @@ export const Constants = {
         "coach",
         "enterprise_admin",
       ],
+      step_status: ["pending", "in_progress", "completed", "failed", "blocked"],
       vault_permission_level: [
         "owner",
         "admin",
