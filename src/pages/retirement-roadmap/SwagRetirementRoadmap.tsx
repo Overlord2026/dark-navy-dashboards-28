@@ -251,15 +251,38 @@ export default function SwagRetirementRoadmap() {
             taxBracket: profile.primaryClient.taxBracket
           }
         },
-        phases,
+        phases: phases.map(p => ({ 
+          ...p, 
+          allocation: p.allocation || { stocks: 60, bonds: 30, alternatives: 10, cash: 0 },
+          projection: p.projection || { expectedReturn: 7.0, volatility: 15.0, projectedValue: 0, withdrawalCapacity: 0 },
+          investmentCategories: p.investmentCategories.map(cat => ({
+            ...cat,
+            allocation: cat.allocation || cat.targetAllocation || 0,
+            risk: cat.risk || 5
+          }))
+        })),
         socialSecurity: {
           clientStartAge: 67,
+          colaPct: 2.0,
           enabled: profile.incomeStreams.socialSecurity.primaryBenefitAge67 > 0,
           currentEarnings: 100000,
           earningsHistory: [],
           filingAge: 67,
           spousalBenefit: !!profile.spouse,
           colaAdjustment: true
+        },
+        liabilities: [
+          { type: 'mortgage', balance: 0, rate: 0 },
+          { type: 'credit_card', balance: 0, rate: 18.0 },
+          { type: 'auto_loan', balance: 0, rate: 5.0 },
+          { type: 'student_loan', balance: 0, rate: 6.0 }
+        ],
+        stress: {
+          ltc: {
+            startAge: 75,
+            years: 3,
+            monthlyCost: 5000
+          }
         },
         assets: [],
         assumptions: {

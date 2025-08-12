@@ -24,7 +24,11 @@ export function RevocationCenter() {
         .order('created_at', { ascending: false })
         .limit(50);
       
-      setTokens(data || []);
+      setTokens((data || []).map(token => ({
+        ...token,
+        scopes: typeof token.scopes === 'string' ? JSON.parse(token.scopes) : token.scopes,
+        conditions: typeof token.conditions === 'string' ? JSON.parse(token.conditions as string) : token.conditions
+      })) as ConsentToken[]);
     } catch (error) {
       console.error('Error loading tokens:', error);
     } finally {

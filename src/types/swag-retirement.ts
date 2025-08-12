@@ -33,7 +33,7 @@ export const SwagRetirementAnalysisInputSchema = z.object({
       retirementAge: z.number().default(65),
       targetIncome: z.number().default(0)
     }).optional(),
-    estateDocuments: z.record(z.object({
+    estateDocuments: z.record(z.string(), z.object({
       hasDocument: z.boolean(),
       lastUpdated: z.string().optional()
     })).optional(),
@@ -352,7 +352,7 @@ export interface WhiteLabelConfig {
 }
 
 // Additional compatibility types for SWAG input
-export interface SwagRetirementAnalysisInputExtended extends SwagRetirementAnalysisInput {
+export interface SwagRetirementAnalysisInputExtended {
   phases?: SwagPhase[];
   primaryClient?: {
     name: string;

@@ -47,7 +47,7 @@ const gleanAiSchema = z.object({
 const providerConfigSchema = z.object({
   providerId: z.string().min(1, "Provider selection is required"),
   // The specific config will be validated separately based on provider
-  config: z.record(z.string().optional()),
+  config: z.record(z.string(), z.unknown()),
 });
 
 type ProviderConfig = z.infer<typeof providerConfigSchema>;
@@ -252,6 +252,7 @@ export function BillPayingProviderIntegrationForm({
                               {...formField} 
                               type={field.type} 
                               autoComplete="off"
+                              value={formField.value as string || ""}
                               className={field.type === "password" ? "font-mono" : ""}
                             />
                           )}

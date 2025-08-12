@@ -14,7 +14,7 @@ export default function PersonaSwitcher() {
 
   const loadPersonas = async () => {
     const { data } = await supabase.from('personas').select('*').order('created_at');
-    setPersonas((data || []).map(p => ({ ...p, kind: p.kind as any })));
+    setPersonas((data || []).map(p => ({ ...p, kind: p.persona_kind as any })));
     
     // Find active session
     const { data: session } = await supabase

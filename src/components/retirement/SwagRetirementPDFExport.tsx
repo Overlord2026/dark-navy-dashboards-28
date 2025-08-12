@@ -199,10 +199,10 @@ export const SwagRetirementPDFExport: React.FC<SwagRetirementPDFExportProps> = (
         doc.setFont('helvetica', 'bold');
         doc.text('Estate Planning Status', 20, estateY);
         
-        const estateData = Object.entries(inputs.profile.estateDocuments).map(([docType, docInfo]) => [
+        const estateData = Object.entries(inputs.profile.estateDocuments || {}).map(([docType, docInfo]) => [
           docType.replace(/([A-Z])/g, ' $1').trim(),
-          docInfo.hasDocument ? 'Complete' : 'Missing',
-          docInfo.lastUpdated ? new Date(docInfo.lastUpdated).toLocaleDateString() : 'N/A'
+          (docInfo as any)?.hasDocument ? 'Complete' : 'Missing',
+          (docInfo as any)?.lastUpdated ? new Date((docInfo as any).lastUpdated).toLocaleDateString() : 'N/A'
         ]);
         
         doc.autoTable({
