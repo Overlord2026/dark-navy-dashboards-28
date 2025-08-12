@@ -36,13 +36,9 @@ const billFormSchema = z.object({
   amount: z.string().refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
     message: "Amount must be a positive number.",
   }),
-  due_date: z.date({
-    required_error: "Due date is required.",
-  }),
-  category: z.enum(['utilities', 'mortgage', 'insurance', 'tuition', 'loans', 'subscriptions', 'transportation', 'healthcare', 'entertainment', 'other'], {
-    message: "Please select a valid category.",
-  }),
-  frequency: z.enum(['one_time', 'weekly', 'monthly', 'quarterly', 'annual']).default('monthly'),
+  due_date: z.date(),
+  category: z.enum(['utilities', 'mortgage', 'insurance', 'tuition', 'loans', 'subscriptions', 'transportation', 'healthcare', 'entertainment', 'other'] as const),
+  frequency: z.enum(['one_time', 'weekly', 'monthly', 'quarterly', 'annual'] as const).default('monthly'),
 });
 
 type BillFormValues = z.infer<typeof billFormSchema>;

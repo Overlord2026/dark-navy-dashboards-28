@@ -46,9 +46,7 @@ import {
 import { PaymentMethodsDialog, PaymentMethod, DEFAULT_PAYMENT_METHODS } from "./PaymentMethodsDialog";
 
 const paymentFormSchema = z.object({
-  paymentMethodId: z.string({
-    required_error: "Please select a payment method",
-  }),
+  paymentMethodId: z.string().min(1, { message: "Please select a payment method" }),
 });
 
 type PaymentFormValues = z.infer<typeof paymentFormSchema>;

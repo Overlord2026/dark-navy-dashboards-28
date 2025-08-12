@@ -69,7 +69,7 @@ const businessFilingSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters" }),
   description: z.string().optional(),
   business_name: z.string().min(1, { message: "Business name is required" }),
-  due_date: z.date({ required_error: "Due date is required" }),
+  due_date: z.date(),
   reminder_days: z.number().min(0).max(90),
   filing_type: z.string().min(1, { message: "Filing type is required" }),
   recurring: z.boolean().default(false),

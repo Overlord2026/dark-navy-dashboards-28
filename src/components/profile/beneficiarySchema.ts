@@ -5,7 +5,7 @@ export const beneficiarySchema = z.object({
   firstName: z.string().min(1, { message: "First name is required." }),
   lastName: z.string().min(1, { message: "Last name is required." }),
   relationship: z.string().min(1, { message: "Relationship is required." }),
-  dateOfBirth: z.date({ required_error: "Date of birth is required." }),
+  dateOfBirth: z.date(),
   ssn: z.string().optional(),
   email: z.string().email().optional().or(z.literal("")),
   address: z.string().min(1, { message: "Address is required." }),

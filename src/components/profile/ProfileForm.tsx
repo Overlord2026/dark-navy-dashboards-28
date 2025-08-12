@@ -21,9 +21,7 @@ const formSchema = z.object({
   suffix: z.string().optional(),
   gender: z.string().optional(),
   maritalStatus: z.string().optional(),
-  dateOfBirth: z.date({
-    required_error: "Date of birth is required.",
-  }),
+  dateOfBirth: z.date(),
 });
 
 export function ProfileForm({ onSave }: { onSave: () => void }) {

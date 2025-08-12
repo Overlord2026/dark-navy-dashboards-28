@@ -35,9 +35,7 @@ import {
 import { serviceCategories } from "./MarketplaceNavigation";
 
 const rfpFormSchema = z.object({
-  serviceType: z.string({
-    required_error: "Please select a service type",
-  }),
+  serviceType: z.string().min(1, { message: "Please select a service type" }),
   serviceSubcategory: z.string().optional(),
   projectTitle: z.string().min(5, {
     message: "Project title must be at least 5 characters",
@@ -45,21 +43,13 @@ const rfpFormSchema = z.object({
   projectDescription: z.string().min(20, {
     message: "Project description must be at least 20 characters",
   }),
-  expertiseLevel: z.enum(["basic", "advanced", "expert"], {
-    required_error: "Please select an expertise level",
-  }),
-  timeline: z.string({
-    required_error: "Please select a timeline",
-  }),
-  budgetType: z.enum(["fixed", "range", "open"], {
-    required_error: "Please select a budget type",
-  }),
+  expertiseLevel: z.enum(["basic", "advanced", "expert"] as const),
+  timeline: z.string().min(1, { message: "Please select a timeline" }),
+  budgetType: z.enum(["fixed", "range", "open"] as const),
   budgetMin: z.string().optional(),
   budgetMax: z.string().optional(),
   budgetFixed: z.string().optional(),
-  visibility: z.enum(["public", "invitation"], {
-    required_error: "Please select a visibility setting",
-  }),
+  visibility: z.enum(["public", "invitation"] as const),
   contactEmail: z.string().email({
     message: "Please enter a valid email address",
   }),
