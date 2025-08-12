@@ -40,6 +40,7 @@ import { GettingStartedPage } from "./pages/help/GettingStartedPage";
 import { VideosPage } from "./pages/help/VideosPage";
 import { APIPage } from "./pages/help/APIPage";
 import { WebinarsPage } from "./pages/help/WebinarsPage";
+import EducationPage from "./pages/EducationPage";
 
 // QA pages removed for production
 // All QA routes, checklists, and testing components removed for production security
@@ -173,6 +174,11 @@ export const router = createBrowserRouter([
         element: <SystemAdministratorDashboard />,
       }
     ]
+  },
+  // Education route
+  {
+    path: "/education",
+    element: <EducationPage />
   },
   // Coming Soon routes for missing features
   {

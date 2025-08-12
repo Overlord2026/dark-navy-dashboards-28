@@ -28,6 +28,7 @@ const buttonVariants = cva(
         premium: "bg-gradient-to-r from-navy to-secondary text-white hover:from-secondary hover:to-navy shadow-lg border border-emerald/20 font-medium",
         gold: "bg-emerald text-white hover:bg-emerald/90 shadow-md font-medium",
         "high-contrast": "bg-primary text-primary-foreground hover:bg-primary/90 font-bold border-2 border-primary-foreground shadow-lg",
+        cta: "bg-accent text-accent-foreground hover:bg-accent/90"
       },
       size: {
         default: "h-10 px-4 py-2",

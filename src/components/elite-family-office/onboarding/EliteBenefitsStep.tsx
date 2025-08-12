@@ -87,7 +87,7 @@ export const EliteBenefitsStep: React.FC<EliteBenefitsStepProps> = ({ onNext }) 
         <Button 
           onClick={onNext}
           size="lg"
-          className="bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90"
+          variant="cta"
         >
           Explore Tools
           <ArrowRight className="ml-2 h-4 w-4" />

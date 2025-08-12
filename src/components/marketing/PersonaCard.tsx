@@ -90,7 +90,8 @@ export const PersonaCard: React.FC<PersonaCardProps> = ({
           <Button
             onClick={handleExploreClick}
             size={compact ? "sm" : "default"}
-            className="flex-1 bg-gradient-to-r from-gold to-gold/90 text-navy font-bold hover:from-gold/90 hover:to-gold hover:shadow-lg transition-all duration-300 touch-target"
+            variant="cta"
+            className="flex-1 touch-target font-semibold"
           >
             Explore Tools
             <ArrowRight className="w-4 h-4 ml-2" />
