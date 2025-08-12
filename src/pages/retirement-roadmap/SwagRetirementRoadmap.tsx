@@ -188,7 +188,7 @@ export default function SwagRetirementRoadmap() {
       healthDirectives: { hasDocument: false },
       digitalAssets: { hasDocument: false }
     },
-    filingStatus: 'married_joint',
+    filingStatus: 'married_joint' as const,
     assets: {
       liquid: [],
       taxable: [],
@@ -255,7 +255,7 @@ export default function SwagRetirementRoadmap() {
         phases,
         goals: {
           retirementAge: profile.primaryClient.retirementAge,
-          retirementDate: new Date(new Date().getFullYear() + (profile.primaryClient.retirementAge - profile.primaryClient.age), 0, 1),
+          targetIncome: 0,
           currentAge: profile.primaryClient.age,
           desiredLifestyle: 'moderate',
           annualRetirementIncome: profile.expenses.totalMonthly * 12,
