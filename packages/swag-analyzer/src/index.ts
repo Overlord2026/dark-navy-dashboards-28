@@ -1,21 +1,28 @@
 /**
- * SWAG Analyzer - Public API
- * Outcome-first stress testing across retirement phases
+ * SWAG Analyzer - Main Export
+ * Strategic Wealth Alpha GPS™
  */
 
 export * from './models';
-export * from './engines/inflation';
-export * from './engines/rates';
-export * from './engines/returns';
-export * from './engines/longevity';
-export * from './engines/ltc';
-export * from './engines/bootstrap';
-export * from './engines/simulator';
 export * from './phase_objective';
+export * from './monitoring';
+export * from './phase_shift';
+export * from './alt_models';
+export * from './receipts';
+export * as engines from './engines';
 
-import { MonteCarloSimulator } from './engines/simulator';
-import { PhaseObjectiveCalculator } from './phase_objective';
-import { AnalyzerInput, AnalyzerResult, ScenarioConfig } from './models';
+// Main analyzer class
+export class SWAGAnalyzer {
+  async analyze(input: any) {
+    const { simulate } = await import('./engines/simulator');
+    return simulate();
+  }
+  
+  async generateReceipt(data: any) {
+    const { makeOutcomeReceipt } = await import('./receipts');
+    return makeOutcomeReceipt(data);
+  }
+}
 
 /**
  * Main SWAG Analyzer class - Entry point for all analysis

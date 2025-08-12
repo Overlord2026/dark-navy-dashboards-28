@@ -3,7 +3,7 @@
  * Outcome-first stress testing across retirement phases
  */
 
-export type PhaseId = 'income_now' | 'income_later' | 'growth' | 'legacy';
+export type PhaseId = 'INCOME_NOW' | 'INCOME_LATER' | 'GROWTH' | 'LEGACY';
 
 export interface PhaseBudgets {
   bL: number; // Liquidity budget
@@ -13,8 +13,9 @@ export interface PhaseBudgets {
 }
 
 export interface RiskProfile {
-  epsilonByPhase: Record<PhaseId, number>;   // chance-constraint tolerances (0-1)
-  budgets: Record<PhaseId, PhaseBudgets>;
+  epsilonByPhase: Record<PhaseId, number>;   // chance-constraint tolerances per phase
+  budgets: Record<PhaseId, PhaseBudgets>;    // hard caps per phase
+}
   maxDrawdown: number;                       // Maximum acceptable drawdown
   confidenceLevel: number;                   // Target confidence level (e.g., 0.95)
 }
@@ -91,12 +92,12 @@ export interface ScenarioConfig {
 }
 
 export interface OutcomeMetrics {
-  ISP: number;    // Income Sufficiency Probability
-  DGBP: number;   // Drawdown Guardrail Breach Probability
+  ISP: number;    // Income Sufficiency Probability (0..1)
+  DGBP: number;   // Drawdown Guardrail Breach Probability (0..1)
   LCR: number;    // Longevity Coverage Ratio
-  LCI: number;    // Legacy Confidence Index
-  ATE: number;    // After-Tax Efficiency
-  OS: number;     // Composite OutcomeScore (0-100)
+  LCI: number;    // Legacy Confidence Index (0..1)
+  ATE: number;    // After-Tax Efficiency (0..1 or scaled)
+  OS: number;     // Composite OutcomeScore
 }
 
 export interface PhaseAllocation {
@@ -171,13 +172,11 @@ export interface AnalyzerResult {
   timestamp: Date;
   
   phaseMetrics: Record<PhaseId, OutcomeMetrics>;
-  phaseAllocations: PhaseAllocation[];
-  stressTests: StressTestResult[];
+  worstPathIdx: number;
+  percentiles: Record<string, number>;
   
   summary: {
     overallScore: number;
-    worstPathIdx: number;
-    percentiles: Record<string, number>;
     keyRisks: string[];
     recommendations: string[];
   };

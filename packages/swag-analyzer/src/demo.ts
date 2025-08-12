@@ -1,14 +1,15 @@
 /**
- * SWAG Analyzer Demo Script
- * Runs breach + recovery scenarios and outputs receipts
+ * SWAG Demo Script
+ * Demonstrates breach and recovery scenarios with receipts
  */
 
-import { SWAGAnalyzer, createDefaultInput } from './index';
-import { makeOutcomeReceipt, outcomeScore } from './core';
-import { PhaseId } from './models';
+import { SWAGAnalyzer } from './index';
+import { makeOutcomeReceipt, makeMonitoringReceipt } from './receipts';
+import { breachState, reRiskStages } from './monitoring';
+import { computeOutcomeMetrics } from './phase_objective';
 
-async function runDemo() {
-  console.log('🚀 SWAG Analyzer Demo - Breach + Recovery Scenarios');
+export async function runDemo() {
+  console.log('🚀 SWAG Analyzer Demo - Breach & Recovery Scenarios');
   console.log('=' * 60);
 
   const analyzer = new SWAGAnalyzer('demo_seed_2024');

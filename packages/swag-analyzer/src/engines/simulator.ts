@@ -1,22 +1,36 @@
 /**
- * Monte Carlo Simulator - Portfolio cash-flow engine across SWAG phases
+ * SWAG Monte Carlo Simulator
+ * Main simulation engine combining all economic models
  */
 
-import { 
-  AnalyzerInput, 
-  AnalyzerResult, 
-  CashflowProjection, 
-  StressTestResult,
-  PhaseAllocation,
-  ScenarioConfig 
-} from '../models';
-import { InflationEngine } from './inflation';
-import { RatesEngine } from './rates';
-import { ReturnsEngine } from './returns';
-import { LongevityEngine } from './longevity';
-import { LTCEngine } from './ltc';
-import { BootstrapEngine } from './bootstrap';
-import * as seedrandom from 'seedrandom';
+import { AnalyzerResult, PhaseId } from '../models';
+import { computeOutcomeMetrics } from '../phase_objective';
+
+// Monte Carlo driver stub — wire to your real analyzer
+export async function simulate(): Promise<AnalyzerResult> {
+  const phases: PhaseId[] = ['INCOME_NOW', 'INCOME_LATER', 'GROWTH', 'LEGACY'];
+  const phaseMetrics: any = {};
+  
+  for (const p of phases) {
+    const isp = (p === 'INCOME_NOW') ? 0.92 : (p === 'INCOME_LATER' ? 0.85 : 0.75);
+    const dgbp = (p === 'INCOME_NOW') ? 0.06 : (p === 'INCOME_LATER' ? 0.10 : 0.18);
+    phaseMetrics[p] = computeOutcomeMetrics({ isp, dgbp, lcr: 1.1, lci: 0.7, ate: 0.6 });
+  }
+  
+  return { 
+    householdId: 'test-household',
+    runId: `run-${Date.now()}`,
+    timestamp: new Date(),
+    phaseMetrics, 
+    worstPathIdx: 0, 
+    percentiles: { OS_p50: 0.6 },
+    summary: {
+      overallScore: 78,
+      keyRisks: ['Market volatility', 'Inflation risk'],
+      recommendations: ['Diversify portfolio', 'Consider I-Bonds']
+    }
+  };
+}
 
 export class MonteCarloSimulator {
   private rng: seedrandom.PRNG;
