@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { zReq, zEnum, zNumeric } from "@/lib/zod-utils";
 import { 
   Dialog, 
   DialogContent, 
@@ -29,16 +30,15 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 
+const BILL_CATEGORIES = ['utilities', 'mortgage', 'insurance', 'tuition', 'loans', 'subscriptions', 'transportation', 'healthcare', 'entertainment', 'other'] as const;
+const BILL_FREQUENCIES = ['one_time', 'weekly', 'monthly', 'quarterly', 'annual'] as const;
+
 const billFormSchema = z.object({
-  biller_name: z.string().min(2, {
-    message: "Bill name must be at least 2 characters.",
-  }),
-  amount: z.string().refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
-    message: "Amount must be a positive number.",
-  }),
+  biller_name: zReq("Bill name must be at least 2 characters."),
+  amount: zNumeric("Amount must be a positive number."),
   due_date: z.date(),
-  category: z.enum(['utilities', 'mortgage', 'insurance', 'tuition', 'loans', 'subscriptions', 'transportation', 'healthcare', 'entertainment', 'other'] as const),
-  frequency: z.enum(['one_time', 'weekly', 'monthly', 'quarterly', 'annual'] as const).default('monthly'),
+  category: zEnum(BILL_CATEGORIES),
+  frequency: zEnum(BILL_FREQUENCIES).default('monthly'),
 });
 
 type BillFormValues = z.infer<typeof billFormSchema>;

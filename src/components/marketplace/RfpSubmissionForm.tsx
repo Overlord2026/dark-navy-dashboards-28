@@ -3,6 +3,7 @@ import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { zReq, zEnum, zEmail } from "@/lib/zod-utils";
 import { 
   Form, 
   FormControl, 
@@ -34,8 +35,12 @@ import {
 } from "lucide-react";
 import { serviceCategories } from "./MarketplaceNavigation";
 
+const EXPERTISE_LEVELS = ["basic", "advanced", "expert"] as const;
+const BUDGET_TYPES = ["fixed", "range", "open"] as const;
+const VISIBILITY_OPTIONS = ["public", "invitation"] as const;
+
 const rfpFormSchema = z.object({
-  serviceType: z.string().min(1, { message: "Please select a service type" }),
+  serviceType: zReq("Please select a service type"),
   serviceSubcategory: z.string().optional(),
   projectTitle: z.string().min(5, {
     message: "Project title must be at least 5 characters",
@@ -43,16 +48,14 @@ const rfpFormSchema = z.object({
   projectDescription: z.string().min(20, {
     message: "Project description must be at least 20 characters",
   }),
-  expertiseLevel: z.enum(["basic", "advanced", "expert"] as const),
-  timeline: z.string().min(1, { message: "Please select a timeline" }),
-  budgetType: z.enum(["fixed", "range", "open"] as const),
+  expertiseLevel: zEnum(EXPERTISE_LEVELS),
+  timeline: zReq("Please select a timeline"),
+  budgetType: zEnum(BUDGET_TYPES),
   budgetMin: z.string().optional(),
   budgetMax: z.string().optional(),
   budgetFixed: z.string().optional(),
-  visibility: z.enum(["public", "invitation"] as const),
-  contactEmail: z.string().email({
-    message: "Please enter a valid email address",
-  }),
+  visibility: zEnum(VISIBILITY_OPTIONS),
+  contactEmail: zEmail(),
   contactPhone: z.string().optional(),
 });
 
