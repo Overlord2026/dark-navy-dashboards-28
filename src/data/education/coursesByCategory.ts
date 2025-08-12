@@ -1,4 +1,3 @@
-
 export const coursesByCategory = {
   "retirement-income": [
     {
@@ -8,6 +7,7 @@ export const coursesByCategory = {
       isPaid: false,
       level: "Beginner",
       duration: "2 hours",
+      category: "retirement-income",
       ghlUrl: "https://ghl.example.com/courses/retirement-income-fundamentals"
     },
     {
@@ -17,6 +17,7 @@ export const coursesByCategory = {
       isPaid: true,
       level: "Intermediate",
       duration: "3 hours",
+      category: "retirement-income",
       ghlUrl: "https://ghl.example.com/courses/income-planning-strategies"
     }
   ],
@@ -28,6 +29,7 @@ export const coursesByCategory = {
       isPaid: false,
       level: "Beginner",
       duration: "1.5 hours",
+      category: "social-security",
       ghlUrl: "https://ghl.example.com/courses/social-security-basics"
     },
     {
@@ -37,6 +39,7 @@ export const coursesByCategory = {
       isPaid: true,
       level: "Intermediate",
       duration: "2.5 hours",
+      category: "social-security",
       ghlUrl: "https://ghl.example.com/courses/maximizing-social-security"
     }
   ],
@@ -48,6 +51,7 @@ export const coursesByCategory = {
       isPaid: false,
       level: "Beginner",
       duration: "2 hours",
+      category: "income-distribution",
       ghlUrl: "https://ghl.example.com/courses/distribution-planning-101"
     },
     {
@@ -57,6 +61,7 @@ export const coursesByCategory = {
       isPaid: true,
       level: "Advanced",
       duration: "3 hours",
+      category: "income-distribution",
       ghlUrl: "https://ghl.example.com/courses/tax-efficient-withdrawals"
     }
   ],
@@ -68,6 +73,7 @@ export const coursesByCategory = {
       isPaid: false,
       level: "Beginner",
       duration: "1.5 hours",
+      category: "annuities",
       ghlUrl: "https://ghl.example.com/courses/annuity-fundamentals"
     },
     {
@@ -77,6 +83,7 @@ export const coursesByCategory = {
       isPaid: true,
       level: "Intermediate",
       duration: "2.5 hours",
+      category: "annuities",
       comingSoon: true,
       ghlUrl: "https://ghl.example.com/courses/advanced-annuity-strategies"
     }
@@ -89,6 +96,7 @@ export const coursesByCategory = {
       isPaid: false,
       level: "Beginner",
       duration: "2 hours",
+      category: "tax-planning",
       ghlUrl: "https://ghl.example.com/courses/tax-planning-essentials"
     },
     {
@@ -98,6 +106,7 @@ export const coursesByCategory = {
       isPaid: true,
       level: "Intermediate",
       duration: "2.5 hours",
+      category: "tax-planning",
       ghlUrl: "https://ghl.example.com/courses/tax-efficient-investing"
     }
   ],
@@ -109,6 +118,7 @@ export const coursesByCategory = {
       isPaid: true,
       level: "Advanced",
       duration: "3 hours",
+      category: "advanced-tax",
       ghlUrl: "https://ghl.example.com/courses/advanced-tax-strategies"
     },
     {
@@ -118,6 +128,7 @@ export const coursesByCategory = {
       isPaid: true,
       level: "Advanced",
       duration: "3.5 hours",
+      category: "advanced-tax",
       comingSoon: true,
       ghlUrl: "https://ghl.example.com/courses/estate-tax-planning"
     }
@@ -130,6 +141,7 @@ export const coursesByCategory = {
       isPaid: false,
       level: "Beginner",
       duration: "2 hours",
+      category: "wealth-management",
       ghlUrl: "https://ghl.example.com/courses/wealth-building-principles"
     },
     {
@@ -139,6 +151,7 @@ export const coursesByCategory = {
       isPaid: true,
       level: "Advanced",
       duration: "4 hours",
+      category: "wealth-management",
       comingSoon: true,
       ghlUrl: "https://ghl.example.com/courses/advanced-portfolio-management"
     }
@@ -151,6 +164,7 @@ export const coursesByCategory = {
       isPaid: false,
       level: "Beginner",
       duration: "2 hours",
+      category: "estate-planning",
       ghlUrl: "https://ghl.example.com/courses/estate-planning-basics"
     },
     {
@@ -160,6 +174,7 @@ export const coursesByCategory = {
       isPaid: true,
       level: "Intermediate",
       duration: "3 hours",
+      category: "estate-planning",
       ghlUrl: "https://ghl.example.com/courses/trust-strategies"
     }
   ],
@@ -171,6 +186,7 @@ export const coursesByCategory = {
       isPaid: true,
       level: "Advanced",
       duration: "4 hours",
+      category: "advanced-estate-planning",
       ghlUrl: "https://ghl.example.com/courses/advanced-estate-planning-strategies"
     },
     {
@@ -180,6 +196,7 @@ export const coursesByCategory = {
       isPaid: true,
       level: "Advanced",
       duration: "3.5 hours",
+      category: "advanced-estate-planning",
       ghlUrl: "https://ghl.example.com/courses/dynasty-trusts"
     }
   ],
@@ -191,6 +208,7 @@ export const coursesByCategory = {
       isPaid: false,
       level: "Beginner",
       duration: "2.5 hours",
+      category: "investment-management",
       ghlUrl: "https://ghl.example.com/courses/investment-management-fundamentals"
     },
     {
@@ -200,6 +218,7 @@ export const coursesByCategory = {
       isPaid: true,
       level: "Intermediate",
       duration: "3 hours",
+      category: "investment-management",
       ghlUrl: "https://ghl.example.com/courses/portfolio-optimization"
     }
   ],
@@ -211,6 +230,7 @@ export const coursesByCategory = {
       isPaid: false,
       level: "Beginner",
       duration: "2 hours",
+      category: "alternative-investments",
       ghlUrl: "https://ghl.example.com/courses/intro-alternative-investments"
     },
     {
@@ -220,6 +240,7 @@ export const coursesByCategory = {
       isPaid: true,
       level: "Intermediate",
       duration: "3 hours",
+      category: "alternative-investments",
       ghlUrl: "https://ghl.example.com/courses/private-market-alpha"
     }
   ],
@@ -231,6 +252,7 @@ export const coursesByCategory = {
       isPaid: false,
       level: "Beginner",
       duration: "1.5 hours",
+      category: "intelligent-allocation",
       ghlUrl: "https://ghl.example.com/courses/intelligent-allocation-overview"
     },
     {
@@ -240,6 +262,7 @@ export const coursesByCategory = {
       isPaid: true,
       level: "Advanced",
       duration: "3 hours",
+      category: "intelligent-allocation",
       ghlUrl: "https://ghl.example.com/courses/advanced-allocation-strategies"
     }
   ],
@@ -251,6 +274,7 @@ export const coursesByCategory = {
       isPaid: false,
       level: "Beginner",
       duration: "1.5 hours",
+      category: "florida-residency",
       ghlUrl: "https://ghl.example.com/courses/florida-residency-advantages"
     },
     {
@@ -260,6 +284,7 @@ export const coursesByCategory = {
       isPaid: true,
       level: "Intermediate",
       duration: "2 hours",
+      category: "florida-residency",
       comingSoon: true,
       ghlUrl: "https://ghl.example.com/courses/florida-estate-planning"
     }
@@ -272,6 +297,7 @@ export const coursesByCategory = {
       isPaid: false,
       level: "Beginner",
       duration: "1.5 hours",
+      category: "texas-residency",
       ghlUrl: "https://ghl.example.com/courses/texas-residency-benefits"
     },
     {
@@ -281,6 +307,7 @@ export const coursesByCategory = {
       isPaid: true,
       level: "Intermediate",
       duration: "2 hours",
+      category: "texas-residency",
       comingSoon: true,
       ghlUrl: "https://ghl.example.com/courses/texas-estate-planning"
     }

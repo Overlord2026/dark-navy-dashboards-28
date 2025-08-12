@@ -7,23 +7,23 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { 
   Search, 
-  Filter, 
   FileText, 
   BookOpen, 
   ExternalLink, 
   Download,
   Star,
   Calendar,
-  User,
-  Settings
+  Settings,
+  PlayCircle,
+  Users
 } from 'lucide-react';
 import { useEducationResources } from '@/hooks/useEducationResources';
 import { EducationResource } from '@/types/education';
 import { useUser } from '@/context/UserContext';
 import { EducationAdminPanel } from '@/components/education/EducationAdminPanel';
-import { cn } from '@/lib/utils';
+import { getFeaturedCourses, getPopularCourses, getAllCourses } from '@/data/education/courseUtils';
 
-const Education = () => {
+const PublicEducationPage = () => {
   const { resources, loading } = useEducationResources();
   const { userProfile } = useUser();
   const [searchTerm, setSearchTerm] = useState('');
@@ -34,9 +34,13 @@ const Education = () => {
 
   const isAdmin = userProfile?.role && ['admin', 'superadmin', 'tenant_admin'].includes(userProfile.role);
 
+  // Get course data for demo content
+  const featuredCourses = getFeaturedCourses();
+  const popularCourses = getPopularCourses();
+
   // Get unique categories from resources
   const categories = useMemo(() => {
-    const cats = Array.from(new Set(resources.map(r => r.category)));
+    const cats = Array.from(new Set(resources.map(r => r.category).filter(Boolean)));
     return cats.sort();
   }, [resources]);
 
@@ -57,9 +61,9 @@ const Education = () => {
     filtered.sort((a, b) => {
       switch (sortBy) {
         case 'newest':
-          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+          return new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime();
         case 'oldest':
-          return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+          return new Date(a.created_at || 0).getTime() - new Date(b.created_at || 0).getTime();
         case 'title':
           return a.title.localeCompare(b.title);
         default:
@@ -90,8 +94,14 @@ const Education = () => {
     }
   };
 
+  const handleCourseAccess = (course: any) => {
+    if (course.ghlUrl) {
+      window.open(course.ghlUrl, '_blank');
+    }
+  };
+
   const renderResourceCard = (resource: EducationResource) => {
-    const Icon = getResourceIcon(resource.resource_type);
+    const Icon = getResourceIcon(resource.resource_type || 'pdf');
     
     return (
       <Card 
@@ -114,11 +124,13 @@ const Education = () => {
                 </CardTitle>
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Badge variant="secondary" className="text-xs">
-                    {resource.resource_type.toUpperCase()}
+                    {resource.resource_type?.toUpperCase() || 'FILE'}
                   </Badge>
-                  <Badge variant="outline" className="text-xs">
-                    {resource.category}
-                  </Badge>
+                  {resource.category && (
+                    <Badge variant="outline" className="text-xs">
+                      {resource.category}
+                    </Badge>
+                  )}
                 </div>
               </div>
             </div>
@@ -134,7 +146,7 @@ const Education = () => {
             <div className="flex items-center gap-4 mt-3 text-xs text-muted-foreground">
               <div className="flex items-center gap-1">
                 <Calendar className="h-3 w-3" />
-                {new Date(resource.created_at).toLocaleDateString()}
+                {resource.created_at ? new Date(resource.created_at).toLocaleDateString() : 'Recent'}
               </div>
               {resource.file_size && (
                 <div className="flex items-center gap-1">
@@ -149,7 +161,48 @@ const Education = () => {
     );
   };
 
-  // Remove authentication requirement - Education Center is now public
+  const renderCourseCard = (course: any) => {
+    return (
+      <Card 
+        key={course.id} 
+        className="group hover:shadow-lg transition-all duration-300 cursor-pointer"
+        onClick={() => handleCourseAccess(course)}
+      >
+        <CardHeader className="pb-3">
+          <div className="flex items-start justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
+                <PlayCircle className="h-5 w-5 text-primary" />
+              </div>
+              <div className="flex-1">
+                <CardTitle className="text-lg mb-1 group-hover:text-primary transition-colors">
+                  {course.title}
+                </CardTitle>
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Badge variant={course.isPaid ? "default" : "secondary"} className="text-xs">
+                    {course.isPaid ? 'Premium' : 'Free'}
+                  </Badge>
+                  <Badge variant="outline" className="text-xs">
+                    {course.level}
+                  </Badge>
+                  <Badge variant="outline" className="text-xs">
+                    {course.duration}
+                  </Badge>
+                </div>
+              </div>
+            </div>
+            <ExternalLink className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+          </div>
+        </CardHeader>
+        
+        <CardContent className="pt-0">
+          <p className="text-sm text-muted-foreground line-clamp-2">
+            {course.description}
+          </p>
+        </CardContent>
+      </Card>
+    );
+  };
 
   if (showAdminPanel) {
     return <EducationAdminPanel onBack={() => setShowAdminPanel(false)} />;
@@ -158,7 +211,29 @@ const Education = () => {
   return (
     <ThreeColumnLayout title="Education Center">
       <div className="space-y-6">
-        {/* Header with Search and Filters */}
+        {/* Hero Section */}
+        <div className="text-center bg-gradient-primary rounded-xl p-8 text-white">
+          <h1 className="text-3xl font-bold mb-4">Financial Education Center</h1>
+          <p className="text-lg opacity-90 mb-6">
+            Comprehensive guides, courses, and resources to enhance your financial knowledge
+          </p>
+          <div className="flex flex-wrap justify-center items-center gap-4 text-sm">
+            <div className="flex items-center gap-2">
+              <BookOpen className="h-4 w-4" />
+              Interactive Courses
+            </div>
+            <div className="flex items-center gap-2">
+              <FileText className="h-4 w-4" />
+              Expert Guides
+            </div>
+            <div className="flex items-center gap-2">
+              <Users className="h-4 w-4" />
+              Community Resources
+            </div>
+          </div>
+        </div>
+
+        {/* Search and Filters */}
         <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
           <div className="flex-1 max-w-md">
             <div className="relative">
@@ -221,6 +296,32 @@ const Education = () => {
           </div>
         </div>
 
+        {/* Featured Courses */}
+        {featuredCourses.length > 0 && (
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold flex items-center gap-2">
+              <Star className="h-5 w-5 text-yellow-500" />
+              Featured Courses
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {featuredCourses.map(renderCourseCard)}
+            </div>
+          </div>
+        )}
+
+        {/* Popular Courses */}
+        {popularCourses.length > 0 && (
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold flex items-center gap-2">
+              <PlayCircle className="h-5 w-5 text-primary" />
+              Popular Courses
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {popularCourses.slice(0, 6).map(renderCourseCard)}
+            </div>
+          </div>
+        )}
+
         {/* Featured Resources */}
         {filteredResources.some(r => r.is_featured) && (
           <div className="space-y-4">
@@ -268,7 +369,7 @@ const Education = () => {
                 <p className="text-muted-foreground">
                   {searchTerm || selectedCategory !== 'all' || selectedType !== 'all'
                     ? 'Try adjusting your search criteria or filters.'
-                    : 'No educational resources have been added yet.'}
+                    : 'Educational resources will appear here once they are added.'}
                 </p>
               </CardContent>
             </Card>
@@ -286,4 +387,4 @@ const Education = () => {
   );
 };
 
-export default Education;
+export default PublicEducationPage;
