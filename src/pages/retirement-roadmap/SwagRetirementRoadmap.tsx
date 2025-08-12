@@ -238,7 +238,6 @@ export default function SwagRetirementRoadmap() {
     try {
       setActiveStep('analysis');
       
-      // Convert enhanced profile to analysis input format
       const analysisInput: SwagRetirementAnalysisInput = {
         profile: {
           client: profile.client ?? { firstName: profile.primaryClient.name || '', lastName: '', age: profile.primaryClient.age },
@@ -253,6 +252,26 @@ export default function SwagRetirementRoadmap() {
           }
         },
         phases,
+        socialSecurity: {
+          clientStartAge: 67,
+          enabled: profile.incomeStreams.socialSecurity.primaryBenefitAge67 > 0,
+          currentEarnings: 100000,
+          earningsHistory: [],
+          filingAge: 67,
+          spousalBenefit: !!profile.spouse,
+          colaAdjustment: true
+        },
+        assets: [],
+        assumptions: {
+          inflation: profile.expenses.inflationAssumption,
+          returns: {
+            incomeNow: 4.0,
+            incomeLater: 5.2,
+            growth: 7.1,
+            legacy: 6.0
+          },
+          reserveAmount: 120000
+        },
         goals: {
           retirementAge: profile.primaryClient.retirementAge,
           targetIncome: 0,
@@ -262,14 +281,6 @@ export default function SwagRetirementRoadmap() {
           inflationRate: profile.expenses.inflationAssumption,
           lifeExpectancy: 90
         },
-        socialSecurity: {
-          enabled: profile.incomeStreams.socialSecurity.primaryBenefitAge67 > 0,
-          currentEarnings: 100000, // TODO: Calculate from employment income
-          earningsHistory: [],
-          filingAge: 67,
-          spousalBenefit: !!profile.spouse,
-          colaAdjustment: true
-        },
         pension: {
           enabled: profile.incomeStreams.pensions.length > 0,
           monthlyBenefit: profile.incomeStreams.pensions[0]?.monthlyBenefit || 0,
@@ -277,8 +288,8 @@ export default function SwagRetirementRoadmap() {
           survivorBenefit: profile.incomeStreams.pensions[0]?.survivorBenefit || 0,
           colaProtection: profile.incomeStreams.pensions[0]?.colaAdjustment || false
         },
-        accounts: [], // TODO: Map from profile assets
-        expenses: [], // TODO: Map from profile expenses
+        accounts: [],
+        expenses: [],
         taxOptimization: {
           withdrawalSequence: ['taxable', 'tax_deferred', 'tax_free'],
           rothConversionStrategy: false,
