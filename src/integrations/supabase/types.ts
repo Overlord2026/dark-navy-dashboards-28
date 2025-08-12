@@ -6948,6 +6948,45 @@ export type Database = {
         }
         Relationships: []
       }
+      consent_tokens: {
+        Row: {
+          conditions: Json | null
+          created_at: string | null
+          id: string
+          issuer_user: string | null
+          scopes: Json
+          status: string | null
+          subject_user: string
+          valid_from: string | null
+          valid_to: string | null
+          vc_jwt: string | null
+        }
+        Insert: {
+          conditions?: Json | null
+          created_at?: string | null
+          id?: string
+          issuer_user?: string | null
+          scopes: Json
+          status?: string | null
+          subject_user: string
+          valid_from?: string | null
+          valid_to?: string | null
+          vc_jwt?: string | null
+        }
+        Update: {
+          conditions?: Json | null
+          created_at?: string | null
+          id?: string
+          issuer_user?: string | null
+          scopes?: Json
+          status?: string | null
+          subject_user?: string
+          valid_from?: string | null
+          valid_to?: string | null
+          vc_jwt?: string | null
+        }
+        Relationships: []
+      }
       contacts: {
         Row: {
           assigned_advisor_id: string | null
@@ -20061,6 +20100,41 @@ export type Database = {
         }
         Relationships: []
       }
+      persona_sessions: {
+        Row: {
+          active: boolean | null
+          ended_at: string | null
+          id: string
+          persona_id: string
+          started_at: string | null
+          user_id: string
+        }
+        Insert: {
+          active?: boolean | null
+          ended_at?: string | null
+          id?: string
+          persona_id: string
+          started_at?: string | null
+          user_id: string
+        }
+        Update: {
+          active?: boolean | null
+          ended_at?: string | null
+          id?: string
+          persona_id?: string
+          started_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "persona_sessions_persona_id_fkey"
+            columns: ["persona_id"]
+            isOneToOne: false
+            referencedRelation: "personas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       persona_signals: {
         Row: {
           collected_at: string
@@ -24093,6 +24167,56 @@ export type Database = {
         }
         Relationships: []
       }
+      reason_receipts: {
+        Row: {
+          action_key: string
+          anchor_txid: string | null
+          content_fingerprint: string | null
+          created_at: string | null
+          explanation: string | null
+          id: string
+          persona_id: string
+          policy_version: string | null
+          reason_code: string
+          sha256: string | null
+          user_id: string
+        }
+        Insert: {
+          action_key: string
+          anchor_txid?: string | null
+          content_fingerprint?: string | null
+          created_at?: string | null
+          explanation?: string | null
+          id?: string
+          persona_id: string
+          policy_version?: string | null
+          reason_code: string
+          sha256?: string | null
+          user_id: string
+        }
+        Update: {
+          action_key?: string
+          anchor_txid?: string | null
+          content_fingerprint?: string | null
+          created_at?: string | null
+          explanation?: string | null
+          id?: string
+          persona_id?: string
+          policy_version?: string | null
+          reason_code?: string
+          sha256?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reason_receipts_persona_id_fkey"
+            columns: ["persona_id"]
+            isOneToOne: false
+            referencedRelation: "personas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       rebalancing_events: {
         Row: {
           account_id: string
@@ -24988,6 +25112,38 @@ export type Database = {
           vesting_schedule?: string | null
         }
         Relationships: []
+      }
+      revocations: {
+        Row: {
+          consent_id: string
+          created_at: string | null
+          id: string
+          propagated: boolean | null
+          reason: string | null
+        }
+        Insert: {
+          consent_id: string
+          created_at?: string | null
+          id?: string
+          propagated?: boolean | null
+          reason?: string | null
+        }
+        Update: {
+          consent_id?: string
+          created_at?: string | null
+          id?: string
+          propagated?: boolean | null
+          reason?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "revocations_consent_id_fkey"
+            columns: ["consent_id"]
+            isOneToOne: false
+            referencedRelation: "consent_tokens"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       ria_filings: {
         Row: {
@@ -32292,6 +32448,45 @@ export type Database = {
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      xr_attestations: {
+        Row: {
+          consent_id: string | null
+          created_at: string | null
+          event: Json | null
+          id: string
+          receipt_id: string | null
+        }
+        Insert: {
+          consent_id?: string | null
+          created_at?: string | null
+          event?: Json | null
+          id?: string
+          receipt_id?: string | null
+        }
+        Update: {
+          consent_id?: string | null
+          created_at?: string | null
+          event?: Json | null
+          id?: string
+          receipt_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "xr_attestations_consent_id_fkey"
+            columns: ["consent_id"]
+            isOneToOne: false
+            referencedRelation: "consent_tokens"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "xr_attestations_receipt_id_fkey"
+            columns: ["receipt_id"]
+            isOneToOne: false
+            referencedRelation: "reason_receipts"
             referencedColumns: ["id"]
           },
         ]
