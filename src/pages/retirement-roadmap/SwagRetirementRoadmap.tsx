@@ -31,18 +31,22 @@ const DEFAULT_PHASES: SwagPhase[] = [
         id: 'cash-equivalents',
         name: 'Cash & Equivalents',
         description: 'High-yield savings, money market, short-term CDs',
+        allocation: 60,
         targetAllocation: 60,
         riskLevel: 'conservative',
         expectedReturn: 4.5,
+        risk: 2,
         products: []
       },
       {
         id: 'short-bonds',
         name: 'Short-Term Bonds',
         description: 'Treasury bills, high-grade corporate bonds',
+        allocation: 40,
         targetAllocation: 40,
         riskLevel: 'conservative',
         expectedReturn: 5.0,
+        risk: 3,
         products: []
       }
     ],

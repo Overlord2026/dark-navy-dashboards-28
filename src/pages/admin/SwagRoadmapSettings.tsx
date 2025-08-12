@@ -23,6 +23,10 @@ import {
 import { SwagPhase, InvestmentCategory, WhiteLabelConfig } from '@/types/swag-retirement';
 
 const DEFAULT_CONFIG: WhiteLabelConfig = {
+  brandName: 'SWAG Retirement Roadmap™',
+  logoUrl: '',
+  primaryColor: '#2563eb',
+  secondaryColor: '#7c3aed',
   phases: [
     {
       id: 'income-now',
@@ -33,7 +37,19 @@ const DEFAULT_CONFIG: WhiteLabelConfig = {
       fundingRequirement: 120000,
       investmentCategories: [],
       enabled: true,
-      order: 1
+      order: 1,
+      allocation: {
+        stocks: 20,
+        bonds: 60,
+        alternatives: 10,
+        cash: 10
+      },
+      projection: {
+        expectedReturn: 4.5,
+        volatility: 5.0,
+        projectedValue: 120000,
+        withdrawalCapacity: 60000
+      }
     },
     {
       id: 'income-later',
@@ -44,7 +60,19 @@ const DEFAULT_CONFIG: WhiteLabelConfig = {
       fundingRequirement: 800000,
       investmentCategories: [],
       enabled: true,
-      order: 2
+      order: 2,
+      allocation: {
+        stocks: 40,
+        bonds: 40,
+        alternatives: 15,
+        cash: 5
+      },
+      projection: {
+        expectedReturn: 6.5,
+        volatility: 8.0,
+        projectedValue: 800000,
+        withdrawalCapacity: 400000
+      }
     },
     {
       id: 'growth',
@@ -55,7 +83,19 @@ const DEFAULT_CONFIG: WhiteLabelConfig = {
       fundingRequirement: 1500000,
       investmentCategories: [],
       enabled: true,
-      order: 3
+      order: 3,
+      allocation: {
+        stocks: 70,
+        bonds: 15,
+        alternatives: 10,
+        cash: 5
+      },
+      projection: {
+        expectedReturn: 9.0,
+        volatility: 15.0,
+        projectedValue: 1500000,
+        withdrawalCapacity: 750000
+      }
     },
     {
       id: 'legacy',
@@ -66,17 +106,33 @@ const DEFAULT_CONFIG: WhiteLabelConfig = {
       fundingRequirement: 500000,
       investmentCategories: [],
       enabled: true,
-      order: 4
+      order: 4,
+      allocation: {
+        stocks: 60,
+        bonds: 25,
+        alternatives: 10,
+        cash: 5
+      },
+      projection: {
+        expectedReturn: 8.0,
+        volatility: 12.0,
+        projectedValue: 500000,
+        withdrawalCapacity: 250000
+      }
     }
   ],
-  investmentMappings: [],
   brandingSettings: {
     primaryColor: '#2563eb',
     secondaryColor: '#7c3aed',
     companyName: 'SWAG Retirement Roadmap™',
     disclaimers: []
   },
-  enabledFeatures: ['phases', 'allocations', 'projections', 'reports']
+  enabledFeatures: {
+    phases: true,
+    allocations: true,
+    projections: true,
+    reports: true
+  }
 };
 
 export default function SwagRoadmapSettings() {
@@ -98,9 +154,11 @@ export default function SwagRoadmapSettings() {
       id: `category-${Date.now()}`,
       name: 'New Category',
       description: '',
+      allocation: 0,
       targetAllocation: 0,
       riskLevel: 'moderate',
       expectedReturn: 7.0,
+      risk: 5,
       products: []
     };
 
@@ -519,19 +577,15 @@ export default function SwagRoadmapSettings() {
                           <p className="text-sm text-muted-foreground">{feature.description}</p>
                         </div>
                         <Checkbox
-                          checked={config.enabledFeatures.includes(feature.key)}
+                          checked={config.enabledFeatures?.[feature.key] || false}
                           onCheckedChange={(checked) => {
-                            if (checked) {
-                              setConfig(prev => ({
-                                ...prev,
-                                enabledFeatures: [...prev.enabledFeatures, feature.key]
-                              }));
-                            } else {
-                              setConfig(prev => ({
-                                ...prev,
-                                enabledFeatures: prev.enabledFeatures.filter(f => f !== feature.key)
-                              }));
-                            }
+                            setConfig(prev => ({
+                              ...prev,
+                              enabledFeatures: {
+                                ...prev.enabledFeatures,
+                                [feature.key]: !!checked
+                              }
+                            }));
                           }}
                         />
                       </div>
