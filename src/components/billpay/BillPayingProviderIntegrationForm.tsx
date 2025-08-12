@@ -47,7 +47,7 @@ const gleanAiSchema = z.object({
 const providerConfigSchema = z.object({
   providerId: z.string().min(1, "Provider selection is required"),
   // The specific config will be validated separately based on provider
-  config: z.record(z.string(), z.unknown()),
+  config: z.record(z.string(), z.string()),
 });
 
 type ProviderConfig = z.infer<typeof providerConfigSchema>;
@@ -237,24 +237,25 @@ export function BillPayingProviderIntegrationForm({
                         <FormControl>
                           {field.type === "checkbox" ? (
                             <div className="flex items-center space-x-2">
-                              <Input
-                                type="checkbox"
-                                checked={!!formField.value}
-                                onChange={(e) => formField.onChange(e.target.checked)}
-                                className="w-4 h-4"
-                              />
+                             <Input
+                               type="checkbox"
+                               checked={!!formField.value}
+                               onChange={(e) => formField.onChange(e.target.checked)}
+                               className="w-4 h-4"
+                             />
                               <span className="text-sm text-muted-foreground">
                                 Enable Sandbox Mode
                               </span>
                             </div>
                           ) : (
-                            <Input 
-                              {...formField} 
-                              type={field.type} 
-                              autoComplete="off"
-                              value={formField.value as string || ""}
-                              className={field.type === "password" ? "font-mono" : ""}
-                            />
+                             <Input 
+                               {...formField} 
+                               type={field.type} 
+                               autoComplete="off"
+                               value={String(formField.value ?? "")}
+                               onChange={(e) => formField.onChange(e.target.value)}
+                               className={field.type === "password" ? "font-mono" : ""}
+                             />
                           )}
                         </FormControl>
                         <FormDescription>{field.description}</FormDescription>

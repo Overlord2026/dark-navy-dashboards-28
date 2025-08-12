@@ -111,7 +111,12 @@ export function AddBillDialog({ isOpen, onClose, onAddBill }: AddBillDialogProps
                 <FormItem>
                   <FormLabel>Bill Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g. Electric Company" {...field} />
+                    <Input 
+                      placeholder="e.g. Electric Company" 
+                      {...field}
+                      value={String(field.value ?? "")}
+                      onChange={(e) => field.onChange(e.target.value)}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -125,7 +130,12 @@ export function AddBillDialog({ isOpen, onClose, onAddBill }: AddBillDialogProps
                 <FormItem>
                   <FormLabel>Amount ($)</FormLabel>
                   <FormControl>
-                    <Input placeholder="0.00" {...field} />
+                    <Input 
+                      placeholder="0.00" 
+                      {...field}
+                      value={String(field.value ?? "")}
+                      onChange={(e) => field.onChange(e.target.value)}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

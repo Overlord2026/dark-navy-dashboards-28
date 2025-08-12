@@ -231,13 +231,15 @@ export const BusinessFilingsTracker = () => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className={cn(isMobile && "text-sm")}>Filing Name</FormLabel>
-                      <FormControl>
-                        <Input 
-                          placeholder="e.g. Annual Report" 
-                          {...field} 
-                          className={cn(isMobile && "text-sm")}
-                        />
-                      </FormControl>
+                        <FormControl>
+                          <Input 
+                            placeholder="e.g. Annual Report" 
+                            {...field}
+                            value={String(field.value ?? "")}
+                            onChange={(e) => field.onChange(e.target.value)}
+                            className={cn(isMobile && "text-sm")}
+                          />
+                        </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -249,13 +251,15 @@ export const BusinessFilingsTracker = () => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className={cn(isMobile && "text-sm")}>Description (Optional)</FormLabel>
-                      <FormControl>
-                        <Input 
-                          placeholder="Brief description" 
-                          {...field} 
-                          className={cn(isMobile && "text-sm")}
-                        />
-                      </FormControl>
+                        <FormControl>
+                          <Input 
+                            placeholder="Brief description" 
+                            {...field}
+                            value={String(field.value ?? "")}
+                            onChange={(e) => field.onChange(e.target.value)}
+                            className={cn(isMobile && "text-sm")}
+                          />
+                        </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -267,13 +271,15 @@ export const BusinessFilingsTracker = () => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className={cn(isMobile && "text-sm")}>Business Name</FormLabel>
-                      <FormControl>
-                        <Input 
-                          placeholder="Business name" 
-                          {...field} 
-                          className={cn(isMobile && "text-sm")}
-                        />
-                      </FormControl>
+                        <FormControl>
+                          <Input 
+                            placeholder="Business name" 
+                            {...field}
+                            value={String(field.value ?? "")}
+                            onChange={(e) => field.onChange(e.target.value)}
+                            className={cn(isMobile && "text-sm")}
+                          />
+                        </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -332,16 +338,17 @@ export const BusinessFilingsTracker = () => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className={cn(isMobile && "text-sm")}>Reminder (Days Before)</FormLabel>
-                      <FormControl>
-                        <Input 
-                          type="number" 
-                          min={0} 
-                          max={90} 
-                          {...field}
-                          onChange={e => field.onChange(parseInt(e.target.value) || 0)}
-                          className={cn(isMobile && "text-sm")}
-                        />
-                      </FormControl>
+                        <FormControl>
+                          <Input 
+                            type="number" 
+                            min={0} 
+                            max={90} 
+                            {...field}
+                            value={String(field.value ?? "")}
+                            onChange={e => field.onChange(parseInt(e.target.value) || 0)}
+                            className={cn(isMobile && "text-sm")}
+                          />
+                        </FormControl>
                       <FormDescription className={cn(isMobile && "text-xs")}>
                         How many days before the due date to receive a reminder.
                       </FormDescription>

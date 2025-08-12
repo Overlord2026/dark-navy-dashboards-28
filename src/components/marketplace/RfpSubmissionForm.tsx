@@ -177,7 +177,12 @@ export function RfpSubmissionForm() {
                   <FormItem>
                     <FormLabel>Project Title</FormLabel>
                     <FormControl>
-                      <Input placeholder="E.g., Estate Plan Refresh for Multi-generational Family" {...field} />
+                      <Input 
+                        placeholder="E.g., Estate Plan Refresh for Multi-generational Family" 
+                        {...field}
+                        value={String(field.value ?? "")}
+                        onChange={(e) => field.onChange(e.target.value)}
+                      />
                     </FormControl>
                     <FormDescription>
                       A clear, concise title for your project
@@ -197,7 +202,9 @@ export function RfpSubmissionForm() {
                       <Textarea 
                         placeholder="Describe your project needs in detail..." 
                         className="min-h-[120px]" 
-                        {...field} 
+                        {...field}
+                        value={String(field.value ?? "")}
+                        onChange={(e) => field.onChange(e.target.value)}
                       />
                     </FormControl>
                     <FormDescription>
@@ -339,9 +346,15 @@ export function RfpSubmissionForm() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Fixed Budget Amount ($)</FormLabel>
-                      <FormControl>
-                        <Input type="number" placeholder="5000" {...field} />
-                      </FormControl>
+                       <FormControl>
+                         <Input 
+                           type="number" 
+                           placeholder="5000" 
+                           {...field}
+                           value={String(field.value ?? "")}
+                           onChange={(e) => field.onChange(e.target.value)}
+                         />
+                       </FormControl>
                       <FormDescription>
                         Enter your exact budget amount
                       </FormDescription>
@@ -359,9 +372,15 @@ export function RfpSubmissionForm() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Minimum Budget ($)</FormLabel>
-                        <FormControl>
-                          <Input type="number" placeholder="3000" {...field} />
-                        </FormControl>
+                         <FormControl>
+                           <Input 
+                             type="number" 
+                             placeholder="3000" 
+                             {...field}
+                             value={String(field.value ?? "")}
+                             onChange={(e) => field.onChange(e.target.value)}
+                           />
+                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -372,9 +391,15 @@ export function RfpSubmissionForm() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Maximum Budget ($)</FormLabel>
-                        <FormControl>
-                          <Input type="number" placeholder="7000" {...field} />
-                        </FormControl>
+                         <FormControl>
+                           <Input 
+                             type="number" 
+                             placeholder="7000" 
+                             {...field}
+                             value={String(field.value ?? "")}
+                             onChange={(e) => field.onChange(e.target.value)}
+                           />
+                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -431,9 +456,15 @@ export function RfpSubmissionForm() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Contact Email</FormLabel>
-                      <FormControl>
-                        <Input type="email" placeholder="your@email.com" {...field} />
-                      </FormControl>
+                       <FormControl>
+                         <Input 
+                           type="email" 
+                           placeholder="your@email.com" 
+                           {...field}
+                           value={String(field.value ?? "")}
+                           onChange={(e) => field.onChange(e.target.value)}
+                         />
+                       </FormControl>
                       <FormDescription>
                         Your primary contact email
                       </FormDescription>
@@ -447,9 +478,15 @@ export function RfpSubmissionForm() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Contact Phone (Optional)</FormLabel>
-                      <FormControl>
-                        <Input type="tel" placeholder="(123) 456-7890" {...field} />
-                      </FormControl>
+                       <FormControl>
+                         <Input 
+                           type="tel" 
+                           placeholder="(123) 456-7890" 
+                           {...field}
+                           value={String(field.value ?? "")}
+                           onChange={(e) => field.onChange(e.target.value)}
+                         />
+                       </FormControl>
                       <FormDescription>
                         Your phone number for providers to contact you
                       </FormDescription>

@@ -52,7 +52,12 @@ export const PersonalInfoSection = ({ form }: PersonalInfoSectionProps) => {
           <FormItem>
             <FormLabel>First Name</FormLabel>
             <FormControl>
-              <Input placeholder="First name" {...field} />
+              <Input 
+                placeholder="First name" 
+                {...field}
+                value={String(field.value ?? "")}
+                onChange={(e) => field.onChange(e.target.value)}
+              />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -66,7 +71,12 @@ export const PersonalInfoSection = ({ form }: PersonalInfoSectionProps) => {
           <FormItem>
             <FormLabel>Last Name</FormLabel>
             <FormControl>
-              <Input placeholder="Last name" {...field} />
+              <Input 
+                placeholder="Last name" 
+                {...field}
+                value={String(field.value ?? "")}
+                onChange={(e) => field.onChange(e.target.value)}
+              />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -80,7 +90,12 @@ export const PersonalInfoSection = ({ form }: PersonalInfoSectionProps) => {
           <FormItem>
             <FormLabel>Middle Name (Optional)</FormLabel>
             <FormControl>
-              <Input placeholder="Middle name" {...field} />
+              <Input 
+                placeholder="Middle name" 
+                {...field}
+                value={String(field.value ?? "")}
+                onChange={(e) => field.onChange(e.target.value)}
+              />
             </FormControl>
             <FormMessage />
           </FormItem>
