@@ -174,7 +174,9 @@ export default function SwagRetirementRoadmap() {
       name: '',
       age: 45,
       occupation: '',
-      retirementAge: 65
+      retirementAge: 65,
+      stateOfResidence: '',
+      taxBracket: '22%'
     },
     dependents: [],
     beneficiaries: [],
@@ -186,8 +188,7 @@ export default function SwagRetirementRoadmap() {
       healthDirectives: { hasDocument: false },
       digitalAssets: { hasDocument: false }
     },
-    stateOfResidence: '',
-    taxBracket: 24,
+    filingStatus: 'married_joint',
     assets: {
       liquid: [],
       taxable: [],
@@ -239,7 +240,18 @@ export default function SwagRetirementRoadmap() {
       
       // Convert enhanced profile to analysis input format
       const analysisInput: SwagRetirementAnalysisInput = {
-        profile,
+        profile: {
+          client: profile.client ?? { firstName: profile.primaryClient.name || '', lastName: '', age: profile.primaryClient.age },
+          spouse: profile.spouse ? { firstName: profile.spouse.name, lastName: '', age: profile.spouse.age } : {},
+          filingStatus: profile.filingStatus,
+          primaryClient: {
+            name: profile.primaryClient.name,
+            age: profile.primaryClient.age,
+            retirementAge: profile.primaryClient.retirementAge,
+            stateOfResidence: profile.primaryClient.stateOfResidence,
+            taxBracket: profile.primaryClient.taxBracket
+          }
+        },
         phases,
         goals: {
           retirementAge: profile.primaryClient.retirementAge,

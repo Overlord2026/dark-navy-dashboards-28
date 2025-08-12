@@ -7,7 +7,7 @@ export const SwagRetirementAnalysisInputSchema = z.object({
       lastName: z.string(), 
       age: z.number(),
       name: z.string().optional() // For compatibility
-    }),
+    }).optional(),
     spouse: z.object({ 
       firstName: z.string().optional(), 
       lastName: z.string().optional(), 
@@ -127,7 +127,13 @@ export const SwagRetirementAnalysisInputSchema = z.object({
   // Additional compatibility fields  
   goals: z.object({
     retirementAge: z.number().default(65),
-    targetIncome: z.number().default(0)
+    targetIncome: z.number().default(0),
+    retirementDate: z.date().optional(),
+    currentAge: z.number().optional(),
+    desiredLifestyle: z.string().optional(),
+    annualRetirementIncome: z.number().optional(),
+    inflationRate: z.number().optional(),
+    lifeExpectancy: z.number().optional()
   }).optional(),
   expenses: z.array(z.object({
     id: z.string(),
@@ -236,6 +242,13 @@ export interface PhaseProjection {
   riskFactors?: string[];
 }
 
+export interface AssetItem {
+  name: string;
+  balance: number;
+  type: string;
+  liquid?: boolean;
+}
+
 export interface EnhancedProfile {
   primaryClient: {
     name: string;
@@ -249,22 +262,62 @@ export interface EnhancedProfile {
     name: string;
     age: number;
   };
-  client: {
+  client?: {
     firstName: string;
     lastName: string;
     age: number;
   };
-  filingStatus: string;
-  assets: Array<{
-    name: string;
-    balance: number;
-    type: string;
-    liquid?: boolean;
-  }>;
-  goals: {
+  filingStatus: 'single' | 'married_joint' | 'married_separate' | 'hoh';
+  assets: {
+    liquid: AssetItem[];
+    taxable: AssetItem[];
+    taxDeferred: AssetItem[];
+    roth: AssetItem[];
+    realEstate: AssetItem[];
+    business: AssetItem[];
+    digitalAssets: AssetItem[];
+    insurance: AssetItem[];
+    annuities: AssetItem[];
+    collectibles: AssetItem[];
+  };
+  incomeStreams: {
+    employment: any[];
+    socialSecurity: {
+      primaryBenefitAge67: number;
+      filingStrategy: string;
+      taxable: boolean;
+    };
+    pensions: Array<{
+      monthlyBenefit: number;
+      startAge: number;
+      survivorBenefit: number;
+      colaAdjustment?: boolean;
+    }>;
+    rental: any[];
+    business: any[];
+    investments: any[];
+    other: any[];
+  };
+  expenses: {
+    housing: { current: number; retirement: number; inflationProtected: boolean; essential: boolean };
+    transportation: { current: number; retirement: number; inflationProtected: boolean; essential: boolean };
+    food: { current: number; retirement: number; inflationProtected: boolean; essential: boolean };
+    healthcare: { current: number; retirement: number; inflationProtected: boolean; essential: boolean };
+    insurance: { current: number; retirement: number; inflationProtected: boolean; essential: boolean };
+    entertainment: { current: number; retirement: number; inflationProtected: boolean; essential: boolean };
+    education: { current: number; retirement: number; inflationProtected: boolean; essential: boolean };
+    charitable: { current: number; retirement: number; inflationProtected: boolean; essential: boolean };
+    other: { current: number; retirement: number; inflationProtected: boolean; essential: boolean };
+    totalMonthly: number;
+    inflationAssumption: number;
+  };
+  goals?: {
     retirementAge: number;
     targetIncome: number;
   };
+  dependents?: any[];
+  beneficiaries?: any[];
+  professionals?: Record<string, any>;
   phases?: SwagPhase[];
   estateDocuments: {
     [key: string]: {

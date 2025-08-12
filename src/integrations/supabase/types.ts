@@ -13864,6 +13864,36 @@ export type Database = {
           },
         ]
       }
+      imports_ra: {
+        Row: {
+          created_at: string | null
+          id: string
+          parsed_data: Json
+          raw_text: string
+          run_id: string
+          sha256_hash: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          parsed_data: Json
+          raw_text: string
+          run_id: string
+          sha256_hash: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          parsed_data?: Json
+          raw_text?: string
+          run_id?: string
+          sha256_hash?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       insurance_agents: {
         Row: {
           ce_credits_completed: number | null
@@ -16074,6 +16104,105 @@ export type Database = {
         }
         Relationships: []
       }
+      longevity_params: {
+        Row: {
+          created_at: string
+          gender: string
+          gm_a: number
+          gm_b: number
+          gm_c: number
+          health_adjustment: number
+          id: string
+          is_active: boolean
+          lifestyle_adjustment: number
+          region: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          gender: string
+          gm_a?: number
+          gm_b?: number
+          gm_c?: number
+          health_adjustment?: number
+          id?: string
+          is_active?: boolean
+          lifestyle_adjustment?: number
+          region?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          gender?: string
+          gm_a?: number
+          gm_b?: number
+          gm_c?: number
+          health_adjustment?: number
+          id?: string
+          is_active?: boolean
+          lifestyle_adjustment?: number
+          region?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      ltc_params: {
+        Row: {
+          adult_daycare_cost: number
+          age_0: number
+          assisted_living_cost: number
+          base_hazard: number
+          created_at: string
+          gender: string
+          home_health_cost: number
+          id: string
+          inflation_rate: number
+          intensity_distribution: Json
+          is_active: boolean
+          nursing_home_cost: number
+          region: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          adult_daycare_cost?: number
+          age_0?: number
+          assisted_living_cost?: number
+          base_hazard?: number
+          created_at?: string
+          gender: string
+          home_health_cost?: number
+          id?: string
+          inflation_rate?: number
+          intensity_distribution?: Json
+          is_active?: boolean
+          nursing_home_cost?: number
+          region?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          adult_daycare_cost?: number
+          age_0?: number
+          assisted_living_cost?: number
+          base_hazard?: number
+          created_at?: string
+          gender?: string
+          home_health_cost?: number
+          id?: string
+          inflation_rate?: number
+          intensity_distribution?: Json
+          is_active?: boolean
+          nursing_home_cost?: number
+          region?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       manager_signals: {
         Row: {
           aum_trend: number | null
@@ -17530,6 +17659,33 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      monitoring_receipts: {
+        Row: {
+          body: Json
+          created_at: string | null
+          household_id: string
+          id: string
+          phase: string
+          sha256: string
+        }
+        Insert: {
+          body: Json
+          created_at?: string | null
+          household_id: string
+          id?: string
+          phase: string
+          sha256: string
+        }
+        Update: {
+          body?: Json
+          created_at?: string | null
+          household_id?: string
+          id?: string
+          phase?: string
+          sha256?: string
+        }
+        Relationships: []
       }
       network_impact_summary: {
         Row: {
@@ -19470,6 +19626,30 @@ export type Database = {
         }
         Relationships: []
       }
+      outcome_receipts: {
+        Row: {
+          body: Json
+          created_at: string | null
+          household_id: string
+          id: string
+          sha256: string
+        }
+        Insert: {
+          body: Json
+          created_at?: string | null
+          household_id: string
+          id?: string
+          sha256: string
+        }
+        Update: {
+          body?: Json
+          created_at?: string | null
+          household_id?: string
+          id?: string
+          sha256?: string
+        }
+        Relationships: []
+      }
       outreach_contacts: {
         Row: {
           contact_type: string | null
@@ -19989,6 +20169,57 @@ export type Database = {
           tenant_id?: string
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      phase_results: {
+        Row: {
+          allocation_data: Json
+          analysis_run_id: string
+          ate: number
+          created_at: string
+          dgbp: number
+          household_id: string
+          id: string
+          isp: number
+          lci: number
+          lcr: number
+          outcome_score: number
+          phase_id: string
+          projection_data: Json
+          user_id: string | null
+        }
+        Insert: {
+          allocation_data?: Json
+          analysis_run_id: string
+          ate: number
+          created_at?: string
+          dgbp: number
+          household_id: string
+          id?: string
+          isp: number
+          lci: number
+          lcr: number
+          outcome_score: number
+          phase_id: string
+          projection_data?: Json
+          user_id?: string | null
+        }
+        Update: {
+          allocation_data?: Json
+          analysis_run_id?: string
+          ate?: number
+          created_at?: string
+          dgbp?: number
+          household_id?: string
+          id?: string
+          isp?: number
+          lci?: number
+          lcr?: number
+          outcome_score?: number
+          phase_id?: string
+          projection_data?: Json
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -25381,6 +25612,69 @@ export type Database = {
           },
         ]
       }
+      scenario_configs: {
+        Row: {
+          block_len_months: number
+          created_at: string
+          crypto_config: Json
+          description: string | null
+          equity_config: Json
+          horizon_years: number
+          id: string
+          inflation_config: Json
+          infrastructure_config: Json
+          is_active: boolean
+          n_paths: number
+          name: string
+          private_credit_config: Json
+          rates_config: Json
+          tax_config: Json
+          tenant_id: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          block_len_months?: number
+          created_at?: string
+          crypto_config?: Json
+          description?: string | null
+          equity_config?: Json
+          horizon_years?: number
+          id?: string
+          inflation_config?: Json
+          infrastructure_config?: Json
+          is_active?: boolean
+          n_paths?: number
+          name: string
+          private_credit_config?: Json
+          rates_config?: Json
+          tax_config?: Json
+          tenant_id?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          block_len_months?: number
+          created_at?: string
+          crypto_config?: Json
+          description?: string | null
+          equity_config?: Json
+          horizon_years?: number
+          id?: string
+          inflation_config?: Json
+          infrastructure_config?: Json
+          is_active?: boolean
+          n_paths?: number
+          name?: string
+          private_credit_config?: Json
+          rates_config?: Json
+          tax_config?: Json
+          tenant_id?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       scheduled_meetings: {
         Row: {
           advisor_id: string
@@ -26589,6 +26883,62 @@ export type Database = {
             columns: ["strategy_id"]
             isOneToOne: false
             referencedRelation: "investment_strategies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      stress_runs: {
+        Row: {
+          analysis_run_id: string
+          cashflow_data: Json
+          created_at: string
+          final_portfolio_value: number
+          id: string
+          max_drawdown: number | null
+          path_number: number
+          scenario_config_id: string | null
+          scenario_name: string
+          success_probability: number
+          total_withdrawals: number
+          user_id: string | null
+          years_to_depletion: number | null
+        }
+        Insert: {
+          analysis_run_id: string
+          cashflow_data?: Json
+          created_at?: string
+          final_portfolio_value: number
+          id?: string
+          max_drawdown?: number | null
+          path_number: number
+          scenario_config_id?: string | null
+          scenario_name: string
+          success_probability: number
+          total_withdrawals: number
+          user_id?: string | null
+          years_to_depletion?: number | null
+        }
+        Update: {
+          analysis_run_id?: string
+          cashflow_data?: Json
+          created_at?: string
+          final_portfolio_value?: number
+          id?: string
+          max_drawdown?: number | null
+          path_number?: number
+          scenario_config_id?: string | null
+          scenario_name?: string
+          success_probability?: number
+          total_withdrawals?: number
+          user_id?: string | null
+          years_to_depletion?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stress_runs_scenario_config_id_fkey"
+            columns: ["scenario_config_id"]
+            isOneToOne: false
+            referencedRelation: "scenario_configs"
             referencedColumns: ["id"]
           },
         ]
