@@ -2,6 +2,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
+import { zReq, zEnum, zEmail } from '@/lib/zod-utils';
 import {
   Dialog,
   DialogContent,
@@ -29,6 +30,8 @@ import {
 import { useReservedProfiles } from '@/hooks/useReservedProfiles';
 import { CUSTODIAN_PARTNERS } from '@/types/reservedProfiles';
 
+const PRIORITY_LEVELS = ['high', 'normal', 'low'] as const;
+
 const formSchema = z.object({
   email: z.string().email('Invalid email address'),
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -37,7 +40,7 @@ const formSchema = z.object({
   persona_type: z.string().min(1, 'Please select a persona type'),
   linkedin_url: z.string().url().optional().or(z.literal('')),
   referral_source: z.string().optional(),
-  priority_level: z.enum(['high', 'normal', 'low']),
+  priority_level: zEnum(PRIORITY_LEVELS),
   segment: z.string().optional(),
   notes: z.string().optional(),
 });

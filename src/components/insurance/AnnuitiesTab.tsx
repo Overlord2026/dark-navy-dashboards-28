@@ -12,13 +12,16 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { zReq, zEnum } from "@/lib/zod-utils";
 import { toast } from "sonner";
 
+const FREQUENCY_OPTIONS = ["monthly", "quarterly", "annually"] as const;
+
 const formSchema = z.object({
-  name: z.string().min(2, { message: "Policy name is required" }),
-  provider: z.string().min(2, { message: "Provider name is required" }),
+  name: zReq("Policy name is required"),
+  provider: zReq("Provider name is required"),
   premium: z.number().min(0),
-  frequency: z.enum(["monthly", "quarterly", "annually"]),
+  frequency: zEnum(FREQUENCY_OPTIONS),
   coverageAmount: z.number().min(0),
   startDate: z.string(),
   endDate: z.string().optional(),

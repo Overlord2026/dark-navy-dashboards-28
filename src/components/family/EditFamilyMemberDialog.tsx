@@ -27,13 +27,17 @@ import { Input } from '@/components/ui/input';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
+import { zReq, zEnum } from '@/lib/zod-utils';
 import { useFamilyMembers, FamilyMember, AddFamilyMemberData } from '@/hooks/useFamilyMembers';
 
+const RELATIONSHIPS = ['aunt', 'brother', 'daughter', 'domestic-partner', 'father', 'father-in-law', 'grandfather', 'grandmother', 'granddaughter', 'grandson', 'mother', 'mother-in-law', 'nephew', 'niece', 'other-individual'] as const;
+const ACCESS_LEVELS = ['full', 'limited'] as const;
+
 const formSchema = z.object({
-  name: z.string().min(1, 'Name is required'),
-  relationship: z.enum(['aunt', 'brother', 'daughter', 'domestic-partner', 'father', 'father-in-law', 'grandfather', 'grandmother', 'granddaughter', 'grandson', 'mother', 'mother-in-law', 'nephew', 'niece', 'other-individual']),
+  name: zReq('Name is required'),
+  relationship: zEnum(RELATIONSHIPS),
   email: z.string().email('Invalid email').min(1, 'Email is required'),
-  access_level: z.enum(['full', 'limited']),
+  access_level: zEnum(ACCESS_LEVELS),
 });
 
 type FormData = z.infer<typeof formSchema>;

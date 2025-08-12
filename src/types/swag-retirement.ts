@@ -14,7 +14,7 @@ export const SwagRetirementAnalysisInputSchema = z.object({
       age: z.number().optional(),
       name: z.string().optional() // For compatibility
     }).default({}),
-    filingStatus: z.enum(["single","married_joint","married_separate","hoh"]).default("married_joint"),
+    filingStatus: z.enum(["single","married_joint","married_separate","hoh"] as const).default("married_joint"),
     // Legacy compatibility fields moved to top level
     primaryClient: z.object({
       name: z.string(),
@@ -55,7 +55,7 @@ export const SwagRetirementAnalysisInputSchema = z.object({
   assets: z.array(z.object({
     name: z.string(),
     balance: z.number(),
-    taxType: z.enum(["qualified","roth","taxable","other"]),
+    taxType: z.enum(["qualified","roth","taxable","other"] as const),
     produces1099: z.boolean().default(false)
   })),
   assumptions: z.object({
@@ -82,7 +82,7 @@ export const SwagRetirementAnalysisInputSchema = z.object({
   }).default({}),
   taxYear: z.number().optional(),
   phases: z.array(z.object({
-    id: z.enum(['income-now', 'income-later', 'growth', 'legacy']),
+    id: z.enum(['income-now', 'income-later', 'growth', 'legacy'] as const),
     name: z.string(),
     allocation: z.object({
       phaseId: z.string().optional(),

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { zReq, zEnum } from '@/lib/zod-utils';
 import { ThreeColumnLayout } from '@/components/layout/ThreeColumnLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -16,12 +17,14 @@ import { useEducationResources } from '@/hooks/useEducationResources';
 import { EducationResource, EducationResourceFormData } from '@/types/education';
 import { toast } from 'sonner';
 
+const RESOURCE_TYPES = ['pdf', 'docx', 'flipbook', 'external_link'] as const;
+
 const resourceFormSchema = z.object({
-  title: z.string().min(1, 'Title is required'),
+  title: zReq('Title is required'),
   description: z.string().optional(),
-  resource_type: z.enum(['pdf', 'docx', 'flipbook', 'external_link']),
+  resource_type: zEnum(RESOURCE_TYPES),
   file_url: z.string().optional(),
-  category: z.string().min(1, 'Category is required'),
+  category: zReq('Category is required'),
   is_featured: z.boolean().default(false),
 });
 
