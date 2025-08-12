@@ -204,6 +204,7 @@ import Founding20LeadershipDeckPage from './pages/founding20/Founding20Leadershi
 import Founding20MasterDashboard from './pages/founding20/Founding20MasterDashboard';
 import Founding20LaunchDashboard from './pages/admin/Founding20LaunchDashboard';
 import PMQPage from './pages/pmq/PMQPage';
+import ConsentDashboard from './components/consent/ConsentDashboard';
 import ExecutiveSuite from './pages/ExecutiveSuite';
 
 // Import onboarding flow component
@@ -698,8 +699,9 @@ function App() {
           <Route path="/founding20/overview" element={<Founding20OverviewPage />} />
           <Route path="/founding20/leadership-briefing-deck" element={<Founding20LeadershipDeckPage />} />
           <Route path="/admin/founding20-dashboard" element={<Founding20MasterDashboard />} />
-                           <Route path="/admin/founding20-checklist" element={<Founding20LaunchDashboard />} />
-                           <Route path="/executive-suite" element={<ExecutiveSuite />} />
+                            <Route path="/admin/founding20-checklist" element={<Founding20LaunchDashboard />} />
+                            <Route path="/executive-suite" element={<ExecutiveSuite />} />
+                            <Route path="/consent" element={<ConsentDashboard />} />
 
                           </Routes>
                         <Navigation />
