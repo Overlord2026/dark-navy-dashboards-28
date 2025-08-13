@@ -4,12 +4,15 @@ import { Header } from './Header';
 import { GlobalErrorBoundary } from '@/components/monitoring/GlobalErrorBoundary';
 import { PerformanceMonitor } from '@/components/monitoring/PerformanceMonitor';
 import { BFOBrandBanner, BFOCornerBug } from '@/components/branding/BFOBrandBanner';
+import { usePersonaSublinks } from '@/hooks/usePersonaSublinks';
 
 interface MainLayoutProps {
   children: React.ReactNode;
 }
 
 export function MainLayout({ children }: MainLayoutProps) {
+  const sublinks = usePersonaSublinks();
+  
   return (
     <GlobalErrorBoundary showDetailedError={process.env.NODE_ENV === 'development'}>
       <PerformanceMonitor />
@@ -21,13 +24,7 @@ export function MainLayout({ children }: MainLayoutProps) {
           announcements={[
             { id: "launch", text: "Marketplace preview is live →", to: "/marketplace", emphasize: true },
           ]}
-          sublinks={[
-            { label: "Notes", to: "/workspace/notes" },
-            { label: "Recommendations", to: "/workspace/recommendations" },
-            { label: "Dashboards", to: "/client-dashboard" },
-            { label: "Calculators", to: "/calculators" },
-            { label: "Studies", to: "/studies" },
-          ]}
+          sublinks={sublinks}
         />
         <BFOCornerBug position="bottom-right" />
         <GlobalErrorBoundary>
