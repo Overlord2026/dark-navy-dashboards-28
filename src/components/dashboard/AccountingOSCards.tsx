@@ -16,6 +16,8 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useUser } from '@/context/UserContext';
 import type { ARInvoice, APBill, TrialBalanceEntry } from '@/types/accounting';
+import { OpenARAPCard } from '@/components/accounting/OpenARAPCard';
+import { ThisMonthPLCard } from '@/components/accounting/ThisMonthPLCard';
 
 interface AccountingMetrics {
   todaysCash: number;
@@ -215,6 +217,13 @@ export const AccountingOSCards: React.FC = () => {
         </Button>
       </div>
 
+      {/* New AR/AP and P&L Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <OpenARAPCard orgId={userProfile?.tenant_id || "demo-org-id"} />
+        <ThisMonthPLCard orgId={userProfile?.tenant_id || "demo-org-id"} />
+      </div>
+
+      {/* Original Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
         {cards.map((card, index) => (
           <motion.div
