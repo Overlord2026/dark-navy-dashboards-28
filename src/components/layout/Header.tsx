@@ -6,6 +6,7 @@ import { useRoleContext, RoleSwitcher } from '@/context/RoleContext';
 import { getRoleDisplayName } from '@/utils/roleHierarchy';
 import { AdminPortalLink } from '@/components/navigation/AdminPortalLink';
 import { ClientTierToggle } from '@/components/dev/ClientTierToggle';
+import { MegaMenu } from '@/components/navigation/MegaMenu';
 // Debug components removed for production
 import { Button } from '@/components/ui/button';
 import { LogOut, User, Home } from 'lucide-react';
@@ -13,7 +14,11 @@ import { LogOut, User, Home } from 'lucide-react';
 export function Header() {
   const { userProfile, logout } = useUser();
   const { getRoleDashboard } = useRoleContext();
-  // Debug panel removed for production
+  
+  // If no user is logged in, show the mega menu
+  if (!userProfile) {
+    return <MegaMenu />;
+  }
   
   // Dev tools disabled for production security
   const currentRole = userProfile?.role || 'client';

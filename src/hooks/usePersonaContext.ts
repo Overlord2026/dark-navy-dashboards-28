@@ -31,8 +31,8 @@ export const usePersonaContext = () => {
 
   // Load persona context from localStorage on mount
   useEffect(() => {
-    const storedPersona = localStorage.getItem('selectedPersona') as PersonaType;
-    const storedPersonaData = localStorage.getItem('personaData');
+    const storedPersona = localStorage.getItem('fom_selected_persona') as PersonaType;
+    const storedPersonaData = localStorage.getItem('fom_persona_data');
 
     if (storedPersona) {
       setSelectedPersona(storedPersona);
@@ -53,9 +53,9 @@ export const usePersonaContext = () => {
     setSelectedPersona(persona);
     setPersonaData(data);
     
-    // Persist to localStorage
-    localStorage.setItem('selectedPersona', persona);
-    localStorage.setItem('personaData', JSON.stringify(data));
+    // Persist to localStorage with FOM prefix
+    localStorage.setItem('fom_selected_persona', persona);
+    localStorage.setItem('fom_persona_data', JSON.stringify(data));
   };
 
   // Function to clear persona context
@@ -64,8 +64,8 @@ export const usePersonaContext = () => {
     setPersonaData(null);
     
     // Clear from localStorage
-    localStorage.removeItem('selectedPersona');
-    localStorage.removeItem('personaData');
+    localStorage.removeItem('fom_selected_persona');
+    localStorage.removeItem('fom_persona_data');
   };
 
   // Get appropriate onboarding route based on persona
