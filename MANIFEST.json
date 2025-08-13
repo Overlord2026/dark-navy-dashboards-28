@@ -1,0 +1,126 @@
+{
+  "export_info": {
+    "project_name": "My.BFOCFO",
+    "version": "2.1.0",
+    "generated_at": "2024-12-26T00:00:00Z",
+    "export_type": "complete_application_export",
+    "purpose": "external_expert_review"
+  },
+  "contents": {
+    "source_code": {
+      "frontend": {
+        "framework": "React 18 + TypeScript + Vite",
+        "ui_library": "shadcn/ui + Tailwind CSS",
+        "state_management": "React Query + Zustand",
+        "routing": "React Router DOM",
+        "files": "src/**/*"
+      },
+      "backend": {
+        "platform": "Supabase (PostgreSQL + Edge Functions)",
+        "functions": "supabase/functions/**/*",
+        "migrations": "supabase/migrations/**/*",
+        "config": "supabase/config.toml"
+      }
+    },
+    "documentation": {
+      "main_readme": "docs/EXPORT_README.md",
+      "architecture": "docs/ARCHITECTURE.md",
+      "database_schema": "docs/DATABASE_SCHEMA.md",
+      "environment_template": ".env.example"
+    },
+    "configuration": {
+      "package_json": "package.json",
+      "typescript_config": "tsconfig.json",
+      "tailwind_config": "tailwind.config.ts",
+      "eslint_config": "eslint.config.js",
+      "vite_config": "vite.config.ts"
+    },
+    "testing": {
+      "cypress_config": "cypress.config.ts",
+      "jest_config": "jest.config.js",
+      "test_files": "cypress/**/*"
+    }
+  },
+  "key_features": [
+    "Multi-persona operating system (Family, Advisor, CPA, Attorney, Admin)",
+    "Comprehensive Row-Level Security (RLS) implementation",
+    "Real-time financial data integration (Plaid, Stripe)",
+    "Document management with e-signature (DocuSign)",
+    "Alternative investments tracking",
+    "SWAG™ planning system",
+    "Communication and task management",
+    "Audit trails and compliance features",
+    "Public education center",
+    "Mobile-responsive design"
+  ],
+  "technical_stack": {
+    "frontend": [
+      "React 18.3.1",
+      "TypeScript 5.5.3",
+      "Vite 5.4.1",
+      "Tailwind CSS 3.4.11",
+      "shadcn/ui components",
+      "React Query 5.56.2",
+      "React Router DOM 6.26.2",
+      "Framer Motion 12.6.2"
+    ],
+    "backend": [
+      "Supabase (PostgreSQL + Edge Functions)",
+      "Row-Level Security (RLS)",
+      "Deno runtime for Edge Functions",
+      "Real-time subscriptions"
+    ],
+    "integrations": [
+      "Plaid (banking)",
+      "Stripe (payments)",
+      "DocuSign (e-signatures)",
+      "SendGrid (email)",
+      "Twilio (SMS)",
+      "OpenAI (AI features)",
+      "Finnhub (market data)"
+    ]
+  },
+  "security_features": [
+    "JWT-based authentication",
+    "Row-Level Security on all tables",
+    "Comprehensive audit logging",
+    "Data encryption at rest and in transit",
+    "Role-based access control",
+    "Two-factor authentication support",
+    "Input validation with Zod schemas"
+  ],
+  "review_priorities": {
+    "high": [
+      "RLS policy completeness and correctness",
+      "Authentication and authorization flows",
+      "Data encryption and security measures",
+      "Performance optimization opportunities"
+    ],
+    "medium": [
+      "Code quality and TypeScript usage",
+      "Component architecture and reusability",
+      "Database query optimization",
+      "Error handling and user experience"
+    ],
+    "low": [
+      "UI/UX improvements",
+      "Additional feature enhancements",
+      "Testing coverage expansion",
+      "Documentation completeness"
+    ]
+  },
+  "deployment_info": {
+    "current_platform": "Lovable (frontend) + Supabase (backend)",
+    "environment": "production",
+    "database_url": "https://xcmqjkvyvuhoslbzmlgi.supabase.co",
+    "deployment_method": "automated_ci_cd"
+  },
+  "export_completeness": {
+    "source_code": "100%",
+    "documentation": "95%",
+    "configuration": "100%",
+    "database_schema": "100%",
+    "environment_setup": "100%",
+    "testing_framework": "90%"
+  }
+}
