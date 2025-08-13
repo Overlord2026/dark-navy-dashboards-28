@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
-type QuickLink = { label: string; to: string; icon?: React.ReactNode; badge?: string; };
+type QuickLink = { label: string; href: string; icon?: React.ReactNode; badge?: string; };
 type Announcement = { id: string; text: string; to?: string; emphasize?: boolean };
 
 export type BFOBrandBannerProps = {
@@ -132,8 +132,8 @@ export function BFOBrandBanner({
         <div className="container mx-auto flex items-center gap-2 overflow-x-auto px-4 py-2">
           {(sublinks.length ? sublinks : DEFAULT_SUBLINKS).map((s) => (
             <Link
-              key={`${s.to}-${s.label}`}
-              to={s.to}
+              key={`${s.href}-${s.label}`}
+              to={s.href}
               className="group inline-flex items-center gap-1 rounded-md px-2 py-1.5 text-xs font-medium hover:bg-muted"
             >
               {s.icon ?? <NotebookPen className="h-3.5 w-3.5" aria-hidden />}
@@ -180,9 +180,9 @@ export function BFOCornerBug({
 
 /* sensible defaults for your "book-looking field" of quick actions */
 const DEFAULT_SUBLINKS: QuickLink[] = [
-  { label: "Notes", to: "/workspace/notes", icon: <NotebookPen className="h-3.5 w-3.5" /> },
-  { label: "Recommendations", to: "/workspace/recommendations", icon: <BookOpenCheck className="h-3.5 w-3.5" /> },
-  { label: "Dashboards", to: "/client-dashboard", icon: <LayoutDashboard className="h-3.5 w-3.5" /> },
-  { label: "Calculators", to: "/calculators", icon: <Calculator className="h-3.5 w-3.5" /> },
-  { label: "Studies", to: "/studies", icon: <Bolt className="h-3.5 w-3.5" /> },
+  { label: "Notes", href: "/workspace/notes", icon: <NotebookPen className="h-3.5 w-3.5" /> },
+  { label: "Recommendations", href: "/workspace/recommendations", icon: <BookOpenCheck className="h-3.5 w-3.5" /> },
+  { label: "Dashboards", href: "/client-dashboard", icon: <LayoutDashboard className="h-3.5 w-3.5" /> },
+  { label: "Calculators", href: "/calculators", icon: <Calculator className="h-3.5 w-3.5" /> },
+  { label: "Studies", href: "/studies", icon: <Bolt className="h-3.5 w-3.5" /> },
 ];
