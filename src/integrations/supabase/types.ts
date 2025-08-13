@@ -2797,6 +2797,151 @@ export type Database = {
           },
         ]
       }
+      ap_bill_lines: {
+        Row: {
+          amount: number
+          bill_id: string
+          description: string | null
+          expense_account: string | null
+          id: string
+          line_no: number
+          org_id: string
+          quantity: number
+          tax_rate: number | null
+          unit_price: number
+        }
+        Insert: {
+          amount?: number
+          bill_id: string
+          description?: string | null
+          expense_account?: string | null
+          id?: string
+          line_no: number
+          org_id: string
+          quantity?: number
+          tax_rate?: number | null
+          unit_price?: number
+        }
+        Update: {
+          amount?: number
+          bill_id?: string
+          description?: string | null
+          expense_account?: string | null
+          id?: string
+          line_no?: number
+          org_id?: string
+          quantity?: number
+          tax_rate?: number | null
+          unit_price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ap_bill_lines_bill_id_fkey"
+            columns: ["bill_id"]
+            isOneToOne: false
+            referencedRelation: "ap_bills"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ap_bill_lines_expense_account_fkey"
+            columns: ["expense_account"]
+            isOneToOne: false
+            referencedRelation: "coa_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ap_bill_lines_expense_account_fkey"
+            columns: ["expense_account"]
+            isOneToOne: false
+            referencedRelation: "vw_balance_sheet"
+            referencedColumns: ["account_id"]
+          },
+          {
+            foreignKeyName: "ap_bill_lines_expense_account_fkey"
+            columns: ["expense_account"]
+            isOneToOne: false
+            referencedRelation: "vw_income_statement"
+            referencedColumns: ["account_id"]
+          },
+          {
+            foreignKeyName: "ap_bill_lines_expense_account_fkey"
+            columns: ["expense_account"]
+            isOneToOne: false
+            referencedRelation: "vw_trial_balance"
+            referencedColumns: ["account_id"]
+          },
+        ]
+      }
+      ap_bills: {
+        Row: {
+          bill_date: string
+          bill_no: string
+          created_at: string
+          currency: string
+          due_date: string | null
+          id: string
+          journal_id: string | null
+          org_id: string
+          partner_id: string
+          status: string
+          subtotal: number
+          tax_total: number
+          total: number
+        }
+        Insert: {
+          bill_date: string
+          bill_no: string
+          created_at?: string
+          currency?: string
+          due_date?: string | null
+          id?: string
+          journal_id?: string | null
+          org_id: string
+          partner_id: string
+          status?: string
+          subtotal?: number
+          tax_total?: number
+          total?: number
+        }
+        Update: {
+          bill_date?: string
+          bill_no?: string
+          created_at?: string
+          currency?: string
+          due_date?: string | null
+          id?: string
+          journal_id?: string | null
+          org_id?: string
+          partner_id?: string
+          status?: string
+          subtotal?: number
+          tax_total?: number
+          total?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ap_bills_currency_fkey"
+            columns: ["currency"]
+            isOneToOne: false
+            referencedRelation: "ref_currencies"
+            referencedColumns: ["code"]
+          },
+          {
+            foreignKeyName: "ap_bills_journal_id_fkey"
+            columns: ["journal_id"]
+            isOneToOne: false
+            referencedRelation: "journals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ap_bills_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       api_integration_configs: {
         Row: {
           api_endpoints: Json | null
@@ -3118,6 +3263,151 @@ export type Database = {
             columns: ["step_id"]
             isOneToOne: false
             referencedRelation: "plan_steps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ar_invoice_lines: {
+        Row: {
+          amount: number
+          description: string | null
+          id: string
+          invoice_id: string
+          line_no: number
+          org_id: string
+          quantity: number
+          revenue_account: string | null
+          tax_rate: number | null
+          unit_price: number
+        }
+        Insert: {
+          amount?: number
+          description?: string | null
+          id?: string
+          invoice_id: string
+          line_no: number
+          org_id: string
+          quantity?: number
+          revenue_account?: string | null
+          tax_rate?: number | null
+          unit_price?: number
+        }
+        Update: {
+          amount?: number
+          description?: string | null
+          id?: string
+          invoice_id?: string
+          line_no?: number
+          org_id?: string
+          quantity?: number
+          revenue_account?: string | null
+          tax_rate?: number | null
+          unit_price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ar_invoice_lines_invoice_id_fkey"
+            columns: ["invoice_id"]
+            isOneToOne: false
+            referencedRelation: "ar_invoices"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ar_invoice_lines_revenue_account_fkey"
+            columns: ["revenue_account"]
+            isOneToOne: false
+            referencedRelation: "coa_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ar_invoice_lines_revenue_account_fkey"
+            columns: ["revenue_account"]
+            isOneToOne: false
+            referencedRelation: "vw_balance_sheet"
+            referencedColumns: ["account_id"]
+          },
+          {
+            foreignKeyName: "ar_invoice_lines_revenue_account_fkey"
+            columns: ["revenue_account"]
+            isOneToOne: false
+            referencedRelation: "vw_income_statement"
+            referencedColumns: ["account_id"]
+          },
+          {
+            foreignKeyName: "ar_invoice_lines_revenue_account_fkey"
+            columns: ["revenue_account"]
+            isOneToOne: false
+            referencedRelation: "vw_trial_balance"
+            referencedColumns: ["account_id"]
+          },
+        ]
+      }
+      ar_invoices: {
+        Row: {
+          created_at: string
+          currency: string
+          due_date: string | null
+          id: string
+          invoice_date: string
+          invoice_no: string
+          journal_id: string | null
+          org_id: string
+          partner_id: string
+          status: string
+          subtotal: number
+          tax_total: number
+          total: number
+        }
+        Insert: {
+          created_at?: string
+          currency?: string
+          due_date?: string | null
+          id?: string
+          invoice_date: string
+          invoice_no: string
+          journal_id?: string | null
+          org_id: string
+          partner_id: string
+          status?: string
+          subtotal?: number
+          tax_total?: number
+          total?: number
+        }
+        Update: {
+          created_at?: string
+          currency?: string
+          due_date?: string | null
+          id?: string
+          invoice_date?: string
+          invoice_no?: string
+          journal_id?: string | null
+          org_id?: string
+          partner_id?: string
+          status?: string
+          subtotal?: number
+          tax_total?: number
+          total?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ar_invoices_currency_fkey"
+            columns: ["currency"]
+            isOneToOne: false
+            referencedRelation: "ref_currencies"
+            referencedColumns: ["code"]
+          },
+          {
+            foreignKeyName: "ar_invoices_journal_id_fkey"
+            columns: ["journal_id"]
+            isOneToOne: false
+            referencedRelation: "journals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ar_invoices_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
             referencedColumns: ["id"]
           },
         ]
@@ -6480,6 +6770,84 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: []
+      }
+      coa_accounts: {
+        Row: {
+          code: string
+          created_at: string
+          currency: string
+          id: string
+          is_active: boolean
+          name: string
+          normal_balance: string
+          org_id: string
+          parent_id: string | null
+          subtype: string | null
+          type: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          currency?: string
+          id?: string
+          is_active?: boolean
+          name: string
+          normal_balance: string
+          org_id: string
+          parent_id?: string | null
+          subtype?: string | null
+          type: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          currency?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+          normal_balance?: string
+          org_id?: string
+          parent_id?: string | null
+          subtype?: string | null
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "coa_accounts_currency_fkey"
+            columns: ["currency"]
+            isOneToOne: false
+            referencedRelation: "ref_currencies"
+            referencedColumns: ["code"]
+          },
+          {
+            foreignKeyName: "coa_accounts_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "coa_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "coa_accounts_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "vw_balance_sheet"
+            referencedColumns: ["account_id"]
+          },
+          {
+            foreignKeyName: "coa_accounts_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "vw_income_statement"
+            referencedColumns: ["account_id"]
+          },
+          {
+            foreignKeyName: "coa_accounts_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "vw_trial_balance"
+            referencedColumns: ["account_id"]
+          },
+        ]
       }
       coach_advisor_relationships: {
         Row: {
@@ -15623,6 +15991,42 @@ export type Database = {
           },
         ]
       }
+      journals: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          org_id: string
+          posted_at: string | null
+          reference: string | null
+          source: string | null
+          status: string
+          txn_date: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          org_id: string
+          posted_at?: string | null
+          reference?: string | null
+          source?: string | null
+          status?: string
+          txn_date: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          org_id?: string
+          posted_at?: string | null
+          reference?: string | null
+          source?: string | null
+          status?: string
+          txn_date?: string
+        }
+        Relationships: []
+      }
       kyc_verifications: {
         Row: {
           created_at: string
@@ -16118,6 +16522,85 @@ export type Database = {
             columns: ["campaign_id"]
             isOneToOne: false
             referencedRelation: "marketing_campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ledger_entries: {
+        Row: {
+          account_id: string
+          created_at: string
+          credit: number
+          currency: string
+          debit: number
+          description: string | null
+          id: string
+          journal_id: string
+          org_id: string
+        }
+        Insert: {
+          account_id: string
+          created_at?: string
+          credit?: number
+          currency?: string
+          debit?: number
+          description?: string | null
+          id?: string
+          journal_id: string
+          org_id: string
+        }
+        Update: {
+          account_id?: string
+          created_at?: string
+          credit?: number
+          currency?: string
+          debit?: number
+          description?: string | null
+          id?: string
+          journal_id?: string
+          org_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ledger_entries_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "coa_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ledger_entries_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "vw_balance_sheet"
+            referencedColumns: ["account_id"]
+          },
+          {
+            foreignKeyName: "ledger_entries_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "vw_income_statement"
+            referencedColumns: ["account_id"]
+          },
+          {
+            foreignKeyName: "ledger_entries_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "vw_trial_balance"
+            referencedColumns: ["account_id"]
+          },
+          {
+            foreignKeyName: "ledger_entries_currency_fkey"
+            columns: ["currency"]
+            isOneToOne: false
+            referencedRelation: "ref_currencies"
+            referencedColumns: ["code"]
+          },
+          {
+            foreignKeyName: "ledger_entries_journal_id_fkey"
+            columns: ["journal_id"]
+            isOneToOne: false
+            referencedRelation: "journals"
             referencedColumns: ["id"]
           },
         ]
@@ -20720,6 +21203,42 @@ export type Database = {
         }
         Relationships: []
       }
+      partners: {
+        Row: {
+          created_at: string
+          email: string | null
+          id: string
+          is_active: boolean
+          kind: string
+          name: string
+          org_id: string
+          phone: string | null
+          tax_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          is_active?: boolean
+          kind: string
+          name: string
+          org_id: string
+          phone?: string | null
+          tax_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          is_active?: boolean
+          kind?: string
+          name?: string
+          org_id?: string
+          phone?: string | null
+          tax_id?: string | null
+        }
+        Relationships: []
+      }
       password_history: {
         Row: {
           created_at: string | null
@@ -20743,6 +21262,41 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: []
+      }
+      payment_applications: {
+        Row: {
+          amount: number
+          id: string
+          org_id: string
+          payment_id: string
+          target_id: string
+          target_kind: string
+        }
+        Insert: {
+          amount: number
+          id?: string
+          org_id: string
+          payment_id: string
+          target_id: string
+          target_kind: string
+        }
+        Update: {
+          amount?: number
+          id?: string
+          org_id?: string
+          payment_id?: string
+          target_id?: string
+          target_kind?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_applications_payment_id_fkey"
+            columns: ["payment_id"]
+            isOneToOne: false
+            referencedRelation: "payments"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       payment_rds: {
         Row: {
@@ -20793,6 +21347,70 @@ export type Database = {
             columns: ["campaign_id"]
             isOneToOne: false
             referencedRelation: "ad_campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payments: {
+        Row: {
+          amount: number
+          created_at: string
+          currency: string
+          id: string
+          journal_id: string | null
+          kind: string
+          memo: string | null
+          method: string | null
+          org_id: string
+          partner_id: string | null
+          payment_date: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          currency?: string
+          id?: string
+          journal_id?: string | null
+          kind: string
+          memo?: string | null
+          method?: string | null
+          org_id: string
+          partner_id?: string | null
+          payment_date: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          currency?: string
+          id?: string
+          journal_id?: string | null
+          kind?: string
+          memo?: string | null
+          method?: string | null
+          org_id?: string
+          partner_id?: string | null
+          payment_date?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_currency_fkey"
+            columns: ["currency"]
+            isOneToOne: false
+            referencedRelation: "ref_currencies"
+            referencedColumns: ["code"]
+          },
+          {
+            foreignKeyName: "payments_journal_id_fkey"
+            columns: ["journal_id"]
+            isOneToOne: false
+            referencedRelation: "journals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payments_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
             referencedColumns: ["id"]
           },
         ]
@@ -25130,6 +25748,21 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      ref_currencies: {
+        Row: {
+          code: string
+          name: string
+        }
+        Insert: {
+          code: string
+          name: string
+        }
+        Update: {
+          code?: string
+          name?: string
+        }
+        Relationships: []
       }
       referral_payouts: {
         Row: {
@@ -33327,6 +33960,45 @@ export type Database = {
         }
         Relationships: []
       }
+      vw_balance_sheet: {
+        Row: {
+          account_id: string | null
+          balance: number | null
+          code: string | null
+          credits: number | null
+          debits: number | null
+          name: string | null
+          org_id: string | null
+          type: string | null
+        }
+        Relationships: []
+      }
+      vw_income_statement: {
+        Row: {
+          account_id: string | null
+          balance: number | null
+          code: string | null
+          credits: number | null
+          debits: number | null
+          name: string | null
+          org_id: string | null
+          type: string | null
+        }
+        Relationships: []
+      }
+      vw_trial_balance: {
+        Row: {
+          account_id: string | null
+          balance: number | null
+          code: string | null
+          credits: number | null
+          debits: number | null
+          name: string | null
+          org_id: string | null
+          type: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       activate_referral: {
@@ -34242,6 +34914,10 @@ export type Database = {
         }
         Returns: string
       }
+      post_journal: {
+        Args: { p_journal: string }
+        Returns: undefined
+      }
       process_advisor_referral: {
         Args: { p_referral_code: string; p_new_advisor_id: string }
         Returns: boolean
@@ -34463,6 +35139,10 @@ export type Database = {
           p_creative_id: string
           p_approval_type: Database["public"]["Enums"]["approval_type"]
         }
+        Returns: boolean
+      }
+      validate_double_entry: {
+        Args: { p_journal: string }
         Returns: boolean
       }
       validate_franchise_referral_creation: {

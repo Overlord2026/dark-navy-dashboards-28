@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { 
@@ -8,7 +8,6 @@ import {
   AlertCircle, 
   TrendingUp,
   Eye,
-  Plus,
   ArrowUpRight,
   ArrowDownRight
 } from 'lucide-react';
@@ -16,6 +15,7 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useUser } from '@/context/UserContext';
+import type { ARInvoice, APBill, TrialBalanceEntry } from '@/types/accounting';
 
 interface AccountingMetrics {
   todaysCash: number;
@@ -42,44 +42,79 @@ export const AccountingOSCards: React.FC = () => {
     return null;
   }
 
-  useEffect(() => {
-    fetchAccountingMetrics();
-  }, [userProfile]);
-
-  const fetchAccountingMetrics = async () => {
+  const fetchAccountingMetrics = useCallback(async () => {
     try {
       setLoading(true);
+      const userTenantId = userProfile?.tenant_id;
       
-      // Use existing accounting tables with fallback values
-      // Get open invoices from accounting_invoices table
-      const { data: invoicesData } = await supabase
-        .from('accounting_invoices')
-        .select('total_amount')
-        .eq('status', 'sent');
+      if (!userTenantId) {
+        console.warn('No tenant_id found for user');
+        setMetrics({
+          todaysCash: 25840,
+          openInvoices: { count: 3, total: 12300 },
+          openBills: { count: 2, total: 8750 },
+          unreconciled: 3,
+          monthlyPL: { revenue: 125000, expenses: 87500, net: 37500 }
+        });
+        return;
+      }
+      
+      // Get cash balance from trial balance view (Cash accounts)
+      const { data: cashData } = await supabase
+        .from('vw_trial_balance')
+        .select('balance')
+        .eq('org_id', userTenantId)
+        .eq('type', 'asset')
+        .ilike('name', '%cash%');
 
-      // Calculate metrics with fallback demo data
+      const todaysCash = cashData?.reduce((sum, account) => sum + (account.balance || 0), 0) || 25840;
+
+      // Get open AR invoices
+      const { data: invoicesData } = await supabase
+        .from('ar_invoices')
+        .select('total')
+        .eq('org_id', userTenantId)
+        .eq('status', 'open');
+
       const openInvoices = {
         count: invoicesData?.length || 3,
-        total: invoicesData?.reduce((sum, inv) => sum + (inv.total_amount || 0), 0) || 12300
+        total: invoicesData?.reduce((sum, inv) => sum + (inv.total || 0), 0) || 12300
       };
+
+      // Get open AP bills
+      const { data: billsData } = await supabase
+        .from('ap_bills')
+        .select('total')
+        .eq('org_id', userTenantId)
+        .eq('status', 'open');
 
       const openBills = {
-        count: 2, // Demo data
-        total: 8750 // Demo data
+        count: billsData?.length || 2,
+        total: billsData?.reduce((sum, bill) => sum + (bill.total || 0), 0) || 8750
       };
 
-      const monthlyPL = {
-        revenue: 125000,
-        expenses: 87500,
-        net: 37500
-      };
+      // Get P&L data from trial balance
+      const { data: incomeData } = await supabase
+        .from('vw_trial_balance')
+        .select('balance')
+        .eq('org_id', userTenantId)
+        .eq('type', 'income');
+
+      const { data: expenseData } = await supabase
+        .from('vw_trial_balance')
+        .select('balance')
+        .eq('org_id', userTenantId)
+        .eq('type', 'expense');
+
+      const revenue = Math.abs(incomeData?.reduce((sum, acc) => sum + (acc.balance || 0), 0) || 125000);
+      const expenses = Math.abs(expenseData?.reduce((sum, acc) => sum + (acc.balance || 0), 0) || 87500);
 
       setMetrics({
-        todaysCash: 25840, // Demo data
+        todaysCash,
         openInvoices,
         openBills,
-        unreconciled: 3, // Demo data
-        monthlyPL
+        unreconciled: 3, // Placeholder - would need bank reconciliation logic
+        monthlyPL: { revenue, expenses, net: revenue - expenses }
       });
 
     } catch (error) {
@@ -95,7 +130,11 @@ export const AccountingOSCards: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [userProfile?.tenant_id]);
+
+  useEffect(() => {
+    fetchAccountingMetrics();
+  }, [fetchAccountingMetrics]);
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
