@@ -317,7 +317,7 @@ export default function SwagRetirementRoadmap() {
           withdrawalSequence: ['taxable', 'tax_deferred', 'tax_free'],
           rothConversionStrategy: false,
           taxBracketManagement: true,
-          harverstLosses: false
+          harvestLosses: false
         },
         healthcare: {
           currentAge: profile.primaryClient.age,

@@ -165,7 +165,7 @@ export const SwagRetirementAnalysisInputSchema = z.object({
     withdrawalSequence: z.array(z.string()),
     rothConversionStrategy: z.boolean(),
     taxBracketManagement: z.boolean(),
-    harverstLosses: z.boolean()
+    harvestLosses: z.boolean()
   }).optional(),
   healthcare: z.object({
     currentAge: z.number(),
@@ -209,7 +209,7 @@ export interface SwagPhase {
   allocation?: PhaseAllocation;
   projection?: PhaseProjection;
   yearStart?: number;
-  yearEnd?: number;
+  yearEnd?: number | null; // Allow null for infinite phases
   investmentCategories?: InvestmentCategory[];
   enabled?: boolean;
   description?: string;
