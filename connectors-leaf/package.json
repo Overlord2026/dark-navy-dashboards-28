@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "concurrently \"npm run supabase:start\" \"npm run functions:dev\"",
     "build": "tsc && npm run api:generate",
-    "test": "jest",
+    "test": "deno test --allow-net --allow-env tests/",
+    "test:mappers": "deno test --allow-net --allow-env tests/mappers/",
     "test:integration": "jest --config jest.integration.config.js",
     "test:security": "npm audit && eslint . --ext .ts,.js",
     "lint": "eslint . --ext .ts,.js --fix",
@@ -20,6 +21,7 @@
     "api:generate": "swagger-typescript-api -p ./api/openapi.yaml -o ./api --name client.ts",
     "db:migrate": "supabase migration up",
     "db:rollback": "supabase migration down",
+    "worker:reconcile": "deno run --allow-net --allow-env workers/reconciliation-job.ts",
     "reporter:build": "cd reporter && docker build -t connector-reporter .",
     "reporter:run": "docker run -p 3001:3001 connector-reporter",
     "security:scan": "npm audit && trivy fs .",
