@@ -1,11 +1,12 @@
-"use client";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { analytics } from '@/lib/analytics';
+import { scrollToId, track } from "@/lib/cta";
 
 export function HomeHero() {
   const [group, setGroup] = useState<"family" | "pro">("family");
+  const navigate = useNavigate();
   
   useEffect(() => {
     const v = (localStorage.getItem("persona_group") as "family" | "pro") || "family";
@@ -28,7 +29,11 @@ export function HomeHero() {
           <Button 
             size="lg" 
             className="px-8 py-3"
-            onClick={() => analytics.track('hero.cta.clicked', { group: 'pro', cta: 'explore_tools' })}
+            onClick={() => { 
+              analytics.track('hero.cta.clicked', { group: 'pro', cta: 'explore_tools' });
+              track("hero.cta.clicked", { label: "Explore Tools", group: 'pro' });
+              navigate("/tools"); 
+            }}
           >
             Explore Tools
           </Button>
@@ -36,7 +41,11 @@ export function HomeHero() {
             size="lg" 
             variant="outline" 
             className="px-8 py-3"
-            onClick={() => analytics.track('hero.cta.clicked', { group: 'pro', cta: 'book_demo' })}
+            onClick={() => { 
+              analytics.track('hero.cta.clicked', { group: 'pro', cta: 'book_demo' });
+              track("hero.cta.clicked", { label: "Book a Demo", group: 'pro' });
+              navigate("/meet?type=demo"); 
+            }}
           >
             Book a Demo
           </Button>
@@ -61,7 +70,11 @@ export function HomeHero() {
         <Button 
           size="lg" 
           className="px-8 py-3"
-          onClick={() => analytics.track('hero.cta.clicked', { group: 'family', cta: 'see_how_it_works' })}
+          onClick={() => { 
+            analytics.track('hero.cta.clicked', { group: 'family', cta: 'see_how_it_works' });
+            track("hero.cta.clicked", { label: "See How It Works", group: 'family' });
+            scrollToId("how-it-works"); 
+          }}
         >
           See How It Works
         </Button>
@@ -69,7 +82,11 @@ export function HomeHero() {
           size="lg" 
           variant="outline" 
           className="px-8 py-3"
-          onClick={() => analytics.track('hero.cta.clicked', { group: 'family', cta: 'try_value_calculator' })}
+          onClick={() => { 
+            analytics.track('hero.cta.clicked', { group: 'family', cta: 'try_value_calculator' });
+            track("hero.cta.clicked", { label: "Try the Value Calculator", group: 'family' });
+            navigate("/tools/value-calculator"); 
+          }}
         >
           Try the Value Calculator
         </Button>

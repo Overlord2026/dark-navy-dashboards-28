@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { familySegments } from "@/lib/persona";
 
 export default function FamilySegmentPage() {
@@ -58,9 +58,12 @@ export default function FamilySegmentPage() {
             Schedule a complimentary consultation to learn how we can help your family 
             achieve its financial goals.
           </p>
-          <button className="px-6 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors">
+          <Link
+            to={`/meet?type=consultation&source=segment&segment=${segment}`}
+            className="inline-flex items-center px-6 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors"
+          >
             Schedule Consultation
-          </button>
+          </Link>
         </div>
       </div>
     </main>

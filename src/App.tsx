@@ -177,6 +177,8 @@ import { MarketplaceLandingPage } from './components/marketplace/MarketplaceLand
 import { PersonaRedirect } from './components/PersonaRedirect';
 import { DemoCalculator } from './components/demo/DemoCalculator';
 import TargetAnalyzerPage from './pages/TargetAnalyzerPage';
+import { MeetPage } from "@/pages/MeetPage";
+import { ToolsPage } from "@/pages/ToolsPage";
 import AdminLayoutSettings from './pages/AdminLayoutSettings';
 import CFODashboard from './pages/CFODashboard';
 import AdminControlsPage from './pages/AdminControlsPage';
@@ -437,7 +439,9 @@ function App() {
                                   {React.createElement(React.lazy(() => import('./pages/ValueCalculator')))}
                                 </React.Suspense>
                             } />
-                            <Route path="/tools/target-analyzer" element={<TargetAnalyzerPage />} />
+            <Route path="/tools/target-analyzer" element={<TargetAnalyzerPage />} />
+            <Route path="/tools" element={<ToolsPage />} />
+            <Route path="/meet" element={<MeetPage />} />
                             <Route path="/auth" element={<AuthPage />} />
                             <Route path="/auth/:authType" element={<AuthPage />} />
                               <Route path="/auth/:authType/:tenantId" element={<AuthPage />} />
