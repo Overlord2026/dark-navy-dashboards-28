@@ -32,9 +32,10 @@ export function HomeHero() {
               size="lg" 
               className="px-8 py-3 pointer-events-auto"
               onClick={() => { 
-                analytics.track('hero.cta.clicked', { group: 'pro', cta: 'explore_tools' });
-                track("hero.cta.clicked", { label: "Explore Tools", group: 'pro' });
-                navigate("/tools"); 
+                analytics.track("hero.cta.clicked", { group: "pro", cta: "explore_tools" });
+                track("hero.cta.clicked", { label: "Explore Tools", group: "pro" });
+                // ✅ FIX: go to a real route
+                navigate("/tools/value-calculator");
               }}
             >
               Explore Tools
