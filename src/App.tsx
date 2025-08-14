@@ -30,6 +30,11 @@ import { LeadConfirmation } from "@/pages/leads/LeadConfirmation";
 import { PipelineBoard } from "@/pages/leads/PipelineBoard";
 import { LeadScoringDashboard } from "@/components/leads/LeadScoringDashboard";
 import { FamilyOfficeMarketplacePage } from "@/components/marketplace/FamilyOfficeMarketplacePage";
+import NotesPage from "@/pages/NotesPage";
+import RecommendationsPage from "@/pages/RecommendationsPage";
+import DashboardsPage from "@/pages/DashboardsPage";
+import CalculatorsPage from "@/pages/CalculatorsPage";
+import StudiesPage from "@/pages/StudiesPage";
 import LinkedInImport from "./pages/LinkedInImport";
 import ProfessionalOnboardingSuccess from "./pages/ProfessionalOnboardingSuccess";
 import ProOnboarding from "./pages/ProOnboarding";
@@ -434,14 +439,19 @@ function App() {
                                <Route path="/universal" element={<UniversalLandingPage />} />
                            <Route path="/marketplace" element={<FamilyOfficeMarketplacePage />} />
                             <Route path="/welcome" element={<WelcomePage />} />
-                            <Route path="/value-calculator" element={
-                                <React.Suspense fallback={<div>Loading...</div>}>
-                                  {React.createElement(React.lazy(() => import('./pages/ValueCalculator')))}
-                                </React.Suspense>
-                            } />
+             <Route path="/tools/value-calculator" element={
+                <React.Suspense fallback={<div>Loading...</div>}>
+                  {React.createElement(React.lazy(() => import('./pages/ValueCalculator')))}
+                </React.Suspense>
+             } />
             <Route path="/tools/target-analyzer" element={<TargetAnalyzerPage />} />
             
             <Route path="/meet" element={<MeetPage />} />
+            <Route path="/notes" element={<NotesPage />} />
+            <Route path="/recommendations" element={<RecommendationsPage />} />
+            <Route path="/dashboards" element={<DashboardsPage />} />
+            <Route path="/calculators" element={<CalculatorsPage />} />
+            <Route path="/studies" element={<StudiesPage />} />
                             <Route path="/auth" element={<AuthPage />} />
                             <Route path="/auth/:authType" element={<AuthPage />} />
                               <Route path="/auth/:authType/:tenantId" element={<AuthPage />} />
@@ -715,6 +725,7 @@ function App() {
           <Route path="/healthcare-dashboard" element={<HealthcareDashboardPage />} />
           <Route path="/shark-tank-pitch" element={<SharkTankPitch />} />
           <Route path="/tools/retirement-confidence-scorecard" element={<RetirementConfidenceScorecardPage />} />
+          <Route path="/scorecard" element={<ScorecardStartPage />} />
           <Route path="/scorecard/start" element={<ScorecardStartPage />} />
           <Route path="/roadmap/intake" element={<SwagRetirementRoadmapPage />} />
           

@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -7,6 +8,7 @@ import { CheckCircle, Users, TrendingUp, Shield, Calendar, DollarSign } from "lu
 import AudienceGuard from "@/components/AudienceGuard";
 
 export function PersonaAwareContent() {
+  const navigate = useNavigate();
   const [group, setGroup] = useState<"family" | "pro">("family");
   
   useEffect(() => {
@@ -135,7 +137,7 @@ export function PersonaAwareContent() {
       {/* Family Content - Only for Families */}
       <AudienceGuard audience="family">
         {/* How It Works */}
-        <section className="container mx-auto px-4">
+        <section id="how-it-works" className="container mx-auto px-4 scroll-mt-24">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold mb-4">How It Works</h2>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
@@ -179,7 +181,11 @@ export function PersonaAwareContent() {
           <p className="text-muted-foreground text-lg mb-8 max-w-2xl mx-auto">
             See how much you could save and what your family office could accomplish
           </p>
-          <Button size="lg" className="px-8 py-3">
+          <Button 
+            size="lg" 
+            className="px-8 py-3"
+            onClick={() => navigate("/tools/value-calculator")}
+          >
             Try the Calculator
           </Button>
         </div>
