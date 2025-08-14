@@ -20,7 +20,6 @@ import { getAdvisorAccessRoles } from "@/utils/roleHierarchy";
 import { DynamicLandingController } from "@/components/auth/DynamicLandingController";
 import { Navigation } from "@/components/Navigation";
 import TopNav from "@/components/nav/TopNav";
-import { StickyTopBanner } from "@/components/layout/StickyTopBanner";
 import ReferralTracker from "@/components/tracking/ReferralTracker";
 import { QABypassIndicator } from "@/components/security/QABypassIndicator";
 import { APIWarningBanner } from "@/components/admin/APIWarningBanner";
@@ -244,11 +243,10 @@ function App() {
                   <TenantProvider>
                     <AdvisorProvider>
                       <PersonaProvider>
-                        <NewPersonaProvider>
-                          <BrowserRouter>
-                            <TopNav />
-                            <StickyTopBanner />
-                            <APIWarningBanner />
+                         <NewPersonaProvider>
+                           <BrowserRouter>
+                             <TopNav showSubBanner />
+                             <APIWarningBanner />
                             <ExtensionHealthBanner />
                             <ReferralTracker />
                            <Routes>

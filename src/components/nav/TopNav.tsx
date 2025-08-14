@@ -2,7 +2,9 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { usePersonaContext } from "@/context/persona-context";
 
-export default function TopNav() {
+export default function TopNav({ showSubBanner = true }: {
+  showSubBanner?: boolean;
+}) {
   const { personaRoot, setPersonaRoot, currentMenu, servicesMenu, solutionsMenu, ctas } = usePersonaContext();
   const [open, setOpen] = useState<string | null>(null);
 
@@ -91,39 +93,41 @@ export default function TopNav() {
         </div>
       </div>
 
-      {/* Sub-banner */}
-      <div className="border-t border-border bg-muted/30">
-        <div className="mx-auto max-w-7xl px-4 h-10 flex items-center gap-4 text-sm">
-          <Link to="/notes" className="text-muted-foreground hover:text-foreground transition-colors">
-            Notes
-          </Link>
-          <span className="text-muted-foreground/40">•</span>
-          <Link to="/recommendations" className="text-muted-foreground hover:text-foreground transition-colors">
-            Recommendations
-          </Link>
-          <span className="text-muted-foreground/40">•</span>
-          <Link to="/dashboards" className="text-muted-foreground hover:text-foreground transition-colors">
-            Dashboards
-          </Link>
-          <span className="text-muted-foreground/40">•</span>
-          <Link to="/calculators" className="text-muted-foreground hover:text-foreground transition-colors">
-            Calculators
-          </Link>
-          <span className="text-muted-foreground/40">•</span>
-          <Link to="/studies" className="text-muted-foreground hover:text-foreground transition-colors">
-            Studies
-          </Link>
-
-          <div className="ml-auto">
-            <Link 
-              to={ctas.valueCalculator.href} 
-              className="px-3 py-1.5 rounded-md border border-border hover:bg-accent text-foreground text-xs font-medium"
-            >
-              {ctas.valueCalculator.label}
+      {/* Sub-banner - only render if showSubBanner is true */}
+      {showSubBanner && (
+        <div className="border-t border-border bg-muted/30">
+          <div className="mx-auto max-w-7xl px-4 h-10 flex items-center gap-4 text-sm">
+            <Link to="/notes" className="text-muted-foreground hover:text-foreground transition-colors">
+              Notes
             </Link>
+            <span className="text-muted-foreground/40">•</span>
+            <Link to="/recommendations" className="text-muted-foreground hover:text-foreground transition-colors">
+              Recommendations
+            </Link>
+            <span className="text-muted-foreground/40">•</span>
+            <Link to="/dashboards" className="text-muted-foreground hover:text-foreground transition-colors">
+              Dashboards
+            </Link>
+            <span className="text-muted-foreground/40">•</span>
+            <Link to="/calculators" className="text-muted-foreground hover:text-foreground transition-colors">
+              Calculators
+            </Link>
+            <span className="text-muted-foreground/40">•</span>
+            <Link to="/studies" className="text-muted-foreground hover:text-foreground transition-colors">
+              Studies
+            </Link>
+
+            <div className="ml-auto">
+              <Link 
+                to={ctas.valueCalculator.href} 
+                className="px-3 py-1.5 rounded-md border border-border hover:bg-accent text-foreground text-xs font-medium"
+              >
+                {ctas.valueCalculator.label}
+              </Link>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </header>
   );
 }

@@ -35,6 +35,8 @@ export const BFOHeader: React.FC<BFOHeaderProps> = ({
   showPersonaBanner = true, 
   className 
 }) => {
+  // Stub out to prevent duplicate headers
+  return null;
   const personaLinks = usePersonaSublinks();
   const [isConnected] = React.useState(false); // Will be dynamic based on integration status
 
