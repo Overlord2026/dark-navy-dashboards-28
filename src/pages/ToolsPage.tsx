@@ -1,87 +1,40 @@
 import { Link } from "react-router-dom";
-import { MainLayout } from "@/components/layout/MainLayout";
-import { Calculator, Target, TrendingUp, FileText } from "lucide-react";
 
-export function ToolsPage() {
-  const tools = [
-    {
-      title: "Value Calculator",
-      description: "Calculate the potential value of working with a family office",
-      href: "/tools/value-calculator",
-      icon: Calculator,
-      color: "bg-blue-500"
-    },
-    {
-      title: "Target Analyzer", 
-      description: "Analyze your target market and identify opportunities",
-      href: "/tools/target-analyzer",
-      icon: Target,
-      color: "bg-green-500"
-    },
-    {
-      title: "Portfolio Tracker",
-      description: "Track and analyze your investment portfolio performance",
-      href: "/tools/portfolio-tracker",
-      icon: TrendingUp,
-      color: "bg-purple-500"
-    },
-    {
-      title: "Report Generator",
-      description: "Generate comprehensive financial reports and insights",
-      href: "/tools/report-generator", 
-      icon: FileText,
-      color: "bg-orange-500"
-    }
-  ];
-
+export default function ToolsIndex() {
   return (
-    <MainLayout>
-      <div className="container mx-auto px-4 py-16">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center space-y-4 mb-12">
-            <h1 className="text-4xl font-bold text-foreground">Professional Tools</h1>
-            <p className="text-lg text-muted-foreground">
-              Powerful tools to help you grow your practice and serve your clients better.
-            </p>
-          </div>
+    <main className="mx-auto max-w-6xl px-4 py-10 space-y-6">
+      <h1 className="text-3xl font-semibold">Tools & Calculators</h1>
 
-          <div className="grid gap-6 md:grid-cols-2">
-            {tools.map((tool) => (
-              <Link
-                key={tool.href}
-                to={tool.href}
-                className="group p-6 bg-muted/50 rounded-lg border border-border hover:border-primary/50 transition-all duration-200"
-              >
-                <div className="flex items-start space-x-4">
-                  <div className={`p-3 rounded-lg ${tool.color} text-white group-hover:scale-110 transition-transform`}>
-                    <tool.icon className="h-6 w-6" />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-xl font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">
-                      {tool.title}
-                    </h3>
-                    <p className="text-muted-foreground">
-                      {tool.description}
-                    </p>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-
-          <div className="mt-12 text-center">
-            <p className="text-muted-foreground mb-6">
-              Need help getting started or have questions about our tools?
-            </p>
-            <Link
-              to="/meet?type=demo&source=tools"
-              className="inline-flex items-center px-6 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors"
-            >
-              Schedule a Demo
-            </Link>
-          </div>
-        </div>
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <Card
+          title="Value Calculator"
+          body="Quantify fees, taxes, coordination value, and planning alpha."
+          to="/tools/value-calculator"
+        />
+        <Card
+          title="Target Analyzer"
+          body="Project to a target age with work rate, spending, and income sources."
+          to="/tools/target-analyzer"
+        />
+        <Card
+          title="Retirement Scorecard™"
+          body="Quick confidence score plus action items."
+          to="/scorecard"
+        />
       </div>
-    </MainLayout>
+    </main>
+  );
+}
+
+function Card({ title, body, to }: { title: string; body: string; to: string }) {
+  return (
+    <Link
+      to={to}
+      className="block rounded-xl border border-white/12 bg-[#0f1b27] p-5 hover:bg-white/5"
+    >
+      <div className="text-lg font-semibold">{title}</div>
+      <div className="opacity-80 text-sm mt-1">{body}</div>
+      <div className="mt-3 text-sm text-[#d9a52b]">Open →</div>
+    </Link>
   );
 }

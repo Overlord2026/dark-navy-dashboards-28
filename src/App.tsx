@@ -178,7 +178,7 @@ import { PersonaRedirect } from './components/PersonaRedirect';
 import { DemoCalculator } from './components/demo/DemoCalculator';
 import TargetAnalyzerPage from './pages/TargetAnalyzerPage';
 import { MeetPage } from "@/pages/MeetPage";
-import { ToolsPage } from "@/pages/ToolsPage";
+import ToolsPage from "@/pages/ToolsPage";
 import AdminLayoutSettings from './pages/AdminLayoutSettings';
 import CFODashboard from './pages/CFODashboard';
 import AdminControlsPage from './pages/AdminControlsPage';
