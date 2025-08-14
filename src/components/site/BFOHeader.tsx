@@ -21,10 +21,10 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { usePersonaSublinks } from '@/hooks/usePersonaSublinks';
-import { MEGA_MENU_CONFIG } from '@/config/persona-links';
 import { cn } from '@/lib/utils';
 import { analytics } from '@/lib/analytics';
 import { getPersonaGroup } from '@/components/AudienceGuard';
+import { servicesMenu, solutionsMenu, personaMenus, PersonaRoot } from '@/lib/persona';
 
 interface BFOHeaderProps {
   showPersonaBanner?: boolean;
@@ -75,66 +75,25 @@ export const BFOHeader: React.FC<BFOHeaderProps> = ({
             {/* Desktop Navigation */}
             <NavigationMenu className="hidden lg:flex">
               <NavigationMenuList>
-                {/* For Families */}
+                {/* Services */}
                 <NavigationMenuItem>
-                  <NavigationMenuTrigger>For Families</NavigationMenuTrigger>
-                  <NavigationMenuContent>
-                    <div className="grid w-[400px] gap-3 p-4">
-                      <div className="grid gap-1">
-                        <h4 className="text-sm font-medium leading-none">Family Types</h4>
-                        <p className="text-sm text-muted-foreground">
-                          Tailored solutions for every family stage
-                        </p>
-                      </div>
-                      <div className="grid gap-2">
-                        {MEGA_MENU_CONFIG.families.sections[0].items.map((item) => (
-                          <NavigationMenuLink key={item.href} asChild>
-                            <Link
-                              to={item.href}
-                              className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                              onClick={() => analytics.track('nav.mega.clicked', { 
-                                group: getPersonaGroup(), 
-                                section: 'families', 
-                                item: item.label 
-                              })}
-                            >
-                              <div className="text-sm font-medium leading-none">{item.label}</div>
-                              <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                                {item.description}
-                              </p>
-                            </Link>
-                          </NavigationMenuLink>
-                        ))}
-                      </div>
-                    </div>
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
-
-                {/* For Professionals */}
-                <NavigationMenuItem>
-                  <NavigationMenuTrigger>For Professionals</NavigationMenuTrigger>
+                  <NavigationMenuTrigger>
+                    {servicesMenu.label}
+                  </NavigationMenuTrigger>
                   <NavigationMenuContent>
                     <div className="grid w-[600px] gap-3 p-4">
-                      <div className="grid gap-1">
-                        <h4 className="text-sm font-medium leading-none">Professional Services</h4>
-                        <p className="text-sm text-muted-foreground">
-                          Tools and solutions for financial services professionals
-                        </p>
-                      </div>
-                      <div className="grid grid-cols-2 gap-4">
-                        {MEGA_MENU_CONFIG.professionals.sections.map((section) => (
-                          <div key={section.title} className="grid gap-2">
-                            <h5 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
-                              {section.title}
-                            </h5>
-                            {section.items.map((item) => (
+                      {servicesMenu.groups.map((group) => (
+                        <div key={group.heading}>
+                          <h4 className="text-sm font-medium leading-none mb-3">{group.heading}</h4>
+                          <div className="grid grid-cols-2 gap-2">
+                            {group.items.map((item) => (
                               <NavigationMenuLink key={item.href} asChild>
                                 <Link
                                   to={item.href}
                                   className="block select-none space-y-1 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                                   onClick={() => analytics.track('nav.mega.clicked', { 
                                     group: getPersonaGroup(), 
-                                    section: 'professionals', 
+                                    section: 'services', 
                                     item: item.label 
                                   })}
                                 >
@@ -146,64 +105,33 @@ export const BFOHeader: React.FC<BFOHeaderProps> = ({
                               </NavigationMenuLink>
                             ))}
                           </div>
-                        ))}
-                      </div>
-                    </div>
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
-
-                {/* Services */}
-                <NavigationMenuItem>
-                  <NavigationMenuTrigger>Services</NavigationMenuTrigger>
-                  <NavigationMenuContent>
-                    <div className="grid w-[500px] gap-3 p-4">
-                      <div className="grid gap-1">
-                        <h4 className="text-sm font-medium leading-none">Core Services</h4>
-                        <p className="text-sm text-muted-foreground">
-                          Comprehensive financial services catalog
-                        </p>
-                      </div>
-                      <div className="grid grid-cols-2 gap-2">
-                        {MEGA_MENU_CONFIG.services.sections[0].items.map((item) => (
-                          <NavigationMenuLink key={item.href} asChild>
-                            <Link
-                              to={item.href}
-                              className="block select-none space-y-1 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                            >
-                              <div className="text-sm font-medium leading-none">{item.label}</div>
-                              <p className="line-clamp-2 text-xs leading-snug text-muted-foreground">
-                                {item.description}
-                              </p>
-                            </Link>
-                          </NavigationMenuLink>
-                        ))}
-                      </div>
+                        </div>
+                      ))}
                     </div>
                   </NavigationMenuContent>
                 </NavigationMenuItem>
 
                 {/* Solutions */}
                 <NavigationMenuItem>
-                  <NavigationMenuTrigger>Solutions</NavigationMenuTrigger>
+                  <NavigationMenuTrigger>
+                    {solutionsMenu.label}
+                  </NavigationMenuTrigger>
                   <NavigationMenuContent>
-                    <div className="grid w-[600px] gap-3 p-4">
-                      <div className="grid gap-1">
-                        <h4 className="text-sm font-medium leading-none">Guided Solutions</h4>
-                        <p className="text-sm text-muted-foreground">
-                          Step-by-step workflows for complex financial tasks
-                        </p>
-                      </div>
-                      <div className="grid grid-cols-2 gap-4">
-                        {MEGA_MENU_CONFIG.solutions.sections.map((section) => (
-                          <div key={section.title} className="grid gap-2">
-                            <h5 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
-                              {section.title}
-                            </h5>
-                            {section.items.map((item) => (
+                    <div className="grid w-[800px] gap-3 p-4 grid-cols-2">
+                      {solutionsMenu.groups.map((group) => (
+                        <div key={group.heading}>
+                          <h4 className="text-sm font-medium leading-none mb-3">{group.heading}</h4>
+                          <div className="grid gap-2">
+                            {group.items.map((item) => (
                               <NavigationMenuLink key={item.href} asChild>
                                 <Link
                                   to={item.href}
                                   className="block select-none space-y-1 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                                  onClick={() => analytics.track('nav.mega.clicked', { 
+                                    group: getPersonaGroup(), 
+                                    section: 'solutions', 
+                                    item: item.label 
+                                  })}
                                 >
                                   <div className="text-sm font-medium leading-none">{item.label}</div>
                                   <p className="line-clamp-2 text-xs leading-snug text-muted-foreground">
@@ -213,11 +141,55 @@ export const BFOHeader: React.FC<BFOHeaderProps> = ({
                               </NavigationMenuLink>
                             ))}
                           </div>
-                        ))}
-                      </div>
+                        </div>
+                      ))}
                     </div>
                   </NavigationMenuContent>
                 </NavigationMenuItem>
+
+                {/* Persona-specific Menu */}
+                {(() => {
+                  const personaGroup = getPersonaGroup();
+                  const personaKey = personaGroup === 'family' ? 'families' : 'professionals';
+                  const menu = personaMenus[personaKey as PersonaRoot];
+                  
+                  return (
+                    <NavigationMenuItem>
+                      <NavigationMenuTrigger>
+                        {menu.label}
+                      </NavigationMenuTrigger>
+                      <NavigationMenuContent>
+                        <div className="grid w-[400px] gap-3 p-4">
+                          {menu.groups.map((group) => (
+                            <div key={group.heading}>
+                              <h4 className="text-sm font-medium leading-none mb-3">{group.heading}</h4>
+                              <div className="grid gap-2">
+                                {group.items.map((item) => (
+                                  <NavigationMenuLink key={item.href} asChild>
+                                    <Link
+                                      to={item.href}
+                                      className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                                      onClick={() => analytics.track('nav.mega.clicked', { 
+                                        group: personaGroup, 
+                                        section: personaKey, 
+                                        item: item.label 
+                                      })}
+                                    >
+                                      <div className="text-sm font-medium leading-none">{item.label}</div>
+                                      <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                                        {item.description}
+                                      </p>
+                                    </Link>
+                                  </NavigationMenuLink>
+                                ))}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </NavigationMenuContent>
+                    </NavigationMenuItem>
+                  );
+                })()}
               </NavigationMenuList>
             </NavigationMenu>
 
@@ -245,27 +217,64 @@ export const BFOHeader: React.FC<BFOHeaderProps> = ({
                     </SheetDescription>
                   </SheetHeader>
                   <div className="grid gap-4 py-4">
-                    {Object.values(MEGA_MENU_CONFIG).map((section) => (
-                      <div key={section.title} className="grid gap-2">
-                        <h4 className="font-medium">{section.title}</h4>
-                        <div className="grid gap-1 pl-4">
-                          {section.sections.map((subsection) => (
-                            <div key={subsection.title} className="grid gap-1">
-                              <h5 className="text-sm text-muted-foreground">{subsection.title}</h5>
-                              {subsection.items.map((item) => (
-                                <Link
-                                  key={item.href}
-                                  to={item.href}
-                                  className="text-sm hover:underline"
-                                >
-                                  {item.label}
-                                </Link>
-                              ))}
-                            </div>
-                          ))}
-                        </div>
+                    {/* Services Mobile */}
+                    <div className="grid gap-2">
+                      <h4 className="font-medium">{servicesMenu.label}</h4>
+                      <div className="grid gap-1 pl-4">
+                        {servicesMenu.groups.map((group) => (
+                          <div key={group.heading}>
+                            <h5 className="text-sm text-muted-foreground">{group.heading}</h5>
+                            {group.items.map((item) => (
+                              <Link key={item.href} to={item.href} className="text-sm hover:underline">
+                                {item.label}
+                              </Link>
+                            ))}
+                          </div>
+                        ))}
                       </div>
-                    ))}
+                    </div>
+
+                    {/* Solutions Mobile */}
+                    <div className="grid gap-2">
+                      <h4 className="font-medium">{solutionsMenu.label}</h4>
+                      <div className="grid gap-1 pl-4">
+                        {solutionsMenu.groups.map((group) => (
+                          <div key={group.heading}>
+                            <h5 className="text-sm text-muted-foreground">{group.heading}</h5>
+                            {group.items.map((item) => (
+                              <Link key={item.href} to={item.href} className="text-sm hover:underline">
+                                {item.label}
+                              </Link>
+                            ))}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Persona Menu Mobile */}
+                    {(() => {
+                      const personaGroup = getPersonaGroup();
+                      const personaKey = personaGroup === 'family' ? 'families' : 'professionals';
+                      const menu = personaMenus[personaKey as PersonaRoot];
+                      
+                      return (
+                        <div className="grid gap-2">
+                          <h4 className="font-medium">{menu.label}</h4>
+                          <div className="grid gap-1 pl-4">
+                            {menu.groups.map((group) => (
+                              <div key={group.heading}>
+                                <h5 className="text-sm text-muted-foreground">{group.heading}</h5>
+                                {group.items.map((item) => (
+                                  <Link key={item.href} to={item.href} className="text-sm hover:underline">
+                                    {item.label}
+                                  </Link>
+                                ))}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })()}
                   </div>
                 </SheetContent>
               </Sheet>
