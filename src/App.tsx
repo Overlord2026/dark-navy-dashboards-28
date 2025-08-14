@@ -104,6 +104,9 @@ import PersonaDashboardQAPage from "./pages/PersonaDashboardQAPage";
 import GoNoGoQAPage from "./pages/GoNoGoQAPage";
 import HealthcareQAPage from "./pages/HealthcareQAPage";
 import PersonaOnboarding from "./components/onboarding/PersonaOnboarding";
+import OnboardingPageNew from "./pages/OnboardingPageNew";
+import FamilySegmentPage from "./pages/FamilySegmentPage";
+import ProfessionalSegmentPage from "./pages/ProfessionalSegmentPage";
 import AdvisorOnboardingPage from "./pages/AdvisorOnboardingPage";
 import AdvisorOnboardingSequencePage from "./pages/AdvisorOnboardingSequencePage";
 import AccountantOnboardingSequencePage from "./pages/AccountantOnboardingSequencePage";
@@ -456,10 +459,14 @@ function App() {
                                </React.Suspense>
                              } />
         <Route path="/onboarding" element={<OnboardingPage />} />
-        <Route path="/persona-onboarding" element={<PersonaOnboarding />} />
+        <Route path="/persona-onboarding" element={<OnboardingPageNew />} />
         <Route path="/welcome-onboarding" element={<ClientWelcomeOnboardingPage />} />
         <Route path="/premium-onboarding" element={<PremiumOnboardingPage />} />
         <Route path="/professional-onboarding/:role" element={<RoleBasedOnboardingPage />} />
+        
+        {/* Dynamic family and professional segment routes */}
+        <Route path="/families/:segment" element={<FamilySegmentPage />} />
+        <Route path="/pros/:segment" element={<ProfessionalSegmentPage />} />
                             <Route path="/dynamic-landing" element={<DynamicLandingController><div /></DynamicLandingController>} />
                            <Route path="/security" element={<SecuritySettingsPage />} />
                           <Route path="/dashboard" element={
