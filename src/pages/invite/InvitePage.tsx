@@ -12,15 +12,23 @@ export default function InvitePage() {
       if (!token) return;
 
       try {
-        // TODO: lookup token in Supabase (prospect_invitations table)
-        // const { data, error } = await supabase
-        //   .from('prospect_invitations')
-        //   .select('persona_group, target_path, status')
-        //   .eq('invitation_token', token)
-        //   .single();
+        // Lookup token in Supabase
+        const { data, error } = await supabase
+          .from('prospect_invitations')
+          .select('persona_group, target_path, status')
+          .eq('invitation_token', token)
+          .single();
 
-        // For now, default to family persona
-        const persona_group: PersonaGroup = "family";
+        if (error || !data) {
+          console.error('Error fetching invitation:', error);
+          // Fallback to family persona
+          const persona_group: PersonaGroup = "family";
+          localStorage.setItem("persona_group", persona_group);
+          window.location.replace("/families");
+          return;
+        }
+
+        const persona_group: PersonaGroup = data.persona_group as PersonaGroup || "family";
         
         // Set persona context
         localStorage.setItem("persona_group", persona_group);

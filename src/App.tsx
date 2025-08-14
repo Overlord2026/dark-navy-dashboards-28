@@ -36,6 +36,10 @@ import JoinProsLanding from "./pages/JoinProsLanding";
 import Index from "./pages/Index";
 // Dashboard default export
 import Dashboard from "./pages/Dashboard";
+// New persona-aware pages
+import FamiliesPage from "./pages/FamiliesPage";
+import ProsPage from "./pages/ProsPage";
+import InvitePage from "./pages/invite/InvitePage";
 // Public pages
 import WelcomePage from "./pages/WelcomePage";
 import RetirementConfidenceScorecard from "./pages/RetirementConfidenceScorecard";
@@ -277,10 +281,14 @@ function App() {
         <Route path="/realtor/dashboard" element={<RealtorDashboard />} />
         <Route path="/lending-wireframe" element={<LendingWireframePage />} />
         <Route path="/image-generator" element={<ImageGeneratorPage />} />
-                             <Route path="/persona-landing" element={<PersonaLandingPage />} />
-                             <Route path="/persona-preview/:personaId" element={<PersonaPreviewPage />} />
-                                 <Route path="/" element={<PublicLandingPage />} />
-                                <Route path="/pmq/:fundId" element={<PMQPage />} />
+                              <Route path="/persona-landing" element={<PersonaLandingPage />} />
+                              <Route path="/persona-preview/:personaId" element={<PersonaPreviewPage />} />
+                                  <Route path="/" element={<PublicLandingPage />} />
+                                  {/* New persona-aware routes */}
+                                  <Route path="/families" element={<FamiliesPage />} />
+                                  <Route path="/pros" element={<ProsPage />} />
+                                  <Route path="/invite/:token" element={<InvitePage />} />
+                                 <Route path="/pmq/:fundId" element={<PMQPage />} />
                                 
                                 {/* Persona intro dashboard routes */}
                                 <Route path="/persona/client" element={

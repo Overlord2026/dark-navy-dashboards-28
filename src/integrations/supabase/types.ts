@@ -1798,6 +1798,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "advisor_matches_advisor_id_fkey"
+            columns: ["advisor_id"]
+            isOneToOne: false
+            referencedRelation: "advisor_profiles_public"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "advisor_matches_questionnaire_id_fkey"
             columns: ["questionnaire_id"]
             isOneToOne: false
@@ -1852,6 +1859,13 @@ export type Database = {
             columns: ["advisor_id"]
             isOneToOne: false
             referencedRelation: "advisor_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "advisor_messages_advisor_id_fkey"
+            columns: ["advisor_id"]
+            isOneToOne: false
+            referencedRelation: "advisor_profiles_public"
             referencedColumns: ["id"]
           },
         ]
@@ -2221,6 +2235,13 @@ export type Database = {
             columns: ["advisor_id"]
             isOneToOne: false
             referencedRelation: "advisor_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "advisor_proposals_advisor_id_fkey"
+            columns: ["advisor_id"]
+            isOneToOne: false
+            referencedRelation: "advisor_profiles_public"
             referencedColumns: ["id"]
           },
           {
@@ -22442,6 +22463,13 @@ export type Database = {
             referencedRelation: "advisor_profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "planning_scenarios_advisor_id_fkey"
+            columns: ["advisor_id"]
+            isOneToOne: false
+            referencedRelation: "advisor_profiles_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       platform_connectors: {
@@ -33912,6 +33940,63 @@ export type Database = {
       }
     }
     Views: {
+      advisor_profiles_public: {
+        Row: {
+          availability_status: string | null
+          average_rating: number | null
+          bio: string | null
+          certifications: string[] | null
+          expertise_areas: string[] | null
+          firm_name: string | null
+          hourly_rate: number | null
+          id: string | null
+          is_active: boolean | null
+          is_verified: boolean | null
+          license_states: string[] | null
+          meeting_types: string[] | null
+          name: string | null
+          specializations: string[] | null
+          total_reviews: number | null
+          years_experience: number | null
+        }
+        Insert: {
+          availability_status?: string | null
+          average_rating?: number | null
+          bio?: string | null
+          certifications?: string[] | null
+          expertise_areas?: string[] | null
+          firm_name?: string | null
+          hourly_rate?: number | null
+          id?: string | null
+          is_active?: boolean | null
+          is_verified?: boolean | null
+          license_states?: string[] | null
+          meeting_types?: string[] | null
+          name?: string | null
+          specializations?: string[] | null
+          total_reviews?: number | null
+          years_experience?: number | null
+        }
+        Update: {
+          availability_status?: string | null
+          average_rating?: number | null
+          bio?: string | null
+          certifications?: string[] | null
+          expertise_areas?: string[] | null
+          firm_name?: string | null
+          hourly_rate?: number | null
+          id?: string | null
+          is_active?: boolean | null
+          is_verified?: boolean | null
+          license_states?: string[] | null
+          meeting_types?: string[] | null
+          name?: string | null
+          specializations?: string[] | null
+          total_reviews?: number | null
+          years_experience?: number | null
+        }
+        Relationships: []
+      }
       audit_summary: {
         Row: {
           audit_date: string | null
