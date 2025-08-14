@@ -1,0 +1,47 @@
+{
+  "name": "connector-reporter",
+  "version": "1.0.0",
+  "description": "PDF Report Generator for Wealth Management Platform",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon src/index.js",
+    "start": "node src/index.js",
+    "build": "echo 'No build step required'",
+    "test": "jest --testTimeout=30000",
+    "test:watch": "jest --watch",
+    "lint": "eslint src/",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@react-pdf/renderer": "^3.4.4",
+    "@supabase/supabase-js": "^2.49.8",
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
+    "node-cron": "^3.0.3",
+    "react": "^18.2.0",
+    "zod": "^3.22.4",
+    "dotenv": "^16.4.5",
+    "date-fns": "^3.6.0",
+    "numeral": "^2.0.6"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/cors": "^2.8.17",
+    "@types/morgan": "^1.9.9",
+    "@types/multer": "^1.4.11",
+    "@types/node": "^20.11.0",
+    "@types/node-cron": "^3.0.11",
+    "@types/numeral": "^2.0.5",
+    "eslint": "^8.57.0",
+    "jest": "^29.7.0",
+    "nodemon": "^3.0.3",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
