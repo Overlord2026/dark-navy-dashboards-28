@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, ChevronDown, ExternalLink } from 'lucide-react';
+import { MastheadPersonaToggle } from './MastheadPersonaToggle';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -260,6 +261,9 @@ export const BFOHeader: React.FC<BFOHeaderProps> = ({
           </div>
         </div>
       </header>
+
+      {/* Persona Toggle */}
+      <MastheadPersonaToggle autoRoute />
 
       {/* Persona Sub-Banner */}
       {showPersonaBanner && personaLinks.length > 0 && (
