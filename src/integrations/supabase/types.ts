@@ -27353,6 +27353,75 @@ export type Database = {
         }
         Relationships: []
       }
+      scorecard_accounts: {
+        Row: {
+          account_name: string
+          annual_contrib: number
+          balance: number
+          created_at: string
+          expected_return: number
+          id: string
+          qualified: boolean
+          scorecard_run_id: string
+          tax_type: string
+        }
+        Insert: {
+          account_name: string
+          annual_contrib?: number
+          balance?: number
+          created_at?: string
+          expected_return?: number
+          id?: string
+          qualified?: boolean
+          scorecard_run_id: string
+          tax_type: string
+        }
+        Update: {
+          account_name?: string
+          annual_contrib?: number
+          balance?: number
+          created_at?: string
+          expected_return?: number
+          id?: string
+          qualified?: boolean
+          scorecard_run_id?: string
+          tax_type?: string
+        }
+        Relationships: []
+      }
+      scorecard_runs: {
+        Row: {
+          breakdown: Json
+          created_at: string
+          id: string
+          inputs: Json
+          results: Json
+          score: number
+          tenant_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          breakdown?: Json
+          created_at?: string
+          id?: string
+          inputs?: Json
+          results?: Json
+          score: number
+          tenant_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          breakdown?: Json
+          created_at?: string
+          id?: string
+          inputs?: Json
+          results?: Json
+          score?: number
+          tenant_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       seat_assignments: {
         Row: {
           assigned_by: string | null
@@ -28893,6 +28962,48 @@ export type Database = {
           status?: string
           subject?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      swag_intakes: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          meeting_at: string | null
+          meeting_type: string | null
+          persona_group: string
+          prospect_id: string | null
+          scorecard_run_id: string | null
+          status: string
+          tenant_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          meeting_at?: string | null
+          meeting_type?: string | null
+          persona_group?: string
+          prospect_id?: string | null
+          scorecard_run_id?: string | null
+          status?: string
+          tenant_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          meeting_at?: string | null
+          meeting_type?: string | null
+          persona_group?: string
+          prospect_id?: string | null
+          scorecard_run_id?: string | null
+          status?: string
+          tenant_id?: string | null
+          updated_at?: string
         }
         Relationships: []
       }
