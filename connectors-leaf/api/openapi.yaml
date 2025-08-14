@@ -71,9 +71,108 @@ paths:
               schema:
                 $ref: '#/components/schemas/NotarizationSession'
 
-  /report-publisher:
+  /ingest/custody-sync:
     post:
-      summary: Generate report
+      summary: Trigger custody data synchronization
+      description: Initiate sync for custody accounts, positions, and transactions
+      tags: [Data Ingestion]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [entity_id, connector_account_id]
+              properties:
+                entity_id:
+                  type: string
+                  format: uuid
+                connector_account_id:
+                  type: string
+                  format: uuid
+                sync_mode:
+                  type: string
+                  enum: [delta, full]
+                  default: delta
+      responses:
+        '200':
+          description: Sync completed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SyncResult'
+
+  /ingest/heldaway-sync:
+    post:
+      summary: Trigger held-away account synchronization
+      description: Sync held-away account data from external providers
+      tags: [Data Ingestion]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [entity_id, provider_account_id]
+              properties:
+                entity_id:
+                  type: string
+                  format: uuid
+                provider_account_id:
+                  type: string
+                sync_mode:
+                  type: string
+                  enum: [delta, full]
+                  default: delta
+      responses:
+        '200':
+          description: Sync completed successfully
+
+  /ingest/alts-webhook:
+    post:
+      summary: Alternative investments webhook
+      description: Receive webhook notifications for alternative investment updates
+      tags: [Data Ingestion]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                event_type:
+                  type: string
+                data:
+                  type: object
+                timestamp:
+                  type: string
+                  format: date-time
+      responses:
+        '200':
+          description: Webhook processed successfully
+
+  /notary/schedule:
+    post:
+      summary: Schedule notarization session
+      description: Create and schedule a notarization session
+      tags: [Notarization]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateNotarizationRequest'
+      responses:
+        '200':
+          description: Notarization session created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotarizationSession'
+
+  /reports/render:
+    post:
+      summary: Generate report on demand
       description: Create and generate a report with specified parameters
       tags: [Reports]
       requestBody:
@@ -89,6 +188,164 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Report'
+
+  /reports:
+    get:
+      summary: List available reports
+      description: Get list of reports user can access with persona-based filtering
+      tags: [Reports]
+      parameters:
+        - name: portfolio_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: persona
+          in: query
+          schema:
+            type: string
+            enum: [client, advisor, cpa, admin]
+        - name: report_type
+          in: query
+          schema:
+            type: string
+        - name: from_date
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: to_date
+          in: query
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: List of available reports
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reports:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Report'
+
+  /exceptions:
+    get:
+      summary: List exceptions
+      description: Get list of data exceptions with filtering and pagination
+      tags: [Exceptions]
+      parameters:
+        - name: entity_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: severity
+          in: query
+          schema:
+            type: string
+            enum: [low, medium, high, critical]
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [open, acknowledged, resolved]
+            default: open
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 50
+      responses:
+        '200':
+          description: List of exceptions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Exception'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+
+  /exceptions/{id}/resolve:
+    post:
+      summary: Resolve exception
+      description: Mark an exception as resolved with resolution notes
+      tags: [Exceptions]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [resolved_by, resolution_notes]
+              properties:
+                resolved_by:
+                  type: string
+                  format: uuid
+                resolution_notes:
+                  type: string
+                resolution_action:
+                  type: string
+      responses:
+        '200':
+          description: Exception resolved successfully
+
+  /billing/summary:
+    get:
+      summary: Get billing summary
+      description: Retrieve billing data and usage metrics for entity
+      tags: [Billing]
+      parameters:
+        - name: entity_id
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: from
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: to
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: granularity
+          in: query
+          schema:
+            type: string
+            enum: [daily, weekly, monthly]
+            default: daily
+      responses:
+        '200':
+          description: Billing summary data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingSummary'
 
 components:
   securitySchemes:
@@ -173,6 +430,85 @@ components:
         created_at:
           type: string
           format: date-time
+
+    Exception:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        entity_id:
+          type: string
+          format: uuid
+        account_id:
+          type: string
+          format: uuid
+        exception_type:
+          type: string
+        severity:
+          type: string
+          enum: [low, medium, high, critical]
+        status:
+          type: string
+          enum: [open, acknowledged, resolved]
+        description:
+          type: string
+        metadata:
+          type: object
+        created_at:
+          type: string
+          format: date-time
+
+    BillingSummary:
+      type: object
+      properties:
+        entity_id:
+          type: string
+          format: uuid
+        period:
+          type: object
+          properties:
+            from:
+              type: string
+              format: date
+            to:
+              type: string
+              format: date
+        total_cost:
+          type: number
+        total_accounts:
+          type: integer
+        total_alt_positions:
+          type: integer
+        total_notarizations:
+          type: integer
+        cost_breakdown:
+          type: object
+          properties:
+            base_cost:
+              type: number
+            alts_cost:
+              type: number
+            notary_cost:
+              type: number
+            vendor_cost:
+              type: number
+
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+        limit:
+          type: integer
+        total:
+          type: integer
+        total_pages:
+          type: integer
+        has_next:
+          type: boolean
+        has_prev:
+          type: boolean
 
   responses:
     BadRequest:
