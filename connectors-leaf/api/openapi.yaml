@@ -1,0 +1,196 @@
+openapi: 3.0.3
+info:
+  title: Connector & Evidence Service API
+  description: Financial data connectors and evidence service for wealth management platforms
+  version: 1.0.0
+  contact:
+    name: Platform Engineering Team
+    email: platform@company.com
+
+servers:
+  - url: https://your-project-ref.supabase.co/functions/v1
+    description: Production
+  - url: http://localhost:54321/functions/v1
+    description: Local Development
+
+security:
+  - BearerAuth: []
+
+paths:
+  /connector-sync:
+    post:
+      summary: Trigger data synchronization
+      description: Initiate sync for a specific connection
+      tags: [Connectors]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [connection_id]
+              properties:
+                connection_id:
+                  type: string
+                  format: uuid
+                sync_type:
+                  type: string
+                  enum: [full, incremental]
+                  default: incremental
+                force:
+                  type: boolean
+                  default: false
+      responses:
+        '200':
+          description: Sync completed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SyncResult'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /notarization-orchestrator:
+    post:
+      summary: Create notarization session
+      description: Initialize notarization with appropriate provider based on state policies
+      tags: [Notarization]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateNotarizationRequest'
+      responses:
+        '200':
+          description: Notarization session created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotarizationSession'
+
+  /report-publisher:
+    post:
+      summary: Generate report
+      description: Create and generate a report with specified parameters
+      tags: [Reports]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateReportRequest'
+      responses:
+        '200':
+          description: Report generation initiated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Report'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    SyncResult:
+      type: object
+      properties:
+        provider:
+          type: string
+        accounts_synced:
+          type: integer
+        transactions_synced:
+          type: integer
+        positions_synced:
+          type: integer
+        duration_ms:
+          type: integer
+
+    CreateNotarizationRequest:
+      type: object
+      required: [document_id, user_id, state_jurisdiction]
+      properties:
+        document_id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        state_jurisdiction:
+          type: string
+          example: "CA"
+        preferred_provider:
+          type: string
+          enum: [docusign, notarycam]
+
+    NotarizationSession:
+      type: object
+      properties:
+        notarization_id:
+          type: string
+          format: uuid
+        session_url:
+          type: string
+          format: uri
+        provider:
+          type: string
+          enum: [docusign, notarycam]
+
+    CreateReportRequest:
+      type: object
+      required: [report_type]
+      properties:
+        report_type:
+          type: string
+          enum: [account_summary, transaction_history, position_summary, performance, tax_summary, notarization_certificate]
+        parameters:
+          type: object
+        file_format:
+          type: string
+          enum: [pdf, csv, json, xlsx]
+          default: pdf
+
+    Report:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        report_type:
+          type: string
+        status:
+          type: string
+          enum: [queued, generating, completed, failed]
+        file_url:
+          type: string
+          format: uri
+        created_at:
+          type: string
+          format: date-time
+
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+    
+    InternalError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
