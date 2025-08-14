@@ -14,10 +14,12 @@ import { ThemeProvider } from "@/context/ThemeContext";
 import { TenantProvider } from "@/context/TenantContext";
 import { AdvisorProvider } from "@/context/AdvisorContext";
 import { PersonaProvider } from "@/context/PersonaContext";
+import { PersonaProvider as NewPersonaProvider } from "@/context/persona-context";
 import { AuthWrapper } from "@/components/auth/AuthWrapper";
 import { getAdvisorAccessRoles } from "@/utils/roleHierarchy";
 import { DynamicLandingController } from "@/components/auth/DynamicLandingController";
 import { Navigation } from "@/components/Navigation";
+import TopNav from "@/components/nav/TopNav";
 import { StickyTopBanner } from "@/components/layout/StickyTopBanner";
 import ReferralTracker from "@/components/tracking/ReferralTracker";
 import { QABypassIndicator } from "@/components/security/QABypassIndicator";
@@ -101,6 +103,7 @@ import StripeSubscriptionTestPage from "./pages/StripeSubscriptionTestPage";
 import PersonaDashboardQAPage from "./pages/PersonaDashboardQAPage";
 import GoNoGoQAPage from "./pages/GoNoGoQAPage";
 import HealthcareQAPage from "./pages/HealthcareQAPage";
+import PersonaOnboarding from "./components/onboarding/PersonaOnboarding";
 import AdvisorOnboardingPage from "./pages/AdvisorOnboardingPage";
 import AdvisorOnboardingSequencePage from "./pages/AdvisorOnboardingSequencePage";
 import AccountantOnboardingSequencePage from "./pages/AccountantOnboardingSequencePage";
@@ -238,11 +241,13 @@ function App() {
                   <TenantProvider>
                     <AdvisorProvider>
                       <PersonaProvider>
-                        <BrowserRouter>
-                          <StickyTopBanner />
-                          <APIWarningBanner />
-                          <ExtensionHealthBanner />
-                          <ReferralTracker />
+                        <NewPersonaProvider>
+                          <BrowserRouter>
+                            <TopNav />
+                            <StickyTopBanner />
+                            <APIWarningBanner />
+                            <ExtensionHealthBanner />
+                            <ReferralTracker />
                            <Routes>
         <Route path="/wireframe" element={<WireframePage />} />
                            <Route path="/platform-map" element={<PlatformMap />} />
@@ -451,6 +456,7 @@ function App() {
                                </React.Suspense>
                              } />
         <Route path="/onboarding" element={<OnboardingPage />} />
+        <Route path="/persona-onboarding" element={<PersonaOnboarding />} />
         <Route path="/welcome-onboarding" element={<ClientWelcomeOnboardingPage />} />
         <Route path="/premium-onboarding" element={<PremiumOnboardingPage />} />
         <Route path="/professional-onboarding/:role" element={<RoleBasedOnboardingPage />} />
@@ -716,9 +722,10 @@ function App() {
                         <Navigation />
                        </BrowserRouter>
                        <QABypassIndicator />
-                       <BrandedFooter />
-                      </PersonaProvider>
-                     </AdvisorProvider>
+                        <BrandedFooter />
+                        </NewPersonaProvider>
+                       </PersonaProvider>
+                      </AdvisorProvider>
                   </TenantProvider>
                   <Toaster />
                   <Sonner />
