@@ -50,6 +50,14 @@
     --brand-text: 0 0% 93%; /* #EDEDED */
     --brand-accent: 206 81% 63%; /* #3BA7F0 */
 
+    /* High-end dark palette */
+    --bfo-bg: 222 44% 8%; /* #0b1520 deep navy */
+    --bfo-panel: 215 39% 11%; /* #0f1b27 panel navy */
+    --bfo-text: 220 20% 97%; /* #f5f7fa */
+    --bfo-muted: 212 25% 70%; /* #9fb3c8 */
+    --bfo-gold: 43 79% 51%; /* #d9a52b accent */
+    --bfo-border: 0 0% 100% / 0.12; /* rgba(255,255,255,.12) */
+
   /* Status Colors */
   --success: 158 64% 52%; /* Emerald #169873 */
   --success-foreground: 0 0% 100%;
@@ -175,11 +183,11 @@
 
   body {
     @apply text-foreground;
-    background: var(--gradient-primary);
+    background: hsl(var(--bfo-bg));
+    color: hsl(var(--bfo-text));
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
     font-size: 16px;
     transition: all var(--role-transition-duration) cubic-bezier(0.4, 0, 0.2, 1);
-    color: hsl(var(--foreground));
   }
 
   body.light-theme {
