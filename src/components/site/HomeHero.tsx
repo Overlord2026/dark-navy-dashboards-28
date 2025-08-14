@@ -32,7 +32,7 @@ export function HomeHero() {
             onClick={() => { 
               analytics.track('hero.cta.clicked', { group: 'pro', cta: 'explore_tools' });
               track("hero.cta.clicked", { label: "Explore Tools", group: 'pro' });
-              navigate("/tools"); 
+              navigate("/tools/value-calculator"); 
             }}
           >
             Explore Tools
