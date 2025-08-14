@@ -176,6 +176,7 @@ import { PersonaPreviewPage } from './pages/PersonaPreviewPage';
 import { MarketplaceLandingPage } from './components/marketplace/MarketplaceLandingPage';
 import { PersonaRedirect } from './components/PersonaRedirect';
 import { DemoCalculator } from './components/demo/DemoCalculator';
+import TargetAnalyzerPage from './pages/TargetAnalyzerPage';
 import AdminLayoutSettings from './pages/AdminLayoutSettings';
 import CFODashboard from './pages/CFODashboard';
 import AdminControlsPage from './pages/AdminControlsPage';
@@ -431,11 +432,12 @@ function App() {
                                <Route path="/universal" element={<UniversalLandingPage />} />
                            <Route path="/marketplace" element={<FamilyOfficeMarketplacePage />} />
                             <Route path="/welcome" element={<WelcomePage />} />
-                             <Route path="/value-calculator" element={
-                               <React.Suspense fallback={<div>Loading...</div>}>
-                                 {React.createElement(React.lazy(() => import('./pages/ValueCalculator')))}
-                               </React.Suspense>
-                           } />
+                            <Route path="/value-calculator" element={
+                                <React.Suspense fallback={<div>Loading...</div>}>
+                                  {React.createElement(React.lazy(() => import('./pages/ValueCalculator')))}
+                                </React.Suspense>
+                            } />
+                            <Route path="/tools/target-analyzer" element={<TargetAnalyzerPage />} />
                             <Route path="/auth" element={<AuthPage />} />
                             <Route path="/auth/:authType" element={<AuthPage />} />
                               <Route path="/auth/:authType/:tenantId" element={<AuthPage />} />
@@ -596,11 +598,12 @@ function App() {
                            <Route path="/analyzer/retirement-income-gap" element={<RetirementIncomeGapAnalyzer />} />
                            <Route path="/info/retirement-roadmap" element={<RetirementRoadmapInfo />} />
                             <Route path="/retirement-analyzer" element={<RetirementAnalyzerDemo />} />
-                            <Route path="/value-calculator" element={
-                              <React.Suspense fallback={<div>Loading...</div>}>
-                                {React.createElement(React.lazy(() => import('./pages/value-calculator')))}
-                              </React.Suspense>
-                            } />
+                             <Route path="/value-calculator" element={
+                               <React.Suspense fallback={<div>Loading...</div>}>
+                                 {React.createElement(React.lazy(() => import('./pages/value-calculator')))}
+                               </React.Suspense>
+                             } />
+                             <Route path="/tools/target-analyzer" element={<TargetAnalyzerPage />} />
                             <Route path="/admin/qa-center" element={
                               <AuthWrapper requireAuth={true} allowedRoles={['admin', 'system_administrator', 'tenant_admin']}>
                                 {React.createElement(React.lazy(() => import('./pages/admin/QACenter')))}

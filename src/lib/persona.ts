@@ -85,7 +85,7 @@ export const solutionsMenu: MenuConfig = {
       heading: "Income & Retirement",
       items: [
         { label: "Income Now", href: "/solutions/income-now", description:"Current income optimization" },
-        { label: "Income Later", href: "/solutions/income-later", description:"Future income planning" },
+        { label: "Income Later", href: "/tools/target-analyzer", description:"Target retirement analyzer" },
         { label: "RMDs", href: "/solutions/rmds", description:"Required distributions" },
       ],
     },

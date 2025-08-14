@@ -7,7 +7,7 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
+  // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "12.2.3 (519615d)"
@@ -25348,6 +25348,7 @@ export type Database = {
           expires_at: string
           id: string
           magic_token: string
+          persona_group: string | null
           personal_note: string | null
           sent_at: string
           status: string
@@ -25365,6 +25366,7 @@ export type Database = {
           expires_at?: string
           id?: string
           magic_token: string
+          persona_group?: string | null
           personal_note?: string | null
           sent_at?: string
           status?: string
@@ -25382,6 +25384,7 @@ export type Database = {
           expires_at?: string
           id?: string
           magic_token?: string
+          persona_group?: string | null
           personal_note?: string | null
           sent_at?: string
           status?: string
@@ -29043,6 +29046,48 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      target_runs: {
+        Row: {
+          computed: Json
+          created_at: string
+          created_by: string
+          gap_amount: number | null
+          household_id: string
+          id: string
+          label: string
+          params: Json
+          scenario_id: string | null
+          success_pct: number | null
+          tenant_id: string
+        }
+        Insert: {
+          computed: Json
+          created_at?: string
+          created_by?: string
+          gap_amount?: number | null
+          household_id: string
+          id?: string
+          label: string
+          params: Json
+          scenario_id?: string | null
+          success_pct?: number | null
+          tenant_id: string
+        }
+        Update: {
+          computed?: Json
+          created_at?: string
+          created_by?: string
+          gap_amount?: number | null
+          household_id?: string
+          id?: string
+          label?: string
+          params?: Json
+          scenario_id?: string | null
+          success_pct?: number | null
+          tenant_id?: string
+        }
+        Relationships: []
       }
       tax_brackets: {
         Row: {
@@ -34086,6 +34131,13 @@ export type Database = {
       }
     }
     Functions: {
+      accept_invite: {
+        Args: { raw_token: string }
+        Returns: {
+          persona_group: string
+          target_path: string
+        }[]
+      }
       activate_referral: {
         Args: { p_referee_id: string }
         Returns: boolean
@@ -34098,48 +34150,48 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: {
           extension_name: string
-          version: string
-          schema_name: string
           is_essential: boolean
-          security_risk: string
           recommendation: string
+          schema_name: string
+          security_risk: string
+          version: string
         }[]
       }
       audit_rls_coverage: {
         Args: Record<PropertyKey, never>
         Returns: {
-          table_name: string
-          rls_enabled: boolean
-          policy_count: number
           missing_operations: string[]
-          security_score: number
+          policy_count: number
           recommendations: string[]
+          rls_enabled: boolean
+          security_score: number
+          table_name: string
         }[]
       }
       best_model_for_holdings: {
         Args: { holdings: Json }
         Returns: {
           model_id: string
-          score: number
           model_name: string
+          score: number
         }[]
       }
       calculate_advisor_overrides: {
-        Args: { p_period_start: string; p_period_end: string }
+        Args: { p_period_end: string; p_period_start: string }
         Returns: {
-          override_id: string
-          referring_advisor_id: string
-          recruited_advisor_id: string
-          production_amount: number
           override_amount: number
+          override_id: string
+          production_amount: number
+          recruited_advisor_id: string
+          referring_advisor_id: string
           updated: boolean
         }[]
       }
       calculate_advisor_performance_metrics: {
         Args: {
           p_advisor_id: string
-          p_period_start: string
           p_period_end: string
+          p_period_start: string
           p_period_type?: string
         }
         Returns: undefined
@@ -34147,8 +34199,8 @@ export type Database = {
       calculate_advisor_roi_metrics: {
         Args: {
           p_advisor_id: string
-          p_start_date?: string
           p_end_date?: string
+          p_start_date?: string
         }
         Returns: Json
       }
@@ -34162,10 +34214,10 @@ export type Database = {
       }
       calculate_audit_hash: {
         Args: {
+          p_block_number: number
           p_inputs_hash: string
           p_outputs_hash: string
           p_parent_hash: string
-          p_block_number: number
           p_timestamp: string
         }
         Returns: string
@@ -34173,20 +34225,20 @@ export type Database = {
       calculate_audit_hash_sha3: {
         Args:
           | {
+              p_block_number: number
               p_inputs_hash: string
               p_outputs_hash: string
               p_parent_hash: string
-              p_block_number: number
-              p_timestamp: string
               p_salt?: string
+              p_timestamp: string
             }
           | {
-              p_tenant_id: string
-              p_persona_id: string
               p_event_type: string
               p_inputs_hash: string
               p_outputs_hash: string
+              p_persona_id: string
               p_salt?: string
+              p_tenant_id: string
             }
         Returns: string
       }
@@ -34204,27 +34256,27 @@ export type Database = {
       }
       calculate_loan_scenario: {
         Args: {
-          p_loan_amount: number
           p_interest_rate: number
-          p_term_months: number
-          p_scenario_type: string
+          p_loan_amount: number
           p_scenario_params: Json
+          p_scenario_type: string
+          p_term_months: number
         }
         Returns: Json
       }
       calculate_network_impact_summary: {
         Args: {
-          p_tenant_id: string
-          p_period_type: string
-          p_period_start: string
           p_period_end: string
+          p_period_start: string
+          p_period_type: string
+          p_tenant_id: string
         }
         Returns: undefined
       }
       calculate_next_due_date: {
         Args: {
-          current_due_date: string
           bill_frequency: Database["public"]["Enums"]["bill_frequency"]
+          current_due_date: string
         }
         Returns: string
       }
@@ -34260,9 +34312,9 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: {
           category: string
-          score: number
-          max_score: number
           issues: string[]
+          max_score: number
+          score: number
           status: string
         }[]
       }
@@ -34288,18 +34340,18 @@ export type Database = {
       }
       check_professional_seats_available: {
         Args: {
-          p_professional_user_id: string
           p_persona_type: Database["public"]["Enums"]["professional_persona"]
+          p_professional_user_id: string
         }
         Returns: boolean
       }
       check_rate_limit: {
         Args: {
+          p_block_minutes?: number
           p_identifier: string
           p_limit_type: string
           p_max_attempts?: number
           p_window_minutes?: number
-          p_block_minutes?: number
         }
         Returns: Json
       }
@@ -34308,7 +34360,7 @@ export type Database = {
         Returns: Json
       }
       check_vault_permission: {
-        Args: { p_vault_id: string; p_user_id: string; p_permission: string }
+        Args: { p_permission: string; p_user_id: string; p_vault_id: string }
         Returns: boolean
       }
       cleanup_expired_export_requests: {
@@ -34357,32 +34409,32 @@ export type Database = {
       }
       create_attorney_document: {
         Args: {
-          p_onboarding_id: string
-          p_document_type: string
           p_document_name: string
+          p_document_type: string
           p_file_path: string
           p_file_size?: number
+          p_onboarding_id: string
         }
         Returns: string
       }
       create_attorney_document_version: {
         Args: {
-          p_parent_document_id: string
-          p_file_path: string
-          p_original_filename: string
-          p_file_size: number
-          p_mime_type: string
-          p_document_title: string
           p_document_description?: string
+          p_document_title: string
+          p_file_path: string
+          p_file_size: number
           p_metadata_fields?: Json
+          p_mime_type: string
+          p_original_filename: string
+          p_parent_document_id: string
         }
         Returns: string
       }
       create_attorney_onboarding: {
         Args: {
+          p_email: string
           p_first_name: string
           p_last_name: string
-          p_email: string
           p_phone?: string
         }
         Returns: string
@@ -34397,11 +34449,11 @@ export type Database = {
       }
       create_franchise_referral_payout: {
         Args: {
+          p_amount: number
           p_franchise_referral_id: string
           p_payout_type: string
-          p_amount: number
-          p_period_start?: string
           p_period_end?: string
+          p_period_start?: string
         }
         Returns: string
       }
@@ -34415,13 +34467,13 @@ export type Database = {
       }
       create_security_incident: {
         Args: {
+          p_affected_resources?: Json
+          p_description: string
+          p_evidence?: Json
           p_incident_type: string
           p_severity: string
-          p_title: string
-          p_description: string
-          p_affected_resources?: Json
-          p_evidence?: Json
           p_tenant_id?: string
+          p_title: string
         }
         Returns: string
       }
@@ -34437,48 +34489,48 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: {
           alert_type: string
-          description: string
-          severity: string
           count: number
+          description: string
           first_occurrence: string
           last_occurrence: string
+          severity: string
         }[]
       }
       detect_suspicious_activities: {
         Args: Record<PropertyKey, never>
         Returns: {
           alert_type: string
-          description: string
-          severity: string
           count: number
+          description: string
           first_occurrence: string
           last_occurrence: string
+          severity: string
         }[]
       }
       detect_transaction_anomalies: {
         Args: {
-          p_user_id: string
-          p_vendor_name: string
           p_amount: number
           p_description: string
+          p_user_id: string
+          p_vendor_name: string
         }
         Returns: Json
       }
       emit_ad_rds: {
         Args: {
           p_ad_id: string
-          p_inputs: Json
           p_approvals: Json
-          p_policy_hash: string
           p_explanation?: Json
+          p_inputs: Json
+          p_policy_hash: string
         }
         Returns: string
       }
       emit_io_rds: {
         Args: {
+          p_algorithm: string
           p_allocation_id: string
           p_budget_inputs: Json
-          p_algorithm: string
           p_constraints: Json
           p_result: Json
         }
@@ -34486,11 +34538,11 @@ export type Database = {
       }
       emit_payment_rds: {
         Args: {
-          p_campaign_id: string
-          p_payment_type: string
           p_amount: number
-          p_inputs: Json
           p_authorization: Json
+          p_campaign_id: string
+          p_inputs: Json
+          p_payment_type: string
           p_processor_response?: Json
         }
         Returns: string
@@ -34499,8 +34551,8 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: {
           category: string
-          status: string
           remaining_issues: string[]
+          status: string
         }[]
       }
       generate_advisor_invitation_code: {
@@ -34537,11 +34589,11 @@ export type Database = {
       }
       generate_plan_rds: {
         Args: {
-          p_plan_id: string
+          p_explanation: Json
           p_inputs_hash: string
           p_model_version: string
+          p_plan_id: string
           p_policy_selection_hash: string
-          p_explanation: Json
         }
         Returns: string
       }
@@ -34550,7 +34602,7 @@ export type Database = {
         Returns: string
       }
       generate_secure_otp: {
-        Args: { p_user_id: string; p_otp_type?: string }
+        Args: { p_otp_type?: string; p_user_id: string }
         Returns: string
       }
       generate_universal_invitation_code: {
@@ -34561,15 +34613,15 @@ export type Database = {
       }
       generate_user_impact_report: {
         Args: {
-          p_user_id: string
-          p_report_type: string
-          p_period_start: string
           p_period_end: string
+          p_period_start: string
+          p_report_type: string
+          p_user_id: string
         }
         Returns: string
       }
       generate_vip_invite_slug: {
-        Args: { p_name: string; p_firm: string }
+        Args: { p_firm: string; p_name: string }
         Returns: string
       }
       generate_vip_magic_link: {
@@ -34583,54 +34635,54 @@ export type Database = {
       get_attorney_onboardings: {
         Args: { p_user_id?: string }
         Returns: {
-          id: string
-          user_id: string
-          tenant_id: string
-          current_step: string
-          first_name: string
-          last_name: string
-          email: string
-          phone: string
-          office_address: string
-          firm_name: string
-          firm_website: string
+          admission_dates: Json
           attorney_bio: string
           bar_number: string
-          primary_jurisdiction: string
-          jurisdictions_licensed: string[]
-          admission_dates: Json
           bar_status: string
+          billing_method: string
+          cle_compliance_status: string
+          cle_expiration_date: string
           cle_hours_completed: number
           cle_hours_required: number
-          cle_expiration_date: string
-          cle_compliance_status: string
-          primary_practice_area: string
-          practice_areas: string[]
-          years_experience: number
-          specializations: string[]
-          hourly_rate: number
           consultation_fee: number
-          billing_method: string
-          retainer_required: boolean
-          typical_retainer_amount: number
-          terms_accepted: boolean
-          nda_signed: boolean
-          participation_agreement_signed: boolean
-          status: string
           created_at: string
+          current_step: string
+          email: string
+          firm_name: string
+          firm_website: string
+          first_name: string
+          hourly_rate: number
+          id: string
+          jurisdictions_licensed: string[]
+          last_name: string
+          nda_signed: boolean
+          office_address: string
+          participation_agreement_signed: boolean
+          phone: string
+          practice_areas: string[]
+          primary_jurisdiction: string
+          primary_practice_area: string
+          retainer_required: boolean
+          specializations: string[]
+          status: string
+          tenant_id: string
+          terms_accepted: boolean
+          typical_retainer_amount: number
           updated_at: string
+          user_id: string
+          years_experience: number
         }[]
       }
       get_campaign_analytics: {
-        Args: { p_tenant_id: string; p_period_days?: number }
+        Args: { p_period_days?: number; p_tenant_id: string }
         Returns: {
-          utm_source: string
-          utm_medium: string
-          utm_campaign: string
-          total_referrals: number
           active_referrals: number
           conversion_rate: number
+          total_referrals: number
           total_rewards: number
+          utm_campaign: string
+          utm_medium: string
+          utm_source: string
         }[]
       }
       get_cpa_staff_permissions: {
@@ -34654,7 +34706,7 @@ export type Database = {
         Returns: string
       }
       get_diagnostic_test_stats: {
-        Args: { p_environment?: string; p_days_back?: number }
+        Args: { p_days_back?: number; p_environment?: string }
         Returns: Json
       }
       get_document_status: {
@@ -34664,12 +34716,12 @@ export type Database = {
       get_enhanced_security_metrics: {
         Args: Record<PropertyKey, never>
         Returns: {
+          details: Json
+          last_updated: string
           metric_category: string
           metric_name: string
           metric_value: number
           status: string
-          last_updated: string
-          details: Json
         }[]
       }
       get_next_audit_block_number: {
@@ -34679,50 +34731,50 @@ export type Database = {
       get_onboarding_documents: {
         Args: { p_onboarding_id: string }
         Returns: {
-          id: string
-          onboarding_id: string
-          user_id: string
-          document_type: string
           document_name: string
+          document_type: string
           file_path: string
           file_size: number
+          id: string
+          onboarding_id: string
           status: string
           uploaded_at: string
+          user_id: string
           verified_at: string
           verified_by: string
         }[]
       }
       get_personalized_invitation_template: {
         Args: {
-          p_persona_type: Database["public"]["Enums"]["professional_persona"]
-          p_professional_name: string
           p_client_name: string
           p_firm_name?: string
+          p_persona_type: Database["public"]["Enums"]["professional_persona"]
+          p_professional_name: string
         }
         Returns: Json
       }
       get_referral_conversion_analytics: {
-        Args: { p_tenant_id: string; p_period_days?: number }
+        Args: { p_period_days?: number; p_tenant_id: string }
         Returns: {
+          active_referrals: number
+          avg_time_to_activation_days: number
+          conversion_rate: number
+          expired_referrals: number
+          pending_referrals: number
           referral_type: string
           total_referrals: number
-          pending_referrals: number
-          active_referrals: number
-          expired_referrals: number
-          conversion_rate: number
-          avg_time_to_activation_days: number
         }[]
       }
       get_reward_analytics: {
-        Args: { p_tenant_id: string; p_period_days?: number }
+        Args: { p_period_days?: number; p_tenant_id: string }
         Returns: {
-          reward_type: string
-          total_amount: number
-          paid_amount: number
-          pending_amount: number
-          count_total: number
           count_paid: number
           count_pending: number
+          count_total: number
+          paid_amount: number
+          pending_amount: number
+          reward_type: string
+          total_amount: number
         }[]
       }
       get_security_dashboard: {
@@ -34732,35 +34784,35 @@ export type Database = {
       get_security_metrics: {
         Args: Record<PropertyKey, never>
         Returns: {
+          last_updated: string
           metric_name: string
           metric_value: number
           status: string
-          last_updated: string
         }[]
       }
       get_top_referrers: {
-        Args: { p_tenant_id: string; p_period_days?: number; p_limit?: number }
+        Args: { p_limit?: number; p_period_days?: number; p_tenant_id: string }
         Returns: {
-          referrer_id: string
+          active_referrals: number
+          conversion_rate: number
           referrer_email: string
+          referrer_id: string
           referrer_name: string
           referrer_type: string
           total_referrals: number
-          active_referrals: number
           total_rewards: number
-          conversion_rate: number
         }[]
       }
       get_top_slow_queries: {
         Args: { p_hours_back?: number; p_limit?: number }
         Returns: {
-          table_name: string
-          operation_type: string
-          query_hash: string
           avg_execution_time_ms: number
-          max_execution_time_ms: number
-          query_count: number
           function_name: string
+          max_execution_time_ms: number
+          operation_type: string
+          query_count: number
+          query_hash: string
+          table_name: string
         }[]
       }
       get_user_organization_id: {
@@ -34792,11 +34844,11 @@ export type Database = {
         Returns: boolean
       }
       has_coach_access_to_advisor: {
-        Args: { p_coach_id: string; p_advisor_id: string }
+        Args: { p_advisor_id: string; p_coach_id: string }
         Returns: boolean
       }
       has_cpa_permission: {
-        Args: { staff_user_id: string; permission_name: string }
+        Args: { permission_name: string; staff_user_id: string }
         Returns: boolean
       }
       has_org_role: {
@@ -34813,10 +34865,10 @@ export type Database = {
       }
       initiate_disaster_recovery: {
         Args: {
+          p_affected_buckets?: string[]
+          p_description: string
           p_incident_type: string
           p_severity: string
-          p_description: string
-          p_affected_buckets?: string[]
         }
         Returns: string
       }
@@ -34830,172 +34882,172 @@ export type Database = {
       }
       log_attorney_document_access: {
         Args: {
-          p_document_id: string
           p_access_type: string
+          p_document_id: string
           p_user_id?: string
         }
         Returns: string
       }
       log_client_access: {
         Args: {
-          p_client_id: string
-          p_professional_id: string
-          p_seat_id: string
           p_access_type: string
-          p_resource_accessed?: string
-          p_session_duration_minutes?: number
+          p_client_id: string
           p_device_info?: Json
+          p_professional_id: string
+          p_resource_accessed?: string
+          p_seat_id: string
+          p_session_duration_minutes?: number
         }
         Returns: string
       }
       log_diagnostic_test_run: {
         Args: {
           p_environment?: string
-          p_git_commit_hash?: string
-          p_git_branch?: string
-          p_total_tests?: number
-          p_passed_tests?: number
-          p_failed_tests?: number
-          p_warnings_count?: number
-          p_execution_time_ms?: number
-          p_overall_status?: string
-          p_test_results?: Json
           p_error_details?: Json
+          p_execution_time_ms?: number
+          p_failed_tests?: number
+          p_git_branch?: string
+          p_git_commit_hash?: string
+          p_overall_status?: string
+          p_passed_tests?: number
+          p_test_results?: Json
+          p_total_tests?: number
+          p_warnings_count?: number
         }
         Returns: string
       }
       log_document_access: {
         Args: {
-          p_doc_id: string
-          p_access_type: string
           p_access_method?: string
+          p_access_type: string
+          p_doc_id: string
           p_emergency_token?: string
         }
         Returns: string
       }
       log_file_access: {
         Args: {
-          p_file_path: string
-          p_bucket_name: string
           p_access_type: string
+          p_bucket_name: string
+          p_file_path: string
           p_file_size?: number
         }
         Returns: string
       }
       log_organization_activity: {
         Args: {
-          p_organization_id: string
-          p_activity_type: string
           p_activity_category: string
-          p_description: string
+          p_activity_type: string
           p_branch_id?: string
-          p_severity?: string
-          p_resource_type?: string
-          p_resource_id?: string
+          p_description: string
           p_metadata?: Json
+          p_organization_id: string
+          p_resource_id?: string
+          p_resource_type?: string
+          p_severity?: string
         }
         Returns: string
       }
       log_proposal_action: {
         Args: {
-          p_proposal_id: string
           p_action: string
           p_details?: Json
+          p_proposal_id: string
           p_user_id?: string
         }
         Returns: string
       }
       log_query_performance: {
         Args: {
-          p_table_name: string
+          p_cache_hit?: boolean
+          p_execution_time_ms: number
+          p_function_name?: string
+          p_index_usage?: Json
           p_operation_type: string
           p_query_hash: string
-          p_execution_time_ms: number
-          p_rows_affected?: number
-          p_function_name?: string
-          p_user_id?: string
           p_query_plan?: Json
-          p_index_usage?: Json
-          p_cache_hit?: boolean
+          p_rows_affected?: number
+          p_table_name: string
+          p_user_id?: string
         }
         Returns: string
       }
       log_referral_audit: {
         Args: {
-          p_event_type: string
-          p_referral_type: string
-          p_referral_id: string
-          p_old_status?: string
-          p_new_status?: string
-          p_user_id?: string
           p_details?: Json
+          p_event_type: string
+          p_new_status?: string
+          p_old_status?: string
+          p_referral_id: string
+          p_referral_type: string
+          p_user_id?: string
         }
         Returns: string
       }
       log_rls_violation: {
         Args: {
-          p_table_name: string
-          p_operation: string
-          p_user_id?: string
           p_additional_context?: Json
+          p_operation: string
+          p_table_name: string
+          p_user_id?: string
         }
         Returns: undefined
       }
       log_seat_activity: {
         Args: {
-          p_seat_id: string
-          p_professional_id: string
-          p_client_id: string
           p_action_type: string
-          p_persona_type: Database["public"]["Enums"]["professional_persona"]
+          p_client_id: string
           p_details?: Json
           p_ip_address?: unknown
+          p_persona_type: Database["public"]["Enums"]["professional_persona"]
+          p_professional_id: string
+          p_seat_id: string
           p_user_agent?: string
         }
         Returns: string
       }
       log_security_event: {
         Args: {
-          p_event_type: string
-          p_severity: string
-          p_resource_type?: string
-          p_resource_id?: string
           p_action_performed?: string
-          p_outcome?: string
+          p_event_type: string
           p_metadata?: Json
+          p_outcome?: string
+          p_resource_id?: string
+          p_resource_type?: string
+          p_severity: string
         }
         Returns: string
       }
       log_service_role_usage: {
         Args: {
+          p_error_message?: string
+          p_execution_context?: string
+          p_execution_time_ms?: number
           p_function_name: string
           p_operation_type: string
-          p_execution_context?: string
-          p_user_context?: string
-          p_tenant_context?: string
-          p_execution_time_ms?: number
-          p_success?: boolean
-          p_error_message?: string
           p_request_metadata?: Json
+          p_success?: boolean
+          p_tenant_context?: string
+          p_user_context?: string
         }
         Returns: string
       }
       log_vault_activity: {
         Args: {
-          p_vault_id: string
           p_action_type: string
-          p_resource_type: string
-          p_resource_id?: string
           p_details?: Json
+          p_resource_id?: string
+          p_resource_type: string
+          p_vault_id: string
         }
         Returns: string
       }
       log_vip_admin_activity: {
         Args: {
-          p_admin_user_id: string
           p_action_type: string
-          p_target_invite_id?: string
+          p_admin_user_id: string
           p_details?: Json
+          p_target_invite_id?: string
         }
         Returns: string
       }
@@ -35004,11 +35056,11 @@ export type Database = {
         Returns: undefined
       }
       process_advisor_referral: {
-        Args: { p_referral_code: string; p_new_advisor_id: string }
+        Args: { p_new_advisor_id: string; p_referral_code: string }
         Returns: boolean
       }
       process_partner_application: {
-        Args: { p_application_id: string; p_action: string; p_notes?: string }
+        Args: { p_action: string; p_application_id: string; p_notes?: string }
         Returns: boolean
       }
       readonly_graphql_schema_version: {
@@ -35021,11 +35073,11 @@ export type Database = {
       }
       request_compliance_export: {
         Args: {
-          p_export_type: string
-          p_persona_filter?: Database["public"]["Enums"]["professional_persona"][]
-          p_date_range_start?: string
           p_date_range_end?: string
+          p_date_range_start?: string
+          p_export_type: string
           p_parameters?: Json
+          p_persona_filter?: Database["public"]["Enums"]["professional_persona"][]
         }
         Returns: string
       }
@@ -35040,13 +35092,13 @@ export type Database = {
       run_database_review_tests: {
         Args: Record<PropertyKey, never>
         Returns: {
-          test_number: number
-          area_feature: string
-          test_case: string
-          expected_result: string
           actual_result: string
-          pass_fail: string
+          area_feature: string
+          expected_result: string
           notes: string
+          pass_fail: string
+          test_case: string
+          test_number: number
         }[]
       }
       safe_graphql_schema_version: {
@@ -35059,18 +35111,18 @@ export type Database = {
       }
       secure_create_secret: {
         Args: {
-          new_secret: string
-          new_name?: string
           new_description?: string
+          new_name?: string
+          new_secret: string
         }
         Returns: string
       }
       secure_update_secret: {
         Args: {
-          secret_id: string
-          new_secret?: string
-          new_name?: string
           new_description?: string
+          new_name?: string
+          new_secret?: string
+          secret_id: string
         }
         Returns: undefined
       }
@@ -35093,99 +35145,99 @@ export type Database = {
       test_audit_logging: {
         Args: Record<PropertyKey, never>
         Returns: {
-          test_name: string
-          result: string
           details: string
+          result: string
+          test_name: string
         }[]
       }
       test_basic_functionality: {
         Args: Record<PropertyKey, never>
         Returns: {
-          test_number: number
-          area_feature: string
-          test_case: string
-          expected_result: string
           actual_result: string
-          pass_fail: string
+          area_feature: string
+          expected_result: string
           notes: string
+          pass_fail: string
+          test_case: string
+          test_number: number
         }[]
       }
       test_edge_functions: {
         Args: Record<PropertyKey, never>
         Returns: {
-          test_number: number
-          area_feature: string
-          test_case: string
-          expected_result: string
           actual_result: string
-          pass_fail: string
+          area_feature: string
+          expected_result: string
           notes: string
+          pass_fail: string
+          test_case: string
+          test_number: number
         }[]
       }
       test_fk_constraints_cascade: {
         Args: Record<PropertyKey, never>
         Returns: {
-          test_case: string
-          expected_result: string
           actual_result: string
-          pass_fail: string
+          expected_result: string
           notes: string
+          pass_fail: string
+          test_case: string
         }[]
       }
       test_hsa_compliance: {
         Args: Record<PropertyKey, never>
         Returns: {
-          test_name: string
-          result: string
           details: string
+          result: string
+          test_name: string
         }[]
       }
       test_rls_and_tenant_isolation: {
         Args: Record<PropertyKey, never>
         Returns: {
-          test_case: string
-          expected_result: string
           actual_result: string
-          pass_fail: string
+          expected_result: string
           notes: string
+          pass_fail: string
+          test_case: string
         }[]
       }
       test_transfer_validation: {
         Args: Record<PropertyKey, never>
         Returns: {
-          test_name: string
-          result: string
           details: string
+          result: string
+          test_name: string
         }[]
       }
       test_webhook_constraints: {
         Args: Record<PropertyKey, never>
         Returns: {
-          test_case: string
-          expected_result: string
           actual_result: string
-          pass_fail: string
+          expected_result: string
           notes: string
+          pass_fail: string
+          test_case: string
         }[]
       }
       track_subscription_event: {
         Args: {
-          p_user_id: string
+          p_add_on_type?: string
           p_event_type: string
           p_feature_name?: string
-          p_subscription_tier?: string
-          p_add_on_type?: string
-          p_usage_count?: number
-          p_revenue_impact?: number
           p_metadata?: Json
+          p_revenue_impact?: number
+          p_subscription_tier?: string
+          p_usage_count?: number
+          p_user_id: string
         }
         Returns: string
       }
       update_agency_performance_metrics: {
         Args: {
           p_agency_id: string
-          p_period_start: string
           p_period_end: string
+          p_period_start: string
         }
         Returns: undefined
       }
@@ -35195,10 +35247,10 @@ export type Database = {
       }
       update_disaster_recovery_progress: {
         Args: {
-          p_recovery_id: string
           p_checklist_item_index: number
           p_completed: boolean
           p_notes?: string
+          p_recovery_id: string
         }
         Returns: boolean
       }
@@ -35207,22 +35259,22 @@ export type Database = {
         Returns: boolean
       }
       update_user_role: {
-        Args: { target_user_id: string; new_role: string }
+        Args: { new_role: string; target_user_id: string }
         Returns: boolean
       }
       upsert_daily_financial_snapshot: {
         Args: {
-          p_user_id: string
+          p_net_worth: number
           p_total_assets: number
           p_total_liabilities: number
-          p_net_worth: number
+          p_user_id: string
         }
         Returns: undefined
       }
       validate_creative_approval: {
         Args: {
-          p_creative_id: string
           p_approval_type: Database["public"]["Enums"]["approval_type"]
+          p_creative_id: string
         }
         Returns: boolean
       }
@@ -35232,14 +35284,14 @@ export type Database = {
       }
       validate_franchise_referral_creation: {
         Args: {
-          p_referring_tenant_id: string
           p_contact_email: string
           p_firm_name: string
+          p_referring_tenant_id: string
         }
         Returns: boolean
       }
       validate_otp_code: {
-        Args: { p_user_id: string; p_otp_code: string }
+        Args: { p_otp_code: string; p_user_id: string }
         Returns: boolean
       }
       validate_plan_activation: {
@@ -35248,9 +35300,9 @@ export type Database = {
       }
       validate_referral_creation: {
         Args: {
-          p_referrer_id: string
           p_referee_email?: string
           p_referral_type?: string
+          p_referrer_id: string
           p_tenant_id?: string
         }
         Returns: boolean
@@ -35259,24 +35311,24 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: {
           check_name: string
-          status: string
           details: string
+          status: string
         }[]
       }
       validate_user_role_access: {
         Args: {
           p_required_roles: string[]
-          p_resource_type?: string
           p_resource_id?: string
+          p_resource_type?: string
         }
         Returns: boolean
       }
       verify_file_backup_integrity: {
         Args: { p_backup_operation_id: string }
         Returns: {
+          error_message: string
           file_path: string
           is_valid: boolean
-          error_message: string
         }[]
       }
       verify_vault_2fa_requirement: {

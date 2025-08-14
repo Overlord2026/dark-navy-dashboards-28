@@ -109,9 +109,22 @@ export default function TopNav({ showSubBanner = true }: {
               Dashboards
             </Link>
             <span className="text-muted-foreground/40">•</span>
-            <Link to="/calculators" className="text-muted-foreground hover:text-foreground transition-colors">
-              Calculators
-            </Link>
+            <div className="relative group">
+              <Link to="/calculators" className="text-muted-foreground hover:text-foreground transition-colors">
+                Calculators
+              </Link>
+              <div className="absolute top-full left-0 mt-1 bg-popover border border-border rounded-md shadow-lg py-2 w-48 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+                <Link to="/tools/value-calculator" className="block px-4 py-2 text-sm hover:bg-accent">
+                  Value Calculator
+                </Link>
+                <Link to="/tools/target-analyzer" className="block px-4 py-2 text-sm hover:bg-accent">
+                  Target Analyzer
+                </Link>
+                <Link to="/tools/rmds" className="block px-4 py-2 text-sm hover:bg-accent">
+                  RMD Calculator
+                </Link>
+              </div>
+            </div>
             <span className="text-muted-foreground/40">•</span>
             <Link to="/studies" className="text-muted-foreground hover:text-foreground transition-colors">
               Studies

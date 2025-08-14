@@ -12,10 +12,29 @@ export default function InvitePage() {
       if (!token) return;
 
       try {
-        // For now, fallback to family persona since prospect_invitations table may not have persona_group column
         console.log('Processing invitation token:', token);
-        // Default to family persona for invitations
-        const persona_group: PersonaGroup = "family";
+        
+        // Call the secure RPC function to validate and accept the invitation
+        const { data, error } = await supabase.rpc('accept_invite', { 
+          raw_token: token 
+        });
+
+        if (error) {
+          console.error('Error validating invitation:', error);
+          // Redirect to home with error
+          window.location.replace("/?error=invalid_invitation");
+          return;
+        }
+
+        if (!data || data.length === 0) {
+          console.error('Invalid or expired invitation token');
+          window.location.replace("/?error=expired_invitation");
+          return;
+        }
+
+        const invitation = data[0];
+        const persona_group: PersonaGroup = invitation.persona_group === 'pro' ? 'pro' : 'family';
+        const target_path = invitation.target_path || (persona_group === 'pro' ? '/pros' : '/families');
         
         // Set persona context
         localStorage.setItem("persona_group", persona_group);
@@ -26,13 +45,13 @@ export default function InvitePage() {
           detail: { group: persona_group } 
         }));
 
-        // Always redirect to families for now
-        window.location.replace("/families");
+        // Redirect to appropriate target
+        window.location.replace(target_path);
         
       } catch (error) {
         console.error('Error processing invitation:', error);
-        // Fallback to families page
-        window.location.replace("/families");
+        // Fallback to home with error
+        window.location.replace("/?error=invitation_error");
       }
     };
 
