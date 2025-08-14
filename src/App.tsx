@@ -447,6 +447,11 @@ function App() {
             <Route path="/tools/target-analyzer" element={<TargetAnalyzerPage />} />
             
             <Route path="/meet" element={<MeetPage />} />
+            <Route path="/tools" element={
+              <React.Suspense fallback={<div>Loading...</div>}>
+                {React.createElement(React.lazy(() => import('./pages/tools/ToolsIndex')))}
+              </React.Suspense>
+            } />
             <Route path="/notes" element={<NotesPage />} />
             <Route path="/recommendations" element={<RecommendationsPage />} />
             <Route path="/dashboards" element={<DashboardsPage />} />
