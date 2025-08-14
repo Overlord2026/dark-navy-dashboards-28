@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle, Users, TrendingUp, Shield, Calendar, DollarSign } from "lucide-react";
+import AudienceGuard from "@/components/AudienceGuard";
 
 export function PersonaAwareContent() {
   const [group, setGroup] = useState<"family" | "pro">("family");
@@ -16,10 +17,10 @@ export function PersonaAwareContent() {
     return () => window.removeEventListener("persona-switched", handler);
   }, []);
 
-  if (group === "pro") {
-    return (
-      <div className="space-y-16 py-16">
-        {/* Professional Paths */}
+  return (
+    <div className="space-y-16 py-16">
+      {/* Professional Paths - Only for Pros */}
+      <AudienceGuard audience="pro">
         <section className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold mb-4">Choose Your Professional Path</h2>
@@ -129,21 +130,18 @@ export function PersonaAwareContent() {
             </div>
           </div>
         </section>
-      </div>
-    );
-  }
+      </AudienceGuard>
 
-  // Families content
-  return (
-    <div className="space-y-16 py-16">
-      {/* How It Works */}
-      <section className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold mb-4">How It Works</h2>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Three simple steps to coordinate your family's financial future
-          </p>
-        </div>
+      {/* Family Content - Only for Families */}
+      <AudienceGuard audience="family">
+        {/* How It Works */}
+        <section className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold mb-4">How It Works</h2>
+            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+              Three simple steps to coordinate your family's financial future
+            </p>
+          </div>
         
         <div className="grid md:grid-cols-3 gap-8">
           {[
@@ -205,6 +203,7 @@ export function PersonaAwareContent() {
           </div>
         </div>
       </section>
+      </AudienceGuard>
     </div>
   );
 }

@@ -1,43 +1,35 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { analytics } from '@/lib/analytics';
 
 type PersonaGroup = "family" | "pro";
-const KEY = "persona_group";
 
-export function MastheadPersonaToggle({ autoRoute = false }: { autoRoute?: boolean }) {
-  const [group, setGroup] = useState<PersonaGroup>(() =>
-    (typeof window !== "undefined" && (localStorage.getItem(KEY) as PersonaGroup)) || "family"
+export default function MastheadPersonaToggle() {
+  const [group, setGroup] = useState<PersonaGroup>(
+    (typeof window !== "undefined" && (localStorage.getItem("persona_group") as PersonaGroup)) || "family"
   );
 
   useEffect(() => {
-    localStorage.setItem(KEY, group);
-    document.cookie = `${KEY}=${group};path=/;SameSite=Lax`;
+    localStorage.setItem("persona_group", group);
+    document.cookie = `persona_group=${group};path=/;SameSite=Lax`;
     window.dispatchEvent(new CustomEvent("persona-switched", { detail: { group } }));
-    if (autoRoute && window.location.pathname === "/") {
-      const target = group === "pro" ? "/pros" : "/families";
-      if (window.location.pathname !== target) window.location.assign(target);
-    }
-  }, [group, autoRoute]);
+    analytics.track('persona.selected', { group });
+  }, [group]);
 
   return (
-    <div className="w-full flex justify-center pt-2 pb-1">
-      <Tabs value={group} onValueChange={(v) => setGroup(v as PersonaGroup)}>
-        <TabsList className="bg-transparent gap-1">
-          <TabsTrigger 
-            value="family" 
-            className="data-[state=active]:bg-emerald-600 data-[state=active]:text-white text-sm px-4 py-2"
-          >
-            For Families
-          </TabsTrigger>
-          <TabsTrigger 
-            value="pro" 
-            className="data-[state=active]:bg-blue-600 data-[state=active]:text-white text-sm px-4 py-2"
-          >
-            For Service Pros
-          </TabsTrigger>
-        </TabsList>
-      </Tabs>
+    <div className="w-full flex justify-center pt-2 gap-2">
+      <button
+        className={`px-3 py-1 rounded ${group==="family"?"bg-emerald-600 text-white":"bg-transparent border border-emerald-600 text-emerald-600"}`}
+        onClick={() => setGroup("family")}
+      >
+        For Families
+      </button>
+      <button
+        className={`px-3 py-1 rounded ${group==="pro"?"bg-blue-600 text-white":"bg-transparent border border-blue-600 text-blue-600"}`}
+        onClick={() => setGroup("pro")}
+      >
+        For Service Pros
+      </button>
     </div>
   );
 }

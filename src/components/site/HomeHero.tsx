@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { analytics } from '@/lib/analytics';
 
 export function HomeHero() {
   const [group, setGroup] = useState<"family" | "pro">("family");
@@ -24,10 +25,19 @@ export function HomeHero() {
           Win ideal clients, automate follow-ups, coordinate with the family office, and keep audits clean.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <Button size="lg" className="px-8 py-3">
+          <Button 
+            size="lg" 
+            className="px-8 py-3"
+            onClick={() => analytics.track('hero.cta.clicked', { group: 'pro', cta: 'explore_tools' })}
+          >
             Explore Tools
           </Button>
-          <Button size="lg" variant="outline" className="px-8 py-3">
+          <Button 
+            size="lg" 
+            variant="outline" 
+            className="px-8 py-3"
+            onClick={() => analytics.track('hero.cta.clicked', { group: 'pro', cta: 'book_demo' })}
+          >
             Book a Demo
           </Button>
         </div>
@@ -48,10 +58,19 @@ export function HomeHero() {
         You choose the team. You control the plan. We coordinate investments, tax, estate, insurance, and healthcare—so your family thrives for generations.
       </p>
       <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-        <Button size="lg" className="px-8 py-3">
+        <Button 
+          size="lg" 
+          className="px-8 py-3"
+          onClick={() => analytics.track('hero.cta.clicked', { group: 'family', cta: 'see_how_it_works' })}
+        >
           See How It Works
         </Button>
-        <Button size="lg" variant="outline" className="px-8 py-3">
+        <Button 
+          size="lg" 
+          variant="outline" 
+          className="px-8 py-3"
+          onClick={() => analytics.track('hero.cta.clicked', { group: 'family', cta: 'try_value_calculator' })}
+        >
           Try the Value Calculator
         </Button>
       </div>

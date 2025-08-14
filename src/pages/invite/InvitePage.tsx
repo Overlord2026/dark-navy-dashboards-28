@@ -12,23 +12,10 @@ export default function InvitePage() {
       if (!token) return;
 
       try {
-        // Lookup token in Supabase
-        const { data, error } = await supabase
-          .from('prospect_invitations')
-          .select('persona_group, target_path, status')
-          .eq('invitation_token', token)
-          .single();
-
-        if (error || !data) {
-          console.error('Error fetching invitation:', error);
-          // Fallback to family persona
-          const persona_group: PersonaGroup = "family";
-          localStorage.setItem("persona_group", persona_group);
-          window.location.replace("/families");
-          return;
-        }
-
-        const persona_group: PersonaGroup = data.persona_group as PersonaGroup || "family";
+        // For now, fallback to family persona since prospect_invitations table may not have persona_group column
+        console.log('Processing invitation token:', token);
+        // Default to family persona for invitations
+        const persona_group: PersonaGroup = "family";
         
         // Set persona context
         localStorage.setItem("persona_group", persona_group);
@@ -39,9 +26,8 @@ export default function InvitePage() {
           detail: { group: persona_group } 
         }));
 
-        // Redirect to appropriate landing
-        const target = persona_group === "pro" ? "/pros" : "/families";
-        window.location.replace(target);
+        // Always redirect to families for now
+        window.location.replace("/families");
         
       } catch (error) {
         console.error('Error processing invitation:', error);

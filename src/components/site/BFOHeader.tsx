@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, ChevronDown, ExternalLink } from 'lucide-react';
-import { MastheadPersonaToggle } from './MastheadPersonaToggle';
+import MastheadPersonaToggle from './MastheadPersonaToggle';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -23,6 +23,8 @@ import {
 import { usePersonaSublinks } from '@/hooks/usePersonaSublinks';
 import { MEGA_MENU_CONFIG } from '@/config/persona-links';
 import { cn } from '@/lib/utils';
+import { analytics } from '@/lib/analytics';
+import { getPersonaGroup } from '@/components/AudienceGuard';
 
 interface BFOHeaderProps {
   showPersonaBanner?: boolean;
@@ -90,6 +92,11 @@ export const BFOHeader: React.FC<BFOHeaderProps> = ({
                             <Link
                               to={item.href}
                               className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                              onClick={() => analytics.track('nav.mega.clicked', { 
+                                group: getPersonaGroup(), 
+                                section: 'families', 
+                                item: item.label 
+                              })}
                             >
                               <div className="text-sm font-medium leading-none">{item.label}</div>
                               <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
@@ -125,6 +132,11 @@ export const BFOHeader: React.FC<BFOHeaderProps> = ({
                                 <Link
                                   to={item.href}
                                   className="block select-none space-y-1 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                                  onClick={() => analytics.track('nav.mega.clicked', { 
+                                    group: getPersonaGroup(), 
+                                    section: 'professionals', 
+                                    item: item.label 
+                                  })}
                                 >
                                   <div className="text-sm font-medium leading-none">{item.label}</div>
                                   <p className="line-clamp-2 text-xs leading-snug text-muted-foreground">
@@ -263,7 +275,7 @@ export const BFOHeader: React.FC<BFOHeaderProps> = ({
       </header>
 
       {/* Persona Toggle */}
-      <MastheadPersonaToggle autoRoute />
+      <MastheadPersonaToggle />
 
       {/* Persona Sub-Banner */}
       {showPersonaBanner && personaLinks.length > 0 && (
