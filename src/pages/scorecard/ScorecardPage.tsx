@@ -24,7 +24,7 @@ export const ScorecardPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { persona } = usePersona();
+  const { currentPersona } = usePersona();
   
   const [isCalculating, setIsCalculating] = useState(false);
   const [results, setResults] = useState<ScorecardResults | null>(null);
@@ -53,7 +53,7 @@ export const ScorecardPage: React.FC = () => {
     accounts: []
   });
 
-  const personaGroup = persona || 'family';
+  const personaGroup = currentPersona || 'family';
 
   useEffect(() => {
     analytics.track('scorecard.page_viewed', { 

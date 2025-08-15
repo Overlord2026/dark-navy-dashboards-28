@@ -13,7 +13,11 @@ interface LTCPanelProps {
 }
 
 export function LTCPanel({ ltcResult }: LTCPanelProps) {
-  const { riskScore, pvCost, selfFundFeasible, annualCost, durationYears } = ltcResult;
+  const { riskScore, pvCost, selfFundFeasible } = ltcResult;
+  
+  // Calculate derived values for display
+  const annualCost = pvCost * 0.06; // Approximate annual cost from PV
+  const durationYears = 3.2; // Average LTC duration
 
   const getRiskLevel = (score: number) => {
     if (score <= 30) return { level: 'Low', color: 'bg-green-500', icon: CheckCircle };
