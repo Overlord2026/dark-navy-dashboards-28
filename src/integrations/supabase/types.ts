@@ -1027,6 +1027,68 @@ export type Database = {
           },
         ]
       }
+      accounts: {
+        Row: {
+          account_name: string
+          account_number: string
+          account_status: string
+          account_type: string
+          available_balance: number | null
+          connector_account_id: string
+          created_at: string
+          currency: string
+          current_balance: number | null
+          id: string
+          institution_name: string
+          last_updated_at: string | null
+          metadata: Json | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          account_name: string
+          account_number: string
+          account_status?: string
+          account_type: string
+          available_balance?: number | null
+          connector_account_id: string
+          created_at?: string
+          currency?: string
+          current_balance?: number | null
+          id?: string
+          institution_name: string
+          last_updated_at?: string | null
+          metadata?: Json | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          account_name?: string
+          account_number?: string
+          account_status?: string
+          account_type?: string
+          available_balance?: number | null
+          connector_account_id?: string
+          created_at?: string
+          currency?: string
+          current_balance?: number | null
+          id?: string
+          institution_name?: string
+          last_updated_at?: string | null
+          metadata?: Json | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "accounts_connector_account_id_fkey"
+            columns: ["connector_account_id"]
+            isOneToOne: false
+            referencedRelation: "connector_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ach_events: {
         Row: {
           created_at: string | null
@@ -5070,6 +5132,60 @@ export type Database = {
           },
         ]
       }
+      billing_daily: {
+        Row: {
+          active_synced_accounts: number | null
+          alt_positions_monitored: number | null
+          alts_cost: number | null
+          base_cost: number | null
+          billing_date: string
+          calculated_at: string
+          created_at: string
+          entity_id: string
+          id: string
+          notarizations_completed: number | null
+          notary_cost: number | null
+          total_estimated_cost: number | null
+          total_vendor_cost: number | null
+          updated_at: string
+          vendor_costs: Json | null
+        }
+        Insert: {
+          active_synced_accounts?: number | null
+          alt_positions_monitored?: number | null
+          alts_cost?: number | null
+          base_cost?: number | null
+          billing_date: string
+          calculated_at?: string
+          created_at?: string
+          entity_id: string
+          id?: string
+          notarizations_completed?: number | null
+          notary_cost?: number | null
+          total_estimated_cost?: number | null
+          total_vendor_cost?: number | null
+          updated_at?: string
+          vendor_costs?: Json | null
+        }
+        Update: {
+          active_synced_accounts?: number | null
+          alt_positions_monitored?: number | null
+          alts_cost?: number | null
+          base_cost?: number | null
+          billing_date?: string
+          calculated_at?: string
+          created_at?: string
+          entity_id?: string
+          id?: string
+          notarizations_completed?: number | null
+          notary_cost?: number | null
+          total_estimated_cost?: number | null
+          total_vendor_cost?: number | null
+          updated_at?: string
+          vendor_costs?: Json | null
+        }
+        Relationships: []
+      }
       billing_metrics: {
         Row: {
           created_at: string
@@ -8215,6 +8331,113 @@ export type Database = {
           task_type?: string
           title?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      connector_accounts: {
+        Row: {
+          account_name: string
+          auth_data_encrypted: string | null
+          connector_id: string
+          created_at: string
+          error_count: number | null
+          external_account_id: string
+          id: string
+          last_error_message: string | null
+          last_sync_at: string | null
+          metadata: Json | null
+          next_sync_at: string | null
+          sync_frequency: string | null
+          sync_status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          account_name: string
+          auth_data_encrypted?: string | null
+          connector_id: string
+          created_at?: string
+          error_count?: number | null
+          external_account_id: string
+          id?: string
+          last_error_message?: string | null
+          last_sync_at?: string | null
+          metadata?: Json | null
+          next_sync_at?: string | null
+          sync_frequency?: string | null
+          sync_status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          account_name?: string
+          auth_data_encrypted?: string | null
+          connector_id?: string
+          created_at?: string
+          error_count?: number | null
+          external_account_id?: string
+          id?: string
+          last_error_message?: string | null
+          last_sync_at?: string | null
+          metadata?: Json | null
+          next_sync_at?: string | null
+          sync_frequency?: string | null
+          sync_status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "connector_accounts_connector_id_fkey"
+            columns: ["connector_id"]
+            isOneToOne: false
+            referencedRelation: "connectors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      connectors: {
+        Row: {
+          api_endpoint: string | null
+          auth_type: string
+          capabilities: Json | null
+          connector_name: string
+          connector_type: string
+          created_at: string
+          id: string
+          metadata: Json | null
+          rate_limits: Json | null
+          status: string
+          updated_at: string
+          vendor_name: string
+        }
+        Insert: {
+          api_endpoint?: string | null
+          auth_type: string
+          capabilities?: Json | null
+          connector_name: string
+          connector_type: string
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          rate_limits?: Json | null
+          status?: string
+          updated_at?: string
+          vendor_name: string
+        }
+        Update: {
+          api_endpoint?: string | null
+          auth_type?: string
+          capabilities?: Json | null
+          connector_name?: string
+          connector_type?: string
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          rate_limits?: Json | null
+          status?: string
+          updated_at?: string
+          vendor_name?: string
         }
         Relationships: []
       }
@@ -12004,6 +12227,60 @@ export type Database = {
           status?: string
           updated_at?: string
           validity_period?: unknown | null
+        }
+        Relationships: []
+      }
+      exceptions: {
+        Row: {
+          assigned_to: string | null
+          created_at: string
+          description: string | null
+          entity_id: string
+          entity_type: string
+          error_details: Json | null
+          exception_type: string
+          id: string
+          metadata: Json | null
+          resolution_notes: string | null
+          resolved_at: string | null
+          severity: string
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          assigned_to?: string | null
+          created_at?: string
+          description?: string | null
+          entity_id: string
+          entity_type: string
+          error_details?: Json | null
+          exception_type: string
+          id?: string
+          metadata?: Json | null
+          resolution_notes?: string | null
+          resolved_at?: string | null
+          severity?: string
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          assigned_to?: string | null
+          created_at?: string
+          description?: string | null
+          entity_id?: string
+          entity_type?: string
+          error_details?: Json | null
+          exception_type?: string
+          id?: string
+          metadata?: Json | null
+          resolution_notes?: string | null
+          resolved_at?: string | null
+          severity?: string
+          status?: string
+          title?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -23289,6 +23566,80 @@ export type Database = {
         }
         Relationships: []
       }
+      positions: {
+        Row: {
+          account_id: string
+          as_of_date: string
+          asset_class: string
+          asset_name: string
+          cost_basis: number | null
+          created_at: string
+          currency: string
+          cusip: string | null
+          id: string
+          isin: string | null
+          market_value: number | null
+          metadata: Json | null
+          position_type: string
+          quantity: number
+          symbol: string
+          unit_price: number | null
+          unrealized_gain_loss: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          account_id: string
+          as_of_date: string
+          asset_class: string
+          asset_name: string
+          cost_basis?: number | null
+          created_at?: string
+          currency?: string
+          cusip?: string | null
+          id?: string
+          isin?: string | null
+          market_value?: number | null
+          metadata?: Json | null
+          position_type?: string
+          quantity: number
+          symbol: string
+          unit_price?: number | null
+          unrealized_gain_loss?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          account_id?: string
+          as_of_date?: string
+          asset_class?: string
+          asset_name?: string
+          cost_basis?: number | null
+          created_at?: string
+          currency?: string
+          cusip?: string | null
+          id?: string
+          isin?: string | null
+          market_value?: number | null
+          metadata?: Json | null
+          position_type?: string
+          quantity?: number
+          symbol?: string
+          unit_price?: number | null
+          unrealized_gain_loss?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "positions_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       practice_benchmarks: {
         Row: {
           created_at: string | null
@@ -26498,30 +26849,36 @@ export type Database = {
       reports: {
         Row: {
           download_url: string | null
+          evidence_id: string | null
           format: string
           generated_at: string
           id: string
           metadata: Json | null
+          persona_scope: string | null
           report_type: string
           role: string
           user_id: string
         }
         Insert: {
           download_url?: string | null
+          evidence_id?: string | null
           format: string
           generated_at?: string
           id?: string
           metadata?: Json | null
+          persona_scope?: string | null
           report_type: string
           role: string
           user_id: string
         }
         Update: {
           download_url?: string | null
+          evidence_id?: string | null
           format?: string
           generated_at?: string
           id?: string
           metadata?: Json | null
+          persona_scope?: string | null
           report_type?: string
           role?: string
           user_id?: string
@@ -30794,6 +31151,74 @@ export type Database = {
           vendor_name?: string | null
         }
         Relationships: []
+      }
+      transactions: {
+        Row: {
+          account_id: string
+          amount: number
+          created_at: string
+          currency: string
+          description: string | null
+          external_transaction_id: string
+          fees: number | null
+          id: string
+          metadata: Json | null
+          price: number | null
+          quantity: number | null
+          settlement_date: string | null
+          symbol: string | null
+          transaction_date: string
+          transaction_type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          account_id: string
+          amount: number
+          created_at?: string
+          currency?: string
+          description?: string | null
+          external_transaction_id: string
+          fees?: number | null
+          id?: string
+          metadata?: Json | null
+          price?: number | null
+          quantity?: number | null
+          settlement_date?: string | null
+          symbol?: string | null
+          transaction_date: string
+          transaction_type: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          account_id?: string
+          amount?: number
+          created_at?: string
+          currency?: string
+          description?: string | null
+          external_transaction_id?: string
+          fees?: number | null
+          id?: string
+          metadata?: Json | null
+          price?: number | null
+          quantity?: number | null
+          settlement_date?: string | null
+          symbol?: string | null
+          transaction_date?: string
+          transaction_type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transactions_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "accounts"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       transfers: {
         Row: {
