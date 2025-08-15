@@ -23569,6 +23569,7 @@ export type Database = {
       positions: {
         Row: {
           account_id: string
+          as_of: string | null
           as_of_date: string
           asset_class: string
           asset_name: string
@@ -23590,6 +23591,7 @@ export type Database = {
         }
         Insert: {
           account_id: string
+          as_of?: string | null
           as_of_date: string
           asset_class: string
           asset_name: string
@@ -23611,6 +23613,7 @@ export type Database = {
         }
         Update: {
           account_id?: string
+          as_of?: string | null
           as_of_date?: string
           asset_class?: string
           asset_name?: string
@@ -36194,6 +36197,10 @@ export type Database = {
           p_resource_id?: string
           p_resource_type?: string
         }
+        Returns: boolean
+      }
+      vault_is_configured: {
+        Args: Record<PropertyKey, never>
         Returns: boolean
       }
       verify_file_backup_integrity: {
