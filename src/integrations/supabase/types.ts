@@ -3213,6 +3213,185 @@ export type Database = {
           },
         ]
       }
+      approval_requests: {
+        Row: {
+          action_type: string
+          approval_rule_id: string | null
+          approval_threshold: number
+          completed_at: string | null
+          created_at: string
+          current_approvals: number
+          expires_at: string | null
+          id: string
+          metadata: Json | null
+          request_data: Json
+          request_title: string
+          requester_id: string | null
+          required_approvals: number
+          resource_id: string
+          resource_type: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          action_type: string
+          approval_rule_id?: string | null
+          approval_threshold?: number
+          completed_at?: string | null
+          created_at?: string
+          current_approvals?: number
+          expires_at?: string | null
+          id?: string
+          metadata?: Json | null
+          request_data?: Json
+          request_title: string
+          requester_id?: string | null
+          required_approvals?: number
+          resource_id: string
+          resource_type: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          action_type?: string
+          approval_rule_id?: string | null
+          approval_threshold?: number
+          completed_at?: string | null
+          created_at?: string
+          current_approvals?: number
+          expires_at?: string | null
+          id?: string
+          metadata?: Json | null
+          request_data?: Json
+          request_title?: string
+          requester_id?: string | null
+          required_approvals?: number
+          resource_id?: string
+          resource_type?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "approval_requests_approval_rule_id_fkey"
+            columns: ["approval_rule_id"]
+            isOneToOne: false
+            referencedRelation: "approval_rules"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      approval_rules: {
+        Row: {
+          action_type: string
+          approval_threshold: number | null
+          approver_roles: Json
+          conditions: Json
+          created_at: string
+          created_by: string | null
+          escalation_rules: Json | null
+          id: string
+          is_active: boolean
+          required_approvers: number
+          resource_type: string
+          rule_name: string
+          timeout_hours: number | null
+          updated_at: string
+        }
+        Insert: {
+          action_type: string
+          approval_threshold?: number | null
+          approver_roles?: Json
+          conditions?: Json
+          created_at?: string
+          created_by?: string | null
+          escalation_rules?: Json | null
+          id?: string
+          is_active?: boolean
+          required_approvers?: number
+          resource_type: string
+          rule_name: string
+          timeout_hours?: number | null
+          updated_at?: string
+        }
+        Update: {
+          action_type?: string
+          approval_threshold?: number | null
+          approver_roles?: Json
+          conditions?: Json
+          created_at?: string
+          created_by?: string | null
+          escalation_rules?: Json | null
+          id?: string
+          is_active?: boolean
+          required_approvers?: number
+          resource_type?: string
+          rule_name?: string
+          timeout_hours?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      approval_signals: {
+        Row: {
+          approval_request_id: string | null
+          approver_id: string | null
+          comments: string | null
+          evidence_package_id: string | null
+          id: string
+          ip_address: unknown | null
+          metadata: Json | null
+          signal_type: string
+          signaled_at: string
+          signature_data: Json | null
+          user_agent: string | null
+          weight: number | null
+        }
+        Insert: {
+          approval_request_id?: string | null
+          approver_id?: string | null
+          comments?: string | null
+          evidence_package_id?: string | null
+          id?: string
+          ip_address?: unknown | null
+          metadata?: Json | null
+          signal_type: string
+          signaled_at?: string
+          signature_data?: Json | null
+          user_agent?: string | null
+          weight?: number | null
+        }
+        Update: {
+          approval_request_id?: string | null
+          approver_id?: string | null
+          comments?: string | null
+          evidence_package_id?: string | null
+          id?: string
+          ip_address?: unknown | null
+          metadata?: Json | null
+          signal_type?: string
+          signaled_at?: string
+          signature_data?: Json | null
+          user_agent?: string | null
+          weight?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "approval_signals_approval_request_id_fkey"
+            columns: ["approval_request_id"]
+            isOneToOne: false
+            referencedRelation: "approval_requests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "approval_signals_evidence_package_id_fkey"
+            columns: ["evidence_package_id"]
+            isOneToOne: false
+            referencedRelation: "evidence_packages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       approvals: {
         Row: {
           approval_notes: string | null
@@ -10634,6 +10813,51 @@ export type Database = {
           },
         ]
       }
+      domain_events: {
+        Row: {
+          aggregate_id: string
+          aggregate_type: string
+          event_data: Json
+          event_hash: string
+          event_type: string
+          id: string
+          last_processing_error: string | null
+          metadata: Json | null
+          occurred_at: string
+          processed: boolean
+          processing_attempts: number | null
+          sequence_number: number
+        }
+        Insert: {
+          aggregate_id: string
+          aggregate_type: string
+          event_data?: Json
+          event_hash: string
+          event_type: string
+          id?: string
+          last_processing_error?: string | null
+          metadata?: Json | null
+          occurred_at?: string
+          processed?: boolean
+          processing_attempts?: number | null
+          sequence_number: number
+        }
+        Update: {
+          aggregate_id?: string
+          aggregate_type?: string
+          event_data?: Json
+          event_hash?: string
+          event_type?: string
+          id?: string
+          last_processing_error?: string | null
+          metadata?: Json | null
+          occurred_at?: string
+          processed?: boolean
+          processing_attempts?: number | null
+          sequence_number?: number
+        }
+        Relationships: []
+      }
       draft_proposals: {
         Row: {
           advisor_id: string
@@ -11737,6 +11961,51 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      evidence_packages: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          evidence_type: string
+          expires_at: string | null
+          id: string
+          metadata: Json | null
+          package_data: Json
+          package_hash: string
+          package_name: string
+          status: string
+          updated_at: string
+          validity_period: unknown | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          evidence_type: string
+          expires_at?: string | null
+          id?: string
+          metadata?: Json | null
+          package_data?: Json
+          package_hash: string
+          package_name: string
+          status?: string
+          updated_at?: string
+          validity_period?: unknown | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          evidence_type?: string
+          expires_at?: string | null
+          id?: string
+          metadata?: Json | null
+          package_data?: Json
+          package_hash?: string
+          package_name?: string
+          status?: string
+          updated_at?: string
+          validity_period?: unknown | null
+        }
+        Relationships: []
       }
       execution_plans: {
         Row: {
@@ -21476,6 +21745,60 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      pbat_tokens: {
+        Row: {
+          constraints: Json | null
+          expires_at: string
+          id: string
+          issued_at: string
+          issuer_id: string | null
+          last_used_at: string | null
+          max_usage_count: number | null
+          policy_id: string
+          revoked_at: string | null
+          scope: Json
+          status: string
+          subject_id: string
+          token_hash: string
+          token_type: string
+          usage_count: number | null
+        }
+        Insert: {
+          constraints?: Json | null
+          expires_at: string
+          id?: string
+          issued_at?: string
+          issuer_id?: string | null
+          last_used_at?: string | null
+          max_usage_count?: number | null
+          policy_id: string
+          revoked_at?: string | null
+          scope?: Json
+          status?: string
+          subject_id: string
+          token_hash: string
+          token_type?: string
+          usage_count?: number | null
+        }
+        Update: {
+          constraints?: Json | null
+          expires_at?: string
+          id?: string
+          issued_at?: string
+          issuer_id?: string | null
+          last_used_at?: string | null
+          max_usage_count?: number | null
+          policy_id?: string
+          revoked_at?: string | null
+          scope?: Json
+          status?: string
+          subject_id?: string
+          token_hash?: string
+          token_type?: string
+          usage_count?: number | null
+        }
+        Relationships: []
       }
       persona_audit: {
         Row: {
@@ -34698,6 +35021,16 @@ export type Database = {
         Args: { p_organization_id: string; p_prefix?: string }
         Returns: string
       }
+      generate_pbat_token: {
+        Args: {
+          p_expires_in_hours?: number
+          p_policy_id: string
+          p_scope: Json
+          p_subject_id: string
+          p_token_type?: string
+        }
+        Returns: string
+      }
       generate_plan_rds: {
         Args: {
           p_explanation: Json
@@ -35404,6 +35737,10 @@ export type Database = {
       validate_otp_code: {
         Args: { p_otp_code: string; p_user_id: string }
         Returns: boolean
+      }
+      validate_pbat_token: {
+        Args: { p_required_scope?: string; p_token: string }
+        Returns: Json
       }
       validate_plan_activation: {
         Args: { plan_id: string }

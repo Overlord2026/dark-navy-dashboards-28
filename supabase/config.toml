@@ -196,3 +196,12 @@ verify_jwt = false
 [functions.email-automation]
 verify_jwt = false
 # @public-ok - Email automation service
+
+[functions.emit-receipt]
+verify_jwt = true
+
+[functions.check-approvals]
+verify_jwt = true
+
+[functions.issue-pbat]
+verify_jwt = true
