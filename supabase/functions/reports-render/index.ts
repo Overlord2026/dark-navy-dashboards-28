@@ -1,4 +1,8 @@
 import { userClient, getCaller } from "../_shared/auth.ts";
+import { SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, REPORTS_BUCKET } from "../_shared/secrets.ts";
+
+// Runtime checks
+void SUPABASE_URL; void SUPABASE_SERVICE_ROLE_KEY;
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',

@@ -346,9 +346,31 @@ For technical support and enterprise licensing:
 - Issues: GitHub Issues
 - Enterprise: Contact sales team
 
-## 📄 License
+## 🔐 Secrets & Vault
 
-Enterprise Software License - See LICENSE file for details.
+**Vault is Optional**: This platform operates without Supabase Vault. All secrets are managed via Edge Function environment variables for enhanced security and simplified deployment.
+
+### Required Environment Variables
+
+**Core Supabase Access:**
+- `SUPABASE_URL` - Supabase project URL
+- `SUPABASE_SERVICE_ROLE_KEY` - Service role key for admin operations
+- `SUPABASE_ANON_KEY` - Anonymous key for user operations
+
+**Optional Vendor Integrations (configured as needed):**
+- `BRIDGEFT_BASE_URL`, `BRIDGEFT_API_KEY` - BridgeFT custody integration
+- `AKOYA_API_KEY` - Akoya data aggregation 
+- `PLAID_CLIENT_ID`, `PLAID_SECRET` - Plaid financial data
+- `CANOE_API_KEY`, `ICAPITAL_API_KEY` - Alternative investment platforms
+- `DOCUSIGN_BASE_URL`, `DOCUSIGN_ACCOUNT_ID`, `DOCUSIGN_INTEGRATOR_KEY`, `DOCUSIGN_USER_ID`, `DOCUSIGN_PRIVATE_KEY` - Document signing
+- `REPORTS_BUCKET` - Storage bucket for reports (defaults to 'reports')
+
+### Security Model
+
+- **No secrets stored in PostgreSQL** - All sensitive data accessed via environment variables
+- **Evidence hashing** - Uses `public.sha256_hex()` for tamper-evident audit trails
+- **Encrypted payloads** - Raw data never exposed to clients, only processed evidence hashes
+- **Zero-knowledge architecture** - Platform can operate without access to underlying credential stores
 
 ---
 

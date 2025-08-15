@@ -1,5 +1,9 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { admin } from "../_shared/supabaseClient.ts";
+import { SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, getDocuSign } from "../_shared/secrets.ts";
+
+// Runtime checks
+void SUPABASE_URL; void SUPABASE_SERVICE_ROLE_KEY;
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -17,9 +21,7 @@ serve(async (req) => {
     console.log(`DocuSign action: ${action} for loan: ${loan_id}`);
 
     // Initialize Supabase client
-    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-    const supabase = createClient(supabaseUrl, supabaseKey);
+    const supabase = admin;
 
     switch (action) {
       case 'create_envelope':
@@ -51,15 +53,19 @@ serve(async (req) => {
 async function createSigningEnvelope(supabase: any, data: any) {
   const { signer_email, signer_name, document_name, loan_id } = data;
   
-  const docusignApiKey = Deno.env.get('DOCUSIGN_API_KEY');
-  const docusignAccountId = Deno.env.get('DOCUSIGN_ACCOUNT_ID');
+  let docusignConfig;
+  try {
+    docusignConfig = getDocuSign();
+  } catch {
+    docusignConfig = null; // DocuSign not configured, use mock
+  }
   
   let envelopeResponse;
   
-  if (docusignApiKey && docusignAccountId) {
+  if (docusignConfig) {
     // Real DocuSign API call
     console.log('Creating real DocuSign envelope');
-    envelopeResponse = await createDocuSignEnvelope(docusignApiKey, docusignAccountId, data);
+    envelopeResponse = await createDocuSignEnvelope(docusignConfig, data);
   } else {
     // Mock envelope creation
     console.log('Creating mock DocuSign envelope');
@@ -115,13 +121,18 @@ async function createSigningEnvelope(supabase: any, data: any) {
 }
 
 async function checkEnvelopeStatus(supabase: any, envelope_id: string) {
-  const docusignApiKey = Deno.env.get('DOCUSIGN_API_KEY');
+  let docusignConfig;
+  try {
+    docusignConfig = getDocuSign();
+  } catch {
+    docusignConfig = null;
+  }
   
   let statusResponse;
   
-  if (docusignApiKey) {
+  if (docusignConfig) {
     // Real DocuSign status check
-    statusResponse = await getDocuSignEnvelopeStatus(docusignApiKey, envelope_id);
+    statusResponse = await getDocuSignEnvelopeStatus(docusignConfig, envelope_id);
   } else {
     // Mock status response
     const statuses = ['sent', 'delivered', 'signed', 'completed'];
@@ -210,10 +221,9 @@ async function handleWebhookCallback(supabase: any, webhookData: any) {
   );
 }
 
-async function createDocuSignEnvelope(apiKey: string, accountId: string, data: any) {
-  // Real DocuSign API integration would go here
-  // This is a placeholder for the actual implementation
-  console.log('Creating DocuSign envelope with API key:', apiKey);
+async function createDocuSignEnvelope(config: any, data: any) {
+  // Real DocuSign API integration would go here using config
+  console.log('Creating DocuSign envelope with account:', config.accountId);
   return {
     envelope_id: `real_env_${Date.now()}`,
     signing_url: `https://na3.docusign.net/signing/${Date.now()}`,
@@ -222,9 +232,9 @@ async function createDocuSignEnvelope(apiKey: string, accountId: string, data: a
   };
 }
 
-async function getDocuSignEnvelopeStatus(apiKey: string, envelope_id: string) {
-  // Real DocuSign status check would go here
-  console.log('Checking DocuSign envelope status:', envelope_id);
+async function getDocuSignEnvelopeStatus(config: any, envelope_id: string) {
+  // Real DocuSign status check would go here using config
+  console.log('Checking DocuSign envelope status with account:', config.accountId);
   return {
     envelope_id,
     status: 'completed',
