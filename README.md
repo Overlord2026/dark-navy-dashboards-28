@@ -59,6 +59,8 @@ SUPABASE_URL=your-supabase-url
 SUPABASE_ANON_KEY=your-supabase-anon-key
 ```
 
+**Note:** This platform runs without Supabase Vault - all secrets are managed via environment variables for enhanced security and simplified deployment.
+
 ## 📋 Usage Examples
 
 ### 1. Persona Detection

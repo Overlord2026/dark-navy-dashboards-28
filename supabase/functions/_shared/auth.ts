@@ -1,18 +1,13 @@
 // Deno / Supabase Edge auth helpers
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, requireEnv } from './secrets.ts';
 
 export type Caller = { userId: string; entityId: string | null; role: string | null };
-
-export function requireEnv(name: string): string {
-  const v = Deno.env.get(name);
-  if (!v) throw new Error(`Missing env: ${name}`);
-  return v;
-}
 
 // Use for user-invoked endpoints (respects RLS)
 export function userClient(req: Request) {
   return createClient(
-    requireEnv("SUPABASE_URL"),
+    SUPABASE_URL,
     requireEnv("SUPABASE_ANON_KEY"),
     { global: { headers: { Authorization: req.headers.get("Authorization") ?? "" } }, auth: { persistSession: false } }
   );
@@ -20,7 +15,7 @@ export function userClient(req: Request) {
 
 // Use ONLY for cron/vendor ingest (bypasses RLS)
 export function serviceClient() {
-  return createClient(requireEnv("SUPABASE_URL"), requireEnv("SUPABASE_SERVICE_ROLE_KEY"), { auth: { persistSession: false } });
+  return createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, { auth: { persistSession: false } });
 }
 
 export function getCaller(req: Request): Caller {
