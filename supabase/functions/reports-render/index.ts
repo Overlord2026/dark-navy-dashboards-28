@@ -1,8 +1,9 @@
+import { admin } from "../_shared/supabaseClient.ts"; 
+import { Env } from "../_shared/secrets.ts";
 import { userClient, getCaller } from "../_shared/auth.ts";
-import { SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, REPORTS_BUCKET } from "../_shared/secrets.ts";
 
 // Runtime checks
-void SUPABASE_URL; void SUPABASE_SERVICE_ROLE_KEY;
+void Env.SB_URL(); void Env.SB_SERVICE();
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',

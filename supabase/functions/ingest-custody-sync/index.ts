@@ -1,8 +1,8 @@
-import { serviceClient } from "../_shared/auth.ts";
-import { SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY } from "../_shared/secrets.ts";
+import { admin } from "../_shared/supabaseClient.ts"; 
+import { Env } from "../_shared/secrets.ts";
 
 // Runtime checks
-void SUPABASE_URL; void SUPABASE_SERVICE_ROLE_KEY;
+void Env.SB_URL(); void Env.SB_SERVICE();
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -22,7 +22,7 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const supabase = serviceClient();
+    const supabase = admin();
 
     const { connector_account_id, sync_type = 'incremental', force = false }: SyncRequest = await req.json()
 
