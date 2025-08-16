@@ -16561,6 +16561,42 @@ export type Database = {
         }
         Relationships: []
       }
+      ip_rules: {
+        Row: {
+          actions: string[]
+          cpc_filter: string | null
+          created_at: string
+          enabled: boolean
+          id: number
+          keyword_filter: string | null
+          name: string
+          thresholds: Json
+          updated_at: string
+        }
+        Insert: {
+          actions?: string[]
+          cpc_filter?: string | null
+          created_at?: string
+          enabled?: boolean
+          id?: number
+          keyword_filter?: string | null
+          name: string
+          thresholds?: Json
+          updated_at?: string
+        }
+        Update: {
+          actions?: string[]
+          cpc_filter?: string | null
+          created_at?: string
+          enabled?: boolean
+          id?: number
+          keyword_filter?: string | null
+          name?: string
+          thresholds?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
       ip_watch_logs: {
         Row: {
           created_at: string | null
