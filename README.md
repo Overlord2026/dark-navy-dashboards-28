@@ -42,12 +42,26 @@ npm install
 
 ### Database Setup
 
-Run the provided migrations to set up the hardened schema:
+#### Option 1: Supabase Studio (Recommended)
+1. Open [Supabase Studio SQL Editor](https://supabase.com/dashboard/project/your-project/sql/new)
+2. Copy the contents of `supabase/migrations/20250116143000_portable_migration_template.sql`
+3. Paste and run the migration
+4. Verify setup by running `scripts/db/smoke.sql`
+
+#### Option 2: Supabase CLI
+```bash
+supabase db push
+```
+
+#### Migration Features
+- **Portable**: No non-portable extensions (no pgsodium, no vault)
+- **Secure**: RLS enabled and forced on all tables
+- **Auditable**: Includes smoke test for verification
 
 ```sql
--- See supabase/migrations/ for complete schema
--- Includes: personas, persona_signals, rbac_roles, policies, 
--- ui_components, ui_layouts, persona_audit, policy_tokens
+-- Extensions used: pgcrypto, pg_trgm (both portable)
+-- All tables have ENABLE ROW LEVEL SECURITY and FORCE ROW LEVEL SECURITY
+-- Minimal deny-by-default policies included
 ```
 
 ### Configuration
