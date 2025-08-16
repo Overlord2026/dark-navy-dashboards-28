@@ -11505,6 +11505,47 @@ export type Database = {
           },
         ]
       }
+      enforcement_queue: {
+        Row: {
+          action: string
+          created_at: string | null
+          entity_id: string | null
+          item_id: string
+          priority: number | null
+          ref_hit_id: string | null
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string | null
+          entity_id?: string | null
+          item_id?: string
+          priority?: number | null
+          ref_hit_id?: string | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string | null
+          entity_id?: string | null
+          item_id?: string
+          priority?: number | null
+          ref_hit_id?: string | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "enforcement_queue_ref_hit_id_fkey"
+            columns: ["ref_hit_id"]
+            isOneToOne: false
+            referencedRelation: "ip_hits"
+            referencedColumns: ["hit_id"]
+          },
+        ]
+      }
       entity_documents: {
         Row: {
           compliance_related: boolean | null
@@ -16480,6 +16521,45 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      ip_hits: {
+        Row: {
+          abstract: string | null
+          cpcs: Json | null
+          created_at: string | null
+          entity_id: string | null
+          hit_id: string
+          ref: string | null
+          source: string
+          title: string | null
+          ts: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          abstract?: string | null
+          cpcs?: Json | null
+          created_at?: string | null
+          entity_id?: string | null
+          hit_id?: string
+          ref?: string | null
+          source: string
+          title?: string | null
+          ts?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          abstract?: string | null
+          cpcs?: Json | null
+          created_at?: string | null
+          entity_id?: string | null
+          hit_id?: string
+          ref?: string | null
+          source?: string
+          title?: string | null
+          ts?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
       }
       ip_watch_logs: {
         Row: {
@@ -26368,6 +26448,51 @@ export type Database = {
         }
         Relationships: []
       }
+      receipts: {
+        Row: {
+          created_at: string | null
+          entity_id: string | null
+          inputs_hash: string
+          leaf: string
+          model_hash: string | null
+          outcome: string
+          policy_hash: string
+          reason_codes: Json | null
+          receipt_id: string
+          root: string
+          txid: string | null
+          worm_uri: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          entity_id?: string | null
+          inputs_hash: string
+          leaf: string
+          model_hash?: string | null
+          outcome: string
+          policy_hash: string
+          reason_codes?: Json | null
+          receipt_id?: string
+          root: string
+          txid?: string | null
+          worm_uri?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          entity_id?: string | null
+          inputs_hash?: string
+          leaf?: string
+          model_hash?: string | null
+          outcome?: string
+          policy_hash?: string
+          reason_codes?: Json | null
+          receipt_id?: string
+          root?: string
+          txid?: string | null
+          worm_uri?: string | null
+        }
+        Relationships: []
+      }
       recommendation_audit: {
         Row: {
           created_at: string | null
@@ -35923,6 +36048,10 @@ export type Database = {
         }
         Returns: string
       }
+      merkle_root: {
+        Args: { leaves: string[] }
+        Returns: string
+      }
       post_journal: {
         Args: { p_journal: string }
         Returns: undefined
@@ -35938,6 +36067,17 @@ export type Database = {
       readonly_graphql_schema_version: {
         Args: Record<PropertyKey, never>
         Returns: number
+      }
+      receipt_emit: {
+        Args: {
+          entity_id?: string
+          inputs_json: Json
+          model_hash?: string
+          outcome: string
+          policy_json: Json
+          reasons?: Json
+        }
+        Returns: string
       }
       recompute_trust_score: {
         Args: { p_professional_id: string }
@@ -36005,6 +36145,10 @@ export type Database = {
       set_limit: {
         Args: { "": number }
         Returns: number
+      }
+      sha256_hex: {
+        Args: { input_text: string }
+        Returns: string
       }
       show_limit: {
         Args: Record<PropertyKey, never>
