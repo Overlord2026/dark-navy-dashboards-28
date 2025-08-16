@@ -360,31 +360,55 @@ For technical support and enterprise licensing:
 - Issues: GitHub Issues
 - Enterprise: Contact sales team
 
-## 🔐 Secrets & Vault
+## 🔐 Secrets & Security
 
-**Vault is Optional**: This platform operates without Supabase Vault. All secrets are managed via Edge Function environment variables for enhanced security and simplified deployment.
+**Zero-Vault Architecture**: This platform operates without Supabase Vault or any secrets stored in PostgreSQL. All secrets are managed exclusively via Edge Function environment variables for maximum security and portability.
 
-### Required Environment Variables
+### Environment Variables Required
 
-**Core Supabase Access:**
+**Core Supabase Access (Required):**
 - `SUPABASE_URL` - Supabase project URL
 - `SUPABASE_SERVICE_ROLE_KEY` - Service role key for admin operations
-- `SUPABASE_ANON_KEY` - Anonymous key for user operations
 
-**Optional Vendor Integrations (configured as needed):**
+**Optional Vendor Integrations:**
+- `PLAID_CLIENT_ID`, `PLAID_SECRET` - Plaid financial data
 - `BRIDGEFT_BASE_URL`, `BRIDGEFT_API_KEY` - BridgeFT custody integration
 - `AKOYA_API_KEY` - Akoya data aggregation 
-- `PLAID_CLIENT_ID`, `PLAID_SECRET` - Plaid financial data
 - `CANOE_API_KEY`, `ICAPITAL_API_KEY` - Alternative investment platforms
 - `DOCUSIGN_BASE_URL`, `DOCUSIGN_ACCOUNT_ID`, `DOCUSIGN_INTEGRATOR_KEY`, `DOCUSIGN_USER_ID`, `DOCUSIGN_PRIVATE_KEY` - Document signing
+- `OPENAI_API_KEY` - AI-powered features
 - `REPORTS_BUCKET` - Storage bucket for reports (defaults to 'reports')
 
-### Security Model
+### Shared Edge Function Utilities
 
-- **No secrets stored in PostgreSQL** - All sensitive data accessed via environment variables
-- **Evidence hashing** - Uses `public.sha256_hex()` for tamper-evident audit trails
-- **Encrypted payloads** - Raw data never exposed to clients, only processed evidence hashes
-- **Zero-knowledge architecture** - Platform can operate without access to underlying credential stores
+All Edge Functions use shared utilities for consistent secret management:
+
+```typescript
+// Import shared utilities in Edge Functions
+import { secrets } from '../_shared/secrets.ts'
+import { getAdminClient, getAnonClient } from '../_shared/supabaseClient.ts'
+
+// Secrets automatically validated on first use
+const apiKey = secrets.get('PLAID_CLIENT_ID') // Required secret
+const bucket = secrets.get('REPORTS_BUCKET') // Optional secret
+
+// Pre-configured Supabase clients
+const admin = getAdminClient() // Bypasses RLS
+const client = getAnonClient() // Respects RLS
+```
+
+### Security Rules
+
+**🚨 CRITICAL SECURITY RULE:**
+- **NO secrets in SQL tables or database functions**
+- **NO vault, pgsodium, or encrypted storage in PostgreSQL**
+- **ALL secrets ONLY in Edge Function environment variables**
+
+This ensures:
+- ✅ Maximum portability across environments
+- ✅ No secret leakage via database dumps
+- ✅ Clear separation of concerns
+- ✅ Simplified secret rotation and management
 
 ### Database Health Monitoring
 
