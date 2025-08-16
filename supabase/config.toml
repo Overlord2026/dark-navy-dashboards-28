@@ -214,6 +214,10 @@ verify_jwt = false
 verify_jwt = false
 # @public-ok - Report generation service
 
+[functions.reports-ip]
+verify_jwt = false
+# @public-ok - IP monitoring reports
+
 [functions.ipwatch-poll]
 verify_jwt = false
 # @public-ok - IP monitoring service

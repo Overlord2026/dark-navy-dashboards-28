@@ -36079,6 +36079,17 @@ export type Database = {
         }
         Returns: string
       }
+      receipt_emit_secure: {
+        Args: {
+          entity_id?: string
+          inputs_json: Json
+          model_hash?: string
+          outcome: string
+          policy_json: Json
+          reasons?: Json
+        }
+        Returns: string
+      }
       recompute_trust_score: {
         Args: { p_professional_id: string }
         Returns: undefined
@@ -36090,6 +36101,17 @@ export type Database = {
           p_export_type: string
           p_parameters?: Json
           p_persona_filter?: Database["public"]["Enums"]["professional_persona"][]
+        }
+        Returns: string
+      }
+      request_receipt_emission: {
+        Args: {
+          entity_id?: string
+          inputs_json: Json
+          model_hash?: string
+          outcome: string
+          policy_json: Json
+          reasons?: Json
         }
         Returns: string
       }

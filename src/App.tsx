@@ -223,6 +223,7 @@ import Founding20LaunchDashboard from './pages/admin/Founding20LaunchDashboard';
 import PMQPage from './pages/pmq/PMQPage';
 import ConsentDashboard from './components/consent/ConsentDashboard';
 import ExecutiveSuite from './pages/ExecutiveSuite';
+import AdminPolicies from './pages/admin/Policies';
 
 // Import onboarding flow component
 const PersonaOnboardingFlow = React.lazy(() => 
@@ -744,6 +745,7 @@ function App() {
           <Route path="/admin/founding20-dashboard" element={<Founding20MasterDashboard />} />
                             <Route path="/admin/founding20-checklist" element={<Founding20LaunchDashboard />} />
                             <Route path="/executive-suite" element={<ExecutiveSuite />} />
+                            <Route path="/admin/policies" element={<AdminPolicies />} />
                             <Route path="/consent" element={<ConsentDashboard />} />
 
                           </Routes>
