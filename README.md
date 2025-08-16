@@ -386,6 +386,36 @@ For technical support and enterprise licensing:
 - **Encrypted payloads** - Raw data never exposed to clients, only processed evidence hashes
 - **Zero-knowledge architecture** - Platform can operate without access to underlying credential stores
 
+### Database Health Monitoring
+
+#### Admin Health Check Function
+Monitor database security with the admin-only `/db-health` edge function:
+
+```bash
+# Run database health check script
+deno run --allow-env --allow-net scripts/check-rls.ts
+```
+
+**Environment variables required:**
+- `SUPABASE_URL` - Your Supabase project URL
+- `SUPABASE_SERVICE_ROLE_KEY` - Service role key for admin access
+
+**Features:**
+- 🔐 Service role authorization required
+- 📊 RLS status reporting (enabled/forced)
+- 📋 Policy inventory per table
+- ⚠️ Security warnings for missing RLS/policies
+- 🎨 Color-coded console output (red/yellow/green)
+- 🚨 Exit codes for CI/CD integration
+
+**Deploy the function:**
+```bash
+# Function deploys automatically with code changes
+# Test with: 
+curl -H "Authorization: Bearer $SUPABASE_SERVICE_ROLE_KEY" \
+  https://[your-project].supabase.co/functions/v1/db-health
+```
+
 ---
 
 **Built with security, performance, and compliance in mind.**

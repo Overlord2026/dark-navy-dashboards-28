@@ -35823,6 +35823,24 @@ export type Database = {
           status: string
         }[]
       }
+      get_table_policies: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          command: string
+          policy_name: string
+          policy_type: string
+          table_name: string
+        }[]
+      }
+      get_table_rls_status: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          policy_count: number
+          rls_enabled: boolean
+          rls_forced: boolean
+          table_name: string
+        }[]
+      }
       get_top_referrers: {
         Args: { p_limit?: number; p_period_days?: number; p_tenant_id: string }
         Returns: {
