@@ -1,12 +1,41 @@
-import { vi } from 'vitest';
+import '@testing-library/jest-dom'
+
+// Mock window.matchMedia
+Object.defineProperty(window, 'matchMedia', {
+  writable: true,
+  value: jest.fn().mockImplementation(query => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: jest.fn(), // deprecated
+    removeListener: jest.fn(), // deprecated
+    addEventListener: jest.fn(),
+    removeEventListener: jest.fn(),
+    dispatchEvent: jest.fn(),
+  })),
+})
+
+// Mock ResizeObserver
+global.ResizeObserver = jest.fn().mockImplementation(() => ({
+  observe: jest.fn(),
+  unobserve: jest.fn(),
+  disconnect: jest.fn(),
+}))
+
+// Mock IntersectionObserver
+global.IntersectionObserver = jest.fn().mockImplementation(() => ({
+  observe: jest.fn(),
+  unobserve: jest.fn(),
+  disconnect: jest.fn(),
+}))
 
 // Mock crypto.subtle for Node.js environment
 Object.defineProperty(global, 'crypto', {
   value: {
     subtle: {
-      digest: vi.fn().mockImplementation(() => Promise.resolve(new ArrayBuffer(32)))
+      digest: jest.fn().mockImplementation(() => Promise.resolve(new ArrayBuffer(32)))
     },
-    getRandomValues: vi.fn().mockImplementation((arr) => {
+    getRandomValues: jest.fn().mockImplementation((arr) => {
       for (let i = 0; i < arr.length; i++) {
         arr[i] = Math.floor(Math.random() * 256);
       }
@@ -18,38 +47,38 @@ Object.defineProperty(global, 'crypto', {
 // Mock Supabase client
 const mockSupabase = {
   auth: {
-    getUser: vi.fn().mockResolvedValue({
+    getUser: jest.fn().mockResolvedValue({
       data: { user: { id: 'test-user-id' } },
       error: null
     }),
-    onAuthStateChange: vi.fn().mockReturnValue({
-      data: { subscription: { unsubscribe: vi.fn() } }
+    onAuthStateChange: jest.fn().mockReturnValue({
+      data: { subscription: { unsubscribe: jest.fn() } }
     })
   },
-  from: vi.fn().mockReturnValue({
-    select: vi.fn().mockReturnThis(),
-    insert: vi.fn().mockReturnThis(),
-    update: vi.fn().mockReturnThis(),
-    delete: vi.fn().mockReturnThis(),
-    upsert: vi.fn().mockReturnThis(),
-    eq: vi.fn().mockReturnThis(),
-    order: vi.fn().mockReturnThis(),
-    limit: vi.fn().mockReturnThis(),
-    single: vi.fn().mockResolvedValue({ data: null, error: null }),
-    maybeSingle: vi.fn().mockResolvedValue({ data: null, error: null })
+  from: jest.fn().mockReturnValue({
+    select: jest.fn().mockReturnThis(),
+    insert: jest.fn().mockReturnThis(),
+    update: jest.fn().mockReturnThis(),
+    delete: jest.fn().mockReturnThis(),
+    upsert: jest.fn().mockReturnThis(),
+    eq: jest.fn().mockReturnThis(),
+    order: jest.fn().mockReturnThis(),
+    limit: jest.fn().mockReturnThis(),
+    single: jest.fn().mockResolvedValue({ data: null, error: null }),
+    maybeSingle: jest.fn().mockResolvedValue({ data: null, error: null })
   }),
   functions: {
-    invoke: vi.fn().mockResolvedValue({ data: null, error: null })
+    invoke: jest.fn().mockResolvedValue({ data: null, error: null })
   }
 };
 
-vi.mock('@/integrations/supabase/client', () => ({
+jest.mock('@/integrations/supabase/client', () => ({
   supabase: mockSupabase
 }));
 
 // Mock React Router
-vi.mock('react-router-dom', () => ({
-  useNavigate: () => vi.fn(),
+jest.mock('react-router-dom', () => ({
+  useNavigate: () => jest.fn(),
   useLocation: () => ({ pathname: '/' }),
   BrowserRouter: ({ children }: { children: React.ReactNode }) => children,
   Routes: ({ children }: { children: React.ReactNode }) => children,
@@ -59,11 +88,11 @@ vi.mock('react-router-dom', () => ({
 }));
 
 // Mock toast
-vi.mock('sonner', () => ({
+jest.mock('sonner', () => ({
   toast: {
-    success: vi.fn(),
-    error: vi.fn(),
-    warning: vi.fn(),
-    info: vi.fn()
+    success: jest.fn(),
+    error: jest.fn(),
+    warning: jest.fn(),
+    info: jest.fn()
   }
 }));

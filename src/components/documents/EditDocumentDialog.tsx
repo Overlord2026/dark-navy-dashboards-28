@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/animated-dialog";
 import { Button } from "@/components/ui/button";
+import { AsyncButton } from "@/components/ui/async-button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { DocumentItem } from "@/types/document";
@@ -10,7 +11,7 @@ export interface EditDocumentDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   document: DocumentItem | null;
-  onSave: (document: DocumentItem, newName: string) => void;
+  onSave: (document: DocumentItem, newName: string) => Promise<void>;
 }
 
 export function EditDocumentDialog({
@@ -28,9 +29,9 @@ export function EditDocumentDialog({
     }
   }, [document]);
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (document && name.trim()) {
-      onSave(document, name.trim());
+      await onSave(document, name.trim());
       onOpenChange(false);
     }
   };
@@ -60,9 +61,14 @@ export function EditDocumentDialog({
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
-          <Button onClick={handleSave} disabled={!name.trim()}>
+          <AsyncButton 
+            onClick={handleSave} 
+            disabled={!name.trim()}
+            loadingText="Saving..."
+            showFeedback={false}
+          >
             Save Changes
-          </Button>
+          </AsyncButton>
         </DialogFooter>
       </DialogContent>
     </Dialog>

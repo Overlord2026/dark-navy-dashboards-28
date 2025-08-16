@@ -2,13 +2,14 @@
 import React from "react";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/animated-dialog";
 import { Button } from "@/components/ui/button";
+import { AsyncButton } from "@/components/ui/async-button";
 import { DocumentItem } from "@/types/document";
 
 export interface DeleteDocumentDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   document: DocumentItem | null;
-  onConfirm: (document: DocumentItem) => void;
+  onConfirm: (document: DocumentItem) => Promise<void>;
 }
 
 export function DeleteDocumentDialog({
@@ -17,9 +18,9 @@ export function DeleteDocumentDialog({
   document,
   onConfirm,
 }: DeleteDocumentDialogProps) {
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     if (document) {
-      onConfirm(document);
+      await onConfirm(document);
       onOpenChange(false);
     }
   };
@@ -37,12 +38,14 @@ export function DeleteDocumentDialog({
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
-          <Button 
+          <AsyncButton 
             variant="destructive" 
             onClick={handleConfirm}
+            loadingText="Deleting..."
+            showFeedback={false}
           >
             Delete
-          </Button>
+          </AsyncButton>
         </DialogFooter>
       </DialogContent>
     </Dialog>
