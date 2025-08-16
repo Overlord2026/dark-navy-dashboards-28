@@ -229,3 +229,7 @@ verify_jwt = false
 [functions.reconcile-enforcement]
 verify_jwt = false
 # @public-ok - Daily enforcement reconciliation
+
+[functions.db-health]
+verify_jwt = false
+# @admin-only - Database health check with service role auth
