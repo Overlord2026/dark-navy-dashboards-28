@@ -1,0 +1,16 @@
+{
+  "nav.persona": true,
+  "dashboard.familyHero": true,
+  "calc.monte": true,
+  "calc.rmd": true,
+  "calc.socialSecurity": true,
+  "guides.retirement": true,
+  "guides.taxPlanning": true,
+  "guides.estatePlanning": true,
+  "pros.medicareRecordingBanner": false,
+  "pros.complianceMode": false,
+  "features.plaidIntegration": true,
+  "features.docusignIntegration": false,
+  "features.advancedReporting": true,
+  "ui.experimentalDesign": false
+}
