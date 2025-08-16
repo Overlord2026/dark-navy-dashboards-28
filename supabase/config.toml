@@ -213,3 +213,15 @@ verify_jwt = false
 [functions.reports-render]
 verify_jwt = false
 # @public-ok - Report generation service
+
+[functions.ipwatch-poll]
+verify_jwt = false
+# @public-ok - IP monitoring service
+
+[functions.ip-enforcement-verifier]
+verify_jwt = false
+# @public-ok - Receipt verification service  
+
+[functions.reconcile-enforcement]
+verify_jwt = false
+# @public-ok - Daily enforcement reconciliation
