@@ -36495,6 +36495,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      vault_get_secret: {
+        Args: { p_name: string }
+        Returns: string
+      }
       vault_is_configured: {
         Args: Record<PropertyKey, never>
         Returns: boolean
