@@ -233,3 +233,15 @@ verify_jwt = false
 [functions.db-health]
 verify_jwt = false
 # @admin-only - Database health check with service role auth
+
+[functions.a11y-pass]
+verify_jwt = false
+# @public-ok - Accessibility audit logging
+
+[functions.perf-budgets]
+verify_jwt = false
+# @public-ok - Performance budget monitoring
+
+[functions.buttons-audit]
+verify_jwt = false
+# @public-ok - Button compliance audit

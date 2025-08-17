@@ -35960,11 +35960,32 @@ export type Database = {
         Args: { claim: string }
         Returns: string
       }
+      log_accessibility_event: {
+        Args: {
+          p_event_type: string
+          p_page_url: string
+          p_score?: number
+          p_user_agent?: string
+          p_violations?: Json
+        }
+        Returns: string
+      }
       log_attorney_document_access: {
         Args: {
           p_access_type: string
           p_document_id: string
           p_user_id?: string
+        }
+        Returns: string
+      }
+      log_button_audit: {
+        Args: {
+          p_accessible_buttons: number
+          p_async_buttons: number
+          p_page_url: string
+          p_testable_buttons: number
+          p_total_buttons: number
+          p_violations?: Json
         }
         Returns: string
       }
@@ -36025,6 +36046,16 @@ export type Database = {
           p_resource_id?: string
           p_resource_type?: string
           p_severity?: string
+        }
+        Returns: string
+      }
+      log_performance_metric: {
+        Args: {
+          p_metadata?: Json
+          p_metric_name: string
+          p_metric_value: number
+          p_page_url: string
+          p_threshold?: number
         }
         Returns: string
       }
