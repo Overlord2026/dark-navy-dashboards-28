@@ -35113,6 +35113,13 @@ export type Database = {
         }
         Relationships: []
       }
+      v_referral_leaderboard: {
+        Row: {
+          owner_id: string | null
+          referrals: number | null
+        }
+        Relationships: []
+      }
       vw_balance_sheet: {
         Row: {
           account_id: string | null
@@ -35347,7 +35354,11 @@ export type Database = {
       }
       check_extension_health: {
         Args: Record<PropertyKey, never>
-        Returns: Json
+        Returns: {
+          message: string
+          name: string
+          severity: string
+        }[]
       }
       check_impact_milestones: {
         Args: { p_user_id: string }
@@ -35798,6 +35809,20 @@ export type Database = {
           total_referrals: number
         }[]
       }
+      get_referral_leaderboard: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          entity_id: string
+          referrals: number
+        }[]
+      }
+      get_referral_leaderboard_for_tenant: {
+        Args: { p_tenant: string }
+        Returns: {
+          entity_id: string
+          referrals: number
+        }[]
+      }
       get_reward_analytics: {
         Args: { p_period_days?: number; p_tenant_id: string }
         Returns: {
@@ -35930,6 +35955,10 @@ export type Database = {
       is_tenant_admin: {
         Args: Record<PropertyKey, never>
         Returns: boolean
+      }
+      jwt_claim: {
+        Args: { claim: string }
+        Returns: string
       }
       log_attorney_document_access: {
         Args: {
