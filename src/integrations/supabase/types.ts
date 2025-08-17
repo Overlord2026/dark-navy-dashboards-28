@@ -20236,6 +20236,24 @@ export type Database = {
           },
         ]
       }
+      nil_training_status: {
+        Row: {
+          athlete_user_id: string
+          completed_at: string | null
+          module: string
+        }
+        Insert: {
+          athlete_user_id: string
+          completed_at?: string | null
+          module: string
+        }
+        Update: {
+          athlete_user_id?: string
+          completed_at?: string | null
+          module?: string
+        }
+        Relationships: []
+      }
       nil_university_contacts: {
         Row: {
           created_at: string | null
