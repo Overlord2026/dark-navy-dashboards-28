@@ -1,9 +1,14 @@
 export const runtimeFlags = {
+  paymentsEnabled: false,
   emailEnabled: false,
   smsEnabled: false,
   pushNotificationsEnabled: false,
   analyticsEnabled: true,
-  debugMode: false
+  debugMode: false,
+  showPatentBadge: true,
+  demoMode: true,
+  demoPlan: "premium" as const,
+  demoSegment: "retirees" as const
 };
 
 // Helper to check if email functionality is available
