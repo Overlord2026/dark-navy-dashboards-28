@@ -48,6 +48,8 @@ import FamiliesPage from "./pages/FamiliesPage";
 import ProsPage from "./pages/ProsPage";
 import ResourcesPage from "./pages/ResourcesPage";
 import SolutionsPage from "./pages/SolutionsPage";
+import NILFrontDoor from "./pages/NILFrontDoor";
+import SportsAgentOS from "./pages/SportsAgentOS";
 import EducationPage from "./pages/EducationPage";
 import InvitePage from "./pages/invite/InvitePage";
 // Public pages
@@ -305,11 +307,13 @@ function App() {
                               <Route path="/persona-preview/:personaId" element={<PersonaPreviewPage />} />
                                   <Route path="/" element={<PersonaRedirect />} />
                                   {/* New persona-aware routes */}
-                                   <Route path="/families" element={<FamiliesPage />} />
-                                   <Route path="/pros" element={<ProsPage />} />
-                                   <Route path="/resources" element={<ResourcesPage />} />
-                                   <Route path="/solutions" element={<SolutionsPage />} />
-                                   <Route path="/education" element={<EducationPage />} />
+                <Route path="/families" element={<FamiliesPage />} />
+                <Route path="/pros" element={<ProsPage />} />
+                <Route path="/resources" element={<ResourcesPage />} />
+                <Route path="/solutions" element={<SolutionsPage />} />
+                <Route path="/education" element={<EducationPage />} />
+                <Route path="/nil" element={<NILFrontDoor />} />
+                <Route path="/agents-os" element={<SportsAgentOS />} />
                                  <Route path="/invite/:token" element={<InvitePage />} />
                                 
                                 {/* Persona intro dashboard routes */}

@@ -1,3 +1,7 @@
+import { SubscriptionTier } from './familiesPricingTiers';
+
+export type FamilySegment = 'Aspiring' | 'Retirees' | 'HNW' | 'UHNW';
+
 export interface NILEntitlements {
   athleteEducation: {
     basic: { modules: number; resources: number };
@@ -128,4 +132,3 @@ export const athleteSegments: AthleteSegment[] = [
     riskLevel: 'medium'
   }
 ];
-

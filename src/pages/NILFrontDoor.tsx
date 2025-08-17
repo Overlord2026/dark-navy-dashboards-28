@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { NILDisclosureForm } from '@/components/nil/NILDisclosureForm';
+import { AdminEmailBanner } from '@/components/admin/AdminEmailBanner';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -16,6 +18,8 @@ import {
 
 const NILFrontDoor: React.FC = () => {
   const [activeSegment, setActiveSegment] = useState<'athletes' | 'agents'>('athletes');
+  const [showDisclosureForm, setShowDisclosureForm] = useState(false);
+  const isAdmin = true; // Replace with actual admin check
 
   const athleteFeatures = [
     { icon: BookOpen, title: 'NIL Education Hub', description: 'Comprehensive learning modules' },
@@ -39,6 +43,9 @@ const NILFrontDoor: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+      {/* Admin Banner */}
+      <AdminEmailBanner isAdmin={isAdmin} className="m-4" />
+      
       {/* Hero Section */}
       <div className="container mx-auto px-4 py-16">
         <div className="text-center max-w-4xl mx-auto mb-16">
@@ -57,14 +64,29 @@ const NILFrontDoor: React.FC = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90">
-              Get Started for Free
+            <Button 
+              size="lg" 
+              onClick={() => setShowDisclosureForm(true)}
+              className="bg-primary text-primary-foreground hover:bg-primary/90"
+            >
+              Start NIL Disclosure
             </Button>
-            <Button variant="outline" size="lg">
-              Watch Demo
+            
+            <Button 
+              variant="outline" 
+              size="lg"
+            >
+              See How It Works
             </Button>
           </div>
         </div>
+
+        {/* NIL Disclosure Form Modal/Section */}
+        {showDisclosureForm && (
+          <div className="mb-16">
+            <NILDisclosureForm onComplete={() => setShowDisclosureForm(false)} />
+          </div>
+        )}
 
         {/* Segment Selector */}
         <Tabs value={activeSegment} onValueChange={(value) => setActiveSegment(value as 'athletes' | 'agents')} className="w-full">
