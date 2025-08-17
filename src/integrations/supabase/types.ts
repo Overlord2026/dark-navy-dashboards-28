@@ -35895,6 +35895,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: string
       }
+      graphql_is_configured: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
       gtrgm_compress: {
         Args: { "": unknown }
         Returns: unknown
