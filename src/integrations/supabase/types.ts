@@ -6093,6 +6093,50 @@ export type Database = {
         }
         Relationships: []
       }
+      checkout_intents: {
+        Row: {
+          buyer_user_id: string | null
+          cart: Json
+          created_at: string | null
+          created_by: string | null
+          currency: string
+          id: string
+          status: string
+          store_id: string
+          total_cents: number
+        }
+        Insert: {
+          buyer_user_id?: string | null
+          cart: Json
+          created_at?: string | null
+          created_by?: string | null
+          currency?: string
+          id?: string
+          status?: string
+          store_id: string
+          total_cents: number
+        }
+        Update: {
+          buyer_user_id?: string | null
+          cart?: Json
+          created_at?: string | null
+          created_by?: string | null
+          currency?: string
+          id?: string
+          status?: string
+          store_id?: string
+          total_cents?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "checkout_intents_store_id_fkey"
+            columns: ["store_id"]
+            isOneToOne: false
+            referencedRelation: "merch_stores"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       client_access_logs: {
         Row: {
           access_type: string
@@ -19130,6 +19174,183 @@ export type Database = {
             columns: ["provider_id"]
             isOneToOne: false
             referencedRelation: "healthcare_providers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      merch_orders: {
+        Row: {
+          buyer_user_id: string | null
+          created_at: string | null
+          currency: string
+          id: string
+          shipping_address: Json | null
+          shipping_cents: number
+          status: string
+          store_id: string
+          subtotal_cents: number
+          tax_cents: number
+          total_cents: number
+        }
+        Insert: {
+          buyer_user_id?: string | null
+          created_at?: string | null
+          currency?: string
+          id?: string
+          shipping_address?: Json | null
+          shipping_cents?: number
+          status?: string
+          store_id: string
+          subtotal_cents?: number
+          tax_cents?: number
+          total_cents?: number
+        }
+        Update: {
+          buyer_user_id?: string | null
+          created_at?: string | null
+          currency?: string
+          id?: string
+          shipping_address?: Json | null
+          shipping_cents?: number
+          status?: string
+          store_id?: string
+          subtotal_cents?: number
+          tax_cents?: number
+          total_cents?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "merch_orders_store_id_fkey"
+            columns: ["store_id"]
+            isOneToOne: false
+            referencedRelation: "merch_stores"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      merch_products: {
+        Row: {
+          attrs: Json | null
+          created_at: string | null
+          currency: string
+          description: string | null
+          id: string
+          name: string
+          price_cents: number
+          published: boolean | null
+          slug: string
+          store_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          attrs?: Json | null
+          created_at?: string | null
+          currency?: string
+          description?: string | null
+          id?: string
+          name: string
+          price_cents?: number
+          published?: boolean | null
+          slug: string
+          store_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          attrs?: Json | null
+          created_at?: string | null
+          currency?: string
+          description?: string | null
+          id?: string
+          name?: string
+          price_cents?: number
+          published?: boolean | null
+          slug?: string
+          store_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "merch_products_store_id_fkey"
+            columns: ["store_id"]
+            isOneToOne: false
+            referencedRelation: "merch_stores"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      merch_stores: {
+        Row: {
+          bio: string | null
+          created_at: string | null
+          display_name: string
+          id: string
+          links: Json | null
+          owner_user_id: string
+          published: boolean | null
+          slug: string
+          updated_at: string | null
+        }
+        Insert: {
+          bio?: string | null
+          created_at?: string | null
+          display_name: string
+          id?: string
+          links?: Json | null
+          owner_user_id: string
+          published?: boolean | null
+          slug: string
+          updated_at?: string | null
+        }
+        Update: {
+          bio?: string | null
+          created_at?: string | null
+          display_name?: string
+          id?: string
+          links?: Json | null
+          owner_user_id?: string
+          published?: boolean | null
+          slug?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      merch_variants: {
+        Row: {
+          attrs: Json | null
+          id: string
+          option1: string | null
+          option2: string | null
+          price_cents: number | null
+          product_id: string
+          sku: string | null
+          stock_qty: number | null
+        }
+        Insert: {
+          attrs?: Json | null
+          id?: string
+          option1?: string | null
+          option2?: string | null
+          price_cents?: number | null
+          product_id: string
+          sku?: string | null
+          stock_qty?: number | null
+        }
+        Update: {
+          attrs?: Json | null
+          id?: string
+          option1?: string | null
+          option2?: string | null
+          price_cents?: number | null
+          product_id?: string
+          sku?: string | null
+          stock_qty?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "merch_variants_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "merch_products"
             referencedColumns: ["id"]
           },
         ]
