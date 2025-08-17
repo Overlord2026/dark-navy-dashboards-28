@@ -6,6 +6,20 @@
 @tailwind components;
 @tailwind utilities;
 
+/* High contrast focus styles for accessibility */
+.focus-visible\:ring-4:focus-visible {
+  --tw-ring-offset-width: 4px;
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 @layer base {
   :root, .dark-theme {
     /* Family Office Marketplace Premium Theme */

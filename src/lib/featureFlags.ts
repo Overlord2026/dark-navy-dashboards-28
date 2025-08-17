@@ -1,3 +1,5 @@
+import * as React from "react";
+
 // Feature flags with safe fallbacks
 interface FeatureFlags {
   enableAdvancedAnalytics: boolean;
@@ -5,6 +7,12 @@ interface FeatureFlags {
   enableDebugMode: boolean;
   enableExperimentalUI: boolean;
   enablePerformanceMonitoring: boolean;
+  // Legacy feature flags for compatibility
+  "dashboard.familyHero": boolean;
+  "calc.monte": boolean;
+  "guides.retirement": boolean;
+  "guides.estatePlanning": boolean;
+  "guides.taxPlanning": boolean;
 }
 
 const defaultFlags: FeatureFlags = {
@@ -13,6 +21,12 @@ const defaultFlags: FeatureFlags = {
   enableDebugMode: false,
   enableExperimentalUI: false,
   enablePerformanceMonitoring: true,
+  // Legacy flags default to true for backward compatibility
+  "dashboard.familyHero": true,
+  "calc.monte": true,
+  "guides.retirement": true,
+  "guides.estatePlanning": true,
+  "guides.taxPlanning": true,
 };
 
 let cachedFlags: FeatureFlags | null = null;
@@ -43,4 +57,17 @@ export function getFeatureFlagSync(key: keyof FeatureFlags): boolean {
 
 export function isFeatureEnabled(key: keyof FeatureFlags): boolean {
   return getFeatureFlagSync(key);
+}
+
+// React hook for feature flags
+export function useFeatureFlag(key: keyof FeatureFlags): boolean {
+  const [isEnabled, setIsEnabled] = React.useState(() => getFeatureFlagSync(key));
+
+  React.useEffect(() => {
+    getFeatureFlags().then((flags) => {
+      setIsEnabled(flags[key]);
+    });
+  }, [key]);
+
+  return isEnabled;
 }
