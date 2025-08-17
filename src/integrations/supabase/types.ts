@@ -36745,26 +36745,6 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: boolean
       }
-      gtrgm_compress: {
-        Args: { "": unknown }
-        Returns: unknown
-      }
-      gtrgm_decompress: {
-        Args: { "": unknown }
-        Returns: unknown
-      }
-      gtrgm_in: {
-        Args: { "": unknown }
-        Returns: unknown
-      }
-      gtrgm_options: {
-        Args: { "": unknown }
-        Returns: undefined
-      }
-      gtrgm_out: {
-        Args: { "": unknown }
-        Returns: unknown
-      }
       has_any_role: {
         Args: { required_roles: string[] }
         Returns: boolean
@@ -37140,21 +37120,9 @@ export type Database = {
         Args: { p_onboarding_id: string }
         Returns: boolean
       }
-      set_limit: {
-        Args: { "": number }
-        Returns: number
-      }
       sha256_hex: {
         Args: { input_text: string }
         Returns: string
-      }
-      show_limit: {
-        Args: Record<PropertyKey, never>
-        Returns: number
-      }
-      show_trgm: {
-        Args: { "": string }
-        Returns: string[]
       }
       test_audit_logging: {
         Args: Record<PropertyKey, never>
