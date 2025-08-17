@@ -7,6 +7,7 @@ interface FeatureFlags {
   enableDebugMode: boolean;
   enableExperimentalUI: boolean;
   enablePerformanceMonitoring: boolean;
+  agents: boolean;
   // Legacy feature flags for compatibility
   "dashboard.familyHero": boolean;
   "calc.monte": boolean;
@@ -21,6 +22,7 @@ const defaultFlags: FeatureFlags = {
   enableDebugMode: false,
   enableExperimentalUI: false,
   enablePerformanceMonitoring: true,
+  agents: true, // Enable for dev
   // Legacy flags default to true for backward compatibility
   "dashboard.familyHero": true,
   "calc.monte": true,

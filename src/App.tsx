@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, Suspense } from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -51,6 +51,13 @@ import SolutionsPage from "./pages/SolutionsPage";
 import NILFrontDoor from "./pages/NILFrontDoor";
 import SportsAgentOS from "./pages/SportsAgentOS";
 import EducationPage from "./pages/EducationPage";
+
+// Lazy load new components
+const FamiliesEntitled = React.lazy(() => import("./pages/FamiliesEntitled"));
+const NILAthlete = React.lazy(() => import("./pages/NILAthlete"));
+const NILUniversity = React.lazy(() => import("./pages/NILUniversity"));
+const NILBrand = React.lazy(() => import("./pages/NILBrand"));
+const AgentsOS = React.lazy(() => import("./pages/AgentsOS"));
 import InvitePage from "./pages/invite/InvitePage";
 // Public pages
 import WelcomePage from "./pages/WelcomePage";
@@ -265,12 +272,67 @@ function App() {
                              <APIWarningBanner />
                             <ExtensionHealthBanner />
                             <ReferralTracker />
-                           <Routes>
+                            <Routes>
         <Route path="/wireframe" element={<WireframePage />} />
-                           <Route path="/platform-map" element={<PlatformMap />} />
-                            <Route path="/athletes/nil-education" element={<NILEducationCenter />} />
-                            <Route path="/athletes/nil-onboarding" element={<NILOnboarding />} />
-                            <Route path="/athletes/nil-landing" element={<NILLandingPage />} />
+                            <Route path="/platform-map" element={<PlatformMap />} />
+                             <Route path="/athletes/nil-education" element={<NILEducationCenter />} />
+                             <Route path="/athletes/nil-onboarding" element={<NILOnboarding />} />
+                             <Route path="/athletes/nil-landing" element={<NILLandingPage />} />
+                             
+                             {/* New Families and NIL Routes */}
+                             <Route path="/families" element={
+                               <Suspense fallback={<div>Loading...</div>}>
+                                 <FamiliesEntitled />
+                               </Suspense>
+                             } />
+                             <Route path="/nil" element={<NILFrontDoor />} />
+                             <Route path="/nil/athlete" element={
+                               <Suspense fallback={<div>Loading...</div>}>
+                                 <NILAthlete />
+                               </Suspense>
+                             } />
+                             <Route path="/nil/university" element={
+                               <Suspense fallback={<div>Loading...</div>}>
+                                 <NILUniversity />
+                               </Suspense>
+                             } />
+                             <Route path="/nil/brand" element={
+                               <Suspense fallback={<div>Loading...</div>}>
+                                 <NILBrand />
+                               </Suspense>
+                             } />
+                             
+                             {/* Sports Agents OS Routes */}
+                             <Route path="/agents" element={
+                               <Suspense fallback={<div>Loading...</div>}>
+                                 <AgentsOS />
+                               </Suspense>
+                             } />
+                             <Route path="/agents/wizard" element={
+                               <Suspense fallback={<div>Loading...</div>}>
+                                 <AgentsOS />
+                               </Suspense>
+                             } />
+                             <Route path="/agents/roster" element={
+                               <Suspense fallback={<div>Loading...</div>}>
+                                 <AgentsOS />
+                               </Suspense>
+                             } />
+                             <Route path="/agents/agreements" element={
+                               <Suspense fallback={<div>Loading...</div>}>
+                                 <AgentsOS />
+                               </Suspense>
+                             } />
+                             <Route path="/agents/campaigns" element={
+                               <Suspense fallback={<div>Loading...</div>}>
+                                 <AgentsOS />
+                               </Suspense>
+                             } />
+                             <Route path="/agents/partners" element={
+                               <Suspense fallback={<div>Loading...</div>}>
+                                 <AgentsOS />
+                               </Suspense>
+                             } />
         <Route path="/athletes/wealth-deck" element={<AthleteWealthDeck />} />
           <Route path="/sales/advisor-deck" element={<AdvisorDeck />} />
           <Route path="/decks/advisor-persona" element={<AdvisorPersonaDeck />} />
