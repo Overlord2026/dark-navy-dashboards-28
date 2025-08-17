@@ -20203,6 +20203,30 @@ export type Database = {
           },
         ]
       }
+      nil_university_contacts: {
+        Row: {
+          created_at: string | null
+          email: string
+          id: string
+          name: string | null
+          university_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          id?: string
+          name?: string | null
+          university_id: string
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          id?: string
+          name?: string | null
+          university_id?: string
+        }
+        Relationships: []
+      }
       notifications: {
         Row: {
           body: string
@@ -36777,6 +36801,10 @@ export type Database = {
           p_severity: string
         }
         Returns: string
+      }
+      is_admin_jwt: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
       }
       is_firm_admin: {
         Args: Record<PropertyKey, never>
