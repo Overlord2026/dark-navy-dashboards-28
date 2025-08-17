@@ -18679,6 +18679,146 @@ export type Database = {
           },
         ]
       }
+      meet_bookings: {
+        Row: {
+          buyer_user_id: string
+          contact: Json | null
+          created_at: string | null
+          created_by: string | null
+          ics: string | null
+          id: string
+          join_url: string | null
+          offering_id: string
+          payment_status: string
+          status: string
+          window_id: string
+        }
+        Insert: {
+          buyer_user_id: string
+          contact?: Json | null
+          created_at?: string | null
+          created_by?: string | null
+          ics?: string | null
+          id?: string
+          join_url?: string | null
+          offering_id: string
+          payment_status?: string
+          status?: string
+          window_id: string
+        }
+        Update: {
+          buyer_user_id?: string
+          contact?: Json | null
+          created_at?: string | null
+          created_by?: string | null
+          ics?: string | null
+          id?: string
+          join_url?: string | null
+          offering_id?: string
+          payment_status?: string
+          status?: string
+          window_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "meet_bookings_offering_id_fkey"
+            columns: ["offering_id"]
+            isOneToOne: false
+            referencedRelation: "meet_offerings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "meet_bookings_window_id_fkey"
+            columns: ["window_id"]
+            isOneToOne: false
+            referencedRelation: "meet_windows"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      meet_offerings: {
+        Row: {
+          athlete_user_id: string
+          capacity: number
+          created_at: string | null
+          currency: string
+          description: string | null
+          duration_min: number
+          id: string
+          media: Json | null
+          price_cents: number
+          published: boolean | null
+          slug: string
+          title: string
+          updated_at: string | null
+          visibility: string
+        }
+        Insert: {
+          athlete_user_id: string
+          capacity?: number
+          created_at?: string | null
+          currency?: string
+          description?: string | null
+          duration_min?: number
+          id?: string
+          media?: Json | null
+          price_cents?: number
+          published?: boolean | null
+          slug: string
+          title: string
+          updated_at?: string | null
+          visibility?: string
+        }
+        Update: {
+          athlete_user_id?: string
+          capacity?: number
+          created_at?: string | null
+          currency?: string
+          description?: string | null
+          duration_min?: number
+          id?: string
+          media?: Json | null
+          price_cents?: number
+          published?: boolean | null
+          slug?: string
+          title?: string
+          updated_at?: string | null
+          visibility?: string
+        }
+        Relationships: []
+      }
+      meet_windows: {
+        Row: {
+          ends_at: string
+          id: string
+          offering_id: string
+          seats_total: number
+          starts_at: string
+        }
+        Insert: {
+          ends_at: string
+          id?: string
+          offering_id: string
+          seats_total?: number
+          starts_at: string
+        }
+        Update: {
+          ends_at?: string
+          id?: string
+          offering_id?: string
+          seats_total?: number
+          starts_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "meet_windows_offering_id_fkey"
+            columns: ["offering_id"]
+            isOneToOne: false
+            referencedRelation: "meet_offerings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       meeting_analytics: {
         Row: {
           action_items_completed: number | null
