@@ -35960,6 +35960,10 @@ export type Database = {
         Args: { claim: string }
         Returns: string
       }
+      last4: {
+        Args: { text_value: string }
+        Returns: string
+      }
       log_accessibility_event: {
         Args: {
           p_event_type: string
@@ -36160,6 +36164,14 @@ export type Database = {
           p_details?: Json
           p_target_invite_id?: string
         }
+        Returns: string
+      }
+      mask_email: {
+        Args: { email_text: string }
+        Returns: string
+      }
+      mask_phone: {
+        Args: { phone_text: string }
         Returns: string
       }
       merkle_root: {
