@@ -153,7 +153,7 @@ export default function LegacyVault() {
     setIsEditDialogOpen(true);
   };
 
-  const handleSaveDocument = (document: DocumentItem, newName: string) => {
+  const handleSaveDocument = async (document: DocumentItem, newName: string) => {
     setDocuments(prev => 
       prev.map(doc => 
         doc.id === document.id 
@@ -174,7 +174,7 @@ export default function LegacyVault() {
     setIsDeleteDialogOpen(true);
   };
 
-  const handleDeleteDocument = (document: DocumentItem) => {
+  const handleDeleteDocument = async (document: DocumentItem) => {
     setDocuments(prev => prev.filter(doc => doc.id !== document.id));
     toast.success("Document deleted successfully");
   };

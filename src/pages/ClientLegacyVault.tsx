@@ -192,7 +192,7 @@ export default function ClientLegacyVault() {
     setIsEditDialogOpen(true);
   };
 
-  const handleSaveDocument = (document: any, newName: string) => {
+  const handleSaveDocument = async (document: any, newName: string) => {
     // Update logic would go here
     toast.success("Document updated successfully");
   };
