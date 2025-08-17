@@ -19,7 +19,8 @@ import { AuthWrapper } from "@/components/auth/AuthWrapper";
 import { getAdvisorAccessRoles } from "@/utils/roleHierarchy";
 import { DynamicLandingController } from "@/components/auth/DynamicLandingController";
 import { Navigation } from "@/components/Navigation";
-import TopNav from "@/components/nav/TopNav";
+import { TopBrandBar } from "@/components/navigation/TopBrandBar";
+import { RoleNavBar } from "@/components/navigation/RoleNavBar";
 import ReferralTracker from "@/components/tracking/ReferralTracker";
 import { QABypassIndicator } from "@/components/security/QABypassIndicator";
 import { APIWarningBanner } from "@/components/admin/APIWarningBanner";
@@ -45,6 +46,9 @@ import Dashboard from "./pages/Dashboard";
 // New persona-aware pages
 import FamiliesPage from "./pages/FamiliesPage";
 import ProsPage from "./pages/ProsPage";
+import ResourcesPage from "./pages/ResourcesPage";
+import SolutionsPage from "./pages/SolutionsPage";
+import EducationPage from "./pages/EducationPage";
 import InvitePage from "./pages/invite/InvitePage";
 // Public pages
 import WelcomePage from "./pages/WelcomePage";
@@ -252,9 +256,10 @@ function App() {
                   <TenantProvider>
                     <AdvisorProvider>
                       <PersonaProvider>
-                         <NewPersonaProvider>
-                           <BrowserRouter>
-                             <TopNav showSubBanner />
+                          <NewPersonaProvider>
+                            <BrowserRouter>
+                              <TopBrandBar />
+                              <RoleNavBar />
                              <APIWarningBanner />
                             <ExtensionHealthBanner />
                             <ReferralTracker />
@@ -300,10 +305,12 @@ function App() {
                               <Route path="/persona-preview/:personaId" element={<PersonaPreviewPage />} />
                                   <Route path="/" element={<PersonaRedirect />} />
                                   {/* New persona-aware routes */}
-                                  <Route path="/families" element={<FamiliesPage />} />
-                                  <Route path="/pros" element={<ProsPage />} />
-                                  <Route path="/invite/:token" element={<InvitePage />} />
-                                 <Route path="/pmq/:fundId" element={<PMQPage />} />
+                                   <Route path="/families" element={<FamiliesPage />} />
+                                   <Route path="/pros" element={<ProsPage />} />
+                                   <Route path="/resources" element={<ResourcesPage />} />
+                                   <Route path="/solutions" element={<SolutionsPage />} />
+                                   <Route path="/education" element={<EducationPage />} />
+                                 <Route path="/invite/:token" element={<InvitePage />} />
                                 
                                 {/* Persona intro dashboard routes */}
                                 <Route path="/persona/client" element={
