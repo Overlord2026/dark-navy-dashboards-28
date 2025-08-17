@@ -47,13 +47,6 @@ export const ExtensionHealthBanner: React.FC<ExtensionHealthBannerProps> = ({
               <Badge variant="secondary" className="text-xs">INFO</Badge>
             </div>
           )}
-          {!health.vaultOk && (
-            <div className="flex items-center gap-2">
-              <XCircle className="h-3 w-3" />
-              <span>Vault extension not configured</span>
-              <Badge variant="secondary" className="text-xs">INFO</Badge>
-            </div>
-          )}
         </div>
         <div className="text-xs text-muted-foreground mt-2">
           <strong>Admin Action Required:</strong> Run database grants to restore extension access.

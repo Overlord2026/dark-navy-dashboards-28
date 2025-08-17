@@ -39,7 +39,7 @@ export function useExtensionHealth(): UseExtensionHealthResult {
   }, []);
 
   const hasIssues = health ? (
-    !health.graphqlOk || !health.vaultOk
+    !health.graphqlOk  // Only show issues if GraphQL is not configured, ignore vault for now
   ) : false;
 
   return {
