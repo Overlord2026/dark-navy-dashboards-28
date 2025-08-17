@@ -2672,6 +2672,13 @@ export type Database = {
             referencedRelation: "communication_templates"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "ai_nudge_rules_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "v_communication_templates_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       analytics_dashboards: {
@@ -4554,6 +4561,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "attorney_documents_metadata_classification_id_fkey"
+            columns: ["classification_id"]
+            isOneToOne: false
+            referencedRelation: "v_attorney_document_classifications_public"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "attorney_documents_metadata_parent_document_id_fkey"
             columns: ["parent_document_id"]
             isOneToOne: false
@@ -5042,6 +5056,13 @@ export type Database = {
             columns: ["template_id"]
             isOneToOne: false
             referencedRelation: "communication_templates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "batch_communications_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "v_communication_templates_public"
             referencedColumns: ["id"]
           },
         ]
@@ -13852,6 +13873,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "follow_up_email_history_email_template_id_fkey"
+            columns: ["email_template_id"]
+            isOneToOne: false
+            referencedRelation: "v_advisor_email_templates_public"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "follow_up_email_history_workflow_id_fkey"
             columns: ["workflow_id"]
             isOneToOne: false
@@ -13912,6 +13940,13 @@ export type Database = {
             columns: ["email_template_id"]
             isOneToOne: false
             referencedRelation: "advisor_email_templates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "follow_up_workflows_email_template_id_fkey"
+            columns: ["email_template_id"]
+            isOneToOne: false
+            referencedRelation: "v_advisor_email_templates_public"
             referencedColumns: ["id"]
           },
         ]
@@ -29241,6 +29276,13 @@ export type Database = {
             referencedRelation: "document_templates"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "signature_requests_document_template_id_fkey"
+            columns: ["document_template_id"]
+            isOneToOne: false
+            referencedRelation: "v_document_templates_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       social_security_estimates: {
@@ -31859,6 +31901,13 @@ export type Database = {
             columns: ["template_id"]
             isOneToOne: false
             referencedRelation: "organization_agreement_templates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_agreements_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "v_organization_agreement_templates_public"
             referencedColumns: ["id"]
           },
         ]
@@ -35113,12 +35162,809 @@ export type Database = {
         }
         Relationships: []
       }
+      v_advisor_email_templates_public: {
+        Row: {
+          advisor_id: string | null
+          body_template: string | null
+          brand_settings: Json | null
+          compliance_approved: boolean | null
+          created_at: string | null
+          id: string | null
+          is_active: boolean | null
+          subject_template: string | null
+          template_name: string | null
+          template_type: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          advisor_id?: string | null
+          body_template?: string | null
+          brand_settings?: Json | null
+          compliance_approved?: boolean | null
+          created_at?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          subject_template?: string | null
+          template_name?: string | null
+          template_type?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          advisor_id?: string | null
+          body_template?: string | null
+          brand_settings?: Json | null
+          compliance_approved?: boolean | null
+          created_at?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          subject_template?: string | null
+          template_name?: string | null
+          template_type?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      v_agreement_workflow_templates_public: {
+        Row: {
+          auto_send_triggers: Json | null
+          created_at: string | null
+          created_by: string | null
+          expiration_days: number | null
+          id: string | null
+          is_active: boolean | null
+          organization_id: string | null
+          reminder_schedule: Json | null
+          signature_required: boolean | null
+          template_content: string | null
+          template_name: string | null
+          updated_at: string | null
+          version: number | null
+          workflow_type: string | null
+        }
+        Insert: {
+          auto_send_triggers?: Json | null
+          created_at?: string | null
+          created_by?: string | null
+          expiration_days?: number | null
+          id?: string | null
+          is_active?: boolean | null
+          organization_id?: string | null
+          reminder_schedule?: Json | null
+          signature_required?: boolean | null
+          template_content?: string | null
+          template_name?: string | null
+          updated_at?: string | null
+          version?: number | null
+          workflow_type?: string | null
+        }
+        Update: {
+          auto_send_triggers?: Json | null
+          created_at?: string | null
+          created_by?: string | null
+          expiration_days?: number | null
+          id?: string | null
+          is_active?: boolean | null
+          organization_id?: string | null
+          reminder_schedule?: Json | null
+          signature_required?: boolean | null
+          template_content?: string | null
+          template_name?: string | null
+          updated_at?: string | null
+          version?: number | null
+          workflow_type?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agreement_workflow_templates_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_attorney_document_classifications_public: {
+        Row: {
+          classification_name: string | null
+          created_at: string | null
+          description: string | null
+          id: string | null
+          is_active: boolean | null
+          required_fields: Json | null
+          retention_period_years: number | null
+          updated_at: string | null
+          validation_rules: Json | null
+        }
+        Insert: {
+          classification_name?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          required_fields?: Json | null
+          retention_period_years?: number | null
+          updated_at?: string | null
+          validation_rules?: Json | null
+        }
+        Update: {
+          classification_name?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          required_fields?: Json | null
+          retention_period_years?: number | null
+          updated_at?: string | null
+          validation_rules?: Json | null
+        }
+        Relationships: []
+      }
+      v_audit_templates_public: {
+        Row: {
+          audit_type: string | null
+          checklist_items: Json | null
+          created_at: string | null
+          created_by: string | null
+          description: string | null
+          evidence_requirements: Json | null
+          firm_id: string | null
+          id: string | null
+          is_system_template: boolean | null
+          name: string | null
+          scoring_criteria: Json | null
+          updated_at: string | null
+        }
+        Insert: {
+          audit_type?: string | null
+          checklist_items?: Json | null
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          evidence_requirements?: Json | null
+          firm_id?: string | null
+          id?: string | null
+          is_system_template?: boolean | null
+          name?: string | null
+          scoring_criteria?: Json | null
+          updated_at?: string | null
+        }
+        Update: {
+          audit_type?: string | null
+          checklist_items?: Json | null
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          evidence_requirements?: Json | null
+          firm_id?: string | null
+          id?: string | null
+          is_system_template?: boolean | null
+          name?: string | null
+          scoring_criteria?: Json | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      v_communication_templates_public: {
+        Row: {
+          content: string | null
+          cpa_partner_id: string | null
+          created_at: string | null
+          id: string | null
+          is_active: boolean | null
+          subject: string | null
+          template_name: string | null
+          template_type: string | null
+          updated_at: string | null
+          variables: Json | null
+        }
+        Insert: {
+          content?: string | null
+          cpa_partner_id?: string | null
+          created_at?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          subject?: string | null
+          template_name?: string | null
+          template_type?: string | null
+          updated_at?: string | null
+          variables?: Json | null
+        }
+        Update: {
+          content?: string | null
+          cpa_partner_id?: string | null
+          created_at?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          subject?: string | null
+          template_name?: string | null
+          template_type?: string | null
+          updated_at?: string | null
+          variables?: Json | null
+        }
+        Relationships: []
+      }
+      v_cpa_welcome_templates_public: {
+        Row: {
+          client_type: string | null
+          cpa_partner_id: string | null
+          created_at: string | null
+          created_by: string | null
+          email_content: string | null
+          id: string | null
+          includes_video: boolean | null
+          is_default: boolean | null
+          subject_line: string | null
+          template_name: string | null
+          updated_at: string | null
+          video_url: string | null
+        }
+        Insert: {
+          client_type?: string | null
+          cpa_partner_id?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          email_content?: string | null
+          id?: string | null
+          includes_video?: boolean | null
+          is_default?: boolean | null
+          subject_line?: string | null
+          template_name?: string | null
+          updated_at?: string | null
+          video_url?: string | null
+        }
+        Update: {
+          client_type?: string | null
+          cpa_partner_id?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          email_content?: string | null
+          id?: string | null
+          includes_video?: boolean | null
+          is_default?: boolean | null
+          subject_line?: string | null
+          template_name?: string | null
+          updated_at?: string | null
+          video_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cpa_welcome_templates_cpa_partner_id_fkey"
+            columns: ["cpa_partner_id"]
+            isOneToOne: false
+            referencedRelation: "cpa_partners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cpa_welcome_templates_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "cpa_staff"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_data_classification_public: {
+        Row: {
+          access_logging_required: boolean | null
+          classification_level: string | null
+          column_name: string | null
+          compliance_requirements: string[] | null
+          created_at: string | null
+          data_category: string[] | null
+          encryption_required: boolean | null
+          geographic_restrictions: string[] | null
+          id: string | null
+          retention_period: unknown | null
+          table_name: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          access_logging_required?: boolean | null
+          classification_level?: string | null
+          column_name?: string | null
+          compliance_requirements?: string[] | null
+          created_at?: string | null
+          data_category?: string[] | null
+          encryption_required?: boolean | null
+          geographic_restrictions?: string[] | null
+          id?: string | null
+          retention_period?: unknown | null
+          table_name?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          access_logging_required?: boolean | null
+          classification_level?: string | null
+          column_name?: string | null
+          compliance_requirements?: string[] | null
+          created_at?: string | null
+          data_category?: string[] | null
+          encryption_required?: boolean | null
+          geographic_restrictions?: string[] | null
+          id?: string | null
+          retention_period?: unknown | null
+          table_name?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      v_document_request_templates_public: {
+        Row: {
+          attorney_id: string | null
+          case_type: string | null
+          created_at: string | null
+          deadline_days: number | null
+          id: string | null
+          instructions: string | null
+          is_default: boolean | null
+          required_documents: Json | null
+          template_name: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          attorney_id?: string | null
+          case_type?: string | null
+          created_at?: string | null
+          deadline_days?: number | null
+          id?: string | null
+          instructions?: string | null
+          is_default?: boolean | null
+          required_documents?: Json | null
+          template_name?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          attorney_id?: string | null
+          case_type?: string | null
+          created_at?: string | null
+          deadline_days?: number | null
+          id?: string | null
+          instructions?: string | null
+          is_default?: boolean | null
+          required_documents?: Json | null
+          template_name?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      v_document_templates_public: {
+        Row: {
+          cpa_partner_id: string | null
+          created_at: string | null
+          id: string | null
+          is_active: boolean | null
+          template_content: string | null
+          template_name: string | null
+          template_type: string | null
+          updated_at: string | null
+          variables: Json | null
+        }
+        Insert: {
+          cpa_partner_id?: string | null
+          created_at?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          template_content?: string | null
+          template_name?: string | null
+          template_type?: string | null
+          updated_at?: string | null
+          variables?: Json | null
+        }
+        Update: {
+          cpa_partner_id?: string | null
+          created_at?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          template_content?: string | null
+          template_name?: string | null
+          template_type?: string | null
+          updated_at?: string | null
+          variables?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "document_templates_cpa_partner_id_fkey"
+            columns: ["cpa_partner_id"]
+            isOneToOne: false
+            referencedRelation: "cpa_partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_goal_category_templates_public: {
+        Row: {
+          aspirational_prompt: string | null
+          category: Database["public"]["Enums"]["goal_category"] | null
+          created_at: string | null
+          default_fields: Json | null
+          description: string | null
+          display_name: string | null
+          icon_name: string | null
+          id: string | null
+          image_url: string | null
+          required_fields: string[] | null
+          success_story_example: string | null
+          suggested_amounts: number[] | null
+          updated_at: string | null
+        }
+        Insert: {
+          aspirational_prompt?: string | null
+          category?: Database["public"]["Enums"]["goal_category"] | null
+          created_at?: string | null
+          default_fields?: Json | null
+          description?: string | null
+          display_name?: string | null
+          icon_name?: string | null
+          id?: string | null
+          image_url?: string | null
+          required_fields?: string[] | null
+          success_story_example?: string | null
+          suggested_amounts?: number[] | null
+          updated_at?: string | null
+        }
+        Update: {
+          aspirational_prompt?: string | null
+          category?: Database["public"]["Enums"]["goal_category"] | null
+          created_at?: string | null
+          default_fields?: Json | null
+          description?: string | null
+          display_name?: string | null
+          icon_name?: string | null
+          id?: string | null
+          image_url?: string | null
+          required_fields?: string[] | null
+          success_story_example?: string | null
+          suggested_amounts?: number[] | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      v_integration_templates_public: {
+        Row: {
+          category: string | null
+          created_at: string | null
+          created_by: string | null
+          default_mappings: Json | null
+          description: string | null
+          documentation_url: string | null
+          id: string | null
+          install_count: number | null
+          is_featured: boolean | null
+          is_verified: boolean | null
+          name: string | null
+          provider: string | null
+          rating: number | null
+          required_credentials: string[] | null
+          setup_instructions: string | null
+          support_url: string | null
+          supported_features: string[] | null
+          template_config: Json | null
+          updated_at: string | null
+          version: string | null
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          default_mappings?: Json | null
+          description?: string | null
+          documentation_url?: string | null
+          id?: string | null
+          install_count?: number | null
+          is_featured?: boolean | null
+          is_verified?: boolean | null
+          name?: string | null
+          provider?: string | null
+          rating?: number | null
+          required_credentials?: string[] | null
+          setup_instructions?: string | null
+          support_url?: string | null
+          supported_features?: string[] | null
+          template_config?: Json | null
+          updated_at?: string | null
+          version?: string | null
+        }
+        Update: {
+          category?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          default_mappings?: Json | null
+          description?: string | null
+          documentation_url?: string | null
+          id?: string | null
+          install_count?: number | null
+          is_featured?: boolean | null
+          is_verified?: boolean | null
+          name?: string | null
+          provider?: string | null
+          rating?: number | null
+          required_credentials?: string[] | null
+          setup_instructions?: string | null
+          support_url?: string | null
+          supported_features?: string[] | null
+          template_config?: Json | null
+          updated_at?: string | null
+          version?: string | null
+        }
+        Relationships: []
+      }
+      v_invitation_message_templates_public: {
+        Row: {
+          body_template: string | null
+          created_at: string | null
+          created_by: string | null
+          id: string | null
+          is_active: boolean | null
+          is_default: boolean | null
+          persona_type:
+            | Database["public"]["Enums"]["professional_persona"]
+            | null
+          subject_template: string | null
+          template_name: string | null
+          tenant_id: string | null
+          updated_at: string | null
+          variables: Json | null
+        }
+        Insert: {
+          body_template?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          is_default?: boolean | null
+          persona_type?:
+            | Database["public"]["Enums"]["professional_persona"]
+            | null
+          subject_template?: string | null
+          template_name?: string | null
+          tenant_id?: string | null
+          updated_at?: string | null
+          variables?: Json | null
+        }
+        Update: {
+          body_template?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          is_default?: boolean | null
+          persona_type?:
+            | Database["public"]["Enums"]["professional_persona"]
+            | null
+          subject_template?: string | null
+          template_name?: string | null
+          tenant_id?: string | null
+          updated_at?: string | null
+          variables?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "invitation_message_templates_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "invitation_message_templates_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      v_legal_document_templates_public: {
+        Row: {
+          attorney_id: string | null
+          created_at: string | null
+          id: string | null
+          is_default: boolean | null
+          practice_area: string | null
+          state_jurisdiction: string | null
+          template_content: string | null
+          template_name: string | null
+          template_type: string | null
+          updated_at: string | null
+          variables: Json | null
+        }
+        Insert: {
+          attorney_id?: string | null
+          created_at?: string | null
+          id?: string | null
+          is_default?: boolean | null
+          practice_area?: string | null
+          state_jurisdiction?: string | null
+          template_content?: string | null
+          template_name?: string | null
+          template_type?: string | null
+          updated_at?: string | null
+          variables?: Json | null
+        }
+        Update: {
+          attorney_id?: string | null
+          created_at?: string | null
+          id?: string | null
+          is_default?: boolean | null
+          practice_area?: string | null
+          state_jurisdiction?: string | null
+          template_content?: string | null
+          template_name?: string | null
+          template_type?: string | null
+          updated_at?: string | null
+          variables?: Json | null
+        }
+        Relationships: []
+      }
+      v_organization_agreement_templates_public: {
+        Row: {
+          agreement_type: Database["public"]["Enums"]["agreement_type"] | null
+          auto_renewal: boolean | null
+          created_at: string | null
+          created_by: string | null
+          id: string | null
+          is_active: boolean | null
+          organization_id: string | null
+          requires_signature: boolean | null
+          template_content: string | null
+          template_name: string | null
+          updated_at: string | null
+          validity_days: number | null
+          version: string | null
+        }
+        Insert: {
+          agreement_type?: Database["public"]["Enums"]["agreement_type"] | null
+          auto_renewal?: boolean | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          organization_id?: string | null
+          requires_signature?: boolean | null
+          template_content?: string | null
+          template_name?: string | null
+          updated_at?: string | null
+          validity_days?: number | null
+          version?: string | null
+        }
+        Update: {
+          agreement_type?: Database["public"]["Enums"]["agreement_type"] | null
+          auto_renewal?: boolean | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          organization_id?: string | null
+          requires_signature?: boolean | null
+          template_content?: string | null
+          template_name?: string | null
+          updated_at?: string | null
+          validity_days?: number | null
+          version?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organization_agreement_templates_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       v_referral_leaderboard: {
         Row: {
           owner_id: string | null
           referrals: number | null
         }
         Relationships: []
+      }
+      v_transaction_classifications_public: {
+        Row: {
+          ai_model_used: string | null
+          anomaly_reasons: string[] | null
+          cleaned_description: string | null
+          confidence_score: number | null
+          created_at: string | null
+          final_category: string | null
+          id: string | null
+          is_anomaly: boolean | null
+          is_recurring: boolean | null
+          learning_data: Json | null
+          manual_override: boolean | null
+          original_description: string | null
+          suggested_category: string | null
+          tenant_id: string | null
+          transaction_id: string | null
+          updated_at: string | null
+          user_id: string | null
+          vendor_name: string | null
+        }
+        Insert: {
+          ai_model_used?: string | null
+          anomaly_reasons?: string[] | null
+          cleaned_description?: string | null
+          confidence_score?: number | null
+          created_at?: string | null
+          final_category?: string | null
+          id?: string | null
+          is_anomaly?: boolean | null
+          is_recurring?: boolean | null
+          learning_data?: Json | null
+          manual_override?: boolean | null
+          original_description?: string | null
+          suggested_category?: string | null
+          tenant_id?: string | null
+          transaction_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          vendor_name?: string | null
+        }
+        Update: {
+          ai_model_used?: string | null
+          anomaly_reasons?: string[] | null
+          cleaned_description?: string | null
+          confidence_score?: number | null
+          created_at?: string | null
+          final_category?: string | null
+          id?: string | null
+          is_anomaly?: boolean | null
+          is_recurring?: boolean | null
+          learning_data?: Json | null
+          manual_override?: boolean | null
+          original_description?: string | null
+          suggested_category?: string | null
+          tenant_id?: string | null
+          transaction_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          vendor_name?: string | null
+        }
+        Relationships: []
+      }
+      v_workflow_templates_public: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string | null
+          is_default: boolean | null
+          name: string | null
+          organization_id: string | null
+          persona: string | null
+          steps: Json | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string | null
+          is_default?: boolean | null
+          name?: string | null
+          organization_id?: string | null
+          persona?: string | null
+          steps?: Json | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string | null
+          is_default?: boolean | null
+          name?: string | null
+          organization_id?: string | null
+          persona?: string | null
+          steps?: Json | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workflow_templates_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       vw_balance_sheet: {
         Row: {
