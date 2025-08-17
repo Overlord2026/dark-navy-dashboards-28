@@ -12,5 +12,9 @@
   "features.plaidIntegration": true,
   "features.docusignIntegration": false,
   "features.advancedReporting": true,
-  "ui.experimentalDesign": false
+  "ui.experimentalDesign": true,
+  "security.rlsPolicies": false,
+  "security.auditLogging": true,
+  "performance.edgeCaching": true,
+  "debug.enableConsoleLogging": true
 }
