@@ -19957,6 +19957,39 @@ export type Database = {
           },
         ]
       }
+      nil_disclosures: {
+        Row: {
+          athlete_user_id: string
+          created_at: string | null
+          created_by: string | null
+          delivered_at: string | null
+          firm_id: string | null
+          id: string
+          payload: Json
+          school_id: string | null
+        }
+        Insert: {
+          athlete_user_id: string
+          created_at?: string | null
+          created_by?: string | null
+          delivered_at?: string | null
+          firm_id?: string | null
+          id?: string
+          payload?: Json
+          school_id?: string | null
+        }
+        Update: {
+          athlete_user_id?: string
+          created_at?: string | null
+          created_by?: string | null
+          delivered_at?: string | null
+          firm_id?: string | null
+          id?: string
+          payload?: Json
+          school_id?: string | null
+        }
+        Relationships: []
+      }
       nil_eligibility: {
         Row: {
           athlete_id: string
@@ -35817,6 +35850,36 @@ export type Database = {
           template_type?: string | null
           updated_at?: string | null
           variables?: Json | null
+        }
+        Relationships: []
+      }
+      v_nil_disclosures_admin: {
+        Row: {
+          athlete_user_id: string | null
+          created_at: string | null
+          delivered_at: string | null
+          disclosure_type: string | null
+          firm_id: string | null
+          id: string | null
+          school_id: string | null
+        }
+        Insert: {
+          athlete_user_id?: string | null
+          created_at?: string | null
+          delivered_at?: string | null
+          disclosure_type?: never
+          firm_id?: string | null
+          id?: string | null
+          school_id?: string | null
+        }
+        Update: {
+          athlete_user_id?: string | null
+          created_at?: string | null
+          delivered_at?: string | null
+          disclosure_type?: never
+          firm_id?: string | null
+          id?: string | null
+          school_id?: string | null
         }
         Relationships: []
       }
