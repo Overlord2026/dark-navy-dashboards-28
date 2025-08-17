@@ -1,0 +1,7 @@
+{
+  "enableAdvancedAnalytics": true,
+  "enableBetaFeatures": false,
+  "enableDebugMode": false,
+  "enableExperimentalUI": false,
+  "enablePerformanceMonitoring": true
+}

@@ -1,7 +1,7 @@
 // Task 8: Typed Analytics Event System for BFO
 // Strongly typed event tracking with BfoEvent schema
 
-type BfoEvent =
+export type BfoEvent =
   | { name: 'nav.menu_open'; menu: 'families' | 'pros' }
   | { name: 'persona.selected'; realm: 'families' | 'pros'; slug: string }
   | { name: 'dashboard.hero_viewed'; personaSlug?: string }
