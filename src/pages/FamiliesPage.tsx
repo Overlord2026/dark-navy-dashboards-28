@@ -1,18 +1,10 @@
 import React from 'react';
-import { BFOHeader } from '@/components/site/BFOHeader';
-import { HomeHero } from '@/components/site/HomeHero';
-import { PersonaAwareContent } from '@/components/site/PersonaAwareContent';
-import { BrandedFooter } from '@/components/ui/BrandedFooter';
 
-export default function FamiliesPage() {
+export const FamiliesPage = () => {
   return (
-    <div className="min-h-screen bg-background">
-      <BFOHeader />
-      <main>
-        <HomeHero />
-        <PersonaAwareContent />
-      </main>
-      <BrandedFooter />
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold mb-6">Families</h1>
+      <p>Family Office Solutions</p>
     </div>
   );
-}
+};

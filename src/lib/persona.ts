@@ -123,6 +123,47 @@ export const personaMenus: Record<PersonaRoot, MenuConfig> = {
   professionals:{ label: "For Professionals", groups:[{ heading:"Professional Services", items: proSegments }] },
 };
 
+// New dual header navigation types
+export enum Persona {
+  FAMILY = 'family',
+  PROFESSIONAL = 'pro'
+}
+
+export interface MenuGroup {
+  label: string;
+  items: MenuItem[];
+}
+
+export interface MenuItem {
+  label: string;
+  href: string;
+  description?: string;
+}
+
+export const FAMILY_MENU_GROUPS: MenuGroup[] = [
+  {
+    label: 'Getting Started',
+    items: [
+      { label: 'Aspiring Families', href: '/families/aspiring' },
+      { label: 'Younger Families', href: '/families/younger' }
+    ]
+  }
+];
+
+export const PROFESSIONAL_MENU_GROUPS: MenuGroup[] = [
+  {
+    label: 'Financial Services',
+    items: [
+      { label: 'Financial Advisors', href: '/pros/advisor' },
+      { label: 'CPAs', href: '/pros/cpa' }
+    ]
+  }
+];
+
+export const RESOURCE_MENU_GROUPS: MenuGroup[] = [];
+export const EDUCATION_MENU_GROUPS: MenuGroup[] = [];
+export const SOLUTIONS_MENU_GROUPS: MenuGroup[] = [];
+
 export const ctas = {
   seeHowItWorks: { label: "See How It Works", href: "/how-it-works" },
   valueCalculator:{ label: "Try the Value Calculator", href: "/tools/value-calculator" },
