@@ -1,7 +1,8 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { ProfessionalSegment } from '@/lib/persona';
+import { ProSegment } from '@/lib/persona';
 import { usePersonaStore } from '@/store/personaStore';
+import { Persona } from '@/lib/persona';
 
 const ProfessionalsLanding = () => {
   const { setPersona } = usePersonaStore();
@@ -21,61 +22,49 @@ const ProfessionalsLanding = () => {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[
             {
-              segment: ProfessionalSegment.ADVISOR,
+              segment: 'advisor' as ProSegment,
               title: 'Financial Advisors',
               description: 'Comprehensive wealth management and investment advisory',
               category: 'Financial Services'
             },
             {
-              segment: ProfessionalSegment.CPA,
+              segment: 'cpa' as ProSegment,
               title: 'CPAs & Tax Professionals',
               description: 'Tax planning, compliance, and accounting services',
               category: 'Financial Services'
             },
             {
-              segment: ProfessionalSegment.ATTORNEY,
+              segment: 'attorney-estate' as ProSegment,
               title: 'Estate Attorneys',
               description: 'Estate planning, trusts, and legal structures',
-              category: 'Financial Services'
+              category: 'Legal Services'
             },
             {
-              segment: ProfessionalSegment.INSURANCE,
-              title: 'Insurance Agents',
-              description: 'Life, disability, and property insurance solutions',
-              category: 'Insurance & Risk'
+              segment: 'insurance-life' as ProSegment,
+              title: 'Life Insurance Agents',
+              description: 'Life insurance and protection planning',
+              category: 'Insurance'
             },
             {
-              segment: ProfessionalSegment.BANK_TRUST,
-              title: 'Bank & Trust Officers',
-              description: 'Private banking and trust administration',
-              category: 'Banking'
+              segment: 'insurance-medicare' as ProSegment,
+              title: 'Medicare Specialists',
+              description: 'Medicare enrollment and education',
+              category: 'Insurance'
             },
             {
-              segment: ProfessionalSegment.HEALTHCARE_INFLUENCER,
-              title: 'Healthcare Influencers',
-              description: 'Medical thought leaders and content creators',
+              segment: 'healthcare-provider' as ProSegment,
+              title: 'Healthcare Providers',
+              description: 'Medical professionals and patient financial wellness',
               category: 'Healthcare'
             },
             {
-              segment: ProfessionalSegment.HEALTHCARE_CLINIC,
-              title: 'Healthcare Clinics',
-              description: 'Medical practices and healthcare facilities',
-              category: 'Healthcare'
+              segment: 'influencer' as ProSegment,
+              title: 'Financial Influencers',
+              description: 'Content creators and financial educators',
+              category: 'Content'
             },
             {
-              segment: ProfessionalSegment.HEALTHCARE_NAVIGATOR,
-              title: 'Healthcare Navigators',
-              description: 'Patient advocacy and healthcare coordination',
-              category: 'Healthcare'
-            },
-            {
-              segment: ProfessionalSegment.PHARMACY,
-              title: 'Pharmacy Partners',
-              description: 'Specialized pharmacy services and consultations',
-              category: 'Healthcare'
-            },
-            {
-              segment: ProfessionalSegment.REALTOR,
+              segment: 'realtor' as ProSegment,
               title: 'Real Estate Professionals',
               description: 'Luxury real estate and property management',
               category: 'Real Estate'
@@ -98,7 +87,7 @@ const ProfessionalsLanding = () => {
               </p>
               <button
                 className="text-primary font-medium hover:underline focus:outline-none focus:ring-2 focus:ring-primary/20 rounded"
-                onClick={() => setPersona('pro', professional.segment)}
+                onClick={() => setPersona(Persona.PROFESSIONAL, professional.segment)}
               >
                 Learn More →
               </button>
@@ -110,7 +99,7 @@ const ProfessionalsLanding = () => {
   );
 };
 
-const ProfessionalSegmentPage = ({ segment }: { segment: ProfessionalSegment }) => {
+const ProfessionalSegmentPage = ({ segment }: { segment: ProSegment }) => {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-3xl mx-auto">
@@ -135,16 +124,15 @@ export const ProfessionalsPage = () => {
   return (
     <Routes>
       <Route index element={<ProfessionalsLanding />} />
-      <Route path="advisor" element={<ProfessionalSegmentPage segment={ProfessionalSegment.ADVISOR} />} />
-      <Route path="cpa" element={<ProfessionalSegmentPage segment={ProfessionalSegment.CPA} />} />
-      <Route path="attorney" element={<ProfessionalSegmentPage segment={ProfessionalSegment.ATTORNEY} />} />
-      <Route path="insurance" element={<ProfessionalSegmentPage segment={ProfessionalSegment.INSURANCE} />} />
-      <Route path="bank-trust" element={<ProfessionalSegmentPage segment={ProfessionalSegment.BANK_TRUST} />} />
-      <Route path="healthcare-influencer" element={<ProfessionalSegmentPage segment={ProfessionalSegment.HEALTHCARE_INFLUENCER} />} />
-      <Route path="healthcare-clinic" element={<ProfessionalSegmentPage segment={ProfessionalSegment.HEALTHCARE_CLINIC} />} />
-      <Route path="healthcare-navigator" element={<ProfessionalSegmentPage segment={ProfessionalSegment.HEALTHCARE_NAVIGATOR} />} />
-      <Route path="pharmacy" element={<ProfessionalSegmentPage segment={ProfessionalSegment.PHARMACY} />} />
-      <Route path="realtor" element={<ProfessionalSegmentPage segment={ProfessionalSegment.REALTOR} />} />
+      <Route path="advisor" element={<ProfessionalSegmentPage segment={'advisor' as ProSegment} />} />
+      <Route path="cpa" element={<ProfessionalSegmentPage segment={'cpa' as ProSegment} />} />
+      <Route path="attorney-estate" element={<ProfessionalSegmentPage segment={'attorney-estate' as ProSegment} />} />
+      <Route path="attorney-litigation" element={<ProfessionalSegmentPage segment={'attorney-litigation' as ProSegment} />} />
+      <Route path="insurance-life" element={<ProfessionalSegmentPage segment={'insurance-life' as ProSegment} />} />
+      <Route path="insurance-medicare" element={<ProfessionalSegmentPage segment={'insurance-medicare' as ProSegment} />} />
+      <Route path="healthcare-provider" element={<ProfessionalSegmentPage segment={'healthcare-provider' as ProSegment} />} />
+      <Route path="influencer" element={<ProfessionalSegmentPage segment={'influencer' as ProSegment} />} />
+      <Route path="realtor" element={<ProfessionalSegmentPage segment={'realtor' as ProSegment} />} />
     </Routes>
   );
 };

@@ -141,9 +141,8 @@ export const usePersonaStore = create<PersonaStore>()(
           await supabase
             .from('profiles')
             .update({
-              persona_preference: selectedPersona,
-              segment_preference: selectedSegment,
-              persona_updated_at: new Date().toISOString()
+              client_segment: selectedSegment,
+              updated_at: new Date().toISOString()
             })
             .eq('id', userId);
 

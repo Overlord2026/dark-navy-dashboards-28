@@ -10,16 +10,22 @@ export type FamilySegment =
   | "athletes-entertainers";
 
 export type ProSegment =
-  | "advisors"
-  | "cpas"
-  | "estate-attorneys"
-  | "insurance"
-  | "bank-trust"
-  | "healthcare-influencers"
-  | "clinic-testing"
-  | "care-navigators"
-  | "pharmacy-shots"
-  | "realtors";
+  | "advisor"
+  | "cpa" 
+  | "attorney-estate"
+  | "attorney-litigation"
+  | "realtor"
+  | "insurance-annuity"
+  | "insurance-life"
+  | "insurance-medicare"
+  | "insurance-ltc"
+  | "healthcare-provider"
+  | "influencer";
+
+export type PersonaSegment = FamilySegment | ProSegment;
+
+// Legacy compatibility
+export type ProfessionalSegment = ProSegment;
 
 export interface LinkItem { 
   label: string; 
@@ -48,16 +54,17 @@ export const familySegments: LinkItem[] = [
 ];
 
 export const proSegments: LinkItem[] = [
-  { label: "Advisors", href: "/pros/advisors" },
-  { label: "CPAs", href: "/pros/cpas" },
-  { label: "Estate Attorneys", href: "/pros/estate-attorneys" },
-  { label: "Insurance", href: "/pros/insurance" },
-  { label: "Bank/Trust", href: "/pros/bank-trust" },
-  { label: "Healthcare Influencers", href: "/pros/healthcare-influencers" },
-  { label: "Clinic/Testing", href: "/pros/clinic-testing" },
-  { label: "Care Navigators", href: "/pros/care-navigators" },
-  { label: "Pharmacy & Shots", href: "/pros/pharmacy-shots" },
-  { label: "Realtors", href: "/pros/realtors" },
+  { label: "Financial Advisors", href: "/pros/advisor" },
+  { label: "CPAs", href: "/pros/cpa" },
+  { label: "Estate Attorneys", href: "/pros/attorney-estate" },
+  { label: "Litigation Attorneys", href: "/pros/attorney-litigation" },
+  { label: "Realtors", href: "/pros/realtor" },
+  { label: "Annuity Insurance", href: "/pros/insurance-annuity" },
+  { label: "Life Insurance", href: "/pros/insurance-life" },
+  { label: "Medicare Insurance", href: "/pros/insurance-medicare" },
+  { label: "LTC Insurance", href: "/pros/insurance-ltc" },
+  { label: "Healthcare Providers", href: "/pros/healthcare-provider" },
+  { label: "Influencers", href: "/pros/influencer" },
 ];
 
 export const servicesMenu: MenuConfig = {
@@ -138,6 +145,7 @@ export interface MenuItem {
   label: string;
   href: string;
   description?: string;
+  segment?: PersonaSegment;
 }
 
 export const FAMILY_MENU_GROUPS: MenuGroup[] = [
@@ -154,8 +162,22 @@ export const PROFESSIONAL_MENU_GROUPS: MenuGroup[] = [
   {
     label: 'Financial Services',
     items: [
-      { label: 'Financial Advisors', href: '/pros/advisor' },
-      { label: 'CPAs', href: '/pros/cpa' }
+      { label: 'Financial Advisors', href: '/pros/advisor', segment: 'advisor' },
+      { label: 'CPAs', href: '/pros/cpa', segment: 'cpa' }
+    ]
+  },
+  {
+    label: 'Legal Services',
+    items: [
+      { label: 'Estate Attorneys', href: '/pros/attorney-estate', segment: 'attorney-estate' },
+      { label: 'Litigation Attorneys', href: '/pros/attorney-litigation', segment: 'attorney-litigation' }
+    ]
+  },
+  {
+    label: 'Insurance',
+    items: [
+      { label: 'Life Insurance', href: '/pros/insurance-life', segment: 'insurance-life' },
+      { label: 'Medicare', href: '/pros/insurance-medicare', segment: 'insurance-medicare' }
     ]
   }
 ];
