@@ -2,12 +2,8 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 
 interface ExtensionHealth {
-  graphql_version: string;
-  graphql_accessible: boolean;
-  vault_accessible: boolean;
-  graphql_error?: string;
-  vault_error?: string;
-  checked_at: string;
+  graphqlOk: boolean;
+  vaultOk: boolean;
 }
 
 interface UseExtensionHealthResult {
@@ -17,38 +13,34 @@ interface UseExtensionHealthResult {
   hasIssues: boolean;
 }
 
+async function checkExtensions() {
+  const [{ data: gql }, { data: vault }] = await Promise.all([
+    (supabase as any).rpc('graphql_is_configured'),
+    (supabase as any).rpc('vault_is_configured')
+  ]);
+  return { graphqlOk: !!gql, vaultOk: !!vault };
+}
+
 export function useExtensionHealth(): UseExtensionHealthResult {
   const [health, setHealth] = useState<ExtensionHealth | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const checkHealth = async () => {
-      try {
-        const { data, error: healthError } = await supabase
-          .rpc('check_extension_health');
-
-        if (healthError) {
-          throw healthError;
-        }
-
-        setHealth(data as unknown as ExtensionHealth);
-        setError(null);
-      } catch (err) {
-        console.error('Extension health check failed:', err);
-        setError(err instanceof Error ? err.message : 'Unknown error');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    checkHealth();
+    checkExtensions().then(({ graphqlOk, vaultOk }) => {
+      setHealth({ graphqlOk, vaultOk });
+      setError(null);
+      setIsLoading(false);
+    }).catch((err) => {
+      console.error('Extension health check failed:', err);
+      setError(err instanceof Error ? err.message : 'Unknown error');
+      setHealth({ graphqlOk: false, vaultOk: false });
+      setIsLoading(false);
+    });
   }, []);
 
   const hasIssues = health ? (
-    !health.graphql_accessible || 
-    !health.vault_accessible ||
-    health.graphql_version === 'access_denied'
+    !health.graphqlOk || !health.vaultOk
   ) : false;
 
   return {

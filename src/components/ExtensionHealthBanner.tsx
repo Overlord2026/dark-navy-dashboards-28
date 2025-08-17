@@ -40,25 +40,18 @@ export const ExtensionHealthBanner: React.FC<ExtensionHealthBannerProps> = ({
           Database Extension Access Issues Detected
         </div>
         <div className="text-sm space-y-1">
-          {!health.graphql_accessible && (
+          {!health.graphqlOk && (
             <div className="flex items-center gap-2">
               <XCircle className="h-3 w-3" />
-              <span>GraphQL schema access denied</span>
-              <Badge variant="destructive" className="text-xs">CRITICAL</Badge>
+              <span>GraphQL extension not configured</span>
+              <Badge variant="secondary" className="text-xs">INFO</Badge>
             </div>
           )}
-          {!health.vault_accessible && (
+          {!health.vaultOk && (
             <div className="flex items-center gap-2">
               <XCircle className="h-3 w-3" />
-              <span>Vault extension access denied</span>
-              <Badge variant="destructive" className="text-xs">CRITICAL</Badge>
-            </div>
-          )}
-          {health.graphql_version === 'access_denied' && (
-            <div className="flex items-center gap-2">
-              <XCircle className="h-3 w-3" />
-              <span>GraphQL version check failed</span>
-              <Badge variant="destructive" className="text-xs">CRITICAL</Badge>
+              <span>Vault extension not configured</span>
+              <Badge variant="secondary" className="text-xs">INFO</Badge>
             </div>
           )}
         </div>
