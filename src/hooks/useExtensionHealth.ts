@@ -31,10 +31,9 @@ export function useExtensionHealth(): UseExtensionHealthResult {
       setHealth({ graphqlOk, vaultOk });
       setError(null);
       setIsLoading(false);
-    }).catch((err) => {
-      console.error('Extension health check failed:', err);
-      setError(err instanceof Error ? err.message : 'Unknown error');
+    }).catch(() => {
       setHealth({ graphqlOk: false, vaultOk: false });
+      setError('Extension check failed');
       setIsLoading(false);
     });
   }, []);
