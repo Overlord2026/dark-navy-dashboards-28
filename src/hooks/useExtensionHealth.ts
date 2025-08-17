@@ -15,8 +15,8 @@ interface UseExtensionHealthResult {
 
 async function checkExtensions() {
   const [{ data: gql }, { data: vault }] = await Promise.all([
-    (supabase as any).rpc('graphql_is_configured'),
-    (supabase as any).rpc('vault_is_configured')
+    supabase.rpc('graphql_is_configured'),
+    supabase.rpc('vault_is_configured')
   ]);
   return { graphqlOk: !!gql, vaultOk: !!vault };
 }
