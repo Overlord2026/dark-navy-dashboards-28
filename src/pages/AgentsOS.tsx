@@ -14,7 +14,7 @@ import {
   Eye
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { trackEvent } from '@/lib/analytics';
+import { analytics } from '@/lib/analytics';
 import { useFeatureFlag } from '@/lib/featureFlags';
 import { runtimeFlags } from '@/config/runtimeFlags';
 

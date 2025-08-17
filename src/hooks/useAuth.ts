@@ -1,10 +1,9 @@
-import { useContext } from 'react';
-import { AuthContext } from '@/context/AuthContext';
-
+// Simple auth hook stub - replace with real auth context
 export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within AuthProvider');
-  }
-  return context;
+  return {
+    user: null,
+    loading: false,
+    signIn: async () => {},
+    signOut: async () => {}
+  };
 };

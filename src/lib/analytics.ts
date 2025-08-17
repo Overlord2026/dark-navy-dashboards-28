@@ -60,6 +60,11 @@ export const analytics = {
     posthog.capture(eventName, properties);
   },
 
+  // Alias for track
+  trackEvent: (eventName: string, properties?: Record<string, any>) => {
+    posthog.capture(eventName, properties);
+  },
+
   // Error tracking
   trackError: (error: Error, context?: Record<string, any>) => {
     posthog.capture('error', {

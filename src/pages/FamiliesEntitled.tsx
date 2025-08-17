@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 import { useFamilyEntitlements } from '@/hooks/useFamilyEntitlements';
 import { useToast } from '@/hooks/use-toast';
-import { trackEvent } from '@/lib/analytics';
+import { analytics } from '@/lib/analytics';
 import familiesConfig from '@/config/familiesEntitlements';
 import { AdminEmailBanner } from '@/components/admin/AdminEmailBanner';
 

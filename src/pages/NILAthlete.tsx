@@ -12,7 +12,7 @@ import {
   Users
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { trackEvent } from '@/lib/analytics';
+import { analytics } from '@/lib/analytics';
 import { supabase } from '@/integrations/supabase/client';
 import { runtimeFlags } from '@/config/runtimeFlags';
 import { useAuth } from '@/hooks/useAuth';
