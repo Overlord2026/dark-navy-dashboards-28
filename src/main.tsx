@@ -1,12 +1,15 @@
 
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+import { BrowserRouter } from 'react-router-dom'
 import App from './App.tsx'
 import './index.css'
 import './styles/chartColors.css'
 import emailjs from '@emailjs/browser'
 import { initializeAnalytics } from './lib/analytics'
 import { registerServiceWorker, promptInstallPWA } from './lib/pwa'
+import { AuthProvider } from '@/context/AuthContext'
+import { EntitlementsProvider } from '@/context/EntitlementsContext'
 
 // Initialize EmailJS at app entry point
 emailjs.init(import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'rfbjUYJ8iPHEZaQvx')
@@ -22,6 +25,12 @@ promptInstallPWA()
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <App />
+    <AuthProvider>
+      <EntitlementsProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </EntitlementsProvider>
+    </AuthProvider>
   </React.StrictMode>,
 )
