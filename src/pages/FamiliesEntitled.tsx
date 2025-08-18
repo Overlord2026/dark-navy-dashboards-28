@@ -56,16 +56,16 @@ export const FamiliesEntitled: React.FC<FamiliesEntitledProps> = ({
   const currentPlan = familiesConfig.plans[currentTier];
 
   const handleQuickAction = (action: any) => {
-    trackEvent(action.event, { feature: action.feature, tier: currentTier });
+    analytics.trackEvent(action.event, { feature: action.feature, tier: currentTier });
     
     if (!hasAccess(action.feature)) {
       toast.error(`Upgrade to ${getRequiredTier(action.feature)} to access this feature`);
-      trackEvent('entitlement.gated', { feature: action.feature, tier: currentTier });
+      analytics.trackEvent('entitlement.gated', { feature: action.feature, tier: currentTier });
       return;
     }
 
     toast.success(`${action.label} started successfully`);
-    trackEvent('quickAction.clicked', { action: action.feature });
+    analytics.trackEvent('quickAction.clicked', { action: action.feature });
   };
 
   const getRequiredTier = (feature: string): string => {
@@ -80,13 +80,13 @@ export const FamiliesEntitled: React.FC<FamiliesEntitledProps> = ({
   const handleEducationAccess = () => {
     if (familiesConfig.education.gateMarketplaceUntilTraining && trainingProgress < 100) {
       toast.info('Complete NIL Training to unlock the Education Marketplace');
-      trackEvent('education.gated', { progress: trainingProgress });
+      analytics.trackEvent('education.gated', { progress: trainingProgress });
       // Navigate to NIL training
       window.location.href = '/nil/athlete';
       return;
     }
     
-    trackEvent('education.opened', { segment: selectedSegment });
+    analytics.trackEvent('education.opened', { segment: selectedSegment });
     toast.success('Education Library opened');
   };
 
@@ -137,7 +137,7 @@ export const FamiliesEntitled: React.FC<FamiliesEntitledProps> = ({
         </div>
 
         {/* Segment Tabs */}
-        <Tabs value={selectedSegment} onValueChange={setSelectedSegment} className="mb-8">
+        <Tabs value={selectedSegment} onValueChange={(value) => setSelectedSegment(value as typeof selectedSegment)} className="mb-8">
           <TabsList className="grid w-full grid-cols-4">
             {familiesConfig.segments.map((segment) => (
               <TabsTrigger key={segment.key} value={segment.key}>

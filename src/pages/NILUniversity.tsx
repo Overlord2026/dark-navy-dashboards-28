@@ -11,7 +11,7 @@ import {
   Shield
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { trackEvent } from '@/lib/analytics';
+import { analytics } from '@/lib/analytics';
 
 export const NILUniversity: React.FC = () => {
   const { toast } = useToast();

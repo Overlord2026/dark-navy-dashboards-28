@@ -209,8 +209,8 @@ export default function MeetOfferingPage() {
                   <div className="flex items-center space-x-2">
                     <Checkbox 
                       id="terms" 
-                      checked={agreedToTerms} 
-                      onCheckedChange={setAgreedToTerms} 
+                checked={agreedToTerms}
+                onCheckedChange={(checked) => setAgreedToTerms(checked === true)}
                     />
                     <Label htmlFor="terms" className="text-sm">
                       I agree to the <a href="/legal/nil-terms" className="text-primary hover:underline">NIL Terms</a>
