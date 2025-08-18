@@ -1,8 +1,8 @@
 
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { BrowserRouter } from 'react-router-dom'
-import App from './App.tsx'
+import { RouterProvider } from 'react-router-dom'
+import { router } from './router'
 import './index.css'
 import './styles/chartColors.css'
 import emailjs from '@emailjs/browser'
@@ -27,9 +27,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <AuthProvider>
       <EntitlementsProvider>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
+        <RouterProvider router={router} />
       </EntitlementsProvider>
     </AuthProvider>
   </React.StrictMode>,
