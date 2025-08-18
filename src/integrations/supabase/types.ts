@@ -20158,6 +20158,119 @@ export type Database = {
         }
         Relationships: []
       }
+      nil_athletes: {
+        Row: {
+          athlete_name: string
+          bio: string | null
+          compliance_status: string
+          created_at: string
+          hourly_rate: number
+          id: string
+          is_available: boolean
+          profile_image_url: string | null
+          school: string
+          session_types: string[] | null
+          social_links: Json | null
+          sport: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          athlete_name: string
+          bio?: string | null
+          compliance_status?: string
+          created_at?: string
+          hourly_rate?: number
+          id?: string
+          is_available?: boolean
+          profile_image_url?: string | null
+          school: string
+          session_types?: string[] | null
+          social_links?: Json | null
+          sport: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          athlete_name?: string
+          bio?: string | null
+          compliance_status?: string
+          created_at?: string
+          hourly_rate?: number
+          id?: string
+          is_available?: boolean
+          profile_image_url?: string | null
+          school?: string
+          session_types?: string[] | null
+          social_links?: Json | null
+          sport?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      nil_booking_requests: {
+        Row: {
+          athlete_id: string
+          client_age: number | null
+          client_user_id: string
+          created_at: string
+          id: string
+          message: string | null
+          parent_consent: boolean | null
+          payment_status: string | null
+          preferred_date: string
+          preferred_time: string
+          requested_duration: number
+          session_type: string
+          status: string
+          total_cost: number | null
+          updated_at: string
+        }
+        Insert: {
+          athlete_id: string
+          client_age?: number | null
+          client_user_id: string
+          created_at?: string
+          id?: string
+          message?: string | null
+          parent_consent?: boolean | null
+          payment_status?: string | null
+          preferred_date: string
+          preferred_time: string
+          requested_duration?: number
+          session_type: string
+          status?: string
+          total_cost?: number | null
+          updated_at?: string
+        }
+        Update: {
+          athlete_id?: string
+          client_age?: number | null
+          client_user_id?: string
+          created_at?: string
+          id?: string
+          message?: string | null
+          parent_consent?: boolean | null
+          payment_status?: string | null
+          preferred_date?: string
+          preferred_time?: string
+          requested_duration?: number
+          session_type?: string
+          status?: string
+          total_cost?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "nil_booking_requests_athlete_id_fkey"
+            columns: ["athlete_id"]
+            isOneToOne: false
+            referencedRelation: "nil_athletes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       nil_compliance_snapshots: {
         Row: {
           active_deals_count: number | null
