@@ -72,7 +72,7 @@ export const nilAdapter = {
   },
 
   // Create NIL-specific offering with compliance checks
-  async createNILOffering(athleteUserId: string, offering: any) {
+  async createNILOffering(athleteUserId: string, offering: Partial<any>) {
     const eligibility = await this.checkPublishEligibility(athleteUserId);
     
     if (offering.is_published && !eligibility.canPublish) {
@@ -94,7 +94,7 @@ export const nilAdapter = {
   },
 
   // Validate NIL booking requirements
-  async validateNILBooking(booking: any) {
+  async validateNILBooking(booking: Partial<any>) {
     if (!booking.confirmed_adult) {
       throw new Error('Age verification required for NIL sessions');
     }

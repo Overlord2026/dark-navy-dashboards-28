@@ -199,7 +199,7 @@ export default function MeetOfferingPage() {
                     <Checkbox 
                       id="adult" 
                       checked={confirmedAdult} 
-                      onCheckedChange={setConfirmedAdult} 
+                      onCheckedChange={(checked) => setConfirmedAdult(checked === true)} 
                     />
                     <Label htmlFor="adult" className="text-sm">
                       I confirm I am 18 years of age or older
