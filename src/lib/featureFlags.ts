@@ -23,3 +23,7 @@ export function useFeatureFlags(): FeatureFlags {
 export function isFeatureEnabled(flagKey: keyof FeatureFlags): boolean {
   return mockFlags[flagKey] ?? false;
 }
+
+export function useFeatureFlag(flagKey: keyof FeatureFlags): boolean {
+  return useFeatureFlags()[flagKey] ?? false;
+}
