@@ -8506,6 +8506,42 @@ export type Database = {
         }
         Relationships: []
       }
+      consent_records: {
+        Row: {
+          accepted_at: string
+          created_at: string
+          id: string
+          ip_address: unknown | null
+          metadata: Json | null
+          scope: string
+          user_agent: string | null
+          user_id: string
+          version: string
+        }
+        Insert: {
+          accepted_at?: string
+          created_at?: string
+          id?: string
+          ip_address?: unknown | null
+          metadata?: Json | null
+          scope: string
+          user_agent?: string | null
+          user_id: string
+          version: string
+        }
+        Update: {
+          accepted_at?: string
+          created_at?: string
+          id?: string
+          ip_address?: unknown | null
+          metadata?: Json | null
+          scope?: string
+          user_agent?: string | null
+          user_id?: string
+          version?: string
+        }
+        Relationships: []
+      }
       consent_tokens: {
         Row: {
           conditions: Json | null
@@ -36727,6 +36763,20 @@ export type Database = {
       }
       complete_attorney_onboarding: {
         Args: { p_onboarding_id: string }
+        Returns: boolean
+      }
+      consent_accept: {
+        Args: {
+          p_ip_address?: unknown
+          p_metadata?: Json
+          p_scope: string
+          p_user_agent?: string
+          p_version?: string
+        }
+        Returns: string
+      }
+      consent_check: {
+        Args: { p_scope: string; p_version?: string }
         Returns: boolean
       }
       count_advisors: {
