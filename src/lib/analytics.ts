@@ -298,3 +298,6 @@ export const analytics = {
     });
   }
 };
+
+// Export the track function directly for convenience
+export const track = analytics.track;

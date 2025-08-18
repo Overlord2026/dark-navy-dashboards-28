@@ -1,6 +1,6 @@
 import { supabase } from '@/lib/supabase';
 import { Plan } from '@/types/pricing';
-import { track } from '@/lib/analytics';
+import { analytics } from '@/lib/analytics';
 
 export interface TrialConfig {
   persona: 'families' | 'professionals';
@@ -78,7 +78,7 @@ export class TrialManager {
       if (error) throw error;
 
       // Track trial start
-      track('trial.start', {
+      analytics.track('trial.start', {
         persona: config.persona,
         segment: config.segment || 'general',
         plan: config.plan,
@@ -86,7 +86,7 @@ export class TrialManager {
         trial_id: trial.id
       });
 
-      return trial;
+      return trial as TrialGrant;
     } catch (error) {
       console.error('Failed to start trial:', error);
       return null;
@@ -106,7 +106,7 @@ export class TrialManager {
         .single();
 
       if (error && error.code !== 'PGRST116') throw error;
-      return trial || null;
+      return trial as TrialGrant || null;
     } catch (error) {
       console.error('Failed to get active trial:', error);
       return null;
@@ -133,7 +133,7 @@ export class TrialManager {
         .single();
 
       if (trial) {
-        track('trial.convert', {
+        analytics.track('trial.convert', {
           persona: trial.persona,
           segment: trial.segment || 'general',
           plan: trial.plan,
