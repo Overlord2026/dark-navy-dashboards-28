@@ -22,6 +22,7 @@ import { canUse, getRequiredPlan, type Plan, type FeatureKey } from '@/lib/featu
 import { useGate } from '@/hooks/useGate';
 import familiesConfig from '@/config/familiesEntitlements';
 import { AdminEmailBanner } from '@/components/admin/AdminEmailBanner';
+import { PlanSuggestionChip } from '@/components/pricing/PlanSuggestionChip';
 
 interface FamiliesEntitledProps {
   userSegment?: FamilySegment;
@@ -153,6 +154,13 @@ export const FamiliesEntitled: React.FC<FamiliesEntitledProps> = ({
     <div className="min-h-screen bg-gradient-to-br from-background to-accent/20">
       <div className="container mx-auto px-4 py-8">
         <AdminEmailBanner isAdmin={isAdmin} className="mb-6" />
+        
+        {/* Plan Suggestion Chip */}
+        <PlanSuggestionChip 
+          persona="families"
+          segment={selectedSegment}
+          className="mb-6"
+        />
         
         {/* Hero Section */}
         <div className="text-center mb-12">

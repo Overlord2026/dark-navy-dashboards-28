@@ -12,6 +12,8 @@ import { Check, X, Loader2 } from 'lucide-react';
 import { FeatureKey, Plan, PLAN_FEATURES } from '@/types/pricing';
 import { useEntitlements } from '@/context/EntitlementsContext';
 import { useToast } from '@/hooks/use-toast';
+import { PlanSuggestionChip } from '@/components/pricing/PlanSuggestionChip';
+import { getPlanRecommendation } from '@/lib/PlanRules';
 
 interface UpgradeModalProps {
   isOpen: boolean;
@@ -115,6 +117,15 @@ export function UpgradeModal({ isOpen, onClose, featureKey }: UpgradeModalProps)
             }
           </DialogDescription>
         </DialogHeader>
+
+        {/* Persona-aware suggestion */}
+        {persona && segment && (
+          <PlanSuggestionChip 
+            persona={persona as any}
+            segment={segment}
+            className="mt-4"
+          />
+        )}
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
           {plans.map((plan) => {
