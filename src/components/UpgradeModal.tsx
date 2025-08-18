@@ -14,6 +14,7 @@ import { useEntitlements } from '@/context/EntitlementsContext';
 import { useToast } from '@/hooks/use-toast';
 import { PlanSuggestionChip } from '@/components/pricing/PlanSuggestionChip';
 import { getPlanRecommendation } from '@/lib/PlanRules';
+import { track } from '@/lib/analytics';
 
 interface UpgradeModalProps {
   isOpen: boolean;
@@ -63,6 +64,15 @@ export function UpgradeModal({ isOpen, onClose, featureKey }: UpgradeModalProps)
   const handleUpgrade = async (targetPlan: Plan) => {
     setIsLoading(targetPlan);
     
+    // Track upgrade click
+    track('plan.upgrade_click', {
+      persona: persona || 'unknown',
+      segment: segment || 'unknown',
+      plan: targetPlan,
+      feature_context: featureKey || null,
+      source: 'upgrade_modal'
+    });
+
     try {
       // Call purchase API stub
       const response = await fetch('/api/purchase', {
@@ -83,6 +93,15 @@ export function UpgradeModal({ isOpen, onClose, featureKey }: UpgradeModalProps)
       }
 
       const result = await response.json();
+      
+      // Track successful purchase
+      track('plan.purchase_success', {
+        persona: persona || 'unknown',
+        segment: segment || 'unknown',
+        plan: targetPlan,
+        transaction_id: result.transactionId,
+        feature_context: featureKey || null
+      });
       
       toast({
         title: "Upgrade Successful!",

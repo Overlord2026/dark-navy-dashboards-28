@@ -1,12 +1,41 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Check, Star, Users, TrendingUp, Shield, ArrowRight } from 'lucide-react';
 import { advisorSubscriptionTiers } from '@/data/advisorSubscriptionTiers';
+import { track } from '@/lib/analytics';
 
 export default function AdvisorsPricingPage() {
+  useEffect(() => {
+    // Track plan view
+    track('plan.viewed', {
+      persona: 'professionals',
+      segment: 'advisors',
+      page_type: 'pricing_comparison'
+    });
+  }, []);
+
   const handleGetStarted = (tierId: string) => {
+    track('plan.upgrade_click', {
+      persona: 'professionals',
+      segment: 'advisors',
+      plan: tierId,
+      is_trial: tierId === 'standard',
+      source: 'pricing_page'
+    });
+
+    if (tierId === 'standard') {
+      // Start 7-day trial for advisors
+      track('trial.start', {
+        persona: 'professionals',
+        segment: 'advisors',
+        plan: 'standard',
+        trial_duration_days: 7
+      });
+      console.log('Starting 7-day Standard trial for advisors');
+    }
+    
     console.log('Get started with advisor tier:', tierId);
     // TODO: Integrate with purchase flow
   };
@@ -98,7 +127,7 @@ export default function AdvisorsPricingPage() {
                     onClick={() => handleGetStarted(tier.id)}
                   >
                     {tier.price === 0 && 'Get Started Free'}
-                    {tier.id === 'standard' && 'Start 14-Day Trial'}
+                    {tier.id === 'standard' && 'Start 7-Day Trial'}
                     {tier.id === 'premium' && 'Contact Sales'}
                     <ArrowRight className="w-4 h-4 ml-2" />
                   </Button>
@@ -106,7 +135,7 @@ export default function AdvisorsPricingPage() {
                   {/* Additional Info */}
                   <div className="text-center text-xs text-muted-foreground pt-4 border-t">
                     {tier.price === 0 && 'No credit card required'}
-                    {tier.id === 'standard' && '30-day money-back guarantee'}
+                    {tier.id === 'standard' && '7-day trial, then $99/month'}
                     {tier.id === 'premium' && 'Custom enterprise features available'}
                   </div>
                 </CardContent>

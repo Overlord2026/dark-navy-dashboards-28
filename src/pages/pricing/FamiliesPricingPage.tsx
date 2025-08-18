@@ -7,6 +7,7 @@ import { Check, Star, Shield, ArrowRight } from 'lucide-react';
 import { tierPricing, familyCards } from '@/data/familiesPricingTiers';
 import { Plan } from '@/types/pricing';
 import { FeatureKey, PLAN_FEATURES, FEATURE_QUOTAS } from '@/types/pricing';
+import { track } from '@/lib/analytics';
 
 export default function FamiliesPricingPage() {
   const [searchParams] = useSearchParams();
@@ -18,6 +19,14 @@ export default function FamiliesPricingPage() {
   const eliteRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // Track plan view
+    track('plan.viewed', {
+      persona: 'families',
+      plan_type: planParam || 'all',
+      feature_context: featureParam || null,
+      page_type: 'pricing_comparison'
+    });
+
     // Auto-scroll to matching plan
     if (planParam) {
       const targetRef = planParam === 'basic' ? basicRef : planParam === 'premium' ? premiumRef : eliteRef;
@@ -28,6 +37,23 @@ export default function FamiliesPricingPage() {
   }, [planParam, featureParam]);
 
   const handleGetStarted = (plan: Plan) => {
+    track('plan.upgrade_click', {
+      persona: 'families',
+      plan: plan,
+      is_trial: plan === 'premium',
+      source: 'pricing_page'
+    });
+
+    if (plan === 'premium') {
+      // Start 14-day trial
+      track('trial.start', {
+        persona: 'families',
+        plan: 'premium',
+        trial_duration_days: 14
+      });
+      console.log('Starting 14-day Premium trial for families');
+    }
+    
     console.log('Get started with plan:', plan);
     // TODO: Integrate with purchase flow
   };
@@ -127,7 +153,7 @@ export default function FamiliesPricingPage() {
                     onClick={() => handleGetStarted(tier)}
                   >
                     {tier === 'basic' && 'Get Started'}
-                    {tier === 'premium' && 'Start Free Trial'}
+                    {tier === 'premium' && 'Start 14-Day Trial'}
                     {tier === 'elite' && 'Contact Sales'}
                     <ArrowRight className="w-4 h-4 ml-2" />
                   </Button>

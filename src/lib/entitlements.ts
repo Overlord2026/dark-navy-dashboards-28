@@ -3,6 +3,7 @@ import { FeatureKey } from '@/types/pricing';
 import { useEntitlements } from '@/context/EntitlementsContext';
 import { Button } from '@/components/ui/button';
 import { Lock } from 'lucide-react';
+import { track } from '@/lib/analytics';
 
 // Helper function to check entitlements
 export function hasEntitlement(key: FeatureKey, entitlements: ReturnType<typeof useEntitlements>): boolean {
@@ -43,6 +44,14 @@ export function Gate({ children, featureKey, fallback, showUpgrade = true }: Gat
   const entitlements = useEntitlements();
   
   if (!entitlements.has(featureKey)) {
+    // Track gated view
+    track('gated.view', {
+      feature_key: featureKey,
+      user_plan: entitlements.plan,
+      user_persona: entitlements.persona || 'unknown',
+      user_segment: entitlements.segment || 'unknown'
+    });
+
     if (fallback) {
       return React.createElement(React.Fragment, null, fallback);
     }
