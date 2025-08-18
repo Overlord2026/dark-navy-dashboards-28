@@ -4,7 +4,17 @@
  */
 
 import { supabase } from "@/integrations/supabase/client";
-import type { OfferingFormData, WindowFormData, BookingFormData } from '../schedulerApi';
+
+interface OfferingFormData {
+  title: string;
+  description?: string;
+  is_published?: boolean;
+}
+
+interface BookingFormData {
+  confirmed_adult: boolean;
+  agreed_to_terms: boolean;
+}
 
 export const nilAdapter = {
   // Check if athlete can publish offerings

@@ -20,12 +20,12 @@ export const NILBrand: React.FC = () => {
   const athletePartners = 24;
 
   const handleViewCampaigns = () => {
-    trackEvent('campaigns.opened', { context: 'nil_brand' });
+    analytics.trackEvent('campaigns.opened', { context: 'nil_brand' });
     toast.success('Campaign Dashboard opened');
   };
 
   const handleFindAthletes = () => {
-    trackEvent('athletes.search', { context: 'nil_brand' });
+    analytics.trackEvent('athletes.search', { context: 'nil_brand' });
     toast.success('Athlete Marketplace opened');
   };
 

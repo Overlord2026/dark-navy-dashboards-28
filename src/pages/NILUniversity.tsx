@@ -20,12 +20,12 @@ export const NILUniversity: React.FC = () => {
   const complianceScore = 94;
 
   const handleViewCompliance = () => {
-    trackEvent('compliance.opened', { context: 'nil_university' });
+    analytics.trackEvent('compliance.opened', { context: 'nil_university' });
     toast.success('University Compliance Center opened');
   };
 
   const handleManageAthletes = () => {
-    trackEvent('athletes.manage', { context: 'nil_university' });
+    analytics.trackEvent('athletes.manage', { context: 'nil_university' });
     toast.success('Athlete Management opened');
   };
 
