@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -8,9 +8,10 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Check, X } from 'lucide-react';
+import { Check, X, Loader2 } from 'lucide-react';
 import { FeatureKey, Plan, PLAN_FEATURES } from '@/types/pricing';
 import { useEntitlements } from '@/context/EntitlementsContext';
+import { useToast } from '@/hooks/use-toast';
 
 interface UpgradeModalProps {
   isOpen: boolean;
@@ -53,12 +54,51 @@ const FEATURE_NAMES: Record<FeatureKey, string> = {
 };
 
 export function UpgradeModal({ isOpen, onClose, featureKey }: UpgradeModalProps) {
-  const { plan: currentPlan } = useEntitlements();
+  const { plan: currentPlan, persona, segment } = useEntitlements();
+  const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState<string | null>(null);
 
-  const handleUpgrade = (targetPlan: Plan) => {
-    // TODO: Integrate with payment system
-    console.log('Upgrading to:', targetPlan);
-    onClose();
+  const handleUpgrade = async (targetPlan: Plan) => {
+    setIsLoading(targetPlan);
+    
+    try {
+      // Call purchase API stub
+      const response = await fetch('/api/purchase', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          plan: targetPlan,
+          persona,
+          segment,
+          featureKey,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Purchase failed');
+      }
+
+      const result = await response.json();
+      
+      toast({
+        title: "Upgrade Successful!",
+        description: `You've been upgraded to ${PLAN_DETAILS[targetPlan].name}. Your new features are now available.`,
+      });
+      
+      // Refresh entitlements after successful upgrade
+      window.location.reload();
+      onClose();
+    } catch (error) {
+      toast({
+        title: "Upgrade Failed",
+        description: "There was an issue processing your upgrade. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(null);
+    }
   };
 
   const plans: Plan[] = ['basic', 'premium', 'elite'];
@@ -133,10 +173,19 @@ export function UpgradeModal({ isOpen, onClose, featureKey }: UpgradeModalProps)
                 <Button 
                   className="w-full"
                   variant={isCurrentPlan ? 'outline' : 'default'}
-                  disabled={isCurrentPlan}
+                  disabled={isCurrentPlan || isLoading === plan}
                   onClick={() => handleUpgrade(plan)}
                 >
-                  {isCurrentPlan ? 'Current Plan' : `Upgrade to ${planDetails.name}`}
+                  {isLoading === plan ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Processing...
+                    </>
+                  ) : isCurrentPlan ? (
+                    'Current Plan'
+                  ) : (
+                    `Upgrade to ${planDetails.name}`
+                  )}
                 </Button>
               </div>
             );
