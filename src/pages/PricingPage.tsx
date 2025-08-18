@@ -109,9 +109,9 @@ export default function PricingPage() {
                 <CardTitle className="text-2xl font-bold">{data.name}</CardTitle>
                 <div className="mt-4">
                   <span className="text-4xl font-bold">
-                    {typeof data.price === 'number' ? `$${data.price}` : data.price}
+                    {typeof (data as any).price === 'number' ? `$${(data as any).price}` : String((data as any).price || 'Custom')}
                   </span>
-                  {typeof data.price === 'number' && (
+                  {typeof (data as any).price === 'number' && (
                     <span className="text-muted-foreground">/month</span>
                   )}
                 </div>

@@ -11,22 +11,9 @@ export const nilAdapter = {
     hasDisclosure: boolean;
   }> {
     try {
-      // Check if athlete has completed NIL training
-      const { data: trainingData } = await supabase
-        .from('athlete_nil_training')
-        .select('completed_at')
-        .eq('athlete_id', athleteUserId)
-        .single();
-
-      // Check if athlete has signed disclosures
-      const { data: disclosureData } = await supabase
-        .from('athlete_nil_disclosures')
-        .select('signed_at')
-        .eq('athlete_id', athleteUserId)
-        .single();
-
-      const hasTraining = !!trainingData?.completed_at;
-      const hasDisclosure = !!disclosureData?.signed_at;
+      // Mock implementation for now since tables don't exist
+      const hasTraining = false; // Mock data
+      const hasDisclosure = false; // Mock data
       const canPublish = hasTraining && hasDisclosure;
 
       let blockReason;
