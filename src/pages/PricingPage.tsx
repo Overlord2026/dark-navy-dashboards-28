@@ -1,254 +1,159 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { CheckCircle, Crown, Shield, Star } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { Check, Star } from 'lucide-react';
+import { familyCards, tierPricing, type PlanTier } from '@/data/familiesPricingTiers';
 import { analytics } from '@/lib/analytics';
-import familiesEntitlements from '@/config/familiesEntitlements';
-
-type PlanId = 'basic' | 'premium' | 'elite';
-
-interface PlanCard {
-  id: PlanId;
-  name: string;
-  price: number;
-  description: string;
-  features: string[];
-  icon: React.ComponentType<any>;
-  gradient: string;
-  buttonVariant: 'default' | 'secondary' | 'outline';
-  popular?: boolean;
-}
-
-const planCards: PlanCard[] = [
-  {
-    id: 'basic',
-    name: 'Basic',
-    price: 29,
-    description: 'Essential family financial tools',
-    features: familiesEntitlements.plans.basic.features,
-    icon: Star,
-    gradient: 'from-blue-500 to-cyan-500',
-    buttonVariant: 'outline'
-  },
-  {
-    id: 'premium',
-    name: 'Premium',
-    price: 99,
-    description: 'Advanced family office features',
-    features: familiesEntitlements.plans.premium.features,
-    icon: Crown,
-    gradient: 'from-amber-500 to-orange-500',
-    buttonVariant: 'default',
-    popular: true
-  },
-  {
-    id: 'elite',
-    name: 'Elite',
-    price: 299,
-    description: 'Full family office experience',
-    features: familiesEntitlements.plans.elite.features,
-    icon: Shield,
-    gradient: 'from-purple-500 to-indigo-500',
-    buttonVariant: 'secondary'
-  }
-];
-
-const featureLabels: Record<string, string> = {
-  education_access: 'Education Library Access',
-  account_link: 'Account Linking',
-  doc_upload_basic: 'Basic Document Upload',
-  doc_upload_pro: 'Professional Document Management',
-  goals_basic: 'Basic Goal Setting',
-  goals_pro: 'Advanced Goal Tracking',
-  invite_pros: 'Invite Financial Professionals',
-  swag_lite: 'SWAG™ Lite Analysis',
-  monte_carlo_lite: 'Monte Carlo Lite',
-  vault_advanced: 'Advanced Secure Vault',
-  rmd_planner: 'RMD Planning Tools',
-  reports: 'Advanced Reports',
-  reports_pro: 'Professional Reports Suite',
-  estate_advanced: 'Advanced Estate Planning',
-  tax_advanced: 'Advanced Tax Optimization',
-  esign_basic: 'Basic E-Signature',
-  esign_pro: 'Professional E-Signature Suite',
-  properties: 'Property Management',
-  advisor_collab: 'Advisor Collaboration',
-  governance: 'Family Governance Tools',
-  multi_entity: 'Multi-Entity Management',
-  concierge: 'Dedicated Concierge Service'
-};
+import { toast } from '@/lib/toast';
 
 export default function PricingPage() {
   const [searchParams] = useSearchParams();
-  const { toast } = useToast();
-  const planRefs = useRef<Record<PlanId, HTMLDivElement | null>>({
-    basic: null,
-    premium: null,
-    elite: null
-  });
-
-  const sourceFeature = searchParams.get('feature');
-  const targetPlan = searchParams.get('plan') as PlanId;
+  const planParam = searchParams.get('plan') as PlanTier | null;
+  const featureParam = searchParams.get('feature');
+  
+  const basicRef = useRef<HTMLDivElement>(null);
+  const premiumRef = useRef<HTMLDivElement>(null);
+  const eliteRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    analytics.trackEvent('pricing.viewed', {
-      source_feature: sourceFeature,
-      target_plan: targetPlan
-    });
-
-    // Auto-scroll to target plan if specified
-    if (targetPlan && planRefs.current[targetPlan]) {
-      setTimeout(() => {
-        planRefs.current[targetPlan]?.scrollIntoView({
-          behavior: 'smooth',
-          block: 'center'
-        });
-      }, 100);
-    }
-  }, [sourceFeature, targetPlan]);
-
-  const handlePlanCTA = (planId: PlanId) => {
-    analytics.trackEvent('pricing.cta.clicked', {
-      plan: planId,
-      source_feature: sourceFeature
-    });
-
-    switch (planId) {
-      case 'basic':
-        toast({
-          title: "🚀 Welcome to Basic!",
-          description: "Your free trial has started. Check your email for setup instructions."
-        });
-        break;
-      case 'premium':
-        toast({
-          title: "✨ Premium Trial Started!",
-          description: "Enjoy 14 days of advanced family office features."
-        });
-        break;
-      case 'elite':
-        toast({
-          title: "👑 Elite Consultation Scheduled",
-          description: "Our concierge team will contact you within 24 hours."
-        });
-        break;
-    }
-  };
-
-  const findPlanWithFeature = (feature: string): PlanId => {
-    for (const [planId, plan] of Object.entries(familiesEntitlements.plans)) {
-      if (plan.features.includes(feature)) {
-        return planId as PlanId;
+    // Track page view
+    analytics.trackEvent("pricing.viewed", { plan: planParam, feature: featureParam });
+    
+    // Auto-scroll to matching plan
+    if (planParam) {
+      const targetRef = planParam === 'basic' ? basicRef : planParam === 'premium' ? premiumRef : eliteRef;
+      if (targetRef.current) {
+        targetRef.current.scrollIntoView({ behavior: "smooth" });
       }
     }
-    return 'premium'; // Default fallback
+  }, [planParam, featureParam]);
+
+  const handleCTA = (tier: PlanTier) => {
+    analytics.trackEvent("pricing.cta.clicked", { plan: tier });
+    
+    switch (tier) {
+      case 'basic':
+        toast.info("Starting Basic. Tools unlocked per Basic plan.");
+        break;
+      case 'premium':
+        toast.ok("Trial started (stub).");
+        break;
+      case 'elite':
+        toast.info("Concierge will reach out (stub).");
+        break;
+    }
   };
 
+  const plans = [
+    { 
+      tier: 'basic' as PlanTier, 
+      ref: basicRef, 
+      data: tierPricing.basic,
+      recommended: false 
+    },
+    { 
+      tier: 'premium' as PlanTier, 
+      ref: premiumRef, 
+      data: tierPricing.premium,
+      recommended: true 
+    },
+    { 
+      tier: 'elite' as PlanTier, 
+      ref: eliteRef, 
+      data: tierPricing.elite,
+      recommended: false 
+    },
+  ];
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-muted/20">
-      <div className="container mx-auto px-4 py-12">
+    <div className="min-h-screen bg-gradient-to-br from-background to-accent/20">
+      <div className="container mx-auto px-4 py-16">
         {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-            Choose Your Family Office Plan
-          </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Unlock powerful tools to manage your family's wealth, education, and legacy
+        <div className="text-center mb-16">
+          <h1 className="text-4xl font-bold mb-4">Choose Your Plan</h1>
+          <p className="text-xl text-muted-foreground mb-8">
+            Comprehensive family office tools tailored to your needs
           </p>
-          {sourceFeature && (
-            <div className="mt-4">
-              <Badge variant="outline" className="text-sm">
-                Upgrading for: {featureLabels[sourceFeature] || sourceFeature}
-              </Badge>
-            </div>
+          {planParam && featureParam && (
+            <Badge variant="outline" className="mb-4">
+              Upgrade to access: {featureParam}
+            </Badge>
           )}
         </div>
 
-        {/* Plan Cards */}
-        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {planCards.map((plan) => {
-            const Icon = plan.icon;
-            const isHighlighted = targetPlan === plan.id;
-            
-            return (
-              <Card
-                key={plan.id}
-                ref={(el) => { planRefs.current[plan.id] = el; }}
-                className={`relative transition-all duration-300 hover:shadow-xl ${
-                  isHighlighted ? 'ring-2 ring-primary shadow-lg scale-105' : ''
-                } ${plan.popular ? 'border-primary' : ''}`}
-              >
-                {plan.popular && (
-                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                    <Badge className="bg-primary text-primary-foreground px-3 py-1">
-                      Most Popular
-                    </Badge>
-                  </div>
-                )}
+        {/* Pricing Cards */}
+        <div className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
+          {plans.map(({ tier, ref, data, recommended }) => (
+            <Card
+              key={tier}
+              ref={ref}
+              className={`relative ${
+                recommended 
+                  ? 'border-primary shadow-lg ring-2 ring-primary/20' 
+                  : 'border-border'
+              }`}
+            >
+              {recommended && (
+                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                  <Badge className="bg-primary text-primary-foreground">
+                    <Star className="w-3 h-3 mr-1" />
+                    Most Popular
+                  </Badge>
+                </div>
+              )}
+              
+              <CardHeader className="text-center pb-8">
+                <CardTitle className="text-2xl font-bold">{data.name}</CardTitle>
+                <div className="mt-4">
+                  <span className="text-4xl font-bold">
+                    {typeof data.price === 'number' ? `$${data.price}` : String(data.price)}
+                  </span>
+                  {typeof data.price === 'number' && (
+                    <span className="text-muted-foreground">/month</span>
+                  )}
+                </div>
+                <p className="text-muted-foreground mt-2">{data.description}</p>
+              </CardHeader>
 
-                <CardHeader className="text-center pb-4">
-                  <div className={`w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r ${plan.gradient} flex items-center justify-center`}>
-                    <Icon className="w-8 h-8 text-white" />
-                  </div>
-                  <CardTitle className="text-2xl font-bold">{plan.name}</CardTitle>
-                  <div className="text-3xl font-bold text-foreground">
-                    ${plan.price}
-                    <span className="text-sm font-normal text-muted-foreground">/month</span>
-                  </div>
-                  <p className="text-muted-foreground">{plan.description}</p>
-                </CardHeader>
+              <CardContent className="space-y-6">
+                {/* Features */}
+                <ul className="space-y-3">
+                  {data.features.map((feature, index) => (
+                    <li key={index} className="flex items-start gap-3">
+                      <Check className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                      <span className="text-sm">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
 
-                <CardContent className="space-y-6">
-                  {/* Features List */}
-                  <div className="space-y-3">
-                    {plan.features.map((feature) => (
-                      <div key={feature} className="flex items-center gap-3">
-                        <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
-                        <span className="text-sm">
-                          {featureLabels[feature] || feature}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
+                {/* CTA Button */}
+                <Button
+                  className="w-full"
+                  variant={recommended ? "default" : "outline"}
+                  size="lg"
+                  onClick={() => handleCTA(tier)}
+                >
+                  {tier === 'basic' && 'Get Started'}
+                  {tier === 'premium' && 'Start Trial'}
+                  {tier === 'elite' && 'Contact Sales'}
+                </Button>
 
-                  {/* CTA Button */}
-                  <Button
-                    variant={plan.buttonVariant}
-                    size="lg"
-                    className="w-full"
-                    onClick={() => handlePlanCTA(plan.id)}
-                  >
-                    {plan.id === 'basic' && 'Start Free Trial'}
-                    {plan.id === 'premium' && 'Try Premium'}
-                    {plan.id === 'elite' && 'Talk to Concierge'}
-                  </Button>
-
-                  {/* Additional Info */}
-                  <div className="text-center text-xs text-muted-foreground">
-                    {plan.id === 'basic' && '14-day free trial • No credit card required'}
-                    {plan.id === 'premium' && '14-day free trial • Cancel anytime'}
-                    {plan.id === 'elite' && 'White-glove onboarding included'}
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })}
+                {/* Feature Count */}
+                <div className="text-center text-sm text-muted-foreground pt-4 border-t">
+                  {familyCards.filter(card => card.requiredTier === tier).length} exclusive features
+                </div>
+              </CardContent>
+            </Card>
+          ))}
         </div>
 
-        {/* FAQ Section */}
-        <div className="mt-16 text-center">
-          <h3 className="text-2xl font-bold text-foreground mb-4">
-            Questions? We're here to help.
-          </h3>
-          <p className="text-muted-foreground mb-6">
-            Our family office experts are available to guide you to the perfect plan.
+        {/* Footer */}
+        <div className="text-center mt-16">
+          <p className="text-muted-foreground">
+            All plans include 24/7 support and regular updates
           </p>
-          <Button variant="outline" size="lg">
-            Schedule a Consultation
-          </Button>
         </div>
       </div>
     </div>

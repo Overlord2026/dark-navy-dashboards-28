@@ -7,7 +7,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { schedulerApi } from '@/modules/scheduler/schedulerApi';
 import { nilAdapter } from '@/modules/scheduler/adapters/nilAdapter';
-import { toast } from '@/hooks/use-toast';
+import { toast } from '@/lib/toast';
 
 interface Offering {
   id: string;
@@ -50,15 +50,19 @@ export default function SessionsOverview() {
         nilAdapter.checkPublishEligibility(user.id)
       ]);
 
-      setOfferings(offeringsData || []);
+      // Map database fields to interface fields
+      const mappedOfferings = (offeringsData || []).map((offering: any) => ({
+        ...offering,
+        duration_minutes: offering.duration_min || 0,
+        is_published: offering.published || false,
+        offering_type: 'one_on_one',
+        location_type: 'virtual'
+      }));
+      setOfferings(mappedOfferings);
       setPublishEligibility(eligibilityData);
     } catch (error) {
       console.error('Error loading sessions data:', error);
-      toast({
-        title: "Error",
-        description: "Failed to load sessions data",
-        variant: "destructive"
-      });
+      toast.err("Failed to load sessions data");
     } finally {
       setIsLoading(false);
     }
@@ -66,11 +70,7 @@ export default function SessionsOverview() {
 
   const togglePublishStatus = async (offeringId: string, currentStatus: boolean) => {
     if (!currentStatus && publishEligibility && !publishEligibility.canPublish) {
-      toast({
-        title: "Cannot Publish",
-        description: publishEligibility.blockReason,
-        variant: "destructive"
-      });
+      toast.err(publishEligibility.blockReason);
       return;
     }
 
@@ -78,17 +78,10 @@ export default function SessionsOverview() {
       await schedulerApi.updateOffering(offeringId, { is_published: !currentStatus });
       await loadData(); // Reload data
       
-      toast({
-        title: "Success",
-        description: `Offering ${!currentStatus ? 'published' : 'unpublished'}`,
-      });
+      toast.ok(`Offering ${!currentStatus ? 'published' : 'unpublished'}`);
     } catch (error) {
       console.error('Error updating offering:', error);
-      toast({
-        title: "Error",
-        description: "Failed to update offering status",
-        variant: "destructive"
-      });
+      toast.err("Failed to update offering status");
     }
   };
 

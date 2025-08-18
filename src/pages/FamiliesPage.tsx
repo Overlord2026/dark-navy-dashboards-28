@@ -6,7 +6,7 @@ import { FamilyCardsGrid } from '@/components/families/FamilyCardsGrid';
 import { FamilySegment } from '@/data/familiesPricingTiers';
 
 const FamiliesPage = () => {
-  const [selectedSegment, setSelectedSegment] = useState<FamilySegment>('Aspiring');
+  const [selectedSegment, setSelectedSegment] = useState<FamilySegment>('aspiring');
 
   return (
     <div className="min-h-screen bg-background">

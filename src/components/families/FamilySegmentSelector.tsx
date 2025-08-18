@@ -15,25 +15,25 @@ const segmentConfig: Record<FamilySegment, {
   icon: React.ElementType;
   color: string;
 }> = {
-  Aspiring: {
+  aspiring: {
     label: 'Aspiring Families',
     description: 'Building wealth and financial security',
     icon: Users,
     color: 'from-emerald-50 to-green-50 border-emerald-200'
   },
-  Retirees: {
+  retirees: {
     label: 'Retirees',
     description: 'Preserving and managing retirement wealth',
     icon: Wallet,
     color: 'from-blue-50 to-indigo-50 border-blue-200'
   },
-  HNW: {
+  hnw: {
     label: 'High Net Worth',
     description: 'Sophisticated wealth management needs',
     icon: Crown,
     color: 'from-amber-50 to-yellow-50 border-amber-200'
   },
-  UHNW: {
+  uhnw: {
     label: 'Ultra High Net Worth',
     description: 'Comprehensive family office services',
     icon: Gem,

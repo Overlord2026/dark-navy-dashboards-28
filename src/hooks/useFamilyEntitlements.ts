@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { SubscriptionTier, FamilySegment, FamilyCard, QuickAction, familyCards, quickActions } from '@/data/familiesPricingTiers';
 import { useSubscriptionAccess } from '@/hooks/useSubscriptionAccess';
 
+export type { FamilySegment };
+
 export interface FamilyEntitlements {
   currentTier: SubscriptionTier;
   segment: FamilySegment;
@@ -13,7 +15,7 @@ export interface FamilyEntitlements {
   isActionAccessible: (action: QuickAction) => boolean;
 }
 
-export function useFamilyEntitlements(selectedSegment: FamilySegment = 'Aspiring'): FamilyEntitlements {
+export function useFamilyEntitlements(selectedSegment: FamilySegment = 'aspiring'): FamilyEntitlements {
   const { subscriptionPlan, isLoading } = useSubscriptionAccess();
   const [currentTier, setCurrentTier] = useState<SubscriptionTier>('basic');
 

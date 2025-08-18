@@ -195,7 +195,7 @@ export const schedulerApi = {
   },
 
   // Public queries
-  async getPublicOffering(slug: string) {
+  async getPublicOffering(slug: string): Promise<any> {
     const { data, error } = await supabase
       .from('meet_offerings')
       .select('*')
@@ -207,7 +207,7 @@ export const schedulerApi = {
     return data;
   },
 
-  async getPublicWindows(offeringId: string) {
+  async getPublicWindows(offeringId: string): Promise<any> {
     const { data, error } = await supabase
       .from('meet_windows')
       .select('*')

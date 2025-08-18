@@ -1,5 +1,13 @@
-export type FamilySegment = 'Aspiring' | 'Retirees' | 'HNW' | 'UHNW';
-export type SubscriptionTier = 'basic' | 'premium' | 'elite';
+export type FamilySegment = "aspiring" | "retirees" | "hnw" | "uhnw";
+export type PlanTier = "basic" | "premium" | "elite";
+export type SubscriptionTier = PlanTier;
+
+export interface Entitlement { 
+  key: string; 
+  label: string; 
+  plans: PlanTier[]; 
+  segments?: FamilySegment[]; 
+}
 
 export interface QuickAction {
   id: string;
@@ -76,7 +84,7 @@ export const familyCards: FamilyCard[] = [
     description: 'View all your financial accounts in one place',
     category: 'Basic Tools',
     requiredTier: 'basic',
-    segments: ['Aspiring', 'Retirees', 'HNW', 'UHNW']
+    segments: ['aspiring', 'retirees', 'hnw', 'uhnw']
   },
   {
     id: 'goal-tracking',
@@ -84,7 +92,7 @@ export const familyCards: FamilyCard[] = [
     description: 'Set and monitor your financial goals',
     category: 'Basic Tools',
     requiredTier: 'basic',
-    segments: ['Aspiring', 'Retirees', 'HNW', 'UHNW']
+    segments: ['aspiring', 'retirees', 'hnw', 'uhnw']
   },
   {
     id: 'document-vault',
@@ -92,7 +100,7 @@ export const familyCards: FamilyCard[] = [
     description: 'Secure document storage and management',
     category: 'Basic Tools',
     requiredTier: 'basic',
-    segments: ['Aspiring', 'Retirees', 'HNW', 'UHNW'],
+    segments: ['aspiring', 'retirees', 'hnw', 'uhnw'],
     quotas: { basic: 50, premium: 500, elite: 999 }
   },
   {
@@ -101,7 +109,7 @@ export const familyCards: FamilyCard[] = [
     description: 'Manage cash flow and transfers',
     category: 'Basic Tools',
     requiredTier: 'basic',
-    segments: ['Aspiring', 'Retirees', 'HNW', 'UHNW']
+    segments: ['aspiring', 'retirees', 'hnw', 'uhnw']
   },
 
   // Premium/Elite guarded cards
@@ -111,7 +119,7 @@ export const familyCards: FamilyCard[] = [
     description: 'Advanced document management with AI indexing',
     category: 'Advanced Features',
     requiredTier: 'premium',
-    segments: ['HNW', 'UHNW'],
+    segments: ['hnw', 'uhnw'],
     quotas: { premium: 1000, elite: 999 }
   },
   {
@@ -120,7 +128,7 @@ export const familyCards: FamilyCard[] = [
     description: 'Real estate portfolio management',
     category: 'Advanced Features',
     requiredTier: 'premium',
-    segments: ['Retirees', 'HNW', 'UHNW']
+    segments: ['retirees', 'hnw', 'uhnw']
   },
   {
     id: 'estate-advanced',
@@ -128,7 +136,7 @@ export const familyCards: FamilyCard[] = [
     description: 'Comprehensive estate planning tools',
     category: 'Advanced Features',
     requiredTier: 'premium',
-    segments: ['HNW', 'UHNW']
+    segments: ['hnw', 'uhnw']
   },
   {
     id: 'tax-advanced',
@@ -136,7 +144,7 @@ export const familyCards: FamilyCard[] = [
     description: 'Advanced tax planning and optimization',
     category: 'Advanced Features',
     requiredTier: 'premium',
-    segments: ['Retirees', 'HNW', 'UHNW']
+    segments: ['retirees', 'hnw', 'uhnw']
   },
   {
     id: 'e-sign-ron-ipen',
@@ -144,7 +152,7 @@ export const familyCards: FamilyCard[] = [
     description: 'Remote online notarization and e-signatures',
     category: 'Premium Services',
     requiredTier: 'elite',
-    segments: ['HNW', 'UHNW']
+    segments: ['hnw', 'uhnw']
   },
   {
     id: 'concierge',
@@ -152,7 +160,7 @@ export const familyCards: FamilyCard[] = [
     description: 'Dedicated concierge services',
     category: 'Premium Services',
     requiredTier: 'elite',
-    segments: ['UHNW']
+    segments: ['uhnw']
   }
 ];
 

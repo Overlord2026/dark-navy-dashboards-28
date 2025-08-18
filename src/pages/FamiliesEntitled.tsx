@@ -15,14 +15,14 @@ import {
   GraduationCap,
   Crown
 } from 'lucide-react';
-import { useFamilyEntitlements } from '@/hooks/useFamilyEntitlements';
-import { useToast } from '@/hooks/use-toast';
+import { useFamilyEntitlements, type FamilySegment } from '@/hooks/useFamilyEntitlements';
+import { toast } from '@/lib/toast';
 import { analytics } from '@/lib/analytics';
 import familiesConfig from '@/config/familiesEntitlements';
 import { AdminEmailBanner } from '@/components/admin/AdminEmailBanner';
 
 interface FamiliesEntitledProps {
-  userSegment?: 'Aspiring' | 'Retirees' | 'HNW' | 'UHNW';
+  userSegment?: FamilySegment;
   isAdmin?: boolean;
 }
 
@@ -44,10 +44,9 @@ const iconMap = {
 };
 
 export const FamiliesEntitled: React.FC<FamiliesEntitledProps> = ({ 
-  userSegment = 'Aspiring',
+  userSegment = 'aspiring',
   isAdmin = false 
 }) => {
-  const { toast } = useToast();
   const [selectedSegment, setSelectedSegment] = useState(userSegment);
   const { hasAccess, currentTier } = useFamilyEntitlements(selectedSegment);
   const [trainingProgress] = useState(45); // Mock training progress
@@ -59,12 +58,12 @@ export const FamiliesEntitled: React.FC<FamiliesEntitledProps> = ({
     analytics.trackEvent(action.event, { feature: action.feature, tier: currentTier });
     
     if (!hasAccess(action.feature)) {
-      toast.error(`Upgrade to ${getRequiredTier(action.feature)} to access this feature`);
+      toast.err(`Upgrade to ${getRequiredTier(action.feature)} to access this feature`);
       analytics.trackEvent('entitlement.gated', { feature: action.feature, tier: currentTier });
       return;
     }
 
-    toast.success(`${action.label} started successfully`);
+    toast.ok(`${action.label} started successfully`);
     analytics.trackEvent('quickAction.clicked', { action: action.feature });
   };
 
@@ -87,7 +86,7 @@ export const FamiliesEntitled: React.FC<FamiliesEntitledProps> = ({
     }
     
     analytics.trackEvent('education.opened', { segment: selectedSegment });
-    toast.success('Education Library opened');
+    toast.ok('Education Library opened');
   };
 
   const renderFeatureCard = (card: any) => {
@@ -165,7 +164,7 @@ export const FamiliesEntitled: React.FC<FamiliesEntitledProps> = ({
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
               {familiesConfig.quick_actions.map((action) => {
                 const IconComponent = iconMap[action.feature as keyof typeof iconMap] || Target;
-                const isAccessible = hasAccess(action.feature);
+                const isAccessible = hasAccess(action.feature as any);
                 
                 return (
                   <Button

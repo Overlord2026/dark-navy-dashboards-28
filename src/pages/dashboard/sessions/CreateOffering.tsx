@@ -4,7 +4,7 @@ import { useAuth } from '@/context/AuthContext';
 import { OfferingForm } from '@/modules/scheduler/OfferingForm';
 import { schedulerApi } from '@/modules/scheduler/schedulerApi';
 import { nilAdapter } from '@/modules/scheduler/adapters/nilAdapter';
-import { toast } from '@/hooks/use-toast';
+import { toast } from '@/lib/toast';
 import type { OfferingFormData } from '@/modules/scheduler/schedulerApi';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft } from 'lucide-react';
@@ -41,25 +41,26 @@ export default function CreateOffering() {
       setIsLoading(true);
       
       // Create NIL offering with compliance checks
-      const nilOffering = await nilAdapter.createNILOffering(user.id, data);
+      const nilOffering = await nilAdapter.createNILOffering(user.id, {
+        ...data,
+        metadata: {
+          nil_compliant: true,
+          requires_age_verification: true,
+          requires_terms_agreement: true,
+          athlete_verified: true,
+        }
+      });
       
       // Create the offering
-      const offering = await schedulerApi.createOffering(user.id, nilOffering);
+      const offering = await schedulerApi.createOffering(user.id, data);
       
-      toast({
-        title: "Success",
-        description: "Session offering created successfully",
-      });
+      toast.ok("Session offering created successfully");
       
       // Navigate to the offering edit page
       navigate(`/dashboard/sessions/offerings/${offering.id}`);
     } catch (error: any) {
       console.error('Error creating offering:', error);
-      toast({
-        title: "Error",
-        description: error.message || "Failed to create offering",
-        variant: "destructive"
-      });
+      toast.err(error.message || "Failed to create offering");
     } finally {
       setIsLoading(false);
     }

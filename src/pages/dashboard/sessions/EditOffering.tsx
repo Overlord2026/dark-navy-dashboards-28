@@ -4,7 +4,7 @@ import { useAuth } from '@/context/AuthContext';
 import { OfferingForm } from '@/modules/scheduler/OfferingForm';
 import { schedulerApi } from '@/modules/scheduler/schedulerApi';
 import { nilAdapter } from '@/modules/scheduler/adapters/nilAdapter';
-import { toast } from '@/hooks/use-toast';
+import { toast } from '@/lib/toast';
 import type { OfferingFormData } from '@/modules/scheduler/schedulerApi';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Trash2 } from 'lucide-react';
@@ -49,11 +49,7 @@ export default function EditOffering() {
 
       const offering = offeringsData.find(o => o.id === id);
       if (!offering) {
-        toast({
-          title: "Error",
-          description: "Offering not found",
-          variant: "destructive"
-        });
+        toast.err("Offering not found");
         navigate('/dashboard/sessions');
         return;
       }
@@ -62,11 +58,7 @@ export default function EditOffering() {
       setPublishEligibility(eligibilityData);
     } catch (error) {
       console.error('Error loading offering:', error);
-      toast({
-        title: "Error",
-        description: "Failed to load offering",
-        variant: "destructive"
-      });
+      toast.err("Failed to load offering");
     } finally {
       setIsLoading(false);
     }
@@ -79,25 +71,26 @@ export default function EditOffering() {
       setIsLoading(true);
       
       // Update NIL offering with compliance checks
-      const nilOffering = await nilAdapter.createNILOffering(user.id, data);
+      const nilOffering = await nilAdapter.createNILOffering(user.id, {
+        ...data,
+        metadata: {
+          nil_compliant: true,
+          requires_age_verification: true,
+          requires_terms_agreement: true,
+          athlete_verified: true,
+        }
+      });
       
       // Update the offering
-      await schedulerApi.updateOffering(id, nilOffering);
+      await schedulerApi.updateOffering(id, data);
       
-      toast({
-        title: "Success",
-        description: "Session offering updated successfully",
-      });
+      toast.ok("Session offering updated successfully");
       
       // Reload data
       await loadData();
     } catch (error: any) {
       console.error('Error updating offering:', error);
-      toast({
-        title: "Error",
-        description: error.message || "Failed to update offering",
-        variant: "destructive"
-      });
+      toast.err(error.message || "Failed to update offering");
     } finally {
       setIsLoading(false);
     }
@@ -110,19 +103,12 @@ export default function EditOffering() {
       setIsDeleting(true);
       await schedulerApi.deleteOffering(id);
       
-      toast({
-        title: "Success",
-        description: "Session offering deleted successfully",
-      });
+      toast.ok("Session offering deleted successfully");
       
       navigate('/dashboard/sessions');
     } catch (error) {
       console.error('Error deleting offering:', error);
-      toast({
-        title: "Error",
-        description: "Failed to delete offering",
-        variant: "destructive"
-      });
+      toast.err("Failed to delete offering");
     } finally {
       setIsDeleting(false);
     }

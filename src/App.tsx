@@ -54,6 +54,7 @@ import EducationPage from "./pages/EducationPage";
 
 // Lazy load new components
 const FamiliesEntitled = React.lazy(() => import("./pages/FamiliesEntitled"));
+const PricingPage = React.lazy(() => import("./pages/PricingPage"));
 const NILAthlete = React.lazy(() => import("./pages/NILAthlete"));
 const NILUniversity = React.lazy(() => import("./pages/NILUniversity"));
 const NILBrand = React.lazy(() => import("./pages/NILBrand"));
@@ -272,6 +273,7 @@ function App() {
                              <APIWarningBanner />
                             <ExtensionHealthBanner />
                             <ReferralTracker />
+                            <Sonner />
                             <Routes>
         <Route path="/wireframe" element={<WireframePage />} />
                             <Route path="/platform-map" element={<PlatformMap />} />
@@ -279,12 +281,17 @@ function App() {
                              <Route path="/athletes/nil-onboarding" element={<NILOnboarding />} />
                              <Route path="/athletes/nil-landing" element={<NILLandingPage />} />
                              
-                             {/* New Families and NIL Routes */}
-                             <Route path="/families" element={
-                               <Suspense fallback={<div>Loading...</div>}>
-                                 <FamiliesEntitled />
-                               </Suspense>
-                             } />
+                              {/* New Families and NIL Routes */}
+                              <Route path="/families" element={
+                                <Suspense fallback={<div>Loading...</div>}>
+                                  <FamiliesEntitled />
+                                </Suspense>
+                              } />
+                              <Route path="/pricing" element={
+                                <Suspense fallback={<div>Loading...</div>}>
+                                  <PricingPage />
+                                </Suspense>
+                              } />
                              <Route path="/nil" element={<NILFrontDoor />} />
                              <Route path="/nil/athlete" element={
                                <Suspense fallback={<div>Loading...</div>}>
