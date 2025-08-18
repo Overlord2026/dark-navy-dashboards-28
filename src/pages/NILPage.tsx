@@ -3,6 +3,7 @@ import { useFeatureFlags } from '@/lib/featureFlags';
 import { useGate } from '@/hooks/useGate';
 import { supabase } from '@/integrations/supabase/client';
 import { analytics } from '@/lib/analytics';
+import { useAuth } from '@/context/AuthContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -39,6 +40,7 @@ interface BookingRequest {
 export default function NILPage() {
   const flags = useFeatureFlags();
   const { allowed } = useGate('nil_booking');
+  const { userProfile } = useAuth();
   const [athletes, setAthletes] = useState<Athlete[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedAthlete, setSelectedAthlete] = useState<Athlete | null>(null);
@@ -94,6 +96,7 @@ export default function NILPage() {
         .insert({
           ...bookingData,
           athlete_id: selectedAthlete.id,
+          client_user_id: userProfile?.id || '',
           total_cost: totalCost
         });
 
