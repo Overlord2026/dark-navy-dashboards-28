@@ -1,0 +1,121 @@
+role,module,status,route,key_files,db_objects,feature_flag,gaps,owner
+advisor,CRM/Households,✅,/crm,"CRMDashboard.tsx,ContactBook.tsx,PipelineManager.tsx","advisor_client_links,client_invitations,households",,None,CRM Team
+advisor,Onboarding,✅,/advisor/onboarding,"AdvisorOnboardingPage.tsx,AdvisorOnboardingSequencePage.tsx","advisor_onboarding,advisor_profiles",,None,Onboarding Team
+advisor,Doc Requests/Vault,🟡,/vault,"DocumentVault.tsx,DocumentUploadZone.tsx","documents,storage.buckets",,E-sign integration missing,Vault Team
+advisor,Pipelines,✅,/advisor/pipeline,"PipelineManager.tsx,PipelineKanban.tsx","leads,lead_stages,pipelines",,None,CRM Team
+advisor,Tasks/Workflows,🟡,/advisor/tasks,"SmartReminders.tsx,AutomatedReminders.tsx","tasks,workflow_templates",,Workflow builder missing,Workflow Team
+advisor,Scheduling,✅,/advisor/schedule,scheduler module,"advisor_availability,appointments",,None,Scheduler Team
+advisor,Billing/Stripe,🟡,/advisor/billing,AdvisorBillingPage.tsx,"billing_daily,billing_metrics",paymentsEnabled,Full Stripe integration disabled,Billing Team
+advisor,Reports/PDF,🟡,/advisor/reports,"CRMAnalytics.tsx,ROIDashboard.tsx","reports,analytics_events",,PDF generation limited,Reports Team
+advisor,Templates/Playbooks,🟡,/advisor/templates,advisor_email_templates,"advisor_email_templates,communication_templates",,Playbook system missing,Templates Team
+advisor,Compliance,🟡,/advisor/compliance,AdvisorCompliancePage.tsx,"compliance_checks,audit_logs",,RIA compliance rules missing,Compliance Team
+advisor,Integrations,🔴,-,-,api_integrations,,No CRM integrations,Integration Team
+advisor,Marketplace,✅,/marketplace,"MarketplacePage.tsx,AdvisorDirectory.tsx","professionals,marketplace_listings",,None,Marketplace Team
+cpa,CRM/Households,🟡,/cpa/clients,"accounting_clients,ContactBook.tsx","accounting_clients,accounting_entities",,Family linking missing,CRM Team
+cpa,Onboarding,✅,/cpa/onboarding,"AccountantOnboardingPage.tsx,AccountantOnboardingSequencePage.tsx",accountant_onboarding,,None,Onboarding Team
+cpa,Doc Requests/Vault,✅,/cpa/documents,"accounting_documents,DocumentVault.tsx","accounting_documents,storage.buckets",,None,Vault Team
+cpa,Pipelines,🟡,/cpa/engagements,accounting_engagements,"accounting_engagements,accounting_tasks",,Visual pipeline missing,CRM Team
+cpa,Tasks/Workflows,✅,/cpa/tasks,"accounting_tasks,workflow templates","accounting_tasks,accounting_outsourcing_routes",,None,Workflow Team
+cpa,Scheduling,🔴,-,-,-,,No scheduling system,Scheduler Team
+cpa,Billing/Stripe,✅,/cpa/billing,"accounting_invoices,accounting_payments","accounting_invoices,accounting_payments",,None,Billing Team
+cpa,Reports/PDF,✅,/cpa/reports,"accounting_returns,reporting system","accounting_returns,bookkeeping_reports",,None,Reports Team
+cpa,Templates/Playbooks,🔴,-,-,-,,No template system,Templates Team
+cpa,Compliance,✅,/cpa/compliance,"CE tracking,license status","accountant_ce_records,accountant_license_status",,None,Compliance Team
+cpa,Integrations,🟡,/cpa/integrations,Outsourcing routes,"accounting_outsourcing_routes,api_integrations",,QuickBooks/Xero missing,Integration Team
+cpa,Marketplace,🔴,-,-,-,,No CPA marketplace,Marketplace Team
+attorney-estate,CRM/Households,🟡,/attorney/estate/clients,attorney_client_links,"attorney_client_links,attorney_client_invitations",,Household grouping missing,CRM Team
+attorney-estate,Onboarding,✅,/attorney/onboarding,"AttorneyOnboardingPage.tsx,AttorneyOnboardingFlowPage.tsx",attorney_onboarding,,None,Onboarding Team
+attorney-estate,Doc Requests/Vault,✅,/attorney/vault,"DocumentVault.tsx,attorney documents","attorney_documents,attorney_document_shares",,None,Vault Team
+attorney-estate,Pipelines,🔴,-,-,-,,No estate planning pipeline,CRM Team
+attorney-estate,Tasks/Workflows,🔴,-,-,-,,No estate workflow system,Workflow Team
+attorney-estate,Scheduling,🔴,-,-,-,,No appointment scheduling,Scheduler Team
+attorney-estate,Billing/Stripe,🔴,-,-,-,,No billing system,Billing Team
+attorney-estate,Reports/PDF,🔴,-,-,-,,No estate reports,Reports Team
+attorney-estate,Templates/Playbooks,🔴,-,-,-,,No estate templates,Templates Team
+attorney-estate,Compliance,✅,/attorney/compliance,"CLE tracking,bar status","attorney_cle_records,attorney_bar_status",,None,Compliance Team
+attorney-estate,Integrations,🔴,-,-,-,,No legal software integrations,Integration Team
+attorney-estate,Marketplace,🔴,-,-,-,,No attorney marketplace,Marketplace Team
+attorney-litigation,CRM/Households,🔴,-,-,-,,No client management,CRM Team
+attorney-litigation,Onboarding,✅,/attorney/litigation/onboarding,LitigationAttorneyOnboardingPage.tsx,attorney_onboarding,,None,Onboarding Team
+attorney-litigation,Doc Requests/Vault,🟡,/attorney/litigation/documents,Shared attorney documents,attorney_documents,,Case-specific organization missing,Vault Team
+attorney-litigation,Pipelines,🔴,-,-,-,,No case pipeline,CRM Team
+attorney-litigation,Tasks/Workflows,🔴,-,-,-,,No litigation workflows,Workflow Team
+attorney-litigation,Scheduling,🔴,-,-,-,,No court scheduling,Scheduler Team
+attorney-litigation,Billing/Stripe,🔴,-,-,-,,No litigation billing,Billing Team
+attorney-litigation,Reports/PDF,🔴,-,-,-,,No case reports,Reports Team
+attorney-litigation,Templates/Playbooks,🔴,-,-,-,,No litigation templates,Templates Team
+attorney-litigation,Compliance,✅,/attorney/compliance,Shared CLE system,"attorney_cle_records,attorney_bar_status",,None,Compliance Team
+attorney-litigation,Integrations,🔴,-,-,-,,No case management integrations,Integration Team
+attorney-litigation,Marketplace,🔴,-,-,-,,No litigation marketplace,Marketplace Team
+realtor,CRM/Households,🔴,-,-,-,,No client management,CRM Team
+realtor,Onboarding,✅,/realtor/onboarding,RealtorOnboardingPage.tsx,realtor_onboarding,,None,Onboarding Team
+realtor,Doc Requests/Vault,🔴,-,-,-,,No property documents system,Vault Team
+realtor,Pipelines,🔴,-,-,-,,No property pipeline,CRM Team
+realtor,Tasks/Workflows,🔴,-,-,-,,No real estate workflows,Workflow Team
+realtor,Scheduling,🔴,-,-,-,,No showing scheduling,Scheduler Team
+realtor,Billing/Stripe,🔴,-,-,-,,No commission tracking,Billing Team
+realtor,Reports/PDF,🔴,-,-,-,,No property reports,Reports Team
+realtor,Templates/Playbooks,🔴,-,-,-,,No real estate templates,Templates Team
+realtor,Compliance,🔴,-,-,-,,No license tracking,Compliance Team
+realtor,Integrations,🔴,-,-,-,,No MLS integrations,Integration Team
+realtor,Marketplace,🔴,-,-,-,,No realtor marketplace,Marketplace Team
+insurance-life,CRM/Households,🔴,-,-,-,,No client management,CRM Team
+insurance-life,Onboarding,✅,/insurance/life/onboarding,InsuranceOnboardingPage.tsx,insurance_onboarding,,None,Onboarding Team
+insurance-life,Doc Requests/Vault,🔴,-,-,-,,No policy documents,Vault Team
+insurance-life,Pipelines,🔴,-,-,-,,No sales pipeline,CRM Team
+insurance-life,Tasks/Workflows,🔴,-,-,-,,No underwriting workflows,Workflow Team
+insurance-life,Scheduling,🔴,-,-,-,,No appointment scheduling,Scheduler Team
+insurance-life,Billing/Stripe,🔴,-,-,-,,No commission tracking,Billing Team
+insurance-life,Reports/PDF,🔴,-,-,-,,No insurance reports,Reports Team
+insurance-life,Templates/Playbooks,🔴,-,-,-,,No insurance templates,Templates Team
+insurance-life,Compliance,🟡,/insurance/compliance,CE tracking,"ce_courses,ce_tracking",,License tracking missing,Compliance Team
+insurance-life,Integrations,🔴,-,-,-,,No carrier integrations,Integration Team
+insurance-life,Marketplace,🔴,-,-,-,,No insurance marketplace,Marketplace Team
+insurance-medicare-ltc,CRM/Households,🔴,-,-,-,,No client management,CRM Team
+insurance-medicare-ltc,Onboarding,✅,/insurance/medicare/onboarding,MedicareOnboardingPage.tsx,medicare_onboarding,,None,Onboarding Team
+insurance-medicare-ltc,Doc Requests/Vault,🔴,-,-,-,,No medicare documents,Vault Team
+insurance-medicare-ltc,Pipelines,🔴,-,-,-,,No enrollment pipeline,CRM Team
+insurance-medicare-ltc,Tasks/Workflows,🔴,-,-,-,,No medicare workflows,Workflow Team
+insurance-medicare-ltc,Scheduling,🔴,-,-,-,,No appointment scheduling,Scheduler Team
+insurance-medicare-ltc,Billing/Stripe,🔴,-,-,-,,No commission tracking,Billing Team
+insurance-medicare-ltc,Reports/PDF,🔴,-,-,-,,No medicare reports,Reports Team
+insurance-medicare-ltc,Templates/Playbooks,🔴,-,-,-,,No medicare templates,Templates Team
+insurance-medicare-ltc,Compliance,🟡,/insurance/compliance,CE tracking,"ce_courses,ce_tracking",,AHIP certification tracking missing,Compliance Team
+insurance-medicare-ltc,Integrations,🔴,-,-,-,,No CMS integrations,Integration Team
+insurance-medicare-ltc,Marketplace,🔴,-,-,-,,No medicare marketplace,Marketplace Team
+healthcare,CRM/Households,🔴,-,-,-,,No patient management,CRM Team
+healthcare,Onboarding,✅,/healthcare/onboarding,HealthcareOnboardingPage.tsx,healthcare_onboarding,,None,Onboarding Team
+healthcare,Doc Requests/Vault,✅,/healthcare/records,Healthcare documents system,"healthcare_documents,healthcare_document_access",,None,Vault Team
+healthcare,Pipelines,🔴,-,-,-,,No patient pipeline,CRM Team
+healthcare,Tasks/Workflows,🔴,-,-,-,,No healthcare workflows,Workflow Team
+healthcare,Scheduling,🔴,-,-,-,,No appointment scheduling,Scheduler Team
+healthcare,Billing/Stripe,🔴,-,-,-,,No medical billing,Billing Team
+healthcare,Reports/PDF,🟡,/healthcare/reports,Health reports,health_recommendations,,Comprehensive reporting missing,Reports Team
+healthcare,Templates/Playbooks,🔴,-,-,-,,No care plan templates,Templates Team
+healthcare,Compliance,🔴,-,-,-,,No HIPAA compliance tracking,Compliance Team
+healthcare,Integrations,🔴,-,-,-,,No EHR integrations,Integration Team
+healthcare,Marketplace,🔴,-,-,-,,No healthcare marketplace,Marketplace Team
+sports-agent,CRM/Households,🟡,/agents/roster,AgentsOS.tsx athlete roster,"athlete_roster,agent_athletes",,Family connections missing,CRM Team
+sports-agent,Onboarding,✅,/agents/onboarding,SportsAgentOnboardingPage.tsx,sports_agent_onboarding,,None,Onboarding Team
+sports-agent,Doc Requests/Vault,🟡,/agents/documents,"NIL documents,agreements","nil_agreements,agent_documents",,Contract templates missing,Vault Team
+sports-agent,Pipelines,✅,/agents/partnerships,Partnership pipeline in AgentsOS,"agent_partnerships,campaign_pipeline",,None,CRM Team
+sports-agent,Tasks/Workflows,🔴,-,-,-,,No NIL workflows,Workflow Team
+sports-agent,Scheduling,🔴,-,-,-,,No meeting scheduling,Scheduler Team
+sports-agent,Billing/Stripe,🔴,-,-,-,,No commission tracking,Billing Team
+sports-agent,Reports/PDF,🔴,-,-,-,,No performance reports,Reports Team
+sports-agent,Templates/Playbooks,🔴,-,-,-,,No NIL templates,Templates Team
+sports-agent,Compliance,🟡,/agents/compliance,NIL compliance tracking,"nil_compliance,nil_disclosures",,State regulations missing,Compliance Team
+sports-agent,Integrations,🔴,-,-,-,,No sports data integrations,Integration Team
+sports-agent,Marketplace,🔴,-,-,-,,No sports marketplace,Marketplace Team
+university,CRM/Households,🔴,-,-,-,,No athlete management,CRM Team
+university,Onboarding,🟡,/nil/university,NILUniversity.tsx,university_onboarding,,Full onboarding flow missing,Onboarding Team
+university,Doc Requests/Vault,🟡,/nil/university/documents,NIL documents,"nil_documents,nil_compliance",,Compliance documents missing,Vault Team
+university,Pipelines,🔴,-,-,-,,No NIL approval pipeline,CRM Team
+university,Tasks/Workflows,🔴,-,-,-,,No compliance workflows,Workflow Team
+university,Scheduling,🔴,-,-,-,,No meeting scheduling,Scheduler Team
+university,Billing/Stripe,🔴,-,-,-,,No revenue tracking,Billing Team
+university,Reports/PDF,🔴,-,-,-,,No NIL reports,Reports Team
+university,Templates/Playbooks,🔴,-,-,-,,No compliance templates,Templates Team
+university,Compliance,🟡,/nil/university/compliance,Basic NIL compliance,"nil_compliance,nil_training_status",,NCAA rule tracking missing,Compliance Team
+university,Integrations,🔴,-,-,-,,No student system integrations,Integration Team
+university,Marketplace,🔴,-,-,-,,No university marketplace,Marketplace Team

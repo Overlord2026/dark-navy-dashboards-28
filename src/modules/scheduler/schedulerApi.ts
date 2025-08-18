@@ -116,9 +116,14 @@ export const schedulerApi = {
   },
 
   async updateWindow(windowId: string, window: Partial<WindowFormData>) {
+    const updateData: any = {};
+    if (window.start_time) updateData.starts_at = window.start_time;
+    if (window.end_time) updateData.ends_at = window.end_time;
+    if (window.max_bookings) updateData.seats_total = window.max_bookings;
+    
     const { data, error } = await supabase
       .from('meet_windows')
-      .update(window)
+      .update(updateData)
       .eq('id', windowId)
       .select()
       .single();

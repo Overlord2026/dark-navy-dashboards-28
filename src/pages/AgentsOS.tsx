@@ -79,10 +79,10 @@ export const AgentsOS: React.FC = () => {
           : agreement
       ));
       toast.success('Agreement marked as sent. Email delivery will activate once admin enables it.');
-      trackEvent('agent.rep.sent', { noSecrets: true });
+      analytics.trackEvent('agent.rep.sent', { noSecrets: true });
     } else {
       toast.success('Agreement sent successfully via email');
-      trackEvent('agent.rep.sent', { method: 'email' });
+      analytics.trackEvent('agent.rep.sent', { method: 'email' });
     }
   };
 
@@ -95,7 +95,7 @@ export const AgentsOS: React.FC = () => {
     };
     setAgreements(prev => [...prev, newAgreement]);
     toast.success('New agreement created');
-    trackEvent('agent.agreement.created');
+    analytics.trackEvent('agent.agreement.created');
   };
 
   const getStatusColor = (status: string) => {

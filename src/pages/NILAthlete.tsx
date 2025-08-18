@@ -39,11 +39,11 @@ export const NILAthlete: React.FC = () => {
         });
         
         toast.success('Disclosure recorded. Email will go out when admin enables delivery.');
-        trackEvent('nil.disclosure.recorded', { noSecrets: true });
+        analytics.trackEvent('nil.disclosure.recorded', { noSecrets: true });
       } else {
         // Keep existing Edge Function call if present
         toast.success('School notification sent successfully');
-        trackEvent('nil.disclosure.sent', { method: 'email' });
+        analytics.trackEvent('nil.disclosure.sent', { method: 'email' });
       }
     } catch (error) {
       console.error('Error in NIL disclosure:', error);
@@ -54,12 +54,12 @@ export const NILAthlete: React.FC = () => {
   };
 
   const handleOpenEducation = () => {
-    trackEvent('education.opened', { context: 'nil_athlete' });
+    analytics.trackEvent('education.opened', { context: 'nil_athlete' });
     toast.success('NIL Education Center opened');
   };
 
   const handleViewCompliance = () => {
-    trackEvent('compliance.opened', { context: 'nil_athlete' });
+    analytics.trackEvent('compliance.opened', { context: 'nil_athlete' });
     toast.success('Compliance Center opened');
   };
 
