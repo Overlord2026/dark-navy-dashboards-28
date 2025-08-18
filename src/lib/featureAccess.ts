@@ -26,13 +26,38 @@ export const FEATURE_MATRIX = {
   create_goal: { minPlan: 'basic' as Plan },
   run_swag: { minPlan: 'premium' as Plan },
   run_monte_carlo: { minPlan: 'premium' as Plan },
-  invite_pro: { minPlan: 'basic' as Plan }
+  invite_pro: { minPlan: 'basic' as Plan },
+
+  // Features from familiesEntitlements.ts
+  education_access: { minPlan: 'basic' as Plan },
+  account_link: { minPlan: 'basic' as Plan },
+  doc_upload_basic: { minPlan: 'basic' as Plan },
+  goals_basic: { minPlan: 'basic' as Plan },
+  invite_pros: { minPlan: 'basic' as Plan },
+  swag_lite: { minPlan: 'basic' as Plan },
+  monte_carlo_lite: { minPlan: 'basic' as Plan },
+  doc_upload_pro: { minPlan: 'premium' as Plan },
+  rmd_planner: { minPlan: 'premium' as Plan },
+  reports: { minPlan: 'premium' as Plan },
+  esign_basic: { minPlan: 'premium' as Plan },
+  goals_pro: { minPlan: 'premium' as Plan },
+  advisor_collab: { minPlan: 'premium' as Plan },
+  esign_pro: { minPlan: 'elite' as Plan },
+  governance: { minPlan: 'elite' as Plan },
+  multi_entity: { minPlan: 'elite' as Plan },
+  reports_pro: { minPlan: 'elite' as Plan },
+  beneficiaries_review: { minPlan: 'premium' as Plan }
 } as const;
 
 export type FeatureKey = keyof typeof FEATURE_MATRIX;
 
 export function canUse(plan: Plan, featureKey: FeatureKey): boolean {
-  const need = FEATURE_MATRIX[featureKey].minPlan;
+  const featureConfig = FEATURE_MATRIX[featureKey];
+  if (!featureConfig) {
+    console.warn(`Feature key '${featureKey}' not found in FEATURE_MATRIX`);
+    return false; // Default to no access for unknown features
+  }
+  const need = featureConfig.minPlan;
   return PLAN_ORDER.indexOf(plan) >= PLAN_ORDER.indexOf(need);
 }
 
