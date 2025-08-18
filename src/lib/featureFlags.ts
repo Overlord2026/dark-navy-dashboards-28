@@ -1,75 +1,25 @@
-import * as React from "react";
-
-// Feature flags with safe fallbacks
 interface FeatureFlags {
-  enableAdvancedAnalytics: boolean;
-  enableBetaFeatures: boolean;
-  enableDebugMode: boolean;
-  enableExperimentalUI: boolean;
-  enablePerformanceMonitoring: boolean;
-  agents: boolean;
-  // Legacy feature flags for compatibility
-  "dashboard.familyHero": boolean;
-  "calc.monte": boolean;
-  "guides.retirement": boolean;
-  "guides.estatePlanning": boolean;
-  "guides.taxPlanning": boolean;
+  families_tools_band?: boolean;
+  pricing_gates?: boolean;
+  consent_module?: boolean;
+  nil_booking_v1?: boolean;
+  [key: string]: boolean | undefined;
 }
 
-const defaultFlags: FeatureFlags = {
-  enableAdvancedAnalytics: true,
-  enableBetaFeatures: false,
-  enableDebugMode: false,
-  enableExperimentalUI: false,
-  enablePerformanceMonitoring: true,
-  agents: true, // Enable for dev
-  // Legacy flags default to true for backward compatibility
-  "dashboard.familyHero": true,
-  "calc.monte": true,
-  "guides.retirement": true,
-  "guides.estatePlanning": true,
-  "guides.taxPlanning": true,
+// Mock feature flags - in real app this would come from a service like LaunchDarkly
+const mockFlags: FeatureFlags = {
+  families_tools_band: true,
+  pricing_gates: true,
+  consent_module: true,
+  nil_booking_v1: true,
 };
 
-let cachedFlags: FeatureFlags | null = null;
-
-export async function getFeatureFlags(): Promise<FeatureFlags> {
-  if (cachedFlags) {
-    return cachedFlags;
-  }
-
-  try {
-    const response = await fetch('/feature-flags.json');
-    if (!response.ok) {
-      throw new Error('Failed to fetch feature flags');
-    }
-    const flags = await response.json();
-    cachedFlags = { ...defaultFlags, ...flags };
-    return cachedFlags;
-  } catch (error) {
-    console.warn('Failed to load feature flags, using defaults:', error);
-    cachedFlags = defaultFlags;
-    return cachedFlags;
-  }
+export function useFeatureFlags(): FeatureFlags {
+  // In a real implementation, this would fetch from your feature flag service
+  // For now, return mock flags
+  return mockFlags;
 }
 
-export function getFeatureFlagSync(key: keyof FeatureFlags): boolean {
-  return cachedFlags?.[key] ?? defaultFlags[key];
-}
-
-export function isFeatureEnabled(key: keyof FeatureFlags): boolean {
-  return getFeatureFlagSync(key);
-}
-
-// React hook for feature flags
-export function useFeatureFlag(key: keyof FeatureFlags): boolean {
-  const [isEnabled, setIsEnabled] = React.useState(() => getFeatureFlagSync(key));
-
-  React.useEffect(() => {
-    getFeatureFlags().then((flags) => {
-      setIsEnabled(flags[key]);
-    });
-  }, [key]);
-
-  return isEnabled;
+export function isFeatureEnabled(flagKey: keyof FeatureFlags): boolean {
+  return mockFlags[flagKey] ?? false;
 }

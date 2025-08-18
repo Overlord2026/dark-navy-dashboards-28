@@ -107,10 +107,10 @@ export default function PricingPage() {
               
               <CardHeader className="text-center pb-8">
                 <CardTitle className="text-2xl font-bold">{data.name}</CardTitle>
-                 <div className="mt-4">
-                   <span className="text-4xl font-bold">
-                     {typeof data.price === 'number' ? `$${data.price}` : String(data.price)}
-                   </span>
+                <div className="mt-4">
+                  <span className="text-4xl font-bold">
+                    {typeof data.price === 'number' ? `$${data.price}` : data.price}
+                  </span>
                   {typeof data.price === 'number' && (
                     <span className="text-muted-foreground">/month</span>
                   )}

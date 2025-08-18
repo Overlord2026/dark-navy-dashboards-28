@@ -1,73 +1,79 @@
-/**
- * Adapter for NIL-specific scheduling features
- * Handles NIL compliance, training requirements, and athlete-specific flows
- */
-
 import { supabase } from "@/integrations/supabase/client";
+import { schedulerApi } from "../schedulerApi";
 
-interface OfferingFormData {
-  title: string;
-  description?: string;
-  is_published?: boolean;
-}
-
-interface BookingFormData {
-  confirmed_adult: boolean;
-  agreed_to_terms: boolean;
-}
-
+// NIL (Name, Image, Likeness) compliance adapter for athletes
 export const nilAdapter = {
-  // Check if athlete can publish offerings
-  async checkPublishEligibility(athleteUserId: string) {
+  // Validate if athlete can publish content based on compliance requirements
+  async checkPublishEligibility(athleteUserId: string): Promise<{
+    canPublish: boolean;
+    blockReason?: string;
+    hasTraining: boolean;
+    hasDisclosure: boolean;
+  }> {
     try {
-      // Check for required NIL disclosures
-      const { data: disclosures, error: disclosureError } = await supabase
-        .from('nil_disclosures')
-        .select('*')
-        .eq('athlete_user_id', athleteUserId)
-        .eq('is_signed', true)
-        .maybeSingle();
+      // Check if athlete has completed NIL training
+      const { data: trainingData } = await supabase
+        .from('athlete_nil_training')
+        .select('completed_at')
+        .eq('athlete_id', athleteUserId)
+        .single();
 
-      if (disclosureError) throw disclosureError;
+      // Check if athlete has signed disclosures
+      const { data: disclosureData } = await supabase
+        .from('athlete_nil_disclosures')
+        .select('signed_at')
+        .eq('athlete_id', athleteUserId)
+        .single();
 
-      // Check for required NIL training
-      const { data: training, error: trainingError } = await supabase
-        .from('nil_training_status')
-        .select('*')
-        .eq('athlete_user_id', athleteUserId)
-        .eq('module', 'nil_core')
-        .eq('status', 'completed')
-        .maybeSingle();
+      const hasTraining = !!trainingData?.completed_at;
+      const hasDisclosure = !!disclosureData?.signed_at;
+      const canPublish = hasTraining && hasDisclosure;
 
-      if (trainingError) throw trainingError;
-
-      const hasDisclosure = !!disclosures;
-      const hasTraining = !!training;
-      const canPublish = hasDisclosure && hasTraining;
-
-      let blockReason = '';
-      if (!hasDisclosure && !hasTraining) {
-        blockReason = 'Complete NIL training and sign disclosure documents to publish offerings';
-      } else if (!hasDisclosure) {
-        blockReason = 'Sign NIL disclosure documents to publish offerings';
+      let blockReason;
+      if (!hasTraining && !hasDisclosure) {
+        blockReason = 'Complete NIL training and sign disclosure agreements';
       } else if (!hasTraining) {
-        blockReason = 'Complete NIL core training to publish offerings';
+        blockReason = 'Complete NIL training requirements';
+      } else if (!hasDisclosure) {
+        blockReason = 'Sign NIL disclosure agreements';
       }
 
       return {
         canPublish,
         blockReason,
-        hasDisclosure,
-        hasTraining
+        hasTraining,
+        hasDisclosure
       };
     } catch (error) {
       console.error('Error checking publish eligibility:', error);
       return {
         canPublish: false,
-        blockReason: 'Unable to verify NIL compliance status',
-        hasDisclosure: false,
-        hasTraining: false
+        blockReason: 'Unable to verify eligibility',
+        hasTraining: false,
+        hasDisclosure: false
       };
+    }
+  },
+
+  // Get athlete offering validation data
+  async getAthleteOfferingValidation(athleteUserId: string): Promise<any[]> {
+    try {
+      const offerings = await schedulerApi.getOfferings(athleteUserId);
+      return offerings || [];
+    } catch (error) {
+      console.error('Error getting athlete offerings:', error);
+      return [];
+    }
+  },
+
+  // Get athlete booking data for compliance reporting
+  async getAthleteBookings(athleteUserId: string): Promise<any[]> {
+    try {
+      const bookings = await schedulerApi.getBookings(athleteUserId);
+      return bookings || [];
+    } catch (error) {
+      console.error('Error getting athlete bookings:', error);
+      return [];
     }
   },
 
@@ -76,21 +82,19 @@ export const nilAdapter = {
     const eligibility = await this.checkPublishEligibility(athleteUserId);
     
     if (offering.is_published && !eligibility.canPublish) {
-      throw new Error(eligibility.blockReason);
+      throw new Error(eligibility.blockReason || 'Cannot publish offering');
     }
 
     // Add NIL-specific metadata
-    const nilOffering = {
+    return {
       ...offering,
       metadata: {
-        nil_compliant: eligibility.canPublish,
+        nil_compliant: true,
         requires_age_verification: true,
         requires_terms_agreement: true,
-        athlete_verified: true
+        athlete_verified: eligibility.canPublish,
       }
     };
-
-    return nilOffering;
   },
 
   // Validate NIL booking requirements
@@ -100,54 +104,9 @@ export const nilAdapter = {
     }
 
     if (!booking.agreed_to_terms) {
-      throw new Error('Agreement to NIL terms required');
+      throw new Error('Terms agreement required for NIL sessions');
     }
 
     return true;
-  },
-
-  // Get athlete profile for public display
-  async getAthleteProfile(athleteUserId: string) {
-    try {
-      const { data: profile, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', athleteUserId)
-        .single();
-
-      if (error) throw error;
-
-      // Only return public information
-      return {
-        id: profile.id,
-        display_name: profile.display_name,
-        first_name: profile.first_name,
-        last_name: profile.last_name,
-        bio: profile.bio,
-        avatar_url: profile.avatar_url,
-        sport: (profile as any).sport || '',
-        school: (profile as any).school || '',
-        graduation_year: (profile as any).graduation_year || null
-      };
-    } catch (error) {
-      console.error('Error fetching athlete profile:', error);
-      return null;
-    }
-  },
-
-  // Generate athlete slug for public URLs
-  generateAthleteSlug(profile: any): string {
-    if (!profile) return '';
-    
-    const name = `${profile.first_name || ''} ${profile.last_name || ''}`.trim();
-    const sport = profile.sport || '';
-    const school = profile.school || '';
-    
-    const slugParts = [name, sport, school].filter(Boolean);
-    return slugParts
-      .join('-')
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/^-|-$/g, '');
   }
 };

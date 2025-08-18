@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { FamilySegment, FamilyCard, QuickAction, familyCards, quickActions } from '@/data/familiesPricingTiers';
 import { useSubscriptionAccess } from '@/hooks/useSubscriptionAccess';
-import { Plan, canUse, getRequiredPlan, getUpgradeTarget } from '@/lib/featureAccess';
+import { Plan, canUse, getRequiredPlan, getUpgradeTarget, FeatureKey } from '@/lib/featureAccess';
+import { useGate } from '@/hooks/useGate';
 
 export type { FamilySegment };
 
@@ -42,7 +43,8 @@ export function useFamilyEntitlements(selectedSegment: FamilySegment = 'aspiring
   };
 
   const canAccessFeature = (featureKey: string): boolean => {
-    return canUse(currentTier, featureKey as any);
+    const gate = useGate(featureKey as FeatureKey);
+    return gate.allowed;
   };
 
   const isCardAccessible = (card: FamilyCard): boolean => {

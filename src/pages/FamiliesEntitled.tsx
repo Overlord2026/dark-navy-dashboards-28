@@ -18,7 +18,8 @@ import {
 import { useFamilyEntitlements, type FamilySegment } from '@/hooks/useFamilyEntitlements';
 import { toast } from '@/lib/toast';
 import { analytics } from '@/lib/analytics';
-import { canUse, getRequiredPlan, type Plan } from '@/lib/featureAccess';
+import { canUse, getRequiredPlan, type Plan, type FeatureKey } from '@/lib/featureAccess';
+import { useGate } from '@/hooks/useGate';
 import familiesConfig from '@/config/familiesEntitlements';
 import { AdminEmailBanner } from '@/components/admin/AdminEmailBanner';
 
@@ -58,13 +59,24 @@ export const FamiliesEntitled: React.FC<FamiliesEntitledProps> = ({
   const handleQuickAction = (action: any) => {
     analytics.trackEvent(action.event, { feature: action.feature, tier: currentTier });
     
-    if (!canAccessFeature(action.feature)) {
-      const requiredPlan = getRequiredPlan(action.feature);
-      toast.err(`Upgrade to ${requiredPlan} to access this feature`);
-      analytics.trackEvent('entitlement.gated', { feature: action.feature, tier: currentTier });
+    const gate = useGate(action.feature as FeatureKey);
+    
+    if (!gate.allowed) {
+      const message = gate.blockedBy === 'flag' 
+        ? `Feature ${action.feature} is not available`
+        : `Upgrade to ${gate.requiredPlan} to access this feature`;
       
-      // Navigate to pricing with upgrade context
-      window.location.href = `/pricing?plan=${requiredPlan}&feature=${action.feature}`;
+      toast.err(message);
+      analytics.trackEvent('entitlement.gated', { 
+        feature: action.feature, 
+        tier: currentTier, 
+        blockedBy: gate.blockedBy 
+      });
+      
+      // Only navigate to pricing if blocked by plan, not by feature flag
+      if (gate.blockedBy === 'plan' && gate.requiredPlan) {
+        window.location.href = `/pricing?plan=${gate.requiredPlan}&feature=${action.feature}`;
+      }
       return;
     }
 
@@ -95,33 +107,39 @@ export const FamiliesEntitled: React.FC<FamiliesEntitledProps> = ({
   };
 
   const renderFeatureCard = (card: any) => {
-    const isAccessible = canAccessFeature(card.feature);
+    const gate = useGate(card.feature as FeatureKey);
     const IconComponent = iconMap[card.feature as keyof typeof iconMap] || Target;
     
     const handleCardClick = () => {
-      if (!isAccessible) {
-        const requiredPlan = getRequiredPlan(card.feature);
-        window.location.href = `/pricing?plan=${requiredPlan}&feature=${card.feature}`;
+      if (!gate.allowed && gate.blockedBy === 'plan' && gate.requiredPlan) {
+        window.location.href = `/pricing?plan=${gate.requiredPlan}&feature=${card.feature}`;
+      } else if (!gate.allowed && gate.blockedBy === 'flag') {
+        toast.info(`Feature ${card.feature} is not available yet`);
       }
     };
     
     return (
       <Card key={card.feature} className={`transition-all duration-200 ${
-        isAccessible ? 'hover:shadow-md cursor-pointer' : 'opacity-60 cursor-pointer'
+        gate.allowed ? 'hover:shadow-md cursor-pointer' : 'opacity-60 cursor-pointer'
       }`} onClick={handleCardClick}>
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
-            <IconComponent className={`h-5 w-5 ${isAccessible ? 'text-primary' : 'text-muted-foreground'}`} />
-            {!isAccessible && (
+            <IconComponent className={`h-5 w-5 ${gate.allowed ? 'text-primary' : 'text-muted-foreground'}`} />
+            {!gate.allowed && gate.blockedBy === 'plan' && (
               <Badge variant="secondary" className="text-xs">
-                {getRequiredPlan(card.feature)}
+                {gate.requiredPlan}
+              </Badge>
+            )}
+            {!gate.allowed && gate.blockedBy === 'flag' && (
+              <Badge variant="outline" className="text-xs">
+                Coming Soon
               </Badge>
             )}
           </div>
         </CardHeader>
         <CardContent>
           <CardTitle className="text-sm mb-1">{card.label}</CardTitle>
-          {!isAccessible && (
+          {!gate.allowed && gate.blockedBy === 'plan' && (
             <Button size="sm" variant="outline" className="w-full mt-2">
               Upgrade to Access
             </Button>

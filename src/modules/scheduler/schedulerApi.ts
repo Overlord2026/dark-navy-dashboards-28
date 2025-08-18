@@ -207,7 +207,7 @@ export const schedulerApi = {
     return data;
   },
 
-  async getPublicWindows(offeringId: string): Promise<any> {
+  async getPublicWindows(offeringId: string): Promise<any[]> {
     const { data, error } = await supabase
       .from('meet_windows')
       .select('*')
@@ -217,6 +217,6 @@ export const schedulerApi = {
       .order('start_time', { ascending: true });
     
     if (error) throw error;
-    return data;
+    return data || [];
   }
 };
