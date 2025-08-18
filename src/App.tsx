@@ -826,6 +826,7 @@ function App() {
           <Route path="/scorecard" element={<ScorecardStartPage />} />
           <Route path="/scorecard/start" element={<ScorecardStartPage />} />
           <Route path="/roadmap/intake" element={<SwagRetirementRoadmapPage />} />
+          <Route path="/pricing" element={<PricingPage />} />
           
           {/* Founding 20 Campaign Routes */}
           <Route path="/founding20/sports" element={<SportsFounding20Landing />} />
