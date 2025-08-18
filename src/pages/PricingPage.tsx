@@ -4,13 +4,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Check, Star } from 'lucide-react';
-import { familyCards, tierPricing, type PlanTier } from '@/data/familiesPricingTiers';
+import { familyCards, tierPricing } from '@/data/familiesPricingTiers';
+import { Plan } from '@/lib/featureAccess';
 import { analytics } from '@/lib/analytics';
 import { toast } from '@/lib/toast';
 
 export default function PricingPage() {
   const [searchParams] = useSearchParams();
-  const planParam = searchParams.get('plan') as PlanTier | null;
+  const planParam = searchParams.get('plan') as Plan | null;
   const featureParam = searchParams.get('feature');
   
   const basicRef = useRef<HTMLDivElement>(null);
@@ -30,7 +31,7 @@ export default function PricingPage() {
     }
   }, [planParam, featureParam]);
 
-  const handleCTA = (tier: PlanTier) => {
+  const handleCTA = (tier: Plan) => {
     analytics.trackEvent("pricing.cta.clicked", { plan: tier });
     
     switch (tier) {
@@ -48,19 +49,19 @@ export default function PricingPage() {
 
   const plans = [
     { 
-      tier: 'basic' as PlanTier, 
+      tier: 'basic' as Plan, 
       ref: basicRef, 
       data: tierPricing.basic,
       recommended: false 
     },
     { 
-      tier: 'premium' as PlanTier, 
+      tier: 'premium' as Plan, 
       ref: premiumRef, 
       data: tierPricing.premium,
       recommended: true 
     },
     { 
-      tier: 'elite' as PlanTier, 
+      tier: 'elite' as Plan, 
       ref: eliteRef, 
       data: tierPricing.elite,
       recommended: false 
@@ -106,10 +107,10 @@ export default function PricingPage() {
               
               <CardHeader className="text-center pb-8">
                 <CardTitle className="text-2xl font-bold">{data.name}</CardTitle>
-                <div className="mt-4">
-                  <span className="text-4xl font-bold">
-                    {typeof data.price === 'number' ? `$${data.price}` : String(data.price)}
-                  </span>
+                 <div className="mt-4">
+                   <span className="text-4xl font-bold">
+                     {typeof data.price === 'number' ? `$${data.price}` : String(data.price)}
+                   </span>
                   {typeof data.price === 'number' && (
                     <span className="text-muted-foreground">/month</span>
                   )}

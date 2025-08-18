@@ -18,6 +18,7 @@ import {
 import { useFamilyEntitlements, type FamilySegment } from '@/hooks/useFamilyEntitlements';
 import { toast } from '@/lib/toast';
 import { analytics } from '@/lib/analytics';
+import { canUse, getRequiredPlan, type Plan } from '@/lib/featureAccess';
 import familiesConfig from '@/config/familiesEntitlements';
 import { AdminEmailBanner } from '@/components/admin/AdminEmailBanner';
 
@@ -48,7 +49,7 @@ export const FamiliesEntitled: React.FC<FamiliesEntitledProps> = ({
   isAdmin = false 
 }) => {
   const [selectedSegment, setSelectedSegment] = useState(userSegment);
-  const { hasAccess, currentTier } = useFamilyEntitlements(selectedSegment);
+  const { canAccessFeature, currentTier, getUpgradeTarget } = useFamilyEntitlements(selectedSegment);
   const [trainingProgress] = useState(45); // Mock training progress
 
   const currentSegmentData = familiesConfig.segments.find(s => s.key === selectedSegment);
@@ -57,9 +58,13 @@ export const FamiliesEntitled: React.FC<FamiliesEntitledProps> = ({
   const handleQuickAction = (action: any) => {
     analytics.trackEvent(action.event, { feature: action.feature, tier: currentTier });
     
-    if (!hasAccess(action.feature)) {
-      toast.err(`Upgrade to ${getRequiredTier(action.feature)} to access this feature`);
+    if (!canAccessFeature(action.feature)) {
+      const requiredPlan = getRequiredPlan(action.feature);
+      toast.err(`Upgrade to ${requiredPlan} to access this feature`);
       analytics.trackEvent('entitlement.gated', { feature: action.feature, tier: currentTier });
+      
+      // Navigate to pricing with upgrade context
+      window.location.href = `/pricing?plan=${requiredPlan}&feature=${action.feature}`;
       return;
     }
 
@@ -90,19 +95,26 @@ export const FamiliesEntitled: React.FC<FamiliesEntitledProps> = ({
   };
 
   const renderFeatureCard = (card: any) => {
-    const isAccessible = hasAccess(card.feature);
+    const isAccessible = canAccessFeature(card.feature);
     const IconComponent = iconMap[card.feature as keyof typeof iconMap] || Target;
+    
+    const handleCardClick = () => {
+      if (!isAccessible) {
+        const requiredPlan = getRequiredPlan(card.feature);
+        window.location.href = `/pricing?plan=${requiredPlan}&feature=${card.feature}`;
+      }
+    };
     
     return (
       <Card key={card.feature} className={`transition-all duration-200 ${
-        isAccessible ? 'hover:shadow-md cursor-pointer' : 'opacity-60 cursor-not-allowed'
-      }`}>
+        isAccessible ? 'hover:shadow-md cursor-pointer' : 'opacity-60 cursor-pointer'
+      }`} onClick={handleCardClick}>
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
             <IconComponent className={`h-5 w-5 ${isAccessible ? 'text-primary' : 'text-muted-foreground'}`} />
             {!isAccessible && (
               <Badge variant="secondary" className="text-xs">
-                {getRequiredTier(card.feature)}
+                {getRequiredPlan(card.feature)}
               </Badge>
             )}
           </div>
@@ -164,7 +176,7 @@ export const FamiliesEntitled: React.FC<FamiliesEntitledProps> = ({
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
               {familiesConfig.quick_actions.map((action) => {
                 const IconComponent = iconMap[action.feature as keyof typeof iconMap] || Target;
-                const isAccessible = hasAccess(action.feature as any);
+                const isAccessible = canAccessFeature(action.feature);
                 
                 return (
                   <Button

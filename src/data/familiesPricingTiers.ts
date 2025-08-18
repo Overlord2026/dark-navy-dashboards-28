@@ -1,6 +1,8 @@
+import { Plan } from '@/lib/featureAccess';
+
 export type FamilySegment = "aspiring" | "retirees" | "hnw" | "uhnw";
-export type PlanTier = "basic" | "premium" | "elite";
-export type SubscriptionTier = PlanTier;
+export type PlanTier = Plan;
+export type SubscriptionTier = Plan;
 
 export interface Entitlement { 
   key: string; 
@@ -14,7 +16,7 @@ export interface QuickAction {
   name: string;
   description: string;
   icon: string;
-  requiredTier: SubscriptionTier;
+  requiredTier: Plan;
 }
 
 export interface FamilyCard {
@@ -22,7 +24,7 @@ export interface FamilyCard {
   name: string;
   description: string;
   category: string;
-  requiredTier: SubscriptionTier;
+  requiredTier: Plan;
   segments: FamilySegment[];
   quotas?: {
     basic?: number;
