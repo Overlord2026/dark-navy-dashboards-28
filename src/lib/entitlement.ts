@@ -1,15 +1,19 @@
-import { entitlements } from "@/config/familiesEntitlements";
-import type { PlanTier } from "@/config/familiesEntitlements";
+import entitlements from "@/config/familiesEntitlements";
+
+export type PlanTier = "basic" | "premium" | "elite";
 
 export function featureMinPlan(featureKey: string): PlanTier | null {
   const order: PlanTier[] = ["basic", "premium", "elite"];
-  const e = entitlements.find(x => x.key === featureKey);
-  if (!e) return null;
-  return order.find(p => e.plans.includes(p)) ?? null;
+  
+  for (const planTier of order) {
+    if (entitlements.plans[planTier].features.includes(featureKey)) {
+      return planTier;
+    }
+  }
+  return null;
 }
 
 export function planIncludes(featureKey: string, plan: PlanTier | null | undefined) {
   if (!plan) return false;
-  const e = entitlements.find(x => x.key === featureKey);
-  return !!e && e.plans.includes(plan);
+  return entitlements.plans[plan]?.features.includes(featureKey) ?? false;
 }
