@@ -1,26 +1,28 @@
 import React, { useState } from 'react';
 import { FamilyHero } from '@/components/families/FamilyHero';
-import { FamilySegmentSelector } from '@/components/families/FamilySegmentSelector';
-import { FamilyQuickActions } from '@/components/families/FamilyQuickActions';
-import { FamilyCardsGrid } from '@/components/families/FamilyCardsGrid';
-import { FamilySegment } from '@/data/familiesPricingTiers';
+import FamiliesToolsBand from '@/components/families/FamiliesToolsBand';
+import { FAMILY_SEGMENTS } from '@/data/familySegments';
+import { analytics } from '@/lib/analytics';
 
 const FamiliesPage = () => {
-  const [selectedSegment, setSelectedSegment] = useState<FamilySegment>('aspiring');
-
   return (
     <div className="min-h-screen bg-background">
       <FamilyHero />
       
-      <div className="container mx-auto px-4 py-8 space-y-12">
-        <FamilySegmentSelector 
-          selectedSegment={selectedSegment}
-          onSegmentChange={setSelectedSegment}
-        />
-        
-        <FamilyQuickActions selectedSegment={selectedSegment} />
-        
-        <FamilyCardsGrid selectedSegment={selectedSegment} />
+      <div className="container mx-auto px-4 py-8 space-y-8">
+        <FamiliesToolsBand />
+        <section>
+          <h2 className="text-xl font-semibold">Explore your path</h2>
+          <div className="grid md:grid-cols-3 gap-4 mt-4">
+            {FAMILY_SEGMENTS.map(s => (
+              <button key={s.slug} className="text-left p-4 border rounded-xl hover:bg-muted"
+                onClick={() => analytics.track('segment.view', { segment:s.slug })}>
+                <div className="font-medium">{s.title}</div>
+                <div className="text-sm text-muted-foreground">{s.blurb}</div>
+              </button>
+            ))}
+          </div>
+        </section>
       </div>
     </div>
   );
