@@ -8581,6 +8581,30 @@ export type Database = {
         }
         Relationships: []
       }
+      consents: {
+        Row: {
+          accepted_at: string
+          id: string
+          scope: string
+          user_id: string
+          version: string
+        }
+        Insert: {
+          accepted_at?: string
+          id?: string
+          scope: string
+          user_id: string
+          version?: string
+        }
+        Update: {
+          accepted_at?: string
+          id?: string
+          scope?: string
+          user_id?: string
+          version?: string
+        }
+        Relationships: []
+      }
       contacts: {
         Row: {
           assigned_advisor_id: string | null
@@ -32098,6 +32122,48 @@ export type Database = {
           },
         ]
       }
+      trial_grants: {
+        Row: {
+          converted_at: string | null
+          created_at: string
+          id: string
+          is_active: boolean
+          persona: string
+          plan: string
+          segment: string | null
+          trial_end: string
+          trial_start: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          converted_at?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          persona: string
+          plan: string
+          segment?: string | null
+          trial_end: string
+          trial_start: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          converted_at?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          persona?: string
+          plan?: string
+          segment?: string | null
+          trial_end?: string
+          trial_start?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       trust_scores: {
         Row: {
           access_permissions: Json | null
@@ -36879,13 +36945,15 @@ export type Database = {
         Returns: boolean
       }
       consent_accept: {
-        Args: {
-          p_ip_address?: unknown
-          p_metadata?: Json
-          p_scope: string
-          p_user_agent?: string
-          p_version?: string
-        }
+        Args:
+          | {
+              p_ip_address?: unknown
+              p_metadata?: Json
+              p_scope: string
+              p_user_agent?: string
+              p_version?: string
+            }
+          | { p_scope: string; p_version?: string }
         Returns: string
       }
       consent_check: {

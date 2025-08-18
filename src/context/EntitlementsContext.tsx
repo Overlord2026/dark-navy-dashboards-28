@@ -10,6 +10,7 @@ import {
   FEATURE_QUOTAS 
 } from '@/types/pricing';
 import { useSubscriptionAccess } from '@/hooks/useSubscriptionAccess';
+import { TrialManager, TrialGrant } from '@/lib/trialManager';
 
 interface EntitlementsContextType {
   entitlements: UserEntitlements | null;
@@ -20,6 +21,8 @@ interface EntitlementsContextType {
   plan: Plan;
   persona?: string;
   segment?: string;
+  activeTrial?: TrialGrant | null;
+  daysRemainingInTrial?: number;
   loadEntitlements: () => Promise<void>;
 }
 
@@ -42,6 +45,8 @@ export function EntitlementsProvider({ children }: EntitlementsProviderProps) {
   const { subscriptionPlan } = useSubscriptionAccess();
   const [entitlements, setEntitlements] = useState<UserEntitlements | null>(null);
   const [loading, setLoading] = useState(true);
+  const [activeTrial, setActiveTrial] = useState<TrialGrant | null>(null);
+  const [daysRemainingInTrial, setDaysRemainingInTrial] = useState<number>();
 
   const loadEntitlements = async () => {
     if (!userProfile) {
@@ -51,11 +56,22 @@ export function EntitlementsProvider({ children }: EntitlementsProviderProps) {
     }
 
     try {
-      // Get plan from subscription system
-      const plan: Plan = (subscriptionPlan?.subscription_tier || 'basic') as Plan;
+      // Get base plan from subscription system
+      const basePlan: Plan = (subscriptionPlan?.subscription_tier || 'basic') as Plan;
+      
+      // Check for active trial
+      const trial = await TrialManager.getActiveTrial(userProfile.id);
+      setActiveTrial(trial);
+      
+      // Determine effective plan (trial plan overrides subscription plan if active)
+      const effectivePlan = trial && !TrialManager.isTrialExpired(trial) ? trial.plan : basePlan;
+      
+      if (trial && !TrialManager.isTrialExpired(trial)) {
+        setDaysRemainingInTrial(TrialManager.getDaysRemaining(trial));
+      }
       
       // Check if we have cached entitlements
-      const cacheKey = `entitlements_${userProfile.id}`;
+      const cacheKey = `entitlements_${userProfile.id}_${effectivePlan}`;
       const cached = localStorage.getItem(cacheKey);
       
       if (cached) {
@@ -74,15 +90,15 @@ export function EntitlementsProvider({ children }: EntitlementsProviderProps) {
         .eq('id', userProfile.id)
         .single();
 
-      // Build entitlements based on plan
-      const planFeatures = PLAN_FEATURES[plan] || [];
+      // Build entitlements based on effective plan
+      const planFeatures = PLAN_FEATURES[effectivePlan] || [];
       const entitlementsMap: Record<FeatureKey, Entitlement> = {} as Record<FeatureKey, Entitlement>;
 
       // Create entitlements for all features
       Object.keys(PLAN_FEATURES).forEach(planKey => {
         PLAN_FEATURES[planKey as Plan].forEach(featureKey => {
           const hasAccess = planFeatures.includes(featureKey);
-          const quota = FEATURE_QUOTAS[plan]?.[featureKey] || null;
+          const quota = FEATURE_QUOTAS[effectivePlan]?.[featureKey] || null;
           
           entitlementsMap[featureKey] = {
             featureKey,
@@ -95,7 +111,7 @@ export function EntitlementsProvider({ children }: EntitlementsProviderProps) {
       });
 
       const userEntitlements: UserEntitlements = {
-        plan,
+        plan: effectivePlan,
         persona: userEntitlementsData?.role || undefined,
         segment: 'basic',
         entitlements: entitlementsMap
@@ -148,6 +164,8 @@ export function EntitlementsProvider({ children }: EntitlementsProviderProps) {
     plan: entitlements?.plan || 'basic',
     persona: entitlements?.persona,
     segment: entitlements?.segment,
+    activeTrial,
+    daysRemainingInTrial,
     loadEntitlements
   };
 
