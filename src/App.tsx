@@ -539,11 +539,11 @@ function App() {
                 </React.Suspense>
              } />
              <Route path="/tools/target-analyzer" element={<TargetAnalyzerPage />} />
-             <Route path="/tools/retirement-scorecard" element={
-               <React.Suspense fallback={<div>Loading...</div>}>
-                 {React.createElement(React.lazy(() => import('./pages/RetirementScorecard')))}
-               </React.Suspense>
-             } />
+              <Route path="/tools/retirement-scorecard" element={
+                <React.Suspense fallback={<div>Loading...</div>}>
+                  {React.createElement(React.lazy(() => import('./pages/tools/RetirementScorecard')))}
+                </React.Suspense>
+              } />
              
             <Route path="/meet" element={<MeetPage />} />
             <Route path="/tools" element={
@@ -560,11 +560,6 @@ function App() {
              <Route path="/solutions/estate-planning" element={
                <React.Suspense fallback={<div>Loading...</div>}>
                  {React.createElement(React.lazy(() => import('./pages/solutions/EstatePlanningPage')))}
-               </React.Suspense>
-             } />
-             <Route path="/tools/retirement-scorecard" element={
-               <React.Suspense fallback={<div>Loading...</div>}>
-                 {React.createElement(React.lazy(() => import('./pages/RetirementScorecard')))}
                </React.Suspense>
              } />
              <Route path="/resources/calculators" element={
