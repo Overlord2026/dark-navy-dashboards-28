@@ -13,6 +13,7 @@ import {
   suggestionStorage,
   PersonaType
 } from '@/lib/PlanRules';
+import { analytics } from '@/lib/analytics';
 
 interface PlanSuggestionChipProps {
   persona: PersonaType;
@@ -50,11 +51,20 @@ export function PlanSuggestionChip({
   }, [persona, segment, wealthBand, currentPlan]);
 
   const handleDismiss = () => {
+    const dismissalKey = 'bfo.upgrade.dismissed';
+    localStorage.setItem(dismissalKey, JSON.stringify({
+      persona,
+      segment,
+      wealthBand,
+      dismissedAt: Date.now()
+    }));
     suggestionStorage.addDismissed(persona, segment, wealthBand);
     setIsVisible(false);
+    analytics.track('upgrade.dismissed', { persona, segment, wealthBand });
   };
 
   const handleUpgrade = () => {
+    analytics.track('upgrade.intent', { persona, segment, wealthBand, currentPlan });
     setShowUpgradeModal(true);
   };
 

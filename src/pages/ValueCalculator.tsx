@@ -33,7 +33,7 @@ interface CalculatorResults {
 }
 
 export default function ValueCalculator() {
-  const [horizon, setHorizon] = useState<10|20|30>(30);
+  const [horizonYears, setHorizonYears] = useState<10|20|30>(30);
   const [inputs, setInputs] = useState<CalculatorInputs>({
     portfolioValue: 1500000,
     annualFeePercent: 1.0,
@@ -53,22 +53,22 @@ export default function ValueCalculator() {
     analytics.trackPageView('/value-calculator');
   }, []);
 
-  function setH(y: 10|20|30) { 
-    setHorizon(y); 
-    setInputs(prev => ({ ...prev, timeHorizon: y }));
-    analytics.track('calc.horizon_set', { y }); 
-  }
+  const handleHorizonChange = (years: 10|20|30) => { 
+    setHorizonYears(years); 
+    setInputs(prev => ({ ...prev, timeHorizon: years }));
+    analytics.track('calc.horizon_set', { horizon_years: years }); 
+  };
 
   const calculateResults = (): CalculatorResults => {
     const { portfolioValue, annualFeePercent, annualFlatFee, annualGrowthPercent, monthlySpending } = inputs;
-    const horizonYears = horizon;
+    const timeHorizon = horizonYears;
     
     let traditionalValue = portfolioValue;
     let valueValue = portfolioValue;
     let traditionalFees = 0;
     let valueFees = 0;
     
-    for (let year = 1; year <= horizonYears; year++) {
+    for (let year = 1; year <= timeHorizon; year++) {
       const traditionalAnnualFee = traditionalValue * (annualFeePercent / 100);
       traditionalFees += traditionalAnnualFee;
       traditionalValue = (traditionalValue - traditionalAnnualFee) * (1 + annualGrowthPercent / 100);
@@ -127,11 +127,12 @@ export default function ValueCalculator() {
     growthRate: inputs.annualGrowthPercent,
     monthlySpending: inputs.monthlySpending,
     inflation: inputs.inflation,
-    timeHorizon: horizon
+    timeHorizon: horizonYears
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+      <main className="pt-[var(--header-stack)] scroll-mt-[var(--header-stack)]">
       <Celebration trigger={showConfetti} />
       
       <div className="container mx-auto px-4 py-8">
@@ -209,13 +210,13 @@ export default function ValueCalculator() {
                 <Label>Time Horizon</Label>
                 <div className="flex gap-2 mt-2" role="group" aria-label="Time horizon selection">
                   <Button
-                    variant={horizon === 10 ? "default" : "outline"}
+                    variant={horizonYears === 10 ? "default" : "outline"}
                     size="sm"
-                    onClick={() => setH(10)}
-                    aria-pressed={horizon === 10}
+                    onClick={() => handleHorizonChange(10)}
+                    aria-pressed={horizonYears === 10}
                     className={cn(
                       "transition-all duration-200",
-                      horizon === 10 
+                      horizonYears === 10 
                         ? "bg-primary text-primary-foreground shadow-md" 
                         : "bg-background hover:bg-accent"
                     )}
@@ -223,13 +224,13 @@ export default function ValueCalculator() {
                     10 years
                   </Button>
                   <Button
-                    variant={horizon === 20 ? "default" : "outline"}
+                    variant={horizonYears === 20 ? "default" : "outline"}
                     size="sm"
-                    onClick={() => setH(20)}
-                    aria-pressed={horizon === 20}
+                    onClick={() => handleHorizonChange(20)}
+                    aria-pressed={horizonYears === 20}
                     className={cn(
                       "transition-all duration-200",
-                      horizon === 20 
+                      horizonYears === 20 
                         ? "bg-primary text-primary-foreground shadow-md" 
                         : "bg-background hover:bg-accent"
                     )}
@@ -237,13 +238,13 @@ export default function ValueCalculator() {
                     20 years
                   </Button>
                   <Button
-                    variant={horizon === 30 ? "default" : "outline"}
+                    variant={horizonYears === 30 ? "default" : "outline"}
                     size="sm"
-                    onClick={() => setH(30)}
-                    aria-pressed={horizon === 30}
+                    onClick={() => handleHorizonChange(30)}
+                    aria-pressed={horizonYears === 30}
                     className={cn(
                       "transition-all duration-200",
-                      horizon === 30 
+                      horizonYears === 30 
                         ? "bg-primary text-primary-foreground shadow-md" 
                         : "bg-background hover:bg-accent"
                     )}
@@ -331,6 +332,7 @@ export default function ValueCalculator() {
           </motion.div>
         )}
       </div>
+      </main>
     </div>
   );
 }
