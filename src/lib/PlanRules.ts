@@ -215,7 +215,7 @@ export function getUpgradeSuggestionText(input: PlanRulesInput): string {
 export const suggestionStorage = {
   getDismissed(): string[] {
     try {
-      const stored = localStorage.getItem('dismissed-plan-suggestions');
+      const stored = localStorage.getItem('bfo.upgrade.dismissed');
       return stored ? JSON.parse(stored) : [];
     } catch {
       return [];
@@ -227,11 +227,11 @@ export const suggestionStorage = {
     const dismissed = this.getDismissed();
     if (!dismissed.includes(suggestionKey)) {
       dismissed.push(suggestionKey);
-      localStorage.setItem('dismissed-plan-suggestions', JSON.stringify(dismissed));
+      localStorage.setItem('bfo.upgrade.dismissed', JSON.stringify(dismissed));
     }
   },
   
   clearAll(): void {
-    localStorage.removeItem('dismissed-plan-suggestions');
+    localStorage.removeItem('bfo.upgrade.dismissed');
   }
 };

@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { X, TrendingUp, Star } from 'lucide-react';
 import { useEntitlements } from '@/context/EntitlementsContext';
 import { UpgradeModal } from '@/components/UpgradeModal';
+import { runtimeFlags } from '@/config/runtimeFlags';
 import { 
   getPlanRecommendation, 
   shouldShowUpgradeSuggestion, 
@@ -32,6 +33,12 @@ export function PlanSuggestionChip({
   const [dismissedSuggestions, setDismissedSuggestions] = useState<string[]>([]);
 
   useEffect(() => {
+    // Hide entirely if in prelaunch mode
+    if (runtimeFlags.prelaunchMode) {
+      setIsVisible(false);
+      return;
+    }
+
     const dismissed = suggestionStorage.getDismissed();
     setDismissedSuggestions(dismissed);
     

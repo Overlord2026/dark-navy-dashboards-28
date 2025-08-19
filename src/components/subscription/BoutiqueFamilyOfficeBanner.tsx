@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { ArrowRight, Award, Star } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
+import { runtimeFlags } from '@/config/runtimeFlags';
 
 interface BoutiqueFamilyOfficeBannerProps {
   onDismiss: () => void;
@@ -11,6 +12,11 @@ interface BoutiqueFamilyOfficeBannerProps {
 
 export function BoutiqueFamilyOfficeBanner({ onDismiss }: BoutiqueFamilyOfficeBannerProps) {
   const navigate = useNavigate();
+  
+  // Hide entirely if in prelaunch mode
+  if (runtimeFlags.prelaunchMode) {
+    return null;
+  }
   
   return (
     <div className="bg-gradient-to-r from-indigo-600/20 to-purple-500/20 rounded-lg p-6 mb-6 animate-fade-in border border-indigo-500/30">

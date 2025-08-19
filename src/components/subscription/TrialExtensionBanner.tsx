@@ -5,6 +5,7 @@ import { ArrowRight, Gift, Check } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useSubscription } from '@/context/SubscriptionContext';
 import { Badge } from '@/components/ui/badge';
+import { runtimeFlags } from '@/config/runtimeFlags';
 
 interface TrialExtensionBannerProps {
   onDismiss: () => void;
@@ -14,6 +15,11 @@ interface TrialExtensionBannerProps {
 export function TrialExtensionBanner({ onDismiss, extensionDays = 14 }: TrialExtensionBannerProps) {
   const navigate = useNavigate();
   const { daysRemainingInTrial } = useSubscription();
+  
+  // Hide entirely if in prelaunch mode
+  if (runtimeFlags.prelaunchMode) {
+    return null;
+  }
   
   return (
     <div className="bg-gradient-to-r from-green-600/20 to-blue-500/20 rounded-lg p-6 mb-6 animate-fade-in border border-green-500/30">
