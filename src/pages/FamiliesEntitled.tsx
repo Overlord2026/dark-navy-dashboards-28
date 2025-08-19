@@ -112,10 +112,29 @@ export const FamiliesEntitled: React.FC<FamiliesEntitledProps> = ({
     const IconComponent = iconMap[card.feature as keyof typeof iconMap] || Target;
     
     const handleCardClick = () => {
+      // Special routing for solution pages
+      if (card.feature === 'tax_advanced') {
+        window.location.href = '/solutions/tax-planning';
+        return;
+      }
+      if (card.feature === 'estate_advanced') {
+        window.location.href = '/solutions/estate-planning';
+        return;
+      }
+      
       if (!gate.allowed && gate.blockedBy === 'plan' && gate.requiredPlan) {
         window.location.href = `/pricing?plan=${gate.requiredPlan}&feature=${card.feature}`;
       } else if (!gate.allowed && gate.blockedBy === 'flag') {
         toast.info(`Feature ${card.feature} is not available yet`);
+      } else if (gate.allowed) {
+        // Handle other allowed features
+        if (card.feature === 'education_access') {
+          handleEducationAccess();
+        } else if (card.feature === 'retirement_scorecard') {
+          window.location.href = '/tools/retirement-scorecard';
+        } else {
+          toast.info(`Feature ${card.feature} accessed`);
+        }
       }
     };
     
