@@ -32,12 +32,31 @@ export const getEnvironmentConfig = (): EnvironmentConfig => {
   };
 };
 
-// SECURITY: CAPTCHA is disabled in all non-production environments for QA
+// SECURITY: Enhanced QA bypass with time-based expiration and audit logging
 export const QA_BYPASS_EMAIL = import.meta.env.DEV ? import.meta.env.VITE_QA_BYPASS_EMAIL || '' : '';
+export const QA_BYPASS_EXPIRY = import.meta.env.DEV ? import.meta.env.VITE_QA_BYPASS_EXPIRY || '' : '';
 
 export const isQABypassAllowed = (userEmail?: string): boolean => {
   const env = getEnvironmentConfig();
-  return env.qaBypassEnabled && env.isDevelopment && userEmail === QA_BYPASS_EMAIL && QA_BYPASS_EMAIL !== '';
+  
+  // Check basic conditions
+  if (!env.qaBypassEnabled || !env.isDevelopment || userEmail !== QA_BYPASS_EMAIL || QA_BYPASS_EMAIL === '') {
+    return false;
+  }
+  
+  // Check time-based expiration if set
+  if (QA_BYPASS_EXPIRY) {
+    const expiryDate = new Date(QA_BYPASS_EXPIRY);
+    if (new Date() > expiryDate) {
+      console.warn('QA bypass has expired');
+      return false;
+    }
+  }
+  
+  // Log QA bypass usage for audit
+  console.warn('QA bypass active for user:', userEmail, 'Environment:', env);
+  
+  return true;
 };
 
 export const shouldEnforceAuthentication = (userEmail?: string): boolean => {

@@ -2681,6 +2681,418 @@ export type Database = {
           },
         ]
       }
+      aies_approvals: {
+        Row: {
+          approver_user_id: string | null
+          decided_at: string | null
+          execution_id: string
+          id: string
+          note: string | null
+          status: string
+        }
+        Insert: {
+          approver_user_id?: string | null
+          decided_at?: string | null
+          execution_id: string
+          id?: string
+          note?: string | null
+          status?: string
+        }
+        Update: {
+          approver_user_id?: string | null
+          decided_at?: string | null
+          execution_id?: string
+          id?: string
+          note?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "aies_approvals_execution_id_fkey"
+            columns: ["execution_id"]
+            isOneToOne: false
+            referencedRelation: "aies_executions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      aies_budget_policies: {
+        Row: {
+          active: boolean
+          approver_role: string | null
+          ceiling_cents: number
+          created_at: string | null
+          id: string
+          requires_approval: boolean
+          role: string | null
+          scope: string
+        }
+        Insert: {
+          active?: boolean
+          approver_role?: string | null
+          ceiling_cents: number
+          created_at?: string | null
+          id?: string
+          requires_approval?: boolean
+          role?: string | null
+          scope: string
+        }
+        Update: {
+          active?: boolean
+          approver_role?: string | null
+          ceiling_cents?: number
+          created_at?: string | null
+          id?: string
+          requires_approval?: boolean
+          role?: string | null
+          scope?: string
+        }
+        Relationships: []
+      }
+      aies_connector_health: {
+        Row: {
+          connector_key: string
+          error_rate: number | null
+          latency_ms: number | null
+          updated_at: string | null
+          window_start: string
+        }
+        Insert: {
+          connector_key: string
+          error_rate?: number | null
+          latency_ms?: number | null
+          updated_at?: string | null
+          window_start: string
+        }
+        Update: {
+          connector_key?: string
+          error_rate?: number | null
+          latency_ms?: number | null
+          updated_at?: string | null
+          window_start?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "aies_connector_health_connector_key_fkey"
+            columns: ["connector_key"]
+            isOneToOne: false
+            referencedRelation: "aies_connectors"
+            referencedColumns: ["key"]
+          },
+        ]
+      }
+      aies_connectors: {
+        Row: {
+          cost_score: number | null
+          data_scopes: string[] | null
+          enabled: boolean | null
+          error_rate: number | null
+          health: string | null
+          jurisdictions: string[] | null
+          key: string
+          meta: Json | null
+          service: string | null
+          sla_score: number | null
+          updated_at: string | null
+          vendor: string | null
+        }
+        Insert: {
+          cost_score?: number | null
+          data_scopes?: string[] | null
+          enabled?: boolean | null
+          error_rate?: number | null
+          health?: string | null
+          jurisdictions?: string[] | null
+          key: string
+          meta?: Json | null
+          service?: string | null
+          sla_score?: number | null
+          updated_at?: string | null
+          vendor?: string | null
+        }
+        Update: {
+          cost_score?: number | null
+          data_scopes?: string[] | null
+          enabled?: boolean | null
+          error_rate?: number | null
+          health?: string | null
+          jurisdictions?: string[] | null
+          key?: string
+          meta?: Json | null
+          service?: string | null
+          sla_score?: number | null
+          updated_at?: string | null
+          vendor?: string | null
+        }
+        Relationships: []
+      }
+      aies_consent_grants: {
+        Row: {
+          connector_key: string | null
+          created_at: string | null
+          dataset: string
+          expires_at: string | null
+          granted_by: string | null
+          id: string
+          scope: string
+          subject_user_id: string
+        }
+        Insert: {
+          connector_key?: string | null
+          created_at?: string | null
+          dataset: string
+          expires_at?: string | null
+          granted_by?: string | null
+          id?: string
+          scope: string
+          subject_user_id: string
+        }
+        Update: {
+          connector_key?: string | null
+          created_at?: string | null
+          dataset?: string
+          expires_at?: string | null
+          granted_by?: string | null
+          id?: string
+          scope?: string
+          subject_user_id?: string
+        }
+        Relationships: []
+      }
+      aies_consents: {
+        Row: {
+          connector_key: string
+          expires_at: string | null
+          granted_at: string
+          id: string
+          jurisdiction: string | null
+          metadata: Json
+          revoked_at: string | null
+          scopes: string[]
+          user_id: string
+        }
+        Insert: {
+          connector_key: string
+          expires_at?: string | null
+          granted_at?: string
+          id?: string
+          jurisdiction?: string | null
+          metadata?: Json
+          revoked_at?: string | null
+          scopes?: string[]
+          user_id: string
+        }
+        Update: {
+          connector_key?: string
+          expires_at?: string | null
+          granted_at?: string
+          id?: string
+          jurisdiction?: string | null
+          metadata?: Json
+          revoked_at?: string | null
+          scopes?: string[]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      aies_executions: {
+        Row: {
+          context: Json
+          ended_at: string | null
+          id: string
+          op_key: string
+          requested_cents: number
+          started_at: string | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          context?: Json
+          ended_at?: string | null
+          id?: string
+          op_key: string
+          requested_cents?: number
+          started_at?: string | null
+          status?: string
+          user_id: string
+        }
+        Update: {
+          context?: Json
+          ended_at?: string | null
+          id?: string
+          op_key?: string
+          requested_cents?: number
+          started_at?: string | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      aies_policies: {
+        Row: {
+          created_at: string | null
+          expression: Json
+          id: string
+          name: string
+          policy_hash: string | null
+          version: string
+        }
+        Insert: {
+          created_at?: string | null
+          expression: Json
+          id?: string
+          name: string
+          policy_hash?: string | null
+          version: string
+        }
+        Update: {
+          created_at?: string | null
+          expression?: Json
+          id?: string
+          name?: string
+          policy_hash?: string | null
+          version?: string
+        }
+        Relationships: []
+      }
+      aies_policy_checks: {
+        Row: {
+          checked_at: string
+          evidence: Json
+          execution_id: string
+          id: string
+          in_force: boolean | null
+          policy_ref: string
+          provider: string
+        }
+        Insert: {
+          checked_at?: string
+          evidence?: Json
+          execution_id: string
+          id?: string
+          in_force?: boolean | null
+          policy_ref: string
+          provider: string
+        }
+        Update: {
+          checked_at?: string
+          evidence?: Json
+          execution_id?: string
+          id?: string
+          in_force?: boolean | null
+          policy_ref?: string
+          provider?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "aies_policy_checks_execution_id_fkey"
+            columns: ["execution_id"]
+            isOneToOne: false
+            referencedRelation: "aies_executions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      aies_receipts: {
+        Row: {
+          actor_id: string
+          connector_key: string | null
+          created_at: string | null
+          id: string
+          inputs: Json
+          inputs_hash: string
+          merkle_leaf: string | null
+          merkle_root: string | null
+          outcomes: Json | null
+          persona: string
+          policy_hash: string | null
+          policy_id: string | null
+          reason_codes: Json | null
+          trust_grade: string | null
+        }
+        Insert: {
+          actor_id: string
+          connector_key?: string | null
+          created_at?: string | null
+          id?: string
+          inputs: Json
+          inputs_hash: string
+          merkle_leaf?: string | null
+          merkle_root?: string | null
+          outcomes?: Json | null
+          persona: string
+          policy_hash?: string | null
+          policy_id?: string | null
+          reason_codes?: Json | null
+          trust_grade?: string | null
+        }
+        Update: {
+          actor_id?: string
+          connector_key?: string | null
+          created_at?: string | null
+          id?: string
+          inputs?: Json
+          inputs_hash?: string
+          merkle_leaf?: string | null
+          merkle_root?: string | null
+          outcomes?: Json | null
+          persona?: string
+          policy_hash?: string | null
+          policy_id?: string | null
+          reason_codes?: Json | null
+          trust_grade?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "aies_receipts_policy_id_fkey"
+            columns: ["policy_id"]
+            isOneToOne: false
+            referencedRelation: "aies_policies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      aies_zk_assertions: {
+        Row: {
+          details: Json
+          execution_id: string
+          id: string
+          predicate: string
+          proof: Json
+          verified: boolean
+          verified_at: string | null
+          verifier: string | null
+        }
+        Insert: {
+          details?: Json
+          execution_id: string
+          id?: string
+          predicate: string
+          proof: Json
+          verified?: boolean
+          verified_at?: string | null
+          verifier?: string | null
+        }
+        Update: {
+          details?: Json
+          execution_id?: string
+          id?: string
+          predicate?: string
+          proof?: Json
+          verified?: boolean
+          verified_at?: string | null
+          verifier?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "aies_zk_assertions_execution_id_fkey"
+            columns: ["execution_id"]
+            isOneToOne: false
+            referencedRelation: "aies_executions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       analytics_dashboards: {
         Row: {
           created_at: string
@@ -32992,6 +33404,27 @@ export type Database = {
           },
         ]
       }
+      user_entitlements: {
+        Row: {
+          feature_key: string
+          granted_at: string | null
+          plan: string
+          user_id: string
+        }
+        Insert: {
+          feature_key: string
+          granted_at?: string | null
+          plan: string
+          user_id: string
+        }
+        Update: {
+          feature_key?: string
+          granted_at?: string | null
+          plan?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_events: {
         Row: {
           created_at: string | null
@@ -33376,6 +33809,27 @@ export type Database = {
           id?: string
           is_used?: boolean
           otp_code?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_persona_profile: {
+        Row: {
+          persona: string
+          segment: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          persona?: string
+          segment?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          persona?: string
+          segment?: string
+          updated_at?: string
           user_id?: string
         }
         Relationships: []
@@ -35333,6 +35787,48 @@ export type Database = {
           },
         ]
       }
+      waitlist_leads: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          ip: string | null
+          name: string | null
+          notes: string | null
+          persona: string | null
+          segment: string | null
+          source: string | null
+          status: string
+          user_agent: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          ip?: string | null
+          name?: string | null
+          notes?: string | null
+          persona?: string | null
+          segment?: string | null
+          source?: string | null
+          status?: string
+          user_agent?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          ip?: string | null
+          name?: string | null
+          notes?: string | null
+          persona?: string | null
+          segment?: string | null
+          source?: string | null
+          status?: string
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       webhook_configs: {
         Row: {
           created_at: string
@@ -35762,6 +36258,36 @@ export type Database = {
           specializations?: string[] | null
           total_reviews?: number | null
           years_experience?: number | null
+        }
+        Relationships: []
+      }
+      aies_receipts_redacted: {
+        Row: {
+          actor_id: string | null
+          connector_key: string | null
+          created_at: string | null
+          id: string | null
+          outcomes: Json | null
+          persona: string | null
+          reason_codes: Json | null
+        }
+        Insert: {
+          actor_id?: string | null
+          connector_key?: string | null
+          created_at?: string | null
+          id?: string | null
+          outcomes?: Json | null
+          persona?: string | null
+          reason_codes?: Json | null
+        }
+        Update: {
+          actor_id?: string | null
+          connector_key?: string | null
+          created_at?: string | null
+          id?: string | null
+          outcomes?: Json | null
+          persona?: string | null
+          reason_codes?: Json | null
         }
         Relationships: []
       }
@@ -36603,6 +37129,15 @@ export type Database = {
         }
         Relationships: []
       }
+      v_user_onboarding_status: {
+        Row: {
+          last_update: string | null
+          persona: string | null
+          steps_done: number | null
+          user_id: string | null
+        }
+        Relationships: []
+      }
       v_workflow_templates_public: {
         Row: {
           created_at: string | null
@@ -36702,6 +37237,19 @@ export type Database = {
       activate_vip_organization: {
         Args: { p_magic_token: string; p_user_id: string }
         Returns: Json
+      }
+      aies_emit_receipt: {
+        Args: {
+          p_actor: string
+          p_connector: string
+          p_inputs: Json
+          p_outcomes: Json
+          p_persona: string
+          p_policy: string
+          p_reason_codes: Json
+          p_trust_grade?: string
+        }
+        Returns: string
       }
       audit_public_schema_extensions: {
         Args: Record<PropertyKey, never>
@@ -37953,6 +38501,10 @@ export type Database = {
           p_user_id: string
         }
         Returns: undefined
+      }
+      user_has_feature: {
+        Args: { _feature: string }
+        Returns: boolean
       }
       validate_creative_approval: {
         Args: {

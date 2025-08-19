@@ -1,12 +1,12 @@
 
 import posthog from 'posthog-js';
 
-// PostHog configuration
-const POSTHOG_KEY = 'phc_Yc8jTGjpIN3vMS0YSvT6ZpOZ7UhEwnyBaUhI2i8ec46'; // Replace with actual key
+// PostHog configuration - Use environment variable for security
+const POSTHOG_KEY = import.meta.env.VITE_POSTHOG_KEY || '';
 const POSTHOG_HOST = 'https://us.i.posthog.com'; // US instance
 
 export const initializeAnalytics = () => {
-  if (typeof window !== 'undefined') {
+  if (typeof window !== 'undefined' && POSTHOG_KEY) {
     posthog.init(POSTHOG_KEY, {
       api_host: POSTHOG_HOST,
       // Privacy-focused settings
