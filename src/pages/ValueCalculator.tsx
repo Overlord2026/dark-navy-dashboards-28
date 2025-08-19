@@ -32,6 +32,7 @@ interface CalculatorResults {
 }
 
 export default function ValueCalculator() {
+  const [horizon, setHorizon] = useState<10|20|30>(30);
   const [inputs, setInputs] = useState<CalculatorInputs>({
     portfolioValue: 1500000,
     annualFeePercent: 1.0,
@@ -51,15 +52,22 @@ export default function ValueCalculator() {
     analytics.trackPageView('/value-calculator');
   }, []);
 
+  function setH(y: 10|20|30) { 
+    setHorizon(y); 
+    setInputs(prev => ({ ...prev, timeHorizon: y }));
+    analytics.track('calc.horizon_set', { y }); 
+  }
+
   const calculateResults = (): CalculatorResults => {
-    const { portfolioValue, annualFeePercent, annualFlatFee, annualGrowthPercent, monthlySpending, timeHorizon } = inputs;
+    const { portfolioValue, annualFeePercent, annualFlatFee, annualGrowthPercent, monthlySpending } = inputs;
+    const horizonYears = horizon;
     
     let traditionalValue = portfolioValue;
     let valueValue = portfolioValue;
     let traditionalFees = 0;
     let valueFees = 0;
     
-    for (let year = 1; year <= timeHorizon; year++) {
+    for (let year = 1; year <= horizonYears; year++) {
       const traditionalAnnualFee = traditionalValue * (annualFeePercent / 100);
       traditionalFees += traditionalAnnualFee;
       traditionalValue = (traditionalValue - traditionalAnnualFee) * (1 + annualGrowthPercent / 100);
@@ -118,7 +126,7 @@ export default function ValueCalculator() {
     growthRate: inputs.annualGrowthPercent,
     monthlySpending: inputs.monthlySpending,
     inflation: inputs.inflation,
-    timeHorizon: inputs.timeHorizon
+    timeHorizon: horizon
   };
 
   return (
@@ -198,17 +206,34 @@ export default function ValueCalculator() {
 
               <div>
                 <Label>Time Horizon</Label>
-                <div className="flex gap-2 mt-2">
-                  {[10, 20, 30].map((years) => (
-                    <Button
-                      key={years}
-                      variant={inputs.timeHorizon === years ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => setInputs(prev => ({ ...prev, timeHorizon: years }))}
-                    >
-                      {years} years
-                    </Button>
-                  ))}
+                <div className="flex gap-2 mt-2" role="group" aria-label="Time horizon selection">
+                  <Button
+                    variant={horizon === 10 ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setH(10)}
+                    aria-pressed={horizon === 10}
+                    className={horizon === 10 ? 'btn-active' : 'btn'}
+                  >
+                    10 years
+                  </Button>
+                  <Button
+                    variant={horizon === 20 ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setH(20)}
+                    aria-pressed={horizon === 20}
+                    className={horizon === 20 ? 'btn-active' : 'btn'}
+                  >
+                    20 years
+                  </Button>
+                  <Button
+                    variant={horizon === 30 ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setH(30)}
+                    aria-pressed={horizon === 30}
+                    className={horizon === 30 ? 'btn-active' : 'btn'}
+                  >
+                    30 years
+                  </Button>
                 </div>
               </div>
             </CardContent>
