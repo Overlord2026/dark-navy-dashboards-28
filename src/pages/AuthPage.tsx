@@ -15,6 +15,7 @@ import { supabase } from '@/lib/supabase';
 import { getLogoConfig } from '@/assets/logos';
 import { EnvironmentIndicator } from '@/components/debug/EnvironmentIndicator';
 import { Shield } from 'lucide-react';
+import { runtimeFlags } from '@/config/runtimeFlags';
 
 export function AuthPage() {
   const [email, setEmail] = useState('');
@@ -165,23 +166,29 @@ export function AuthPage() {
             
             <CardContent>
               <Tabs value={isSignUp ? 'signup' : 'login'} onValueChange={(value) => {
+                if (runtimeFlags.prelaunchMode && value === 'signup') {
+                  navigate('/waitlist');
+                  return;
+                }
                 setIsSignUp(value === 'signup');
                 setError(null);
                 setPasswordValidation(null);
               }}>
-                <TabsList className="grid w-full grid-cols-2 bg-navy border-white/20">
+                <TabsList className={`grid w-full ${runtimeFlags.prelaunchMode ? 'grid-cols-1' : 'grid-cols-2'} bg-navy border-white/20`}>
                   <TabsTrigger 
                     value="login" 
                     className="text-white data-[state=active]:bg-gold data-[state=active]:text-navy font-display"
                   >
                     Login
                   </TabsTrigger>
-                  <TabsTrigger 
-                    value="signup" 
-                    className="text-white data-[state=active]:bg-emerald data-[state=active]:text-white font-display"
-                  >
-                    Sign Up
-                  </TabsTrigger>
+                  {!runtimeFlags.prelaunchMode && (
+                    <TabsTrigger 
+                      value="signup" 
+                      className="text-white data-[state=active]:bg-emerald data-[state=active]:text-white font-display"
+                    >
+                      Sign Up
+                    </TabsTrigger>
+                  )}
                 </TabsList>
               
               <TabsContent value="login">
@@ -231,8 +238,9 @@ export function AuthPage() {
                 </form>
               </TabsContent>
               
-              <TabsContent value="signup">
-                <form onSubmit={handleSignUp} className="space-y-4">
+              {!runtimeFlags.prelaunchMode && (
+                <TabsContent value="signup">
+                  <form onSubmit={handleSignUp} className="space-y-4">
                   {error && (
                     <Alert variant={error.includes('successful') ? 'default' : 'destructive'}>
                       <AlertDescription>{error}</AlertDescription>
@@ -304,6 +312,22 @@ export function AuthPage() {
                   </Button>
                 </form>
               </TabsContent>
+              )}
+              
+              {runtimeFlags.prelaunchMode && (
+                <div className="mt-6 p-4 bg-navy/50 border border-white/10 rounded-lg text-center">
+                  <p className="text-white/70 text-sm mb-3">
+                    New user registration is currently limited.
+                  </p>
+                  <Button 
+                    variant="outline" 
+                    className="w-full border-gold text-gold hover:bg-gold hover:text-navy"
+                    onClick={() => navigate('/waitlist')}
+                  >
+                    Join Our Waitlist
+                  </Button>
+                </div>
+              )}
             </Tabs>
           </CardContent>
         </Card>

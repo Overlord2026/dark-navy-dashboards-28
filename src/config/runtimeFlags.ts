@@ -8,7 +8,8 @@ export const runtimeFlags = {
   showPatentBadge: true,
   demoMode: true,
   demoPlan: "premium" as const,
-  demoSegment: "retirees" as const
+  demoSegment: "retirees" as const,
+  prelaunchMode: true
 };
 
 // Helper to check if email functionality is available

@@ -76,6 +76,7 @@ import SwagRetirementRoadmapPage from "./pages/roadmap/SwagRetirementRoadmapPage
 import InvestmentAllocationDashboard from "./pages/retirement-roadmap/InvestmentAllocationDashboard";
 import SwagRoadmapSettings from "./pages/admin/SwagRoadmapSettings";
 import { AuthPage } from "./pages/AuthPage";
+import { WaitlistPage } from "./pages/WaitlistPage";
 import { SecuritySettingsPage } from "./pages/SecuritySettingsPage";
 import OnboardingPage from "./pages/OnboardingPage";
 import ClientWelcomeOnboardingPage from "./pages/ClientWelcomeOnboardingPage";
@@ -553,6 +554,7 @@ function App() {
                             <Route path="/auth" element={<AuthPage />} />
                             <Route path="/auth/:authType" element={<AuthPage />} />
                               <Route path="/auth/:authType/:tenantId" element={<AuthPage />} />
+                              <Route path="/waitlist" element={<WaitlistPage />} />
                               <Route path="/settings/automation" element={
                                 <AuthWrapper requireAuth={true}>
                                   {React.createElement(React.lazy(() => import('./pages/settings/AutomationSettings')))}

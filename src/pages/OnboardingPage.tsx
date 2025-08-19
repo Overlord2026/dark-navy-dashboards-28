@@ -116,7 +116,6 @@ export default function OnboardingPage() {
         {active === "link-accounts" && (
           <LinkAccounts
             onComplete={(data) => markComplete("link-accounts", data)}
-            onUpgrade={() => requirePremium("accounts_aggregator")}
             persona={persona}
             segment={segment}
           />
@@ -124,7 +123,6 @@ export default function OnboardingPage() {
         {active === "upload-doc" && (
           <UploadDoc
             onComplete={(data) => markComplete("upload-doc", data)}
-            onUpgrade={() => requirePremium("vault_advanced")}
             persona={persona}
             segment={segment}
           />

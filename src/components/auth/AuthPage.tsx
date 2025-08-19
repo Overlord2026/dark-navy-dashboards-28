@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Loader2, Eye, EyeOff } from 'lucide-react';
+import { runtimeFlags } from '@/config/runtimeFlags';
 
 export function AuthPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -230,9 +231,9 @@ export function AuthPage() {
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="signin" className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
+            <TabsList className={`grid w-full ${runtimeFlags.prelaunchMode ? 'grid-cols-1' : 'grid-cols-2'}`}>
               <TabsTrigger value="signin">Sign In</TabsTrigger>
-              <TabsTrigger value="signup">Sign Up</TabsTrigger>
+              {!runtimeFlags.prelaunchMode && <TabsTrigger value="signup">Sign Up</TabsTrigger>}
             </TabsList>
             
             <TabsContent value="signin" className="space-y-4">
@@ -293,8 +294,9 @@ export function AuthPage() {
               </form>
             </TabsContent>
             
-            <TabsContent value="signup" className="space-y-4">
-              <form onSubmit={handleSignUp} className="space-y-4">
+            {!runtimeFlags.prelaunchMode && (
+              <TabsContent value="signup" className="space-y-4">
+                <form onSubmit={handleSignUp} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="signup-firstname">First Name</Label>
@@ -396,6 +398,22 @@ export function AuthPage() {
                 </Button>
               </form>
             </TabsContent>
+            )}
+            
+            {runtimeFlags.prelaunchMode && (
+              <div className="mt-6 p-4 bg-muted rounded-lg text-center">
+                <p className="text-sm text-muted-foreground mb-3">
+                  New user registration is currently limited.
+                </p>
+                <Button 
+                  variant="outline" 
+                  className="w-full"
+                  onClick={() => navigate('/waitlist')}
+                >
+                  Join Our Waitlist
+                </Button>
+              </div>
+            )}
           </Tabs>
         </CardContent>
       </Card>
