@@ -32097,6 +32097,33 @@ export type Database = {
         }
         Relationships: []
       }
+      tools_results: {
+        Row: {
+          created_at: string | null
+          id: string
+          inputs: Json
+          outputs: Json
+          tool_key: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          inputs: Json
+          outputs: Json
+          tool_key: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          inputs?: Json
+          outputs?: Json
+          tool_key?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       tracked_events: {
         Row: {
           created_at: string

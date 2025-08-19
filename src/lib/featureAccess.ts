@@ -46,7 +46,8 @@ export const FEATURE_MATRIX = {
   governance: { minPlan: 'elite' as Plan },
   multi_entity: { minPlan: 'elite' as Plan },
   reports_pro: { minPlan: 'elite' as Plan },
-  beneficiaries_review: { minPlan: 'premium' as Plan }
+  beneficiaries_review: { minPlan: 'premium' as Plan },
+  retirement_scorecard: { minPlan: 'basic' as Plan }
 } as const;
 
 export type FeatureKey = keyof typeof FEATURE_MATRIX;

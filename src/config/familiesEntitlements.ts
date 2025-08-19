@@ -13,6 +13,7 @@ export default {
     {"key":"retirees","title":"Retirees","cards":[
       {"feature":"rmd_planner","label":"RMD Planner (Premium)"},
       {"feature":"reports","label":"Income Reports (Premium)"},
+      {"feature":"retirement_scorecard","label":"Retirement Confidence Scorecard"},
       {"feature":"beneficiaries_review","label":"Beneficiaries Review"}]},
     {"key":"hnw","title":"High-Net-Worth","cards":[
       {"feature":"vault_advanced","label":"Secure Vault (Premium/Elite)"},
