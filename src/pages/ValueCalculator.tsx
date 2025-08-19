@@ -8,6 +8,7 @@ import { Slider } from '@/components/ui/slider';
 import { Badge } from '@/components/ui/badge';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Calculator, DollarSign, TrendingUp, Clock, Sparkles } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import CountUp from 'react-countup';
 import { Celebration } from '@/components/ConfettiAnimation';
 import { StressTestPreview } from '@/components/retirement/StressTestPreview';
@@ -212,7 +213,12 @@ export default function ValueCalculator() {
                     size="sm"
                     onClick={() => setH(10)}
                     aria-pressed={horizon === 10}
-                    className={horizon === 10 ? 'btn-active' : 'btn'}
+                    className={cn(
+                      "transition-all duration-200",
+                      horizon === 10 
+                        ? "bg-primary text-primary-foreground shadow-md" 
+                        : "bg-background hover:bg-accent"
+                    )}
                   >
                     10 years
                   </Button>
@@ -221,7 +227,12 @@ export default function ValueCalculator() {
                     size="sm"
                     onClick={() => setH(20)}
                     aria-pressed={horizon === 20}
-                    className={horizon === 20 ? 'btn-active' : 'btn'}
+                    className={cn(
+                      "transition-all duration-200",
+                      horizon === 20 
+                        ? "bg-primary text-primary-foreground shadow-md" 
+                        : "bg-background hover:bg-accent"
+                    )}
                   >
                     20 years
                   </Button>
@@ -230,7 +241,12 @@ export default function ValueCalculator() {
                     size="sm"
                     onClick={() => setH(30)}
                     aria-pressed={horizon === 30}
-                    className={horizon === 30 ? 'btn-active' : 'btn'}
+                    className={cn(
+                      "transition-all duration-200",
+                      horizon === 30 
+                        ? "bg-primary text-primary-foreground shadow-md" 
+                        : "bg-background hover:bg-accent"
+                    )}
                   >
                     30 years
                   </Button>
