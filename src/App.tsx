@@ -562,6 +562,31 @@ function App() {
                  {React.createElement(React.lazy(() => import('./pages/solutions/EstatePlanningPage')))}
                </React.Suspense>
              } />
+             <Route path="/tools/retirement-scorecard" element={
+               <React.Suspense fallback={<div>Loading...</div>}>
+                 {React.createElement(React.lazy(() => import('./pages/RetirementScorecard')))}
+               </React.Suspense>
+             } />
+             <Route path="/resources/calculators" element={
+               <React.Suspense fallback={<div>Loading...</div>}>
+                 {React.createElement(React.lazy(() => import('./pages/resources/CalculatorsIndexPage')))}
+               </React.Suspense>
+             } />
+             <Route path="/resources/guides" element={
+               <React.Suspense fallback={<div>Loading...</div>}>
+                 {React.createElement(React.lazy(() => import('./pages/resources/GuidesIndexPage')))}
+               </React.Suspense>
+             } />
+             <Route path="/resources/glossary" element={
+               <React.Suspense fallback={<div>Loading...</div>}>
+                 {React.createElement(React.lazy(() => import('./pages/resources/GlossaryIndexPage')))}
+               </React.Suspense>
+             } />
+             <Route path="/resources/security" element={
+               <React.Suspense fallback={<div>Loading...</div>}>
+                 {React.createElement(React.lazy(() => import('./pages/resources/SecurityIndexPage')))}
+               </React.Suspense>
+             } />
              
             <Route path="/recommendations" element={<RecommendationsPage />} />
             <Route path="/dashboards" element={<DashboardsPage />} />
