@@ -1,11 +1,13 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { handleGetStarted } from '@/utils/getStartedUtils';
 
 interface BrandBarProps {
   className?: string;
 }
 
 export const BrandBar: React.FC<BrandBarProps> = ({ className = '' }) => {
+  const navigate = useNavigate();
   return (
     <div className={`sticky top-0 z-50 w-full h-14 bg-background border-b border-border backdrop-blur-md ${className}`}>
       <div className="container flex items-center justify-between h-full px-4">
@@ -62,6 +64,7 @@ export const BrandBar: React.FC<BrandBarProps> = ({ className = '' }) => {
             </button>
             <button 
               className="px-3 py-1.5 text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 transition-colors duration-200 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20 focus:ring-offset-2"
+              onClick={() => handleGetStarted(navigate)}
               aria-label="Get started"
             >
               Get Started

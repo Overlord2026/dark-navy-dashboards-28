@@ -190,5 +190,5 @@ export const ctas = {
   seeHowItWorks: { label: "See How It Works", href: "/how-it-works" },
   valueCalculator:{ label: "Try the Value Calculator", href: "/tools/value-calculator" },
   invitation:{ label: "I have an invitation", href: "/invite" },
-  getStarted:{ label: "Get Started", href: "/onboarding" },
+  getStarted:{ label: "Get Started", href: "/onboarding?persona=family&segment=retirees" },
 };

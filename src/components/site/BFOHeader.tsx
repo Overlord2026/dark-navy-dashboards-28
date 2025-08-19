@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, ChevronDown, ExternalLink } from 'lucide-react';
+import { getStartedRoute } from '@/utils/getStartedUtils';
 import MastheadPersonaToggle from './MastheadPersonaToggle';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -201,7 +202,7 @@ export const BFOHeader: React.FC<BFOHeaderProps> = ({
                 <Link to="/login">Sign In</Link>
               </Button>
               <Button size="sm" asChild>
-                <Link to="/signup">Get Started</Link>
+                <Link to={getStartedRoute()}>Get Started</Link>
               </Button>
               
               {/* Mobile Menu */}
