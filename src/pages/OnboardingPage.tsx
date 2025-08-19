@@ -44,8 +44,18 @@ export default function OnboardingPage() {
     if (!user_id) { setSaving(false); return; }
 
     await supabase
-      .from("user_onboarding_progress")
-      .upsert({ user_id, persona, segment, step, data }, { onConflict: "user_id,persona,segment,step" });
+      .from('user_onboarding_progress')
+      .upsert(
+        { 
+          user_id, 
+          user_type: persona, 
+          step_name: step, 
+          is_completed: true, 
+          completed_at: new Date().toISOString(), 
+          updated_at: new Date().toISOString() 
+        },
+        { onConflict: 'user_id,user_type,step_name' }
+      );
 
     analytics.trackEvent("onboarding.step_completed", { step, persona, segment });
     setSaving(false);
