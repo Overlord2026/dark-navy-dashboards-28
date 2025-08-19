@@ -22,6 +22,9 @@
 
 @layer base {
   :root, .dark-theme {
+    /* Header Stack Height for Sticky Navigation */
+    --header-stack: 112px;
+    
     /* Family Office Marketplace Premium Theme */
     --background: 216 29% 11%; /* Deep Blue #14213D */
     --foreground: 0 0% 100%; /* White #FFFFFF */
@@ -112,6 +115,9 @@
   }
 
   .light-theme {
+    /* Header Stack Height for Sticky Navigation */
+    --header-stack: 112px;
+    
     /* Family Office Marketplace Premium Theme */
     --background: 216 29% 11%; /* Deep Blue #14213D */
     --foreground: 0 0% 100%; /* White #FFFFFF */
@@ -601,6 +607,19 @@
     .touch-target {
       @apply min-h-touch min-w-touch;
     }
+  }
+
+  /* Sticky Header Navigation */
+  .nav-brand-strip {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  
+  .persona-nav {
+    position: sticky;
+    top: 56px;
+    z-index: 40;
   }
 
   /* High contrast accessibility */

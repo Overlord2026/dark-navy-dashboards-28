@@ -7,9 +7,10 @@ import { analytics } from '@/lib/analytics';
 const FamiliesPage = () => {
   return (
     <div className="min-h-screen bg-background">
-      <FamilyHero />
-      
-      <div className="container mx-auto px-4 py-8 space-y-8">
+      <main className="pt-[var(--header-stack)] scroll-mt-[var(--header-stack)]">
+        <FamilyHero />
+        
+        <div className="container mx-auto px-4 py-8 space-y-8">
         <FamiliesToolsBand />
         <section>
           <h2 className="text-xl font-semibold">Explore your path</h2>
@@ -23,7 +24,8 @@ const FamiliesPage = () => {
             ))}
           </div>
         </section>
-      </div>
+        </div>
+      </main>
     </div>
   );
 };

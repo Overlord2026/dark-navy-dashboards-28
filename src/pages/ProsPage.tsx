@@ -8,7 +8,7 @@ export default function ProsPage() {
   return (
     <div className="min-h-screen bg-background">
       <BFOHeader />
-      <main>
+      <main className="pt-[var(--header-stack)] scroll-mt-[var(--header-stack)]">
         <HomeHero />
         <PersonaAwareContent />
       </main>
