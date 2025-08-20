@@ -241,6 +241,8 @@ import PMQPage from './pages/pmq/PMQPage';
 import ConsentDashboard from './components/consent/ConsentDashboard';
 import ExecutiveSuite from './pages/ExecutiveSuite';
 import AdminPolicies from './pages/admin/Policies';
+import GoalsHome from './pages/GoalsHome';
+import NewGoalWizard from './pages/NewGoalWizard';
 
 // Import onboarding flow component
 const PersonaOnboardingFlow = React.lazy(() => 
@@ -538,12 +540,14 @@ function App() {
                   {React.createElement(React.lazy(() => import('./pages/ValueCalculator')))}
                 </React.Suspense>
              } />
-             <Route path="/tools/target-analyzer" element={<TargetAnalyzerPage />} />
-              <Route path="/tools/retirement-scorecard" element={
-                <React.Suspense fallback={<div>Loading...</div>}>
-                  {React.createElement(React.lazy(() => import('./pages/tools/RetirementScorecard')))}
-                </React.Suspense>
-              } />
+              <Route path="/tools/target-analyzer" element={<TargetAnalyzerPage />} />
+               <Route path="/tools/retirement-scorecard" element={
+                 <React.Suspense fallback={<div>Loading...</div>}>
+                   {React.createElement(React.lazy(() => import('./pages/tools/RetirementScorecard')))}
+                 </React.Suspense>
+               } />
+               <Route path="/goals" element={<GoalsHome />} />
+               <Route path="/goals/new" element={<NewGoalWizard />} />
              
             <Route path="/meet" element={<MeetPage />} />
             <Route path="/tools" element={
