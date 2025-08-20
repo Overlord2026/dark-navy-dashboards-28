@@ -15,6 +15,11 @@ export function Navigation() {
               Family Office Platform
             </span>
           </Link>
+          <div className="flex items-center space-x-6">
+            <Link to="/goals" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+              Goals
+            </Link>
+          </div>
         </div>
         <div className="flex items-center">
           {/* Dev tools disabled for production security */}
