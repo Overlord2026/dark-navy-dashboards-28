@@ -1,33 +1,77 @@
-// SMART Goals System - Comprehensive Goal Types
+// Updated Goal types for comprehensive goals management system
 
 export type Persona = "aspiring" | "retiree";
-export type GoalKind = "financial" | "bucket";
+export type GoalType = 'bucket_list' | 'retirement' | 'savings' | 'education' | 'wedding' | 'emergency' | 'down_payment' | 'debt' | 'custom';
 
-export type FundingSplit = {
-  prePaycheck?: { amount: number; cadence: "weekly" | "biweekly" | "monthly" };
-  postPaycheck?: { amount: number; day: number };
-  autoIncreasePct?: number; // e.g., 3
-};
-
-export type Goal = {
+export interface Goal {
   id: string;
+  type: GoalType;
+  title: string;
+  imageUrl?: string;
+  targetAmount?: number;
+  targetDate?: string; // ISO
+  smartr?: {
+    specific: string;
+    measurable: string;
+    achievable: string;
+    relevant: string;
+    timeBound: string;
+    rewards?: string;
+  };
+  assignedAccountIds: string[];
+  monthlyContribution?: number;
   persona: Persona;
-  kind: GoalKind;
-  priority: number;
-  name: string;
-  cover?: string; // url or vault id
-  specific?: { destination?: string; experiences?: string[]; description?: string };
-  measurable: { unit: "usd" | "trips" | "items"; target: number; current: number };
-  relevant?: { why?: string; invitedProId?: string };
-  timeBound?: { deadline?: string; window?: { month?: number; year?: number } };
-  funding?: FundingSplit;
+  progress: {
+    current: number;
+    pct: number;
+  };
+  priority: number; // For top 3 ordering
   createdAt: string;
-  // Additional fields for system compatibility
-  user_id?: string;
-  tenant_id?: string;
-  status?: GoalStatus;
-  updated_at?: string;
-};
+  updatedAt: string;
+}
+
+// Account type for assignments
+export interface Account {
+  id: string;
+  name: string;
+  type: 'checking' | 'savings' | 'investment' | 'retirement';
+  balance: number;
+  institution: string;
+}
+
+// Persona defaults configuration
+export interface PersonaDefaults {
+  persona: Persona;
+  goals: Omit<Goal, 'id' | 'createdAt' | 'updatedAt' | 'assignedAccountIds'>[];
+}
+
+// API request/response types
+export interface CreateGoalRequest {
+  type: GoalType;
+  title: string;
+  imageUrl?: string;
+  targetAmount?: number;
+  targetDate?: string;
+  smartr?: Goal['smartr'];
+  monthlyContribution?: number;
+  persona: Persona;
+  priority?: number;
+}
+
+export interface UpdateGoalRequest extends Partial<CreateGoalRequest> {
+  id: string;
+}
+
+export interface AssignAccountsRequest {
+  goalId: string;
+  accountIds: string[];
+}
+
+export interface SetContributionPlanRequest {
+  goalId: string;
+  monthlyContribution: number;
+  targetDate?: string;
+}
 
 // Legacy types for backward compatibility
 export type GoalStatus = 'active' | 'completed' | 'paused' | 'on_track' | 'at_risk' | 'achieved';
@@ -68,52 +112,6 @@ export interface GoalMilestone {
   updated_at: string;
 }
 
-export interface GoalTemplate {
-  id: string;
-  category: GoalCategory;
-  display_name: string;
-  description: string;
-  icon_name: string;
-  image_url: string | null;
-  default_fields: Record<string, any>;
-  required_fields: string[];
-  suggested_amounts: number[];
-  aspirational_prompt: string;
-  success_story_example: string | null;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface GoalAttachment {
-  id: string;
-  goal_id: string;
-  user_id: string;
-  filename: string;
-  file_url: string;
-  file_type: string;
-  file_size: number;
-  uploaded_at: string;
-  description: string | null;
-}
-
-// Progress calculation helpers
-export interface GoalProgress {
-  percentage: number;
-  amount_remaining: number;
-  days_remaining: number;
-  monthly_target: number;
-  on_track: boolean;
-  projected_completion: string | null;
-}
-
-// Family Office specific enhancements
-export interface FamilyMember {
-  id: string;
-  name: string;
-  relationship: string;
-  role: 'primary' | 'spouse' | 'child' | 'parent' | 'other';
-}
-
 export interface GoalStats {
   total_goals: number;
   active_goals: number;
@@ -124,42 +122,3 @@ export interface GoalStats {
   on_track_count: number;
   at_risk_count: number;
 }
-
-// Backward compatibility helpers for legacy goal structure
-export const adaptLegacyGoal = (legacyGoal: any): Goal => {
-  return {
-    id: legacyGoal.id,
-    persona: 'aspiring' as Persona,
-    kind: 'financial' as GoalKind,
-    priority: legacyGoal.priority === 'top_aspiration' ? 1 : 
-              legacyGoal.priority === 'high' ? 2 :
-              legacyGoal.priority === 'medium' ? 3 : 4,
-    name: legacyGoal.name || legacyGoal.title || '',
-    cover: legacyGoal.image_url || legacyGoal.imageUrl,
-    specific: {
-      description: legacyGoal.description || legacyGoal.aspirational_description
-    },
-    measurable: {
-      unit: 'usd',
-      target: legacyGoal.target_amount || legacyGoal.targetAmount || 0,
-      current: legacyGoal.current_amount || legacyGoal.savedAmount || 0
-    },
-    relevant: {
-      why: legacyGoal.why_important || legacyGoal.experience_story
-    },
-    timeBound: legacyGoal.target_date || legacyGoal.targetDate ? {
-      deadline: legacyGoal.target_date || legacyGoal.targetDate
-    } : undefined,
-    funding: legacyGoal.monthly_contribution || legacyGoal.monthlyPlan ? {
-      prePaycheck: {
-        amount: legacyGoal.monthly_contribution || legacyGoal.monthlyPlan?.pre || 0,
-        cadence: 'monthly'
-      }
-    } : undefined,
-    createdAt: legacyGoal.created_at || new Date().toISOString(),
-    user_id: legacyGoal.user_id,
-    tenant_id: legacyGoal.tenant_id,
-    status: legacyGoal.status,
-    updated_at: legacyGoal.updated_at
-  };
-};

@@ -1,301 +1,117 @@
-import { useState, useEffect, useMemo, useCallback } from 'react';
-import { supabase } from '@/lib/supabase';
-import { useToast } from '@/hooks/use-toast';
-import { Goal, GoalTemplate, adaptLegacyGoal } from '@/types/goal';
-import { calculateGoalProgress, calculateTotalGoalStats } from '@/lib/goalHelpers';
-
-export type { Goal };
-
-
+// Simple hooks file to get build working
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { goalsApi, goalKeys } from '@/api/goalsApi';
+import { toast } from 'sonner';
 
 export const useGoals = () => {
-  const [goals, setGoals] = useState<Goal[]>([]);
-  const [loading, setLoading] = useState(true);
-  const { toast } = useToast();
+  return useQuery({
+    queryKey: goalKeys.lists(),
+    queryFn: goalsApi.listGoals,
+  });
+};
 
-  const fetchGoals = useCallback(async () => {
-    try {
-      setLoading(true);
-      const { data, error } = await supabase
-        .from('user_goals')
-        .select('*')
-        .order('sort_order', { ascending: true });
+export const useCreateGoal = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: goalsApi.createGoal,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: goalKeys.lists() });
+      toast.success('Goal created!');
+    },
+  });
+};
 
-      if (error) throw error;
-      
-      // Adapt legacy goals to new structure
-      const adaptedGoals = (data || []).map((legacyGoal: any) => adaptLegacyGoal(legacyGoal));
-      setGoals(adaptedGoals);
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to load goals. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  }, [toast]);
+export const useUpdateGoal = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: goalsApi.updateGoal,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: goalKeys.lists() });
+      toast.success('Goal updated!');
+    },
+  });
+};
 
-  const createGoal = useCallback(async (goalData: Partial<Goal>) => {
-    try {
-      const { data: user } = await supabase.auth.getUser();
-      if (!user.user) throw new Error('User not authenticated');
+export const useDeleteGoal = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: goalsApi.deleteGoal,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: goalKeys.lists() });
+      toast.success('Goal deleted!');
+    },
+  });
+};
 
-      // Convert new Goal to legacy format for database
-      const legacyGoalData = {
-        name: goalData.name,
-        description: goalData.specific?.description || '',
-        aspirational_description: goalData.specific?.description || '',
-        target_amount: goalData.measurable.unit === 'usd' ? goalData.measurable.target : 0,
-        current_amount: goalData.measurable.unit === 'usd' ? goalData.measurable.current : 0,
-        target_date: goalData.timeBound?.deadline || null,
-        monthly_contribution: goalData.funding?.prePaycheck?.amount || 0,
-        priority: (goalData.priority === 1 ? 'top_aspiration' : 
-                 goalData.priority <= 3 ? 'high' : 
-                 goalData.priority <= 5 ? 'medium' : 'low') as any,
-        image_url: goalData.cover,
-        category: 'other' as any,
-        funding_frequency: 'monthly' as any,
-        sort_order: goalData.priority || 99,
-        user_id: user.user.id,
-        tenant_id: '',
-        status: 'active' as any
-      };
+export const useAccounts = () => {
+  return useQuery({
+    queryKey: goalKeys.accounts,
+    queryFn: goalsApi.getAccounts,
+  });
+};
 
-      const { data, error } = await supabase
-        .from('user_goals')
-        .insert([legacyGoalData as any])
-        .select()
-        .single();
+export const usePersonaDefaults = (persona: 'aspiring' | 'retiree') => {
+  return useQuery({
+    queryKey: goalKeys.personaDefaults(persona),
+    queryFn: () => goalsApi.getPersonaDefaults(persona),
+  });
+};
 
-      if (error) throw error;
+export const useAssignAccounts = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: goalsApi.assignAccounts,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: goalKeys.lists() });
+      toast.success('Accounts assigned!');
+    },
+  });
+};
 
-      const adaptedGoal = adaptLegacyGoal(data);
-      setGoals(prev => [...prev, adaptedGoal]);
-      toast({
-        title: "Success!",
-        description: "Your goal has been created successfully.",
-      });
+export const useSetContributionPlan = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: goalsApi.setContributionPlan,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: goalKeys.lists() });
+      toast.success('Contribution plan updated!');
+    },
+  });
+};
 
-      return data;
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to create goal. Please try again.",
-        variant: "destructive",
-      });
-      throw error;
-    }
-  }, [toast]);
+export const useReorderGoals = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: goalsApi.reorderGoals,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: goalKeys.lists() });
+      toast.success('Goals reordered!');
+    },
+  });
+};
 
-  const updateGoal = useCallback(async (id: string, updates: Partial<Goal>) => {
-    try {
-      // Convert new Goal updates to legacy format
-      const legacyUpdates: any = {};
-      
-      if (updates.name) legacyUpdates.name = updates.name;
-      if (updates.specific?.description) legacyUpdates.description = updates.specific.description;
-      if (updates.measurable) {
-        if (updates.measurable.unit === 'usd') {
-          if (updates.measurable.target !== undefined) legacyUpdates.target_amount = updates.measurable.target;
-          if (updates.measurable.current !== undefined) legacyUpdates.current_amount = updates.measurable.current;
-        }
-      }
-      if (updates.timeBound?.deadline) legacyUpdates.target_date = updates.timeBound.deadline;
-      if (updates.funding?.prePaycheck?.amount) legacyUpdates.monthly_contribution = updates.funding.prePaycheck.amount;
-      if (updates.cover) legacyUpdates.image_url = updates.cover;
-      if (updates.status) legacyUpdates.status = updates.status;
+export const useTopGoals = (persona?: 'aspiring' | 'retiree', limit = 3) => {
+  const { data: goals = [] } = useGoals();
+  const filteredGoals = persona ? goals.filter(goal => goal.persona === persona) : goals;
+  return filteredGoals.sort((a, b) => a.priority - b.priority).slice(0, limit);
+};
 
-      const { data, error } = await supabase
-        .from('user_goals')
-        .update(legacyUpdates)
-        .eq('id', id)
-        .select()
-        .single();
-
-      if (error) throw error;
-
-      const adaptedGoal = adaptLegacyGoal(data);
-      setGoals(prev => prev.map(goal => goal.id === id ? adaptedGoal : goal));
-      toast({
-        title: "Updated!",
-        description: "Your goal has been updated successfully.",
-      });
-
-      return data;
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to update goal. Please try again.",
-        variant: "destructive",
-      });
-      throw error;
-    }
-  }, [toast]);
-
-  const deleteGoal = useCallback(async (id: string) => {
-    try {
-      const { error } = await supabase
-        .from('user_goals')
-        .delete()
-        .eq('id', id);
-
-      if (error) throw error;
-
-      setGoals(prev => prev.filter(goal => goal.id !== id));
-      toast({
-        title: "Deleted!",
-        description: "Your goal has been deleted successfully.",
-      });
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to delete goal. Please try again.",
-        variant: "destructive",
-      });
-      throw error;
-    }
-  }, [toast]);
-
-  const markGoalComplete = useCallback(async (id: string) => {
-    try {
-      const goal = goals.find(g => g.id === id);
-      if (!goal) throw new Error('Goal not found');
-
-      const { data, error } = await supabase
-        .from('user_goals')
-        .update({
-          status: 'completed',
-          completed_at: new Date().toISOString(),
-          current_amount: goal.measurable.unit === 'usd' ? goal.measurable.target : goal.measurable.current
-        })
-        .eq('id', id)
-        .select()
-        .single();
-
-      if (error) throw error;
-
-      const adaptedGoal = adaptLegacyGoal(data);
-      setGoals(prev => prev.map(goal => goal.id === id ? adaptedGoal : goal));
-      toast({
-        title: "Congratulations! 🎉",
-        description: "You've achieved your goal! Time to celebrate!",
-      });
-
-      return data;
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to mark goal as complete. Please try again.",
-        variant: "destructive",
-      });
-      throw error;
-    }
-  }, [goals, toast]);
-
-  const updateGoalProgress = useCallback(async (id: string, newAmount: number) => {
-    try {
-      const { data, error } = await supabase
-        .from('user_goals')
-        .update({ current_amount: newAmount })
-        .eq('id', id)
-        .select()
-        .single();
-
-      if (error) throw error;
-
-      const adaptedGoal = adaptLegacyGoal(data);
-      setGoals(prev => prev.map(goal => goal.id === id ? adaptedGoal : goal));
-      return adaptedGoal;
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to update progress. Please try again.",
-        variant: "destructive",
-      });
-      throw error;
-    }
-  }, [toast]);
-
-  useEffect(() => {
-    fetchGoals();
-  }, []);
-
-  // Memoized calculations for performance
-  const activeGoals = useMemo(() => goals.filter(g => (g.status || 'active') === 'active'), [goals]);
-  const completedGoals = useMemo(() => goals.filter(g => (g.status || 'active') === 'completed'), [goals]);
-  const topAspirations = useMemo(() => goals.filter(g => g.priority === 1), [goals]);
-
-  const totalSaved = useMemo(() => 
-    goals.reduce((sum, goal) => 
-      sum + (goal.measurable.unit === 'usd' ? goal.measurable.current : 0), 0), [goals]);
-  
-  const totalTarget = useMemo(() => 
-    goals.reduce((sum, goal) => 
-      sum + (goal.measurable.unit === 'usd' ? goal.measurable.target : 0), 0), [goals]);
-  
-  const averageProgress = useMemo(() => {
-    if (goals.length === 0) return 0;
-    return goals.reduce((sum, goal) => {
-      const progress = goal.measurable.target > 0 
-        ? (goal.measurable.current / goal.measurable.target) * 100 
-        : 0;
-      return sum + Math.min(progress, 100);
-    }, 0) / goals.length;
-  }, [goals]);
-
+export const useGoalStats = () => {
+  const { data: goals = [] } = useGoals();
   return {
-    goals,
-    activeGoals,
-    completedGoals,
-    topAspirations,
-    loading,
-    totalSaved,
-    totalTarget,
-    averageProgress,
-    fetchGoals,
-    createGoal,
-    updateGoal,
-    deleteGoal,
-    markGoalComplete,
-    updateGoalProgress
+    total: goals.length,
+    totalSaved: goals.reduce((sum, goal) => sum + (goal.progress?.current || 0), 0),
+    totalTarget: goals.reduce((sum, goal) => sum + (goal.targetAmount || 0), 0),
+    averageProgress: goals.length > 0 ? goals.reduce((sum, goal) => sum + (goal.progress?.pct || 0), 0) / goals.length : 0,
+    onTrack: goals.filter(goal => (goal.progress?.pct || 0) >= 80).length
   };
 };
 
-export const useGoalTemplates = () => {
-  const [templates, setTemplates] = useState<GoalTemplate[]>([]);
-  const [loading, setLoading] = useState(true);
-  const { toast } = useToast();
-
-  const fetchTemplates = useCallback(async () => {
-    try {
-      setLoading(true);
-      const { data, error } = await supabase
-        .from('goal_category_templates')
-        .select('*')
-        .order('display_name');
-
-      if (error) throw error;
-      setTemplates((data || []) as any);
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to load goal templates. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  }, [toast]);
-
-  useEffect(() => {
-    fetchTemplates();
-  }, []);
-
+export const useGoal = (goalId: string) => {
+  const { data: goals } = useGoals();
   return {
-    templates,
-    loading,
-    fetchTemplates
+    data: goals?.find(g => g.id === goalId),
+    isLoading: false,
+    error: null
   };
 };
