@@ -1,24 +1,30 @@
 import { Goal, GoalProgress } from '@/types/goal';
 
 export const calculateGoalProgress = (goal: Goal): GoalProgress => {
-  const percentage = goal.target_amount > 0 
-    ? Math.min((goal.current_amount / goal.target_amount) * 100, 100)
+  // Handle both new and legacy goal structures
+  const targetAmount = goal.targetAmount || (goal as any).target_amount || 0;
+  const currentAmount = goal.savedAmount || (goal as any).current_amount || 0;
+  
+  const percentage = targetAmount > 0 
+    ? Math.min((currentAmount / targetAmount) * 100, 100)
     : 0;
 
-  const amount_remaining = Math.max(goal.target_amount - goal.current_amount, 0);
+  const amount_remaining = Math.max(targetAmount - currentAmount, 0);
 
   let days_remaining = 0;
   let projected_completion: string | null = null;
 
-  if (goal.target_date) {
-    const targetDate = new Date(goal.target_date);
+  const targetDate = goal.targetDate || (goal as any).target_date;
+  if (targetDate) {
+    const targetDateObj = new Date(targetDate);
     const today = new Date();
-    const diffTime = targetDate.getTime() - today.getTime();
+    const diffTime = targetDateObj.getTime() - today.getTime();
     days_remaining = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
     // Calculate projected completion based on current savings rate
-    if (goal.monthly_contribution > 0 && amount_remaining > 0) {
-      const monthsToComplete = amount_remaining / goal.monthly_contribution;
+    const monthlyContribution = goal.monthlyPlan?.pre || (goal as any).monthly_contribution || 0;
+    if (monthlyContribution > 0 && amount_remaining > 0) {
+      const monthsToComplete = amount_remaining / monthlyContribution;
       const projectedDate = new Date();
       projectedDate.setMonth(projectedDate.getMonth() + monthsToComplete);
       projected_completion = projectedDate.toISOString().split('T')[0];
@@ -31,8 +37,9 @@ export const calculateGoalProgress = (goal: Goal): GoalProgress => {
     : 0;
 
   // Determine if goal is on track
+  const monthlyContribution = goal.monthlyPlan?.pre || (goal as any).monthly_contribution || 0;
   const on_track = days_remaining > 0 
-    ? (goal.monthly_contribution >= monthly_target * 0.9) // 90% threshold
+    ? (monthlyContribution >= monthly_target * 0.9) // 90% threshold
     : percentage >= 100;
 
   return {
@@ -83,38 +90,48 @@ export const formatGoalCategory = (category: string): string => {
     .join(' ');
 };
 
-export const getGoalCategoryIcon = (category: string): string => {
-  const iconMap: Record<string, string> = {
-    'retirement': '🏖️',
-    'healthcare_healthspan': '❤️',
-    'travel_bucket_list': '✈️',
-    'family_experience': '👨‍👩‍👧‍👦',
-    'charitable_giving': '🎁',
-    'education': '🎓',
-    'real_estate': '🏠',
-    'wedding': '💒',
-    'vehicle': '🚗',
-    'emergency_fund': '🛡️',
-    'debt_paydown': '💳',
-    'lifetime_gifting': '💝',
-    'legacy_inheritance': '👑',
-    'life_insurance': '🔒',
-    'other': '🎯'
-  };
+export const getGoalCategoryIcon = (goal: Goal): string => {
+  // Handle bucket list goals
+  if (goal.kind === 'bucket') {
+    return '✨'; // Default bucket list icon
+  }
   
-  return iconMap[category] || '🎯';
+  // Handle financial goals by title/category inference
+  const title = goal.title.toLowerCase();
+  if (title.includes('retirement')) return '🏖️';
+  if (title.includes('emergency')) return '🛡️';
+  if (title.includes('travel')) return '✈️';
+  if (title.includes('education')) return '🎓';
+  if (title.includes('home') || title.includes('house')) return '🏠';
+  if (title.includes('car') || title.includes('vehicle')) return '🚗';
+  if (title.includes('wedding')) return '💒';
+  if (title.includes('charity') || title.includes('giving')) return '🎁';
+  if (title.includes('health')) return '❤️';
+  if (title.includes('debt')) return '💳';
+  
+  return goal.kind === 'financial' ? '💰' : '🎯';
 };
 
 export const calculateTotalGoalStats = (goals: Goal[]) => {
   const total_goals = goals.length;
-  const active_goals = goals.filter(g => g.status === 'active').length;
-  const completed_goals = goals.filter(g => g.status === 'completed').length;
-  const total_saved = goals.reduce((sum, goal) => sum + goal.current_amount, 0);
-  const total_target = goals.reduce((sum, goal) => sum + goal.target_amount, 0);
+  const active_goals = goals.filter(g => (g.status || 'active') === 'active').length;
+  const completed_goals = goals.filter(g => (g.status || 'active') === 'completed').length;
+  
+  const total_saved = goals.reduce((sum, goal) => {
+    const saved = goal.savedAmount || (goal as any).current_amount || 0;
+    return sum + saved;
+  }, 0);
+  
+  const total_target = goals.reduce((sum, goal) => {
+    const target = goal.targetAmount || (goal as any).target_amount || 0;
+    return sum + target;
+  }, 0);
   
   const average_progress = goals.length > 0 
     ? goals.reduce((sum, goal) => {
-        const progress = goal.target_amount > 0 ? (goal.current_amount / goal.target_amount) * 100 : 0;
+        const target = goal.targetAmount || (goal as any).target_amount || 0;
+        const current = goal.savedAmount || (goal as any).current_amount || 0;
+        const progress = target > 0 ? (current / target) * 100 : 0;
         return sum + Math.min(progress, 100);
       }, 0) / goals.length
     : 0;
@@ -124,7 +141,7 @@ export const calculateTotalGoalStats = (goals: Goal[]) => {
     return progress.on_track;
   }).length;
 
-  const at_risk_count = goals.filter(g => g.status === 'at_risk').length;
+  const at_risk_count = goals.filter(g => (g.status || 'active') === 'at_risk').length;
 
   return {
     total_goals,
@@ -140,14 +157,30 @@ export const calculateTotalGoalStats = (goals: Goal[]) => {
 
 export const suggestNextMilestone = (goal: Goal, currentMilestones: any[] = []): any => {
   const progress = calculateGoalProgress(goal);
+  const targetAmount = goal.targetAmount || (goal as any).target_amount || 0;
+  const currentAmount = goal.savedAmount || (goal as any).current_amount || 0;
+  const goalName = goal.title || (goal as any).name || 'goal';
+  
+  if (goal.kind === 'bucket') {
+    const metricTarget = goal.metricTarget || 1;
+    const metricProgress = goal.metricProgress || 0;
+    const nextMetric = Math.min(metricProgress + 1, metricTarget);
+    
+    return {
+      title: `Complete milestone ${nextMetric} of ${metricTarget}`,
+      target_amount: 0,
+      description: `Work towards achieving milestone ${nextMetric} for ${goalName}`
+    };
+  }
+  
   const nextAmount = Math.min(
-    goal.current_amount + (goal.target_amount * 0.25), // 25% increments
-    goal.target_amount
+    currentAmount + (targetAmount * 0.25), // 25% increments
+    targetAmount
   );
 
   return {
-    title: `Reach ${((nextAmount / goal.target_amount) * 100).toFixed(0)}% of ${goal.name}`,
+    title: `Reach ${((nextAmount / targetAmount) * 100).toFixed(0)}% of ${goalName}`,
     target_amount: nextAmount,
-    description: `Save ${((nextAmount - goal.current_amount) / 1000).toFixed(0)}K towards your ${goal.name} goal`
+    description: `Save ${((nextAmount - currentAmount) / 1000).toFixed(0)}K towards your ${goalName} goal`
   };
 };

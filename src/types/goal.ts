@@ -1,32 +1,30 @@
-// Unified Goal Types for Goals & Aspirations Module
+// Updated Goal Types for Goals & Aspirations Module
 
-export interface Goal {
+export type GoalKind = "financial" | "bucket";
+
+export type Goal = {
   id: string;
-  user_id: string;
-  tenant_id: string;
-  name: string;
-  category: GoalCategory;
-  description: string;
-  aspirational_description: string;
-  target_amount: number;
-  current_amount: number;
-  target_date: string | null;
-  monthly_contribution: number;
-  funding_frequency: FundingFrequency;
-  image_url: string | null;
-  priority: GoalPriority;
-  status: GoalStatus;
-  family_member_ids: string[] | null;
-  experience_story: string | null;
-  why_important: string | null;
-  linked_account_ids: string[] | null;
-  goal_metadata: Record<string, any>;
-  sort_order: number;
-  completed_at: string | null;
-  created_at: string;
-  updated_at: string;
-}
+  kind: GoalKind;
+  persona: "aspiring" | "retiree";
+  priority: number;
+  title: string;           // "Greece 2026" | "Emergency Fund"
+  imageUrl?: string;       // bucket-list cover
+  targetAmount?: number;   // $ for financial
+  savedAmount?: number;    // $ progress
+  metricTarget?: number;   // e.g., 3 cities
+  metricProgress?: number; // e.g., 1 city
+  targetDate?: string;     // ISO 8601
+  notes?: string;
+  monthlyPlan?: { pre?: number; post?: { amount: number; day: number } };
+  // Additional fields for compatibility
+  user_id?: string;
+  tenant_id?: string;
+  status?: GoalStatus;
+  created_at?: string;
+  updated_at?: string;
+};
 
+// Legacy types for backward compatibility
 export type GoalCategory = 
   | 'retirement'
   | 'healthcare_healthspan'
