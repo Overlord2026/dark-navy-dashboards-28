@@ -12,7 +12,9 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
-import { Goal } from "@/hooks/useGoals";
+import { Goal } from "@/types/goal";
+import { adaptLegacyGoal } from "@/types/goal";
+import { recordGoalRDS, recordGoalUpdateRDS } from "@/lib/rds";
 
 const GoalDetailPage = () => {
   const { id } = useParams();
@@ -40,8 +42,9 @@ const GoalDetailPage = () => {
         .single();
 
       if (error) throw error;
-        setGoal(data as any);
-      setProgressAmount(data.current_amount);
+      const adaptedGoal = adaptLegacyGoal(data);
+      setGoal(adaptedGoal);
+      setProgressAmount(adaptedGoal.measurable.current);
     } catch (error) {
       console.error('Error fetching goal:', error);
       toast({
@@ -67,7 +70,17 @@ const GoalDetailPage = () => {
         .single();
 
       if (error) throw error;
-        setGoal(data as any);
+      const adaptedGoal = adaptLegacyGoal(data);
+      setGoal(adaptedGoal);
+      
+      // Record RDS for goal update
+      recordGoalUpdateRDS({
+        goalId: goal.id,
+        previousAmount: goal.measurable.current,
+        newAmount: progressAmount,
+        userId: data.user_id
+      });
+      
       toast({
         title: "Progress Updated!",
         description: "Your goal progress has been updated successfully.",
@@ -91,14 +104,15 @@ const GoalDetailPage = () => {
         .update({
           status: 'completed',
           completed_at: new Date().toISOString(),
-          current_amount: goal.target_amount
+          current_amount: goal.measurable.target
         })
         .eq('id', goal.id)
         .select()
         .single();
 
       if (error) throw error;
-        setGoal(data as any);
+      const adaptedGoal = adaptLegacyGoal(data);
+      setGoal(adaptedGoal);
       toast({
         title: "Congratulations! 🎉",
         description: "You've achieved your goal! Time to celebrate!",
@@ -151,7 +165,8 @@ const GoalDetailPage = () => {
         .single();
 
       if (error) throw error;
-      setGoal(data as any);
+      const adaptedGoal = adaptLegacyGoal(data);
+      setGoal(adaptedGoal);
       setExperienceUpdate("");
       toast({
         title: "Experience Story Updated!",
@@ -177,22 +192,22 @@ const GoalDetailPage = () => {
   };
 
   const calculateProgress = () => {
-    if (!goal || goal.target_amount === 0) return 0;
-    return Math.min((goal.current_amount / goal.target_amount) * 100, 100);
+    if (!goal || goal.measurable.target === 0) return 0;
+    return Math.min((goal.measurable.current / goal.measurable.target) * 100, 100);
   };
 
   const getMonthsRemaining = () => {
-    if (!goal?.target_date) return null;
+    if (!goal?.timeBound?.deadline) return null;
     const today = new Date();
-    const targetDate = new Date(goal.target_date);
+    const targetDate = new Date(goal.timeBound.deadline);
     const diffTime = targetDate.getTime() - today.getTime();
     const diffMonths = Math.ceil(diffTime / (1000 * 60 * 60 * 24 * 30));
     return diffMonths;
   };
 
   const getRequiredMonthlyContribution = () => {
-    if (!goal || !goal.target_date) return 0;
-    const remaining = goal.target_amount - goal.current_amount;
+    if (!goal || !goal.timeBound?.deadline) return 0;
+    const remaining = goal.measurable.target - goal.measurable.current;
     const monthsRemaining = getMonthsRemaining();
     if (!monthsRemaining || monthsRemaining <= 0) return 0;
     return remaining / monthsRemaining;
@@ -219,12 +234,12 @@ const GoalDetailPage = () => {
     return categoryMap[category] || category;
   };
 
-  const getPriorityColor = (priority: string) => {
+  const getPriorityColor = (priority: number) => {
     switch (priority) {
-      case 'top_aspiration': return 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white';
-      case 'high': return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300';
-      case 'medium': return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300';
-      case 'low': return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300';
+      case 1: return 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white';
+      case 2: return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300';
+      case 3: return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300';
+      case 4: return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300';
       default: return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300';
     }
   };
@@ -270,7 +285,7 @@ const GoalDetailPage = () => {
         <div className="flex-1">
           <div className="flex items-center gap-3 mb-2">
             <h1 className="text-3xl font-bold text-foreground">{goal.name}</h1>
-            {goal.priority === 'top_aspiration' && (
+            {goal.priority === 1 && (
               <Badge className={getPriorityColor(goal.priority)}>
                 <Star className="w-3 h-3 mr-1" />
                 Top Aspiration
@@ -284,7 +299,7 @@ const GoalDetailPage = () => {
             )}
           </div>
           <p className="text-lg text-muted-foreground">
-            {getCategoryDisplayName(goal.category)}
+            {goal.kind === 'financial' ? 'Financial Goal' : 'Bucket List Goal'}
           </p>
         </div>
         <div className="flex gap-2">
@@ -318,16 +333,16 @@ const GoalDetailPage = () => {
       </div>
 
       {/* Goal Image */}
-      {goal.image_url && (
+      {goal.cover && (
         <div className="relative h-64 rounded-lg overflow-hidden">
           <img 
-            src={goal.image_url} 
+            src={goal.cover} 
             alt={goal.name}
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
           <div className="absolute bottom-4 left-4 right-4">
-            <h2 className="text-white text-xl font-semibold mb-2">{goal.aspirational_description}</h2>
+            <h2 className="text-white text-xl font-semibold mb-2">{goal.specific?.description}</h2>
           </div>
         </div>
       )}
@@ -352,8 +367,8 @@ const GoalDetailPage = () => {
                 </div>
                 <Progress value={progress} className="h-3" />
                 <div className="flex justify-between text-sm text-muted-foreground">
-                  <span>{formatCurrency(goal.current_amount)}</span>
-                  <span>{formatCurrency(goal.target_amount)}</span>
+                  <span>{formatCurrency(goal.measurable.current)}</span>
+                  <span>{formatCurrency(goal.measurable.target)}</span>
                 </div>
               </div>
 
@@ -394,24 +409,28 @@ const GoalDetailPage = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              {goal.aspirational_description && (
+              {goal.specific?.description && (
                 <div>
                   <h4 className="font-medium mb-2">What's Your Dream?</h4>
-                  <p className="text-muted-foreground">{goal.aspirational_description}</p>
+                  <p className="text-muted-foreground">{goal.specific.description}</p>
                 </div>
               )}
               
-              {goal.why_important && (
+              {goal.relevant?.why && (
                 <div>
                   <h4 className="font-medium mb-2">Why This Matters</h4>
-                  <p className="text-muted-foreground">{goal.why_important}</p>
+                  <p className="text-muted-foreground">{goal.relevant.why}</p>
                 </div>
               )}
 
-              {goal.description && (
+              {goal.specific?.experiences && goal.specific.experiences.length > 0 && (
                 <div>
-                  <h4 className="font-medium mb-2">Description</h4>
-                  <p className="text-muted-foreground">{goal.description}</p>
+                  <h4 className="font-medium mb-2">Experiences</h4>
+                  <ul className="text-muted-foreground list-disc list-inside space-y-1">
+                    {goal.specific.experiences.map((exp, index) => (
+                      <li key={index}>{exp}</li>
+                    ))}
+                  </ul>
                 </div>
               )}
             </CardContent>
@@ -429,9 +448,9 @@ const GoalDetailPage = () => {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              {goal.experience_story && (
+              {goal.relevant?.why && (
                 <div className="bg-muted/30 p-4 rounded-lg">
-                  <p className="text-sm text-muted-foreground italic">"{goal.experience_story}"</p>
+                  <p className="text-sm text-muted-foreground italic">"{goal.relevant.why}"</p>
                 </div>
               )}
               
@@ -467,24 +486,24 @@ const GoalDetailPage = () => {
             <CardContent className="space-y-4">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Target Amount</span>
-                <span className="font-semibold">{formatCurrency(goal.target_amount)}</span>
+                <span className="font-semibold">{formatCurrency(goal.measurable.target)}</span>
               </div>
               
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Current Amount</span>
-                <span className="font-semibold">{formatCurrency(goal.current_amount)}</span>
+                <span className="font-semibold">{formatCurrency(goal.measurable.current)}</span>
               </div>
               
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Remaining</span>
-                <span className="font-semibold">{formatCurrency(goal.target_amount - goal.current_amount)}</span>
+                <span className="font-semibold">{formatCurrency(goal.measurable.target - goal.measurable.current)}</span>
               </div>
               
-              {goal.target_date && (
+              {goal.timeBound?.deadline && (
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Target Date</span>
                   <span className="font-semibold">
-                    {new Date(goal.target_date).toLocaleDateString()}
+                    {new Date(goal.timeBound.deadline).toLocaleDateString()}
                   </span>
                 </div>
               )}
@@ -496,10 +515,10 @@ const GoalDetailPage = () => {
                 </div>
               )}
               
-              {goal.monthly_contribution > 0 && (
+              {goal.funding?.prePaycheck?.amount && goal.funding.prePaycheck.amount > 0 && (
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Monthly Contribution</span>
-                  <span className="font-semibold">{formatCurrency(goal.monthly_contribution)}</span>
+                  <span className="font-semibold">{formatCurrency(goal.funding.prePaycheck.amount)}</span>
                 </div>
               )}
               
@@ -524,10 +543,10 @@ const GoalDetailPage = () => {
             </CardHeader>
             <CardContent>
               <Badge className={getPriorityColor(goal.priority)}>
-                {goal.priority === 'top_aspiration' && <Star className="w-3 h-3 mr-1" />}
-                {goal.priority === 'top_aspiration' ? 'Top Aspiration' : 
-                 goal.priority === 'high' ? 'High Priority' :
-                 goal.priority === 'medium' ? 'Medium Priority' : 'Low Priority'}
+                {goal.priority === 1 && <Star className="w-3 h-3 mr-1" />}
+                {goal.priority === 1 ? 'Top Aspiration' : 
+                 goal.priority === 2 ? 'High Priority' :
+                 goal.priority === 3 ? 'Medium Priority' : 'Low Priority'}
               </Badge>
             </CardContent>
           </Card>
