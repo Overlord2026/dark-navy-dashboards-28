@@ -1,30 +1,38 @@
-// Updated Goal Types for Goals & Aspirations Module
+// SMART Goals System - Comprehensive Goal Types
 
+export type Persona = "aspiring" | "retiree";
 export type GoalKind = "financial" | "bucket";
+
+export type FundingSplit = {
+  prePaycheck?: { amount: number; cadence: "weekly" | "biweekly" | "monthly" };
+  postPaycheck?: { amount: number; day: number };
+  autoIncreasePct?: number; // e.g., 3
+};
 
 export type Goal = {
   id: string;
+  persona: Persona;
   kind: GoalKind;
-  persona: "aspiring" | "retiree";
   priority: number;
-  title: string;           // "Greece 2026" | "Emergency Fund"
-  imageUrl?: string;       // bucket-list cover
-  targetAmount?: number;   // $ for financial
-  savedAmount?: number;    // $ progress
-  metricTarget?: number;   // e.g., 3 cities
-  metricProgress?: number; // e.g., 1 city
-  targetDate?: string;     // ISO 8601
-  notes?: string;
-  monthlyPlan?: { pre?: number; post?: { amount: number; day: number } };
-  // Additional fields for compatibility
+  name: string;
+  cover?: string; // url or vault id
+  specific?: { destination?: string; experiences?: string[]; description?: string };
+  measurable: { unit: "usd" | "trips" | "items"; target: number; current: number };
+  relevant?: { why?: string; invitedProId?: string };
+  timeBound?: { deadline?: string; window?: { month?: number; year?: number } };
+  funding?: FundingSplit;
+  createdAt: string;
+  // Additional fields for system compatibility
   user_id?: string;
   tenant_id?: string;
   status?: GoalStatus;
-  created_at?: string;
   updated_at?: string;
 };
 
 // Legacy types for backward compatibility
+export type GoalStatus = 'active' | 'completed' | 'paused' | 'on_track' | 'at_risk' | 'achieved';
+export type GoalPriority = 'low' | 'medium' | 'high' | 'top_aspiration';
+
 export type GoalCategory = 
   | 'retirement'
   | 'healthcare_healthspan'
@@ -41,10 +49,6 @@ export type GoalCategory =
   | 'legacy_inheritance'
   | 'life_insurance'
   | 'other';
-
-export type GoalStatus = 'active' | 'completed' | 'paused' | 'on_track' | 'at_risk' | 'achieved';
-
-export type GoalPriority = 'low' | 'medium' | 'high' | 'top_aspiration';
 
 export type FundingFrequency = 'weekly' | 'monthly' | 'quarterly' | 'annually' | 'one_time';
 

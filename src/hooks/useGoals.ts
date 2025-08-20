@@ -1,7 +1,8 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useToast } from '@/hooks/use-toast';
-import { Goal, GoalTemplate } from '@/types/goal';
+import { Goal, GoalTemplate, adaptLegacyGoal } from '@/types/goal';
+import { calculateGoalProgress, calculateTotalGoalStats } from '@/lib/goalHelpers';
 
 export type { Goal };
 
@@ -21,7 +22,10 @@ export const useGoals = () => {
         .order('sort_order', { ascending: true });
 
       if (error) throw error;
-      setGoals((data || []) as any);
+      
+      // Adapt legacy goals to new structure
+      const adaptedGoals = (data || []).map(adaptLegacyGoal);
+      setGoals(adaptedGoals);
     } catch (error) {
       toast({
         title: "Error",
@@ -38,19 +42,32 @@ export const useGoals = () => {
       const { data: user } = await supabase.auth.getUser();
       if (!user.user) throw new Error('User not authenticated');
 
+      // Convert new Goal to legacy format for database
+      const legacyGoalData = {
+        name: goalData.name,
+        description: goalData.specific?.description || '',
+        target_amount: goalData.measurable.unit === 'usd' ? goalData.measurable.target : 0,
+        current_amount: goalData.measurable.unit === 'usd' ? goalData.measurable.current : 0,
+        target_date: goalData.timeBound?.deadline || null,
+        monthly_contribution: goalData.funding?.prePaycheck?.amount || 0,
+        priority: goalData.priority === 1 ? 'top_aspiration' : 
+                 goalData.priority <= 3 ? 'high' : 
+                 goalData.priority <= 5 ? 'medium' : 'low',
+        image_url: goalData.cover,
+        user_id: user.user.id,
+        status: 'active'
+      };
+
       const { data, error } = await supabase
         .from('user_goals')
-        .insert([{
-          ...goalData as any,
-          user_id: user.user.id,
-          status: 'active'
-        }])
+        .insert([legacyGoalData])
         .select()
         .single();
 
       if (error) throw error;
 
-      setGoals(prev => [...prev, data as any]);
+      const adaptedGoal = adaptLegacyGoal(data);
+      setGoals(prev => [...prev, adaptedGoal]);
       toast({
         title: "Success!",
         description: "Your goal has been created successfully.",
@@ -69,16 +86,33 @@ export const useGoals = () => {
 
   const updateGoal = useCallback(async (id: string, updates: Partial<Goal>) => {
     try {
+      // Convert new Goal updates to legacy format
+      const legacyUpdates: any = {};
+      
+      if (updates.name) legacyUpdates.name = updates.name;
+      if (updates.specific?.description) legacyUpdates.description = updates.specific.description;
+      if (updates.measurable) {
+        if (updates.measurable.unit === 'usd') {
+          if (updates.measurable.target !== undefined) legacyUpdates.target_amount = updates.measurable.target;
+          if (updates.measurable.current !== undefined) legacyUpdates.current_amount = updates.measurable.current;
+        }
+      }
+      if (updates.timeBound?.deadline) legacyUpdates.target_date = updates.timeBound.deadline;
+      if (updates.funding?.prePaycheck?.amount) legacyUpdates.monthly_contribution = updates.funding.prePaycheck.amount;
+      if (updates.cover) legacyUpdates.image_url = updates.cover;
+      if (updates.status) legacyUpdates.status = updates.status;
+
       const { data, error } = await supabase
         .from('user_goals')
-        .update(updates as any)
+        .update(legacyUpdates)
         .eq('id', id)
         .select()
         .single();
 
       if (error) throw error;
 
-      setGoals(prev => prev.map(goal => goal.id === id ? data as any : goal));
+      const adaptedGoal = adaptLegacyGoal(data);
+      setGoals(prev => prev.map(goal => goal.id === id ? adaptedGoal : goal));
       toast({
         title: "Updated!",
         description: "Your goal has been updated successfully.",
@@ -121,12 +155,15 @@ export const useGoals = () => {
 
   const markGoalComplete = useCallback(async (id: string) => {
     try {
+      const goal = goals.find(g => g.id === id);
+      if (!goal) throw new Error('Goal not found');
+
       const { data, error } = await supabase
         .from('user_goals')
         .update({
           status: 'completed',
           completed_at: new Date().toISOString(),
-          current_amount: goals.find(g => g.id === id)?.target_amount || 0
+          current_amount: goal.measurable.unit === 'usd' ? goal.measurable.target : goal.measurable.current
         })
         .eq('id', id)
         .select()
@@ -134,7 +171,8 @@ export const useGoals = () => {
 
       if (error) throw error;
 
-      setGoals(prev => prev.map(goal => goal.id === id ? data as any : goal));
+      const adaptedGoal = adaptLegacyGoal(data);
+      setGoals(prev => prev.map(goal => goal.id === id ? adaptedGoal : goal));
       toast({
         title: "Congratulations! 🎉",
         description: "You've achieved your goal! Time to celebrate!",
@@ -162,8 +200,9 @@ export const useGoals = () => {
 
       if (error) throw error;
 
-      setGoals(prev => prev.map(goal => goal.id === id ? data as any : goal));
-      return data;
+      const adaptedGoal = adaptLegacyGoal(data);
+      setGoals(prev => prev.map(goal => goal.id === id ? adaptedGoal : goal));
+      return adaptedGoal;
     } catch (error) {
       toast({
         title: "Error",
@@ -179,17 +218,24 @@ export const useGoals = () => {
   }, []);
 
   // Memoized calculations for performance
-  const activeGoals = useMemo(() => goals.filter(g => g.status === 'active'), [goals]);
-  const completedGoals = useMemo(() => goals.filter(g => g.status === 'completed'), [goals]);
-  const topAspirations = useMemo(() => goals.filter(g => g.priority === 'top_aspiration'), [goals]);
+  const activeGoals = useMemo(() => goals.filter(g => (g.status || 'active') === 'active'), [goals]);
+  const completedGoals = useMemo(() => goals.filter(g => (g.status || 'active') === 'completed'), [goals]);
+  const topAspirations = useMemo(() => goals.filter(g => g.priority === 1), [goals]);
 
-  const totalSaved = useMemo(() => goals.reduce((sum, goal) => sum + goal.current_amount, 0), [goals]);
-  const totalTarget = useMemo(() => goals.reduce((sum, goal) => sum + goal.target_amount, 0), [goals]);
+  const totalSaved = useMemo(() => 
+    goals.reduce((sum, goal) => 
+      sum + (goal.measurable.unit === 'usd' ? goal.measurable.current : 0), 0), [goals]);
+  
+  const totalTarget = useMemo(() => 
+    goals.reduce((sum, goal) => 
+      sum + (goal.measurable.unit === 'usd' ? goal.measurable.target : 0), 0), [goals]);
   
   const averageProgress = useMemo(() => {
     if (goals.length === 0) return 0;
     return goals.reduce((sum, goal) => {
-      const progress = goal.target_amount > 0 ? (goal.current_amount / goal.target_amount) * 100 : 0;
+      const progress = goal.measurable.target > 0 
+        ? (goal.measurable.current / goal.measurable.target) * 100 
+        : 0;
       return sum + Math.min(progress, 100);
     }, 0) / goals.length;
   }, [goals]);

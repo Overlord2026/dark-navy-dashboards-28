@@ -1,29 +1,40 @@
-import { Goal, GoalProgress } from '@/types/goal';
+import { Goal, GoalProgress, Persona, GoalKind, FundingSplit } from '@/types/goal';
 
 export const calculateGoalProgress = (goal: Goal): GoalProgress => {
-  // Handle both new and legacy goal structures
-  const targetAmount = goal.targetAmount || (goal as any).target_amount || 0;
-  const currentAmount = goal.savedAmount || (goal as any).current_amount || 0;
+  const target = goal.measurable.target;
+  const current = goal.measurable.current;
   
-  const percentage = targetAmount > 0 
-    ? Math.min((currentAmount / targetAmount) * 100, 100)
+  const percentage = target > 0 
+    ? Math.min((current / target) * 100, 100)
     : 0;
 
-  const amount_remaining = Math.max(targetAmount - currentAmount, 0);
+  const amount_remaining = Math.max(target - current, 0);
 
   let days_remaining = 0;
   let projected_completion: string | null = null;
 
-  const targetDate = goal.targetDate || (goal as any).target_date;
-  if (targetDate) {
-    const targetDateObj = new Date(targetDate);
+  // Handle deadline or window-based time bounds
+  if (goal.timeBound?.deadline) {
+    const targetDate = new Date(goal.timeBound.deadline);
     const today = new Date();
-    const diffTime = targetDateObj.getTime() - today.getTime();
+    const diffTime = targetDate.getTime() - today.getTime();
     days_remaining = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  } else if (goal.timeBound?.window) {
+    // Estimate days based on window (month/year)
+    const today = new Date();
+    const targetDate = new Date(
+      goal.timeBound.window.year || today.getFullYear() + 1,
+      goal.timeBound.window.month ? goal.timeBound.window.month - 1 : 11,
+      1
+    );
+    const diffTime = targetDate.getTime() - today.getTime();
+    days_remaining = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  }
 
-    // Calculate projected completion based on current savings rate
-    const monthlyContribution = goal.monthlyPlan?.pre || (goal as any).monthly_contribution || 0;
-    if (monthlyContribution > 0 && amount_remaining > 0) {
+  // Calculate projected completion based on funding strategy
+  if (goal.funding && amount_remaining > 0) {
+    const monthlyContribution = calculateMonthlyContribution(goal.funding);
+    if (monthlyContribution > 0) {
       const monthsToComplete = amount_remaining / monthlyContribution;
       const projectedDate = new Date();
       projectedDate.setMonth(projectedDate.getMonth() + monthsToComplete);
@@ -32,12 +43,12 @@ export const calculateGoalProgress = (goal: Goal): GoalProgress => {
   }
 
   // Calculate monthly target to reach goal on time
-  const monthly_target = days_remaining > 0 
+  const monthly_target = days_remaining > 0 && goal.measurable.unit === 'usd'
     ? (amount_remaining / (days_remaining / 30.44)) // Average days per month
     : 0;
 
   // Determine if goal is on track
-  const monthlyContribution = goal.monthlyPlan?.pre || (goal as any).monthly_contribution || 0;
+  const monthlyContribution = goal.funding ? calculateMonthlyContribution(goal.funding) : 0;
   const on_track = days_remaining > 0 
     ? (monthlyContribution >= monthly_target * 0.9) // 90% threshold
     : percentage >= 100;
@@ -52,7 +63,33 @@ export const calculateGoalProgress = (goal: Goal): GoalProgress => {
   };
 };
 
-export const getGoalStatusColor = (status: string): string => {
+export const calculateMonthlyContribution = (funding: FundingSplit): number => {
+  let monthlyAmount = 0;
+  
+  if (funding.prePaycheck) {
+    const { amount, cadence } = funding.prePaycheck;
+    switch (cadence) {
+      case 'weekly':
+        monthlyAmount += amount * 4.33; // Average weeks per month
+        break;
+      case 'biweekly':
+        monthlyAmount += amount * 2.17; // Average biweeks per month
+        break;
+      case 'monthly':
+        monthlyAmount += amount;
+        break;
+    }
+  }
+  
+  if (funding.postPaycheck) {
+    monthlyAmount += funding.postPaycheck.amount;
+  }
+  
+  return monthlyAmount;
+};
+
+export const getGoalStatusColor = (goal: Goal): string => {
+  const status = goal.status || 'active';
   switch (status) {
     case 'completed':
     case 'achieved':
@@ -68,46 +105,37 @@ export const getGoalStatusColor = (status: string): string => {
   }
 };
 
-export const getGoalPriorityColor = (priority: string): string => {
-  switch (priority) {
-    case 'top_aspiration':
-      return 'text-yellow-500';
-    case 'high':
-      return 'text-red-500';
-    case 'medium':
-      return 'text-orange-500';
-    case 'low':
-      return 'text-gray-500';
-    default:
-      return 'text-gray-500';
-  }
+export const getGoalPriorityColor = (priority: number): string => {
+  if (priority === 1) return 'text-red-500'; // Highest priority
+  if (priority <= 3) return 'text-orange-500'; // High priority
+  if (priority <= 5) return 'text-yellow-500'; // Medium priority
+  return 'text-gray-500'; // Lower priority
 };
 
-export const formatGoalCategory = (category: string): string => {
-  return category
-    .split('_')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
+export const getGoalKindIcon = (kind: GoalKind): string => {
+  return kind === 'financial' ? '💰' : '✨';
 };
 
 export const getGoalCategoryIcon = (goal: Goal): string => {
   // Handle bucket list goals
   if (goal.kind === 'bucket') {
+    if (goal.specific?.destination) return '✈️';
+    if (goal.specific?.experiences?.length) return '🎯';
     return '✨'; // Default bucket list icon
   }
   
-  // Handle financial goals by title/category inference
-  const title = goal.title.toLowerCase();
-  if (title.includes('retirement')) return '🏖️';
-  if (title.includes('emergency')) return '🛡️';
-  if (title.includes('travel')) return '✈️';
-  if (title.includes('education')) return '🎓';
-  if (title.includes('home') || title.includes('house')) return '🏠';
-  if (title.includes('car') || title.includes('vehicle')) return '🚗';
-  if (title.includes('wedding')) return '💒';
-  if (title.includes('charity') || title.includes('giving')) return '🎁';
-  if (title.includes('health')) return '❤️';
-  if (title.includes('debt')) return '💳';
+  // Handle financial goals by name inference
+  const name = goal.name.toLowerCase();
+  if (name.includes('retirement')) return '🏖️';
+  if (name.includes('emergency')) return '🛡️';
+  if (name.includes('travel')) return '✈️';
+  if (name.includes('education')) return '🎓';
+  if (name.includes('home') || name.includes('house')) return '🏠';
+  if (name.includes('car') || name.includes('vehicle')) return '🚗';
+  if (name.includes('wedding')) return '💒';
+  if (name.includes('charity') || name.includes('giving')) return '🎁';
+  if (name.includes('health')) return '❤️';
+  if (name.includes('debt')) return '💳';
   
   return goal.kind === 'financial' ? '💰' : '🎯';
 };
@@ -118,20 +146,18 @@ export const calculateTotalGoalStats = (goals: Goal[]) => {
   const completed_goals = goals.filter(g => (g.status || 'active') === 'completed').length;
   
   const total_saved = goals.reduce((sum, goal) => {
-    const saved = goal.savedAmount || (goal as any).current_amount || 0;
-    return sum + saved;
+    return sum + (goal.measurable.unit === 'usd' ? goal.measurable.current : 0);
   }, 0);
   
   const total_target = goals.reduce((sum, goal) => {
-    const target = goal.targetAmount || (goal as any).target_amount || 0;
-    return sum + target;
+    return sum + (goal.measurable.unit === 'usd' ? goal.measurable.target : 0);
   }, 0);
   
   const average_progress = goals.length > 0 
     ? goals.reduce((sum, goal) => {
-        const target = goal.targetAmount || (goal as any).target_amount || 0;
-        const current = goal.savedAmount || (goal as any).current_amount || 0;
-        const progress = target > 0 ? (current / target) * 100 : 0;
+        const progress = goal.measurable.target > 0 
+          ? (goal.measurable.current / goal.measurable.target) * 100 
+          : 0;
         return sum + Math.min(progress, 100);
       }, 0) / goals.length
     : 0;
@@ -157,30 +183,93 @@ export const calculateTotalGoalStats = (goals: Goal[]) => {
 
 export const suggestNextMilestone = (goal: Goal, currentMilestones: any[] = []): any => {
   const progress = calculateGoalProgress(goal);
-  const targetAmount = goal.targetAmount || (goal as any).target_amount || 0;
-  const currentAmount = goal.savedAmount || (goal as any).current_amount || 0;
-  const goalName = goal.title || (goal as any).name || 'goal';
   
   if (goal.kind === 'bucket') {
-    const metricTarget = goal.metricTarget || 1;
-    const metricProgress = goal.metricProgress || 0;
-    const nextMetric = Math.min(metricProgress + 1, metricTarget);
+    const { target, current, unit } = goal.measurable;
+    const nextTarget = Math.min(current + 1, target);
     
     return {
-      title: `Complete milestone ${nextMetric} of ${metricTarget}`,
-      target_amount: 0,
-      description: `Work towards achieving milestone ${nextMetric} for ${goalName}`
+      title: `Complete milestone ${nextTarget} of ${target}`,
+      target_amount: nextTarget,
+      description: `Work towards achieving milestone ${nextTarget} for ${goal.name}`
     };
   }
   
+  // Financial goals
+  const { target, current } = goal.measurable;
   const nextAmount = Math.min(
-    currentAmount + (targetAmount * 0.25), // 25% increments
-    targetAmount
+    current + (target * 0.25), // 25% increments
+    target
   );
 
   return {
-    title: `Reach ${((nextAmount / targetAmount) * 100).toFixed(0)}% of ${goalName}`,
+    title: `Reach ${((nextAmount / target) * 100).toFixed(0)}% of ${goal.name}`,
     target_amount: nextAmount,
-    description: `Save ${((nextAmount - currentAmount) / 1000).toFixed(0)}K towards your ${goalName} goal`
+    description: `Save ${((nextAmount - current) / 1000).toFixed(0)}K towards your ${goal.name} goal`
+  };
+};
+
+export const formatGoalUnit = (unit: "usd" | "trips" | "items", amount: number): string => {
+  switch (unit) {
+    case 'usd':
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      }).format(amount);
+    case 'trips':
+      return `${amount} trip${amount !== 1 ? 's' : ''}`;
+    case 'items':
+      return `${amount} item${amount !== 1 ? 's' : ''}`;
+    default:
+      return amount.toString();
+  }
+};
+
+export const getPersonaColor = (persona: Persona): string => {
+  return persona === 'aspiring' ? 'text-blue-500' : 'text-emerald-500';
+};
+
+export const getPersonaIcon = (persona: Persona): string => {
+  return persona === 'aspiring' ? '🚀' : '🌅';
+};
+
+// Backward compatibility helpers for legacy goal structure
+export const adaptLegacyGoal = (legacyGoal: any): Goal => {
+  return {
+    id: legacyGoal.id,
+    persona: 'aspiring' as Persona,
+    kind: 'financial' as GoalKind,
+    priority: legacyGoal.priority === 'top_aspiration' ? 1 : 
+              legacyGoal.priority === 'high' ? 2 :
+              legacyGoal.priority === 'medium' ? 3 : 4,
+    name: legacyGoal.name || legacyGoal.title || '',
+    cover: legacyGoal.image_url || legacyGoal.imageUrl,
+    specific: {
+      description: legacyGoal.description || legacyGoal.aspirational_description
+    },
+    measurable: {
+      unit: 'usd',
+      target: legacyGoal.target_amount || legacyGoal.targetAmount || 0,
+      current: legacyGoal.current_amount || legacyGoal.savedAmount || 0
+    },
+    relevant: {
+      why: legacyGoal.why_important || legacyGoal.experience_story
+    },
+    timeBound: legacyGoal.target_date || legacyGoal.targetDate ? {
+      deadline: legacyGoal.target_date || legacyGoal.targetDate
+    } : undefined,
+    funding: legacyGoal.monthly_contribution || legacyGoal.monthlyPlan ? {
+      prePaycheck: {
+        amount: legacyGoal.monthly_contribution || legacyGoal.monthlyPlan?.pre || 0,
+        cadence: 'monthly'
+      }
+    } : undefined,
+    createdAt: legacyGoal.created_at || new Date().toISOString(),
+    user_id: legacyGoal.user_id,
+    tenant_id: legacyGoal.tenant_id,
+    status: legacyGoal.status,
+    updated_at: legacyGoal.updated_at
   };
 };
