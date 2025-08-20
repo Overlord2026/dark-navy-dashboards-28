@@ -547,9 +547,15 @@ function App() {
                    {React.createElement(React.lazy(() => import('./pages/tools/RetirementScorecard')))}
                  </React.Suspense>
                } />
-          <Route path="/goals" element={<div className="p-8 text-center"><h1 className="text-3xl font-bold">Goals System</h1></div>} />
-          <Route path="/goals/new" element={<div className="p-8 text-center"><h1 className="text-3xl font-bold">New Goal Coming Soon</h1></div>} />
-          <Route path="/goals/:id" element={<div className="p-8 text-center"><h1 className="text-3xl font-bold">Goal Detail Coming Soon</h1></div>} />
+           <Route path="/goals/*" element={<GoalsHome />} />
+           <Route path="/goals-old/*" element={<GoalsOld />} />
+           
+           {/* Transactions Routes */}
+           <Route path="/transactions" element={<TransactionsPage />} />
+           <Route path="/settings/categories" element={<CategoriesPage />} />
+           <Route path="/settings/rules" element={<RulesPage />} />
+           <Route path="/settings/merchants" element={<MerchantsPage />} />
+           <Route path="/settings/hidden" element={<HiddenTransactionsPage />} />
              
             <Route path="/meet" element={<MeetPage />} />
             <Route path="/tools" element={
