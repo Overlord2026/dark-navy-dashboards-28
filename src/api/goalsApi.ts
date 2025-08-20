@@ -70,6 +70,7 @@ const personaDefaults: PersonaDefaults[] = [
         monthlyContribution: 500,
         persona: 'aspiring',
         priority: 1,
+        progress: { current: 0, pct: 0 },
         smartr: {
           specific: 'Build an emergency fund to cover 6 months of expenses',
           measurable: '$10,000 in a high-yield savings account',

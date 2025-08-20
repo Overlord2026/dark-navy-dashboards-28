@@ -14,7 +14,7 @@ import { ContractAnalyzer } from '@/components/annuities/ContractAnalyzer';
 import GoalsPage from '@/pages/GoalsPage';
 import CreateGoalPage from '@/pages/CreateGoalPage';
 import GoalFormPage from '@/pages/GoalFormPage';
-import GoalDetailPage from '@/pages/GoalDetailPage';
+// import GoalDetailPage from '@/pages/GoalDetailPage'; // Removed
 import TaxCenter from '@/pages/TaxCenter';
 import AdvisorROIDashboard from '@/pages/AdvisorROIDashboard';
 import { ComprehensiveQATest } from '@/pages/ComprehensiveQATest';
@@ -133,7 +133,7 @@ const additionalRoutes = [
   },
   {
     path: '/goals/:id',
-    element: <GoalDetailPage />
+    element: <div className="p-8 text-center"><h1 className="text-3xl font-bold">Goal Detail Coming Soon</h1></div>
   },
   {
     path: '/accounts-tab',

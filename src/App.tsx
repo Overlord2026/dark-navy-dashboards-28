@@ -241,9 +241,9 @@ import PMQPage from './pages/pmq/PMQPage';
 import ConsentDashboard from './components/consent/ConsentDashboard';
 import ExecutiveSuite from './pages/ExecutiveSuite';
 import AdminPolicies from './pages/admin/Policies';
-import GoalsHome from './pages/GoalsHome';
-import NewGoalWizard from './pages/NewGoalWizard';
-import GoalDetail from './pages/GoalDetail';
+// import GoalsHome from './pages/GoalsHome'; // Removed
+// import NewGoalWizard from './pages/NewGoalWizard'; // Removed
+// import GoalDetail from './pages/GoalDetail'; // Removed
 
 // Import onboarding flow component
 const PersonaOnboardingFlow = React.lazy(() => 
@@ -547,9 +547,9 @@ function App() {
                    {React.createElement(React.lazy(() => import('./pages/tools/RetirementScorecard')))}
                  </React.Suspense>
                } />
-          <Route path="/goals" element={<GoalsHome />} />
-          <Route path="/goals/new" element={<NewGoalWizard />} />
-          <Route path="/goals/:id" element={<GoalDetail />} />
+          <Route path="/goals" element={<div className="p-8 text-center"><h1 className="text-3xl font-bold">Goals System</h1></div>} />
+          <Route path="/goals/new" element={<div className="p-8 text-center"><h1 className="text-3xl font-bold">New Goal Coming Soon</h1></div>} />
+          <Route path="/goals/:id" element={<div className="p-8 text-center"><h1 className="text-3xl font-bold">Goal Detail Coming Soon</h1></div>} />
              
             <Route path="/meet" element={<MeetPage />} />
             <Route path="/tools" element={

@@ -26,45 +26,36 @@ export const GoalsAndMilestones: React.FC<GoalsAndMilestonesProps> = ({ goals })
   const navigate = useNavigate();
 
   const getGoalIcon = (goal: Goal) => {
-    if (goal.kind === 'bucket') {
-      if (goal.specific?.destination) return <MapPin className="h-5 w-5 text-blue-500" />;
-      return <Target className="h-5 w-5 text-purple-500" />;
-    }
-    
-    // Financial goals - infer from name
-    const name = goal.name.toLowerCase();
-    if (name.includes('emergency')) return <Target className="h-5 w-5 text-red-500" />;
-    if (name.includes('travel')) return <MapPin className="h-5 w-5 text-blue-500" />;
-    if (name.includes('education')) return <GraduationCap className="h-5 w-5 text-purple-500" />;
-    if (name.includes('health')) return <Heart className="h-5 w-5 text-pink-500" />;
-    if (name.includes('charity') || name.includes('giving')) return <Gift className="h-5 w-5 text-green-500" />;
-    return <Target className="h-5 w-5 text-gray-500" />;
-  };
-
-  const getStatusConfig = (status: Goal['status']) => {
-    switch (status) {
-      case 'achieved':
-      case 'completed':
-        return { color: "bg-emerald-500", icon: <CheckCircle className="h-4 w-4" />, text: "Achieved" };
-      case 'on_track':
-        return { color: "bg-blue-500", icon: <Target className="h-4 w-4" />, text: "On Track" };
-      case 'at_risk':
-        return { color: "bg-amber-500", icon: <AlertTriangle className="h-4 w-4" />, text: "At Risk" };
-      case 'paused':
-        return { color: "bg-gray-500", icon: <Calendar className="h-4 w-4" />, text: "Paused" };
+    switch (goal.type) {
+      case 'bucket_list':
+        return <MapPin className="h-5 w-5 text-blue-500" />;
+      case 'retirement':
+        return <Target className="h-5 w-5 text-purple-500" />;
+      case 'education':
+        return <GraduationCap className="h-5 w-5 text-purple-500" />;
+      case 'emergency':
+        return <Target className="h-5 w-5 text-red-500" />;
+      case 'wedding':
+        return <Heart className="h-5 w-5 text-pink-500" />;
       default:
-        return { color: "bg-slate-500", icon: <Target className="h-4 w-4" />, text: "Active" };
+        return <Target className="h-5 w-5 text-gray-500" />;
     }
   };
 
-  const getProgress = (goal: Goal) => {
-    if (goal.measurable.unit === 'usd') {
-      return Math.min((goal.measurable.current / goal.measurable.target) * 100, 100);
+  const getStatusConfig = (progress: number) => {
+    if (progress >= 100) {
+      return { color: "bg-emerald-500", icon: <CheckCircle className="h-4 w-4" />, text: "Achieved" };
+    } else if (progress >= 80) {
+      return { color: "bg-blue-500", icon: <Target className="h-4 w-4" />, text: "On Track" };
+    } else if (progress >= 50) {
+      return { color: "bg-amber-500", icon: <AlertTriangle className="h-4 w-4" />, text: "At Risk" };
+    } else {
+      return { color: "bg-slate-500", icon: <Target className="h-4 w-4" />, text: "Active" };
     }
-    return Math.min((goal.measurable.current / goal.measurable.target) * 100, 100);
   };
 
-  const getDaysToTarget = (targetDate: string) => {
+  const getDaysToTarget = (targetDate?: string) => {
+    if (!targetDate) return 0;
     const today = new Date();
     const target = new Date(targetDate);
     const diffTime = target.getTime() - today.getTime();
@@ -88,9 +79,9 @@ export const GoalsAndMilestones: React.FC<GoalsAndMilestonesProps> = ({ goals })
       {/* Horizontally Scrollable Goal Cards */}
       <div className="flex space-x-4 overflow-x-auto pb-4">
         {goals.map((goal) => {
-          const progress = getProgress(goal);
-          const statusConfig = getStatusConfig(goal.status);
-          const daysLeft = goal.timeBound?.deadline ? getDaysToTarget(goal.timeBound.deadline) : 0;
+          const progress = goal.progress?.pct || 0;
+          const statusConfig = getStatusConfig(progress);
+          const daysLeft = getDaysToTarget(goal.targetDate);
           
           return (
             <Card key={goal.id} className="flex-shrink-0 w-80 hover-scale cursor-pointer">
@@ -100,8 +91,8 @@ export const GoalsAndMilestones: React.FC<GoalsAndMilestonesProps> = ({ goals })
                   <div className="flex items-center space-x-3">
                     {getGoalIcon(goal)}
                     <div>
-                      <h3 className="font-semibold text-lg">{goal.name}</h3>
-                      <p className="text-sm text-muted-foreground">{goal.specific?.description || ''}</p>
+                      <h3 className="font-semibold text-lg">{goal.title}</h3>
+                      <p className="text-sm text-muted-foreground">{goal.smartr?.specific || ''}</p>
                     </div>
                   </div>
                   <Badge 
@@ -124,30 +115,24 @@ export const GoalsAndMilestones: React.FC<GoalsAndMilestonesProps> = ({ goals })
                   
                   <div className="flex justify-between text-sm">
                     <span className="font-medium">
-                      {goal.measurable.unit === 'usd' 
-                        ? formatCurrency(goal.measurable.current)
-                        : `${goal.measurable.current} ${goal.measurable.unit}`}
+                      {formatCurrency(goal.progress?.current || 0)}
                     </span>
                     <span className="text-muted-foreground">
-                      {goal.measurable.unit === 'usd' 
-                        ? formatCurrency(goal.measurable.target)
-                        : `${goal.measurable.target} ${goal.measurable.unit}`}
+                      {formatCurrency(goal.targetAmount || 0)}
                     </span>
                   </div>
 
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">
-                      {goal.measurable.unit === 'usd' 
-                        ? formatCurrency(goal.measurable.target - goal.measurable.current)
-                        : `${goal.measurable.target - goal.measurable.current} ${goal.measurable.unit}`} remaining
+                      {formatCurrency((goal.targetAmount || 0) - (goal.progress?.current || 0))} remaining
                     </span>
                     <span className={daysLeft > 30 ? "text-muted-foreground" : "text-amber-600 font-medium"}>
-                      {daysLeft > 0 ? `${daysLeft} days left` : "Overdue"}
+                      {daysLeft > 0 ? `${daysLeft} days left` : "No deadline"}
                     </span>
                   </div>
 
                   <div className="text-xs text-muted-foreground">
-                    Priority: {goal.priority}
+                    Priority: {goal.priority || 1}
                   </div>
                 </div>
 
@@ -157,7 +142,7 @@ export const GoalsAndMilestones: React.FC<GoalsAndMilestonesProps> = ({ goals })
                     <Edit className="h-3 w-3 mr-1" />
                     Edit
                   </Button>
-                  {goal.status === 'achieved' || goal.status === 'completed' ? (
+                  {progress >= 100 ? (
                     <Button size="sm" className="flex-1 bg-emerald-500 hover:bg-emerald-600">
                       <CheckCircle className="h-3 w-3 mr-1" />
                       Achieved
