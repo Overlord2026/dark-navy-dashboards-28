@@ -24,7 +24,7 @@ export const useGoals = () => {
       if (error) throw error;
       
       // Adapt legacy goals to new structure
-      const adaptedGoals = (data || []).map(adaptLegacyGoal);
+      const adaptedGoals = (data || []).map((legacyGoal: any) => adaptLegacyGoal(legacyGoal));
       setGoals(adaptedGoals);
     } catch (error) {
       toast({
@@ -46,21 +46,26 @@ export const useGoals = () => {
       const legacyGoalData = {
         name: goalData.name,
         description: goalData.specific?.description || '',
+        aspirational_description: goalData.specific?.description || '',
         target_amount: goalData.measurable.unit === 'usd' ? goalData.measurable.target : 0,
         current_amount: goalData.measurable.unit === 'usd' ? goalData.measurable.current : 0,
         target_date: goalData.timeBound?.deadline || null,
         monthly_contribution: goalData.funding?.prePaycheck?.amount || 0,
-        priority: goalData.priority === 1 ? 'top_aspiration' : 
+        priority: (goalData.priority === 1 ? 'top_aspiration' : 
                  goalData.priority <= 3 ? 'high' : 
-                 goalData.priority <= 5 ? 'medium' : 'low',
+                 goalData.priority <= 5 ? 'medium' : 'low') as any,
         image_url: goalData.cover,
+        category: 'other' as any,
+        funding_frequency: 'monthly' as any,
+        sort_order: goalData.priority || 99,
         user_id: user.user.id,
-        status: 'active'
+        tenant_id: '',
+        status: 'active' as any
       };
 
       const { data, error } = await supabase
         .from('user_goals')
-        .insert([legacyGoalData])
+        .insert([legacyGoalData as any])
         .select()
         .single();
 

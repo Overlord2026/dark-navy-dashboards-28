@@ -124,3 +124,42 @@ export interface GoalStats {
   on_track_count: number;
   at_risk_count: number;
 }
+
+// Backward compatibility helpers for legacy goal structure
+export const adaptLegacyGoal = (legacyGoal: any): Goal => {
+  return {
+    id: legacyGoal.id,
+    persona: 'aspiring' as Persona,
+    kind: 'financial' as GoalKind,
+    priority: legacyGoal.priority === 'top_aspiration' ? 1 : 
+              legacyGoal.priority === 'high' ? 2 :
+              legacyGoal.priority === 'medium' ? 3 : 4,
+    name: legacyGoal.name || legacyGoal.title || '',
+    cover: legacyGoal.image_url || legacyGoal.imageUrl,
+    specific: {
+      description: legacyGoal.description || legacyGoal.aspirational_description
+    },
+    measurable: {
+      unit: 'usd',
+      target: legacyGoal.target_amount || legacyGoal.targetAmount || 0,
+      current: legacyGoal.current_amount || legacyGoal.savedAmount || 0
+    },
+    relevant: {
+      why: legacyGoal.why_important || legacyGoal.experience_story
+    },
+    timeBound: legacyGoal.target_date || legacyGoal.targetDate ? {
+      deadline: legacyGoal.target_date || legacyGoal.targetDate
+    } : undefined,
+    funding: legacyGoal.monthly_contribution || legacyGoal.monthlyPlan ? {
+      prePaycheck: {
+        amount: legacyGoal.monthly_contribution || legacyGoal.monthlyPlan?.pre || 0,
+        cadence: 'monthly'
+      }
+    } : undefined,
+    createdAt: legacyGoal.created_at || new Date().toISOString(),
+    user_id: legacyGoal.user_id,
+    tenant_id: legacyGoal.tenant_id,
+    status: legacyGoal.status,
+    updated_at: legacyGoal.updated_at
+  };
+};

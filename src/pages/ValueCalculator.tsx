@@ -13,7 +13,7 @@ import CountUp from 'react-countup';
 import { Celebration } from '@/components/ConfettiAnimation';
 import { StressTestPreview } from '@/components/retirement/StressTestPreview';
 import { playSound } from '@/utils/sounds';
-import { analytics } from '@/lib/analytics';
+import { analytics, track } from '@/lib/analytics';
 
 interface CalculatorInputs {
   portfolioValue: number;
@@ -92,7 +92,7 @@ export default function ValueCalculator() {
     setIsCalculating(true);
     setShowResults(false);
     
-    analytics.track('calc_run', inputs);
+    track('calc_run', inputs as any);
     
     setTimeout(() => {
       const calculatedResults = calculateResults();

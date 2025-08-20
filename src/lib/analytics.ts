@@ -1,73 +1,37 @@
+// Simple Analytics Tracking
 
-import posthog from 'posthog-js';
+export function track(event: string, props?: Record<string, unknown>) {
+  // swap with your analytics later
+  console.log("[analytics]", event, props ?? {});
+}
 
-// PostHog configuration - Use environment variable for security
-const POSTHOG_KEY = import.meta.env.VITE_POSTHOG_KEY || '';
-const POSTHOG_HOST = 'https://us.i.posthog.com'; // US instance
-
-export const initializeAnalytics = () => {
-  if (typeof window !== 'undefined' && POSTHOG_KEY) {
-    posthog.init(POSTHOG_KEY, {
-      api_host: POSTHOG_HOST,
-      // Privacy-focused settings
-      capture_pageview: false, // We'll manually track page views
-      capture_pageleave: true,
-      disable_session_recording: false, // Enable if you want session recordings
-      respect_dnt: true,
-      // Performance optimizations
-      loaded: (posthog) => {
-        if (process.env.NODE_ENV === 'development') {
-          console.log('PostHog loaded successfully');
-        }
-      }
-    });
-  }
-};
-
+// For backward compatibility, export an analytics object with the track method
 export const analytics = {
-  // Page tracking
+  track,
+  
+  // Alias methods that all use the same simple track function
   trackPageView: (pageName: string, properties?: Record<string, any>) => {
-    posthog.capture('$pageview', {
-      $current_url: window.location.href,
-      page_name: pageName,
-      ...properties
-    });
+    track('pageview', { page_name: pageName, ...properties });
   },
 
-  // User identification
   identify: (userId: string, properties?: Record<string, any>) => {
-    posthog.identify(userId, properties);
+    track('identify', { user_id: userId, ...properties });
   },
 
-  // Feature usage tracking
   trackFeatureUsage: (featureName: string, properties?: Record<string, any>) => {
-    posthog.capture('feature_used', {
-      feature_name: featureName,
-      ...properties
-    });
+    track('feature_used', { feature_name: featureName, ...properties });
   },
 
-  // Conversion events
   trackConversion: (conversionType: string, properties?: Record<string, any>) => {
-    posthog.capture('conversion', {
-      conversion_type: conversionType,
-      ...properties
-    });
+    track('conversion', { conversion_type: conversionType, ...properties });
   },
 
-  // Custom events
-  track: (eventName: string, properties?: Record<string, any>) => {
-    posthog.capture(eventName, properties);
-  },
-
-  // Alias for track
   trackEvent: (eventName: string, properties?: Record<string, any>) => {
-    posthog.capture(eventName, properties);
+    track(eventName, properties);
   },
 
-  // Error tracking
   trackError: (error: Error, context?: Record<string, any>) => {
-    posthog.capture('error', {
+    track('error', {
       error_message: error.message,
       error_stack: error.stack,
       error_name: error.name,
@@ -75,18 +39,16 @@ export const analytics = {
     });
   },
 
-  // Performance tracking
   trackPerformance: (metric: string, value: number, context?: Record<string, any>) => {
-    posthog.capture('performance_metric', {
+    track('performance_metric', {
       metric_name: metric,
       metric_value: value,
       ...context
     });
   },
 
-  // Security event tracking
   trackSecurityEvent: (eventType: string, severity: 'low' | 'medium' | 'high' | 'critical', details?: Record<string, any>) => {
-    posthog.capture('security_event', {
+    track('security_event', {
       event_type: eventType,
       severity,
       timestamp: new Date().toISOString(),
@@ -94,19 +56,17 @@ export const analytics = {
     });
   },
 
-  // User properties
   setUserProperties: (properties: Record<string, any>) => {
-    posthog.setPersonProperties(properties);
+    track('user_properties_set', properties);
   },
 
-  // Reset user (for logout)
   reset: () => {
-    posthog.reset();
+    track('user_reset');
   },
 
   // Onboarding & Engagement Tracking
   trackPersonaClaim: (persona: string, userId: string) => {
-    posthog.capture('persona_claimed', {
+    track('persona_claimed', {
       persona_type: persona,
       user_id: userId,
       timestamp: Date.now()
@@ -114,7 +74,7 @@ export const analytics = {
   },
 
   trackViralShare: (platform: string, persona: string, userId: string) => {
-    posthog.capture('viral_share_clicked', {
+    track('viral_share_clicked', {
       platform,
       persona_type: persona,
       user_id: userId,
@@ -123,7 +83,7 @@ export const analytics = {
   },
 
   trackOnboardingStep: (step: string, persona: string, userId: string, completed: boolean = false) => {
-    posthog.capture('onboarding_step', {
+    track('onboarding_step', {
       step_name: step,
       persona_type: persona,
       user_id: userId,
@@ -133,7 +93,7 @@ export const analytics = {
   },
 
   trackFAQUsage: (searchTerm?: string, articleId?: string) => {
-    posthog.capture('faq_usage', {
+    track('faq_usage', {
       search_term: searchTerm,
       article_id: articleId,
       timestamp: Date.now()
@@ -141,7 +101,7 @@ export const analytics = {
   },
 
   trackEmailSequenceEngagement: (day: number, action: string, userId: string) => {
-    posthog.capture('email_sequence_engagement', {
+    track('email_sequence_engagement', {
       sequence_day: day,
       action, // 'opened', 'clicked', 'converted'
       user_id: userId,
@@ -151,7 +111,7 @@ export const analytics = {
 
   // Segment-specific tracking methods
   trackOnboardingStart: (persona: string, segment: string) => {
-    posthog.capture('onboarding_started', {
+    track('onboarding_started', {
       persona,
       segment,
       timestamp: Date.now()
@@ -159,7 +119,7 @@ export const analytics = {
   },
 
   trackOnboardingCompleted: (persona: string, segment: string, referrer?: string) => {
-    posthog.capture('onboarding_completed', {
+    track('onboarding_completed', {
       persona,
       segment,
       referrer,
@@ -168,7 +128,7 @@ export const analytics = {
   },
 
   trackFAQOpened: (persona: string, segment: string, page: string) => {
-    posthog.capture('faq_opened', {
+    track('faq_opened', {
       persona,
       segment,
       page,
@@ -177,7 +137,7 @@ export const analytics = {
   },
 
   trackFAQSearched: (persona: string, segment: string, query: string) => {
-    posthog.capture('faq_searched', {
+    track('faq_searched', {
       persona,
       segment,
       query,
@@ -186,7 +146,7 @@ export const analytics = {
   },
 
   trackViralShareClicked: (persona: string, segment: string, channel: string) => {
-    posthog.capture('viral_share_clicked', {
+    track('viral_share_clicked', {
       persona,
       segment,
       channel,
@@ -196,7 +156,7 @@ export const analytics = {
 
   // Lead-to-Sales Closure Events
   trackLeadQuickAction: (action: string, leadId: string) => {
-    posthog.capture('lead_quick_action_clicked', {
+    track('lead_quick_action_clicked', {
       action,
       leadId,
       timestamp: Date.now()
@@ -204,7 +164,7 @@ export const analytics = {
   },
 
   trackLeadOutcome: (outcome: string, leadId: string) => {
-    posthog.capture('lead_outcome_set', {
+    track('lead_outcome_set', {
       outcome,
       leadId,
       timestamp: Date.now()
@@ -212,7 +172,7 @@ export const analytics = {
   },
 
   trackAIObjection: (type: string, confidence: number) => {
-    posthog.capture('ai_objection_detected', {
+    track('ai_objection_detected', {
       type,
       confidence,
       timestamp: Date.now()
@@ -220,7 +180,7 @@ export const analytics = {
   },
 
   trackSmartCadence: (reason: string, templateId: string) => {
-    posthog.capture('smart_cadence_triggered', {
+    track('smart_cadence_triggered', {
       reason,
       templateId,
       timestamp: Date.now()
@@ -228,7 +188,7 @@ export const analytics = {
   },
 
   trackComplianceReview: (leadId: string, flags: any[]) => {
-    posthog.capture('compliance_review_requested', {
+    track('compliance_review_requested', {
       leadId,
       flags,
       timestamp: Date.now()
@@ -236,7 +196,7 @@ export const analytics = {
   },
 
   trackWinLossReason: (reason: string, stage: string) => {
-    posthog.capture('win_loss_reason_selected', {
+    track('win_loss_reason_selected', {
       reason,
       stage,
       timestamp: Date.now()
@@ -245,7 +205,7 @@ export const analytics = {
 
   // Portfolio Navigator GPS Analytics
   trackOptimizationRun: (userId: string, phaseName: string, riskBudget: number) => {
-    posthog.capture('optimization_run', {
+    track('optimization_run', {
       user_id: userId,
       phase_name: phaseName,
       risk_budget: riskBudget,
@@ -254,7 +214,7 @@ export const analytics = {
   },
 
   trackRebalancingTicketCreated: (userId: string, tradesCount: number, totalValue: number) => {
-    posthog.capture('rebalancing_ticket_created', {
+    track('rebalancing_ticket_created', {
       user_id: userId,
       trades_count: tradesCount,
       total_value: totalValue,
@@ -263,7 +223,7 @@ export const analytics = {
   },
 
   trackMcPacRun: (userId: string, successProbability: number, timeHorizon: number) => {
-    posthog.capture('mc_pac_run', {
+    track('mc_pac_run', {
       user_id: userId,
       success_probability: successProbability,
       time_horizon: timeHorizon,
@@ -272,7 +232,7 @@ export const analytics = {
   },
 
   trackPM3Updated: (fundId: string, pm3Score: number, bucketTilt: string) => {
-    posthog.capture('pm3_updated', {
+    track('pm3_updated', {
       fund_id: fundId,
       pm3_score: pm3Score,
       bucket_tilt: bucketTilt,
@@ -281,7 +241,7 @@ export const analytics = {
   },
 
   trackPhasePolicyApplied: (userId: string, phaseName: string, riskAdjustment: number) => {
-    posthog.capture('phase_policy_applied', {
+    track('phase_policy_applied', {
       user_id: userId,
       phase_name: phaseName,
       risk_adjustment: riskAdjustment,
@@ -290,7 +250,7 @@ export const analytics = {
   },
 
   trackRecommendationViewed: (userId: string, recommendationType: string, confidence: number) => {
-    posthog.capture('recommendation_viewed', {
+    track('recommendation_viewed', {
       user_id: userId,
       recommendation_type: recommendationType,
       confidence,
@@ -299,5 +259,7 @@ export const analytics = {
   }
 };
 
-// Export the track function directly for convenience
-export const track = analytics.track;
+// No initialization needed for simple console logging
+export const initializeAnalytics = () => {
+  console.log("[analytics] Simple analytics initialized - logging to console");
+};
