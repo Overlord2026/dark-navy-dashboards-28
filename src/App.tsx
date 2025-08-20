@@ -241,9 +241,12 @@ import PMQPage from './pages/pmq/PMQPage';
 import ConsentDashboard from './components/consent/ConsentDashboard';
 import ExecutiveSuite from './pages/ExecutiveSuite';
 import AdminPolicies from './pages/admin/Policies';
-// import GoalsHome from './pages/GoalsHome'; // Removed
-// import NewGoalWizard from './pages/NewGoalWizard'; // Removed
-// import GoalDetail from './pages/GoalDetail'; // Removed
+import { TransactionsPage } from './features/transactions/pages/TransactionsPage';
+import { CategoriesPage } from './features/transactions/pages/CategoriesPage';
+import { RulesPage } from './features/transactions/pages/RulesPage';
+import { MerchantsPage } from './features/transactions/pages/MerchantsPage';
+import { HiddenTransactionsPage } from './features/transactions/pages/HiddenTransactionsPage';
+import { CashFlowPage } from './features/cashflow/pages/CashFlowPage';
 
 // Import onboarding flow component
 const PersonaOnboardingFlow = React.lazy(() => 
@@ -547,15 +550,13 @@ function App() {
                    {React.createElement(React.lazy(() => import('./pages/tools/RetirementScorecard')))}
                  </React.Suspense>
                } />
-           <Route path="/goals/*" element={<GoalsHome />} />
-           <Route path="/goals-old/*" element={<GoalsOld />} />
-           
            {/* Transactions Routes */}
            <Route path="/transactions" element={<TransactionsPage />} />
            <Route path="/settings/categories" element={<CategoriesPage />} />
            <Route path="/settings/rules" element={<RulesPage />} />
            <Route path="/settings/merchants" element={<MerchantsPage />} />
            <Route path="/settings/hidden" element={<HiddenTransactionsPage />} />
+           <Route path="/cashflow" element={<CashFlowPage />} />
              
             <Route path="/meet" element={<MeetPage />} />
             <Route path="/tools" element={
