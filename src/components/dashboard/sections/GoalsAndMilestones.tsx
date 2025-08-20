@@ -25,15 +25,20 @@ interface GoalsAndMilestonesProps {
 export const GoalsAndMilestones: React.FC<GoalsAndMilestonesProps> = ({ goals }) => {
   const navigate = useNavigate();
 
-  const getGoalIcon = (category: Goal['category']) => {
-    switch (category) {
-      case 'emergency_fund': return <Target className="h-5 w-5 text-red-500" />;
-      case 'travel_bucket_list': return <MapPin className="h-5 w-5 text-blue-500" />;
-      case 'education': return <GraduationCap className="h-5 w-5 text-purple-500" />;
-      case 'healthcare_healthspan': return <Heart className="h-5 w-5 text-pink-500" />;
-      case 'charitable_giving': return <Gift className="h-5 w-5 text-green-500" />;
-      default: return <Target className="h-5 w-5 text-gray-500" />;
+  const getGoalIcon = (goal: Goal) => {
+    if (goal.kind === 'bucket') {
+      if (goal.specific?.destination) return <MapPin className="h-5 w-5 text-blue-500" />;
+      return <Target className="h-5 w-5 text-purple-500" />;
     }
+    
+    // Financial goals - infer from name
+    const name = goal.name.toLowerCase();
+    if (name.includes('emergency')) return <Target className="h-5 w-5 text-red-500" />;
+    if (name.includes('travel')) return <MapPin className="h-5 w-5 text-blue-500" />;
+    if (name.includes('education')) return <GraduationCap className="h-5 w-5 text-purple-500" />;
+    if (name.includes('health')) return <Heart className="h-5 w-5 text-pink-500" />;
+    if (name.includes('charity') || name.includes('giving')) return <Gift className="h-5 w-5 text-green-500" />;
+    return <Target className="h-5 w-5 text-gray-500" />;
   };
 
   const getStatusConfig = (status: Goal['status']) => {
@@ -53,7 +58,10 @@ export const GoalsAndMilestones: React.FC<GoalsAndMilestonesProps> = ({ goals })
   };
 
   const getProgress = (goal: Goal) => {
-    return Math.min((goal.current_amount / goal.target_amount) * 100, 100);
+    if (goal.measurable.unit === 'usd') {
+      return Math.min((goal.measurable.current / goal.measurable.target) * 100, 100);
+    }
+    return Math.min((goal.measurable.current / goal.measurable.target) * 100, 100);
   };
 
   const getDaysToTarget = (targetDate: string) => {
@@ -82,7 +90,7 @@ export const GoalsAndMilestones: React.FC<GoalsAndMilestonesProps> = ({ goals })
         {goals.map((goal) => {
           const progress = getProgress(goal);
           const statusConfig = getStatusConfig(goal.status);
-          const daysLeft = goal.target_date ? getDaysToTarget(goal.target_date) : 0;
+          const daysLeft = goal.timeBound?.deadline ? getDaysToTarget(goal.timeBound.deadline) : 0;
           
           return (
             <Card key={goal.id} className="flex-shrink-0 w-80 hover-scale cursor-pointer">
@@ -90,10 +98,10 @@ export const GoalsAndMilestones: React.FC<GoalsAndMilestonesProps> = ({ goals })
                 {/* Goal Header */}
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center space-x-3">
-                    {getGoalIcon(goal.category)}
+                    {getGoalIcon(goal)}
                     <div>
                       <h3 className="font-semibold text-lg">{goal.name}</h3>
-                      <p className="text-sm text-muted-foreground">{goal.description}</p>
+                      <p className="text-sm text-muted-foreground">{goal.specific?.description || ''}</p>
                     </div>
                   </div>
                   <Badge 
@@ -115,13 +123,23 @@ export const GoalsAndMilestones: React.FC<GoalsAndMilestonesProps> = ({ goals })
                   <Progress value={progress} className="h-2" />
                   
                   <div className="flex justify-between text-sm">
-                    <span className="font-medium">{formatCurrency(goal.current_amount)}</span>
-                    <span className="text-muted-foreground">{formatCurrency(goal.target_amount)}</span>
+                    <span className="font-medium">
+                      {goal.measurable.unit === 'usd' 
+                        ? formatCurrency(goal.measurable.current)
+                        : `${goal.measurable.current} ${goal.measurable.unit}`}
+                    </span>
+                    <span className="text-muted-foreground">
+                      {goal.measurable.unit === 'usd' 
+                        ? formatCurrency(goal.measurable.target)
+                        : `${goal.measurable.target} ${goal.measurable.unit}`}
+                    </span>
                   </div>
 
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">
-                      {formatCurrency(goal.target_amount - goal.current_amount)} remaining
+                      {goal.measurable.unit === 'usd' 
+                        ? formatCurrency(goal.measurable.target - goal.measurable.current)
+                        : `${goal.measurable.target - goal.measurable.current} ${goal.measurable.unit}`} remaining
                     </span>
                     <span className={daysLeft > 30 ? "text-muted-foreground" : "text-amber-600 font-medium"}>
                       {daysLeft > 0 ? `${daysLeft} days left` : "Overdue"}

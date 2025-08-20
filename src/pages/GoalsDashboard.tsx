@@ -40,7 +40,7 @@ const GoalsDashboard = () => {
   const navigate = useNavigate();
   const { goals, loading, totalSaved, totalTarget, averageProgress, activeGoals, completedGoals } = useGoals();
   const [searchTerm, setSearchTerm] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState<GoalCategory | 'all'>('all');
+  const [categoryFilter, setCategoryFilter] = useState<'all' | 'financial' | 'bucket'>('all');
   const [statusFilter, setStatusFilter] = useState<GoalStatus | 'all'>('all');
   const [renderCount, setRenderCount] = useState(0);
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
@@ -58,21 +58,15 @@ const GoalsDashboard = () => {
     setLastUpdate(new Date());
   }, [goals]);
 
-  // Memoized icon mapping for performance
-  const getGoalIcon = useCallback((category: GoalCategory) => {
-    const iconMap = {
-      'retirement': Target,
-      'healthcare_healthspan': Heart,
-      'travel_bucket_list': Plane,
-      'family_experience': Users,
-      'charitable_giving': Gift,
-      'education': GraduationCap,
-      'real_estate': Home,
-      'emergency_fund': Shield,
-      'other': Target
-    };
-    const IconComponent = iconMap[category] || Target;
-    return <IconComponent className="h-5 w-5" />;
+  const getGoalIcon = useCallback((kind: string) => {
+    switch (kind) {
+      case 'financial':
+        return <DollarSign className="h-5 w-5" />;
+      case 'bucket':
+        return <Star className="h-5 w-5" />;
+      default:
+        return <Target className="h-5 w-5" />;
+    }
   }, []);
 
   const getStatusColor = useCallback((status: GoalStatus) => {
@@ -112,8 +106,8 @@ const GoalsDashboard = () => {
     const startTime = performance.now();
     const filtered = goals.filter(goal => {
       const matchesSearch = goal.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           goal.description.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesCategory = categoryFilter === 'all' || goal.category === categoryFilter;
+                           (goal.specific?.description || '').toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesCategory = categoryFilter === 'all' || goal.kind === categoryFilter;
       const matchesStatus = statusFilter === 'all' || goal.status === statusFilter;
       
       return matchesSearch && matchesCategory && matchesStatus;
@@ -122,7 +116,7 @@ const GoalsDashboard = () => {
     return filtered;
   }, [goals, searchTerm, categoryFilter, statusFilter]);
 
-  const topAspirations = useMemo(() => goals.filter(g => g.priority === 'top_aspiration'), [goals]);
+  const topAspirations = useMemo(() => goals.filter(g => g.priority === 1), [goals]);
   const recentlyCompleted = useMemo(() => completedGoals.slice(0, 3), [completedGoals]);
 
   if (loading) {
@@ -239,19 +233,14 @@ const GoalsDashboard = () => {
             className="pl-10"
           />
         </div>
-        <Select value={categoryFilter} onValueChange={(value) => setCategoryFilter(value as GoalCategory | 'all')}>
+        <Select value={categoryFilter} onValueChange={(value) => setCategoryFilter(value as 'all' | 'financial' | 'bucket')}>
           <SelectTrigger className="w-full md:w-48">
             <SelectValue placeholder="Category" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Categories</SelectItem>
-            <SelectItem value="retirement">Retirement</SelectItem>
-            <SelectItem value="travel_bucket_list">Travel</SelectItem>
-            <SelectItem value="family_experience">Family</SelectItem>
-            <SelectItem value="charitable_giving">Charitable</SelectItem>
-            <SelectItem value="education">Education</SelectItem>
-            <SelectItem value="real_estate">Real Estate</SelectItem>
-            <SelectItem value="emergency_fund">Emergency</SelectItem>
+            <SelectItem value="financial">Financial Goals</SelectItem>
+            <SelectItem value="bucket">Bucket List</SelectItem>
           </SelectContent>
         </Select>
         <Select value={statusFilter} onValueChange={(value) => setStatusFilter(value as GoalStatus | 'all')}>
@@ -349,13 +338,13 @@ const GoalsGrid = ({ goals, navigate, getGoalIcon, getStatusColor, getStatusText
               <div className="flex items-start justify-between">
                 <div className="flex items-center space-x-3">
                   <div className="p-2 rounded-lg bg-primary/10">
-                    {getGoalIcon(goal.category)}
+                    {getGoalIcon(goal.kind)}
                   </div>
                   <div className="flex-1">
                     <CardTitle className="text-lg group-hover:text-primary transition-colors">
                       {goal.name}
                     </CardTitle>
-                    <p className="text-sm text-muted-foreground">{goal.description}</p>
+                    <p className="text-sm text-muted-foreground">{goal.specific?.description || ''}</p>
                   </div>
                 </div>
                 <Badge className={`${getStatusColor(goal.status)} text-white`}>
@@ -372,8 +361,16 @@ const GoalsGrid = ({ goals, navigate, getGoalIcon, getStatusColor, getStatusText
                 </div>
                 <Progress value={progress.percentage} className="h-2" />
                 <div className="flex justify-between text-sm">
-                  <span className="font-medium">{formatCurrency(goal.current_amount)}</span>
-                  <span className="text-muted-foreground">{formatCurrency(goal.target_amount)}</span>
+                  <span className="font-medium">
+                    {goal.measurable.unit === 'usd' 
+                      ? formatCurrency(goal.measurable.current)
+                      : `${goal.measurable.current} ${goal.measurable.unit}`}
+                  </span>
+                  <span className="text-muted-foreground">
+                    {goal.measurable.unit === 'usd' 
+                      ? formatCurrency(goal.measurable.target)
+                      : `${goal.measurable.target} ${goal.measurable.unit}`}
+                  </span>
                 </div>
               </div>
 
@@ -393,7 +390,7 @@ const GoalsGrid = ({ goals, navigate, getGoalIcon, getStatusColor, getStatusText
                 </div>
               </div>
 
-              {goal.priority === 'top_aspiration' && (
+              {goal.priority === 1 && (
                 <div className="flex items-center space-x-1">
                   <Star className="h-3 w-3 text-yellow-500" />
                   <span className="text-xs text-yellow-600 font-medium">Top Aspiration</span>
