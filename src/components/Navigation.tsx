@@ -22,6 +22,9 @@ export function Navigation() {
             <Link to="/receipts" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
               Receipts
             </Link>
+            <Link to="/nil-onboarding" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+              NIL Onboarding
+            </Link>
           </div>
         </div>
         <div className="flex items-center">

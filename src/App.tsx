@@ -68,6 +68,7 @@ import WelcomePage from "./pages/WelcomePage";
 import RetirementConfidenceScorecard from "./pages/RetirementConfidenceScorecard";
 import LongevityScorecard from "./pages/LongevityScorecard";
 import PublicFeeCalculator from "./pages/PublicFeeCalculator";
+import NILOnboardingPage from "./pages/NILOnboardingPage";
 import RetirementIncomeGapAnalyzer from "./pages/RetirementIncomeGapAnalyzer";
 import RetirementRoadmapInfo from "./pages/RetirementRoadmapInfo";
 import RetirementAnalyzerDemo from "./pages/RetirementAnalyzerDemo";
@@ -547,6 +548,7 @@ function App() {
         <Route path="/persona/corporate-executive" element={<CorporateExecutivePersonaPage />} />
         <Route path="/persona/pre-retiree-retiree" element={<PreRetireeRetireePersonaPage />} />
                                  <Route path="/calculator" element={<PublicFeeCalculator />} />
+                                 <Route path="/nil-onboarding" element={<NILOnboardingPage />} />
                                 <Route path="/demo" element={<div className="min-h-screen bg-background p-8"><DemoCalculator /></div>} />
                                 <Route path="/lead-magnet" element={<LeadMagnetPage />} />
                                 <Route path="/marketplace-demo" element={<MarketplaceLandingPage />} />
