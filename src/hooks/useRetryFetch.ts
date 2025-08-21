@@ -1,88 +1,85 @@
-import { useState, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
-interface RetryOptions {
+interface UseRetryFetchOptions {
   maxRetries?: number;
-  initialDelay?: number;
+  baseDelay?: number;
   maxDelay?: number;
-  backoffMultiplier?: number;
+  backoffFactor?: number;
 }
 
-interface FetchState<T> {
+interface UseRetryFetchResult<T> {
   data: T | null;
   loading: boolean;
-  error: string | null;
+  error: Error | null;
+  retry: () => void;
   retryCount: number;
 }
 
 export function useRetryFetch<T>(
   fetchFn: () => Promise<T>,
-  options: RetryOptions = {}
-) {
+  deps: React.DependencyList = [],
+  options: UseRetryFetchOptions = {}
+): UseRetryFetchResult<T> {
   const {
     maxRetries = 3,
-    initialDelay = 1000,
+    baseDelay = 1000,
     maxDelay = 10000,
-    backoffMultiplier = 2
+    backoffFactor = 2,
   } = options;
 
-  const [state, setState] = useState<FetchState<T>>({
-    data: null,
-    loading: false,
-    error: null,
-    retryCount: 0
-  });
+  const [data, setData] = useState<T | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+  const [retryCount, setRetryCount] = useState(0);
 
-  const executeWithRetry = useCallback(async () => {
-    setState(prev => ({ ...prev, loading: true, error: null }));
+  const calculateDelay = useCallback((attempt: number): number => {
+    const delay = Math.min(baseDelay * Math.pow(backoffFactor, attempt), maxDelay);
+    // Add jitter to prevent thundering herd
+    return delay + Math.random() * 1000;
+  }, [baseDelay, backoffFactor, maxDelay]);
 
-    for (let attempt = 0; attempt <= maxRetries; attempt++) {
-      try {
-        const result = await fetchFn();
-        setState({
-          data: result,
-          loading: false,
-          error: null,
-          retryCount: attempt
-        });
-        return result;
-      } catch (error) {
-        const isLastAttempt = attempt === maxRetries;
+  const executeWithRetry = useCallback(async (attempt = 0) => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const result = await fetchFn();
+      setData(result);
+      setRetryCount(attempt);
+    } catch (err) {
+      const error = err instanceof Error ? err : new Error('Unknown error');
+      
+      if (attempt < maxRetries) {
+        const delay = calculateDelay(attempt);
+        console.warn(`Fetch attempt ${attempt + 1} failed, retrying in ${delay}ms:`, error.message);
         
-        if (isLastAttempt) {
-          setState(prev => ({
-            ...prev,
-            loading: false,
-            error: error instanceof Error ? error.message : 'Unknown error occurred',
-            retryCount: attempt
-          }));
-          throw error;
-        }
-
-        // Calculate delay with exponential backoff
-        const delay = Math.min(
-          initialDelay * Math.pow(backoffMultiplier, attempt),
-          maxDelay
-        );
-
-        // Add jitter to prevent thundering herd
-        const jitteredDelay = delay + Math.random() * 1000;
-        
-        await new Promise(resolve => setTimeout(resolve, jitteredDelay));
-        
-        setState(prev => ({ ...prev, retryCount: attempt + 1 }));
+        setTimeout(() => {
+          executeWithRetry(attempt + 1);
+        }, delay);
+      } else {
+        console.error(`Fetch failed after ${maxRetries + 1} attempts:`, error);
+        setError(error);
+        setRetryCount(attempt);
       }
+    } finally {
+      setLoading(false);
     }
-  }, [fetchFn, maxRetries, initialDelay, maxDelay, backoffMultiplier]);
+  }, [fetchFn, maxRetries, calculateDelay]);
 
   const retry = useCallback(() => {
-    executeWithRetry().catch(() => {
-      // Error already handled in executeWithRetry
-    });
+    setRetryCount(0);
+    executeWithRetry(0);
   }, [executeWithRetry]);
 
+  useEffect(() => {
+    executeWithRetry(0);
+  }, deps);
+
   return {
-    ...state,
-    execute: executeWithRetry,
-    retry
+    data,
+    loading,
+    error,
+    retry,
+    retryCount,
   };
 }

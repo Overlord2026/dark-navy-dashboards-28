@@ -1,372 +1,204 @@
-import React from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { 
-  Search, 
-  Receipt, 
-  FileText, 
-  Shield, 
-  Eye, 
-  Database,
-  AlertTriangle,
-  RefreshCw 
-} from 'lucide-react';
-import { ReceiptRow } from './ReceiptRow';
-import { VerifyModal } from './VerifyModal';
-import { SkeletonList } from '@/components/ui/skeleton-loader';
-import { ErrorBoundary, InlineErrorFallback } from '@/components/ui/error-boundary';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Search, FileText, Shield, CheckCircle, AlertTriangle, Eye } from 'lucide-react';
+import { verifyReceipt } from '@/lib/receipt-verifier';
 import { useRetryFetch } from '@/hooks/useRetryFetch';
-import { useKeyboardNavigation } from '@/hooks/useKeyboardNavigation';
-import { receiptStore } from '@/features/receipts/store';
-import { safeLog, createSanitizedReceipt } from '@/lib/privacy-utils';
+import { SkeletonLoader } from '@/components/ui/skeleton-loader';
 import { useToast } from '@/hooks/use-toast';
-import { formatDistanceToNow } from 'date-fns';
 
-export function ReceiptsExplorer() {
+interface Receipt {
+  id: string;
+  type: string;
+  timestamp: string;
+  data: any;
+  session_id: string;
+  verified?: boolean;
+}
+
+export const ReceiptsExplorer: React.FC = () => {
+  const [receipts, setReceipts] = useState<Receipt[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedReceipt, setSelectedReceipt] = useState<Receipt | null>(null);
   const { toast } = useToast();
-  const containerRef = React.useRef<HTMLDivElement>(null);
-  
-  // Keyboard navigation
-  useKeyboardNavigation({
-    enableArrowKeys: true,
-    enableEscapeKey: true,
-    containerRef
-  });
 
-  const [filteredReceipts, setFilteredReceipts] = React.useState<any[]>([]);
-  const [searchTerm, setSearchTerm] = React.useState('');
-  const [selectedTab, setSelectedTab] = React.useState('all');
-  const [selectedReceipt, setSelectedReceipt] = React.useState<any>(null);
-  const [isVerifyModalOpen, setIsVerifyModalOpen] = React.useState(false);
-  const [stats, setStats] = React.useState({
-    total: 0,
-    byType: {} as Record<string, number>,
-    byPolicy: {} as Record<string, number>,
-    storage: 'memory' as 'indexeddb' | 'memory'
-  });
-
-  // Fetch receipts with retry logic
-  const {
-    data: receipts,
-    loading: receiptsLoading,
-    error: receiptsError,
-    retry: retryReceipts
-  } = useRetryFetch(async () => {
-    const allReceipts = await receiptStore.list({ limit: 1000 });
-    
-    // Add mock receipts for demo if none exist
-    if (allReceipts.length === 0) {
-      const mockReceipts = [
+  const { data: mockReceipts, loading, error, retry } = useRetryFetch<Receipt[]>(
+    async () => {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      return [
         {
-          id: 'receipt_demo_onboard_1',
+          id: 'receipt_001',
           type: 'onboard_rds',
-          step: 'persona',
-          persona: 'aspiring',
-          ts: new Date().toISOString(),
-          session_id: 'session_demo_1',
-          policy_version: 'v1.0'
+          timestamp: new Date().toISOString(),
+          data: { step: 'persona', persona: 'aspiring', session_id: 'session_123' },
+          session_id: 'session_123'
         },
         {
-          id: 'receipt_demo_decision_1',
+          id: 'receipt_002',
           type: 'decision_rds',
-          action: 'create_goal',
-          persona: 'aspiring',
-          tier: 'foundational',
-          goal_key: 'emergency_fund',
-          ts: new Date(Date.now() - 1000 * 60 * 30).toISOString(),
-          session_id: 'session_demo_1',
-          policy_version: 'v1.0'
-        },
-        {
-          id: 'receipt_demo_vault_1',
-          type: 'vault_rds',
-          action: 'ingest',
-          source: 'plaid',
-          hash: 'sha256_demo_hash_123',
-          ts: new Date(Date.now() - 1000 * 60 * 60).toISOString(),
-          session_id: 'session_demo_1',
-          policy_version: 'v1.0'
-        },
-        {
-          id: 'receipt_demo_consent_1',
-          type: 'consent_rds',
-          scope: ['advisor_access', 'document_sharing'],
-          purpose_of_use: 'Financial planning consultation',
-          ttl_days: 30,
-          result: 'approve',
-          ts: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(),
-          session_id: 'session_demo_1',
-          policy_version: 'v1.0'
+          timestamp: new Date().toISOString(),
+          data: { action: 'create_goal', persona: 'aspiring', tier: 'foundational' },
+          session_id: 'session_123'
         }
       ];
-
-      // Store mock receipts with privacy sanitization
-      for (const receipt of mockReceipts) {
-        const sanitizedReceipt = createSanitizedReceipt(receipt);
-        await receiptStore.put(sanitizedReceipt);
-        safeLog.info('Demo receipt created', { id: receipt.id, type: receipt.type });
-      }
-      
-      return mockReceipts;
-    } else {
-      // Map stored receipts to display format
-      const displayReceipts = allReceipts.map(stored => stored.receipt_data);
-      safeLog.info('Loaded receipts from storage', { count: displayReceipts.length });
-      return displayReceipts;
     }
-  }, {
-    maxRetries: 3,
-    initialDelay: 1000
-  });
+  );
 
-  // Fetch stats with retry logic
-  const {
-    data: statsData,
-    loading: statsLoading,
-    error: statsError,
-    retry: retryStats
-  } = useRetryFetch(async () => {
-    return await receiptStore.getStats();
-  }, {
-    maxRetries: 2,
-    initialDelay: 500
-  });
-
-  // Update stats when data loads
-  React.useEffect(() => {
-    if (statsData) {
-      setStats(statsData);
+  useEffect(() => {
+    if (mockReceipts) {
+      setReceipts(mockReceipts);
     }
-  }, [statsData]);
+  }, [mockReceipts]);
 
-  // Filter receipts based on search and tab
-  React.useEffect(() => {
-    if (!receipts) return;
-    
-    let filtered = receipts;
+  const filteredReceipts = receipts.filter(receipt =>
+    receipt.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    receipt.type.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
-    // Filter by tab
-    if (selectedTab !== 'all') {
-      filtered = filtered.filter(receipt => {
-        switch (selectedTab) {
-          case 'onboarding':
-            return receipt.type === 'onboard_rds';
-          case 'decisions':
-            return receipt.type === 'decision_rds';
-          case 'consent':
-            return receipt.type === 'consent_rds';
-          case 'vault':
-            return receipt.type === 'vault_rds';
-          default:
-            return true;
-        }
-      });
-    }
-
-    // Filter by search term
-    if (searchTerm) {
-      const term = searchTerm.toLowerCase();
-      filtered = filtered.filter(receipt =>
-        receipt.id.toLowerCase().includes(term) ||
-        receipt.type.toLowerCase().includes(term) ||
-        receipt.step?.toLowerCase().includes(term) ||
-        receipt.action?.toLowerCase().includes(term) ||
-        receipt.persona?.toLowerCase().includes(term) ||
-        receipt.session_id?.toLowerCase().includes(term)
-      );
-    }
-
-    setFilteredReceipts(filtered);
-  }, [receipts, selectedTab, searchTerm]);
-
-  const handleViewJSON = (receipt: any) => {
-    const sanitizedReceipt = createSanitizedReceipt(receipt);
-    const jsonString = JSON.stringify(sanitizedReceipt, null, 2);
-    
-    navigator.clipboard.writeText(jsonString).then(() => {
+  const handleVerifyReceipt = (receipt: Receipt) => {
+    try {
+      const result = verifyReceipt(receipt.data);
+      setReceipts(prev => prev.map(r => 
+        r.id === receipt.id ? { ...r, verified: result.isValid } : r
+      ));
       toast({
-        title: "JSON copied",
-        description: "Sanitized receipt JSON has been copied to clipboard",
+        title: result.isValid ? "Receipt Verified" : "Verification Failed",
+        description: result.message,
+        variant: result.isValid ? "default" : "destructive",
       });
-      safeLog.info('Receipt JSON copied', { receiptId: receipt.id });
-    }).catch(() => {
+    } catch (error) {
       toast({
-        title: "Copy failed",
-        description: "Could not copy JSON to clipboard",
+        title: "Verification Error",
+        description: "Failed to verify receipt",
         variant: "destructive",
       });
-    });
+    }
   };
 
-  const handleVerify = (receipt: any) => {
-    setSelectedReceipt(receipt);
-    setIsVerifyModalOpen(true);
-    safeLog.info('Receipt verification initiated', { receiptId: receipt.id });
-  };
+  if (loading) {
+    return (
+      <div className="container mx-auto px-4 py-6 space-y-6">
+        <SkeletonLoader count={5} height="120px" />
+      </div>
+    );
+  }
 
-  const getTabCounts = () => {
-    if (!receipts) return { all: 0, onboarding: 0, decisions: 0, consent: 0, vault: 0 };
-    
-    return {
-      all: receipts.length,
-      onboarding: receipts.filter(r => r.type === 'onboard_rds').length,
-      decisions: receipts.filter(r => r.type === 'decision_rds').length,
-      consent: receipts.filter(r => r.type === 'consent_rds').length,
-      vault: receipts.filter(r => r.type === 'vault_rds').length,
-    };
-  };
-
-  const tabCounts = getTabCounts();
-
-  return (
-    <ErrorBoundary>
-      <div className="space-y-6" ref={containerRef}>
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold flex items-center gap-2">
-              <Receipt className="h-6 w-6" aria-hidden="true" />
-              Receipts Explorer
-            </h1>
-            <p className="text-muted-foreground">
-              View and verify all transaction receipts and audit trails
-            </p>
-          </div>
-          
-          <div className="flex items-center gap-4">
-            {/* Error states and retry buttons */}
-            {(receiptsError || statsError) && (
-              <Alert className="max-w-sm">
-                <AlertTriangle className="h-4 w-4" />
-                <AlertDescription className="flex items-center justify-between">
-                  <span>Some data failed to load</span>
-                  <div className="flex gap-1">
-                    {receiptsError && (
-                      <Button 
-                        size="sm" 
-                        variant="outline" 
-                        onClick={retryReceipts}
-                        aria-label="Retry loading receipts"
-                      >
-                        <RefreshCw className="h-3 w-3" />
-                      </Button>
-                    )}
-                    {statsError && (
-                      <Button 
-                        size="sm" 
-                        variant="outline" 
-                        onClick={retryStats}
-                        aria-label="Retry loading statistics"
-                      >
-                        <RefreshCw className="h-3 w-3" />
-                      </Button>
-                    )}
-                  </div>
-                </AlertDescription>
-              </Alert>
-            )}
-            
-            <Badge variant="outline" className="flex items-center gap-2">
-              <Database className="h-3 w-3" aria-hidden="true" />
-              Storage: {stats.storage}
-            </Badge>
-            <Badge variant="secondary">
-              Total: {statsLoading ? '...' : stats.total}
-            </Badge>
-          </div>
-        </div>
-
-        {/* Search */}
+  if (error) {
+    return (
+      <div className="container mx-auto px-4 py-6">
         <Card>
-          <CardContent className="p-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" aria-hidden="true" />
-              <Input
-                placeholder="Search receipts by ID, type, action, persona..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-9"
-                aria-label="Search receipts"
-                disabled={receiptsLoading}
-              />
-            </div>
+          <CardContent className="flex flex-col items-center justify-center py-12">
+            <AlertTriangle className="h-12 w-12 text-destructive mb-4" />
+            <h3 className="text-lg font-semibold mb-2">Error Loading Receipts</h3>
+            <Button onClick={retry}>Try Again</Button>
           </CardContent>
         </Card>
+      </div>
+    );
+  }
 
-        {/* Tabs */}
-        <Tabs value={selectedTab} onValueChange={setSelectedTab}>
-          <TabsList className="grid w-full grid-cols-5">
-            <TabsTrigger value="all" className="flex items-center gap-2">
-              All <Badge variant="secondary" className="text-xs">{tabCounts.all}</Badge>
-            </TabsTrigger>
-            <TabsTrigger value="onboarding" className="flex items-center gap-2">
-              <FileText className="h-3 w-3" aria-hidden="true" />
-              Onboarding <Badge variant="secondary" className="text-xs">{tabCounts.onboarding}</Badge>
-            </TabsTrigger>
-            <TabsTrigger value="decisions" className="flex items-center gap-2">
-              Decisions <Badge variant="secondary" className="text-xs">{tabCounts.decisions}</Badge>
-            </TabsTrigger>
-            <TabsTrigger value="consent" className="flex items-center gap-2">
-              <Eye className="h-3 w-3" aria-hidden="true" />
-              Consent <Badge variant="secondary" className="text-xs">{tabCounts.consent}</Badge>
-            </TabsTrigger>
-            <TabsTrigger value="vault" className="flex items-center gap-2">
-              <Shield className="h-3 w-3" aria-hidden="true" />
-              Vault <Badge variant="secondary" className="text-xs">{tabCounts.vault}</Badge>
-            </TabsTrigger>
-          </TabsList>
+  if (receipts.length === 0) {
+    return (
+      <div className="container mx-auto px-4 py-6">
+        <Card>
+          <CardContent className="flex flex-col items-center justify-center py-12">
+            <FileText className="h-12 w-12 text-muted-foreground mb-4" />
+            <h3 className="text-lg font-semibold mb-2">No receipts yet</h3>
+            <p className="text-muted-foreground text-center">
+              Complete one action and they'll appear here.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
-          <TabsContent value={selectedTab} className="space-y-4">
-            {receiptsLoading ? (
-              <SkeletonList count={5} />
-            ) : receiptsError ? (
-              <InlineErrorFallback 
-                error={new Error(receiptsError)} 
-                retry={retryReceipts} 
-              />
-            ) : filteredReceipts.length === 0 ? (
-              <Card>
-                <CardContent className="p-8 text-center">
-                  <Receipt className="h-12 w-12 mx-auto text-muted-foreground mb-4" aria-hidden="true" />
-                  <h3 className="text-lg font-medium mb-2">No receipts yet</h3>
-                  <p className="text-muted-foreground">
-                    {searchTerm 
-                      ? 'Try adjusting your search criteria'
-                      : 'Complete one action and they\'ll appear here.'
-                    }
-                  </p>
-                </CardContent>
-              </Card>
-            ) : (
-              <div className="space-y-3" role="list" aria-label="Receipt list">
-                {filteredReceipts.map((receipt) => (
-                  <div key={receipt.id} role="listitem">
-                    <ReceiptRow
-                      receipt={receipt}
-                      onViewJSON={() => handleViewJSON(receipt)}
-                      onVerify={() => handleVerify(receipt)}
-                    />
-                  </div>
-                ))}
-              </div>
-            )}
-          </TabsContent>
-        </Tabs>
+  return (
+    <div className="container mx-auto px-4 py-6 space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold">Receipts Explorer</h1>
+          <p className="text-muted-foreground mt-2">View and verify your RDS receipts</p>
+        </div>
+      </div>
 
-        {/* Verify Modal */}
-        <VerifyModal
-          receipt={selectedReceipt}
-          isOpen={isVerifyModalOpen}
-          onClose={() => {
-            setIsVerifyModalOpen(false);
-            setSelectedReceipt(null);
-          }}
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <Input
+          placeholder="Search receipts..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="pl-10"
+          aria-label="Search receipts"
         />
       </div>
-    </ErrorBoundary>
+
+      <div className="grid grid-cols-1 gap-4">
+        {filteredReceipts.map((receipt) => (
+          <Card key={receipt.id} className="cursor-pointer transition-all hover:shadow-md">
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <FileText className="h-5 w-5" />
+                  <CardTitle className="text-lg">{receipt.id}</CardTitle>
+                </div>
+                <div className="flex items-center gap-2">
+                  {receipt.verified !== undefined && (
+                    <Badge variant={receipt.verified ? "default" : "destructive"} className="text-xs">
+                      {receipt.verified ? (
+                        <>
+                          <CheckCircle className="h-3 w-3 mr-1" />
+                          Verified
+                        </>
+                      ) : (
+                        <>
+                          <AlertTriangle className="h-3 w-3 mr-1" />
+                          Invalid
+                        </>
+                      )}
+                    </Badge>
+                  )}
+                  <Badge variant="outline" className="text-xs">{receipt.type}</Badge>
+                </div>
+              </div>
+              <CardDescription>
+                {new Date(receipt.timestamp).toLocaleString()}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="pt-0">
+              <div className="flex items-center gap-2">
+                <Button variant="outline" size="sm" onClick={() => handleVerifyReceipt(receipt)}>
+                  <Shield className="h-4 w-4 mr-2" />
+                  Verify
+                </Button>
+                <Button variant="ghost" size="sm" onClick={() => setSelectedReceipt(receipt)}>
+                  <Eye className="h-4 w-4 mr-2" />
+                  View
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      <Dialog open={!!selectedReceipt} onOpenChange={() => setSelectedReceipt(null)}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Receipt Details: {selectedReceipt?.id}</DialogTitle>
+            <DialogDescription>
+              Type: {selectedReceipt?.type} • {selectedReceipt && new Date(selectedReceipt.timestamp).toLocaleString()}
+            </DialogDescription>
+          </DialogHeader>
+          {selectedReceipt && (
+            <pre className="bg-muted p-4 rounded-lg text-sm overflow-auto max-h-96">
+              {JSON.stringify(selectedReceipt.data, null, 2)}
+            </pre>
+          )}
+        </DialogContent>
+      </Dialog>
+    </div>
   );
-}
+};

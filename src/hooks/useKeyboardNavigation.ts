@@ -1,101 +1,102 @@
-import { useEffect, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
-interface KeyboardNavigationOptions {
-  enableArrowKeys?: boolean;
-  enableTabTrapping?: boolean;
-  enableEscapeKey?: boolean;
+interface UseKeyboardNavigationOptions<T> {
+  items: T[];
+  onSelect?: (item: T, index: number) => void;
   onEscape?: () => void;
-  containerRef?: React.RefObject<HTMLElement>;
+  isEnabled?: boolean;
+  loop?: boolean;
 }
 
-export function useKeyboardNavigation(options: KeyboardNavigationOptions = {}) {
-  const {
-    enableArrowKeys = true,
-    enableTabTrapping = false,
-    enableEscapeKey = true,
-    onEscape,
-    containerRef
-  } = options;
+interface UseKeyboardNavigationResult {
+  selectedIndex: number;
+  handleKeyDown: (event: React.KeyboardEvent) => void;
+  setSelectedIndex: (index: number) => void;
+  resetSelection: () => void;
+}
 
-  const handleKeyDown = useCallback((event: KeyboardEvent) => {
-    const container = containerRef?.current || document;
-    const focusableElements = container.querySelectorAll(
-      'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"]):not([disabled])'
-    );
-    
-    const focusableArray = Array.from(focusableElements) as HTMLElement[];
-    const currentIndex = focusableArray.indexOf(document.activeElement as HTMLElement);
+export function useKeyboardNavigation<T>({
+  items,
+  onSelect,
+  onEscape,
+  isEnabled = true,
+  loop = true,
+}: UseKeyboardNavigationOptions<T>): UseKeyboardNavigationResult {
+  const [selectedIndex, setSelectedIndex] = useState(-1);
 
-    // Handle escape key
-    if (enableEscapeKey && event.key === 'Escape') {
-      event.preventDefault();
-      onEscape?.();
-      return;
-    }
+  const resetSelection = useCallback(() => {
+    setSelectedIndex(-1);
+  }, []);
 
-    // Handle arrow key navigation
-    if (enableArrowKeys && (event.key === 'ArrowDown' || event.key === 'ArrowUp')) {
-      event.preventDefault();
-      
-      if (focusableArray.length === 0) return;
-      
-      let nextIndex;
-      if (event.key === 'ArrowDown') {
-        nextIndex = currentIndex + 1;
-        if (nextIndex >= focusableArray.length) nextIndex = 0;
-      } else {
-        nextIndex = currentIndex - 1;
-        if (nextIndex < 0) nextIndex = focusableArray.length - 1;
-      }
-      
-      focusableArray[nextIndex]?.focus();
-    }
+  const handleKeyDown = useCallback((event: React.KeyboardEvent) => {
+    if (!isEnabled || items.length === 0) return;
 
-    // Handle tab trapping
-    if (enableTabTrapping && event.key === 'Tab') {
-      if (focusableArray.length === 0) {
+    switch (event.key) {
+      case 'ArrowDown':
         event.preventDefault();
-        return;
-      }
+        setSelectedIndex(prev => {
+          if (prev >= items.length - 1) {
+            return loop ? 0 : prev;
+          }
+          return prev + 1;
+        });
+        break;
 
-      if (event.shiftKey) {
-        if (currentIndex <= 0) {
-          event.preventDefault();
-          focusableArray[focusableArray.length - 1]?.focus();
+      case 'ArrowUp':
+        event.preventDefault();
+        setSelectedIndex(prev => {
+          if (prev <= 0) {
+            return loop ? items.length - 1 : 0;
+          }
+          return prev - 1;
+        });
+        break;
+
+      case 'Enter':
+      case ' ':
+        event.preventDefault();
+        if (selectedIndex >= 0 && selectedIndex < items.length) {
+          onSelect?.(items[selectedIndex], selectedIndex);
         }
-      } else {
-        if (currentIndex >= focusableArray.length - 1) {
-          event.preventDefault();
-          focusableArray[0]?.focus();
-        }
-      }
+        break;
+
+      case 'Escape':
+        event.preventDefault();
+        resetSelection();
+        onEscape?.();
+        break;
+
+      case 'Home':
+        event.preventDefault();
+        setSelectedIndex(0);
+        break;
+
+      case 'End':
+        event.preventDefault();
+        setSelectedIndex(items.length - 1);
+        break;
+
+      default:
+        break;
     }
-  }, [enableArrowKeys, enableTabTrapping, enableEscapeKey, onEscape, containerRef]);
+  }, [isEnabled, items, selectedIndex, onSelect, onEscape, loop]);
 
   useEffect(() => {
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [handleKeyDown]);
+    if (selectedIndex >= items.length) {
+      setSelectedIndex(-1);
+    }
+  }, [items.length, selectedIndex]);
 
-  const focusFirst = useCallback(() => {
-    const container = containerRef?.current || document;
-    const firstFocusable = container.querySelector(
-      'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"]):not([disabled])'
-    ) as HTMLElement;
-    firstFocusable?.focus();
-  }, [containerRef]);
-
-  const focusLast = useCallback(() => {
-    const container = containerRef?.current || document;
-    const focusableElements = container.querySelectorAll(
-      'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"]):not([disabled])'
-    );
-    const lastFocusable = focusableElements[focusableElements.length - 1] as HTMLElement;
-    lastFocusable?.focus();
-  }, [containerRef]);
+  useEffect(() => {
+    if (!isEnabled) {
+      setSelectedIndex(-1);
+    }
+  }, [isEnabled]);
 
   return {
-    focusFirst,
-    focusLast
+    selectedIndex,
+    handleKeyDown,
+    setSelectedIndex,
+    resetSelection,
   };
 }

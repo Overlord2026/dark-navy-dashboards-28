@@ -1,65 +1,67 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 
-interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
+interface SkeletonLoaderProps {
   className?: string;
+  count?: number;
+  height?: string;
+  width?: string;
+  variant?: 'default' | 'circular' | 'text' | 'card';
 }
 
-export function Skeleton({ className, ...props }: SkeletonProps) {
-  return (
-    <div
-      className={cn(
-        "animate-pulse rounded-md bg-muted/60",
-        className
-      )}
-      {...props}
-    />
-  );
-}
+export const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
+  className,
+  count = 1,
+  height = '20px',
+  width = '100%',
+  variant = 'default',
+}) => {
+  const getVariantClasses = () => {
+    switch (variant) {
+      case 'circular':
+        return 'rounded-full aspect-square';
+      case 'text':
+        return 'rounded h-4';
+      case 'card':
+        return 'rounded-lg p-4 space-y-3';
+      default:
+        return 'rounded';
+    }
+  };
 
-export function SkeletonCard() {
-  return (
-    <div className="space-y-3 p-4 border rounded-lg">
-      <div className="flex items-center space-x-3">
-        <Skeleton className="h-4 w-4 rounded" />
-        <div className="space-y-2 flex-1">
-          <Skeleton className="h-4 w-24" />
-          <Skeleton className="h-3 w-32" />
-        </div>
-        <Skeleton className="h-6 w-16" />
+  const baseClasses = 'animate-pulse bg-muted';
+  
+  if (variant === 'card') {
+    return (
+      <div className="space-y-4">
+        {Array.from({ length: count }).map((_, index) => (
+          <div
+            key={index}
+            className={cn(baseClasses, getVariantClasses(), className)}
+            style={{ minHeight: height }}
+            role="progressbar"
+            aria-label="Loading content"
+          >
+            <div className="h-6 bg-muted-foreground/20 rounded mb-2" />
+            <div className="h-4 bg-muted-foreground/20 rounded w-3/4 mb-2" />
+            <div className="h-4 bg-muted-foreground/20 rounded w-1/2" />
+          </div>
+        ))}
       </div>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <div className="space-y-1">
-          <Skeleton className="h-3 w-12" />
-          <Skeleton className="h-4 w-20" />
-        </div>
-        <div className="space-y-1">
-          <Skeleton className="h-3 w-16" />
-          <Skeleton className="h-4 w-24" />
-        </div>
-        <div className="space-y-1">
-          <Skeleton className="h-3 w-20" />
-          <Skeleton className="h-4 w-16" />
-        </div>
-        <div className="space-y-1">
-          <Skeleton className="h-3 w-14" />
-          <Skeleton className="h-6 w-18" />
-        </div>
-      </div>
-      <div className="flex justify-end gap-2 pt-2 border-t">
-        <Skeleton className="h-8 w-20" />
-        <Skeleton className="h-8 w-16" />
-      </div>
-    </div>
-  );
-}
+    );
+  }
 
-export function SkeletonList({ count = 3 }: { count?: number }) {
   return (
     <div className="space-y-3">
-      {Array.from({ length: count }).map((_, i) => (
-        <SkeletonCard key={i} />
+      {Array.from({ length: count }).map((_, index) => (
+        <div
+          key={index}
+          className={cn(baseClasses, getVariantClasses(), className)}
+          style={{ height, width }}
+          role="progressbar"
+          aria-label="Loading content"
+        />
       ))}
     </div>
   );
-}
+};
