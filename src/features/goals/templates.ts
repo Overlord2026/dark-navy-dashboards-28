@@ -1,170 +1,289 @@
-import { GoalType, Persona } from '@/types/goal';
-
-export type Tier = 'basic' | 'advanced';
+import { Persona, ComplexityTier } from '@/features/personalization/types';
 
 export interface GoalTemplate {
   id: string;
-  type: GoalType;
   title: string;
   description: string;
-  targetAmount?: number;
-  imageUrl?: string;
-  smartr: {
-    specific: string;
-    measurable: string;
-    achievable: string;
-    relevant: string;
-    timeBound: string;
-    rewards?: string;
-  };
-  monthlyContribution?: number;
+  category: 'emergency' | 'debt' | 'savings' | 'retirement' | 'education' | 'bucket_list' | 'health' | 'charitable' | 'equity' | 'liquidity';
+  targetAmountRange: { min: number; max: number };
+  timeFrameMonths: number;
   persona: Persona;
-  tier: Tier;
+  tier: ComplexityTier;
+  icon: string;
+  color: string;
+  priority: number;
 }
 
-const goalTemplates: GoalTemplate[] = [
-  // Retiree Bucket List Templates
-  {
-    id: 'retiree-world-travel',
-    type: 'bucket_list',
-    title: 'World Travel Adventure',
-    description: 'Explore the world and visit dream destinations during retirement',
-    targetAmount: 50000,
-    imageUrl: '/images/goals/world-travel.jpg',
-    smartr: {
-      specific: 'Save for a comprehensive world travel experience visiting 10 countries over 2 years',
-      measurable: '$50,000 total budget covering flights, accommodations, meals, and activities',
-      achievable: 'Based on current retirement income and planned travel timeline',
-      relevant: 'Fulfilling lifelong dream to explore different cultures and destinations',
-      timeBound: 'Complete funding within 3 years, begin travel in year 4 of retirement',
-      rewards: 'Create lasting memories and experience diverse cultures around the world'
-    },
-    monthlyContribution: 1389,
-    persona: 'retiree',
-    tier: 'basic'
-  },
-  {
-    id: 'retiree-legacy-home',
-    type: 'bucket_list',
-    title: 'Family Legacy Home',
-    description: 'Purchase or renovate a family gathering place for generations',
-    targetAmount: 200000,
-    imageUrl: '/images/goals/legacy-home.jpg',
-    smartr: {
-      specific: 'Acquire and prepare a vacation home that can host family gatherings and be passed down',
-      measurable: '$200,000 for down payment, renovations, and initial setup costs',
-      achievable: 'Leveraging home equity and retirement savings over 5-year timeline',
-      relevant: 'Creating a lasting legacy and central gathering place for family traditions',
-      timeBound: 'Complete purchase and renovations within 5 years',
-      rewards: 'Establish family traditions and create a tangible legacy for future generations'
-    },
-    monthlyContribution: 3333,
-    persona: 'retiree',
-    tier: 'basic'
-  },
-
-  // Advanced Tier Templates
-  {
-    id: 'equity-comp-strategy',
-    type: 'savings',
-    title: 'Equity Compensation Strategy',
-    description: 'Optimize stock options, RSUs, and ESPP for maximum value',
-    targetAmount: 500000,
-    imageUrl: '/images/goals/equity-comp.jpg',
-    smartr: {
-      specific: 'Diversify and optimize equity compensation through strategic exercise and diversification',
-      measurable: 'Accumulate $500,000 in diversified investments from equity compensation',
-      achievable: 'Based on current vesting schedule and tax-efficient exercise strategies',
-      relevant: 'Reduce concentration risk while maximizing after-tax value of equity compensation',
-      timeBound: 'Complete diversification strategy over 4 years with quarterly reviews',
-      rewards: 'Reduced portfolio risk and optimized tax efficiency from equity compensation'
-    },
-    monthlyContribution: 10417,
-    persona: 'aspiring',
-    tier: 'advanced'
-  },
-  {
-    id: 'donor-advised-fund',
-    type: 'custom',
-    title: 'Donor Advised Fund',
-    description: 'Establish a charitable giving strategy with tax advantages',
-    targetAmount: 100000,
-    imageUrl: '/images/goals/daf.jpg',
-    smartr: {
-      specific: 'Establish and fund a donor advised fund for strategic charitable giving',
-      measurable: 'Contribute $100,000 to DAF over 3 years for ongoing charitable distributions',
-      achievable: 'Using appreciated securities and tax-advantaged contribution strategies',
-      relevant: 'Create sustainable charitable giving while optimizing tax benefits',
-      timeBound: 'Fully fund DAF within 3 years, begin annual distributions in year 2',
-      rewards: 'Make meaningful charitable impact while achieving significant tax benefits'
-    },
-    monthlyContribution: 2778,
-    persona: 'aspiring',
-    tier: 'advanced'
-  },
-
-  // Basic Templates for Both Personas
+const foundationalTemplates: GoalTemplate[] = [
+  // Aspiring Foundational Goals
   {
     id: 'emergency-fund',
-    type: 'emergency',
     title: 'Emergency Fund',
-    description: '6 months of expenses for financial security',
-    targetAmount: 30000,
-    smartr: {
-      specific: 'Build an emergency fund covering 6 months of essential expenses',
-      measurable: '$30,000 in high-yield savings account',
-      achievable: 'Save consistently from monthly budget allocation',
-      relevant: 'Provides financial security and peace of mind for unexpected expenses',
-      timeBound: 'Complete funding within 18 months',
-      rewards: 'Financial security and ability to handle emergencies without debt'
-    },
-    monthlyContribution: 1667,
+    description: 'Build 3-6 months of expenses for financial security',
+    category: 'emergency',
+    targetAmountRange: { min: 10000, max: 50000 },
+    timeFrameMonths: 12,
     persona: 'aspiring',
-    tier: 'basic'
+    tier: 'foundational',
+    icon: 'Shield',
+    color: 'blue',
+    priority: 1
   },
   {
-    id: 'retirement-savings',
-    type: 'retirement',
-    title: 'Retirement Savings',
-    description: 'Build wealth for a comfortable retirement',
-    targetAmount: 1000000,
-    smartr: {
-      specific: 'Accumulate retirement savings across 401k, IRA, and investment accounts',
-      measurable: '$1,000,000 in retirement accounts by age 65',
-      achievable: 'Consistent contributions with employer matching and compound growth',
-      relevant: 'Essential for maintaining lifestyle and financial independence in retirement',
-      timeBound: 'Reach target by retirement age through 30+ years of consistent saving',
-      rewards: 'Financial freedom and ability to retire comfortably'
-    },
-    monthlyContribution: 2000,
+    id: 'debt-paydown',
+    title: 'Debt Paydown',
+    description: 'Eliminate high-interest debt and improve credit score',
+    category: 'debt',
+    targetAmountRange: { min: 5000, max: 100000 },
+    timeFrameMonths: 24,
     persona: 'aspiring',
-    tier: 'basic'
+    tier: 'foundational',
+    icon: 'CreditCard',
+    color: 'red',
+    priority: 2
+  },
+  {
+    id: 'down-payment',
+    title: 'Home Down Payment',
+    description: 'Save for your first home purchase',
+    category: 'savings',
+    targetAmountRange: { min: 20000, max: 200000 },
+    timeFrameMonths: 36,
+    persona: 'aspiring',
+    tier: 'foundational',
+    icon: 'Home',
+    color: 'green',
+    priority: 3
+  },
+  {
+    id: 'college-fund',
+    title: 'College Education Fund',
+    description: 'Save for children\'s education expenses',
+    category: 'education',
+    targetAmountRange: { min: 50000, max: 300000 },
+    timeFrameMonths: 180, // 15 years
+    persona: 'aspiring',
+    tier: 'foundational',
+    icon: 'GraduationCap',
+    color: 'purple',
+    priority: 4
+  },
+
+  // Retiree Foundational Goals
+  {
+    id: 'bucket-list-travel',
+    title: 'World Travel Adventure',
+    description: 'Explore dream destinations and create lasting memories',
+    category: 'bucket_list',
+    targetAmountRange: { min: 25000, max: 100000 },
+    timeFrameMonths: 24,
+    persona: 'retiree',
+    tier: 'foundational',
+    icon: 'Plane',
+    color: 'orange',
+    priority: 1
+  },
+  {
+    id: 'bucket-list-legacy',
+    title: 'Family Legacy Project',
+    description: 'Create a meaningful legacy for future generations',
+    category: 'bucket_list',
+    targetAmountRange: { min: 50000, max: 500000 },
+    timeFrameMonths: 60,
+    persona: 'retiree',
+    tier: 'foundational',
+    icon: 'Heart',
+    color: 'pink',
+    priority: 2
+  },
+  {
+    id: 'health-hsa-reserve',
+    title: 'Health & HSA Reserve',
+    description: 'Prepare for healthcare costs and long-term care',
+    category: 'health',
+    targetAmountRange: { min: 50000, max: 200000 },
+    timeFrameMonths: 36,
+    persona: 'retiree',
+    tier: 'foundational',
+    icon: 'Activity',
+    color: 'teal',
+    priority: 3
+  },
+  {
+    id: 'charitable-giving',
+    title: 'Charitable Giving Fund',
+    description: 'Support causes important to you',
+    category: 'charitable',
+    targetAmountRange: { min: 10000, max: 100000 },
+    timeFrameMonths: 12,
+    persona: 'retiree',
+    tier: 'foundational',
+    icon: 'Heart',
+    color: 'green',
+    priority: 4
   }
 ];
 
-export function getTemplates(persona?: Persona, tier: Tier = 'basic'): GoalTemplate[] {
-  let filtered = goalTemplates;
-
-  if (persona) {
-    filtered = filtered.filter(template => template.persona === persona);
+const advancedTemplates: GoalTemplate[] = [
+  // Advanced Equity & Liquidity Goals (both personas)
+  {
+    id: 'equity-comp-strategy',
+    title: 'Equity Compensation Strategy',
+    description: 'Optimize ISOs, NSOs, and RSUs for tax efficiency',
+    category: 'equity',
+    targetAmountRange: { min: 100000, max: 2000000 },
+    timeFrameMonths: 48,
+    persona: 'aspiring',
+    tier: 'advanced',
+    icon: 'TrendingUp',
+    color: 'indigo',
+    priority: 5
+  },
+  {
+    id: 'concentrated-stock',
+    title: 'Concentrated Stock Diversification',
+    description: 'Reduce single-stock risk through strategic diversification',
+    category: 'equity',
+    targetAmountRange: { min: 500000, max: 5000000 },
+    timeFrameMonths: 36,
+    persona: 'aspiring',
+    tier: 'advanced',
+    icon: 'PieChart',
+    color: 'violet',
+    priority: 6
+  },
+  {
+    id: 'daf-charitable-trust',
+    title: 'Donor Advised Fund Setup',
+    description: 'Establish tax-efficient charitable giving structure',
+    category: 'charitable',
+    targetAmountRange: { min: 50000, max: 1000000 },
+    timeFrameMonths: 12,
+    persona: 'retiree',
+    tier: 'advanced',
+    icon: 'Building',
+    color: 'emerald',
+    priority: 5
+  },
+  {
+    id: 'liquidity-event-prep',
+    title: 'Liquidity Event Preparation',
+    description: 'Prepare for business sale or major financial event',
+    category: 'liquidity',
+    targetAmountRange: { min: 1000000, max: 50000000 },
+    timeFrameMonths: 24,
+    persona: 'aspiring',
+    tier: 'advanced',
+    icon: 'Landmark',
+    color: 'amber',
+    priority: 7
+  },
+  
+  // Cross-persona advanced templates
+  {
+    id: 'equity-comp-retiree',
+    title: 'Post-Career Equity Strategy',
+    description: 'Manage remaining equity compensation in retirement',
+    category: 'equity',
+    targetAmountRange: { min: 200000, max: 3000000 },
+    timeFrameMonths: 24,
+    persona: 'retiree',
+    tier: 'advanced',
+    icon: 'TrendingUp',
+    color: 'indigo',
+    priority: 6
+  },
+  {
+    id: 'concentrated-stock-retiree',
+    title: 'Legacy Stock Portfolio',
+    description: 'Optimize concentrated holdings for estate planning',
+    category: 'equity',
+    targetAmountRange: { min: 1000000, max: 10000000 },
+    timeFrameMonths: 60,
+    persona: 'retiree',
+    tier: 'advanced',
+    icon: 'PieChart',
+    color: 'violet',
+    priority: 7
   }
+];
 
-  // Include basic templates for all tiers, advanced only for advanced tier
-  filtered = filtered.filter(template => 
-    template.tier === 'basic' || (template.tier === 'advanced' && tier === 'advanced')
+/**
+ * Gets goal templates based on persona and complexity tier
+ * Foundational tier returns base templates for the persona
+ * Advanced tier appends additional sophisticated templates
+ */
+export function getGoalTemplates(persona: Persona, tier: ComplexityTier): GoalTemplate[] {
+  // Get foundational templates for the persona
+  const foundational = foundationalTemplates.filter(template => 
+    template.persona === persona && template.tier === 'foundational'
   );
 
-  return filtered;
+  // If foundational tier, return only foundational templates
+  if (tier === 'foundational') {
+    return foundational.sort((a, b) => a.priority - b.priority);
+  }
+
+  // If advanced tier, append advanced templates for the persona
+  const advanced = advancedTemplates.filter(template => 
+    template.persona === persona && template.tier === 'advanced'
+  );
+
+  return [...foundational, ...advanced].sort((a, b) => a.priority - b.priority);
 }
 
+/**
+ * Gets bucket list templates specifically for retiree persona
+ */
+export function getBucketListTemplates(): GoalTemplate[] {
+  return foundationalTemplates.filter(template => 
+    template.persona === 'retiree' && template.category === 'bucket_list'
+  );
+}
+
+/**
+ * Gets templates by category
+ */
+export function getTemplatesByCategory(
+  category: GoalTemplate['category'], 
+  persona: Persona, 
+  tier: ComplexityTier
+): GoalTemplate[] {
+  const allTemplates = getGoalTemplates(persona, tier);
+  return allTemplates.filter(template => template.category === category);
+}
+
+/**
+ * Gets a specific template by ID
+ */
 export function getTemplateById(id: string): GoalTemplate | undefined {
-  return goalTemplates.find(template => template.id === id);
+  const allTemplates = [...foundationalTemplates, ...advancedTemplates];
+  return allTemplates.find(template => template.id === id);
 }
 
-export function getTemplatesByType(type: GoalType, persona?: Persona, tier: Tier = 'basic'): GoalTemplate[] {
-  return getTemplates(persona, tier).filter(template => template.type === type);
+/**
+ * Checks if advanced templates are available for the current tier
+ */
+export function hasAdvancedTemplates(tier: ComplexityTier): boolean {
+  return tier === 'advanced';
 }
 
-export function getBucketListTemplates(persona: Persona = 'retiree', tier: Tier = 'basic'): GoalTemplate[] {
-  return getTemplatesByType('bucket_list', persona, tier);
+/**
+ * Gets template count by tier and persona
+ */
+export function getTemplateCount(persona: Persona, tier: ComplexityTier): {
+  foundational: number;
+  advanced: number;
+  total: number;
+} {
+  const foundational = foundationalTemplates.filter(t => t.persona === persona).length;
+  const advanced = tier === 'advanced' 
+    ? advancedTemplates.filter(t => t.persona === persona).length 
+    : 0;
+  
+  return {
+    foundational,
+    advanced,
+    total: foundational + advanced
+  };
 }

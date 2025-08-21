@@ -205,6 +205,7 @@ import AdminLayoutSettings from './pages/AdminLayoutSettings';
 import CFODashboard from './pages/CFODashboard';
 import AdminControlsPage from './pages/AdminControlsPage';
 import PersonalizedDashboard from './pages/PersonalizedDashboard';
+import GoalsHome from './pages/GoalsHome';
 import VettingApplicationPage from './pages/VettingApplicationPage';
 import { LeadMagnetPage } from './pages/LeadMagnetPage';
 import { ClientFamilyIntroPage } from '@/pages/ClientFamilyIntroPage';
@@ -893,8 +894,9 @@ function App() {
                             <Route path="/admin/policies" element={<AdminPolicies />} />
                             <Route path="/consent" element={<ConsentDashboard />} />
                             
-                            {/* Personalized Dashboard */}
+                            {/* Personalized Dashboard & Goals */}
                             <Route path="/personalized-dashboard" element={<PersonalizedDashboard />} />
+                            <Route path="/goals-home" element={<GoalsHome />} />
 
                           </Routes>
                         <Navigation />
