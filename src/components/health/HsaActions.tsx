@@ -217,13 +217,14 @@ export function HsaActions({ plan, onRefresh }: HsaActionsProps) {
             Export all HSA-related Health-RDS receipts as a JSON file for record keeping and compliance.
           </div>
           
-          <Button 
-            onClick={handleExportReceipts}
-            disabled={isProcessing}
-            variant="outline"
-            className="w-full"
-            aria-label="Export HSA receipts as JSON file"
-          >
+           <Button 
+             onClick={handleExportReceipts}
+             disabled={isProcessing}
+             variant="outline"
+             className="w-full"
+             data-testid="export-records"
+             aria-label="Export HSA receipts as JSON file"
+           >
             <FileText className="w-4 h-4 mr-2" aria-hidden="true" />
             {isProcessing ? "Exporting..." : "Export Receipts"}
           </Button>

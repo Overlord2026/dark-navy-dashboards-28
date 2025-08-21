@@ -110,7 +110,7 @@ export default function HealthHsaPage() {
 
       {/* Page Title */}
       <div id="main-content" tabIndex={-1}>
-        <h1 className="text-3xl font-bold tracking-tight">HSA Planner</h1>
+        <h1 className="text-3xl font-bold tracking-tight" data-testid="hsa-page-title">HSA Planner</h1>
         <p className="text-muted-foreground mt-2">
           Manage your Health Savings Account contributions, track eligibility, and maintain compliance records.
         </p>

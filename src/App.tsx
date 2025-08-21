@@ -21,6 +21,7 @@ import { DynamicLandingController } from "@/components/auth/DynamicLandingContro
 import { Navigation } from "@/components/Navigation";
 import { TopBrandBar } from "@/components/navigation/TopBrandBar";
 import { RoleNavBar } from "@/components/navigation/RoleNavBar";
+import { SkipToContent, useKeyboardNavigation } from "@/components/accessibility/AccessibilityHelpers";
 import ReferralTracker from "@/components/tracking/ReferralTracker";
 import { QABypassIndicator } from "@/components/security/QABypassIndicator";
 import { APIWarningBanner } from "@/components/admin/APIWarningBanner";
@@ -264,6 +265,8 @@ const PersonaOnboardingFlow = React.lazy(() =>
 const queryClient = new QueryClient();
 
 function App() {
+  useKeyboardNavigation();
+  
   useEffect(() => {
     initializeAnalytics();
     setupErrorMonitoring();
@@ -281,15 +284,17 @@ function App() {
                   <TenantProvider>
                     <AdvisorProvider>
                       <PersonaProvider>
-                          <NewPersonaProvider>
-                            <div>
-                              <TopBrandBar />
-                              <RoleNavBar />
-                             <APIWarningBanner />
-                            <ExtensionHealthBanner />
-                            <ReferralTracker />
-                            <Sonner />
-                            <Routes>
+                           <NewPersonaProvider>
+                             <div>
+                               <SkipToContent />
+                               <TopBrandBar />
+                               <RoleNavBar />
+                              <APIWarningBanner />
+                             <ExtensionHealthBanner />
+                             <ReferralTracker />
+                             <Sonner />
+                             <main id="main-content" role="main">
+                             <Routes>
         <Route path="/wireframe" element={<WireframePage />} />
                             <Route path="/platform-map" element={<PlatformMap />} />
                              <Route path="/athletes/nil-education" element={<NILEducationCenter />} />
@@ -907,27 +912,28 @@ function App() {
                              <Route path="/health/hsa" element={<LazyHealthHsaPage />} />
                              <Route path="/health/screenings" element={<LazyHealthScreeningsPage />} />
                              {/* Verifier route will be added after import fix */}
-                             {/* Anchor Manager route will be added separately */}
+                              {/* Anchor Manager route will be added separately */}
 
                           </Routes>
+                          </main>
+                          <Toaster />
+                          <BrandedFooter />
                         <Navigation />
                        </div>
-                       <QABypassIndicator />
-                        <BrandedFooter />
-                        </NewPersonaProvider>
-                       </PersonaProvider>
-                      </AdvisorProvider>
-                  </TenantProvider>
-                  <Toaster />
-                  <Sonner />
-                </SubscriptionProvider>
-              </RoleProvider>
-            </UserProvider>
-          </AuthProvider>
-        </ThemeProvider>
-      </TooltipProvider>
-    </QueryClientProvider>
-  );
-}
+                        <QABypassIndicator />
+                         </NewPersonaProvider>
+                        </PersonaProvider>
+                       </AdvisorProvider>
+                   </TenantProvider>
+                   <Sonner />
+                 </SubscriptionProvider>
+               </RoleProvider>
+             </UserProvider>
+           </AuthProvider>
+         </ThemeProvider>
+       </TooltipProvider>
+     </QueryClientProvider>
+   );
+ }
 
-export default App;
+ export default App;
