@@ -1,5 +1,6 @@
 import { BaseRDS } from '@/features/healthcare/receipts';
 import { coverageRules, safetyRules, type InsurancePlan, type Medication, type Allergy } from './rules';
+import { createFHIRInputsHash, type NormalizedSummary } from '@/features/health/fhir/client';
 
 export interface PARDS extends BaseRDS {
   type: 'PA-RDS';
@@ -227,13 +228,24 @@ export function gatePaRequest(facts: PaPackFacts): PaGateResult {
 }
 
 /**
- * Record PA decision as PA-RDS receipt
+ * Record PA decision as PA-RDS receipt with FHIR summary hash
  */
 export function recordPARDS(
   facts: PaPackFacts,
   gateResult: PaGateResult,
-  evidencePackHash?: string
+  evidencePackHash?: string,
+  fhirSummary?: NormalizedSummary
 ): PARDS {
+  // Use FHIR summary hash if available, otherwise hash the facts
+  const inputsHash = fhirSummary 
+    ? createFHIRInputsHash(fhirSummary)
+    : hashInputs({
+        procedure_cpt: facts.procedure.cpt,
+        diagnoses: facts.diagnoses.length,
+        plan_type: facts.plan.type,
+        urgency: facts.procedure.urgency
+      });
+
   const receipt: PARDS = {
     type: 'PA-RDS',
     action: gateResult.approved ? 'approve' : 'deny',
@@ -241,12 +253,7 @@ export function recordPARDS(
     diagnosis_icd: facts.diagnoses[0] || '',
     approved: gateResult.approved,
     reasons: gateResult.reasons,
-    inputs_hash: hashInputs({
-      procedure_cpt: facts.procedure.cpt,
-      diagnoses: facts.diagnoses.length,
-      plan_type: facts.plan.type,
-      urgency: facts.procedure.urgency
-    }),
+    inputs_hash: inputsHash,
     policy_version: 'PA-2025.08',
     ts: new Date().toISOString()
   };
