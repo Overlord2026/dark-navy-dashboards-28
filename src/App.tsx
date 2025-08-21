@@ -208,7 +208,7 @@ import PersonalizedDashboard from './pages/PersonalizedDashboard';
 import ReportsPage from './pages/ReportsPage';
 import GoalsHome from './pages/GoalsHome';
 import HealthcarePage from './pages/HealthcarePage';
-import HealthHsaPage from './pages/HealthHsaPage';
+import { LazyHealthHsaPage, LazyHealthScreeningsPage } from './pages/health/LazyHealthPages';
 import HealthScreeningsPage from './pages/HealthScreeningsPage';
 import VettingApplicationPage from './pages/VettingApplicationPage';
 import { LeadMagnetPage } from './pages/LeadMagnetPage';
@@ -904,8 +904,8 @@ function App() {
                             <Route path="/goals-home" element={<GoalsHome />} />
                             <Route path="/calculators" element={<CalculatorsPage />} />
                             <Route path="/healthcare" element={<HealthcarePage />} />
-                            <Route path="/health/hsa" element={<HealthHsaPage />} />
-                            <Route path="/health/screenings" element={<HealthScreeningsPage />} />
+                            <Route path="/health/hsa" element={<LazyHealthHsaPage />} />
+                            <Route path="/health/screenings" element={<LazyHealthScreeningsPage />} />
 
                           </Routes>
                         <Navigation />

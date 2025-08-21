@@ -30,6 +30,7 @@ import {
   ScreeningFacts 
 } from '@/features/health/screening/rules';
 import { gateScreening, ScreeningGateResult } from '@/features/health/screening/api';
+import { SkipToContent } from '@/components/accessibility/SkipToContent';
 
 export default function HealthScreeningsPage() {
   const navigate = useNavigate();
@@ -139,6 +140,8 @@ export default function HealthScreeningsPage() {
 
   return (
     <div className="container mx-auto p-6 space-y-6">
+      <SkipToContent />
+      
       {/* Header */}
       <div className="flex items-center gap-4">
         <Button
@@ -146,6 +149,7 @@ export default function HealthScreeningsPage() {
           size="sm"
           onClick={() => navigate('/healthcare')}
           className="flex items-center gap-2"
+          aria-label="Return to healthcare dashboard"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Healthcare
@@ -153,7 +157,7 @@ export default function HealthScreeningsPage() {
       </div>
 
       {/* Page Title */}
-      <div>
+      <div id="main-content" tabIndex={-1}>
         <h1 className="text-3xl font-bold tracking-tight">Health Screenings</h1>
         <p className="text-muted-foreground mt-2">
           Evidence-based screening recommendations with coverage verification and compliance receipts.
@@ -286,8 +290,9 @@ export default function HealthScreeningsPage() {
                           onClick={() => handleGenerateReceipt(screening)}
                           disabled={processingScreening === screening.key}
                           className="flex items-center gap-2"
+                          aria-label={`Generate screening receipt for ${screening.name}`}
                         >
-                          <FileText className="h-4 w-4" />
+                          <FileText className="h-4 w-4" aria-hidden="true" />
                           {processingScreening === screening.key 
                             ? "Generating..." 
                             : "Generate Receipt"

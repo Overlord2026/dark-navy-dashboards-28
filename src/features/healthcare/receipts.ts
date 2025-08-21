@@ -18,6 +18,7 @@ export interface HealthRDS extends BaseRDS {
     estimated_cost_cents?: number;
     coverage_type?: string;
   };
+  anchor_ref?: string; // Optional field for future cross-chain anchoring
 }
 
 export interface ConsentRDS extends BaseRDS {
@@ -34,6 +35,7 @@ export interface VaultRDS extends BaseRDS {
   type: 'Vault-RDS';
   action: 'grant' | 'revoke' | 'legal_hold' | 'delete';
   doc_id?: string;
+  anchor_ref?: string; // Optional field for future cross-chain anchoring
 }
 
 export type HealthcareRDS = HealthRDS | ConsentRDS | VaultRDS;

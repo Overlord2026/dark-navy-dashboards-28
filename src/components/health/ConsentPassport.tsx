@@ -233,8 +233,8 @@ export function ConsentPassport() {
           
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
-              <Button className="flex items-center gap-2">
-                <Plus className="h-4 w-4" />
+              <Button className="flex items-center gap-2" aria-label="Issue new HIPAA consent">
+                <Plus className="h-4 w-4" aria-hidden="true" />
                 Issue Consent
               </Button>
             </DialogTrigger>
@@ -426,8 +426,9 @@ export function ConsentPassport() {
                         variant="outline"
                         onClick={() => handleRevokeConsent(consent)}
                         className="flex items-center gap-2"
+                        aria-label={`Revoke consent for ${consent.scope.purpose}`}
                       >
-                        <Trash2 className="h-3 w-3" />
+                        <Trash2 className="h-3 w-3" aria-hidden="true" />
                         Revoke
                       </Button>
                     </div>

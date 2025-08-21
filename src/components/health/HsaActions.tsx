@@ -143,6 +143,7 @@ export function HsaActions({ plan, onRefresh }: HsaActionsProps) {
             onClick={handlePlanContribution}
             disabled={isProcessing || !contributionAmount}
             className="w-full"
+            aria-label="Plan HSA contribution"
           >
             {isProcessing ? "Processing..." : "Plan Contribution"}
           </Button>
@@ -193,6 +194,7 @@ export function HsaActions({ plan, onRefresh }: HsaActionsProps) {
             onClick={handleRecordClaim}
             disabled={isProcessing || !claimAmount || !claimDescription.trim()}
             className="w-full"
+            aria-label="Record HSA claim"
           >
             {isProcessing ? "Processing..." : "Record Claim"}
           </Button>
@@ -220,8 +222,9 @@ export function HsaActions({ plan, onRefresh }: HsaActionsProps) {
             disabled={isProcessing}
             variant="outline"
             className="w-full"
+            aria-label="Export HSA receipts as JSON file"
           >
-            <FileText className="w-4 h-4 mr-2" />
+            <FileText className="w-4 h-4 mr-2" aria-hidden="true" />
             {isProcessing ? "Exporting..." : "Export Receipts"}
           </Button>
         </CardContent>

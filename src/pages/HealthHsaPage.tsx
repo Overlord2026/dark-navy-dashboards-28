@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { HsaSummary } from '@/components/health/HsaSummary';
 import { HsaActions } from '@/components/health/HsaActions';
 import { ConsentPassport } from '@/components/health/ConsentPassport';
+import { SkipToContent } from '@/components/accessibility/SkipToContent';
 import { getPlan, HsaPlan } from '@/features/health/hsa/api';
 
 export default function HealthHsaPage() {
@@ -91,6 +92,8 @@ export default function HealthHsaPage() {
 
   return (
     <div className="container mx-auto p-6 space-y-6">
+      <SkipToContent />
+      
       {/* Header */}
       <div className="flex items-center gap-4">
         <Button
@@ -98,6 +101,7 @@ export default function HealthHsaPage() {
           size="sm"
           onClick={() => navigate('/healthcare')}
           className="flex items-center gap-2"
+          aria-label="Return to healthcare dashboard"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Healthcare
@@ -105,7 +109,7 @@ export default function HealthHsaPage() {
       </div>
 
       {/* Page Title */}
-      <div>
+      <div id="main-content" tabIndex={-1}>
         <h1 className="text-3xl font-bold tracking-tight">HSA Planner</h1>
         <p className="text-muted-foreground mt-2">
           Manage your Health Savings Account contributions, track eligibility, and maintain compliance records.
