@@ -47,13 +47,17 @@ export const performanceUtils = {
     }).observe({ entryTypes: ['largest-contentful-paint'] });
 
     // FID - First Input Delay  
-    new PerformanceObserver((list) => {
-      list.getEntries().forEach((entry: any) => {
-        if (entry.processingStart && entry.startTime) {
-          console.log('FID:', entry.processingStart - entry.startTime);
-        }
-      });
-    }).observe({ entryTypes: ['first-input'] });
+    try {
+      new PerformanceObserver((list) => {
+        list.getEntries().forEach((entry: any) => {
+          if (entry.processingStart && entry.startTime) {
+            console.log('FID:', entry.processingStart - entry.startTime);
+          }
+        });
+      }).observe({ entryTypes: ['first-input'] });
+    } catch (e) {
+      console.warn('FID monitoring not available:', e);
+    }
 
     // CLS - Cumulative Layout Shift
     let clsValue = 0;

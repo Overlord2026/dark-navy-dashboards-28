@@ -1,33 +1,33 @@
-import { beforeAll, afterEach, vi } from 'vitest'
+import { beforeAll, afterEach } from 'vitest'
 import { cleanup } from '@testing-library/react'
 import '@testing-library/jest-dom'
 
 // Mock analytics for tests
-vi.mock('@/lib/analytics', () => ({
-  analytics: {
-    track: vi.fn(),
-    trackError: vi.fn(),
-    trackPerformance: vi.fn(),
-    trackSecurityEvent: vi.fn(),
-  },
-  initializeAnalytics: vi.fn(),
-}))
+const mockAnalytics = {
+  track: () => {},
+  trackError: () => {},
+  trackPerformance: () => {},
+  trackSecurityEvent: () => {},
+};
 
-// Mock monitoring for tests  
-vi.mock('@/lib/monitoring', () => ({
-  setupErrorMonitoring: vi.fn(),
-  monitorAuthEvents: vi.fn(),
-  monitorDatabaseErrors: vi.fn(),
-  monitorAPIErrors: vi.fn(),
-}))
+const mockMonitoring = {
+  setupErrorMonitoring: () => {},
+  monitorAuthEvents: () => {},
+  monitorDatabaseErrors: () => {},
+  monitorAPIErrors: () => {},
+};
+
+// Mock modules
+Object.defineProperty(window, 'analytics', { value: mockAnalytics });
+Object.defineProperty(window, 'monitoring', { value: mockMonitoring });
 
 // Mock IndexedDB for tests
 Object.defineProperty(window, 'indexedDB', {
   value: {
-    open: vi.fn(),
-    deleteDatabase: vi.fn(),
+    open: () => Promise.resolve({}),
+    deleteDatabase: () => Promise.resolve(),
   },
-})
+});
 
 // Clean up after each test
 afterEach(() => {
