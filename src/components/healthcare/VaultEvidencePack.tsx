@@ -168,12 +168,7 @@ export function VaultEvidencePack() {
     // Create Vault-RDS receipt for delete action
     const deletionReceipt: VaultRDSReceipt = createVaultRDSReceipt(
       'delete',
-      pack.id,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      proofOfKeyShred
+      pack.id
     );
 
     console.log('Vault-RDS Receipt (Defensible Deletion):', deletionReceipt);

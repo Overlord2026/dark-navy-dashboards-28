@@ -210,6 +210,7 @@ import ReportsPage from './pages/ReportsPage';
 import GoalsHome from './pages/GoalsHome';
 import HealthcarePage from './pages/HealthcarePage';
 import { LazyHealthHsaPage, LazyHealthScreeningsPage } from './pages/health/LazyHealthPages';
+import HealthDashboard from "./pages/HealthDashboard";
 import HealthScreeningsPage from './pages/HealthScreeningsPage';
 import VettingApplicationPage from './pages/VettingApplicationPage';
 import { LeadMagnetPage } from './pages/LeadMagnetPage';
@@ -397,7 +398,9 @@ function App() {
         <Route path="/insurance-life-annuity/onboarding" element={<InsuranceLifeAnnuityOnboarding />} />
         
         {/* Realtor/Property Manager routes */}
-        <Route path="/personas/realtor" element={<RealtorPersonaLanding />} />
+                              <Route path="/health/screenings" element={<HealthScreeningsPage />} />
+                              <Route path="/health" element={<HealthDashboard />} />
+                              <Route path="/personas/realtor" element={<RealtorPersonaLanding />} />
         <Route path="/realtor/onboarding" element={<RealtorOnboarding />} />
         <Route path="/realtor/dashboard" element={<RealtorDashboard />} />
         <Route path="/lending-wireframe" element={<LendingWireframePage />} />

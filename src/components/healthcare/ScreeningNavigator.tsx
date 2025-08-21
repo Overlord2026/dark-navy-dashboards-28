@@ -89,23 +89,20 @@ export function ScreeningNavigator() {
       if (!rec.inNetworkProvider) {
         // Emit denial receipt for out-of-network
       const denialReceipt = createHealthRDSReceipt(
-        'authorize',
+        'Clinician',
+        'hh_demo_456',
+        `sha256:${Math.random().toString(36).substr(2, 32)}`,
+        [
           {
-            screening_type: rec.name,
-            patient_age: profile.age,
-            uspstf_grade: rec.grade,
-            in_network: rec.inNetworkProvider
-          },
-          'deny',
-          ['out_of_network_provider', 'coverage_limitation'],
-          ['Provider verification failed', 'Appeal options: 1) Find in-network provider 2) Submit prior authorization for out-of-network coverage'],
-          undefined,
-          undefined,
-          {
-            estimated_cost_cents: 50000, // $500 estimated
-            coverage_type: 'screening'
+            role: 'Clinician',
+            user_id: 'c_456',
+            ts: new Date().toISOString(),
+            action: 'deny'
           }
-        );
+        ],
+        'deny',
+        [`screening_${rec.name.toLowerCase().replace(/\s/g, '_')}`, 'out_of_network_denial']
+      );
 
         console.log('Screening Denial Receipt:', denialReceipt);
         
@@ -119,22 +116,25 @@ export function ScreeningNavigator() {
 
       // Emit approval receipt
       const approvalReceipt = createHealthRDSReceipt(
-        'authorize',
-        {
-          screening_type: rec.name,
-          patient_age: profile.age,
-          uspstf_grade: rec.grade,
-          in_network: rec.inNetworkProvider
-        },
+        'Clinician',
+        'hh_demo_456',
+        `sha256:${Math.random().toString(36).substr(2, 32)}`,
+        [
+          {
+            role: 'Clinician',
+            user_id: 'c_456',
+            ts: new Date().toISOString(),
+            action: 'approve'
+          },
+          {
+            role: 'Plan',
+            user_id: 'p_789',
+            ts: new Date(Date.now() + 30000).toISOString(),
+            action: 'accept'
+          }
+        ],
         'approve',
-        ['uspstf_recommended', 'age_appropriate', 'in_network_verified'],
-        [`${rec.name} approved for patient age ${profile.age}`, 'In-network provider verified'],
-        undefined,
-        undefined,
-        {
-          estimated_cost_cents: 0, // Covered screening
-          coverage_type: 'preventive'
-        }
+        [`screening_${rec.name.toLowerCase().replace(/\s/g, '_')}`, 'in_network_approved']
       );
 
       console.log('Screening Approval Receipt:', approvalReceipt);
@@ -146,17 +146,19 @@ export function ScreeningNavigator() {
     } else {
       // Handle decline action
       const declineReceipt = createHealthRDSReceipt(
-        'share',
-        {
-          screening_type: rec.name,
-          patient_age: profile.age,
-          decline_reason: 'patient_declined'
-        },
-        'approve',
-        ['patient_choice', 'informed_decision'],
-        [`Patient declined ${rec.name}`, 'Documented refusal with counseling provided'],
-        undefined,
-        undefined
+        'Retiree',
+        'hh_demo_456',
+        `sha256:${Math.random().toString(36).substr(2, 32)}`,
+        [
+          {
+            role: 'Retiree',
+            user_id: 'u_789',
+            ts: new Date().toISOString(),
+            action: 'deny'
+          }
+        ],
+        'deny',
+        [`screening_${rec.name.toLowerCase().replace(/\s/g, '_')}`, 'patient_declined']
       );
 
       console.log('Screening Decline Receipt:', declineReceipt);

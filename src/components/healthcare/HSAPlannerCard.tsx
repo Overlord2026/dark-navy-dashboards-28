@@ -85,23 +85,25 @@ export function HSAPlannerCard() {
 
     // Emit Health-RDS receipt
     const receipt: HealthRDSReceipt = createHealthRDSReceipt(
-      'authorize',
-      {
-        plan_type: inputs.planType,
-        deductible: inputs.deductible,
-        oop_max: inputs.outOfPocketMax,
-        monthly_safe_spend: outputs.monthlySafeToSpend,
-        risk_score: outputs.riskScore
-      },
+      'Retiree',
+      'hh_demo_123',
+      `sha256:${Math.random().toString(36).substr(2, 32)}`,
+      [
+        {
+          role: 'Retiree',
+          user_id: 'u_123',
+          ts: new Date().toISOString(),
+          action: 'approve'
+        },
+        {
+          role: 'Plan',
+          user_id: 'p_889',
+          ts: new Date(Date.now() + 60000).toISOString(),
+          action: 'accept'
+        }
+      ],
       'approve',
-      ['policy_gate_passed', 'irmaa_compliant', 'contribution_limits_verified'],
-      [`Monthly safe-to-spend: $${outputs.monthlySafeToSpend}`, `Risk assessment: ${outputs.riskScore}`],
-      undefined,
-      undefined,
-      {
-        estimated_cost_cents: Math.round(outputs.monthlySafeToSpend * 100),
-        coverage_type: inputs.planType
-      }
+      [`hsa_plan_${inputs.planType}`, `deductible_${inputs.deductible}`]
     );
 
     console.log('HSA Plan Health-RDS Receipt:', receipt);

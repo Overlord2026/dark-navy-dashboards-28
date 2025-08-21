@@ -56,38 +56,34 @@ export async function getUserHealthReceipts(options: {
 
 // Create and store a new Health-RDS receipt
 export async function createAndStoreHealthReceipt(
-  action: HealthRDSReceipt['action'],
-  inputs: Record<string, any>,
-  result: HealthRDSReceipt['result'],
-  reasons: string[],
-  disclosures: string[] = [],
-  financial?: HealthRDSReceipt['financial'],
-  anchorRef?: HealthRDSReceipt['anchor_ref'],
-  userId?: string
+  persona: HealthRDSReceipt['persona'],
+  householdId: string,
+  inputsHash: string,
+  routeEntries: any[],
+  decision: HealthRDSReceipt['decision'],
+  linkedMaterials?: string[],
+  signers?: string[]
 ): Promise<{ receipt: HealthRDSReceipt; receiptId: string }> {
   
   // Create standardized receipt
   const receipt = createHealthRDSReceipt(
-    action,
-    inputs,
-    result,
-    reasons,
-    disclosures,
-    undefined, // subjectId
-    undefined, // actorId
-    financial,
-    undefined, // linked
-    anchorRef
+    persona,
+    householdId,
+    inputsHash,
+    routeEntries,
+    decision,
+    linkedMaterials,
+    signers
   );
 
   // Store the receipt
-  const receiptId = await storeHealthRDSReceipt(receipt, userId);
+  const receiptId = await storeHealthRDSReceipt(receipt, signers?.[0]);
 
   console.log('Health-RDS receipt created and stored:', {
-    action: receipt.action,
-    result: receipt.result,
+    persona: receipt.persona,
+    decision: receipt.decision,
     receiptId,
-    timestamp: receipt.ts
+    timestamp: receipt.created_ts
   });
 
   return { receipt, receiptId };

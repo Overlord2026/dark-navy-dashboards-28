@@ -1,37 +1,32 @@
-export interface HealthRDSReceipt {
-  id: string; // rds_2025_08_21_0001
-  type: "Health-RDS";
-  action: "authorize" | "order" | "share" | "publish" | "pay" | "takedown";
-  subject_id?: string; // did:patient:abc123 - optional DID/VC pointer; no raw PHI
-  actor_id?: string; // did:app:mybfocfo - who executed the gate
-  inputs_hash: string; // sha256:... - hash of canonical summary (FHIR redacted)
-  policy_version: string; // H-2025.08 - frozen ruleset ID
-  reasons: string[]; // ["USPSTF_ELIGIBLE", "COVERED"] - explainable codes
-  result: "approve" | "deny"; // approve|deny
-  disclosures: string[]; // ["minimum-necessary", "purpose:care_coordination"]
-  financial?: {
-    hsa_eligible?: boolean;
-    est_oop?: number; // estimated out of pocket
-    deductibleMet?: boolean;
-    estimated_cost_cents?: number;
-    coverage_type?: string;
-  };
-  linked?: { // cross-references; all optional
-    consent_rds_id?: string;
-    vault_rds_id?: string;
-    pa_rds_id?: string;
-    settlement_rds_id?: string;
-  };
-  anchor_ref?: {
-    merkle_root: string; // 0xROOT
-    cross_chain_locator: Array<{
-      chain_id: string; // "perm-A", "pub-B"
-      tx_ref: string; // "0x..."
-      ts: number; // Unix timestamp
-      anchor_epoch: number;
-    }>;
-  };
+/**
+ * Enhanced Health RDS Receipt Types with updated structure
+ * Supports household-based healthcare decisions with multi-persona routing
+ */
+
+export interface HealthRouteEntry {
+  role: "Retiree" | "Advisor" | "CPA" | "Clinician" | "Plan" | "TPA";
+  user_id: string;
   ts: string; // ISO 8601 timestamp
+  action: "approve" | "deny" | "accept" | "needs_info";
+}
+
+export interface HealthAnchor {
+  locator: string; // "n-of-m:eth:0x…|priv:chainA:blk:…"
+  batch_root: string; // "merkle:…"
+}
+
+export interface HealthRDSReceipt {
+  receipt_id: string; // h-2025-08-20-000123
+  household_id: string; // hh_7F98…
+  persona: "Retiree" | "Advisor" | "CPA" | "Clinician" | "Plan" | "TPA";
+  policy_version: string; // hpac_v1.3.2
+  inputs_hash: string; // sha256:… (normalized inputs, no raw PHI)
+  route: HealthRouteEntry[];
+  decision: "approve" | "deny" | "needs_info";
+  anchor?: HealthAnchor; // populated post-batch
+  lm_hashes?: string[]; // linked materials (orders, EOB pdf hash, etc.)
+  created_ts: string; // ISO 8601 timestamp
+  signers?: string[]; // co-sign lineage when present
 }
 
 export interface ConsentRDSReceipt {
@@ -48,34 +43,14 @@ export interface ConsentRDSReceipt {
   expiry?: string;
   freshness_score: number; // 0-1
   co_sign_routes?: Array<{
-    route: string; // "guardian_A"
-    ts: string;
-    ok: boolean;
+    role: string;
+    required: boolean;
+    signed: boolean;
+    timestamp?: string;
   }>;
-  zk_predicates?: Array<{ // proof hashes only; no raw DOB/labs
-    predicate: string; // "age>=50", "in_network"
-    ok: boolean;
-    proof_hash: string; // "sha256:..."
-  }>;
-  result: "approve" | "deny";
-  reason: "CONSENT_STALE" | "SCOPE_MISMATCH" | "OK" | string;
-  proof_hash: string; // "sha256:consent_proof_redacted"
-  inputs_hash?: string;
-  policy_version?: string;
-  anchor_ref?: HealthRDSReceipt['anchor_ref'] | null;
-  ts: string;
-}
-
-export interface VaultRDSReceipt {
-  id: string; // vault_2025_08_21_0100
-  type: "Vault-RDS";
-  action: "grant" | "revoke" | "legal_hold" | "delete" | "export";
-  doc_id: string; // pack:0xABCDEF - evidence pack identifier (hash, not content)
-  grant_id?: string; // grant_7_days_provider - optional
-  recipient_role?: string; // provider
-  ttl_days?: number; // 7
+  proof_hash: string; // sha256:...
   anchor_ref?: {
-    merkle_root: string; // 0x...
+    merkle_root: string; // 0xROOT
     cross_chain_locator: Array<{
       chain_id: string; // "perm-A", "pub-B"
       tx_ref: string; // "0x..."
@@ -83,7 +58,62 @@ export interface VaultRDSReceipt {
       anchor_epoch: number;
     }>;
   };
-  proof_of_key_shred?: string | null; // sha256:... - present only for delete
+  ts: string; // ISO 8601 timestamp
+}
+
+export interface VaultRDSReceipt {
+  id: string; // vault_2025_08_21_0100
+  type: "Vault-RDS";
+  action: "grant" | "revoke" | "legal_hold" | "delete" | "export";
+  doc_id: string; // pack:0xABCDEF - evidence pack identifier (hash, not content)
+  grant_id?: string; // grant_7_days_provider
+  recipient_role?: string; // provider
+  ttl_days?: number; // 7
+  anchor_ref?: {
+    merkle_root: string; // 0xROOT
+    cross_chain_locator: Array<{
+      chain_id: string; // "perm-A", "pub-B"
+      tx_ref: string; // "0x..."
+      ts: number; // Unix timestamp
+      anchor_epoch: number;
+    }>;
+  };
+  proof_of_key_shred?: string; // sha256:... (present only for delete action)
+  ts: string; // ISO 8601 timestamp
+}
+
+export interface PARDSReceipt {
+  id: string; // pa_2025_08_21_0010
+  type: "PA-RDS";
+  request_type: "prior_authorization" | "appeal" | "urgent_review";
+  medical_necessity: {
+    icd_codes: string[];
+    cpt_codes: string[];
+    clinical_rationale: string;
+    supporting_evidence_hashes: string[];
+  };
+  decision: "approved" | "denied" | "partial" | "pending";
+  decision_rationale: string[];
+  review_timeline: {
+    submitted_at: string;
+    reviewed_at?: string;
+    decision_at?: string;
+    appeal_deadline?: string;
+  };
+  financial_impact: {
+    estimated_cost_cents: number;
+    patient_responsibility_cents: number;
+    coverage_determination: string;
+  };
+  anchor_ref?: {
+    merkle_root: string; // 0xROOT
+    cross_chain_locator: Array<{
+      chain_id: string; // "perm-A", "pub-B"
+      tx_ref: string; // "0x..."
+      ts: number; // Unix timestamp
+      anchor_epoch: number;
+    }>;
+  };
   ts: string; // ISO 8601 timestamp
 }
 
@@ -123,134 +153,43 @@ export interface SettlementRDSReceipt {
   ts: string; // ISO 8601 timestamp
 }
 
-export interface PARDSReceipt {
-  id: string; // pa_2025_08_21_0010
-  type: "PA-RDS";
-  action: "authorize" | "resubmit" | "appeal" | "withdraw";
-  inputs_hash: string; // sha256:... - canonical plan/procedure summary hash
-  policy_version: string; // H-2025.08
-  result: "approve" | "deny";
-  reasons: string[]; // ["EVIDENCE_INCOMPLETE"] - e.g., NOT_COVERED|OUT_OF_NETWORK|EVIDENCE_INCOMPLETE
-  missingEvidence?: string[]; // ["last colonoscopy report (CPT 45378)", "GI consult note"]
-  disclosures: string[]; // ["minimum-necessary", "purpose:prior_auth"]
-  anchor_ref?: {
-    merkle_root: string; // 0xROOT
-    cross_chain_locator: Array<{
-      chain_id: string; // "perm-A", "pub-B"
-      tx_ref: string; // "0x..."
-      ts: number; // Unix timestamp
-      anchor_epoch: number;
-    }>;
-  };
-  ts: string; // ISO 8601 timestamp
-}
-
-
 export type HealthcareReceipt = HealthRDSReceipt | ConsentRDSReceipt | VaultRDSReceipt | PARDSReceipt | SettlementRDSReceipt;
 
 // Helper function to create standardized Health-RDS receipts
 export function createHealthRDSReceipt(
-  action: HealthRDSReceipt['action'],
-  inputs: Record<string, any>,
-  result: HealthRDSReceipt['result'],
-  reasons: string[],
-  disclosures: string[] = [],
-  subjectId?: string,
-  actorId?: string,
-  financial?: HealthRDSReceipt['financial'],
-  linked?: HealthRDSReceipt['linked'],
-  anchorRef?: HealthRDSReceipt['anchor_ref']
+  persona: HealthRDSReceipt['persona'],
+  householdId: string,
+  inputsHash: string,
+  routeEntries: HealthRouteEntry[],
+  decision: HealthRDSReceipt['decision'],
+  linkedMaterials?: string[],
+  signers?: string[]
 ): HealthRDSReceipt {
-  // Sanitize inputs to remove PHI
-  const sanitizedInputs = { ...inputs };
-  delete sanitizedInputs.name;
-  delete sanitizedInputs.ssn;
-  delete sanitizedInputs.dob;
-  delete sanitizedInputs.address;
-  delete sanitizedInputs.phone;
-  delete sanitizedInputs.email;
-  
-  // Create SHA256 hash of sanitized inputs
-  const inputString = JSON.stringify(sanitizedInputs, Object.keys(sanitizedInputs).sort());
-  const inputs_hash = `sha256:${btoa(inputString).substring(0, 16)}`;
-  
-  // Generate unique ID
-  const timestamp = new Date().toISOString().split('T')[0].replace(/-/g, '_');
-  const randomSuffix = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
-  const id = `rds_${timestamp}_${randomSuffix}`;
+  // Generate unique receipt ID
+  const timestamp = new Date().toISOString().split('T')[0].replace(/-/g, '-');
+  const randomSuffix = Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
+  const receiptId = `h-${timestamp}-${randomSuffix}`;
   
   return {
-    id,
-    type: "Health-RDS",
-    action,
-    subject_id: subjectId,
-    actor_id: actorId,
-    inputs_hash,
-    policy_version: "H-2025.08",
-    reasons,
-    result,
-    disclosures,
-    financial,
-    linked,
-    anchor_ref: anchorRef,
-    ts: new Date().toISOString()
-  };
-}
-
-// Helper function to create standardized PA-RDS receipts
-export function createPARDSReceipt(
-  action: PARDSReceipt['action'],
-  inputs: Record<string, any>,
-  result: PARDSReceipt['result'],
-  reasons: string[],
-  disclosures: string[] = [],
-  missingEvidence?: string[],
-  anchorRef?: PARDSReceipt['anchor_ref']
-): PARDSReceipt {
-  // Sanitize inputs to remove PHI
-  const sanitizedInputs = { ...inputs };
-  delete sanitizedInputs.name;
-  delete sanitizedInputs.ssn;
-  delete sanitizedInputs.dob;
-  delete sanitizedInputs.address;
-  delete sanitizedInputs.phone;
-  delete sanitizedInputs.email;
-  
-  // Create SHA256 hash of sanitized inputs
-  const inputString = JSON.stringify(sanitizedInputs, Object.keys(sanitizedInputs).sort());
-  const inputs_hash = `sha256:${btoa(inputString).substring(0, 16)}`;
-  
-  // Generate unique ID
-  const timestamp = new Date().toISOString().split('T')[0].replace(/-/g, '_');
-  const randomSuffix = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
-  const id = `pa_${timestamp}_${randomSuffix}`;
-  
-  return {
-    id,
-    type: "PA-RDS",
-    action,
-    inputs_hash,
-    policy_version: "H-2025.08",
-    result,
-    reasons,
-    missingEvidence,
-    disclosures,
-    anchor_ref: anchorRef,
-    ts: new Date().toISOString()
+    receipt_id: receiptId,
+    household_id: householdId,
+    persona,
+    policy_version: "hpac_v1.3.2",
+    inputs_hash: inputsHash,
+    route: routeEntries,
+    decision,
+    lm_hashes: linkedMaterials,
+    created_ts: new Date().toISOString(),
+    signers
   };
 }
 
 // Helper function to create standardized Consent-RDS receipts
 export function createConsentRDSReceipt(
+  scope: string[],
   purposeOfUse: ConsentRDSReceipt['purpose_of_use'],
-  scope: ConsentRDSReceipt['scope'],
-  result: ConsentRDSReceipt['result'],
-  reason: ConsentRDSReceipt['reason'],
-  freshnessScore: number = 1.0,
   expiryDays?: number,
-  coSignRoutes?: ConsentRDSReceipt['co_sign_routes'],
-  zkPredicates?: ConsentRDSReceipt['zk_predicates'],
-  anchorRef?: ConsentRDSReceipt['anchor_ref']
+  coSigner?: string
 ): ConsentRDSReceipt {
   const now = new Date();
   const expiry = expiryDays ? new Date(now.getTime() + expiryDays * 24 * 60 * 60 * 1000) : undefined;
@@ -260,30 +199,33 @@ export function createConsentRDSReceipt(
   const randomSuffix = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
   const id = `cons_${timestamp}_${randomSuffix}`;
   
-  // Generate proof hash
-  const proofData = {
-    purpose: purposeOfUse,
+  const inputs = {
     scope,
-    timestamp: now.toISOString(),
-    zk_predicates: zkPredicates
+    purpose: purposeOfUse,
+    timestamp: now.toISOString()
   };
-  const proof_hash = `sha256:${btoa(JSON.stringify(proofData)).substring(0, 16)}`;
   
+  const proofHash = `sha256:${btoa(JSON.stringify({...inputs, salt: Math.random()})).substring(0, 32)}`;
+
   return {
     id,
     type: "Consent-RDS",
     purpose_of_use: purposeOfUse,
-    scope,
+    scope: {
+      minimum_necessary: true,
+      recipient_role: "provider",
+      resources: scope
+    },
     consent_time: now.toISOString(),
     expiry: expiry?.toISOString(),
-    freshness_score: freshnessScore,
-    co_sign_routes: coSignRoutes,
-    zk_predicates: zkPredicates,
-    result,
-    reason,
-    proof_hash,
-    anchor_ref: anchorRef,
-    ts: now.toISOString()
+    freshness_score: 1.0, // New consent = fresh
+    proof_hash: proofHash,
+    ts: now.toISOString(),
+    co_sign_routes: coSigner ? [{
+      role: coSigner,
+      required: true,
+      signed: false
+    }] : undefined
   };
 }
 
@@ -294,14 +236,14 @@ export function createVaultRDSReceipt(
   grantId?: string,
   recipientRole?: string,
   ttlDays?: number,
-  proofOfKeyShred?: string | null,
-  anchorRef?: VaultRDSReceipt['anchor_ref']
+  anchorRef?: VaultRDSReceipt['anchor_ref'],
+  proofOfKeyShred?: string
 ): VaultRDSReceipt {
   // Generate unique ID
   const timestamp = new Date().toISOString().split('T')[0].replace(/-/g, '_');
   const randomSuffix = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
   const id = `vault_${timestamp}_${randomSuffix}`;
-  
+
   return {
     id,
     type: "Vault-RDS",
@@ -310,9 +252,45 @@ export function createVaultRDSReceipt(
     grant_id: grantId,
     recipient_role: recipientRole,
     ttl_days: ttlDays,
-    proof_of_key_shred: proofOfKeyShred,
     anchor_ref: anchorRef,
+    proof_of_key_shred: proofOfKeyShred,
     ts: new Date().toISOString()
+  };
+}
+
+// Helper function to create standardized PA-RDS receipts
+export function createPARDSReceipt(
+  requestType: PARDSReceipt['request_type'],
+  medicalNecessity: PARDSReceipt['medical_necessity'],
+  decision: PARDSReceipt['decision'],
+  decisionRationale: string[],
+  financialImpact: PARDSReceipt['financial_impact'],
+  anchorRef?: PARDSReceipt['anchor_ref']
+): PARDSReceipt {
+  // Generate unique ID
+  const timestamp = new Date().toISOString().split('T')[0].replace(/-/g, '_');
+  const randomSuffix = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+  const id = `pa_${timestamp}_${randomSuffix}`;
+
+  const now = new Date();
+  const reviewTimeline = {
+    submitted_at: now.toISOString(),
+    reviewed_at: decision !== 'pending' ? now.toISOString() : undefined,
+    decision_at: decision !== 'pending' ? now.toISOString() : undefined,
+    appeal_deadline: decision === 'denied' ? new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000).toISOString() : undefined
+  };
+
+  return {
+    id,
+    type: "PA-RDS",
+    request_type: requestType,
+    medical_necessity: medicalNecessity,
+    decision,
+    decision_rationale: decisionRationale,
+    review_timeline: reviewTimeline,
+    financial_impact: financialImpact,
+    anchor_ref: anchorRef,
+    ts: now.toISOString()
   };
 }
 
@@ -343,38 +321,36 @@ export function createSettlementRDSReceipt(
   };
 }
 
-// Helper function to validate receipt structure
+// Helper function to validate Health-RDS receipt structure
 export function validateHealthRDSReceipt(receipt: any): receipt is HealthRDSReceipt {
   return (
     receipt &&
-    typeof receipt.id === "string" &&
-    receipt.type === "Health-RDS" &&
-    typeof receipt.action === "string" &&
+    typeof receipt.receipt_id === "string" &&
+    typeof receipt.household_id === "string" &&
+    typeof receipt.persona === "string" &&
+    typeof receipt.policy_version === "string" &&
     typeof receipt.inputs_hash === "string" &&
     receipt.inputs_hash.startsWith("sha256:") &&
-    typeof receipt.policy_version === "string" &&
-    Array.isArray(receipt.reasons) &&
-    typeof receipt.result === "string" &&
-    ["approve", "deny"].includes(receipt.result) &&
-    Array.isArray(receipt.disclosures) &&
-    typeof receipt.ts === "string"
+    Array.isArray(receipt.route) &&
+    typeof receipt.decision === "string" &&
+    typeof receipt.created_ts === "string"
   );
 }
 
-// Helper function to validate PA-RDS receipt structure
-export function validatePARDSReceipt(receipt: any): receipt is PARDSReceipt {
+// Helper function to validate Consent-RDS receipt structure
+export function validateConsentRDSReceipt(receipt: any): receipt is ConsentRDSReceipt {
   return (
     receipt &&
     typeof receipt.id === "string" &&
-    receipt.type === "PA-RDS" &&
-    typeof receipt.action === "string" &&
-    typeof receipt.inputs_hash === "string" &&
-    receipt.inputs_hash.startsWith("sha256:") &&
-    typeof receipt.policy_version === "string" &&
-    Array.isArray(receipt.reasons) &&
-    typeof receipt.result === "string" &&
-    ["approve", "deny"].includes(receipt.result) &&
-    Array.isArray(receipt.disclosures) &&
+    receipt.type === "Consent-RDS" &&
+    typeof receipt.purpose_of_use === "string" &&
+    ["care_coordination", "billing", "legal"].includes(receipt.purpose_of_use) &&
+    typeof receipt.scope === "object" &&
+    typeof receipt.consent_time === "string" &&
+    typeof receipt.freshness_score === "number" &&
+    receipt.freshness_score >= 0 && receipt.freshness_score <= 1 &&
+    typeof receipt.proof_hash === "string" &&
+    receipt.proof_hash.startsWith("sha256:") &&
     typeof receipt.ts === "string"
   );
 }
@@ -392,22 +368,22 @@ export function validateVaultRDSReceipt(receipt: any): receipt is VaultRDSReceip
   );
 }
 
-// Helper function to validate Consent-RDS receipt structure
-export function validateConsentRDSReceipt(receipt: any): receipt is ConsentRDSReceipt {
+// Helper function to validate PA-RDS receipt structure
+export function validatePARDSReceipt(receipt: any): receipt is PARDSReceipt {
   return (
     receipt &&
     typeof receipt.id === "string" &&
-    receipt.type === "Consent-RDS" &&
-    typeof receipt.purpose_of_use === "string" &&
-    ["care_coordination", "billing", "legal"].includes(receipt.purpose_of_use) &&
-    typeof receipt.scope === "object" &&
-    typeof receipt.consent_time === "string" &&
-    typeof receipt.freshness_score === "number" &&
-    typeof receipt.result === "string" &&
-    ["approve", "deny"].includes(receipt.result) &&
-    typeof receipt.reason === "string" &&
-    typeof receipt.proof_hash === "string" &&
-    receipt.proof_hash.startsWith("sha256:") &&
+    receipt.type === "PA-RDS" &&
+    typeof receipt.request_type === "string" &&
+    ["prior_authorization", "appeal", "urgent_review"].includes(receipt.request_type) &&
+    typeof receipt.medical_necessity === "object" &&
+    Array.isArray(receipt.medical_necessity.icd_codes) &&
+    Array.isArray(receipt.medical_necessity.cpt_codes) &&
+    typeof receipt.decision === "string" &&
+    ["approved", "denied", "partial", "pending"].includes(receipt.decision) &&
+    Array.isArray(receipt.decision_rationale) &&
+    typeof receipt.review_timeline === "object" &&
+    typeof receipt.financial_impact === "object" &&
     typeof receipt.ts === "string"
   );
 }
