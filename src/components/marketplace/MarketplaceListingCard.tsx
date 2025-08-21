@@ -118,7 +118,7 @@ export function MarketplaceListingCard({ listing }: MarketplaceListingCardProps)
       </CardContent>
       
       <CardFooter className="flex gap-2 pt-0">
-        <Button variant="default" size="sm" className="w-full gap-1.5">
+        <Button variant="gold" size="sm" className="w-full gap-1.5">
           <Mail className="h-4 w-4" />
           Inquire
         </Button>

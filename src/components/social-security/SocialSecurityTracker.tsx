@@ -326,7 +326,7 @@ export const SocialSecurityTracker = () => {
                   <ExternalLinkIcon className="h-4 w-4 ml-2" />
                 </Button>
               ) : (
-                <Button variant="default" className="w-full" onClick={() => handleLinkAccount(member.id)}>
+                <Button variant="gold" className="w-full" onClick={() => handleLinkAccount(member.id)}>
                   Link SSA.gov Account
                   <ExternalLinkIcon className="h-4 w-4 ml-2" />
                 </Button>

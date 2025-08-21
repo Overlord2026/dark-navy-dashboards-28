@@ -76,7 +76,7 @@ export default function ClientFamilyDeck() {
                 Share
               </Button>
               
-              <Button variant="default" size="sm">
+              <Button variant="gold" size="sm">
                 <Calendar className="h-4 w-4 mr-2" />
                 Schedule Demo
               </Button>

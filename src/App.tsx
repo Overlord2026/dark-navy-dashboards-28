@@ -10,6 +10,8 @@ import { AuthProvider } from "@/context/AuthContext";
 import { UserProvider } from "@/context/UserContext";
 import { RoleProvider } from "@/context/RoleContext";
 import { SubscriptionProvider } from "@/context/SubscriptionContext";
+import { useSubscription } from "@/context/SubscriptionContext";
+import PremiumDashboardExample from "@/pages/PremiumDashboardExample";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { TenantProvider } from "@/context/TenantContext";
 import { AdvisorProvider } from "@/context/AdvisorContext";
@@ -296,7 +298,8 @@ function App() {
                              <ReferralTracker />
                              <Sonner />
                              <main id="main-content" role="main">
-                             <Routes>
+                              <Routes>
+        <Route path="/premium-ui-demo" element={<PremiumDashboardExample />} />
         <Route path="/wireframe" element={<WireframePage />} />
                             <Route path="/platform-map" element={<PlatformMap />} />
                              <Route path="/athletes/nil-education" element={<NILEducationCenter />} />

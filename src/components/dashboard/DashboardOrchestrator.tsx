@@ -53,6 +53,7 @@ export const DashboardOrchestrator: React.FC = () => {
         description: `${tool.name} requires ${tool.entitlement} plan or higher`,
         action: (
           <Button
+            variant="gold"
             size="sm"
             onClick={() => navigate(`/pricing?feature=${tool.key}&plan_hint=${tool.entitlement}`)}
           >
@@ -179,7 +180,7 @@ export const DashboardOrchestrator: React.FC = () => {
                     </CardHeader>
                     <CardContent className="pt-0">
                       <Button 
-                        variant={hasAccess ? "outline" : "ghost"}
+                        variant={hasAccess ? "gold" : "ghost"}
                         size="sm" 
                         className="w-full"
                         disabled={!hasAccess}
@@ -210,8 +211,8 @@ export const DashboardOrchestrator: React.FC = () => {
           </CardHeader>
           <CardContent>
             <Button 
+              variant="gold"
               onClick={() => navigate('/pricing?feature=family_office&plan_hint=premium')}
-              className="bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700"
             >
               Unlock Family Office
             </Button>

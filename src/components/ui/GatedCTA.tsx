@@ -7,11 +7,11 @@ export function GatedCTA({ feature, onRun, onUpgrade }:{
   onUpgrade: () => void;
 }) {
   const { allowed, plan } = useGate(feature);
-  if (allowed) return <Button onClick={onRun}>Open</Button>;
+  if (allowed) return <Button variant="gold" onClick={onRun}>Open</Button>;
   return (
     <div className="flex items-center gap-2">
       <span className="text-sm text-muted-foreground">Requires {feature==='calculators_advanced' || feature==='retirement_scorecard'?'Premium':'Elite'} plan</span>
-      <Button variant="default" onClick={onUpgrade}>Upgrade</Button>
+      <Button variant="gold" onClick={onUpgrade}>Upgrade</Button>
     </div>
   );
 }
