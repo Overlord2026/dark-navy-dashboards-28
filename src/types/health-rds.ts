@@ -48,11 +48,20 @@ export interface ConsentRDSReceipt {
 export interface VaultRDSReceipt {
   type: "Vault-RDS";
   action: "grant" | "revoke" | "legal_hold" | "delete";
-  doc_id?: string;
-  inputs_hash: string;
-  policy_version: string;
-  ts: string;
-  anchor_ref?: HealthRDSReceipt['anchor_ref'];
+  doc_id?: string; // pack:0xABC...
+  inputs_hash?: string;
+  policy_version?: string;
+  anchor_ref?: {
+    merkle_root: string; // 0x...
+    cross_chain_locator: Array<{
+      chain_id: string; // "perm-A", "pub-B"
+      tx_ref: string; // "0x..."
+      ts: number; // Unix timestamp
+      anchor_epoch: number;
+    }>;
+  };
+  proof_of_key_shred?: string; // sha256:...
+  ts: string; // ISO 8601 timestamp
 }
 
 export interface PARDSReceipt {
@@ -81,15 +90,6 @@ export interface PARDSReceipt {
   ts: string; // ISO 8601 timestamp
 }
 
-export interface VaultRDSReceipt {
-  type: "Vault-RDS";
-  action: "grant" | "revoke" | "legal_hold" | "delete";
-  doc_id?: string;
-  inputs_hash: string;
-  policy_version: string;
-  ts: string;
-  anchor_ref?: HealthRDSReceipt['anchor_ref'];
-}
 
 export type HealthcareReceipt = HealthRDSReceipt | ConsentRDSReceipt | VaultRDSReceipt | PARDSReceipt;
 
@@ -169,6 +169,23 @@ export function createPARDSReceipt(
   };
 }
 
+// Helper function to create standardized Vault-RDS receipts
+export function createVaultRDSReceipt(
+  action: VaultRDSReceipt['action'],
+  docId?: string,
+  proofOfKeyShred?: string,
+  anchorRef?: VaultRDSReceipt['anchor_ref']
+): VaultRDSReceipt {
+  return {
+    type: "Vault-RDS",
+    action,
+    doc_id: docId,
+    proof_of_key_shred: proofOfKeyShred,
+    anchor_ref: anchorRef,
+    ts: new Date().toISOString()
+  };
+}
+
 // Helper function to validate receipt structure
 export function validateHealthRDSReceipt(receipt: any): receipt is HealthRDSReceipt {
   return (
@@ -197,6 +214,17 @@ export function validatePARDSReceipt(receipt: any): receipt is PARDSReceipt {
     Array.isArray(receipt.reasons) &&
     typeof receipt.result === "string" &&
     Array.isArray(receipt.disclosures) &&
+    typeof receipt.ts === "string"
+  );
+}
+
+// Helper function to validate Vault-RDS receipt structure
+export function validateVaultRDSReceipt(receipt: any): receipt is VaultRDSReceipt {
+  return (
+    receipt &&
+    receipt.type === "Vault-RDS" &&
+    typeof receipt.action === "string" &&
+    ["grant", "revoke", "legal_hold", "delete"].includes(receipt.action) &&
     typeof receipt.ts === "string"
   );
 }
