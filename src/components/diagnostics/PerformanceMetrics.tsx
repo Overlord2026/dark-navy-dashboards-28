@@ -85,6 +85,7 @@ export function PerformanceMetrics() {
         <button 
           onClick={handleRefresh}
           className="text-xs text-muted-foreground hover:text-primary"
+          aria-label="Refresh performance metrics"
         >
           Refresh
         </button>
@@ -108,7 +109,8 @@ export function PerformanceMetrics() {
                 : (memoryUsage.usagePercentage || 0) > 60 
                   ? "text-yellow-400" 
                   : "text-green-400"
-            } 
+            }
+            aria-label={`Memory usage: ${memoryUsage.usagePercentage?.toFixed(1)}% used`}
           />
           <div className="flex justify-between mt-1 text-xs text-muted-foreground">
             <span>
@@ -153,6 +155,7 @@ export function PerformanceMetrics() {
                           ? "text-yellow-400" 
                           : "text-green-400"
                     }
+                    aria-label={`Load time for ${metric.route}: ${metric.loadTime.toFixed(0)}ms`}
                   />
                 </div>
               ))

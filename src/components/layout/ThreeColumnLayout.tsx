@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { TopNavigationBar } from "@/components/navigation/TopNavigationBar";
+import { SkipLink } from "@/components/SkipLink";
 
 interface ThreeColumnLayoutProps {
   children: ReactNode;
@@ -167,6 +168,7 @@ export function ThreeColumnLayout({
       "flex flex-col h-screen overflow-hidden",
       "bg-background text-foreground"
     )}>
+      <SkipLink href="#main-content">Skip to main content</SkipLink>
       <div className="w-full flex justify-center items-center py-1 border-b border-border z-50 bg-background sticky top-0">
         {isMobile && (
           <div className="absolute left-2 top-1/2 transform -translate-y-1/2 z-50">
@@ -229,10 +231,14 @@ export function ThreeColumnLayout({
             </div>
           ) : null}
           
-          <main className={cn(
-            "flex-1 overflow-y-auto font-sans w-full",
-            isMobile ? "p-4" : "p-3"
-          )}>
+          <main 
+            id="main-content"
+            tabIndex={-1}
+            className={cn(
+              "flex-1 overflow-y-auto font-sans w-full",
+              isMobile ? "p-4" : "p-3"
+            )}
+          >
             {!isDashboardPage && !isLegacyVaultPage && title && (
               <motion.div 
                 className="flex justify-between items-center mb-4"
