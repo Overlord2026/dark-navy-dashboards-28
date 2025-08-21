@@ -903,9 +903,10 @@ function App() {
         <Route path="/reports" element={<ReportsPage />} />
                             <Route path="/goals-home" element={<GoalsHome />} />
                             <Route path="/calculators" element={<CalculatorsPage />} />
-                            <Route path="/healthcare" element={<HealthcarePage />} />
-                            <Route path="/health/hsa" element={<LazyHealthHsaPage />} />
-                            <Route path="/health/screenings" element={<LazyHealthScreeningsPage />} />
+                             <Route path="/healthcare" element={<HealthcarePage />} />
+                             <Route path="/health/hsa" element={<LazyHealthHsaPage />} />
+                             <Route path="/health/screenings" element={<LazyHealthScreeningsPage />} />
+                             {/* Verifier route will be added after import fix */}
 
                           </Routes>
                         <Navigation />
