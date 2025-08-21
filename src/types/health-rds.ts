@@ -87,6 +87,42 @@ export interface VaultRDSReceipt {
   ts: string; // ISO 8601 timestamp
 }
 
+export interface SettlementRDSReceipt {
+  id: string; // settlement_2025_08_21_0200
+  type: "Settlement-RDS";
+  offer_lock: {
+    navigator_id: string;
+    service_type: string; // "second_opinion" | "care_navigation" | "specialist_referral"
+    locked_rate: number; // cents
+    lock_expiry: string; // ISO timestamp
+  };
+  attribution_hash: string; // sha256:... - hash of contribution/work proof
+  split_tree_hash: string; // sha256:... - deterministic payout split calculation
+  approvals: Array<{
+    approver_role: string; // "patient" | "provider" | "platform_admin"
+    approval_hash: string; // sha256:...
+    timestamp: string;
+    signature?: string; // optional cryptographic signature
+  }>;
+  escrow_state: {
+    total_amount_cents: number;
+    disbursed_amount_cents: number;
+    pending_amount_cents: number;
+    escrow_account_id: string;
+    release_conditions: string[];
+  };
+  anchor_ref?: {
+    merkle_root: string; // 0xROOT
+    cross_chain_locator: Array<{
+      chain_id: string; // "perm-A", "pub-B"
+      tx_ref: string; // "0x..."
+      ts: number; // Unix timestamp
+      anchor_epoch: number;
+    }>;
+  };
+  ts: string; // ISO 8601 timestamp
+}
+
 export interface PARDSReceipt {
   id: string; // pa_2025_08_21_0010
   type: "PA-RDS";
@@ -110,7 +146,7 @@ export interface PARDSReceipt {
 }
 
 
-export type HealthcareReceipt = HealthRDSReceipt | ConsentRDSReceipt | VaultRDSReceipt | PARDSReceipt;
+export type HealthcareReceipt = HealthRDSReceipt | ConsentRDSReceipt | VaultRDSReceipt | PARDSReceipt | SettlementRDSReceipt;
 
 // Helper function to create standardized Health-RDS receipts
 export function createHealthRDSReceipt(
@@ -280,6 +316,33 @@ export function createVaultRDSReceipt(
   };
 }
 
+// Helper function to create standardized Settlement-RDS receipts
+export function createSettlementRDSReceipt(
+  offerLock: SettlementRDSReceipt['offer_lock'],
+  attributionHash: string,
+  splitTreeHash: string,
+  approvals: SettlementRDSReceipt['approvals'],
+  escrowState: SettlementRDSReceipt['escrow_state'],
+  anchorRef?: SettlementRDSReceipt['anchor_ref']
+): SettlementRDSReceipt {
+  // Generate unique ID
+  const timestamp = new Date().toISOString().split('T')[0].replace(/-/g, '_');
+  const randomSuffix = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+  const id = `settlement_${timestamp}_${randomSuffix}`;
+  
+  return {
+    id,
+    type: "Settlement-RDS",
+    offer_lock: offerLock,
+    attribution_hash: attributionHash,
+    split_tree_hash: splitTreeHash,
+    approvals,
+    escrow_state: escrowState,
+    anchor_ref: anchorRef,
+    ts: new Date().toISOString()
+  };
+}
+
 // Helper function to validate receipt structure
 export function validateHealthRDSReceipt(receipt: any): receipt is HealthRDSReceipt {
   return (
@@ -345,6 +408,30 @@ export function validateConsentRDSReceipt(receipt: any): receipt is ConsentRDSRe
     typeof receipt.reason === "string" &&
     typeof receipt.proof_hash === "string" &&
     receipt.proof_hash.startsWith("sha256:") &&
+    typeof receipt.ts === "string"
+  );
+}
+
+// Helper function to validate Settlement-RDS receipt structure
+export function validateSettlementRDSReceipt(receipt: any): receipt is SettlementRDSReceipt {
+  return (
+    receipt &&
+    typeof receipt.id === "string" &&
+    receipt.type === "Settlement-RDS" &&
+    typeof receipt.offer_lock === "object" &&
+    typeof receipt.offer_lock.navigator_id === "string" &&
+    typeof receipt.offer_lock.service_type === "string" &&
+    typeof receipt.offer_lock.locked_rate === "number" &&
+    typeof receipt.offer_lock.lock_expiry === "string" &&
+    typeof receipt.attribution_hash === "string" &&
+    receipt.attribution_hash.startsWith("sha256:") &&
+    typeof receipt.split_tree_hash === "string" &&
+    receipt.split_tree_hash.startsWith("sha256:") &&
+    Array.isArray(receipt.approvals) &&
+    typeof receipt.escrow_state === "object" &&
+    typeof receipt.escrow_state.total_amount_cents === "number" &&
+    typeof receipt.escrow_state.escrow_account_id === "string" &&
+    Array.isArray(receipt.escrow_state.release_conditions) &&
     typeof receipt.ts === "string"
   );
 }
