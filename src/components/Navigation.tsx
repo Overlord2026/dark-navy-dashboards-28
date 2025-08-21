@@ -19,6 +19,9 @@ export function Navigation() {
             <Link to="/goals" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
               Goals
             </Link>
+            <Link to="/receipts" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+              Receipts
+            </Link>
           </div>
         </div>
         <div className="flex items-center">
