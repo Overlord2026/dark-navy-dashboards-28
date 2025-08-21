@@ -22,7 +22,23 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         
-        // BFO Color System
+        // Direct color tokens
+        ink: '#0A0A0A',
+        navy: '#0B2239', 
+        gold: { 
+          base: '#C7A139', 
+          hi: '#F2D68E', 
+          lo: '#8C6B1E' 
+        },
+        slate: '#2E3A4A',
+        sky: '#6BA6FF',
+        mint: '#75E0C2',
+        burgundy: '#7A1733',
+        indigo: '#3946A6',
+        sand: '#F2EBDD',
+        alert: '#D9534F',
+        
+        // BFO Color System (HSL)
         'ink-black': "hsl(var(--ink-black))",
         'bfo-navy': "hsl(var(--bfo-navy))",
         'metallic-gold': {
@@ -30,12 +46,6 @@ export default {
           highlight: "hsl(var(--metallic-gold-highlight))",
           shadow: "hsl(var(--metallic-gold-shadow))",
         },
-        slate: "hsl(var(--slate))",
-        sky: "hsl(var(--sky))",
-        mint: "hsl(var(--mint))",
-        burgundy: "hsl(var(--burgundy))",
-        indigo: "hsl(var(--indigo))",
-        sand: "hsl(var(--sand))",
         'alert-red': "hsl(var(--alert-red))",
         
         // Core theme colors
@@ -94,6 +104,12 @@ export default {
         lg: `var(--radius)`,
         md: `calc(var(--radius) - 2px)`,
         sm: "calc(var(--radius) - 4px)",
+        xl: '14px',
+        '2xl': '20px'
+      },
+      boxShadow: {
+        soft: '0 6px 18px rgba(0,0,0,.12)',
+        gold: 'inset 0 1px 0 rgba(255,255,255,.2), 0 6px 14px rgba(0,0,0,.18)',
       },
       fontFamily: {
         sans: ["Inter", "var(--font-sans)", ...fontFamily.sans],
