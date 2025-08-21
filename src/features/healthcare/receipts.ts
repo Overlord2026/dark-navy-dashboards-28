@@ -38,7 +38,10 @@ export interface VaultRDS extends BaseRDS {
   anchor_ref?: string; // Optional field for future cross-chain anchoring
 }
 
-export type HealthcareRDS = HealthRDS | ConsentRDS | VaultRDS;
+// Import PA-RDS for complete type union
+import type { PARDS } from '@/features/health/pa/api';
+
+export type HealthcareRDS = HealthRDS | ConsentRDS | VaultRDS | PARDS;
 
 /**
  * Creates a hash of inputs without storing PHI
