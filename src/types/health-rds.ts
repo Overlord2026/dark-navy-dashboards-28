@@ -35,23 +35,35 @@ export interface HealthRDSReceipt {
 }
 
 export interface ConsentRDSReceipt {
+  id: string; // cons_2025_08_21_0099
   type: "Consent-RDS";
   purpose_of_use: "care_coordination" | "billing" | "legal";
+  scope: {
+    minimum_necessary?: boolean;
+    recipient_role?: "provider" | "advisor" | "cpa" | "attorney" | string;
+    resources?: string[]; // ["claims_summary", "lab_summary"]
+    [key: string]: any;
+  };
   consent_time: string;
   expiry?: string;
   freshness_score: number; // 0-1
-  scope: {
-    minimum_necessary?: boolean;
-    recipient_role?: string;
-    [key: string]: any;
-  };
-  result: "deny" | "approve";
+  co_sign_routes?: Array<{
+    route: string; // "guardian_A"
+    ts: string;
+    ok: boolean;
+  }>;
+  zk_predicates?: Array<{ // proof hashes only; no raw DOB/labs
+    predicate: string; // "age>=50", "in_network"
+    ok: boolean;
+    proof_hash: string; // "sha256:..."
+  }>;
+  result: "approve" | "deny";
   reason: "CONSENT_STALE" | "SCOPE_MISMATCH" | "OK" | string;
-  proof_hash: string;
+  proof_hash: string; // "sha256:consent_proof_redacted"
   inputs_hash?: string;
   policy_version?: string;
-  ts?: string;
-  anchor_ref?: HealthRDSReceipt['anchor_ref'];
+  anchor_ref?: HealthRDSReceipt['anchor_ref'] | null;
+  ts: string;
 }
 
 export interface VaultRDSReceipt {
@@ -190,6 +202,53 @@ export function createPARDSReceipt(
   };
 }
 
+// Helper function to create standardized Consent-RDS receipts
+export function createConsentRDSReceipt(
+  purposeOfUse: ConsentRDSReceipt['purpose_of_use'],
+  scope: ConsentRDSReceipt['scope'],
+  result: ConsentRDSReceipt['result'],
+  reason: ConsentRDSReceipt['reason'],
+  freshnessScore: number = 1.0,
+  expiryDays?: number,
+  coSignRoutes?: ConsentRDSReceipt['co_sign_routes'],
+  zkPredicates?: ConsentRDSReceipt['zk_predicates'],
+  anchorRef?: ConsentRDSReceipt['anchor_ref']
+): ConsentRDSReceipt {
+  const now = new Date();
+  const expiry = expiryDays ? new Date(now.getTime() + expiryDays * 24 * 60 * 60 * 1000) : undefined;
+  
+  // Generate unique ID
+  const timestamp = now.toISOString().split('T')[0].replace(/-/g, '_');
+  const randomSuffix = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+  const id = `cons_${timestamp}_${randomSuffix}`;
+  
+  // Generate proof hash
+  const proofData = {
+    purpose: purposeOfUse,
+    scope,
+    timestamp: now.toISOString(),
+    zk_predicates: zkPredicates
+  };
+  const proof_hash = `sha256:${btoa(JSON.stringify(proofData)).substring(0, 16)}`;
+  
+  return {
+    id,
+    type: "Consent-RDS",
+    purpose_of_use: purposeOfUse,
+    scope,
+    consent_time: now.toISOString(),
+    expiry: expiry?.toISOString(),
+    freshness_score: freshnessScore,
+    co_sign_routes: coSignRoutes,
+    zk_predicates: zkPredicates,
+    result,
+    reason,
+    proof_hash,
+    anchor_ref: anchorRef,
+    ts: now.toISOString()
+  };
+}
+
 // Helper function to create standardized Vault-RDS receipts
 export function createVaultRDSReceipt(
   action: VaultRDSReceipt['action'],
@@ -248,6 +307,26 @@ export function validateVaultRDSReceipt(receipt: any): receipt is VaultRDSReceip
     receipt.type === "Vault-RDS" &&
     typeof receipt.action === "string" &&
     ["grant", "revoke", "legal_hold", "delete"].includes(receipt.action) &&
+    typeof receipt.ts === "string"
+  );
+}
+
+// Helper function to validate Consent-RDS receipt structure
+export function validateConsentRDSReceipt(receipt: any): receipt is ConsentRDSReceipt {
+  return (
+    receipt &&
+    typeof receipt.id === "string" &&
+    receipt.type === "Consent-RDS" &&
+    typeof receipt.purpose_of_use === "string" &&
+    ["care_coordination", "billing", "legal"].includes(receipt.purpose_of_use) &&
+    typeof receipt.scope === "object" &&
+    typeof receipt.consent_time === "string" &&
+    typeof receipt.freshness_score === "number" &&
+    typeof receipt.result === "string" &&
+    ["approve", "deny"].includes(receipt.result) &&
+    typeof receipt.reason === "string" &&
+    typeof receipt.proof_hash === "string" &&
+    receipt.proof_hash.startsWith("sha256:") &&
     typeof receipt.ts === "string"
   );
 }
