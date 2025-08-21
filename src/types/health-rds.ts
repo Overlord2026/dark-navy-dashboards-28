@@ -86,19 +86,15 @@ export interface VaultRDSReceipt {
 }
 
 export interface PARDSReceipt {
+  id: string; // pa_2025_08_21_0010
   type: "PA-RDS";
   action: "authorize" | "resubmit" | "appeal" | "withdraw";
-  inputs_hash: string; // sha256:...
+  inputs_hash: string; // sha256:... - canonical plan/procedure summary hash
   policy_version: string; // H-2025.08
-  result: "approve" | "deny" | "pending" | "pended";
-  reasons: string[]; // ["NOT_COVERED", "EVIDENCE_INCOMPLETE"]
+  result: "approve" | "deny";
+  reasons: string[]; // ["EVIDENCE_INCOMPLETE"] - e.g., NOT_COVERED|OUT_OF_NETWORK|EVIDENCE_INCOMPLETE
   missingEvidence?: string[]; // ["last colonoscopy report (CPT 45378)", "GI consult note"]
   disclosures: string[]; // ["minimum-necessary", "purpose:prior_auth"]
-  financial?: {
-    estimated_cost_cents?: number;
-    coverage_type?: string;
-    deductible_applied?: boolean;
-  };
   anchor_ref?: {
     merkle_root: string; // 0xROOT
     cross_chain_locator: Array<{
@@ -171,7 +167,6 @@ export function createPARDSReceipt(
   reasons: string[],
   disclosures: string[] = [],
   missingEvidence?: string[],
-  financial?: PARDSReceipt['financial'],
   anchorRef?: PARDSReceipt['anchor_ref']
 ): PARDSReceipt {
   // Sanitize inputs to remove PHI
@@ -187,7 +182,13 @@ export function createPARDSReceipt(
   const inputString = JSON.stringify(sanitizedInputs, Object.keys(sanitizedInputs).sort());
   const inputs_hash = `sha256:${btoa(inputString).substring(0, 16)}`;
   
+  // Generate unique ID
+  const timestamp = new Date().toISOString().split('T')[0].replace(/-/g, '_');
+  const randomSuffix = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+  const id = `pa_${timestamp}_${randomSuffix}`;
+  
   return {
+    id,
     type: "PA-RDS",
     action,
     inputs_hash,
@@ -196,7 +197,6 @@ export function createPARDSReceipt(
     reasons,
     missingEvidence,
     disclosures,
-    financial,
     anchor_ref: anchorRef,
     ts: new Date().toISOString()
   };
@@ -288,6 +288,7 @@ export function validateHealthRDSReceipt(receipt: any): receipt is HealthRDSRece
 export function validatePARDSReceipt(receipt: any): receipt is PARDSReceipt {
   return (
     receipt &&
+    typeof receipt.id === "string" &&
     receipt.type === "PA-RDS" &&
     typeof receipt.action === "string" &&
     typeof receipt.inputs_hash === "string" &&
@@ -295,6 +296,7 @@ export function validatePARDSReceipt(receipt: any): receipt is PARDSReceipt {
     typeof receipt.policy_version === "string" &&
     Array.isArray(receipt.reasons) &&
     typeof receipt.result === "string" &&
+    ["approve", "deny"].includes(receipt.result) &&
     Array.isArray(receipt.disclosures) &&
     typeof receipt.ts === "string"
   );
