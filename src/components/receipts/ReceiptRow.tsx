@@ -20,17 +20,18 @@ interface ReceiptRowProps {
 
 export function ReceiptRow({ receipt, onViewJSON, onVerify }: ReceiptRowProps) {
   const getReceiptIcon = (type: string) => {
+    const iconProps = { className: "h-4 w-4", "aria-hidden": true };
     switch (type) {
       case 'onboard_rds':
-        return <FileText className="h-4 w-4 text-blue-500" />;
+        return <FileText {...iconProps} className="h-4 w-4 text-blue-500" />;
       case 'decision_rds':
-        return <CheckCircle className="h-4 w-4 text-green-500" />;
+        return <CheckCircle {...iconProps} className="h-4 w-4 text-green-500" />;
       case 'vault_rds':
-        return <Shield className="h-4 w-4 text-purple-500" />;
+        return <Shield {...iconProps} className="h-4 w-4 text-purple-500" />;
       case 'consent_rds':
-        return <Eye className="h-4 w-4 text-orange-500" />;
+        return <Eye {...iconProps} className="h-4 w-4 text-orange-500" />;
       default:
-        return <FileText className="h-4 w-4 text-gray-500" />;
+        return <FileText {...iconProps} className="h-4 w-4 text-gray-500" />;
     }
   };
 
@@ -101,19 +102,25 @@ export function ReceiptRow({ receipt, onViewJSON, onVerify }: ReceiptRowProps) {
         <div>
           <span className="font-medium text-muted-foreground">Time:</span>
           <p className="flex items-center gap-1 mt-1">
-            <Clock className="h-3 w-3" />
-            {timeAgo}
+            <Clock className="h-3 w-3" aria-hidden="true" />
+            <time dateTime={receipt.ts} title={timestamp.toLocaleString()}>
+              {timeAgo}
+            </time>
           </p>
         </div>
         
         <div>
           <span className="font-medium text-muted-foreground">Action:</span>
-          <p className="mt-1 truncate">{getActionDisplay()}</p>
+          <p className="mt-1 truncate" title={getActionDisplay()}>
+            {getActionDisplay()}
+          </p>
         </div>
         
         <div>
           <span className="font-medium text-muted-foreground">Reason/Scope:</span>
-          <p className="mt-1 truncate">{getReasonCodesDisplay()}</p>
+          <p className="mt-1 truncate" title={getReasonCodesDisplay()}>
+            {getReasonCodesDisplay()}
+          </p>
         </div>
         
         <div>
@@ -121,12 +128,12 @@ export function ReceiptRow({ receipt, onViewJSON, onVerify }: ReceiptRowProps) {
           <div className="mt-1 flex items-center gap-1">
             {hasAnchor ? (
               <Badge variant="default" className="text-xs">
-                <CheckCircle className="h-3 w-3 mr-1" />
+                <CheckCircle className="h-3 w-3 mr-1" aria-hidden="true" />
                 Anchored
               </Badge>
             ) : (
               <Badge variant="secondary" className="text-xs">
-                <XCircle className="h-3 w-3 mr-1" />
+                <XCircle className="h-3 w-3 mr-1" aria-hidden="true" />
                 Local
               </Badge>
             )}
@@ -141,8 +148,9 @@ export function ReceiptRow({ receipt, onViewJSON, onVerify }: ReceiptRowProps) {
           variant="outline"
           onClick={onViewJSON}
           className="text-xs"
+          aria-label={`View JSON for receipt ${receipt.id}`}
         >
-          <Eye className="h-3 w-3 mr-1" />
+          <Eye className="h-3 w-3 mr-1" aria-hidden="true" />
           View JSON
         </Button>
         <Button
@@ -150,8 +158,9 @@ export function ReceiptRow({ receipt, onViewJSON, onVerify }: ReceiptRowProps) {
           variant="outline"
           onClick={onVerify}
           className="text-xs"
+          aria-label={`Verify receipt ${receipt.id}`}
         >
-          <Shield className="h-3 w-3 mr-1" />
+          <Shield className="h-3 w-3 mr-1" aria-hidden="true" />
           Verify
         </Button>
       </div>

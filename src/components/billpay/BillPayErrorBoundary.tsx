@@ -49,11 +49,7 @@ const BillPayErrorFallback: React.FC<BillPayErrorFallbackProps> = ({ error, rese
 
 export const BillPayErrorBoundary: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <ErrorBoundary
-    fallback={<BillPayErrorFallback error={new Error('Unknown error')} resetError={() => {}} />}
-    onError={(error, errorInfo) => {
-      console.error('Bill Pay Error:', error);
-      console.error('Component Stack:', errorInfo.componentStack);
-    }}
+    fallback={({ error, retry }) => <BillPayErrorFallback error={error} resetError={retry} />}
   >
     {children}
   </ErrorBoundary>
