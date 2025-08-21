@@ -73,7 +73,10 @@ export async function createAndStoreHealthReceipt(
     result,
     reasons,
     disclosures,
+    undefined, // subjectId
+    undefined, // actorId
     financial,
+    undefined, // linked
     anchorRef
   );
 

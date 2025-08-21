@@ -1,10 +1,13 @@
 export interface HealthRDSReceipt {
+  id: string; // rds_2025_08_21_0001
   type: "Health-RDS";
   action: "authorize" | "order" | "share" | "publish" | "pay" | "takedown";
-  inputs_hash: string; // sha256:...
-  policy_version: string; // H-2025.08
-  reasons: string[]; // ["USPSTF_ELIGIBLE", "COVERED"]
-  result: "approve" | "deny" | "pending";
+  subject_id?: string; // did:patient:abc123 - optional DID/VC pointer; no raw PHI
+  actor_id?: string; // did:app:mybfocfo - who executed the gate
+  inputs_hash: string; // sha256:... - hash of canonical summary (FHIR redacted)
+  policy_version: string; // H-2025.08 - frozen ruleset ID
+  reasons: string[]; // ["USPSTF_ELIGIBLE", "COVERED"] - explainable codes
+  result: "approve" | "deny"; // approve|deny
   disclosures: string[]; // ["minimum-necessary", "purpose:care_coordination"]
   financial?: {
     hsa_eligible?: boolean;
@@ -12,6 +15,12 @@ export interface HealthRDSReceipt {
     deductibleMet?: boolean;
     estimated_cost_cents?: number;
     coverage_type?: string;
+  };
+  linked?: { // cross-references; all optional
+    consent_rds_id?: string;
+    vault_rds_id?: string;
+    pa_rds_id?: string;
+    settlement_rds_id?: string;
   };
   anchor_ref?: {
     merkle_root: string; // 0xROOT
@@ -100,7 +109,10 @@ export function createHealthRDSReceipt(
   result: HealthRDSReceipt['result'],
   reasons: string[],
   disclosures: string[] = [],
+  subjectId?: string,
+  actorId?: string,
   financial?: HealthRDSReceipt['financial'],
+  linked?: HealthRDSReceipt['linked'],
   anchorRef?: HealthRDSReceipt['anchor_ref']
 ): HealthRDSReceipt {
   // Sanitize inputs to remove PHI
@@ -116,15 +128,24 @@ export function createHealthRDSReceipt(
   const inputString = JSON.stringify(sanitizedInputs, Object.keys(sanitizedInputs).sort());
   const inputs_hash = `sha256:${btoa(inputString).substring(0, 16)}`;
   
+  // Generate unique ID
+  const timestamp = new Date().toISOString().split('T')[0].replace(/-/g, '_');
+  const randomSuffix = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+  const id = `rds_${timestamp}_${randomSuffix}`;
+  
   return {
+    id,
     type: "Health-RDS",
     action,
+    subject_id: subjectId,
+    actor_id: actorId,
     inputs_hash,
     policy_version: "H-2025.08",
     reasons,
     result,
     disclosures,
     financial,
+    linked,
     anchor_ref: anchorRef,
     ts: new Date().toISOString()
   };
@@ -190,6 +211,7 @@ export function createVaultRDSReceipt(
 export function validateHealthRDSReceipt(receipt: any): receipt is HealthRDSReceipt {
   return (
     receipt &&
+    typeof receipt.id === "string" &&
     receipt.type === "Health-RDS" &&
     typeof receipt.action === "string" &&
     typeof receipt.inputs_hash === "string" &&
@@ -197,6 +219,7 @@ export function validateHealthRDSReceipt(receipt: any): receipt is HealthRDSRece
     typeof receipt.policy_version === "string" &&
     Array.isArray(receipt.reasons) &&
     typeof receipt.result === "string" &&
+    ["approve", "deny"].includes(receipt.result) &&
     Array.isArray(receipt.disclosures) &&
     typeof receipt.ts === "string"
   );
