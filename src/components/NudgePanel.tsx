@@ -75,38 +75,38 @@ export const NudgePanel: React.FC = () => {
   };
 
   if (nudges.length === 0) {
-    return (
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="text-lg flex items-center gap-2">
-            <Bell className="h-5 w-5" />
-            Recommendations
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-muted-foreground text-sm">
-            No nudges—great job. Come back tomorrow for fresh suggestions.
-          </p>
-        </CardContent>
-      </Card>
-    );
+  return (
+    <Card className="rounded-2xl shadow-soft">
+      <CardHeader className="pb-3 p-4">
+        <CardTitle className="text-[15px] font-semibold flex items-center gap-2">
+          <Bell className="h-4 w-4" />
+          Recommendations
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="p-4 pt-0">
+        <p className="text-muted-foreground text-sm">
+          No nudges—great job. Come back tomorrow for fresh suggestions.
+        </p>
+      </CardContent>
+    </Card>
+  );
   }
 
   return (
-    <Card>
-      <CardHeader className="pb-3">
-        <CardTitle className="text-lg flex items-center gap-2">
-          <Bell className="h-5 w-5" />
+    <Card className="rounded-2xl shadow-soft">
+      <CardHeader className="pb-3 p-4">
+        <CardTitle className="text-[15px] font-semibold flex items-center gap-2">
+          <Bell className="h-4 w-4" />
           Recommendations
-          <Badge variant="outline" className="ml-auto">
+          <Badge variant="outline" className="ml-auto text-xs">
             {nudges.length}
           </Badge>
         </CardTitle>
-        <CardDescription>
+        <CardDescription className="text-sm">
           Personalized insights based on your {persona} profile
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-3">
+      <CardContent className="space-y-3 p-4 pt-0">
         {nudges.slice(0, 3).map((nudge) => (
           <Alert key={nudge.id} className="relative">
             <div className="flex items-start gap-3 w-full">
