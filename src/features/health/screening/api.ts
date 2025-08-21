@@ -1,5 +1,6 @@
 import { recordHealthRDS } from '@/features/healthcare/receipts';
 import { ScreeningRule, ScreeningFacts, generateZKPredicates, isScreeningCovered } from './rules';
+import { getActiveConsents, validateConsent } from '@/features/health/consent/api';
 
 export interface ScreeningGateResult {
   screening_key: string;
@@ -15,17 +16,33 @@ export interface ScreeningGateResult {
 export function gateScreening(
   screeningRule: ScreeningRule, 
   facts: ScreeningFacts,
-  consentFresh: boolean = true
+  consentFresh: boolean = true,
+  requiredConsentPurpose: string = 'care_coordination'
 ): ScreeningGateResult {
   
   const zkPredicates = generateZKPredicates(facts.age);
   const reasons: string[] = [];
   let authorized = true;
-  
-  // Check consent freshness
-  if (!consentFresh) {
-    reasons.push('CONSENT_STALE');
+
+  // Check for valid consent first
+  const activeConsents = getActiveConsents();
+  const relevantConsent = activeConsents.find(c => 
+    c.scope.purpose === requiredConsentPurpose || 
+    c.scope.purpose === 'care_coordination'
+  );
+
+  if (!relevantConsent) {
+    reasons.push('NO_CONSENT');
     authorized = false;
+  } else {
+    const validation = validateConsent(relevantConsent, relevantConsent.scope.purpose, ['primary_physician']);
+    
+    if (!validation.valid) {
+      reasons.push(...validation.reasons);
+      authorized = false;
+    } else {
+      reasons.push('VALID_CONSENT');
+    }
   }
   
   // Check ZK age eligibility
@@ -67,7 +84,8 @@ export function gateScreening(
     zk_predicates: zkPredicates,
     sex_eligible: !screeningRule.zk.sexRequired || facts.sex === screeningRule.zk.sexRequired,
     plan_preventive: facts.plan.preventive_coverage,
-    consent_fresh: consentFresh
+    consent_id: relevantConsent?.id || null,
+    consent_valid: relevantConsent ? validateConsent(relevantConsent, relevantConsent.scope.purpose, ['primary_physician']).valid : false
   };
   
   // Generate Health-RDS

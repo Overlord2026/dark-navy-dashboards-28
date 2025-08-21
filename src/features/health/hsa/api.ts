@@ -1,4 +1,5 @@
 import { recordHealthRDS } from '@/features/healthcare/receipts';
+import { getActiveConsents, validateConsent } from '@/features/health/consent/api';
 
 export interface HsaPlan {
   planName: string;
@@ -84,19 +85,62 @@ export function recordClaim(amount: number, description: string) {
 }
 
 /**
- * Export HSA receipts (mock implementation)
+ * Export HSA receipts (mock implementation) - requires active consent
  */
 export function exportHsaReceipts() {
+  // Check for valid consent
+  const activeConsents = getActiveConsents();
+  const billingConsent = activeConsents.find(c => c.scope.purpose === 'billing' || c.scope.purpose === 'care_coordination');
+  
+  if (!billingConsent) {
+    // No consent available - generate denial receipt
+    const inputs = {
+      export_type: 'hsa_receipts',
+      export_format: 'json',
+      consent_check: 'failed'
+    };
+
+    return recordHealthRDS(
+      'export_hsa_receipts',
+      inputs,
+      'deny',
+      ['NO_CONSENT'],
+      ['export_denied_no_consent']
+    );
+  }
+
+  const validation = validateConsent(billingConsent, billingConsent.scope.purpose, ['billing_department']);
+  
+  if (!validation.valid) {
+    // Stale or invalid consent - generate denial receipt
+    const inputs = {
+      export_type: 'hsa_receipts',
+      export_format: 'json',
+      consent_id: billingConsent.id,
+      consent_check: 'failed'
+    };
+
+    return recordHealthRDS(
+      'export_hsa_receipts',
+      inputs,
+      'deny',
+      validation.reasons,
+      ['export_denied_invalid_consent']
+    );
+  }
+
+  // Valid consent - proceed with export
   const inputs = {
     export_type: 'hsa_receipts',
-    export_format: 'json'
+    export_format: 'json',
+    consent_id: billingConsent.id
   };
 
   const receipt = recordHealthRDS(
     'export_hsa_receipts',
     inputs,
     'allow',
-    ['authorized_export'],
+    ['authorized_export', 'valid_consent'],
     ['receipt_export_generated']
   );
 
@@ -104,7 +148,8 @@ export function exportHsaReceipts() {
   const mockData = {
     receipts: [receipt],
     exported_at: new Date().toISOString(),
-    export_type: 'hsa_receipts'
+    export_type: 'hsa_receipts',
+    consent_id: billingConsent.id
   };
 
   const blob = new Blob([JSON.stringify(mockData, null, 2)], {

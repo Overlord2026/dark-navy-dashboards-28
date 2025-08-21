@@ -14,6 +14,7 @@ import {
   Info
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { ConsentPassport } from '@/components/health/ConsentPassport';
 import {
   Table,
   TableBody,
@@ -72,10 +73,8 @@ export default function HealthScreeningsPage() {
     setProcessingScreening(screening.key);
     
     try {
-      // Mock consent freshness check
-      const consentFresh = true;
-      
-      const result: ScreeningGateResult = gateScreening(screening, mockFacts, consentFresh);
+      // Check consent automatically in gateScreening
+      const result: ScreeningGateResult = gateScreening(screening, mockFacts, true, 'care_coordination');
       
       toast({
         title: result.authorized ? "Screening Authorized" : "Screening Denied",
@@ -303,6 +302,12 @@ export default function HealthScreeningsPage() {
           )}
         </CardContent>
       </Card>
+
+      {/* Consent Management */}
+      <div>
+        <h2 className="text-xl font-semibold mb-4">Consent Management</h2>
+        <ConsentPassport />
+      </div>
 
       {/* Guidelines Reference */}
       <Card className="border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-gray-950/10">

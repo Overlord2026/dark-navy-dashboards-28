@@ -5,6 +5,7 @@ import { ArrowLeft, HeartHandshake } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { HsaSummary } from '@/components/health/HsaSummary';
 import { HsaActions } from '@/components/health/HsaActions';
+import { ConsentPassport } from '@/components/health/ConsentPassport';
 import { getPlan, HsaPlan } from '@/features/health/hsa/api';
 
 export default function HealthHsaPage() {
@@ -131,6 +132,12 @@ export default function HealthHsaPage() {
       <div>
         <h2 className="text-xl font-semibold mb-4">HSA Actions</h2>
         <HsaActions plan={plan} onRefresh={handleRefresh} />
+      </div>
+
+      {/* Consent Management */}
+      <div>
+        <h2 className="text-xl font-semibold mb-4">Consent Management</h2>
+        <ConsentPassport />
       </div>
 
       {/* Compliance Note */}
