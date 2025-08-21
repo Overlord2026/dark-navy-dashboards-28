@@ -204,7 +204,7 @@ export function FamilyOnboardingV2({ onComplete, initialPersona }: FamilyOnboard
             onConnect={handleAccountConnect}
             onSkip={() => handleAccountConnect({ skipped: true })}
             isLoading={isLoading}
-            hasFeature={has('plaid_integration')}
+            hasFeature={has('doc_vault')}
             onFeatureGating={handleFeatureGating}
           />
         );
@@ -222,7 +222,7 @@ export function FamilyOnboardingV2({ onComplete, initialPersona }: FamilyOnboard
             onInvite={handleProfessionalInvite}
             onSkip={() => handleProfessionalInvite({ skipped: true })}
             isLoading={isLoading}
-            hasFeature={has('premium_support')}
+            hasFeature={has('advanced_analytics')}
             onFeatureGating={handleFeatureGating}
           />
         );
