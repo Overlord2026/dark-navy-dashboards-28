@@ -6,7 +6,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 relative overflow-hidden",
   {
     variants: {
       variant: {
@@ -26,7 +26,7 @@ const buttonVariants = cva(
         warning: "bg-warning text-warning-foreground hover:bg-warning/90",
         success: "bg-success text-success-foreground hover:bg-success/90",
         premium: "bg-gradient-to-r from-navy to-secondary text-white hover:from-secondary hover:to-navy shadow-lg border border-emerald/20 font-medium",
-        gold: "bg-emerald text-white hover:bg-emerald/90 shadow-md font-medium",
+        gold: "rounded-2xl bg-ink text-gold-base border border-gold-base shadow-soft transition-all duration-200 ease-out focus-visible:ring-2 focus-visible:ring-gold-base focus-visible:ring-offset-2 hover:text-ink group [&>span:first-child]:relative [&>span:first-child]:z-10 before:absolute before:inset-0 before:rounded-2xl before:opacity-0 before:btn-gold-grad hover:before:opacity-100",
         "high-contrast": "bg-primary text-primary-foreground hover:bg-primary/90 font-bold border-2 border-primary-foreground shadow-lg",
         cta: "bg-accent text-accent-foreground hover:bg-accent/90"
       },
