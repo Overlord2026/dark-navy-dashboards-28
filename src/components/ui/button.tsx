@@ -27,6 +27,7 @@ const buttonVariants = cva(
         success: "bg-success text-success-foreground hover:bg-success/90",
         premium: "bg-gradient-to-r from-navy to-secondary text-white hover:from-secondary hover:to-navy shadow-lg border border-emerald/20 font-medium",
         gold: "rounded-2xl bg-ink text-gold-base border border-gold-base shadow-soft transition-all duration-200 ease-out focus-visible:ring-2 focus-visible:ring-gold-base focus-visible:ring-offset-2 hover:text-ink group [&>span:first-child]:relative [&>span:first-child]:z-10 before:absolute before:inset-0 before:rounded-2xl before:opacity-0 before:btn-gold-grad hover:before:opacity-100",
+        "gold-outline": "rounded-2xl bg-ink text-gold-base border border-gold-base shadow-soft hover:border-[2px] focus-visible:ring-2 focus-visible:ring-gold-base focus-visible:ring-offset-2 transition-all duration-200 ease-out",
         "high-contrast": "bg-primary text-primary-foreground hover:bg-primary/90 font-bold border-2 border-primary-foreground shadow-lg",
         cta: "bg-accent text-accent-foreground hover:bg-accent/90"
       },
