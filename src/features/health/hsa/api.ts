@@ -53,7 +53,6 @@ export function planContribution(amount: number) {
     withinLimit ? ['within_annual_limit'] : ['exceeds_annual_limit'],
     ['contribution_plan_generated'],
     {
-      hsa_eligible: true,
       estimated_cost_cents: amount * 100,
       coverage_type: plan.family ? 'family' : 'individual'
     }
@@ -78,7 +77,6 @@ export function recordClaim(amount: number, description: string) {
     ['valid_medical_expense'],
     ['hsa_claim_recorded'],
     {
-      hsa_eligible: true,
       estimated_cost_cents: amount * 100,
       coverage_type: plan.family ? 'family' : 'individual'
     }
