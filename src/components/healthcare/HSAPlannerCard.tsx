@@ -87,7 +87,24 @@ export function HSAPlannerCard() {
     const receipt: HealthRDSReceipt = createHealthRDSReceipt(
       'Retiree',
       'hh_demo_123',
-      `sha256:${Math.random().toString(36).substr(2, 32)}`,
+      {
+        event: "prior_auth_request",
+        plan_id: "plan_demo_hsa",
+        eligibility_zkp: {
+          meets_criteria: true,
+          proof_id: `zkp_${Math.random().toString(36).substr(2, 8)}`
+        }
+      },
+      {
+        decision: "approve",
+        reason: "meets_uspstf",
+        next_step: "complete",
+        cost_estimate: {
+          total_cents: Math.round(outputs.monthlySafeToSpend * 100),
+          patient_responsibility_cents: Math.round(outputs.monthlySafeToSpend * 100),
+          coverage_percentage: 100
+        }
+      },
       [
         {
           role: 'Retiree',
@@ -102,7 +119,6 @@ export function HSAPlannerCard() {
           action: 'accept'
         }
       ],
-      'approve',
       [`hsa_plan_${inputs.planType}`, `deductible_${inputs.deductible}`]
     );
 

@@ -76,16 +76,16 @@ export function ConsentPassport() {
     // Create Consent-RDS receipt
     const consentReceipt: ConsentRDSReceipt = createConsentRDSReceipt(
       scopeArray,
-      'care_coordination',
+      settings.roles.filter(r => r.enabled).map(r => r.role),
       settings.duration,
-      settings.requiresCoSign ? settings.coSignerRole : undefined
+      settings.requiresCoSign ? [settings.coSignerRole] : undefined
     );
 
     console.log('Consent-RDS Receipt:', consentReceipt);
 
     toast({
       title: "Consent Passport Saved",
-      description: `Consent-RDS issued for ${settings.duration} days. Freshness score: ${consentReceipt.freshness_score}`,
+      description: `Consent-RDS issued for ${settings.duration} days. Status: ${consentReceipt.revocation.status}`,
     });
   };
 

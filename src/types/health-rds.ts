@@ -67,23 +67,21 @@ export interface HealthRDSReceipt {
 
 export interface ConsentRDSReceipt {
   id: string; // cons_2025_08_21_0099
-  type: "Consent-RDS";
-  purpose_of_use: "care_coordination" | "billing" | "legal";
+  type: "consent_rds";
   scope: {
-    minimum_necessary?: boolean;
-    recipient_role?: "provider" | "advisor" | "cpa" | "attorney" | string;
-    resources?: string[]; // ["claims_summary", "lab_summary"]
-    [key: string]: any;
+    docs: string[]; // ["tax", "medications", "insurance"]
+    roles: string[]; // ["Advisor", "CPA"]
+    minimum_necessary: boolean;
   };
-  consent_time: string;
-  expiry?: string;
-  freshness_score: number; // 0-1
-  co_sign_routes?: Array<{
-    role: string;
-    required: boolean;
-    signed: boolean;
-    timestamp?: string;
-  }>;
+  freshness: {
+    issued_ts: string; // ISO 8601 timestamp
+    expires_ts?: string; // ISO 8601 timestamp
+    co_sign: string[]; // ["u_spouse_001"]
+  };
+  revocation: {
+    status: "active" | "revoked";
+    revoked_ts?: string; // ISO 8601 timestamp
+  };
   proof_hash: string; // sha256:...
   anchor_ref?: {
     merkle_root: string; // 0xROOT
@@ -229,10 +227,10 @@ export function createHealthRDSReceipt(
 
 // Helper function to create standardized Consent-RDS receipts
 export function createConsentRDSReceipt(
-  scope: string[],
-  purposeOfUse: ConsentRDSReceipt['purpose_of_use'],
+  docs: string[],
+  roles: string[],
   expiryDays?: number,
-  coSigner?: string
+  coSigners?: string[]
 ): ConsentRDSReceipt {
   const now = new Date();
   const expiry = expiryDays ? new Date(now.getTime() + expiryDays * 24 * 60 * 60 * 1000) : undefined;
@@ -243,8 +241,8 @@ export function createConsentRDSReceipt(
   const id = `cons_${timestamp}_${randomSuffix}`;
   
   const inputs = {
-    scope,
-    purpose: purposeOfUse,
+    docs,
+    roles,
     timestamp: now.toISOString()
   };
   
@@ -252,23 +250,22 @@ export function createConsentRDSReceipt(
 
   return {
     id,
-    type: "Consent-RDS",
-    purpose_of_use: purposeOfUse,
+    type: "consent_rds",
     scope: {
-      minimum_necessary: true,
-      recipient_role: "provider",
-      resources: scope
+      docs,
+      roles,
+      minimum_necessary: true
     },
-    consent_time: now.toISOString(),
-    expiry: expiry?.toISOString(),
-    freshness_score: 1.0, // New consent = fresh
+    freshness: {
+      issued_ts: now.toISOString(),
+      expires_ts: expiry?.toISOString(),
+      co_sign: coSigners || []
+    },
+    revocation: {
+      status: "active"
+    },
     proof_hash: proofHash,
-    ts: now.toISOString(),
-    co_sign_routes: coSigner ? [{
-      role: coSigner,
-      required: true,
-      signed: false
-    }] : undefined
+    ts: now.toISOString()
   };
 }
 

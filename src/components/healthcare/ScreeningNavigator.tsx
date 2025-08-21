@@ -87,11 +87,27 @@ export function ScreeningNavigator() {
     if (action === 'approve') {
       // Check zero-knowledge predicate for in-network provider
       if (!rec.inNetworkProvider) {
-        // Emit denial receipt for out-of-network
+      // Emit denial receipt for out-of-network
       const denialReceipt = createHealthRDSReceipt(
         'Clinician',
         'hh_demo_456',
-        `sha256:${Math.random().toString(36).substr(2, 32)}`,
+        {
+          event: "screening_order",
+          plan_id: "plan_demo_screening",
+          screening_code: `CPT:${rec.name.toLowerCase()}`,
+          network_zkp: {
+            in_network: false,
+            proof_id: `zkp_${Math.random().toString(36).substr(2, 8)}`
+          }
+        },
+        {
+          decision: "deny",
+          reason: "out_of_network",
+          next_step: "appeal",
+          sla: {
+            appeal_deadline: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+          }
+        },
         [
           {
             role: 'Clinician',
@@ -100,7 +116,6 @@ export function ScreeningNavigator() {
             action: 'deny'
           }
         ],
-        'deny',
         [`screening_${rec.name.toLowerCase().replace(/\s/g, '_')}`, 'out_of_network_denial']
       );
 
@@ -118,7 +133,24 @@ export function ScreeningNavigator() {
       const approvalReceipt = createHealthRDSReceipt(
         'Clinician',
         'hh_demo_456',
-        `sha256:${Math.random().toString(36).substr(2, 32)}`,
+        {
+          event: "screening_order",
+          plan_id: "plan_demo_screening",
+          screening_code: `CPT:${rec.name.toLowerCase()}`,
+          network_zkp: {
+            in_network: true,
+            proof_id: `zkp_${Math.random().toString(36).substr(2, 8)}`
+          },
+          eligibility_zkp: {
+            meets_criteria: true,
+            proof_id: `zkp_${Math.random().toString(36).substr(2, 8)}`
+          }
+        },
+        {
+          decision: "approve",
+          reason: "meets_uspstf",
+          next_step: "schedule"
+        },
         [
           {
             role: 'Clinician',
@@ -133,7 +165,6 @@ export function ScreeningNavigator() {
             action: 'accept'
           }
         ],
-        'approve',
         [`screening_${rec.name.toLowerCase().replace(/\s/g, '_')}`, 'in_network_approved']
       );
 
@@ -148,7 +179,16 @@ export function ScreeningNavigator() {
       const declineReceipt = createHealthRDSReceipt(
         'Retiree',
         'hh_demo_456',
-        `sha256:${Math.random().toString(36).substr(2, 32)}`,
+        {
+          event: "screening_order",
+          plan_id: "plan_demo_screening",
+          screening_code: `CPT:${rec.name.toLowerCase()}`
+        },
+        {
+          decision: "deny",
+          reason: "not_medically_necessary",
+          next_step: "complete"
+        },
         [
           {
             role: 'Retiree',
@@ -157,7 +197,6 @@ export function ScreeningNavigator() {
             action: 'deny'
           }
         ],
-        'deny',
         [`screening_${rec.name.toLowerCase().replace(/\s/g, '_')}`, 'patient_declined']
       );
 
