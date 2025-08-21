@@ -49,7 +49,7 @@ class TestRuleEngine {
         case '===':
           return value === condition.value;
         case '>=':
-          return typeof value === 'number' && value >= condition.value;
+          return typeof value === 'number' && typeof condition.value === 'number' && value >= condition.value;
         case 'older_than':
           if (condition.value === '1_year' && value) {
             const lastDate = new Date(value);

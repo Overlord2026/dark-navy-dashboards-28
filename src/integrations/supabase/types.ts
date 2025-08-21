@@ -8918,6 +8918,68 @@ export type Database = {
         }
         Relationships: []
       }
+      consent_rds_receipts: {
+        Row: {
+          anchor_ref: Json | null
+          consent_time: string
+          created_at: string
+          expiry: string | null
+          freshness_score: number
+          hipaa_scope: string[]
+          id: string
+          inputs_hash: string
+          policy_version: string
+          proof_hash: string
+          purpose_of_use: string
+          receipt_id: string | null
+          receipt_timestamp: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          anchor_ref?: Json | null
+          consent_time: string
+          created_at?: string
+          expiry?: string | null
+          freshness_score: number
+          hipaa_scope?: string[]
+          id?: string
+          inputs_hash: string
+          policy_version: string
+          proof_hash: string
+          purpose_of_use: string
+          receipt_id?: string | null
+          receipt_timestamp: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          anchor_ref?: Json | null
+          consent_time?: string
+          created_at?: string
+          expiry?: string | null
+          freshness_score?: number
+          hipaa_scope?: string[]
+          id?: string
+          inputs_hash?: string
+          policy_version?: string
+          proof_hash?: string
+          purpose_of_use?: string
+          receipt_id?: string | null
+          receipt_timestamp?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "consent_rds_receipts_receipt_id_fkey"
+            columns: ["receipt_id"]
+            isOneToOne: false
+            referencedRelation: "receipts"
+            referencedColumns: ["receipt_id"]
+          },
+        ]
+      }
       consent_records: {
         Row: {
           accepted_at: string
@@ -15235,6 +15297,65 @@ export type Database = {
           value?: string
         }
         Relationships: []
+      }
+      health_rds_receipts: {
+        Row: {
+          action: string
+          anchor_ref: Json | null
+          created_at: string
+          disclosures: string[]
+          financial_data: Json | null
+          id: string
+          inputs_hash: string
+          policy_version: string
+          reasons: string[]
+          receipt_id: string | null
+          receipt_timestamp: string
+          result: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          anchor_ref?: Json | null
+          created_at?: string
+          disclosures?: string[]
+          financial_data?: Json | null
+          id?: string
+          inputs_hash: string
+          policy_version: string
+          reasons?: string[]
+          receipt_id?: string | null
+          receipt_timestamp: string
+          result: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          anchor_ref?: Json | null
+          created_at?: string
+          disclosures?: string[]
+          financial_data?: Json | null
+          id?: string
+          inputs_hash?: string
+          policy_version?: string
+          reasons?: string[]
+          receipt_id?: string | null
+          receipt_timestamp?: string
+          result?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "health_rds_receipts_receipt_id_fkey"
+            columns: ["receipt_id"]
+            isOneToOne: false
+            referencedRelation: "receipts"
+            referencedColumns: ["receipt_id"]
+          },
+        ]
       }
       health_recommendations: {
         Row: {
@@ -37884,6 +38005,28 @@ export type Database = {
           metric_name: string
           metric_value: number
           status: string
+        }[]
+      }
+      get_health_receipts: {
+        Args: {
+          p_action?: string
+          p_end_date?: string
+          p_limit?: number
+          p_offset?: number
+          p_result?: string
+          p_start_date?: string
+        }
+        Returns: {
+          action: string
+          created_at: string
+          disclosures: string[]
+          has_anchor: boolean
+          has_financial: boolean
+          id: string
+          policy_version: string
+          reasons: string[]
+          receipt_timestamp: string
+          result: string
         }[]
       }
       get_next_audit_block_number: {
