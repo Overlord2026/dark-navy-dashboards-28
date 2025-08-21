@@ -70,7 +70,8 @@ export function recordHealthRDS(
   result: 'allow' | 'deny',
   reasons: string[],
   disclosures: string[] = [],
-  financial?: HealthRDS['financial']
+  financial?: HealthRDS['financial'],
+  anchorRef?: string
 ): HealthRDS {
   const receipt: HealthRDS = {
     type: 'Health-RDS',
@@ -81,7 +82,8 @@ export function recordHealthRDS(
     result,
     disclosures,
     financial,
-    ts: new Date().toISOString()
+    ts: new Date().toISOString(),
+    anchor_ref: anchorRef
   };
 
   console.info('receipt.recorded', { 

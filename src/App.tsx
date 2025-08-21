@@ -907,6 +907,7 @@ function App() {
                              <Route path="/health/hsa" element={<LazyHealthHsaPage />} />
                              <Route path="/health/screenings" element={<LazyHealthScreeningsPage />} />
                              {/* Verifier route will be added after import fix */}
+                             {/* Anchor Manager route will be added separately */}
 
                           </Routes>
                         <Navigation />
