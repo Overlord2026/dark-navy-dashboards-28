@@ -118,26 +118,26 @@ export interface VaultRDSReceipt {
 
 export interface PARDSReceipt {
   id: string; // pa_2025_08_21_0010
-  type: "PA-RDS";
-  request_type: "prior_authorization" | "appeal" | "urgent_review";
-  medical_necessity: {
-    icd_codes: string[];
-    cpt_codes: string[];
-    clinical_rationale: string;
-    supporting_evidence_hashes: string[];
+  type: "pa_rds";
+  request: {
+    auth_id: string; // pa_00421
+    service_code: string; // CPT:…
+    provider_zkp: {
+      licensed: boolean;
+      in_network: boolean;
+      proof_id?: string;
+    };
   };
-  decision: "approved" | "denied" | "partial" | "pending";
-  decision_rationale: string[];
-  review_timeline: {
-    submitted_at: string;
-    reviewed_at?: string;
-    decision_at?: string;
-    appeal_deadline?: string;
-  };
-  financial_impact: {
-    estimated_cost_cents: number;
-    patient_responsibility_cents: number;
-    coverage_determination: string;
+  decision: {
+    status: "approved" | "denied" | "partial" | "pending";
+    effective?: string; // ISO date - when approval takes effect
+    denial_delta?: {
+      present: boolean;
+      code: string; // PA-DEN-009
+      human_reason: string;
+      appeal_path: string[]; // ["peer_review", "formal_appeal"]
+      required_docs: string[]; // ["sha256:docA","sha256:docB"]
+    };
   };
   anchor_ref?: {
     merkle_root: string; // 0xROOT
@@ -294,6 +294,42 @@ export function createVaultRDSReceipt(
     ttl_days: ttlDays,
     anchor_ref: anchorRef,
     proof_of_key_shred: proofOfKeyShred,
+    ts: new Date().toISOString()
+  };
+}
+
+// Helper function to create standardized PA-RDS receipts
+export function createPARDSReceipt(
+  authId: string,
+  serviceCode: string,
+  providerLicensed: boolean,
+  providerInNetwork: boolean,
+  decisionStatus: PARDSReceipt['decision']['status'],
+  effectiveDate?: string,
+  denialInfo?: PARDSReceipt['decision']['denial_delta']
+): PARDSReceipt {
+  // Generate unique ID
+  const timestamp = new Date().toISOString().split('T')[0].replace(/-/g, '_');
+  const randomSuffix = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+  const id = `pa_${timestamp}_${randomSuffix}`;
+
+  return {
+    id,
+    type: "pa_rds",
+    request: {
+      auth_id: authId,
+      service_code: serviceCode,
+      provider_zkp: {
+        licensed: providerLicensed,
+        in_network: providerInNetwork,
+        proof_id: `zkp_${Math.random().toString(36).substr(2, 8)}`
+      }
+    },
+    decision: {
+      status: decisionStatus,
+      effective: effectiveDate,
+      denial_delta: denialInfo
+    },
     ts: new Date().toISOString()
   };
 }
