@@ -12,9 +12,7 @@ import { RoleProvider } from "@/context/RoleContext";
 import { SubscriptionProvider } from "@/context/SubscriptionContext";
 import { useSubscription } from "@/context/SubscriptionContext";
 import PremiumDashboardExample from "@/pages/PremiumDashboardExample";
-import NILOnboardingPage from "@/pages/nil/NILOnboardingPage";
-import NILEducationPage from "@/pages/nil/NILEducationPage";
-import NILOffersPage from "@/pages/nil/NILOffersPage";
+import NILOnboardingWizard from "@/pages/nil/Onboarding";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { TenantProvider } from "@/context/TenantContext";
 import { AdvisorProvider } from "@/context/AdvisorContext";
@@ -73,7 +71,7 @@ import WelcomePage from "./pages/WelcomePage";
 import RetirementConfidenceScorecard from "./pages/RetirementConfidenceScorecard";
 import LongevityScorecard from "./pages/LongevityScorecard";
 import PublicFeeCalculator from "./pages/PublicFeeCalculator";
-import NILOnboardingPage from "./pages/NILOnboardingPage";
+
 import RetirementIncomeGapAnalyzer from "./pages/RetirementIncomeGapAnalyzer";
 import RetirementRoadmapInfo from "./pages/RetirementRoadmapInfo";
 import RetirementAnalyzerDemo from "./pages/RetirementAnalyzerDemo";
@@ -304,9 +302,7 @@ function App() {
                               <Routes>
         <Route path="/premium-ui-demo" element={<PremiumDashboardExample />} />
         {/* NIL Routes */}
-        <Route path="/nil/onboarding" element={<NILOnboardingPage />} />
-        <Route path="/nil/education" element={<NILEducationPage />} />
-        <Route path="/nil/offers" element={<NILOffersPage />} />
+        <Route path="/nil/onboarding" element={<NILOnboardingWizard />} />
         <Route path="/wireframe" element={<WireframePage />} />
                             <Route path="/platform-map" element={<PlatformMap />} />
                              <Route path="/athletes/nil-education" element={<NILEducationCenter />} />
@@ -558,7 +554,7 @@ function App() {
         <Route path="/persona/corporate-executive" element={<CorporateExecutivePersonaPage />} />
         <Route path="/persona/pre-retiree-retiree" element={<PreRetireeRetireePersonaPage />} />
                                  <Route path="/calculator" element={<PublicFeeCalculator />} />
-                                 <Route path="/nil-onboarding" element={<NILOnboardingPage />} />
+                                 <Route path="/nil-onboarding" element={<NILOnboardingWizard />} />
                                 <Route path="/demo" element={<div className="min-h-screen bg-background p-8"><DemoCalculator /></div>} />
                                 <Route path="/lead-magnet" element={<LeadMagnetPage />} />
                                 <Route path="/marketplace-demo" element={<MarketplaceLandingPage />} />
