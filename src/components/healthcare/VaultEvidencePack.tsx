@@ -143,13 +143,15 @@ export function VaultEvidencePack() {
     
     setPack(prev => ({ ...prev, id: packId, isSealed: true }));
 
-    // Create Vault-RDS receipt for grant action
+    // Create Vault-RDS receipt for pack sealing
     const vaultReceipt: VaultRDSReceipt = createVaultRDSReceipt(
-      'grant',
-      packId,
-      `grant_${Date.now()}`,
-      'prior_auth_team',
-      7 // 7 days TTL
+      pack.documents.map(doc => ({
+        name: doc.name,
+        hash: `sha256:${Math.random().toString(36).substr(2, 32)}`
+      })),
+      pack.signers.map(s => s.role),
+      true, // WORM compliant
+      false // not eligible for deletion initially
     );
 
     console.log('Vault-RDS Receipt (Grant):', vaultReceipt);
@@ -165,10 +167,17 @@ export function VaultEvidencePack() {
 
     const proofOfKeyShred = `sha256:${Math.random().toString(36).substr(2, 32)}`;
     
-    // Create Vault-RDS receipt for delete action
+    // Create Vault-RDS receipt for deletion with stub
     const deletionReceipt: VaultRDSReceipt = createVaultRDSReceipt(
-      'delete',
-      pack.id
+      [], // no docs - this is a deletion
+      [pack.signers[0].role], // original signer role
+      false, // no longer WORM protected
+      true, // eligible for deletion
+      {
+        ts: new Date().toISOString(),
+        reason: "policy_expired",
+        signer: pack.signers[0].role
+      }
     );
 
     console.log('Vault-RDS Receipt (Defensible Deletion):', deletionReceipt);

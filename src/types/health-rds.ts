@@ -97,12 +97,24 @@ export interface ConsentRDSReceipt {
 
 export interface VaultRDSReceipt {
   id: string; // vault_2025_08_21_0100
-  type: "Vault-RDS";
-  action: "grant" | "revoke" | "legal_hold" | "delete" | "export";
-  doc_id: string; // pack:0xABCDEF - evidence pack identifier (hash, not content)
-  grant_id?: string; // grant_7_days_provider
-  recipient_role?: string; // provider
-  ttl_days?: number; // 7
+  type: "vault_rds";
+  pack: {
+    docs: Array<{
+      name: string; // "physician_note.pdf"
+      hash: string; // "sha256:…"
+    }>;
+    signers: string[]; // ["u_123","clin_456"]
+    sealed_ts: string; // ISO 8601 timestamp
+    worm: boolean; // write-once-read-many compliance
+  };
+  deletion: {
+    eligible: boolean;
+    stub?: {
+      ts: string; // ISO 8601 timestamp
+      reason: string; // "policy_expired", "user_request", "legal_hold_released"
+      signer: string; // user who authorized deletion
+    } | null;
+  };
   anchor_ref?: {
     merkle_root: string; // 0xROOT
     cross_chain_locator: Array<{
@@ -112,7 +124,6 @@ export interface VaultRDSReceipt {
       anchor_epoch: number;
     }>;
   };
-  proof_of_key_shred?: string; // sha256:... (present only for delete action)
   ts: string; // ISO 8601 timestamp
 }
 
@@ -271,13 +282,11 @@ export function createConsentRDSReceipt(
 
 // Helper function to create standardized Vault-RDS receipts
 export function createVaultRDSReceipt(
-  action: VaultRDSReceipt['action'],
-  docId: string,
-  grantId?: string,
-  recipientRole?: string,
-  ttlDays?: number,
-  anchorRef?: VaultRDSReceipt['anchor_ref'],
-  proofOfKeyShred?: string
+  docs: Array<{name: string; hash: string}>,
+  signers: string[],
+  wormCompliant: boolean = true,
+  deletionEligible: boolean = false,
+  deletionStub?: VaultRDSReceipt['deletion']['stub']
 ): VaultRDSReceipt {
   // Generate unique ID
   const timestamp = new Date().toISOString().split('T')[0].replace(/-/g, '_');
@@ -286,14 +295,17 @@ export function createVaultRDSReceipt(
 
   return {
     id,
-    type: "Vault-RDS",
-    action,
-    doc_id: docId,
-    grant_id: grantId,
-    recipient_role: recipientRole,
-    ttl_days: ttlDays,
-    anchor_ref: anchorRef,
-    proof_of_key_shred: proofOfKeyShred,
+    type: "vault_rds",
+    pack: {
+      docs,
+      signers,
+      sealed_ts: new Date().toISOString(),
+      worm: wormCompliant
+    },
+    deletion: {
+      eligible: deletionEligible,
+      stub: deletionStub || null
+    },
     ts: new Date().toISOString()
   };
 }
