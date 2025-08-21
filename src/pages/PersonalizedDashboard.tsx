@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { X, Crown, TrendingUp, User, Settings } from 'lucide-react';
 import { usePersonalizationStore } from '@/features/personalization/store';
 import { getModuleOrder } from '@/features/personalization/personalization';
+import { NudgePanel } from '@/components/NudgePanel';
 
 // Mock dashboard modules for demonstration
 const moduleComponents = {
@@ -222,6 +223,9 @@ export default function PersonalizedDashboard() {
           </CardContent>
         </Card>
       )}
+
+      {/* Nudge Panel */}
+      <NudgePanel />
 
       {/* Current Configuration Display */}
       <Card>
