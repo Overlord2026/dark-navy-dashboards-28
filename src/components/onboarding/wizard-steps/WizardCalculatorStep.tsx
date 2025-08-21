@@ -226,7 +226,7 @@ export function WizardCalculatorStep({ onComplete, persona }: WizardCalculatorSt
                 return (
                   <div key={key} className="text-center">
                     <p className="text-lg font-bold text-green-800">
-                      ${typeof value === 'number' ? value.toLocaleString() : value}
+                      ${typeof value === 'number' ? value.toLocaleString() : String(value)}
                     </p>
                     <p className="text-xs text-green-600 capitalize">
                       {String(key).replace(/_/g, ' ')}

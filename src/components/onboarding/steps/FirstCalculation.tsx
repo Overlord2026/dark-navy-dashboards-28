@@ -250,9 +250,9 @@ export function FirstCalculation({ onCalculate, persona, isLoading }: FirstCalcu
                   return (
                     <div key={key} className="text-center">
                       <p className="text-lg font-bold text-green-800">
-                        {typeof value === 'number' && key.includes('amount') || key.includes('income') || key.includes('withdrawal') 
-                          ? `$${value.toLocaleString()}` 
-                          : value}
+                         {typeof value === 'number' && (key.includes('amount') || key.includes('income') || key.includes('withdrawal')) 
+                           ? `$${value.toLocaleString()}` 
+                           : String(value)}
                       </p>
                       <p className="text-xs text-green-600 capitalize">
                         {String(key).replace(/_/g, ' ')}
