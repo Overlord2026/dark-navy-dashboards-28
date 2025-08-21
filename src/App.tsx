@@ -204,6 +204,7 @@ import { MeetPage } from "@/pages/MeetPage";
 import AdminLayoutSettings from './pages/AdminLayoutSettings';
 import CFODashboard from './pages/CFODashboard';
 import AdminControlsPage from './pages/AdminControlsPage';
+import PersonalizedDashboard from './pages/PersonalizedDashboard';
 import VettingApplicationPage from './pages/VettingApplicationPage';
 import { LeadMagnetPage } from './pages/LeadMagnetPage';
 import { ClientFamilyIntroPage } from '@/pages/ClientFamilyIntroPage';
@@ -891,6 +892,9 @@ function App() {
                             <Route path="/executive-suite" element={<ExecutiveSuite />} />
                             <Route path="/admin/policies" element={<AdminPolicies />} />
                             <Route path="/consent" element={<ConsentDashboard />} />
+                            
+                            {/* Personalized Dashboard */}
+                            <Route path="/personalized-dashboard" element={<PersonalizedDashboard />} />
 
                           </Routes>
                         <Navigation />

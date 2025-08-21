@@ -6,6 +6,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import './styles/dashboard.css';
+
 /* High contrast focus styles for accessibility */
 .focus-visible\:ring-4:focus-visible {
   --tw-ring-offset-width: 4px;

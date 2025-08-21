@@ -121,19 +121,23 @@ export function PersonalizationProvider({ children, userId = 'demo-user' }: Pers
   const queryClient = useQueryClient();
 
   // Load personalization data
-  const { isLoading } = useQuery({
+  const { isLoading, data } = useQuery({
     queryKey: ['personalization', userId],
-    queryFn: personalizationApi.getPersonalization,
-    onSuccess: (data) => {
+    queryFn: personalizationApi.getPersonalization
+  });
+
+  // Update state when data is loaded
+  useEffect(() => {
+    if (data) {
       dispatch({ type: 'SET_STATE', payload: data });
     }
-  });
+  }, [data]);
 
   // Update personalization mutation
   const updateMutation = useMutation({
     mutationFn: personalizationApi.updatePersonalization,
     onSuccess: () => {
-      queryClient.invalidateQueries(['personalization', userId]);
+      queryClient.invalidateQueries({ queryKey: ['personalization', userId] });
     }
   });
 
@@ -208,7 +212,7 @@ export function PersonalizationProvider({ children, userId = 'demo-user' }: Pers
   };
 
   const refreshPersonalization = () => {
-    queryClient.invalidateQueries(['personalization', userId]);
+    queryClient.invalidateQueries({ queryKey: ['personalization', userId] });
   };
 
   return (
@@ -218,7 +222,7 @@ export function PersonalizationProvider({ children, userId = 'demo-user' }: Pers
         updatePersona,
         updateFacts,
         refreshPersonalization,
-        isLoading: isLoading || updateMutation.isLoading
+        isLoading: isLoading || updateMutation.isPending
       }}
     >
       {children}
