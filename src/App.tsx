@@ -208,6 +208,7 @@ import PersonalizedDashboard from './pages/PersonalizedDashboard';
 import ReportsPage from './pages/ReportsPage';
 import GoalsHome from './pages/GoalsHome';
 import HealthcarePage from './pages/HealthcarePage';
+import HealthHsaPage from './pages/HealthHsaPage';
 import VettingApplicationPage from './pages/VettingApplicationPage';
 import { LeadMagnetPage } from './pages/LeadMagnetPage';
 import { ClientFamilyIntroPage } from '@/pages/ClientFamilyIntroPage';
@@ -902,6 +903,7 @@ function App() {
                             <Route path="/goals-home" element={<GoalsHome />} />
                             <Route path="/calculators" element={<CalculatorsPage />} />
                             <Route path="/healthcare" element={<HealthcarePage />} />
+                            <Route path="/health/hsa" element={<HealthHsaPage />} />
 
                           </Routes>
                         <Navigation />
