@@ -58,9 +58,9 @@ export async function getUserHealthReceipts(options: {
 export async function createAndStoreHealthReceipt(
   persona: HealthRDSReceipt['persona'],
   householdId: string,
-  inputsHash: string,
+  context: any,
+  outcome: any,
   routeEntries: any[],
-  decision: HealthRDSReceipt['decision'],
   linkedMaterials?: string[],
   signers?: string[]
 ): Promise<{ receipt: HealthRDSReceipt; receiptId: string }> {
@@ -69,9 +69,9 @@ export async function createAndStoreHealthReceipt(
   const receipt = createHealthRDSReceipt(
     persona,
     householdId,
-    inputsHash,
+    context,
+    outcome,
     routeEntries,
-    decision,
     linkedMaterials,
     signers
   );
@@ -79,9 +79,11 @@ export async function createAndStoreHealthReceipt(
   // Store the receipt
   const receiptId = await storeHealthRDSReceipt(receipt, signers?.[0]);
 
-  console.log('Health-RDS receipt created and stored:', {
+  console.log('Enhanced Health-RDS receipt with ZKP created and stored:', {
     persona: receipt.persona,
-    decision: receipt.decision,
+    decision: receipt.outcome.decision,
+    zkp_network: receipt.context.network_zkp?.proof_id,
+    zkp_eligibility: receipt.context.eligibility_zkp?.proof_id,
     receiptId,
     timestamp: receipt.created_ts
   });

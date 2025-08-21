@@ -1,6 +1,6 @@
 import { HealthHeader } from '@/components/healthcare/HealthHeader';
 import { HSAPlannerCard } from '@/components/healthcare/HSAPlannerCard';
-import { ScreeningNavigator } from '@/components/healthcare/ScreeningNavigator';
+import { EnhancedScreeningNavigator } from '@/components/healthcare/EnhancedScreeningNavigator';
 import { ConsentPassport } from '@/components/healthcare/ConsentPassport';
 import { VaultEvidencePack } from '@/components/healthcare/VaultEvidencePack';
 import { HealthQADashboard } from '@/components/healthcare/HealthQADashboard';
@@ -25,9 +25,9 @@ export default function HealthDashboard() {
             <HSAPlannerCard />
           </section>
 
-          {/* H2 - Screening & Prevention */}
+          {/* H2 - Enhanced Screening & Prevention with ZKP */}
           <section id="screening-navigator">
-            <ScreeningNavigator />
+            <EnhancedScreeningNavigator />
           </section>
 
           {/* H3 - Consent Passport */}
