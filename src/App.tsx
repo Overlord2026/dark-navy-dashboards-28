@@ -12,6 +12,9 @@ import { RoleProvider } from "@/context/RoleContext";
 import { SubscriptionProvider } from "@/context/SubscriptionContext";
 import { useSubscription } from "@/context/SubscriptionContext";
 import PremiumDashboardExample from "@/pages/PremiumDashboardExample";
+import NILOnboardingPage from "@/pages/nil/NILOnboardingPage";
+import NILEducationPage from "@/pages/nil/NILEducationPage";
+import NILOffersPage from "@/pages/nil/NILOffersPage";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { TenantProvider } from "@/context/TenantContext";
 import { AdvisorProvider } from "@/context/AdvisorContext";
@@ -300,6 +303,10 @@ function App() {
                              <main id="main-content" role="main">
                               <Routes>
         <Route path="/premium-ui-demo" element={<PremiumDashboardExample />} />
+        {/* NIL Routes */}
+        <Route path="/nil/onboarding" element={<NILOnboardingPage />} />
+        <Route path="/nil/education" element={<NILEducationPage />} />
+        <Route path="/nil/offers" element={<NILOffersPage />} />
         <Route path="/wireframe" element={<WireframePage />} />
                             <Route path="/platform-map" element={<PlatformMap />} />
                              <Route path="/athletes/nil-education" element={<NILEducationCenter />} />
