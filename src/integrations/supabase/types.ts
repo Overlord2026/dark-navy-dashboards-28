@@ -15393,6 +15393,114 @@ export type Database = {
         }
         Relationships: []
       }
+      healthcare_appeals: {
+        Row: {
+          appeal_reason: string | null
+          appeal_status: string | null
+          appeal_type: string
+          assigned_reviewer: string | null
+          created_at: string | null
+          decision_notes: string | null
+          evidence_pack_vault_id: string | null
+          health_rds_receipt_id: string | null
+          id: string
+          missing_docs: Json | null
+          original_pa_rds_id: string
+          priority: string | null
+          review_deadline: string | null
+          submitted_by: string | null
+          updated_at: string | null
+          vault_rds_receipt_id: string | null
+        }
+        Insert: {
+          appeal_reason?: string | null
+          appeal_status?: string | null
+          appeal_type: string
+          assigned_reviewer?: string | null
+          created_at?: string | null
+          decision_notes?: string | null
+          evidence_pack_vault_id?: string | null
+          health_rds_receipt_id?: string | null
+          id?: string
+          missing_docs?: Json | null
+          original_pa_rds_id: string
+          priority?: string | null
+          review_deadline?: string | null
+          submitted_by?: string | null
+          updated_at?: string | null
+          vault_rds_receipt_id?: string | null
+        }
+        Update: {
+          appeal_reason?: string | null
+          appeal_status?: string | null
+          appeal_type?: string
+          assigned_reviewer?: string | null
+          created_at?: string | null
+          decision_notes?: string | null
+          evidence_pack_vault_id?: string | null
+          health_rds_receipt_id?: string | null
+          id?: string
+          missing_docs?: Json | null
+          original_pa_rds_id?: string
+          priority?: string | null
+          review_deadline?: string | null
+          submitted_by?: string | null
+          updated_at?: string | null
+          vault_rds_receipt_id?: string | null
+        }
+        Relationships: []
+      }
+      healthcare_audit_exports: {
+        Row: {
+          completed_at: string | null
+          created_at: string | null
+          date_range_end: string | null
+          date_range_start: string | null
+          export_format: string
+          export_status: string | null
+          export_type: string
+          file_path: string | null
+          file_size_bytes: number | null
+          filters: Json | null
+          id: string
+          include_anchor_refs: boolean | null
+          record_count: number | null
+          requested_by: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string | null
+          date_range_end?: string | null
+          date_range_start?: string | null
+          export_format: string
+          export_status?: string | null
+          export_type: string
+          file_path?: string | null
+          file_size_bytes?: number | null
+          filters?: Json | null
+          id?: string
+          include_anchor_refs?: boolean | null
+          record_count?: number | null
+          requested_by?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string | null
+          date_range_end?: string | null
+          date_range_start?: string | null
+          export_format?: string
+          export_status?: string | null
+          export_type?: string
+          file_path?: string | null
+          file_size_bytes?: number | null
+          filters?: Json | null
+          id?: string
+          include_anchor_refs?: boolean | null
+          record_count?: number | null
+          requested_by?: string | null
+        }
+        Relationships: []
+      }
       healthcare_document_permissions: {
         Row: {
           access_level: string
@@ -15503,6 +15611,54 @@ export type Database = {
           updated_at?: string
           uploaded_by?: string | null
           user_id?: string
+        }
+        Relationships: []
+      }
+      healthcare_policies: {
+        Row: {
+          approval_date: string | null
+          approved_by: string | null
+          created_at: string | null
+          created_by: string | null
+          effective_date: string
+          expiry_date: string | null
+          id: string
+          is_active: boolean | null
+          policy_name: string
+          policy_rules: Json
+          policy_type: string
+          policy_version: string
+          updated_at: string | null
+        }
+        Insert: {
+          approval_date?: string | null
+          approved_by?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          effective_date: string
+          expiry_date?: string | null
+          id?: string
+          is_active?: boolean | null
+          policy_name: string
+          policy_rules?: Json
+          policy_type: string
+          policy_version: string
+          updated_at?: string | null
+        }
+        Update: {
+          approval_date?: string | null
+          approved_by?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          effective_date?: string
+          expiry_date?: string | null
+          id?: string
+          is_active?: boolean | null
+          policy_name?: string
+          policy_rules?: Json
+          policy_type?: string
+          policy_version?: string
+          updated_at?: string | null
         }
         Relationships: []
       }
@@ -20881,6 +21037,71 @@ export type Database = {
           },
         ]
       }
+      nil_contracts: {
+        Row: {
+          anchor_ref: Json | null
+          content_hash: string | null
+          contract_type: string
+          created_at: string | null
+          effective_date: string | null
+          execution_date: string | null
+          expiry_date: string | null
+          id: string
+          offer_id: string | null
+          parties: Json
+          receipt_id: string | null
+          signature_requirements: Json | null
+          signatures: Json | null
+          status: string | null
+          terms: Json
+          updated_at: string | null
+        }
+        Insert: {
+          anchor_ref?: Json | null
+          content_hash?: string | null
+          contract_type: string
+          created_at?: string | null
+          effective_date?: string | null
+          execution_date?: string | null
+          expiry_date?: string | null
+          id?: string
+          offer_id?: string | null
+          parties: Json
+          receipt_id?: string | null
+          signature_requirements?: Json | null
+          signatures?: Json | null
+          status?: string | null
+          terms: Json
+          updated_at?: string | null
+        }
+        Update: {
+          anchor_ref?: Json | null
+          content_hash?: string | null
+          contract_type?: string
+          created_at?: string | null
+          effective_date?: string | null
+          execution_date?: string | null
+          expiry_date?: string | null
+          id?: string
+          offer_id?: string | null
+          parties?: Json
+          receipt_id?: string | null
+          signature_requirements?: Json | null
+          signatures?: Json | null
+          status?: string | null
+          terms?: Json
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "nil_contracts_offer_id_fkey"
+            columns: ["offer_id"]
+            isOneToOne: false
+            referencedRelation: "nil_offers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       nil_deals: {
         Row: {
           athlete_id: string
@@ -21024,6 +21245,42 @@ export type Database = {
           },
         ]
       }
+      nil_disclosure_packs: {
+        Row: {
+          channel: string
+          content_hash: string
+          created_at: string | null
+          disclosure_version: string
+          effective_date: string
+          expiry_date: string | null
+          id: string
+          jurisdiction: string
+          pack_data: Json
+        }
+        Insert: {
+          channel: string
+          content_hash: string
+          created_at?: string | null
+          disclosure_version: string
+          effective_date: string
+          expiry_date?: string | null
+          id?: string
+          jurisdiction: string
+          pack_data: Json
+        }
+        Update: {
+          channel?: string
+          content_hash?: string
+          created_at?: string | null
+          disclosure_version?: string
+          effective_date?: string
+          expiry_date?: string | null
+          id?: string
+          jurisdiction?: string
+          pack_data?: Json
+        }
+        Relationships: []
+      }
       nil_disclosures: {
         Row: {
           athlete_user_id: string
@@ -21056,6 +21313,109 @@ export type Database = {
           school_id?: string | null
         }
         Relationships: []
+      }
+      nil_disputes: {
+        Row: {
+          anchor_ref: Json | null
+          dispute_details: Json
+          dispute_type: string
+          disputed_entity_id: string
+          disputed_entity_type: string
+          disputing_party: string | null
+          filed_at: string | null
+          id: string
+          receipt_id: string | null
+          resolution: Json | null
+          resolved_at: string | null
+          status: string | null
+        }
+        Insert: {
+          anchor_ref?: Json | null
+          dispute_details: Json
+          dispute_type: string
+          disputed_entity_id: string
+          disputed_entity_type: string
+          disputing_party?: string | null
+          filed_at?: string | null
+          id?: string
+          receipt_id?: string | null
+          resolution?: Json | null
+          resolved_at?: string | null
+          status?: string | null
+        }
+        Update: {
+          anchor_ref?: Json | null
+          dispute_details?: Json
+          dispute_type?: string
+          disputed_entity_id?: string
+          disputed_entity_type?: string
+          disputing_party?: string | null
+          filed_at?: string | null
+          id?: string
+          receipt_id?: string | null
+          resolution?: Json | null
+          resolved_at?: string | null
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "nil_disputes_disputing_party_fkey"
+            columns: ["disputing_party"]
+            isOneToOne: false
+            referencedRelation: "nil_personas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      nil_education_records: {
+        Row: {
+          anchor_ref: Json | null
+          channel: string
+          completion_date: string
+          content_hash: string
+          created_at: string | null
+          education_type: string
+          expiry_date: string | null
+          id: string
+          jurisdiction: string
+          persona_id: string | null
+          receipt_id: string | null
+        }
+        Insert: {
+          anchor_ref?: Json | null
+          channel: string
+          completion_date: string
+          content_hash: string
+          created_at?: string | null
+          education_type: string
+          expiry_date?: string | null
+          id?: string
+          jurisdiction: string
+          persona_id?: string | null
+          receipt_id?: string | null
+        }
+        Update: {
+          anchor_ref?: Json | null
+          channel?: string
+          completion_date?: string
+          content_hash?: string
+          created_at?: string | null
+          education_type?: string
+          expiry_date?: string | null
+          id?: string
+          jurisdiction?: string
+          persona_id?: string | null
+          receipt_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "nil_education_records_persona_id_fkey"
+            columns: ["persona_id"]
+            isOneToOne: false
+            referencedRelation: "nil_personas"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       nil_eligibility: {
         Row: {
@@ -21189,6 +21549,72 @@ export type Database = {
           },
         ]
       }
+      nil_offers: {
+        Row: {
+          anchor_ref: Json | null
+          athlete_id: string | null
+          brand_id: string | null
+          created_at: string | null
+          currency: string | null
+          exclusivity_period_days: number | null
+          id: string
+          offer_amount: number | null
+          offer_lock_until: string | null
+          offer_terms: Json | null
+          offer_type: string
+          receipt_id: string | null
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          anchor_ref?: Json | null
+          athlete_id?: string | null
+          brand_id?: string | null
+          created_at?: string | null
+          currency?: string | null
+          exclusivity_period_days?: number | null
+          id?: string
+          offer_amount?: number | null
+          offer_lock_until?: string | null
+          offer_terms?: Json | null
+          offer_type: string
+          receipt_id?: string | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          anchor_ref?: Json | null
+          athlete_id?: string | null
+          brand_id?: string | null
+          created_at?: string | null
+          currency?: string | null
+          exclusivity_period_days?: number | null
+          id?: string
+          offer_amount?: number | null
+          offer_lock_until?: string | null
+          offer_terms?: Json | null
+          offer_type?: string
+          receipt_id?: string | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "nil_offers_athlete_id_fkey"
+            columns: ["athlete_id"]
+            isOneToOne: false
+            referencedRelation: "nil_personas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "nil_offers_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "nil_personas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       nil_parties: {
         Row: {
           created_at: string
@@ -21233,6 +21659,79 @@ export type Database = {
           verification_status?: string | null
         }
         Relationships: []
+      }
+      nil_payments: {
+        Row: {
+          amount: number
+          anchor_ref: Json | null
+          contract_id: string | null
+          created_at: string | null
+          currency: string | null
+          escrow_status: string | null
+          from_party: string | null
+          id: string
+          payment_method: string | null
+          payment_type: string
+          processed_at: string | null
+          receipt_id: string | null
+          to_party: string | null
+          transaction_ref: string | null
+        }
+        Insert: {
+          amount: number
+          anchor_ref?: Json | null
+          contract_id?: string | null
+          created_at?: string | null
+          currency?: string | null
+          escrow_status?: string | null
+          from_party?: string | null
+          id?: string
+          payment_method?: string | null
+          payment_type: string
+          processed_at?: string | null
+          receipt_id?: string | null
+          to_party?: string | null
+          transaction_ref?: string | null
+        }
+        Update: {
+          amount?: number
+          anchor_ref?: Json | null
+          contract_id?: string | null
+          created_at?: string | null
+          currency?: string | null
+          escrow_status?: string | null
+          from_party?: string | null
+          id?: string
+          payment_method?: string | null
+          payment_type?: string
+          processed_at?: string | null
+          receipt_id?: string | null
+          to_party?: string | null
+          transaction_ref?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "nil_payments_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "nil_contracts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "nil_payments_from_party_fkey"
+            columns: ["from_party"]
+            isOneToOne: false
+            referencedRelation: "nil_personas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "nil_payments_to_party_fkey"
+            columns: ["to_party"]
+            isOneToOne: false
+            referencedRelation: "nil_personas"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       nil_payouts: {
         Row: {
@@ -21302,6 +21801,135 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      nil_personas: {
+        Row: {
+          created_at: string | null
+          email: string
+          id: string
+          jurisdiction: string | null
+          metadata: Json | null
+          name: string
+          persona_type: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          id?: string
+          jurisdiction?: string | null
+          metadata?: Json | null
+          name: string
+          persona_type: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          id?: string
+          jurisdiction?: string | null
+          metadata?: Json | null
+          name?: string
+          persona_type?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      nil_policy_gates: {
+        Row: {
+          created_at: string | null
+          entity_id: string
+          entity_type: string
+          evaluation_result: Json | null
+          gate_status: string | null
+          gate_type: string
+          id: string
+          last_evaluation: string | null
+          policy_config: Json
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          entity_id: string
+          entity_type: string
+          evaluation_result?: Json | null
+          gate_status?: string | null
+          gate_type: string
+          id?: string
+          last_evaluation?: string | null
+          policy_config: Json
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          entity_id?: string
+          entity_type?: string
+          evaluation_result?: Json | null
+          gate_status?: string | null
+          gate_type?: string
+          id?: string
+          last_evaluation?: string | null
+          policy_config?: Json
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      nil_receipts: {
+        Row: {
+          anchor_ref: Json | null
+          created_at: string | null
+          decision_outcome: string
+          entity_id: string
+          entity_type: string
+          event_type: string
+          explanation: string | null
+          id: string
+          inputs_hash: string
+          merkle_leaf: string
+          merkle_root: string | null
+          policy_hash: string
+          privacy_level: string | null
+          reason_codes: Json | null
+          receipt_type: string
+          retention_date: string | null
+        }
+        Insert: {
+          anchor_ref?: Json | null
+          created_at?: string | null
+          decision_outcome: string
+          entity_id: string
+          entity_type: string
+          event_type: string
+          explanation?: string | null
+          id?: string
+          inputs_hash: string
+          merkle_leaf: string
+          merkle_root?: string | null
+          policy_hash: string
+          privacy_level?: string | null
+          reason_codes?: Json | null
+          receipt_type: string
+          retention_date?: string | null
+        }
+        Update: {
+          anchor_ref?: Json | null
+          created_at?: string | null
+          decision_outcome?: string
+          entity_id?: string
+          entity_type?: string
+          event_type?: string
+          explanation?: string | null
+          id?: string
+          inputs_hash?: string
+          merkle_leaf?: string
+          merkle_root?: string | null
+          policy_hash?: string
+          privacy_level?: string | null
+          reason_codes?: Json | null
+          receipt_type?: string
+          retention_date?: string | null
+        }
+        Relationships: []
       }
       nil_training_status: {
         Row: {
@@ -23120,6 +23748,116 @@ export type Database = {
           password_hash?: string
           tenant_id?: string | null
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      payer_api_requests: {
+        Row: {
+          completed_at: string | null
+          connector_id: string | null
+          created_at: string | null
+          error_code: string | null
+          error_message: string | null
+          external_request_id: string | null
+          health_rds_receipt_id: string | null
+          id: string
+          pa_rds_receipt_id: string | null
+          request_payload_hash: string | null
+          request_type: string
+          response_status: number | null
+          response_time_ms: number | null
+          sla_met: boolean | null
+        }
+        Insert: {
+          completed_at?: string | null
+          connector_id?: string | null
+          created_at?: string | null
+          error_code?: string | null
+          error_message?: string | null
+          external_request_id?: string | null
+          health_rds_receipt_id?: string | null
+          id?: string
+          pa_rds_receipt_id?: string | null
+          request_payload_hash?: string | null
+          request_type: string
+          response_status?: number | null
+          response_time_ms?: number | null
+          sla_met?: boolean | null
+        }
+        Update: {
+          completed_at?: string | null
+          connector_id?: string | null
+          created_at?: string | null
+          error_code?: string | null
+          error_message?: string | null
+          external_request_id?: string | null
+          health_rds_receipt_id?: string | null
+          id?: string
+          pa_rds_receipt_id?: string | null
+          request_payload_hash?: string | null
+          request_type?: string
+          response_status?: number | null
+          response_time_ms?: number | null
+          sla_met?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payer_api_requests_connector_id_fkey"
+            columns: ["connector_id"]
+            isOneToOne: false
+            referencedRelation: "payer_connectors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payer_connectors: {
+        Row: {
+          api_base_url: string
+          api_version: string | null
+          connection_status: string | null
+          created_at: string | null
+          credentials_vault_id: string | null
+          error_mapping: Json | null
+          feature_flags: Json | null
+          id: string
+          payer_code: string
+          payer_name: string
+          rate_limits: Json | null
+          sla_config: Json | null
+          supported_operations: Json | null
+          updated_at: string | null
+        }
+        Insert: {
+          api_base_url: string
+          api_version?: string | null
+          connection_status?: string | null
+          created_at?: string | null
+          credentials_vault_id?: string | null
+          error_mapping?: Json | null
+          feature_flags?: Json | null
+          id?: string
+          payer_code: string
+          payer_name: string
+          rate_limits?: Json | null
+          sla_config?: Json | null
+          supported_operations?: Json | null
+          updated_at?: string | null
+        }
+        Update: {
+          api_base_url?: string
+          api_version?: string | null
+          connection_status?: string | null
+          created_at?: string | null
+          credentials_vault_id?: string | null
+          error_mapping?: Json | null
+          feature_flags?: Json | null
+          id?: string
+          payer_code?: string
+          payer_name?: string
+          rate_limits?: Json | null
+          sla_config?: Json | null
+          supported_operations?: Json | null
+          updated_at?: string | null
         }
         Relationships: []
       }
@@ -36349,6 +37087,84 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      zkp_circuits: {
+        Row: {
+          circuit_hash: string
+          circuit_name: string
+          circuit_version: string
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          performance_metrics: Json | null
+          predicate_types: string[]
+          trusted_setup_date: string | null
+          verification_key: string
+        }
+        Insert: {
+          circuit_hash: string
+          circuit_name: string
+          circuit_version: string
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          performance_metrics?: Json | null
+          predicate_types: string[]
+          trusted_setup_date?: string | null
+          verification_key: string
+        }
+        Update: {
+          circuit_hash?: string
+          circuit_name?: string
+          circuit_version?: string
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          performance_metrics?: Json | null
+          predicate_types?: string[]
+          trusted_setup_date?: string | null
+          verification_key?: string
+        }
+        Relationships: []
+      }
+      zkp_verifications: {
+        Row: {
+          circuit_version: string | null
+          created_at: string | null
+          expires_at: string | null
+          id: string
+          metadata: Json | null
+          predicate_type: string
+          proof_hash: string
+          proof_id: string
+          verification_status: string | null
+          verification_time_ms: number | null
+        }
+        Insert: {
+          circuit_version?: string | null
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          metadata?: Json | null
+          predicate_type: string
+          proof_hash: string
+          proof_id: string
+          verification_status?: string | null
+          verification_time_ms?: number | null
+        }
+        Update: {
+          circuit_version?: string | null
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          metadata?: Json | null
+          predicate_type?: string
+          proof_hash?: string
+          proof_id?: string
+          verification_status?: string | null
+          verification_time_ms?: number | null
+        }
+        Relationships: []
       }
     }
     Views: {
