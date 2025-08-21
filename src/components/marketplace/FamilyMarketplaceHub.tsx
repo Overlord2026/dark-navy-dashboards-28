@@ -163,7 +163,7 @@ export function FamilyMarketplaceHub({ userName = 'Family' }: FamilyMarketplaceH
           variant="ghost"
           size="sm"
           onClick={() => setShowFiduciaryPrinciples(true)}
-          className="text-white hover:text-gold-400"
+          className="text-ink hover:text-gold-base"
         >
           Learn More
         </Button>

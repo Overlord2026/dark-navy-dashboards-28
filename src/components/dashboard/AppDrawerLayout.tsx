@@ -355,7 +355,7 @@ export const AppDrawerLayout: React.FC<AppDrawerLayoutProps> = ({
                     {module.status === 'premium' && (
                       <Badge 
                         variant="secondary" 
-                        className="absolute -top-2 -right-2 z-10 bg-gradient-to-r from-gold to-accent text-white border-gold/20 shadow-lg"
+                        className="absolute -top-2 -right-2 z-10 bg-gradient-to-r from-gold-base to-accent text-ink border-gold-base/20 shadow-lg"
                       >
                         <Crown className="h-3 w-3 mr-1" />
                         {isPremiumLocked ? 'Upgrade' : 'Premium'}

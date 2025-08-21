@@ -20,6 +20,10 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+  
+  .btn-gold-grad {
+    animation: none !important;
+  }
 }
 
 @layer base {

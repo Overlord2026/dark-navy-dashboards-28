@@ -252,7 +252,7 @@ export const PDFGenerator: React.FC<PDFGeneratorProps> = ({ theme, segment }) =>
       <div className="flex gap-4">
         <Button 
           onClick={() => generatePDF('print')}
-          className="bg-black text-white border border-gold hover:bg-gray-900"
+          variant="gold"
         >
           <FileText className="mr-2 h-4 w-4" />
           Generate Print PDF

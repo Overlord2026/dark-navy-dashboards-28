@@ -177,7 +177,7 @@ export function AuthPage() {
                 <TabsList className={`grid w-full ${runtimeFlags.prelaunchMode ? 'grid-cols-1' : 'grid-cols-2'} bg-navy border-white/20`}>
                   <TabsTrigger 
                     value="login" 
-                    className="text-white data-[state=active]:bg-gold data-[state=active]:text-navy font-display"
+                    className="text-ink data-[state=active]:bg-gold-base data-[state=active]:text-ink font-display"
                   >
                     Login
                   </TabsTrigger>

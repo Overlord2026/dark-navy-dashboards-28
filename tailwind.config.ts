@@ -22,21 +22,19 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         
-        // Direct color tokens
-        ink: '#0A0A0A',
-        navy: '#0B2239', 
-        gold: { 
-          base: '#C7A139', 
-          hi: '#F2D68E', 
-          lo: '#8C6B1E' 
-        },
-        slate: '#2E3A4A',
-        sky: '#6BA6FF',
-        mint: '#75E0C2',
-        burgundy: '#7A1733',
-        indigo: '#3946A6',
-        sand: '#F2EBDD',
-        alert: '#D9534F',
+        // New BFO palette (HSL semantic tokens)
+        'ink': 'hsl(var(--ink-black))',
+        'navy': 'hsl(var(--bfo-navy))', 
+        'gold-base': 'hsl(var(--metallic-gold))',
+        'gold-hi': 'hsl(var(--metallic-gold-highlight))',
+        'gold-lo': 'hsl(var(--metallic-gold-shadow))',
+        'slate': 'hsl(var(--slate))',
+        'sky': 'hsl(var(--sky))',
+        'mint': 'hsl(var(--mint))',
+        'burgundy': 'hsl(var(--burgundy))',
+        'indigo': 'hsl(var(--indigo))',
+        'sand': 'hsl(var(--sand))',
+        'alert': 'hsl(var(--alert-red))',
         
         // BFO Color System (HSL)
         'ink-black': "hsl(var(--ink-black))",

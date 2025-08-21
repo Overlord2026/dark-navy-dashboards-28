@@ -268,12 +268,12 @@ Each segment includes links to full PDFs and detailed analysis.
       </section>
 
       {/* Footer */}
-      <footer className="bg-black text-white py-12 border-t border-gold/30">
+      <footer className="bg-ink text-sand py-12 border-t border-gold-base/30">
         <div className="max-w-7xl mx-auto px-6 text-center">
           <div className="space-y-4">
-            <h3 className="text-2xl font-bold text-gold">Boutique Family Office™</h3>
-            <p className="text-white/70">Healthspan + Wealthspan. One Platform.</p>
-            <div className="flex justify-center space-x-6 text-sm text-white/60">
+            <h3 className="text-2xl font-bold text-gold-base">Boutique Family Office™</h3>
+            <p className="text-sand/70">Healthspan + Wealthspan. One Platform.</p>
+            <div className="flex justify-center space-x-6 text-sm text-sand/60">
               <span>ROI-ranked partnerships</span>
               <span>•</span>
               <span>Strategic outreach</span>
