@@ -27,15 +27,21 @@ export interface HealthRDSReceipt {
 
 export interface ConsentRDSReceipt {
   type: "Consent-RDS";
-  hipaa_scope: string[];
-  purpose_of_use: string;
+  purpose_of_use: "care_coordination" | "billing" | "legal";
   consent_time: string;
   expiry?: string;
   freshness_score: number; // 0-1
+  scope: {
+    minimum_necessary?: boolean;
+    recipient_role?: string;
+    [key: string]: any;
+  };
+  result: "deny" | "approve";
+  reason: "CONSENT_STALE" | "SCOPE_MISMATCH" | "OK" | string;
   proof_hash: string;
-  inputs_hash: string;
-  policy_version: string;
-  ts: string;
+  inputs_hash?: string;
+  policy_version?: string;
+  ts?: string;
   anchor_ref?: HealthRDSReceipt['anchor_ref'];
 }
 
