@@ -1,300 +1,301 @@
-export type EntitlementTier = 'basic' | 'premium' | 'elite';
-export type CalculatorCategory = 'foundational' | 'advanced';
+import { Persona, ComplexityTier } from '@/features/personalization/types';
 
-export interface Calculator {
-  id: string;
+export type Entitlement = 'basic' | 'premium' | 'elite';
+
+export interface CalcItem {
+  key: string;
   title: string;
   description: string;
-  category: CalculatorCategory;
-  entitlement: EntitlementTier;
+  entitlement: Entitlement;
+  persona?: Persona;
+  advancedOnly?: boolean;
+  category: 'retirement' | 'planning' | 'tax' | 'investment' | 'estate' | 'business';
+  estimatedTime: string;
   icon: string;
-  route: string;
   tags: string[];
-  estimatedTime: string; // e.g., "5 min"
-  complexity: 'simple' | 'intermediate' | 'advanced';
-  popular?: boolean;
 }
 
-const calculatorCatalog: Calculator[] = [
-  // Foundational Calculators (Basic Tier)
+const calculatorCatalog: CalcItem[] = [
+  // Foundational Calculators (Basic Entitlement)
   {
-    id: 'compound-interest',
-    title: 'Compound Interest Calculator',
-    description: 'Calculate the power of compound interest over time',
-    category: 'foundational',
+    key: 'swag-monte-carlo',
+    title: 'SWAG/Monte Carlo',
+    description: 'Scientific Wild Ass Guess with Monte Carlo analysis for retirement planning',
     entitlement: 'basic',
-    icon: 'TrendingUp',
-    route: '/calculators/compound-interest',
-    tags: ['savings', 'growth', 'retirement'],
-    estimatedTime: '3 min',
-    complexity: 'simple',
-    popular: true
-  },
-  {
-    id: 'retirement-savings',
-    title: 'Retirement Savings Calculator',
-    description: 'Determine how much to save for retirement',
-    category: 'foundational',
-    entitlement: 'basic',
-    icon: 'PiggyBank',
-    route: '/calculators/retirement-savings',
-    tags: ['retirement', 'savings', '401k'],
+    category: 'retirement',
     estimatedTime: '5 min',
-    complexity: 'simple',
-    popular: true
+    icon: 'BarChart3',
+    tags: ['retirement', 'probability', 'planning']
   },
   {
-    id: 'mortgage-payment',
-    title: 'Mortgage Payment Calculator',
-    description: 'Calculate monthly mortgage payments and amortization',
-    category: 'foundational',
+    key: 'budget-planner',
+    title: 'Budget Planner',
+    description: 'Comprehensive budget planning and cash flow analysis',
     entitlement: 'basic',
-    icon: 'Home',
-    route: '/calculators/mortgage-payment',
-    tags: ['mortgage', 'real-estate', 'loans'],
-    estimatedTime: '4 min',
-    complexity: 'simple'
-  },
-  {
-    id: 'debt-payoff',
-    title: 'Debt Payoff Calculator',
-    description: 'Create a strategy to pay off debt faster',
-    category: 'foundational',
-    entitlement: 'basic',
-    icon: 'CreditCard',
-    route: '/calculators/debt-payoff',
-    tags: ['debt', 'payoff', 'strategy'],
-    estimatedTime: '6 min',
-    complexity: 'simple'
-  },
-  {
-    id: 'emergency-fund',
-    title: 'Emergency Fund Calculator',
-    description: 'Determine the right emergency fund size for your situation',
-    category: 'foundational',
-    entitlement: 'basic',
-    icon: 'Shield',
-    route: '/calculators/emergency-fund',
-    tags: ['emergency', 'savings', 'security'],
-    estimatedTime: '3 min',
-    complexity: 'simple'
-  },
-
-  // Premium Tier Calculators
-  {
-    id: 'tax-loss-harvesting',
-    title: 'Tax-Loss Harvesting Calculator',
-    description: 'Optimize your tax strategy through strategic loss harvesting',
-    category: 'advanced',
-    entitlement: 'premium',
-    icon: 'Receipt',
-    route: '/calculators/tax-loss-harvesting',
-    tags: ['tax', 'investing', 'optimization'],
+    category: 'planning',
     estimatedTime: '10 min',
-    complexity: 'intermediate',
-    popular: true
+    icon: 'Calculator',
+    tags: ['budget', 'cash-flow', 'planning']
   },
   {
-    id: 'asset-allocation',
-    title: 'Asset Allocation Optimizer',
-    description: 'Build an optimal portfolio based on risk tolerance and goals',
-    category: 'advanced',
-    entitlement: 'premium',
-    icon: 'PieChart',
-    route: '/calculators/asset-allocation',
-    tags: ['portfolio', 'allocation', 'risk'],
-    estimatedTime: '8 min',
-    complexity: 'intermediate'
+    key: 'rmd-basic',
+    title: 'RMD Basic Calculator',
+    description: 'Calculate Required Minimum Distributions for retirement accounts',
+    entitlement: 'basic',
+    persona: 'retiree',
+    category: 'retirement',
+    estimatedTime: '3 min',
+    icon: 'PiggyBank',
+    tags: ['rmd', 'retirement', 'required']
   },
   {
-    id: 'college-funding',
-    title: 'College Funding Calculator',
-    description: 'Plan and save for education expenses with 529 optimization',
-    category: 'foundational',
-    entitlement: 'premium',
-    icon: 'GraduationCap',
-    route: '/calculators/college-funding',
-    tags: ['education', '529', 'savings'],
-    estimatedTime: '7 min',
-    complexity: 'intermediate'
-  },
-  {
-    id: 'roth-conversion',
-    title: 'Roth IRA Conversion Calculator',
-    description: 'Analyze the benefits of converting traditional IRA to Roth',
-    category: 'advanced',
-    entitlement: 'premium',
-    icon: 'RefreshCw',
-    route: '/calculators/roth-conversion',
-    tags: ['retirement', 'roth', 'tax'],
-    estimatedTime: '12 min',
-    complexity: 'intermediate'
-  },
-  {
-    id: 'social-security',
-    title: 'Social Security Optimizer',
-    description: 'Optimize when to claim Social Security benefits',
-    category: 'advanced',
-    entitlement: 'premium',
+    key: 'ss-timing-basic',
+    title: 'Social Security Timing Basic',
+    description: 'Basic Social Security claiming strategy analysis',
+    entitlement: 'basic',
+    persona: 'retiree',
+    category: 'retirement',
+    estimatedTime: '5 min',
     icon: 'Users',
-    route: '/calculators/social-security',
-    tags: ['social-security', 'retirement', 'benefits'],
-    estimatedTime: '9 min',
-    complexity: 'intermediate'
+    tags: ['social-security', 'timing', 'benefits']
+  },
+  {
+    key: 'emergency-fund',
+    title: 'Emergency Fund Calculator',
+    description: 'Determine optimal emergency fund size based on expenses',
+    entitlement: 'basic',
+    persona: 'aspiring',
+    category: 'planning',
+    estimatedTime: '2 min',
+    icon: 'Shield',
+    tags: ['emergency', 'savings', 'security']
+  },
+  {
+    key: 'debt-payoff',
+    title: 'Debt Payoff Strategy',
+    description: 'Optimize debt payoff with avalanche vs snowball comparison',
+    entitlement: 'basic',
+    persona: 'aspiring',
+    category: 'planning',
+    estimatedTime: '7 min',
+    icon: 'CreditCard',
+    tags: ['debt', 'payoff', 'strategy']
   },
 
-  // Elite Tier Calculators
+  // Advanced Calculators (Premium/Elite Entitlement)
   {
-    id: 'estate-tax-planning',
-    title: 'Estate Tax Planning Calculator',
-    description: 'Advanced estate planning with tax minimization strategies',
-    category: 'advanced',
-    entitlement: 'elite',
-    icon: 'Landmark',
-    route: '/calculators/estate-tax-planning',
-    tags: ['estate', 'tax', 'planning', 'trust'],
+    key: 'charitable-trust',
+    title: 'Charitable Trust Analyzer',
+    description: 'Analyze charitable remainder and lead trust strategies',
+    entitlement: 'premium',
+    advancedOnly: true,
+    category: 'estate',
     estimatedTime: '15 min',
-    complexity: 'advanced'
-  },
-  {
-    id: 'trust-analysis',
-    title: 'Trust Structure Analyzer',
-    description: 'Compare different trust structures for wealth transfer',
-    category: 'advanced',
-    entitlement: 'elite',
-    icon: 'Building',
-    route: '/calculators/trust-analysis',
-    tags: ['trust', 'wealth-transfer', 'tax'],
-    estimatedTime: '20 min',
-    complexity: 'advanced'
-  },
-  {
-    id: 'business-valuation',
-    title: 'Business Valuation Calculator',
-    description: 'Value your business for sale, succession, or estate planning',
-    category: 'advanced',
-    entitlement: 'elite',
-    icon: 'Building2',
-    route: '/calculators/business-valuation',
-    tags: ['business', 'valuation', 'succession'],
-    estimatedTime: '18 min',
-    complexity: 'advanced'
-  },
-  {
-    id: 'charitable-giving',
-    title: 'Charitable Giving Optimizer',
-    description: 'Maximize tax benefits through strategic charitable giving',
-    category: 'advanced',
-    entitlement: 'elite',
     icon: 'Heart',
-    route: '/calculators/charitable-giving',
-    tags: ['charity', 'tax', 'giving', 'daf'],
-    estimatedTime: '14 min',
-    complexity: 'advanced'
+    tags: ['charitable', 'trust', 'tax-deduction']
   },
   {
-    id: 'private-equity',
-    title: 'Private Equity Calculator',
-    description: 'Analyze private equity investments and cash flows',
-    category: 'advanced',
-    entitlement: 'elite',
+    key: 'equity-comp-planner',
+    title: 'Equity Compensation Planner',
+    description: 'Optimize ISOs, NSOs, RSUs, and ESPP strategies',
+    entitlement: 'premium',
+    advancedOnly: true,
+    category: 'tax',
+    estimatedTime: '20 min',
     icon: 'TrendingUp',
-    route: '/calculators/private-equity',
-    tags: ['private-equity', 'investing', 'returns'],
-    estimatedTime: '16 min',
-    complexity: 'advanced'
+    tags: ['equity', 'compensation', 'tax-optimization']
+  },
+  {
+    key: 'nua-calculator',
+    title: 'Net Unrealized Appreciation (NUA)',
+    description: 'Calculate NUA tax advantages for company stock distributions',
+    entitlement: 'premium',
+    advancedOnly: true,
+    category: 'tax',
+    estimatedTime: '12 min',
+    icon: 'Building2',
+    tags: ['nua', 'company-stock', 'tax-strategy']
+  },
+  {
+    key: 'entity-trust-summary',
+    title: 'Entity/Trust Summary',
+    description: 'Comprehensive analysis of legal entities and trust structures',
+    entitlement: 'premium',
+    advancedOnly: true,
+    category: 'business',
+    estimatedTime: '25 min',
+    icon: 'Building',
+    tags: ['entities', 'trusts', 'structure']
+  },
+  {
+    key: 'roth-conversion-ladder',
+    title: 'Roth Conversion Ladder',
+    description: 'Advanced Roth conversion planning with tax optimization',
+    entitlement: 'elite',
+    advancedOnly: true,
+    category: 'tax',
+    estimatedTime: '30 min',
+    icon: 'Layers',
+    tags: ['roth', 'conversion', 'tax-planning']
+  },
+  {
+    key: 'estate-tax-planning',
+    title: 'Estate Tax Planning',
+    description: 'Comprehensive estate tax minimization strategies',
+    entitlement: 'elite',
+    advancedOnly: true,
+    category: 'estate',
+    estimatedTime: '35 min',
+    icon: 'Crown',
+    tags: ['estate', 'tax-planning', 'wealth-transfer']
+  },
+  {
+    key: 'private-equity-analyzer',
+    title: 'Private Equity Analyzer',
+    description: 'Analyze private equity investments and cash flows',
+    entitlement: 'elite',
+    advancedOnly: true,
+    category: 'investment',
+    estimatedTime: '40 min',
+    icon: 'Briefcase',
+    tags: ['private-equity', 'alternative-investments', 'analysis']
+  },
+  {
+    key: 'family-office-dashboard',
+    title: 'Family Office Dashboard',
+    description: 'Comprehensive family office reporting and analytics',
+    entitlement: 'elite',
+    advancedOnly: true,
+    category: 'business',
+    estimatedTime: '45 min',
+    icon: 'LayoutDashboard',
+    tags: ['family-office', 'reporting', 'analytics']
   }
 ];
 
-export interface CalculatorAccessResult {
-  hasAccess: boolean;
-  userTier: EntitlementTier;
-  requiredTier: EntitlementTier;
-  upgradeUrl?: string;
+/**
+ * Gets available calculators based on user's persona, complexity tier, and entitlement
+ */
+export function getAvailableCalculators(
+  persona: Persona,
+  tier: ComplexityTier,
+  userEntitlement: Entitlement
+): CalcItem[] {
+  return calculatorCatalog.filter(calc => {
+    // Hide advanced-only calculators if user is not in advanced tier
+    if (calc.advancedOnly && tier !== 'advanced') {
+      return false;
+    }
+
+    // Show calculators that match persona (or have no persona restriction)
+    if (calc.persona && calc.persona !== persona) {
+      return false;
+    }
+
+    return true;
+  });
 }
 
-export function getCalculatorCatalog(): Calculator[] {
+/**
+ * Gets all calculators (for admin/preview purposes)
+ */
+export function getAllCalculators(): CalcItem[] {
   return calculatorCatalog;
 }
 
-export function getFoundationalCalculators(): Calculator[] {
-  return calculatorCatalog.filter(calc => calc.category === 'foundational');
+/**
+ * Gets calculators by category
+ */
+export function getCalculatorsByCategory(
+  category: CalcItem['category'],
+  persona: Persona,
+  tier: ComplexityTier,
+  userEntitlement: Entitlement
+): CalcItem[] {
+  const available = getAvailableCalculators(persona, tier, userEntitlement);
+  return available.filter(calc => calc.category === category);
 }
 
-export function getAdvancedCalculators(): Calculator[] {
-  return calculatorCatalog.filter(calc => calc.category === 'advanced');
+/**
+ * Gets a specific calculator by key
+ */
+export function getCalculatorByKey(key: string): CalcItem | undefined {
+  return calculatorCatalog.find(calc => calc.key === key);
 }
 
-export function getCalculatorsByTier(tier: EntitlementTier): Calculator[] {
-  const tierHierarchy: Record<EntitlementTier, EntitlementTier[]> = {
-    basic: ['basic'],
-    premium: ['basic', 'premium'],
-    elite: ['basic', 'premium', 'elite']
-  };
-  
-  return calculatorCatalog.filter(calc => 
-    tierHierarchy[tier].includes(calc.entitlement)
-  );
-}
+/**
+ * Checks if user has access to a calculator
+ */
+export function hasCalculatorAccess(calcKey: string, userEntitlement: Entitlement): boolean {
+  const calc = getCalculatorByKey(calcKey);
+  if (!calc) return false;
 
-export function getPopularCalculators(): Calculator[] {
-  return calculatorCatalog.filter(calc => calc.popular);
-}
-
-export function getCalculatorById(id: string): Calculator | undefined {
-  return calculatorCatalog.find(calc => calc.id === id);
-}
-
-export function checkCalculatorAccess(
-  calculatorId: string, 
-  userTier: EntitlementTier
-): CalculatorAccessResult {
-  const calculator = getCalculatorById(calculatorId);
-  
-  if (!calculator) {
-    return {
-      hasAccess: false,
-      userTier,
-      requiredTier: 'basic'
-    };
-  }
-
-  const tierHierarchy: Record<EntitlementTier, number> = {
+  const entitlementLevels: Record<Entitlement, number> = {
     basic: 1,
     premium: 2,
     elite: 3
   };
 
-  const hasAccess = tierHierarchy[userTier] >= tierHierarchy[calculator.entitlement];
+  return entitlementLevels[userEntitlement] >= entitlementLevels[calc.entitlement];
+}
+
+/**
+ * Gets the required entitlement for a calculator
+ */
+export function getRequiredEntitlement(calcKey: string): Entitlement | null {
+  const calc = getCalculatorByKey(calcKey);
+  return calc ? calc.entitlement : null;
+}
+
+/**
+ * Generates pricing URL for gated calculator
+ */
+export function getPricingUrl(calcKey: string): string {
+  const calc = getCalculatorByKey(calcKey);
+  const tier = calc?.entitlement || 'premium';
+  return `/pricing?feature=${calcKey}&tier=${tier}`;
+}
+
+/**
+ * Gets calculators count by entitlement level
+ */
+export function getCalculatorCounts(persona: Persona, tier: ComplexityTier): {
+  basic: number;
+  premium: number;
+  elite: number;
+  total: number;
+  available: number;
+} {
+  const available = getAvailableCalculators(persona, tier, 'elite'); // Get all possible
   
-  const result: CalculatorAccessResult = {
-    hasAccess,
-    userTier,
-    requiredTier: calculator.entitlement
+  const basic = available.filter(c => c.entitlement === 'basic').length;
+  const premium = available.filter(c => c.entitlement === 'premium').length;
+  const elite = available.filter(c => c.entitlement === 'elite').length;
+  
+  return {
+    basic,
+    premium,
+    elite,
+    total: basic + premium + elite,
+    available: available.length
   };
-
-  if (!hasAccess) {
-    result.upgradeUrl = `/pricing?feature=${calculator.id}&tier=${calculator.entitlement}`;
-  }
-
-  return result;
 }
 
-export function getUpgradeUrl(feature: string, requiredTier: EntitlementTier): string {
-  return `/pricing?feature=${feature}&tier=${requiredTier}`;
-}
-
-export function searchCalculators(query: string): Calculator[] {
+/**
+ * Searches calculators by title, description, or tags
+ */
+export function searchCalculators(
+  query: string,
+  persona: Persona,
+  tier: ComplexityTier,
+  userEntitlement: Entitlement
+): CalcItem[] {
+  const available = getAvailableCalculators(persona, tier, userEntitlement);
   const searchTerm = query.toLowerCase();
-  return calculatorCatalog.filter(calc => 
+  
+  return available.filter(calc =>
     calc.title.toLowerCase().includes(searchTerm) ||
     calc.description.toLowerCase().includes(searchTerm) ||
     calc.tags.some(tag => tag.toLowerCase().includes(searchTerm))
-  );
-}
-
-export function getCalculatorsByTag(tag: string): Calculator[] {
-  return calculatorCatalog.filter(calc => 
-    calc.tags.includes(tag.toLowerCase())
   );
 }

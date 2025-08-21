@@ -897,6 +897,7 @@ function App() {
                             {/* Personalized Dashboard & Goals */}
                             <Route path="/personalized-dashboard" element={<PersonalizedDashboard />} />
                             <Route path="/goals-home" element={<GoalsHome />} />
+                            <Route path="/calculators" element={<CalculatorsPage />} />
 
                           </Routes>
                         <Navigation />

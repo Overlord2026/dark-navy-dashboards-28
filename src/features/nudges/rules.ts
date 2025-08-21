@@ -1,5 +1,5 @@
 import { Persona } from '@/types/goal';
-import { EntitlementTier } from '@/features/calculators/catalog';
+import { Entitlement } from '@/features/calculators/catalog';
 
 export type NudgeCategory = 'financial_planning' | 'retirement' | 'advanced_planning' | 'tax_optimization' | 'compliance';
 export type NudgePriority = 'low' | 'medium' | 'high' | 'critical';
@@ -11,7 +11,7 @@ export interface NudgeRule {
   category: NudgeCategory;
   priority: NudgePriority;
   persona?: Persona;
-  tier?: EntitlementTier;
+  tier?: Entitlement;
   condition: (context: NudgeContext) => boolean;
   message: {
     title: string;
@@ -27,7 +27,7 @@ export interface NudgeContext {
   user: {
     id: string;
     persona: Persona;
-    tier: EntitlementTier;
+    tier: Entitlement;
     createdAt: Date;
     lastLoginAt: Date;
   };
@@ -430,7 +430,7 @@ export function getRulesByPersona(persona: Persona): NudgeRule[] {
   return nudgeRules.filter(rule => rule.persona === persona || !rule.persona);
 }
 
-export function getRulesByTier(tier: EntitlementTier): NudgeRule[] {
+export function getRulesByTier(tier: Entitlement): NudgeRule[] {
   return nudgeRules.filter(rule => rule.tier === tier || !rule.tier);
 }
 

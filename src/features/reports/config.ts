@@ -1,4 +1,4 @@
-import { EntitlementTier } from '@/features/calculators/catalog';
+import { Entitlement } from '@/features/calculators/catalog';
 import { Persona } from '@/types/goal';
 
 export type ReportCategory = 'foundational' | 'advanced';
@@ -9,7 +9,7 @@ export interface Report {
   title: string;
   description: string;
   category: ReportCategory;
-  entitlement: EntitlementTier;
+  entitlement: Entitlement;
   type: ReportType;
   icon: string;
   route: string;
@@ -200,8 +200,8 @@ const reportsConfig: Report[] = [
 
 export interface ReportAccessResult {
   hasAccess: boolean;
-  userTier: EntitlementTier;
-  requiredTier: EntitlementTier;
+  userTier: Entitlement;
+  requiredTier: Entitlement;
   upgradeUrl?: string;
 }
 
@@ -227,8 +227,8 @@ export function getReportsByCategory(category: ReportCategory): Report[] {
   return reportsConfig.filter(report => report.category === category);
 }
 
-export function getReportsByTier(tier: EntitlementTier): Report[] {
-  const tierHierarchy: Record<EntitlementTier, EntitlementTier[]> = {
+export function getReportsByTier(tier: Entitlement): Report[] {
+  const tierHierarchy: Record<Entitlement, Entitlement[]> = {
     basic: ['basic'],
     premium: ['basic', 'premium'],
     elite: ['basic', 'premium', 'elite']
@@ -255,7 +255,7 @@ export function getReportById(id: string): Report | undefined {
 
 export function checkReportAccess(
   reportId: string, 
-  userTier: EntitlementTier
+  userTier: Entitlement
 ): ReportAccessResult {
   const report = getReportById(reportId);
   
@@ -267,7 +267,7 @@ export function checkReportAccess(
     };
   }
 
-  const tierHierarchy: Record<EntitlementTier, number> = {
+  const tierHierarchy: Record<Entitlement, number> = {
     basic: 1,
     premium: 2,
     elite: 3
@@ -288,7 +288,7 @@ export function checkReportAccess(
   return result;
 }
 
-export function getUpgradeUrl(feature: string, requiredTier: EntitlementTier): string {
+export function getUpgradeUrl(feature: string, requiredTier: Entitlement): string {
   return `/pricing?feature=${feature}&tier=${requiredTier}`;
 }
 
@@ -312,7 +312,7 @@ export function getReportsByType(type: ReportType): Report[] {
 }
 
 // Analytics event helpers
-export function trackReportAccess(reportId: string, userTier: EntitlementTier) {
+export function trackReportAccess(reportId: string, userTier: Entitlement) {
   const report = getReportById(reportId);
   if (!report) return;
 
@@ -341,7 +341,7 @@ export function trackReportGeneration(reportId: string, format: string, duration
   });
 }
 
-export function trackFeatureGated(reportId: string, userTier: EntitlementTier, requiredTier: EntitlementTier) {
+export function trackFeatureGated(reportId: string, userTier: Entitlement, requiredTier: Entitlement) {
   const report = getReportById(reportId);
   if (!report) return;
 
