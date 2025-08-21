@@ -21,25 +21,31 @@ export default {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        
+        // BFO Color System
+        'ink-black': "hsl(var(--ink-black))",
+        'bfo-navy': "hsl(var(--bfo-navy))",
+        'metallic-gold': {
+          DEFAULT: "hsl(var(--metallic-gold))",
+          highlight: "hsl(var(--metallic-gold-highlight))",
+          shadow: "hsl(var(--metallic-gold-shadow))",
+        },
+        slate: "hsl(var(--slate))",
+        sky: "hsl(var(--sky))",
+        mint: "hsl(var(--mint))",
+        burgundy: "hsl(var(--burgundy))",
+        indigo: "hsl(var(--indigo))",
+        sand: "hsl(var(--sand))",
+        'alert-red': "hsl(var(--alert-red))",
+        
+        // Core theme colors
         primary: {
-          DEFAULT: "hsl(var(--primary))", // Gold #FFD700
+          DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
-          DEFAULT: "hsl(var(--secondary))", // Deep Blue #14213D
+          DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
-        },
-        gold: {
-          DEFAULT: "hsl(var(--gold))", // Gold #FFD700
-          foreground: "hsl(var(--gold-foreground))",
-        },
-        navy: {
-          DEFAULT: "hsl(var(--navy))", // Deep Blue #14213D
-          foreground: "hsl(var(--navy-foreground))",
-        },
-        emerald: {
-          DEFAULT: "hsl(var(--emerald))", // Emerald #169873
-          foreground: "hsl(var(--emerald-foreground))",
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
@@ -50,7 +56,7 @@ export default {
           foreground: "hsl(var(--muted-foreground))",
         },
         accent: {
-          DEFAULT: "hsl(var(--accent))", // Emerald
+          DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
         },
         popover: {
@@ -62,12 +68,26 @@ export default {
           foreground: "hsl(var(--card-foreground))",
         },
         success: {
-          DEFAULT: "hsl(var(--success))", // Emerald
+          DEFAULT: "hsl(var(--success))",
           foreground: "hsl(var(--success-foreground))",
         },
         warning: {
-          DEFAULT: "hsl(var(--warning))", // Gold
+          DEFAULT: "hsl(var(--warning))",
           foreground: "hsl(var(--warning-foreground))",
+        },
+        
+        // Legacy aliases for backward compatibility
+        gold: {
+          DEFAULT: "hsl(var(--metallic-gold))",
+          foreground: "hsl(var(--primary-foreground))",
+        },
+        navy: {
+          DEFAULT: "hsl(var(--bfo-navy))",
+          foreground: "hsl(var(--secondary-foreground))",
+        },
+        emerald: {
+          DEFAULT: "hsl(var(--mint))",
+          foreground: "hsl(var(--success-foreground))",
         },
       },
       borderRadius: {

@@ -27,169 +27,210 @@
     /* Header Stack Height for Sticky Navigation */
     --header-stack: 112px;
     
-    /* Family Office Marketplace Premium Theme */
-    --background: 216 29% 11%; /* Deep Blue #14213D */
-    --foreground: 0 0% 100%; /* White #FFFFFF */
+    /* BFO Color System - Exact Hex Conversions */
+    /* Ink Black #0A0A0A (primary dark / button bg) */
+    --ink-black: 0 0% 4%;
+    
+    /* BFO Navy #0B2239 (headers/sidebar/sections) */
+    --bfo-navy: 210 65% 13%;
+    
+    /* Metallic Gold System */
+    --metallic-gold: 45 55% 50%;        /* Base #C7A139 */
+    --metallic-gold-highlight: 45 80% 75%; /* Highlight #F2D68E */
+    --metallic-gold-shadow: 45 68% 33%;   /* Shadow #8C6B1E */
+    
+    /* Supporting Colors */
+    --slate: 210 23% 24%;    /* #2E3A4A */
+    --sky: 220 100% 70%;     /* #6BA6FF */
+    --mint: 164 64% 67%;     /* #75E0C2 */
+    --burgundy: 336 66% 28%; /* #7A1733 (Attorney) */
+    --indigo: 233 47% 44%;   /* #3946A6 (Provider/Plan) */
+    --sand: 35 47% 90%;      /* #F2EBDD (light bg) */
+    --alert-red: 5 63% 58%;  /* #D9534F */
 
-    --card: 216 25% 16%; /* Card background */
-    --card-foreground: 0 0% 100%; /* White text */
+    /* Core Theme Variables */
+    --background: var(--bfo-navy);
+    --foreground: 0 0% 100%; /* White text on navy */
 
-    --popover: 216 25% 14%; /* Surface color */
+    --card: var(--slate);
+    --card-foreground: 0 0% 100%; /* White text on slate */
+
+    --popover: var(--bfo-navy);
     --popover-foreground: 0 0% 100%;
 
-    /* Primary - High Contrast Gold for Senior Accessibility */
-    --primary: 45 85% 35%; /* Darker Gold #B8860B for better contrast */
-    --primary-foreground: 0 0% 100%; /* White text on darker gold */
+    /* Primary - Metallic Gold Base */
+    --primary: var(--metallic-gold);
+    --primary-foreground: var(--ink-black); /* Black text on gold (accessibility rule) */
 
-    /* Secondary - Deep Blue #14213D */
-    --secondary: 216 29% 11%; /* Deep Blue #14213D */
-    --secondary-foreground: 0 0% 100%; /* White text on blue */
+    /* Secondary - BFO Navy */
+    --secondary: var(--bfo-navy);
+    --secondary-foreground: 0 0% 100%; /* White text on navy */
 
-    --muted: 216 25% 16%; /* Card background */
+    --muted: var(--slate);
     --muted-foreground: 210 25% 70%; /* Light text */
 
-    /* Accent - Emerald #169873 */
-    --accent: 158 64% 52%; /* Emerald #169873 */
-    --accent-foreground: 0 0% 100%; /* White text on emerald */
+    /* Accent - Sky Blue */
+    --accent: var(--sky);
+    --accent-foreground: 0 0% 100%; /* White text on sky */
 
-    /* Marketplace Colors - High Contrast for Accessibility */
-    --gold: 45 85% 35%; /* Darker Gold #B8860B for better contrast */
-    --gold-foreground: 0 0% 100%; /* White text on darker gold */
+    /* Status Colors */
+    --success: var(--mint);
+    --success-foreground: var(--ink-black); /* Black text on mint */
+    
+    --warning: var(--metallic-gold);
+    --warning-foreground: var(--ink-black); /* Black text on gold */
 
-    --navy: 216 29% 11%; /* Deep Blue #14213D */
-    --navy-foreground: 0 0% 100%; /* White text on navy */
-
-    --emerald: 158 64% 52%; /* Emerald #169873 */
-    --emerald-foreground: 0 0% 100%; /* White text on emerald */
-
-    /* BFO Brand Colors */
-    --brand-primary: 45 75% 55%; /* BFO Gold #C7A34A */
-    --brand-dark: 216 24% 12%; /* #111418 */
-    --brand-bg: 222 26% 6%; /* #0B0E12 */
-    --brand-text: 0 0% 93%; /* #EDEDED */
-    --brand-accent: 206 81% 63%; /* #3BA7F0 */
-
-    /* High-end dark palette */
-    --bfo-bg: 222 44% 8%; /* #0b1520 deep navy */
-    --bfo-panel: 215 39% 11%; /* #0f1b27 panel navy */
-    --bfo-text: 220 20% 97%; /* #f5f7fa */
-    --bfo-muted: 212 25% 70%; /* #9fb3c8 */
-    --bfo-gold: 43 79% 51%; /* #d9a52b accent */
-    --bfo-border: 0 0% 100% / 0.12; /* rgba(255,255,255,.12) */
-
-  /* Status Colors */
-  --success: 158 64% 52%; /* Emerald #169873 */
-  --success-foreground: 0 0% 100%;
-  
-  --warning: 45 85% 35%; /* Darker Gold for better contrast */
-  --warning-foreground: 0 0% 100%; /* White text */
-
-  /* Touch Targets */
-  --touch-target: 44px; /* iOS Human Interface Guidelines minimum */
-
-    --destructive: 0 84% 60%; /* Red for errors */
-    --destructive-foreground: 0 0% 100%;
+    --destructive: var(--alert-red);
+    --destructive-foreground: 0 0% 100%; /* White text on red */
 
     /* UI Elements */
-    --border: 216 25% 20%; /* Border color */
-    --input: 216 25% 16%; /* Input background */
-    --ring: 51 100% 50%; /* Gold focus rings */
+    --border: var(--slate);
+    --input: var(--slate);
+    --ring: var(--metallic-gold-highlight);
 
     --radius: 0.75rem;
 
-    /* Premium Gradients & Effects */
-    --gradient-primary: linear-gradient(135deg, hsl(216 29% 11%) 0%, hsl(216 25% 14%) 100%);
-    --gradient-gold: linear-gradient(135deg, hsl(51 100% 50%) 0%, hsl(45 100% 47%) 100%);
-    --gradient-emerald: linear-gradient(135deg, hsl(158 64% 52%) 0%, hsl(158 64% 45%) 100%);
+    /* Role-specific colors */
+    --role-family: var(--metallic-gold);
+    --role-advisor: var(--sky);
+    --role-accountant: var(--mint);
+    --role-attorney: var(--burgundy);
+    --role-provider: var(--indigo);
+    --role-admin: var(--slate);
+
+    /* Sidebar colors */
+    --sidebar-background: var(--bfo-navy);
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-border: var(--slate);
+    --sidebar-accent: var(--slate);
+
+    /* Premium Gradients using new colors */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--bfo-navy)) 0%, hsl(var(--slate)) 100%);
+    --gradient-gold: linear-gradient(135deg, hsl(var(--metallic-gold)) 0%, hsl(var(--metallic-gold-highlight)) 100%);
+    --gradient-surface: linear-gradient(135deg, hsl(var(--slate)) 0%, hsl(var(--bfo-navy)) 100%);
     
     /* Premium Shadows */
-    --shadow-gold: 0 4px 20px hsla(51, 100%, 50%, 0.25);
-    --shadow-emerald: 0 4px 20px hsla(158, 64%, 52%, 0.25);
-    --shadow-premium: 0 8px 32px hsla(216, 29%, 8%, 0.4);
+    --shadow-gold: 0 4px 20px hsla(var(--metallic-gold), 0.25);
+    --shadow-elevated: 0 8px 32px hsla(var(--ink-black), 0.4);
+    --shadow-premium: 0 12px 40px hsla(var(--ink-black), 0.6);
+    --shadow-subtle: 0 2px 8px hsla(var(--ink-black), 0.2);
 
     /* Touch Targets */
     --touch-target: 44px;
 
+    /* Legacy brand colors for backwards compatibility */
+    --brand-primary: var(--metallic-gold);
+    --brand-dark: var(--ink-black);
+    --brand-bg: var(--bfo-navy);
+    --brand-text: 0 0% 100%;
+    --brand-accent: var(--sky);
+
+    /* BFO specific colors */
+    --bfo-bg: var(--bfo-navy);
+    --bfo-panel: var(--slate);
+    --bfo-text: 0 0% 100%;
+    --bfo-muted: 210 25% 70%;
+    --bfo-gold: var(--metallic-gold);
+    --bfo-border: 0 0% 100% / 0.12;
+
     /* Celebration Colors */
-    --confetti-gold: 51 100% 50%;
-    --confetti-emerald: 158 64% 52%;
-    --confetti-navy: 216 29% 11%;
+    --confetti-gold: var(--metallic-gold);
+    --confetti-mint: var(--mint);
+    --confetti-navy: var(--bfo-navy);
   }
 
   .light-theme {
     /* Header Stack Height for Sticky Navigation */
     --header-stack: 112px;
     
-    /* Family Office Marketplace Premium Theme */
-    --background: 216 29% 11%; /* Deep Blue #14213D */
-    --foreground: 0 0% 100%; /* White #FFFFFF */
+    /* Light theme uses Sand background with accessibility rules */
+    --background: var(--sand);
+    --foreground: var(--ink-black); /* Black text on sand (accessibility rule) */
 
-    --card: 216 25% 16%; /* Card background */
-    --card-foreground: 0 0% 100%;
+    --card: 0 0% 100%; /* White cards */
+    --card-foreground: var(--ink-black); /* Black text on white */
 
-    --popover: 216 25% 14%; /* Surface color */
-    --popover-foreground: 0 0% 100%;
+    --popover: 0 0% 100%;
+    --popover-foreground: var(--ink-black);
 
-    /* Primary - High Contrast Gold for Senior Accessibility */
-    --primary: 45 85% 35%; /* Darker Gold #B8860B for better contrast */
-    --primary-foreground: 0 0% 100%; /* White text on darker gold */
+    /* Primary - Metallic Gold Base */
+    --primary: var(--metallic-gold);
+    --primary-foreground: var(--ink-black); /* Black text on gold (accessibility rule) */
 
-    /* Secondary - Deep Blue #14213D */
-    --secondary: 216 29% 11%; /* Deep Blue #14213D */
-    --secondary-foreground: 0 0% 100%; /* White text on blue */
+    /* Secondary - BFO Navy */
+    --secondary: var(--bfo-navy);
+    --secondary-foreground: 0 0% 100%; /* White text on navy */
 
-    --muted: 216 25% 16%;
-    --muted-foreground: 210 25% 70%;
+    --muted: 210 23% 96%; /* Very light muted */
+    --muted-foreground: var(--slate);
 
-    /* Accent - Emerald #169873 */
-    --accent: 158 64% 52%; /* Emerald #169873 */
-    --accent-foreground: 0 0% 100%;
+    /* Accent - Sky Blue */
+    --accent: var(--sky);
+    --accent-foreground: 0 0% 100%; /* White text on sky */
 
-    /* Marketplace Colors - High Contrast for Accessibility */
-    --gold: 45 85% 35%; /* Darker Gold #B8860B for better contrast */
-    --gold-foreground: 0 0% 100%; /* White text on darker gold */
-
-    --navy: 216 29% 11%; /* Deep Blue #14213D */
-    --navy-foreground: 0 0% 100%;
-
-    --emerald: 158 64% 52%; /* Emerald #169873 */
-    --emerald-foreground: 0 0% 100%;
-
-    /* BFO Brand Colors */
-    --brand-primary: 45 75% 55%; /* BFO Gold #C7A34A */
-    --brand-dark: 216 24% 12%; /* #111418 */
-    --brand-bg: 222 26% 6%; /* #0B0E12 */
-    --brand-text: 0 0% 93%; /* #EDEDED */
-    --brand-accent: 206 81% 63%; /* #3BA7F0 */
-
-    --success: 158 64% 52%;
-    --success-foreground: 0 0% 100%;
+    /* Status Colors */
+    --success: var(--mint);
+    --success-foreground: var(--ink-black); /* Black text on mint */
     
-    --warning: 45 85% 35%; /* Darker Gold for better contrast */
-    --warning-foreground: 0 0% 100%; /* White text */
+    --warning: var(--metallic-gold);
+    --warning-foreground: var(--ink-black); /* Black text on gold */
 
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
+    --destructive: var(--alert-red);
+    --destructive-foreground: 0 0% 100%; /* White text on red */
 
-    --border: 216 25% 20%;
-    --input: 216 25% 16%;
-    --ring: 51 100% 50%;
+    /* UI Elements */
+    --border: 210 23% 85%;
+    --input: 0 0% 100%;
+    --ring: var(--metallic-gold-highlight);
 
     --radius: 0.75rem;
 
-    --gradient-primary: linear-gradient(135deg, hsl(216 29% 11%) 0%, hsl(216 25% 14%) 100%);
-    --gradient-gold: linear-gradient(135deg, hsl(51 100% 50%) 0%, hsl(45 100% 47%) 100%);
-    --gradient-emerald: linear-gradient(135deg, hsl(158 64% 52%) 0%, hsl(158 64% 45%) 100%);
+    /* Role-specific colors remain the same */
+    --role-family: var(--metallic-gold);
+    --role-advisor: var(--sky);
+    --role-accountant: var(--mint);
+    --role-attorney: var(--burgundy);
+    --role-provider: var(--indigo);
+    --role-admin: var(--slate);
+
+    /* Sidebar colors for light theme */
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: var(--ink-black);
+    --sidebar-border: 210 23% 85%;
+    --sidebar-accent: 210 23% 95%;
+
+    /* Light theme gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--sand)) 0%, hsl(0 0% 100%) 100%);
+    --gradient-gold: linear-gradient(135deg, hsl(var(--metallic-gold)) 0%, hsl(var(--metallic-gold-highlight)) 100%);
+    --gradient-surface: linear-gradient(135deg, hsl(0 0% 100%) 0%, hsl(var(--sand)) 100%);
     
-    --shadow-gold: 0 4px 20px hsla(51, 100%, 50%, 0.25);
-    --shadow-emerald: 0 4px 20px hsla(158, 64%, 52%, 0.25);
-    --shadow-premium: 0 8px 32px hsla(216, 29%, 8%, 0.4);
+    /* Light theme shadows */
+    --shadow-gold: 0 4px 20px hsla(var(--metallic-gold), 0.25);
+    --shadow-elevated: 0 8px 32px hsla(var(--ink-black), 0.15);
+    --shadow-premium: 0 12px 40px hsla(var(--ink-black), 0.25);
+    --shadow-subtle: 0 2px 8px hsla(var(--ink-black), 0.1);
 
     --touch-target: 44px;
 
-    --confetti-gold: 51 100% 50%;
-    --confetti-emerald: 158 64% 52%;
-    --confetti-navy: 216 29% 11%;
+    /* Legacy colors updated */
+    --brand-primary: var(--metallic-gold);
+    --brand-dark: var(--ink-black);
+    --brand-bg: var(--sand);
+    --brand-text: var(--ink-black);
+    --brand-accent: var(--sky);
+
+    /* BFO colors for light theme */
+    --bfo-bg: var(--sand);
+    --bfo-panel: 0 0% 100%;
+    --bfo-text: var(--ink-black);
+    --bfo-muted: var(--slate);
+    --bfo-gold: var(--metallic-gold);
+    --bfo-border: var(--ink-black) / 0.12;
+
+    /* Celebration colors */
+    --confetti-gold: var(--metallic-gold);
+    --confetti-mint: var(--mint);
+    --confetti-navy: var(--bfo-navy);
   }
 }
 
