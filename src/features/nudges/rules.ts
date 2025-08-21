@@ -29,11 +29,11 @@ export function evalNudges({ persona, tier, facts }: NudgeContext): Nudge[] {
 
   // Aspiring persona nudges
   if (persona === 'aspiring') {
-    // Missing emergency fund check
+    // Create Emergency Fund (OB-3 requirement)
     if (facts.estimatedLinkedAssetsUSD < 10000) {
       nudges.push({
-        id: 'missingEmergencyFund',
-        title: 'Build Emergency Fund',
+        id: 'createEmergencyFund',
+        title: 'Create Emergency Fund',
         description: 'Start with 3-6 months of expenses for financial security',
         type: 'action',
         priority: 'high',
@@ -45,11 +45,11 @@ export function evalNudges({ persona, tier, facts }: NudgeContext): Nudge[] {
       });
     }
 
-    // First budget nudge
+    // First Budget (OB-3 requirement)
     if (facts.entitiesCount === 0 && facts.propertiesCount === 0) {
       nudges.push({
         id: 'firstBudget',
-        title: 'Create Your First Budget',
+        title: 'First Budget',
         description: 'Track spending and identify savings opportunities',
         type: 'action',
         priority: 'medium',
@@ -61,18 +61,18 @@ export function evalNudges({ persona, tier, facts }: NudgeContext): Nudge[] {
       });
     }
 
-    // Auto contribution reminder
+    // Auto-contribution On (OB-3 requirement)
     if (!facts.equityCompPresent) {
       nudges.push({
         id: 'autoContributionOn',
-        title: 'Automate Your Savings',
+        title: 'Auto-contribution On',
         description: 'Set up automatic contributions to reach goals faster',
         type: 'reminder',
         priority: 'medium',
         persona: 'aspiring',
         action: {
-          label: 'Learn More',
-          route: '/education'
+          label: 'Set Up Auto-Save',
+          route: '/goals-home'
         }
       });
     }
@@ -80,11 +80,11 @@ export function evalNudges({ persona, tier, facts }: NudgeContext): Nudge[] {
 
   // Retiree persona nudges
   if (persona === 'retiree') {
-    // RMD due check (mock based on assets)
+    // RMD due soon (OB-3 requirement)
     if (facts.estimatedLinkedAssetsUSD > 100000) {
       nudges.push({
-        id: 'rmdDue',
-        title: 'RMD Planning Required',
+        id: 'rmdDueSoon',
+        title: 'RMD due soon',
         description: 'Plan your required minimum distributions for tax efficiency',
         type: 'reminder',
         priority: 'high',
@@ -96,10 +96,10 @@ export function evalNudges({ persona, tier, facts }: NudgeContext): Nudge[] {
       });
     }
 
-    // Medicare window
+    // Medicare window open (OB-3 requirement)
     nudges.push({
-      id: 'medicareWindow',
-      title: 'Medicare Enrollment Window',
+      id: 'medicareWindowOpen',
+      title: 'Medicare window open',
       description: 'Review your Medicare options and enrollment timeline',
       type: 'reminder',
       priority: 'medium',
@@ -110,11 +110,11 @@ export function evalNudges({ persona, tier, facts }: NudgeContext): Nudge[] {
       }
     });
 
-    // Social Security timing
+    // SS claim timing check (OB-3 requirement)
     if (!facts.hasAltsOrPrivate) {
       nudges.push({
-        id: 'ssClaimTiming',
-        title: 'Optimize Social Security Timing',
+        id: 'ssClaimTimingCheck',
+        title: 'SS claim timing check',
         description: 'Maximize your benefits with strategic claiming',
         type: 'opportunity',
         priority: 'medium',
@@ -127,26 +127,27 @@ export function evalNudges({ persona, tier, facts }: NudgeContext): Nudge[] {
     }
   }
 
-  // Advanced tier nudges (for both personas)
+  // Advanced tier nudges (for both personas) - OB-3 requirements
   if (tier === 'advanced') {
+    // Family Office summary available
     nudges.push({
-      id: 'familyOfficeMode',
-      title: 'Family Office Features Available',
+      id: 'familyOfficeSummaryAvailable',
+      title: 'Family Office summary available',
       description: 'Explore advanced wealth management tools and strategies',
       type: 'opportunity',
       priority: 'low',
       advancedOnly: true,
       action: {
-        label: 'Explore Features',
-        route: '/advanced'
+        label: 'View Summary',
+        route: '/reports'
       }
     });
 
-    // K1 hub setup for complex investments
+    // K-1 Hub setup (OB-3 requirement)
     if (facts.k1Count >= 1 || facts.hasAltsOrPrivate) {
       nudges.push({
         id: 'k1HubSetup',
-        title: 'Set Up K-1 Tracking Hub',
+        title: 'K-1 Hub setup',
         description: 'Organize and track your partnership distributions',
         type: 'action',
         priority: 'medium',
@@ -158,11 +159,11 @@ export function evalNudges({ persona, tier, facts }: NudgeContext): Nudge[] {
       });
     }
 
-    // Trust uploads for estate planning
+    // Trust uploads needed (OB-3 requirement)
     if (facts.estateInstrumentsPresent || facts.estimatedLinkedAssetsUSD > 2000000) {
       nudges.push({
-        id: 'trustUploads',
-        title: 'Upload Trust Documents',
+        id: 'trustUploadsNeeded',
+        title: 'Trust uploads needed',
         description: 'Centralize your estate planning documents for review',
         type: 'action',
         priority: 'medium',
