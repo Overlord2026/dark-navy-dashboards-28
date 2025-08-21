@@ -67,11 +67,13 @@ export interface ConsentRDSReceipt {
 }
 
 export interface VaultRDSReceipt {
+  id: string; // vault_2025_08_21_0100
   type: "Vault-RDS";
-  action: "grant" | "revoke" | "legal_hold" | "delete";
-  doc_id?: string; // pack:0xABC...
-  inputs_hash?: string;
-  policy_version?: string;
+  action: "grant" | "revoke" | "legal_hold" | "delete" | "export";
+  doc_id: string; // pack:0xABCDEF - evidence pack identifier (hash, not content)
+  grant_id?: string; // grant_7_days_provider - optional
+  recipient_role?: string; // provider
+  ttl_days?: number; // 7
   anchor_ref?: {
     merkle_root: string; // 0x...
     cross_chain_locator: Array<{
@@ -81,7 +83,7 @@ export interface VaultRDSReceipt {
       anchor_epoch: number;
     }>;
   };
-  proof_of_key_shred?: string; // sha256:...
+  proof_of_key_shred?: string | null; // sha256:... - present only for delete
   ts: string; // ISO 8601 timestamp
 }
 
@@ -252,14 +254,26 @@ export function createConsentRDSReceipt(
 // Helper function to create standardized Vault-RDS receipts
 export function createVaultRDSReceipt(
   action: VaultRDSReceipt['action'],
-  docId?: string,
-  proofOfKeyShred?: string,
+  docId: string,
+  grantId?: string,
+  recipientRole?: string,
+  ttlDays?: number,
+  proofOfKeyShred?: string | null,
   anchorRef?: VaultRDSReceipt['anchor_ref']
 ): VaultRDSReceipt {
+  // Generate unique ID
+  const timestamp = new Date().toISOString().split('T')[0].replace(/-/g, '_');
+  const randomSuffix = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+  const id = `vault_${timestamp}_${randomSuffix}`;
+  
   return {
+    id,
     type: "Vault-RDS",
     action,
     doc_id: docId,
+    grant_id: grantId,
+    recipient_role: recipientRole,
+    ttl_days: ttlDays,
     proof_of_key_shred: proofOfKeyShred,
     anchor_ref: anchorRef,
     ts: new Date().toISOString()
@@ -306,9 +320,11 @@ export function validatePARDSReceipt(receipt: any): receipt is PARDSReceipt {
 export function validateVaultRDSReceipt(receipt: any): receipt is VaultRDSReceipt {
   return (
     receipt &&
+    typeof receipt.id === "string" &&
     receipt.type === "Vault-RDS" &&
     typeof receipt.action === "string" &&
-    ["grant", "revoke", "legal_hold", "delete"].includes(receipt.action) &&
+    ["grant", "revoke", "legal_hold", "delete", "export"].includes(receipt.action) &&
+    typeof receipt.doc_id === "string" &&
     typeof receipt.ts === "string"
   );
 }
