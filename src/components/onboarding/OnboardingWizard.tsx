@@ -153,7 +153,7 @@ export function OnboardingWizard({ onComplete, initialPersona }: OnboardingWizar
     // Show Family Office mode toast if advanced
     if (tier === 'advanced') {
       toast({
-        title: "🏛️ Family Office mode unlocked",
+        title: "Family Office mode unlocked",
         description: "Advanced tools and features are now available",
         duration: 4000,
       });
@@ -188,6 +188,23 @@ export function OnboardingWizard({ onComplete, initialPersona }: OnboardingWizar
       { goal_key: goalData.goal_key, reasons: ['onboarding_flow'] }
     );
     addReceipt(receipt);
+    
+    toast({
+      title: "Receipt recorded",
+      description: (
+        <div className="flex items-center gap-2">
+          <span>Goal creation recorded</span>
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={() => window.location.href = '/receipts'}
+            className="h-auto p-1 text-xs"
+          >
+            View in Receipts
+          </Button>
+        </div>
+      ),
+    });
 
     setSession(prev => ({
       ...prev,

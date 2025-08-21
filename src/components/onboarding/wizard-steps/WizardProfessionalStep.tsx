@@ -95,7 +95,7 @@ export function WizardProfessionalStep({ onComplete, hasFeature }: WizardProfess
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h2 className="text-xl font-semibold mb-2">Invite a professional (optional)</h2>
+        <h2 className="text-xl font-semibold mb-2">Share selectively—only what's needed</h2>
         <p className="text-muted-foreground">
           Share specific information with professionals who can help accelerate your progress
         </p>

@@ -332,11 +332,11 @@ export function ReceiptsExplorer() {
               <Card>
                 <CardContent className="p-8 text-center">
                   <Receipt className="h-12 w-12 mx-auto text-muted-foreground mb-4" aria-hidden="true" />
-                  <h3 className="text-lg font-medium mb-2">No receipts found</h3>
+                  <h3 className="text-lg font-medium mb-2">No receipts yet</h3>
                   <p className="text-muted-foreground">
                     {searchTerm 
                       ? 'Try adjusting your search criteria'
-                      : 'Complete some onboarding steps or use tools to generate receipts'
+                      : 'Complete one action and they\'ll appear here.'
                     }
                   </p>
                 </CardContent>

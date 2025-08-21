@@ -127,7 +127,7 @@ export function WizardCalculatorStep({ onComplete, persona }: WizardCalculatorSt
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h2 className="text-xl font-semibold mb-2">Try a quick calculation</h2>
+        <h2 className="text-xl font-semibold mb-2">Run your quick estimate</h2>
         <p className="text-muted-foreground">
           {persona === 'aspiring' 
             ? 'See how much you can safely save each month'

@@ -85,7 +85,7 @@ export const NudgePanel: React.FC = () => {
         </CardHeader>
         <CardContent>
           <p className="text-muted-foreground text-sm">
-            No new recommendations at this time. You're on track!
+            No nudges—great job. Come back tomorrow for fresh suggestions.
           </p>
         </CardContent>
       </Card>

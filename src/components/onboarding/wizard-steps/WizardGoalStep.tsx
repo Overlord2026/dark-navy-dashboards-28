@@ -118,7 +118,7 @@ export function WizardGoalStep({ onComplete, persona }: WizardGoalStepProps) {
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h2 className="text-xl font-semibold mb-2">What's your top financial goal?</h2>
+        <h2 className="text-xl font-semibold mb-2">Pick your top priority—no wrong choices</h2>
         <p className="text-muted-foreground">
           {persona === 'aspiring' 
             ? 'Let\'s start building your financial foundation'

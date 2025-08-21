@@ -76,7 +76,7 @@ export function WizardConnectStep({ onComplete, hasFeature }: WizardConnectStepP
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h2 className="text-xl font-semibold mb-2">Connect one data point</h2>
+        <h2 className="text-xl font-semibold mb-2">Link one account or upload one doc</h2>
         <p className="text-muted-foreground">
           Link an account or upload a document to unlock personalized insights
         </p>

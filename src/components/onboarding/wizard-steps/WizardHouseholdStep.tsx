@@ -47,7 +47,7 @@ export function WizardHouseholdStep({ onComplete }: WizardHouseholdStepProps) {
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h2 className="text-xl font-semibold mb-2">Tell us about your household</h2>
+        <h2 className="text-xl font-semibold mb-2">A few quick questions to personalize your plan</h2>
         <p className="text-muted-foreground">This helps us personalize your financial plan</p>
       </div>
 
