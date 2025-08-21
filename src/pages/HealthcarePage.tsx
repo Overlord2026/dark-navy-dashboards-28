@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { HealthcareGateway } from '@/components/healthcare/HealthcareGateway';
 import { HealthcareReceiptViewer } from '@/components/healthcare/HealthcareReceiptViewer';
+import { EvidencePack } from '@/components/health/EvidencePack';
 import { ThreeColumnLayout } from '@/components/layout/ThreeColumnLayout';
 import { usePersonalizationStore } from '@/features/personalization/store';
 import { fhirConnector, recordVaultRDS } from '@/features/healthcare';
@@ -98,10 +99,11 @@ export default function HealthcarePage() {
 
         {/* Main Content Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="benefits">Benefits</TabsTrigger>
             <TabsTrigger value="documents">Documents</TabsTrigger>
+            <TabsTrigger value="vault">Evidence Vault</TabsTrigger>
             <TabsTrigger value="audit">Audit Trail</TabsTrigger>
           </TabsList>
 
@@ -249,6 +251,10 @@ export default function HealthcarePage() {
                 </CardContent>
               </Card>
             </HealthcareGateway>
+          </TabsContent>
+
+          <TabsContent value="vault" className="space-y-6">
+            <EvidencePack />
           </TabsContent>
 
           <TabsContent value="audit">
