@@ -1,305 +1,173 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
-import { 
-  Settings, 
-  Upload, 
-  Download, 
-  Trash2, 
-  Play, 
-  AlertTriangle 
-} from 'lucide-react';
+import { Database, Trash2, RefreshCw } from 'lucide-react';
+import { loadFixtures, clearFixtures } from '@/fixtures/fixtures';
+import { getReceiptsCount, getReceiptsByType } from '@/features/receipts/record';
 import { toast } from 'sonner';
 
 export default function AdminFixturesPanel() {
-  const [nilSnapshot, setNilSnapshot] = useState<string>('');
-  const [healthSnapshot, setHealthSnapshot] = useState<string>('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
+  
+  const receiptsCount = getReceiptsCount();
+  const decisionCount = getReceiptsByType('Decision-RDS').length;
+  const consentCount = getReceiptsByType('Consent-RDS').length;
+  const settlementCount = getReceiptsByType('Settlement-RDS').length;
+  const deltaCount = getReceiptsByType('Delta-RDS').length;
 
-  const isDev = import.meta.env.MODE !== 'production';
-  const showFixtures = isDev && (window as any).__DEV_FIXTURES__ === true;
-
-  if (!showFixtures) {
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Settings className="h-5 w-5" />
-            Fixtures (Development)
-          </CardTitle>
-          <CardDescription>Development fixture management tools</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="text-center py-8 text-muted-foreground">
-            <AlertTriangle className="h-12 w-12 mx-auto mb-4 text-yellow-600" />
-            <p className="font-semibold mb-2">Dev Fixtures Not Available</p>
-            <p className="text-sm">
-              Fixtures are only available in development mode with __DEV_FIXTURES__ enabled.
-            </p>
-            <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded text-left">
-              <p className="text-sm text-yellow-800">
-                <strong>To enable:</strong><br />
-                1. Set <code>window.__DEV_FIXTURES__ = true</code> in console<br />
-                2. Ensure running in development mode
-              </p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
-
-  // Mock fixture functions (replace with actual implementations)
-  const loadNilFixtures = async (profile: 'coach' | 'mom') => {
+  const handleLoadFixtures = async (profile: 'coach' | 'mom') => {
     setIsLoading(true);
     try {
-      // Mock loading fixtures
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // In real implementation, this would call actual fixture loading
-      console.log(`Loading NIL fixtures for ${profile} profile`);
-      
-      toast.success(`NIL ${profile} fixtures loaded successfully`);
+      const result = await loadFixtures({ profile });
+      toast.success(`Loaded ${profile} fixtures`, {
+        description: `${result.receiptIds.length} receipts created`
+      });
     } catch (error) {
-      toast.error('Failed to load NIL fixtures');
+      toast.error('Failed to load fixtures', {
+        description: error instanceof Error ? error.message : 'Unknown error'
+      });
     } finally {
       setIsLoading(false);
     }
   };
 
-  const loadHealthFixtures = async () => {
+  const handleClearAll = () => {
+    clearFixtures();
+    toast.success('All fixtures cleared');
+  };
+
+  const handleLoadBoth = async () => {
     setIsLoading(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      console.log('Loading Health fixtures');
-      toast.success('Health fixtures loaded successfully');
+      const coachResult = await loadFixtures({ profile: 'coach' });
+      const momResult = await loadFixtures({ profile: 'mom' });
+      
+      const totalReceipts = coachResult.receiptIds.length + momResult.receiptIds.length;
+      
+      toast.success('Loaded all fixtures', {
+        description: `${totalReceipts} receipts created (Coach + Mom profiles)`
+      });
     } catch (error) {
-      toast.error('Failed to load Health fixtures');
+      toast.error('Failed to load fixtures', {
+        description: error instanceof Error ? error.message : 'Unknown error'
+      });
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const saveNilSnapshot = () => {
-    try {
-      // Mock dehydration
-      const mockSnapshot = {
-        timestamp: new Date().toISOString(),
-        receipts: [],
-        state: {},
-        version: '1.0.0'
-      };
-      
-      const jsonString = JSON.stringify(mockSnapshot, null, 2);
-      setNilSnapshot(jsonString);
-      
-      // Also trigger download
-      const blob = new Blob([jsonString], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `nil-snapshot-${Date.now()}.json`;
-      link.click();
-      URL.revokeObjectURL(url);
-      
-      toast.success('NIL snapshot saved and downloaded');
-    } catch (error) {
-      toast.error('Failed to save NIL snapshot');
-    }
-  };
-
-  const saveHealthSnapshot = () => {
-    try {
-      const mockSnapshot = {
-        timestamp: new Date().toISOString(),
-        healthRecords: [],
-        patientState: {},
-        version: '1.0.0'
-      };
-      
-      const jsonString = JSON.stringify(mockSnapshot, null, 2);
-      setHealthSnapshot(jsonString);
-      
-      const blob = new Blob([jsonString], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `health-snapshot-${Date.now()}.json`;
-      link.click();
-      URL.revokeObjectURL(url);
-      
-      toast.success('Health snapshot saved and downloaded');
-    } catch (error) {
-      toast.error('Failed to save Health snapshot');
-    }
-  };
-
-  const restoreNilSnapshot = () => {
-    if (!nilSnapshot.trim()) {
-      toast.error('No NIL snapshot data to restore');
-      return;
-    }
-    
-    try {
-      const parsed = JSON.parse(nilSnapshot);
-      console.log('Restoring NIL snapshot:', parsed);
-      toast.success('NIL snapshot restored successfully');
-    } catch (error) {
-      toast.error('Invalid JSON in NIL snapshot');
-    }
-  };
-
-  const restoreHealthSnapshot = () => {
-    if (!healthSnapshot.trim()) {
-      toast.error('No Health snapshot data to restore');
-      return;
-    }
-    
-    try {
-      const parsed = JSON.parse(healthSnapshot);
-      console.log('Restoring Health snapshot:', parsed);
-      toast.success('Health snapshot restored successfully');
-    } catch (error) {
-      toast.error('Invalid JSON in Health snapshot');
-    }
-  };
-
-  const clearAll = () => {
-    setNilSnapshot('');
-    setHealthSnapshot('');
-    // In real implementation, clear actual state
-    toast.success('All snapshots cleared');
   };
 
   return (
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Settings className="h-5 w-5" />
-          Fixtures (Development)
-          <Badge variant="destructive">DEV ONLY</Badge>
+          <Database className="h-5 w-5" />
+          Test Fixtures (Development)
         </CardTitle>
         <CardDescription>
-          Load, save, and restore fixture snapshots for NIL and Health systems
+          Manage demo data for NIL compliance testing
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        {/* NIL Fixtures */}
-        <div className="space-y-4">
-          <div className="flex items-center gap-2">
-            <h3 className="text-lg font-semibold">NIL Fixtures</h3>
-            <Badge variant="outline">No PHI</Badge>
+        {/* Current State */}
+        <div className="grid grid-cols-5 gap-4 p-4 bg-muted/50 rounded-lg">
+          <div className="text-center">
+            <div className="text-2xl font-bold">{receiptsCount}</div>
+            <div className="text-sm text-muted-foreground">Total</div>
           </div>
-          
-          <div className="flex flex-wrap gap-2">
-            <Button 
-              onClick={() => loadNilFixtures('coach')} 
-              disabled={isLoading}
-              variant="outline"
-            >
-              <Play className="h-4 w-4 mr-2" />
-              Load NIL (Coach)
-            </Button>
-            <Button 
-              onClick={() => loadNilFixtures('mom')} 
-              disabled={isLoading}
-              variant="outline"
-            >
-              <Play className="h-4 w-4 mr-2" />
-              Load NIL (Mom)
-            </Button>
-            <Button onClick={saveNilSnapshot} variant="outline">
-              <Download className="h-4 w-4 mr-2" />
-              Save NIL JSON
-            </Button>
+          <div className="text-center">
+            <div className="text-2xl font-bold">{decisionCount}</div>
+            <div className="text-sm text-muted-foreground">Decision</div>
           </div>
+          <div className="text-center">
+            <div className="text-2xl font-bold">{consentCount}</div>
+            <div className="text-sm text-muted-foreground">Consent</div>
+          </div>
+          <div className="text-center">
+            <div className="text-2xl font-bold">{settlementCount}</div>
+            <div className="text-sm text-muted-foreground">Settlement</div>
+          </div>
+          <div className="text-center">
+            <div className="text-2xl font-bold">{deltaCount}</div>
+            <div className="text-sm text-muted-foreground">Delta</div>
+          </div>
+        </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="nil-snapshot">NIL Snapshot JSON</Label>
-            <Textarea
-              id="nil-snapshot"
-              placeholder="NIL snapshot JSON will appear here..."
-              value={nilSnapshot}
-              onChange={(e) => setNilSnapshot(e.target.value)}
-              rows={6}
-              className="font-mono text-xs"
-            />
-            <Button 
-              onClick={restoreNilSnapshot} 
-              disabled={!nilSnapshot.trim()}
+        <Separator />
+
+        {/* Load Individual Profiles */}
+        <div className="space-y-3">
+          <h3 className="font-medium">Load Demo Profiles</h3>
+          <div className="grid grid-cols-2 gap-3">
+            <Button
+              onClick={() => handleLoadFixtures('coach')}
+              disabled={isLoading}
               variant="outline"
-              size="sm"
+              className="h-auto p-4 flex flex-col items-start"
             >
-              <Upload className="h-4 w-4 mr-2" />
-              Restore NIL JSON
+              <div className="flex items-center gap-2 mb-2">
+                <Badge variant="secondary">Coach</Badge>
+              </div>
+              <div className="text-sm text-muted-foreground text-left">
+                Youth sports coach scenario with parent consent flows
+              </div>
+            </Button>
+            
+            <Button
+              onClick={() => handleLoadFixtures('mom')}
+              disabled={isLoading}
+              variant="outline"
+              className="h-auto p-4 flex flex-col items-start"
+            >
+              <div className="flex items-center gap-2 mb-2">
+                <Badge variant="secondary">Mom/Guardian</Badge>
+              </div>
+              <div className="text-sm text-muted-foreground text-left">
+                Parent/guardian scenario with multiple student-athletes
+              </div>
             </Button>
           </div>
         </div>
 
         <Separator />
 
-        {/* Health Fixtures */}
-        <div className="space-y-4">
-          <div className="flex items-center gap-2">
-            <h3 className="text-lg font-semibold">Health Fixtures</h3>
-            <Badge variant="outline">No PHI</Badge>
-          </div>
-          
-          <div className="flex flex-wrap gap-2">
-            <Button 
-              onClick={loadHealthFixtures} 
+        {/* Bulk Actions */}
+        <div className="space-y-3">
+          <h3 className="font-medium">Bulk Actions</h3>
+          <div className="flex gap-3">
+            <Button
+              onClick={handleLoadBoth}
+              disabled={isLoading}
+              className="flex-1"
+            >
+              <RefreshCw className="h-4 w-4 mr-2" />
+              {isLoading ? 'Loading...' : 'Load All Profiles'}
+            </Button>
+            
+            <Button
+              onClick={handleClearAll}
               disabled={isLoading}
               variant="outline"
             >
-              <Play className="h-4 w-4 mr-2" />
-              Load Health
-            </Button>
-            <Button onClick={saveHealthSnapshot} variant="outline">
-              <Download className="h-4 w-4 mr-2" />
-              Save Health JSON
-            </Button>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="health-snapshot">Health Snapshot JSON</Label>
-            <Textarea
-              id="health-snapshot"
-              placeholder="Health snapshot JSON will appear here..."
-              value={healthSnapshot}
-              onChange={(e) => setHealthSnapshot(e.target.value)}
-              rows={6}
-              className="font-mono text-xs"
-            />
-            <Button 
-              onClick={restoreHealthSnapshot} 
-              disabled={!healthSnapshot.trim()}
-              variant="outline"
-              size="sm"
-            >
-              <Upload className="h-4 w-4 mr-2" />
-              Restore Health JSON
+              <Trash2 className="h-4 w-4 mr-2" />
+              Clear All
             </Button>
           </div>
         </div>
 
-        <Separator />
-
-        {/* Clear All */}
-        <div className="flex justify-center">
-          <Button onClick={clearAll} variant="destructive" size="sm">
-            <Trash2 className="h-4 w-4 mr-2" />
-            Clear All Snapshots
-          </Button>
-        </div>
-
-        {/* Security Notice */}
-        <div className="text-xs text-muted-foreground p-3 bg-yellow-50 border border-yellow-200 rounded">
-          <strong>Security Note:</strong> This panel is development-only and disabled in production. 
-          All fixture data is anonymized and contains no PHI/PII.
+        {/* Warning */}
+        <div className="p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
+          <div className="flex items-start gap-2">
+            <div className="text-yellow-600 mt-0.5">⚠️</div>
+            <div className="text-sm">
+              <div className="font-medium text-yellow-800 dark:text-yellow-200">Development Only</div>
+              <div className="text-yellow-700 dark:text-yellow-300">
+                This panel is only available in development mode. 
+                All fixtures are stored in memory and will be lost on page refresh.
+              </div>
+            </div>
+          </div>
         </div>
       </CardContent>
     </Card>

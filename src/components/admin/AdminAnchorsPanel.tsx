@@ -1,206 +1,229 @@
-import React, { useState, useMemo, useEffect } from 'react';
-import { listReceipts } from '@/features/receipts/record';
+import React, { useState } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Shield, CheckCircle, AlertCircle, Play } from 'lucide-react';
-import { toast } from 'sonner';
+import { Shield, CheckCircle, XCircle, AlertTriangle } from 'lucide-react';
+import { listReceipts } from '@/features/receipts/record';
 import { buildMerkle } from '@/lib/merkle';
-import { sha256Hex } from '@/lib/canonical';
-import type { AnyRDS } from '@/features/receipts/types';
+import { hash } from '@/lib/canonical';
+import { AnyRDS } from '@/features/receipts/types';
+import { toast } from 'sonner';
+
+interface VerificationResult {
+  receipt: AnyRDS;
+  status: 'verified' | 'failed' | 'no-anchor';
+  localRoot?: string;
+  receiptRoot?: string;
+  error?: string;
+}
 
 export default function AdminAnchorsPanel() {
-  const receipts = listReceipts();
-  const [verificationResults, setVerificationResults] = useState<Record<string, boolean>>({});
   const [isVerifying, setIsVerifying] = useState(false);
+  const [results, setResults] = useState<VerificationResult[]>([]);
+  const [summary, setSummary] = useState<{
+    total: number;
+    verified: number;
+    failed: number;
+    noAnchor: number;
+  } | null>(null);
 
-  // Filter receipts that have anchor references
-  const anchoredReceipts = useMemo(() => {
-    return receipts.filter(receipt => (receipt as any).anchor_ref);
-  }, [receipts]);
-
-  const buildLocalMerkle = async (receipts: AnyRDS[]) => {
-    if (receipts.length === 0) return await sha256Hex('empty');
-    
-    // Convert receipts to hex leaves
-    const leaves = await Promise.all(
-      receipts.map(async (r) => await sha256Hex(JSON.stringify(r)))
-    );
-    
-    const { root } = await buildMerkle(leaves);
-    return root;
-  };
-
-  const verifyReceipt = async (receipt: AnyRDS) => {
-    const receiptId = (receipt as any).id;
-    const anchorRef = (receipt as any).anchor_ref;
-    
-    if (!anchorRef) return false;
-
-    // Simulate verification logic
-    await new Promise(resolve => setTimeout(resolve, 100));
-    
-    // Use proper Merkle verification
-    const localRoot = await buildLocalMerkle([receipt]);
-    const isValid = anchorRef.merkle_root && localRoot.length > 0;
-    
-    return isValid;
-  };
-
-  const verifyAllAnchors = async () => {
+  const handleVerifyAll = async () => {
     setIsVerifying(true);
-    const results: Record<string, boolean> = {};
-    
-    for (const receipt of anchoredReceipts) {
-      const receiptId = (receipt as any).id;
-      const isValid = await verifyReceipt(receipt);
-      results[receiptId] = isValid;
+    setResults([]);
+    setSummary(null);
+
+    try {
+      const receipts = listReceipts();
+      const anchoredReceipts = receipts.filter(r => 
+        'anchor_ref' in r && r.anchor_ref !== null
+      );
+
+      if (anchoredReceipts.length === 0) {
+        toast.warning('No anchored receipts found');
+        setIsVerifying(false);
+        return;
+      }
+
+      // Build local Merkle tree from all anchored receipts
+      const receiptHashes = await Promise.all(
+        anchoredReceipts.map(async receipt => await hash(receipt))
+      );
+
+      const { root: localRoot } = await buildMerkle(receiptHashes);
+      
+      const verificationResults: VerificationResult[] = [];
+      let verified = 0, failed = 0, noAnchor = 0;
+
+      // Verify each receipt
+      for (let i = 0; i < receipts.length; i++) {
+        const receipt = receipts[i];
+        
+        if (!('anchor_ref' in receipt) || !receipt.anchor_ref) {
+          verificationResults.push({
+            receipt,
+            status: 'no-anchor'
+          });
+          noAnchor++;
+          continue;
+        }
+
+        try {
+          const receiptHash = await hash(receipt);
+          const receiptIndex = receiptHashes.indexOf(receiptHash);
+          
+          if (receiptIndex === -1) {
+            verificationResults.push({
+              receipt,
+              status: 'failed',
+              error: 'Receipt not found in local tree'
+            });
+            failed++;
+            continue;
+          }
+
+          // Verify against local root
+          const isValid = receipt.anchor_ref.merkle_root === localRoot;
+          const receiptRoot = receipt.anchor_ref.merkle_root;
+          
+          if (isValid) {
+            verificationResults.push({
+              receipt,
+              status: 'verified',
+              localRoot,
+              receiptRoot
+            });
+            verified++;
+          } else {
+            verificationResults.push({
+              receipt,
+              status: 'failed',
+              localRoot,
+              receiptRoot,
+              error: 'Root mismatch'
+            });
+            failed++;
+          }
+        } catch (error) {
+          verificationResults.push({
+            receipt,
+            status: 'failed',
+            error: error instanceof Error ? error.message : 'Unknown error'
+          });
+          failed++;
+        }
+      }
+
+      setResults(verificationResults);
+      setSummary({
+        total: receipts.length,
+        verified,
+        failed,
+        noAnchor
+      });
+
+      toast.success('Anchor verification complete', {
+        description: `${verified} verified, ${failed} failed, ${noAnchor} unanchored`
+      });
+
+    } catch (error) {
+      toast.error('Verification failed', {
+        description: error instanceof Error ? error.message : 'Unknown error'
+      });
+    } finally {
+      setIsVerifying(false);
     }
-    
-    setVerificationResults(results);
-    setIsVerifying(false);
-    
-    const passCount = Object.values(results).filter(Boolean).length;
-    const totalCount = Object.keys(results).length;
-    
-    toast.success(`Anchor verification complete: ${passCount}/${totalCount} valid`);
   };
 
-  const verifySingleAnchor = async (receipt: AnyRDS) => {
-    const receiptId = (receipt as any).id;
-    const isValid = await verifyReceipt(receipt);
-    
-    setVerificationResults(prev => ({
-      ...prev,
-      [receiptId]: isValid
-    }));
-    
-    toast.success(`Anchor verified: ${isValid ? 'Valid' : 'Invalid'}`);
+  const getStatusIcon = (status: VerificationResult['status']) => {
+    switch (status) {
+      case 'verified':
+        return <CheckCircle className="h-4 w-4 text-green-500" />;
+      case 'failed':
+        return <XCircle className="h-4 w-4 text-red-500" />;
+      case 'no-anchor':
+        return <AlertTriangle className="h-4 w-4 text-yellow-500" />;
+    }
   };
 
-  const getVerificationStatus = (receiptId: string) => {
-    if (!(receiptId in verificationResults)) return null;
-    return verificationResults[receiptId];
+  const getStatusBadge = (status: VerificationResult['status']) => {
+    switch (status) {
+      case 'verified':
+        return <Badge variant="default">Verified</Badge>;
+      case 'failed':
+        return <Badge variant="destructive">Failed</Badge>;
+      case 'no-anchor':
+        return <Badge variant="secondary">No Anchor</Badge>;
+    }
   };
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center justify-between">
-          <span className="flex items-center gap-2">
-            <Shield className="h-5 w-5" />
-            Anchor Verification
-          </span>
+        <div className="flex items-center justify-between">
+          <div>
+            <CardTitle className="flex items-center gap-2">
+              <Shield className="h-5 w-5" />
+              Anchor Verification
+            </CardTitle>
+            <CardDescription>
+              Verify Merkle proofs and anchor integrity
+            </CardDescription>
+          </div>
           <Button 
-            onClick={verifyAllAnchors}
-            disabled={isVerifying || anchoredReceipts.length === 0}
-            variant="default"
+            onClick={handleVerifyAll} 
+            disabled={isVerifying}
           >
-            <Play className="h-4 w-4 mr-2" />
-            Verify All
+            {isVerifying ? 'Verifying...' : 'Verify All'}
           </Button>
-        </CardTitle>
-        <CardDescription>
-          Web-based verification panel for anchored receipts with Merkle proof validation
-        </CardDescription>
+        </div>
       </CardHeader>
-      <CardContent className="space-y-4">
-        {/* Summary Stats */}
-        <div className="grid grid-cols-3 gap-4">
-          <div className="text-center p-3 border rounded-lg">
-            <p className="text-2xl font-bold">{anchoredReceipts.length}</p>
-            <p className="text-sm text-muted-foreground">Anchored Receipts</p>
+      <CardContent className="space-y-6">
+        {summary && (
+          <div className="grid grid-cols-4 gap-4 p-4 bg-muted/50 rounded-lg">
+            <div className="text-center">
+              <div className="text-2xl font-bold">{summary.total}</div>
+              <div className="text-sm text-muted-foreground">Total</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-green-600">{summary.verified}</div>
+              <div className="text-sm text-muted-foreground">Verified</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-red-600">{summary.failed}</div>
+              <div className="text-sm text-muted-foreground">Failed</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-yellow-600">{summary.noAnchor}</div>
+              <div className="text-sm text-muted-foreground">No Anchor</div>
+            </div>
           </div>
-          <div className="text-center p-3 border rounded-lg">
-            <p className="text-2xl font-bold text-green-600">
-              {Object.values(verificationResults).filter(Boolean).length}
-            </p>
-            <p className="text-sm text-muted-foreground">Valid Proofs</p>
-          </div>
-          <div className="text-center p-3 border rounded-lg">
-            <p className="text-2xl font-bold text-red-600">
-              {Object.values(verificationResults).filter(v => v === false).length}
-            </p>
-            <p className="text-sm text-muted-foreground">Invalid Proofs</p>
-          </div>
-        </div>
+        )}
 
-        {/* Anchored Receipts Table */}
-        <div className="border rounded-lg">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Receipt ID</TableHead>
-                <TableHead>Type</TableHead>
-                <TableHead>Anchor Root</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {anchoredReceipts.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
-                    No anchored receipts found
-                  </TableCell>
-                </TableRow>
-              ) : (
-                anchoredReceipts.map((receipt, index) => {
-                  const receiptId = (receipt as any).id || `receipt-${index}`;
-                  const anchorRef = (receipt as any).anchor_ref;
-                  const verificationStatus = getVerificationStatus(receiptId);
-                  
-                  return (
-                    <TableRow key={receiptId}>
-                      <TableCell className="font-mono text-xs">
-                        {receiptId.substring(0, 8)}...
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="outline">{receipt.type}</Badge>
-                      </TableCell>
-                      <TableCell className="font-mono text-xs">
-                        {anchorRef?.merkle_root?.substring(0, 16) || 'N/A'}...
-                      </TableCell>
-                      <TableCell>
-                        {verificationStatus === null ? (
-                          <Badge variant="secondary">Not Verified</Badge>
-                        ) : verificationStatus ? (
-                          <Badge variant="default" className="bg-green-600">
-                            <CheckCircle className="h-3 w-3 mr-1" />
-                            Valid
-                          </Badge>
-                        ) : (
-                          <Badge variant="destructive">
-                            <AlertCircle className="h-3 w-3 mr-1" />
-                            Invalid
-                          </Badge>
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => verifySingleAnchor(receipt)}
-                          disabled={isVerifying}
-                        >
-                          Verify
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })
-              )}
-            </TableBody>
-          </Table>
-        </div>
+        {results.length > 0 && (
+          <div className="space-y-3">
+            {results.map((result, index) => (
+              <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                <div className="flex items-center gap-3">
+                  {getStatusIcon(result.status)}
+                  <div>
+                    <div className="font-mono text-sm">{result.receipt.id.slice(0, 8)}...</div>
+                    <div className="text-xs text-muted-foreground">{result.receipt.type}</div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  {getStatusBadge(result.status)}
+                  {result.error && (
+                    <div className="text-xs text-red-500">{result.error}</div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
 
-        {anchoredReceipts.length > 0 && (
-          <div className="text-sm text-muted-foreground">
-            <p>
-              <strong>Note:</strong> This is a demo-grade verification using local Merkle roots. 
-              In production, proofs would be validated against the actual blockchain anchors.
-            </p>
+        {results.length === 0 && !isVerifying && (
+          <div className="text-center py-8 text-muted-foreground">
+            Click "Verify All" to run anchor verification
           </div>
         )}
       </CardContent>

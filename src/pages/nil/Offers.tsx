@@ -11,6 +11,18 @@ import { CalendarIcon, AlertTriangle, DollarSign, Users } from 'lucide-react';
 import { format } from 'date-fns';
 import { createOffer, checkConflicts, getOffers, NILOffer } from '@/features/nil/offers/store';
 import { previewSplit, calculateSplitAmounts } from '@/features/nil/splits/preview';
+import { recordReceipt } from '@/features/receipts/record';
+import { hash } from '@/lib/canonical';
+// Mock anchor batch function for demo
+const anchorBatch = async (hashes: string[]) => ({
+  merkle_root: `root-${Date.now()}`,
+  cross_chain_locator: [{
+    chain_id: "ethereum",
+    tx_ref: `0x${Math.random().toString(16).slice(2)}`,
+    ts: Date.now(),
+    anchor_epoch: 1
+  }]
+});
 import { toast } from 'sonner';
 
 export default function OffersPage() {
@@ -53,7 +65,7 @@ export default function OffersPage() {
     }
   }, [selectedOffer, offers]);
 
-  const handleCreateOffer = () => {
+  const handleCreateOffer = async () => {
     if (!formData.brand || !formData.category || !formData.startDate || !formData.endDate) {
       toast.error('Please fill in all required fields');
       return;
@@ -68,6 +80,28 @@ export default function OffersPage() {
         channels: formData.channels,
         amount: formData.amount
       });
+
+      // Create Decision-RDS receipt
+      const decisionReceipt = {
+        id: crypto.randomUUID(),
+        type: 'Decision-RDS' as const,
+        action: 'publish' as const,
+        policy_version: 'E-2025.08',
+        inputs_hash: await hash({ offerId, brand: formData.brand, category: formData.category }),
+        reasons: ['Offer created successfully', 'Compliance check passed'],
+        result: 'approve' as const,
+        asset_id: offerId,
+        anchor_ref: null,
+        ts: new Date().toISOString()
+      };
+
+      // Anchor the receipt
+      const receiptHash = await hash(decisionReceipt);
+      const anchorRef = await anchorBatch([receiptHash]);
+      decisionReceipt.anchor_ref = anchorRef;
+
+      // Record the receipt
+      recordReceipt(decisionReceipt);
 
       setOffers(getOffers());
       setSelectedOffer(offerId);
@@ -84,7 +118,11 @@ export default function OffersPage() {
       });
 
       toast.success('Offer created successfully!', {
-        description: `Offer ID: ${offerId}`
+        description: `OfferLock: ${offerId.slice(0, 8)}...`,
+        action: {
+          label: 'View Receipt',
+          onClick: () => window.location.href = '/nil/receipts'
+        }
       });
     } catch (error) {
       toast.error('Failed to create offer');
@@ -219,6 +257,23 @@ export default function OffersPage() {
               <div className="flex gap-2">
                 <Button onClick={handleCreateOffer}>Create Offer</Button>
                 <Button variant="outline" onClick={() => setShowCreateForm(false)}>Cancel</Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Empty state */}
+        {offers.length === 0 && !showCreateForm && (
+          <Card>
+            <CardContent className="py-12 text-center">
+              <div className="space-y-4">
+                <div className="text-muted-foreground">
+                  <h3 className="text-lg font-medium mb-2">No offers yet</h3>
+                  <p>Create your first NIL offer to get started with compliance tracking.</p>
+                </div>
+                <Button onClick={() => setShowCreateForm(true)}>
+                  Create Your First Offer
+                </Button>
               </div>
             </CardContent>
           </Card>

@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { Separator } from '@/components/ui/separator';
 import { loadFixtures, dehydrateState, hydrateState, clearFixtures } from '@/fixtures/fixtures';
-import { getReceiptsCount } from '@/features/receipts/record';
+import { getReceiptsCount, getReceiptsByType } from '@/features/receipts/record';
 import { toast } from 'sonner';
 import { FileDown, FileUp, Trash2, Database, Bug } from 'lucide-react';
 
@@ -22,6 +22,10 @@ function DevPanelDev() {
   const [isExpanded, setIsExpanded] = useState(false);
   
   const receiptsCount = getReceiptsCount();
+  const decisionCount = getReceiptsByType('Decision-RDS').length;
+  const consentCount = getReceiptsByType('Consent-RDS').length;
+  const settlementCount = getReceiptsByType('Settlement-RDS').length;
+  const deltaCount = getReceiptsByType('Delta-RDS').length;
 
   const handleLoadFixtures = async () => {
     setIsLoading(true);
@@ -71,6 +75,12 @@ function DevPanelDev() {
     toast.success('All fixtures cleared');
   };
 
+  const handleClearBoth = () => {
+    clearFixtures();
+    setSnapshotData('');
+    toast.success('NIL & Health fixtures cleared');
+  };
+
   if (!isExpanded) {
     return (
       <div className="fixed bottom-4 right-4 z-50">
@@ -102,7 +112,7 @@ function DevPanelDev() {
               <CardTitle className="text-sm">Dev Panel</CardTitle>
               {receiptsCount > 0 && (
                 <Badge variant="secondary" className="text-xs">
-                  {receiptsCount} receipts
+                  D:{decisionCount} C:{consentCount} S:{settlementCount} Δ:{deltaCount}
                 </Badge>
               )}
             </div>
@@ -172,10 +182,11 @@ function DevPanelDev() {
                 Load
               </Button>
               <Button
-                onClick={handleClear}
+                onClick={handleClearBoth}
                 variant="outline"
                 size="sm"
                 className="h-8 text-xs"
+                title="Clear Both NIL & Health"
               >
                 <Trash2 className="h-3 w-3" />
               </Button>

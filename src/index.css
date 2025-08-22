@@ -38,10 +38,10 @@
     /* BFO Navy #0B2239 (headers/sidebar/sections) */
     --bfo-navy: 210 65% 13%;
     
-    /* Metallic Gold System */
-    --metallic-gold: 45 55% 50%;        /* Base #C7A139 */
-    --metallic-gold-highlight: 45 80% 75%; /* Highlight #F2D68E */
-    --metallic-gold-shadow: 45 68% 33%;   /* Shadow #8C6B1E */
+    /* Metallic Gold System - Updated to #D4AF37 */
+    --metallic-gold: 45 71% 52%;        /* Base #D4AF37 */
+    --metallic-gold-highlight: 45 71% 65%; /* Hover #E1C04D */
+    --metallic-gold-shadow: 45 71% 40%;   /* Shadow #C19A2C */
     
     /* Supporting Colors */
     --slate: 210 23% 24%;    /* #2E3A4A */
@@ -64,7 +64,7 @@
 
     /* Primary - Metallic Gold Base */
     --primary: var(--metallic-gold);
-    --primary-foreground: var(--ink-black); /* Black text on gold (accessibility rule) */
+    --primary-foreground: 0 0% 4%; /* Black #0A0A0A text on gold (accessibility rule) */
 
     /* Secondary - BFO Navy */
     --secondary: var(--bfo-navy);

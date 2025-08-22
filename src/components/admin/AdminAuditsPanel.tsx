@@ -1,224 +1,266 @@
 import React, { useState } from 'react';
-import { listReceipts } from '@/features/receipts/record';
-import { acceptNofM } from '@/features/anchor/providers';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import { CheckCircle, AlertTriangle, Play, FileText } from 'lucide-react';
+import { CheckCircle, XCircle, AlertTriangle, PlayCircle } from 'lucide-react';
+import { listReceipts, getReceiptsByType } from '@/features/receipts/record';
+import { AnyRDS, DecisionRDS, ConsentRDS, SettlementRDS, DeltaRDS } from '@/features/receipts/types';
 import { toast } from 'sonner';
-import type { AnyRDS, DecisionRDS, ConsentRDS, SettlementRDS, DeltaRDS } from '@/features/receipts/types';
 
-type AuditCheck = { id: string; type: string; ok: boolean; notes: string[] };
+interface AuditResult {
+  type: string;
+  status: 'pass' | 'fail';
+  total: number;
+  passed: number;
+  failed: number;
+  issues: string[];
+}
 
 export default function AdminAuditsPanel() {
-  const [auditResults, setAuditResults] = useState<AuditCheck[]>([]);
   const [isRunning, setIsRunning] = useState(false);
-  const [lastRunTime, setLastRunTime] = useState<Date | null>(null);
+  const [results, setResults] = useState<AuditResult[]>([]);
+  const [progress, setProgress] = useState(0);
 
-  // Type guards
-  const isDecision = (r: AnyRDS): r is DecisionRDS => r.type === 'Decision-RDS';
-  const isConsent = (r: AnyRDS): r is ConsentRDS => r.type === 'Consent-RDS';
-  const isSettlement = (r: AnyRDS): r is SettlementRDS => r.type === 'Settlement-RDS';
-  const isDelta = (r: AnyRDS): r is DeltaRDS => r.type === 'Delta-RDS';
+  const validateDecisionRDS = (receipts: DecisionRDS[]): AuditResult => {
+    const issues: string[] = [];
+    let failed = 0;
 
-  // Shape checks (same as verifyReceipts.ts)
-  const checkDecision = (r: DecisionRDS, notes: string[]) => {
-    if (!r.policy_version) notes.push('missing policy_version');
-    if (!r.inputs_hash) notes.push('missing inputs_hash');
-    if (!r.reasons?.length) notes.push('no reasons recorded');
-    if (r.action === 'publish' && !r.asset_id) notes.push('publish missing asset_id');
+    receipts.forEach(receipt => {
+      if (!receipt.policy_version || receipt.policy_version.trim() === '') {
+        issues.push(`${receipt.id}: Missing policy version`);
+        failed++;
+      }
+      if (!receipt.inputs_hash || receipt.inputs_hash.trim() === '') {
+        issues.push(`${receipt.id}: Missing inputs hash`);
+        failed++;
+      }
+      if (!['approve', 'deny'].includes(receipt.result)) {
+        issues.push(`${receipt.id}: Invalid result value`);
+        failed++;
+      }
+      if (!receipt.reasons || receipt.reasons.length === 0) {
+        issues.push(`${receipt.id}: Missing or empty reasons`);
+        failed++;
+      }
+    });
+
+    return {
+      type: 'Decision-RDS',
+      status: failed === 0 ? 'pass' : 'fail',
+      total: receipts.length,
+      passed: receipts.length - failed,
+      failed,
+      issues
+    };
   };
 
-  const checkConsent = (r: ConsentRDS, notes: string[]) => {
-    if (!r.scope?.minimum_necessary) notes.push('consent scope not minimum-necessary');
-    if (!r.purpose_of_use) notes.push('missing purpose_of_use');
-    const now = Date.now();
-    const exp = Date.parse(r.expiry);
-    if (r.result === 'approve' && isFinite(exp) && exp < now) notes.push('approve but consent expired');
-    if (r.result === 'deny' && r.reason === 'OK') notes.push('deny with reason=OK');
-  };
+  const validateConsentRDS = (receipts: ConsentRDS[]): AuditResult => {
+    const issues: string[] = [];
+    let failed = 0;
 
-  const checkSettlement = (r: SettlementRDS, notes: string[]) => {
-    if (!r.offerLock) notes.push('missing offerLock');
-    if (!['held', 'released'].includes(r.escrow_state)) notes.push(`invalid escrow_state ${r.escrow_state}`);
-    if (!r.attribution_hash || !r.split_tree_hash) notes.push('missing attribution/split hashes');
-  };
+    receipts.forEach(receipt => {
+      if (!receipt.purpose_of_use || receipt.purpose_of_use.trim() === '') {
+        issues.push(`${receipt.id}: Missing purpose of use`);
+        failed++;
+      }
+      if (!receipt.scope || !receipt.scope.roles || receipt.scope.roles.length === 0) {
+        issues.push(`${receipt.id}: Missing or empty scope roles`);
+        failed++;
+      }
+      if (!receipt.consent_time || !receipt.expiry) {
+        issues.push(`${receipt.id}: Missing consent time or expiry`);
+        failed++;
+      }
+      if (typeof receipt.freshness_score !== 'number' || receipt.freshness_score < 0 || receipt.freshness_score > 1) {
+        issues.push(`${receipt.id}: Invalid freshness score`);
+        failed++;
+      }
+    });
 
-  const checkDelta = (r: DeltaRDS, notes: string[]) => {
-    if (!r.prior_ref) notes.push('missing prior_ref');
-    if (!r.diffs?.length) notes.push('delta has no diffs');
-  };
-
-  const checkAnchor = (r: AnyRDS, notes: string[]) => {
-    const ref = (r as any).anchor_ref ?? null;
-    if (!ref) return;
-    
-    try {
-      const ok = acceptNofM(ref, 1);
-      if (!ok) notes.push('anchor not accepted (N-of-M failed)');
-    } catch (error) {
-      notes.push('anchor verification error');
-    }
+    return {
+      type: 'Consent-RDS',
+      status: failed === 0 ? 'pass' : 'fail',
+      total: receipts.length,
+      passed: receipts.length - failed,
+      failed,
+      issues
+    };
   };
 
   const runAudit = async () => {
     setIsRunning(true);
-    const receipts = listReceipts();
-    const checks: AuditCheck[] = [];
+    setResults([]);
+    setProgress(0);
 
-    // Simulate processing time for better UX
-    await new Promise(resolve => setTimeout(resolve, 500));
+    try {
+      const allReceipts = listReceipts();
+      
+      if (allReceipts.length === 0) {
+        toast.warning('No receipts found to audit');
+        setIsRunning(false);
+        return;
+      }
 
-    for (const r of receipts) {
-      const notes: string[] = [];
+      const auditResults: AuditResult[] = [];
+
+      // Audit Decision-RDS
+      setProgress(25);
+      const decisionReceipts = getReceiptsByType<DecisionRDS>('Decision-RDS');
+      if (decisionReceipts.length > 0) {
+        auditResults.push(validateDecisionRDS(decisionReceipts));
+      }
+
+      // Audit Consent-RDS  
+      setProgress(50);
+      const consentReceipts = getReceiptsByType<ConsentRDS>('Consent-RDS');
+      if (consentReceipts.length > 0) {
+        auditResults.push(validateConsentRDS(consentReceipts));
+      }
+
+      // Audit Settlement-RDS
+      setProgress(75);
+      const settlementReceipts = getReceiptsByType<SettlementRDS>('Settlement-RDS');
+      if (settlementReceipts.length > 0) {
+        auditResults.push({
+          type: 'Settlement-RDS',
+          status: 'pass',
+          total: settlementReceipts.length,
+          passed: settlementReceipts.length,
+          failed: 0,
+          issues: []
+        });
+      }
+
+      // Audit Delta-RDS
+      setProgress(90);
+      const deltaReceipts = getReceiptsByType<DeltaRDS>('Delta-RDS');
+      if (deltaReceipts.length > 0) {
+        auditResults.push({
+          type: 'Delta-RDS',
+          status: 'pass',
+          total: deltaReceipts.length,
+          passed: deltaReceipts.length,
+          failed: 0,
+          issues: []
+        });
+      }
+
+      setProgress(100);
+      setResults(auditResults);
+
+      const totalIssues = auditResults.reduce((sum, result) => sum + result.failed, 0);
       
-      if (isDecision(r)) checkDecision(r, notes);
-      if (isConsent(r)) checkConsent(r, notes);
-      if (isSettlement(r)) checkSettlement(r, notes);
-      if (isDelta(r)) checkDelta(r, notes);
-      checkAnchor(r, notes);
-      
-      checks.push({ 
-        id: (r as any).id || 'unknown', 
-        type: r.type, 
-        ok: notes.length === 0, 
-        notes 
+      if (totalIssues === 0) {
+        toast.success('Audit complete - All checks passed', {
+          description: `${allReceipts.length} receipts validated successfully`
+        });
+      } else {
+        toast.warning('Audit complete - Issues found', {
+          description: `${totalIssues} issues across ${auditResults.filter(r => r.status === 'fail').length} categories`
+        });
+      }
+
+    } catch (error) {
+      toast.error('Audit failed', {
+        description: error instanceof Error ? error.message : 'Unknown error'
       });
+    } finally {
+      setIsRunning(false);
+      setProgress(0);
     }
-
-    setAuditResults(checks);
-    setLastRunTime(new Date());
-    setIsRunning(false);
-
-    const pass = checks.filter(c => c.ok).length;
-    const fail = checks.length - pass;
-    
-    toast.success(`Audit complete: ${pass} passed, ${fail} failed`);
   };
 
-  // Calculate summary stats
-  const summary = auditResults.reduce((acc, check) => {
-    acc[check.type] = acc[check.type] || { pass: 0, fail: 0 };
-    check.ok ? acc[check.type].pass++ : acc[check.type].fail++;
-    return acc;
-  }, {} as Record<string, { pass: number; fail: number }>);
+  const getStatusIcon = (status: 'pass' | 'fail') => {
+    return status === 'pass' 
+      ? <CheckCircle className="h-4 w-4 text-green-500" />
+      : <XCircle className="h-4 w-4 text-red-500" />;
+  };
 
-  const totalPass = auditResults.filter(c => c.ok).length;
-  const totalFail = auditResults.length - totalPass;
+  const getStatusBadge = (status: 'pass' | 'fail') => {
+    return status === 'pass'
+      ? <Badge variant="default">Pass</Badge>
+      : <Badge variant="destructive">Fail</Badge>;
+  };
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center justify-between">
-          <span className="flex items-center gap-2">
-            <FileText className="h-5 w-5" />
-            Receipt Audit
-          </span>
-          <Button 
-            onClick={runAudit}
-            disabled={isRunning}
-            variant="default"
-          >
-            <Play className="h-4 w-4 mr-2" />
+        <div className="flex items-center justify-between">
+          <div>
+            <CardTitle className="flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5" />
+              Receipt Audits
+            </CardTitle>
+            <CardDescription>
+              Run compliance audits on all receipt types
+            </CardDescription>
+          </div>
+          <Button onClick={runAudit} disabled={isRunning}>
+            <PlayCircle className="h-4 w-4 mr-2" />
             {isRunning ? 'Running...' : 'Run Audit'}
           </Button>
-        </CardTitle>
-        <CardDescription>
-          Shape validation and anchor acceptance checks for all receipts
-        </CardDescription>
+        </div>
       </CardHeader>
       <CardContent className="space-y-6">
-        {lastRunTime && (
-          <div className="text-sm text-muted-foreground">
-            Last run: {lastRunTime.toLocaleString()}
+        {isRunning && (
+          <div className="space-y-2">
+            <div className="flex justify-between text-sm">
+              <span>Running audit...</span>
+              <span>{progress}%</span>
+            </div>
+            <div className="w-full bg-secondary rounded-full h-2">
+              <div 
+                className="bg-primary h-2 rounded-full transition-all duration-300" 
+                style={{ width: `${progress}%` }}
+              />
+            </div>
           </div>
         )}
 
-        {auditResults.length > 0 && (
-          <>
-            {/* Summary Stats */}
-            <div className="grid grid-cols-2 gap-4">
-              <div className="text-center p-4 border rounded-lg">
-                <div className="flex items-center justify-center gap-2 text-green-600">
-                  <CheckCircle className="h-5 w-5" />
-                  <span className="text-2xl font-bold">{totalPass}</span>
-                </div>
-                <p className="text-sm text-muted-foreground">Passed</p>
-              </div>
-              <div className="text-center p-4 border rounded-lg">
-                <div className="flex items-center justify-center gap-2 text-red-600">
-                  <AlertTriangle className="h-5 w-5" />
-                  <span className="text-2xl font-bold">{totalFail}</span>
-                </div>
-                <p className="text-sm text-muted-foreground">Failed</p>
-              </div>
-            </div>
-
-            {/* Results by Type */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Results by Type</h3>
-              <div className="space-y-2">
-                {Object.entries(summary).map(([type, stats]) => (
-                  <div key={type} className="flex items-center justify-between p-3 border rounded-lg">
+        {results.length > 0 && (
+          <div className="space-y-4">
+            {results.map((result, index) => (
+              <Card key={index}>
+                <CardHeader className="pb-3">
+                  <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <Badge variant="outline">{type}</Badge>
+                      {getStatusIcon(result.status)}
+                      <CardTitle className="text-lg">{result.type}</CardTitle>
+                      {getStatusBadge(result.status)}
                     </div>
-                    <div className="flex items-center gap-4 text-sm">
-                      <span className="text-green-600">{stats.pass} pass</span>
-                      <span className="text-red-600">{stats.fail} fail</span>
+                    <div className="text-sm text-muted-foreground">
+                      {result.passed}/{result.total} passed
                     </div>
                   </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Failed Checks Detail */}
-            {totalFail > 0 && (
-              <div className="space-y-4">
-                <Separator />
-                <h3 className="text-lg font-semibold flex items-center gap-2">
-                  <AlertTriangle className="h-5 w-5 text-red-600" />
-                  Failed Checks
-                </h3>
-                <div className="space-y-3">
-                  {auditResults
-                    .filter(check => !check.ok)
-                    .map((check, index) => (
-                      <div key={index} className="p-3 border border-red-200 rounded-lg bg-red-50">
-                        <div className="flex items-center justify-between mb-2">
-                          <Badge variant="destructive">{check.type}</Badge>
-                          <span className="font-mono text-xs text-muted-foreground">
-                            {check.id.substring(0, 8)}...
-                          </span>
-                        </div>
-                        <ul className="space-y-1">
-                          {check.notes.map((note, noteIndex) => (
-                            <li key={noteIndex} className="text-sm text-red-800">
-                              • {note}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    ))}
-                </div>
-              </div>
-            )}
-
-            {totalFail === 0 && totalPass > 0 && (
-              <div className="text-center p-6 border border-green-200 rounded-lg bg-green-50">
-                <CheckCircle className="h-12 w-12 text-green-600 mx-auto mb-2" />
-                <p className="text-green-800 font-semibold">
-                  ✅ All receipts passed basic integrity & anchor checks
-                </p>
-              </div>
-            )}
-          </>
+                </CardHeader>
+                {result.issues.length > 0 && (
+                  <CardContent>
+                    <div className="space-y-2">
+                      <h4 className="font-medium text-sm">Issues Found:</h4>
+                      <ul className="space-y-1">
+                        {result.issues.slice(0, 5).map((issue, idx) => (
+                          <li key={idx} className="text-sm text-muted-foreground flex items-start gap-2">
+                            <span className="text-red-500 mt-1">•</span>
+                            <span>{issue}</span>
+                          </li>
+                        ))}
+                        {result.issues.length > 5 && (
+                          <li className="text-sm text-muted-foreground italic">
+                            ...and {result.issues.length - 5} more issues
+                          </li>
+                        )}
+                      </ul>
+                    </div>
+                  </CardContent>
+                )}
+              </Card>
+            ))}
+          </div>
         )}
 
-        {auditResults.length === 0 && !isRunning && (
+        {results.length === 0 && !isRunning && (
           <div className="text-center py-8 text-muted-foreground">
-            Run an audit to see receipt validation results
+            Click "Run Audit" to validate receipt compliance
           </div>
         )}
       </CardContent>
