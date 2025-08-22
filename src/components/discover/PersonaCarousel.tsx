@@ -15,11 +15,18 @@ interface PersonaTile {
 
 const personas: PersonaTile[] = [
   {
-    id: 'families',
-    title: 'Families',
-    benefit: 'All your financial and health life in one private workspace. Organize accounts, estate docs, properties, taxes, meds & tests; invite advisors/CPAs/attorneys/clinicians; export a clean "what & why" pack anytime.',
-    demoId: 'families',
-    catalogFilter: 'families'
+    id: 'families-aspiring',
+    title: 'Families (Aspiring)',
+    benefit: 'Build wealth systematically. Organize accounts, goals, and progress; invite advisors; track your path to financial freedom in one private workspace.',
+    demoId: 'families-aspiring',
+    catalogFilter: 'family,aspiring'
+  },
+  {
+    id: 'families-retirees',
+    title: 'Families (Retirees)',
+    benefit: 'Organize income, taxes, estate, investments and healthspan in one place—with private proof. Manage your wealth and legacy securely.',
+    demoId: 'families-retirees',
+    catalogFilter: 'family,retiree'
   },
   {
     id: 'advisors',

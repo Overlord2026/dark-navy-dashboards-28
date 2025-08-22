@@ -17,6 +17,8 @@ import Pricing from '@/pages/Pricing';
 import FixturesPanel from '@/pages/dev/FixturesPanel';
 import Discover from '@/pages/Discover';
 import { HowItWorks } from '@/pages/HowItWorks';
+import { Solutions } from '@/pages/Solutions';
+import { Annuities } from '@/pages/solutions/Annuities';
 import { OnboardingFlow } from '@/pages/OnboardingFlow';
 
 const DemoPage = React.lazy(() => import('@/pages/demos/[persona]'));
@@ -35,6 +37,8 @@ function App() {
           } />
           <Route path="/discover" element={<Discover />} />
           <Route path="/how-it-works" element={<HowItWorks />} />
+          <Route path="/solutions" element={<Solutions />} />
+          <Route path="/solutions/annuities" element={<Annuities />} />
           <Route path="/onboarding" element={<OnboardingFlow />} />
           <Route path="/nil/onboarding" element={<NILOnboarding />} />
           <Route path="/nil/education" element={<Education />} />
