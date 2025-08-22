@@ -15,23 +15,31 @@ import {
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
 import { usePersonaContext } from "@/hooks/usePersonaContext";
+import personaConfig from "@/config/personaConfig.json";
+
+// Group personas from config
+const familyPersonas = personaConfig.filter(p => p.persona === 'families');
+const advisorPersonas = personaConfig.filter(p => p.persona === 'advisors');
+const cpaPersonas = personaConfig.filter(p => p.persona === 'cpas');
+const attorneyPersonas = personaConfig.filter(p => p.persona === 'attorneys');
+const insurancePersonas = personaConfig.filter(p => p.persona === 'insurance');
+const healthcarePersonas = personaConfig.filter(p => p.persona === 'healthcare');
+const realtorPersonas = personaConfig.filter(p => p.persona === 'realtor');
+const nilPersonas = personaConfig.filter(p => p.persona?.startsWith('nil'));
 
 const MEGA_MENU = {
-  families: [
-    { title: "Aspiring Families", href: "/families/aspiring", desc: "Early builders—save, invest, protect." },
-    { title: "Younger Families", href: "/families/younger", desc: "Career growth, kids, first home." },
-    { title: "Wealthy (HNW)", href: "/families/wealthy", desc: "Tax coordination, alternatives, entities." },
-    { title: "Executives", href: "/families/executives", desc: "ISOs/RSUs, AMT, 10b5-1 planning." },
-    { title: "Retirees", href: "/families/retirees", desc: "Income Now/Later—stay retired." },
-    { title: "Business Owners", href: "/families/business-owners", desc: "Exit strategy, entity design." },
-  ],
+  families: familyPersonas.map(p => ({
+    title: p.segment ? `${p.segment.charAt(0).toUpperCase() + p.segment.slice(1)} Families` : p.label.split(' — ')[1],
+    href: `/families/${p.segment || p.persona}`,
+    desc: p.benefit
+  })),
   professionals: [
-    { title: "Advisors", href: "/pros/advisors", desc: "Book health, meeting kits, workflows." },
-    { title: "CPAs", href: "/pros/cpas", desc: "Quarterlies, K-1, intake & e-sign." },
-    { title: "Estate Attorneys", href: "/pros/attorneys", desc: "Titling exceptions, trust funding." },
-    { title: "Insurance", href: "/pros/insurance", desc: "Case design, underwriting packets." },
-    { title: "Healthcare/Care", href: "/pros/healthcare", desc: "LTC planning & permissions." },
-    { title: "Bank/Trust", href: "/pros/bank-trust", desc: "Entity distributions & audits." },
+    ...advisorPersonas.map(p => ({ title: p.label.split(' — ')[0], href: `/pros/advisors`, desc: p.benefit })),
+    ...cpaPersonas.map(p => ({ title: p.label.split(' — ')[0], href: `/pros/cpas`, desc: p.benefit })),
+    ...attorneyPersonas.map(p => ({ title: p.label.split(' — ')[0], href: `/pros/attorneys`, desc: p.benefit })),
+    ...insurancePersonas.map(p => ({ title: `${p.label.split(' — ')[1]}`, href: `/pros/insurance/${p.segment}`, desc: p.benefit })),
+    ...healthcarePersonas.map(p => ({ title: `Healthcare ${p.segment}`, href: `/pros/healthcare/${p.segment}`, desc: p.benefit })),
+    ...realtorPersonas.map(p => ({ title: p.label.split(' — ')[0], href: `/pros/realtor`, desc: p.benefit })),
   ],
   services: [
     { title: "SWAG™ Planning Hub", href: "/services/planning" },
@@ -95,21 +103,30 @@ export function EnhancedMegaMenu({ className }: MegaMenuProps) {
                 For Families
               </NavigationMenuTrigger>
               <NavigationMenuContent>
-                <div className="grid w-[600px] gap-3 p-6 md:w-[700px] md:grid-cols-2 lg:w-[800px]">
-                  {MEGA_MENU.families.map((item) => (
-                    <NavigationMenuLink key={item.title} asChild>
-                      <Link
-                        to={item.href}
-                        className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                        onClick={() => handlePersonaClick(item.href, 'family')}
-                      >
-                        <div className="text-sm font-medium leading-none">{item.title}</div>
-                        <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                          {item.desc}
-                        </p>
-                      </Link>
-                    </NavigationMenuLink>
-                  ))}
+                <div className="w-[600px] p-6 md:w-[700px] lg:w-[800px]">
+                  <Tabs defaultValue="aspiring" className="w-full">
+                    <TabsList className="grid w-full grid-cols-2 mb-4">
+                      <TabsTrigger value="aspiring">Aspiring</TabsTrigger>
+                      <TabsTrigger value="retirees">Retirees</TabsTrigger>
+                    </TabsList>
+                    
+                    {familyPersonas.map((persona) => (
+                      <TabsContent key={persona.segment} value={persona.segment} className="space-y-3">
+                        <NavigationMenuLink asChild>
+                          <Link
+                            to={`/families/${persona.segment}`}
+                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                            onClick={() => handlePersonaClick(`/families/${persona.segment}`, 'family')}
+                          >
+                            <div className="text-sm font-medium leading-none">{persona.label}</div>
+                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                              {persona.benefit}
+                            </p>
+                          </Link>
+                        </NavigationMenuLink>
+                      </TabsContent>
+                    ))}
+                  </Tabs>
                 </div>
               </NavigationMenuContent>
             </NavigationMenuItem>
@@ -120,21 +137,83 @@ export function EnhancedMegaMenu({ className }: MegaMenuProps) {
                 For Professionals
               </NavigationMenuTrigger>
               <NavigationMenuContent>
-                <div className="grid w-[600px] gap-3 p-6 md:w-[700px] md:grid-cols-2 lg:w-[800px]">
-                  {MEGA_MENU.professionals.map((item) => (
-                    <NavigationMenuLink key={item.title} asChild>
-                      <Link
-                        to={item.href}
-                        className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                        onClick={() => handlePersonaClick(item.href, 'professional')}
-                      >
-                        <div className="text-sm font-medium leading-none">{item.title}</div>
-                        <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                          {item.desc}
-                        </p>
-                      </Link>
-                    </NavigationMenuLink>
-                  ))}
+                <div className="w-[700px] p-6 md:w-[800px] lg:w-[900px]">
+                  <div className="grid gap-6">
+                    {/* Single personas */}
+                    <div className="grid grid-cols-2 gap-3">
+                      {[...advisorPersonas, ...cpaPersonas, ...attorneyPersonas, ...realtorPersonas].map((persona) => (
+                        <NavigationMenuLink key={persona.persona} asChild>
+                          <Link
+                            to={`/pros/${persona.persona}`}
+                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                            onClick={() => handlePersonaClick(`/pros/${persona.persona}`, 'professional')}
+                          >
+                            <div className="text-sm font-medium leading-none">{persona.label}</div>
+                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                              {persona.benefit}
+                            </p>
+                          </Link>
+                        </NavigationMenuLink>
+                      ))}
+                    </div>
+
+                    {/* Tabbed sections */}
+                    <div className="grid grid-cols-2 gap-6">
+                      {/* Insurance */}
+                      <div>
+                        <h4 className="font-medium text-sm mb-2">Insurance</h4>
+                        <Tabs defaultValue="life-annuity" className="w-full">
+                          <TabsList className="grid w-full grid-cols-2 h-8">
+                            <TabsTrigger value="life-annuity" className="text-xs">Life & Annuity</TabsTrigger>
+                            <TabsTrigger value="medicare-ltc" className="text-xs">Medicare & LTC</TabsTrigger>
+                          </TabsList>
+                          {insurancePersonas.map((persona) => (
+                            <TabsContent key={persona.segment} value={persona.segment} className="mt-2">
+                              <NavigationMenuLink asChild>
+                                <Link
+                                  to={`/pros/insurance/${persona.segment}`}
+                                  className="block select-none space-y-1 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                                  onClick={() => handlePersonaClick(`/pros/insurance/${persona.segment}`, 'professional')}
+                                >
+                                  <div className="text-xs font-medium leading-none">{persona.label}</div>
+                                  <p className="line-clamp-2 text-xs leading-snug text-muted-foreground">
+                                    {persona.benefit}
+                                  </p>
+                                </Link>
+                              </NavigationMenuLink>
+                            </TabsContent>
+                          ))}
+                        </Tabs>
+                      </div>
+
+                      {/* Healthcare */}
+                      <div>
+                        <h4 className="font-medium text-sm mb-2">Healthcare</h4>
+                        <Tabs defaultValue="providers" className="w-full">
+                          <TabsList className="grid w-full grid-cols-2 h-8">
+                            <TabsTrigger value="providers" className="text-xs">Providers</TabsTrigger>
+                            <TabsTrigger value="influencers" className="text-xs">Coaches</TabsTrigger>
+                          </TabsList>
+                          {healthcarePersonas.map((persona) => (
+                            <TabsContent key={persona.segment} value={persona.segment} className="mt-2">
+                              <NavigationMenuLink asChild>
+                                <Link
+                                  to={`/pros/healthcare/${persona.segment}`}
+                                  className="block select-none space-y-1 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                                  onClick={() => handlePersonaClick(`/pros/healthcare/${persona.segment}`, 'professional')}
+                                >
+                                  <div className="text-xs font-medium leading-none">{persona.label}</div>
+                                  <p className="line-clamp-2 text-xs leading-snug text-muted-foreground">
+                                    {persona.benefit}
+                                  </p>
+                                </Link>
+                              </NavigationMenuLink>
+                            </TabsContent>
+                          ))}
+                        </Tabs>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </NavigationMenuContent>
             </NavigationMenuItem>
