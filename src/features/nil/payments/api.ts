@@ -51,7 +51,7 @@ export async function release(escrowId: string): Promise<{ txnId: string; receip
 
   // Create settlement receipt
   const offerData = { offerId: escrow.offerId, amount: escrow.amount };
-  const attributionHash = hashInputs(offerData);
+  const attributionHash = await hashInputs(offerData);
   
   // Get split configuration for this offer
   const splitData: SplitParty[] = [
@@ -59,7 +59,7 @@ export async function release(escrowId: string): Promise<{ txnId: string; receip
     { party: 'advisor', share: 0.20 },
     { party: 'brand', share: 0.05 }
   ];
-  const splitTreeHash = hashSplit(splitData);
+  const splitTreeHash = await hashSplit(splitData);
 
   const rds: SettlementRDS = {
     id: `settle_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
@@ -68,7 +68,7 @@ export async function release(escrowId: string): Promise<{ txnId: string; receip
     attribution_hash: attributionHash,
     split_tree_hash: splitTreeHash,
     escrow_state: 'released',
-    anchor_ref: await anchorBatch(attributionHash),
+    anchor_ref: await anchorBatch(await hashInputs({ escrowId })),
     ts: new Date().toISOString()
   };
 
@@ -87,6 +87,8 @@ export function getEscrowAccount(id: string): EscrowAccount | null {
   return escrowAccounts.find(e => e.id === id) || null;
 }
 
-function hashInputs(obj: any): string {
-  return window.btoa(unescape(encodeURIComponent(JSON.stringify(obj)))).slice(0, 24);
+import { hash } from '@/lib/canonical';
+
+async function hashInputs(obj: any): Promise<string> {
+  return await hash(obj);
 }

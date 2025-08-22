@@ -36,7 +36,9 @@ export function calculateSplitAmounts(offerId: string, totalAmount: number): Arr
   }));
 }
 
-export function hashSplit(splits: SplitParty[]): string {
+import { hash } from '@/lib/canonical';
+
+export async function hashSplit(splits: SplitParty[]): Promise<string> {
   const splitData = splits.map(s => ({ party: s.party, share: s.share }));
-  return window.btoa(unescape(encodeURIComponent(JSON.stringify(splitData)))).slice(0, 24);
+  return await hash(splitData);
 }

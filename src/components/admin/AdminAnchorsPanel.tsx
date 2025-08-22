@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { listReceipts } from '@/features/receipts/record';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -6,6 +6,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Shield, CheckCircle, AlertCircle, Play } from 'lucide-react';
 import { toast } from 'sonner';
+import { buildMerkle } from '@/lib/merkle';
+import { sha256Hex } from '@/lib/canonical';
 import type { AnyRDS } from '@/features/receipts/types';
 
 export function AdminAnchorsPanel() {
@@ -18,12 +20,16 @@ export function AdminAnchorsPanel() {
     return receipts.filter(receipt => (receipt as any).anchor_ref);
   }, [receipts]);
 
-  const buildLocalMerkle = (receipts: AnyRDS[]) => {
-    // Simple mock Merkle root calculation for demo
-    const receiptIds = receipts.map(r => (r as any).id || '').sort();
-    const concatenated = receiptIds.join('');
-    // Simple hash simulation (in real implementation, use proper crypto)
-    return btoa(concatenated).substring(0, 32);
+  const buildLocalMerkle = async (receipts: AnyRDS[]) => {
+    if (receipts.length === 0) return await sha256Hex('empty');
+    
+    // Convert receipts to hex leaves
+    const leaves = await Promise.all(
+      receipts.map(async (r) => await sha256Hex(JSON.stringify(r)))
+    );
+    
+    const { root } = await buildMerkle(leaves);
+    return root;
   };
 
   const verifyReceipt = async (receipt: AnyRDS) => {
@@ -35,8 +41,8 @@ export function AdminAnchorsPanel() {
     // Simulate verification logic
     await new Promise(resolve => setTimeout(resolve, 100));
     
-    // Mock verification - in real implementation, check against actual anchor
-    const localRoot = buildLocalMerkle([receipt]);
+    // Use proper Merkle verification
+    const localRoot = await buildLocalMerkle([receipt]);
     const isValid = anchorRef.merkle_root && localRoot.length > 0;
     
     return isValid;
