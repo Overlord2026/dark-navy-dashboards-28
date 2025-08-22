@@ -4,8 +4,8 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ExternalLink, Download, AlertTriangle, CheckCircle, XCircle } from 'lucide-react';
-import { validateConfigs, exportCoverageCSV, type ValidationResult } from '@/utils/validateConfigs';
+import { ExternalLink, Download, AlertTriangle, CheckCircle, XCircle, RefreshCw } from 'lucide-react';
+import { validateConfigs, validateRoutes, exportCoverageCSV, exportDetailedCSV, getValidationStats, type Issue, type CoverageMatrix } from '@/utils/configValidator';
 import { FAMILY_SEGMENTS } from '@/data/familySegments';
 
 const SOLUTIONS = [
@@ -21,24 +21,41 @@ const SOLUTIONS = [
 ];
 
 export default function QACoverage() {
-  const [validation, setValidation] = useState<ValidationResult | null>(null);
+  const [validation, setValidation] = useState<{
+    issues: Issue[];
+    coverage: CoverageMatrix;
+  } | null>(null);
+  const [routeIssues, setRouteIssues] = useState<Issue[]>([]);
   const [loading, setLoading] = useState(true);
+  const [checkingRoutes, setCheckingRoutes] = useState(false);
 
   useEffect(() => {
-    const runValidation = async () => {
-      setLoading(true);
-      try {
-        const result = validateConfigs();
-        setValidation(result);
-      } catch (error) {
-        console.error('Validation failed:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     runValidation();
   }, []);
+
+  const runValidation = async () => {
+    setLoading(true);
+    try {
+      const result = validateConfigs();
+      setValidation(result);
+    } catch (error) {
+      console.error('Validation failed:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const checkRoutes = async () => {
+    setCheckingRoutes(true);
+    try {
+      const issues = await validateRoutes();
+      setRouteIssues(issues);
+    } catch (error) {
+      console.error('Route validation failed:', error);
+    } finally {
+      setCheckingRoutes(false);
+    }
+  };
 
   const handleExportCSV = () => {
     if (!validation) return;
@@ -49,6 +66,19 @@ export default function QACoverage() {
     const a = document.createElement('a');
     a.href = url;
     a.download = 'qa-coverage-matrix.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleExportDetailedCSV = () => {
+    if (!validation) return;
+    
+    const csv = exportDetailedCSV(validation.coverage);
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'qa-coverage-detailed.csv';
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -97,6 +127,9 @@ export default function QACoverage() {
     );
   }
 
+  const allIssues = [...validation.issues, ...routeIssues];
+  const stats = getValidationStats(allIssues);
+
   return (
     <div className="container mx-auto py-8 space-y-6">
       <div className="flex items-center justify-between">
@@ -106,36 +139,30 @@ export default function QACoverage() {
             Validate configs and check coverage across personas and solutions
           </p>
         </div>
-        <Button onClick={handleExportCSV} variant="outline" className="flex items-center gap-2">
-          <Download className="w-4 h-4" />
-          Export CSV
-        </Button>
+        <div className="flex gap-2">
+          <Button onClick={checkRoutes} disabled={checkingRoutes} variant="outline" className="flex items-center gap-2">
+            <RefreshCw className={`w-4 h-4 ${checkingRoutes ? 'animate-spin' : ''}`} />
+            Check Routes
+          </Button>
+          <Button onClick={handleExportCSV} variant="outline" className="flex items-center gap-2">
+            <Download className="w-4 h-4" />
+            Export CSV
+          </Button>
+          <Button onClick={handleExportDetailedCSV} variant="outline" className="flex items-center gap-2">
+            <Download className="w-4 h-4" />
+            Detailed CSV
+          </Button>
+        </div>
       </div>
 
       {/* Stats Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Total Tools</CardTitle>
+            <CardTitle className="text-sm font-medium">Total Issues</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{validation.stats.totalTools}</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Ready</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-green-600">{validation.stats.readyTools}</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Beta</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-yellow-600">{validation.stats.betaTools}</div>
+            <div className="text-2xl font-bold">{stats.totalIssues}</div>
           </CardContent>
         </Card>
         <Card>
@@ -143,7 +170,7 @@ export default function QACoverage() {
             <CardTitle className="text-sm font-medium">Errors</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-red-600">{validation.stats.errorCount}</div>
+            <div className="text-2xl font-bold text-red-600">{stats.errorCount}</div>
           </CardContent>
         </Card>
         <Card>
@@ -151,7 +178,31 @@ export default function QACoverage() {
             <CardTitle className="text-sm font-medium">Warnings</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-orange-600">{validation.stats.warningCount}</div>
+            <div className="text-2xl font-bold text-orange-600">{stats.warningCount}</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">Catalog Issues</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.catalogIssues}</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">Coverage Issues</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.coverageIssues}</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">Route Issues</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.routeIssues}</div>
           </CardContent>
         </Card>
       </div>
@@ -212,7 +263,7 @@ export default function QACoverage() {
         </TabsContent>
 
         <TabsContent value="issues" className="space-y-4">
-          {validation.issues.length === 0 ? (
+          {allIssues.length === 0 ? (
             <Card>
               <CardContent className="py-8">
                 <div className="text-center">
@@ -224,7 +275,7 @@ export default function QACoverage() {
             </Card>
           ) : (
             <div className="space-y-2">
-              {validation.issues.map((issue, index) => (
+              {allIssues.map((issue, index) => (
                 <Alert key={index} variant={issue.level === 'error' ? 'destructive' : 'default'}>
                   <AlertTriangle className="w-4 h-4" />
                   <AlertDescription className="flex items-center justify-between">
