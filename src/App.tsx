@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider } from "next-themes";
 import { Toaster } from '@/components/ui/toaster';
 import DevPanel from '@/components/dev/DevPanel';
@@ -18,30 +18,28 @@ import FixturesPanel from '@/pages/dev/FixturesPanel';
 function App() {
   return (
     <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-      <Router>
-        <div className="min-h-screen bg-background text-foreground">
-          <Routes>
-            <Route path="/" element={<Navigate to="/nil/onboarding" replace />} />
-            <Route path="/nil/onboarding" element={<NILOnboarding />} />
-            <Route path="/nil/education" element={<Education />} />
-            <Route path="/nil/disclosures" element={<Disclosures />} />
-            <Route path="/nil/offers" element={<Offers />} />
-            <Route path="/nil/marketplace" element={<Marketplace />} />
-            <Route path="/nil/contract/:id" element={<Contract />} />
-            <Route path="/nil/payments" element={<Payments />} />
-            <Route path="/nil/disputes" element={<Disputes />} />
-            <Route path="/nil/receipts" element={<Receipts />} />
-            <Route path="/nil/admin" element={<Admin />} />
-            <Route path="/pricing" element={<Pricing />} />
-            {/* Dev-only route */}
-            {process.env.NODE_ENV !== 'production' && (
-              <Route path="/dev/fixtures" element={<FixturesPanel />} />
-            )}
-          </Routes>
-          <Toaster />
-          <DevPanel />
-        </div>
-      </Router>
+      <div className="min-h-screen bg-background text-foreground">
+        <Routes>
+          <Route path="/" element={<Navigate to="/nil/onboarding" replace />} />
+          <Route path="/nil/onboarding" element={<NILOnboarding />} />
+          <Route path="/nil/education" element={<Education />} />
+          <Route path="/nil/disclosures" element={<Disclosures />} />
+          <Route path="/nil/offers" element={<Offers />} />
+          <Route path="/nil/marketplace" element={<Marketplace />} />
+          <Route path="/nil/contract/:id" element={<Contract />} />
+          <Route path="/nil/payments" element={<Payments />} />
+          <Route path="/nil/disputes" element={<Disputes />} />
+          <Route path="/nil/receipts" element={<Receipts />} />
+          <Route path="/nil/admin" element={<Admin />} />
+          <Route path="/pricing" element={<Pricing />} />
+          {/* Dev-only route */}
+          {process.env.NODE_ENV !== 'production' && (
+            <Route path="/dev/fixtures" element={<FixturesPanel />} />
+          )}
+        </Routes>
+        <Toaster />
+        <DevPanel />
+      </div>
     </ThemeProvider>
   );
 }
