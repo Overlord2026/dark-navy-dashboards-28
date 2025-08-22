@@ -8,7 +8,7 @@ import { Download, Filter } from 'lucide-react';
 import { toast } from 'sonner';
 import type { AnyRDS } from '@/features/receipts/types';
 
-export function AdminReceiptsPanel() {
+export default function AdminReceiptsPanel() {
   const receipts = listReceipts();
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
 

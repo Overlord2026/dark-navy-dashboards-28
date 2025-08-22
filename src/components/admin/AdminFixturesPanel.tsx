@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 
-export function AdminFixturesPanel() {
+export default function AdminFixturesPanel() {
   const [nilSnapshot, setNilSnapshot] = useState<string>('');
   const [healthSnapshot, setHealthSnapshot] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);

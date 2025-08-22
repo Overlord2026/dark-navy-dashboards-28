@@ -10,7 +10,7 @@ import { buildMerkle } from '@/lib/merkle';
 import { sha256Hex } from '@/lib/canonical';
 import type { AnyRDS } from '@/features/receipts/types';
 
-export function AdminAnchorsPanel() {
+export default function AdminAnchorsPanel() {
   const receipts = listReceipts();
   const [verificationResults, setVerificationResults] = useState<Record<string, boolean>>({});
   const [isVerifying, setIsVerifying] = useState(false);

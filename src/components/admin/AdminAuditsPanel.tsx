@@ -11,7 +11,7 @@ import type { AnyRDS, DecisionRDS, ConsentRDS, SettlementRDS, DeltaRDS } from '@
 
 type AuditCheck = { id: string; type: string; ok: boolean; notes: string[] };
 
-export function AdminAuditsPanel() {
+export default function AdminAuditsPanel() {
   const [auditResults, setAuditResults] = useState<AuditCheck[]>([]);
   const [isRunning, setIsRunning] = useState(false);
   const [lastRunTime, setLastRunTime] = useState<Date | null>(null);
