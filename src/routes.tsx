@@ -48,6 +48,7 @@ import NILIndex from "./pages/NILIndex";
 import AthleteProfile from "./pages/AthleteProfile";
 import SchoolDashboard from "./pages/nil/school/SchoolDashboard";
 import BrandDashboard from "./pages/nil/brand/BrandDashboard";
+import NILAdminAnchors from "./pages/admin/NILAdminAnchors";
 
 // QA pages removed for production
 // All QA routes, checklists, and testing components removed for production security
@@ -202,6 +203,10 @@ export const router = createBrowserRouter([
   {
     path: "/nil/brand/home",
     element: <BrandDashboard />
+  },
+  {
+    path: "/admin/nil/anchors",
+    element: <NILAdminAnchors />
   },
   // Education route
   {
