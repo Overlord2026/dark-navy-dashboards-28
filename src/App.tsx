@@ -26,6 +26,7 @@ import { OnboardingFlow } from '@/pages/OnboardingFlow';
 import QACoverage from '@/pages/admin/QACoverage';
 import ReadyCheck from '@/pages/admin/ReadyCheck';
 import PublishPanel from '@/pages/admin/PublishPanel';
+import EnvInspector from '@/pages/admin/EnvInspector';
 import NotFound from '@/pages/NotFound';
 import { getFlag } from '@/lib/flags';
 
@@ -100,6 +101,7 @@ function App() {
             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/qa-coverage" element={<QACoverage />} />}
             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/ready-check" element={<ReadyCheck />} />}
             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/publish" element={<PublishPanel />} />}
+            {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/env" element={<EnvInspector />} />}
             
             {/* Demo Routes */}
             {getFlag('DEMOS_ENABLED') && (

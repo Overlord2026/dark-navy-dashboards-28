@@ -2,8 +2,9 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useUser } from '@/context/UserContext';
 import { Button } from '@/components/ui/button';
-import { Settings, MessageSquare, Home, Users, HelpCircle, CheckCircle, Globe } from 'lucide-react';
+import { Settings, MessageSquare, Home, Users, HelpCircle, CheckCircle, Globe, Monitor } from 'lucide-react';
 import { getFlag } from '@/lib/flags';
+import { AdminHeaderEnvLink } from '@/components/admin/AdminHeaderEnvLink';
 import { cn } from '@/lib/utils';
 
 interface AdminLayoutProps {
@@ -33,6 +34,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
     { href: '/admin', icon: Home, label: 'Dashboard' },
     { href: '/admin/ready-check', icon: CheckCircle, label: 'Ready Check' },
     { href: '/admin/publish', icon: Globe, label: 'Publish' },
+    { href: '/admin/env', icon: Monitor, label: 'Environment' },
     { href: '/admin/ai-marketing-engine', icon: MessageSquare, label: 'AI Marketing' },
     { href: '/admin/faqs', icon: HelpCircle, label: 'Manage FAQs' },
     { href: '/admin/users', icon: Users, label: 'Users' },
@@ -40,7 +42,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
   ].filter(item => {
     // Hide admin tools if flag is disabled
     if (!getFlag('ADMIN_TOOLS_ENABLED') && 
-        ['/admin/ready-check', '/admin/publish', '/admin/qa-coverage'].includes(item.href)) {
+        ['/admin/ready-check', '/admin/publish', '/admin/qa-coverage', '/admin/env'].includes(item.href)) {
       return false;
     }
     return true;
@@ -55,9 +57,12 @@ export function AdminLayout({ children }: AdminLayoutProps) {
             <div className="h-6 w-px bg-border" />
             <span className="text-sm text-muted-foreground">Welcome, {userProfile.name || userProfile.email}</span>
           </div>
-          <Button variant="outline" size="sm" asChild>
-            <Link to="/client-dashboard">Exit Admin</Link>
-          </Button>
+          <div className="flex items-center gap-2">
+            <AdminHeaderEnvLink />
+            <Button variant="outline" size="sm" asChild>
+              <Link to="/client-dashboard">Exit Admin</Link>
+            </Button>
+          </div>
         </div>
       </header>
 
