@@ -39,10 +39,26 @@ const DemoPage: React.FC = () => {
   const handleStartWorkspace = () => {
     // Analytics
     if (typeof window !== 'undefined' && (window as any).analytics) {
-      (window as any).analytics.track('lp.hero.cta', { persona, source: 'demo_page' });
+      (window as any).analytics.track('lp.hero.cta', { demoId: demo?.id, source: 'demo_page' });
     }
     
-    window.location.href = `/onboarding?persona=${demo?.persona}&segment=${demo?.segment}`;
+    // Navigate to onboarding based on demo ID
+    const routeMap: Record<string, string> = {
+      'families-aspiring': '/start/families?seg=aspiring',
+      'families-retirees': '/start/families?seg=retirees',
+      'advisors': '/start/advisors',
+      'cpas': '/start/cpas',
+      'attorneys': '/start/attorneys',
+      'insurance-life-annuity': '/start/insurance?seg=life-annuity',
+      'insurance-medicare-ltc': '/start/insurance?seg=medicare-ltc',
+      'healthcare-providers': '/start/healthcare?seg=providers',
+      'healthcare-influencers': '/start/healthcare?seg=influencers',
+      'realtor': '/start/realtor',
+      'nil-athlete': '/start/nil-athlete',
+      'nil-school': '/start/nil-school'
+    };
+    
+    window.location.href = routeMap[demo?.id || ''] || '/start';
   };
 
   if (!persona || !demo) {

@@ -33,6 +33,8 @@ import HealthcareOnboarding from '@/pages/onboarding/HealthcareOnboarding';
 import NILOnboardingFlow from '@/pages/onboarding/NILOnboarding';
 
 const DemoPage = React.lazy(() => import('@/pages/demos/[persona]'));
+// Import FamilyHome directly for now to fix TypeScript error
+import { FamilyHome } from '@/pages/family/FamilyHome';
 
 function App() {
   // Check authentication status (simplified for demo)
@@ -45,7 +47,7 @@ function App() {
         <div className="min-h-screen bg-background text-foreground">
           <Routes>
             <Route path="/" element={
-              isAuthenticated ? <Navigate to="/nil/onboarding" replace /> : 
+              isAuthenticated ? <Navigate to="/family/home" replace /> : 
               PUBLIC_CONFIG.DISCOVER_ENABLED ? <Navigate to="/discover" replace /> : 
               <Navigate to="/nil/onboarding" replace />
             } />
@@ -66,6 +68,9 @@ function App() {
             <Route path="/start/healthcare" element={<HealthcareOnboarding segment="providers" />} />
             <Route path="/start/nil-athlete" element={<NILOnboardingFlow type="athlete" />} />
             <Route path="/start/nil-school" element={<NILOnboardingFlow type="school" />} />
+            
+            {/* Family App Routes (Authenticated) */}
+            <Route path="/family/home" element={<FamilyHome />} />
             
             {/* Private App Routes */}
             <Route path="/onboarding" element={<OnboardingFlow />} />

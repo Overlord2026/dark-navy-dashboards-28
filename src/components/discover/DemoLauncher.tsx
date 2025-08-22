@@ -2,12 +2,22 @@ import React, { useState } from 'react';
 import { TourStepper } from './TourStepper';
 import demoConfig from '@/config/demoConfig.json';
 
+interface SimpleDemoStep {
+  h: string;
+  p: string;
+}
+
+interface SimpleDemo {
+  id: string;
+  title: string;
+  steps: SimpleDemoStep[];
+  cta: string;
+}
+
+// This matches the old Demo interface that TourStepper expects
 interface Demo {
   id: string;
   title: string;
-  persona?: string;
-  segment?: string;
-  category?: string;
   description: string;
   shareMessage: string;
   steps: Array<{
@@ -33,8 +43,20 @@ export const DemoLauncher: React.FC<DemoLauncherProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  // Find the demo from config
-  const demo = (demoConfig as Demo[]).find(d => d.id === demoId);
+  // Convert simple demo to full demo format
+  const simpleDemo = (demoConfig as SimpleDemo[]).find(d => d.id === demoId);
+  const demo = simpleDemo ? {
+    id: simpleDemo.id,
+    title: simpleDemo.title,
+    description: `60-second interactive tour: ${simpleDemo.title}`,
+    shareMessage: `${simpleDemo.title} - Check this out: a 60-second tour of how this platform works`,
+    steps: simpleDemo.steps.map(step => ({
+      title: step.h,
+      content: step.p,
+      image: "/placeholder.svg",
+      duration: 12000
+    }))
+  } : null;
 
   const handleOpen = () => {
     setIsOpen(true);

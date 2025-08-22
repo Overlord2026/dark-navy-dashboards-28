@@ -3,9 +3,41 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Play, Pause, SkipForward, X, ExternalLink } from 'lucide-react';
-import { getDemoById, type DemoConfig } from '@/config/demoConfig';
 import ShareButton from '@/components/ui/ShareButton';
 import { PERSONA_CONFIG } from '@/config/personaConfig';
+import demoConfig from '@/config/demoConfig.json';
+
+interface SimpleDemoStep {
+  h: string;
+  p: string;
+}
+
+interface SimpleDemo {
+  id: string;
+  title: string;
+  steps: SimpleDemoStep[];
+  cta: string;
+}
+
+// Convert simple demo to full demo config format
+const convertDemo = (demo: SimpleDemo) => ({
+  id: demo.id,
+  title: demo.title,
+  description: `60-second interactive tour: ${demo.title}`,
+  duration: demo.steps.length * 12, // 12 seconds per step
+  steps: demo.steps.map((step, index) => ({
+    title: step.h,
+    description: step.p,
+    duration: 12
+  })),
+  cta: demo.cta,
+  route: `/start/${demo.id.replace('-', '/')}`
+});
+
+const getDemoById = (id: string) => {
+  const simpleDemo = (demoConfig as SimpleDemo[]).find(d => d.id === id);
+  return simpleDemo ? convertDemo(simpleDemo) : null;
+};
 
 interface DemoLauncherProps {
   demoId: string;
