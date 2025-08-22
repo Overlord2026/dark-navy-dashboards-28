@@ -1,107 +1,51 @@
-// Feature flags loader with environment inheritance support
-import defaultFlags from '@/config/featureFlags.default.json';
-import devFlags from '@/config/featureFlags.dev.json';
-import stagingFlags from '@/config/featureFlags.staging.json';
-import prodFlags from '@/config/featureFlags.prod.json';
+// Minimal feature flags implementation with environment inheritance
+import def from '@/config/featureFlags.default.json';
 
-export type FeatureFlag = keyof typeof defaultFlags;
-
-type FlagConfig = typeof defaultFlags & { __extends?: string };
-
-// Determine build flavor from environment
-function getBuildFlavor(): 'dev' | 'staging' | 'prod' {
-  const mode = import.meta.env.MODE;
-  const flavor = import.meta.env.VITE_BUILD_FLAVOR;
-  
-  if (flavor && ['dev', 'staging', 'prod'].includes(flavor)) {
-    return flavor as 'dev' | 'staging' | 'prod';
-  }
-  
-  // Fallback based on MODE
-  if (mode === 'production') return 'prod';
-  if (mode === 'staging') return 'staging';
-  return 'dev';
+let envFlags: any;
+try {
+  const flavor = import.meta.env.VITE_BUILD_FLAVOR || import.meta.env.MODE; // 'dev'|'staging'|'prod'
+  envFlags = (flavor === 'prod')
+    ? (await import('@/config/featureFlags.prod.json')).default
+    : (flavor === 'staging')
+      ? (await import('@/config/featureFlags.staging.json')).default
+      : (await import('@/config/featureFlags.dev.json')).default;
+} catch { 
+  envFlags = {}; 
 }
 
-// Load and merge flag configs
-function loadFlags(): typeof defaultFlags {
-  const flavor = getBuildFlavor();
-  const configs = {
-    dev: devFlags,
-    staging: stagingFlags,
-    prod: prodFlags
-  };
-  
-  const envConfig = configs[flavor] as FlagConfig;
-  
-  // If config extends default, merge them
-  if (envConfig.__extends) {
-    const { __extends, ...envOverrides } = envConfig;
-    return { ...defaultFlags, ...envOverrides };
-  }
-  
-  return envConfig as typeof defaultFlags;
+function extend(base: any, ext: any) {
+  const result = { ...base, ...ext };
+  if (ext.__extends) { /* already merged via base file */ }
+  return result;
 }
 
-// Initialize flags
-let flags = loadFlags();
+export const flags = extend(def, envFlags);
 
-// In-memory flag overrides (for admin panel)
-const flagOverrides: Partial<typeof defaultFlags> = {};
+export type FeatureFlag = keyof typeof def;
 
-export function getFlags(): typeof defaultFlags {
-  return { ...flags, ...flagOverrides };
+// Admin panel can mutate runtime flag (does not persist file)
+export function setFlag(key: string, value: boolean) {
+  (flags as any)[key] = value;
+  return flags;
 }
 
 export function getFlag(key: FeatureFlag): boolean {
-  const allFlags = getFlags();
-  return allFlags[key];
+  return flags[key];
 }
 
-export function setFlag(key: FeatureFlag, value: boolean): void {
-  flagOverrides[key] = value;
-  // Trigger any listeners (for React updates)
-  flagChangeListeners.forEach(listener => listener());
+export function getFlags(): typeof def {
+  return flags;
 }
 
 export function resetFlags(): void {
-  Object.keys(flagOverrides).forEach(key => {
-    delete flagOverrides[key as FeatureFlag];
-  });
-  flagChangeListeners.forEach(listener => listener());
+  // Reset to original flags (remove any runtime overrides)
+  Object.assign(flags, extend(def, envFlags));
 }
 
-// React hook support
-const flagChangeListeners: (() => void)[] = [];
-
-export function useFlagChanges(callback: () => void): void {
-  flagChangeListeners.push(callback);
-}
-
-export function removeFlagChangeListener(callback: () => void): void {
-  const index = flagChangeListeners.indexOf(callback);
-  if (index > -1) {
-    flagChangeListeners.splice(index, 1);
-  }
-}
-
-// Hook for React components
-export function useFeatureFlag(flag: FeatureFlag): boolean {
-  const [value, setValue] = React.useState(() => getFlag(flag));
-  
-  React.useEffect(() => {
-    const listener = () => setValue(getFlag(flag));
-    useFlagChanges(listener);
-    return () => removeFlagChangeListener(listener);
-  }, [flag]);
-  
-  return value;
-}
-
-// Environment info
+// Environment info for admin panel
 export function getBuildInfo() {
   return {
-    flavor: getBuildFlavor(),
+    flavor: import.meta.env.VITE_BUILD_FLAVOR || import.meta.env.MODE,
     mode: import.meta.env.MODE,
     timestamp: new Date().toISOString(),
     dev: import.meta.env.DEV,
@@ -123,6 +67,3 @@ export const FLAG_DESCRIPTIONS: Record<FeatureFlag, string> = {
   NIL_SCHOOL_ENABLED: 'Enable NIL school portal and functionality',
   ADMIN_TOOLS_ENABLED: 'Show admin tools (panels, ready-check, etc.)'
 };
-
-// Import React for hook
-import React from 'react';
