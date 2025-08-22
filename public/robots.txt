@@ -1,14 +1,22 @@
-User-agent: Googlebot
-Allow: /
-
-User-agent: Bingbot
-Allow: /
-
-User-agent: Twitterbot
-Allow: /
-
-User-agent: facebookexternalhit
-Allow: /
-
 User-agent: *
-Allow: /
+
+# Private app routes - always disallowed
+Disallow: /admin/
+Disallow: /family/
+Disallow: /nil/athlete/
+Disallow: /nil/agent/
+Disallow: /nil/school/
+Disallow: /nil/admin/
+Disallow: /dev/
+Disallow: /api/
+
+# Public routes - controlled by feature flags
+# Note: Dynamic generation based on feature flags happens in production build
+Allow: /how-it-works
+Allow: /discover
+Allow: /solutions/
+Allow: /nil
+Allow: /nil/index
+Allow: /start/
+
+Sitemap: https://mybfocfo.com/sitemap.xml

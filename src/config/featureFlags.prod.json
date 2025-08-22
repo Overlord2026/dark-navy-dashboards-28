@@ -1,0 +1,4 @@
+{
+  "__extends": "featureFlags.default.json",
+  "ONBOARDING_PUBLIC_ENABLED": true
+}

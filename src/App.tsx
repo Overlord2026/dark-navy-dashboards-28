@@ -23,10 +23,11 @@ import { HowItWorks } from '@/pages/HowItWorks';
 import Solutions from '@/pages/Solutions';
 import { Annuities } from '@/pages/solutions/Annuities';
 import { OnboardingFlow } from '@/pages/OnboardingFlow';
-import { PUBLIC_CONFIG } from '@/config/publicConfig';
 import QACoverage from '@/pages/admin/QACoverage';
 import ReadyCheck from '@/pages/admin/ReadyCheck';
+import PublishPanel from '@/pages/admin/PublishPanel';
 import NotFound from '@/pages/NotFound';
+import { getFlag } from '@/lib/flags';
 
 // Onboarding Components
 import FamilyOnboarding from '@/pages/onboarding/FamilyOnboarding';
@@ -50,26 +51,31 @@ function App() {
           <Routes>
             <Route path="/" element={
               isAuthenticated ? <Navigate to="/family/home" replace /> : 
-              PUBLIC_CONFIG.DISCOVER_ENABLED ? <Navigate to="/discover" replace /> : 
+              getFlag('PUBLIC_DISCOVER_ENABLED') ? <Navigate to="/discover" replace /> : 
               <Navigate to="/nil/onboarding" replace />
             } />
             
-            {/* Public Pages */}
-            {PUBLIC_CONFIG.DISCOVER_ENABLED && <Route path="/discover" element={<Discover />} />}
+            {/* Public Pages - Flag Protected */}
+            {getFlag('PUBLIC_DISCOVER_ENABLED') && <Route path="/discover" element={<Discover />} />}
             <Route path="/how-it-works" element={<HowItWorks />} />
-            {PUBLIC_CONFIG.SOLUTIONS_ENABLED && <Route path="/solutions" element={<Solutions />} />}
-            {PUBLIC_CONFIG.SOLUTIONS_ENABLED && <Route path="/solutions/annuities" element={<Annuities />} />}
+            {getFlag('SOLUTIONS_ENABLED') && <Route path="/solutions" element={<Solutions />} />}
+            {getFlag('SOLUTIONS_ENABLED') && <Route path="/solutions/annuities" element={<Annuities />} />}
             
-            {/* Onboarding Routes */}
-            <Route path="/start/families" element={<FamilyOnboarding />} />
-            <Route path="/start/advisors" element={<ProfessionalOnboarding professionalType="advisors" />} />
-            <Route path="/start/cpas" element={<ProfessionalOnboarding professionalType="cpas" />} />
-            <Route path="/start/attorneys" element={<ProfessionalOnboarding professionalType="attorneys" />} />
-            <Route path="/start/realtor" element={<ProfessionalOnboarding professionalType="realtor" />} />
-            <Route path="/start/insurance" element={<ProfessionalOnboarding professionalType="advisors" />} />
-            <Route path="/start/healthcare" element={<HealthcareOnboarding segment="providers" />} />
-            <Route path="/start/nil-athlete" element={<NILOnboardingFlow type="athlete" />} />
-            <Route path="/start/nil-school" element={<NILOnboardingFlow type="school" />} />
+            {/* NIL Public Pages */}
+            {getFlag('NIL_PUBLIC_ENABLED') && <Route path="/nil" element={<Marketplace />} />}
+            {getFlag('NIL_PUBLIC_ENABLED') && <Route path="/nil/index" element={<Marketplace />} />}
+            
+            
+            {/* Onboarding Routes - Flag Protected */}
+            {getFlag('ONBOARDING_PUBLIC_ENABLED') && <Route path="/start/families" element={<FamilyOnboarding />} />}
+            {getFlag('ONBOARDING_PUBLIC_ENABLED') && <Route path="/start/advisors" element={<ProfessionalOnboarding professionalType="advisors" />} />}
+            {getFlag('ONBOARDING_PUBLIC_ENABLED') && <Route path="/start/cpas" element={<ProfessionalOnboarding professionalType="cpas" />} />}
+            {getFlag('ONBOARDING_PUBLIC_ENABLED') && <Route path="/start/attorneys" element={<ProfessionalOnboarding professionalType="attorneys" />} />}
+            {getFlag('ONBOARDING_PUBLIC_ENABLED') && <Route path="/start/realtor" element={<ProfessionalOnboarding professionalType="realtor" />} />}
+            {getFlag('ONBOARDING_PUBLIC_ENABLED') && <Route path="/start/insurance" element={<ProfessionalOnboarding professionalType="advisors" />} />}
+            {getFlag('ONBOARDING_PUBLIC_ENABLED') && <Route path="/start/healthcare" element={<HealthcareOnboarding segment="providers" />} />}
+            {getFlag('ONBOARDING_PUBLIC_ENABLED') && <Route path="/start/nil-athlete" element={<NILOnboardingFlow type="athlete" />} />}
+            {getFlag('ONBOARDING_PUBLIC_ENABLED') && <Route path="/start/nil-school" element={<NILOnboardingFlow type="school" />} />}
             
             {/* Family App Routes (Authenticated) */}
             <Route path="/family/home" element={<FamilyHome />} />
@@ -89,12 +95,14 @@ function App() {
             <Route path="/nil/admin/ready-check" element={<NilReadyCheckPage />} />
             <Route path="/pricing" element={<Pricing />} />
             
-            {/* Admin Routes */}
-            <Route path="/admin/qa-coverage" element={<QACoverage />} />
-            <Route path="/admin/ready-check" element={<ReadyCheck />} />
+            
+            {/* Admin Routes - Flag Protected */}
+            {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/qa-coverage" element={<QACoverage />} />}
+            {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/ready-check" element={<ReadyCheck />} />}
+            {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/publish" element={<PublishPanel />} />}
             
             {/* Demo Routes */}
-            {PUBLIC_CONFIG.DEMOS_ENABLED && (
+            {getFlag('DEMOS_ENABLED') && (
               <Route path="/demos/:persona" element={
                 <Suspense fallback={<div className="min-h-screen bg-background flex items-center justify-center">Loading demo...</div>}>
                   <DemoPage />
@@ -114,8 +122,9 @@ function App() {
           <Toaster />
           <DevPanel />
           
-          {/* Show CTA bar on public pages only */}
-          {!isAuthenticated && <CTAStickyBar />}
+          
+          {/* Show CTA bar on public pages only - Flag Protected */}
+          {!isAuthenticated && getFlag('PUBLIC_CTA_BAR') && <CTAStickyBar />}
         </div>
       </ThemeProvider>
     </HelmetProvider>
