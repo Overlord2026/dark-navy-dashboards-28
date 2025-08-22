@@ -21,6 +21,7 @@ import { Solutions } from '@/pages/Solutions';
 import { Annuities } from '@/pages/solutions/Annuities';
 import { OnboardingFlow } from '@/pages/OnboardingFlow';
 import { PUBLIC_CONFIG } from '@/config/publicConfig';
+import QACoverage from '@/pages/admin/QACoverage';
 
 const DemoPage = React.lazy(() => import('@/pages/demos/[persona]'));
 
@@ -53,6 +54,7 @@ function App() {
           <Route path="/nil/disputes" element={<Disputes />} />
           <Route path="/nil/receipts" element={<Receipts />} />
           <Route path="/nil/admin" element={<Admin />} />
+          <Route path="/admin/qa-coverage" element={<QACoverage />} />
           <Route path="/pricing" element={<Pricing />} />
           {PUBLIC_CONFIG.DEMOS_ENABLED && (
             <Route path="/demos/:persona" element={
