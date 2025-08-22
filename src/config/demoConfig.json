@@ -1,5 +1,43 @@
 [
   {
+    "id": "overview",
+    "title": "Platform Overview Demo",
+    "description": "See how families and professionals collaborate securely in one workspace",
+    "shareMessage": "A secure workspace where families and their trusted professionals collaborate seamlessly—check this out: {url}",
+    "steps": [
+      {
+        "title": "Welcome to the Family Office Platform",
+        "content": "A secure workspace where families and their trusted professionals collaborate seamlessly. Everything you need in one place, with compliance and proof built in.",
+        "image": "/placeholder.svg",
+        "duration": 8000
+      },
+      {
+        "title": "Choose Your Role",
+        "content": "Whether you're a family, advisor, CPA, attorney, or other professional, the platform adapts to your specific needs and workflows.",
+        "image": "/placeholder.svg", 
+        "duration": 8000
+      },
+      {
+        "title": "Organize Everything",
+        "content": "Accounts, documents, goals, tasks, and communications—all organized and accessible to the right people at the right time.",
+        "image": "/placeholder.svg",
+        "duration": 8000
+      },
+      {
+        "title": "Trust & Compliance",
+        "content": "Every action creates a cryptographic receipt. Smart checks ensure compliance. Secure vault keeps everything safe. Time-stamped anchors provide immutable proof.",
+        "image": "/placeholder.svg",
+        "duration": 8000
+      },
+      {
+        "title": "Collaborate Securely",
+        "content": "Invite your people, share what they need to see, and maintain complete control over your information.",
+        "image": "/placeholder.svg",
+        "duration": 8000
+      }
+    ]
+  },
+  {
     "id": "families-aspiring",
     "title": "Aspiring Families Demo",
     "persona": "families",

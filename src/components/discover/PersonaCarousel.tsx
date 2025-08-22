@@ -114,12 +114,15 @@ export const PersonaCarousel: React.FC = () => {
             </CardDescription>
             
             <div className="space-y-3">
-              <DemoLauncher persona={persona.demoId}>
-                <Button variant="outline" className="w-full">
-                  <Play className="mr-2 h-4 w-4" />
-                  See 60-second demo
-                </Button>
-              </DemoLauncher>
+              <DemoLauncher 
+                demoId={persona.demoId}
+                trigger={
+                  <Button variant="outline" className="w-full">
+                    <Play className="mr-2 h-4 w-4" />
+                    See 60-second demo
+                  </Button>
+                }
+              />
               
               <Button 
                 variant="ghost" 
@@ -141,6 +144,7 @@ export const PersonaCarousel: React.FC = () => {
               <div className="pt-2 text-center">
                 <ShareButton 
                   text={`Check this out — a secure platform to organize everything in one place and keep a record you can trust: ${persona.title}`}
+                  url={window.location.href}
                   className="text-muted-foreground hover:text-foreground text-sm"
                 />
               </div>

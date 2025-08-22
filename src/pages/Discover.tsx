@@ -87,17 +87,21 @@ const Discover: React.FC = () => {
                 <ArrowRight className="mr-2 h-5 w-5" />
                 Start your workspace
               </Button>
-              <DemoLauncher persona="overview">
-                <Button variant="outline" size="lg" className="border-white/20 text-white hover:bg-white/10 px-8 py-4">
-                  <Play className="mr-2 h-5 w-5" />
-                  See 60-second demo
-                </Button>
-              </DemoLauncher>
+              <DemoLauncher 
+                demoId="overview"
+                trigger={
+                  <Button variant="outline" size="lg" className="border-white/20 text-white hover:bg-white/10 px-8 py-4">
+                    <Play className="mr-2 h-5 w-5" />
+                    See 60-second demo
+                  </Button>
+                }
+              />
             </div>
             
             <div className="pt-8">
               <ShareButton 
                 text="Check this out — a secure platform to organize everything in one place and keep a record you can trust"
+                url={window.location.href}
                 className="text-white/60 hover:text-white"
               />
             </div>
