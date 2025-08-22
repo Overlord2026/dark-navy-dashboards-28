@@ -42,6 +42,11 @@ import { APIPage } from "./pages/help/APIPage";
 import { WebinarsPage } from "./pages/help/WebinarsPage";
 import EducationPage from "./pages/EducationPage";
 
+// NIL pages
+import NILHub from "./pages/NILHub";
+import NILIndex from "./pages/NILIndex";
+import AthleteProfile from "./pages/AthleteProfile";
+
 // QA pages removed for production
 // All QA routes, checklists, and testing components removed for production security
 
@@ -174,6 +179,19 @@ export const router = createBrowserRouter([
         element: <SystemAdministratorDashboard />,
       }
     ]
+  },
+  // NIL Platform routes
+  {
+    path: "/nil",
+    element: <NILHub />
+  },
+  {
+    path: "/nil/index",
+    element: <NILIndex />
+  },
+  {
+    path: "/a/:handle",
+    element: <AthleteProfile />
   },
   // Education route
   {
