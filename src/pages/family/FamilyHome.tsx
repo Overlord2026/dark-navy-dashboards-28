@@ -442,7 +442,12 @@ export function FamilyHome() {
             </div>
             
             <Suspense fallback={<LoadingSkeleton />}>
-              <div className="grid md:grid-cols-5 gap-3" role="list" aria-label="Recent proof slips">
+              <div 
+                className="grid md:grid-cols-5 gap-3" 
+                role="list" 
+                aria-label="Recent proof slips"
+                data-testid="receipts-strip"
+              >
                 {MOCK_PROOF_SLIPS.slice(0, 5).map((slip) => {
                   const typeConfig = PROOF_SLIP_TYPES[slip.type];
                   return (
