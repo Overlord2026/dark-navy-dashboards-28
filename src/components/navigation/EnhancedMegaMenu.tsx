@@ -15,17 +15,26 @@ import {
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
 import { usePersonaContext } from "@/hooks/usePersonaContext";
-import personaConfig from "@/config/personaConfig.json";
+import { PERSONA_CONFIG } from "@/config/personaConfig";
+import { SOLUTIONS_CONFIG } from "@/config/solutionsConfig";
+import catalogConfig from "@/config/catalogConfig.json";
 
 // Group personas from config
-const familyPersonas = personaConfig.filter(p => p.persona === 'families');
-const advisorPersonas = personaConfig.filter(p => p.persona === 'advisors');
-const cpaPersonas = personaConfig.filter(p => p.persona === 'cpas');
-const attorneyPersonas = personaConfig.filter(p => p.persona === 'attorneys');
-const insurancePersonas = personaConfig.filter(p => p.persona === 'insurance');
-const healthcarePersonas = personaConfig.filter(p => p.persona === 'healthcare');
-const realtorPersonas = personaConfig.filter(p => p.persona === 'realtor');
-const nilPersonas = personaConfig.filter(p => p.persona?.startsWith('nil'));
+const familyPersonas = PERSONA_CONFIG.filter(p => p.persona === 'families');
+const advisorPersonas = PERSONA_CONFIG.filter(p => p.persona === 'advisors');
+const cpaPersonas = PERSONA_CONFIG.filter(p => p.persona === 'cpas');
+const attorneyPersonas = PERSONA_CONFIG.filter(p => p.persona === 'attorneys');
+const insurancePersonas = PERSONA_CONFIG.filter(p => p.persona === 'insurance');
+const healthcarePersonas = PERSONA_CONFIG.filter(p => p.persona === 'healthcare');
+const realtorPersonas = PERSONA_CONFIG.filter(p => p.persona === 'realtor');
+const nilPersonas = PERSONA_CONFIG.filter(p => p.persona?.startsWith('nil'));
+
+// Get top tools per persona for "Tools you'll use today"
+const getTopToolsForPersona = (personaTags: string[]) => {
+  return (catalogConfig as any[])
+    .filter(tool => tool.personas?.some((p: string) => personaTags.includes(p)))
+    .slice(0, 3);
+};
 
 const MEGA_MENU = {
   families: familyPersonas.map(p => ({
@@ -51,13 +60,11 @@ const MEGA_MENU = {
     { title: "Documents & E-Sign", href: "/services/documents" },
     { title: "Education & Concierge", href: "/education" },
   ],
-  solutions: [
-    { title: "Income Now / Later", href: "/solutions/income-now" },
-    { title: "RMD Orchestration", href: "/solutions/rmds" },
-    { title: "K-1 / Tax Season", href: "/solutions/tax-season" },
-    { title: "Subscribe & Capital Calls", href: "/solutions/private-market-alpha" },
-    { title: "Entity Renewals & Licenses", href: "/solutions/entities" },
-  ],
+  solutions: SOLUTIONS_CONFIG.map(s => ({
+    title: s.label,
+    href: s.route,
+    desc: `Complete ${s.label.toLowerCase()} tools and workflows`
+  })),
 } as const;
 
 const PERSONA_CHIPS = [
@@ -245,17 +252,44 @@ export function EnhancedMegaMenu({ className }: MegaMenuProps) {
                 Solutions
               </NavigationMenuTrigger>
               <NavigationMenuContent>
-                <div className="grid w-[400px] gap-3 p-6 md:w-[500px] md:grid-cols-1">
-                  {MEGA_MENU.solutions.map((item) => (
-                    <NavigationMenuLink key={item.title} asChild>
-                      <Link
-                        to={item.href}
-                        className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                      >
-                        <div className="text-sm font-medium leading-none">{item.title}</div>
+                <div className="w-[600px] p-6 md:w-[700px]">
+                  <div className="grid grid-cols-2 gap-4 mb-6">
+                    <div>
+                      <Link to="/solutions" className="block p-3 rounded-md hover:bg-accent">
+                        <div className="text-sm font-medium mb-1">All Solutions</div>
+                        <div className="text-xs text-muted-foreground">View complete solutions hub</div>
                       </Link>
-                    </NavigationMenuLink>
-                  ))}
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-3">
+                    {MEGA_MENU.solutions.map((item) => (
+                      <NavigationMenuLink key={item.title} asChild>
+                        <Link
+                          to={item.href}
+                          className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                        >
+                          <div className="text-sm font-medium leading-none">{item.title}</div>
+                          <div className="text-xs text-muted-foreground">{item.desc}</div>
+                        </Link>
+                      </NavigationMenuLink>
+                    ))}
+                  </div>
+                  
+                  <div className="mt-6 pt-4 border-t">
+                    <div className="text-xs font-medium text-muted-foreground mb-2">Tools you'll use today</div>
+                    <div className="grid grid-cols-3 gap-2">
+                      {getTopToolsForPersona(['family', 'advisor']).map((tool: any) => (
+                        <Link
+                          key={tool.key}
+                          to={tool.route}
+                          className="text-xs p-2 rounded hover:bg-accent block"
+                        >
+                          {tool.label}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </NavigationMenuContent>
             </NavigationMenuItem>

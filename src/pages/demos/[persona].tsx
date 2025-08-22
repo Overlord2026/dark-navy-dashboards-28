@@ -9,17 +9,11 @@ import demoConfig from '@/config/demoConfig.json';
 interface Demo {
   id: string;
   title: string;
-  persona?: string;
-  segment?: string;
-  category?: string;
-  description: string;
-  shareMessage: string;
   steps: Array<{
-    title: string;
-    content: string;
-    image: string;
-    duration: number;
+    h: string;
+    p: string;
   }>;
+  cta: string;
 }
 
 const DemoPage: React.FC = () => {
@@ -84,14 +78,14 @@ const DemoPage: React.FC = () => {
               <div>
                 <h1 className="text-lg font-semibold">{demo.title}</h1>
                 <p className="text-sm text-muted-foreground">
-                  {demo.description}
+                  60-second interactive tour
                 </p>
               </div>
             </div>
             
             <div className="flex items-center gap-3">
               <ShareButton 
-                text={demo.shareMessage.replace('{url}', window.location.href)}
+                text={`${demo.title} - Check this out: a 60-second tour of how this platform works`}
                 url={window.location.href}
                 variant="outline"
                 size="sm"
@@ -119,7 +113,17 @@ const DemoPage: React.FC = () => {
 
       {/* Tour Stepper */}
       <TourStepper
-        demo={demo}
+        demo={{
+          ...demo,
+          description: demo.title,
+          shareMessage: `${demo.title} - Check this out: a 60-second tour of how this platform works`,
+          steps: demo.steps.map(step => ({
+            title: step.h,
+            content: step.p,
+            image: "/placeholder.svg",
+            duration: 12000
+          }))
+        }}
         isOpen={isOpen}
         onClose={handleClose}
       />

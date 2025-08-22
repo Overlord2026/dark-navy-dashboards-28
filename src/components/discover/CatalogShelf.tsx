@@ -15,48 +15,45 @@ import {
 import catalogConfig from '@/config/catalogConfig.json';
 
 interface CatalogItem {
-  id: string;
-  title: string;
-  description: string;
-  type: 'calculator' | 'tool' | 'course' | 'guide' | 'admin';
-  category: string;
-  persona: string[];
+  key: string;
+  label: string;
+  summary: string;
+  type: string;
+  personas: string[];
+  solutions: string[];
+  goals: string[];
   tags: string[];
   route: string;
-  status: 'active' | 'soon';
-  tier: 'basic' | 'premium' | 'elite';
-  estimatedTime?: string;
+  status: string;
 }
 
 // Cast the imported config to our interface
 const catalogItems: CatalogItem[] = catalogConfig as CatalogItem[];
 
 // Extract unique values for filters
-const personas = [...new Set(catalogItems.flatMap(item => item.persona))];
+const personas = [...new Set(catalogItems.flatMap(item => item.personas))];
 const types = [...new Set(catalogItems.map(item => item.type))];
-const categories = [...new Set(catalogItems.map(item => item.category))];
+const solutions = [...new Set(catalogItems.flatMap(item => item.solutions))];
 const tags = [...new Set(catalogItems.flatMap(item => item.tags))];
-const tiers = ['basic', 'premium', 'elite'];
 
 export const CatalogShelf: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPersonas, setSelectedPersonas] = useState<string[]>([]);
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedSolutions, setSelectedSolutions] = useState<string[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [selectedTiers, setSelectedTiers] = useState<string[]>([]);
 
   const filteredItems = useMemo(() => {
     return catalogItems.filter(item => {
       // Search filter
-      if (searchQuery && !item.title.toLowerCase().includes(searchQuery.toLowerCase()) && 
-          !item.description.toLowerCase().includes(searchQuery.toLowerCase()) &&
+      if (searchQuery && !item.label.toLowerCase().includes(searchQuery.toLowerCase()) && 
+          !item.summary.toLowerCase().includes(searchQuery.toLowerCase()) &&
           !item.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))) {
         return false;
       }
 
       // Persona filter
-      if (selectedPersonas.length > 0 && !selectedPersonas.some(p => item.persona.includes(p))) {
+      if (selectedPersonas.length > 0 && !selectedPersonas.some(p => item.personas.includes(p))) {
         return false;
       }
 
@@ -65,8 +62,8 @@ export const CatalogShelf: React.FC = () => {
         return false;
       }
 
-      // Category filter
-      if (selectedCategories.length > 0 && !selectedCategories.includes(item.category)) {
+      // Solutions filter
+      if (selectedSolutions.length > 0 && !selectedSolutions.some(s => item.solutions.includes(s))) {
         return false;
       }
 
@@ -75,26 +72,21 @@ export const CatalogShelf: React.FC = () => {
         return false;
       }
 
-      // Tier filter
-      if (selectedTiers.length > 0 && !selectedTiers.includes(item.tier)) {
-        return false;
-      }
-
       return true;
     });
-  }, [searchQuery, selectedPersonas, selectedTypes, selectedCategories, selectedTags, selectedTiers]);
+  }, [searchQuery, selectedPersonas, selectedTypes, selectedSolutions, selectedTags]);
 
   const handleCardClick = (item: CatalogItem) => {
     // Analytics
     if (typeof window !== 'undefined' && (window as any).analytics) {
       (window as any).analytics.track('lp.catalog.card.open', { 
-        item: item.id, 
+        item: item.key, 
         route: item.route,
-        comingSoon: item.status === 'soon'
+        comingSoon: item.status !== 'ready'
       });
     }
 
-    if (item.route === '#soon' || item.status === 'soon') {
+    if (item.status !== 'ready') {
       // Show coming soon message
       return;
     }
@@ -103,7 +95,7 @@ export const CatalogShelf: React.FC = () => {
     window.location.href = item.route;
   };
 
-  const handleFilterChange = (filterType: 'personas' | 'types' | 'categories' | 'tags' | 'tiers', value: string, checked: boolean) => {
+  const handleFilterChange = (filterType: 'personas' | 'types' | 'solutions' | 'tags', value: string, checked: boolean) => {
     // Analytics
     if (typeof window !== 'undefined' && (window as any).analytics && checked) {
       (window as any).analytics.track('lp.catalog.filter', { 
@@ -115,9 +107,8 @@ export const CatalogShelf: React.FC = () => {
     const setters = {
       personas: setSelectedPersonas,
       types: setSelectedTypes,
-      categories: setSelectedCategories,
-      tags: setSelectedTags,
-      tiers: setSelectedTiers
+      solutions: setSelectedSolutions,
+      tags: setSelectedTags
     };
 
     const setter = setters[filterType];
@@ -163,7 +154,7 @@ export const CatalogShelf: React.FC = () => {
     }
   };
 
-  const activeFiltersCount = selectedPersonas.length + selectedTypes.length + selectedCategories.length + selectedTags.length + selectedTiers.length;
+  const activeFiltersCount = selectedPersonas.length + selectedTypes.length + selectedSolutions.length + selectedTags.length;
 
   return (
     <div className="space-y-6">
@@ -204,14 +195,14 @@ export const CatalogShelf: React.FC = () => {
             ))}
             
             <DropdownMenuSeparator />
-            <DropdownMenuLabel>Filter by Category</DropdownMenuLabel>
-            {categories.map((category) => (
+            <DropdownMenuLabel>Filter by Solution</DropdownMenuLabel>
+            {solutions.map((solution) => (
               <DropdownMenuCheckboxItem
-                key={category}
-                checked={selectedCategories.includes(category)}
-                onCheckedChange={(checked) => handleFilterChange('categories', category, checked)}
+                key={solution}
+                checked={selectedSolutions.includes(solution)}
+                onCheckedChange={(checked) => handleFilterChange('solutions', solution, checked)}
               >
-                {category.charAt(0).toUpperCase() + category.slice(1)}
+                {solution.charAt(0).toUpperCase() + solution.slice(1)}
               </DropdownMenuCheckboxItem>
             ))}
 
@@ -224,21 +215,6 @@ export const CatalogShelf: React.FC = () => {
                 onCheckedChange={(checked) => handleFilterChange('types', type, checked)}
               >
                 {type.charAt(0).toUpperCase() + type.slice(1)}
-              </DropdownMenuCheckboxItem>
-            ))}
-            
-            <DropdownMenuSeparator />
-            <DropdownMenuLabel>Filter by Tier</DropdownMenuLabel>
-            {tiers.map((tier) => (
-              <DropdownMenuCheckboxItem
-                key={tier}
-                checked={selectedTiers.includes(tier)}
-                onCheckedChange={(checked) => handleFilterChange('tiers', tier, checked)}
-              >
-                <div className="flex items-center gap-2">
-                  {getTierIcon(tier)}
-                  {tier.charAt(0).toUpperCase() + tier.slice(1)}
-                </div>
               </DropdownMenuCheckboxItem>
             ))}
             
@@ -266,15 +242,15 @@ export const CatalogShelf: React.FC = () => {
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredItems.map((item) => (
           <Card 
-            key={item.id} 
+            key={item.key}
             className="cursor-pointer hover:shadow-lg transition-shadow"
             onClick={() => handleCardClick(item)}
           >
             <CardHeader>
               <div className="flex items-start justify-between gap-2">
-                <CardTitle className="text-lg leading-tight">{item.title}</CardTitle>
+                <CardTitle className="text-lg leading-tight">{item.label}</CardTitle>
                 <div className="flex items-center gap-1">
-                  {item.status === 'soon' ? (
+                  {item.status !== 'ready' ? (
                     <Badge variant="secondary">Coming Soon</Badge>
                   ) : (
                     <ExternalLink className="h-4 w-4 text-muted-foreground flex-shrink-0" />
@@ -285,27 +261,19 @@ export const CatalogShelf: React.FC = () => {
             
             <CardContent className="space-y-4">
               <CardDescription className="text-sm leading-relaxed">
-                {item.description}
+                {item.summary}
               </CardDescription>
               
               <div className="space-y-2">
                 <div className="flex flex-wrap gap-1">
-                  <Badge className={`text-xs flex items-center gap-1 ${getTierColor(item.tier)}`} variant="outline">
-                    {getTierIcon(item.tier)}
-                    {item.tier}
-                  </Badge>
                   <Badge variant="outline" className="text-xs">
                     {item.type}
                   </Badge>
-                  <Badge variant="outline" className="text-xs">
-                    {item.category}
-                  </Badge>
-                  {item.estimatedTime && (
-                    <Badge variant="secondary" className="text-xs flex items-center gap-1">
-                      <Clock className="h-3 w-3" />
-                      {item.estimatedTime}
+                  {item.solutions.map(solution => (
+                    <Badge key={solution} variant="outline" className="text-xs">
+                      {solution}
                     </Badge>
-                  )}
+                  ))}
                 </div>
                 
                 <div className="flex flex-wrap gap-1">
@@ -322,7 +290,7 @@ export const CatalogShelf: React.FC = () => {
                 </div>
                 
                 <div className="text-xs text-muted-foreground">
-                  For: {item.persona.map(formatPersonaName).join(', ')}
+                  For: {item.personas.map(formatPersonaName).join(', ')}
                 </div>
               </div>
             </CardContent>
@@ -339,9 +307,8 @@ export const CatalogShelf: React.FC = () => {
               setSearchQuery('');
               setSelectedPersonas([]);
               setSelectedTypes([]);
-              setSelectedCategories([]);
+              setSelectedSolutions([]);
               setSelectedTags([]);
-              setSelectedTiers([]);
             }}
             className="mt-2"
           >
