@@ -1,474 +1,313 @@
-import React, { useEffect, useState } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import React, { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
+import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Separator } from '@/components/ui/separator';
+import { useNavigate } from 'react-router-dom';
 import { 
   CheckCircle, 
-  Circle, 
-  Target, 
-  Calculator, 
-  FileText, 
-  Shield, 
+  Clock, 
   TrendingUp, 
-  Users,
-  Wallet,
-  Heart,
-  Building,
-  BookOpen,
+  Shield, 
   ArrowRight,
-  Plus
+  Play,
+  Share,
+  ExternalLink,
+  Clock3,
+  Receipt
 } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-import SEOHead from '@/components/seo/SEOHead';
+import familyToolsConfig from '@/config/familyTools.json';
 import catalogConfig from '@/config/catalogConfig.json';
+import { analytics } from '@/lib/analytics';
 
-interface ChecklistItem {
-  id: string;
-  title: string;
-  description: string;
-  category: string;
-  completed: boolean;
-  route: string;
-  icon: any;
+type FamilySegment = 'aspiring' | 'retirees';
+
+interface UserSession {
+  email: string;
+  segment: FamilySegment;
+  goals: string[];
+  onboarded: boolean;
 }
 
-const SEGMENT_CHECKLISTS = {
-  aspiring: [
-    {
-      id: 'connect-accounts',
-      title: 'Connect accounts',
-      description: 'Link bank and investment accounts for a complete view',
-      category: 'organize',
-      completed: false,
-      route: '/family/accounts',
-      icon: Wallet
-    },
-    {
-      id: 'upload-docs',
-      title: 'Upload key documents',
-      description: 'Store important financial and estate documents securely',
-      category: 'organize', 
-      completed: false,
-      route: '/family/vault',
-      icon: FileText
-    },
-    {
-      id: 'invite-professionals',
-      title: 'Invite advisor/CPA/attorney',
-      description: 'Collaborate with your trusted professionals',
-      category: 'collaborate',
-      completed: false,
-      route: '/family/team',
-      icon: Users
-    },
-    {
-      id: 'retirement-roadmap',
-      title: 'Run Retirement Roadmap',
-      description: 'Plan your path to financial independence',
-      category: 'plan',
-      completed: false,
-      route: '/tools/retirement-roadmap',
-      icon: Target
-    },
-    {
-      id: 'roth-ladder',
-      title: 'Set Roth Ladder plan',
-      description: 'Multi-year tax optimization strategy',
-      category: 'plan',
-      completed: false,
-      route: '/tools/roth-ladder',
-      icon: Calculator
-    },
-    {
-      id: 'longevity-hub',
-      title: 'Start Longevity Hub',
-      description: 'Begin your health and wellness journey',
-      category: 'plan',
-      completed: false,
-      route: '/family/longevity',
-      icon: Heart
-    }
-  ],
-  retirees: [
-    {
-      id: 'ss-optimizer',
-      title: 'Run SS Optimizer',
-      description: 'Find the best Social Security claiming strategy',
-      category: 'plan',
-      completed: false,
-      route: '/tools/social-security',
-      icon: Calculator
-    },
-    {
-      id: 'rmd-check',
-      title: 'Check RMD path',
-      description: 'Ensure compliance with required distributions',
-      category: 'comply',
-      completed: false,
-      route: '/tools/rmd-check',
-      icon: Shield
-    },
-    {
-      id: 'upload-estate',
-      title: 'Upload Will/Trust to Vault',
-      description: 'Secure storage for estate planning documents',
-      category: 'organize',
-      completed: false,
-      route: '/tools/wealth-vault',
-      icon: FileText
-    },
-    {
-      id: 'financial-poa',
-      title: 'Add Financial POA',
-      description: 'Set up power of attorney documentation',
-      category: 'collaborate',
-      completed: false,
-      route: '/tools/financial-poa',
-      icon: Users
-    },
-    {
-      id: 'annuities-review',
-      title: 'Review Annuities (calcs)',
-      description: 'Explore income generation options',
-      category: 'plan',
-      completed: false,
-      route: '/solutions/annuities/calculators',
-      icon: TrendingUp
-    },
-    {
-      id: 'private-markets',
-      title: 'Explore Private Markets (readiness)',
-      description: 'Check eligibility for private investments',
-      category: 'plan',
-      completed: false,
-      route: '/solutions/investments/private-markets',
-      icon: Building
-    }
-  ]
-};
+interface ProofSlip {
+  id: string;
+  type: 'document_upload' | 'account_link' | 'advisor_invite' | 'calculation_run' | 'compliance_check';
+  timestamp: string;
+  description: string;
+  anchored: boolean;
+}
 
-const TOOL_CATEGORIES = [
-  { id: 'money', label: 'Money & Planning', icon: Calculator, color: 'text-blue-600' },
-  { id: 'tax', label: 'Tax Planning', icon: FileText, color: 'text-green-600' },
-  { id: 'estate', label: 'Estate & Legacy', icon: Shield, color: 'text-purple-600' },
-  { id: 'health', label: 'Health & Longevity', icon: Heart, color: 'text-red-600' },
-  { id: 'vault', label: 'Vault & Receipts', icon: FileText, color: 'text-indigo-600' },
-  { id: 'markets', label: 'Annuities & Private Markets', icon: TrendingUp, color: 'text-orange-600' }
+// Mock proof slips data
+const MOCK_PROOF_SLIPS: ProofSlip[] = [
+  { id: '1', type: 'document_upload', timestamp: '2024-01-22T10:30:00Z', description: 'Uploaded Estate Documents to Vault', anchored: true },
+  { id: '2', type: 'calculation_run', timestamp: '2024-01-22T09:15:00Z', description: 'Retirement Roadmap Analysis', anchored: true },
+  { id: '3', type: 'advisor_invite', timestamp: '2024-01-21T16:45:00Z', description: 'Invited Financial Advisor', anchored: false },
+  { id: '4', type: 'account_link', timestamp: '2024-01-21T14:20:00Z', description: 'Connected Bank Account', anchored: true },
+  { id: '5', type: 'compliance_check', timestamp: '2024-01-21T11:30:00Z', description: 'RMD Compliance Check', anchored: true }
 ];
 
-export const FamilyHome: React.FC = () => {
-  const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
-  const { toast } = useToast();
-  
-  const [onboardingData, setOnboardingData] = useState<any>(null);
-  const [checklist, setChecklist] = useState<ChecklistItem[]>([]);
-  const [activeTab, setActiveTab] = useState('overview');
+const PROOF_SLIP_TYPES = {
+  document_upload: { label: 'Document', color: 'bg-blue-100 text-blue-800' },
+  account_link: { label: 'Account', color: 'bg-green-100 text-green-800' },
+  advisor_invite: { label: 'Invite', color: 'bg-purple-100 text-purple-800' },
+  calculation_run: { label: 'Analysis', color: 'bg-orange-100 text-orange-800' },
+  compliance_check: { label: 'Compliance', color: 'bg-red-100 text-red-800' }
+};
 
-  const isWelcome = searchParams.get('welcome') === 'true';
+export function FamilyHome() {
+  const navigate = useNavigate();
+  const [session, setSession] = useState<UserSession | null>(null);
 
   useEffect(() => {
-    // Load onboarding data
-    const stored = localStorage.getItem('family_onboarding');
-    if (stored) {
-      const data = JSON.parse(stored);
-      setOnboardingData(data);
-      
-      // Load appropriate checklist
-      const segmentChecklist = SEGMENT_CHECKLISTS[data.segment as keyof typeof SEGMENT_CHECKLISTS] || [];
-      setChecklist(segmentChecklist);
+    // Get user session
+    const sessionData = localStorage.getItem('user_session');
+    if (sessionData) {
+      const parsedSession = JSON.parse(sessionData);
+      setSession(parsedSession);
+    } else {
+      // Redirect to onboarding if no session
+      navigate('/start/families');
     }
+  }, [navigate]);
 
-    // Show welcome toast
-    if (isWelcome) {
-      toast({
-        title: "Welcome to your family workspace!",
-        description: "Everything you need to organize, plan, and protect your family's future—in one place.",
+  if (!session) {
+    return <div className="min-h-screen bg-background flex items-center justify-center">Loading...</div>;
+  }
+
+  const segmentConfig = familyToolsConfig[session.segment];
+  const segmentTitle = session.segment === 'aspiring' ? 'Aspiring Wealthy' : 'Retirees';
+
+  const getToolDetails = (toolKey: string) => {
+    return catalogConfig.tools.find(tool => tool.key === toolKey) || {
+      title: toolKey,
+      description: 'Tool description',
+      category: 'general',
+      route: `/tools/${toolKey}`,
+      marketingRoute: `/solutions/${toolKey}`
+    };
+  };
+
+  const handleDemoOpen = () => {
+    analytics.trackEvent('family.demo_opened', { segment: session.segment });
+    navigate(`/demos/families-${session.segment}`);
+  };
+
+  const handleShare = () => {
+    analytics.trackEvent('family.workspace_shared', { segment: session.segment });
+    if (navigator.share) {
+      navigator.share({
+        title: `${segmentTitle} Family Workspace`,
+        text: 'Check out my family financial workspace',
+        url: window.location.href
       });
     }
-  }, [isWelcome, toast]);
-
-  const handleChecklistToggle = (itemId: string) => {
-    setChecklist(prev => 
-      prev.map(item => 
-        item.id === itemId 
-          ? { ...item, completed: !item.completed }
-          : item
-      )
-    );
   };
 
-  const completedItems = checklist.filter(item => item.completed).length;
-  const progressPercentage = checklist.length > 0 ? (completedItems / checklist.length) * 100 : 0;
-
-  const getCategoryTools = (category: string) => {
-    const categoryMap: Record<string, string[]> = {
-      money: ['retirement-roadmap', 'ss-optimizer', 'roth-ladder'],
-      tax: ['taxhub-diy', 'nua-analyzer', 'daf-crt'],
-      estate: ['wealth-vault', 'beneficiary-center', 'financial-poa'],
-      health: ['longevity-hub', 'consent-passport'],
-      vault: ['receipts-viewer'],
-      markets: ['annuities-education', 'annuities-calcs', 'private-markets']
-    };
-
-    return (catalogConfig as any[])
-      .filter(tool => categoryMap[category]?.includes(tool.key))
-      .slice(0, 4);
+  const formatTimestamp = (timestamp: string) => {
+    const date = new Date(timestamp);
+    const now = new Date();
+    const diffHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
+    
+    if (diffHours < 1) return 'Just now';
+    if (diffHours < 24) return `${diffHours}h ago`;
+    return date.toLocaleDateString();
   };
-
-  const renderOverviewTab = () => (
-    <div className="space-y-8">
-      {/* Welcome Section */}
-      {onboardingData && (
-        <Card className="bg-gradient-to-br from-gold/10 to-gold/5 border-gold/20">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <CheckCircle className="h-5 w-5 text-gold" />
-              {onboardingData.segment === 'aspiring' ? 'Aspiring Family' : 'Retiree Family'} Workspace
-            </CardTitle>
-            <CardDescription>
-              Your goals: {onboardingData.goals?.map((g: string) => g.charAt(0).toUpperCase() + g.slice(1)).join(', ')}
-            </CardDescription>
-          </CardHeader>
-        </Card>
-      )}
-
-      {/* Quick Actions */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {[
-          { title: 'Connect Accounts', icon: Wallet, route: '/family/accounts', description: 'Link bank & investment accounts' },
-          { title: 'Upload Documents', icon: FileText, route: '/family/vault', description: 'Store important documents' },
-          { title: 'Invite Team', icon: Users, route: '/family/team', description: 'Add trusted professionals' },
-          { title: 'View Receipts', icon: Shield, route: '/receipts', description: 'See proof of all actions' }
-        ].map((action) => (
-          <Card key={action.title} className="cursor-pointer hover:shadow-md transition-shadow group">
-            <CardHeader className="text-center pb-2">
-              <action.icon className="h-8 w-8 mx-auto text-primary group-hover:scale-110 transition-transform" />
-              <CardTitle className="text-sm">{action.title}</CardTitle>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <CardDescription className="text-xs text-center">
-                {action.description}
-              </CardDescription>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      {/* Progress Section */}
-      {checklist.length > 0 && (
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle>Getting Started Checklist</CardTitle>
-              <Badge variant="outline">
-                {completedItems} of {checklist.length} complete
-              </Badge>
-            </div>
-            <Progress value={progressPercentage} className="mt-2" />
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {checklist.slice(0, 3).map((item) => (
-                <div 
-                  key={item.id}
-                  className="flex items-center gap-3 p-3 rounded-lg hover:bg-muted/50 cursor-pointer transition-colors"
-                  onClick={() => handleChecklistToggle(item.id)}
-                >
-                  {item.completed ? (
-                    <CheckCircle className="h-5 w-5 text-green-600" />
-                  ) : (
-                    <Circle className="h-5 w-5 text-muted-foreground" />
-                  )}
-                  <item.icon className="h-5 w-5 text-muted-foreground" />
-                  <div className="flex-1">
-                    <div className="font-medium text-sm">{item.title}</div>
-                    <div className="text-xs text-muted-foreground">{item.description}</div>
-                  </div>
-                  <ArrowRight className="h-4 w-4 text-muted-foreground" />
-                </div>
-              ))}
-            </div>
-            
-            {checklist.length > 3 && (
-              <Button 
-                variant="ghost" 
-                className="w-full mt-4"
-                onClick={() => setActiveTab('checklist')}
-              >
-                View all {checklist.length} items
-              </Button>
-            )}
-          </CardContent>
-        </Card>
-      )}
-    </div>
-  );
-
-  const renderToolsTab = () => (
-    <div className="space-y-6">
-      <div className="text-center">
-        <h2 className="text-2xl font-bold mb-2">Your Family Office Tools</h2>
-        <p className="text-muted-foreground">
-          Everything you need to organize, plan, and protect your family's future
-        </p>
-      </div>
-
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {TOOL_CATEGORIES.map((category) => {
-          const tools = getCategoryTools(category.id);
-          const IconComponent = category.icon;
-          
-          return (
-            <Card key={category.id} className="h-full">
-              <CardHeader>
-                <div className="flex items-center gap-3">
-                  <IconComponent className={`h-6 w-6 ${category.color}`} />
-                  <CardTitle className="text-lg">{category.label}</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {tools.map((tool: any) => (
-                  <div 
-                    key={tool.key}
-                    className="flex items-center justify-between p-2 rounded hover:bg-muted/50 cursor-pointer transition-colors"
-                    onClick={() => navigate(tool.route)}
-                  >
-                    <div>
-                      <div className="font-medium text-sm">{tool.label}</div>
-                      <div className="text-xs text-muted-foreground">{tool.summary}</div>
-                    </div>
-                    <ArrowRight className="h-4 w-4 text-muted-foreground" />
-                  </div>
-                ))}
-                
-                {tools.length === 0 && (
-                  <div className="text-center py-4 text-muted-foreground">
-                    <Plus className="h-8 w-8 mx-auto mb-2" />
-                    <div className="text-sm">Tools coming soon</div>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
-    </div>
-  );
-
-  const renderChecklistTab = () => (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold">Getting Started</h2>
-          <p className="text-muted-foreground">
-            Complete these steps to set up your family workspace
-          </p>
-        </div>
-        <div className="text-right">
-          <div className="text-2xl font-bold text-primary">
-            {Math.round(progressPercentage)}%
-          </div>
-          <div className="text-sm text-muted-foreground">Complete</div>
-        </div>
-      </div>
-
-      <Progress value={progressPercentage} className="h-3" />
-
-      <div className="space-y-4">
-        {checklist.map((item) => (
-          <Card 
-            key={item.id} 
-            className={`cursor-pointer transition-all duration-200 ${
-              item.completed ? 'bg-green-50 border-green-200' : 'hover:shadow-md'
-            }`}
-            onClick={() => navigate(item.route)}
-          >
-            <CardContent className="p-4">
-              <div className="flex items-center gap-4">
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleChecklistToggle(item.id);
-                  }}
-                  className="flex-shrink-0"
-                >
-                  {item.completed ? (
-                    <CheckCircle className="h-6 w-6 text-green-600" />
-                  ) : (
-                    <Circle className="h-6 w-6 text-muted-foreground hover:text-primary" />
-                  )}
-                </button>
-                
-                <item.icon className="h-6 w-6 text-muted-foreground flex-shrink-0" />
-                
-                <div className="flex-1">
-                  <div className={`font-medium ${item.completed ? 'line-through text-muted-foreground' : ''}`}>
-                    {item.title}
-                  </div>
-                  <div className="text-sm text-muted-foreground mt-1">
-                    {item.description}
-                  </div>
-                  <Badge variant="outline" className="mt-2 text-xs">
-                    {item.category}
-                  </Badge>
-                </div>
-                
-                <ArrowRight className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    </div>
-  );
 
   return (
-    <div className="min-h-screen bg-background">
-      <SEOHead
-        title="Family Home - Your Family Office Dashboard"
-        description="Your secure family office workspace. Organize finances, plan for the future, and collaborate with trusted professionals—all in one place."
-        keywords={['family office', 'financial planning', 'family dashboard', 'wealth management']}
-      />
+    <>
+      <Helmet>
+        <title>{segmentTitle} Family Workspace</title>
+        <meta name="description" content={`Your private ${segmentTitle.toLowerCase()} family workspace for financial planning and organization`} />
+      </Helmet>
       
-      <div className="container mx-auto px-6 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Family Workspace</h1>
-          <p className="text-muted-foreground">
-            Your secure hub for organizing, planning, and protecting your family's future
-          </p>
+      <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
+        
+        {/* Welcome Bar */}
+        <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+          <div className="container mx-auto px-4 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+                    {session.segment === 'aspiring' ? <TrendingUp className="w-5 h-5 text-primary" /> : <Shield className="w-5 h-5 text-primary" />}
+                  </div>
+                  <div>
+                    <h1 className="text-xl font-semibold">{segmentTitle} Workspace</h1>
+                    <p className="text-sm text-muted-foreground">{session.email}</p>
+                  </div>
+                </div>
+                <Badge variant="secondary" className="ml-2">
+                  {segmentTitle}
+                </Badge>
+              </div>
+              
+              <div className="flex items-center gap-2">
+                <Button variant="outline" size="sm" onClick={handleDemoOpen}>
+                  <Play className="w-4 h-4 mr-2" />
+                  Open 60-sec demo
+                </Button>
+                <Button variant="ghost" size="sm" onClick={handleShare}>
+                  <Share className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="tools">Tools</TabsTrigger>
-            <TabsTrigger value="checklist" className="relative">
-              Checklist
-              {checklist.length > 0 && completedItems < checklist.length && (
-                <Badge variant="secondary" className="ml-2 h-5 w-5 p-0 text-xs">
-                  {checklist.length - completedItems}
-                </Badge>
-              )}
-            </TabsTrigger>
-          </TabsList>
+        <div className="container mx-auto px-4 py-8 space-y-8">
+          
+          {/* Quick Actions */}
+          <section>
+            <h2 className="text-lg font-semibold mb-4">Quick Actions</h2>
+            <div className="grid md:grid-cols-5 gap-4">
+              {segmentConfig.quickActions.map((action, index) => (
+                <Card 
+                  key={index}
+                  className="cursor-pointer hover:shadow-md transition-all duration-200 group"
+                  onClick={() => navigate(action.route)}
+                >
+                  <CardContent className="p-4">
+                    <div className="text-center">
+                      <div className="text-sm font-medium mb-2 group-hover:text-primary transition-colors">
+                        {action.label}
+                      </div>
+                      <ArrowRight className="w-4 h-4 mx-auto text-muted-foreground group-hover:text-primary transition-colors" />
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </section>
 
-          <TabsContent value="overview">
-            {renderOverviewTab()}
-          </TabsContent>
+          <Separator />
 
-          <TabsContent value="tools">
-            {renderToolsTab()}
-          </TabsContent>
+          {/* Tools Tabs */}
+          <section>
+            <Tabs defaultValue={segmentConfig.tabs[0].key} className="space-y-6">
+              <div className="flex items-center justify-between">
+                <h2 className="text-lg font-semibold">Your Tools</h2>
+                <TabsList className="grid grid-cols-4 md:grid-cols-6 lg:w-fit">
+                  {segmentConfig.tabs.map(tab => (
+                    <TabsTrigger key={tab.key} value={tab.key} className="text-xs">
+                      {tab.label}
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
+              </div>
 
-          <TabsContent value="checklist">
-            {renderChecklistTab()}
-          </TabsContent>
-        </Tabs>
+              {segmentConfig.tabs.map(tab => (
+                <TabsContent key={tab.key} value={tab.key} className="space-y-4">
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {tab.cards.map(card => {
+                      const toolDetails = getToolDetails(card.toolKey);
+                      const isLoggedIn = !!session; // Check if user has session
+                      const targetRoute = isLoggedIn ? toolDetails.route : (toolDetails.marketingRoute || toolDetails.route);
+                      
+                      return (
+                        <Card 
+                          key={card.toolKey}
+                          className="cursor-pointer hover:shadow-md transition-shadow group"
+                          onClick={() => navigate(targetRoute)}
+                        >
+                          <CardContent className="p-6">
+                            <div className="flex items-start justify-between">
+                              <div className="space-y-2 flex-1">
+                                <div className="flex items-center gap-2">
+                                  <h3 className="font-semibold group-hover:text-primary transition-colors">
+                                    {toolDetails.title}
+                                  </h3>
+                                  {!isLoggedIn && <ExternalLink className="w-3 h-3 text-muted-foreground" />}
+                                </div>
+                                <p className="text-sm text-muted-foreground line-clamp-2">
+                                  {toolDetails.description}
+                                </p>
+                                <Badge variant="secondary" className="text-xs">
+                                  {toolDetails.category}
+                                </Badge>
+                              </div>
+                              <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors ml-2" />
+                            </div>
+                          </CardContent>
+                        </Card>
+                      );
+                    })}
+                  </div>
+                </TabsContent>
+              ))}
+            </Tabs>
+          </section>
+
+          <Separator />
+
+          {/* Receipts Strip */}
+          <section>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold">Recent Proof Slips</h2>
+              <Button variant="outline" size="sm" onClick={() => navigate('/receipts')}>
+                <Receipt className="w-4 h-4 mr-2" />
+                Open Receipts
+              </Button>
+            </div>
+            
+            <div className="grid md:grid-cols-5 gap-3">
+              {MOCK_PROOF_SLIPS.slice(0, 5).map((slip) => {
+                const typeConfig = PROOF_SLIP_TYPES[slip.type];
+                return (
+                  <Card key={slip.id} className="hover:shadow-sm transition-shadow cursor-pointer">
+                    <CardContent className="p-4">
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <Badge variant="secondary" className={`text-xs ${typeConfig.color}`}>
+                            {typeConfig.label}
+                          </Badge>
+                          {slip.anchored && <CheckCircle className="w-3 h-3 text-green-600" />}
+                        </div>
+                        <p className="text-xs text-muted-foreground line-clamp-2">
+                          {slip.description}
+                        </p>
+                        <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                          <Clock3 className="w-3 h-3" />
+                          {formatTimestamp(slip.timestamp)}
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          </section>
+
+          {/* Trust Explainer Footer */}
+          <footer className="mt-12 pt-8 border-t">
+            <div className="text-center space-y-4">
+              <h3 className="font-semibold text-muted-foreground">Trust Rails</h3>
+              <div className="flex flex-wrap justify-center gap-6 text-sm text-muted-foreground">
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="w-4 h-4 text-green-600" />
+                  <span>Smart Checks</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Receipt className="w-4 h-4 text-blue-600" />
+                  <span>Proof Slips</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Shield className="w-4 h-4 text-purple-600" />
+                  <span>Secure Vault</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Clock className="w-4 h-4 text-orange-600" />
+                  <span>Time-Stamp</span>
+                </div>
+              </div>
+              <p className="text-xs text-muted-foreground max-w-2xl mx-auto">
+                Every action in your workspace generates cryptographic proof. Keep-Safe storage with Legal Hold capabilities ensures your family's records are tamper-evident and court-admissible.
+              </p>
+            </div>
+          </footer>
+        </div>
       </div>
-    </div>
+    </>
   );
-};
+}
