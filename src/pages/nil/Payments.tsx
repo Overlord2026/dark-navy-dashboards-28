@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { DollarSign, Lock, Unlock, Receipt, CheckCircle } from 'lucide-react';
 import { hold, release, getEscrowAccounts, EscrowAccount } from '@/features/nil/payments/api';
 import { getOffers } from '@/features/nil/offers/store';
-import { acceptNofM } from '@/features/anchor/simple-providers';
+import { acceptNofM } from '@/features/anchor/providers';
 import { toast } from 'sonner';
 
 export default function PaymentsPage() {
@@ -203,9 +203,18 @@ export default function PaymentsPage() {
                     )}
 
                     {account.status === 'released' && (
-                      <div className="flex items-center gap-2 text-green-600 text-sm">
-                        <CheckCircle className="h-4 w-4" />
-                        Funds distributed and Settlement-RDS created
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2 text-green-600 text-sm">
+                          <CheckCircle className="h-4 w-4" />
+                          Funds distributed and Settlement-RDS created
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Badge variant="default" className="bg-green-100 text-green-800 border-green-200">
+                            <CheckCircle className="h-3 w-3 mr-1" />
+                            Included ✓
+                          </Badge>
+                          <span className="text-xs text-muted-foreground">Anchor verified</span>
+                        </div>
                       </div>
                     )}
                   </div>
