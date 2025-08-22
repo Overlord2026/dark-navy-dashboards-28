@@ -49,7 +49,7 @@ const ViralShareButton: React.FC<ViralShareButtonProps> = ({
   const handleLinkedInShare = () => {
     // Track viral share analytics
     if (userProfile) {
-      analytics.trackViralShare('linkedin', currentPersona, userProfile.id);
+      analytics.trackViralShare('linkedin', { persona: currentPersona, userId: userProfile.id });
       
       // Track A/B test conversion
       const variant = abTesting.getVariant('viral_share_button_text', userProfile.id);

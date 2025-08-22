@@ -33,8 +33,8 @@ export const analytics = {
     analytics.trackEvent('persona_claim', { persona, ...properties });
   },
 
-  trackOnboardingStep: (step: string, persona: string, segment: string, properties?: Record<string, any>) => {
-    analytics.trackEvent('onboarding_step', { step, persona, segment, ...properties });
+  trackOnboardingStep: (step: string, persona?: string, segment?: string, complete?: boolean, properties?: Record<string, any>) => {
+    analytics.trackEvent('onboarding_step', { step, persona, segment, complete, ...properties });
   },
 
   trackOnboardingStart: (persona: string, properties?: Record<string, any>) => {
@@ -49,16 +49,17 @@ export const analytics = {
     analytics.trackEvent('conversion', { type, ...properties });
   },
 
-  trackSecurityEvent: (event: string, severity: string, properties?: Record<string, any>) => {
+  trackSecurityEvent: (event: string, severity?: string, properties?: Record<string, any>) => {
     analytics.trackEvent('security_event', { event, severity, ...properties });
   },
 
-  trackError: (error: string, properties?: Record<string, any>) => {
-    analytics.trackEvent('error', { error, ...properties });
+  trackError: (error: string | Error, properties?: Record<string, any>) => {
+    const errorMessage = error instanceof Error ? error.message : error;
+    analytics.trackEvent('error', { error: errorMessage, ...properties });
   },
 
-  trackPerformance: (metric: string, properties?: Record<string, any>) => {
-    analytics.trackEvent('performance', { metric, ...properties });
+  trackPerformance: (metric: string, value?: number, properties?: Record<string, any>) => {
+    analytics.trackEvent('performance', { metric, value, ...properties });
   },
 
   trackFAQUsage: (question: string, properties?: Record<string, any>) => {

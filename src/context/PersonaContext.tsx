@@ -34,7 +34,7 @@ export const PersonaProvider: React.FC<PersonaProviderProps> = ({ children }) =>
       setCurrentPersona(persona);
 
       // Track persona claim for analytics
-      analytics.trackPersonaClaim(persona, userProfile.id);
+      analytics.trackPersonaClaim(persona, { userId: userProfile.id });
 
       // Check localStorage for welcome states
       const modalKey = `fom_welcome_modal_seen_${userProfile.id}`;
@@ -64,7 +64,7 @@ export const PersonaProvider: React.FC<PersonaProviderProps> = ({ children }) =>
       setHasSeenWelcomeModal(true);
       
       // Track onboarding completion
-      analytics.trackOnboardingStep('welcome_modal_completed', currentPersona, userProfile.id, true);
+      analytics.trackOnboardingStep('welcome_modal_completed', currentPersona, undefined, true, { userId: userProfile.id });
     }
   };
 
