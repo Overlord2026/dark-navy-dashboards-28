@@ -14,12 +14,13 @@ export interface NILOffer {
 
 const offers: NILOffer[] = [];
 
-export function createOffer({ brand, category, start, end, channels }: {
+export function createOffer({ brand, category, startDate, endDate, channels, amount }: {
   brand: string;
   category: string;
-  start: string;
-  end: string;
+  startDate: string;
+  endDate: string;
   channels: string[];
+  amount?: number;
 }) {
   const offerId = `offer_${Date.now()}`;
   const offer: NILOffer = {
@@ -28,15 +29,15 @@ export function createOffer({ brand, category, start, end, channels }: {
     offerLock: `offer:${Math.random().toString(16).slice(2)}`,
     brand,
     category,
-    amount: 10000, // Default amount
-    start,
-    end,
-    startDate: start,
-    endDate: end,
+    amount: amount || 10000, // Default amount
+    start: startDate,
+    end: endDate,
+    startDate,
+    endDate,
     channels
   };
   offers.push(offer);
-  return offer;
+  return { offerId, offerLock: offer.offerLock };
 }
 
 export function getOffers(): NILOffer[] {

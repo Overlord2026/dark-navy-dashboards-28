@@ -43,12 +43,12 @@ export default function ContractPage() {
   const [signatureStatus, setSignatureStatus] = React.useState<Record<string, boolean>>({});
   const [isPublished, setIsPublished] = React.useState(false);
 
-  const handleRunChecks = () => {
+  const handleRunChecks = async () => {
     try {
-      const checks = runChecks(contractId);
+      const checks = await runChecks(contractId);
       setPolicyCheck(checks);
       
-      const validation = validateContract(contractId);
+      const validation = await validateContract(contractId);
       setContractValidation(validation);
 
       toast.success('Policy checks completed', {

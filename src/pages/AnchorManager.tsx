@@ -461,7 +461,7 @@ export default function AnchorManager() {
                       <div>
                         <div className="font-medium">{providers[anchor.provider_id]?.name || anchor.provider_id}</div>
                         <div className="text-xs text-muted-foreground">
-                          Chain: {anchor.chain_id}
+                           Provider: {anchor.provider_id}
                         </div>
                       </div>
                     </div>
@@ -470,7 +470,7 @@ export default function AnchorManager() {
                         {anchor.tx_ref.substring(0, 20)}...
                       </div>
                       <div className="text-xs text-muted-foreground">
-                        Block: {anchor.block_height}
+                        Status: {anchor.status}
                       </div>
                     </div>
                   </div>
