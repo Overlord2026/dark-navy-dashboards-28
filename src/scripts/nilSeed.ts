@@ -60,14 +60,14 @@ export async function seedNilDemo() {
   const attorneyInvite = invite('attorney', 'lisa.legal@example.com');
   
   // Auto-accept for demo
-  accept(advisorInvite);
-  accept(cpaInvite);
-  accept(attorneyInvite);
+  accept(advisorInvite.pendingId);
+  accept(cpaInvite.pendingId);
+  accept(attorneyInvite.pendingId);
   console.log('✅ Professional team assembled');
   
   // 6. Issue consent for team collaboration
   console.log('🔐 Issuing consent for team collaboration');
-  const consent = issueConsent({
+  const consent = await issueConsent({
     roles: ['advisor', 'cpa', 'attorney'],
     resources: ['contracts', 'financial_data', 'brand_agreements'],
     ttlDays: 90,

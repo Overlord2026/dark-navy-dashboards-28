@@ -43,7 +43,7 @@ export default function MarketplacePage() {
     }
 
     try {
-      const pendingId = invite(inviteForm.role, inviteForm.email);
+      const { pendingId } = invite(inviteForm.role, inviteForm.email);
       setInvites(getInvites());
       setShowInviteForm(false);
       
@@ -75,14 +75,14 @@ export default function MarketplacePage() {
     }
   };
 
-  const handleIssueConsent = () => {
+  const handleIssueConsent = async () => {
     if (consentForm.roles.length === 0 || consentForm.resources.length === 0) {
       toast.error('Please select at least one role and resource');
       return;
     }
 
     try {
-      const consent = issueConsent(consentForm);
+      const consent = await issueConsent(consentForm);
       setActiveConsents(getActiveConsents());
       setShowConsentForm(false);
       

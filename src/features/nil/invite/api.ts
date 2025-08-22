@@ -1,54 +1,61 @@
+import { ConsentRDS } from '@/features/receipts/types';
+import { recordReceipt } from '@/features/receipts/record';
+import { anchorBatch } from '@/features/anchor/simple-providers';
+
 export interface PendingInvite {
   id: string;
   role: 'advisor' | 'cpa' | 'attorney';
   email: string;
+  accepted: boolean;
   status: 'pending' | 'accepted' | 'declined';
   invitedAt: string;
   acceptedAt?: string;
 }
 
-const invites: PendingInvite[] = [];
+const pendings: PendingInvite[] = [];
 
-export function invite(role: 'advisor' | 'cpa' | 'attorney', email: string): string {
-  const pendingId = `invite_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+export function invite(role: 'advisor' | 'cpa' | 'attorney', email: string): { pendingId: string } {
+  const id = `pend_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
   
   const invite: PendingInvite = {
-    id: pendingId,
+    id,
     role,
     email,
+    accepted: false,
     status: 'pending',
     invitedAt: new Date().toISOString()
   };
 
-  invites.push(invite);
+  pendings.push(invite);
   
-  console.info('invite.sent', { pendingId, role, email });
-  
-  return pendingId;
+  console.info('nil.invite.sent', { pendingId: id, role, email });
+  return { pendingId: id };
 }
 
-export function accept(pendingId: string): boolean {
-  const invite = invites.find(i => i.id === pendingId);
-  if (!invite) {
-    throw new Error('Invite not found');
+export function accept(pendingId: string): { accepted: boolean; invite?: PendingInvite } {
+  const p = pendings.find(x => x.id === pendingId);
+  if (p && !p.accepted) {
+    p.accepted = true;
+    p.status = 'accepted';
+    p.acceptedAt = new Date().toISOString();
+    console.info('nil.invite.accepted', { id: pendingId, role: p.role, email: p.email });
+    return { accepted: true, invite: p };
   }
-
-  if (invite.status !== 'pending') {
-    throw new Error('Invite already processed');
-  }
-
-  invite.status = 'accepted';
-  invite.acceptedAt = new Date().toISOString();
-  
-  console.info('invite.accepted', { pendingId, role: invite.role });
-  
-  return true;
+  return { accepted: false };
 }
 
-export function getInvites(): PendingInvite[] {
-  return [...invites];
+export function list(): PendingInvite[] {
+  return [...pendings];
 }
 
-export function getPendingInvites(): PendingInvite[] {
-  return invites.filter(i => i.status === 'pending');
+export function getAcceptedTeam(): PendingInvite[] {
+  return pendings.filter(p => p.accepted);
 }
+
+export function getActivePendingInvites(): PendingInvite[] {
+  return pendings.filter(p => !p.accepted);
+}
+
+// For backwards compatibility
+export const getInvites = list;
+export const getPendingInvites = getActivePendingInvites;
