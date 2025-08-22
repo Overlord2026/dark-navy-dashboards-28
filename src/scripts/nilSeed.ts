@@ -28,8 +28,7 @@ export async function seedNilDemo() {
     startDate: '2025-01-01',
     endDate: '2025-06-30',
     channels: ['IG', 'TikTok'],
-    amount: 10000,
-    exclusivityType: 'non_exclusive'
+    amount: 10000
   });
   
   // 3. Complete education modules (2 out of 5 for demo)
@@ -92,7 +91,7 @@ export async function seedNilDemo() {
     reasons: ['POLICY_CHECKS_PASSED', 'EDU_FRESH', 'DISCLOSURE_BOUND', 'NO_CONFLICT'],
     result: 'approve',
     asset_id: 'contract_aurora_001',
-    anchor_ref: await anchorBatch(hash({ contract_id: 'contract_aurora_001' })),
+    anchor_ref: null, // Will be set after anchoring
     ts: new Date().toISOString()
   };
   
