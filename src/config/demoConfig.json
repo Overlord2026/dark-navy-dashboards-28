@@ -1,0 +1,638 @@
+[
+  {
+    "id": "families-aspiring",
+    "title": "Aspiring Families Demo",
+    "persona": "families",
+    "segment": "aspiring",
+    "description": "See how aspiring families build wealth and protect their future",
+    "shareMessage": "Building wealth the right way—save, invest, protect—with AI you can trust and receipts you can prove. Check this out: {url}",
+    "steps": [
+      {
+        "title": "Welcome to Your Family Workspace",
+        "content": "One private workspace to organize everything—from saving goals to investment accounts to estate documents.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Smart Goal Setting",
+        "content": "Set savings targets for emergencies, first home, kids' education. Get personalized recommendations that evolve with your income.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Automated Investment Strategy", 
+        "content": "Simple portfolio allocation that grows with you. Dollar-cost averaging into index funds, with tax-loss harvesting built in.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Insurance & Protection Planning",
+        "content": "Right-size your life insurance, disability coverage, and emergency fund. Protect what you're building.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Document Organization",
+        "content": "Store important docs securely—wills, insurance policies, tax returns. Share access with trusted family members.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Ready to Start Building?",
+        "content": "Join thousands of aspiring families who are building wealth the smart way—with transparency and proof every step.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      }
+    ]
+  },
+  {
+    "id": "families-retirees",
+    "title": "Retirees Demo",
+    "persona": "families", 
+    "segment": "retirees",
+    "description": "Retire with confidence—income that lasts, taxes under control",
+    "shareMessage": "This organizes income, taxes, estate, investments and healthspan in one place—with private proof. Worth a look: {url}",
+    "steps": [
+      {
+        "title": "Retirement Income Orchestration",
+        "content": "Coordinate Social Security, pensions, 401k withdrawals, and annuities for optimal tax-efficient income streams.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "RMD Strategy & Timing",
+        "content": "Automate Required Minimum Distributions with tax optimization. Convert to Roth when it makes sense.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Healthcare Cost Planning",
+        "content": "Plan for Medicare, long-term care, and health savings. Coordinate with your health team securely.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Estate Planning Made Simple",
+        "content": "Ensure your legacy is protected. Coordinate trusts, beneficiaries, and titling with your attorney and family.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Family Coordination Hub",
+        "content": "Share financial information with adult children and advisors. Control access and maintain privacy.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Stay Retired Confidently",
+        "content": "Monitor your plan, adjust as needed, and enjoy retirement knowing everything is organized and secure.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      }
+    ]
+  },
+  {
+    "id": "advisors",
+    "title": "Financial Advisors Demo",
+    "persona": "advisors",
+    "description": "Run your practice end-to-end—lead to lifelong client—in one place",
+    "shareMessage": "A full-stack platform for advisors—CRM, planning tools, compliance, and client portals—finally in one place: {url}",
+    "steps": [
+      {
+        "title": "Unified Client Management",
+        "content": "One dashboard for all clients—from prospects to lifelong relationships. Track meetings, tasks, and goals.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Advanced Planning Tools",
+        "content": "Monte Carlo simulations, tax optimization, estate planning calculators. Professional-grade tools at your fingertips.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Client Portals & Collaboration",
+        "content": "Secure client portals for document sharing, plan reviews, and goal tracking. White-label with your branding.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Compliance & Documentation",
+        "content": "Built-in compliance tracking, automated documentation, and audit trails. Stay compliant effortlessly.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Team Coordination",
+        "content": "Collaborate with CPAs, attorneys, and insurance professionals. Centralized communication and task management.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Scale Your Practice",
+        "content": "Streamline workflows, automate routine tasks, and focus on what matters—building lasting client relationships.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      }
+    ]
+  },
+  {
+    "id": "cpas", 
+    "title": "CPAs Demo",
+    "persona": "cpas",
+    "description": "Engagements in one place—requests, deliverables, signatures, retention",
+    "shareMessage": "Tax season just got easier—client intake, document management, e-signatures, and retention—all organized: {url}",
+    "steps": [
+      {
+        "title": "Streamlined Client Intake",
+        "content": "Digital questionnaires, document requests, and organizers. Clients upload documents securely before appointments.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Document Management Hub",
+        "content": "Organize tax returns, supporting documents, and client communications. Everything tagged and searchable.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "E-Signature & Approvals",
+        "content": "Send returns for electronic signature with built-in approval workflows. Track status in real-time.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Client Communication Portal",
+        "content": "Secure messaging, file sharing, and status updates. Reduce phone calls and emails during busy season.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Year-Round Engagement",
+        "content": "Quarterly check-ins, estimated payments, and tax planning. Keep clients engaged beyond tax season.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Practice Growth Tools",
+        "content": "Client retention dashboards, referral tracking, and automated follow-ups. Grow your practice systematically.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      }
+    ]
+  },
+  {
+    "id": "attorneys",
+    "title": "Estate Attorneys Demo", 
+    "persona": "attorneys",
+    "description": "Matters, authority, signatures, and the evidence trail—defensible and easy to share",
+    "shareMessage": "Estate planning made efficient—client intake, document drafting, execution, and the complete evidence trail: {url}",
+    "steps": [
+      {
+        "title": "Matter Management System",
+        "content": "Track every estate planning matter from initial consultation to document execution. Organized case files and timelines.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Client Data Collection",
+        "content": "Digital intake forms for assets, beneficiaries, and wishes. Secure storage with family access controls.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Document Drafting & Review",
+        "content": "Template libraries for wills, trusts, and powers of attorney. Version control and client review workflows.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Execution & Witnesses",
+        "content": "Coordinate document signing, notarization, and witness requirements. Complete execution checklists.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Trust Administration",
+        "content": "Ongoing trust management, beneficiary communications, and distribution tracking. Fiduciary compliance built-in.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Evidence & Audit Trail",
+        "content": "Complete documentation of client wishes, capacity, and execution. Defensible records for any challenge.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      }
+    ]
+  },
+  {
+    "id": "insurance-life-annuity",
+    "title": "Life & Annuity Insurance Demo",
+    "persona": "insurance",
+    "segment": "life-annuity", 
+    "description": "Quotes, replacements, enrollments and renewals—with receipts—in one place",
+    "shareMessage": "Life insurance and annuity sales made simple—needs analysis, quotes, applications, and compliance—streamlined: {url}",
+    "steps": [
+      {
+        "title": "Needs Analysis & Suitability",
+        "content": "Comprehensive life insurance and annuity suitability analysis. Document client needs and risk tolerance.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Multi-Carrier Quoting",
+        "content": "Compare rates across multiple carriers instantly. Life, whole life, universal life, and annuity quotes.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Application Management",
+        "content": "Digital applications, medical exam scheduling, and underwriting tracking. Monitor progress in real-time.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Compliance Documentation",
+        "content": "Automated suitability documentation, disclosure tracking, and regulatory compliance. Audit-ready records.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Policy Administration",
+        "content": "Track policy performance, premium payments, and beneficiary changes. Automated renewal reminders.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Client Communication Hub",
+        "content": "Secure client portals for policy details, performance reports, and service requests. White-label experience.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      }
+    ]
+  },
+  {
+    "id": "insurance-medicare-ltc",
+    "title": "Medicare & LTC Insurance Demo",
+    "persona": "insurance",
+    "segment": "medicare-ltc",
+    "description": "Medicare/LTC proposals and enrollments—compliant by design",
+    "shareMessage": "Medicare and long-term care insurance made simple—education, enrollment, and ongoing support—compliant by design: {url}",
+    "steps": [
+      {
+        "title": "Medicare Education Center",
+        "content": "Interactive Medicare education tools. Help clients understand Parts A, B, C, D and supplement options.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Plan Comparison Tools",
+        "content": "Compare Medicare Advantage, Supplement, and Part D plans. Filter by doctors, prescriptions, and costs.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "LTC Needs Assessment",
+        "content": "Long-term care planning tools and hybrid life/LTC product comparisons. Family care coordination features.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Enrollment Management",
+        "content": "Track enrollment periods, application status, and effective dates. Automated reminders for annual reviews.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Compliance & Regulations",
+        "content": "Built-in compliance with CMS regulations, state requirements, and carrier guidelines. Automated documentation.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Ongoing Client Support",
+        "content": "Annual review scheduling, plan changes, and claims assistance. Lifetime client relationship management.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      }
+    ]
+  },
+  {
+    "id": "healthcare-providers",
+    "title": "Healthcare Providers Demo",
+    "persona": "healthcare",
+    "segment": "providers",
+    "description": "One secure window to the family's shared essentials—no extra portals",
+    "shareMessage": "Finally—secure access to patient financial wellness and family coordination—no extra portals needed: {url}",
+    "steps": [
+      {
+        "title": "Integrated Patient Records",
+        "content": "Secure access to patient's financial wellness data, insurance information, and family health coordination.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Family Health Coordination",
+        "content": "Coordinate care across multiple family members and providers. Shared health records and communication.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Insurance & Prior Auth",
+        "content": "Streamlined insurance verification and prior authorization workflows. Reduce administrative burden.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Preventive Care Planning",
+        "content": "Coordinate preventive care schedules, health screenings, and wellness programs across the family.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Secure Communication",
+        "content": "HIPAA-compliant messaging with patients and family members. Care plan updates and results sharing.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Integrated Wellness Platform",
+        "content": "Connect medical care with financial wellness, nutrition, and lifestyle planning for holistic patient care.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      }
+    ]
+  },
+  {
+    "id": "healthcare-influencers",
+    "title": "Healthcare Coaches Demo",
+    "persona": "healthcare",
+    "segment": "influencers",
+    "description": "Turn content into protocols & programs—supervise clients without duct-taping tools",
+    "shareMessage": "Transform your health expertise into scalable programs—client management, protocols, and progress tracking—all integrated: {url}",
+    "steps": [
+      {
+        "title": "Program Development Hub",
+        "content": "Transform your content into structured health and wellness programs. Template libraries and protocol builders.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Client Onboarding System",
+        "content": "Digital intake forms, health assessments, and goal setting. Automated program assignment based on needs.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Progress Tracking Dashboard",
+        "content": "Monitor client progress across multiple programs. Biometric tracking, habit formation, and milestone celebrations.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Communication & Support",
+        "content": "Group coaching calls, one-on-one messaging, and community forums. Keep clients engaged and accountable.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Content Delivery Platform",
+        "content": "Video courses, meal plans, workout routines, and educational content. Organized by program and progression level.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Business Analytics",
+        "content": "Track client outcomes, program effectiveness, and business metrics. Scale your impact with data-driven insights.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      }
+    ]
+  },
+  {
+    "id": "realtor",
+    "title": "Realtors Demo",
+    "persona": "realtor",
+    "description": "Listings, offers, closings—plus client financial docs—in one place",
+    "shareMessage": "Real estate transactions made seamless—from listing to closing, with client financial coordination built in: {url}",
+    "steps": [
+      {
+        "title": "Property Management Hub",
+        "content": "Manage listings, track showings, and coordinate with buyers and sellers. MLS integration and marketing tools.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Client Financial Coordination",
+        "content": "Help clients organize financial documents for pre-approval, closing, and investment analysis. Secure document sharing.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Transaction Management",
+        "content": "Track offers, counteroffers, inspections, and closing timelines. Automated task management and deadline tracking.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Investment Analysis Tools",
+        "content": "Cap rate calculators, cash flow analysis, and market comparisons. Help clients make informed investment decisions.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Professional Network",
+        "content": "Connect with lenders, inspectors, contractors, and attorneys. Streamlined referral management and coordination.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Long-term Client Relationships",
+        "content": "Property portfolio tracking, market updates, and investment opportunities. Turn transactions into lifelong relationships.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      }
+    ]
+  },
+  {
+    "id": "nil-athlete",
+    "title": "NIL Athletes Demo",
+    "persona": "nil-athlete",
+    "description": "Training → Disclosures → Offers → Payments—done right and kept on record",
+    "shareMessage": "NIL made simple for athletes—compliance, earnings tracking, and brand building—all in one secure platform: {url}",
+    "steps": [
+      {
+        "title": "NIL Education & Compliance",
+        "content": "Learn NIL rules, disclosure requirements, and compliance guidelines. Stay eligible while maximizing opportunities.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Opportunity Management",
+        "content": "Track NIL offers, evaluate deals, and manage contracts. Automated compliance checking and approval workflows.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Brand Development Tools",
+        "content": "Build your personal brand with content creation tools, social media management, and audience analytics.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Financial Tracking",
+        "content": "Track NIL earnings, expenses, and tax obligations. Automated reporting and financial planning tools.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Team Coordination",
+        "content": "Work with parents, coaches, and advisors. Shared access to opportunities and approval workflows.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Long-term Planning",
+        "content": "Plan for post-athletic career, investment strategies, and wealth building. Professional development resources.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      }
+    ]
+  },
+  {
+    "id": "nil-school",
+    "title": "NIL Schools Demo",
+    "persona": "nil-school",
+    "description": "Publish rules once; verify automatically—fewer disputes, faster launches",
+    "shareMessage": "NIL compliance for schools made efficient—automated rule checking, approval workflows, and complete audit trails: {url}",
+    "steps": [
+      {
+        "title": "NIL Rule Management",
+        "content": "Create and publish NIL policies, approval processes, and compliance guidelines. Centralized rule management.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Automated Compliance Checking",
+        "content": "Automatically review NIL deals for compliance violations, conflicts of interest, and policy adherence.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Approval Workflows",
+        "content": "Streamlined approval processes for NIL activities. Multi-level review with automated routing and notifications.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Student-Athlete Portal",
+        "content": "Self-service portal for athletes to submit deals, check status, and access educational resources.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Reporting & Analytics",
+        "content": "Comprehensive reporting on NIL activity, compliance metrics, and program effectiveness. NCAA reporting tools.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Audit Trail & Documentation",
+        "content": "Complete audit trails for all NIL activities. Defensible documentation for NCAA compliance and investigations.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      }
+    ]
+  },
+  {
+    "id": "solutions-annuities",
+    "title": "Annuities Solutions Demo",
+    "category": "solutions",
+    "description": "Clear annuity education, calculators, proposal review with suitability checks",
+    "shareMessage": "Clear annuity education, calculators, proposal review with suitability checks, and a fiduciary shortlist—finally in one place: {url}",
+    "steps": [
+      {
+        "title": "Annuity Education Center",
+        "content": "Comprehensive annuity education in plain English. Compare immediate, deferred, fixed, and variable annuities.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Income Planning Calculators",
+        "content": "Calculate retirement income needs, annuity payouts, and inflation protection strategies. Interactive modeling tools.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Product Comparison Tools",
+        "content": "Compare annuity products side-by-side. Fee analysis, surrender charges, and benefit riders comparison.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Proposal Review System",
+        "content": "Upload annuity proposals for automated analysis. Suitability checking and fee transparency reports.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Fiduciary Provider Network",
+        "content": "Connect with fiduciary-minded annuity providers and advisors. Vetted professionals with transparent fee structures.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Implementation Support",
+        "content": "Guided implementation process from selection to purchase. Ongoing monitoring and review scheduling.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      }
+    ]
+  },
+  {
+    "id": "investments-private-markets",
+    "title": "Private Markets Demo",
+    "category": "solutions",
+    "description": "Curated private investments—once for the ultra-wealthy—now within reach",
+    "shareMessage": "Curated private investments—once for the ultra-wealthy—now within reach, with built-in checks. Explore: {url}",
+    "steps": [
+      {
+        "title": "Private Market Access",
+        "content": "Access private equity, real estate, hedge funds, and alternative investments previously available only to institutions.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Due Diligence Platform",
+        "content": "Professional-grade due diligence on all private market opportunities. Risk analysis and manager evaluation.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Portfolio Construction",
+        "content": "Build diversified alternative investment portfolios. Asset allocation guidance and risk management tools.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Investment Monitoring",
+        "content": "Track private investment performance, capital calls, and distributions. Comprehensive reporting and analytics.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Tax Optimization",
+        "content": "Coordinate private investments with tax strategies. K-1 management and tax-loss harvesting opportunities.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      },
+      {
+        "title": "Liquidity Management",
+        "content": "Plan for capital calls and illiquid investments. Coordination with traditional portfolios and cash management.",
+        "image": "/placeholder.svg",
+        "duration": 10000
+      }
+    ]
+  }
+]

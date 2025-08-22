@@ -1,99 +1,113 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { useToast } from '@/hooks/use-toast';
-import { Share2, Copy, Twitter, Linkedin, Mail } from 'lucide-react';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { Share2, Copy, Check } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 
 interface ShareButtonProps {
   text: string;
-  url?: string;
+  url: string;
+  title?: string;
+  onShare?: () => void;
   className?: string;
-  variant?: 'default' | 'outline' | 'ghost' | 'link';
+  variant?: 'default' | 'outline' | 'ghost' | 'secondary';
   size?: 'default' | 'sm' | 'lg';
 }
 
 export const ShareButton: React.FC<ShareButtonProps> = ({
   text,
-  url = typeof window !== 'undefined' ? window.location.href : '',
+  url,
+  title = 'Check this out',
+  onShare,
   className = '',
-  variant = 'ghost',
-  size = 'sm'
+  variant = 'outline',
+  size = 'default'
 }) => {
-  const { toast } = useToast();
+  const [isOpen, setIsOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
 
-  const shareData = {
-    title: 'Family Office Platform',
-    text,
-    url
-  };
+  const handleShare = async () => {
+    onShare?.();
 
-  const handleWebShare = async () => {
-    // Analytics
-    if (typeof window !== 'undefined' && (window as any).analytics) {
-      (window as any).analytics.track('share.click', { method: 'web_share', url });
-    }
+    // Try Web Share API first (mobile)
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title,
+          text,
+          url
+        });
 
-    try {
-      if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
-        await navigator.share(shareData);
-        
-        // Analytics success
+        // Analytics for successful native share
         if (typeof window !== 'undefined' && (window as any).analytics) {
-          (window as any).analytics.track('share.success', { method: 'web_share', url });
+          (window as any).analytics.track('share.success', { 
+            method: 'native',
+            url,
+            text
+          });
         }
-        
-        return true;
+        return;
+      } catch (error) {
+        // User cancelled or error occurred, fall back to copy
+        console.log('Native share cancelled or failed:', error);
       }
-      return false;
-    } catch (error) {
-      console.error('Web Share failed:', error);
-      return false;
-    }
-  };
-
-  const handleCopyLink = async () => {
-    // Analytics
-    if (typeof window !== 'undefined' && (window as any).analytics) {
-      (window as any).analytics.track('share.click', { method: 'copy_link', url });
     }
 
+    // Fallback: copy to clipboard
     try {
-      await navigator.clipboard.writeText(url);
-      toast({
-        title: 'Link copied!',
-        description: 'The link has been copied to your clipboard.',
-      });
-      
-      // Analytics success
+      await navigator.clipboard.writeText(`${text} ${url}`);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+
+      // Analytics for successful copy
       if (typeof window !== 'undefined' && (window as any).analytics) {
-        (window as any).analytics.track('share.success', { method: 'copy_link', url });
+        (window as any).analytics.track('share.success', { 
+          method: 'copy',
+          url,
+          text
+        });
       }
     } catch (error) {
-      console.error('Copy failed:', error);
-      toast({
-        title: 'Copy failed',
-        description: 'Unable to copy link to clipboard.',
-        variant: 'destructive'
-      });
+      // Final fallback: show share modal
+      console.log('Clipboard API failed:', error);
+      setIsOpen(true);
     }
   };
 
-  const handleSocialShare = (platform: string) => {
-    // Analytics
-    if (typeof window !== 'undefined' && (window as any).analytics) {
-      (window as any).analytics.track('share.click', { method: platform, url });
+  const handleCopyFromModal = async (textToCopy: string) => {
+    try {
+      await navigator.clipboard.writeText(textToCopy);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+      
+      // Analytics
+      if (typeof window !== 'undefined' && (window as any).analytics) {
+        (window as any).analytics.track('share.success', { 
+          method: 'modal_copy',
+          url,
+          text
+        });
+      }
+    } catch (error) {
+      // Manual selection fallback
+      const input = document.createElement('input');
+      input.value = textToCopy;
+      document.body.appendChild(input);
+      input.select();
+      document.execCommand('copy');
+      document.body.removeChild(input);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
     }
+  };
 
+  const shareToSocial = (platform: string) => {
     const encodedText = encodeURIComponent(text);
     const encodedUrl = encodeURIComponent(url);
     
     let shareUrl = '';
-    
     switch (platform) {
       case 'twitter':
         shareUrl = `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`;
@@ -102,73 +116,141 @@ export const ShareButton: React.FC<ShareButtonProps> = ({
         shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`;
         break;
       case 'email':
-        shareUrl = `mailto:?subject=${encodeURIComponent('Family Office Platform')}&body=${encodedText}%20${encodedUrl}`;
+        shareUrl = `mailto:?subject=${encodeURIComponent(title)}&body=${encodedText}%20${encodedUrl}`;
         break;
     }
-    
+
     if (shareUrl) {
-      window.open(shareUrl, '_blank', 'noopener,noreferrer');
+      window.open(shareUrl, '_blank', 'width=600,height=400');
       
-      // Analytics success
+      // Analytics
       if (typeof window !== 'undefined' && (window as any).analytics) {
-        (window as any).analytics.track('share.success', { method: platform, url });
+        (window as any).analytics.track('share.click', { 
+          platform,
+          url,
+          text
+        });
       }
     }
-  };
-
-  const handleShare = async () => {
-    // Try Web Share API first on mobile
-    if (typeof window !== 'undefined' && window.innerWidth <= 768) {
-      const webShareSuccess = await handleWebShare();
-      if (webShareSuccess) return;
-    }
     
-    // Fallback to copy link
-    await handleCopyLink();
+    setIsOpen(false);
   };
 
-  // Mobile: simple button with Web Share fallback to copy
-  if (typeof window !== 'undefined' && window.innerWidth <= 768) {
-    return (
-      <Button
+  return (
+    <>
+      <Button 
         variant={variant}
         size={size}
         onClick={handleShare}
         className={className}
+        aria-label="Share this content"
       >
-        <Share2 className="mr-2 h-4 w-4" />
-        Share
+        {copied ? (
+          <>
+            <Check className="mr-2 h-4 w-4" />
+            Link copied!
+          </>
+        ) : (
+          <>
+            <Share2 className="mr-2 h-4 w-4" />
+            Share
+          </>
+        )}
       </Button>
-    );
-  }
 
-  // Desktop: dropdown menu with social options
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant={variant} size={size} className={className}>
-          <Share2 className="mr-2 h-4 w-4" />
-          Share
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-48">
-        <DropdownMenuItem onClick={() => handleSocialShare('twitter')}>
-          <Twitter className="mr-2 h-4 w-4" />
-          Share on Twitter
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => handleSocialShare('linkedin')}>
-          <Linkedin className="mr-2 h-4 w-4" />
-          Share on LinkedIn
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => handleSocialShare('email')}>
-          <Mail className="mr-2 h-4 w-4" />
-          Share via Email
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={handleCopyLink}>
-          <Copy className="mr-2 h-4 w-4" />
-          Copy Link
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+      {/* Desktop Share Modal */}
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Share this content</DialogTitle>
+          </DialogHeader>
+          
+          <div className="space-y-4">
+            {/* Social Share Buttons */}
+            <div className="grid grid-cols-3 gap-2">
+              <Button
+                variant="outline"
+                onClick={() => shareToSocial('twitter')}
+                className="w-full"
+              >
+                Twitter
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => shareToSocial('linkedin')}
+                className="w-full"
+              >
+                LinkedIn
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => shareToSocial('email')}
+                className="w-full"
+              >
+                Email
+              </Button>
+            </div>
+
+            {/* Copy Message */}
+            <div className="space-y-2">
+              <Label htmlFor="share-message">Message</Label>
+              <Textarea
+                id="share-message"
+                value={text}
+                readOnly
+                className="resize-none"
+                rows={3}
+              />
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => handleCopyFromModal(text)}
+                className="w-full"
+              >
+                <Copy className="mr-2 h-3 w-3" />
+                Copy message
+              </Button>
+            </div>
+
+            {/* Copy Link */}
+            <div className="space-y-2">
+              <Label htmlFor="share-url">Link</Label>
+              <div className="flex gap-2">
+                <Input
+                  id="share-url"
+                  value={url}
+                  readOnly
+                  className="flex-1"
+                />
+                <Button
+                  variant="outline"
+                  onClick={() => handleCopyFromModal(url)}
+                >
+                  <Copy className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+
+            {/* Copy Both */}
+            <Button
+              onClick={() => handleCopyFromModal(`${text} ${url}`)}
+              className="w-full"
+            >
+              {copied ? (
+                <>
+                  <Check className="mr-2 h-4 w-4" />
+                  Copied!
+                </>
+              ) : (
+                <>
+                  <Copy className="mr-2 h-4 w-4" />
+                  Copy message & link
+                </>
+              )}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
