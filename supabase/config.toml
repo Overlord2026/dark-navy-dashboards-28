@@ -1,4 +1,3 @@
-
 project_id = "xcmqjkvyvuhoslbzmlgi"
 
 [api]
@@ -245,3 +244,7 @@ verify_jwt = false
 [functions.buttons-audit]
 verify_jwt = false
 # @public-ok - Button compliance audit
+
+[functions.store-receipt]
+verify_jwt = false
+# @public-ok - NIL receipt storage for proof slips
