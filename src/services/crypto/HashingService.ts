@@ -1,4 +1,4 @@
-import { createHash } from 'crypto';
+import { sha256Hex } from '@/lib/canonical';
 
 /**
  * Enhanced hashing service using SHA3-256 for policy and audit operations
@@ -12,9 +12,9 @@ export class HashingService {
    * @param data - Data to hash (string or object)
    * @returns Hex-encoded SHA3-256 hash
    */
-  static sha3Hash(data: string | object): string {
+  static async sha3Hash(data: string | object): Promise<string> {
     const canonical = typeof data === 'string' ? data : this.canonicalize(data);
-    return createHash('sha3-256').update(canonical).digest('hex');
+    return await sha256Hex(canonical);
   }
 
   /**
@@ -26,15 +26,15 @@ export class HashingService {
    * @param outputsHash - Outputs hash
    * @returns SHA3-256 hash with salt
    */
-  static auditHash(
+  static async auditHash(
     tenantId: string,
     personaId: string,
     eventType: string,
     inputsHash: string,
     outputsHash: string
-  ): string {
+  ): Promise<string> {
     const combined = `${tenantId}${personaId}${eventType}${inputsHash}${outputsHash}${this.SALT}`;
-    return this.sha3Hash(combined);
+    return await this.sha3Hash(combined);
   }
 
   /**
@@ -42,9 +42,9 @@ export class HashingService {
    * @param policyGraph - Policy graph object
    * @returns SHA3-256 structural hash
    */
-  static structuralHash(policyGraph: any): string {
+  static async structuralHash(policyGraph: any): Promise<string> {
     const canonical = this.canonicalizeGraph(policyGraph);
-    return this.sha3Hash(canonical);
+    return await this.sha3Hash(canonical);
   }
 
   /**

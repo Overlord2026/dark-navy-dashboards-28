@@ -1,7 +1,6 @@
-
 import { StripeWebhookEvent } from '../types/webhookTypes';
 import { logger } from '@/services/logging/loggingService';
-import crypto from 'crypto';
+import { sha256Hex } from '@/lib/canonical';
 
 // Mock secret for webhook signature verification
 // In a real app, this would be stored securely and retrieved from environment variables
@@ -11,10 +10,10 @@ export const STRIPE_WEBHOOK_SECRET = 'whsec_mock_secret_key_for_demo_purposes';
  * Verify the Stripe webhook signature
  * In a real app, this would use the Stripe SDK to verify the signature
  */
-export const verifyWebhookSignature = (
+export const verifyWebhookSignature = async (
   payload: string,
   signature: string
-): boolean => {
+): Promise<boolean> => {
   // Basic input validation
   if (!signature || !payload) {
     logger.error('Missing signature or payload in webhook verification', {
@@ -46,17 +45,12 @@ export const verifyWebhookSignature = (
   
   try {
     // In a real implementation, this would use Stripe's constructEvent method
-    // For demonstration, implement a simple HMAC verification
+    // For demonstration, implement a simple hash verification
     // This is NOT production-ready, but illustrates the concept
-    const hmac = crypto.createHmac('sha256', STRIPE_WEBHOOK_SECRET);
-    const expectedSignature = hmac.update(payload).digest('hex');
+    const expectedSignature = await sha256Hex(STRIPE_WEBHOOK_SECRET + payload);
     
-    // Time-constant comparison to prevent timing attacks
-    // In production, use Stripe's official SDK which handles this correctly
-    const signaturesMatch = crypto.timingSafeEqual(
-      Buffer.from(signature), 
-      Buffer.from(expectedSignature)
-    );
+    // Simple comparison (in production, use proper HMAC and timing-safe comparison)
+    const signaturesMatch = signature === expectedSignature;
     
     if (!signaturesMatch) {
       logger.warning('Invalid webhook signature', {

@@ -7,7 +7,7 @@
  */
 
 import { supabase } from '@/integrations/supabase/client';
-import { createHash } from 'crypto';
+import { sha256Hex } from '@/lib/canonical';
 
 export interface EvidenceBundle {
   professional_id: string;

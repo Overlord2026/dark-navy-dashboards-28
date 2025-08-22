@@ -53,7 +53,7 @@ export class MinimalScopeTokenizer {
     });
     
     // Calculate token hash using SHA3-256
-    const tokenHash = HashingService.sha3Hash(tokenBody);
+    const tokenHash = await HashingService.sha3Hash(tokenBody);
     
     // Check for replay attacks
     await this.checkReplayAttack(tokenHash);
@@ -62,7 +62,7 @@ export class MinimalScopeTokenizer {
     const { data, error } = await supabase
       .from('policy_tokens')
       .insert({
-        token_hash: tokenHash, 
+        token_hash: tokenHash,
         token_body: tokenBody, 
         tenant_id: request.tenantId, 
         user_id: request.userId || 'system', 
@@ -77,7 +77,7 @@ export class MinimalScopeTokenizer {
     
     return {
       id: data.id,
-      tokenHash,
+      tokenHash: tokenHash,
       tokenBody,
       scopes: minimalScopes,
       expiresAt: request.expiresAt

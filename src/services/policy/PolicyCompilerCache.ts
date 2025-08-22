@@ -25,13 +25,13 @@ export class PolicyCompilerCache {
   /**
    * Generate cache key from policy context
    */
-  generateCacheKey(
+  async generateCacheKey(
     tenantId: string,
     policyVersion: string,
     jurisdiction: string,
     policyGraph: any
-  ): string {
-    const structuralHash = HashingService.structuralHash(policyGraph);
+  ): Promise<string> {
+    const structuralHash = await HashingService.structuralHash(policyGraph);
     return HashingService.generateCacheKey(tenantId, policyVersion, jurisdiction, structuralHash);
   }
 
