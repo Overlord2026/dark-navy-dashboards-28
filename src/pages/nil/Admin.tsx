@@ -62,7 +62,7 @@ export default function AdminPage() {
         </div>
         <div className="flex items-center gap-2">
           <Button 
-            onClick={() => navigate('/nil/admin/ready-check')}
+            onClick={() => navigate('/admin/ready-check')}
             className="flex items-center gap-2"
           >
             <Play className="w-4 h-4" />

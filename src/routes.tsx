@@ -52,7 +52,7 @@ import BrandDashboard from "./pages/nil/brand/BrandDashboard";
 import NILAdminAnchors from "./pages/admin/NILAdminAnchors";
 import AthleteHomeDashboard from "./pages/nil/athlete/AthleteHomeDashboard";
 import AgentHomeDashboard from "./pages/nil/agent/AgentHomeDashboard";
-import NilReadyCheckPage from "./pages/nil/admin/NilReadyCheckPage";
+import ReadyCheck from "./pages/admin/ReadyCheck";
 
 // QA pages removed for production
 // All QA routes, checklists, and testing components removed for production security
@@ -221,8 +221,8 @@ export const router = createBrowserRouter([
     element: <NILAdminAnchors />
   },
   {
-    path: "/nil/admin/ready-check",
-    element: <NilReadyCheckPage />
+    path: "/admin/ready-check",
+    element: <ReadyCheck />
   },
   // Education route
   {

@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useUser } from '@/context/UserContext';
 import { Button } from '@/components/ui/button';
-import { Settings, MessageSquare, Home, Users, HelpCircle } from 'lucide-react';
+import { Settings, MessageSquare, Home, Users, HelpCircle, CheckCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface AdminLayoutProps {
@@ -30,6 +30,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
 
   const adminNavItems = [
     { href: '/admin', icon: Home, label: 'Dashboard' },
+    { href: '/admin/ready-check', icon: CheckCircle, label: 'Ready Check' },
     { href: '/admin/ai-marketing-engine', icon: MessageSquare, label: 'AI Marketing' },
     { href: '/admin/faqs', icon: HelpCircle, label: 'Manage FAQs' },
     { href: '/admin/users', icon: Users, label: 'Users' },

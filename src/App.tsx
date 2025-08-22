@@ -25,6 +25,7 @@ import { Annuities } from '@/pages/solutions/Annuities';
 import { OnboardingFlow } from '@/pages/OnboardingFlow';
 import { PUBLIC_CONFIG } from '@/config/publicConfig';
 import QACoverage from '@/pages/admin/QACoverage';
+import ReadyCheck from '@/pages/admin/ReadyCheck';
 import NotFound from '@/pages/NotFound';
 
 // Onboarding Components
@@ -90,6 +91,7 @@ function App() {
             
             {/* Admin Routes */}
             <Route path="/admin/qa-coverage" element={<QACoverage />} />
+            <Route path="/admin/ready-check" element={<ReadyCheck />} />
             
             {/* Demo Routes */}
             {PUBLIC_CONFIG.DEMOS_ENABLED && (
