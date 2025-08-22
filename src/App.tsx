@@ -13,6 +13,7 @@ import Disputes from '@/pages/nil/Disputes';
 import Receipts from '@/pages/nil/Receipts';
 import Admin from '@/pages/nil/Admin';
 import Pricing from '@/pages/Pricing';
+import FixturesPanel from '@/pages/dev/FixturesPanel';
 
 function App() {
   return (
@@ -32,6 +33,10 @@ function App() {
             <Route path="/nil/receipts" element={<Receipts />} />
             <Route path="/nil/admin" element={<Admin />} />
             <Route path="/pricing" element={<Pricing />} />
+            {/* Dev-only route */}
+            {process.env.NODE_ENV !== 'production' && (
+              <Route path="/dev/fixtures" element={<FixturesPanel />} />
+            )}
           </Routes>
           <Toaster />
           <DevPanel />
