@@ -14,6 +14,8 @@ import {
   Zap
 } from 'lucide-react';
 import { checkPublicRoutes, checkDemoData, checkAnalyticsSetup, checkEnvironmentConfig } from '@/utils/nil/routeChecker';
+import { validateNil, validateConfigs, validateFamilyTools } from '@/utils/nil/validateNil';
+import { runDevSeed, seedAllDemoData } from '@/utils/nil/devSeeder';
 import { seedNilProofs } from '@/tools/seedNilProofs';
 import { useToast } from '@/hooks/use-toast';
 
@@ -31,6 +33,7 @@ export default function NilReadyCheckPage() {
     demos: CheckResult[];
     analytics: CheckResult[];
     environment: CheckResult[];
+    validation: CheckResult[];
   } | null>(null);
   const { toast } = useToast();
 
@@ -53,6 +56,36 @@ export default function NilReadyCheckPage() {
         Promise.resolve(checkEnvironmentConfig())
       ]);
 
+      // Run validation checks
+      const nilValidation = validateNil();
+      const configValidation = validateConfigs();
+      const familyValidation = validateFamilyTools();
+
+      // Combine validation results
+      const validationResults: CheckResult[] = [
+        {
+          component: 'NIL Configuration',
+          ok: nilValidation.errors.length === 0,
+          message: nilValidation.errors.length > 0 ? 
+            nilValidation.errors.join('; ') : 
+            `${nilValidation.warnings.length} warnings`
+        },
+        {
+          component: 'Config Files',
+          ok: configValidation.errors.length === 0,
+          message: configValidation.errors.length > 0 ? 
+            configValidation.errors.join('; ') : 
+            'All configs valid'
+        },
+        {
+          component: 'Family Tools',
+          ok: familyValidation.errors.length === 0,
+          message: familyValidation.errors.length > 0 ? 
+            familyValidation.errors.join('; ') : 
+            'Family tools configured'
+        }
+      ];
+
       // Transform route results to match CheckResult interface
       const transformedRouteResults = routeResults.map(r => ({
         component: r.path,
@@ -65,7 +98,8 @@ export default function NilReadyCheckPage() {
         routes: transformedRouteResults,
         demos: demoResults,
         analytics: analyticsResults,
-        environment: envResults
+        environment: envResults,
+        validation: validationResults
       });
 
       toast({
@@ -83,17 +117,34 @@ export default function NilReadyCheckPage() {
     }
   };
 
-  const seedDemoData = () => {
+  const seedDemoData = async () => {
     try {
-      seedNilProofs();
+      const results = await seedAllDemoData();
+      const successCount = Object.values(results).filter(r => r === 'ok').length;
       toast({
         title: "Demo Data Seeded",
-        description: "NIL proof slips have been created for testing.",
+        description: `Successfully seeded ${successCount} proof categories.`,
       });
     } catch (error) {
       toast({
         title: "Seeding Failed",
         description: "Failed to create demo proof slips.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const seedNilOnly = () => {
+    try {
+      seedNilProofs();
+      toast({
+        title: "NIL Proofs Seeded",
+        description: "NIL proof slips have been created for testing.",
+      });
+    } catch (error) {
+      toast({
+        title: "NIL Seeding Failed",
+        description: "Failed to create NIL proof slips.",
         variant: "destructive",
       });
     }
@@ -111,7 +162,8 @@ export default function NilReadyCheckPage() {
       ...results.routes,
       ...results.demos,
       ...results.analytics,
-      ...results.environment
+      ...results.environment,
+      ...results.validation
     ];
     
     const allOk = allResults.every(r => r.ok);
@@ -143,12 +195,20 @@ export default function NilReadyCheckPage() {
             {isRunning ? 'Running Check...' : 'Run Ready Check'}
           </Button>
           <Button 
+            onClick={seedNilOnly}
+            variant="outline"
+            className="flex items-center gap-2"
+          >
+            <Database className="w-4 h-4" />
+            Seed NIL Only
+          </Button>
+          <Button 
             onClick={seedDemoData}
             variant="outline"
             className="flex items-center gap-2"
           >
             <Database className="w-4 h-4" />
-            Seed Demo Data
+            Seed All Demo Data
           </Button>
         </div>
       </div>
@@ -178,7 +238,7 @@ export default function NilReadyCheckPage() {
       </Card>
 
       {results && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Public Routes */}
           <Card>
             <CardHeader>
@@ -264,6 +324,29 @@ export default function NilReadyCheckPage() {
             </CardHeader>
             <CardContent className="space-y-2">
               {results.environment.map((result, index) => (
+                <div key={index} className="flex items-center justify-between p-2 rounded border">
+                  <div className="flex items-center gap-2">
+                    {getStatusIcon(result.ok)}
+                    <span className="text-sm">{result.component}</span>
+                  </div>
+                  <span className="text-sm text-muted-foreground">{result.message}</span>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+          {/* Configuration Validation */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Settings className="w-5 h-5" />
+                Configuration Validation
+              </CardTitle>
+              <CardDescription>
+                Validating NIL and system configurations
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              {results.validation.map((result, index) => (
                 <div key={index} className="flex items-center justify-between p-2 rounded border">
                   <div className="flex items-center gap-2">
                     {getStatusIcon(result.ok)}
