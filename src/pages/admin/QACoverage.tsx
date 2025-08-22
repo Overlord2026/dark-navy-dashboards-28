@@ -6,6 +6,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ExternalLink, Download, AlertTriangle, CheckCircle, XCircle, RefreshCw } from 'lucide-react';
 import { validateConfigs, validateRoutes, exportCoverageCSV, exportDetailedCSV, getValidationStats, type Issue, type CoverageMatrix } from '@/utils/configValidator';
+import { validateFamilyTools, getFamilyToolsValidationStatus, formatValidationResults } from '@/tools/validateFamilyTools';
 import { FAMILY_SEGMENTS } from '@/data/familySegments';
 
 const SOLUTIONS = [
@@ -26,6 +27,7 @@ export default function QACoverage() {
     coverage: CoverageMatrix;
   } | null>(null);
   const [routeIssues, setRouteIssues] = useState<Issue[]>([]);
+  const [familyValidation, setFamilyValidation] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [checkingRoutes, setCheckingRoutes] = useState(false);
 
@@ -38,6 +40,10 @@ export default function QACoverage() {
     try {
       const result = validateConfigs();
       setValidation(result);
+      
+      // Also run family tools validation
+      const familyResult = validateFamilyTools();
+      setFamilyValidation(familyResult);
     } catch (error) {
       console.error('Validation failed:', error);
     } finally {
@@ -210,6 +216,7 @@ export default function QACoverage() {
       <Tabs defaultValue="coverage" className="w-full">
         <TabsList>
           <TabsTrigger value="coverage">Coverage Matrix</TabsTrigger>
+          <TabsTrigger value="family">Family Tools</TabsTrigger>
           <TabsTrigger value="issues">Issues</TabsTrigger>
         </TabsList>
 
@@ -258,6 +265,84 @@ export default function QACoverage() {
                   </tbody>
                 </table>
               </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="family" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                Family Tools Validation
+                <Badge variant={getFamilyToolsValidationStatus() === 'pass' ? 'default' : 
+                              getFamilyToolsValidationStatus() === 'warning' ? 'secondary' : 'destructive'}>
+                  {getFamilyToolsValidationStatus().toUpperCase()}
+                </Badge>
+              </CardTitle>
+              <CardDescription>
+                Validation of familyTools.json against catalogConfig.json
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {familyValidation && (
+                <div className="space-y-4">
+                  {/* Summary Stats */}
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div className="text-center p-4 border rounded-lg">
+                      <div className="text-2xl font-bold">{familyValidation.summary.totalTools}</div>
+                      <div className="text-sm text-muted-foreground">Total Tools</div>
+                    </div>
+                    <div className="text-center p-4 border rounded-lg">
+                      <div className="text-2xl font-bold text-green-600">{familyValidation.summary.validTools}</div>
+                      <div className="text-sm text-muted-foreground">Valid Tools</div>
+                    </div>
+                    <div className="text-center p-4 border rounded-lg">
+                      <div className="text-2xl font-bold text-red-600">{familyValidation.errors.length}</div>
+                      <div className="text-sm text-muted-foreground">Errors</div>
+                    </div>
+                    <div className="text-center p-4 border rounded-lg">
+                      <div className="text-2xl font-bold text-orange-600">{familyValidation.warnings.length}</div>
+                      <div className="text-sm text-muted-foreground">Warnings</div>
+                    </div>
+                  </div>
+
+                  {/* Issues List */}
+                  {(familyValidation.errors.length > 0 || familyValidation.warnings.length > 0) && (
+                    <div className="space-y-2">
+                      <h4 className="font-semibold">Issues</h4>
+                      {[...familyValidation.errors, ...familyValidation.warnings].map((issue: any, index: number) => (
+                        <Alert key={index} variant={issue.type === 'error' ? 'destructive' : 'default'}>
+                          <AlertTriangle className="w-4 h-4" />
+                          <AlertDescription>
+                            <div className="flex justify-between items-start">
+                              <div>
+                                <strong>{issue.segment ? `${issue.segment}: ` : ''}</strong>
+                                {issue.message}
+                                {issue.location && <div className="text-xs text-muted-foreground mt-1">Location: {issue.location}</div>}
+                              </div>
+                              {issue.toolKey && (
+                                <Badge variant="outline" className="ml-2 text-xs">
+                                  {issue.toolKey}
+                                </Badge>
+                              )}
+                            </div>
+                          </AlertDescription>
+                        </Alert>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Success Message */}
+                  {familyValidation.errors.length === 0 && familyValidation.warnings.length === 0 && (
+                    <Alert>
+                      <CheckCircle className="w-4 h-4" />
+                      <AlertDescription>
+                        All family tools configuration is valid! All tool keys exist in catalog and routes are properly configured.
+                      </AlertDescription>
+                    </Alert>
+                  )}
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>

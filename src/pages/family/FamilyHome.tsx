@@ -80,7 +80,9 @@ export function FamilyHome() {
   const segmentTitle = session.segment === 'aspiring' ? 'Aspiring Wealthy' : 'Retirees';
 
   const getToolDetails = (toolKey: string) => {
-    return catalogConfig.tools.find(tool => tool.key === toolKey) || {
+    // Handle both array formats of catalogConfig
+    const tools = (catalogConfig as any).tools || catalogConfig;
+    return tools.find((tool: any) => tool.key === toolKey) || {
       title: toolKey,
       description: 'Tool description',
       category: 'general',
