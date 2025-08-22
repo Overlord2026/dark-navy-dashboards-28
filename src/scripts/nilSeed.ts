@@ -10,7 +10,7 @@ import { confirmDisclosurePack } from '@/features/nil/disclosures/rules';
 import { invite, accept } from '@/features/nil/invite/api';
 import { issueConsent } from '@/features/nil/consent/api';
 import { hold, release } from '@/features/nil/payments/api';
-import { anchorBatch } from '@/features/anchor/providers';
+import { anchorBatch } from '@/features/anchor/simple-providers';
 import { hash } from '@/lib/canonical';
 import type { DecisionRDS, SettlementRDS } from '@/features/receipts/types';
 
