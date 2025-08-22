@@ -49,6 +49,8 @@ import AthleteProfile from "./pages/AthleteProfile";
 import SchoolDashboard from "./pages/nil/school/SchoolDashboard";
 import BrandDashboard from "./pages/nil/brand/BrandDashboard";
 import NILAdminAnchors from "./pages/admin/NILAdminAnchors";
+import AthleteHomeDashboard from "./pages/nil/athlete/AthleteHomeDashboard";
+import AgentHomeDashboard from "./pages/nil/agent/AgentHomeDashboard";
 
 // QA pages removed for production
 // All QA routes, checklists, and testing components removed for production security
@@ -203,6 +205,14 @@ export const router = createBrowserRouter([
   {
     path: "/nil/brand/home",
     element: <BrandDashboard />
+  },
+  {
+    path: "/nil/athlete/home",
+    element: <AthleteHomeDashboard />
+  },
+  {
+    path: "/nil/agent/home",
+    element: <AgentHomeDashboard />
   },
   {
     path: "/admin/nil/anchors",
