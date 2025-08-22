@@ -17,7 +17,7 @@ export interface CatalogTool {
 }
 
 export const CATALOG_TOOLS: CatalogTool[] = [
-  /* ---------- INVESTMENTS ---------- */
+  /* ========== INVESTMENTS (incl. RETIREES) ========== */
   {
     key: "retirement-roadmap",
     label: "Retirement Roadmap",
@@ -55,6 +55,18 @@ export const CATALOG_TOOLS: CatalogTool[] = [
     status: "ready"
   },
   {
+    key: "guardrails-monitor",
+    label: "Guardrails Monitor",
+    summary: "Watch an income guardrail and get alerts when markets move.",
+    type: "Tool",
+    personas: ["family", "retiree", "advisor"],
+    solutions: ["investments"],
+    goals: ["plan", "prove"],
+    tags: ["monitor", "alerts"],
+    route: "/tools/guardrails",
+    status: "coming-soon"
+  },
+  {
     key: "entity-trust-map",
     label: "Entity & Trust Map",
     summary: "Visualize entities, trusts, accounts, and roles.",
@@ -67,7 +79,7 @@ export const CATALOG_TOOLS: CatalogTool[] = [
     status: "ready"
   },
 
-  /* ---------- PRIVATE MARKETS ---------- */
+  /* ========== PRIVATE MARKETS ========== */
   {
     key: "private-markets",
     label: "Private Markets",
@@ -93,7 +105,7 @@ export const CATALOG_TOOLS: CatalogTool[] = [
     status: "ready"
   },
 
-  /* ---------- ANNUITIES HUB ---------- */
+  /* ========== ANNUITIES HUB ========== */
   {
     key: "annuities-education",
     label: "Annuities 101",
@@ -143,7 +155,7 @@ export const CATALOG_TOOLS: CatalogTool[] = [
     status: "ready"
   },
 
-  /* ---------- INSURANCE ---------- */
+  /* ========== INSURANCE ========== */
   {
     key: "life-needs-analysis",
     label: "Life Needs Analysis",
@@ -205,7 +217,7 @@ export const CATALOG_TOOLS: CatalogTool[] = [
     status: "ready"
   },
 
-  /* ---------- TAX PLANNING ---------- */
+  /* ========== TAX PLANNING ========== */
   {
     key: "roth-ladder",
     label: "Roth Conversion Ladder",
@@ -255,7 +267,7 @@ export const CATALOG_TOOLS: CatalogTool[] = [
     status: "ready"
   },
 
-  /* ---------- ESTATE ---------- */
+  /* ========== ESTATE ========== */
   {
     key: "wealth-vault",
     label: "Wealth Vault",
@@ -293,7 +305,7 @@ export const CATALOG_TOOLS: CatalogTool[] = [
     status: "ready"
   },
 
-  /* ---------- HEALTH & LONGEVITY ---------- */
+  /* ========== HEALTH & LONGEVITY ========== */
   {
     key: "longevity-hub",
     label: "Longevity Hub",
@@ -319,7 +331,7 @@ export const CATALOG_TOOLS: CatalogTool[] = [
     status: "ready"
   },
 
-  /* ---------- PRACTICE MANAGEMENT ---------- */
+  /* ========== PRACTICE MANAGEMENT (PROS) ========== */
   {
     key: "engagement-tracker",
     label: "Engagement Tracker",
@@ -357,7 +369,7 @@ export const CATALOG_TOOLS: CatalogTool[] = [
     status: "ready"
   },
 
-  /* ---------- COURSES / GUIDES ---------- */
+  /* ========== COURSES / GUIDES ========== */
   {
     key: "money-in-7",
     label: "Money in 7 Steps",
