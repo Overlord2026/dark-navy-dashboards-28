@@ -1,3 +1,4 @@
+import React, { Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider } from "next-themes";
 import { Toaster } from '@/components/ui/toaster';
@@ -14,13 +15,23 @@ import Receipts from '@/pages/nil/Receipts';
 import Admin from '@/pages/nil/Admin';
 import Pricing from '@/pages/Pricing';
 import FixturesPanel from '@/pages/dev/FixturesPanel';
+import Discover from '@/pages/Discover';
+
+const DemoPage = React.lazy(() => import('@/pages/demos/[persona]'));
 
 function App() {
+  // Check authentication status (simplified for demo)
+  const isAuthenticated = typeof window !== 'undefined' && 
+    (localStorage.getItem('user_session') || localStorage.getItem('auth_token'));
+
   return (
     <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
       <div className="min-h-screen bg-background text-foreground">
         <Routes>
-          <Route path="/" element={<Navigate to="/nil/onboarding" replace />} />
+          <Route path="/" element={
+            isAuthenticated ? <Navigate to="/nil/onboarding" replace /> : <Navigate to="/discover" replace />
+          } />
+          <Route path="/discover" element={<Discover />} />
           <Route path="/nil/onboarding" element={<NILOnboarding />} />
           <Route path="/nil/education" element={<Education />} />
           <Route path="/nil/disclosures" element={<Disclosures />} />
@@ -32,6 +43,11 @@ function App() {
           <Route path="/nil/receipts" element={<Receipts />} />
           <Route path="/nil/admin" element={<Admin />} />
           <Route path="/pricing" element={<Pricing />} />
+          <Route path="/demos/:persona" element={
+            <Suspense fallback={<div className="min-h-screen bg-background flex items-center justify-center">Loading demo...</div>}>
+              <DemoPage />
+            </Suspense>
+          } />
           {/* Dev-only route */}
           {process.env.NODE_ENV !== 'production' && (
             <Route path="/dev/fixtures" element={<FixturesPanel />} />
