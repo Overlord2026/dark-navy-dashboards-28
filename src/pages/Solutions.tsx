@@ -172,11 +172,7 @@ export default function Solutions() {
       {/* Demo Launcher */}
       {selectedDemo && (
         <div key={selectedDemo}>
-          <DemoLauncher
-            demoId={selectedDemo}
-            trigger={null}
-            onDemoComplete={() => setSelectedDemo(null)}
-          />
+          <DemoLauncher demoId={selectedDemo} />
         </div>
       )}
     </div>

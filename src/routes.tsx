@@ -46,6 +46,8 @@ import EducationPage from "./pages/EducationPage";
 import NILHub from "./pages/NILHub";
 import NILIndex from "./pages/NILIndex";
 import AthleteProfile from "./pages/AthleteProfile";
+import SchoolDashboard from "./pages/nil/school/SchoolDashboard";
+import BrandDashboard from "./pages/nil/brand/BrandDashboard";
 
 // QA pages removed for production
 // All QA routes, checklists, and testing components removed for production security
@@ -192,6 +194,14 @@ export const router = createBrowserRouter([
   {
     path: "/a/:handle",
     element: <AthleteProfile />
+  },
+  {
+    path: "/nil/school/home",
+    element: <SchoolDashboard />
+  },
+  {
+    path: "/nil/brand/home",
+    element: <BrandDashboard />
   },
   // Education route
   {
