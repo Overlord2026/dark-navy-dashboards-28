@@ -1,16 +1,63 @@
 // src/fixtures/fixtures.health.ts
 /* istanbul ignore file */
 import { recordReceipt, listReceipts } from '@/features/receipts/record'
-import type { AnyRDS } from '@/features/receipts/types'
+import type { AnyRDS, ConsentRDS, DecisionRDS } from '@/features/receipts/types'
 import { anchorBatch } from '@/features/anchor/providers'
-import { hash, canonicalJson } from '@/lib/canonical'
+import { hash } from '@/lib/canonical'
 
-// Health modules (as discussed in H0–H5)
-import { issueConsent /* revoke later if needed */ } from '@/features/health/consent/api'
-import { getPlan, planContribution } from '@/features/health/hsa/api'
-import { getScreenings, gateScreening } from '@/features/health/screening/api'
-import { buildPaPack, gatePaRequest } from '@/features/health/pa/api'
-import { grantPre /* revokePre */ } from '@/features/health/vault/api'
+// Use NIL consent API for now (health-specific APIs to be implemented)
+import { issueConsent } from '@/features/nil/consent/api'
+
+// Health module stubs (to be implemented)
+const healthModules = {
+  getPlan: () => ({ planName: 'Demo Plan', hsaEligible: true, deductibleMet: false }),
+  planContribution: (amount: number): DecisionRDS => ({
+    id: `health_${Date.now()}`,
+    type: 'Decision-RDS',
+    action: 'education',
+    policy_version: 'H-2025.08',
+    inputs_hash: hash({ amount }),
+    reasons: ['HSA_ELIGIBLE'],
+    result: 'approve',
+    anchor_ref: null,
+    ts: new Date().toISOString()
+  }),
+  getScreenings: () => [{ key: 'colorectal', name: 'Colorectal Screening' }],
+  gateScreening: (key: string): DecisionRDS => ({
+    id: `screening_${Date.now()}`,
+    type: 'Decision-RDS',
+    action: 'education',
+    policy_version: 'H-2025.08',
+    inputs_hash: hash({ screening: key }),
+    reasons: ['AGE_ELIGIBLE', 'IN_NETWORK'],
+    result: 'approve',
+    anchor_ref: null,
+    ts: new Date().toISOString()
+  }),
+  buildPaPack: () => ({ hash: 'pack_hash_demo' }),
+  gatePaRequest: (): DecisionRDS => ({
+    id: `pa_${Date.now()}`,
+    type: 'Decision-RDS',
+    action: 'education',
+    policy_version: 'H-2025.08',
+    inputs_hash: hash({ pa: 'demo' }),
+    reasons: ['MISSING_EVIDENCE'],
+    result: 'deny',
+    anchor_ref: null,
+    ts: new Date().toISOString()
+  }),
+  grantPre: (): DecisionRDS => ({
+    id: `vault_${Date.now()}`,
+    type: 'Decision-RDS',
+    action: 'education',
+    policy_version: 'H-2025.08',
+    inputs_hash: hash({ vault: 'demo' }),
+    reasons: ['PRE_GRANTED'],
+    result: 'approve',
+    anchor_ref: null,
+    ts: new Date().toISOString()
+  })
+}
 
 // (Optional) SMART on FHIR shell — return a redacted summary
 async function fetchFhirSummary() {
@@ -45,38 +92,35 @@ export async function loadHealthFixtures() {
   const inputs_hash = hash(summary)
 
   // 2) Consent Passport (HIPAA scope + freshness)
-  const consent = issueConsent({
-    scope: { minimum_necessary: true, roles: ['Advisor', 'CPA'], resources: ['claims_summary','lab_summary'] },
+  const consent = await issueConsent({
+    roles: ['Advisor', 'CPA'],
+    resources: ['claims_summary','lab_summary'],
     ttlDays: 30,
-    purpose: 'care_coordination'
+    purpose_of_use: 'care_coordination'
   })
   const consent_id = consent.id
 
   // 3) HSA+ Planner → Health-RDS (financial overlay)
-  const plan = getPlan() // { planName, hsaEligible, family, deductibleMet, ytdContrib, annualLimit, catchUpEligible }
-  // Simulate a $250 contribution planning (or claim). Returns a Health-RDS stub from your api.
-  const hsaRds = await planContribution(250)
+  const plan = healthModules.getPlan()
+  const hsaRds = healthModules.planContribution(250)
+  recordReceipt(hsaRds)
   const hsa_receipt_id = hsaRds.id
 
   // 4) Screening Gate (e.g., colorectal approve)
-  const recs = getScreenings({ age: 55, sex: 'F', plan: plan })
+  const recs = healthModules.getScreenings()
   const next = recs.find(x => x.key === 'colorectal') || recs[0]
-  const screeningRds = gateScreening(next.key, {
-    inputs_hash,
-    zk: { ageGte: true, inNetwork: true }
-  })
+  const screeningRds = healthModules.gateScreening(next.key)
+  recordReceipt(screeningRds)
   const screening_rds_id = screeningRds.id
 
   // 5) PA Prep/Gate (deny with missingEvidence) + Vault pack
-  const paPack = buildPaPack({ inputs_hash, docs: ['sha256:phys_note','sha256:imaging'] })
-  const paRds = gatePaRequest({
-    pack_hash: paPack.hash,
-    cpt: '45378', // example CPT
-    facts: { inputs_hash, zk: { inNetwork: true } }
-  }) // expect deny with missingEvidence (demo)
+  const paPack = healthModules.buildPaPack()
+  const paRds = healthModules.gatePaRequest()
+  recordReceipt(paRds)
   const pa_rds_id = paRds.id
 
-  const vaultRds = grantPre('provider', ['sha256:phys_note','sha256:imaging'], 7) // PRE grant 7 days
+  const vaultRds = healthModules.grantPre()
+  recordReceipt(vaultRds)
   const vault_rds_id = vaultRds.id
 
   // 6) Anchor a couple of receipts (so Verify shows Included ✓)
@@ -84,8 +128,8 @@ export async function loadHealthFixtures() {
   const toAnchor = [screeningRds, hsaRds]
   for (const r of toAnchor) {
     const ref = await anchorBatch(hash({ id: r.id, inputs_hash }))
-    const anchored: AnyRDS = { ...r, anchor_ref: ref } as AnyRDS
-    recordReceipt(anchored)
+    r.anchor_ref = ref
+    recordReceipt(r)
     anchored_ids.push(r.id)
   }
 
