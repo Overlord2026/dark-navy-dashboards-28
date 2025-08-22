@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { PersonaCarousel } from '@/components/discover/PersonaCarousel';
 import { CatalogShelf } from '@/components/discover/CatalogShelf';
 import { TrustExplainer } from '@/components/discover/TrustExplainer';
@@ -12,6 +12,56 @@ import { Badge } from '@/components/ui/badge';
 import { Play, ArrowRight, Shield, Users, Zap } from 'lucide-react';
 
 const Discover: React.FC = () => {
+  useEffect(() => {
+    // Set SEO meta tags
+    document.title = 'Family Office Platform - Secure Workspace for Families & Professionals';
+    
+    // Meta description
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 'One shared workspace for families and their trusted professionals. AI you can trust, receipts you can prove. Organize everything securely with compliance built-in.');
+    } else {
+      const meta = document.createElement('meta');
+      meta.name = 'description';
+      meta.content = 'One shared workspace for families and their trusted professionals. AI you can trust, receipts you can prove. Organize everything securely with compliance built-in.';
+      document.head.appendChild(meta);
+    }
+
+    // OpenGraph tags
+    const ogTags = [
+      { property: 'og:title', content: 'Family Office Platform - Secure Workspace for Families & Professionals' },
+      { property: 'og:description', content: 'One shared workspace for families and their trusted professionals. AI you can trust, receipts you can prove.' },
+      { property: 'og:type', content: 'website' },
+      { property: 'og:url', content: window.location.href },
+      { property: 'og:image', content: `${window.location.origin}/placeholder.svg` },
+      { name: 'twitter:card', content: 'summary_large_image' },
+      { name: 'twitter:title', content: 'Family Office Platform - Secure Workspace for Families & Professionals' },
+      { name: 'twitter:description', content: 'One shared workspace for families and their trusted professionals. AI you can trust, receipts you can prove.' },
+    ];
+
+    ogTags.forEach(tag => {
+      const existing = document.querySelector(`meta[${tag.property ? 'property' : 'name'}="${tag.property || tag.name}"]`);
+      if (existing) {
+        existing.setAttribute('content', tag.content);
+      } else {
+        const meta = document.createElement('meta');
+        if (tag.property) meta.setAttribute('property', tag.property);
+        if (tag.name) meta.setAttribute('name', tag.name);
+        meta.content = tag.content;
+        document.head.appendChild(meta);
+      }
+    });
+  }, []);
+
+  const handleStartWorkspace = () => {
+    // Analytics
+    if (typeof window !== 'undefined' && (window as any).analytics) {
+      (window as any).analytics.track('lp.hero.cta', { source: 'hero' });
+    }
+    
+    window.location.href = '/onboarding';
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <PublicNavigation />
@@ -33,7 +83,7 @@ const Discover: React.FC = () => {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Button size="lg" className="bg-gold hover:bg-gold-hover text-navy font-semibold px-8 py-4">
+              <Button size="lg" className="bg-gold hover:bg-gold-hover text-navy font-semibold px-8 py-4" onClick={handleStartWorkspace}>
                 <ArrowRight className="mr-2 h-5 w-5" />
                 Start your workspace
               </Button>
