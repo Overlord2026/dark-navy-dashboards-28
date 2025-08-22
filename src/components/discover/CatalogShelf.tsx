@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { ExternalLink, Search, Filter } from 'lucide-react';
+import { ExternalLink, Search, Filter, Clock, Crown, Star, Zap } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,153 +12,51 @@ import {
   DropdownMenuCheckboxItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import catalogConfig from '@/config/catalogConfig.json';
 
 interface CatalogItem {
   id: string;
   title: string;
   description: string;
-  personas: string[];
-  type: 'Tool' | 'Course' | 'Rail' | 'Guide' | 'Admin';
+  type: 'calculator' | 'tool' | 'course' | 'guide' | 'admin';
+  category: string;
+  persona: string[];
   tags: string[];
   route: string;
-  comingSoon?: boolean;
+  status: 'active' | 'soon';
+  tier: 'basic' | 'premium' | 'elite';
+  estimatedTime?: string;
 }
 
-const catalogItems: CatalogItem[] = [
-  {
-    id: 'value-calculator',
-    title: 'Value Calculator',
-    description: 'Calculate the value of advisory services for your situation',
-    personas: ['families', 'advisors'],
-    type: 'Tool',
-    tags: ['Keep-Safe'],
-    route: '/tools/value-calculator'
-  },
-  {
-    id: 'target-analyzer',
-    title: 'Retirement Target Analyzer',
-    description: 'Analyze retirement income goals and strategies',
-    personas: ['families', 'advisors'],
-    type: 'Tool',
-    tags: ['Hold'],
-    route: '/tools/target-analyzer'
-  },
-  {
-    id: 'estate-planner',
-    title: 'Estate Planning Guide',
-    description: 'Comprehensive estate planning guidance and tools',
-    personas: ['families', 'attorneys'],
-    type: 'Guide',
-    tags: ['Keep-Safe', 'Anchored'],
-    route: '/guides/estate-planning'
-  },
-  {
-    id: 'tax-optimizer',
-    title: 'Tax Optimization Suite',
-    description: 'Advanced tax planning and optimization strategies',
-    personas: ['families', 'cpas', 'advisors'],
-    type: 'Tool',
-    tags: ['Hold', 'Supervisor'],
-    route: '/tools/tax-optimizer'
-  },
-  {
-    id: 'compliance-rail',
-    title: 'Compliance Management Rail',
-    description: 'End-to-end compliance tracking and management',
-    personas: ['advisors', 'cpas', 'attorneys'],
-    type: 'Rail',
-    tags: ['Anchored', 'Supervisor'],
-    route: '/rails/compliance'
-  },
-  {
-    id: 'investment-course',
-    title: 'Investment Fundamentals Course',
-    description: 'Learn the basics of investment planning and management',
-    personas: ['families'],
-    type: 'Course',
-    tags: ['Keep-Safe'],
-    route: '/courses/investment-fundamentals'
-  },
-  {
-    id: 'nil-management',
-    title: 'NIL Management Platform',
-    description: 'Complete NIL offer and compliance management system',
-    personas: ['nil-athlete', 'nil-school'],
-    type: 'Rail',
-    tags: ['Anchored', 'Supervisor'],
-    route: '/nil/onboarding'
-  },
-  {
-    id: 'document-vault',
-    title: 'Secure Document Vault',
-    description: 'Encrypted storage and sharing for sensitive documents',
-    personas: ['families', 'advisors', 'attorneys', 'cpas'],
-    type: 'Tool',
-    tags: ['Keep-Safe', 'Anchored'],
-    route: '/tools/document-vault'
-  },
-  {
-    id: 'risk-assessor',
-    title: 'Risk Assessment Tool',
-    description: 'Comprehensive risk analysis for families and portfolios',
-    personas: ['families', 'advisors', 'insurance'],
-    type: 'Tool',
-    tags: ['Hold'],
-    route: '#soon',
-    comingSoon: true
-  },
-  {
-    id: 'healthcare-coordination',
-    title: 'Healthcare Coordination Hub',
-    description: 'Coordinate care among multiple healthcare providers',
-    personas: ['families', 'healthcare'],
-    type: 'Rail',
-    tags: ['Keep-Safe', 'Supervisor'],
-    route: '#soon',
-    comingSoon: true
-  },
-  {
-    id: 'real-estate-tracker',
-    title: 'Real Estate Transaction Tracker',
-    description: 'Track property transactions from listing to closing',
-    personas: ['families', 'realtor'],
-    type: 'Rail',
-    tags: ['Anchored', 'Supervisor'],
-    route: '#soon',
-    comingSoon: true
-  },
-  {
-    id: 'insurance-optimizer',
-    title: 'Insurance Coverage Optimizer',
-    description: 'Optimize insurance coverage across all policy types',
-    personas: ['families', 'insurance'],
-    type: 'Tool',
-    tags: ['Hold', 'Supervisor'],
-    route: '#soon',
-    comingSoon: true
-  }
-];
+// Cast the imported config to our interface
+const catalogItems: CatalogItem[] = catalogConfig as CatalogItem[];
 
-const personas = ['families', 'advisors', 'cpas', 'attorneys', 'insurance', 'healthcare', 'realtor', 'nil-athlete', 'nil-school'];
-const types = ['Tool', 'Course', 'Rail', 'Guide', 'Admin'];
-const tags = ['Keep-Safe', 'Hold', 'Anchored', 'Supervisor'];
+// Extract unique values for filters
+const personas = [...new Set(catalogItems.flatMap(item => item.persona))];
+const types = [...new Set(catalogItems.map(item => item.type))];
+const categories = [...new Set(catalogItems.map(item => item.category))];
+const tags = [...new Set(catalogItems.flatMap(item => item.tags))];
+const tiers = ['basic', 'premium', 'elite'];
 
 export const CatalogShelf: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPersonas, setSelectedPersonas] = useState<string[]>([]);
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [selectedTiers, setSelectedTiers] = useState<string[]>([]);
 
   const filteredItems = useMemo(() => {
     return catalogItems.filter(item => {
       // Search filter
       if (searchQuery && !item.title.toLowerCase().includes(searchQuery.toLowerCase()) && 
-          !item.description.toLowerCase().includes(searchQuery.toLowerCase())) {
+          !item.description.toLowerCase().includes(searchQuery.toLowerCase()) &&
+          !item.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))) {
         return false;
       }
 
       // Persona filter
-      if (selectedPersonas.length > 0 && !selectedPersonas.some(p => item.personas.includes(p))) {
+      if (selectedPersonas.length > 0 && !selectedPersonas.some(p => item.persona.includes(p))) {
         return false;
       }
 
@@ -167,14 +65,24 @@ export const CatalogShelf: React.FC = () => {
         return false;
       }
 
+      // Category filter
+      if (selectedCategories.length > 0 && !selectedCategories.includes(item.category)) {
+        return false;
+      }
+
       // Tag filter
       if (selectedTags.length > 0 && !selectedTags.some(t => item.tags.includes(t))) {
         return false;
       }
 
+      // Tier filter
+      if (selectedTiers.length > 0 && !selectedTiers.includes(item.tier)) {
+        return false;
+      }
+
       return true;
     });
-  }, [searchQuery, selectedPersonas, selectedTypes, selectedTags]);
+  }, [searchQuery, selectedPersonas, selectedTypes, selectedCategories, selectedTags, selectedTiers]);
 
   const handleCardClick = (item: CatalogItem) => {
     // Analytics
@@ -182,11 +90,11 @@ export const CatalogShelf: React.FC = () => {
       (window as any).analytics.track('lp.catalog.card.open', { 
         item: item.id, 
         route: item.route,
-        comingSoon: item.comingSoon 
+        comingSoon: item.status === 'soon'
       });
     }
 
-    if (item.route === '#soon') {
+    if (item.route === '#soon' || item.status === 'soon') {
       // Show coming soon message
       return;
     }
@@ -195,7 +103,7 @@ export const CatalogShelf: React.FC = () => {
     window.location.href = item.route;
   };
 
-  const handleFilterChange = (filterType: 'personas' | 'types' | 'tags', value: string, checked: boolean) => {
+  const handleFilterChange = (filterType: 'personas' | 'types' | 'categories' | 'tags' | 'tiers', value: string, checked: boolean) => {
     // Analytics
     if (typeof window !== 'undefined' && (window as any).analytics && checked) {
       (window as any).analytics.track('lp.catalog.filter', { 
@@ -207,7 +115,9 @@ export const CatalogShelf: React.FC = () => {
     const setters = {
       personas: setSelectedPersonas,
       types: setSelectedTypes,
-      tags: setSelectedTags
+      categories: setSelectedCategories,
+      tags: setSelectedTags,
+      tiers: setSelectedTiers
     };
 
     const setter = setters[filterType];
@@ -219,21 +129,41 @@ export const CatalogShelf: React.FC = () => {
   };
 
   const formatPersonaName = (persona: string) => {
-    const names = {
-      'families': 'Families',
-      'advisors': 'Advisors',
-      'cpas': 'CPAs',
-      'attorneys': 'Attorneys',
+    const names: Record<string, string> = {
+      'family': 'Families',
+      'aspiring': 'Aspiring Families',
+      'retiree': 'Retirees',
+      'advisor': 'Advisors',
+      'cpa': 'CPAs',
+      'attorney': 'Attorneys',
       'insurance': 'Insurance',
       'healthcare': 'Healthcare',
       'realtor': 'Realtors',
       'nil-athlete': 'NIL Athletes',
       'nil-school': 'NIL Schools'
     };
-    return names[persona as keyof typeof names] || persona;
+    return names[persona] || persona.charAt(0).toUpperCase() + persona.slice(1);
   };
 
-  const activeFiltersCount = selectedPersonas.length + selectedTypes.length + selectedTags.length;
+  const getTierIcon = (tier: string) => {
+    switch (tier) {
+      case 'basic': return <Star className="h-3 w-3" />;
+      case 'premium': return <Zap className="h-3 w-3" />;
+      case 'elite': return <Crown className="h-3 w-3" />;
+      default: return null;
+    }
+  };
+
+  const getTierColor = (tier: string) => {
+    switch (tier) {
+      case 'basic': return 'bg-blue-100 text-blue-800 border-blue-200';
+      case 'premium': return 'bg-purple-100 text-purple-800 border-purple-200';
+      case 'elite': return 'bg-amber-100 text-amber-800 border-amber-200';
+      default: return 'bg-gray-100 text-gray-800 border-gray-200';
+    }
+  };
+
+  const activeFiltersCount = selectedPersonas.length + selectedTypes.length + selectedCategories.length + selectedTags.length + selectedTiers.length;
 
   return (
     <div className="space-y-6">
@@ -274,6 +204,18 @@ export const CatalogShelf: React.FC = () => {
             ))}
             
             <DropdownMenuSeparator />
+            <DropdownMenuLabel>Filter by Category</DropdownMenuLabel>
+            {categories.map((category) => (
+              <DropdownMenuCheckboxItem
+                key={category}
+                checked={selectedCategories.includes(category)}
+                onCheckedChange={(checked) => handleFilterChange('categories', category, checked)}
+              >
+                {category.charAt(0).toUpperCase() + category.slice(1)}
+              </DropdownMenuCheckboxItem>
+            ))}
+
+            <DropdownMenuSeparator />
             <DropdownMenuLabel>Filter by Type</DropdownMenuLabel>
             {types.map((type) => (
               <DropdownMenuCheckboxItem
@@ -281,13 +223,28 @@ export const CatalogShelf: React.FC = () => {
                 checked={selectedTypes.includes(type)}
                 onCheckedChange={(checked) => handleFilterChange('types', type, checked)}
               >
-                {type}
+                {type.charAt(0).toUpperCase() + type.slice(1)}
+              </DropdownMenuCheckboxItem>
+            ))}
+            
+            <DropdownMenuSeparator />
+            <DropdownMenuLabel>Filter by Tier</DropdownMenuLabel>
+            {tiers.map((tier) => (
+              <DropdownMenuCheckboxItem
+                key={tier}
+                checked={selectedTiers.includes(tier)}
+                onCheckedChange={(checked) => handleFilterChange('tiers', tier, checked)}
+              >
+                <div className="flex items-center gap-2">
+                  {getTierIcon(tier)}
+                  {tier.charAt(0).toUpperCase() + tier.slice(1)}
+                </div>
               </DropdownMenuCheckboxItem>
             ))}
             
             <DropdownMenuSeparator />
             <DropdownMenuLabel>Filter by Tags</DropdownMenuLabel>
-            {tags.map((tag) => (
+            {tags.slice(0, 10).map((tag) => (
               <DropdownMenuCheckboxItem
                 key={tag}
                 checked={selectedTags.includes(tag)}
@@ -316,11 +273,13 @@ export const CatalogShelf: React.FC = () => {
             <CardHeader>
               <div className="flex items-start justify-between gap-2">
                 <CardTitle className="text-lg leading-tight">{item.title}</CardTitle>
-                {item.comingSoon ? (
-                  <Badge variant="secondary">Coming Soon</Badge>
-                ) : (
-                  <ExternalLink className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-                )}
+                <div className="flex items-center gap-1">
+                  {item.status === 'soon' ? (
+                    <Badge variant="secondary">Coming Soon</Badge>
+                  ) : (
+                    <ExternalLink className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                  )}
+                </div>
               </div>
             </CardHeader>
             
@@ -331,18 +290,39 @@ export const CatalogShelf: React.FC = () => {
               
               <div className="space-y-2">
                 <div className="flex flex-wrap gap-1">
+                  <Badge className={`text-xs flex items-center gap-1 ${getTierColor(item.tier)}`} variant="outline">
+                    {getTierIcon(item.tier)}
+                    {item.tier}
+                  </Badge>
                   <Badge variant="outline" className="text-xs">
                     {item.type}
                   </Badge>
-                  {item.tags.map((tag) => (
+                  <Badge variant="outline" className="text-xs">
+                    {item.category}
+                  </Badge>
+                  {item.estimatedTime && (
+                    <Badge variant="secondary" className="text-xs flex items-center gap-1">
+                      <Clock className="h-3 w-3" />
+                      {item.estimatedTime}
+                    </Badge>
+                  )}
+                </div>
+                
+                <div className="flex flex-wrap gap-1">
+                  {item.tags.slice(0, 3).map((tag) => (
                     <Badge key={tag} variant="secondary" className="text-xs">
                       {tag}
                     </Badge>
                   ))}
+                  {item.tags.length > 3 && (
+                    <Badge variant="secondary" className="text-xs">
+                      +{item.tags.length - 3} more
+                    </Badge>
+                  )}
                 </div>
                 
                 <div className="text-xs text-muted-foreground">
-                  For: {item.personas.map(formatPersonaName).join(', ')}
+                  For: {item.persona.map(formatPersonaName).join(', ')}
                 </div>
               </div>
             </CardContent>
@@ -359,7 +339,9 @@ export const CatalogShelf: React.FC = () => {
               setSearchQuery('');
               setSelectedPersonas([]);
               setSelectedTypes([]);
+              setSelectedCategories([]);
               setSelectedTags([]);
+              setSelectedTiers([]);
             }}
             className="mt-2"
           >
