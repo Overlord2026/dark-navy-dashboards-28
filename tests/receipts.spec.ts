@@ -12,20 +12,20 @@ describe('Canonical JSON and Hashing', () => {
     expect(canonicalJson(obj1)).toBe('{"a":1,"b":2,"c":3}');
   });
 
-  it('should hash consistently', () => {
+  it('should hash consistently', async () => {
     const obj = { id: 'test', value: 42 };
-    const hash1 = hash(obj);
-    const hash2 = hash(obj);
+    const hash1 = await hash(obj);
+    const hash2 = await hash(obj);
     
     expect(hash1).toBe(hash2);
     expect(hash1).toMatch(/^sha256:/);
   });
 
-  it('should produce different hashes for different objects', () => {
+  it('should produce different hashes for different objects', async () => {
     const obj1 = { id: 'test1', value: 42 };
     const obj2 = { id: 'test2', value: 42 };
     
-    expect(hash(obj1)).not.toBe(hash(obj2));
+    expect(await hash(obj1)).not.toBe(await hash(obj2));
   });
 });
 
@@ -34,13 +34,13 @@ describe('Receipt System', () => {
     clearReceipts();
   });
 
-  it('should store and retrieve Decision-RDS receipts', () => {
+  it('should store and retrieve Decision-RDS receipts', async () => {
     const decisionRDS: DecisionRDS = {
       id: 'test-decision-1',
       type: 'Decision-RDS',
       action: 'education',
       policy_version: 'E-2025.08',
-      inputs_hash: hash({ module: 'nil-basics' }),
+      inputs_hash: await hash({ module: 'nil-basics' }),
       reasons: ['EDU_FRESH'],
       result: 'approve',
       anchor_ref: null,
@@ -80,13 +80,13 @@ describe('Receipt System', () => {
     expect(recorded.freshness_score).toBe(1.0);
   });
 
-  it('should validate Settlement-RDS with anchor_ref', () => {
+  it('should validate Settlement-RDS with anchor_ref', async () => {
     const settlementRDS: SettlementRDS = {
       id: 'test-settlement-1',
       type: 'Settlement-RDS',
       offerLock: 'lock_test_123',
-      attribution_hash: hash({ offer: 'test-offer' }),
-      split_tree_hash: hash({ splits: [{ party: 'brand', share: 0.8 }] }),
+      attribution_hash: await hash({ offer: 'test-offer' }),
+      split_tree_hash: await hash({ splits: [{ party: 'brand', share: 0.8 }] }),
       escrow_state: 'released',
       anchor_ref: {
         merkle_root: 'root_abc123',
@@ -132,13 +132,13 @@ describe('Receipt System', () => {
     expect(recorded.prior_ref).toBe('settlement-123');
   });
 
-  it('should not contain PII in test data', () => {
+  it('should not contain PII in test data', async () => {
     const testReceipt: DecisionRDS = {
       id: 'test-no-pii',
       type: 'Decision-RDS',
       action: 'education',
       policy_version: 'E-2025.08',
-      inputs_hash: hash({ module: 'test' }),
+      inputs_hash: await hash({ module: 'test' }),
       reasons: ['TEST_REASON'],
       result: 'approve',
       anchor_ref: null,

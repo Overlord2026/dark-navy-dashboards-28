@@ -11,47 +11,47 @@ import { issueConsent } from '@/features/nil/consent/api'
 // Health module stubs (to be implemented)
 const healthModules = {
   getPlan: () => ({ planName: 'Demo Plan', hsaEligible: true, deductibleMet: false }),
-  planContribution: (amount: number): DecisionRDS => ({
+  planContribution: async (amount: number): Promise<DecisionRDS> => ({
     id: `health_${Date.now()}`,
     type: 'Decision-RDS',
     action: 'education',
     policy_version: 'H-2025.08',
-    inputs_hash: hash({ amount }),
+    inputs_hash: await hash({ amount }),
     reasons: ['HSA_ELIGIBLE'],
     result: 'approve',
     anchor_ref: null,
     ts: new Date().toISOString()
   }),
   getScreenings: () => [{ key: 'colorectal', name: 'Colorectal Screening' }],
-  gateScreening: (key: string): DecisionRDS => ({
+  gateScreening: async (key: string): Promise<DecisionRDS> => ({
     id: `screening_${Date.now()}`,
     type: 'Decision-RDS',
     action: 'education',
     policy_version: 'H-2025.08',
-    inputs_hash: hash({ screening: key }),
+    inputs_hash: await hash({ screening: key }),
     reasons: ['AGE_ELIGIBLE', 'IN_NETWORK'],
     result: 'approve',
     anchor_ref: null,
     ts: new Date().toISOString()
   }),
   buildPaPack: () => ({ hash: 'pack_hash_demo' }),
-  gatePaRequest: (): DecisionRDS => ({
+  gatePaRequest: async (): Promise<DecisionRDS> => ({
     id: `pa_${Date.now()}`,
     type: 'Decision-RDS',
     action: 'education',
     policy_version: 'H-2025.08',
-    inputs_hash: hash({ pa: 'demo' }),
+    inputs_hash: await hash({ pa: 'demo' }),
     reasons: ['MISSING_EVIDENCE'],
     result: 'deny',
     anchor_ref: null,
     ts: new Date().toISOString()
   }),
-  grantPre: (): DecisionRDS => ({
+  grantPre: async (): Promise<DecisionRDS> => ({
     id: `vault_${Date.now()}`,
     type: 'Decision-RDS',
     action: 'education',
     policy_version: 'H-2025.08',
-    inputs_hash: hash({ vault: 'demo' }),
+    inputs_hash: await hash({ vault: 'demo' }),
     reasons: ['PRE_GRANTED'],
     result: 'approve',
     anchor_ref: null,
@@ -89,7 +89,7 @@ const state: { snapshot: HealthSnapshot | null } = { snapshot: null }
 export async function loadHealthFixtures() {
   // 1) Inputs → inputs_hash
   const summary = await fetchFhirSummary()
-  const inputs_hash = hash(summary)
+  const inputs_hash = await hash(summary)
 
   // 2) Consent Passport (HIPAA scope + freshness)
   const consent = await issueConsent({
@@ -102,24 +102,24 @@ export async function loadHealthFixtures() {
 
   // 3) HSA+ Planner → Health-RDS (financial overlay)
   const plan = healthModules.getPlan()
-  const hsaRds = healthModules.planContribution(250)
+  const hsaRds = await healthModules.planContribution(250)
   recordReceipt(hsaRds)
   const hsa_receipt_id = hsaRds.id
 
   // 4) Screening Gate (e.g., colorectal approve)
   const recs = healthModules.getScreenings()
   const next = recs.find(x => x.key === 'colorectal') || recs[0]
-  const screeningRds = healthModules.gateScreening(next.key)
+  const screeningRds = await healthModules.gateScreening(next.key)
   recordReceipt(screeningRds)
   const screening_rds_id = screeningRds.id
 
   // 5) PA Prep/Gate (deny with missingEvidence) + Vault pack
   const paPack = healthModules.buildPaPack()
-  const paRds = healthModules.gatePaRequest()
+  const paRds = await healthModules.gatePaRequest()
   recordReceipt(paRds)
   const pa_rds_id = paRds.id
 
-  const vaultRds = healthModules.grantPre()
+  const vaultRds = await healthModules.grantPre()
   recordReceipt(vaultRds)
   const vault_rds_id = vaultRds.id
 
@@ -127,7 +127,7 @@ export async function loadHealthFixtures() {
   const anchored_ids: string[] = []
   const toAnchor = [screeningRds, hsaRds]
   for (const r of toAnchor) {
-    const ref = await anchorBatch(hash({ id: r.id, inputs_hash }))
+    const ref = await anchorBatch(await hash({ id: r.id, inputs_hash }))
     r.anchor_ref = ref
     recordReceipt(r)
     anchored_ids.push(r.id)

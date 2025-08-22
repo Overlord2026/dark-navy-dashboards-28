@@ -1,38 +1,42 @@
-/**
- * Canonical JSON + SHA256 hashing for deterministic receipt generation
- */
+// Browser-safe canonical JSON + SHA-256 helpers.
+// - In the browser: uses SubtleCrypto (async).
+// - In Node/CLI: falls back to node:crypto.
 
 export function canonicalJson(obj: any): string {
-  if (obj === null) return 'null';
-  if (typeof obj === 'boolean') return obj.toString();
-  if (typeof obj === 'number') return obj.toString();
-  if (typeof obj === 'string') return JSON.stringify(obj);
-  
-  if (Array.isArray(obj)) {
-    const items = obj.map(canonicalJson);
-    return `[${items.join(',')}]`;
-  }
-  
-  if (typeof obj === 'object') {
-    const sortedKeys = Object.keys(obj).sort();
-    const pairs = sortedKeys.map(key => {
-      const value = canonicalJson(obj[key]);
-      return `${JSON.stringify(key)}:${value}`;
-    });
-    return `{${pairs.join(',')}}`;
-  }
-  
-  throw new Error(`Cannot canonicalize type: ${typeof obj}`);
+  return JSON.stringify(sortRecursively(obj));
 }
 
-export function hash(obj: any): string {
-  const canonical = canonicalJson(obj);
-  // Simple hash for demo - in production use crypto.subtle
-  let hash = 0;
-  for (let i = 0; i < canonical.length; i++) {
-    const char = canonical.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
-    hash = hash & hash; // Convert to 32-bit integer
+function sortRecursively(input: any): any {
+  if (Array.isArray(input)) return input.map(sortRecursively);
+  if (input && typeof input === 'object') {
+    return Object.keys(input).sort().reduce((acc: any, k: string) => {
+      acc[k] = sortRecursively(input[k]);
+      return acc;
+    }, {});
   }
-  return `sha256:${Math.abs(hash).toString(16).padStart(8, '0')}`;
+  return input;
+}
+
+// Browser + Node safe SHA-256 -> hex
+export async function sha256Hex(data: string): Promise<string> {
+  // Browser
+  if (typeof window !== 'undefined' && (window.crypto as any)?.subtle) {
+    const enc = new TextEncoder().encode(data);
+    const digest = await window.crypto.subtle.digest('SHA-256', enc);
+    return [...new Uint8Array(digest)].map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+  // Node (CLI/tests)
+  try {
+    const { createHash } = await import('node:crypto');
+    return createHash('SHA-256').update(data, 'utf8').digest('hex');
+  } catch {
+    // ultra-fallback (deterministic but not cryptographic)
+    return Array.from(data).reduce((acc, ch) => (acc * 31 + ch.charCodeAt(0)) >>> 0, 0).toString(16).padStart(64, '0');
+  }
+}
+
+export async function hash(obj: any): Promise<string> {
+  const s = canonicalJson(obj);
+  const hex = await sha256Hex(s);
+  return 'sha256:' + hex;
 }

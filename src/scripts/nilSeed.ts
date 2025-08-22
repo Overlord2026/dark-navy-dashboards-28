@@ -87,7 +87,7 @@ export async function seedNilDemo() {
     type: 'Decision-RDS',
     action: 'publish',
     policy_version: 'E-2025.08',
-    inputs_hash: hash({ contract_id: 'contract_aurora_001', offer_id: offerId }),
+    inputs_hash: await hash({ contract_id: 'contract_aurora_001', offer_id: offerId }),
     reasons: ['POLICY_CHECKS_PASSED', 'EDU_FRESH', 'DISCLOSURE_BOUND', 'NO_CONFLICT'],
     result: 'approve',
     asset_id: 'contract_aurora_001',

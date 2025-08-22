@@ -86,7 +86,7 @@ export async function loadFixtures(opts: { profile: Profile } = { profile: 'coac
     id: `rds_pub_${Date.now()}`, type: 'Decision-RDS', action: 'publish',
     policy_version: 'E-2025.08', inputs_hash: 'sha256:demo',
     reasons: checks.reasons, result: 'approve', asset_id: `asset_${offerId}`,
-    anchor_ref: await anchorBatch(hash({ offerId, asset: `asset_${offerId}` })),
+    anchor_ref: await anchorBatch(await hash({ offerId, asset: `asset_${offerId}` })),
     ts: new Date().toISOString()
   }
   recordReceipt(publishReceipt)
