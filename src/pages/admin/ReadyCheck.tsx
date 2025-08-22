@@ -15,7 +15,9 @@ const PUBLIC_ROUTES = [
   '/personas/families',
   '/personas/advisors',
   '/personas/insurance',
-  '/personas/healthcare'
+  '/personas/healthcare',
+  '/personas/nil-athlete',
+  '/personas/nil-school'
 ];
 
 type Result = { label:string; status:'ok'|'warn'|'fail'; notes?:string[] }

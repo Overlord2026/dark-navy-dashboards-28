@@ -192,6 +192,7 @@ export default function PublishPanel() {
                   <Switch
                     checked={value}
                     onCheckedChange={(checked) => handleFlagToggle(key as FeatureFlag, checked)}
+                    data-testid={`flag-toggle-${key}`}
                   />
                 </div>
               </div>

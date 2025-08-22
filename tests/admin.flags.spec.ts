@@ -6,7 +6,7 @@ test.describe('Admin Publish flags', () => {
     await page.goto('/admin/publish');
     
     // Flip OFF
-    const toggle = page.getByRole('switch', { name: /PUBLIC_DISCOVER_ENABLED/i });
+    const toggle = page.getByTestId('flag-toggle-PUBLIC_DISCOVER_ENABLED');
     await toggle.click();
     const confirm = page.getByRole('dialog');
     await expect(confirm).toBeVisible();
@@ -33,7 +33,7 @@ test.describe('Admin Publish flags', () => {
     await page.goto('/admin/publish');
     
     // Flip OFF solutions
-    const toggle = page.getByRole('switch', { name: /SOLUTIONS_ENABLED/i });
+    const toggle = page.getByTestId('flag-toggle-SOLUTIONS_ENABLED');
     await toggle.click();
     const confirm = page.getByRole('dialog');
     await expect(confirm).toBeVisible();
@@ -56,7 +56,7 @@ test.describe('Admin Publish flags', () => {
     await page.goto('/admin/publish');
     
     // Flip OFF NIL public
-    const toggle = page.getByRole('switch', { name: /NIL_PUBLIC_ENABLED/i });
+    const toggle = page.getByTestId('flag-toggle-NIL_PUBLIC_ENABLED');
     await toggle.click();
     const confirm = page.getByRole('dialog');
     await expect(confirm).toBeVisible();
@@ -119,7 +119,7 @@ test.describe('Admin Publish flags', () => {
     ];
     
     for (const flagName of publicFlags) {
-      const toggle = page.getByRole('switch', { name: new RegExp(flagName, 'i') });
+      const toggle = page.getByTestId(`flag-toggle-${flagName}`);
       await toggle.click();
       const confirm = page.getByRole('dialog');
       await confirm.getByRole('button', { name: /Proceed|Confirm/i }).click();
