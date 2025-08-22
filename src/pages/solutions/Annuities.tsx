@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import SEOHead from '@/components/seo/SEOHead';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -47,6 +48,11 @@ export function Annuities() {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title="Annuities Solutions - Education, Calculators & Compliance"
+        description="Complete annuities platform with education, calculators, proposal review, and fiduciary guidance. SPIA, DIA, MYGA, FIA, VA analysis tools."
+        keywords={['annuities', 'annuity calculator', 'SPIA', 'DIA', 'MYGA', 'FIA', 'variable annuity', 'retirement income']}
+      />
       {/* Hero Section */}
       <section className="py-16 bg-gradient-to-br from-blue-50 via-background to-indigo-50 dark:from-blue-950/20 dark:via-background dark:to-indigo-950/20">
         <div className="container mx-auto px-4">

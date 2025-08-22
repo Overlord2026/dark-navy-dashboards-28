@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import SEOHead from '@/components/seo/SEOHead';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -64,6 +65,11 @@ export default function Solutions() {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title="Financial Solutions Hub - Insurance, Investments, Tax & Estate"
+        description="Complete financial solutions for professionals and families. Insurance, annuities, investments, tax planning, estate management, and compliance tools."
+        keywords={['financial solutions', 'insurance tools', 'investment platform', 'tax planning', 'estate planning', 'annuities']}
+      />
       {/* Hero Section */}
       <section className="py-16 bg-gradient-to-br from-primary/5 via-background to-secondary/5">
         <div className="container mx-auto px-4">
