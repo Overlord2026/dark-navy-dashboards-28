@@ -36,16 +36,18 @@ export default function PublishPanel() {
   const handlePurgeCDN = async () => {
     setIsLoading(true);
     try {
-      const result = await purgeCDN();
+      const success = await purgeCDN();
       toast({
-        title: result.ok ? 'CDN Purge Initiated' : 'CDN Purge Failed',
-        description: result.message,
-        variant: result.ok ? 'default' : 'destructive',
+        title: success ? 'CDN Purge Initiated' : 'CDN Purge Failed',
+        description: success 
+          ? 'CDN purge initiated successfully. Changes may take 2-5 minutes to propagate.'
+          : 'CDN purge failed. Check console for manual steps.',
+        variant: success ? 'default' : 'destructive',
       });
     } catch (error) {
       toast({
         title: 'CDN Purge Error',
-        description: 'Failed to initiate CDN purge',
+        description: 'Failed to initiate CDN purge. Check console for manual steps.',
         variant: 'destructive',
       });
     } finally {

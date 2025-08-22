@@ -1,16 +1,22 @@
 // Minimal feature flags implementation with environment inheritance
 import def from '@/config/featureFlags.default.json';
+import devFlags from '@/config/featureFlags.dev.json';
+import stagingFlags from '@/config/featureFlags.staging.json';
+import prodFlags from '@/config/featureFlags.prod.json';
 
-let envFlags: any;
-try {
-  const flavor = import.meta.env.VITE_BUILD_FLAVOR || import.meta.env.MODE; // 'dev'|'staging'|'prod'
-  envFlags = (flavor === 'prod')
-    ? (await import('@/config/featureFlags.prod.json')).default
-    : (flavor === 'staging')
-      ? (await import('@/config/featureFlags.staging.json')).default
-      : (await import('@/config/featureFlags.dev.json')).default;
-} catch { 
-  envFlags = {}; 
+export type FeatureFlag = keyof typeof def;
+
+// Determine environment flags synchronously
+function getEnvironmentFlags() {
+  const flavor = import.meta.env.VITE_BUILD_FLAVOR || import.meta.env.MODE;
+  
+  if (flavor === 'prod' || flavor === 'production') {
+    return prodFlags;
+  } else if (flavor === 'staging') {
+    return stagingFlags;
+  } else {
+    return devFlags;
+  }
 }
 
 function extend(base: any, ext: any) {
@@ -19,9 +25,9 @@ function extend(base: any, ext: any) {
   return result;
 }
 
+// Initialize flags synchronously
+const envFlags = getEnvironmentFlags();
 export const flags = extend(def, envFlags);
-
-export type FeatureFlag = keyof typeof def;
 
 // Admin panel can mutate runtime flag (does not persist file)
 export function setFlag(key: string, value: boolean) {
