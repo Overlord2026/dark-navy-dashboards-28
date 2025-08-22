@@ -25,16 +25,16 @@ export const analytics = {
   },
 
   // All the missing methods for compatibility
-  trackViralShare: (eventName: string, properties?: Record<string, any>, metadata?: any) => {
-    analytics.trackEvent('viral_share', { event: eventName, ...properties, metadata });
+  trackViralShare: (platform: string, properties?: Record<string, any>, metadata?: any) => {
+    analytics.trackEvent('viral_share', { platform, ...properties, metadata });
   },
 
   trackPersonaClaim: (persona: string, properties?: Record<string, any>) => {
     analytics.trackEvent('persona_claim', { persona, ...properties });
   },
 
-  trackOnboardingStep: (step: string, persona?: string, segment?: string, complete?: boolean, properties?: Record<string, any>) => {
-    analytics.trackEvent('onboarding_step', { step, persona, segment, complete, ...properties });
+  trackOnboardingStep: (step: string, properties?: Record<string, any>) => {
+    analytics.trackEvent('onboarding_step', { step, ...properties });
   },
 
   trackOnboardingStart: (persona: string, properties?: Record<string, any>) => {
@@ -49,8 +49,8 @@ export const analytics = {
     analytics.trackEvent('conversion', { type, ...properties });
   },
 
-  trackSecurityEvent: (event: string, severity?: string, properties?: Record<string, any>) => {
-    analytics.trackEvent('security_event', { event, severity, ...properties });
+  trackSecurityEvent: (event: string, properties?: Record<string, any>) => {
+    analytics.trackEvent('security_event', { event, ...properties });
   },
 
   trackError: (error: string | Error, properties?: Record<string, any>) => {
@@ -58,12 +58,53 @@ export const analytics = {
     analytics.trackEvent('error', { error: errorMessage, ...properties });
   },
 
-  trackPerformance: (metric: string, value?: number, properties?: Record<string, any>) => {
-    analytics.trackEvent('performance', { metric, value, ...properties });
+  trackPerformance: (metric: string, properties?: Record<string, any>) => {
+    analytics.trackEvent('performance', { metric, ...properties });
   },
 
-  trackFAQUsage: (question: string, properties?: Record<string, any>) => {
-    analytics.trackEvent('faq_usage', { question, ...properties });
+  trackFAQUsage: (action: string, properties?: Record<string, any>) => {
+    analytics.trackEvent('faq_usage', { action, ...properties });
+  },
+
+  // Family-specific events
+  trackFamilyOnboardingStart: (segment?: string, properties?: Record<string, any>) => {
+    analytics.trackEvent('onboard.families.start', { segment, ...properties });
+  },
+
+  trackFamilyOnboardingComplete: (segment: string, goals: string[], properties?: Record<string, any>) => {
+    analytics.trackEvent('onboard.families.complete', { segment, goals, ...properties });
+  },
+
+  trackFamilySegmentSelection: (segment: string, properties?: Record<string, any>) => {
+    analytics.trackEvent('onboard.families.segment', { segment, ...properties });
+  },
+
+  trackFamilyGoalsSelection: (goals: string[], properties?: Record<string, any>) => {
+    analytics.trackEvent('onboard.families.goals', { goals, ...properties });
+  },
+
+  trackFamilyQuickAction: (label: string, route: string, properties?: Record<string, any>) => {
+    analytics.trackEvent('family.quickAction.click', { label, route, ...properties });
+  },
+
+  trackFamilyTabView: (tabKey: string, segment: string, properties?: Record<string, any>) => {
+    analytics.trackEvent('family.tab.view', { tabKey, segment, ...properties });
+  },
+
+  trackToolCardOpen: (toolKey: string, toolName: string, category: string, properties?: Record<string, any>) => {
+    analytics.trackEvent('tool.card.open', { toolKey, toolName, category, ...properties });
+  },
+
+  trackProofCreated: (type: string, reasonCodes?: string[], properties?: Record<string, any>) => {
+    analytics.trackEvent('proof.created', { type, reasonCodes, ...properties });
+  },
+
+  trackShareClick: (context: string, properties?: Record<string, any>) => {
+    analytics.trackEvent('share.click', { context, ...properties });
+  },
+
+  trackShareSuccess: (context: string, platform?: string, properties?: Record<string, any>) => {
+    analytics.trackEvent('share.success', { context, platform, ...properties });
   }
 };
 

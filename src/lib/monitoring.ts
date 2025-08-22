@@ -27,8 +27,8 @@ export const setupErrorMonitoring = () => {
         for (const entry of list.getEntries()) {
           if (entry.entryType === 'navigation') {
             const navEntry = entry as PerformanceNavigationTiming;
-            analytics.trackPerformance('page_load_time', navEntry.loadEventEnd - navEntry.loadEventStart);
-            analytics.trackPerformance('dom_content_loaded', navEntry.domContentLoadedEventEnd - navEntry.domContentLoadedEventStart);
+            analytics.trackPerformance('page_load_time', { value: navEntry.loadEventEnd - navEntry.loadEventStart });
+            analytics.trackPerformance('dom_content_loaded', { value: navEntry.domContentLoadedEventEnd - navEntry.domContentLoadedEventStart });
           }
         }
       });
@@ -51,7 +51,8 @@ export const monitorAuthEvents = () => {
     // Monitor auth-related requests
     if (typeof url === 'string' && url.includes('/auth/')) {
       if (!response.ok) {
-        analytics.trackSecurityEvent('auth_failure', 'medium', {
+        analytics.trackSecurityEvent('auth_failure', {
+          severity: 'medium',
           url,
           status: response.status,
           statusText: response.statusText

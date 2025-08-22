@@ -62,7 +62,7 @@ class SecurityMonitoringService {
       }
 
       // Track in analytics
-      analytics.trackSecurityEvent(event.eventType, event.severity, event.metadata);
+      analytics.trackSecurityEvent(event.eventType, { severity: event.severity, ...event.metadata });
 
     } catch (error) {
       console.error('Failed to log security event:', error);

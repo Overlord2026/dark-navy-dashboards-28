@@ -64,7 +64,7 @@ export const PersonaProvider: React.FC<PersonaProviderProps> = ({ children }) =>
       setHasSeenWelcomeModal(true);
       
       // Track onboarding completion
-      analytics.trackOnboardingStep('welcome_modal_completed', currentPersona, undefined, true, { userId: userProfile.id });
+      analytics.trackOnboardingStep('welcome_modal_completed', { persona: currentPersona, userId: userProfile.id, complete: true });
     }
   };
 

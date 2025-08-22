@@ -39,7 +39,8 @@ export const useSessionTimeout = ({
         variant: "destructive",
       });
       
-      analytics.trackSecurityEvent('session_warning', 'medium', {
+      analytics.trackSecurityEvent('session_warning', {
+        severity: 'medium',
         warning_minutes: warningMinutes,
         user_id: user.id
       });
@@ -47,7 +48,8 @@ export const useSessionTimeout = ({
 
     // Set logout timeout
     timeoutRef.current = setTimeout(() => {
-      analytics.trackSecurityEvent('session_timeout', 'medium', {
+      analytics.trackSecurityEvent('session_timeout', {
+        severity: 'medium',
         timeout_minutes: timeoutMinutes,
         user_id: user.id,
         last_activity: lastActivityRef.current

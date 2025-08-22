@@ -102,12 +102,14 @@ export function FamilyHome() {
   };
 
   const handleShare = () => {
-    analytics.trackEvent('family.workspace_shared', { segment: session.segment });
+    analytics.trackShareClick('family_workspace', { segment: session.segment });
     if (navigator.share) {
       navigator.share({
         title: `${segmentTitle} Family Workspace`,
         text: 'Check out my family financial workspace',
         url: window.location.href
+      }).then(() => {
+        analytics.trackShareSuccess('family_workspace', 'native_share', { segment: session.segment });
       });
     }
   };
@@ -173,7 +175,10 @@ export function FamilyHome() {
                 <Card 
                   key={index}
                   className="cursor-pointer hover:shadow-md transition-all duration-200 group"
-                  onClick={() => navigate(action.route)}
+                  onClick={() => {
+                    analytics.trackFamilyQuickAction(action.label, action.route, { segment: session.segment });
+                    navigate(action.route);
+                  }}
                 >
                   <CardContent className="p-4">
                     <div className="text-center">
@@ -192,7 +197,13 @@ export function FamilyHome() {
 
           {/* Tools Tabs */}
           <section>
-            <Tabs defaultValue={segmentConfig.tabs[0].key} className="space-y-6">
+            <Tabs 
+              defaultValue={segmentConfig.tabs[0].key} 
+              className="space-y-6"
+              onValueChange={(value) => {
+                analytics.trackFamilyTabView(value, session.segment);
+              }}
+            >
               <div className="flex items-center justify-between">
                 <h2 className="text-lg font-semibold">Your Tools</h2>
                 <TabsList className="grid grid-cols-4 md:grid-cols-6 lg:w-fit">
@@ -216,7 +227,14 @@ export function FamilyHome() {
                         <Card 
                           key={card.toolKey}
                           className="cursor-pointer hover:shadow-md transition-shadow group"
-                          onClick={() => navigate(targetRoute)}
+                          onClick={() => {
+                            analytics.trackToolCardOpen(card.toolKey, toolDetails.title, toolDetails.category, { 
+                              segment: session.segment, 
+                              tab: tab.key,
+                              route: targetRoute 
+                            });
+                            navigate(targetRoute);
+                          }}
                         >
                           <CardContent className="p-6">
                             <div className="flex items-start justify-between">

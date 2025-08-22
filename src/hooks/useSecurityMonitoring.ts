@@ -21,7 +21,8 @@ export const useSecurityMonitoring = () => {
 
     try {
       // Log to analytics
-      analytics.trackSecurityEvent(event.eventType, event.severity, {
+      analytics.trackSecurityEvent(event.eventType, {
+        severity: event.severity,
         resource_type: event.resourceType,
         resource_id: event.resourceId,
         action: event.action,

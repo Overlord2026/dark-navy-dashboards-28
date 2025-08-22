@@ -53,8 +53,7 @@ export default function FamilyOnboarding() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    analytics.trackEvent('onboard.families.start', { 
-      segment: state.segment,
+    analytics.trackFamilyOnboardingStart(state.segment || undefined, { 
       referrer: document.referrer
     });
     
@@ -66,7 +65,7 @@ export default function FamilyOnboarding() {
 
   const handleSegmentSelect = (segment: 'aspiring' | 'retirees') => {
     setState(prev => ({ ...prev, segment }));
-    analytics.trackEvent('onboard.families.segment', { segment });
+    analytics.trackFamilySegmentSelection(segment);
     setStep(2);
   };
 
@@ -85,10 +84,7 @@ export default function FamilyOnboarding() {
     setLoading(true);
     
     try {
-      analytics.trackEvent('onboard.families.goals', { 
-        segment: state.segment,
-        goals: state.goals
-      });
+      analytics.trackFamilyGoalsSelection(state.goals, { segment: state.segment });
 
       // Simulate API call to create workspace
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -101,8 +97,8 @@ export default function FamilyOnboarding() {
         onboarded: true
       }));
 
-      analytics.trackEvent('onboard.families.complete', {
-        segment: state.segment,
+      analytics.trackFamilyOnboardingComplete(state.segment, state.goals, {
+        email: state.email,
         goals_count: state.goals.length
       });
 
