@@ -8,6 +8,7 @@ export const PUBLIC_CONFIG = {
   DEMOS_ENABLED: import.meta.env.VITE_DEMOS_ENABLED !== 'false',
   CTA_BAR_ENABLED: import.meta.env.VITE_PUBLIC_CTA_BAR !== 'false',
   TRUST_EXPLAINER_ENABLED: import.meta.env.VITE_TRUST_EXPLAINER_ENABLED !== 'false',
+  ONBOARDING_PUBLIC_ENABLED: import.meta.env.VITE_ONBOARDING_PUBLIC_ENABLED !== 'false',
 } as const;
 
 // Helper function to check if a feature is enabled
