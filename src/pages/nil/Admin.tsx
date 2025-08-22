@@ -6,6 +6,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Settings, CheckCircle, Clock, FileText } from 'lucide-react';
 import { toast } from 'sonner';
 import { AdminReceiptsPanel } from '@/components/admin/AdminReceiptsPanel';
+import { AdminAnchorsPanel } from '@/components/admin/AdminAnchorsPanel';
+import { AdminAuditsPanel } from '@/components/admin/AdminAuditsPanel';
+import { AdminFixturesPanel } from '@/components/admin/AdminFixturesPanel';
+
+import { getReceiptsCount } from '@/features/receipts/record';
 
 export default function AdminPage() {
   const [currentVersion, setCurrentVersion] = React.useState('E-2025.08');
@@ -14,6 +19,10 @@ export default function AdminPage() {
     { version: 'E-2025.07', status: 'deprecated', deployedAt: '2025-07-01' },
     { version: 'E-2025.06', status: 'retired', deployedAt: '2025-06-01' }
   ]);
+
+  // Dev fixtures guard
+  const isDev = import.meta.env.MODE !== 'production';
+  const showFixtures = isDev && (window as any).__DEV_FIXTURES__ === true;
 
   const handlePromotePolicy = (version: string) => {
     setCurrentVersion(version);
@@ -30,9 +39,12 @@ export default function AdminPage() {
       </div>
 
       <Tabs defaultValue="overview" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-2">
+        <TabsList className={`grid w-full ${showFixtures ? 'grid-cols-5' : 'grid-cols-4'}`}>
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="receipts">Receipts</TabsTrigger>
+          <TabsTrigger value="anchors">Anchors</TabsTrigger>
+          <TabsTrigger value="audits">Audits</TabsTrigger>
+          {showFixtures && <TabsTrigger value="fixtures">Fixtures (dev)</TabsTrigger>}
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6">
@@ -92,7 +104,7 @@ export default function AdminPage() {
                 </div>
                 <div>
                   <p className="font-medium">Total Receipts</p>
-                  <p className="text-muted-foreground">Loading...</p>
+                  <p className="text-muted-foreground">{getReceiptsCount()}</p>
                 </div>
               </div>
             </CardContent>
@@ -102,6 +114,20 @@ export default function AdminPage() {
         <TabsContent value="receipts">
           <AdminReceiptsPanel />
         </TabsContent>
+
+        <TabsContent value="anchors">
+          <AdminAnchorsPanel />
+        </TabsContent>
+
+        <TabsContent value="audits">
+          <AdminAuditsPanel />
+        </TabsContent>
+
+        {showFixtures && (
+          <TabsContent value="fixtures">
+            <AdminFixturesPanel />
+          </TabsContent>
+        )}
       </Tabs>
     </div>
   );
