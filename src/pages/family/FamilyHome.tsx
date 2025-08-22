@@ -22,8 +22,12 @@ import familyToolsConfig from '@/config/familyTools.json';
 import catalogConfig from '@/config/catalogConfig.json';
 import { analytics } from '@/lib/analytics';
 import { cn } from '@/lib/utils';
+import { InviteModal } from '@/components/modals/InviteModal';
+import { UploadModal } from '@/components/modals/UploadModal';
+import { ReceiptsModal } from '@/components/modals/ReceiptsModal';
 
 type FamilySegment = 'aspiring' | 'retirees';
+type ModalType = 'invite' | 'upload' | 'receipts' | 'none';
 
 interface UserSession {
   email: string;
@@ -82,6 +86,8 @@ export function FamilyHome() {
   const navigate = useNavigate();
   const [session, setSession] = React.useState<UserSession | null>(null);
   const [activeTab, setActiveTab] = React.useState<string>('');
+  const [activeModal, setActiveModal] = React.useState<ModalType>('none');
+  const [inviteType, setInviteType] = React.useState<'advisor' | 'cpa' | 'attorney' | 'professional'>('advisor');
 
   React.useEffect(() => {
     // Get user session
@@ -170,6 +176,21 @@ export function FamilyHome() {
   };
 
   const handleQuickAction = (action: any) => {
+    // Handle special modal actions
+    if (action.label.toLowerCase().includes('invite')) {
+      setInviteType('advisor');
+      setActiveModal('invite');
+      analytics.trackFamilyQuickAction(action.label, action.route, { segment: session.segment, modal: true });
+      return;
+    }
+    
+    if (action.label.toLowerCase().includes('upload')) {
+      setActiveModal('upload');
+      analytics.trackFamilyQuickAction(action.label, action.route, { segment: session.segment, modal: true });
+      return;
+    }
+    
+    // Regular navigation
     analytics.trackFamilyQuickAction(action.label, action.route, { segment: session.segment });
     navigate(action.route);
   };
@@ -181,6 +202,10 @@ export function FamilyHome() {
       route: targetRoute 
     });
     navigate(targetRoute);
+  };
+
+  const closeModal = () => {
+    setActiveModal('none');
   };
 
   const formatTimestamp = (timestamp: string) => {
@@ -407,7 +432,7 @@ export function FamilyHome() {
               <Button 
                 variant="outline" 
                 size="sm" 
-                onClick={() => navigate('/receipts')}
+                onClick={() => setActiveModal('receipts')}
                 className="min-h-[44px]"
                 aria-label="Open full receipts viewer"
               >
@@ -490,6 +515,24 @@ export function FamilyHome() {
             </div>
           </footer>
         </main>
+
+        {/* Modals with ESC key handling */}
+        <InviteModal 
+          isOpen={activeModal === 'invite'}
+          onClose={closeModal}
+          type={inviteType}
+        />
+        
+        <UploadModal 
+          isOpen={activeModal === 'upload'}
+          onClose={closeModal}
+          type="vault"
+        />
+        
+        <ReceiptsModal 
+          isOpen={activeModal === 'receipts'}
+          onClose={closeModal}
+        />
       </div>
     </>
   );
