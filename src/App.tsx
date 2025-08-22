@@ -16,6 +16,7 @@ import Admin from '@/pages/nil/Admin';
 import Pricing from '@/pages/Pricing';
 import FixturesPanel from '@/pages/dev/FixturesPanel';
 import Discover from '@/pages/Discover';
+import { HowItWorks } from '@/pages/HowItWorks';
 import { OnboardingFlow } from '@/pages/OnboardingFlow';
 
 const DemoPage = React.lazy(() => import('@/pages/demos/[persona]'));
@@ -33,6 +34,7 @@ function App() {
             isAuthenticated ? <Navigate to="/nil/onboarding" replace /> : <Navigate to="/discover" replace />
           } />
           <Route path="/discover" element={<Discover />} />
+          <Route path="/how-it-works" element={<HowItWorks />} />
           <Route path="/onboarding" element={<OnboardingFlow />} />
           <Route path="/nil/onboarding" element={<NILOnboarding />} />
           <Route path="/nil/education" element={<Education />} />

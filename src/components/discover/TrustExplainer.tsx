@@ -27,25 +27,25 @@ const trustFeatures: TrustFeature[] = [
   {
     icon: <Shield className="h-8 w-8 text-gold" />,
     title: "Smart Checks",
-    description: "AI-powered validation ensures every action follows compliance rules and best practices.",
+    description: "Quick check before sending—to prevent mistakes.",
     techDetails: "Rules engine with machine learning validates actions against regulatory requirements, fiduciary standards, and institutional policies in real-time."
   },
   {
     icon: <FileCheck className="h-8 w-8 text-gold" />,
     title: "Proof Slips",
-    description: "Every action generates a cryptographic receipt that proves what happened, when, and why.",
-    techDetails: "Cryptographic hashing (SHA-256) creates immutable receipts for every transaction, decision, and communication with non-repudiation guarantees."
+    description: "A tiny, private record of what happened and why.",
+    techDetails: "Cryptographic hashing (SHA-256) creates immutable receipts for every transaction, decision, and communication with non-repudiation guarantees. No sensitive values included."
   },
   {
     icon: <Lock className="h-8 w-8 text-gold" />,
     title: "Secure Vault",
-    description: "Bank-grade encryption protects your sensitive information with role-based access controls.",
-    techDetails: "AES-256 encryption at rest, TLS 1.3 in transit, zero-knowledge architecture ensures we can't access your data even if we wanted to."
+    description: "Can't be changed; kept until the date you set.",
+    techDetails: "AES-256 encryption at rest, TLS 1.3 in transit, zero-knowledge architecture with legal hold capabilities and minimum-necessary sharing principles."
   },
   {
     icon: <Clock className="h-8 w-8 text-gold" />,
-    title: "Time-Stamp Anchors",
-    description: "Receipts are anchored to immutable timestamping services for legal-grade proof of existence.",
+    title: "Time-Stamp",
+    description: "A secure batch stamp—like notarizing the envelope.",
     techDetails: "Merkle tree batching with RFC 3161 timestamping and optional blockchain anchoring provides tamper-evident audit trails that hold up in court."
   }
 ];
@@ -58,7 +58,7 @@ export const TrustExplainer: React.FC = () => {
           Built on trust, proven with receipts
         </h2>
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-6">
-          Every action in our platform creates verifiable proof. Here's how we make trust transparent.
+          Every action in our platform creates verifiable proof. Here's how we make trust transparent with minimum-necessary sharing.
         </p>
         <Button variant="outline" asChild>
           <a href="/how-it-works" className="inline-flex items-center">
