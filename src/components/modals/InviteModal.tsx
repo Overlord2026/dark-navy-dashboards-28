@@ -21,6 +21,9 @@ export function InviteModal({ isOpen, onClose, type }: InviteModalProps) {
     e.preventDefault();
     // Handle invite logic here
     console.log('Inviting:', { type, email, name, message });
+    
+    // Show success feedback
+    alert(`Invitation sent to ${name} (${email})`);
     onClose();
   };
 

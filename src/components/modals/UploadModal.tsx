@@ -56,6 +56,9 @@ export function UploadModal({ isOpen, onClose, type }: UploadModalProps) {
   const handleUpload = () => {
     // Handle upload logic here
     console.log('Uploading files:', files, 'Type:', selectedType);
+    
+    // Show success feedback
+    alert(`Successfully uploaded ${files.length} files to ${selectedType} category`);
     onClose();
   };
 
