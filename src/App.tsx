@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { ThemeProvider } from '@/context/ThemeContext';
+import { ThemeProvider } from "next-themes";
 import { Toaster } from '@/components/ui/toaster';
 import NILOnboarding from '@/pages/nil/Onboarding';
 import Education from '@/pages/nil/Education';
@@ -15,7 +15,7 @@ import Pricing from '@/pages/Pricing';
 
 function App() {
   return (
-    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+    <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
       <Router>
         <div className="min-h-screen bg-background text-foreground">
           <Routes>

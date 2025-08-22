@@ -1,5 +1,5 @@
-import { recordReceipt } from '@/features/receipts/record';
 import { DecisionRDS } from '@/features/receipts/types';
+import { recordReceipt } from '@/features/receipts/record';
 
 export interface EducationModule {
   id: string;
@@ -8,51 +8,38 @@ export interface EducationModule {
   completedAt?: string;
 }
 
-// Simulated modules data
-const modules: EducationModule[] = [
-  { id: 'nil-basics', title: 'NIL Basics & Rights', status: 'todo' },
-  { id: 'social-media', title: 'Social Media Guidelines', status: 'todo' },
-  { id: 'contracts', title: 'Contract Fundamentals', status: 'todo' },
-  { id: 'tax-implications', title: 'Tax Implications', status: 'todo' },
-  { id: 'compliance', title: 'Compliance Requirements', status: 'todo' },
+let modules: EducationModule[] = [
+  { id: 'edu_mod_01', title: 'NIL Basics', status: 'done', completedAt: '2025-08-18T10:00:00Z' },
+  { id: 'edu_mod_02', title: 'Disclosure & FTC', status: 'done', completedAt: '2025-08-18T10:20:00Z' },
+  { id: 'edu_mod_03', title: 'Brand Safety', status: 'todo' }
 ];
 
-export function getModules(): EducationModule[] {
-  return [...modules];
+export async function getModules(): Promise<EducationModule[]> {
+  return modules;
 }
 
-export function completeModule(id: string): DecisionRDS {
-  const module = modules.find(m => m.id === id);
-  if (!module) {
-    throw new Error('Module not found');
-  }
-
-  module.status = 'done';
-  module.completedAt = new Date().toISOString();
-
-  // Check freshness - simulate staleness for demo
-  const completedCount = modules.filter(m => m.status === 'done').length;
-  const isStale = Math.random() < 0.3; // 30% chance of staleness for demo
+export async function completeModule(id: string): Promise<DecisionRDS> {
+  const m = modules.find(x => x.id === id);
+  if (!m) throw new Error('not found');
   
-  const isLastModule = completedCount === modules.length;
-  const result = isLastModule && !isStale ? 'approve' : 'deny';
-  const reasons = isLastModule 
-    ? (isStale ? ['EDU_STALE'] : ['EDU_FRESH'])
-    : ['EDU_INCOMPLETE'];
-
-  const rds: DecisionRDS = {
-    id: `edu_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+  m.status = 'done';
+  m.completedAt = new Date().toISOString();
+  
+  const freshnessDays = 30; // demo
+  const r: DecisionRDS = {
+    id: `rds_${Date.now()}`,
     type: 'Decision-RDS',
     action: 'education',
     policy_version: 'E-2025.08',
-    inputs_hash: hashInputs({ module_id: id, completed_at: module.completedAt }),
-    reasons,
-    result,
+    inputs_hash: 'sha256:demo',
+    reasons: [freshnessDays > 365 ? 'EDU_STALE' : 'EDU_FRESH'],
+    result: freshnessDays > 365 ? 'deny' : 'approve',
     anchor_ref: null,
     ts: new Date().toISOString()
   };
-
-  return recordReceipt(rds);
+  
+  recordReceipt(r);
+  return r;
 }
 
 function hashInputs(obj: any): string {

@@ -40,36 +40,22 @@ const disclosurePacks: DisclosurePack[] = [
   }
 ];
 
-export function chooseDisclosurePack(params: {
-  channel: 'IG' | 'TikTok' | 'YouTube';
-  jurisdiction: 'US' | 'CA';
-}): { pack: DisclosurePack; reasons: string[] } {
-  const { channel, jurisdiction } = params;
-  
-  const pack = disclosurePacks.find(p => 
-    p.channels.includes(channel) && p.jurisdictions.includes(jurisdiction)
-  );
-
-  if (!pack) {
-    throw new Error(`No disclosure pack found for ${channel} in ${jurisdiction}`);
-  }
-
-  const reasons = [
-    'DISCLOSURE_READY',
-    `CHANNEL_${channel}`,
-    `JURISDICTION_${jurisdiction}`
-  ];
-
-  return { pack, reasons };
+export function chooseDisclosurePack({ channel, jurisdiction }: { 
+  channel: 'IG' | 'TikTok' | 'YouTube'; 
+  jurisdiction: 'US' | 'CA' 
+}) {
+  const id = `FTC_${jurisdiction}_${channel}_2025-08`;
+  const reasons = ['DISCLOSURE_READY', `CHANNEL_${channel}`, `JURISDICTION_${jurisdiction}`];
+  return { id, reasons };
 }
 
 export function confirmDisclosurePack(packId: string, params: {
   channel: 'IG' | 'TikTok' | 'YouTube';
   jurisdiction: 'US' | 'CA';
 }): DecisionRDS {
-  const { pack, reasons } = chooseDisclosurePack(params);
+  const { id, reasons } = chooseDisclosurePack(params);
   
-  if (pack.id !== packId) {
+  if (id !== packId) {
     throw new Error('Pack ID mismatch');
   }
 

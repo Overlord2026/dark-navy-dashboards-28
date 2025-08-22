@@ -16,7 +16,15 @@ export default function DisclosuresPage() {
   React.useEffect(() => {
     try {
       const result = chooseDisclosurePack({ channel, jurisdiction });
-      setSelectedPack(result.pack);
+      // Create a mock pack object for display
+      const pack = {
+        id: result.id,
+        name: `${jurisdiction} ${channel} Standard`,
+        template: `#ad #sponsored #partnership`,
+        channels: [channel],
+        jurisdictions: [jurisdiction]
+      };
+      setSelectedPack(pack);
       setReasons(result.reasons);
     } catch (error) {
       setSelectedPack(null);

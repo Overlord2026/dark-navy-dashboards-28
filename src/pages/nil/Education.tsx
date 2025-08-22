@@ -10,13 +10,14 @@ export default function EducationPage() {
   const [modules, setModules] = React.useState<EducationModule[]>([]);
 
   React.useEffect(() => {
-    setModules(getModules());
+    getModules().then(setModules);
   }, []);
 
-  const handleCompleteModule = (id: string) => {
+  const handleCompleteModule = async (id: string) => {
     try {
-      const receipt = completeModule(id);
-      setModules(getModules());
+      const receipt = await completeModule(id);
+      const updatedModules = await getModules();
+      setModules(updatedModules);
       
       toast.success('Module completed!', {
         description: `Receipt: ${receipt.id}`,

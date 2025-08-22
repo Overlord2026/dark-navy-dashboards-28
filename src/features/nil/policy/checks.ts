@@ -8,12 +8,12 @@ export interface PolicyCheckResult {
   details?: Record<string, any>;
 }
 
-export function runChecks(contractId: string, offerId?: string): PolicyCheckResult {
+export async function runChecks(contractId: string, offerId?: string): Promise<PolicyCheckResult> {
   const reasons: string[] = [];
   let ok = true;
 
   // Check education completion
-  const modules = getModules();
+  const modules = await getModules();
   const completedModules = modules.filter(m => m.status === 'done');
   
   if (completedModules.length === modules.length) {
