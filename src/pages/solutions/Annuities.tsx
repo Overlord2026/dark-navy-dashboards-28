@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Play, Calculator, FileText, Award, Shield, CheckCircle, Upload, AlertTriangle, BookOpen } from 'lucide-react';
 import { CATALOG_TOOLS } from '@/data/catalogTools';
-import DemoLauncher from '@/components/demos/DemoLauncher';
+import { DemoLauncher } from '@/components/discover/DemoLauncher';
 import ShareButton from '@/components/ui/ShareButton';
 import { PUBLIC_CONFIG } from '@/config/publicConfig';
 
@@ -110,11 +110,13 @@ export function Annuities() {
 
       {/* Demo Launcher */}
       {selectedDemo && (
-        <DemoLauncher
-          demoId={selectedDemo}
-          open={!!selectedDemo}
-          onClose={() => setSelectedDemo(null)}
-        />
+        <div key={selectedDemo}>
+          <DemoLauncher
+            demoId={selectedDemo}
+            trigger={null}
+            onDemoComplete={() => setSelectedDemo(null)}
+          />
+        </div>
       )}
     </div>
   );

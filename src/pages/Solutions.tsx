@@ -7,7 +7,7 @@ import { Play, ExternalLink, Calculator, TrendingUp, Building, FileText, Shield,
 import { SOLUTIONS_CONFIG } from '@/config/solutionsConfig';
 import { CATALOG_TOOLS } from '@/data/catalogTools';
 import { getDemoById } from '@/config/demoConfig';
-import DemoLauncher from '@/components/demos/DemoLauncher';
+import { DemoLauncher } from '@/components/discover/DemoLauncher';
 import ShareButton from '@/components/ui/ShareButton';
 import { PUBLIC_CONFIG } from '@/config/publicConfig';
 
@@ -171,11 +171,13 @@ export default function Solutions() {
 
       {/* Demo Launcher */}
       {selectedDemo && (
-        <DemoLauncher
-          demoId={selectedDemo}
-          open={!!selectedDemo}
-          onClose={() => setSelectedDemo(null)}
-        />
+        <div key={selectedDemo}>
+          <DemoLauncher
+            demoId={selectedDemo}
+            trigger={null}
+            onDemoComplete={() => setSelectedDemo(null)}
+          />
+        </div>
       )}
     </div>
   );
