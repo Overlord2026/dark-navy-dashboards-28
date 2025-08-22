@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider } from "next-themes";
 import { Toaster } from '@/components/ui/toaster';
+import DevPanel from '@/components/dev/DevPanel';
 import NILOnboarding from '@/pages/nil/Onboarding';
 import Education from '@/pages/nil/Education';
 import Disclosures from '@/pages/nil/Disclosures';
@@ -33,6 +34,7 @@ function App() {
             <Route path="/pricing" element={<Pricing />} />
           </Routes>
           <Toaster />
+          <DevPanel />
         </div>
       </Router>
     </ThemeProvider>
