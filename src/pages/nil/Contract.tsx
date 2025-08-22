@@ -4,284 +4,340 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
-import { Separator } from '@/components/ui/separator';
-import { CheckCircle, AlertCircle, FileText, Users, Signature, Upload } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { CheckCircle, XCircle, FileText, Users, Signature, Send } from 'lucide-react';
 import { runChecks, validateContract, PolicyCheckResult } from '@/features/nil/policy/checks';
 import { recordReceipt } from '@/features/receipts/record';
-import { DecisionRDS } from '@/features/receipts/types';
 import { anchorBatch } from '@/features/anchor/simple-providers';
+import { DecisionRDS } from '@/features/receipts/types';
 import { toast } from 'sonner';
 
 export default function ContractPage() {
   const { id } = useParams<{ id: string }>();
-  const [contractTerms, setContractTerms] = React.useState('# NIL Partnership Agreement\n\nThis agreement outlines the terms for the NIL partnership...');
-  const [checkResults, setCheckResults] = React.useState<PolicyCheckResult | null>(null);
-  const [coSigners, setCoSigners] = React.useState<string[]>([]);
-  const [eSignStatus, setESignStatus] = React.useState<'pending' | 'sent' | 'signed'>('pending');
-  const [newCoSigner, setNewCoSigner] = React.useState('');
+  const contractId = id || 'default-contract';
+  
+  const [contractTerms, setContractTerms] = React.useState(`# NIL Agreement
+
+**Parties:** [Athlete Name] and [Brand Name]
+
+## Terms and Conditions
+
+1. **Grant of Rights**: Athlete grants Brand the right to use their name, image, and likeness for promotional purposes.
+
+2. **Compensation**: Brand agrees to pay Athlete $[Amount] for the rights granted herein.
+
+3. **Duration**: This agreement shall be effective from [Start Date] to [End Date].
+
+4. **Usage Rights**: Brand may use Athlete's NIL in the following channels:
+   - Social Media (Instagram, TikTok, YouTube)
+   - Digital Advertising
+   - Website Content
+
+5. **Exclusivity**: [Exclusivity terms to be defined]
+
+6. **Compliance**: Both parties agree to comply with all applicable NCAA, state, and federal regulations regarding NIL activities.`);
+
+  const [policyCheck, setPolicyCheck] = React.useState<PolicyCheckResult | null>(null);
+  const [contractValidation, setContractValidation] = React.useState<PolicyCheckResult | null>(null);
+  const [coSigners, setCoSigners] = React.useState<string[]>(['Parent/Guardian', 'University Compliance Officer']);
+  const [signatureStatus, setSignatureStatus] = React.useState<Record<string, boolean>>({});
+  const [isPublished, setIsPublished] = React.useState(false);
 
   const handleRunChecks = () => {
     try {
-      const results = runChecks(id || 'contract-1', 'offer-1');
-      const contractValidation = validateContract(id || 'contract-1');
+      const checks = runChecks(contractId);
+      setPolicyCheck(checks);
       
-      // Combine results
-      const combinedResults: PolicyCheckResult = {
-        ok: results.ok && contractValidation.ok,
-        reasons: [...results.reasons, ...contractValidation.reasons],
-        details: { ...results.details, contractValid: contractValidation.ok }
-      };
-      
-      setCheckResults(combinedResults);
-      
+      const validation = validateContract(contractId);
+      setContractValidation(validation);
+
       toast.success('Policy checks completed', {
-        description: combinedResults.ok ? 'All checks passed' : 'Some issues found'
+        description: checks.ok ? 'All checks passed' : `${checks.reasons.length} issues found`
       });
     } catch (error) {
       toast.error('Failed to run policy checks');
     }
   };
 
-  const handleAddCoSigner = () => {
-    if (newCoSigner && !coSigners.includes(newCoSigner)) {
-      setCoSigners(prev => [...prev, newCoSigner]);
-      setNewCoSigner('');
-      toast.success('Co-signer added');
-    }
-  };
-
-  const handleRequestCoSign = () => {
-    if (coSigners.length === 0) {
-      toast.error('No co-signers added');
-      return;
-    }
-    
-    toast.success('Co-sign requests sent', {
-      description: `Sent to ${coSigners.length} co-signers`
+  const handleRequestCoSign = (signer: string) => {
+    setSignatureStatus(prev => ({ ...prev, [signer]: true }));
+    toast.success(`Co-signature requested from ${signer}`, {
+      description: 'They will receive an email with signing instructions'
     });
   };
 
   const handleSendForESign = () => {
-    setESignStatus('sent');
-    toast.success('Contract sent for e-signature');
-    
-    // Simulate e-sign completion after 3 seconds
-    setTimeout(() => {
-      setESignStatus('signed');
-      toast.success('Contract signed!');
-    }, 3000);
+    // Simulate e-signature process
+    toast.success('Contract sent for e-signature', {
+      description: 'All parties will receive signing instructions'
+    });
   };
 
   const handlePublish = async () => {
-    if (!checkResults?.ok) {
-      toast.error('Cannot publish: Policy checks failed');
+    if (!policyCheck?.ok || !contractValidation?.ok) {
+      toast.error('Cannot publish: Policy checks must pass first');
       return;
     }
 
-    if (eSignStatus !== 'signed') {
-      toast.error('Cannot publish: Contract not signed');
+    const requiredCoSigns = coSigners.filter(signer => !signatureStatus[signer]);
+    if (requiredCoSigns.length > 0) {
+      toast.error('Cannot publish: Missing required co-signatures', {
+        description: `Still need: ${requiredCoSigns.join(', ')}`
+      });
       return;
     }
 
     try {
       // Create hash of contract content
       const contractHash = window.btoa(unescape(encodeURIComponent(contractTerms))).slice(0, 24);
+      
+      // Anchor the contract
       const anchorRef = await anchorBatch(contractHash);
 
-      const rds: DecisionRDS = {
+      // Create Decision-RDS for publish action
+      const publishRDS: DecisionRDS = {
         id: `publish_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
         type: 'Decision-RDS',
         action: 'publish',
         policy_version: 'E-2025.08',
         inputs_hash: contractHash,
-        reasons: checkResults.reasons,
+        reasons: [...(policyCheck?.reasons || []), ...(contractValidation?.reasons || [])],
         result: 'approve',
-        asset_id: id || 'contract-1',
+        asset_id: contractId,
         anchor_ref: anchorRef,
         ts: new Date().toISOString()
       };
 
-      const receipt = recordReceipt(rds);
-      
-      toast.success('Contract published!', {
+      const receipt = recordReceipt(publishRDS);
+      setIsPublished(true);
+
+      toast.success('Contract published successfully!', {
         description: `Receipt: ${receipt.id}`,
         action: {
           label: 'View Receipt',
-          onClick: () => console.log('Receipt:', receipt)
+          onClick: () => console.log('Publish receipt:', receipt)
         }
+      });
+
+      console.info('nil.contract.published', {
+        contractId,
+        receiptId: receipt.id,
+        anchorRef,
+        timestamp: new Date().toISOString()
       });
     } catch (error) {
       toast.error('Failed to publish contract');
     }
   };
 
-  const canPublish = checkResults?.ok && eSignStatus === 'signed';
+  const allChecksPass = policyCheck?.ok && contractValidation?.ok;
+  const allCoSigned = coSigners.every(signer => signatureStatus[signer]);
+  const canPublish = allChecksPass && allCoSigned && !isPublished;
 
   return (
     <div className="container mx-auto py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Contract Editor</h1>
-        <p className="text-muted-foreground">
-          Contract ID: {id || 'contract-1'}
-        </p>
+        <h1 className="text-3xl font-bold mb-2">NIL Contract Editor</h1>
+        <p className="text-muted-foreground">Contract ID: {contractId}</p>
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 space-y-6">
+      <Tabs defaultValue="terms" className="space-y-6">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="terms">Terms</TabsTrigger>
+          <TabsTrigger value="disclosures">Disclosures</TabsTrigger>
+          <TabsTrigger value="cosigners">Co-signers</TabsTrigger>
+          <TabsTrigger value="esign">E-Sign</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="terms">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <FileText className="h-5 w-5" />
                 Contract Terms
               </CardTitle>
-              <CardDescription>Edit the contract content in markdown</CardDescription>
+              <CardDescription>Edit the terms and conditions of your NIL agreement</CardDescription>
             </CardHeader>
             <CardContent>
               <Textarea
                 value={contractTerms}
                 onChange={(e) => setContractTerms(e.target.value)}
-                rows={15}
-                className="font-mono text-sm"
-                placeholder="Enter contract terms in markdown..."
+                placeholder="Enter contract terms in markdown format..."
+                className="min-h-[400px] font-mono"
               />
             </CardContent>
           </Card>
+        </TabsContent>
 
+        <TabsContent value="disclosures">
+          <Card>
+            <CardHeader>
+              <CardTitle>Bound Disclosures</CardTitle>
+              <CardDescription>Disclosure packs automatically bound to this contract</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                <div className="p-3 border rounded flex items-center justify-between">
+                  <div>
+                    <p className="font-medium">US Instagram Standard</p>
+                    <p className="text-sm text-muted-foreground">#ad #sponsored #partnership with @{'{brand}'}</p>
+                  </div>
+                  <Badge>Bound</Badge>
+                </div>
+                <div className="p-3 border rounded flex items-center justify-between">
+                  <div>
+                    <p className="font-medium">US TikTok Standard</p>
+                    <p className="text-sm text-muted-foreground">#sponsored #partnership with {'{brand}'}</p>
+                  </div>
+                  <Badge>Bound</Badge>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="cosigners">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Users className="h-5 w-5" />
                 Co-signers
               </CardTitle>
-              <CardDescription>Add required co-signers for this contract</CardDescription>
+              <CardDescription>Required signatures for contract approval</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex gap-2">
-                <input
-                  type="email"
-                  value={newCoSigner}
-                  onChange={(e) => setNewCoSigner(e.target.value)}
-                  placeholder="Enter email address"
-                  className="flex-1 px-3 py-2 border rounded-md"
-                />
-                <Button onClick={handleAddCoSigner} disabled={!newCoSigner}>
-                  Add
-                </Button>
-              </div>
-              
-              <div className="space-y-2">
-                {coSigners.map((signer, index) => (
-                  <div key={index} className="flex items-center justify-between p-2 bg-muted rounded-md">
-                    <span className="text-sm">{signer}</span>
-                    <Badge variant="secondary">Pending</Badge>
+            <CardContent>
+              <div className="space-y-3">
+                {coSigners.map((signer) => (
+                  <div key={signer} className="flex items-center justify-between p-3 border rounded">
+                    <div className="flex items-center gap-3">
+                      {signatureStatus[signer] ? (
+                        <CheckCircle className="h-5 w-5 text-green-500" />
+                      ) : (
+                        <XCircle className="h-5 w-5 text-muted-foreground" />
+                      )}
+                      <span className="font-medium">{signer}</span>
+                    </div>
+                    {!signatureStatus[signer] && (
+                      <Button
+                        size="sm"
+                        onClick={() => handleRequestCoSign(signer)}
+                      >
+                        Request Signature
+                      </Button>
+                    )}
                   </div>
                 ))}
-                {coSigners.length === 0 && (
-                  <p className="text-sm text-muted-foreground">No co-signers added</p>
-                )}
               </div>
-
-              <Button 
-                onClick={handleRequestCoSign}
-                disabled={coSigners.length === 0}
-                className="w-full"
-              >
-                Request Co-signatures
-              </Button>
             </CardContent>
           </Card>
-        </div>
+        </TabsContent>
 
-        <div className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Policy Checks</CardTitle>
-              <CardDescription>Validate contract compliance</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <Button onClick={handleRunChecks} className="w-full">
-                Run Checks
-              </Button>
-
-              {checkResults && (
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2">
-                    {checkResults.ok ? (
-                      <CheckCircle className="h-5 w-5 text-green-500" />
-                    ) : (
-                      <AlertCircle className="h-5 w-5 text-red-500" />
-                    )}
-                    <span className="font-medium">
-                      {checkResults.ok ? 'All checks passed' : 'Issues found'}
-                    </span>
-                  </div>
-
-                  <div className="space-y-1">
-                    {checkResults.reasons.map((reason, index) => (
-                      <Badge 
-                        key={index} 
-                        variant={reason.includes('MISSING') || reason.includes('INCOMPLETE') || reason.includes('CONFLICT') ? 'destructive' : 'default'}
-                        className="text-xs"
-                      >
-                        {reason}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-
+        <TabsContent value="esign">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Signature className="h-5 w-5" />
-                E-Signature
+                Electronic Signature
               </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center gap-2">
-                <Badge variant={eSignStatus === 'signed' ? 'default' : 'secondary'}>
-                  {eSignStatus}
-                </Badge>
-              </div>
-
-              <Button 
-                onClick={handleSendForESign}
-                disabled={eSignStatus !== 'pending'}
-                className="w-full"
-              >
-                Send for E-Sign
-              </Button>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Upload className="h-5 w-5" />
-                Publish Contract
-              </CardTitle>
+              <CardDescription>Send contract for electronic signatures</CardDescription>
             </CardHeader>
             <CardContent>
-              <Button 
-                onClick={handlePublish}
-                disabled={!canPublish}
-                className="w-full"
-                variant={canPublish ? 'default' : 'secondary'}
-              >
-                {canPublish ? 'Publish Contract' : 'Complete checks & signing first'}
-              </Button>
-              
-              {canPublish && (
-                <p className="text-xs text-muted-foreground mt-2 text-center">
-                  This will create an anchored Decision-RDS receipt
-                </p>
-              )}
+              <div className="space-y-4">
+                <div className="p-4 bg-muted rounded-lg">
+                  <p className="text-sm text-muted-foreground mb-2">Signing Order:</p>
+                  <ol className="list-decimal list-inside space-y-1 text-sm">
+                    <li>Athlete</li>
+                    <li>Parent/Guardian (if applicable)</li>
+                    <li>University Compliance Officer</li>
+                    <li>Brand Representative</li>
+                  </ol>
+                </div>
+                <Button onClick={handleSendForESign} className="w-full">
+                  <Send className="mr-2 h-4 w-4" />
+                  Send for E-Signature
+                </Button>
+              </div>
             </CardContent>
           </Card>
-        </div>
-      </div>
+        </TabsContent>
+      </Tabs>
+
+      {/* Action Panel */}
+      <Card className="mt-6">
+        <CardHeader>
+          <CardTitle>Contract Actions</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <div className="flex gap-2">
+              <Button onClick={handleRunChecks} variant="outline">
+                Run Policy Checks
+              </Button>
+              <Button 
+                onClick={handlePublish} 
+                disabled={!canPublish}
+                className="bg-primary"
+              >
+                {isPublished ? 'Published' : 'Publish Contract'}
+              </Button>
+            </div>
+
+            {/* Policy Check Results */}
+            {policyCheck && (
+              <div className="p-4 border rounded">
+                <div className="flex items-center gap-2 mb-2">
+                  {policyCheck.ok ? (
+                    <CheckCircle className="h-5 w-5 text-green-500" />
+                  ) : (
+                    <XCircle className="h-5 w-5 text-red-500" />
+                  )}
+                  <span className="font-medium">Policy Check Results</span>
+                </div>
+                <div className="flex flex-wrap gap-1">
+                  {policyCheck.reasons.map((reason, idx) => (
+                    <Badge key={idx} variant={policyCheck.ok ? 'default' : 'destructive'}>
+                      {reason}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Contract Validation Results */}
+            {contractValidation && (
+              <div className="p-4 border rounded">
+                <div className="flex items-center gap-2 mb-2">
+                  {contractValidation.ok ? (
+                    <CheckCircle className="h-5 w-5 text-green-500" />
+                  ) : (
+                    <XCircle className="h-5 w-5 text-red-500" />
+                  )}
+                  <span className="font-medium">Contract Validation</span>
+                </div>
+                <div className="flex flex-wrap gap-1">
+                  {contractValidation.reasons.map((reason, idx) => (
+                    <Badge key={idx} variant={contractValidation.ok ? 'default' : 'destructive'}>
+                      {reason}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {isPublished && (
+              <div className="p-4 bg-green-50 border border-green-200 rounded">
+                <div className="flex items-center gap-2 text-green-700">
+                  <CheckCircle className="h-5 w-5" />
+                  <span className="font-medium">Contract Published Successfully</span>
+                </div>
+                <p className="text-sm text-green-600 mt-1">
+                  Contract is now live and anchored on the blockchain
+                </p>
+              </div>
+            )}
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
