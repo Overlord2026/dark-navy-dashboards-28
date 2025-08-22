@@ -1,88 +1,56 @@
-import React from 'react';
+import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ArrowRight, Users, DollarSign, Shield, TrendingUp, Heart, Home } from 'lucide-react';
-import { DemoLauncher } from '@/components/discover/DemoLauncher';
-import { PatentFooter } from '@/components/ui/PatentFooter';
-import { PUBLIC_CONFIG, withFeatureFlag } from '@/config/publicConfig';
+import { Play, ExternalLink, Calculator, TrendingUp, Building, FileText, Shield, Heart } from 'lucide-react';
+import { SOLUTIONS_CONFIG } from '@/config/solutionsConfig';
+import { CATALOG_TOOLS } from '@/data/catalogTools';
+import { getDemoById } from '@/config/demoConfig';
+import DemoLauncher from '@/components/demos/DemoLauncher';
+import ShareButton from '@/components/ui/ShareButton';
+import { PUBLIC_CONFIG } from '@/config/publicConfig';
 
-interface SolutionHub {
-  id: string;
-  title: string;
-  description: string;
-  icon: React.ReactNode;
-  route: string;
-  demoId: string;
-  status: 'active' | 'soon';
-  benefits: string[];
-}
+const IconMap = {
+  insurance: Shield,
+  annuities: Calculator,
+  lending: Building,
+  investments: TrendingUp,
+  tax: FileText,
+  estate: FileText
+};
 
-const solutionHubs: SolutionHub[] = [
-  {
-    id: 'annuities',
-    title: 'Annuities & Income Planning',
-    description: 'Clear education, calculators, and suitability checks with a fiduciary shortlist.',
-    icon: <DollarSign className="h-8 w-8 text-gold" />,
-    route: '/solutions/annuities',
-    demoId: 'solutions-annuities',
-    status: 'active',
-    benefits: ['Income Calculator', 'Suitability Assessment', 'Product Comparison', 'Fiduciary Reviews']
-  },
-  {
-    id: 'private-markets',
-    title: 'Private Markets & Investments',
-    description: 'Curated private investments with built-in due diligence and compliance checks.',
-    icon: <TrendingUp className="h-8 w-8 text-gold" />,
-    route: '/solutions/private-markets',
-    demoId: 'investments-private-markets',
-    status: 'active',
-    benefits: ['Due Diligence AI', 'Private Alpha Signals', 'Overlap Analysis', 'Liquidity Scoring']
-  },
-  {
-    id: 'insurance',
-    title: 'Insurance & Protection',
-    description: 'Life, disability, and long-term care solutions with fiduciary analysis.',
-    icon: <Shield className="h-8 w-8 text-gold" />,
-    route: '/solutions/insurance',
-    demoId: 'insurance-life-annuity',
-    status: 'active',
-    benefits: ['Policy Comparison', 'Needs Analysis', 'Surrender Optimization', 'Claims Support']
-  },
-  {
-    id: 'estate-tax',
-    title: 'Estate & Tax Planning',
-    description: 'Comprehensive estate and tax strategies with document automation.',
-    icon: <Users className="h-8 w-8 text-gold" />,
-    route: '/solutions/estate-tax',
-    demoId: 'attorneys',
-    status: 'soon',
-    benefits: ['Estate Planning', 'Tax Optimization', 'Document Generation', 'Compliance Tracking']
-  },
-  {
-    id: 'healthcare',
-    title: 'Healthcare & Longevity',
-    description: 'Health records, longevity planning, and provider coordination.',
-    icon: <Heart className="h-8 w-8 text-gold" />,
-    route: '/solutions/healthcare',
-    demoId: 'healthcare-providers',
-    status: 'soon',
-    benefits: ['Health Records', 'Longevity Planning', 'Provider Network', 'Care Coordination']
-  },
-  {
-    id: 'real-estate',
-    title: 'Real Estate & Property',
-    description: 'Property management, financing, and investment analysis tools.',
-    icon: <Home className="h-8 w-8 text-gold" />,
-    route: '/solutions/real-estate',
-    demoId: 'realtor',
-    status: 'soon',
-    benefits: ['Property Analysis', 'Financing Options', 'Market Intelligence', 'Investment Tracking']
-  }
-];
+const BenefitMap = {
+  insurance: "Comprehensive coverage analysis and compliance tools",
+  annuities: "Education, calculators, and fiduciary guidance",
+  lending: "Credit analysis and loan structuring tools",
+  investments: "Portfolio planning and retirement income strategies",
+  tax: "Tax optimization and compliance automation",
+  estate: "Estate planning and wealth transfer tools"
+};
 
-export const Solutions: React.FC = () => {
-  // Check if solutions are enabled
+export default function Solutions() {
+  const [selectedDemo, setSelectedDemo] = useState<string | null>(null);
+
+  const handleDemo = (solutionKey: string) => {
+    // Map solution keys to demo IDs
+    const demoMap: { [key: string]: string } = {
+      annuities: 'annuities-solutions',
+      investments: 'families-retirees',
+      insurance: 'insurance-life-annuity'
+    };
+    
+    const demoId = demoMap[solutionKey];
+    if (demoId && PUBLIC_CONFIG.DEMOS_ENABLED) {
+      setSelectedDemo(demoId);
+    }
+  };
+
+  const getToolsForSolution = (solutionKey: string) => {
+    return CATALOG_TOOLS.filter(tool => 
+      tool.solutions.includes(solutionKey as any)
+    ).slice(0, 6);
+  };
+
   if (!PUBLIC_CONFIG.SOLUTIONS_ENABLED) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -94,93 +62,115 @@ export const Solutions: React.FC = () => {
     );
   }
 
-  const handleSolutionClick = (hub: SolutionHub) => {
-    if (hub.status === 'active') {
-      window.location.href = hub.route;
-    }
-  };
-
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-6 py-12">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">
-            Solutions Hub
-          </h1>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Comprehensive financial solutions organized by specialty. 
-            Each hub contains tools, calculators, education, and compliance built-in.
-          </p>
+      {/* Hero Section */}
+      <section className="py-16 bg-gradient-to-br from-primary/5 via-background to-secondary/5">
+        <div className="container mx-auto px-4">
+          <div className="text-center max-w-3xl mx-auto">
+            <h1 className="text-4xl md:text-5xl font-bold mb-6">
+              Complete Solutions for Financial Professionals
+            </h1>
+            <p className="text-xl text-muted-foreground mb-8">
+              Integrated tools and workflows for insurance, investments, tax planning, and more—all in one platform.
+            </p>
+          </div>
         </div>
-        
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {solutionHubs.map((hub) => (
-            <Card 
-              key={hub.id} 
-              className={`h-full flex flex-col hover:shadow-lg transition-all cursor-pointer ${
-                hub.status === 'soon' ? 'opacity-75' : ''
-              }`}
-              onClick={() => handleSolutionClick(hub)}
-            >
-              <CardHeader>
-                <div className="flex items-center justify-between mb-4">
-                  {hub.icon}
-                  {hub.status === 'soon' && (
-                    <Badge variant="outline" className="text-xs">
-                      Coming Soon
-                    </Badge>
-                  )}
-                </div>
-                <CardTitle className="text-xl">{hub.title}</CardTitle>
-                <CardDescription className="text-sm leading-relaxed">
-                  {hub.description}
-                </CardDescription>
-              </CardHeader>
-              
-              <CardContent className="flex-1 flex flex-col">
-                <div className="space-y-2 mb-6">
-                  {hub.benefits.map((benefit, index) => (
-                    <div key={index} className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <div className="w-1.5 h-1.5 bg-gold rounded-full" />
-                      {benefit}
+      </section>
+
+      {/* Solutions Grid */}
+      <section className="py-16">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center mb-12">Choose Your Solution</h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+            {SOLUTIONS_CONFIG.map((solution) => {
+              const Icon = IconMap[solution.key as keyof typeof IconMap] || Building;
+              const benefit = BenefitMap[solution.key as keyof typeof BenefitMap] || "Professional tools and workflows";
+              const tools = getToolsForSolution(solution.key);
+              const hasDemo = ['annuities', 'investments', 'insurance'].includes(solution.key);
+
+              return (
+                <Card key={solution.key} className="h-full hover:shadow-lg transition-shadow">
+                  <CardHeader>
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="p-2 bg-primary/10 rounded-lg">
+                        <Icon className="w-6 h-6 text-primary" />
+                      </div>
+                      <CardTitle className="text-xl">{solution.label}</CardTitle>
                     </div>
-                  ))}
-                </div>
-                
-                <div className="space-y-3 mt-auto">
-                  {withFeatureFlag('DEMOS_ENABLED',
-                    <DemoLauncher 
-                      demoId={hub.demoId}
-                      trigger={
-                        <Button variant="outline" className="w-full">
-                          <ArrowRight className="mr-2 h-4 w-4" />
-                          See Demo
-                        </Button>
-                      }
-                    />
-                  )}
+                    <CardDescription className="text-base">
+                      {benefit}
+                    </CardDescription>
+                  </CardHeader>
                   
-                  {hub.status === 'active' ? (
-                    <Button 
-                      className="w-full bg-gold hover:bg-gold-hover text-navy"
-                      onClick={() => handleSolutionClick(hub)}
-                    >
-                      <ArrowRight className="mr-2 h-4 w-4" />
-                      Explore {hub.title}
-                    </Button>
-                  ) : (
-                    <Button disabled className="w-full">
-                      Coming Soon
-                    </Button>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+                  <CardContent className="space-y-4">
+                    {/* Featured Tools */}
+                    <div>
+                      <h4 className="font-medium mb-2 text-sm text-muted-foreground">Featured Tools:</h4>
+                      <div className="space-y-1">
+                        {tools.slice(0, 3).map((tool) => (
+                          <div key={tool.key} className="flex items-center gap-2 text-sm">
+                            <div className="w-1.5 h-1.5 bg-primary rounded-full" />
+                            <span>{tool.label}</span>
+                            {tool.status === 'coming-soon' && (
+                              <Badge variant="secondary" className="text-xs">Soon</Badge>
+                            )}
+                          </div>
+                        ))}
+                        {tools.length > 3 && (
+                          <div className="text-xs text-muted-foreground">
+                            +{tools.length - 3} more tools
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="flex flex-col gap-2 pt-2">
+                      {hasDemo && PUBLIC_CONFIG.DEMOS_ENABLED && (
+                        <Button 
+                          variant="outline" 
+                          className="w-full flex items-center gap-2"
+                          onClick={() => handleDemo(solution.key)}
+                        >
+                          <Play className="w-4 h-4" />
+                          See 60-sec Demo
+                        </Button>
+                      )}
+                      
+                      <Button 
+                        className="w-full flex items-center gap-2"
+                        onClick={() => window.open(solution.route, '_blank')}
+                      >
+                        <ExternalLink className="w-4 h-4" />
+                        Open Catalog
+                      </Button>
+
+                      <ShareButton
+                        title={`${solution.label} Solutions`}
+                        text={`Check out our ${solution.label.toLowerCase()} solutions - ${benefit}`}
+                        url={`${window.location.origin}${solution.route}`}
+                        variant="ghost"
+                        className="w-full"
+                      />
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
         </div>
-      </div>
-      
-      <PatentFooter />
+      </section>
+
+      {/* Demo Launcher */}
+      {selectedDemo && (
+        <DemoLauncher
+          demoId={selectedDemo}
+          open={!!selectedDemo}
+          onClose={() => setSelectedDemo(null)}
+        />
+      )}
     </div>
   );
-};
+}

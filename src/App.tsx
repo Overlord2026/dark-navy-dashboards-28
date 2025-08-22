@@ -17,7 +17,7 @@ import Pricing from '@/pages/Pricing';
 import FixturesPanel from '@/pages/dev/FixturesPanel';
 import Discover from '@/pages/Discover';
 import { HowItWorks } from '@/pages/HowItWorks';
-import { Solutions } from '@/pages/Solutions';
+import Solutions from '@/pages/Solutions';
 import { Annuities } from '@/pages/solutions/Annuities';
 import { OnboardingFlow } from '@/pages/OnboardingFlow';
 import { PUBLIC_CONFIG } from '@/config/publicConfig';
