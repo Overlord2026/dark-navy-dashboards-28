@@ -1,0 +1,120 @@
+export interface PersonaConfig {
+  persona: string;
+  segment?: string;
+  label: string;
+  benefit: string;
+  cta: string;
+  tags: string[];
+  demoId: string;
+}
+
+export const PERSONA_CONFIG: PersonaConfig[] = [
+  {
+    persona: "families",
+    segment: "aspiring",
+    label: "Families — Aspiring",
+    benefit: "One private workspace to build and protect your future.",
+    cta: "Start Aspiring Family workspace",
+    tags: ["family", "aspiring"],
+    demoId: "families-aspiring"
+  },
+  {
+    persona: "families",
+    segment: "retirees",
+    label: "Families — Retirees",
+    benefit: "Retire with confidence—income that lasts, taxes under control, estate buttoned-up, healthspan in view—on one platform.",
+    cta: "Start Retiree Family workspace",
+    tags: ["family", "retiree"],
+    demoId: "families-retirees"
+  },
+  {
+    persona: "advisors",
+    label: "Advisors — Full-stack platform",
+    benefit: "Run your practice end-to-end—lead to lifelong client—in one place.",
+    cta: "Start Advisor workspace",
+    tags: ["advisor"],
+    demoId: "advisors"
+  },
+  {
+    persona: "cpas",
+    label: "CPAs — Full-stack platform",
+    benefit: "Requests, deliverables, signatures, retention—organized and audit-ready.",
+    cta: "Start CPA workspace",
+    tags: ["cpa"],
+    demoId: "cpas"
+  },
+  {
+    persona: "attorneys",
+    label: "Attorneys — Full-stack platform",
+    benefit: "Matters, authority, signatures, and the evidence trail—defensible and easy to share.",
+    cta: "Start Attorney workspace",
+    tags: ["attorney"],
+    demoId: "attorneys"
+  },
+  {
+    persona: "insurance",
+    segment: "life-annuity",
+    label: "Insurance — Life & Annuity",
+    benefit: "Quotes, replacements, enrollments and renewals—with receipts—in one place.",
+    cta: "Start Life & Annuity workspace",
+    tags: ["insurance", "life", "annuity"],
+    demoId: "insurance-life-annuity"
+  },
+  {
+    persona: "insurance",
+    segment: "medicare-ltc",
+    label: "Insurance — Medicare & LTC",
+    benefit: "Medicare/LTC proposals and enrollments—compliant by design.",
+    cta: "Start Medicare & LTC workspace",
+    tags: ["insurance", "medicare", "ltc"],
+    demoId: "insurance-medicare-ltc"
+  },
+  {
+    persona: "healthcare",
+    segment: "providers",
+    label: "Healthcare — Providers/Clinics",
+    benefit: "One secure window to the family's shared essentials—no extra portals.",
+    cta: "Request access",
+    tags: ["healthcare", "provider"],
+    demoId: "healthcare-providers"
+  },
+  {
+    persona: "healthcare",
+    segment: "influencers",
+    label: "Healthcare — Influencers/Coaches",
+    benefit: "Turn content into protocols & programs—supervise clients without duct-taping tools.",
+    cta: "Start coach workspace",
+    tags: ["healthcare", "coach", "longevity"],
+    demoId: "healthcare-influencers"
+  },
+  {
+    persona: "realtor",
+    label: "Realtors — Full-stack platform",
+    benefit: "Listings, offers, closings—plus client financial docs—in one place.",
+    cta: "Start Realtor workspace",
+    tags: ["realtor"],
+    demoId: "realtor"
+  },
+  {
+    persona: "nil-athlete",
+    label: "NIL — Athlete/Parent",
+    benefit: "Training → Disclosures → Offers → Payments—done right and kept on record.",
+    cta: "Start NIL workspace",
+    tags: ["nil", "athlete"],
+    demoId: "nil-athlete"
+  },
+  {
+    persona: "nil-school",
+    label: "NIL — School/Brand",
+    benefit: "Publish rules once; verify automatically—fewer disputes, faster launches.",
+    cta: "Start School/Brand workspace",
+    tags: ["nil", "school"],
+    demoId: "nil-school"
+  }
+];
+
+export const getPersonaByKey = (key: string) => 
+  PERSONA_CONFIG.find(p => `${p.persona}-${p.segment || ''}`.replace(/^-|-$/g, '') === key);
+
+export const getPersonasByTag = (tag: string) => 
+  PERSONA_CONFIG.filter(p => p.tags.includes(tag));
