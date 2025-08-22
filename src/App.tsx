@@ -20,6 +20,7 @@ import { HowItWorks } from '@/pages/HowItWorks';
 import { Solutions } from '@/pages/Solutions';
 import { Annuities } from '@/pages/solutions/Annuities';
 import { OnboardingFlow } from '@/pages/OnboardingFlow';
+import { PUBLIC_CONFIG } from '@/config/publicConfig';
 
 const DemoPage = React.lazy(() => import('@/pages/demos/[persona]'));
 
@@ -33,12 +34,14 @@ function App() {
       <div className="min-h-screen bg-background text-foreground">
         <Routes>
           <Route path="/" element={
-            isAuthenticated ? <Navigate to="/nil/onboarding" replace /> : <Navigate to="/discover" replace />
+            isAuthenticated ? <Navigate to="/nil/onboarding" replace /> : 
+            PUBLIC_CONFIG.DISCOVER_ENABLED ? <Navigate to="/discover" replace /> : 
+            <Navigate to="/nil/onboarding" replace />
           } />
-          <Route path="/discover" element={<Discover />} />
+          {PUBLIC_CONFIG.DISCOVER_ENABLED && <Route path="/discover" element={<Discover />} />}
           <Route path="/how-it-works" element={<HowItWorks />} />
-          <Route path="/solutions" element={<Solutions />} />
-          <Route path="/solutions/annuities" element={<Annuities />} />
+          {PUBLIC_CONFIG.SOLUTIONS_ENABLED && <Route path="/solutions" element={<Solutions />} />}
+          {PUBLIC_CONFIG.SOLUTIONS_ENABLED && <Route path="/solutions/annuities" element={<Annuities />} />}
           <Route path="/onboarding" element={<OnboardingFlow />} />
           <Route path="/nil/onboarding" element={<NILOnboarding />} />
           <Route path="/nil/education" element={<Education />} />
@@ -51,11 +54,13 @@ function App() {
           <Route path="/nil/receipts" element={<Receipts />} />
           <Route path="/nil/admin" element={<Admin />} />
           <Route path="/pricing" element={<Pricing />} />
-          <Route path="/demos/:persona" element={
-            <Suspense fallback={<div className="min-h-screen bg-background flex items-center justify-center">Loading demo...</div>}>
-              <DemoPage />
-            </Suspense>
-          } />
+          {PUBLIC_CONFIG.DEMOS_ENABLED && (
+            <Route path="/demos/:persona" element={
+              <Suspense fallback={<div className="min-h-screen bg-background flex items-center justify-center">Loading demo...</div>}>
+                <DemoPage />
+              </Suspense>
+            } />
+          )}
           {/* Dev-only route */}
           {process.env.NODE_ENV !== 'production' && (
             <Route path="/dev/fixtures" element={<FixturesPanel />} />

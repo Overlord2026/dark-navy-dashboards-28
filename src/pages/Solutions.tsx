@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { ArrowRight, Users, DollarSign, Shield, TrendingUp, Heart, Home } from 'lucide-react';
 import { DemoLauncher } from '@/components/discover/DemoLauncher';
 import { PatentFooter } from '@/components/ui/PatentFooter';
+import { PUBLIC_CONFIG, withFeatureFlag } from '@/config/publicConfig';
 
 interface SolutionHub {
   id: string;
@@ -81,6 +82,18 @@ const solutionHubs: SolutionHub[] = [
 ];
 
 export const Solutions: React.FC = () => {
+  // Check if solutions are enabled
+  if (!PUBLIC_CONFIG.SOLUTIONS_ENABLED) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4">Solutions Coming Soon</h1>
+          <p className="text-muted-foreground">Our solutions hub is currently being prepared.</p>
+        </div>
+      </div>
+    );
+  }
+
   const handleSolutionClick = (hub: SolutionHub) => {
     if (hub.status === 'active') {
       window.location.href = hub.route;
@@ -135,15 +148,17 @@ export const Solutions: React.FC = () => {
                 </div>
                 
                 <div className="space-y-3 mt-auto">
-                  <DemoLauncher 
-                    demoId={hub.demoId}
-                    trigger={
-                      <Button variant="outline" className="w-full">
-                        <ArrowRight className="mr-2 h-4 w-4" />
-                        See Demo
-                      </Button>
-                    }
-                  />
+                  {withFeatureFlag('DEMOS_ENABLED',
+                    <DemoLauncher 
+                      demoId={hub.demoId}
+                      trigger={
+                        <Button variant="outline" className="w-full">
+                          <ArrowRight className="mr-2 h-4 w-4" />
+                          See Demo
+                        </Button>
+                      }
+                    />
+                  )}
                   
                   {hub.status === 'active' ? (
                     <Button 

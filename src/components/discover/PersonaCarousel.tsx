@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { DemoLauncher } from './DemoLauncher';
 import { ShareButton } from './ShareButton';
 import { Play, ExternalLink, ArrowRight } from 'lucide-react';
+import { PUBLIC_CONFIG, withFeatureFlag } from '@/config/publicConfig';
 
 interface PersonaTile {
   id: string;
@@ -121,24 +122,28 @@ export const PersonaCarousel: React.FC = () => {
             </CardDescription>
             
             <div className="space-y-3">
-              <DemoLauncher 
-                demoId={persona.demoId}
-                trigger={
-                  <Button variant="outline" className="w-full">
-                    <Play className="mr-2 h-4 w-4" />
-                    See 60-second demo
-                  </Button>
-                }
-              />
+              {withFeatureFlag('DEMOS_ENABLED',
+                <DemoLauncher 
+                  demoId={persona.demoId}
+                  trigger={
+                    <Button variant="outline" className="w-full">
+                      <Play className="mr-2 h-4 w-4" />
+                      See 60-second demo
+                    </Button>
+                  }
+                />
+              )}
               
-              <Button 
-                variant="ghost" 
-                className="w-full"
-                onClick={() => handleCatalogOpen(persona.catalogFilter)}
-              >
-                <ExternalLink className="mr-2 h-4 w-4" />
-                Open catalog
-              </Button>
+              {withFeatureFlag('CATALOG_ENABLED',
+                <Button 
+                  variant="ghost" 
+                  className="w-full"
+                  onClick={() => handleCatalogOpen(persona.catalogFilter)}
+                >
+                  <ExternalLink className="mr-2 h-4 w-4" />
+                  Open catalog
+                </Button>
+              )}
               
               <Button 
                 className="w-full bg-gold hover:bg-gold-hover text-navy"

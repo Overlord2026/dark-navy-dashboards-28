@@ -10,6 +10,7 @@ import { DemoLauncher } from '@/components/discover/DemoLauncher';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Play, ArrowRight, Shield, Users, Zap } from 'lucide-react';
+import { PUBLIC_CONFIG, withFeatureFlag } from '@/config/publicConfig';
 
 const Discover: React.FC = () => {
   useEffect(() => {
@@ -87,15 +88,17 @@ const Discover: React.FC = () => {
                 <ArrowRight className="mr-2 h-5 w-5" />
                 Start your workspace
               </Button>
-              <DemoLauncher 
-                demoId="overview"
-                trigger={
-                  <Button variant="outline" size="lg" className="border-white/20 text-white hover:bg-white/10 px-8 py-4">
-                    <Play className="mr-2 h-5 w-5" />
-                    See 60-second demo
-                  </Button>
-                }
-              />
+              {withFeatureFlag('DEMOS_ENABLED',
+                <DemoLauncher 
+                  demoId="overview"
+                  trigger={
+                    <Button variant="outline" size="lg" className="border-white/20 text-white hover:bg-white/10 px-8 py-4">
+                      <Play className="mr-2 h-5 w-5" />
+                      See 60-second demo
+                    </Button>
+                  }
+                />
+              )}
             </div>
             
             <div className="pt-8">
@@ -143,22 +146,26 @@ const Discover: React.FC = () => {
       </section>
 
       {/* Catalog Shelf */}
-      <section className="py-16 bg-background">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Explore our catalog</h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Tools, courses, guides, and rails to help you succeed.
-            </p>
+      {withFeatureFlag('CATALOG_ENABLED',
+        <section className="py-16 bg-background">
+          <div className="container mx-auto px-6">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">Explore our catalog</h2>
+              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+                Tools, courses, guides, and rails to help you succeed.
+              </p>
+            </div>
+            <CatalogShelf />
           </div>
-          <CatalogShelf />
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Trust Explainer */}
-      <section className="py-16 bg-muted/30">
-        <TrustExplainer />
-      </section>
+      {withFeatureFlag('TRUST_EXPLAINER_ENABLED',
+        <section className="py-16 bg-muted/30">
+          <TrustExplainer />
+        </section>
+      )}
 
       {/* About & Tools Strip */}
       <section className="py-16 bg-background border-t">
@@ -200,7 +207,7 @@ const Discover: React.FC = () => {
       </section>
 
       <FooterMinimal />
-      <CTAStickyBar />
+      {withFeatureFlag('CTA_BAR_ENABLED', <CTAStickyBar />)}
       
       {/* Patent Footer */}
       <div className="border-t bg-muted/30 py-6">

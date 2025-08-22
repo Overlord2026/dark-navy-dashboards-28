@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Calculator, BookOpen, Shield, Users, ArrowRight, Play } from 'lucide-react';
 import { DemoLauncher } from '@/components/discover/DemoLauncher';
 import { PatentFooter } from '@/components/ui/PatentFooter';
+import { PUBLIC_CONFIG, withFeatureFlag } from '@/config/publicConfig';
 
 interface AnnuitySection {
   id: string;
@@ -76,15 +77,17 @@ export const Annuities: React.FC = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <DemoLauncher 
-              demoId="solutions-annuities"
-              trigger={
-                <Button size="lg" className="bg-gold hover:bg-gold-hover text-navy">
-                  <Play className="mr-2 h-5 w-5" />
-                  See 60-Second Demo
-                </Button>
-              }
-            />
+            {withFeatureFlag('DEMOS_ENABLED',
+              <DemoLauncher 
+                demoId="solutions-annuities"
+                trigger={
+                  <Button size="lg" className="bg-gold hover:bg-gold-hover text-navy">
+                    <Play className="mr-2 h-5 w-5" />
+                    See 60-Second Demo
+                  </Button>
+                }
+              />
+            )}
             <Button variant="outline" size="lg" asChild>
               <a href="/onboarding?focus=annuities">
                 <ArrowRight className="mr-2 h-5 w-5" />
