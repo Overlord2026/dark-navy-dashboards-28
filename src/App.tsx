@@ -15,6 +15,7 @@ import Payments from '@/pages/nil/Payments';
 import Disputes from '@/pages/nil/Disputes';
 import Receipts from '@/pages/nil/Receipts';
 import Admin from '@/pages/nil/Admin';
+import NilReadyCheckPage from '@/pages/nil/admin/NilReadyCheckPage';
 import Pricing from '@/pages/Pricing';
 import FixturesPanel from '@/pages/dev/FixturesPanel';
 import Discover from '@/pages/Discover';
@@ -84,6 +85,7 @@ function App() {
             <Route path="/nil/disputes" element={<Disputes />} />
             <Route path="/nil/receipts" element={<Receipts />} />
             <Route path="/nil/admin" element={<Admin />} />
+            <Route path="/nil/admin/ready-check" element={<NilReadyCheckPage />} />
             <Route path="/pricing" element={<Pricing />} />
             
             {/* Admin Routes */}

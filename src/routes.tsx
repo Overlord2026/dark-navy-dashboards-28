@@ -1,3 +1,4 @@
+import React, { Suspense } from "react";
 import { createBrowserRouter } from "react-router-dom";
 import { SecureMessagesPage } from "./pages/SecureMessagesPage";
 import { HomePage } from "./pages/TabPages";
@@ -51,6 +52,7 @@ import BrandDashboard from "./pages/nil/brand/BrandDashboard";
 import NILAdminAnchors from "./pages/admin/NILAdminAnchors";
 import AthleteHomeDashboard from "./pages/nil/athlete/AthleteHomeDashboard";
 import AgentHomeDashboard from "./pages/nil/agent/AgentHomeDashboard";
+import NilReadyCheckPage from "./pages/nil/admin/NilReadyCheckPage";
 
 // QA pages removed for production
 // All QA routes, checklists, and testing components removed for production security
@@ -217,6 +219,10 @@ export const router = createBrowserRouter([
   {
     path: "/admin/nil/anchors",
     element: <NILAdminAnchors />
+  },
+  {
+    path: "/nil/admin/ready-check",
+    element: <NilReadyCheckPage />
   },
   // Education route
   {

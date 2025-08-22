@@ -3,7 +3,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Settings, CheckCircle, Clock, FileText, Shield } from 'lucide-react';
+import { Settings, CheckCircle, Clock, FileText, Shield, Play } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 // Lazy load heavy admin panels to avoid bundling on other pages
@@ -15,6 +16,7 @@ const AdminFixturesPanel = lazy(() => import('@/components/admin/AdminFixturesPa
 import { getReceiptsCount } from '@/features/receipts/record';
 
 export default function AdminPage() {
+  const navigate = useNavigate();
   const [currentVersion, setCurrentVersion] = React.useState('E-2025.08');
   const [versions] = React.useState([
     { version: 'E-2025.08', status: 'active', deployedAt: '2025-08-01' },
@@ -58,10 +60,19 @@ export default function AdminPage() {
           <h1 className="text-3xl font-bold mb-2">NIL Admin</h1>
           <p className="text-muted-foreground">Manage policy versions and system configuration</p>
         </div>
-        <Badge variant="outline" className="bg-blue-50 text-blue-700">
-          <Shield className="w-4 h-4 mr-1" />
-          Admin Access
-        </Badge>
+        <div className="flex items-center gap-2">
+          <Button 
+            onClick={() => navigate('/nil/admin/ready-check')}
+            className="flex items-center gap-2"
+          >
+            <Play className="w-4 h-4" />
+            Ready Check & Seeder
+          </Button>
+          <Badge variant="outline" className="bg-blue-50 text-blue-700">
+            <Shield className="w-4 h-4 mr-1" />
+            Admin Access
+          </Badge>
+        </div>
       </div>
 
       <Suspense fallback={<div className="p-4 text-center text-muted-foreground">Loading admin tools...</div>}>
