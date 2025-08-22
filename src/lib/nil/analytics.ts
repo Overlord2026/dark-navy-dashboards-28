@@ -168,6 +168,15 @@ export class NILAnalytics {
     });
   }
 
+  // Quick Action Events
+  static quickActionClick(userType: string, action: string) {
+    this.trackEvent('nil.quick_action.click', {
+      userType,
+      action,
+      source: 'dashboard'
+    });
+  }
+
   // Accessibility Events
   static accessibilityViolation(violationType: string, element: string, severity: 'error' | 'warning') {
     this.trackEvent('a11y.violation', {
