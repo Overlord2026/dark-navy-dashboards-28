@@ -1,10 +1,20 @@
 import React from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Download, RefreshCw, CheckCircle, AlertTriangle, XCircle } from 'lucide-react';
 import { validateConfigs } from '@/tools/validateConfigs';
 import { validateFamilyTools } from '@/tools/validateFamilyToolsWrapper';
-import { validateNil } from '@/tools/validateNil'; // omit if not using nilTools.json
+import { validateNil } from '@/tools/validateNil';
 import { checkPublicRoutes } from '@/tools/checkPublicRoutes';
 import { runDevSeed } from '@/tools/devSeed';
-import { getMissingRoutes, getToolsNeedingStatusUpdate } from '@/tools/auditLinks';
+import { auditAllLinks, getMissingRoutes, getToolsNeedingStatusUpdate } from '@/tools/auditLinks';
+import { routeExists } from '@/tools/routeMap';
+import { CATALOG_TOOLS } from '@/data/catalogTools';
+import familyToolsConfig from '@/config/familyTools.json';
+import nilToolsConfig from '@/config/nilTools.json';
+import { toast } from '@/hooks/use-toast';
 
 const PUBLIC_ROUTES = [
   '/discover',
@@ -21,7 +31,22 @@ const PUBLIC_ROUTES = [
   '/personas/nil-school'
 ];
 
-type Result = { label:string; status:'ok'|'warn'|'fail'; notes?:string[] }
+type Result = { label:string; status:'ok'|'warn'|'fail'; notes?:string[]; details?:any }
+
+interface RouteAuditResult {
+  broken: any[];
+  previews: any[];
+  familyToolsCoverage: {
+    total: number;
+    covered: number;
+    missing: any[];
+  };
+  nilToolsCoverage: {
+    total: number;
+    covered: number;
+    missing: any[];
+  };
+}
 
 export default function ReadyCheck() {
   const [running, setRunning] = React.useState(false);
@@ -29,6 +54,89 @@ export default function ReadyCheck() {
   const [routes, setRoutes] = React.useState<{path:string; ok:boolean; status?:number}[]>([]);
   const [seedMsg, setSeedMsg] = React.useState<string>('');
   const [missingRoutes, setMissingRoutes] = React.useState<ReturnType<typeof getMissingRoutes>>([]);
+  const [routeAudit, setRouteAudit] = React.useState<RouteAuditResult | null>(null);
+  const [fixingPreviews, setFixingPreviews] = React.useState(false);
+
+  // Enhanced route audit function
+  const performRouteAudit = () => {
+    const allLinks = auditAllLinks();
+    const missing = getMissingRoutes();
+    
+    // Check family tools coverage
+    const familyToolsLinks: any[] = [];
+    Object.entries(familyToolsConfig).forEach(([segment, config]) => {
+      (config as any).tabs?.forEach((tab: any) => {
+        tab.cards?.forEach((card: any) => {
+          if (card.toolKey) {
+            const catalogItem = CATALOG_TOOLS.find(item => item.key === card.toolKey);
+            if (catalogItem) {
+              familyToolsLinks.push({
+                toolKey: card.toolKey,
+                route: catalogItem.route,
+                segment,
+                tab: tab.key,
+                exists: routeExists(catalogItem.route)
+              });
+            }
+          }
+        });
+      });
+      
+      (config as any).quickActions?.forEach((action: any) => {
+        if (action.route) {
+          familyToolsLinks.push({
+            route: action.route,
+            segment,
+            type: 'quickAction',
+            exists: routeExists(action.route)
+          });
+        }
+      });
+    });
+
+    // Check NIL tools coverage
+    const nilToolsLinks: any[] = [];
+    Object.entries(nilToolsConfig).forEach(([segment, config]) => {
+      (config as any).tabs?.forEach((tab: any) => {
+        tab.cards?.forEach((card: any) => {
+          if (card.route) {
+            nilToolsLinks.push({
+              route: card.route,
+              segment,
+              tab: tab.key,
+              exists: routeExists(card.route)
+            });
+          }
+        });
+      });
+      
+      (config as any).quickActions?.forEach((action: any) => {
+        if (action.route) {
+          nilToolsLinks.push({
+            route: action.route,
+            segment,
+            type: 'quickAction',
+            exists: routeExists(action.route)
+          });
+        }
+      });
+    });
+
+    return {
+      broken: allLinks.filter(link => !link.exists && !missing.some(m => m.route === link.route)),
+      previews: missing,
+      familyToolsCoverage: {
+        total: familyToolsLinks.length,
+        covered: familyToolsLinks.filter(link => link.exists).length,
+        missing: familyToolsLinks.filter(link => !link.exists)
+      },
+      nilToolsCoverage: {
+        total: nilToolsLinks.length,
+        covered: nilToolsLinks.filter(link => link.exists).length,
+        missing: nilToolsLinks.filter(link => !link.exists)
+      }
+    };
+  };
 
   async function runAll() {
     setRunning(true);
@@ -66,16 +174,53 @@ export default function ReadyCheck() {
     res.push({ label:'Public routes', status: bad.length ? 'warn' : 'ok',
                notes: bad.map(b=> `${b.path} -> ${b.status||'ERR'}`) });
 
-    // 5) Route audit - find missing routes we link to
-    const missing = getMissingRoutes();
-    setMissingRoutes(missing);
-    const missingCount = missing.length;
-    res.push({ 
-      label: 'Route audit', 
-      status: missingCount > 0 ? 'warn' : 'ok',
-      notes: missingCount > 0 ? 
-        [`Missing routes mapped to preview: ${missingCount}`, ...missing.slice(0, 5).map(m => `${m.route} (${m.source})`)] :
-        ['All linked routes exist']
+    // 5) Enhanced route audit
+    const audit = performRouteAudit();
+    setRouteAudit(audit);
+    setMissingRoutes(audit.previews);
+
+    // Broken routes (should be 0 after F-ROUTES)
+    res.push({
+      label: 'Broken routes (hard 404s)',
+      status: audit.broken.length > 0 ? 'fail' : 'ok',
+      notes: audit.broken.length > 0 ? 
+        [`${audit.broken.length} broken routes found`, ...audit.broken.slice(0, 5).map(b => `${b.route} (${b.source})`)] :
+        ['No broken routes - all links work'],
+      details: audit.broken
+    });
+
+    // Preview mappings
+    res.push({
+      label: 'Preview-mapped routes',
+      status: audit.previews.length > 0 ? 'warn' : 'ok',
+      notes: audit.previews.length > 0 ? 
+        [`${audit.previews.length} routes mapped to previews`, ...audit.previews.slice(0, 5).map(p => `${p.route} → /preview/${p.toolKey || 'unknown'}`)] :
+        ['All routes have implementations'],
+      details: audit.previews
+    });
+
+    // Family tools coverage
+    const familyCoveragePercent = Math.round((audit.familyToolsCoverage.covered / audit.familyToolsCoverage.total) * 100);
+    res.push({
+      label: 'Family tools coverage',
+      status: audit.familyToolsCoverage.missing.length > 0 ? 'warn' : 'ok',
+      notes: [
+        `${audit.familyToolsCoverage.covered}/${audit.familyToolsCoverage.total} tools accessible (${familyCoveragePercent}%)`,
+        ...audit.familyToolsCoverage.missing.slice(0, 3).map(m => `Missing: ${m.route} (${m.segment}/${m.tab || m.type})`)
+      ],
+      details: audit.familyToolsCoverage
+    });
+
+    // NIL tools coverage
+    const nilCoveragePercent = Math.round((audit.nilToolsCoverage.covered / audit.nilToolsCoverage.total) * 100);
+    res.push({
+      label: 'NIL tools coverage',
+      status: audit.nilToolsCoverage.missing.length > 0 ? 'warn' : 'ok',
+      notes: [
+        `${audit.nilToolsCoverage.covered}/${audit.nilToolsCoverage.total} tools accessible (${nilCoveragePercent}%)`,
+        ...audit.nilToolsCoverage.missing.slice(0, 3).map(m => `Missing: ${m.route} (${m.segment}/${m.tab || m.type})`)
+      ],
+      details: audit.nilToolsCoverage
     });
 
     setResults(res);
@@ -88,6 +233,64 @@ export default function ReadyCheck() {
     setTimeout(()=>setSeedMsg(''), 3000);
   }
 
+  const regeneratePreviews = async () => {
+    setFixingPreviews(true);
+    try {
+      // Re-run the route audit to catch any new missing routes
+      const audit = performRouteAudit();
+      setRouteAudit(audit);
+      setMissingRoutes(audit.previews);
+      
+      toast({
+        title: "Previews regenerated",
+        description: `Found ${audit.previews.length} routes mapped to previews`,
+      });
+    } catch (error) {
+      toast({
+        title: "Error regenerating previews",
+        description: "Failed to regenerate preview mappings",
+        variant: "destructive"
+      });
+    }
+    setFixingPreviews(false);
+  };
+
+  const exportCSV = () => {
+    if (!routeAudit) return;
+    
+    const csvData = [
+      ['Type', 'Route', 'Status', 'Source', 'Tool Key', 'Notes'],
+      ...routeAudit.broken.map(item => ['Broken', item.route, 'FAIL', item.source, item.toolKey || '', 'Hard 404']),
+      ...routeAudit.previews.map(item => ['Preview', item.route, 'WARN', item.source, item.toolKey || '', 'Mapped to preview']),
+      ...routeAudit.familyToolsCoverage.missing.map(item => ['Family Tool', item.route, 'WARN', `${item.segment}/${item.tab || item.type}`, item.toolKey || '', 'Missing from family tools']),
+      ...routeAudit.nilToolsCoverage.missing.map(item => ['NIL Tool', item.route, 'WARN', `${item.segment}/${item.tab || item.type}`, '', 'Missing from NIL tools'])
+    ];
+    
+    const csvContent = csvData.map(row => row.map(cell => `"${cell}"`).join(',')).join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `ready-check-${new Date().toISOString().split('T')[0]}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    toast({
+      title: "CSV exported",
+      description: "Ready check results exported to CSV",
+    });
+  };
+
+  const getStatusIcon = (status: Result['status']) => {
+    switch (status) {
+      case 'ok': return <CheckCircle className="w-5 h-5 text-green-600" />;
+      case 'warn': return <AlertTriangle className="w-5 h-5 text-yellow-600" />;
+      case 'fail': return <XCircle className="w-5 h-5 text-red-600" />;
+    }
+  };
+
   const statusColor: Record<Result['status'], string> = {
     ok:   '#10B981', // mint
     warn: '#F59E0B',
@@ -95,86 +298,216 @@ export default function ReadyCheck() {
   };
 
   return (
-    <div className="p-6 space-y-6" style={{ color:'#0B1E33' }}>
-      <h1 className="text-2xl font-semibold">Ready-Check</h1>
-      <p className="text-sm">Run config & route checks, then (dev only) seed demo Proof Slips.</p>
-
-      <div className="space-x-2">
-        <button disabled={running} onClick={runAll}
-          className="rounded-xl px-4 py-2 text-[#0A0A0A] border border-[#D4AF37] bg-[#D4AF37]">
-          {running ? 'Running…' : 'Run All Checks'}
-        </button>
-        <button onClick={()=>seed('nil')}
-          className="rounded-xl px-4 py-2 border border-gray-300">Seed NIL (dev)</button>
-        <button onClick={()=>seed('family')}
-          className="rounded-xl px-4 py-2 border border-gray-300">Seed Family (dev)</button>
-        {seedMsg && <span className="ml-2 text-sm">{seedMsg}</span>}
+    <div className="container mx-auto px-6 py-8 space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold">Ready-Check</h1>
+          <p className="text-muted-foreground mt-2">
+            Comprehensive config & route validation, preview management, and export tools.
+          </p>
+        </div>
+        
+        <div className="flex items-center gap-2">
+          {routeAudit && (
+            <>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={exportCSV}
+                className="flex items-center gap-2"
+              >
+                <Download className="w-4 h-4" />
+                Export CSV
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={regeneratePreviews}
+                disabled={fixingPreviews}
+                className="flex items-center gap-2"
+              >
+                <RefreshCw className={`w-4 h-4 ${fixingPreviews ? 'animate-spin' : ''}`} />
+                Regenerate Previews
+              </Button>
+            </>
+          )}
+        </div>
       </div>
 
-      <div className="grid gap-4">
-        {results.map((r, i) => (
-          <div key={i} className="rounded-xl p-4 border"
-               style={{borderColor:statusColor[r.status]}}>
-            <div className="flex items-center justify-between">
-              <h2 className="font-semibold">{r.label}</h2>
-              <span className="px-2 py-1 rounded text-white"
-                    style={{ backgroundColor: statusColor[r.status] }}>
-                {r.status.toUpperCase()}
-              </span>
-            </div>
-            {r.notes && r.notes.length > 0 && (
-              <ul className="mt-2 list-disc pl-5 text-sm">
-                {r.notes.slice(0,10).map((n, idx)=> <li key={idx}>{n}</li>)}
-                {r.notes.length > 10 && <li>…{r.notes.length - 10} more</li>}
-              </ul>
+      {/* Action Buttons */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Actions</CardTitle>
+          <CardDescription>Run checks and seed development data</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-wrap gap-3">
+            <Button 
+              disabled={running} 
+              onClick={runAll}
+              size="lg"
+              className="flex items-center gap-2"
+            >
+              {running ? (
+                <>
+                  <RefreshCw className="w-4 h-4 animate-spin" />
+                  Running…
+                </>
+              ) : (
+                'Run All Checks'
+              )}
+            </Button>
+            <Button 
+              variant="outline"
+              onClick={() => seed('nil')}
+              className="flex items-center gap-2"
+            >
+              Seed NIL (dev)
+            </Button>
+            <Button 
+              variant="outline"
+              onClick={() => seed('family')}
+              className="flex items-center gap-2"
+            >
+              Seed Family (dev)
+            </Button>
+            {seedMsg && (
+              <Alert className="flex-1 max-w-sm">
+                <AlertDescription>{seedMsg}</AlertDescription>
+              </Alert>
             )}
           </div>
-        ))}
-      </div>
+        </CardContent>
+      </Card>
 
-      <div>
-        <h3 className="font-semibold mt-2 mb-1">Public Routes</h3>
-        <ul className="text-sm">
-          {routes.map((r, i)=> (
-            <li key={i}>
-              {r.ok ? '✅' : '⚠️'} <a href={r.path} target="_blank" rel="noreferrer">{r.path}</a>
-              {typeof r.status !== 'undefined' && ` — ${r.status}`}
-            </li>
+      {/* Results Grid */}
+      {results.length > 0 && (
+        <div className="grid gap-4">
+          {results.map((r, i) => (
+            <Card key={i} className={`border-l-4`} style={{borderLeftColor: statusColor[r.status]}}>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="flex items-center gap-2">
+                    {getStatusIcon(r.status)}
+                    {r.label}
+                  </CardTitle>
+                  <Badge 
+                    variant={r.status === 'ok' ? 'default' : r.status === 'warn' ? 'secondary' : 'destructive'}
+                  >
+                    {r.status.toUpperCase()}
+                  </Badge>
+                </div>
+              </CardHeader>
+              {r.notes && r.notes.length > 0 && (
+                <CardContent>
+                  <ul className="space-y-1 text-sm">
+                    {r.notes.slice(0, 10).map((note, idx) => (
+                      <li key={idx} className="flex items-start gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground mt-2 flex-shrink-0" />
+                        {note}
+                      </li>
+                    ))}
+                    {r.notes.length > 10 && (
+                      <li className="text-muted-foreground italic">
+                        …{r.notes.length - 10} more items
+                      </li>
+                    )}
+                  </ul>
+                </CardContent>
+              )}
+            </Card>
           ))}
-        </ul>
-      </div>
-
-      {missingRoutes.length > 0 && (
-        <div>
-          <h3 className="font-semibold mt-2 mb-1">Missing Routes (Auto-Preview Created)</h3>
-          <ul className="text-sm space-y-1">
-            {missingRoutes.slice(0, 10).map((miss, i) => (
-              <li key={i} className="flex justify-between">
-                <span>
-                  ⚠️ <a href={miss.route} target="_blank" rel="noreferrer" className="underline">
-                    {miss.route}
-                  </a>
-                  {miss.toolKey && (
-                    <span className="ml-2 text-xs text-muted-foreground">
-                      → /preview/{miss.toolKey}
-                    </span>
-                  )}
-                </span>
-                <span className="text-xs text-muted-foreground">{miss.source}</span>
-              </li>
-            ))}
-            {missingRoutes.length > 10 && (
-              <li className="text-xs text-muted-foreground">
-                ...{missingRoutes.length - 10} more missing routes
-              </li>
-            )}
-          </ul>
         </div>
       )}
 
-      <div className="text-xs text-gray-600 mt-4">
-        Tip: After publishing, run this again in production with feature flags on. Aim for OK across the board.
-      </div>
+      {/* Detailed Route Information */}
+      {routes.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Public Routes Status</CardTitle>
+            <CardDescription>Accessibility check for public routes</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-2">
+              {routes.map((r, i) => (
+                <div key={i} className="flex items-center justify-between p-2 rounded border">
+                  <div className="flex items-center gap-2">
+                    {r.ok ? (
+                      <CheckCircle className="w-4 h-4 text-green-600" />
+                    ) : (
+                      <XCircle className="w-4 h-4 text-red-600" />
+                    )}
+                    <a 
+                      href={r.path} 
+                      target="_blank" 
+                      rel="noreferrer"
+                      className="font-mono text-sm hover:underline"
+                    >
+                      {r.path}
+                    </a>
+                  </div>
+                  {typeof r.status !== 'undefined' && (
+                    <Badge variant="outline" className="font-mono">
+                      {r.status}
+                    </Badge>
+                  )}
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Preview Mappings Detail */}
+      {missingRoutes.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <AlertTriangle className="w-5 h-5 text-yellow-600" />
+              Preview-Mapped Routes ({missingRoutes.length})
+            </CardTitle>
+            <CardDescription>
+              Routes that are mapped to preview pages instead of real implementations
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-2 max-h-60 overflow-y-auto">
+              {missingRoutes.map((miss, i) => (
+                <div key={i} className="flex items-center justify-between p-2 rounded border">
+                  <div className="flex items-center gap-2">
+                    <AlertTriangle className="w-4 h-4 text-yellow-600" />
+                    <a 
+                      href={miss.route} 
+                      target="_blank" 
+                      rel="noreferrer"
+                      className="font-mono text-sm hover:underline"
+                    >
+                      {miss.route}
+                    </a>
+                    {miss.toolKey && (
+                      <Badge variant="outline" className="text-xs">
+                        → /preview/{miss.toolKey}
+                      </Badge>
+                    )}
+                  </div>
+                  <Badge variant="secondary" className="text-xs">
+                    {miss.source}
+                  </Badge>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Summary Footer */}
+      <Alert>
+        <CheckCircle className="w-4 h-4" />
+        <AlertDescription>
+          <strong>Tip:</strong> After publishing, run this again in production with feature flags enabled. 
+          Aim for all checks showing "OK" status. Preview mappings are acceptable as warnings.
+        </AlertDescription>
+      </Alert>
     </div>
   );
 }
