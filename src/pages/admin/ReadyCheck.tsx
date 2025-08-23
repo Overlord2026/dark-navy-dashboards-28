@@ -14,7 +14,8 @@ import { routeExists } from '@/tools/routeMap';
 import { CATALOG_TOOLS } from '@/data/catalogTools';
 import familyToolsConfig from '@/config/familyTools.json';
 import nilToolsConfig from '@/config/nilTools.json';
-import { toast } from '@/hooks/use-toast';
+import { getWorkspaceTools, installTool } from '@/services/workspaceTools';
+import { useToast } from '@/hooks/use-toast';
 
 const PUBLIC_ROUTES = [
   '/discover',
@@ -49,6 +50,7 @@ interface RouteAuditResult {
 }
 
 export default function ReadyCheck() {
+  const { toast } = useToast();
   const [running, setRunning] = React.useState(false);
   const [results, setResults] = React.useState<Result[]>([]);
   const [routes, setRoutes] = React.useState<{path:string; ok:boolean; status?:number}[]>([]);
@@ -56,6 +58,7 @@ export default function ReadyCheck() {
   const [missingRoutes, setMissingRoutes] = React.useState<ReturnType<typeof getMissingRoutes>>([]);
   const [routeAudit, setRouteAudit] = React.useState<RouteAuditResult | null>(null);
   const [fixingPreviews, setFixingPreviews] = React.useState(false);
+  const [installingTools, setInstallingTools] = React.useState(false);
 
   // Enhanced route audit function
   const performRouteAudit = () => {
@@ -223,6 +226,20 @@ export default function ReadyCheck() {
       details: audit.nilToolsCoverage
     });
 
+    // Workspace tools status
+    const workspace = getWorkspaceTools();
+    res.push({
+      label: 'Installed tools (this workspace)',
+      status: 'ok',
+      notes: [
+        `${workspace.installed.length} tools installed`,
+        `Persona: ${workspace.persona || 'not set'}`,
+        `Segment: ${workspace.segment || 'not set'}`,
+        ...workspace.installed.slice(0, 5).map(tool => `✓ ${tool}`)
+      ],
+      details: workspace
+    });
+
     setResults(res);
     setRunning(false);
   }
@@ -253,6 +270,45 @@ export default function ReadyCheck() {
       });
     }
     setFixingPreviews(false);
+  };
+
+  const installAllRecommended = async () => {
+    setInstallingTools(true);
+    try {
+      // Default recommended tools for demo workspace
+      const recommendedTools = [
+        'retirement-roadmap',
+        'wealth-vault', 
+        'longevity-hub',
+        'taxhub-diy',
+        'annuities-review'
+      ];
+      
+      let installed = 0;
+      for (const toolKey of recommendedTools) {
+        try {
+          await installTool(toolKey, true); // Install with seed data
+          installed++;
+        } catch (error) {
+          console.warn(`Failed to install ${toolKey}:`, error);
+        }
+      }
+      
+      toast({
+        title: "Tools installed",
+        description: `Installed ${installed} of ${recommendedTools.length} recommended tools`,
+      });
+      
+      // Re-run checks to update workspace tools status
+      runAll();
+    } catch (error) {
+      toast({
+        title: "Installation failed",
+        description: "Failed to install recommended tools",
+        variant: "destructive"
+      });
+    }
+    setInstallingTools(false);
   };
 
   const exportCSV = () => {
@@ -370,6 +426,15 @@ export default function ReadyCheck() {
               className="flex items-center gap-2"
             >
               Seed Family (dev)
+            </Button>
+            <Button 
+              variant="outline"
+              onClick={installAllRecommended}
+              disabled={installingTools}
+              className="flex items-center gap-2"
+            >
+              <RefreshCw className={`w-4 h-4 ${installingTools ? 'animate-spin' : ''}`} />
+              Install All Recommended
             </Button>
             {seedMsg && (
               <Alert className="flex-1 max-w-sm">

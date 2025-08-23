@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTools } from '@/contexts/ToolsContext';
 import { InstallModal } from '@/components/tools/InstallModal';
+import { getWorkspaceTools } from '@/services/workspaceTools';
 
 interface ToolGateProps {
   toolKey: string;
@@ -39,10 +40,23 @@ export const ToolGate: React.FC<ToolGateProps> = ({
     return null;
   }
 
-  // Show install modal when tool gate is rendered
+  // Show install modal when tool gate is rendered and track click
   React.useEffect(() => {
+    const workspace = getWorkspaceTools();
+    
+    // Track tool card click analytics
+    if (typeof window !== 'undefined' && window.analytics) {
+      window.analytics.track('tool.card.click', { 
+        key: toolKey, 
+        persona: workspace.persona, 
+        segment: workspace.segment,
+        installed: isToolEnabled(toolKey),
+        available: isToolAvailable(toolKey)
+      });
+    }
+    
     setShowInstallModal(true);
-  }, []);
+  }, [toolKey, isToolEnabled, isToolAvailable]);
 
   return (
     <>
