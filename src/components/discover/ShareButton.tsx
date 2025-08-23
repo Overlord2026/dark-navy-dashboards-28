@@ -29,6 +29,15 @@ export const ShareButton: React.FC<ShareButtonProps> = ({
   const [copied, setCopied] = useState(false);
 
   const handleShare = async () => {
+    // Analytics - share.click
+    if (typeof window !== 'undefined' && (window as any).analytics) {
+      (window as any).analytics.track('share.click', { 
+        url,
+        text,
+        title
+      });
+    }
+
     onShare?.();
 
     // Try Web Share API first (mobile)
@@ -40,12 +49,13 @@ export const ShareButton: React.FC<ShareButtonProps> = ({
           url
         });
 
-        // Analytics for successful native share
+        // Analytics - share.success
         if (typeof window !== 'undefined' && (window as any).analytics) {
           (window as any).analytics.track('share.success', { 
             method: 'native',
             url,
-            text
+            text,
+            title
           });
         }
         return;
@@ -61,13 +71,21 @@ export const ShareButton: React.FC<ShareButtonProps> = ({
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
 
-      // Analytics for successful copy
+      // Analytics - share.success
       if (typeof window !== 'undefined' && (window as any).analytics) {
         (window as any).analytics.track('share.success', { 
           method: 'copy',
           url,
-          text
+          text,
+          title
         });
+      }
+
+      // Toast notification
+      if (typeof window !== 'undefined' && window.dispatchEvent) {
+        window.dispatchEvent(new CustomEvent('toast', {
+          detail: { message: 'Link copied to clipboard!' }
+        }));
       }
     } catch (error) {
       // Final fallback: show share modal
@@ -82,12 +100,13 @@ export const ShareButton: React.FC<ShareButtonProps> = ({
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
       
-      // Analytics
+      // Analytics - share.success
       if (typeof window !== 'undefined' && (window as any).analytics) {
         (window as any).analytics.track('share.success', { 
           method: 'modal_copy',
           url,
-          text
+          text,
+          title
         });
       }
     } catch (error) {
@@ -123,12 +142,13 @@ export const ShareButton: React.FC<ShareButtonProps> = ({
     if (shareUrl) {
       window.open(shareUrl, '_blank', 'width=600,height=400');
       
-      // Analytics
+      // Analytics - share.click
       if (typeof window !== 'undefined' && (window as any).analytics) {
         (window as any).analytics.track('share.click', { 
           platform,
           url,
-          text
+          text,
+          title
         });
       }
     }

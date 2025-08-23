@@ -62,10 +62,11 @@ export const DemoLauncher: React.FC<DemoLauncherProps> = ({
     setIsOpen(true);
     onDemoStart?.();
     
-    // Analytics
+    // Analytics - demo.open
     if (typeof window !== 'undefined' && (window as any).analytics) {
-      (window as any).analytics.track('lp.persona.demo.launch', { 
-        demoId,
+      (window as any).analytics.track('demo.open', { 
+        id: demoId,
+        title: simpleDemo?.title,
         source: 'demo_launcher'
       });
     }
@@ -74,6 +75,15 @@ export const DemoLauncher: React.FC<DemoLauncherProps> = ({
   const handleClose = () => {
     setIsOpen(false);
     onDemoComplete?.();
+    
+    // Analytics - demo.complete
+    if (typeof window !== 'undefined' && (window as any).analytics) {
+      (window as any).analytics.track('demo.complete', { 
+        id: demoId,
+        title: simpleDemo?.title,
+        source: 'demo_launcher'
+      });
+    }
   };
 
   if (!demo) {

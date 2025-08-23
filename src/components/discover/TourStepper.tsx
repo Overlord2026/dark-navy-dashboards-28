@@ -83,17 +83,18 @@ export const TourStepper: React.FC<TourStepperProps> = ({ demo, isOpen, onClose 
       setIsPlaying(true);
       setProgress(0);
       
-      // Analytics
+      // Analytics - demo.open
       if (typeof window !== 'undefined' && (window as any).analytics) {
-        (window as any).analytics.track('lp.persona.demo.open', { 
-          demoId: demo.id,
+        (window as any).analytics.track('demo.open', { 
+          id: demo.id,
+          title: demo.title,
           persona: demo.persona,
           segment: demo.segment,
           category: demo.category
         });
       }
     }
-  }, [isOpen, demo.id, demo.persona, demo.segment, demo.category]);
+  }, [isOpen, demo.id, demo.title, demo.persona, demo.segment, demo.category]);
 
   // Keyboard navigation
   useEffect(() => {
@@ -148,10 +149,11 @@ export const TourStepper: React.FC<TourStepperProps> = ({ demo, isOpen, onClose 
   }, [currentStep]);
 
   const handleStartWorkspace = () => {
-    // Analytics
+    // Analytics - demo.complete with action
     if (typeof window !== 'undefined' && (window as any).analytics) {
-      (window as any).analytics.track('lp.persona.demo.complete', { 
-        demoId: demo.id,
+      (window as any).analytics.track('demo.complete', { 
+        id: demo.id,
+        title: demo.title,
         persona: demo.persona,
         segment: demo.segment,
         category: demo.category,
@@ -170,10 +172,11 @@ export const TourStepper: React.FC<TourStepperProps> = ({ demo, isOpen, onClose 
   };
 
   const handleShare = () => {
-    // Analytics
+    // Analytics - demo.complete with share action
     if (typeof window !== 'undefined' && (window as any).analytics) {
-      (window as any).analytics.track('lp.persona.demo.complete', { 
-        demoId: demo.id,
+      (window as any).analytics.track('demo.complete', { 
+        id: demo.id,
+        title: demo.title,
         persona: demo.persona,
         segment: demo.segment,
         category: demo.category,

@@ -24,6 +24,15 @@ export default function ShareButton({
   const { toast } = useToast();
 
   const handleShare = async () => {
+    // Analytics - share.click
+    if (typeof window !== 'undefined' && (window as any).analytics) {
+      (window as any).analytics.track('share.click', { 
+        url,
+        text,
+        title
+      });
+    }
+
     // Try Web Share API first (mobile-friendly)
     if (navigator.share) {
       try {
@@ -32,6 +41,16 @@ export default function ShareButton({
           text,
           url
         });
+
+        // Analytics - share.success
+        if (typeof window !== 'undefined' && (window as any).analytics) {
+          (window as any).analytics.track('share.success', { 
+            method: 'native',
+            url,
+            text,
+            title
+          });
+        }
         return;
       } catch (error) {
         // User cancelled or error occurred, fallback to clipboard
@@ -47,6 +66,16 @@ export default function ShareButton({
         title: "Link copied!",
         description: "The link has been copied to your clipboard.",
       });
+
+      // Analytics - share.success
+      if (typeof window !== 'undefined' && (window as any).analytics) {
+        (window as any).analytics.track('share.success', { 
+          method: 'copy',
+          url,
+          text,
+          title
+        });
+      }
       
       // Reset copied state after 2 seconds
       setTimeout(() => setCopied(false), 2000);
