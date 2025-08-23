@@ -13,7 +13,7 @@ const BRAND = {
 const GROUPS = {
   publicShell: ['PUBLIC_DISCOVER_ENABLED','PUBLIC_CATALOG_ENABLED','PUBLIC_CTA_BAR','TRUST_EXPLAINER_ENABLED','DEMOS_ENABLED'],
   solutions:   ['SOLUTIONS_ENABLED'],
-  nil:         ['NIL_PUBLIC_ENABLED'],
+  nil:         ['NIL_PUBLIC_ENABLED','NIL_AGENT_ENABLED','NIL_SCHOOL_ENABLED'],
 };
 
 function computeStatus(f: any) {
