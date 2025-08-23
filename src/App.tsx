@@ -20,7 +20,8 @@ import Pricing from '@/pages/Pricing';
 import FixturesPanel from '@/pages/dev/FixturesPanel';
 import Discover from '@/pages/Discover';
 import { HowItWorks } from '@/pages/HowItWorks';
-import Solutions from '@/pages/Solutions';
+import SolutionsHub from '@/pages/SolutionsHub';
+import SolutionCategoryPage from '@/pages/solutions/SolutionCategoryPage';
 import { Annuities } from '@/pages/solutions/Annuities';
 import { OnboardingFlow } from '@/pages/OnboardingFlow';
 import QACoverage from '@/pages/admin/QACoverage';
@@ -60,7 +61,8 @@ function App() {
             {/* Public Pages - Flag Protected */}
             {getFlag('PUBLIC_DISCOVER_ENABLED') && <Route path="/discover" element={<Discover />} />}
             <Route path="/how-it-works" element={<HowItWorks />} />
-            {getFlag('SOLUTIONS_ENABLED') && <Route path="/solutions" element={<Solutions />} />}
+            {getFlag('SOLUTIONS_ENABLED') && <Route path="/solutions" element={<SolutionsHub />} />}
+            {getFlag('SOLUTIONS_ENABLED') && <Route path="/solutions/:category" element={<SolutionCategoryPage />} />}
             {getFlag('SOLUTIONS_ENABLED') && <Route path="/solutions/annuities" element={<Annuities />} />}
             
             {/* NIL Public Pages */}

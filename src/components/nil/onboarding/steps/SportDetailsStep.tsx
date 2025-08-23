@@ -5,7 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Plus, X, Instagram, Twitter, TikTok, Youtube } from 'lucide-react';
+import { Plus, X, Instagram, Twitter, Youtube } from 'lucide-react';
 
 interface SportDetailsStepProps {
   onComplete: (data: any) => void;
@@ -25,7 +25,7 @@ const SCHOOL_YEARS = [
 const SOCIAL_PLATFORMS = [
   { id: 'instagram', name: 'Instagram', icon: Instagram, placeholder: '@username' },
   { id: 'twitter', name: 'Twitter/X', icon: Twitter, placeholder: '@username' },
-  { id: 'tiktok', name: 'TikTok', icon: TikTok, placeholder: '@username' },
+  { id: 'tiktok', name: 'TikTok', icon: Twitter, placeholder: '@username' }, // Using Twitter icon as fallback
   { id: 'youtube', name: 'YouTube', icon: Youtube, placeholder: 'Channel Name' }
 ];
 
