@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import toolRegistry from '@/config/toolRegistry.json';
+import { getWorkspaceTools, isInstalled, installTool as installWorkspaceTool, setPersona, setSegment } from '@/services/workspaceTools';
 
 export interface ToolRegistryItem {
   key: string;
@@ -12,7 +13,7 @@ export interface ToolRegistryItem {
   deps: string[];
 }
 
-export interface WorkspaceTools {
+export interface WorkspaceConfig {
   enabledTools: string[];
   userPersona: string;
   subscription: 'basic' | 'premium' | 'elite';
@@ -25,7 +26,7 @@ interface ToolsContextType {
   isToolEnabled: (toolKey: string) => boolean;
   isToolAvailable: (toolKey: string) => boolean;
   getToolInfo: (toolKey: string) => ToolRegistryItem | null;
-  enableTool: (toolKey: string) => Promise<boolean>;
+  enableTool: (toolKey: string, seed?: boolean) => Promise<boolean>;
   seedDemoData: (toolKey: string) => Promise<boolean>;
 }
 
@@ -40,51 +41,21 @@ export const useTools = () => {
 };
 
 export const ToolsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [enabledTools, setEnabledTools] = useState<string[]>([]);
-  const [userPersona, setUserPersona] = useState<string>('family');
+  const [workspaceTools, setWorkspaceTools] = useState(getWorkspaceTools());
   const [subscription, setSubscription] = useState<'basic' | 'premium' | 'elite'>('basic');
 
-  // Load workspace tools from localStorage/API
+  // Sync with workspace tools changes
   useEffect(() => {
-    const loadWorkspaceTools = () => {
-      try {
-        const saved = localStorage.getItem('workspace_tools');
-        if (saved) {
-          const data: WorkspaceTools = JSON.parse(saved);
-          setEnabledTools(data.enabledTools || []);
-          setUserPersona(data.userPersona || 'family');
-          setSubscription(data.subscription || 'basic');
-        } else {
-          // Default enabled tools for demo
-          const defaultTools = [
-            'retirement-roadmap',
-            'wealth-vault',
-            'longevity-hub',
-            'receipts-viewer',
-            'money-in-7'
-          ];
-          setEnabledTools(defaultTools);
-        }
-      } catch (error) {
-        console.error('Failed to load workspace tools:', error);
-      }
+    const handleStorageChange = () => {
+      setWorkspaceTools(getWorkspaceTools());
     };
-
-    loadWorkspaceTools();
+    
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
-  // Save to localStorage when tools change
-  useEffect(() => {
-    const workspaceData: WorkspaceTools = {
-      enabledTools,
-      userPersona,
-      subscription
-    };
-    localStorage.setItem('workspace_tools', JSON.stringify(workspaceData));
-  }, [enabledTools, userPersona, subscription]);
-
   const isToolEnabled = (toolKey: string): boolean => {
-    return enabledTools.includes(toolKey);
+    return isInstalled(toolKey);
   };
 
   const isToolAvailable = (toolKey: string): boolean => {
@@ -92,23 +63,19 @@ export const ToolsProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     if (!tool) return false;
     
     // Check if tool is available for user's persona
-    return tool.personas.includes(userPersona) || tool.personas.includes('all');
+    const persona = workspaceTools.persona || 'family';
+    return tool.personas.includes(persona) || tool.personas.includes('all');
   };
 
   const getToolInfo = (toolKey: string): ToolRegistryItem | null => {
     return (toolRegistry as ToolRegistryItem[]).find(tool => tool.key === toolKey) || null;
   };
 
-  const enableTool = async (toolKey: string): Promise<boolean> => {
+  const enableTool = async (toolKey: string, seed: boolean = false): Promise<boolean> => {
     try {
-      // Simulate API call to enable tool
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      if (!enabledTools.includes(toolKey)) {
-        setEnabledTools(prev => [...prev, toolKey]);
-      }
-      
-      return true;
+      const result = await installWorkspaceTool(toolKey, seed);
+      setWorkspaceTools(getWorkspaceTools());
+      return result;
     } catch (error) {
       console.error('Failed to enable tool:', error);
       return false;
@@ -116,23 +83,12 @@ export const ToolsProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   };
 
   const seedDemoData = async (toolKey: string): Promise<boolean> => {
-    try {
-      // Simulate API call to seed demo data
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Log for demonstration
-      console.log(`Demo data seeded for tool: ${toolKey}`);
-      
-      return true;
-    } catch (error) {
-      console.error('Failed to seed demo data:', error);
-      return false;
-    }
+    return enableTool(toolKey, true);
   };
 
   const value: ToolsContextType = {
-    enabledTools,
-    userPersona,
+    enabledTools: workspaceTools.installed,
+    userPersona: workspaceTools.persona || 'family',
     subscription,
     isToolEnabled,
     isToolAvailable,

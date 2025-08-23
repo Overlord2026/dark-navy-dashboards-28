@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Switch } from '@/components/ui/switch';
 import { Play, Lock, Sparkles, ExternalLink, CheckCircle, Loader2 } from 'lucide-react';
 import { useTools, type ToolRegistryItem } from '@/contexts/ToolsContext';
-import { toast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/use-toast';
 
 interface InstallModalProps {
   isOpen: boolean;
@@ -22,6 +22,7 @@ export const InstallModal: React.FC<InstallModalProps> = ({
 }) => {
   const navigate = useNavigate();
   const { enableTool, seedDemoData, subscription } = useTools();
+  const { toast } = useToast();
   const [isEnabling, setIsEnabling] = useState(false);
   const [isSeeding, setIsSeeding] = useState(false);
   const [includeDemoData, setIncludeDemoData] = useState(true);
@@ -31,15 +32,9 @@ export const InstallModal: React.FC<InstallModalProps> = ({
     setIsEnabling(true);
     
     try {
-      const success = await enableTool(tool.key);
+      const success = await enableTool(tool.key, includeDemoData);
       
       if (success) {
-        if (includeDemoData) {
-          setIsSeeding(true);
-          await seedDemoData(tool.key);
-          setIsSeeding(false);
-        }
-        
         setInstallComplete(true);
         
         toast({
