@@ -71,5 +71,11 @@ export const FLAG_DESCRIPTIONS: Record<FeatureFlag, string> = {
   NIL_PUBLIC_ENABLED: 'Show /nil and /nil/index for unauthenticated users',
   NIL_AGENT_ENABLED: 'Enable NIL agent portal and functionality',
   NIL_SCHOOL_ENABLED: 'Enable NIL school portal and functionality',
-  ADMIN_TOOLS_ENABLED: 'Show admin tools (panels, ready-check, etc.)'
+  ADMIN_TOOLS_ENABLED: 'Show admin tools (panels, ready-check, etc.)',
+  INSTALL_DEFAULT_TOOLS_ON_FIRST_LOGIN: 'Auto-install default tools for new users based on their persona'
 };
+
+// Hook to use feature flags
+export function useFeatureFlag(flag: FeatureFlag): boolean {
+  return getFlag(flag);
+}
