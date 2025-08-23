@@ -27,6 +27,7 @@ import QACoverage from '@/pages/admin/QACoverage';
 import ReadyCheck from '@/pages/admin/ReadyCheck';
 import PublishPanel from '@/pages/admin/PublishPanel';
 import { EnvInspector } from '@/pages/admin/EnvInspector';
+import MarketingPreview from '@/pages/preview/MarketingPreview';
 import NotFound from '@/pages/NotFound';
 import { getFlag } from '@/lib/flags';
 
@@ -116,6 +117,9 @@ function App() {
             {process.env.NODE_ENV !== 'production' && (
               <Route path="/dev/fixtures" element={<FixturesPanel />} />
             )}
+            
+            {/* Preview Routes - Marketing pages for missing tools */}
+            <Route path="/preview/:toolKey" element={<MarketingPreview />} />
             
             {/* 404 Route */}
             <Route path="*" element={<NotFound />} />

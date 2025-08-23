@@ -4,6 +4,7 @@ import { validateFamilyTools } from '@/tools/validateFamilyToolsWrapper';
 import { validateNil } from '@/tools/validateNil'; // omit if not using nilTools.json
 import { checkPublicRoutes } from '@/tools/checkPublicRoutes';
 import { runDevSeed } from '@/tools/devSeed';
+import { getMissingRoutes, getToolsNeedingStatusUpdate } from '@/tools/auditLinks';
 
 const PUBLIC_ROUTES = [
   '/discover',
@@ -27,6 +28,7 @@ export default function ReadyCheck() {
   const [results, setResults] = React.useState<Result[]>([]);
   const [routes, setRoutes] = React.useState<{path:string; ok:boolean; status?:number}[]>([]);
   const [seedMsg, setSeedMsg] = React.useState<string>('');
+  const [missingRoutes, setMissingRoutes] = React.useState<ReturnType<typeof getMissingRoutes>>([]);
 
   async function runAll() {
     setRunning(true);
@@ -63,6 +65,18 @@ export default function ReadyCheck() {
     const bad = rt.filter(r => !r.ok);
     res.push({ label:'Public routes', status: bad.length ? 'warn' : 'ok',
                notes: bad.map(b=> `${b.path} -> ${b.status||'ERR'}`) });
+
+    // 5) Route audit - find missing routes we link to
+    const missing = getMissingRoutes();
+    setMissingRoutes(missing);
+    const missingCount = missing.length;
+    res.push({ 
+      label: 'Route audit', 
+      status: missingCount > 0 ? 'warn' : 'ok',
+      notes: missingCount > 0 ? 
+        [`Missing routes mapped to preview: ${missingCount}`, ...missing.slice(0, 5).map(m => `${m.route} (${m.source})`)] :
+        ['All linked routes exist']
+    });
 
     setResults(res);
     setRunning(false);
@@ -129,6 +143,34 @@ export default function ReadyCheck() {
           ))}
         </ul>
       </div>
+
+      {missingRoutes.length > 0 && (
+        <div>
+          <h3 className="font-semibold mt-2 mb-1">Missing Routes (Auto-Preview Created)</h3>
+          <ul className="text-sm space-y-1">
+            {missingRoutes.slice(0, 10).map((miss, i) => (
+              <li key={i} className="flex justify-between">
+                <span>
+                  ⚠️ <a href={miss.route} target="_blank" rel="noreferrer" className="underline">
+                    {miss.route}
+                  </a>
+                  {miss.toolKey && (
+                    <span className="ml-2 text-xs text-muted-foreground">
+                      → /preview/{miss.toolKey}
+                    </span>
+                  )}
+                </span>
+                <span className="text-xs text-muted-foreground">{miss.source}</span>
+              </li>
+            ))}
+            {missingRoutes.length > 10 && (
+              <li className="text-xs text-muted-foreground">
+                ...{missingRoutes.length - 10} more missing routes
+              </li>
+            )}
+          </ul>
+        </div>
+      )}
 
       <div className="text-xs text-gray-600 mt-4">
         Tip: After publishing, run this again in production with feature flags on. Aim for OK across the board.
