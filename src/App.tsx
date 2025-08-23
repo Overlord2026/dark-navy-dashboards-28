@@ -2,6 +2,7 @@ import React, { Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider } from "next-themes";
 import { HelmetProvider } from 'react-helmet-async';
+import { ToolsProvider } from '@/contexts/ToolsContext';
 import { Toaster } from '@/components/ui/toaster';
 import DevPanel from '@/components/dev/DevPanel';
 import CTAStickyBar from '@/components/ui/CTAStickyBar';
@@ -48,9 +49,10 @@ function App() {
     (localStorage.getItem('user_session') || localStorage.getItem('auth_token'));
 
   return (
-    <HelmetProvider>
-      <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-        <div className="min-h-screen bg-background text-foreground">
+    <ToolsProvider>
+      <HelmetProvider>
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+          <div className="min-h-screen bg-background text-foreground">
           <Routes>
             <Route path="/" element={
               isAuthenticated ? <Navigate to="/family/home" replace /> : 
@@ -133,9 +135,10 @@ function App() {
           
           {/* Show CTA bar on public pages only - Flag Protected */}
           {!isAuthenticated && getFlag('PUBLIC_CTA_BAR') && <CTAStickyBar />}
-        </div>
-      </ThemeProvider>
-    </HelmetProvider>
+          </div>
+        </ThemeProvider>
+      </HelmetProvider>
+    </ToolsProvider>
   );
 }
 

@@ -18,6 +18,7 @@ import {
   Clock3,
   Receipt
 } from 'lucide-react';
+import { ToolGrid } from '@/components/tools/ToolGrid';
 import familyToolsConfig from '@/config/familyTools.json';
 import catalogConfig from '@/config/catalogConfig.json';
 import { analytics } from '@/lib/analytics';
