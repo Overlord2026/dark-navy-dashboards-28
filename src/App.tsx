@@ -38,6 +38,9 @@ import FamilyOnboarding from '@/pages/onboarding/FamilyOnboarding';
 import ProfessionalOnboarding from '@/pages/onboarding/ProfessionalOnboarding';
 import HealthcareOnboarding from '@/pages/onboarding/HealthcareOnboarding';
 import NILOnboardingFlow from '@/pages/onboarding/NILOnboarding';
+import { BrandOnboarding } from '@/pages/brand/BrandOnboarding';
+import { BrandHub } from '@/pages/brand/BrandHub';
+import { SolutionsHub } from '@/components/solutions/SolutionsHub';
 
 const DemoPage = React.lazy(() => import('@/pages/demos/[persona]'));
 // Import FamilyHome directly for now to fix TypeScript error
@@ -63,7 +66,7 @@ function App() {
             {/* Public Pages - Flag Protected */}
             {getFlag('PUBLIC_DISCOVER_ENABLED') && <Route path="/discover" element={<Discover />} />}
             <Route path="/how-it-works" element={<HowItWorks />} />
-            {getFlag('SOLUTIONS_ENABLED') && <Route path="/solutions" element={<SolutionsPage />} />}
+            {getFlag('SOLUTIONS_ENABLED') && <Route path="/solutions" element={<SolutionsHub />} />}
             {getFlag('SOLUTIONS_ENABLED') && <Route path="/solutions/annuities" element={<Annuities />} />}
             {getFlag('SOLUTIONS_ENABLED') && <Route path="/solutions/:solutionKey" element={<SolutionCategoryPage />} />}
             
@@ -82,9 +85,15 @@ function App() {
             {getFlag('ONBOARDING_PUBLIC_ENABLED') && <Route path="/start/healthcare" element={<HealthcareOnboarding segment="providers" />} />}
             {getFlag('ONBOARDING_PUBLIC_ENABLED') && <Route path="/start/nil-athlete" element={<NILOnboardingFlow type="athlete" />} />}
             {getFlag('ONBOARDING_PUBLIC_ENABLED') && <Route path="/start/nil-school" element={<NILOnboardingFlow type="school" />} />}
+            {getFlag('ONBOARDING_PUBLIC_ENABLED') && <Route path="/start/brand" element={<BrandOnboarding />} />}
             
             {/* Family App Routes (Authenticated) */}
             <Route path="/family/home" element={<FamilyHome />} />
+            
+            {/* Brand Hub Routes */}
+            <Route path="/brand" element={<BrandHub />} />
+            <Route path="/brand/enterprise" element={<BrandHub segment="enterprise" />} />
+            <Route path="/brand/local" element={<BrandHub segment="local-business" />} />
             
             {/* Private App Routes */}
             <Route path="/onboarding" element={<OnboardingFlow />} />
