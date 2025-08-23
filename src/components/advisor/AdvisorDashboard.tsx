@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { ToolGate } from '@/components/tools/ToolGate';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -523,10 +524,14 @@ export function AdvisorDashboard() {
               </div>
               <div className="space-y-2">
                 <Button variant="outline" className="w-full" onClick={() => setShowPortfolioTools(true)}>
-                  Portfolio Tools
+                  <ToolGate toolKey="portfolio-analytics" fallbackRoute="/tools/portfolio-tools">
+                    Portfolio Tools
+                  </ToolGate>
                 </Button>
                 <Button variant="outline" className="w-full" onClick={() => navigate('/advisor/compliance')}>
-                  Compliance Tracker
+                  <ToolGate toolKey="compliance-tracker" fallbackRoute="/tools/compliance-tracker">
+                    Compliance Tracker
+                  </ToolGate>
                 </Button>
               </div>
             </CardContent>

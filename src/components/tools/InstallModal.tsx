@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Switch } from '@/components/ui/switch';
-import { Play, Lock, Sparkles, ExternalLink, CheckCircle, Loader2 } from 'lucide-react';
-import { useTools, type ToolRegistryItem } from '@/contexts/ToolsContext';
+import { Badge } from '@/components/ui/badge';
+import { Sparkles, Eye, X } from 'lucide-react';
+import { installTool } from '@/services/workspaceTools';
+import { getWorkspaceTools } from '@/services/workspaceTools';
 import { useToast } from '@/hooks/use-toast';
+import type { ToolRegistryItem } from '@/contexts/ToolsContext';
 
 interface InstallModalProps {
   isOpen: boolean;
@@ -21,216 +22,152 @@ export const InstallModal: React.FC<InstallModalProps> = ({
   tool
 }) => {
   const navigate = useNavigate();
-  const { enableTool, seedDemoData, subscription } = useTools();
   const { toast } = useToast();
-  const [isEnabling, setIsEnabling] = useState(false);
-  const [isSeeding, setIsSeeding] = useState(false);
-  const [includeDemoData, setIncludeDemoData] = useState(true);
-  const [installComplete, setInstallComplete] = useState(false);
+  const [seed, setSeed] = useState(true);
+  const [isInstalling, setIsInstalling] = useState(false);
+
+  const { key, label, summary, routePriv, routePub, solutions } = tool;
 
   const handleInstall = async () => {
-    setIsEnabling(true);
-    
+    setIsInstalling(true);
     try {
-      const success = await enableTool(tool.key, includeDemoData);
+      const workspace = getWorkspaceTools();
       
-      if (success) {
-        setInstallComplete(true);
-        
-        toast({
-          title: "Tool installed successfully!",
-          description: `${tool.label} is now available in your workspace.`,
+      // Track install analytics
+      if (typeof window !== 'undefined' && window.analytics) {
+        window.analytics.track('tool.install', { 
+          key, 
+          seed, 
+          persona: workspace.persona, 
+          segment: workspace.segment 
         });
-        
-        // Auto-close and navigate after a brief delay
-        setTimeout(() => {
-          onClose();
-          if (tool.routePriv) {
-            navigate(tool.routePriv);
-          }
-        }, 1500);
-        
-      } else {
-        throw new Error('Installation failed');
+      }
+      
+      await installTool(key, seed);
+      
+      toast({
+        title: "Tool Installed",
+        description: `${label} is now available in your workspace.`,
+      });
+      
+      onClose();
+      if (routePriv) {
+        navigate(routePriv);
       }
     } catch (error) {
       toast({
-        title: "Installation failed",
-        description: "Please try again or contact support.",
-        variant: "destructive"
+        title: "Installation Failed",
+        description: "Please try again later.",
+        variant: "destructive",
       });
     } finally {
-      setIsEnabling(false);
+      setIsInstalling(false);
     }
   };
 
-  const handleViewPublic = () => {
-    onClose();
-    navigate(tool.routePub);
-  };
-
-  const getSubscriptionBadge = () => {
-    // Simple logic for demo - in real app this would check tool requirements
-    const isAdvanced = tool.solutions.includes('private-markets') || tool.key.includes('supervisor');
+  const handlePreview = () => {
+    // Track preview analytics
+    if (typeof window !== 'undefined' && window.analytics) {
+      window.analytics.track('tool.preview', { key });
+    }
     
-    if (isAdvanced) {
-      return <Badge variant="secondary" className="bg-purple-100 text-purple-800">Premium</Badge>;
+    onClose();
+    navigate(routePub || `/preview/${key}`);
+  };
+
+  const handleClose = () => {
+    if (!isInstalling) {
+      onClose();
     }
-    return <Badge variant="default" className="bg-green-100 text-green-800">Basic</Badge>;
   };
-
-  const canInstall = () => {
-    // Check if tool has private route available
-    return tool.routePriv !== null;
-  };
-
-  if (installComplete) {
-    return (
-      <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader className="text-center">
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
-              <CheckCircle className="h-6 w-6 text-green-600" />
-            </div>
-            <DialogTitle className="text-xl">Installation Complete!</DialogTitle>
-            <DialogDescription>
-              {tool.label} has been added to your workspace and is ready to use.
-            </DialogDescription>
-          </DialogHeader>
-        </DialogContent>
-      </Dialog>
-    );
-  }
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <div className="flex items-start gap-3">
-            <div className="p-2 rounded-lg bg-primary/10">
-              <Lock className="h-5 w-5 text-primary" />
-            </div>
-            <div className="flex-1">
-              <DialogTitle className="text-xl">{tool.label}</DialogTitle>
-              <DialogDescription className="mt-1">
-                {tool.summary}
-              </DialogDescription>
-              <div className="flex items-center gap-2 mt-2">
-                {getSubscriptionBadge()}
-                <Badge variant="outline" className="text-xs">
-                  {tool.solutions.join(', ')}
-                </Badge>
-              </div>
-            </div>
+          <div className="flex items-center justify-between">
+            <DialogTitle className="text-xl font-semibold flex items-center gap-2">
+              <Sparkles className="h-5 w-5 text-primary" />
+              {label || 'Install Tool'}
+            </DialogTitle>
+            <Button variant="ghost" size="sm" onClick={handleClose} disabled={isInstalling}>
+              <X className="h-4 w-4" />
+            </Button>
           </div>
+          <DialogDescription className="text-sm text-muted-foreground">
+            {summary}
+          </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-4">
-          {canInstall() ? (
-            <>
-              <Card className="border-dashed">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-sm font-medium flex items-center gap-2">
-                    <Sparkles className="h-4 w-4 text-primary" />
-                    Install to Your Workspace
-                  </CardTitle>
-                  <CardDescription className="text-xs">
-                    Add this tool to your private workspace for full functionality
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="pt-0">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
-                      <Switch
-                        id="demo-data"
-                        checked={includeDemoData}
-                        onCheckedChange={setIncludeDemoData}
-                      />
-                      <label 
-                        htmlFor="demo-data" 
-                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                      >
-                        Include demo data
-                      </label>
-                    </div>
-                    <Badge variant="secondary" className="text-xs">
-                      Recommended
-                    </Badge>
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-2">
-                    Pre-populate with sample data to explore features quickly
-                  </p>
-                </CardContent>
-              </Card>
+        {/* Solution tags */}
+        {solutions && solutions.length > 0 && (
+          <div className="flex flex-wrap gap-1">
+            {solutions.slice(0, 3).map((solution) => (
+              <Badge key={solution} variant="secondary" className="text-xs">
+                {solution}
+              </Badge>
+            ))}
+            {solutions.length > 3 && (
+              <Badge variant="secondary" className="text-xs">
+                +{solutions.length - 3} more
+              </Badge>
+            )}
+          </div>
+        )}
 
-              <div className="text-center">
-                <div className="text-xs text-muted-foreground mb-2">OR</div>
+        <div className="space-y-4">
+          {routePriv ? (
+            <>
+              {/* Demo data option */}
+              <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                <div className="space-y-1">
+                  <p className="text-sm font-medium">Seed with demo data</p>
+                  <p className="text-xs text-muted-foreground">
+                    Recommended for first run to explore features
+                  </p>
+                </div>
+                <Switch
+                  checked={seed}
+                  onCheckedChange={setSeed}
+                  disabled={isInstalling}
+                />
+              </div>
+
+              {/* Action buttons */}
+              <div className="flex items-center gap-3">
+                <Button 
+                  onClick={handleInstall} 
+                  disabled={isInstalling}
+                  className="flex-1"
+                >
+                  <Sparkles className="h-4 w-4 mr-2" />
+                  {isInstalling ? 'Installing...' : 'Install & Open'}
+                </Button>
+                
+                <Button 
+                  variant="outline" 
+                  onClick={handlePreview}
+                  disabled={isInstalling}
+                >
+                  <Eye className="h-4 w-4 mr-2" />
+                  Preview
+                </Button>
               </div>
             </>
           ) : (
-            <Card className="border-yellow-200 bg-yellow-50">
-              <CardContent className="pt-4">
-                <div className="flex items-center gap-2 text-yellow-800">
-                  <Play className="h-4 w-4" />
-                  <span className="text-sm font-medium">
-                    Private version coming soon
-                  </span>
-                </div>
-                <p className="text-xs text-yellow-700 mt-1">
-                  View the public preview to see what's planned
-                </p>
-              </CardContent>
-            </Card>
+            <div className="flex items-center gap-3">
+              <Button onClick={handlePreview} className="flex-1">
+                <Eye className="h-4 w-4 mr-2" />
+                View Preview
+              </Button>
+            </div>
           )}
-
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium flex items-center gap-2">
-                <ExternalLink className="h-4 w-4 text-muted-foreground" />
-                Preview Demo
-              </CardTitle>
-              <CardDescription className="text-xs">
-                See how this tool works with marketing preview
-              </CardDescription>
-            </CardHeader>
-          </Card>
         </div>
 
-        <DialogFooter className="gap-2">
-          <Button variant="outline" onClick={handleViewPublic}>
-            <ExternalLink className="h-4 w-4 mr-2" />
-            View Preview
-          </Button>
-          
-          {canInstall() && (
-            <Button 
-              onClick={handleInstall} 
-              disabled={isEnabling}
-              className="flex-1"
-            >
-              {isEnabling ? (
-                <>
-                  {isSeeding ? (
-                    <>
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      Seeding data...
-                    </>
-                  ) : (
-                    <>
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      Installing...
-                    </>
-                  )}
-                </>
-              ) : (
-                <>
-                  <Sparkles className="h-4 w-4 mr-2" />
-                  Install Tool
-                </>
-              )}
-            </Button>
-          )}
-        </DialogFooter>
+        {/* Footer note */}
+        <div className="text-xs text-muted-foreground text-center pt-2 border-t">
+          Smart Checks • Proof Slips • Secure Vault • Time-Stamp
+        </div>
       </DialogContent>
     </Dialog>
   );

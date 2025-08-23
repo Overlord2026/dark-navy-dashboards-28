@@ -1,4 +1,5 @@
 import React from 'react';
+import { ToolGate } from '@/components/tools/ToolGate';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -97,7 +98,9 @@ export function NILDashboard({ persona }: NILDashboardProps) {
                   className="w-full"
                   onClick={() => window.location.href = action.href}
                 >
-                  Open
+                  <ToolGate toolKey={`nil-${action.label.toLowerCase().replace(/\s+/g, '-')}`} fallbackRoute={action.href}>
+                    Open
+                  </ToolGate>
                 </Button>
               </CardContent>
             </Card>
