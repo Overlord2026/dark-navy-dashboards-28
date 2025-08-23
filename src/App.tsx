@@ -26,7 +26,7 @@ import { OnboardingFlow } from '@/pages/OnboardingFlow';
 import QACoverage from '@/pages/admin/QACoverage';
 import ReadyCheck from '@/pages/admin/ReadyCheck';
 import PublishPanel from '@/pages/admin/PublishPanel';
-import EnvInspector from '@/pages/admin/EnvInspector';
+import { EnvInspector } from '@/pages/admin/EnvInspector';
 import NotFound from '@/pages/NotFound';
 import { getFlag } from '@/lib/flags';
 

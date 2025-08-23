@@ -1,278 +1,299 @@
 import React, { useState } from 'react';
+import { Navigate } from 'react-router-dom';
+import { useUser } from '@/context/UserContext';
+import { getFlag, FLAG_DESCRIPTIONS } from '@/lib/flags';
 import { getBuildInfo } from '@/lib/buildInfo';
 import { getPublicEnv } from '@/lib/envInfo';
 import { getFlags } from '@/lib/flagInfo';
-import { getFlag } from '@/lib/flags';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ExternalLink, Download, Server, Flag, Settings, Database } from 'lucide-react';
+import { Download, ExternalLink, Monitor } from 'lucide-react';
+import { AdminLayout } from '@/components/layout/AdminLayout';
 
-// Mock config counts - replace with actual imports if available
-function getConfigCoverage() {
-  try {
-    // These would be actual imports in a real implementation
-    const personas = 4; // FAMILY_SEGMENTS.length
-    const solutions = 9; // SOLUTIONS.length  
-    const catalog = 12; // CATALOG_TOOLS.length
-    const demos = 3; // DEMO_CONFIG.length
-    
-    return { personas, solutions, catalog, demos };
-  } catch {
-    return { personas: 0, solutions: 0, catalog: 0, demos: 0 };
-  }
-}
+// Import configs for coverage analysis
+import personaConfig from '@/config/personaConfig.json';
+import catalogConfig from '@/config/catalogConfig.json';
+import demoConfig from '@/config/demoConfig.json';
 
-function getEnabledPublicRoutes() {
-  const routes = [];
-  
-  if (getFlag('PUBLIC_DISCOVER_ENABLED')) {
-    routes.push('/discover');
-  }
-  
-  if (getFlag('SOLUTIONS_ENABLED')) {
-    routes.push('/solutions', '/solutions/annuities', '/personas/families', '/personas/advisors');
-  }
-  
-  if (getFlag('NIL_PUBLIC_ENABLED')) {
-    routes.push('/nil', '/nil/index');
-  }
-  
-  if (getFlag('ONBOARDING_PUBLIC_ENABLED')) {
-    routes.push('/start/families', '/start/advisors');
-  }
-  
-  // Always available
-  routes.push('/how-it-works');
-  
-  return routes;
-}
-
-export default function EnvInspector() {
+export function EnvInspector() {
+  const { userProfile } = useUser();
   const [isExporting, setIsExporting] = useState(false);
-  
-  // Check admin access and feature flag
+
+  // Check access permissions
+  if (!userProfile || userProfile.role !== 'admin') {
+    return <Navigate to="/client-dashboard" replace />;
+  }
+
   if (!getFlag('ADMIN_TOOLS_ENABLED')) {
-    return (
-      <div className="p-6 text-center">
-        <h1 className="text-2xl font-semibold text-destructive">Access Denied</h1>
-        <p className="text-muted-foreground mt-2">Environment inspector is disabled.</p>
-      </div>
-    );
+    return <Navigate to="/admin" replace />;
   }
 
   const buildInfo = getBuildInfo();
+  const publicEnv = getPublicEnv();
   const flags = getFlags();
-  const env = getPublicEnv();
-  const config = getConfigCoverage();
-  const publicRoutes = getEnabledPublicRoutes();
 
-  const exportSnapshot = () => {
-    setIsExporting(true);
-    
-    const snapshot = {
-      build: buildInfo,
-      flags,
-      env,
-      config,
-      publicRoutes,
-      timestamp: new Date().toISOString()
-    };
-    
-    const dataStr = JSON.stringify(snapshot, null, 2);
-    const dataBlob = new Blob([dataStr], { type: 'application/json' });
-    const url = URL.createObjectURL(dataBlob);
-    
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `env-snapshot-${buildInfo.flavor}-${Date.now()}.json`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-    
-    setTimeout(() => setIsExporting(false), 1000);
+  // Solutions nav data (extracted from utils/configValidator.ts)
+  const solutionsNav = [
+    { key: 'investments', title: 'Investments' },
+    { key: 'annuities', title: 'Annuities' },
+    { key: 'insurance', title: 'Insurance' },
+    { key: 'tax', title: 'Tax Planning' },
+    { key: 'estate', title: 'Estate' },
+    { key: 'health', title: 'Health & Longevity' },
+    { key: 'practice', title: 'Practice Management' },
+    { key: 'compliance', title: 'Compliance' },
+    { key: 'nil', title: 'NIL' }
+  ];
+
+  // Config coverage analysis
+  const configCoverage = {
+    personas: personaConfig.length,
+    solutions: solutionsNav.length,
+    catalog: {
+      total: catalogConfig.length,
+      bySolution: solutionsNav.reduce((acc, solution) => {
+        const count = catalogConfig.filter(item => 
+          item.solutions?.includes(solution.key)
+        ).length;
+        return { ...acc, [solution.key]: count };
+      }, {} as Record<string, number>)
+    },
+    demos: demoConfig.length
   };
 
-  const openRoute = (route: string) => {
-    window.open(route, '_blank', 'noopener,noreferrer');
+  // Public routes based on flags
+  const publicRoutes = [
+    { path: '/discover', enabled: getFlag('PUBLIC_DISCOVER_ENABLED'), label: 'Discovery Page' },
+    { path: '/solutions', enabled: getFlag('SOLUTIONS_ENABLED'), label: 'Solutions Hub' },
+    { path: '/personas', enabled: getFlag('PUBLIC_CATALOG_ENABLED'), label: 'Personas Catalog' },
+    { path: '/catalog', enabled: getFlag('PUBLIC_CATALOG_ENABLED'), label: 'Tool Catalog' },
+    { path: '/proof', enabled: getFlag('TRUST_EXPLAINER_ENABLED'), label: 'Proof & Trust' },
+    { path: '/how-it-works', enabled: getFlag('TRUST_EXPLAINER_ENABLED'), label: 'How It Works' },
+    { path: '/nil', enabled: getFlag('NIL_PUBLIC_ENABLED'), label: 'NIL Landing' },
+    { path: '/nil/index', enabled: getFlag('NIL_PUBLIC_ENABLED'), label: 'NIL Index' }
+  ];
+
+  const enabledRoutes = publicRoutes.filter(route => route.enabled);
+
+  const exportData = () => {
+    setIsExporting(true);
+    
+    const exportSnapshot = {
+      timestamp: new Date().toISOString(),
+      build: buildInfo,
+      flags,
+      env: publicEnv,
+      config: {
+        personas: configCoverage.personas,
+        solutions: configCoverage.solutions,
+        catalog: configCoverage.catalog.total,
+        demos: configCoverage.demos
+      },
+      publicRoutes: enabledRoutes.map(r => r.path)
+    };
+
+    const blob = new Blob([JSON.stringify(exportSnapshot, null, 2)], {
+      type: 'application/json'
+    });
+    
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `env-snapshot-${buildInfo.flavor}-${Date.now()}.json`;
+    a.click();
+    
+    URL.revokeObjectURL(url);
+    setIsExporting(false);
   };
 
   return (
-    <div className="p-6 space-y-6" style={{ backgroundColor: '#F8F9FA', color: '#0B1E33' }}>
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold" style={{ color: '#D4AF37' }}>Environment Inspector</h1>
-          <p className="text-muted-foreground">
-            Safe view of build info, feature flags, and configuration
-          </p>
+    <AdminLayout>
+      <div className="space-y-6">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Monitor className="h-6 w-6" style={{ color: '#D4AF37' }} />
+            <h1 className="text-2xl font-bold" style={{ color: '#D4AF37' }}>
+              Environment Inspector
+            </h1>
+          </div>
+          <Button
+            onClick={exportData}
+            disabled={isExporting}
+            className="h-11"
+            style={{ 
+              backgroundColor: '#D4AF37',
+              color: '#0B1E33'
+            }}
+          >
+            <Download className="h-4 w-4 mr-2" />
+            {isExporting ? 'Exporting...' : 'Export JSON'}
+          </Button>
         </div>
-        <Button 
-          onClick={exportSnapshot}
-          disabled={isExporting}
-          className="h-11"
-          style={{ 
-            backgroundColor: '#D4AF37', 
-            color: '#0A0A0A',
-            border: '1px solid #D4AF37'
-          }}
-        >
-          <Download className="h-4 w-4 mr-2" />
-          {isExporting ? 'Exporting...' : 'Export JSON'}
-        </Button>
-      </div>
 
-      {/* Build Information */}
-      <Card>
-        <CardHeader style={{ backgroundColor: '#0B1E33' }}>
-          <CardTitle className="flex items-center gap-2" style={{ color: '#D4AF37' }}>
-            <Server className="h-5 w-5" />
-            Build Information
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            <div>
-              <span className="font-medium">Mode:</span>
-              <div className="text-muted-foreground">{buildInfo.mode}</div>
-            </div>
-            <div>
-              <span className="font-medium">Flavor:</span>
-              <div className="text-muted-foreground">{buildInfo.flavor}</div>
-            </div>
-            <div>
-              <span className="font-medium">Base URL:</span>
-              <div className="text-muted-foreground">{buildInfo.baseUrl}</div>
-            </div>
-            {buildInfo.sha && (
+        {/* Build Information */}
+        <Card>
+          <CardHeader style={{ backgroundColor: '#0B1E33' }}>
+            <CardTitle style={{ color: '#D4AF37' }}>Build Information</CardTitle>
+          </CardHeader>
+          <CardContent className="pt-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               <div>
-                <span className="font-medium">Git SHA:</span>
-                <div className="text-muted-foreground font-mono text-sm">{buildInfo.sha}</div>
+                <span className="text-sm font-medium text-muted-foreground">Mode</span>
+                <p className="text-lg font-mono">{buildInfo.mode}</p>
               </div>
-            )}
-            {buildInfo.builtAt && (
               <div>
-                <span className="font-medium">Built At:</span>
-                <div className="text-muted-foreground">{buildInfo.builtAt}</div>
+                <span className="text-sm font-medium text-muted-foreground">Flavor</span>
+                <p className="text-lg font-mono">{buildInfo.flavor}</p>
               </div>
-            )}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Feature Flags */}
-      <Card>
-        <CardHeader style={{ backgroundColor: '#0B1E33' }}>
-          <CardTitle className="flex items-center gap-2" style={{ color: '#D4AF37' }}>
-            <Flag className="h-5 w-5" />
-            Feature Flags
-          </CardTitle>
-          <CardDescription style={{ color: '#E5E7EB' }}>
-            Read-only view (use Publish panel to toggle)
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {Object.entries(flags).map(([key, value]) => (
-              <div key={key} className="flex items-center justify-between p-3 border rounded-lg">
-                <span className="font-medium">{key}</span>
-                <Badge variant={value ? 'default' : 'secondary'}>
-                  {value ? 'Enabled' : 'Disabled'}
-                </Badge>
+              <div>
+                <span className="text-sm font-medium text-muted-foreground">Base URL</span>
+                <p className="text-sm font-mono break-all">{buildInfo.baseUrl}</p>
               </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+              {buildInfo.sha && (
+                <div>
+                  <span className="text-sm font-medium text-muted-foreground">Git SHA</span>
+                  <p className="text-sm font-mono">{buildInfo.sha}</p>
+                </div>
+              )}
+              {buildInfo.builtAt && (
+                <div>
+                  <span className="text-sm font-medium text-muted-foreground">Built At</span>
+                  <p className="text-sm font-mono">{buildInfo.builtAt}</p>
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
 
-      {/* Public Environment */}
-      <Card>
-        <CardHeader style={{ backgroundColor: '#0B1E33' }}>
-          <CardTitle className="flex items-center gap-2" style={{ color: '#D4AF37' }}>
-            <Settings className="h-5 w-5" />
-            Public Environment (VITE_*)
-          </CardTitle>
-          <CardDescription style={{ color: '#E5E7EB' }}>
-            Only VITE_ prefixed variables shown
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="pt-6">
-          {Object.keys(env).length === 0 ? (
-            <p className="text-muted-foreground">No VITE_ environment variables found</p>
-          ) : (
+        {/* Feature Flags */}
+        <Card>
+          <CardHeader style={{ backgroundColor: '#0B1E33' }}>
+            <CardTitle style={{ color: '#D4AF37' }}>Feature Flags</CardTitle>
+          </CardHeader>
+          <CardContent className="pt-6">
             <div className="space-y-3">
-              {Object.entries(env).map(([key, value]) => (
-                <div key={key} className="flex items-center justify-between p-3 border rounded-lg">
-                  <span className="font-medium">VITE_{key}</span>
-                  <code className="text-sm bg-muted px-2 py-1 rounded">{value}</code>
+              {Object.entries(flags).map(([key, value]) => (
+                <div key={key} className="flex items-center justify-between p-3 rounded-lg border">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <code className="text-sm font-mono">{key}</code>
+                      <Badge variant={value ? "default" : "secondary"}>
+                        {value ? 'ON' : 'OFF'}
+                      </Badge>
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {FLAG_DESCRIPTIONS[key as keyof typeof FLAG_DESCRIPTIONS] || 'No description available'}
+                    </p>
+                  </div>
                 </div>
               ))}
             </div>
-          )}
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
 
-      {/* Config Coverage */}
-      <Card>
-        <CardHeader style={{ backgroundColor: '#0B1E33' }}>
-          <CardTitle className="flex items-center gap-2" style={{ color: '#D4AF37' }}>
-            <Database className="h-5 w-5" />
-            Configuration Coverage
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="text-center p-4 border rounded-lg">
-              <div className="text-2xl font-bold" style={{ color: '#D4AF37' }}>{config.personas}</div>
-              <div className="text-sm text-muted-foreground">Personas</div>
-            </div>
-            <div className="text-center p-4 border rounded-lg">
-              <div className="text-2xl font-bold" style={{ color: '#D4AF37' }}>{config.solutions}</div>
-              <div className="text-sm text-muted-foreground">Solutions</div>
-            </div>
-            <div className="text-center p-4 border rounded-lg">
-              <div className="text-2xl font-bold" style={{ color: '#D4AF37' }}>{config.catalog}</div>
-              <div className="text-sm text-muted-foreground">Catalog Items</div>
-            </div>
-            <div className="text-center p-4 border rounded-lg">
-              <div className="text-2xl font-bold" style={{ color: '#D4AF37' }}>{config.demos}</div>
-              <div className="text-sm text-muted-foreground">Demos</div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+        {/* Public Environment Variables */}
+        <Card>
+          <CardHeader style={{ backgroundColor: '#0B1E33' }}>
+            <CardTitle style={{ color: '#D4AF37' }}>Public Environment (VITE_*)</CardTitle>
+          </CardHeader>
+          <CardContent className="pt-6">
+            {Object.keys(publicEnv).length === 0 ? (
+              <p className="text-muted-foreground text-center py-6">No VITE_ environment variables found</p>
+            ) : (
+              <div className="space-y-2">
+                {Object.entries(publicEnv).map(([key, value]) => (
+                  <div key={key} className="flex items-center justify-between p-3 rounded-lg border">
+                    <code className="text-sm font-mono">{key}</code>
+                    <code className="text-sm font-mono text-muted-foreground">
+                      {value}
+                    </code>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
 
-      {/* Public Routes */}
-      <Card>
-        <CardHeader style={{ backgroundColor: '#0B1E33' }}>
-          <CardTitle className="flex items-center gap-2" style={{ color: '#D4AF37' }}>
-            <ExternalLink className="h-5 w-5" />
-            Enabled Public Routes
-          </CardTitle>
-          <CardDescription style={{ color: '#E5E7EB' }}>
-            Routes currently accessible to unauthenticated users
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {publicRoutes.map(route => (
-              <Button
-                key={route}
-                variant="outline"
-                onClick={() => openRoute(route)}
-                className="justify-between h-11"
-                style={{ 
-                  borderColor: '#D4AF37',
-                  color: '#0B1E33'
-                }}
-              >
-                <span>{route}</span>
-                <ExternalLink className="h-4 w-4" />
-              </Button>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+        {/* Config Coverage */}
+        <Card>
+          <CardHeader style={{ backgroundColor: '#0B1E33' }}>
+            <CardTitle style={{ color: '#D4AF37' }}>Configuration Coverage</CardTitle>
+          </CardHeader>
+          <CardContent className="pt-6">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="text-center p-4 rounded-lg border">
+                <div className="text-2xl font-bold">{configCoverage.personas}</div>
+                <div className="text-sm text-muted-foreground">Personas</div>
+              </div>
+              <div className="text-center p-4 rounded-lg border">
+                <div className="text-2xl font-bold">{configCoverage.solutions}</div>
+                <div className="text-sm text-muted-foreground">Solutions</div>
+              </div>
+              <div className="text-center p-4 rounded-lg border">
+                <div className="text-2xl font-bold">{configCoverage.catalog.total}</div>
+                <div className="text-sm text-muted-foreground">Catalog Items</div>
+              </div>
+              <div className="text-center p-4 rounded-lg border">
+                <div className="text-2xl font-bold">{configCoverage.demos}</div>
+                <div className="text-sm text-muted-foreground">Demos</div>
+              </div>
+            </div>
+            
+            <div className="mt-6">
+              <h4 className="font-medium mb-3">Catalog by Solution</h4>
+              <div className="grid grid-cols-3 gap-2">
+                {solutionsNav.map(solution => (
+                  <div key={solution.key} className="flex justify-between p-2 text-sm rounded border">
+                    <span>{solution.title}</span>
+                    <span className="font-mono">{configCoverage.catalog.bySolution[solution.key] || 0}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Public Routes */}
+        <Card>
+          <CardHeader style={{ backgroundColor: '#0B1E33' }}>
+            <CardTitle style={{ color: '#D4AF37' }}>Enabled Public Routes</CardTitle>
+          </CardHeader>
+          <CardContent className="pt-6">
+            {enabledRoutes.length === 0 ? (
+              <p className="text-muted-foreground text-center py-6">No public routes currently enabled</p>
+            ) : (
+              <div className="space-y-2">
+                {enabledRoutes.map(route => (
+                  <div key={route.path} className="flex items-center justify-between p-3 rounded-lg border">
+                    <div>
+                      <code className="text-sm font-mono">{route.path}</code>
+                      <span className="text-sm text-muted-foreground ml-2">— {route.label}</span>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      asChild
+                      className="h-8"
+                    >
+                      <a 
+                        href={route.path} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1"
+                      >
+                        <ExternalLink className="h-3 w-3" />
+                        View
+                      </a>
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    </AdminLayout>
   );
 }
