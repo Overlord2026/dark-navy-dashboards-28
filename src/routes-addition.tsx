@@ -26,7 +26,7 @@ import MobileMobileQATest from '@/pages/mobile/MobileMobileQATest';
 import LandingPage from '@/pages/LandingPage';
 import EnhancedValueCalculator from '@/pages/EnhancedValueCalculator';
 import EducationHub from '@/pages/EducationHub';
-import SolutionsHub from '@/pages/SolutionsHub';
+// SolutionsHub removed - using SolutionsPage instead
 import AdminHome from '@/pages/admin/AdminHome';
 import { WithRole } from '@/components/auth/withRole';
 
@@ -47,7 +47,7 @@ const additionalRoutes = [
   },
   {
     path: '/solutions-hub',
-    element: <SolutionsHub />
+    element: <div className="p-8 text-center"><h1 className="text-3xl font-bold">Solutions Hub - Use /solutions instead</h1></div>
   },
   {
     path: '/marketplace',

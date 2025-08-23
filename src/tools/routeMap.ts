@@ -12,7 +12,7 @@ export function getKnownRoutes(): string[] {
     // Public pages (flag protected)
     ...(getFlag('PUBLIC_DISCOVER_ENABLED') ? ['/discover'] : []),
     '/how-it-works',
-    ...(getFlag('SOLUTIONS_ENABLED') ? ['/solutions', '/solutions/annuities'] : []),
+    ...(getFlag('SOLUTIONS_ENABLED') ? ['/solutions', '/solutions/annuities', '/solutions/:solutionKey'] : []),
     
     // NIL public pages
     ...(getFlag('NIL_PUBLIC_ENABLED') ? ['/nil', '/nil/index'] : []),

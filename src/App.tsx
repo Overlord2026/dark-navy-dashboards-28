@@ -20,7 +20,7 @@ import Pricing from '@/pages/Pricing';
 import FixturesPanel from '@/pages/dev/FixturesPanel';
 import Discover from '@/pages/Discover';
 import { HowItWorks } from '@/pages/HowItWorks';
-import SolutionsHub from '@/pages/SolutionsHub';
+import SolutionsPage from '@/pages/SolutionsPage';
 import SolutionCategoryPage from '@/pages/solutions/SolutionCategoryPage';
 import { Annuities } from '@/pages/solutions/Annuities';
 import { OnboardingFlow } from '@/pages/OnboardingFlow';
@@ -61,9 +61,9 @@ function App() {
             {/* Public Pages - Flag Protected */}
             {getFlag('PUBLIC_DISCOVER_ENABLED') && <Route path="/discover" element={<Discover />} />}
             <Route path="/how-it-works" element={<HowItWorks />} />
-            {getFlag('SOLUTIONS_ENABLED') && <Route path="/solutions" element={<SolutionsHub />} />}
-            {getFlag('SOLUTIONS_ENABLED') && <Route path="/solutions/:category" element={<SolutionCategoryPage />} />}
+            {getFlag('SOLUTIONS_ENABLED') && <Route path="/solutions" element={<SolutionsPage />} />}
             {getFlag('SOLUTIONS_ENABLED') && <Route path="/solutions/annuities" element={<Annuities />} />}
+            {getFlag('SOLUTIONS_ENABLED') && <Route path="/solutions/:solutionKey" element={<SolutionCategoryPage />} />}
             
             {/* NIL Public Pages */}
             {getFlag('NIL_PUBLIC_ENABLED') && <Route path="/nil" element={<Marketplace />} />}
