@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Settings, MessageSquare, Home, Users, HelpCircle, CheckCircle, Globe, Monitor } from 'lucide-react';
 import { getFlag } from '@/lib/flags';
 import { AdminHeaderEnvLink } from '@/components/admin/AdminHeaderEnvLink';
+import PublicFlagsBadge from '@/components/admin/PublicFlagsBadge';
 import { cn } from '@/lib/utils';
 
 interface AdminLayoutProps {
@@ -57,8 +58,9 @@ export function AdminLayout({ children }: AdminLayoutProps) {
             <div className="h-6 w-px bg-border" />
             <span className="text-sm text-muted-foreground">Welcome, {userProfile.name || userProfile.email}</span>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <AdminHeaderEnvLink />
+            {getFlag('ADMIN_TOOLS_ENABLED') && <PublicFlagsBadge />}
             <Button variant="outline" size="sm" asChild>
               <Link to="/client-dashboard">Exit Admin</Link>
             </Button>
