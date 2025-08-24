@@ -390,9 +390,68 @@ export const router = createBrowserRouter([
       return React.createElement(ProDashboard, { persona: 'realtor' });
     })
   },
+  // Advisor workspace routes
+  {
+    path: "/advisors",
+    element: React.createElement(() => {
+      const { AdvisorsLayout } = require('./layouts/AdvisorsLayout');
+      return React.createElement(AdvisorsLayout);
+    }),
+    children: [
+      {
+        path: "home",
+        element: React.createElement(() => {
+          const { AdvisorHomePage } = require('./pages/advisors/AdvisorHomePage');
+          return React.createElement(AdvisorHomePage);
+        })
+      },
+      {
+        path: "leads",
+        element: React.createElement(() => {
+          const { AdvisorLeadsPage } = require('./pages/advisors/AdvisorLeadsPage');
+          return React.createElement(AdvisorLeadsPage);
+        })
+      },
+      {
+        path: "meetings",
+        element: React.createElement(() => {
+          const { AdvisorMeetingsPage } = require('./pages/advisors/AdvisorMeetingsPage');
+          return React.createElement(AdvisorMeetingsPage);
+        })
+      },
+      {
+        path: "campaigns",
+        element: React.createElement(() => {
+          const { AdvisorCampaignsPage } = require('./pages/advisors/AdvisorCampaignsPage');
+          return React.createElement(AdvisorCampaignsPage);
+        })
+      },
+      {
+        path: "pipeline",
+        element: React.createElement(() => {
+          const { AdvisorPipelinePage } = require('./pages/advisors/AdvisorPipelinePage');
+          return React.createElement(AdvisorPipelinePage);
+        })
+      },
+      {
+        path: "tools",
+        element: React.createElement(() => {
+          const { AdvisorToolsPage } = require('./pages/advisors/AdvisorToolsPage');
+          return React.createElement(AdvisorToolsPage);
+        })
+      },
+      {
+        path: "proof",
+        element: React.createElement(() => {
+          const { AdvisorProofPage } = require('./pages/advisors/AdvisorProofPage');
+          return React.createElement(AdvisorProofPage);
+        })
+      }
+    ]
+  },
   {
     path: "/advisor/*",
-    element: <ComingSoonPage featureName="Advisor Tools" description="Professional advisor management and client service tools." />
+    element: <ComingSoonPage featureName="Legacy Advisor Tools" description="Professional advisor management and client service tools." />
   },
   {
     path: "/accountant/*", 
