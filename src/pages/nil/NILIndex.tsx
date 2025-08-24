@@ -3,7 +3,8 @@ import { Helmet } from 'react-helmet-async';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Award, TrendingUp, DollarSign, Users, Calendar, Building2, Play, Share, Copy, Check } from 'lucide-react';
+import { Award, TrendingUp, DollarSign, Users, Calendar, Building2, Play, Share, Copy, Check, ChevronDown } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { useNavigate } from 'react-router-dom';
 import { toast } from '@/hooks/use-toast';
 import { getFlag } from '@/lib/flags';
@@ -53,7 +54,7 @@ export default function NILIndex() {
     navigate('/start/brand');
   };
 
-  const handleDemo = () => {
+  const handleAthleteDemo = () => {
     // Analytics  
     if (typeof window !== 'undefined' && (window as any).analytics) {
       (window as any).analytics.track('demo.open', { 
@@ -63,6 +64,18 @@ export default function NILIndex() {
     }
     
     navigate('/demos/nil-athlete');
+  };
+
+  const handleSchoolDemo = () => {
+    // Analytics  
+    if (typeof window !== 'undefined' && (window as any).analytics) {
+      (window as any).analytics.track('demo.open', { 
+        source: 'nil-index-sticky',
+        demoId: 'nil-school'
+      });
+    }
+    
+    navigate('/demos/nil-school');
   };
 
   const handleShare = async () => {
@@ -284,14 +297,31 @@ export default function NILIndex() {
                 )}
                 
                 {getFlag('DEMOS_ENABLED') && (
-                  <Button 
-                    variant="outline" 
-                    onClick={handleDemo}
-                    className="flex items-center gap-2 min-h-[44px]"
-                  >
-                    <Play className="w-4 h-4" />
-                    See 60-sec Demo
-                  </Button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button 
+                        variant="outline" 
+                        className="flex items-center gap-2 min-h-[44px]"
+                      >
+                        <Play className="w-4 h-4" />
+                        See 60-sec Demo
+                        <ChevronDown className="w-4 h-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent 
+                      className="z-50 bg-background border shadow-lg"
+                      align="start"
+                    >
+                      <DropdownMenuItem onClick={handleAthleteDemo}>
+                        <Award className="w-4 h-4 mr-2" />
+                        Athlete Demo
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={handleSchoolDemo}>
+                        <Building2 className="w-4 h-4 mr-2" />
+                        School Demo
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 )}
               </div>
               
