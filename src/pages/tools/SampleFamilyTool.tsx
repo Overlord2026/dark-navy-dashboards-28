@@ -163,9 +163,7 @@ export default function SampleFamilyTool() {
             )}
 
             <ExportButtons
-              toolKey="rmd-check"
-              csvEnabled={!!results}
-              zipEnabled={!!results}
+              exports={{ csv: !!results, zip: !!results }}
             />
           </div>
         </div>

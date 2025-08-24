@@ -7,20 +7,29 @@ export const analytics = {
       // posthog.capture(event, properties);
     }
   },
-  // Legacy compatibility methods
+  // Legacy compatibility methods with flexible parameters
   trackEvent: (event: string, properties?: Record<string, any>) => analytics.track(event, properties),
   trackPageView: (path: string, properties?: Record<string, any>) => analytics.track('page_view', { path, ...properties }),
   trackFeatureUsage: (feature: string, properties?: Record<string, any>) => analytics.track('feature_usage', { feature, ...properties }),
   trackConversion: (type: string, properties?: Record<string, any>) => analytics.track('conversion', { type, ...properties }),
-  trackError: (error: string, properties?: Record<string, any>) => analytics.track('error', { error, ...properties }),
-  trackPerformance: (metric: string, value: number, properties?: Record<string, any>) => analytics.track('performance', { metric, value, ...properties }),
+  trackError: (error: Error | string, properties?: Record<string, any>) => analytics.track('error', { error: error.toString(), ...properties }),
+  trackPerformance: (metric: string, value: number | { value: number }, properties?: Record<string, any>) => {
+    const val = typeof value === 'number' ? value : value.value;
+    return analytics.track('performance', { metric, value: val, ...properties });
+  },
   trackSecurityEvent: (event: string, properties?: Record<string, any>) => analytics.track('security_event', { event, ...properties }),
   trackPersonaClaim: (persona: string, properties?: Record<string, any>) => analytics.track('persona_claim', { persona, ...properties }),
   trackOnboardingStep: (step: string, properties?: Record<string, any>) => analytics.track('onboarding_step', { step, ...properties }),
   trackOnboardingStart: (properties?: Record<string, any>) => analytics.track('onboarding_start', properties),
   trackViralShare: (platform: string, properties?: Record<string, any>) => analytics.track('viral_share', { platform, ...properties }),
   trackShareClick: (type: string, properties?: Record<string, any>) => analytics.track('share_click', { type, ...properties }),
-  trackShareSuccess: (type: string, properties?: Record<string, any>) => analytics.track('share_success', { type, ...properties }),
+  trackShareSuccess: (type: string | Record<string, any>, properties?: Record<string, any>) => {
+    if (typeof type === 'string') {
+      return analytics.track('share_success', { type, ...properties });
+    } else {
+      return analytics.track('share_success', type);
+    }
+  },
   trackFAQUsage: (question: string, properties?: Record<string, any>) => analytics.track('faq_usage', { question, ...properties }),
   // Family-specific tracking methods
   trackFamilyTabView: (tab: string, properties?: Record<string, any>) => analytics.track('family_tab_view', { tab, ...properties }),
