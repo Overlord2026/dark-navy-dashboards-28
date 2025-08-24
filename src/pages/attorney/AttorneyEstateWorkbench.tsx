@@ -13,12 +13,14 @@ import {
   Archive,
   AlertTriangle,
   CheckCircle2,
-  DollarSign
+  DollarSign,
+  Gavel
 } from 'lucide-react';
 import { recordReceipt } from '@/features/receipts/record';
 import { renderEstatePdf } from '@/lib/report/estatePdf';
 import { buildBinderPack } from '@/features/estate/binder';
 import { useEstateRules } from '@/features/estate/states/estateRules';
+import { RecordingIntakeForm } from '@/features/estate/deeds/RecordingIntakeForm';
 import { toast } from 'sonner';
 import analytics from '@/lib/analytics';
 
@@ -188,11 +190,12 @@ const AttorneyEstateWorkbench = () => {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-6">
+          <TabsList className="grid w-full grid-cols-7">
             <TabsTrigger value="conflict">Conflict Check</TabsTrigger>
             <TabsTrigger value="authority">Authority</TabsTrigger>
             <TabsTrigger value="drafting">Drafting</TabsTrigger>
             <TabsTrigger value="execution">Execution</TabsTrigger>
+            <TabsTrigger value="recording">Deed & Recording</TabsTrigger>
             <TabsTrigger value="binder">Binder</TabsTrigger>
             <TabsTrigger value="billing">Billing</TabsTrigger>
           </TabsList>
@@ -424,6 +427,20 @@ const AttorneyEstateWorkbench = () => {
                     </ul>
                   </div>
                 </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="recording" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Gavel className="h-5 w-5" />
+                  Deed & Recording
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <RecordingIntakeForm />
               </CardContent>
             </Card>
           </TabsContent>
