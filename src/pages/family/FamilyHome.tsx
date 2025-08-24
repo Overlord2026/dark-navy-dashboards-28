@@ -128,18 +128,28 @@ export function FamilyHome() {
 
   const getToolDetails = (toolKey: string) => {
     const tool = catalogConfig.find((tool: any) => tool.key === toolKey);
+    
+    // Map specific family tools to their routes
+    const familyToolRoutes: Record<string, string> = {
+      'retirement-roadmap': '/family/tools/retirement',
+      'social-security': '/family/tools/ss-timing',
+      'rmd-check': '/family/tools/rmd-check',
+      'roth-ladder': '/family/tools/roth-ladder',
+      'taxhub-diy': '/family/tools/taxhub-preview'
+    };
+    
     return tool ? {
       title: tool.label,
       description: tool.summary,
       category: tool.type.toLowerCase(),
-      route: tool.route,
+      route: familyToolRoutes[toolKey] || tool.route,
       marketingRoute: tool.route,
       status: tool.status
     } : {
       title: toolKey,
       description: 'Tool description',
       category: 'general',
-      route: `/tools/${toolKey}`,
+      route: familyToolRoutes[toolKey] || `/tools/${toolKey}`,
       marketingRoute: `/solutions/${toolKey}`,
       status: 'ready'
     };
@@ -325,7 +335,17 @@ export function FamilyHome() {
               className="space-y-6"
             >
               <div className="flex items-center justify-between">
-                <h2 id="tools-heading" className="text-lg font-semibold">Your Tools</h2>
+                <div className="flex items-center gap-4">
+                  <h2 id="tools-heading" className="text-lg font-semibold">Your Tools</h2>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => navigate('/family/tools')}
+                    className="text-xs"
+                  >
+                    See All Tools
+                  </Button>
+                </div>
                 <TabsList 
                   className="grid grid-cols-4 md:grid-cols-6 lg:w-fit"
                   role="tablist"

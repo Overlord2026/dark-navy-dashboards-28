@@ -53,6 +53,13 @@ import { SolutionsHub } from '@/components/solutions/SolutionsHub';
 const DemoPage = React.lazy(() => import('@/pages/demos/[persona]'));
 const PreviewPage = React.lazy(() => import('@/components/PreviewPage'));
 import FamilyHome from '@/pages/family/Home';
+import FamilyToolsHub from '@/pages/family/FamilyToolsHub';
+import RothLadderTool from '@/pages/family/RothLadderTool';
+import RMDCheckTool from '@/pages/family/RMDCheckTool';
+import TaxHubPreview from '@/pages/family/TaxHubPreview';
+import FamilyReceipts from '@/pages/family/FamilyReceipts';
+import RetirementRoadmapTool from '@/pages/tools/RetirementRoadmapTool';
+import SocialSecurityTool from '@/pages/tools/SocialSecurityTool';
 import AdvisorHome from '@/pages/advisor/AdvisorHome';
 import NILAthleteHome from '@/pages/nil/NILAthleteHome';
 import MarketplacePage from '@/pages/nil/Marketplace';
@@ -110,6 +117,13 @@ function App() {
             
             {/* Family App Routes (Authenticated) */}
             <Route path="/family/home" element={<FamilyHome />} />
+            <Route path="/family/tools" element={<FamilyToolsHub />} />
+            <Route path="/family/tools/retirement" element={<RetirementRoadmapTool />} />
+            <Route path="/family/tools/roth-ladder" element={<RothLadderTool />} />
+            <Route path="/family/tools/ss-timing" element={<SocialSecurityTool />} />
+            <Route path="/family/tools/rmd-check" element={<RMDCheckTool />} />
+            <Route path="/family/tools/taxhub-preview" element={<TaxHubPreview />} />
+            <Route path="/family/receipts" element={<FamilyReceipts />} />
             
             {/* Brand Hub Routes */}
             {getFlag('BRAND_PUBLIC_ENABLED') && <Route path="/brand" element={<BrandHub />} />}
