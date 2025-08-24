@@ -1,5 +1,5 @@
 import React, { Suspense } from "react";
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Routes, Route, Navigate, Link } from "react-router-dom";
 import { SecureMessagesPage } from "./pages/SecureMessagesPage";
 import { HomePage } from "./pages/TabPages";
 import { AnnuitiesPage } from "./pages/AnnuitiesPage";
@@ -497,6 +497,32 @@ export const router = createBrowserRouter([
           <Route path="proof" element={React.createElement(() => {
             const { AttorneyProofPage } = require('./pages/attorneys/AttorneyProofPage');
             return React.createElement(AttorneyProofPage);
+          })} />
+        </Routes>
+      </div>
+    )
+  },
+  {
+    path: "/insurance/life/*",
+    element: (
+      <div className="min-h-screen bg-background">
+        <Routes>
+          <Route index element={<Navigate to="home" replace />} />
+          <Route path="home" element={React.createElement(() => {
+            const { default: InsuranceLifeHomePage } = require('./pages/insurance/life/InsuranceLifeHomePage');
+            return React.createElement(InsuranceLifeHomePage);
+          })} />
+          <Route path="leads" element={React.createElement(() => {
+            const { default: InsuranceLifeLeadsPage } = require('./pages/insurance/life/InsuranceLifeLeadsPage');
+            return React.createElement(InsuranceLifeLeadsPage);
+          })} />
+          <Route path="tools" element={React.createElement(() => {
+            const { default: InsuranceLifeToolsPage } = require('./pages/insurance/life/InsuranceLifeToolsPage');
+            return React.createElement(InsuranceLifeToolsPage);
+          })} />
+          <Route path="proof" element={React.createElement(() => {
+            const { default: InsuranceLifeProofPage } = require('./pages/insurance/life/InsuranceLifeProofPage');
+            return React.createElement(InsuranceLifeProofPage);
           })} />
         </Routes>
       </div>
