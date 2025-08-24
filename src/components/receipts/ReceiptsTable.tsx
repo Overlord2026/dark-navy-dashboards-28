@@ -8,8 +8,16 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTr
 import { Download, Eye, Shield, Search } from 'lucide-react';
 import { listReceipts, getReceiptsByType } from '@/features/receipts/record';
 import { AnyRDS } from '@/features/receipts/types';
+import type { AnchorRef } from '@/features/receipts/types';
 import { acceptNofM } from '@/features/anchor/simple-providers';
 import { toast } from 'sonner';
+
+// small helper so acceptNofM always receives the required shape
+type AnchorLike = { cross_chain_locator: any[] };
+
+function toAnchorLike(ref?: AnchorRef | null): AnchorLike {
+  return { cross_chain_locator: ref?.cross_chain_locator ?? [] };
+}
 
 const RECEIPT_TYPES = ['Decision-RDS', 'Consent-RDS', 'Settlement-RDS', 'Delta-RDS'] as const;
 
@@ -46,7 +54,7 @@ export default function ReceiptsTable() {
     }
     
     try {
-      const verified = acceptNofM(receipt.anchor_ref, 1);
+      const verified = acceptNofM(toAnchorLike(receipt.anchor_ref), 1);
       return verified 
         ? { status: 'verified', variant: 'default' }
         : { status: 'unverified', variant: 'secondary' };
@@ -62,7 +70,7 @@ export default function ReceiptsTable() {
     }
     
     try {
-      const verified = acceptNofM(receipt.anchor_ref, 1);
+      const verified = acceptNofM(toAnchorLike(receipt.anchor_ref), 1);
       if (verified) {
         toast.success('Receipt verified ✓', { 
           description: 'Anchor proof is valid' 
