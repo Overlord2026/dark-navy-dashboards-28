@@ -20,6 +20,7 @@ import NilReadyCheckPage from '@/pages/nil/admin/NilReadyCheckPage';
 import Pricing from '@/pages/Pricing';
 import FixturesPanel from '@/pages/dev/FixturesPanel';
 import Discover from '@/pages/Discover';
+import SearchPage from '@/pages/SearchPage';
 import { HowItWorks } from '@/pages/HowItWorks';
 import SolutionsPage from '@/pages/SolutionsPage';
 import SolutionCategoryPage from '@/pages/solutions/SolutionCategoryPage';
@@ -76,6 +77,7 @@ function App() {
             
             {/* Public Pages - Flag Protected */}
             {getFlag('PUBLIC_DISCOVER_ENABLED') && <Route path="/discover" element={<Discover />} />}
+            {getFlag('PUBLIC_DISCOVER_ENABLED') && <Route path="/search" element={<SearchPage />} />}
             <Route path="/how-it-works" element={<HowItWorks />} />
             {getFlag('SOLUTIONS_ENABLED') && <Route path="/solutions" element={<SolutionsPage />} />}
             {getFlag('SOLUTIONS_ENABLED') && <Route path="/solutions/annuities" element={<Annuities />} />}

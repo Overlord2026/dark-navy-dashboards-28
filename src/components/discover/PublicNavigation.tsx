@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Menu, LogIn, ArrowRight, ChevronDown, Award, Play, Building2 } from 'lucide-react';
+import { Menu, LogIn, ArrowRight, ChevronDown, Award, Play, Building2, Search } from 'lucide-react';
 import { getFlag } from '@/lib/flags';
 
 export const PublicNavigation: React.FC = () => {
@@ -11,6 +11,7 @@ export const PublicNavigation: React.FC = () => {
   const [isNilOpen, setIsNilOpen] = useState(false);
 
   const navItems = [
+    { label: 'Search', href: '/search', icon: Search },
     { label: 'Goals', href: '/goals' },
     { label: 'Catalog', href: '/catalog' },
     { label: 'Personas', href: '/discover#personas' },
@@ -159,8 +160,9 @@ export const PublicNavigation: React.FC = () => {
               <a
                 key={item.label}
                 href={item.href}
-                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
               >
+                {item.icon && <item.icon className="h-4 w-4" />}
                 {item.label}
               </a>
             ))}
@@ -260,19 +262,20 @@ export const PublicNavigation: React.FC = () => {
                     </div>
                   )}
 
-                  {/* Navigation Links */}
-                  <div className="space-y-4">
-                    {navItems.map((item) => (
-                      <a
-                        key={item.label}
-                        href={item.href}
-                        className="block text-lg font-medium text-white hover:text-[#D4AF37] focus:outline-none focus:ring-2 focus:ring-[#67E8F9] focus:ring-offset-0 min-h-[44px] flex items-center transition-colors duration-200"
-                        onClick={() => setIsOpen(false)}
-                      >
-                        {item.label}
-                      </a>
-                    ))}
-                  </div>
+                   {/* Navigation Links */}
+                   <div className="space-y-4">
+                     {navItems.map((item) => (
+                       <a
+                         key={item.label}
+                         href={item.href}
+                         className="block text-lg font-medium text-white hover:text-[#D4AF37] focus:outline-none focus:ring-2 focus:ring-[#67E8F9] focus:ring-offset-0 min-h-[44px] flex items-center gap-2 transition-colors duration-200"
+                         onClick={() => setIsOpen(false)}
+                       >
+                         {item.icon && <item.icon className="h-5 w-5" />}
+                         {item.label}
+                       </a>
+                     ))}
+                   </div>
 
                   {/* Actions */}
                   <div className="space-y-3 pt-6 border-t border-white/20">
