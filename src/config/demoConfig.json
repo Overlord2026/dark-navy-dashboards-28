@@ -120,10 +120,12 @@
   },
   {
     "id": "nil-school",
-    "title": "NIL School/Brand — 60-second tour",
+    "title": "NIL — Schools & Universities (60-second tour)",
     "steps": [
-      {"h":"Policy once, verify always","p":"Train/disclose/approve with green checks."},
-      {"h":"Proof & export","p":"Audit packs in one click."}
+      { "h": "Publish policy once", "p": "State/school rules and channel disclosures are set in one place and reused across all deals." },
+      { "h": "Verify automatically", "p": "Training, disclosure and approvals show green checks; Smart Checks block gaps before approval." },
+      { "h": "Approve & audit", "p": "Approvals create Proof Slips; export an audit pack (CSV + docs ZIP) in one click." },
+      { "h": "Fewer disputes, faster launches", "p": "Clear status, clean receipts and faster time to go-live for campaigns." }
     ],
     "cta": "Start School/Brand workspace"
   },
