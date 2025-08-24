@@ -14,7 +14,9 @@ export async function seedCPALead() {
     phone: '555-0123',
     persona: 'cpa',
     tags: ['tax-planning', 'small-business'],
-    utm: { source: 'google', medium: 'cpc', campaign: 'tax-season-2025' },
+    utm_source: 'google',
+    utm_medium: 'cpc',
+    utm_campaign: 'tax-season-2025',
     status: 'qualified',
     consent_given: true
   });
@@ -58,6 +60,7 @@ Risk Factors:
   
   const meeting = MeetingModel.create({
     persona: 'cpa',
+    title: 'Q4 Tax Planning Session',
     source: 'plain',
     summary: 'Q4 tax planning session with discussion of retirement strategies and business expense optimization',
     bullets: [
@@ -66,7 +69,7 @@ Risk Factors:
       'Identified tax-loss harvesting opportunities',
       'S-Corp election consideration for business'
     ],
-    actions: [
+    action_items: [
       'Gather Q4 business expense receipts',
       'Review retirement account balances',
       'Schedule January tax prep meeting'
@@ -76,7 +79,9 @@ Risk Factors:
       'Potential Q4 estimated tax underpayment'
     ],
     participants: ['CPA Sarah Chen', 'Jennifer Martinez'],
-    inputs_hash
+    inputs_hash,
+    vault_grants: [],
+    meeting_date: '2024-12-15'
   });
 
   // Record decision
@@ -97,9 +102,15 @@ export async function seedCPACampaign() {
     persona: 'cpa',
     name: 'Tax Season Warmup - Jennifer Martinez',
     template_id: 'cpa_tax_season_warmup_3touch',
-    recipients: ['jennifer.martinez@email.com'],
     scheduled_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
-    status: 'scheduled'
+    status: 'scheduled',
+    target_audience: ['jennifer.martinez@email.com'],
+    metrics: {
+      sent: 0,
+      opened: 0,
+      clicked: 0,
+      converted: 0
+    }
   });
 
   // Record communication decision

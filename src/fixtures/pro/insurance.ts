@@ -14,8 +14,11 @@ export async function seedInsuranceLead() {
     phone: '555-0789',
     persona: 'insurance',
     tags: ['life-insurance', 'retirement-planning'],
-    utm: { source: 'seminar', medium: 'event', campaign: 'retirement-readiness-2025' },
-    status: 'needs_analysis'
+    utm_source: 'seminar',
+    utm_medium: 'event',
+    utm_campaign: 'retirement-readiness-2025',
+    status: 'qualified',
+    consent_given: true
   });
 
   // Record consent with insurance licensing notice
@@ -57,7 +60,8 @@ Risk Factors:
   
   const meeting = MeetingModel.create({
     persona: 'insurance',
-    source: 'manual',
+    title: 'Life Insurance Needs Analysis',
+    source: 'plain',
     summary: 'Life insurance needs analysis with retirement income planning discussion',
     bullets: [
       'Current coverage and goals reviewed',
@@ -65,7 +69,7 @@ Risk Factors:
       'Annuity options for guaranteed income discussed',
       '1035 exchange opportunities explored'
     ],
-    actions: [
+    action_items: [
       'Prepare detailed life insurance illustration',
       'Review specific annuity product options',
       'Schedule comprehensive suitability review'
@@ -75,7 +79,9 @@ Risk Factors:
       'Retirement income gap requires addressing'
     ],
     participants: ['Agent Lisa Rodriguez', 'Patricia Wilson'],
-    inputs_hash
+    inputs_hash,
+    vault_grants: [],
+    meeting_date: '2024-12-15'
   });
 
   // Record decision with suitability check
@@ -97,22 +103,28 @@ export async function seedInsuranceCampaign() {
     persona: 'insurance',
     name: 'Life Needs Analysis - Patricia Wilson',
     template_id: 'insurance_life_needs_3touch',
-    recipients: ['patricia.wilson@email.com'],
-    scheduled_at: new Date(Date.now() + 24 * 60 * 60 * 1000),
-    status: 'scheduled'
+    scheduled_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+    status: 'scheduled',
+    target_audience: ['patricia.wilson@email.com'],
+    metrics: {
+      sent: 0,
+      opened: 0,
+      clicked: 0,
+      converted: 0
+    }
   });
 
   // Record communication decision with state licensing check
   const commDecision = recordDecisionRDS({
     action: 'communication_send',
     persona: 'insurance',
-    inputs_hash: await hash({ template_id: campaign.template_id, recipients: campaign.recipients }),
+    inputs_hash: await hash({ template_id: campaign.template_id, recipients: ['patricia.wilson@email.com'] }),
     reasons: ['template_approved', 'consent_valid', 'state_licensed', 'compliance_reviewed'],
     result: 'approve',
     metadata: {
       channel: 'email',
       template_id: campaign.template_id,
-      recipient_count: campaign.recipients.length,
+      recipient_count: 1,
       state_licensing_verified: true
     }
   });

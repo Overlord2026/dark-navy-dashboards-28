@@ -14,8 +14,11 @@ export async function seedRealtorLead() {
     phone: '555-0654',
     persona: 'realtor',
     tags: ['first-time-buyer', 'suburban'],
-    utm: { source: 'zillow', medium: 'listing', campaign: 'first-time-buyers-2025' },
-    status: 'pre_approved'
+    utm_source: 'zillow',
+    utm_medium: 'listing',
+    utm_campaign: 'first-time-buyers-2025',
+    status: 'qualified',
+    consent_given: true
   });
 
   // Record consent for real estate services
@@ -58,7 +61,8 @@ Risk Factors:
   
   const meeting = MeetingModel.create({
     persona: 'realtor',
-    source: 'manual',
+    title: 'First-Time Buyer Consultation',
+    source: 'plain',
     summary: 'First-time buyer consultation with timeline and neighborhood planning',
     bullets: [
       'Home buying timeline and budget reviewed',
@@ -66,7 +70,7 @@ Risk Factors:
       'Neighborhood preferences discussed',
       'Property showing strategy developed'
     ],
-    actions: [
+    action_items: [
       'Prepare neighborhood market analysis',
       'Schedule weekend property showings',
       'Facilitate lender connection',
@@ -77,7 +81,9 @@ Risk Factors:
       'Limited inventory challenge'
     ],
     participants: ['Realtor Mark Johnson', 'Amanda Foster', 'Tom Foster'],
-    inputs_hash
+    inputs_hash,
+    vault_grants: [],
+    meeting_date: '2024-12-15'
   });
 
   // Record decision
@@ -98,22 +104,28 @@ export async function seedRealtorCampaign() {
     persona: 'realtor',
     name: 'Neighborhood Report - Amanda Foster',
     template_id: 'realtor_neighborhood_report_3touch',
-    recipients: ['amanda.foster@email.com'],
-    scheduled_at: new Date(Date.now() + 24 * 60 * 60 * 1000),
-    status: 'scheduled'
+    scheduled_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+    status: 'scheduled',
+    target_audience: ['amanda.foster@email.com'],
+    metrics: {
+      sent: 0,
+      opened: 0,
+      clicked: 0,
+      converted: 0
+    }
   });
 
   // Record communication decision
   const commDecision = recordDecisionRDS({
     action: 'communication_send',
     persona: 'realtor',
-    inputs_hash: await hash({ template_id: campaign.template_id, recipients: campaign.recipients }),
+    inputs_hash: await hash({ template_id: campaign.template_id, recipients: ['amanda.foster@email.com'] }),
     reasons: ['template_approved', 'consent_valid', 'market_update'],
     result: 'approve',
     metadata: {
       channel: 'email',
       template_id: campaign.template_id,
-      recipient_count: campaign.recipients.length
+      recipient_count: 1
     }
   });
 

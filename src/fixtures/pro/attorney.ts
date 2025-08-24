@@ -14,8 +14,11 @@ export async function seedAttorneyLead() {
     phone: '555-0456',
     persona: 'attorney',
     tags: ['estate-planning', 'trust'],
-    utm: { source: 'referral', medium: 'attorney-network', campaign: 'estate-planning' },
-    status: 'consultation_scheduled'
+    utm_source: 'referral',
+    utm_medium: 'attorney-network',
+    utm_campaign: 'estate-planning',
+    status: 'qualified',
+    consent_given: true
   });
 
   // Record consent with attorney-client privilege notice
@@ -48,7 +51,8 @@ Risk Factors: Complex family situation requiring careful beneficiary planning
   
   const meeting = MeetingModel.create({
     persona: 'attorney',
-    source: 'manual',
+    title: 'Estate Planning Consultation',
+    source: 'plain',
     summary: 'Estate planning consultation - privileged content stored securely',
     bullets: [
       'Estate planning objectives reviewed',
@@ -56,7 +60,7 @@ Risk Factors: Complex family situation requiring careful beneficiary planning
       'Beneficiary planning considerations',
       'Tax implications addressed'
     ],
-    actions: [
+    action_items: [
       'Draft initial will document',
       'Prepare trust structure proposal',
       'Schedule follow-up review meeting'
@@ -67,7 +71,9 @@ Risk Factors: Complex family situation requiring careful beneficiary planning
     ],
     participants: ['Attorney Michael Davis', 'Robert Thompson'],
     inputs_hash,
-    privileged: true // Special flag for attorney content
+    vault_grants: [],
+    meeting_date: '2024-12-15'
+    // privileged: true // Special flag for attorney content
   });
 
   // Record decision with privilege protection
@@ -89,22 +95,28 @@ export async function seedAttorneyCampaign() {
     persona: 'attorney',
     name: 'Will/Trust Review - Robert Thompson',
     template_id: 'attorney_will_trust_review_3touch',
-    recipients: ['robert.thompson@email.com'],
-    scheduled_at: new Date(Date.now() + 24 * 60 * 60 * 1000),
-    status: 'scheduled'
+    scheduled_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+    status: 'scheduled',
+    target_audience: ['robert.thompson@email.com'],
+    metrics: {
+      sent: 0,
+      opened: 0,
+      clicked: 0,
+      converted: 0
+    }
   });
 
   // Record communication decision
   const commDecision = recordDecisionRDS({
     action: 'communication_send',
     persona: 'attorney',
-    inputs_hash: await hash({ template_id: campaign.template_id, recipients: campaign.recipients }),
+    inputs_hash: await hash({ template_id: campaign.template_id, recipients: ['robert.thompson@email.com'] }),
     reasons: ['template_approved', 'consent_valid', 'no_solicitation_rules_checked'],
     result: 'approve',
     metadata: {
       channel: 'email',
       template_id: campaign.template_id,
-      recipient_count: campaign.recipients.length
+      recipient_count: 1
     }
   });
 

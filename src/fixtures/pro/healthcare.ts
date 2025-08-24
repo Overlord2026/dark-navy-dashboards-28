@@ -14,8 +14,11 @@ export async function seedHealthcareLead() {
     phone: '555-0321',
     persona: 'healthcare',
     tags: ['longevity', 'wellness-coaching'],
-    utm: { source: 'webinar', medium: 'education', campaign: 'longevity-optimization' },
-    status: 'screening_scheduled'
+    utm_source: 'webinar',
+    utm_medium: 'education',
+    utm_campaign: 'longevity-optimization',
+    status: 'qualified',
+    consent_given: true
   });
 
   // Record consent with HIPAA scope
@@ -48,7 +51,8 @@ Risk Factors: Identified areas for health optimization
   
   const meeting = MeetingModel.create({
     persona: 'healthcare',
-    source: 'manual',
+    title: 'Longevity Wellness Consultation',
+    source: 'plain',
     summary: 'Longevity wellness consultation - HIPAA protected content stored securely',
     bullets: [
       'Current wellness status reviewed',
@@ -56,7 +60,7 @@ Risk Factors: Identified areas for health optimization
       'Lifestyle factors assessment completed',
       'Personalized recommendations developed'
     ],
-    actions: [
+    action_items: [
       'Develop detailed wellness optimization plan',
       'Schedule follow-up progress review',
       'Coordinate with healthcare providers as needed'
@@ -67,7 +71,9 @@ Risk Factors: Identified areas for health optimization
     ],
     participants: ['Dr. Sarah Kim', 'David Chen'],
     inputs_hash,
-    hipaa_protected: true // Special flag for healthcare content
+    vault_grants: [],
+    meeting_date: '2024-12-15'
+    // hipaa_protected: true // Special flag for healthcare content
   });
 
   // Record decision with HIPAA minimum necessary principle
@@ -89,22 +95,28 @@ export async function seedHealthcareCampaign() {
     persona: 'healthcare',
     name: 'Longevity Intro - David Chen',
     template_id: 'healthcare_longevity_intro_3touch',
-    recipients: ['david.chen@email.com'],
-    scheduled_at: new Date(Date.now() + 24 * 60 * 60 * 1000),
-    status: 'scheduled'
+    scheduled_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+    status: 'scheduled',
+    target_audience: ['david.chen@email.com'],
+    metrics: {
+      sent: 0,
+      opened: 0,
+      clicked: 0,
+      converted: 0
+    }
   });
 
   // Record communication decision (education only for healthcare)
   const commDecision = recordDecisionRDS({
     action: 'communication_send',
     persona: 'healthcare',
-    inputs_hash: await hash({ template_id: campaign.template_id, recipients: campaign.recipients }),
+    inputs_hash: await hash({ template_id: campaign.template_id, recipients: ['david.chen@email.com'] }),
     reasons: ['education_only', 'consent_valid', 'hipaa_compliant'],
     result: 'approve',
     metadata: {
       channel: 'email',
       template_id: campaign.template_id,
-      recipient_count: campaign.recipients.length,
+      recipient_count: 1,
       education_only: true
     }
   });
