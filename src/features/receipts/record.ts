@@ -1,30 +1,33 @@
-import { AnyRDS } from './types';
-
-const store: AnyRDS[] = [];
-
-export function recordReceipt<T extends AnyRDS>(rds: T): T {
-  store.push(rds);
-  console.info('receipt.recorded', rds);
-  return rds;
+// Simple receipt recording system for demo purposes
+export function recordReceipt(receipt: any) {
+  try {
+    const receipts = JSON.parse(localStorage.getItem('family_receipts') || '[]');
+    receipts.unshift(receipt);
+    localStorage.setItem('family_receipts', JSON.stringify(receipts));
+    console.log('✅ Receipt recorded:', receipt.id);
+    return receipt;
+  } catch (error) {
+    console.error('❌ Failed to record receipt:', error);
+    return receipt;
+  }
 }
 
-export function listReceipts(): AnyRDS[] {
-  return [...store];
-}
-
-export function getReceipt(id: string): AnyRDS | null {
-  return store.find(r => r.id === id) || null;
-}
-
-export function getReceiptsByType<T extends AnyRDS>(type: T['type']): T[] {
-  return store.filter(r => r.type === type) as T[];
-}
-
-export function clearReceipts(): void {
-  store.length = 0;
-  console.info('receipt.store.cleared');
+export function listReceipts(): any[] {
+  try {
+    return JSON.parse(localStorage.getItem('family_receipts') || '[]');
+  } catch {
+    return [];
+  }
 }
 
 export function getReceiptsCount(): number {
-  return store.length;
+  return listReceipts().length;
+}
+
+export function getReceiptsByType(type: string): any[] {
+  return listReceipts().filter(r => r.type === type);
+}
+
+export function clearReceipts(): void {
+  localStorage.removeItem('family_receipts');
 }

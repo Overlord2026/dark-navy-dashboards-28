@@ -105,21 +105,21 @@ export default function AdminAuditsPanel() {
 
       // Audit Decision-RDS
       setProgress(25);
-      const decisionReceipts = getReceiptsByType<DecisionRDS>('Decision-RDS');
+      const decisionReceipts = getReceiptsByType('Decision-RDS');
       if (decisionReceipts.length > 0) {
         auditResults.push(validateDecisionRDS(decisionReceipts));
       }
 
       // Audit Consent-RDS  
       setProgress(50);
-      const consentReceipts = getReceiptsByType<ConsentRDS>('Consent-RDS');
+      const consentReceipts = getReceiptsByType('Consent-RDS');
       if (consentReceipts.length > 0) {
         auditResults.push(validateConsentRDS(consentReceipts));
       }
 
       // Audit Settlement-RDS
       setProgress(75);
-      const settlementReceipts = getReceiptsByType<SettlementRDS>('Settlement-RDS');
+      const settlementReceipts = getReceiptsByType('Settlement-RDS');
       if (settlementReceipts.length > 0) {
         auditResults.push({
           type: 'Settlement-RDS',
@@ -133,7 +133,7 @@ export default function AdminAuditsPanel() {
 
       // Audit Delta-RDS
       setProgress(90);
-      const deltaReceipts = getReceiptsByType<DeltaRDS>('Delta-RDS');
+      const deltaReceipts = getReceiptsByType('Delta-RDS');
       if (deltaReceipts.length > 0) {
         auditResults.push({
           type: 'Delta-RDS',

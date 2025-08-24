@@ -1,7 +1,23 @@
-// Wealth Vault seeder
+// /src/tools/seeds/wealth-vault.ts
+export async function seedWealthVault() {
+  const now = new Date().toISOString();
+  const { recordReceipt } = await import('@/features/receipts/record');
+  recordReceipt({
+    id: `vault_${Date.now()}`,
+    type: 'Decision-RDS',
+    policy_version: 'E-2025.08',
+    inputs_hash: 'sha256:demo',
+    result: 'approve',
+    reasons: ['WEALTHDOC.ADD'],
+    created_at: now
+  } as any);
+  return true;
+}
+
+// Wealth Vault seeder (legacy fallback)
 import { supabase } from '@/integrations/supabase/client';
 
-export default async function seedWealthVault() {
+export default async function seedWealthVaultLegacy() {
   try {
     // Create mock proof slips for the wealth vault tool
     const proofSlips = [
