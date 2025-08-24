@@ -30,10 +30,10 @@ export const ESTATE_RULES: Record<string,EstateRule> = {
     rlt: { notary: true, spousalConsents: true },
     pourOver: { witnesses: 2, notary: false },
     poa: { notary: true },
-    probateNotes: 'Small estate procedure available for estates under $184,500',
+    probateNotes: 'Small estate procedures available; county-level nuances.',
     communityProperty: true,
     todPodAllowed: true,
-    deedPracticeNote: 'Transfer on death deeds permitted for real property'
+    deedPracticeNote: 'Confirm county margin requirements.'
   },
   'TX': {
     code: 'TX',
@@ -41,18 +41,21 @@ export const ESTATE_RULES: Record<string,EstateRule> = {
     rlt: { notary: true },
     pourOver: { witnesses: 2, notary: false },
     poa: { notary: true },
-    probateNotes: 'Independent administration preferred',
+    probateNotes: 'Muniment of title option in some cases.',
     communityProperty: true,
-    todPodAllowed: true
+    todPodAllowed: true,
+    deedPracticeNote: 'Margin/format varies by county.'
   },
   'FL': {
     code: 'FL',
-    will: { witnesses: 2, notary: true, selfProving: true },
+    will: { witnesses: 2, notary: false, selfProving: true },
     rlt: { notary: true },
-    pourOver: { witnesses: 2, notary: true },
+    pourOver: { witnesses: 2, notary: false },
     poa: { notary: true },
-    probateNotes: 'Summary administration available for estates under $75,000',
-    todPodAllowed: false
+    probateNotes: 'Specific witness eligibility applies; confirm hospital policies for healthcare docs.',
+    communityProperty: false,
+    todPodAllowed: true,
+    deedPracticeNote: 'Enhanced life estate deeds common; confirm county acceptance.'
   },
   'NY': {
     code: 'NY',
@@ -60,7 +63,76 @@ export const ESTATE_RULES: Record<string,EstateRule> = {
     rlt: { notary: true },
     pourOver: { witnesses: 2, notary: false },
     poa: { notary: true },
-    probateNotes: 'Voluntary administration available for small estates'
+    probateNotes: 'Use "Health Care Proxy" terminology for healthcare; TOD deed availability verify.',
+    communityProperty: false,
+    todPodAllowed: false,
+    deedPracticeNote: 'County formatting strict; confirm.'
+  },
+  'PA': {
+    code: 'PA',
+    will: { witnesses: 2, notary: false, selfProving: true },
+    rlt: { notary: true },
+    pourOver: { witnesses: 2, notary: false },
+    poa: { notary: true },
+    probateNotes: 'Self-proving affidavit recommended.',
+    communityProperty: false,
+    todPodAllowed: true,
+    deedPracticeNote: 'Verify transfer tax & local subset.'
+  },
+  'IL': {
+    code: 'IL',
+    will: { witnesses: 2, notary: false, selfProving: true },
+    rlt: { notary: true },
+    pourOver: { witnesses: 2, notary: false },
+    poa: { notary: true },
+    probateNotes: 'Check local practices; TOD deed availability verify.',
+    communityProperty: false,
+    todPodAllowed: true,
+    deedPracticeNote: 'County-by-county format differences.'
+  },
+  'OH': {
+    code: 'OH',
+    will: { witnesses: 2, notary: false, selfProving: true },
+    rlt: { notary: true },
+    pourOver: { witnesses: 2, notary: false },
+    poa: { notary: true },
+    probateNotes: 'Confirm TOD deed; county acceptance varies.',
+    communityProperty: false,
+    todPodAllowed: true,
+    deedPracticeNote: 'Margin/format likely enforced.'
+  },
+  'GA': {
+    code: 'GA',
+    will: { witnesses: 2, notary: false, selfProving: true },
+    rlt: { notary: true },
+    pourOver: { witnesses: 2, notary: false },
+    poa: { notary: true },
+    probateNotes: 'Witness eligibility; TOD deeds limited/verify.',
+    communityProperty: false,
+    todPodAllowed: false,
+    deedPracticeNote: 'Attorney practice varies; verify taxes.'
+  },
+  'NC': {
+    code: 'NC',
+    will: { witnesses: 2, notary: false, selfProving: true },
+    rlt: { notary: true },
+    pourOver: { witnesses: 2, notary: false },
+    poa: { notary: true },
+    probateNotes: 'Some counties accept TOD; verify current law.',
+    communityProperty: false,
+    todPodAllowed: false,
+    deedPracticeNote: 'Margins & indexing strict; verify.'
+  },
+  'MI': {
+    code: 'MI',
+    will: { witnesses: 2, notary: false, selfProving: true },
+    rlt: { notary: true },
+    pourOver: { witnesses: 2, notary: false },
+    poa: { notary: true },
+    probateNotes: 'Enhanced life estate deed ("Lady Bird") recognized; confirm recording detail.',
+    communityProperty: false,
+    todPodAllowed: true,
+    deedPracticeNote: 'County format differences apply.'
   },
   'DEFAULT': {
     code: 'DEFAULT',

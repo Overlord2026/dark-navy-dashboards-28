@@ -16,48 +16,104 @@ export type RecordingRule = {
 export const DEED_RULES: Record<string, RecordingRule> = {
   'CA': {
     code: 'CA',
-    allowed: ['Warranty', 'Quitclaim', 'TOD'],
-    todAvailable: true,
-    ladyBirdAvailable: false,
+    allowed: ['Warranty', 'Quitclaim', 'TODD'],
     witnesses: 0,
     notary: true,
-    marginRules: '1 inch margins required',
-    transferTaxes: 'Documentary transfer tax applies',
+    todAvailable: true,
+    ladyBirdAvailable: false,
     eRecordingLikely: true,
-    notes: 'Prop 13 considerations for family transfers'
+    marginRules: 'Top margin ~2.5"+ (confirm county).',
+    notes: 'TODD accepted; verify current statute.'
   },
   'TX': {
     code: 'TX',
-    allowed: ['Warranty', 'SpecialWarranty', 'Quitclaim', 'TOD', 'LadyBird'],
-    todAvailable: true,
-    ladyBirdAvailable: true,
+    allowed: ['Warranty', 'SpecialWarranty', 'Quitclaim', 'TOD', 'TODD', 'LadyBird'],
     witnesses: 0,
     notary: true,
-    transferTaxes: 'No state transfer tax',
+    todAvailable: true,
+    ladyBirdAvailable: true,
     eRecordingLikely: true,
-    notes: 'Enhanced life estate deeds available'
+    notes: 'Muniment of title may apply; margin varies.'
   },
   'FL': {
     code: 'FL',
-    allowed: ['Warranty', 'Quitclaim', 'LadyBird'],
-    todAvailable: false,
-    ladyBirdAvailable: true,
+    allowed: ['Warranty', 'SpecialWarranty', 'Quitclaim', 'LadyBird'],
     witnesses: 2,
     notary: true,
-    transferTaxes: 'Documentary stamp tax applies',
+    todAvailable: true,
+    ladyBirdAvailable: true,
     eRecordingLikely: true,
-    notes: 'Enhanced life estate deeds available; no TOD deeds'
+    notes: '"Lady Bird" deeds common; confirm county acceptance.'
   },
   'NY': {
     code: 'NY',
-    allowed: ['Warranty', 'Quitclaim'],
-    todAvailable: false,
-    ladyBirdAvailable: false,
+    allowed: ['Warranty', 'SpecialWarranty', 'Quitclaim'],
     witnesses: 0,
     notary: true,
-    transferTaxes: 'Transfer tax and mortgage recording tax may apply',
-    eRecordingLikely: false,
-    notes: 'No TOD or enhanced life estate deeds'
+    todAvailable: false,
+    ladyBirdAvailable: false,
+    eRecordingLikely: true,
+    notes: 'TOD/TODD availability limited; verify.'
+  },
+  'PA': {
+    code: 'PA',
+    allowed: ['Warranty', 'SpecialWarranty', 'Quitclaim', 'TODD'],
+    witnesses: 0,
+    notary: true,
+    todAvailable: true,
+    ladyBirdAvailable: false,
+    eRecordingLikely: true,
+    notes: 'Transfer tax considerations; county format.'
+  },
+  'IL': {
+    code: 'IL',
+    allowed: ['Warranty', 'SpecialWarranty', 'Quitclaim', 'TODD'],
+    witnesses: 0,
+    notary: true,
+    todAvailable: true,
+    ladyBirdAvailable: false,
+    eRecordingLikely: true,
+    notes: 'County margin enforcement common.'
+  },
+  'OH': {
+    code: 'OH',
+    allowed: ['Warranty', 'SpecialWarranty', 'Quitclaim', 'TODD'],
+    witnesses: 0,
+    notary: true,
+    todAvailable: true,
+    ladyBirdAvailable: false,
+    eRecordingLikely: true,
+    notes: 'County acceptance varies.'
+  },
+  'GA': {
+    code: 'GA',
+    allowed: ['Warranty', 'SpecialWarranty', 'Quitclaim'],
+    witnesses: 2,
+    notary: true,
+    todAvailable: false,
+    ladyBirdAvailable: false,
+    eRecordingLikely: true,
+    notes: 'Execution formalities strict; check local.'
+  },
+  'NC': {
+    code: 'NC',
+    allowed: ['Warranty', 'SpecialWarranty', 'Quitclaim'],
+    witnesses: 2,
+    notary: true,
+    todAvailable: false,
+    ladyBirdAvailable: false,
+    eRecordingLikely: true,
+    notes: 'Margins/indexing strict.'
+  },
+  'MI': {
+    code: 'MI',
+    allowed: ['Warranty', 'SpecialWarranty', 'Quitclaim', 'TODD', 'LadyBird'],
+    witnesses: 0,
+    notary: true,
+    todAvailable: true,
+    ladyBirdAvailable: true,
+    eRecordingLikely: true,
+    notes: 'Enhanced life estate recognized; verify county.'
   },
   'DEFAULT': {
     code: 'DEFAULT',
