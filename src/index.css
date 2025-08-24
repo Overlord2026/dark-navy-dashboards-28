@@ -710,3 +710,40 @@
     border: 1px solid #000 !important;
   }
 }
+
+/* Focus Ring Enhancement */
+*:focus-visible {
+  outline: 2px solid hsl(180 100% 70%); /* Cyan focus ring */
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Accessibility Improvements */
+.focus-visible\:ring-cyan-400:focus-visible {
+  --tw-ring-color: hsl(180 100% 70%);
+  --tw-ring-offset-width: 2px;
+}
+
+/* Keyboard Navigation */
+[role="dialog"] {
+  isolation: isolate;
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  :root {
+    --border: 0 0% 30%;
+    --muted: 0 0% 95%;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
