@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { AdvisorE2EDemo } from '@/components/demos/AdvisorE2EDemo';
 import { 
   Users, 
   UserCheck, 
@@ -199,6 +200,7 @@ export default function AdvisorHomePage() {
             <p className="text-muted-foreground">Manage your practice and client relationships</p>
           </div>
           <div className="flex items-center gap-3">
+            <AdvisorE2EDemo />
             <Badge variant="secondary" className="bg-blue-100 text-blue-700">
               Practice Management
             </Badge>

@@ -10,6 +10,7 @@ import { getWorkspaceTools } from '@/lib/workspaceTools';
 import { useFamilyAnalytics } from '@/lib/familyAnalytics';
 import { EmptyTabState, EmptyReceiptsState } from '@/components/ui/empty-states';
 import { TabGridSkeleton, ReceiptsStripSkeleton } from '@/components/ui/skeletons';
+import { FamilyE2EDemo } from '@/components/demos/FamilyE2EDemo';
 import familyToolsConfig from '@/config/familyTools.json';
 import catalogConfig from '@/config/catalogConfig.json';
 import { Clock, Crown, Users, Heart, Briefcase, TrendingUp, Shield, Trophy, ExternalLink, Share, CheckCircle, Play, Copy } from 'lucide-react';
@@ -197,6 +198,7 @@ export default function FamilyHome() {
           </div>
           
           <div className="flex items-center gap-2">
+            <FamilyE2EDemo />
             <Button
               variant="outline"
               size="sm"
