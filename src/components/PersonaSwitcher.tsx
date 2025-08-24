@@ -3,7 +3,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { usePersonaContext } from '@/context/persona-context';
-import { analytics } from '@/lib/analytics';
+import analytics from '@/lib/analytics';
 
 interface PersonaSwitcherProps {
   orientation?: 'horizontal' | 'vertical';

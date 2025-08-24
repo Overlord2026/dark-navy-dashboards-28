@@ -5,7 +5,7 @@ import {
   Link, Upload, Target, TrendingUp, UserPlus, Calendar,
   Building, FileText, Calculator, ShoppingBag, Award
 } from 'lucide-react';
-import { analytics } from '@/lib/analytics';
+import analytics from '@/lib/analytics';
 
 interface QuickAction {
   id: string;

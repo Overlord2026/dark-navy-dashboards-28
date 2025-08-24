@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { analytics } from '@/lib/analytics';
+import analytics from '@/lib/analytics';
 
 type PersonaGroup = "family" | "pro";
 

@@ -23,7 +23,7 @@ import {
 } from '@/components/ui/sheet';
 import { usePersonaSublinks } from '@/hooks/usePersonaSublinks';
 import { cn } from '@/lib/utils';
-import { analytics } from '@/lib/analytics';
+import analytics from '@/lib/analytics';
 import { getPersonaGroup } from '@/components/AudienceGuard';
 import { servicesMenu, solutionsMenu, personaMenus, PersonaRoot } from '@/lib/persona';
 

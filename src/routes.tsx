@@ -294,8 +294,8 @@ export const router = createBrowserRouter([
   {
     path: "/brand/home",
     element: React.createElement(() => {
-      const { default: BrandDashboard } = require('./pages/nil/brand/BrandDashboard');
-      return React.createElement(BrandDashboard);
+      const { default: BrandHomePage } = require('./pages/brand/BrandHomePage');
+      return React.createElement(BrandHomePage);
     })
   },
   {

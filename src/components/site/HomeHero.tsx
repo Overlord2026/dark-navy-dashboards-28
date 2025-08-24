@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { analytics } from '@/lib/analytics';
+import analytics from '@/lib/analytics';
 import { scrollToId, track } from "@/lib/cta";
 
 export function HomeHero() {
