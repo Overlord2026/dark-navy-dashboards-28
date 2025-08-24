@@ -1,120 +1,49 @@
-// Analytics utility for tracking events
+// Analytics tracking for demo interactions
 export const analytics = {
-  trackEvent: (eventName: string, properties?: Record<string, any>) => {
-    // Console log for development
-    console.log(`Analytics Event: ${eventName}`, properties);
-    
-    // PostHog integration if available
-    if (typeof window !== 'undefined' && (window as any).posthog) {
-      (window as any).posthog.capture(eventName, properties);
-    }
-    
-    // Google Analytics integration if available
-    if (typeof window !== 'undefined' && (window as any).gtag) {
-      (window as any).gtag('event', eventName, properties);
+  track: (event: string, properties?: Record<string, any>) => {
+    if (typeof window !== 'undefined') {
+      console.log(`📊 Analytics: ${event}`, properties);
+      // In production, this would send to your analytics service
+      // posthog.capture(event, properties);
     }
   },
-  
-  // Backward compatibility methods
-  track: (eventName: string, properties?: Record<string, any>) => {
-    analytics.trackEvent(eventName, properties);
-  },
-  
-  trackPageView: (page: string, properties?: Record<string, any>) => {
-    analytics.trackEvent('page_view', { page, ...properties });
-  },
-
-  // All the missing methods for compatibility
-  trackViralShare: (platform: string, properties?: Record<string, any>, metadata?: any) => {
-    analytics.trackEvent('viral_share', { platform, ...properties, metadata });
-  },
-
-  trackPersonaClaim: (persona: string, properties?: Record<string, any>) => {
-    analytics.trackEvent('persona_claim', { persona, ...properties });
-  },
-
-  trackOnboardingStep: (step: string, properties?: Record<string, any>) => {
-    analytics.trackEvent('onboarding_step', { step, ...properties });
-  },
-
-  trackOnboardingStart: (persona: string, properties?: Record<string, any>) => {
-    analytics.trackEvent('onboarding_start', { persona, ...properties });
-  },
-
-  trackFeatureUsage: (feature: string, properties?: Record<string, any>) => {
-    analytics.trackEvent('feature_usage', { feature, ...properties });
-  },
-
-  trackConversion: (type: string, properties?: Record<string, any>) => {
-    analytics.trackEvent('conversion', { type, ...properties });
-  },
-
-  trackSecurityEvent: (event: string, properties?: Record<string, any>) => {
-    analytics.trackEvent('security_event', { event, ...properties });
-  },
-
-  trackError: (error: string | Error, properties?: Record<string, any>) => {
-    const errorMessage = error instanceof Error ? error.message : error;
-    analytics.trackEvent('error', { error: errorMessage, ...properties });
-  },
-
-  trackPerformance: (metric: string, properties?: Record<string, any>) => {
-    analytics.trackEvent('performance', { metric, ...properties });
-  },
-
-  trackFAQUsage: (action: string, properties?: Record<string, any>) => {
-    analytics.trackEvent('faq_usage', { action, ...properties });
-  },
-
-  // Family-specific events
-  trackFamilyOnboardingStart: (segment?: string, properties?: Record<string, any>) => {
-    analytics.trackEvent('onboard.families.start', { segment, ...properties });
-  },
-
-  trackFamilyOnboardingComplete: (segment: string, goals: string[], properties?: Record<string, any>) => {
-    analytics.trackEvent('onboard.families.complete', { segment, goals, ...properties });
-  },
-
-  trackFamilySegmentSelection: (segment: string, properties?: Record<string, any>) => {
-    analytics.trackEvent('onboard.families.segment', { segment, ...properties });
-  },
-
-  trackFamilyGoalsSelection: (goals: string[], properties?: Record<string, any>) => {
-    analytics.trackEvent('onboard.families.goals', { goals, ...properties });
-  },
-
-  trackFamilyQuickAction: (label: string, route: string, properties?: Record<string, any>) => {
-    analytics.trackEvent('family.quickAction.click', { label, route, ...properties });
-  },
-
-  trackFamilyTabView: (tabKey: string, segment: string, properties?: Record<string, any>) => {
-    analytics.trackEvent('family.tab.view', { tabKey, segment, ...properties });
-  },
-
-  trackToolCardOpen: (toolKey: string, toolName: string, category: string, properties?: Record<string, any>) => {
-    analytics.trackEvent('tool.card.open', { toolKey, toolName, category, ...properties });
-  },
-
-  trackProofCreated: (type: string, reasonCodes?: string[], properties?: Record<string, any>) => {
-    analytics.trackEvent('proof.created', { type, reasonCodes, ...properties });
-  },
-
-  trackShareClick: (context: string, properties?: Record<string, any>) => {
-    analytics.trackEvent('share.click', { context, ...properties });
-  },
-
-  trackShareSuccess: (context: string, platform?: string, properties?: Record<string, any>) => {
-    analytics.trackEvent('share.success', { context, platform, ...properties });
-  }
+  // Legacy compatibility methods
+  trackEvent: (event: string, properties?: Record<string, any>) => analytics.track(event, properties),
+  trackPageView: (path: string, properties?: Record<string, any>) => analytics.track('page_view', { path, ...properties }),
+  trackFeatureUsage: (feature: string, properties?: Record<string, any>) => analytics.track('feature_usage', { feature, ...properties }),
+  trackConversion: (type: string, properties?: Record<string, any>) => analytics.track('conversion', { type, ...properties }),
+  trackError: (error: string, properties?: Record<string, any>) => analytics.track('error', { error, ...properties }),
+  trackPerformance: (metric: string, value: number, properties?: Record<string, any>) => analytics.track('performance', { metric, value, ...properties }),
+  trackSecurityEvent: (event: string, properties?: Record<string, any>) => analytics.track('security_event', { event, ...properties }),
+  trackPersonaClaim: (persona: string, properties?: Record<string, any>) => analytics.track('persona_claim', { persona, ...properties }),
+  trackOnboardingStep: (step: string, properties?: Record<string, any>) => analytics.track('onboarding_step', { step, ...properties }),
+  trackOnboardingStart: (properties?: Record<string, any>) => analytics.track('onboarding_start', properties),
+  trackViralShare: (platform: string, properties?: Record<string, any>) => analytics.track('viral_share', { platform, ...properties }),
+  trackShareClick: (type: string, properties?: Record<string, any>) => analytics.track('share_click', { type, ...properties }),
+  trackShareSuccess: (type: string, properties?: Record<string, any>) => analytics.track('share_success', { type, ...properties }),
+  trackFAQUsage: (question: string, properties?: Record<string, any>) => analytics.track('faq_usage', { question, ...properties }),
+  // Family-specific tracking methods
+  trackFamilyTabView: (tab: string, properties?: Record<string, any>) => analytics.track('family_tab_view', { tab, ...properties }),
+  trackFamilyQuickAction: (action: string, properties?: Record<string, any>) => analytics.track('family_quick_action', { action, ...properties }),
+  trackToolCardOpen: (tool: string, properties?: Record<string, any>) => analytics.track('tool_card_open', { tool, ...properties }),
+  trackFamilyOnboardingStart: (properties?: Record<string, any>) => analytics.track('family_onboarding_start', properties),
+  trackFamilySegmentSelection: (segment: string, properties?: Record<string, any>) => analytics.track('family_segment_selection', { segment, ...properties }),
+  trackFamilyGoalsSelection: (goals: string[], properties?: Record<string, any>) => analytics.track('family_goals_selection', { goals, ...properties }),
+  trackFamilyOnboardingComplete: (properties?: Record<string, any>) => analytics.track('family_onboarding_complete', properties)
 };
 
-// Export track function for backward compatibility
+// Named exports for compatibility
 export const track = analytics.track;
+export const initializeAnalytics = () => console.log('Analytics initialized');
 
-// Initialize function for main.tsx
-export const initializeAnalytics = () => {
-  console.log('Analytics initialized');
-  // Add any initialization logic here
+export const trackFamilyToolDemo = (toolKey: string) => {
+  analytics.track('family.tool.demo.loaded', { toolKey });
 };
 
-export default analytics;
+export const trackProofCreated = (type: string) => {
+  analytics.track('proof.created', { type });
+};
+
+export const trackExportClick = (kind: string) => {
+  analytics.track('export.click', { kind });
+};

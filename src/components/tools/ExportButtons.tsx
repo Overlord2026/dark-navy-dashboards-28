@@ -1,90 +1,87 @@
 import React from 'react';
-import { Download, Archive, FileSpreadsheet } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Download, FileArchive, FileText } from 'lucide-react';
+import { trackExportClick } from '@/lib/analytics';
 import { toast } from 'sonner';
-import { analytics } from '@/lib/analytics';
 
 interface ExportButtonsProps {
-  toolKey: string;
-  csvEnabled?: boolean;
-  zipEnabled?: boolean;
-  onCsvExport?: () => void;
-  onZipExport?: () => void;
+  exports: {
+    csv?: boolean;
+    zip?: boolean;
+    pdf?: boolean;
+    qr?: boolean;
+  };
+  onExport?: (type: 'csv' | 'zip' | 'pdf' | 'qr') => void;
+  disabled?: boolean;
   className?: string;
 }
 
-export const ExportButtons: React.FC<ExportButtonsProps> = ({
-  toolKey,
-  csvEnabled = true,
-  zipEnabled = true,
-  onCsvExport,
-  onZipExport,
+export const ExportButtons: React.FC<ExportButtonsProps> = ({ 
+  exports, 
+  onExport,
+  disabled = false,
   className = ''
 }) => {
-  const handleCsvExport = () => {
-    if (onCsvExport) {
-      onCsvExport();
+  const handleExport = (type: 'csv' | 'zip' | 'pdf' | 'qr') => {
+    trackExportClick(type);
+    
+    if (onExport) {
+      onExport(type);
     } else {
-      // Default CSV export stub
-      toast.success('CSV summary exported');
-      analytics.track('export.click', { kind: 'csv', tool: toolKey });
+      // Default export behavior
+      toast.success(`${type.toUpperCase()} export started`);
     }
   };
 
-  const handleZipExport = () => {
-    if (onZipExport) {
-      onZipExport();
-    } else {
-      // Default ZIP export stub
-      toast.success('Evidence ZIP exported');
-      analytics.track('export.click', { kind: 'zip', tool: toolKey });
+  const exportButtons = [
+    {
+      type: 'csv' as const,
+      label: 'CSV',
+      icon: FileText,
+      enabled: exports.csv,
+      description: 'Export data as spreadsheet'
+    },
+    {
+      type: 'zip' as const,
+      label: 'ZIP',
+      icon: FileArchive,
+      enabled: exports.zip,
+      description: 'Export documents as archive'
+    },
+    {
+      type: 'pdf' as const,
+      label: 'PDF',
+      icon: FileText,
+      enabled: exports.pdf,
+      description: 'Export as PDF report'
+    },
+    {
+      type: 'qr' as const,
+      label: 'QR',
+      icon: Download,
+      enabled: exports.qr,
+      description: 'Export QR verification code'
     }
-  };
+  ].filter(btn => btn.enabled);
+
+  if (exportButtons.length === 0) return null;
 
   return (
-    <TooltipProvider>
-      <div className={`flex items-center gap-2 ${className}`}>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <div>
-              <Button
-                variant="outline"
-                size="sm"
-                disabled={!csvEnabled}
-                onClick={handleCsvExport}
-                className="focus-visible:ring-2 focus-visible:ring-cyan-400"
-              >
-                <FileSpreadsheet className="w-4 h-4 mr-2" />
-                CSV Summary
-              </Button>
-            </div>
-          </TooltipTrigger>
-          <TooltipContent>
-            {csvEnabled ? 'Export data as CSV' : 'CSV export not available for this tool'}
-          </TooltipContent>
-        </Tooltip>
-
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <div>
-              <Button
-                variant="outline"
-                size="sm"
-                disabled={!zipEnabled}
-                onClick={handleZipExport}
-                className="focus-visible:ring-2 focus-visible:ring-cyan-400"
-              >
-                <Archive className="w-4 h-4 mr-2" />
-                Evidence ZIP
-              </Button>
-            </div>
-          </TooltipTrigger>
-          <TooltipContent>
-            {zipEnabled ? 'Export supporting documents as ZIP' : 'ZIP export not available for this tool'}
-          </TooltipContent>
-        </Tooltip>
-      </div>
-    </TooltipProvider>
+    <div className={`flex gap-2 ${className}`}>
+      {exportButtons.map(({ type, label, icon: Icon, description }) => (
+        <Button
+          key={type}
+          variant="outline"
+          size="sm"
+          disabled={disabled}
+          onClick={() => handleExport(type)}
+          className="min-h-[44px] focus-visible:ring-2 focus-visible:ring-cyan-400"
+          title={disabled ? 'Export not available' : description}
+        >
+          <Icon className="w-4 h-4 mr-2" />
+          {label}
+        </Button>
+      ))}
+    </div>
   );
 };

@@ -1,49 +1,96 @@
-/**
- * Seeder for retirement-roadmap tool
- * Creates sample proof slips when tool is installed with seed=true
- */
+import { recordReceipt } from '@/features/receipts/record';
 
-export default async function seedRetirementRoadmap() {
-  try {
-    // Create mock proof slips for the retirement roadmap tool
-    const proofSlips = [
-      {
-        id: `rr-${Date.now()}-1`,
-        type: 'Retirement Analysis',
-        tool: 'retirement-roadmap',
-        timestamp: new Date().toISOString(),
-        anchored: true,
-        data: {
-          currentAge: 45,
-          retirementAge: 65,
-          currentSavings: 250000,
-          monthlyContribution: 2000,
-          projectedNeeded: 1200000
-        }
-      },
-      {
-        id: `rr-${Date.now()}-2`,
-        type: 'Gap Analysis',
-        tool: 'retirement-roadmap',
-        timestamp: new Date(Date.now() - 3600000).toISOString(), // 1 hour ago
-        anchored: true,
-        data: {
-          shortfall: 150000,
-          recommendedIncrease: 500,
-          timeToGoal: 20
-        }
+export interface RetirementScenario {
+  id: string;
+  name: string;
+  retirementAge: number;
+  monthlyIncome: number;
+  savingsGoal: number;
+  riskTolerance: 'conservative' | 'moderate' | 'aggressive';
+  guardrails: {
+    emergencyFund: number;
+    debtPayoff: boolean;
+    insuranceCoverage: boolean;
+  };
+}
+
+export async function seedRetirementRoadmap() {
+  const scenarios: RetirementScenario[] = [
+    {
+      id: 'conservative',
+      name: 'Conservative Plan',
+      retirementAge: 67,
+      monthlyIncome: 8500,
+      savingsGoal: 2100000,
+      riskTolerance: 'conservative',
+      guardrails: {
+        emergencyFund: 85000,
+        debtPayoff: true,
+        insuranceCoverage: true
       }
-    ];
+    },
+    {
+      id: 'moderate',
+      name: 'Balanced Plan',
+      retirementAge: 65,
+      monthlyIncome: 12000,
+      savingsGoal: 2800000,
+      riskTolerance: 'moderate',
+      guardrails: {
+        emergencyFund: 120000,
+        debtPayoff: true,
+        insuranceCoverage: true
+      }
+    },
+    {
+      id: 'aggressive',
+      name: 'Growth Plan',
+      retirementAge: 62,
+      monthlyIncome: 15000,
+      savingsGoal: 3500000,
+      riskTolerance: 'aggressive',
+      guardrails: {
+        emergencyFund: 150000,
+        debtPayoff: true,
+        insuranceCoverage: true
+      }
+    }
+  ];
 
-    // Store in localStorage for demo (in production, this would go to Supabase)
-    const existingSlips = JSON.parse(localStorage.getItem('proofSlips') || '[]');
-    const updatedSlips = [...existingSlips, ...proofSlips];
-    localStorage.setItem('proofSlips', JSON.stringify(updatedSlips));
+  // Store scenarios in localStorage for demo
+  localStorage.setItem('retirement_scenarios', JSON.stringify(scenarios));
 
-    console.log('✅ Seeded retirement-roadmap with 2 proof slips');
-    return true;
-  } catch (error) {
-    console.error('❌ Failed to seed retirement-roadmap:', error);
-    return false;
+  // Create proof slips
+  const now = new Date().toISOString();
+  
+  recordReceipt({
+    id: `rr_calc_${Date.now()}`,
+    type: 'Decision-RDS',
+    policy_version: 'E-2025.08',
+    inputs_hash: 'sha256:demo',
+    result: 'approve',
+    reasons: ['CALC_STARTED'],
+    created_at: now
+  } as any);
+
+  recordReceipt({
+    id: `rr_plan_${Date.now()}`,
+    type: 'Decision-RDS',
+    policy_version: 'E-2025.08',
+    inputs_hash: 'sha256:demo',
+    result: 'approve',
+    reasons: ['PLAN_SAVED'],
+    created_at: now
+  } as any);
+
+  return scenarios;
+}
+
+export function getRetirementScenarios(): RetirementScenario[] {
+  try {
+    const stored = localStorage.getItem('retirement_scenarios');
+    return stored ? JSON.parse(stored) : [];
+  } catch {
+    return [];
   }
 }

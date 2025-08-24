@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Calculator, TrendingUp } from 'lucide-react';
-import seedRetirementRoadmap from '@/tools/seeds/retirement-roadmap';
+import { seedRetirementRoadmap } from '@/tools/seeds/retirement-roadmap';
 
 export default function RetirementRoadmapTool() {
   const [inputs, setInputs] = useState({

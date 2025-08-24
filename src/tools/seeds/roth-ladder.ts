@@ -1,67 +1,91 @@
-/**
- * Seeder for roth-ladder tool
- * Creates sample proof slips when tool is installed with seed=true
- */
+import { recordReceipt } from '@/features/receipts/record';
 
-export default async function seedRothLadder() {
+export interface RothLadderYear {
+  year: number;
+  conversionAmount: number;
+  taxOwed: number;
+  availableForWithdrawal: number;
+  totalRothBalance: number;
+  notes: string;
+}
+
+export async function seedRothLadder() {
+  const currentYear = new Date().getFullYear();
+  
+  const ladderPlan: RothLadderYear[] = [
+    {
+      year: currentYear,
+      conversionAmount: 50000,
+      taxOwed: 12000,
+      availableForWithdrawal: 0,
+      totalRothBalance: 50000,
+      notes: 'Initial conversion - 24% tax bracket'
+    },
+    {
+      year: currentYear + 1,
+      conversionAmount: 55000,
+      taxOwed: 13200,
+      availableForWithdrawal: 0,
+      totalRothBalance: 105000,
+      notes: 'Increased conversion amount'
+    },
+    {
+      year: currentYear + 2,
+      conversionAmount: 60000,
+      taxOwed: 14400,
+      availableForWithdrawal: 0,
+      totalRothBalance: 165000,
+      notes: 'Maximum conversion before higher bracket'
+    },
+    {
+      year: currentYear + 3,
+      conversionAmount: 50000,
+      taxOwed: 12000,
+      availableForWithdrawal: 0,
+      totalRothBalance: 215000,
+      notes: 'Maintaining optimal tax bracket'
+    },
+    {
+      year: currentYear + 4,
+      conversionAmount: 50000,
+      taxOwed: 12000,
+      availableForWithdrawal: 0,
+      totalRothBalance: 265000,
+      notes: 'Consistent conversion strategy'
+    },
+    {
+      year: currentYear + 5,
+      conversionAmount: 0,
+      taxOwed: 0,
+      availableForWithdrawal: 50000,
+      totalRothBalance: 265000,
+      notes: 'First year available for tax-free withdrawal'
+    }
+  ];
+
+  // Store in localStorage for demo
+  localStorage.setItem('roth_ladder_plan', JSON.stringify(ladderPlan));
+
+  // Create proof slip
+  const now = new Date().toISOString();
+  recordReceipt({
+    id: `roth_plan_${Date.now()}`,
+    type: 'Decision-RDS',
+    policy_version: 'E-2025.08',
+    inputs_hash: 'sha256:demo',
+    result: 'approve',
+    reasons: ['ROTH_PLAN'],
+    created_at: now
+  } as any);
+
+  return ladderPlan;
+}
+
+export function getRothLadderPlan(): RothLadderYear[] {
   try {
-    // Create mock proof slips for the Roth ladder tool
-    const proofSlips = [
-      {
-        id: `rl-${Date.now()}-1`,
-        type: 'Roth Plan',
-        tool: 'roth-ladder',
-        timestamp: new Date().toISOString(),
-        anchored: true,
-        data: {
-          conversionPeriod: '5 years',
-          annualConversion: 50000,
-          totalConverted: 250000,
-          taxSavings: 37500,
-          strategy: 'Systematic ladder',
-          startYear: 2024
-        }
-      },
-      {
-        id: `rl-${Date.now()}-2`,
-        type: 'Tax Bracket Analysis',
-        tool: 'roth-ladder',
-        timestamp: new Date(Date.now() - 7200000).toISOString(), // 2 hours ago
-        anchored: true,
-        data: {
-          currentBracket: '22%',
-          projectedBracket: '12%',
-          conversionWindow: 'Years 60-65',
-          taxDeferral: 62500,
-          recommendation: 'Accelerate conversions'
-        }
-      },
-      {
-        id: `rl-${Date.now()}-3`,
-        type: 'Multi-Year Schedule',
-        tool: 'roth-ladder',
-        timestamp: new Date(Date.now() - 10800000).toISOString(), // 3 hours ago
-        anchored: false,
-        data: {
-          year1: 45000,
-          year2: 50000,
-          year3: 55000,
-          year4: 50000,
-          year5: 45000,
-          totalPlan: 245000
-        }
-      }
-    ];
-
-    // Store in localStorage for demo (in production, this would go to Supabase)
-    const existingSlips = JSON.parse(localStorage.getItem('proofSlips') || '[]');
-    const updatedSlips = [...existingSlips, ...proofSlips];
-    localStorage.setItem('proofSlips', JSON.stringify(updatedSlips));
-
-    console.log('✅ Seeded roth-ladder with 3 proof slips');
-    return true;
-  } catch (error) {
-    console.error('❌ Failed to seed roth-ladder:', error);
-    return false;
+    const stored = localStorage.getItem('roth_ladder_plan');
+    return stored ? JSON.parse(stored) : [];
+  } catch {
+    return [];
   }
 }

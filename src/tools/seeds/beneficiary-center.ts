@@ -1,67 +1,75 @@
-/**
- * Seeder for beneficiary-center tool
- * Creates sample proof slips when tool is installed with seed=true
- */
+import { recordReceipt } from '@/features/receipts/record';
 
-export default async function seedBeneficiaryCenter() {
+export interface BeneficiaryRecord {
+  id: string;
+  accountType: string;
+  accountNumber: string;
+  primaryBeneficiary: string;
+  contingentBeneficiary?: string;
+  percentage: number;
+  lastUpdated: string;
+  status: 'current' | 'outdated' | 'mismatch';
+  warnings?: string[];
+}
+
+export async function seedBeneficiaryCenter() {
+  const beneficiaries: BeneficiaryRecord[] = [
+    {
+      id: 'bene_401k',
+      accountType: '401(k)',
+      accountNumber: '****-1234',
+      primaryBeneficiary: 'Sarah Johnson (Spouse)',
+      contingentBeneficiary: 'Michael Johnson (Son)',
+      percentage: 100,
+      lastUpdated: '2023-01-15',
+      status: 'current',
+    },
+    {
+      id: 'bene_ira',
+      accountType: 'Traditional IRA',
+      accountNumber: '****-5678',
+      primaryBeneficiary: 'Sarah Johnson (Spouse)',
+      percentage: 100,
+      lastUpdated: '2022-06-20',
+      status: 'outdated',
+      warnings: ['Last updated over 12 months ago']
+    },
+    {
+      id: 'bene_life',
+      accountType: 'Life Insurance',
+      accountNumber: 'POL-9876',
+      primaryBeneficiary: 'Jane Doe (Ex-spouse)',
+      contingentBeneficiary: 'Michael Johnson (Son)',
+      percentage: 100,
+      lastUpdated: '2020-03-10',
+      status: 'mismatch',
+      warnings: ['Beneficiary may be outdated', 'Consider updating after life changes']
+    }
+  ];
+
+  // Store in localStorage for demo
+  localStorage.setItem('beneficiary_records', JSON.stringify(beneficiaries));
+
+  // Create proof slip for warning
+  const now = new Date().toISOString();
+  recordReceipt({
+    id: `ben_warn_${Date.now()}`,
+    type: 'Decision-RDS',
+    policy_version: 'E-2025.08',
+    inputs_hash: 'sha256:demo',
+    result: 'approve',
+    reasons: ['BENEFICIARY_WARN'],
+    created_at: now
+  } as any);
+
+  return beneficiaries;
+}
+
+export function getBeneficiaryRecords(): BeneficiaryRecord[] {
   try {
-    // Create mock proof slips for the beneficiary center tool
-    const proofSlips = [
-      {
-        id: `bc-${Date.now()}-1`,
-        type: 'Beneficiary Warning',
-        tool: 'beneficiary-center',
-        timestamp: new Date().toISOString(),
-        anchored: true,
-        data: {
-          account: '401k - Primary',
-          issue: 'Outdated beneficiary',
-          risk: 'High',
-          currentBeneficiary: 'Ex-spouse',
-          suggestedUpdate: 'Current spouse',
-          impact: 'Estate planning conflict'
-        }
-      },
-      {
-        id: `bc-${Date.now()}-2`,
-        type: 'Fix Suggestion',
-        tool: 'beneficiary-center',
-        timestamp: new Date(Date.now() - 1800000).toISOString(), // 30 min ago
-        anchored: true,
-        data: {
-          account: 'Life Insurance Policy',
-          suggestion: 'Add contingent beneficiary',
-          benefit: 'Avoid probate',
-          priority: 'Medium',
-          estimatedTime: '15 minutes',
-          status: 'Pending'
-        }
-      },
-      {
-        id: `bc-${Date.now()}-3`,
-        type: 'Compliance Check',
-        tool: 'beneficiary-center',
-        timestamp: new Date(Date.now() - 3600000).toISOString(), // 1 hour ago
-        anchored: false,
-        data: {
-          accountsReviewed: 8,
-          mismatches: 2,
-          missing: 1,
-          upToDate: 5,
-          lastReview: '2024-01-15'
-        }
-      }
-    ];
-
-    // Store in localStorage for demo (in production, this would go to Supabase)
-    const existingSlips = JSON.parse(localStorage.getItem('proofSlips') || '[]');
-    const updatedSlips = [...existingSlips, ...proofSlips];
-    localStorage.setItem('proofSlips', JSON.stringify(updatedSlips));
-
-    console.log('✅ Seeded beneficiary-center with 3 proof slips');
-    return true;
-  } catch (error) {
-    console.error('❌ Failed to seed beneficiary-center:', error);
-    return false;
+    const stored = localStorage.getItem('beneficiary_records');
+    return stored ? JSON.parse(stored) : [];
+  } catch {
+    return [];
   }
 }

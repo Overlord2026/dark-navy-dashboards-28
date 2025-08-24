@@ -1,53 +1,63 @@
-/**
- * Seeder for consent-passport tool
- * Creates sample proof slips when tool is installed with seed=true
- */
+import { recordReceipt } from '@/features/receipts/record';
 
-export default async function seedConsentPassport() {
+export interface ConsentGrant {
+  id: string;
+  purpose: string;
+  scope: {
+    minimumNecessary: boolean;
+    roles: string[];
+    resources: string[];
+    dataTypes: string[];
+  };
+  grantedTo: string;
+  grantedBy: string;
+  consentTime: string;
+  expiry: string;
+  status: 'active' | 'expired' | 'revoked';
+  freshnessScore: number;
+}
+
+export async function seedConsentPassport() {
+  const consentGrant: ConsentGrant = {
+    id: `consent_${Date.now()}`,
+    purpose: 'Financial Planning and Tax Preparation',
+    scope: {
+      minimumNecessary: true,
+      roles: ['Financial Advisor', 'Tax Preparer'],
+      resources: ['Investment Accounts', 'Tax Documents', 'Income Statements'],
+      dataTypes: ['Account Balances', 'Transaction History', 'Tax Forms']
+    },
+    grantedTo: 'ABC Financial Advisory, LLC',
+    grantedBy: 'John Smith',
+    consentTime: new Date().toISOString(),
+    expiry: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
+    status: 'active',
+    freshnessScore: 95
+  };
+
+  // Store in localStorage for demo
+  localStorage.setItem('consent_grant', JSON.stringify(consentGrant));
+
+  // Create proof slip
+  const now = new Date().toISOString();
+  recordReceipt({
+    id: `consent_${Date.now()}`,
+    type: 'Consent-RDS',
+    policy_version: 'E-2025.08',
+    inputs_hash: 'sha256:demo',
+    result: 'approve',
+    reasons: ['SURROGATE_GRANT'],
+    created_at: now
+  } as any);
+
+  return consentGrant;
+}
+
+export function getConsentGrant(): ConsentGrant | null {
   try {
-    // Create mock proof slips for the consent passport tool
-    const proofSlips = [
-      {
-        id: `cp-${Date.now()}-1`,
-        type: 'Surrogate Grant',
-        tool: 'consent-passport',
-        timestamp: new Date().toISOString(),
-        anchored: true,
-        data: {
-          grantType: 'Minimum-necessary view',
-          surrogate: 'Adult child',
-          scope: 'Emergency medical decisions',
-          duration: 'Until capacity restored',
-          restrictions: 'No experimental treatments',
-          status: 'Active'
-        }
-      },
-      {
-        id: `cp-${Date.now()}-2`,
-        type: 'Healthcare Directive',
-        tool: 'consent-passport',
-        timestamp: new Date(Date.now() - 1800000).toISOString(), // 30 min ago
-        anchored: true,
-        data: {
-          directiveType: 'Advance directive',
-          preferences: 'Comfort care priority',
-          durable: true,
-          witnesses: 2,
-          notarized: true,
-          lastUpdated: '2024-01-10'
-        }
-      }
-    ];
-
-    // Store in localStorage for demo (in production, this would go to Supabase)
-    const existingSlips = JSON.parse(localStorage.getItem('proofSlips') || '[]');
-    const updatedSlips = [...existingSlips, ...proofSlips];
-    localStorage.setItem('proofSlips', JSON.stringify(updatedSlips));
-
-    console.log('✅ Seeded consent-passport with 2 proof slips');
-    return true;
-  } catch (error) {
-    console.error('❌ Failed to seed consent-passport:', error);
-    return false;
+    const stored = localStorage.getItem('consent_grant');
+    return stored ? JSON.parse(stored) : null;
+  } catch {
+    return null;
   }
 }
