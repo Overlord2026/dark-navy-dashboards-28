@@ -1,107 +1,128 @@
 {
   "aspiring": {
-    "quickActions": [
-      {
-        "label": "Invite Advisor",
-        "icon": "users",
-        "route": "/advisor/invite"
+    "tabs": [
+      { 
+        "key": "money", 
+        "label": "Money", 
+        "cards": [
+          {"toolKey":"retirement-roadmap"}, 
+          {"toolKey":"roth-ladder"}, 
+          {"toolKey":"entity-trust-map"}, 
+          {"toolKey":"money-in-7"}
+        ]
       },
-      {
-        "label": "Upload to Vault",
-        "icon": "shield",
-        "route": "/tools/wealth-vault"
+      { 
+        "key": "tax", 
+        "label": "Tax", 
+        "cards": [
+          {"toolKey":"taxhub-diy"}, 
+          {"toolKey":"nua-analyzer"}, 
+          {"toolKey":"daf-crt"}
+        ]
       },
-      {
-        "label": "Run Roadmap",
-        "icon": "trending-up",
-        "route": "/tools/retirement-roadmap"
+      { 
+        "key": "estate", 
+        "label": "Estate", 
+        "cards": [
+          {"toolKey":"wealth-vault"}, 
+          {"toolKey":"beneficiary-center"}, 
+          {"toolKey":"financial-poa"}
+        ]
       },
-      {
-        "label": "Start Longevity",
-        "icon": "activity",
-        "route": "/family/longevity"
+      { 
+        "key": "health", 
+        "label": "Health & Longevity", 
+        "cards": [
+          {"toolKey":"longevity-hub"}, 
+          {"toolKey":"consent-passport"}
+        ]
+      },
+      { 
+        "key": "marketplace", 
+        "label": "Solutions", 
+        "cards": [
+          {"toolKey":"life-needs-analysis"}, 
+          {"toolKey":"medicare-compare"}, 
+          {"toolKey":"ltc-planner"},
+          {"toolKey":"private-markets"},
+          {"toolKey":"annuities-education"}, 
+          {"toolKey":"annuities-calcs"}, 
+          {"toolKey":"annuities-review"}, 
+          {"toolKey":"annuities-index"}
+        ]
       }
     ],
-    "tabs": [
-      {
-        "key": "planning",
-        "label": "Planning",
-        "cards": [
-          { "toolKey": "retirement-roadmap" },
-          { "toolKey": "ss-optimizer" },
-          { "toolKey": "taxhub-diy" }
-        ]
-      },
-      {
-        "key": "protection",
-        "label": "Protection", 
-        "cards": [
-          { "toolKey": "wealth-vault" },
-          { "toolKey": "beneficiary-center" },
-          { "toolKey": "financial-poa" }
-        ]
-      },
-      {
-        "key": "wellness",
-        "label": "Wellness",
-        "cards": [
-          { "toolKey": "longevity-hub" }
-        ]
-      }
+    "quickActions": [
+      {"label":"Invite my advisor", "route":"/tools/engagement-tracker"},
+      {"label":"Upload documents to Vault", "route":"/tools/wealth-vault"},
+      {"label":"Run Retirement Roadmap", "route":"/tools/retirement-roadmap"},
+      {"label":"Start Longevity Hub", "route":"/family/longevity"},
+      {"label":"Open Annuity Calculators", "route":"/solutions/annuities/calculators"}
     ]
   },
-  "retiree": {
-    "quickActions": [
-      {
-        "label": "Invite Advisor", 
-        "icon": "users",
-        "route": "/advisor/invite"
+  "retirees": {
+    "tabs": [
+      { 
+        "key": "income", 
+        "label": "Income", 
+        "cards": [
+          {"toolKey":"retirement-roadmap"}, 
+          {"toolKey":"rmd-check"}, 
+          {"toolKey":"ss-optimizer"}
+        ]
       },
-      {
-        "label": "Upload to Vault",
-        "icon": "shield", 
-        "route": "/tools/wealth-vault"
+      { 
+        "key": "tax", 
+        "label": "Tax", 
+        "cards": [
+          {"toolKey":"roth-ladder"}, 
+          {"toolKey":"taxhub-diy"}, 
+          {"toolKey":"daf-crt"}, 
+          {"toolKey":"nua-analyzer"}
+        ]
       },
-      {
-        "label": "RMD Check",
-        "icon": "calculator",
-        "route": "/tools/rmd-check"
+      { 
+        "key": "estate", 
+        "label": "Estate", 
+        "cards": [
+          {"toolKey":"wealth-vault"}, 
+          {"toolKey":"beneficiary-center"}, 
+          {"toolKey":"financial-poa"}
+        ]
       },
-      {
-        "label": "Annuity Calculators",
-        "icon": "calculator",
-        "route": "/solutions/annuities/calculators"
+      { 
+        "key": "invest", 
+        "label": "Invest", 
+        "cards": [
+          {"toolKey":"private-markets"}, 
+          {"toolKey":"entity-trust-map"}
+        ]
+      },
+      { 
+        "key": "annuities", 
+        "label": "Annuities", 
+        "cards": [
+          {"toolKey":"annuities-education"}, 
+          {"toolKey":"annuities-calcs"}, 
+          {"toolKey":"annuities-review"}, 
+          {"toolKey":"annuities-index"}
+        ]
+      },
+      { 
+        "key": "health", 
+        "label": "Health & Longevity", 
+        "cards": [
+          {"toolKey":"longevity-hub"}, 
+          {"toolKey":"consent-passport"}
+        ]
       }
     ],
-    "tabs": [
-      {
-        "key": "income",
-        "label": "Income",
-        "cards": [
-          { "toolKey": "retirement-roadmap" },
-          { "toolKey": "rmd-check" },
-          { "toolKey": "ss-optimizer" },
-          { "toolKey": "annuities-calcs" },
-          { "toolKey": "annuities-review" }
-        ]
-      },
-      {
-        "key": "protection", 
-        "label": "Protection",
-        "cards": [
-          { "toolKey": "wealth-vault" },
-          { "toolKey": "beneficiary-center" },
-          { "toolKey": "financial-poa" },
-          { "toolKey": "taxhub-diy" }
-        ]
-      },
-      {
-        "key": "wellness",
-        "label": "Wellness", 
-        "cards": [
-          { "toolKey": "longevity-hub" }
-        ]
-      }
+    "quickActions": [
+      {"label":"Optimize Social Security", "route":"/tools/social-security"},
+      {"label":"Check my RMD", "route":"/tools/rmd-check"},
+      {"label":"Review Annuity Proposal", "route":"/solutions/annuities/review"},
+      {"label":"Explore Private Markets", "route":"/solutions/investments/private-markets"},
+      {"label":"Update Will/Trust", "route":"/tools/wealth-vault"}
     ]
   }
 }

@@ -45,6 +45,7 @@ import { BrandHub } from '@/pages/brand/BrandHub';
 import { SolutionsHub } from '@/components/solutions/SolutionsHub';
 
 const DemoPage = React.lazy(() => import('@/pages/demos/[persona]'));
+const PreviewPage = React.lazy(() => import('@/components/PreviewPage'));
 import FamilyHome from '@/pages/families/FamilyHome';
 
 function App() {
@@ -135,7 +136,11 @@ function App() {
             )}
             
             {/* Preview Routes - Marketing pages for missing tools */}
-            <Route path="/preview/:toolKey" element={<MarketingPreview />} />
+            <Route path="/preview/:key" element={
+              <Suspense fallback={<div className="flex items-center justify-center h-64">Loading preview...</div>}>
+                <PreviewPage />
+              </Suspense>
+            } />
             
             {/* 404 Route */}
             <Route path="*" element={<NotFound />} />
