@@ -4,53 +4,27 @@ export type MonitorLike = {
   timing?: (name: string, value: number) => void;
 };
 
-// You can swap this with your real monitor (Sentry/Datadog/etc.)
 const monitor: MonitorLike = (window as any).__MONITOR__ || {
-  captureMessage: (msg: string) => console.warn('[monitor]', msg),
-  gauge: (name: string, value: number) => console.info('[gauge]', name, value),
-  timing: (name: string, value: number) => console.info('[timing]', name, value)
+  captureMessage: (msg:string) => (import.meta.env.DEV) && console.warn('[monitor]', msg),
+  gauge: (n:string, v:number)=> (import.meta.env.DEV) && console.info('[gauge]', n, v),
+  timing:(n:string, v:number)=> (import.meta.env.DEV) && console.info('[timing]', n, v)
 };
 
-export function logError(msg: string, meta?: Record<string, any>) {
-  monitor.captureMessage(msg);
-  if (meta && Object.keys(meta).length > 0) {
-    console.error('[monitor-meta]', meta);
-  }
+function toMsg(...args: any[]) {
+  try {
+    return args.map(a =>
+      a instanceof Error ? (a.stack || a.message)
+      : typeof a === 'string' ? a
+      : JSON.stringify(a)
+    ).join(' | ');
+  } catch { return '[monitor]'; }
 }
 
-export function logEvent(name: string, meta?: Record<string, any>) {
-  monitor.captureMessage(`[event] ${name}`);
-  if (meta && Object.keys(meta).length > 0) {
-    console.info('[event-meta]', meta);
-  }
-}
-
-// Legacy helper for Error objects
-export function logErrorFromException(err: unknown) {
-  if (err instanceof Error) {
-    logError(err.message, { stack: err.stack });
-  } else {
-    logError(typeof err === 'string' ? err : JSON.stringify(err));
-  }
-}
-
-export function logWarn(msg: unknown) {
-  monitor.captureMessage(typeof msg === 'string' ? msg : JSON.stringify(msg));
-}
-
-export function logInfo(msg: unknown) {
-  monitor.captureMessage(typeof msg === 'string' ? msg : JSON.stringify(msg));
-}
-
-export function gauge(name: string, value: number | { value: number }) {
-  const n = typeof value === 'number' ? value : value?.value;
-  monitor.gauge?.(name, Number(n));
-}
-
-export function timing(name: string, value: number | { value: number }) {
-  const n = typeof value === 'number' ? value : value?.value;
-  monitor.timing?.(name, Number(n));
-}
+export function logError(...args:any[]){ monitor.captureMessage(toMsg(...args)); }
+export function logWarn (...args:any[]){ monitor.captureMessage(toMsg(...args)); }
+export function logInfo (...args:any[]){ monitor.captureMessage(toMsg(...args)); }
+export function gauge(name:string, value:number|{value:number}){ monitor.gauge?.(name, Number((value as any)?.value ?? value)); }
+export function timing(name:string, value:number|{value:number}){ monitor.timing?.(name, Number((value as any)?.value ?? value)); }
 
 // Global error handler
 export const setupErrorMonitoring = () => {

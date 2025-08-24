@@ -18,6 +18,7 @@ import {
   DollarSign,
   CheckCircle,
   AlertTriangle,
+  Mail,
   Users
 } from 'lucide-react';
 import { toast } from 'sonner';

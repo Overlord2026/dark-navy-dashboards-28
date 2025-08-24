@@ -3,6 +3,9 @@ import { PersonaSegment, detectPersonaSegment, PERSONA_SEGMENT_CONFIGS } from '@
 import { PersonaType } from '@/types/personas';
 import { analytics } from '@/lib/analytics';
 
+export type AllPersonaTypes = PersonaType | 'families' | 'pros';
+export type SegmentValue = { persona: AllPersonaTypes; segment: PersonaSegment };
+
 interface SegmentContextType {
   currentSegment: PersonaSegment;
   segmentConfig: any;
@@ -30,7 +33,7 @@ export const SegmentProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setCurrentSegment(detectedSegment);
     
     // Track segment selection
-    analytics.trackOnboardingStart({ persona, segment: detectedSegment });
+    analytics.track('onboarding.start', { persona, segment: detectedSegment });
   };
 
   const trackSegmentEvent = (event: string, properties: Record<string, any> = {}) => {

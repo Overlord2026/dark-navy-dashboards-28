@@ -1,4 +1,4 @@
-export type ProPersona = 'advisor' | 'cpa' | 'attorney' | 'insurance' | 'healthcare' | 'realtor';
+export type ProPersona = 'advisor' | 'cpa' | 'attorney' | 'insurance' | 'healthcare' | 'realtor' | 'medicare';
 
 export interface Lead {
   id: string;
@@ -14,6 +14,9 @@ export interface Lead {
   status: 'new' | 'contacted' | 'qualified' | 'converted' | 'lost';
   consent_given: boolean;
   consent_receipt_id?: string;
+  primaryConcern?: string;
+  referralSource?: string;
+  dnc_verified?: boolean;
 }
 
 export interface Meeting {
