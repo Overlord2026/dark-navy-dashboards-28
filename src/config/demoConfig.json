@@ -146,5 +146,16 @@
       {"h":"Indicate & e-Sign","p":"In one flow—without leaving the platform."}
     ],
     "cta": "Explore Private Markets"
+  },
+  {
+    "id": "nil-brand",
+    "title": "NIL — Brands & Local Businesses (60-second tour)",
+    "steps": [
+      { "h": "Pick a campaign template", "p": "Local sponsor, giveaway, ambassador, or event appearance—choose a starting point." },
+      { "h": "Create a brief", "p": "Add deliverables, usage window, budget, and brand-safe assets. FTC disclosure banners are added automatically." },
+      { "h": "Approve & e-Sign", "p": "OfferLock prevents overlap; school policy checks run before you sign; approvals generate Proof Slips." },
+      { "h": "Pay & track performance", "p": "Escrow to release on milestones; settlement receipts are private and exportable to your finance/CPA." }
+    ],
+    "cta": "Start Brand workspace"
   }
 ]

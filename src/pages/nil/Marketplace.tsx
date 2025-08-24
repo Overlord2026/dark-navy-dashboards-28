@@ -79,10 +79,10 @@ export default function MarketplacePage() {
     if (typeof window !== 'undefined' && (window as any).analytics) {
       (window as any).analytics.track('demo.open', { 
         source: 'nil-marketplace-sticky',
-        demoId: 'nil-school'
+        demoId: 'nil-brand'
       });
     }
-    navigate('/demos/nil-school');
+    navigate('/demos/nil-brand');
   };
 
   const handleShare = async () => {

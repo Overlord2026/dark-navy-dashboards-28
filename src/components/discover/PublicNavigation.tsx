@@ -40,10 +40,10 @@ export const PublicNavigation: React.FC = () => {
         description: 'Athlete journey demonstration'
       },
       { 
-        label: '60-sec demo: School', 
-        href: '/demos/nil-school',
+        label: '60-sec demo: School/Brand', 
+        href: '/demos/nil-brand',
         icon: Play,
-        description: 'School compliance demonstration'
+        description: 'School & brand compliance demonstration'
       }
     ] : []),
     ...(getFlag('BRAND_PUBLIC_ENABLED') ? [

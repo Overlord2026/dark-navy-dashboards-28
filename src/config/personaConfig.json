@@ -12,5 +12,6 @@
   {"persona":"nil-athlete","label":"NIL — Athlete/Parent","benefit":"Training → Disclosures → Offers → Payments—done right and kept on record.","cta":"Start NIL workspace","tags":["nil","athlete"],"demoId":"nil-athlete"},
   {"persona":"nil-school","label":"NIL — School/Brand","benefit":"Publish rules once; verify automatically—fewer disputes, faster launches.","cta":"Start School/Brand workspace","tags":["nil","school"],"demoId":"nil-school"},
   {"persona":"brand","segment":"enterprise","label":"Brands — Enterprise","benefit":"Scale campaigns across markets with compliance automation and performance tracking.","cta":"Start Enterprise Brand workspace","tags":["brand","enterprise","campaign"],"demoId":"brand-enterprise"},
-  {"persona":"brand","segment":"local-business","label":"Brands — Local Business","benefit":"Launch local campaigns fast—templates, compliance checks, and payments in one place.","cta":"Start Local Business workspace","tags":["brand","local","campaign"],"demoId":"brand-local"}
+  {"persona":"brand","segment":"local-business","label":"Brands — Local Business","benefit":"Launch local campaigns fast—templates, compliance checks, and payments in one place.","cta":"Start Local Business workspace","tags":["brand","local","campaign"],"demoId":"brand-local"},
+  {"persona":"nil-brand","label":"NIL — Brands & Local Businesses","benefit":"Brief, collaborate, approve, and verify in one place.","cta":"Start Brand workspace","tags":["nil","brand"],"demoId":"nil-brand"}
 ]
