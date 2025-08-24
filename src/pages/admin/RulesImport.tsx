@@ -6,6 +6,11 @@ import { Badge } from '@/components/ui/badge';
 import { Upload, AlertCircle, CheckCircle } from 'lucide-react';
 import { toast } from 'sonner';
 
+import { ESTATE_RULES } from '@/features/estate/states/estateRules';
+import { DEED_RULES } from '@/features/estate/deeds/stateDeedRules';
+import { HEALTH_RULES } from '@/features/estate/states/healthRules';
+import { COUNTY_META } from '@/features/estate/deeds/countyMeta';
+
 export default function RulesImport() {
   const [jsonInput, setJsonInput] = useState('');
   const [importResult, setImportResult] = useState<any>(null);
@@ -21,33 +26,65 @@ export default function RulesImport() {
     try {
       const data = JSON.parse(jsonInput);
       
-      // Validate structure
-      const validTypes = ['estate', 'deed', 'health', 'county'];
-      const importTypes = Object.keys(data);
+      // Process different types of imports
+      let applied = 0;
+      let countyApplied = 0;
       
-      if (!importTypes.every(type => validTypes.includes(type))) {
-        throw new Error('Invalid import format. Expected: estate, deed, health, or county rules');
+      // Handle direct format (estate, deed, health, county top-level keys)
+      if (data.estate || data.deed || data.health || data.county) {
+        if (data.estate) {
+          Object.assign(ESTATE_RULES as any, data.estate);
+          applied += Object.keys(data.estate).length;
+        }
+        if (data.deed) {
+          Object.assign(DEED_RULES as any, data.deed);
+          applied += Object.keys(data.deed).length;
+        }
+        if (data.health) {
+          Object.assign(HEALTH_RULES as any, data.health);
+          applied += Object.keys(data.health).length;
+        }
+        if (data.county) {
+          Object.assign(COUNTY_META as any, data.county);
+          countyApplied += Object.keys(data.county).length;
+        }
+      } else {
+        // Handle prefixed key format (estate:STATE, deed:STATE, county:STATE/COUNTY)
+        for (const [k, v] of Object.entries(data)) {
+          if (k.startsWith('estate:')) {
+            (ESTATE_RULES as any)[k.slice(7)] = v;
+            applied++;
+          } else if (k.startsWith('deed:')) {
+            (DEED_RULES as any)[k.slice(5)] = v;
+            applied++;
+          } else if (k.startsWith('health:')) {
+            (HEALTH_RULES as any)[k.slice(7)] = v;
+            applied++;
+          } else if (k.startsWith('county:')) {
+            (COUNTY_META as any)[k.slice(7)] = v;
+            countyApplied++;
+          }
+        }
       }
 
-      // Simulate import (in production, this would update the actual rule sets)
       const result = {
         success: true,
         imported: {
-          estate: data.estate ? Object.keys(data.estate).length : 0,
-          deed: data.deed ? Object.keys(data.deed).length : 0,
-          health: data.health ? Object.keys(data.health).length : 0,
-          county: data.county ? Object.keys(data.county).length : 0,
+          stateRules: applied,
+          countyRules: countyApplied,
+          total: applied + countyApplied
         },
         timestamp: new Date().toISOString()
       };
 
       setImportResult(result);
-      toast.success('Rules imported successfully');
+      toast.success(`Applied ${applied} state-rule entries and ${countyApplied} county entries`);
       
       // Log receipt for audit trail
       console.log('IMPORT_RECEIPT:', {
-        type: 'config-update',
-        imported: result.imported,
+        type: 'Decision-RDS',
+        action: 'config.rules.import',
+        reasons: [`states:${applied}`, `counties:${countyApplied}`],
         timestamp: result.timestamp
       });
 
@@ -83,6 +120,23 @@ export default function RulesImport() {
       "notary": true,
       "todAvailable": true,
       "eRecordingLikely": true
+    }
+  },
+  "county": {
+    "CO/Denver": {
+      "state": "CO",
+      "county": "Denver",
+      "pageSize": "Letter",
+      "topMarginIn": 3,
+      "leftMarginIn": 1,
+      "rightMarginIn": 1,
+      "bottomMarginIn": 1,
+      "firstPageStamp": { "xIn": 6.0, "yIn": 0.5, "wIn": 2.5, "hIn": 3.0 },
+      "requiresReturnAddress": true,
+      "requiresPreparer": true,
+      "requiresAPN": true,
+      "eRecording": true,
+      "providers": ["simplifile"]
     }
   }
 }`;
@@ -146,13 +200,15 @@ export default function RulesImport() {
                   <div className="space-y-2">
                     <p className="text-sm text-green-700">Rules updated successfully:</p>
                     <div className="flex flex-wrap gap-2">
-                      {Object.entries(importResult.imported).map(([type, count]: [string, any]) => (
-                        count > 0 && (
-                          <Badge key={type} variant="outline" className="text-green-700 border-green-300">
-                            {type}: {count} rules
-                          </Badge>
-                        )
-                      ))}
+                      <Badge variant="outline" className="text-green-700 border-green-300">
+                        State Rules: {importResult.imported.stateRules}
+                      </Badge>
+                      <Badge variant="outline" className="text-blue-700 border-blue-300">
+                        County Rules: {importResult.imported.countyRules}
+                      </Badge>
+                      <Badge variant="outline" className="text-purple-700 border-purple-300">
+                        Total: {importResult.imported.total}
+                      </Badge>
                     </div>
                     <p className="text-xs text-green-600 mt-2">
                       Imported at: {new Date(importResult.timestamp).toLocaleString()}
@@ -176,17 +232,23 @@ export default function RulesImport() {
         <CardContent>
           <div className="space-y-4">
             <p className="text-sm text-muted-foreground">
-              Import JSON should contain one or more of these top-level keys:
+              Import JSON with state rules, deed rules, healthcare rules, and county metadata.
             </p>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
               <Badge variant="outline" className="justify-center py-2">estate</Badge>
               <Badge variant="outline" className="justify-center py-2">deed</Badge>
               <Badge variant="outline" className="justify-center py-2">health</Badge>
               <Badge variant="outline" className="justify-center py-2">county</Badge>
+              <Badge variant="outline" className="justify-center py-2">prefixed keys</Badge>
             </div>
-            <p className="text-xs text-muted-foreground">
-              Click "Load Example" to see the expected format. All imports are validated before processing.
-            </p>
+            <div className="space-y-2">
+              <p className="text-xs text-muted-foreground">
+                <strong>Standard format:</strong> {"{ \"estate\": {...}, \"county\": {...} }"}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                <strong>Prefixed format:</strong> {"{ \"county:CA/Los Angeles\": {...} }"}
+              </p>
+            </div>
           </div>
         </CardContent>
       </Card>

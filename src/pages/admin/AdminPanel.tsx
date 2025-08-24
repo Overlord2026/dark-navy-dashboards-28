@@ -1,7 +1,8 @@
 import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Shield, Settings, Database, FileText, Users, Activity } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Settings, Database, FileText, Users, Plus, Shield, Activity } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
 
 export default function AdminPanel() {
@@ -42,6 +43,13 @@ export default function AdminPanel() {
       icon: Database,
       route: '/admin/rules-import',
       color: 'text-cyan-600'
+    },
+    {
+      title: 'County Quick Add',
+      description: 'Generate and add county metadata with templates',
+      icon: Plus,
+      route: '/admin/county-add',
+      color: 'text-indigo-600'
     },
     {
       title: 'Publish Panel',
