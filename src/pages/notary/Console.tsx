@@ -27,6 +27,8 @@ import {
   Stamp
 } from 'lucide-react';
 import { recordDecisionRDS } from '@/lib/rds';
+import { applyPdfSealAndTimestamp } from '@/features/notary/tamper/timestamp';
+import { SealPreview } from '@/features/notary/components/SealPreview';
 import { useToast } from '@/hooks/use-toast';
 
 // Mock data - in production, fetch from API
@@ -103,18 +105,36 @@ export default function NotaryConsole() {
 
   const handleCompleteSession = async (sessionId: string) => {
     try {
-      // In production: apply seal, save A/V, create journal entry
+      // Mock PDF bytes for demo
+      const mockPdfBytes = new Uint8Array([0x25, 0x50, 0x44, 0x46]); // PDF header
+      
+      // Apply premium brand seal and timestamp
+      const sealResult = await applyPdfSealAndTimestamp(mockPdfBytes, {
+        sealFormat: 'image',
+        notary: {
+          name: profile.name,
+          commission: profile.commissionNumber,
+          jurisdiction: profile.jurisdiction,
+          expires: profile.expiresAt,
+          county: 'Demo County'
+        },
+        enableLTV: true
+      });
+      
+      // Record completion with hash
       recordDecisionRDS({
         action: 'notary.complete',
         sessionId,
         state: 'FL',
         mode: 'RON',
-        reasons: ['session_completed', 'document_notarized', 'seal_applied'],
+        reasons: ['session_completed', 'document_notarized', 'seal_applied', sealResult.sha256],
         result: 'approve',
         metadata: { 
           notaryId: 'current_user_id', 
           completedAt: new Date().toISOString(),
-          documentsSealed: 1
+          documentsSealed: 1,
+          sealHash: sealResult.sha256,
+          ltvEnabled: sealResult.ltv
         }
       });
       
@@ -122,7 +142,7 @@ export default function NotaryConsole() {
       
       toast({
         title: "Session Completed",
-        description: "Document has been notarized and sealed. Journal entry created."
+        description: `Document notarized and sealed with hash: ${sealResult.sha256.slice(0, 16)}...`
       });
     } catch (error) {
       toast({
@@ -438,6 +458,17 @@ export default function NotaryConsole() {
                     )}
                   </div>
                 </div>
+
+                {/* Seal Preview */}
+                <SealPreview 
+                  notaryInfo={{
+                    name: profile.name,
+                    commission: profile.commissionNumber,
+                    jurisdiction: profile.jurisdiction,
+                    expires: profile.expiresAt,
+                    county: 'Demo County'
+                  }}
+                />
               </CardContent>
             </Card>
           </TabsContent>

@@ -2,6 +2,8 @@
  * PDF sealing and timestamp utilities for tamper-evident outputs
  */
 
+import { stampPdfWithBrandSeal } from '@/lib/report/sealTemplate';
+
 export interface SealOptions {
   sealFormat: 'image' | 'x509';
   notary: {
@@ -11,6 +13,7 @@ export interface SealOptions {
     expires: string;
     sealImageUrl?: string;
     x509Certificate?: string;
+    county?: string;
   };
   enableLTV?: boolean; // Long-term validation
 }
@@ -26,27 +29,33 @@ export async function applyPdfSealAndTimestamp(
   pdfBytes: Uint8Array, 
   opts: SealOptions
 ): Promise<SealedPdfResult> {
-  // In production, this would:
-  // 1. Load PDF with PDF-lib or similar
-  // 2. Find signature fields or place seal at designated location
-  // 3. Apply notary seal (image overlay or digital signature)
-  // 4. Add timestamp from trusted TSA if LTV enabled
-  // 5. Return tamper-evident PDF with hash
+  // 1) Apply brand seal template with premium styling
+  const stamped = await stampPdfWithBrandSeal(pdfBytes, {
+    notaryName: opts.notary.name,
+    commissionNo: opts.notary.commission,
+    commissionExp: opts.notary.expires,
+    state: opts.notary.jurisdiction,
+    county: opts.notary.county,
+    circleText: 'Electronic Notary Seal'
+  }, { 
+    brandNavy: '#0B1E33', 
+    brandGold: '#D4AF37' 
+  });
   
-  // Stub implementation
-  const modifiedPdf = await addNotarySeal(pdfBytes, opts);
-  const hash = await calculateSHA256(modifiedPdf);
+  // 2) Calculate SHA256 hash of stamped PDF
+  const hash = await calculateSHA256(stamped);
   
   let timestamp: string | undefined;
   let ltv = false;
   
+  // 3) Apply LTV timestamp if enabled
   if (opts.enableLTV) {
-    timestamp = await addTimestampToPDF(modifiedPdf);
+    timestamp = await addTimestampToPDF(stamped);
     ltv = true;
   }
   
   return {
-    bytes: modifiedPdf,
+    bytes: stamped,
     sha256: hash,
     timestamp,
     ltv
