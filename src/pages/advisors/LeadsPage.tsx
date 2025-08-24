@@ -1,77 +1,67 @@
-import React from 'react';
+import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { 
-  Search,
-  Filter,
-  Plus,
-  Phone,
-  Mail,
-  Calendar,
-  MoreHorizontal,
-  TrendingUp,
-  Clock
-} from 'lucide-react';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { LeadCaptureModal } from "@/components/advisors/LeadCaptureModal";
+import { useLeads, useUpdateLead, useDeleteLead, type LeadsFilters } from "@/hooks/useLeads";
+import { Download, MoreHorizontal, Search, Filter } from 'lucide-react';
+import { format } from 'date-fns';
 
-const leadData = [
-  {
-    id: '1',
-    name: 'Sarah Johnson',
-    email: 'sarah.johnson@email.com',
-    phone: '+1 (555) 123-4567',
-    source: 'Website',
-    status: 'hot',
-    value: '$125,000',
-    lastContact: '2 days ago',
-    nextAction: 'Follow-up call scheduled'
-  },
-  {
-    id: '2',
-    name: 'Michael Chen',
-    email: 'michael.chen@techcorp.com',
-    phone: '+1 (555) 987-6543',
-    source: 'Referral',
-    status: 'warm',
-    value: '$250,000',
-    lastContact: '1 week ago',
-    nextAction: 'Send retirement analysis'
-  },
-  {
-    id: '3',
-    name: 'Davis Family Trust',
-    email: 'contact@davistrust.com',
-    phone: '+1 (555) 456-7890',
-    source: 'LinkedIn',
-    status: 'cold',
-    value: '$500,000',
-    lastContact: '2 weeks ago',
-    nextAction: 'Schedule consultation'
-  }
-];
-
-const getStatusColor = (status: string) => {
-  switch (status) {
-    case 'hot': return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100';
-    case 'warm': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100';
-    case 'cold': return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100';
-    default: return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-100';
-  }
+const statusColors = {
+  new: 'bg-blue-100 text-blue-800',
+  contacted: 'bg-yellow-100 text-yellow-800',
+  qualified: 'bg-green-100 text-green-800',
+  converted: 'bg-purple-100 text-purple-800',
+  closed: 'bg-gray-100 text-gray-800'
 };
 
 export default function LeadsPage() {
-  const [searchTerm, setSearchTerm] = React.useState('');
-  const [activeTab, setActiveTab] = React.useState('all');
+  const [filters, setFilters] = useState<LeadsFilters>({});
+  const { data: leads = [], isLoading, refetch } = useLeads(filters);
+  const updateLead = useUpdateLead();
+  const deleteLead = useDeleteLead();
 
-  const filteredLeads = leadData.filter(lead => {
-    const matchesSearch = lead.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         lead.email.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesTab = activeTab === 'all' || lead.status === activeTab;
-    return matchesSearch && matchesTab;
-  });
+  const handleStatusUpdate = async (id: string, status: string) => {
+    updateLead.mutate({ id, updates: { lead_status: status } });
+  };
+
+  const handleDelete = async (id: string) => {
+    if (confirm('Are you sure you want to delete this lead?')) {
+      deleteLead.mutate(id);
+    }
+  };
+
+  const exportToCSV = () => {
+    const headers = ['First Name', 'Last Name', 'Email', 'Phone', 'Status', 'Source', 'Created Date', 'Notes'];
+    const csvContent = [
+      headers.join(','),
+      ...leads.map(lead => [
+        `"${lead.first_name}"`,
+        `"${lead.last_name}"`,
+        `"${lead.email || ''}"`,
+        `"${lead.phone || ''}"`,
+        `"${lead.lead_status || ''}"`,
+        `"${lead.lead_source || ''}"`,
+        `"${format(new Date(lead.created_at), 'yyyy-MM-dd HH:mm:ss')}"`,
+        `"${lead.notes || ''}"`
+      ].join(','))
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `leads-${format(new Date(), 'yyyy-MM-dd')}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   return (
     <>
@@ -82,167 +72,188 @@ export default function LeadsPage() {
 
       <div className="space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex justify-between items-start">
           <div>
-            <h1 className="text-3xl font-bold">Leads</h1>
-            <p className="text-muted-foreground">
-              Manage and track your prospects through the sales funnel
-            </p>
+            <h1 className="text-2xl font-bold">Leads</h1>
+            <p className="text-muted-foreground">Manage your prospect pipeline</p>
           </div>
-          <Button className="flex items-center gap-2">
-            <Plus className="w-4 h-4" />
-            Add New Lead
-          </Button>
-        </div>
-
-        {/* Stats Cards */}
-        <div className="grid md:grid-cols-4 gap-4">
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Total Leads</p>
-                  <p className="text-2xl font-bold">24</p>
-                </div>
-                <TrendingUp className="w-6 h-6 text-blue-600" />
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Hot Leads</p>
-                  <p className="text-2xl font-bold">8</p>
-                </div>
-                <div className="w-2 h-2 bg-red-500 rounded-full" />
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Conversion Rate</p>
-                  <p className="text-2xl font-bold">18.5%</p>
-                </div>
-                <TrendingUp className="w-6 h-6 text-green-600" />
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Pipeline Value</p>
-                  <p className="text-2xl font-bold">$875K</p>
-                </div>
-                <TrendingUp className="w-6 h-6 text-purple-600" />
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Search and Filters */}
-        <div className="flex items-center gap-4">
-          <div className="relative flex-1 max-w-md">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input
-              placeholder="Search leads..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
-            />
+          <div className="flex gap-2">
+            <Button onClick={exportToCSV} variant="outline" className="flex items-center gap-2">
+              <Download className="h-4 w-4" />
+              Export CSV
+            </Button>
+            <LeadCaptureModal onLeadCreated={() => refetch()} />
           </div>
-          <Button variant="outline" className="flex items-center gap-2">
-            <Filter className="w-4 h-4" />
-            Filters
-          </Button>
         </div>
 
-        {/* Leads List */}
+        {/* Filters */}
         <Card>
           <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle>Lead Pipeline</CardTitle>
-              <Tabs value={activeTab} onValueChange={setActiveTab}>
-                <TabsList>
-                  <TabsTrigger value="all">All</TabsTrigger>
-                  <TabsTrigger value="hot">Hot</TabsTrigger>
-                  <TabsTrigger value="warm">Warm</TabsTrigger>
-                  <TabsTrigger value="cold">Cold</TabsTrigger>
-                </TabsList>
-              </Tabs>
-            </div>
+            <CardTitle className="flex items-center gap-2">
+              <Filter className="h-4 w-4" />
+              Filters
+            </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              {filteredLeads.map((lead) => (
-                <div key={lead.id} className="p-4 border rounded-lg hover:bg-muted/50 transition-colors">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
-                        <span className="font-semibold text-primary">
-                          {lead.name.split(' ').map(n => n[0]).join('')}
-                        </span>
-                      </div>
-                      <div>
-                        <h3 className="font-semibold">{lead.name}</h3>
-                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                          <span className="flex items-center gap-1">
-                            <Mail className="w-3 h-3" />
-                            {lead.email}
-                          </span>
-                          <span className="flex items-center gap-1">
-                            <Phone className="w-3 h-3" />
-                            {lead.phone}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center gap-6">
-                      <div className="text-right">
-                        <p className="font-semibold">{lead.value}</p>
-                        <p className="text-sm text-muted-foreground">Potential Value</p>
-                      </div>
-                      
-                      <div className="text-right">
-                        <Badge className={getStatusColor(lead.status)}>
-                          {lead.status.toUpperCase()}
-                        </Badge>
-                        <p className="text-sm text-muted-foreground mt-1">
-                          Source: {lead.source}
-                        </p>
-                      </div>
-                      
-                      <div className="text-right">
-                        <p className="text-sm font-medium">{lead.nextAction}</p>
-                        <p className="text-sm text-muted-foreground flex items-center gap-1">
-                          <Clock className="w-3 h-3" />
-                          {lead.lastContact}
-                        </p>
-                      </div>
-                      
-                      <div className="flex items-center gap-2">
-                        <Button variant="ghost" size="sm">
-                          <Phone className="w-4 h-4" />
-                        </Button>
-                        <Button variant="ghost" size="sm">
-                          <Mail className="w-4 h-4" />
-                        </Button>
-                        <Button variant="ghost" size="sm">
-                          <Calendar className="w-4 h-4" />
-                        </Button>
-                        <Button variant="ghost" size="sm">
-                          <MoreHorizontal className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
+            <div className="flex gap-4 items-end">
+              <div className="flex-1">
+                <label className="text-sm font-medium mb-2 block">Search</label>
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Search by name or email..."
+                    value={filters.search || ''}
+                    onChange={(e) => setFilters({ ...filters, search: e.target.value })}
+                    className="pl-9"
+                  />
                 </div>
-              ))}
+              </div>
+              <div>
+                <label className="text-sm font-medium mb-2 block">Status</label>
+                <Select value={filters.status || ''} onValueChange={(value) => setFilters({ ...filters, status: value || undefined })}>
+                  <SelectTrigger className="w-40">
+                    <SelectValue placeholder="All statuses" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="">All statuses</SelectItem>
+                    <SelectItem value="new">New</SelectItem>
+                    <SelectItem value="contacted">Contacted</SelectItem>
+                    <SelectItem value="qualified">Qualified</SelectItem>
+                    <SelectItem value="converted">Converted</SelectItem>
+                    <SelectItem value="closed">Closed</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <label className="text-sm font-medium mb-2 block">Source</label>
+                <Select value={filters.utm_source || ''} onValueChange={(value) => setFilters({ ...filters, utm_source: value || undefined })}>
+                  <SelectTrigger className="w-40">
+                    <SelectValue placeholder="All sources" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="">All sources</SelectItem>
+                    <SelectItem value="manual_entry">Manual Entry</SelectItem>
+                    <SelectItem value="website">Website</SelectItem>
+                    <SelectItem value="referral">Referral</SelectItem>
+                    <SelectItem value="social">Social Media</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <Button
+                variant="outline"
+                onClick={() => setFilters({})}
+                disabled={!filters.search && !filters.status && !filters.utm_source}
+              >
+                Clear
+              </Button>
             </div>
+          </CardContent>
+        </Card>
+
+        {/* Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <Card>
+            <CardContent className="p-4">
+              <div className="text-2xl font-bold">{leads.length}</div>
+              <p className="text-xs text-muted-foreground">Total Leads</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-4">
+              <div className="text-2xl font-bold">{leads.filter(l => l.lead_status === 'new').length}</div>
+              <p className="text-xs text-muted-foreground">New Leads</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-4">
+              <div className="text-2xl font-bold">{leads.filter(l => l.lead_status === 'qualified').length}</div>
+              <p className="text-xs text-muted-foreground">Qualified</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-4">
+              <div className="text-2xl font-bold">{leads.filter(l => l.lead_status === 'converted').length}</div>
+              <p className="text-xs text-muted-foreground">Converted</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Leads Table */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Leads ({leads.length})</CardTitle>
+            <CardDescription>
+              Prospect information with consent tracking and source attribution
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {isLoading ? (
+              <div className="text-center py-8">Loading leads...</div>
+            ) : leads.length === 0 ? (
+              <div className="text-center py-8 text-muted-foreground">
+                No leads found. Use the filters above or capture new leads.
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Name</TableHead>
+                      <TableHead>Email</TableHead>
+                      <TableHead>Phone</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Source</TableHead>
+                      <TableHead>Created</TableHead>
+                      <TableHead className="w-12"></TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {leads.map((lead) => (
+                      <TableRow key={lead.id}>
+                        <TableCell className="font-medium">
+                          {lead.first_name} {lead.last_name}
+                        </TableCell>
+                        <TableCell>{lead.email || '-'}</TableCell>
+                        <TableCell>{lead.phone || '-'}</TableCell>
+                        <TableCell>
+                          <Badge className={statusColors[lead.lead_status as keyof typeof statusColors] || statusColors.new}>
+                            {lead.lead_status || 'new'}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>{lead.lead_source}</TableCell>
+                        <TableCell>{format(new Date(lead.created_at), 'MMM dd, yyyy')}</TableCell>
+                        <TableCell>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="sm">
+                                <MoreHorizontal className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem onClick={() => handleStatusUpdate(lead.id, 'contacted')}>
+                                Mark as Contacted
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handleStatusUpdate(lead.id, 'qualified')}>
+                                Mark as Qualified
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handleStatusUpdate(lead.id, 'converted')}>
+                                Mark as Converted
+                              </DropdownMenuItem>
+                              <DropdownMenuItem 
+                                onClick={() => handleDelete(lead.id)}
+                                className="text-destructive"
+                              >
+                                Delete
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
