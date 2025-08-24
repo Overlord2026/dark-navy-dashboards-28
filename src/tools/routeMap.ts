@@ -9,10 +9,17 @@ export function getKnownRoutes(): string[] {
     // Root routes
     '/',
     
-    // Public pages (flag protected)
-    ...(getFlag('PUBLIC_DISCOVER_ENABLED') ? ['/discover'] : []),
-    '/how-it-works',
-    ...(getFlag('SOLUTIONS_ENABLED') ? ['/solutions', '/solutions/annuities', '/solutions/:solutionKey'] : []),
+    // Discovery and solutions
+    '/discover', '/solutions', '/solutions/annuities', '/solutions/investments',
+    
+    // Family routes  
+    '/family/home', '/family/longevity', '/receipts',
+    
+    // Tool routes
+    '/tools/retirement-roadmap', '/tools/rmd-check', '/tools/social-security', 
+    '/tools/wealth-vault', '/tools/beneficiary-center', '/tools/financial-poa', 
+    '/tools/taxhub-diy', '/solutions/annuities/calculators', '/solutions/annuities/review',
+    '/solutions/annuities/index',
     
     // NIL public pages
     ...(getFlag('NIL_PUBLIC_ENABLED') ? ['/nil', '/nil/index'] : []),
@@ -29,9 +36,6 @@ export function getKnownRoutes(): string[] {
       '/start/nil-athlete',
       '/start/nil-school'
     ] : []),
-    
-    // Family app routes
-    '/family/home',
     
     // Private app routes
     '/onboarding',
@@ -60,10 +64,7 @@ export function getKnownRoutes(): string[] {
     ...(getFlag('DEMOS_ENABLED') ? ['/demos/:persona'] : []),
     
     // Dev routes
-    ...(process.env.NODE_ENV !== 'production' ? ['/dev/fixtures'] : []),
-    
-    // Special routes
-    '/receipts'
+    ...(process.env.NODE_ENV !== 'production' ? ['/dev/fixtures'] : [])
   ];
   
   return routes.filter(Boolean);

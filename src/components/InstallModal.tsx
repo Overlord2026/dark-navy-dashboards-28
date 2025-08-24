@@ -9,6 +9,15 @@ export default function InstallModal({ toolKey, registryItem, onClose }: {
   const [seed, setSeed] = React.useState(true);
   const { label, summary, routePriv, routePub } = registryItem || {};
   
+  // ESC key handler
+  React.useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    document.addEventListener('keydown', handleEsc);
+    return () => document.removeEventListener('keydown', handleEsc);
+  }, [onClose]);
+  
   async function onInstall() { 
     await installTool(toolKey, seed); 
     onClose(); 
@@ -20,11 +29,21 @@ export default function InstallModal({ toolKey, registryItem, onClose }: {
     nav(routePub || `/preview/${toolKey}`); 
   }
   
+  function handleBackdropClick(e: React.MouseEvent) {
+    if (e.target === e.currentTarget) onClose();
+  }
+  
   return (
-    <div role="dialog" aria-modal="true" className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="absolute inset-0 bg-black/40" onClick={onClose} />
+    <div 
+      role="dialog" 
+      aria-modal="true" 
+      aria-labelledby="modal-title"
+      className="fixed inset-0 z-50 flex items-center justify-center"
+      onClick={handleBackdropClick}
+    >
+      <div className="absolute inset-0 bg-black/40" />
       <div className="relative w-full max-w-lg rounded-2xl p-6 bg-white">
-        <h2 className="text-xl font-semibold">{label || 'Install tool'}</h2>
+        <h2 id="modal-title" className="text-xl font-semibold">{label || 'Install tool'}</h2>
         <p className="mt-2 text-sm text-gray-600">{summary}</p>
         {routePriv ? (
           <>
