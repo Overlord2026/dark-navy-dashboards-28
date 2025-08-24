@@ -115,6 +115,104 @@ export const DEED_RULES: Record<string, RecordingRule> = {
     eRecordingLikely: true,
     notes: 'Enhanced life estate recognized; verify county.'
   },
+  'NJ': {
+    code: 'NJ',
+    allowed: ['Warranty', 'SpecialWarranty', 'Quitclaim', 'TODD'],
+    witnesses: 0,
+    notary: true,
+    todAvailable: true,
+    ladyBirdAvailable: false,
+    eRecordingLikely: true,
+    marginRules: 'Top margin ~3" (verify county).',
+    notes: 'TOD/TODD availability and transfer tax vary; verify.'
+  },
+  'VA': {
+    code: 'VA',
+    allowed: ['Warranty', 'SpecialWarranty', 'Quitclaim', 'TODD'],
+    witnesses: 0,
+    notary: true,
+    todAvailable: true,
+    ladyBirdAvailable: false,
+    eRecordingLikely: true,
+    marginRules: 'Top margin ~3"; APN formatting varies by county.'
+  },
+  'WA': {
+    code: 'WA',
+    allowed: ['Warranty', 'SpecialWarranty', 'Quitclaim', 'TODD'],
+    witnesses: 0,
+    notary: true,
+    todAvailable: true,
+    ladyBirdAvailable: false,
+    eRecordingLikely: true,
+    notes: 'Community property impacts vesting; confirm county APN rules.'
+  },
+  'AZ': {
+    code: 'AZ',
+    allowed: ['Warranty', 'SpecialWarranty', 'Quitclaim', 'TODD'],
+    witnesses: 0,
+    notary: true,
+    todAvailable: true,
+    ladyBirdAvailable: false,
+    eRecordingLikely: true,
+    notes: 'Beneficiary deeds permitted; confirm transfer fee.'
+  },
+  'MA': {
+    code: 'MA',
+    allowed: ['Warranty', 'SpecialWarranty', 'Quitclaim'],
+    witnesses: 0,
+    notary: true,
+    todAvailable: false,
+    ladyBirdAvailable: false,
+    eRecordingLikely: true,
+    notes: 'Strict margins/cover conventions; confirm tax.'
+  },
+  'TN': {
+    code: 'TN',
+    allowed: ['Warranty', 'SpecialWarranty', 'Quitclaim', 'TODD'],
+    witnesses: 0,
+    notary: true,
+    todAvailable: true,
+    ladyBirdAvailable: false,
+    eRecordingLikely: true
+  },
+  'IN': {
+    code: 'IN',
+    allowed: ['Warranty', 'SpecialWarranty', 'Quitclaim', 'TODD'],
+    witnesses: 0,
+    notary: true,
+    todAvailable: true,
+    ladyBirdAvailable: false,
+    eRecordingLikely: true
+  },
+  'MO': {
+    code: 'MO',
+    allowed: ['Warranty', 'SpecialWarranty', 'Quitclaim', 'TODD'],
+    witnesses: 0,
+    notary: true,
+    todAvailable: true,
+    ladyBirdAvailable: false,
+    eRecordingLikely: true
+  },
+  'MD': {
+    code: 'MD',
+    allowed: ['Warranty', 'SpecialWarranty', 'Quitclaim', 'TODD'],
+    witnesses: 0,
+    notary: true,
+    todAvailable: true,
+    ladyBirdAvailable: false,
+    eRecordingLikely: true,
+    marginRules: 'Return address/preparer/APN often required; confirm.'
+  },
+  'WI': {
+    code: 'WI',
+    allowed: ['Warranty', 'SpecialWarranty', 'Quitclaim', 'TODD'],
+    witnesses: 0,
+    notary: true,
+    todAvailable: true,
+    ladyBirdAvailable: false,
+    eRecordingLikely: true,
+    notes: 'Marital property; verify local transfer fee.'
+  },
   'DEFAULT': {
     code: 'DEFAULT',
     allowed: ['Warranty', 'Quitclaim'],

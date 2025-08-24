@@ -134,6 +134,116 @@ export const ESTATE_RULES: Record<string,EstateRule> = {
     todPodAllowed: true,
     deedPracticeNote: 'County format differences apply.'
   },
+  'NJ': {
+    code: 'NJ',
+    will: { witnesses: 2, notary: false, selfProving: true },
+    rlt: { notary: true },
+    pourOver: { witnesses: 2, notary: false },
+    poa: { notary: true },
+    probateNotes: 'Self-proving affidavit recommended; county practices vary.',
+    communityProperty: false,
+    todPodAllowed: true,
+    deedPracticeNote: 'Verify TOD deed availability and county transfer tax.'
+  },
+  'VA': {
+    code: 'VA',
+    will: { witnesses: 2, notary: false, selfProving: true },
+    rlt: { notary: true },
+    pourOver: { witnesses: 2, notary: false },
+    poa: { notary: true },
+    probateNotes: 'Witness eligibility applies; confirm county formatting.',
+    communityProperty: false,
+    todPodAllowed: true,
+    deedPracticeNote: 'Margin rules vary by county.'
+  },
+  'WA': {
+    code: 'WA',
+    will: { witnesses: 2, notary: false, selfProving: true },
+    rlt: { notary: true },
+    pourOver: { witnesses: 2, notary: false },
+    poa: { notary: true },
+    probateNotes: 'Community property agreement may affect titling.',
+    communityProperty: true,
+    todPodAllowed: true,
+    deedPracticeNote: 'APN format and margins enforced in many counties.'
+  },
+  'AZ': {
+    code: 'AZ',
+    will: { witnesses: 2, notary: false, selfProving: true },
+    rlt: { notary: true },
+    pourOver: { witnesses: 2, notary: false },
+    poa: { notary: true },
+    probateNotes: 'Community property; beneficiary deed statutes present.',
+    communityProperty: true,
+    todPodAllowed: true,
+    deedPracticeNote: 'County e-record common; confirm transfer fee.'
+  },
+  'MA': {
+    code: 'MA',
+    will: { witnesses: 2, notary: false, selfProving: true },
+    rlt: { notary: true },
+    pourOver: { witnesses: 2, notary: false },
+    poa: { notary: true },
+    probateNotes: '"Health Care Proxy" terminology for healthcare; confirm TOD real property availability.',
+    communityProperty: false,
+    todPodAllowed: false,
+    deedPracticeNote: 'Strict recording margins; confirm RPT rules.'
+  },
+  'TN': {
+    code: 'TN',
+    will: { witnesses: 2, notary: false, selfProving: true },
+    rlt: { notary: true },
+    pourOver: { witnesses: 2, notary: false },
+    poa: { notary: true },
+    probateNotes: 'County fees vary; confirm witness eligibility.',
+    communityProperty: false,
+    todPodAllowed: true,
+    deedPracticeNote: 'Margins and indexing varied.'
+  },
+  'IN': {
+    code: 'IN',
+    will: { witnesses: 2, notary: false, selfProving: true },
+    rlt: { notary: true },
+    pourOver: { witnesses: 2, notary: false },
+    poa: { notary: true },
+    probateNotes: 'TOD deeds recognized; verify county acceptance.',
+    communityProperty: false,
+    todPodAllowed: true,
+    deedPracticeNote: 'APN required in many counties.'
+  },
+  'MO': {
+    code: 'MO',
+    will: { witnesses: 2, notary: false, selfProving: true },
+    rlt: { notary: true },
+    pourOver: { witnesses: 2, notary: false },
+    poa: { notary: true },
+    probateNotes: 'Beneficiary deeds supported; review county tax.',
+    communityProperty: false,
+    todPodAllowed: true,
+    deedPracticeNote: 'Margins/format vary by county.'
+  },
+  'MD': {
+    code: 'MD',
+    will: { witnesses: 2, notary: false, selfProving: true },
+    rlt: { notary: true },
+    pourOver: { witnesses: 2, notary: false },
+    poa: { notary: true },
+    probateNotes: 'County transfer/recordation taxes common.',
+    communityProperty: false,
+    todPodAllowed: true,
+    deedPracticeNote: 'First-page cover conventions vary; confirm.'
+  },
+  'WI': {
+    code: 'WI',
+    will: { witnesses: 2, notary: false, selfProving: true },
+    rlt: { notary: true },
+    pourOver: { witnesses: 2, notary: false },
+    poa: { notary: true },
+    probateNotes: 'Marital property system akin to community property.',
+    communityProperty: true,
+    todPodAllowed: true,
+    deedPracticeNote: 'APN and margins enforced; check municipal fees.'
+  },
   'DEFAULT': {
     code: 'DEFAULT',
     will: { witnesses: 2, notary: false },
@@ -185,6 +295,74 @@ export const HEALTH_RULES: Record<string, HealthcareRule> = {
     surrogateTerminology: 'Health Care Proxy',
     specialNotes: 'New York uses Health Care Proxy terminology',
     witnessEligibility: 'No treating physician or facility operator as witness'
+  },
+  'NJ': {
+    code: 'NJ',
+    witnesses: 2,
+    notaryRequired: false,
+    selfProvingAffidavit: true,
+    remoteNotaryAllowed: true,
+    healthcareForms: ['AdvanceDirective', 'HealthcarePOA', 'HIPAA'],
+    surrogateTerminology: 'Health Care Proxy',
+    specialNotes: 'Hospital policies may vary by system.'
+  },
+  'VA': {
+    code: 'VA',
+    witnesses: 2,
+    notaryRequired: false,
+    remoteNotaryAllowed: true,
+    healthcareForms: ['AdvanceDirective', 'HealthcarePOA', 'HIPAA']
+  },
+  'WA': {
+    code: 'WA',
+    witnesses: 2,
+    notaryRequired: false,
+    healthcareForms: ['AdvanceDirective', 'HealthcarePOA', 'HIPAA'],
+    specialNotes: 'Community property; confirm provider acceptance.'
+  },
+  'AZ': {
+    code: 'AZ',
+    witnesses: 2,
+    notaryRequired: false,
+    healthcareForms: ['AdvanceDirective', 'HealthcarePOA', 'HIPAA'],
+    specialNotes: 'State AD forms widely used.'
+  },
+  'MA': {
+    code: 'MA',
+    witnesses: 2,
+    notaryRequired: false,
+    healthcareForms: ['Surrogate', 'HIPAA'],
+    surrogateTerminology: 'Health Care Proxy'
+  },
+  'TN': {
+    code: 'TN',
+    witnesses: 2,
+    notaryRequired: false,
+    healthcareForms: ['AdvanceDirective', 'HealthcarePOA', 'HIPAA']
+  },
+  'IN': {
+    code: 'IN',
+    witnesses: 2,
+    notaryRequired: false,
+    healthcareForms: ['AdvanceDirective', 'HealthcarePOA', 'HIPAA']
+  },
+  'MO': {
+    code: 'MO',
+    witnesses: 2,
+    notaryRequired: false,
+    healthcareForms: ['AdvanceDirective', 'HealthcarePOA', 'HIPAA']
+  },
+  'MD': {
+    code: 'MD',
+    witnesses: 2,
+    notaryRequired: false,
+    healthcareForms: ['AdvanceDirective', 'HealthcarePOA', 'HIPAA']
+  },
+  'WI': {
+    code: 'WI',
+    witnesses: 2,
+    notaryRequired: false,
+    healthcareForms: ['AdvanceDirective', 'HealthcarePOA', 'HIPAA']
   },
   'DEFAULT': {
     code: 'DEFAULT',
