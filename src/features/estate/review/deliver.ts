@@ -3,13 +3,18 @@ import { recordReceipt } from '@/features/receipts/record';
 export async function deliverReviewPacket(options: {
   sessionId: string;
   familyUserId: string;
-  signedPdfId: string;
+  signedPdfId?: string;
+  mergedPdfId?: string;
 }): Promise<void> {
-  const { sessionId, familyUserId, signedPdfId } = options;
+  const { sessionId, familyUserId, signedPdfId, mergedPdfId } = options;
+  
+  // Prefer merged final packet over individual signed letter
+  const deliverId = mergedPdfId || signedPdfId;
 
   // PRE share to family user (Vault grant)
   // In a real implementation, this would call the actual vault service
-  console.log(`Granting access to ${signedPdfId} for user ${familyUserId}`);
+  console.log(`Granting access to ${deliverId} for user ${familyUserId}`);
+  const ismerged = !!mergedPdfId;
 
   // Log Consent-RDS with scope for estate review packet
   await recordReceipt({
@@ -36,7 +41,7 @@ export async function deliverReviewPacket(options: {
   await recordReceipt({
     type: 'Decision-RDS',
     action: 'estate.review.deliver',
-    reasons: [sessionId, 'family_delivery'],
+    reasons: [`session:${sessionId}`, deliverId!, ismerged ? 'merged_final' : 'signed_letter'],
     participant_id: familyUserId,
     created_at: new Date().toISOString()
   } as any);

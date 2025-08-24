@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { buildReviewLetter, applyAttorneyESign } from '@/features/estate/review/builder';
 import { signReviewLetter, deliverReviewPacket, getAllReviewSessions } from '@/features/estate/review/service';
+import { finalizeReviewPacket, loadReviewPacketPdfs } from '@/features/estate/review/finalize';
 import { useToast } from '@/hooks/use-toast';
 import type { ReviewSession, AttorneyInfo } from '@/features/estate/review/types';
 
@@ -97,15 +98,63 @@ Please ensure all execution formalities are followed precisely as outlined to en
     }
   };
 
+  const handleMergeAndStamp = async () => {
+    if (!session) return;
+
+    setLoading(true);
+    try {
+      // Load PDF bytes from vault
+      const { letterPdf, packetPdf } = await loadReviewPacketPdfs(session);
+      
+      const footerTag = `Reviewed & Signed on ${new Date().toLocaleString()}`;
+      const anchorEnabled = import.meta.env.VITE_ARP_ANCHOR_ON_FINAL === 'true';
+      
+      const result = await finalizeReviewPacket({
+        sessionId: session.id,
+        clientId: session.clientId,
+        letterPdf,
+        packetPdf,
+        footerTag,
+        anchor: anchorEnabled
+      });
+      
+      // Update session with final packet
+      const updatedSession = {
+        ...session,
+        signedPacket: { 
+          pdfId: result.finalPdfId, 
+          sha256: result.sha256 
+        }
+      };
+      setSession(updatedSession);
+      
+      toast({
+        title: 'Final Packet Created',
+        description: `Merged and stamped packet ready for delivery${anchorEnabled ? ' (anchored)' : ''}.`,
+      });
+      
+    } catch (error) {
+      console.error('Failed to create final packet:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to create final packet. Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleDeliverPacket = async () => {
-    if (!session || !session.signedLetter) return;
+    if (!session || (!session.signedLetter && !session.signedPacket)) return;
 
     setLoading(true);
     try {
       await deliverReviewPacket({
         sessionId: session.id,
         familyUserId: session.clientId, // Simplified - would be actual family user ID
-        signedPdfId: session.signedLetter.pdfId
+        signedPdfId: session.signedLetter?.pdfId,
+        mergedPdfId: session.signedPacket?.pdfId
       });
 
       // Refresh session data
@@ -279,20 +328,41 @@ Please ensure all execution formalities are followed precisely as outlined to en
 
               <Separator />
 
-              <div className="flex justify-between items-center">
-                <div>
-                  {session.signedLetter ? (
-                    <Badge variant="default">Letter Signed</Badge>
-                  ) : (
-                    <Badge variant="secondary">Pending Signature</Badge>
-                  )}
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <div>
+                    {session.signedLetter ? (
+                      <Badge variant="default">Letter Signed</Badge>
+                    ) : (
+                      <Badge variant="secondary">Pending Signature</Badge>
+                    )}
+                  </div>
+                  <Button 
+                    onClick={handleSignLetter} 
+                    disabled={loading || !!session.signedLetter}
+                  >
+                    {loading ? 'Signing...' : session.signedLetter ? 'Already Signed' : 'Sign Review Letter'}
+                  </Button>
                 </div>
-                <Button 
-                  onClick={handleSignLetter} 
-                  disabled={loading || !!session.signedLetter}
-                >
-                  {loading ? 'Signing...' : session.signedLetter ? 'Already Signed' : 'Sign Review Letter'}
-                </Button>
+
+                {session.signedLetter && (
+                  <div className="flex justify-between items-center pt-4 border-t">
+                    <div>
+                      {session.signedPacket ? (
+                        <Badge variant="default">Final Packet Ready</Badge>
+                      ) : (
+                        <Badge variant="secondary">Ready to Merge</Badge>
+                      )}
+                    </div>
+                    <Button 
+                      onClick={handleMergeAndStamp}
+                      disabled={loading || !!session.signedPacket}
+                      variant={session.signedPacket ? "outline" : "default"}
+                    >
+                      {loading ? 'Processing...' : session.signedPacket ? 'Final Packet Created' : 'Merge & Stamp Final Packet'}
+                    </Button>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
@@ -310,10 +380,16 @@ Please ensure all execution formalities are followed precisely as outlined to en
               <div className="p-4 bg-muted rounded-lg">
                 <h3 className="font-medium mb-2">Package Contents:</h3>
                 <ul className="text-sm text-muted-foreground space-y-1">
-                  <li>• Review packet PDF with state execution summary</li>
-                  <li>• Attorney review letter (signed)</li>
-                  <li>• Execution checklist and instructions</li>
-                  <li>• Document previews</li>
+                  {session.signedPacket ? (
+                    <li>• <strong>Final merged packet</strong> (branded, signed, ready to print)</li>
+                  ) : (
+                    <>
+                      <li>• Review packet PDF with state execution summary</li>
+                      <li>• Attorney review letter (signed)</li>
+                      <li>• Execution checklist and instructions</li>
+                      <li>• Document previews</li>
+                    </>
+                  )}
                 </ul>
               </div>
 
@@ -325,13 +401,15 @@ Please ensure all execution formalities are followed precisely as outlined to en
                   <p className="text-sm text-muted-foreground">
                     {session.status === 'delivered' 
                       ? 'Package has been delivered to family'
-                      : 'Attorney signature required before delivery'
+                      : session.signedPacket
+                      ? 'Final packet ready for delivery'
+                      : 'Attorney signature and final packet required'
                     }
                   </p>
                 </div>
                 <Button 
                   onClick={handleDeliverPacket}
-                  disabled={loading || !session.signedLetter || session.status === 'delivered'}
+                  disabled={loading || (!session.signedLetter && !session.signedPacket) || session.status === 'delivered'}
                 >
                   {loading ? 'Delivering...' : 'Deliver to Family'}
                 </Button>

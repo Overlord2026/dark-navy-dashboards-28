@@ -110,9 +110,11 @@ export async function signReviewLetter(options: {
 export async function deliverReviewPacket(options: {
   sessionId: string;
   familyUserId: string;
-  signedPdfId: string;
+  signedPdfId?: string;
+  mergedPdfId?: string;
 }): Promise<void> {
-  const { sessionId, familyUserId, signedPdfId } = options;
+  const { sessionId, familyUserId, signedPdfId, mergedPdfId } = options;
+  const deliverId = mergedPdfId || signedPdfId;
   const session = getReviewSession(sessionId);
   if (!session) throw new Error('Review session not found');
 
