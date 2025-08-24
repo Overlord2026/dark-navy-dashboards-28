@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, LogIn, ArrowRight } from 'lucide-react';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Menu, LogIn, ArrowRight, ChevronDown, Award, Play } from 'lucide-react';
+import { getFlag } from '@/lib/flags';
 
 export const PublicNavigation: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isNilOpen, setIsNilOpen] = useState(false);
 
   const navItems = [
     { label: 'Personas', href: '/discover#personas' },
@@ -12,6 +15,36 @@ export const PublicNavigation: React.FC = () => {
     { label: 'Catalog', href: '/catalog' },
     { label: 'Proof', href: '/how-it-works' },
     { label: 'Pricing', href: '/pricing' }
+  ];
+
+  // NIL Menu Items with feature flag gating
+  const nilItems = [
+    { 
+      label: 'NIL Hub', 
+      href: '/nil',
+      icon: Award,
+      description: 'Name, Image & Likeness marketplace'
+    },
+    { 
+      label: 'Weekly NIL Index', 
+      href: '/nil/index',
+      icon: Award,
+      description: 'Market trends and opportunities'
+    },
+    ...(getFlag('DEMOS_ENABLED') ? [
+      { 
+        label: '60-sec demo: Athlete', 
+        href: '/demos/nil-athlete',
+        icon: Play,
+        description: 'Athlete journey demonstration'
+      },
+      { 
+        label: '60-sec demo: School', 
+        href: '/demos/nil-school',
+        icon: Play,
+        description: 'School compliance demonstration'
+      }
+    ] : [])
   ];
 
   const handleLogin = () => {
@@ -30,6 +63,14 @@ export const PublicNavigation: React.FC = () => {
     }
     
     window.location.href = '/onboarding';
+  };
+
+  // Keyboard navigation for mobile menu
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === 'Escape') {
+      setIsOpen(false);
+      setIsNilOpen(false);
+    }
   };
 
   return (
@@ -72,19 +113,76 @@ export const PublicNavigation: React.FC = () => {
           <div className="md:hidden">
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="sm">
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                  aria-label="Open navigation menu"
+                  className="focus:ring-2 focus:ring-[#67E8F9] focus:ring-offset-0"
+                >
                   <Menu className="h-5 w-5" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="w-72">
+              <SheetContent 
+                side="right" 
+                className="w-72 bg-navy-900"
+                onKeyDown={handleKeyDown}
+              >
                 <div className="space-y-6 mt-6">
+                  {/* NIL Accordion Section */}
+                  {getFlag('NIL_PUBLIC_ENABLED') && (
+                    <div className="space-y-2">
+                      <Collapsible open={isNilOpen} onOpenChange={setIsNilOpen}>
+                        <CollapsibleTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            className="w-full justify-between text-left text-white hover:text-[#D4AF37] hover:bg-white/10 focus:ring-2 focus:ring-[#67E8F9] focus:ring-offset-0 min-h-[44px] transition-colors duration-200"
+                            aria-expanded={isNilOpen}
+                          >
+                            <div className="flex items-center gap-2">
+                              <Award className="h-5 w-5" />
+                              <span className="font-medium">NIL</span>
+                            </div>
+                            <ChevronDown 
+                              className={`h-4 w-4 transition-transform duration-200 ${
+                                isNilOpen ? 'rotate-180' : ''
+                              }`} 
+                            />
+                          </Button>
+                        </CollapsibleTrigger>
+                        <CollapsibleContent className="space-y-1 pl-2">
+                          {nilItems.map((item) => (
+                            <a
+                              key={item.href}
+                              href={item.href}
+                              className="group block p-3 rounded-md text-white hover:text-[#D4AF37] hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-[#67E8F9] focus:ring-offset-0 min-h-[44px] transition-colors duration-200"
+                              onClick={() => setIsOpen(false)}
+                            >
+                              <div className="flex items-start gap-3">
+                                <item.icon className="h-4 w-4 mt-0.5 flex-shrink-0" />
+                                <div className="min-w-0 flex-1">
+                                  <div className="text-sm font-medium">{item.label}</div>
+                                  <div className="text-xs text-gray-300 group-hover:text-gray-200">
+                                    {item.description}
+                                  </div>
+                                </div>
+                              </div>
+                            </a>
+                          ))}
+                        </CollapsibleContent>
+                      </Collapsible>
+                      
+                      {/* Divider */}
+                      <div className="border-t border-white/20 pt-4" />
+                    </div>
+                  )}
+
                   {/* Navigation Links */}
                   <div className="space-y-4">
                     {navItems.map((item) => (
                       <a
                         key={item.label}
                         href={item.href}
-                        className="block text-lg font-medium text-muted-foreground hover:text-foreground transition-colors"
+                        className="block text-lg font-medium text-white hover:text-[#D4AF37] focus:outline-none focus:ring-2 focus:ring-[#67E8F9] focus:ring-offset-0 min-h-[44px] flex items-center transition-colors duration-200"
                         onClick={() => setIsOpen(false)}
                       >
                         {item.label}
@@ -93,10 +191,10 @@ export const PublicNavigation: React.FC = () => {
                   </div>
 
                   {/* Actions */}
-                  <div className="space-y-3 pt-6 border-t">
+                  <div className="space-y-3 pt-6 border-t border-white/20">
                     <Button 
                       variant="outline" 
-                      className="w-full" 
+                      className="w-full border-white/30 text-white hover:text-[#D4AF37] hover:bg-white/10 focus:ring-2 focus:ring-[#67E8F9] focus:ring-offset-0 min-h-[44px]" 
                       onClick={() => {
                         setIsOpen(false);
                         handleLogin();
@@ -106,7 +204,7 @@ export const PublicNavigation: React.FC = () => {
                       Log in
                     </Button>
                     <Button 
-                      className="w-full bg-gold hover:bg-gold-hover text-navy" 
+                      className="w-full bg-[#D4AF37] hover:bg-[#B8941F] text-navy-900 focus:ring-2 focus:ring-[#67E8F9] focus:ring-offset-0 min-h-[44px]" 
                       onClick={() => {
                         setIsOpen(false);
                         handleGetStarted();
