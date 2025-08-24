@@ -40,6 +40,7 @@ import PublishPanel from '@/pages/admin/PublishPanel';
 import { EnvInspector } from '@/pages/admin/EnvInspector';
 import RulesCoverage from '@/pages/admin/RulesCoverage';
 import RulesImport from '@/pages/admin/RulesImport';
+import RulesExport from '@/pages/admin/RulesExport';
 import CountyQuickAdd from '@/pages/admin/CountyQuickAdd';
 import MarketingPreview from '@/pages/preview/MarketingPreview';
 import NotFound from '@/pages/NotFound';
@@ -224,6 +225,7 @@ function App() {
             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/ready-check-enhanced" element={<ReadyCheckEnhanced />} />}
             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/rules-coverage" element={<RulesCoverage />} />}
             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/rules-import" element={<RulesImport />} />}
+            {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/rules-export" element={<RulesExport />} />}
             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/county-add" element={<CountyQuickAdd />} />}
             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin" element={<AdminPanel />} />}
             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/jobs" element={<JobsPanel />} />}

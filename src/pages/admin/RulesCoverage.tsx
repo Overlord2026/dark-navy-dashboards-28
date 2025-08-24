@@ -82,10 +82,18 @@ export default function RulesCoverage() {
                 ({Math.round((completedCount / totalCount) * 100)}% coverage)
               </span>
             </div>
-            <Button onClick={exportCSV} variant="outline" className="gap-2">
-              <Download className="h-4 w-4" />
-              Export CSV
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button onClick={exportCSV} variant="outline" className="gap-2">
+                <Download className="h-4 w-4" />
+                Export CSV
+              </Button>
+              <Button asChild variant="outline" size="sm">
+                <a href="/admin/rules-export" className="flex items-center gap-2">
+                  <Download className="h-4 w-4" />
+                  Export All Rules (JSON + CSV)
+                </a>
+              </Button>
+            </div>
           </div>
         </CardContent>
       </Card>

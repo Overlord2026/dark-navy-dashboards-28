@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Settings, Database, FileText, Users, Plus, Shield, Activity } from "lucide-react";
+import { Settings, Database, FileText, Users, Plus, Shield, Activity, Download } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
 
 export default function AdminPanel() {
@@ -42,12 +42,19 @@ export default function AdminPanel() {
       description: 'Bulk import and update estate rules via JSON',
       icon: Database,
       route: '/admin/rules-import',
-      color: 'text-cyan-600'
+      color: 'text-blue-600'
+    },
+    {
+      title: 'Rules Export',
+      description: 'Download all current rules as JSON and CSV files',
+      icon: Download,
+      route: '/admin/rules-export',
+      color: 'text-green-600'
     },
     {
       title: 'County Quick Add',
       description: 'Generate and add county metadata with templates',
-      icon: Plus,
+      icon: Settings,
       route: '/admin/county-add',
       color: 'text-indigo-600'
     },

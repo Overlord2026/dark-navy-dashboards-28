@@ -1,0 +1,251 @@
+import React from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Download, FileJson, FileSpreadsheet } from 'lucide-react';
+import { recordHealthRDS } from '@/features/healthcare/receipts';
+
+// Import rules with fallbacks
+let ESTATE_RULES: any = {};
+let DEED_RULES: any = {};
+let HEALTH_RULES: any = {};
+let COUNTY_META: any = {};
+
+try {
+  ESTATE_RULES = require('@/features/estate/states/estateRules').ESTATE_RULES || {};
+} catch (e) {
+  console.warn('ESTATE_RULES not found');
+}
+
+try {
+  DEED_RULES = require('@/features/estate/deeds/stateDeedRules').DEED_RULES || {};
+} catch (e) {
+  console.warn('DEED_RULES not found');
+}
+
+try {
+  HEALTH_RULES = require('@/features/estate/states/healthRules').HEALTH_RULES || {};
+} catch (e) {
+  console.warn('HEALTH_RULES not found');
+}
+
+try {
+  COUNTY_META = require('@/features/estate/deeds/countyMeta').COUNTY_META || {};
+} catch (e) {
+  console.warn('COUNTY_META not found');
+}
+
+function download(name: string, text: string, type = 'application/json') {
+  const blob = new Blob([text], { type });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = name;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function toCSV(rows: any[], headers: string[]) {
+  const esc = (v: any) => `"${String(v ?? '').replace(/"/g, '""')}"`;
+  const lines = [headers.join(',')].concat(
+    rows.map(r => headers.map(h => esc((r as any)[h])).join(','))
+  );
+  return lines.join('\n');
+}
+
+async function sha256Hex(str: string) {
+  const enc = new TextEncoder().encode(str);
+  const buf = await crypto.subtle.digest('SHA-256', enc);
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+export default function RulesExport() {
+  const [log, setLog] = React.useState('');
+  const [loading, setLoading] = React.useState(false);
+  const dateTag = new Date().toISOString().slice(0, 19).replace(/[:T]/g, '').replace(/-/g, '');
+
+  function summarize(obj: any) { 
+    return obj ? Object.keys(obj).length : 0; 
+  }
+
+  async function doExport() {
+    setLoading(true);
+    try {
+      const payload = {
+        meta: {
+          exported_at: new Date().toISOString(),
+          counts: {
+            estate: summarize(ESTATE_RULES),
+            deed: summarize(DEED_RULES),
+            health: summarize(HEALTH_RULES),
+            counties: summarize(COUNTY_META)
+          },
+          version: 'v1'
+        },
+        estate_rules: ESTATE_RULES,
+        deed_rules: DEED_RULES,
+        health_rules: HEALTH_RULES || {},
+        county_meta: COUNTY_META
+      };
+
+      const pretty = JSON.stringify(payload, null, 2);
+      const min = JSON.stringify(payload);
+      const hash = await sha256Hex(min);
+
+      // Downloads - JSON files
+      download(`rules_export_${dateTag}.json`, pretty, 'application/json');
+      download(`rules_export_${dateTag}.min.json`, min, 'application/json');
+
+      // CSVs (basic, for quick diffing)
+      const estateRows = Object.entries(ESTATE_RULES || {}).map(([code, r]: any) => ({ 
+        code, 
+        cp: String(!!r.communityProperty), 
+        tod: String(!!r.todPodAllowed),
+        witnesses: r.witnesses || 0,
+        notary: String(!!r.notaryRequired)
+      }));
+      
+      const deedRows = Object.entries(DEED_RULES || {}).map(([code, r]: any) => ({ 
+        code, 
+        allowed: (r.allowed || []).join('|'), 
+        eRec: String(!!r.eRecordingLikely),
+        forms: (r.deedForms || []).join('|')
+      }));
+      
+      const healthRows = Object.entries(HEALTH_RULES || {}).map(([code, r]: any) => ({ 
+        code, 
+        witnesses: r.witnesses || 0, 
+        notary: String(!!r.notaryRequired), 
+        forms: (r.healthcareForms || []).join('|'),
+        ron: String(!!r.remoteNotaryAllowed)
+      }));
+      
+      const countyRows = Object.entries(COUNTY_META || {}).map(([key, m]: any) => ({ 
+        key, 
+        state: m.state, 
+        county: m.county, 
+        top: m.topMarginIn, 
+        left: m.leftMarginIn, 
+        right: m.rightMarginIn, 
+        bottom: m.bottomMarginIn, 
+        eRec: String(!!m.eRecording), 
+        providers: (m.providers || []).join('|') 
+      }));
+
+      // Download CSV files
+      if (estateRows.length > 0) {
+        download(`estate_rules_${dateTag}.csv`, toCSV(estateRows, ['code', 'cp', 'tod', 'witnesses', 'notary']), 'text/csv');
+      }
+      
+      if (deedRows.length > 0) {
+        download(`deed_rules_${dateTag}.csv`, toCSV(deedRows, ['code', 'allowed', 'eRec', 'forms']), 'text/csv');
+      }
+      
+      if (healthRows.length > 0) {
+        download(`health_rules_${dateTag}.csv`, toCSV(healthRows, ['code', 'witnesses', 'notary', 'forms', 'ron']), 'text/csv');
+      }
+      
+      if (countyRows.length > 0) {
+        download(`county_meta_${dateTag}.csv`, toCSV(countyRows, ['key', 'state', 'county', 'top', 'left', 'right', 'bottom', 'eRec', 'providers']), 'text/csv');
+      }
+
+      // Receipt (content-free)
+      recordHealthRDS(
+        'config.rules.export',
+        {},
+        'allow',
+        [
+          `estate:${estateRows.length}`, 
+          `deed:${deedRows.length}`, 
+          `health:${healthRows.length}`, 
+          `counties:${countyRows.length}`, 
+          `sha256:${hash.substring(0, 16)}`
+        ]
+      );
+
+      setLog(`✅ Exported rules successfully!\n\nCounts:\n- Estate rules: ${estateRows.length}\n- Deed rules: ${deedRows.length}\n- Health rules: ${healthRows.length}\n- County metadata: ${countyRows.length}\n\nSHA256: ${hash}\n\nFiles downloaded:\n- rules_export_${dateTag}.json (pretty)\n- rules_export_${dateTag}.min.json (minified)\n- CSV files for each rule type`);
+
+    } catch (error: any) {
+      setLog(`❌ Export failed: ${error.message}`);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const counts = {
+    estate: summarize(ESTATE_RULES),
+    deed: summarize(DEED_RULES),
+    health: summarize(HEALTH_RULES),
+    counties: summarize(COUNTY_META)
+  };
+
+  return (
+    <div className="container mx-auto max-w-4xl p-6 space-y-6">
+      <div>
+        <h1 className="text-3xl font-bold">Rules Export</h1>
+        <p className="text-muted-foreground mt-2">
+          Download the current in-memory rules as JSON (pretty + minified) and CSV files for analysis.
+          Commit the JSON to source control after review for permanence.
+        </p>
+      </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Download className="h-5 w-5" />
+            Export Current Rules
+          </CardTitle>
+          <CardDescription>
+            Downloads all rule configurations currently loaded in memory
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="text-center p-3 bg-muted/50 rounded-lg">
+              <div className="text-2xl font-bold text-primary">{counts.estate}</div>
+              <div className="text-sm text-muted-foreground">Estate Rules</div>
+            </div>
+            <div className="text-center p-3 bg-muted/50 rounded-lg">
+              <div className="text-2xl font-bold text-primary">{counts.deed}</div>
+              <div className="text-sm text-muted-foreground">Deed Rules</div>
+            </div>
+            <div className="text-center p-3 bg-muted/50 rounded-lg">
+              <div className="text-2xl font-bold text-primary">{counts.health}</div>
+              <div className="text-sm text-muted-foreground">Health Rules</div>
+            </div>
+            <div className="text-center p-3 bg-muted/50 rounded-lg">
+              <div className="text-2xl font-bold text-primary">{counts.counties}</div>
+              <div className="text-sm text-muted-foreground">Counties</div>
+            </div>
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-4">
+            <Button 
+              onClick={doExport} 
+              disabled={loading}
+              className="flex items-center gap-2"
+            >
+              <Download className="h-4 w-4" />
+              {loading ? 'Exporting...' : 'Export All Rules (JSON + CSV)'}
+            </Button>
+          </div>
+
+          <div className="text-sm text-muted-foreground space-y-1">
+            <div className="flex items-center gap-2">
+              <FileJson className="h-4 w-4" />
+              JSON files: Pretty formatted and minified versions
+            </div>
+            <div className="flex items-center gap-2">
+              <FileSpreadsheet className="h-4 w-4" />
+              CSV files: Separate files for each rule type for quick analysis
+            </div>
+          </div>
+
+          {log && (
+            <div className="mt-4 p-4 bg-muted rounded-lg">
+              <pre className="text-xs whitespace-pre-wrap font-mono">{log}</pre>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
