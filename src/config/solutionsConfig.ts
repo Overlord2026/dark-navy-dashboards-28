@@ -17,7 +17,7 @@ export const SOLUTIONS_CONFIG: SolutionConfig[] = [
   },
   {
     key: "lending",
-    label: "Lending",
+    label: "Lending", 
     route: "/solutions/lending"
   },
   {

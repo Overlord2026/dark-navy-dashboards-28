@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useNavigate } from 'react-router-dom';
 import { Play, Users, TrendingUp, Calculator, Shield, Receipt, FileText, Heart, CheckCircle, Award } from 'lucide-react';
-import { CATALOG_CATEGORIES } from '@/data/catalogTools';
+import { CATALOG_CATEGORIES, CATALOG_TOOLS } from '@/data/catalogTools';
 import { SOLUTIONS_CONFIG } from '@/config/solutionsConfig';
 import SEOHead from '@/components/seo/SEOHead';
 import ShareButton from '@/components/ui/ShareButton';
@@ -92,6 +92,18 @@ const SolutionsPage: React.FC = () => {
                 if (!category) return null;
                 
                 const IconComponent = iconMap[category.icon as keyof typeof iconMap] || FileText;
+                const categoryTools = CATALOG_TOOLS.filter(tool => 
+                  tool.solutions.includes(solution.key as any)
+                ).slice(0, 4);
+                
+                const benefits = {
+                  investments: "Build wealth with professional-grade planning tools",
+                  annuities: "Secure lifetime income with transparent guidance", 
+                  insurance: "Protect what matters with smart analysis",
+                  tax: "Keep more of what you earn with proactive planning",
+                  estate: "Preserve and transfer wealth efficiently",
+                  lending: "Access capital when you need it most"
+                };
                 
                 return (
                   <Card 
@@ -104,11 +116,22 @@ const SolutionsPage: React.FC = () => {
                         <IconComponent className="w-8 h-8 text-primary" />
                       </div>
                       <CardTitle className="text-xl">{category.title}</CardTitle>
-                      <CardDescription className="text-center">
-                        {category.description}
+                      <CardDescription className="text-center mb-4">
+                        {benefits[solution.key as keyof typeof benefits] || category.description}
                       </CardDescription>
+                      <div className="text-xs text-muted-foreground">
+                        {categoryTools.length} tools available
+                      </div>
                     </CardHeader>
                     <CardContent>
+                      <div className="space-y-3 mb-4">
+                        {categoryTools.slice(0, 2).map((tool) => (
+                          <div key={tool.key} className="text-xs text-left">
+                            <div className="font-medium">{tool.label}</div>
+                            <div className="text-muted-foreground truncate">{tool.summary}</div>
+                          </div>
+                        ))}
+                      </div>
                       <Button variant="outline" className="w-full">
                         Explore {category.title}
                       </Button>

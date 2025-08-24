@@ -24,6 +24,11 @@ import { HowItWorks } from '@/pages/HowItWorks';
 import SolutionsPage from '@/pages/SolutionsPage';
 import SolutionCategoryPage from '@/pages/solutions/SolutionCategoryPage';
 import { Annuities } from '@/pages/solutions/Annuities';
+import { SolutionsInvestmentsPage } from '@/pages/solutions/SolutionsInvestmentsPage';
+import { SolutionsInsurancePage } from '@/pages/solutions/SolutionsInsurancePage';
+import { SolutionsLendingPage } from '@/pages/solutions/SolutionsLendingPage';
+import { SolutionsTaxPage } from '@/pages/solutions/SolutionsTaxPage';
+import { SolutionsEstatePage } from '@/pages/solutions/SolutionsEstatePage';
 import { OnboardingFlow } from '@/pages/OnboardingFlow';
 import QACoverage from '@/pages/admin/QACoverage';
 import ReadyCheck from '@/pages/admin/ReadyCheck';
@@ -70,8 +75,13 @@ function App() {
             {/* Public Pages - Flag Protected */}
             {getFlag('PUBLIC_DISCOVER_ENABLED') && <Route path="/discover" element={<Discover />} />}
             <Route path="/how-it-works" element={<HowItWorks />} />
-            {getFlag('SOLUTIONS_ENABLED') && <Route path="/solutions" element={<SolutionsHub />} />}
+            {getFlag('SOLUTIONS_ENABLED') && <Route path="/solutions" element={<SolutionsPage />} />}
             {getFlag('SOLUTIONS_ENABLED') && <Route path="/solutions/annuities" element={<Annuities />} />}
+            {getFlag('SOLUTIONS_ENABLED') && <Route path="/solutions/investments" element={<SolutionsInvestmentsPage />} />}
+            {getFlag('SOLUTIONS_ENABLED') && <Route path="/solutions/insurance" element={<SolutionsInsurancePage />} />}
+            {getFlag('SOLUTIONS_ENABLED') && <Route path="/solutions/lending" element={<SolutionsLendingPage />} />}
+            {getFlag('SOLUTIONS_ENABLED') && <Route path="/solutions/tax" element={<SolutionsTaxPage />} />}
+            {getFlag('SOLUTIONS_ENABLED') && <Route path="/solutions/estate" element={<SolutionsEstatePage />} />}
             {getFlag('SOLUTIONS_ENABLED') && <Route path="/solutions/:solutionKey" element={<SolutionCategoryPage />} />}
             
             {/* NIL Public Pages */}

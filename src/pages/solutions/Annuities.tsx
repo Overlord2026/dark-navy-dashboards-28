@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Play, Calculator, FileText, Award, Shield, CheckCircle, Upload, AlertTriangle, BookOpen } from 'lucide-react';
+import ToolGate from '@/components/ToolGate';
 import { CATALOG_TOOLS } from '@/data/catalogTools';
 import { DemoLauncher } from '@/components/discover/DemoLauncher';
 import ShareButton from '@/components/ui/ShareButton';
@@ -83,27 +84,69 @@ export function Annuities() {
         </div>
       </section>
 
-      {/* Main Content - Simplified for time */}
+      {/* Annuities Sections */}
       <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { title: 'Education', icon: BookOpen, description: 'Learn SPIA, DIA, MYGA, FIA, VA types' },
-              { title: 'Calculators', icon: Calculator, description: 'Income projections and comparisons' },
-              { title: 'Review', icon: FileText, description: 'Upload proposals for suitability checks' },
-              { title: 'Index', icon: Award, description: 'Fiduciary product shortlist' }
+              { title: 'Education', icon: BookOpen, description: 'Learn SPIA, DIA, MYGA, FIA, VA types', toolKey: 'annuities-education' },
+              { title: 'Calculators', icon: Calculator, description: 'Income projections and comparisons', toolKey: 'annuities-calcs' },
+              { title: 'Review', icon: FileText, description: 'Upload proposals for suitability checks', toolKey: 'annuities-review' },
+              { title: 'Index', icon: Award, description: 'Fiduciary product shortlist', toolKey: 'annuities-index' }
             ].map((section) => (
-              <Card key={section.title} className="text-center">
-                <CardHeader>
-                  <section.icon className="w-12 h-12 mx-auto text-primary mb-4" />
-                  <CardTitle>{section.title}</CardTitle>
-                  <CardDescription>{section.description}</CardDescription>
+              <ToolGate key={section.title} toolKey={section.toolKey}>
+                {({onClick}) => (
+                  <Card 
+                    className="text-center cursor-pointer hover:shadow-lg transition-all duration-200"
+                    onClick={onClick}
+                    data-tool-card={section.toolKey}
+                  >
+                    <CardHeader>
+                      <section.icon className="w-12 h-12 mx-auto text-primary mb-4" />
+                      <CardTitle>{section.title}</CardTitle>
+                      <CardDescription>{section.description}</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <Button className="w-full">Open {section.title}</Button>
+                    </CardContent>
+                  </Card>
+                )}
+              </ToolGate>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Suitability Smart Checks */}
+      <section className="py-16 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold mb-4">Suitability Smart Checks</h2>
+            <p className="text-lg text-muted-foreground">
+              Automated compliance checks with proof documentation for every recommendation
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto">
+            {suitabilityChecks.map((check, index) => (
+              <Card key={index}>
+                <CardHeader className="pb-2">
+                  <div className="flex items-center gap-3">
+                    <check.icon className="w-5 h-5 text-primary" />
+                    <CardTitle className="text-sm">{check.factor}</CardTitle>
+                  </div>
                 </CardHeader>
                 <CardContent>
-                  <Button className="w-full">Coming Soon</Button>
+                  <CardDescription className="text-xs">{check.description}</CardDescription>
                 </CardContent>
               </Card>
             ))}
+          </div>
+          
+          <div className="text-center mt-8">
+            <Button size="lg">
+              Start Suitability Review
+            </Button>
           </div>
         </div>
       </section>
