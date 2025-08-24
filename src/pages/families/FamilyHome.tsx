@@ -3,7 +3,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { getWorkspaceTools } from '@/services/workspaceTools';
+import { getWorkspaceTools } from '@/lib/workspaceTools';
 import { ToolCard } from '@/components/tools/ToolCard';
 import { Shield, Users, FileText, Calculator, Activity, Lock, TrendingUp, Receipt } from 'lucide-react';
 import familyToolsConfig from '@/config/familyTools.json';

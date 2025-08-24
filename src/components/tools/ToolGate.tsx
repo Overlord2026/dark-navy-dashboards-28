@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTools } from '@/contexts/ToolsContext';
 import { InstallModal } from '@/components/tools/InstallModal';
-import { getWorkspaceTools } from '@/services/workspaceTools';
+import { getWorkspaceTools } from '@/lib/workspaceTools';
 
 interface ToolGateProps {
   toolKey: string;

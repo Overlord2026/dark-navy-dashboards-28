@@ -14,7 +14,7 @@ import { routeExists } from '@/tools/routeMap';
 import { CATALOG_TOOLS } from '@/data/catalogTools';
 import familyToolsConfig from '@/config/familyTools.json';
 import nilToolsConfig from '@/config/nilTools.json';
-import { getWorkspaceTools, installTool } from '@/services/workspaceTools';
+import { getWorkspaceTools, installTool } from '@/lib/workspaceTools';
 import { useToast } from '@/hooks/use-toast';
 
 const PUBLIC_ROUTES = [

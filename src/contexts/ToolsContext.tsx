@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import toolRegistry from '@/config/toolRegistry.json';
-import { getWorkspaceTools, isInstalled, installTool as installWorkspaceTool, setPersona, setSegment } from '@/services/workspaceTools';
+import { getWorkspaceTools, isInstalled, installTool as installWorkspaceTool, setPersona } from '@/lib/workspaceTools';
 
 export interface ToolRegistryItem {
   key: string;

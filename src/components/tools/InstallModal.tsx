@@ -5,8 +5,8 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { Sparkles, Eye, X } from 'lucide-react';
-import { installTool } from '@/services/workspaceTools';
-import { getWorkspaceTools } from '@/services/workspaceTools';
+import { installTool } from '@/lib/workspaceTools';
+import { getWorkspaceTools } from '@/lib/workspaceTools';
 import { useToast } from '@/hooks/use-toast';
 import type { ToolRegistryItem } from '@/contexts/ToolsContext';
 
