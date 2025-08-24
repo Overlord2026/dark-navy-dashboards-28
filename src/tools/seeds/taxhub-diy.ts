@@ -5,46 +5,50 @@
 
 export default async function seedTaxhubDiy() {
   try {
-    // Create mock proof slips for the taxhub DIY tool
+    // Create mock proof slips for the TaxHub DIY tool
     const proofSlips = [
       {
-        id: `th-${Date.now()}-1`,
-        type: 'Tax Strategy Analysis',
+        id: `tax-${Date.now()}-1`,
+        type: 'Tax Scenario',
         tool: 'taxhub-diy',
         timestamp: new Date().toISOString(),
         anchored: true,
         data: {
-          taxYear: 2024,
-          estimatedSavings: 8500,
-          strategiesApplied: ['Roth Conversion', 'Tax-Loss Harvesting', 'HSA Maximization'],
-          riskLevel: 'Conservative'
+          scenario: 'Roth conversion optimization',
+          currentYear: 2024,
+          bracketAnalysis: '22% → 12%',
+          conversionAmount: 75000,
+          taxSavings: 7500,
+          recommendation: 'Proceed with conversion'
         }
       },
       {
-        id: `th-${Date.now()}-2`,
-        type: 'Deduction Optimization',
+        id: `tax-${Date.now()}-2`,
+        type: 'Step Receipt',
         tool: 'taxhub-diy',
         timestamp: new Date(Date.now() - 1800000).toISOString(), // 30 min ago
         anchored: true,
         data: {
-          standardDeduction: 27700,
-          itemizedDeductions: 31200,
-          recommendation: 'Itemize - save $3,500',
-          charitableGiving: 12000,
-          stateLocalTax: 10000
+          step: 'Step 3: Loss harvesting',
+          action: 'Realized losses',
+          amount: 12500,
+          taxBenefit: 3125,
+          carryforward: 8000,
+          status: 'Completed'
         }
       },
       {
-        id: `th-${Date.now()}-3`,
-        type: 'Quarterly Planning',
+        id: `tax-${Date.now()}-3`,
+        type: 'Multi-Year Plan',
         tool: 'taxhub-diy',
-        timestamp: new Date(Date.now() - 10800000).toISOString(), // 3 hours ago
+        timestamp: new Date(Date.now() - 3600000).toISOString(), // 1 hour ago
         anchored: false,
         data: {
-          quarter: 'Q1 2024',
-          estimatedPayments: 15000,
-          withholdings: 45000,
-          projectedRefund: 2100
+          years: '2024-2028',
+          totalSavings: 45000,
+          strategies: 4,
+          riskLevel: 'Conservative',
+          reviewed: true
         }
       }
     ];

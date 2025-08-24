@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Play } from 'lucide-react';
 import { E2EDemoStepper, E2EDemo } from './E2EDemoStepper';
-import { seedLeads } from '@/tools/seeds/leads';
-import { seedOnboarding } from '@/tools/seeds/onboarding';
-import { seedRoadmap } from '@/tools/seeds/roadmap';
-import { seedProposalReport } from '@/tools/seeds/proposal-report';
-import { seedSupervisorDashboard } from '@/tools/seeds/supervisor-dashboard';
+import seedLeads from '@/tools/seeds/leads';
+import seedOnboarding from '@/tools/seeds/onboarding';
+import seedRoadmap from '@/tools/seeds/roadmap';
+import seedProposalReport from '@/tools/seeds/proposal-report';
+import seedSupervisorDashboard from '@/tools/seeds/supervisor-dashboard';
 
 const advisorDemo: E2EDemo = {
   id: 'advisor-practice',
@@ -19,7 +19,7 @@ const advisorDemo: E2EDemo = {
       description: 'Capture new prospect information and track pipeline status',
       toolKey: 'leads',
       route: '/advisor/leads',
-      seedFunction: seedLeads,
+      seedFunction: async () => { await seedLeads(); },
       duration: 6
     },
     {
@@ -28,7 +28,7 @@ const advisorDemo: E2EDemo = {
       description: 'Complete intake process with document collection and verification',
       toolKey: 'onboarding',
       route: '/advisor/onboarding',
-      seedFunction: seedOnboarding,
+      seedFunction: async () => { await seedOnboarding(); },
       duration: 8
     },
     {
@@ -37,7 +37,7 @@ const advisorDemo: E2EDemo = {
       description: 'Generate comprehensive financial plan with scenario modeling',
       toolKey: 'roadmap',
       route: '/advisor/roadmap',
-      seedFunction: seedRoadmap,
+      seedFunction: async () => { await seedRoadmap(); },
       duration: 10
     },
     {
@@ -46,7 +46,7 @@ const advisorDemo: E2EDemo = {
       description: 'Create client-ready proposal with investment recommendations',
       toolKey: 'proposal-report',
       route: '/advisor/proposals',
-      seedFunction: seedProposalReport,
+      seedFunction: async () => { await seedProposalReport(); },
       duration: 8
     },
     {
@@ -55,7 +55,7 @@ const advisorDemo: E2EDemo = {
       description: 'Generate compliance pack for supervisory review',
       toolKey: 'supervisor-dashboard',
       route: '/advisor/supervision',
-      seedFunction: seedSupervisorDashboard,
+      seedFunction: async () => { await seedSupervisorDashboard(); },
       duration: 5
     }
   ],

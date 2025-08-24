@@ -17,7 +17,7 @@ const familyRetireeDemo: E2EDemo = {
       description: 'Analyze optimal claiming strategies for maximum lifetime benefits',
       toolKey: 'social-security',
       route: '/family/social-security',
-      seedFunction: seedSocialSecurity,
+      seedFunction: async () => { await seedSocialSecurity(); },
       duration: 8
     },
     {
@@ -26,7 +26,7 @@ const familyRetireeDemo: E2EDemo = {
       description: 'Calculate required minimum distributions and tax implications',
       toolKey: 'rmd-check', 
       route: '/family/rmd-check',
-      seedFunction: seedRmdCheck,
+      seedFunction: async () => { await seedRmdCheck(); },
       duration: 8
     },
     {
@@ -59,7 +59,7 @@ const familyRetireeDemo: E2EDemo = {
       description: 'Securely store important estate planning documents',
       toolKey: 'wealth-vault',
       route: '/family/vault',
-      seedFunction: seedWealthVault,
+      seedFunction: async () => { await seedWealthVault(); },
       duration: 6
     }
   ],
