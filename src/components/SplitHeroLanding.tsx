@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { BFOHeader } from '@/components/site/BFOHeader';
 import { BrandedFooter } from '@/components/ui/BrandedFooter';
-import { analytics } from '@/lib/analytics';
+import analytics from '@/lib/analytics';
 
 export const SplitHeroLanding: React.FC = () => {
   const handleFamilyClick = () => {

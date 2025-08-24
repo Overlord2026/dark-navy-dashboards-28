@@ -299,6 +299,13 @@ export const router = createBrowserRouter([
     })
   },
   {
+    path: "/supervisor",
+    element: React.createElement(() => {
+      const { default: SupervisorHomePage } = require('./pages/supervisor/SupervisorHomePage');
+      return React.createElement(SupervisorHomePage);
+    })
+  },
+  {
     path: "/advisor/leads",
     element: React.createElement(() => {
       const { ProLeadsPage } = require('./pages/pro/ProLeadsPage');

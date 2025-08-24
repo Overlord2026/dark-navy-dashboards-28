@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { analytics } from '@/lib/analytics';
+import analytics from '@/lib/analytics';
 import { supabase } from '@/integrations/supabase/client';
 
 export default function ConsentModal({openFor}:{openFor:'calculators_advanced'}) {
