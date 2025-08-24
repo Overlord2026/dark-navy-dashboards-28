@@ -38,7 +38,11 @@ export const analytics = {
   trackFamilyOnboardingStart: (properties?: Record<string, any>) => analytics.track('family_onboarding_start', properties),
   trackFamilySegmentSelection: (segment: string, properties?: Record<string, any>) => analytics.track('family_segment_selection', { segment, ...properties }),
   trackFamilyGoalsSelection: (goals: string[], properties?: Record<string, any>) => analytics.track('family_goals_selection', { goals, ...properties }),
-  trackFamilyOnboardingComplete: (properties?: Record<string, any>) => analytics.track('family_onboarding_complete', properties)
+  trackFamilyOnboardingComplete: (properties?: Record<string, any>) => analytics.track('family_onboarding_complete', properties),
+  // E2E Demo tracking
+  trackDemoE2EStart: (name: string, properties?: Record<string, any>) => analytics.track('demo.e2e.start', { name, ...properties }),
+  trackDemoE2EStep: (name: string, toolKey: string, properties?: Record<string, any>) => analytics.track('demo.e2e.step', { name, toolKey, ...properties }),
+  trackDemoE2EComplete: (name: string, properties?: Record<string, any>) => analytics.track('demo.e2e.complete', { name, ...properties })
 };
 
 // Named exports for compatibility

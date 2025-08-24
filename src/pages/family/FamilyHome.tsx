@@ -26,6 +26,7 @@ import { cn } from '@/lib/utils';
 import { InviteModal } from '@/components/modals/InviteModal';
 import { UploadModal } from '@/components/modals/UploadModal';
 import { ReceiptsModal } from '@/components/modals/ReceiptsModal';
+import { FamilyE2EDemo } from '@/components/demos/FamilyE2EDemo';
 
 type FamilySegment = 'aspiring' | 'retirees';
 type ModalType = 'invite' | 'upload' | 'receipts' | 'none';
@@ -258,16 +259,7 @@ export function FamilyHome() {
               </div>
               
               <div className="flex items-center gap-2">
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={handleDemoOpen}
-                  className="min-h-[44px]"
-                  aria-label={`Open 60-second demo for ${segmentTitle.toLowerCase()} workspace`}
-                >
-                  <Play className="w-4 h-4 mr-2" aria-hidden="true" />
-                  Open 60-sec demo
-                </Button>
+                <FamilyE2EDemo className="min-h-[44px]" />
                 <Button 
                   variant="ghost" 
                   size="sm" 

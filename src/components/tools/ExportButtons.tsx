@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Download, FileArchive, FileText } from 'lucide-react';
 import { trackExportClick } from '@/lib/analytics';
-import { toast } from 'sonner';
+import { toast } from '@/hooks/use-toast';
 
 interface ExportButtonsProps {
   exports: {
@@ -29,7 +29,10 @@ export const ExportButtons: React.FC<ExportButtonsProps> = ({
       onExport(type);
     } else {
       // Default export behavior
-      toast.success(`${type.toUpperCase()} export started`);
+      toast({
+        title: `${type.toUpperCase()} export started`,
+        description: 'Your export is being prepared'
+      });
     }
   };
 

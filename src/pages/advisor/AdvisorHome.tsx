@@ -25,6 +25,7 @@ import {
   Scale,
   Briefcase
 } from 'lucide-react';
+import { AdvisorE2EDemo } from '@/components/demos/AdvisorE2EDemo';
 
 interface ProofSlip {
   id: string;
@@ -191,15 +192,7 @@ export default function AdvisorHome() {
           </div>
           
           <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleOpenDemo}
-              className="flex items-center gap-2"
-            >
-              <Play className="w-4 h-4" />
-              Workflow Demo
-            </Button>
+            <AdvisorE2EDemo className="min-h-[44px]" />
             <Button
               variant="outline"
               size="sm"
