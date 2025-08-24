@@ -217,7 +217,16 @@ export default function RulesExport() {
           Download the current in-memory rules as JSON (pretty + minified) and CSV files for analysis.
           Commit the JSON to source control after review for permanence.
         </p>
-      </div>
+          </div>
+
+          <div className="text-sm">
+            <a 
+              href="/admin/rules-replace-county" 
+              className="text-primary hover:text-primary/80 underline"
+            >
+              Replace runtime COUNTY_META from uploaded TS/JSON →
+            </a>
+          </div>
 
       <Card>
         <CardHeader>

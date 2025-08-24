@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Settings, Database, FileText, Users, Plus, Shield, Activity, Download } from "lucide-react";
+import { Settings, Database, FileText, Users, Plus, Shield, Activity, Download, Upload } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
 
 export default function AdminPanel() {
@@ -50,6 +50,13 @@ export default function AdminPanel() {
       icon: Download,
       route: '/admin/rules-export',
       color: 'text-green-600'
+    },
+    {
+      title: 'Replace County Data',
+      description: 'Upload TypeScript files to replace runtime county metadata',
+      icon: Upload,
+      route: '/admin/rules-replace-county',
+      color: 'text-purple-600'
     },
     {
       title: 'County Quick Add',
