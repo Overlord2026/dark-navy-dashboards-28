@@ -22,7 +22,7 @@ export async function renderDeedPdf(
   const pdfContent = await generatePdf(content, {
     title: `${kind} Deed`,
     margins: { top: 72, bottom: 72, left: 72, right: 72 }, // 1 inch margins
-    ...rules.marginRules && { customMargins: rules.marginRules }
+    ...(rules.marginRules && { customMargins: rules.marginRules })
   });
   
   return new Uint8Array(pdfContent);
@@ -99,7 +99,7 @@ function getDeedTemplate(kind: string): string {
 }
 
 function addNotaryBlock(content: string, rules: RecordingRule): string {
-  if (!rules.notary) return content;
+  if (!rules.notaryRequired) return content;
   
   const notaryBlock = `
     State of {{state_code}}
@@ -117,12 +117,12 @@ function addNotaryBlock(content: string, rules: RecordingRule): string {
 }
 
 function addWitnessBlock(content: string, rules: RecordingRule): string {
-  if (rules.witnesses === 0) {
+  if (rules.witnessCount === 0) {
     return content.replace('{{witness_block}}', '');
   }
   
   let witnessBlock = '\nWITNESSES:\n';
-  for (let i = 1; i <= rules.witnesses; i++) {
+  for (let i = 1; i <= rules.witnessCount; i++) {
     witnessBlock += `
       Witness ${i}: _________________________  Date: __________
       Print Name: _________________________

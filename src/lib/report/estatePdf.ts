@@ -97,11 +97,11 @@ function replaceTokens(content: string, tokens: Record<string, string>, rule: Es
   });
   
   // Add state-specific execution requirements
-  processed = processed.replace(/{{witnesses}}/g, String(rule.will.witnesses));
-  processed = processed.replace(/{{notary_clause}}/g, rule.will.notary ? 'and notarization' : '');
-  processed = processed.replace(/{{notary_requirement}}/g, rule.rlt.notary ? 'Notarization required' : 'No notarization required');
+  processed = processed.replace(/{{witnesses}}/g, String(rule.will.witnessCount));
+  processed = processed.replace(/{{notary_clause}}/g, rule.will.notaryRequired ? 'and notarization' : '');
+  processed = processed.replace(/{{notary_requirement}}/g, rule.rlt.successorTrusteeRequired ? 'Notarization required' : 'No notarization required');
   processed = processed.replace(/{{execution_requirements}}/g, 
-    rule.poa.notary ? 'Notarization required' : `${rule.will.witnesses} witnesses required`);
+    rule.poa.notaryRequired ? 'Notarization required' : `${rule.will.witnessCount} witnesses required`);
   
   // Add community property notices
   if (rule.communityProperty) {

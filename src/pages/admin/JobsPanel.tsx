@@ -51,7 +51,7 @@ export default function JobsPanel() {
   }, []);
 
   const loadData = () => {
-    setJobs(getJobs());
+    setJobs(getJobs().map(j => ({ ...j, name: j.name || j.key, description: j.description || '' })));
     setJobRuns(getJobRuns());
     setStatus(getJobStatus());
   };

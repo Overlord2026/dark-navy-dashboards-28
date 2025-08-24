@@ -7,4 +7,9 @@ export interface RecordingRule {
   transferTaxRequired: boolean;
   disclosureRequired: boolean;
   titleInsuranceRecommended: boolean;
+  marginRules?: { top: number; bottom: number; left: number; right: number };
+  notary?: boolean;
+  witnesses?: number;
+  todAvailable?: boolean;
+  ladyBirdAvailable?: boolean;
 }

@@ -72,4 +72,8 @@ export function useEstateRules() {
   return { ESTATE_RULES, getEstateRule };
 }
 
-export type { HealthcareRule } from '../states/healthRules';
+export type { HealthcareRule } from './types';
+
+export function useHealthcareRules() {
+  return { ESTATE_RULES, getEstateRule };
+}

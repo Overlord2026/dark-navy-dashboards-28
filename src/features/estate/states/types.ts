@@ -4,10 +4,13 @@ export interface EstateRule {
     required: boolean;
     witnessCount: number;
     notaryRequired: boolean;
+    witnesses?: number;
+    notary?: boolean;
   };
   rlt: {
     allowed: boolean;
     successorTrusteeRequired: boolean;
+    notary?: boolean;
   };
   pourOver: {
     required: boolean;
@@ -17,6 +20,8 @@ export interface EstateRule {
     required: boolean;
     notaryRequired: boolean;
     durabilityRequired: boolean;
+    notary?: boolean;
+    witnesses?: number;
   };
   healthcarePoa: {
     required: boolean;
@@ -37,4 +42,37 @@ export interface EstateRule {
     required: string[];
   };
   fundingRequirements: string[];
+  communityProperty?: boolean;
+  probateNotes?: string[];
+  todPodAllowed?: boolean;
+  deedPracticeNote?: string;
+}
+
+export interface HealthcareRule {
+  state: string;
+  healthcarePoa: {
+    required: boolean;
+    notaryRequired: boolean;
+    witnessCount: number;
+  };
+  advanceDirective: {
+    required: boolean;
+    witnessCount: number;
+    notaryRequired: boolean;
+  };
+  hipaa: {
+    required: boolean;
+  };
+  mentalHealthAdvanceDirective?: {
+    allowed: boolean;
+    requirements: string[];
+  };
+  witnesses?: number;
+  notaryRequired?: boolean;
+  surrogateTerminology?: string[];
+  notarizationText?: string;
+  witnessEligibility?: string[];
+  specialNotes?: string[];
+  remoteNotaryAllowed?: boolean;
+  healthcareForms?: string[];
 }
