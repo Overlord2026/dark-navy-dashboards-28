@@ -54,11 +54,28 @@ export function track(event: string, props?: AnalyticsProps) {
   analytics.track(event, props);
 }
 
-// Legacy export helpers for backward compatibility
-export function trackExportClick(format: string) {
-  analytics.track('export.click', { format });
+/**
+ * Standardized export event helper.
+ * kind: 'csv' | 'zip' | 'pdf' | 'json' | 'other'
+ * props: e.g., { toolKey, rows, bytes, persona }
+ */
+export function trackExportClick(
+  kind: 'csv' | 'zip' | 'pdf' | 'json' | 'other',
+  props?: AnalyticsProps
+) {
+  analytics.track('export.click', { kind, ...(props || {}) });
 }
 
+// Initialize analytics (no-op for shim)
+export function initializeAnalytics() {
+  // Analytics is already initialized via the resolveRuntime() call
+  // This is just for compatibility with existing main.tsx
+  if (import.meta.env.DEV) {
+    console.debug('[analytics] Analytics initialized via shim');
+  }
+}
+
+// Legacy export helpers for backward compatibility  
 export function trackPageView(page: string, props?: AnalyticsProps) {
   analytics.track('page.view', { page, ...props });
 }
