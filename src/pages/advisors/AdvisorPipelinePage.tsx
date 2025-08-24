@@ -12,7 +12,7 @@ import {
   Clock
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { emitReceipt } from '@/lib/analytics';
+import { recordDecisionRDS } from '@/features/pro/compliance/DecisionTracker';
 
 interface PipelineStage {
   id: string;
@@ -81,21 +81,26 @@ export function AdvisorPipelinePage() {
       lastContact: '2024-01-12',
       daysInStage: 7
     }
-  ];
+  ]);
 
   const handleStageChange = async (prospectId: string, newStage: string, reasons: string[] = []) => {
     try {
       const prospect = prospects.find(p => p.id === prospectId);
       if (!prospect) return;
 
-      await emitReceipt('Decision-RDS', {
-        action: 'pipeline.stage_change',
-        prospectId,
-        prospectName: prospect.name,
-        fromStage: prospect.stage,
-        toStage: newStage,
-        reasonCodes: reasons.length > 0 ? reasons : ['stage_progression'],
-        prospectValue: prospect.value
+      recordDecisionRDS({
+        action: 'pipeline_stage_change',
+        persona: 'realtor',
+        inputs_hash: `${prospectId}_${prospect.stage}_${newStage}`,
+        reasons: reasons.length > 0 ? reasons : ['stage_progression'],
+        result: 'approve',
+        metadata: {
+          prospect_id: prospectId,
+          prospect_name: prospect.name,
+          from_stage: prospect.stage,
+          to_stage: newStage,
+          prospect_value: prospect.value
+        }
       });
 
       toast({
