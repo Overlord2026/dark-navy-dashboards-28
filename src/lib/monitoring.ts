@@ -11,13 +11,27 @@ const monitor: MonitorLike = (window as any).__MONITOR__ || {
   timing: (name: string, value: number) => console.info('[timing]', name, value)
 };
 
-function toMsg(err: unknown) {
-  if (err instanceof Error) return err.stack || err.message;
-  return typeof err === 'string' ? err : JSON.stringify(err);
+export function logError(msg: string, meta?: Record<string, any>) {
+  monitor.captureMessage(msg);
+  if (meta && Object.keys(meta).length > 0) {
+    console.error('[monitor-meta]', meta);
+  }
 }
 
-export function logError(err: unknown) {
-  monitor.captureMessage(toMsg(err));
+export function logEvent(name: string, meta?: Record<string, any>) {
+  monitor.captureMessage(`[event] ${name}`);
+  if (meta && Object.keys(meta).length > 0) {
+    console.info('[event-meta]', meta);
+  }
+}
+
+// Legacy helper for Error objects
+export function logErrorFromException(err: unknown) {
+  if (err instanceof Error) {
+    logError(err.message, { stack: err.stack });
+  } else {
+    logError(typeof err === 'string' ? err : JSON.stringify(err));
+  }
 }
 
 export function logWarn(msg: unknown) {
@@ -42,11 +56,13 @@ export function timing(name: string, value: number | { value: number }) {
 export const setupErrorMonitoring = () => {
   // Catch unhandled errors
   window.addEventListener('error', (event) => {
-    logError(new Error(event.message));
+    logError(event.message, { stack: event.error?.stack });
   });
 
   // Catch unhandled promise rejections
   window.addEventListener('unhandledrejection', (event) => {
-    logError(new Error(event.reason));
+    logError(String(event.reason), { 
+      stack: event.reason instanceof Error ? event.reason.stack : undefined 
+    });
   });
 };

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useMemo } from 'react';
 import { PersonaSegment, detectPersonaSegment, PERSONA_SEGMENT_CONFIGS } from '@/types/personaSegments';
 import { PersonaType } from '@/types/personas';
 import { analytics } from '@/lib/analytics';
@@ -9,6 +9,14 @@ interface SegmentContextType {
   setPersonaSegment: (persona: PersonaType, segment?: PersonaSegment) => void;
   trackSegmentEvent: (event: string, properties?: Record<string, any>) => void;
 }
+
+// Default no-op tracker to avoid undefined
+const defaultTracker = {
+  currentSegment: 'general' as PersonaSegment,
+  segmentConfig: PERSONA_SEGMENT_CONFIGS.general,
+  setPersonaSegment: () => {},
+  trackSegmentEvent: () => {}
+};
 
 const SegmentContext = createContext<SegmentContextType | undefined>(undefined);
 
@@ -34,13 +42,15 @@ export const SegmentProvider: React.FC<{ children: React.ReactNode }> = ({ child
     });
   };
 
+  const contextValue = useMemo(() => ({
+    currentSegment,
+    segmentConfig,
+    setPersonaSegment,
+    trackSegmentEvent
+  }), [currentSegment, segmentConfig]);
+
   return (
-    <SegmentContext.Provider value={{
-      currentSegment,
-      segmentConfig,
-      setPersonaSegment,
-      trackSegmentEvent
-    }}>
+    <SegmentContext.Provider value={contextValue}>
       {children}
     </SegmentContext.Provider>
   );
@@ -49,7 +59,8 @@ export const SegmentProvider: React.FC<{ children: React.ReactNode }> = ({ child
 export const useSegment = () => {
   const context = useContext(SegmentContext);
   if (context === undefined) {
-    throw new Error('useSegment must be used within a SegmentProvider');
+    console.warn('useSegment used outside SegmentProvider, using default tracker');
+    return defaultTracker;
   }
   return context;
 };
