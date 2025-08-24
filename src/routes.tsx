@@ -53,6 +53,7 @@ import NILAdminAnchors from "./pages/admin/NILAdminAnchors";
 import AthleteHomeDashboard from "./pages/nil/athlete/AthleteHomeDashboard";
 import AgentHomeDashboard from "./pages/nil/agent/AgentHomeDashboard";
 import ReadyCheck from "./pages/admin/ReadyCheck";
+import { QAPlaybookPage } from "./pages/qa/QAPlaybookPage";
 
 // QA pages removed for production
 // All QA routes, checklists, and testing components removed for production security
@@ -672,6 +673,10 @@ export const router = createBrowserRouter([
   {
     path: "/secure-messages",
     element: <SecureMessagesPage />
+  },
+  {
+    path: "/qa-playbook",
+    element: <QAPlaybookPage />
   },
   // QA routes removed for production security
   // 404 catch-all route
