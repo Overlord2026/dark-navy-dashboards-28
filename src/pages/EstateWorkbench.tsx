@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import analytics from '@/lib/analytics';
 import { recordReceipt } from '@/features/receipts/record';
 import { ProofStrip } from '@/components/ui/ProofStrip';
+import { BeneficiaryCenter } from '@/components/estate/BeneficiaryCenter';
 import { buildBinderPack } from '@/features/estate/binder';
 import { makeAuthorityGrantPdf } from '@/lib/report/authorityPdf';
 import type { AuthorityGrant, BeneficiaryMismatch } from '@/features/estate/types';
@@ -277,53 +278,25 @@ Thank you.`;
             </Card>
           </TabsContent>
 
-          <TabsContent value="beneficiary" className="space-y-4">
-            <Card className="p-6">
-              <h3 className="font-semibold mb-4">Beneficiary Analysis</h3>
-              
-              <div className="space-y-4">
-                <div className="flex items-center gap-2 mb-4">
-                  <Badge variant="destructive">1 Mismatch Found</Badge>
-                </div>
-
-                {mismatches.map((mismatch, index) => (
-                  <div key={index} className="border border-amber-200 rounded-lg p-4 bg-amber-50/50">
-                    <div className="flex items-start justify-between">
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-2">
-                          <AlertTriangle className="h-4 w-4 text-amber-600" />
-                          <span className="font-medium">Account: {mismatch.accountId}</span>
-                        </div>
-                        <div className="text-sm space-y-1">
-                          <p><strong>Intent:</strong> {mismatch.intent}</p>
-                          <p><strong>Current:</strong> {mismatch.current}</p>
-                          {mismatch.fixSuggestion && (
-                            <p className="text-amber-700">
-                              <strong>Suggestion:</strong> {mismatch.fixSuggestion}
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                      <Button
-                        onClick={() => handleBeneficiaryFix(mismatch)}
-                        size="sm"
-                        className="ml-4"
-                      >
-                        Apply Fix
-                      </Button>
-                    </div>
-                  </div>
-                ))}
+          <TabsContent value="beneficiary" className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-semibold">Beneficiary Center</h3>
+                <p className="text-sm text-muted-foreground">
+                  Monitor and fix beneficiary designations across accounts
+                </p>
               </div>
-
-              {lastReceiptId && (
-                <ProofStrip
-                  lastReceiptId={lastReceiptId}
-                  anchored={false}
-                  className="mt-4"
-                />
-              )}
-            </Card>
+            </div>
+            
+            <BeneficiaryCenter clientId="current-client-id" />
+            
+            {lastReceiptId && (
+              <ProofStrip
+                lastReceiptId={lastReceiptId}
+                anchored={false}
+                className="mt-4"
+              />
+            )}
           </TabsContent>
 
           <TabsContent value="survivorship" className="space-y-4">

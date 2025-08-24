@@ -18,6 +18,17 @@ jobs.push({
   run: runGuardrailsMonitor 
 });
 
+// Register beneficiary sync job
+import { runBeneficiarySync } from './beneficiary.sync';
+jobs.push({
+  key: 'beneficiary.sync',
+  name: 'Beneficiary Sync',
+  description: 'Sync estate intents vs account beneficiaries and detect mismatches',
+  enabledFlag: 'SYNC_BENEFICIARIES_ENABLED',
+  intervalMs: 7 * 24 * 60 * 60 * 1000, // 7 days
+  run: runBeneficiarySync
+});
+
 /**
  * Register a job with the system
  */
