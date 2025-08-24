@@ -175,3 +175,7 @@ export async function seedRoadmapDemo() {
     receipts: [planReceipt1, planReceipt2],
   };
 }
+
+// Export with both names for compatibility
+export { seedRoadmapDemo as seedRetirementRoadmap };
+export default seedRoadmapDemo;

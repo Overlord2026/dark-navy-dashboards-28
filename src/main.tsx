@@ -18,6 +18,11 @@ emailjs.init(import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'rfbjUYJ8iPHEZaQvx')
 // Initialize analytics
 initializeAnalytics()
 
+// Initialize job system for admin users
+import('@/jobs/sample-jobs').then(() => {
+  console.log('[App] Job system samples loaded');
+}).catch(console.error);
+
 // Register service worker for PWA
 registerServiceWorker()
 

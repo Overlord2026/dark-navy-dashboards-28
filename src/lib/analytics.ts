@@ -40,29 +40,25 @@ function makeNoop(): FamilyOfficeAnalytics {
     group: (id, t) => log('group', id, t),
   };
   // Add all method aliases for legacy callers
-  const addAlias = (methodName: string) => {
-    (client as any)[methodName] = (e: any, p?: any) => client.track(methodName.replace('track', '').toLowerCase(), { event: e, ...p });
-  };
-  
-  addAlias('trackEvent');
-  addAlias('trackPageView');
-  addAlias('trackViralShare');
-  addAlias('trackPersonaClaim');
-  addAlias('trackOnboardingStep');
-  addAlias('trackOnboardingStart');
-  addAlias('trackFeatureUsage');
-  addAlias('trackConversion');
-  addAlias('trackSecurityEvent');
-  addAlias('trackFAQUsage');
-  addAlias('trackShareClick');
-  addAlias('trackShareSuccess');
-  addAlias('trackFamilyTabView');
-  addAlias('trackFamilyQuickAction');
-  addAlias('trackToolCardOpen');
-  addAlias('trackFamilySegmentSelection');
-  addAlias('trackFamilyGoalsSelection');
-  addAlias('trackFamilyOnboardingComplete');
-  addAlias('trackFamilyOnboardingStart');
+  client.trackEvent = (e: string, p?: AnalyticsProps) => client.track(e, p);
+  client.trackPageView = (page: string, props?: AnalyticsProps) => client.track('page_view', { page, ...props });
+  client.trackViralShare = (props?: AnalyticsProps) => client.track('viral_share', props);
+  client.trackPersonaClaim = (props?: AnalyticsProps) => client.track('persona_claim', props);
+  client.trackOnboardingStep = (props?: AnalyticsProps) => client.track('onboarding_step', props);
+  client.trackOnboardingStart = (props?: AnalyticsProps) => client.track('onboarding_start', props);
+  client.trackFeatureUsage = (props?: AnalyticsProps) => client.track('feature_usage', props);
+  client.trackConversion = (props?: AnalyticsProps) => client.track('conversion', props);
+  client.trackSecurityEvent = (props?: AnalyticsProps) => client.track('security_event', props);
+  client.trackFAQUsage = (props?: AnalyticsProps) => client.track('faq_usage', props);
+  client.trackShareClick = (props?: AnalyticsProps) => client.track('share_click', props);
+  client.trackShareSuccess = (props?: AnalyticsProps) => client.track('share_success', props);
+  client.trackFamilyTabView = (props?: AnalyticsProps) => client.track('family_tab_view', props);
+  client.trackFamilyQuickAction = (props?: AnalyticsProps) => client.track('family_quick_action', props);
+  client.trackToolCardOpen = (props?: AnalyticsProps) => client.track('tool_card_open', props);
+  client.trackFamilySegmentSelection = (props?: AnalyticsProps) => client.track('family_segment_selection', props);
+  client.trackFamilyGoalsSelection = (props?: AnalyticsProps) => client.track('family_goals_selection', props);
+  client.trackFamilyOnboardingComplete = (props?: AnalyticsProps) => client.track('family_onboarding_complete', props);
+  client.trackFamilyOnboardingStart = (props?: AnalyticsProps) => client.track('family_onboarding_start', props);
   
   return client;
 }
@@ -123,6 +119,7 @@ export function trackPageView(page: string, props?: AnalyticsProps) {
 
 // Export missing functions for compatibility
 export function emitReceipt() { /* compatibility stub */ }
+export function getReceipts() { /* compatibility stub */ }
 
 // Export BOTH default and named so all imports compile
 export { analytics };

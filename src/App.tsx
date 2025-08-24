@@ -35,6 +35,7 @@ import QACoverage from '@/pages/admin/QACoverage';
 import ReadyCheck from '@/pages/admin/ReadyCheck';
 import { ReadyCheckEnhanced } from '@/pages/admin/ReadyCheckEnhanced';
 import AdminPanel from '@/pages/admin/AdminPanel';
+import JobsPanel from '@/pages/admin/JobsPanel';
 import PublishPanel from '@/pages/admin/PublishPanel';
 import { EnvInspector } from '@/pages/admin/EnvInspector';
 import MarketingPreview from '@/pages/preview/MarketingPreview';
@@ -172,6 +173,7 @@ function App() {
             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/ready-check" element={<ReadyCheck />} />}
             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/ready-check-enhanced" element={<ReadyCheckEnhanced />} />}
             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin" element={<AdminPanel />} />}
+            {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/jobs" element={<JobsPanel />} />}
             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/publish" element={<PublishPanel />} />}
             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/env" element={<EnvInspector />} />}
             

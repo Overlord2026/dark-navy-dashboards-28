@@ -31,3 +31,7 @@ export function getReceiptsByType(type: string): any[] {
 export function clearReceipts(): void {
   localStorage.removeItem('family_receipts');
 }
+
+export function getReceipts(): any[] {
+  return listReceipts();
+}
