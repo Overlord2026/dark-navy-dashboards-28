@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Play } from 'lucide-react';
 import { E2EDemoStepper, E2EDemo } from './E2EDemoStepper';
-import { seedSocialSecurity } from '@/tools/seeds/social-security';
-import { seedRMDCheck } from '@/tools/seeds/rmd-check';
-import { seedWealthVault } from '@/tools/seeds/wealth-vault';
+import seedSocialSecurity from '@/tools/seeds/social-security';
+import seedRmdCheck from '@/tools/seeds/rmd-check';
+import seedWealthVault from '@/tools/seeds/wealth-vault';
 
 const familyRetireeDemo: E2EDemo = {
   id: 'family-retiree',
@@ -26,7 +26,7 @@ const familyRetireeDemo: E2EDemo = {
       description: 'Calculate required minimum distributions and tax implications',
       toolKey: 'rmd-check', 
       route: '/family/rmd-check',
-      seedFunction: seedRMDCheck,
+      seedFunction: seedRmdCheck,
       duration: 8
     },
     {
