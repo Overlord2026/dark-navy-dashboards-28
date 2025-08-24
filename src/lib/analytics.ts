@@ -73,6 +73,14 @@ export function track(eventOrProps:any, maybeProps?:AnalyticsProps) {
   (analytics.track as any)(eventOrProps, maybeProps);
 }
 
+// Initialize function for app startup
+export function initializeAnalytics() {
+  // Analytics initialization logic if needed
+  if (import.meta.env.DEV) {
+    console.debug('[analytics] initialized');
+  }
+}
+
 // Export BOTH default and named
 export { analytics };
 export default analytics;
