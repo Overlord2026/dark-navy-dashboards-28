@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
+import SchemaLocalBusiness from '@/components/seo/SchemaLocalBusiness';
+import { getFlag } from '@/lib/flags';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -150,6 +152,17 @@ export function BrandOnboarding() {
         <meta property="og:type" content="website" />
         <meta property="og:url" content={window.location.href} />
       </Helmet>
+
+      {/* LocalBusiness Schema - Static */}
+      {getFlag('BRAND_PUBLIC_ENABLED') && (
+        <SchemaLocalBusiness
+          name="Brands & Local Businesses — myBFOCFO NIL"
+          url={`${window.location.origin}/start/brand`}
+          logo={`${window.location.origin}/og/brand.png`}
+          category="Marketing"
+          priceRange="$$"
+        />
+      )}
 
       <div className="min-h-screen bg-background">
         <div className="container mx-auto px-4 py-8">

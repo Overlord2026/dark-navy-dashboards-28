@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
+import SchemaLocalBusiness from '@/components/seo/SchemaLocalBusiness';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -93,8 +94,10 @@ export function BrandHub({ segment = 'enterprise' }: BrandHubProps) {
   const location = useLocation();
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
   const [onboardingData, setOnboardingData] = useState<any>(null);
+  const [brandProfile, setBrandProfile] = useState<any>(null);
   
   const isEnterprise = segment === 'enterprise';
+  const isBrandOwner = true; // TODO: Replace with actual auth check
   
   useEffect(() => {
     // Check for onboarding data
@@ -109,7 +112,19 @@ export function BrandHub({ segment = 'enterprise' }: BrandHubProps) {
         description: `Your ${locationState.selectedTemplate.replace('-', ' ')} template is ready to customize.`,
       });
     }
-  }, [location]);
+
+    // Mock brand profile data - replace with actual API call
+    const mockBrandProfile = {
+      name: onboardingData?.businessName || "Sample Brand",
+      logoUrl: null,
+      publicPhone: null,
+      addr: null,
+      publicLinks: [],
+      category: "Marketing",
+      priceRange: "$$"
+    };
+    setBrandProfile(mockBrandProfile);
+  }, [location, onboardingData]);
   
   const segmentTitle = isEnterprise ? 'Enterprise Brand Hub' : 'Local Business Hub';
   const segmentDescription = isEnterprise 
@@ -139,6 +154,24 @@ export function BrandHub({ segment = 'enterprise' }: BrandHubProps) {
         <meta name="description" content={segmentDescription} />
         <meta name="keywords" content="brand campaigns, influencer marketing, FTC compliance, campaign automation" />
       </Helmet>
+
+      {/* LocalBusiness Schema - Dynamic */}
+      {isBrandOwner && brandProfile && (
+        <SchemaLocalBusiness
+          name={brandProfile.name}
+          url={`${window.location.origin}/brand/home`}
+          logo={brandProfile.logoUrl || undefined}
+          telephone={brandProfile.publicPhone || undefined}
+          streetAddress={brandProfile.addr?.street || undefined}
+          addressLocality={brandProfile.addr?.city || undefined}
+          addressRegion={brandProfile.addr?.region || undefined}
+          postalCode={brandProfile.addr?.postal || undefined}
+          addressCountry={brandProfile.addr?.country || "US"}
+          sameAs={brandProfile.publicLinks || []}
+          category={brandProfile.category || "Marketing"}
+          priceRange={brandProfile.priceRange || "$$"}
+        />
+      )}
 
       <div className="min-h-screen bg-background">
         {/* Header */}
