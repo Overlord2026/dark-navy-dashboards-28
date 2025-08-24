@@ -27,7 +27,7 @@ export const PersonaSwitcher: React.FC<PersonaSwitcherProps> = ({
 
   const handleSegmentChange = (value: string) => {
     setFamilySegment(value as any);
-    analytics.trackEvent('nav.persona_selected', { 
+    analytics.track('nav.persona_selected', { 
       segment: value,
       previous_segment: familySegment 
     });
