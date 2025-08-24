@@ -312,6 +312,42 @@ export const router = createBrowserRouter([
       return React.createElement(ProLeadsPage, { persona: 'realtor' });
     })
   },
+  // Pro dashboard routes
+  {
+    path: "/cpa",
+    element: React.createElement(() => {
+      const { ProDashboard } = require('./pages/pro/ProDashboard');
+      return React.createElement(ProDashboard, { persona: 'cpa' });
+    })
+  },
+  {
+    path: "/attorney",
+    element: React.createElement(() => {
+      const { ProDashboard } = require('./pages/pro/ProDashboard');
+      return React.createElement(ProDashboard, { persona: 'attorney' });
+    })
+  },
+  {
+    path: "/insurance",
+    element: React.createElement(() => {
+      const { ProDashboard } = require('./pages/pro/ProDashboard');
+      return React.createElement(ProDashboard, { persona: 'insurance' });
+    })
+  },
+  {
+    path: "/healthcare",
+    element: React.createElement(() => {
+      const { ProDashboard } = require('./pages/pro/ProDashboard');
+      return React.createElement(ProDashboard, { persona: 'healthcare' });
+    })
+  },
+  {
+    path: "/realtor",
+    element: React.createElement(() => {
+      const { ProDashboard } = require('./pages/pro/ProDashboard');
+      return React.createElement(ProDashboard, { persona: 'realtor' });
+    })
+  },
   {
     path: "/advisor/*",
     element: <ComingSoonPage featureName="Advisor Tools" description="Professional advisor management and client service tools." />
