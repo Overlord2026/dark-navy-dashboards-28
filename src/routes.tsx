@@ -292,6 +292,27 @@ export const router = createBrowserRouter([
     })
   },
   {
+    path: "/insurance/leads",
+    element: React.createElement(() => {
+      const { ProLeadsPage } = require('./pages/pro/ProLeadsPage');
+      return React.createElement(ProLeadsPage, { persona: 'insurance' });
+    })
+  },
+  {
+    path: "/healthcare/leads", 
+    element: React.createElement(() => {
+      const { ProLeadsPage } = require('./pages/pro/ProLeadsPage');
+      return React.createElement(ProLeadsPage, { persona: 'healthcare' });
+    })
+  },
+  {
+    path: "/realtor/leads",
+    element: React.createElement(() => {
+      const { ProLeadsPage } = require('./pages/pro/ProLeadsPage');
+      return React.createElement(ProLeadsPage, { persona: 'realtor' });
+    })
+  },
+  {
     path: "/advisor/*",
     element: <ComingSoonPage featureName="Advisor Tools" description="Professional advisor management and client service tools." />
   },

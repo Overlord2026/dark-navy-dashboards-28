@@ -29,11 +29,11 @@ const PERSONA_LABELS = {
 
 const CONSENT_LABELS = {
   advisor: 'I consent to being contacted about financial advisory services and related communications',
-  cpa: 'I consent to being contacted about tax and accounting services and related communications',
-  attorney: 'I consent to being contacted about legal services and related communications',
-  insurance: 'I consent to being contacted about insurance services and related communications',
-  healthcare: 'I consent to being contacted about healthcare services and related communications',
-  realtor: 'I consent to being contacted about real estate services and related communications'
+  cpa: 'I agree to be contacted regarding tax services.',
+  attorney: 'I agree to be contacted regarding legal services; no attorney-client relationship is created by this communication.',
+  insurance: 'I agree to be contacted regarding insurance products; I understand state licensing applies.',
+  healthcare: 'I consent to be contacted about wellness/health services; HIPAA authorization may be required for records.',
+  realtor: 'I agree to be contacted regarding real estate services.'
 };
 
 export function LeadCaptureModal({ open, onOpenChange, persona, onLeadCreated }: LeadCaptureModalProps) {

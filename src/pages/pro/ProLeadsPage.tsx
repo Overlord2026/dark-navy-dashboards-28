@@ -4,6 +4,8 @@ import { Plus, Download } from 'lucide-react';
 import { LeadCaptureModal } from '@/features/pro/lead/LeadCaptureModal';
 import { LeadModel } from '@/features/pro/lead/LeadModel';
 import { ProPersona } from '@/features/pro/types';
+import { ProDashboardNav } from '@/components/pro/ProDashboardNav';
+import { recordExportDecision } from '@/features/pro/compliance/DecisionTracker';
 
 interface ProLeadsPageProps {
   persona: ProPersona;
@@ -12,8 +14,17 @@ interface ProLeadsPageProps {
 export function ProLeadsPage({ persona }: ProLeadsPageProps) {
   const [showCapture, setShowCapture] = useState(false);
   const [leads] = useState(() => LeadModel.getByPersona(persona));
+  const [activeTab, setActiveTab] = useState('leads');
 
   const handleExport = () => {
+    // Record export decision for compliance
+    recordExportDecision({
+      persona,
+      export_type: 'leads',
+      record_count: leads.length,
+      includes_pii: true
+    });
+
     const csv = LeadModel.exportCSV(persona);
     const blob = new Blob([csv], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
@@ -24,8 +35,24 @@ export function ProLeadsPage({ persona }: ProLeadsPageProps) {
     URL.revokeObjectURL(url);
   };
 
+  if (activeTab !== 'leads') {
+    return (
+      <ProDashboardNav 
+        persona={persona}
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+      />
+    );
+  }
+
   return (
     <div className="space-y-6">
+      <ProDashboardNav 
+        persona={persona}
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+      />
+      
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">Lead Management</h1>
         <div className="flex gap-2">

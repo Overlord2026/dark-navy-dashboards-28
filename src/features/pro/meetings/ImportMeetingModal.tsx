@@ -14,6 +14,7 @@ import { recordDecisionRDS } from '../compliance/DecisionTracker';
 import { generateSummaryPDF } from '../vault/summaryPDF';
 import { grantVaultAccess } from '../vault/VaultManager';
 import { FEATURE_FLAGS } from '../config/flags';
+import { getPersonaDisclaimer, getImportSettings } from '../config/persona-settings';
 import { toast } from 'sonner';
 
 interface ImportMeetingModalProps {
@@ -80,6 +81,9 @@ export function ImportMeetingModal({ open, onOpenChange, persona, onMeetingImpor
     setIsImporting(true);
 
     try {
+      // Get persona-specific settings
+      const importSettings = getImportSettings(persona);
+      
       // Parse content based on source
       let parsed;
       switch (formData.source) {
@@ -96,10 +100,28 @@ export function ImportMeetingModal({ open, onOpenChange, persona, onMeetingImpor
       // Generate inputs hash
       const inputs_hash = generateInputsHash(parsed);
 
-      // Determine risks and reasons
-      const reasons = ['meeting_import', 'meeting_summary'];
+      // Determine risks and reasons with persona-specific additions
+      const reasons = ['meeting_import', 'meeting_summary', ...importSettings.additional_reasons];
       if (parsed.action_items.length > 0) reasons.push('action_items');
       if (parsed.risks.length > 0) reasons.push('risk_flag');
+
+      // Add persona-specific risk flags
+      const riskFlags = [...parsed.risks];
+      if (importSettings.risk_flags.length > 0) {
+        // Check for persona-specific risks in content
+        const contentLower = content.toLowerCase();
+        importSettings.risk_flags.forEach(flag => {
+          if (flag === 'privilege_risk' && persona === 'attorney' && contentLower.includes('privilege')) {
+            riskFlags.push('Attorney-client privilege detected');
+          }
+          if (flag === 'phi_exposure' && persona === 'healthcare' && contentLower.includes('patient')) {
+            riskFlags.push('PHI content detected');
+          }
+          if (flag === 'suitability_concern' && persona === 'insurance' && contentLower.includes('replacement')) {
+            riskFlags.push('Insurance replacement discussion');
+          }
+        });
+      }
 
       // Record decision receipt
       const decisionReceipt = recordDecisionRDS({
@@ -109,7 +131,8 @@ export function ImportMeetingModal({ open, onOpenChange, persona, onMeetingImpor
         source: formData.source,
         reasons,
         participants: parsed.participants || [],
-        result: 'approve'
+        result: 'approve',
+        risk_level: riskFlags.length > parsed.risks.length ? 'medium' : 'low'
       });
 
       // Generate summary PDF
@@ -279,6 +302,14 @@ export function ImportMeetingModal({ open, onOpenChange, persona, onMeetingImpor
                 <li>• Proof will be anchored for immutable verification</li>
               )}
             </ul>
+            {getPersonaDisclaimer(persona, 'compliance_banner') && (
+              <div className="mt-3 p-2 bg-yellow-50 border border-yellow-200 rounded text-sm">
+                {getPersonaDisclaimer(persona, 'compliance_banner')}
+              </div>
+            )}
+            <p className="text-xs text-muted-foreground mt-2">
+              {getPersonaDisclaimer(persona, 'meeting_import')}
+            </p>
           </div>
 
           <div className="flex justify-end gap-2 pt-4">
