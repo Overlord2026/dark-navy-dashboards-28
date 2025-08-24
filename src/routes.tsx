@@ -529,6 +529,32 @@ export const router = createBrowserRouter([
     )
   },
   {
+    path: "/medicare/*",
+    element: (
+      <div className="min-h-screen bg-background">
+        <Routes>
+          <Route index element={<Navigate to="home" replace />} />
+          <Route path="home" element={React.createElement(() => {
+            const { default: MedicareHomePage } = require('./pages/medicare/MedicareHomePage');
+            return React.createElement(MedicareHomePage);
+          })} />
+          <Route path="leads" element={React.createElement(() => {
+            const { default: MedicareLeadsPage } = require('./pages/medicare/MedicareLeadsPage');
+            return React.createElement(MedicareLeadsPage);
+          })} />
+          <Route path="soa" element={React.createElement(() => {
+            const { default: MedicareSOAPage } = require('./pages/medicare/MedicareSOAPage');
+            return React.createElement(MedicareSOAPage);
+          })} />
+          <Route path="proof" element={React.createElement(() => {
+            const { default: MedicareProofPage } = require('./pages/medicare/MedicareProofPage');
+            return React.createElement(MedicareProofPage);
+          })} />
+        </Routes>
+      </div>
+    )
+  },
+  {
     path: "/admin/*",
     element: (
       <AdminRoute roles={['admin', 'tenant_admin', 'system_administrator']}>
