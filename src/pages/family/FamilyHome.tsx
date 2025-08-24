@@ -27,6 +27,8 @@ import { InviteModal } from '@/components/modals/InviteModal';
 import { UploadModal } from '@/components/modals/UploadModal';
 import { ReceiptsModal } from '@/components/modals/ReceiptsModal';
 import { FamilyE2EDemo } from '@/components/demos/FamilyE2EDemo';
+import { ReadyBanner } from '@/components/onboarding/ReadyBanner';
+import { useReadyCheck } from '@/hooks/useReadyCheck';
 
 type FamilySegment = 'aspiring' | 'retirees';
 type ModalType = 'invite' | 'upload' | 'receipts' | 'none';
@@ -90,6 +92,7 @@ export function FamilyHome() {
   const [activeTab, setActiveTab] = React.useState<string>('');
   const [activeModal, setActiveModal] = React.useState<ModalType>('none');
   const [inviteType, setInviteType] = React.useState<'advisor' | 'cpa' | 'attorney' | 'professional'>('advisor');
+  const { readiness } = useReadyCheck();
 
   React.useEffect(() => {
     // Get user session
@@ -326,6 +329,15 @@ export function FamilyHome() {
           </section>
 
           <Separator />
+
+          {/* Ready Check Banner */}
+          {readiness && !readiness.ready && (
+            <section>
+              <ReadyBanner readiness={readiness} />
+            </section>
+          )}
+
+          {readiness && !readiness.ready && <Separator />}
 
           {/* Tools Tabs with proper ARIA and focus management */}
           <section aria-labelledby="tools-heading">
