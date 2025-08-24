@@ -83,3 +83,13 @@ export async function updateSessionStatus(sessionId: string, status: ReviewSessi
     created_at: new Date().toISOString()
   } as any);
 }
+
+export async function getAllReviewSessions(): Promise<ReviewSession[]> {
+  // TODO: Implement actual data fetching
+  return [];
+}
+
+export async function signReviewLetter(sessionId: string, attorneyInfo: any): Promise<void> {
+  console.log(`[Review Service] Signing review letter for session ${sessionId}`);
+  // TODO: Implement actual signing logic
+}

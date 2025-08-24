@@ -86,3 +86,19 @@ export function startBackgroundJobs(): void {
     }, job.intervalMs);
   });
 }
+
+export function getJobs() {
+  return jobs;
+}
+
+export function getEnabledJobs() {
+  return jobs.filter(job => import.meta.env[`VITE_${job.enabledFlag}`] === 'true');
+}
+
+export function getJob(jobKey: string) {
+  return jobs.find(j => j.key === jobKey);
+}
+
+export function registerJob(job: JobDefinition) {
+  jobs.push(job);
+}

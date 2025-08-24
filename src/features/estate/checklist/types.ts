@@ -14,12 +14,16 @@ export type ChecklistItemKey =
 
 export type ChecklistStatus = 'COMPLETE' | 'PENDING' | 'NEEDS_ATTENTION' | 'EXPIRED';
 
+export type Origin = 'autofill' | 'manual' | 'notary' | 'erecord' | 'review' | 'esign';
+
 export type ChecklistItem = {
   key: ChecklistItemKey;
   status: ChecklistStatus;
   updatedAt: string;
   reasons?: string[];           // short reason codes (content-free)
   refs?: string[];              // vault ids / hashes (no PII)
+  origin?: Origin;              // NEW: last update source
+  originCount?: Partial<Record<Origin, number>>; // NEW: running counts by origin
 };
 
 export type Checklist = {

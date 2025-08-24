@@ -1,5 +1,7 @@
 import type { EstateRule } from './types';
 
+export type { EstateRule } from './types';
+
 // Conservative estate rule generator
 export function conservativeEstateRule(state: string): EstateRule {
   return {
@@ -65,3 +67,9 @@ for (const state of ALL_STATES_DC) {
 export function getEstateRule(state: string): EstateRule {
   return ESTATE_RULES[state] || conservativeEstateRule(state);
 }
+
+export function useEstateRules() {
+  return { ESTATE_RULES, getEstateRule };
+}
+
+export type { HealthcareRule } from '../states/healthRules';

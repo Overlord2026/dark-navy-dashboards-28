@@ -88,3 +88,17 @@ ${mockData.disclaimerText}
   
   return { bytes, sha256 };
 }
+
+export async function buildReviewLetter(options: any): Promise<{ bytes: Uint8Array; sha256: string }> {
+  // TODO: Implement review letter builder
+  const content = "Review Letter Placeholder";
+  const bytes = new TextEncoder().encode(content);
+  const sha256 = await hash(bytes);
+  return { bytes, sha256 };
+}
+
+export async function applyAttorneyESign(letterBytes: Uint8Array, attorney: any): Promise<{ bytes: Uint8Array; sha256: string }> {
+  // TODO: Implement attorney e-signature
+  const sha256 = await hash(letterBytes);
+  return { bytes: letterBytes, sha256 };
+}

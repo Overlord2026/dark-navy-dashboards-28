@@ -1,5 +1,8 @@
 import type { RecordingRule } from './types';
 
+export type { RecordingRule } from './types';
+export type DeedType = string;
+
 // Conservative deed rule generator
 export function conservativeDeedRule(state: string): RecordingRule {
   return {
@@ -68,4 +71,8 @@ export function canUseDeed(state: string, kind: string): boolean {
 
 export function getDeedRule(state: string): RecordingRule {
   return DEED_RULES[state] || conservativeDeedRule(state);
+}
+
+export function getAvailableDeedTypes(state: string): string[] {
+  return getDeedRule(state).allowed;
 }
