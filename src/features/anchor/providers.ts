@@ -1,12 +1,8 @@
-export type AnchorRef = {
-  merkle_root: string;
-  cross_chain_locator: { chain_id: string; tx_ref: string; ts: number; }[];
-  batch_id?: string;
-  created_at?: string;
-  total_cost_cents?: number;
-  providers_used?: string[];
-  anchors?: { status: string; provider_id: string; tx_ref: string; confirmations?: number; }[];
-};
+import type { AnchorRef } from '../receipts/types';
+
+type AnchorInput = AnchorRef | { cross_chain_locator?: any[] } | null | undefined;
+
+export type { AnchorRef };
 
 export type AnchorResolution = {
   found: boolean;
@@ -45,8 +41,9 @@ export async function anchorBatch(root: string, options?: {
   };
 }
 
-export function acceptNofM(ref: { cross_chain_locator?: any[] } | null, n = 1) {
-  return (ref?.cross_chain_locator?.length || 0) >= n;
+export function acceptNofM(ref: AnchorInput, n = 1): boolean {
+  const list = ref?.cross_chain_locator ?? [];
+  return list.length >= n;
 }
 
 export async function resolveAnchor(root: string): Promise<AnchorResolution> {

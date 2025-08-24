@@ -2,8 +2,13 @@ export interface AnchorRef {
   chain_id?: string;
   tx_ref?: string;
   timestamp?: string;
-  merkle_root?: string;
-  cross_chain_locator: any[];
+  merkle_root: string;
+  cross_chain_locator: { chain_id: string; tx_ref: string; ts: number; }[];
+  batch_id?: string;
+  created_at?: string;
+  total_cost_cents?: number;
+  providers_used?: string[];
+  anchors?: { status: string; provider_id: string; tx_ref: string; confirmations?: number; }[];
 }
 
 export interface Receipt {
