@@ -115,12 +115,41 @@ export function emitReceipt(...args: any[]) {
   analytics.track('receipt.emit', args[0] || {});
 }
 
-// Initialize function for app startup
-export function initializeAnalytics() {
-  // Analytics initialization logic if needed
+export type AnalyticsInitOptions = {
+  // optional hints for future real providers; ignored by the shim
+  writeKey?: string;
+  endpoint?: string;
+  userId?: string;
+  traits?: Record<string, any>;
+};
+
+/**
+ * initializeAnalytics
+ * - If a real analytics client exists on window (window.analytics or window.ANALYTICS), keep it.
+ * - Otherwise, attach the shim client to window.analytics for consistency.
+ * - Optionally call identify() if userId/traits provided.
+ * - Returns the active analytics client.
+ */
+export function initializeAnalytics(opts?: AnalyticsInitOptions) {
+  const w: any = (globalThis as any) || (window as any);
+  // If a runtime client already exists (Segment/Amplitude/etc.), keep it; else attach our shim.
+  if (!w.analytics && !w.ANALYTICS) {
+    w.analytics = analytics; // attach shim so downstream code can rely on window.analytics
+  }
+  // Normalize: ensure trackEvent alias exists
+  if (w.analytics && typeof w.analytics.trackEvent !== 'function' && typeof w.analytics.track === 'function') {
+    w.analytics.trackEvent = (e: string, p?: Record<string, any>) => w.analytics.track(e, p);
+  }
+  // Optional identify on init
+  if (opts?.userId) {
+    w.analytics.identify?.(opts.userId, opts.traits || {});
+  }
+  
   if (import.meta.env.DEV) {
     console.debug('[analytics] initialized');
   }
+  
+  return w.analytics;
 }
 
 // Export BOTH default and named

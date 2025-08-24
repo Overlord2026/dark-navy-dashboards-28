@@ -57,8 +57,10 @@ const PreviewPage = React.lazy(() => import('@/components/PreviewPage'));
 // Estate Planning Components
 const EstateWorkbench = React.lazy(() => import('@/pages/estate/EstateWorkbench'));
 const EstateDIYWizard = React.lazy(() => import('@/pages/estate/EstateDIYWizard'));
+const HealthcareDIYWizard = React.lazy(() => import('@/pages/estate/HealthcareDIYWizard'));
 const AdvisorEstatePage = React.lazy(() => import('@/pages/advisors/AdvisorEstatePage'));
 const AttorneyEstateWorkbench = React.lazy(() => import('@/pages/attorney/AttorneyEstateWorkbench'));
+const HealthcareProWorkbench = React.lazy(() => import('@/pages/attorney/HealthcareProWorkbench'));
 const CPAEstatePage = React.lazy(() => import('@/pages/cpa/CPAEstatePage'));
 
 import FamilyHome from '@/pages/family/Home';
@@ -144,7 +146,7 @@ function App() {
             } />
             <Route path="/estate/healthcare" element={
               <Suspense fallback={<div>Loading...</div>}>
-                <React.lazy(() => import('@/pages/estate/HealthcareDIYWizard')) />
+                <HealthcareDIYWizard />
               </Suspense>
             } />
             <Route path="/advisors/estate" element={
@@ -159,7 +161,7 @@ function App() {
             } />
             <Route path="/attorney/estate/health" element={
               <Suspense fallback={<div>Loading...</div>}>
-                <React.lazy(() => import('@/pages/attorney/HealthcareProWorkbench')) />
+                <HealthcareProWorkbench />
               </Suspense>
             } />
             <Route path="/cpa/estate" element={
