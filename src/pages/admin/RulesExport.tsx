@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Download, FileJson, FileSpreadsheet } from 'lucide-react';
+import { Download, FileJson, FileSpreadsheet, Code } from 'lucide-react';
 import { recordHealthRDS } from '@/features/healthcare/receipts';
 
 // Import rules with fallbacks
@@ -87,6 +87,88 @@ async function downloadCountyTs(countyMeta: any) {
   );
   
   return { hash };
+}
+
+async function downloadTsModule(
+  kind: 'ESTATE'|'DEED'|'HEALTH'|'ALL',
+  body: string,
+  fileName: string,
+  reasonCounts: string[]
+) {
+  const hash = await sha256Hex(body);
+  download(fileName, body, 'text/plain');
+  
+  recordHealthRDS(
+    'config.rules.export.ts',
+    {},
+    'allow',
+    [...reasonCounts, `sha256:${hash.substring(0, 16)}`, `kind:${kind}`]
+  );
+  
+  return hash;
+}
+
+function makeEstateTs(map: any) {
+  const dateIso = new Date().toISOString();
+  const obj = stringifyTs(map);
+  return `// Auto-generated from runtime at ${dateIso}
+// Review with legal counsel before production.
+import type { EstateRule } from '@/features/estate/states/estateRules';
+
+export const ESTATE_RULES: Record<string, EstateRule> = ${obj};
+
+export default ESTATE_RULES;
+`;
+}
+
+function makeDeedTs(map: any) {
+  const dateIso = new Date().toISOString();
+  const obj = stringifyTs(map);
+  return `// Auto-generated from runtime at ${dateIso}
+// Review with legal counsel before production.
+import type { RecordingRule } from '@/features/estate/deeds/stateDeedRules';
+
+export const DEED_RULES: Record<string, RecordingRule> = ${obj};
+
+export default DEED_RULES;
+`;
+}
+
+function makeHealthTs(map: any) {
+  const dateIso = new Date().toISOString();
+  const obj = stringifyTs(map);
+  return `// Auto-generated from runtime at ${dateIso}
+// Review with legal counsel before production.
+import type { HealthcareRule } from '@/features/estate/states/healthRules';
+
+export const HEALTH_RULES: Record<string, HealthcareRule> = ${obj};
+
+export default HEALTH_RULES;
+`;
+}
+
+function makeAllBundleTs(params: {
+  estateTsObj: string;
+  deedTsObj: string;
+  healthTsObj?: string;
+}) {
+  const dateIso = new Date().toISOString();
+  const hImport = params.healthTsObj ? `import type { HealthcareRule } from '@/features/estate/states/healthRules';\n` : '';
+  const hBlock  = params.healthTsObj ? `export const HEALTH_RULES: Record<string, HealthcareRule> = ${params.healthTsObj};\n` : `export const HEALTH_RULES = {} as const;\n`;
+  return `// Auto-generated from runtime at ${dateIso}
+// Combined bundle: ESTATE_RULES, DEED_RULES${params.healthTsObj ? ', HEALTH_RULES' : ''}
+// Review with legal counsel before production.
+
+import type { EstateRule } from '@/features/estate/states/estateRules';
+import type { RecordingRule } from '@/features/estate/deeds/stateDeedRules';
+${hImport}
+export const ESTATE_RULES: Record<string, EstateRule> = ${params.estateTsObj};
+
+export const DEED_RULES: Record<string, RecordingRule> = ${params.deedTsObj};
+
+${hBlock}
+export default { ESTATE_RULES, DEED_RULES, HEALTH_RULES };
+`;
 }
 
 export default function RulesExport() {
@@ -296,18 +378,122 @@ export default function RulesExport() {
             </Button>
           </div>
 
+          {/* TypeScript Module Exports */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <Button
+              variant="secondary"
+              disabled={loading}
+              className="flex items-center gap-2"
+              onClick={async () => {
+                setLoading(true);
+                try {
+                  const ts = makeEstateTs(ESTATE_RULES || {});
+                  const cnt = Object.keys(ESTATE_RULES || {}).length;
+                  const hash = await downloadTsModule('ESTATE', ts, 'ESTATE_RULES.generated.ts', [`estate:${cnt}`]);
+                  setLog((prev) => (prev ? prev + '\n\n' : '') + 
+                    `✅ Exported ESTATE_RULES.generated.ts\n${cnt} states • SHA256: ${hash}`);
+                } catch (error: any) {
+                  setLog((prev) => (prev ? prev + '\n\n' : '') + `❌ Estate export failed: ${error.message}`);
+                } finally {
+                  setLoading(false);
+                }
+              }}
+            >
+              <Code className="h-4 w-4" />
+              Export ESTATE_RULES.ts
+            </Button>
+
+            <Button
+              variant="secondary"
+              disabled={loading}
+              className="flex items-center gap-2"
+              onClick={async () => {
+                setLoading(true);
+                try {
+                  const ts = makeDeedTs(DEED_RULES || {});
+                  const cnt = Object.keys(DEED_RULES || {}).length;
+                  const hash = await downloadTsModule('DEED', ts, 'DEED_RULES.generated.ts', [`deed:${cnt}`]);
+                  setLog((prev) => (prev ? prev + '\n\n' : '') + 
+                    `✅ Exported DEED_RULES.generated.ts\n${cnt} states • SHA256: ${hash}`);
+                } catch (error: any) {
+                  setLog((prev) => (prev ? prev + '\n\n' : '') + `❌ Deed export failed: ${error.message}`);
+                } finally {
+                  setLoading(false);
+                }
+              }}
+            >
+              <Code className="h-4 w-4" />
+              Export DEED_RULES.ts
+            </Button>
+
+            {Object.keys(HEALTH_RULES || {}).length > 0 && (
+              <Button
+                variant="secondary"
+                disabled={loading}
+                className="flex items-center gap-2"
+                onClick={async () => {
+                  setLoading(true);
+                  try {
+                    const ts = makeHealthTs(HEALTH_RULES || {});
+                    const cnt = Object.keys(HEALTH_RULES || {}).length;
+                    const hash = await downloadTsModule('HEALTH', ts, 'HEALTH_RULES.generated.ts', [`health:${cnt}`]);
+                    setLog((prev) => (prev ? prev + '\n\n' : '') + 
+                      `✅ Exported HEALTH_RULES.generated.ts\n${cnt} states • SHA256: ${hash}`);
+                  } catch (error: any) {
+                    setLog((prev) => (prev ? prev + '\n\n' : '') + `❌ Health export failed: ${error.message}`);
+                  } finally {
+                    setLoading(false);
+                  }
+                }}
+              >
+                <Code className="h-4 w-4" />
+                Export HEALTH_RULES.ts
+              </Button>
+            )}
+
+            <Button
+              variant="outline"
+              disabled={loading}
+              className="flex items-center gap-2"
+              onClick={async () => {
+                setLoading(true);
+                try {
+                  const estateObj = stringifyTs(ESTATE_RULES || {});
+                  const deedObj = stringifyTs(DEED_RULES || {});
+                  const healthObj = Object.keys(HEALTH_RULES || {}).length > 0 ? stringifyTs(HEALTH_RULES) : undefined;
+                  const bundle = makeAllBundleTs({ estateTsObj: estateObj, deedTsObj: deedObj, healthTsObj: healthObj });
+                  const reasons = [
+                    `estate:${Object.keys(ESTATE_RULES || {}).length}`,
+                    `deed:${Object.keys(DEED_RULES || {}).length}`,
+                    `health:${Object.keys(HEALTH_RULES || {}).length}`
+                  ];
+                  const hash = await downloadTsModule('ALL', bundle, 'ALL_RULES.generated.ts', reasons);
+                  setLog((prev) => (prev ? prev + '\n\n' : '') + 
+                    `✅ Exported ALL_RULES.generated.ts (bundle)\nEstate: ${Object.keys(ESTATE_RULES || {}).length}, Deed: ${Object.keys(DEED_RULES || {}).length}, Health: ${Object.keys(HEALTH_RULES || {}).length} • SHA256: ${hash}`);
+                } catch (error: any) {
+                  setLog((prev) => (prev ? prev + '\n\n' : '') + `❌ Bundle export failed: ${error.message}`);
+                } finally {
+                  setLoading(false);
+                }
+              }}
+            >
+              <FileSpreadsheet className="h-4 w-4" />
+              Export ALL_RULES.ts
+            </Button>
+          </div>
+
           <div className="text-sm text-muted-foreground space-y-1">
             <div className="flex items-center gap-2">
               <FileJson className="h-4 w-4" />
-              JSON files: Pretty formatted and minified versions
+              JSON files: Pretty formatted and minified versions for data analysis
             </div>
             <div className="flex items-center gap-2">
               <FileSpreadsheet className="h-4 w-4" />
-              CSV files: Separate files for each rule type for quick analysis
+              CSV files: Separate files for each rule type for quick spreadsheet analysis
             </div>
             <div className="flex items-center gap-2">
-              <FileSpreadsheet className="h-4 w-4" />
-              TypeScript module: Ready-to-use COUNTY_META.ts for direct code integration
+              <Code className="h-4 w-4" />
+              TypeScript modules: Ready-to-use .ts files for direct code integration
             </div>
           </div>
 
