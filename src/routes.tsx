@@ -555,6 +555,32 @@ export const router = createBrowserRouter([
     )
   },
   {
+    path: "/health/*",
+    element: (
+      <div className="min-h-screen bg-background">
+        <Routes>
+          <Route index element={<Navigate to="home" replace />} />
+          <Route path="home" element={React.createElement(() => {
+            const { default: HealthcareHomePage } = require('./pages/health/HealthcareHomePage');
+            return React.createElement(HealthcareHomePage);
+          })} />
+          <Route path="leads" element={React.createElement(() => {
+            const { default: HealthcareLeadsPage } = require('./pages/health/HealthcareLeadsPage');
+            return React.createElement(HealthcareLeadsPage);
+          })} />
+          <Route path="tools" element={React.createElement(() => {
+            const { default: HealthcareToolsPage } = require('./pages/health/HealthcareToolsPage');
+            return React.createElement(HealthcareToolsPage);
+          })} />
+          <Route path="proof" element={React.createElement(() => {
+            const { default: HealthcareProofPage } = require('./pages/health/HealthcareProofPage');
+            return React.createElement(HealthcareProofPage);
+          })} />
+        </Routes>
+      </div>
+    )
+  },
+  {
     path: "/admin/*",
     element: (
       <AdminRoute roles={['admin', 'tenant_admin', 'system_administrator']}>
