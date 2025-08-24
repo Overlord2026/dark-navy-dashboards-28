@@ -285,6 +285,20 @@ export const router = createBrowserRouter([
     element: <ComingSoonPage featureName="Health Optimization" description="Comprehensive health optimization and wellness management tools." />
   },
   {
+    path: "/start/brand",
+    element: React.createElement(() => {
+      const { default: StartBrandPage } = require('./pages/start/StartBrandPage');
+      return React.createElement(StartBrandPage);
+    })
+  },
+  {
+    path: "/brand/home",
+    element: React.createElement(() => {
+      const { default: BrandDashboard } = require('./pages/nil/brand/BrandDashboard');
+      return React.createElement(BrandDashboard);
+    })
+  },
+  {
     path: "/advisor/leads",
     element: React.createElement(() => {
       const { ProLeadsPage } = require('./pages/pro/ProLeadsPage');

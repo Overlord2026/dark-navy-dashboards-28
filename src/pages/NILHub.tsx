@@ -22,19 +22,19 @@ import {
   Lock,
   FileCheck
 } from 'lucide-react';
-import { analytics } from '@/lib/analytics';
+import { toast } from 'sonner';
 import DemoLauncher from '@/components/demos/DemoLauncher';
 
 const NILHub: React.FC = () => {
   const navigate = useNavigate();
 
   const handleDemoClick = (persona: string) => {
-    analytics.trackEvent('nil_demo_clicked', { persona });
+    toast.success(`Loading ${persona} demo...`);
     navigate(`/demos/nil-${persona}`);
   };
 
   const handleStartWorkspace = (persona: string) => {
-    analytics.trackEvent('nil_workspace_start', { persona });
+    toast.success(`Starting ${persona} workspace...`);
     navigate(`/start/nil?persona=${persona}`);
   };
 

@@ -22,7 +22,7 @@ import {
   Share,
   Calendar
 } from 'lucide-react';
-import { analytics } from '@/lib/analytics';
+import { toast } from 'sonner';
 
 // Mock athlete data
 const mockAthletes = [
@@ -144,20 +144,13 @@ const NILIndex: React.FC = () => {
   }, [searchQuery, selectedSport, selectedRegion, selectedClass]);
 
   const handleAthleteClick = (athlete: any) => {
-    analytics.trackEvent('nil_athlete_profile_view', { 
-      athleteId: athlete.id, 
-      athleteName: athlete.name,
-      source: 'index' 
-    });
+    toast.success(`Loading ${athlete.name} profile...`);
     navigate(`/a/${athlete.handle}`);
   };
 
   const handleInviteClick = (athlete: any, event: React.MouseEvent) => {
     event.stopPropagation();
-    analytics.trackEvent('nil_athlete_invite_clicked', { 
-      athleteId: athlete.id, 
-      athleteName: athlete.name 
-    });
+    toast.success(`Inviting ${athlete.name}...`);
     // Open invite modal or navigate to invite flow
     navigate(`/invite/athlete/${athlete.handle}`);
   };

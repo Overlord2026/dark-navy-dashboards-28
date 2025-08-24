@@ -23,7 +23,7 @@ import {
   Copy,
   Mail
 } from 'lucide-react';
-import { analytics } from '@/lib/analytics';
+// import { analytics } from '@/lib/analytics';
 import { toast } from 'sonner';
 
 const AthleteProfile: React.FC = () => {
@@ -109,16 +109,11 @@ const AthleteProfile: React.FC = () => {
   };
 
   const handleInviteClick = () => {
-    analytics.trackEvent('athlete_profile_invite_clicked', { 
-      athleteId: athlete.id, 
-      athleteName: athlete.name 
-    });
+    toast.success(`Inviting ${athlete.name}...`);
     navigate(`/invite/athlete/${athlete.handle}`);
   };
 
   const handleShare = async () => {
-    analytics.trackShareClick('athlete_profile', { athleteId: athlete.id });
-    
     const shareData = {
       title: `${athlete.name} - NIL Athlete Profile`,
       text: `Check out ${athlete.name}'s NIL athlete profile`,
@@ -128,7 +123,7 @@ const AthleteProfile: React.FC = () => {
     if (navigator.share) {
       try {
         await navigator.share(shareData);
-        analytics.trackShareSuccess({ type: 'athlete_profile', method: 'native_share' });
+        toast.success('Profile shared successfully');
       } catch (error) {
         // User cancelled or error occurred
       }
@@ -136,15 +131,11 @@ const AthleteProfile: React.FC = () => {
       // Fallback: copy to clipboard
       await navigator.clipboard.writeText(window.location.href);
       toast.success('Profile link copied to clipboard');
-      analytics.trackShareSuccess({ type: 'athlete_profile', method: 'clipboard' });
     }
   };
 
   const handleRequestShoutout = () => {
-    analytics.trackEvent('athlete_shoutout_request', { 
-      athleteId: athlete.id, 
-      athleteName: athlete.name 
-    });
+    toast.success(`Requesting shoutout from ${athlete.name}...`);
     navigate(`/request/shoutout/${athlete.handle}`);
   };
 
