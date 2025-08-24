@@ -142,6 +142,11 @@ function App() {
                 <EstateDIYWizard />
               </Suspense>
             } />
+            <Route path="/estate/healthcare" element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <React.lazy(() => import('@/pages/estate/HealthcareDIYWizard')) />
+              </Suspense>
+            } />
             <Route path="/advisors/estate" element={
               <Suspense fallback={<div>Loading...</div>}>
                 <AdvisorEstatePage />
@@ -150,6 +155,11 @@ function App() {
             <Route path="/attorney/estate" element={
               <Suspense fallback={<div>Loading...</div>}>
                 <AttorneyEstateWorkbench />
+              </Suspense>
+            } />
+            <Route path="/attorney/estate/health" element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <React.lazy(() => import('@/pages/attorney/HealthcareProWorkbench')) />
               </Suspense>
             } />
             <Route path="/cpa/estate" element={
