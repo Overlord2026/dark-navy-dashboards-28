@@ -1,114 +1,51 @@
-import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Switch } from '@/components/ui/switch';
-import { Badge } from '@/components/ui/badge';
-import { Sparkles, X } from 'lucide-react';
+import React from 'react';
 import { installTool } from '@/lib/workspaceTools';
-import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
 
-interface InstallModalProps {
-  toolKey: string;
-  registryItem: any;
-  onClose: () => void;
-}
-
-export default function InstallModal({ toolKey, registryItem, onClose }: InstallModalProps) {
-  const [isInstalling, setIsInstalling] = useState(false);
-  const [withSeed, setWithSeed] = useState(true);
-  const { toast } = useToast();
-  const navigate = useNavigate();
-
-  const handleInstall = async () => {
-    setIsInstalling(true);
-    try {
-      await installTool(toolKey, withSeed);
-      toast({
-        title: "Tool Installed",
-        description: `${registryItem.label} is now available in your workspace.`,
-      });
-      onClose();
-      if (registryItem.routePriv) {
-        navigate(registryItem.routePriv);
-      }
-    } catch (error) {
-      toast({
-        title: "Installation Failed",
-        description: "Please try again later.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsInstalling(false);
-    }
-  };
-
+export default function InstallModal({ toolKey, registryItem, onClose }: {
+  toolKey: string, registryItem: any, onClose: () => void
+}) {
+  const nav = useNavigate();
+  const [seed, setSeed] = React.useState(true);
+  const { label, summary, routePriv, routePub } = registryItem || {};
+  
+  async function onInstall() { 
+    await installTool(toolKey, seed); 
+    onClose(); 
+    if (routePriv) nav(routePriv); 
+  }
+  
+  function onPreview() { 
+    onClose(); 
+    nav(routePub || `/preview/${toolKey}`); 
+  }
+  
   return (
-    <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-lg">
-        <DialogHeader>
-          <div className="flex items-center justify-between">
-            <DialogTitle className="text-xl font-semibold flex items-center gap-2">
-              <Sparkles className="h-5 w-5 text-primary" />
-              {registryItem.label}
-            </DialogTitle>
-            <Button variant="ghost" size="sm" onClick={onClose} disabled={isInstalling}>
-              <X className="h-4 w-4" />
-            </Button>
-          </div>
-          <DialogDescription className="text-sm text-muted-foreground">
-            {registryItem.summary}
-          </DialogDescription>
-        </DialogHeader>
-
-        {/* Solution tags */}
-        {registryItem.solutions && registryItem.solutions.length > 0 && (
-          <div className="flex flex-wrap gap-1">
-            {registryItem.solutions.slice(0, 3).map((solution: string) => (
-              <Badge key={solution} variant="secondary" className="text-xs">
-                {solution}
-              </Badge>
-            ))}
-            {registryItem.solutions.length > 3 && (
-              <Badge variant="secondary" className="text-xs">
-                +{registryItem.solutions.length - 3} more
-              </Badge>
-            )}
+    <div role="dialog" aria-modal="true" className="fixed inset-0 z-50 flex items-center justify-center">
+      <div className="absolute inset-0 bg-black/40" onClick={onClose} />
+      <div className="relative w-full max-w-lg rounded-2xl p-6 bg-white">
+        <h2 className="text-xl font-semibold">{label || 'Install tool'}</h2>
+        <p className="mt-2 text-sm text-gray-600">{summary}</p>
+        {routePriv ? (
+          <>
+            <label className="mt-4 flex items-center gap-2">
+              <input type="checkbox" checked={seed} onChange={e => setSeed(e.target.checked)} />
+              <span>Seed with demo data</span>
+            </label>
+            <div className="mt-6 flex items-center gap-3">
+              <button onClick={onInstall} className="rounded-xl px-4 py-2 text-[#0A0A0A] border border-[#D4AF37] bg-[#D4AF37]">Install & Open</button>
+              <button onClick={onPreview} className="rounded-xl px-4 py-2 border">Preview first</button>
+              <button onClick={onClose} className="ml-auto text-sm">Cancel</button>
+            </div>
+          </>
+        ) : (
+          <div className="mt-6 flex items-center gap-3">
+            <button onClick={onPreview} className="rounded-xl px-4 py-2 text-[#0A0A0A] border border-[#D4AF37] bg-[#D4AF37]">View Preview</button>
+            <button onClick={onClose} className="ml-auto text-sm">Close</button>
           </div>
         )}
-
-        <div className="space-y-4">
-          {/* Demo data option */}
-          <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
-            <div className="space-y-1">
-              <p className="text-sm font-medium">Seed with demo data</p>
-              <p className="text-xs text-muted-foreground">
-                Recommended for first run to explore features
-              </p>
-            </div>
-            <Switch
-              checked={withSeed}
-              onCheckedChange={setWithSeed}
-              disabled={isInstalling}
-            />
-          </div>
-
-          {/* Action button */}
-          <Button 
-            onClick={handleInstall} 
-            disabled={isInstalling}
-            className="w-full"
-          >
-            <Sparkles className="h-4 w-4 mr-2" />
-            {isInstalling ? 'Installing...' : 'Install & Open'}
-          </Button>
-        </div>
-
-        {/* Footer note */}
-        <div className="text-xs text-muted-foreground text-center pt-2 border-t">
-          Smart Checks • Proof Slips • Secure Vault • Time-Stamp
-        </div>
-      </DialogContent>
-    </Dialog>
+        <p className="mt-4 text-xs text-gray-500">Smart Checks • Proof Slips • Secure Vault (Keep-Safe/Legal Hold) • Time-Stamp.</p>
+      </div>
+    </div>
   );
 }
