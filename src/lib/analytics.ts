@@ -54,6 +54,15 @@ export function track(event: string, props?: AnalyticsProps) {
   analytics.track(event, props);
 }
 
+// Legacy export helpers for backward compatibility
+export function trackExportClick(format: string) {
+  analytics.track('export.click', { format });
+}
+
+export function trackPageView(page: string, props?: AnalyticsProps) {
+  analytics.track('page.view', { page, ...props });
+}
+
 // Export BOTH default and named so all imports compile
 export { analytics };
 export default analytics;

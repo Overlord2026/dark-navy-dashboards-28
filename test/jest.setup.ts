@@ -1,4 +1,15 @@
-import '@testing-library/jest-dom'
+import '@testing-library/jest-dom';
+import { setupAnalyticsMock, clearAnalyticsMocks } from '../src/test/analytics.mock';
+
+// Set up analytics mock before all tests
+beforeAll(() => {
+  setupAnalyticsMock();
+});
+
+// Clear mocks between tests to prevent test pollution
+afterEach(() => {
+  clearAnalyticsMocks();
+});
 
 // Mock window.matchMedia
 Object.defineProperty(window, 'matchMedia', {

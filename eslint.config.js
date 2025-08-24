@@ -27,6 +27,14 @@ export default tseslint.config(
         { allowConstantExport: true },
       ],
       "@typescript-eslint/no-unused-vars": "off",
+      // Analytics guardrails - prevent 3+ arg calls that caused TS issues
+      "no-restricted-syntax": [
+        "error",
+        {
+          "selector": "CallExpression[callee.object.name='analytics'][callee.property.name='track'][arguments.length>2]",
+          "message": "analytics.track only accepts (event, props?). Remove extra positional args."
+        }
+      ],
       // A11y specific rules
       "jsx-a11y/alt-text": "error",
       "jsx-a11y/anchor-has-content": "error",
