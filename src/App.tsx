@@ -27,6 +27,8 @@ import { Annuities } from '@/pages/solutions/Annuities';
 import { OnboardingFlow } from '@/pages/OnboardingFlow';
 import QACoverage from '@/pages/admin/QACoverage';
 import ReadyCheck from '@/pages/admin/ReadyCheck';
+import { ReadyCheckEnhanced } from '@/pages/admin/ReadyCheckEnhanced';
+import AdminPanel from '@/pages/admin/AdminPanel';
 import PublishPanel from '@/pages/admin/PublishPanel';
 import { EnvInspector } from '@/pages/admin/EnvInspector';
 import MarketingPreview from '@/pages/preview/MarketingPreview';
@@ -43,8 +45,7 @@ import { BrandHub } from '@/pages/brand/BrandHub';
 import { SolutionsHub } from '@/components/solutions/SolutionsHub';
 
 const DemoPage = React.lazy(() => import('@/pages/demos/[persona]'));
-// Import FamilyHome directly for now to fix TypeScript error
-import { FamilyHome } from '@/pages/family/FamilyHome';
+import FamilyHome from '@/pages/families/FamilyHome';
 
 function App() {
   // Check authentication status (simplified for demo)
@@ -114,6 +115,8 @@ function App() {
             {/* Admin Routes - Flag Protected */}
             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/qa-coverage" element={<QACoverage />} />}
             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/ready-check" element={<ReadyCheck />} />}
+            {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/ready-check-enhanced" element={<ReadyCheckEnhanced />} />}
+            {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin" element={<AdminPanel />} />}
             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/publish" element={<PublishPanel />} />}
             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/env" element={<EnvInspector />} />}
             

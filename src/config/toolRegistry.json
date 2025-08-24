@@ -4,7 +4,7 @@
     "label": "Retirement Roadmap",
     "summary": "Turn assets into lifetime income with sequence-risk guardrails.",
     "routePriv": "/tools/retirement-roadmap",
-    "routePub": "/preview/retirement-roadmap",
+    "routePub": "/catalog/retirement-roadmap",
     "personas": ["family", "retiree", "advisor"],
     "solutions": ["investments"],
     "deps": []
