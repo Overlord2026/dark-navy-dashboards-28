@@ -9,6 +9,7 @@ import { CheckCircle, XCircle, FileText, Upload, AlertTriangle } from 'lucide-re
 import { toast } from 'sonner';
 
 import { COUNTY_META, getCountiesByState, getCountyMeta, type CountyMeta } from './countyMeta';
+import CountyLookupPanel from './CountyLookupPanel';
 import { validateFirstPage, getIssueDescription, getIssueSeverity, type LayoutIssue, type IntakeCheck } from './layoutValidators';
 import { renderCoverSheetPdf, validateCoverSheetTokens, type CoverSheetTokens } from '@/lib/report/coverSheetPdf';
 import { submitERecording, type ERecordingResult } from './erecord';
@@ -222,17 +223,31 @@ export function RecordingIntakeForm({ deedId, onSubmitted, onRecorded }: Recordi
     onRecorded?.(recordedInstrument);
   };
 
+  const handleCountySelect = (meta: CountyMeta) => {
+    setSelectedState(meta.state);
+    setSelectedCounty(meta.county);
+  };
+
   return (
     <div className="space-y-6">
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <FileText className="h-5 w-5" />
-            Recording Intake
+            County Look-up & Recording Intake
           </CardTitle>
           <CardDescription>
-            Validate deed layout and submit for county recording
+            Search counties and validate deed layout for recording
           </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <CountyLookupPanel onUse={handleCountySelect} />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Recording Intake Form</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           {/* County Selection */}
