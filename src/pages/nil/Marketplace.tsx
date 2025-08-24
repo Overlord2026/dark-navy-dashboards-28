@@ -1,18 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
-import { UserPlus, Shield, Clock, Check, X } from 'lucide-react';
+import { UserPlus, Shield, Award, Building2, Play, Share } from 'lucide-react';
 import { invite, accept, getInvites, getPendingInvites, PendingInvite } from '@/features/nil/invite/api';
 import { issueConsent, revokeConsent, getActiveConsents, ConsentRequest } from '@/features/nil/consent/api';
 import { ConsentRDS } from '@/features/receipts/types';
 import { toast } from 'sonner';
+import { useNavigate } from 'react-router-dom';
+import { getFlag } from '@/lib/flags';
 
 export default function MarketplacePage() {
+  const navigate = useNavigate();
   const [invites, setInvites] = React.useState<PendingInvite[]>([]);
   const [activeConsents, setActiveConsents] = React.useState<ConsentRDS[]>([]);
   const [showInviteForm, setShowInviteForm] = React.useState(false);
@@ -62,301 +65,189 @@ export default function MarketplacePage() {
     }
   };
 
-  const handleAcceptInvite = (pendingId: string) => {
+  const handleBrandStart = () => {
+    if (typeof window !== 'undefined' && (window as any).analytics) {
+      (window as any).analytics.track('brand.start.click', { 
+        source: 'nil-marketplace-sticky',
+        campaign: 'quick-start'
+      });
+    }
+    navigate('/start/brand');
+  };
+
+  const handleDemo = () => {
+    if (typeof window !== 'undefined' && (window as any).analytics) {
+      (window as any).analytics.track('demo.open', { 
+        source: 'nil-marketplace-sticky',
+        demoId: 'nil-school'
+      });
+    }
+    navigate('/demos/nil-school');
+  };
+
+  const handleShare = async () => {
+    const shareData = {
+      title: 'NIL Marketplace',
+      text: 'NIL collaboration platform connecting athletes, brands, and advisors with compliance built-in.',
+      url: window.location.href
+    };
+
+    if (typeof window !== 'undefined' && (window as any).analytics) {
+      (window as any).analytics.track('share.click', { 
+        source: 'nil-marketplace-sticky'
+      });
+    }
+
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+        return;
+      } catch (error) {
+        console.log('Share cancelled');
+      }
+    }
+
     try {
-      accept(pendingId);
-      setInvites(getInvites());
-      
-      toast.success('Invite accepted!', {
-        description: 'You can now collaborate on contracts'
-      });
+      await navigator.clipboard.writeText(`${shareData.text}\n\n${shareData.url}`);
+      toast.success("Link copied to clipboard!");
     } catch (error) {
-      toast.error('Failed to accept invite');
+      toast.error("Could not copy link");
     }
-  };
-
-  const handleIssueConsent = async () => {
-    if (consentForm.roles.length === 0 || consentForm.resources.length === 0) {
-      toast.error('Please select at least one role and resource');
-      return;
-    }
-
-    try {
-      const consent = await issueConsent(consentForm);
-      setActiveConsents(getActiveConsents());
-      setShowConsentForm(false);
-      
-      // Reset form
-      setConsentForm({
-        roles: [],
-        resources: [],
-        ttlDays: 365,
-        purpose_of_use: 'contract_collab'
-      });
-
-      toast.success('Consent issued successfully!', {
-        description: `Receipt: ${consent.id}`,
-        action: {
-          label: 'View Receipt',
-          onClick: () => console.log('Consent:', consent)
-        }
-      });
-    } catch (error) {
-      toast.error('Failed to issue consent');
-    }
-  };
-
-  const handleRevokeConsent = (consentId: string) => {
-    try {
-      const revokeReceipt = revokeConsent(consentId);
-      setActiveConsents(getActiveConsents());
-      
-      toast.success('Consent revoked', {
-        description: `Revocation receipt: ${revokeReceipt.id}`,
-        action: {
-          label: 'View Receipt',
-          onClick: () => console.log('Revoke receipt:', revokeReceipt)
-        }
-      });
-    } catch (error) {
-      toast.error('Failed to revoke consent');
-    }
-  };
-
-  const toggleRole = (role: string) => {
-    setConsentForm(prev => ({
-      ...prev,
-      roles: prev.roles.includes(role)
-        ? prev.roles.filter(r => r !== role)
-        : [...prev.roles, role]
-    }));
-  };
-
-  const toggleResource = (resource: string) => {
-    setConsentForm(prev => ({
-      ...prev,
-      resources: prev.resources.includes(resource)
-        ? prev.resources.filter(r => r !== resource)
-        : [...prev.resources, resource]
-    }));
   };
 
   return (
-    <div className="container mx-auto py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">NIL Marketplace</h1>
-        <p className="text-muted-foreground">
-          Collaborate with advisors, CPAs, and attorneys on NIL contracts
-        </p>
-      </div>
+    <>
+      <Helmet>
+        <title>NIL Marketplace - Athlete Collaborations & Brand Partnerships</title>
+        <meta name="description" content="Connect with athletes, brands, and advisors on NIL partnerships. Compliant collaboration platform for name, image, and likeness deals." />
+      </Helmet>
 
-      <div className="grid gap-6">
-        {/* Invite Section */}
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle className="flex items-center gap-2">
-                  <UserPlus className="h-5 w-5" />
-                  Professional Invites
-                </CardTitle>
-                <CardDescription>Invite professionals to collaborate on your NIL deals</CardDescription>
+      <div className="min-h-screen bg-background relative">
+        <div className="container mx-auto py-8 pb-24">
+          <div className="mb-8">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
+                <Award className="w-5 h-5 text-primary" />
               </div>
-              <Button onClick={() => setShowInviteForm(true)}>
-                Send Invite
-              </Button>
+              <h1 className="text-3xl font-bold">NIL Marketplace</h1>
             </div>
-          </CardHeader>
-          <CardContent>
-            {showInviteForm && (
-              <div className="mb-6 p-4 border rounded-lg space-y-4">
-                <div className="grid grid-cols-2 gap-4">
+            <p className="text-muted-foreground">
+              Collaborate with advisors, CPAs, and attorneys on NIL contracts
+            </p>
+          </div>
+
+          <div className="grid gap-6">
+            {/* Invite Section */}
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
                   <div>
-                    <Label>Professional Role</Label>
-                    <Select value={inviteForm.role} onValueChange={(value: any) => setInviteForm(prev => ({ ...prev, role: value }))}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="advisor">Financial Advisor</SelectItem>
-                        <SelectItem value="cpa">CPA/Accountant</SelectItem>
-                        <SelectItem value="attorney">Attorney</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <CardTitle className="flex items-center gap-2">
+                      <UserPlus className="h-5 w-5" />
+                      Professional Invites
+                    </CardTitle>
+                    <CardDescription>Invite professionals to collaborate on your NIL deals</CardDescription>
                   </div>
-                  <div>
-                    <Label>Email Address</Label>
-                    <Input
-                      type="email"
-                      value={inviteForm.email}
-                      onChange={(e) => setInviteForm(prev => ({ ...prev, email: e.target.value }))}
-                      placeholder="professional@example.com"
-                    />
-                  </div>
+                  <Button onClick={() => setShowInviteForm(true)}>
+                    Send Invite
+                  </Button>
                 </div>
-                <div className="flex gap-2">
-                  <Button onClick={handleSendInvite}>Send Invite</Button>
-                  <Button variant="outline" onClick={() => setShowInviteForm(false)}>Cancel</Button>
-                </div>
-              </div>
-            )}
-
-            {invites.length > 0 ? (
-              <div className="space-y-3">
-                {invites.map((invite) => (
-                  <div key={invite.id} className="flex items-center justify-between p-3 border rounded">
-                    <div>
-                      <p className="font-medium">{invite.email}</p>
-                      <p className="text-sm text-muted-foreground capitalize">{invite.role}</p>
-                      <p className="text-xs text-muted-foreground">
-                        Invited: {new Date(invite.invitedAt).toLocaleDateString()}
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Badge variant={
-                        invite.status === 'accepted' ? 'default' :
-                        invite.status === 'declined' ? 'destructive' : 'secondary'
-                      }>
-                        {invite.status}
-                      </Badge>
-                      {invite.status === 'pending' && (
-                        <Button
-                          size="sm"
-                          onClick={() => handleAcceptInvite(invite.id)}
-                        >
-                          Accept
-                        </Button>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-muted-foreground text-center py-4">No invites sent yet</p>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Consent Management */}
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle className="flex items-center gap-2">
-                  <Shield className="h-5 w-5" />
-                  Consent Management
-                </CardTitle>
-                <CardDescription>Issue and manage consent for data sharing</CardDescription>
-              </div>
-              <Button onClick={() => setShowConsentForm(true)}>
-                Issue Consent
-              </Button>
-            </div>
-          </CardHeader>
-          <CardContent>
-            {showConsentForm && (
-              <div className="mb-6 p-4 border rounded-lg space-y-4">
-                <div>
-                  <Label>Authorized Roles</Label>
-                  <div className="flex gap-2 mt-2">
-                    {['advisor', 'cpa', 'attorney', 'brand_representative'].map(role => (
-                      <Button
-                        key={role}
-                        variant={consentForm.roles.includes(role) ? 'default' : 'outline'}
-                        size="sm"
-                        onClick={() => toggleRole(role)}
-                      >
-                        {role.replace('_', ' ')}
-                      </Button>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <Label>Authorized Resources</Label>
-                  <div className="flex gap-2 mt-2 flex-wrap">
-                    {['contract_terms', 'financial_data', 'performance_metrics', 'compliance_records'].map(resource => (
-                      <Button
-                        key={resource}
-                        variant={consentForm.resources.includes(resource) ? 'default' : 'outline'}
-                        size="sm"
-                        onClick={() => toggleResource(resource)}
-                      >
-                        {resource.replace('_', ' ')}
-                      </Button>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label>Valid for (days)</Label>
-                    <Input
-                      type="number"
-                      value={consentForm.ttlDays}
-                      onChange={(e) => setConsentForm(prev => ({ ...prev, ttlDays: Number(e.target.value) }))}
-                    />
-                  </div>
-                  <div>
-                    <Label>Purpose</Label>
-                    <Select value={consentForm.purpose_of_use} onValueChange={(value) => setConsentForm(prev => ({ ...prev, purpose_of_use: value }))}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="contract_collab">Contract Collaboration</SelectItem>
-                        <SelectItem value="tax_preparation">Tax Preparation</SelectItem>
-                        <SelectItem value="legal_review">Legal Review</SelectItem>
-                        <SelectItem value="financial_planning">Financial Planning</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-
-                <div className="flex gap-2">
-                  <Button onClick={handleIssueConsent}>Issue Consent</Button>
-                  <Button variant="outline" onClick={() => setShowConsentForm(false)}>Cancel</Button>
-                </div>
-              </div>
-            )}
-
-            {activeConsents.length > 0 ? (
-              <div className="space-y-3">
-                {activeConsents.map((consent) => (
-                  <div key={consent.id} className="p-3 border rounded">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <Badge variant={consent.result === 'approve' ? 'default' : 'destructive'}>
-                          {consent.result === 'approve' ? 'Active' : 'Revoked'}
-                        </Badge>
-                        <span className="font-medium">{consent.purpose_of_use.replace('_', ' ')}</span>
+              </CardHeader>
+              <CardContent>
+                {showInviteForm && (
+                  <div className="mb-6 p-4 border rounded-lg space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Label>Professional Role</Label>
+                        <Select value={inviteForm.role} onValueChange={(value: any) => setInviteForm(prev => ({ ...prev, role: value }))}>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="advisor">Financial Advisor</SelectItem>
+                            <SelectItem value="cpa">CPA/Accountant</SelectItem>
+                            <SelectItem value="attorney">Attorney</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </div>
-                      {consent.result === 'approve' && (
-                        <Button
-                          variant="destructive"
-                          size="sm"
-                          onClick={() => handleRevokeConsent(consent.id)}
-                        >
-                          Revoke
-                        </Button>
-                      )}
+                      <div>
+                        <Label>Email Address</Label>
+                        <Input
+                          type="email"
+                          value={inviteForm.email}
+                          onChange={(e) => setInviteForm(prev => ({ ...prev, email: e.target.value }))}
+                          placeholder="professional@example.com"
+                        />
+                      </div>
                     </div>
-                    
-                    <div className="text-sm text-muted-foreground space-y-1">
-                      <p>Roles: {consent.scope.roles.join(', ')}</p>
-                      <p>Resources: {consent.scope.resources.join(', ')}</p>
-                      <p>Expires: {new Date(consent.expiry).toLocaleDateString()}</p>
-                      <p>Freshness Score: {(consent.freshness_score * 100).toFixed(1)}%</p>
+                    <div className="flex gap-2">
+                      <Button onClick={handleSendInvite}>Send Invite</Button>
+                      <Button variant="outline" onClick={() => setShowInviteForm(false)}>Cancel</Button>
                     </div>
                   </div>
-                ))}
+                )}
+
+                {invites.length > 0 ? (
+                  <div className="space-y-3">
+                    {invites.map((invite) => (
+                      <div key={invite.id} className="flex items-center justify-between p-3 border rounded">
+                        <div>
+                          <p className="font-medium">{invite.email}</p>
+                          <p className="text-sm text-muted-foreground capitalize">{invite.role}</p>
+                        </div>
+                        <Badge variant={invite.status === 'accepted' ? 'default' : 'secondary'}>
+                          {invite.status}
+                        </Badge>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-muted-foreground text-center py-4">No invites sent yet</p>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+
+        {/* Sticky Action Row */}
+        <div className="fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur border-t">
+          <div className="container mx-auto px-4 py-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                {getFlag('BRAND_PUBLIC_ENABLED') && (
+                  <Button 
+                    onClick={handleBrandStart}
+                    className="flex items-center gap-2 min-h-[44px]"
+                  >
+                    <Building2 className="w-4 h-4" />
+                    For Brands & Local Businesses
+                  </Button>
+                )}
+                
+                {getFlag('DEMOS_ENABLED') && (
+                  <Button 
+                    variant="outline" 
+                    onClick={handleDemo}
+                    className="flex items-center gap-2 min-h-[44px]"
+                  >
+                    <Play className="w-4 h-4" />
+                    See 60-sec Demo
+                  </Button>
+                )}
               </div>
-            ) : (
-              <p className="text-muted-foreground text-center py-4">No active consents</p>
-            )}
-          </CardContent>
-        </Card>
+              
+              <Button
+                variant="ghost"
+                onClick={handleShare}
+                className="flex items-center gap-2 min-h-[44px]"
+              >
+                <Share className="w-4 h-4" />
+                Share
+              </Button>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 }

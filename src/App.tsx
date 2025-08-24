@@ -54,6 +54,8 @@ const PreviewPage = React.lazy(() => import('@/components/PreviewPage'));
 import FamilyHome from '@/pages/family/Home';
 import AdvisorHome from '@/pages/advisor/AdvisorHome';
 import NILAthleteHome from '@/pages/nil/NILAthleteHome';
+import MarketplacePage from '@/pages/nil/Marketplace';
+import NILIndex from '@/pages/nil/NILIndex';
 
 function App() {
   // Check authentication status (simplified for demo)
@@ -85,8 +87,8 @@ function App() {
             {getFlag('SOLUTIONS_ENABLED') && <Route path="/solutions/:solutionKey" element={<SolutionCategoryPage />} />}
             
             {/* NIL Public Pages */}
-            {getFlag('NIL_PUBLIC_ENABLED') && <Route path="/nil" element={<Marketplace />} />}
-            {getFlag('NIL_PUBLIC_ENABLED') && <Route path="/nil/index" element={<Marketplace />} />}
+            {getFlag('NIL_PUBLIC_ENABLED') && <Route path="/nil" element={<MarketplacePage />} />}
+            {getFlag('NIL_PUBLIC_ENABLED') && <Route path="/nil/index" element={<NILIndex />} />}
             
             {/* New Home Pages */}
             <Route path="/advisor/home" element={<AdvisorHome />} />

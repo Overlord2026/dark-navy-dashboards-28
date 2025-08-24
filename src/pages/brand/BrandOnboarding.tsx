@@ -23,53 +23,44 @@ import {
 } from 'lucide-react';
 
 interface OnboardingData {
-  // Business basics
+  // Step 1: Business basics
   businessName: string;
-  businessType: 'enterprise' | 'local-business' | '';
-  industry: string;
-  location: string;
-  size: string;
+  website: string;
+  businessType: 'local' | 'enterprise' | '';
   
-  // Campaign basics
-  campaignType: string;
-  targetAudience: string;
-  budget: string;
-  timeline: string;
-  
-  // Template selection
+  // Step 2: Campaign template
   selectedTemplate: string;
-  templateCustomization: string;
 }
 
 const businessTypes = [
-  { value: 'enterprise', label: 'Enterprise Brand', description: 'Multi-market campaigns with complex compliance needs' },
-  { value: 'local-business', label: 'Local Business', description: 'Community-focused campaigns and local influencer partnerships' }
+  { value: 'local', label: 'Local Business', description: 'Community-focused campaigns and local partnerships' },
+  { value: 'enterprise', label: 'National Brand', description: 'Multi-market campaigns with complex compliance needs' }
 ];
 
 const campaignTemplates = [
   {
-    id: 'product-launch',
-    title: 'Product Launch Campaign',
-    description: 'Multi-phase campaign for new product introduction',
-    features: ['Teaser phase', 'Launch phase', 'Follow-up engagement', 'Performance tracking']
+    id: 'local-sponsor',
+    title: 'Local Sponsor',
+    description: 'Support local athletes and events with authentic partnerships',
+    features: ['Local athlete partnerships', 'Event sponsorships', 'Community engagement']
   },
   {
-    id: 'brand-awareness',
-    title: 'Brand Awareness Campaign',
-    description: 'Build brand recognition and reach new audiences',
-    features: ['Content strategy', 'Influencer partnerships', 'Community engagement', 'Brand metrics']
+    id: 'giveaway',
+    title: 'Giveaway Campaign',
+    description: 'Boost engagement with athlete-powered product giveaways',
+    features: ['Product giveaways', 'Contest mechanics', 'Social amplification']
   },
   {
-    id: 'local-event',
-    title: 'Local Event Promotion',
-    description: 'Drive attendance for local events and activations',
-    features: ['Local influencers', 'Event countdown', 'Live coverage', 'Post-event content']
+    id: 'ambassador',
+    title: 'Brand Ambassador',
+    description: 'Long-term partnerships with athletes as brand representatives',
+    features: ['Ongoing partnerships', 'Content creation', 'Performance tracking']
   },
   {
-    id: 'seasonal-promo',
-    title: 'Seasonal Promotion',
-    description: 'Holiday and seasonal marketing campaigns',
-    features: ['Seasonal content', 'Time-sensitive offers', 'Holiday themes', 'Gift guides']
+    id: 'event-appearance',
+    title: 'Event Appearance',
+    description: 'Book athletes for events, grand openings, and activations',
+    features: ['Event appearances', 'Meet & greets', 'Photo/video content']
   }
 ];
 
@@ -78,22 +69,24 @@ export function BrandOnboarding() {
   const [step, setStep] = useState(1);
   const [data, setData] = useState<OnboardingData>({
     businessName: '',
+    website: '',
     businessType: '',
-    industry: '',
-    location: '',
-    size: '',
-    campaignType: '',
-    targetAudience: '',
-    budget: '',
-    timeline: '',
-    selectedTemplate: '',
-    templateCustomization: ''
+    selectedTemplate: ''
   });
 
-  const totalSteps = 3;
+  const totalSteps = 2;
   const progress = (step / totalSteps) * 100;
 
   const handleNext = () => {
+    // Analytics
+    if (typeof window !== 'undefined' && (window as any).analytics) {
+      if (step === 1) {
+        (window as any).analytics.track('onboard.brand.segment', { 
+          businessType: data.businessType 
+        });
+      }
+    }
+
     if (step < totalSteps) {
       setStep(step + 1);
     } else {
@@ -108,21 +101,39 @@ export function BrandOnboarding() {
   };
 
   const handleComplete = () => {
+    // Analytics
+    if (typeof window !== 'undefined' && (window as any).analytics) {
+      (window as any).analytics.track('onboard.brand.start', { 
+        businessName: data.businessName,
+        businessType: data.businessType 
+      });
+      (window as any).analytics.track('onboard.brand.template', { 
+        template: data.selectedTemplate 
+      });
+      (window as any).analytics.track('onboard.brand.complete', { 
+        businessType: data.businessType,
+        template: data.selectedTemplate
+      });
+    }
+
     // Save onboarding data
     localStorage.setItem('brand_onboarding', JSON.stringify(data));
     
-    // Navigate to appropriate brand hub
+    // Navigate to brand hub with template pre-loaded
     const hubRoute = data.businessType === 'enterprise' ? '/brand/enterprise' : '/brand/local';
-    navigate(hubRoute);
+    navigate(hubRoute, { 
+      state: { 
+        selectedTemplate: data.selectedTemplate,
+        onboardingData: data 
+      }
+    });
   };
 
   const canProceed = () => {
     switch (step) {
       case 1:
-        return data.businessName && data.businessType && data.industry && data.location;
+        return data.businessName && data.businessType;
       case 2:
-        return data.campaignType && data.targetAudience && data.budget && data.timeline;
-      case 3:
         return data.selectedTemplate;
       default:
         return false;
@@ -169,19 +180,19 @@ export function BrandOnboarding() {
                     />
                   </div>
 
-                  <div className="space-y-3">
-                    <Label>Business Type *</Label>
-                    <div className="grid gap-3">
-                      {businessTypes.map((type) => (
-                        <Card 
-                          key={type.value}
-                          className={`cursor-pointer transition-all ${
-                            data.businessType === type.value 
-                              ? 'ring-2 ring-primary bg-primary/5' 
-                              : 'hover:shadow-md'
-                          }`}
-                          onClick={() => setData({...data, businessType: type.value as 'enterprise' | 'local-business'})}
-                        >
+                    <div className="space-y-3">
+                      <Label>Local or National? *</Label>
+                      <div className="grid gap-3">
+                        {businessTypes.map((type) => (
+                          <Card 
+                            key={type.value}
+                            className={`cursor-pointer transition-all ${
+                              data.businessType === type.value 
+                                ? 'ring-2 ring-primary bg-primary/5' 
+                                : 'hover:shadow-md'
+                            }`}
+                            onClick={() => setData({...data, businessType: type.value as 'local' | 'enterprise'})}
+                          >
                           <CardContent className="p-4">
                             <div className="flex items-start gap-3">
                               <div className="w-2 h-2 rounded-full bg-primary mt-2" />
@@ -196,138 +207,26 @@ export function BrandOnboarding() {
                     </div>
                   </div>
 
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="industry">Industry *</Label>
-                      <Select onValueChange={(value) => setData({...data, industry: value})}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select industry" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="retail">Retail</SelectItem>
-                          <SelectItem value="technology">Technology</SelectItem>
-                          <SelectItem value="healthcare">Healthcare</SelectItem>
-                          <SelectItem value="finance">Finance</SelectItem>
-                          <SelectItem value="food-beverage">Food & Beverage</SelectItem>
-                          <SelectItem value="fashion">Fashion</SelectItem>
-                          <SelectItem value="automotive">Automotive</SelectItem>
-                          <SelectItem value="real-estate">Real Estate</SelectItem>
-                          <SelectItem value="other">Other</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="location">Primary Location *</Label>
-                      <Input
-                        id="location"
-                        value={data.location}
-                        onChange={(e) => setData({...data, location: e.target.value})}
-                        placeholder="City, State"
-                      />
-                    </div>
-                  </div>
-
                   <div className="space-y-2">
-                    <Label htmlFor="size">Company Size</Label>
-                    <Select onValueChange={(value) => setData({...data, size: value})}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select company size" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="1-10">1-10 employees</SelectItem>
-                        <SelectItem value="11-50">11-50 employees</SelectItem>
-                        <SelectItem value="51-200">51-200 employees</SelectItem>
-                        <SelectItem value="201-1000">201-1000 employees</SelectItem>
-                        <SelectItem value="1000+">1000+ employees</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Label htmlFor="website">Website (Optional)</Label>
+                    <Input
+                      id="website"
+                      value={data.website}
+                      onChange={(e) => setData({...data, website: e.target.value})}
+                      placeholder="https://yourwebsite.com"
+                    />
                   </div>
                 </CardContent>
               </Card>
             )}
 
-            {/* Step 2: Campaign Basics */}
+            {/* Step 2: Choose Campaign Template */}
             {step === 2 && (
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <Target className="w-5 h-5" />
-                    Your first campaign
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="campaignType">Campaign Type *</Label>
-                    <Select onValueChange={(value) => setData({...data, campaignType: value})}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="What type of campaign?" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="product-launch">Product Launch</SelectItem>
-                        <SelectItem value="brand-awareness">Brand Awareness</SelectItem>
-                        <SelectItem value="local-event">Local Event</SelectItem>
-                        <SelectItem value="seasonal">Seasonal Promotion</SelectItem>
-                        <SelectItem value="ongoing">Ongoing Content</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="targetAudience">Target Audience *</Label>
-                    <Textarea
-                      id="targetAudience"
-                      value={data.targetAudience}
-                      onChange={(e) => setData({...data, targetAudience: e.target.value})}
-                      placeholder="Describe your ideal audience (age, interests, location, etc.)"
-                      rows={3}
-                    />
-                  </div>
-
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="budget">Campaign Budget *</Label>
-                      <Select onValueChange={(value) => setData({...data, budget: value})}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select budget range" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="under-5k">Under $5,000</SelectItem>
-                          <SelectItem value="5k-15k">$5,000 - $15,000</SelectItem>
-                          <SelectItem value="15k-50k">$15,000 - $50,000</SelectItem>
-                          <SelectItem value="50k-100k">$50,000 - $100,000</SelectItem>
-                          <SelectItem value="over-100k">Over $100,000</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="timeline">Timeline *</Label>
-                      <Select onValueChange={(value) => setData({...data, timeline: value})}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Campaign length" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="1-week">1 week</SelectItem>
-                          <SelectItem value="2-4-weeks">2-4 weeks</SelectItem>
-                          <SelectItem value="1-3-months">1-3 months</SelectItem>
-                          <SelectItem value="3-6-months">3-6 months</SelectItem>
-                          <SelectItem value="ongoing">Ongoing</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Step 3: Template Selection */}
-            {step === 3 && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
                     <FileText className="w-5 h-5" />
-                    Choose your campaign template
+                    Choose a campaign template
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
@@ -361,19 +260,6 @@ export function BrandOnboarding() {
                       </Card>
                     ))}
                   </div>
-
-                  {data.selectedTemplate && (
-                    <div className="space-y-2">
-                      <Label htmlFor="customization">Template Customization (Optional)</Label>
-                      <Textarea
-                        id="customization"
-                        value={data.templateCustomization}
-                        onChange={(e) => setData({...data, templateCustomization: e.target.value})}
-                        placeholder="Any specific requirements or modifications for your campaign template?"
-                        rows={3}
-                      />
-                    </div>
-                  )}
                 </CardContent>
               </Card>
             )}
