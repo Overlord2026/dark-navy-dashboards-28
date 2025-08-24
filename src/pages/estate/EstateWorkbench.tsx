@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -24,6 +24,9 @@ const EstateWorkbench = () => {
   const [clientId] = useState('demo-client');
   const [mismatches, setMismatches] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [showDeedRequest, setShowDeedRequest] = useState(false);
+  const [showFundingLetters, setShowFundingLetters] = useState(false);
+  const [deedRequests] = useState<any[]>([]);
 
   const handleGrantAuthority = async (role: 'POA' | 'Trustee' | 'Executor', subjectId: string) => {
     setLoading(true);
@@ -168,6 +171,10 @@ const EstateWorkbench = () => {
               <Users className="h-4 w-4" />
               Beneficiaries
             </TabsTrigger>
+            <TabsTrigger value="property" className="flex items-center gap-2">
+              <FileText className="h-4 w-4" />
+              Property
+            </TabsTrigger>
             <TabsTrigger value="survivorship" className="flex items-center gap-2">
               <Calculator className="h-4 w-4" />
               Survivorship
@@ -175,10 +182,6 @@ const EstateWorkbench = () => {
             <TabsTrigger value="binder" className="flex items-center gap-2">
               <Archive className="h-4 w-4" />
               Binder
-            </TabsTrigger>
-            <TabsTrigger value="diy" className="flex items-center gap-2">
-              <FileText className="h-4 w-4" />
-              DIY Premium
             </TabsTrigger>
           </TabsList>
 
@@ -301,6 +304,62 @@ const EstateWorkbench = () => {
             </Card>
           </TabsContent>
 
+          <TabsContent value="property" className="space-y-6">
+            <div className="grid gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <FileText className="h-5 w-5" />
+                    Property & Funding
+                  </CardTitle>
+                  <CardDescription>
+                    Request deeds and generate funding letters for trust and estate planning
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <p className="text-sm text-blue-800">
+                      <strong>UPL Notice:</strong> Deeds are prepared by licensed attorneys only. 
+                      Your request will be routed to a state-licensed attorney.
+                    </p>
+                  </div>
+                  
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <Button onClick={() => setShowDeedRequest(true)} className="flex items-center gap-2">
+                      <FileText className="h-4 w-4" />
+                      Request a Deed
+                    </Button>
+                    
+                    <Button variant="outline" onClick={() => setShowFundingLetters(true)}>
+                      Generate Funding Letters
+                    </Button>
+                  </div>
+                  
+                  {deedRequests.length > 0 && (
+                    <div className="space-y-3">
+                      <h4 className="font-medium">Your Deed Requests</h4>
+                      {deedRequests.map((request) => (
+                        <Card key={request.id} className="p-4">
+                          <div className="flex justify-between items-start">
+                            <div>
+                              <p className="font-medium">{request.propertyAddress}</p>
+                              <p className="text-sm text-muted-foreground">
+                                {request.deedType} • {request.status}
+                              </p>
+                            </div>
+                            <Badge variant={request.status === 'recorded' ? 'default' : 'secondary'}>
+                              {request.status}
+                            </Badge>
+                          </div>
+                        </Card>
+                      ))}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
           <TabsContent value="survivorship" className="space-y-6">
             <Card>
               <CardHeader>
@@ -374,49 +433,6 @@ const EstateWorkbench = () => {
             </Card>
           </TabsContent>
 
-          <TabsContent value="diy" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <FileText className="h-5 w-5" />
-                  DIY Premium Estate Planning
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="text-center p-8">
-                  <Crown className="h-12 w-12 mx-auto mb-4 text-primary" />
-                  <h3 className="font-medium mb-2">Premium DIY Estate Planning</h3>
-                  <p className="text-sm text-muted-foreground mb-6">
-                    State-aware document generation with attorney review option
-                  </p>
-                  <Button asChild>
-                    <a href="/estate/diy">Start DIY Premium</a>
-                  </Button>
-                </div>
-                
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="p-4 border rounded-lg">
-                    <h4 className="font-medium">Included</h4>
-                    <ul className="text-sm text-muted-foreground mt-2 space-y-1">
-                      <li>• Last Will & Testament</li>
-                      <li>• Revocable Living Trust</li>
-                      <li>• Financial Power of Attorney</li>
-                      <li>• State execution guidance</li>
-                    </ul>
-                  </div>
-                  <div className="p-4 border rounded-lg">
-                    <h4 className="font-medium">Optional Add-ons</h4>
-                    <ul className="text-sm text-muted-foreground mt-2 space-y-1">
-                      <li>• Attorney review</li>
-                      <li>• Notary coordination</li>
-                      <li>• Document execution</li>
-                      <li>• Annual updates</li>
-                    </ul>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
         </Tabs>
       </div>
     </div>
