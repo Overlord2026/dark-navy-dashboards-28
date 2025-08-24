@@ -53,6 +53,14 @@ import { SolutionsHub } from '@/components/solutions/SolutionsHub';
 
 const DemoPage = React.lazy(() => import('@/pages/demos/[persona]'));
 const PreviewPage = React.lazy(() => import('@/components/PreviewPage'));
+
+// Estate Planning Components
+const EstateWorkbench = React.lazy(() => import('@/pages/estate/EstateWorkbench'));
+const EstateDIYWizard = React.lazy(() => import('@/pages/estate/EstateDIYWizard'));
+const AdvisorEstatePage = React.lazy(() => import('@/pages/advisors/AdvisorEstatePage'));
+const AttorneyEstateWorkbench = React.lazy(() => import('@/pages/attorney/AttorneyEstateWorkbench'));
+const CPAEstatePage = React.lazy(() => import('@/pages/cpa/CPAEstatePage'));
+
 import FamilyHome from '@/pages/family/Home';
 import FamilyToolsHub from '@/pages/family/FamilyToolsHub';
 import RothLadderTool from '@/pages/family/RothLadderTool';
@@ -122,6 +130,33 @@ function App() {
             {getFlag('ONBOARDING_PUBLIC_ENABLED') && <Route path="/start/nil-athlete" element={<NILOnboardingFlow type="athlete" />} />}
             {getFlag('ONBOARDING_PUBLIC_ENABLED') && <Route path="/start/nil-school" element={<NILOnboardingFlow type="school" />} />}
             {getFlag('BRAND_PUBLIC_ENABLED') && <Route path="/start/brand" element={<BrandOnboarding />} />}
+            
+            {/* Estate Planning Routes */}
+            <Route path="/estate/workbench" element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <EstateWorkbench />
+              </Suspense>
+            } />
+            <Route path="/estate/diy" element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <EstateDIYWizard />
+              </Suspense>
+            } />
+            <Route path="/advisors/estate" element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <AdvisorEstatePage />
+              </Suspense>
+            } />
+            <Route path="/attorney/estate" element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <AttorneyEstateWorkbench />
+              </Suspense>
+            } />
+            <Route path="/cpa/estate" element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <CPAEstatePage />
+              </Suspense>
+            } />
             
             {/* Family App Routes (Authenticated) */}
             <Route path="/family/home" element={<FamilyHome />} />
