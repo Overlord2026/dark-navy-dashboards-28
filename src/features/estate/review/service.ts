@@ -146,7 +146,9 @@ export async function deliverReviewPacket(options: {
   } as any);
 
   session.status = 'delivered';
-  session.signedPacket = { pdfId: signedPdfId, sha256: session.signedLetter?.sha256 || '' };
+  const currentVersion = session.finalVersions?.find(v => v.vno === session.currentVno);
+  const finalPdfId = currentVersion?.pdfId || signedPdfId;
+  session.finalVersions = session.finalVersions || [];
 
   storeReviewSession(session);
 }

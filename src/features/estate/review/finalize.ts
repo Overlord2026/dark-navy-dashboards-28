@@ -2,6 +2,7 @@ import { mergePdfs, loadPdfFromVault } from '@/lib/pdf/merge';
 import { stampPdfBrandHeaderFooter } from '@/lib/pdf/brandFooter';
 import { hash } from '@/lib/canonical';
 import { recordReceipt } from '@/features/receipts/record';
+import type { FinalVersion } from './types';
 
 export async function finalizeReviewPacket({
   sessionId,
@@ -63,6 +64,7 @@ export async function finalizeReviewPacket({
     } as any);
     
     console.log(`[ARP] Anchored final packet: ${sha}`);
+    return { finalPdfId, sha256: sha, anchor_ref: anchorRef };
   }
 
   // 7) Log Vault-RDS for final packet storage
@@ -76,6 +78,59 @@ export async function finalizeReviewPacket({
   } as any);
 
   return { finalPdfId, sha256: sha };
+}
+
+// Compute a stable hash of build-inputs for change detection
+export async function computeReviewInputsHash({
+  clientId,
+  state,
+  letterSha256,
+  packetSha256,
+  checklistState
+}: {
+  clientId: string;
+  state: string;
+  letterSha256: string;
+  packetSha256: string;
+  checklistState: any; // serialize minimal shape (IDs + pass/fail booleans, not PII)
+}) {
+  return await hash({ 
+    clientId, 
+    state, 
+    letterSha256, 
+    packetSha256, 
+    checklist: checklistState, 
+    tsFloor: Math.floor(Date.now() / 60000) 
+  });
+}
+
+// Create a new version entry
+export function makeFinalVersion({
+  previous,
+  pdfId,
+  sha256,
+  anchor_ref,
+  builtBy,
+  reason
+}: {
+  previous?: FinalVersion[];
+  pdfId: string;
+  sha256: string;
+  anchor_ref?: any;
+  builtBy: string;
+  reason?: string;
+}): FinalVersion[] {
+  const vno = (previous?.[previous.length - 1]?.vno || 0) + 1;
+  const entry: FinalVersion = { 
+    vno, 
+    pdfId, 
+    sha256, 
+    anchor_ref, 
+    builtAt: new Date().toISOString(), 
+    builtBy, 
+    reason 
+  };
+  return [...(previous || []), entry];
 }
 
 export async function loadReviewPacketPdfs(session: any) {

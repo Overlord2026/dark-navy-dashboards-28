@@ -9,8 +9,10 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { buildReviewLetter, applyAttorneyESign } from '@/features/estate/review/builder';
-import { signReviewLetter, deliverReviewPacket, getAllReviewSessions } from '@/features/estate/review/service';
+import { signReviewLetter, getAllReviewSessions } from '@/features/estate/review/service';
 import { finalizeReviewPacket, loadReviewPacketPdfs } from '@/features/estate/review/finalize';
+import { rebuildFinalPacket, setCurrentVersion } from '@/features/estate/review/rebuild';
+import { deliverReviewPacket } from '@/features/estate/review/deliver';
 import { useToast } from '@/hooks/use-toast';
 import type { ReviewSession, AttorneyInfo } from '@/features/estate/review/types';
 
@@ -118,13 +120,19 @@ Please ensure all execution formalities are followed precisely as outlined to en
         anchor: anchorEnabled
       });
       
-      // Update session with final packet
+      // Update session with final version
       const updatedSession = {
         ...session,
-        signedPacket: { 
+        finalVersions: [{
+          vno: 1,
           pdfId: result.finalPdfId, 
-          sha256: result.sha256 
-        }
+          sha256: result.sha256,
+          anchor_ref: result.anchor_ref,
+          builtAt: new Date().toISOString(),
+          builtBy: 'current-attorney-id',
+          reason: 'Initial final packet'
+        }],
+        currentVno: 1
       };
       setSession(updatedSession);
       
@@ -145,28 +153,68 @@ Please ensure all execution formalities are followed precisely as outlined to en
     }
   };
 
+  const handleRebuildFinal = async () => {
+    if (!session) return;
+    
+    const reason = prompt('Why rebuild? (e.g., "Updated POA", "Checklist fixes")') || 'unspecified';
+    
+    setLoading(true);
+    try {
+      // Load PDF bytes from vault
+      const { letterPdf, packetPdf } = await loadReviewPacketPdfs(session);
+      
+      const footerTag = `Reviewed & Signed on ${new Date().toLocaleString()}`;
+      const anchorEnabled = import.meta.env.VITE_ARP_ANCHOR_ON_FINAL === 'true';
+      
+      const updatedSession = await rebuildFinalPacket({
+        session,
+        clientId: session.clientId,
+        letterBytes: letterPdf,
+        packetBytes: packetPdf,
+        footerTag,
+        builtBy: 'current-attorney-id', // TODO: get actual user ID
+        reason,
+        anchor: anchorEnabled
+      });
+      
+      setSession(updatedSession);
+      
+      toast({
+        title: 'Final Packet Rebuilt',
+        description: `Final v${updatedSession.currentVno} created${anchorEnabled ? ' (anchored)' : ''}.`,
+      });
+      
+    } catch (error) {
+      console.error('Failed to rebuild final packet:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to rebuild final packet. Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleDeliverPacket = async () => {
-    if (!session || (!session.signedLetter && !session.signedPacket)) return;
+    if (!session) return;
 
     setLoading(true);
     try {
+      const updatedSession = { ...session };
       await deliverReviewPacket({
-        sessionId: session.id,
-        familyUserId: session.clientId, // Simplified - would be actual family user ID
-        signedPdfId: session.signedLetter?.pdfId,
-        mergedPdfId: session.signedPacket?.pdfId
+        session: updatedSession,
+        familyUserId: session.clientId
       });
 
-      // Refresh session data
-      const sessions = getAllReviewSessions();
-      const updatedSession = sessions.find(s => s.id === id);
-      if (updatedSession) {
-        setSession(updatedSession);
-      }
+      // Update local session state
+      updatedSession.deliveredVno = updatedSession.currentVno;
+      updatedSession.status = 'delivered';
+      setSession(updatedSession);
 
       toast({
         title: 'Package Delivered',
-        description: 'Review package has been delivered to the family.',
+        description: `Review package v${updatedSession.deliveredVno || 'legacy'} has been delivered to the family.`,
       });
     } catch (error) {
       console.error('Error delivering package:', error);
@@ -346,21 +394,91 @@ Please ensure all execution formalities are followed precisely as outlined to en
                 </div>
 
                 {session.signedLetter && (
-                  <div className="flex justify-between items-center pt-4 border-t">
-                    <div>
-                      {session.signedPacket ? (
-                        <Badge variant="default">Final Packet Ready</Badge>
-                      ) : (
-                        <Badge variant="secondary">Ready to Merge</Badge>
-                      )}
+                  <div className="space-y-4 pt-4 border-t">
+                    <div className="flex justify-between items-center">
+                      <div>
+                        {session.finalVersions?.length ? (
+                          <Badge variant="default">v{session.currentVno} Current</Badge>
+                        ) : (
+                          <Badge variant="secondary">Ready to Create Final</Badge>
+                        )}
+                      </div>
+                      <div className="flex gap-2">
+                        <Button 
+                          onClick={handleMergeAndStamp}
+                          disabled={loading || !session.signedLetter}
+                          size="sm"
+                        >
+                          {loading ? 'Processing...' : session.finalVersions?.length ? 'Create v1' : 'Merge & Stamp Final'}
+                        </Button>
+                        {session.finalVersions?.length && (
+                          <Button 
+                            onClick={handleRebuildFinal}
+                            disabled={loading}
+                            variant="outline"
+                            size="sm"
+                          >
+                            Rebuild v{(session.finalVersions?.length || 0) + 1}
+                          </Button>
+                        )}
+                      </div>
                     </div>
-                    <Button 
-                      onClick={handleMergeAndStamp}
-                      disabled={loading || !!session.signedPacket}
-                      variant={session.signedPacket ? "outline" : "default"}
-                    >
-                      {loading ? 'Processing...' : session.signedPacket ? 'Final Packet Created' : 'Merge & Stamp Final Packet'}
-                    </Button>
+
+                    {/* Version history table */}
+                    {session.finalVersions?.length ? (
+                      <div className="mt-4">
+                        <h3 className="font-semibold text-sm mb-2">Final Versions</h3>
+                        <div className="overflow-x-auto">
+                          <table className="w-full text-xs border rounded">
+                            <thead className="bg-muted">
+                              <tr>
+                                <th className="text-left p-2">Version</th>
+                                <th className="text-left p-2">SHA256</th>
+                                <th className="text-left p-2">Built</th>
+                                <th className="text-left p-2">By</th>
+                                <th className="text-left p-2">Anchor</th>
+                                <th className="text-left p-2">Reason</th>
+                                <th className="text-left p-2">Current</th>
+                                <th className="text-left p-2">Actions</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {session.finalVersions.map(v => (
+                                <tr key={v.vno} className="border-t">
+                                  <td className="p-2">v{v.vno}</td>
+                                  <td className="p-2 font-mono">{v.sha256.slice(0, 18)}…</td>
+                                  <td className="p-2">{new Date(v.builtAt).toLocaleString()}</td>
+                                  <td className="p-2">{v.builtBy}</td>
+                                  <td className="p-2">{v.anchor_ref ? '✓' : '-'}</td>
+                                  <td className="p-2">{v.reason || '-'}</td>
+                                  <td className="p-2">{session.currentVno === v.vno ? '●' : ''}</td>
+                                  <td className="p-2">
+                                    <div className="flex gap-1">
+                                      <Button variant="link" size="sm" className="h-auto p-0 text-xs">
+                                        Download
+                                      </Button>
+                                      {session.currentVno !== v.vno && (
+                                        <Button 
+                                          variant="link" 
+                                          size="sm" 
+                                          className="h-auto p-0 text-xs"
+                                          onClick={() => {
+                                            const updated = setCurrentVersion(session, v.vno);
+                                            if (updated) setSession(updated);
+                                          }}
+                                        >
+                                          Set Current
+                                        </Button>
+                                      )}
+                                    </div>
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    ) : null}
                   </div>
                 )}
               </div>
@@ -380,15 +498,20 @@ Please ensure all execution formalities are followed precisely as outlined to en
               <div className="p-4 bg-muted rounded-lg">
                 <h3 className="font-medium mb-2">Package Contents:</h3>
                 <ul className="text-sm text-muted-foreground space-y-1">
-                  {session.signedPacket ? (
-                    <li>• <strong>Final merged packet</strong> (branded, signed, ready to print)</li>
-                  ) : (
+                  {session.finalVersions?.length ? (
+                    <li>• <strong>Final packet v{session.currentVno}</strong> (branded, signed, ready to print)</li>
+                  ) : session.signedLetter ? (
                     <>
                       <li>• Review packet PDF with state execution summary</li>
                       <li>• Attorney review letter (signed)</li>
                       <li>• Execution checklist and instructions</li>
                       <li>• Document previews</li>
                     </>
+                  ) : (
+                    <li>• Pending attorney signature</li>
+                  )}
+                  {session.deliveredVno && session.currentVno !== session.deliveredVno && (
+                    <li className="text-amber-600">⚠ Delivered v{session.deliveredVno}, but current is v{session.currentVno}</li>
                   )}
                 </ul>
               </div>
@@ -400,18 +523,18 @@ Please ensure all execution formalities are followed precisely as outlined to en
                   </p>
                   <p className="text-sm text-muted-foreground">
                     {session.status === 'delivered' 
-                      ? 'Package has been delivered to family'
-                      : session.signedPacket
-                      ? 'Final packet ready for delivery'
-                      : 'Attorney signature and final packet required'
+                      ? `Package v${session.deliveredVno || 'legacy'} has been delivered to family`
+                      : session.finalVersions?.length
+                      ? `Final packet v${session.currentVno} ready for delivery`
+                      : 'Final packet creation required'
                     }
                   </p>
                 </div>
                 <Button 
                   onClick={handleDeliverPacket}
-                  disabled={loading || (!session.signedLetter && !session.signedPacket) || session.status === 'delivered'}
+                  disabled={loading || (!session.finalVersions?.length && !session.signedLetter) || session.status === 'delivered'}
                 >
-                  {loading ? 'Delivering...' : 'Deliver to Family'}
+                  {loading ? 'Delivering...' : `Deliver v${session.currentVno || 'legacy'} to Family`}
                 </Button>
               </div>
             </CardContent>

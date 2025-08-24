@@ -1,20 +1,19 @@
 import { recordReceipt } from '@/features/receipts/record';
+import type { ReviewSession } from './types';
 
 export async function deliverReviewPacket(options: {
-  sessionId: string;
-  familyUserId: string;
-  signedPdfId?: string;
-  mergedPdfId?: string;
+  session: ReviewSession;
+  familyUserId?: string;
 }): Promise<void> {
-  const { sessionId, familyUserId, signedPdfId, mergedPdfId } = options;
-  
-  // Prefer merged final packet over individual signed letter
-  const deliverId = mergedPdfId || signedPdfId;
+  const { session, familyUserId = session.clientId } = options;
+
+  // Prefer current final version, fallback to signed letter or packet
+  const currentVersion = session.finalVersions?.find(v => v.vno === session.currentVno);
+  const deliverId = currentVersion?.pdfId || session.signedLetter?.pdfId || session.packet.pdfId;
 
   // PRE share to family user (Vault grant)
-  // In a real implementation, this would call the actual vault service
   console.log(`Granting access to ${deliverId} for user ${familyUserId}`);
-  const ismerged = !!mergedPdfId;
+  const versionLabel = currentVersion ? `v${currentVersion.vno}` : 'legacy';
 
   // Log Consent-RDS with scope for estate review packet
   await recordReceipt({
@@ -41,12 +40,16 @@ export async function deliverReviewPacket(options: {
   await recordReceipt({
     type: 'Decision-RDS',
     action: 'estate.review.deliver',
-    reasons: [`session:${sessionId}`, deliverId!, ismerged ? 'merged_final' : 'signed_letter'],
+    reasons: [`session:${session.id}`, `v:${currentVersion?.vno || 'n/a'}`, deliverId!],
     participant_id: familyUserId,
     created_at: new Date().toISOString()
   } as any);
 
-  console.log(`✅ Review packet delivered to family user ${familyUserId}`);
+  // Update session with delivery tracking
+  session.deliveredVno = currentVersion?.vno;
+  session.status = 'delivered';
+
+  console.log(`✅ Review packet ${versionLabel} delivered to family user ${familyUserId}`);
 }
 
 export async function notifyFamilyOfDelivery(options: {

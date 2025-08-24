@@ -61,12 +61,22 @@ export default function ReviewView() {
     <div className="container mx-auto py-6 max-w-4xl">
       <div className="mb-6">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">Your Estate Planning Review Package</h1>
+          <h1 className="text-2xl font-bold">
+            Your Estate Planning Review Package
+            {session.deliveredVno && ` v${session.deliveredVno}`}
+          </h1>
           <Badge variant="default">Ready for Execution</Badge>
         </div>
         <p className="text-muted-foreground mt-2">
           State: {session.state} • Reviewed: {new Date(session.createdAt).toLocaleDateString()}
         </p>
+        {session.deliveredVno && session.currentVno !== session.deliveredVno && (
+          <div className="mt-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+            <p className="text-sm text-amber-800">
+              ⚠ You received v{session.deliveredVno}, but a newer version v{session.currentVno} is available. Contact your attorney for the latest version.
+            </p>
+          </div>
+        )}
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
