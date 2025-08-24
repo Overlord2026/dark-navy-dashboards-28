@@ -7,6 +7,7 @@ import { riskScore, riskBand } from '@/features/estate/console/risk';
 import { loadViews, addView, removeView, exportViews, importViews, SavedView } from '@/features/estate/console/views';
 import { explainFlags, FlagKey } from '@/features/estate/console/explainer';
 import { loadConsoleJobs, scheduleJob, removeConsoleJob, ConsoleJobSpec } from '@/features/estate/console/jobs';
+import { getCurrentTenantId } from '@/features/tenant/context';
 import { recordReceipt } from '@/features/receipts/record';
 import type { PortfolioRow } from '@/features/estate/console/data';
 
@@ -621,6 +622,7 @@ export default function ChecklistConsole() {
                 onClick={async () => {
                   const spec: ConsoleJobSpec = {
                     id: crypto.randomUUID(),
+                    tenantId: getCurrentTenantId(),
                     name: `${jobModal.kind} — ${jobModal.filter}`,
                     kind: jobModal.kind,
                     filter: jobModal.filter as any,

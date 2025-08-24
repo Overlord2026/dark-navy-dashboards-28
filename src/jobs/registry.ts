@@ -1,6 +1,7 @@
 import { runArpNudgeWeekly } from './arpNudgeWeekly';
 import { runChecklistNightly } from './checklistNightly';
 import { runConsoleScheduledRunner } from './consoleScheduledRunner';
+import { runConsoleScheduledRunnerHourly } from './consoleScheduledRunnerHourly';
 import type { JobDefinition } from './types';
 
 export const jobs: JobDefinition[] = [
@@ -17,9 +18,15 @@ export const jobs: JobDefinition[] = [
     run: runChecklistNightly
   },
   {
-    key: 'console.scheduled.runner',
+    key: 'console.scheduled.runner.hourly',
     enabledFlag: 'CHECKLIST_JOBS_BRIDGE',
-    intervalMs: 24 * 60 * 60 * 1000, // Daily - runner decides what's due
+    intervalMs: 60 * 60 * 1000,                 // hourly
+    run: runConsoleScheduledRunnerHourly
+  },
+  {
+    key: 'console.scheduled.runner.daily',
+    enabledFlag: 'CHECKLIST_JOBS_BRIDGE',
+    intervalMs: 24 * 3600 * 1000,               // daily summary (optional keep)
     run: runConsoleScheduledRunner
   }
 ];
