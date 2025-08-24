@@ -46,7 +46,7 @@ import { SolutionsHub } from '@/components/solutions/SolutionsHub';
 
 const DemoPage = React.lazy(() => import('@/pages/demos/[persona]'));
 const PreviewPage = React.lazy(() => import('@/components/PreviewPage'));
-import FamilyHome from '@/pages/families/FamilyHome';
+import FamilyHome from '@/pages/family/Home';
 
 function App() {
   // Check authentication status (simplified for demo)

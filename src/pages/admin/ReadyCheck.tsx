@@ -192,26 +192,40 @@ export default function ReadyCheck() {
       details: audit.broken
     });
 
-    // Preview mappings
+    // Preview mappings - show count from auditLinks
+    const previewMappedCount = audit.previews.length;
     res.push({
-      label: 'Preview-mapped routes',
-      status: audit.previews.length > 0 ? 'warn' : 'ok',
-      notes: audit.previews.length > 0 ? 
-        [`${audit.previews.length} routes mapped to previews`, ...audit.previews.slice(0, 5).map(p => `${p.route} → /preview/${p.toolKey || 'unknown'}`)] :
+      label: `Preview-mapped routes (${previewMappedCount} found)`,
+      status: previewMappedCount > 0 ? 'warn' : 'ok',
+      notes: previewMappedCount > 0 ? 
+        [`${previewMappedCount} routes mapped to previews`, ...audit.previews.slice(0, 5).map(p => `${p.route} → /preview/${p.toolKey || 'unknown'}`)] :
         ['All routes have implementations'],
       details: audit.previews
     });
 
-    // Family tools coverage
+    // Family tools coverage - OK if all toolKeys resolve to private route or preview
     const familyCoveragePercent = Math.round((audit.familyToolsCoverage.covered / audit.familyToolsCoverage.total) * 100);
+    const familyMissingButPreviewable = audit.familyToolsCoverage.missing.filter(m => 
+      audit.previews.some(p => p.toolKey === m.toolKey)
+    );
+    const familyActuallyMissing = audit.familyToolsCoverage.missing.filter(m => 
+      !audit.previews.some(p => p.toolKey === m.toolKey)
+    );
+    
     res.push({
       label: 'Family tools coverage',
-      status: audit.familyToolsCoverage.missing.length > 0 ? 'warn' : 'ok',
+      status: familyActuallyMissing.length > 0 ? 'warn' : 'ok',
       notes: [
-        `${audit.familyToolsCoverage.covered}/${audit.familyToolsCoverage.total} tools accessible (${familyCoveragePercent}%)`,
-        ...audit.familyToolsCoverage.missing.slice(0, 3).map(m => `Missing: ${m.route} (${m.segment}/${m.tab || m.type})`)
+        `${audit.familyToolsCoverage.covered}/${audit.familyToolsCoverage.total} tools have routes (${familyCoveragePercent}%)`,
+        `${familyMissingButPreviewable.length} missing tools have preview fallbacks`,
+        `${familyActuallyMissing.length} tools completely unreachable`,
+        ...familyActuallyMissing.slice(0, 3).map(m => `Missing: ${m.route} (${m.segment}/${m.tab || m.type})`)
       ],
-      details: audit.familyToolsCoverage
+      details: { 
+        ...audit.familyToolsCoverage, 
+        previewFallbacks: familyMissingButPreviewable.length,
+        actuallyMissing: familyActuallyMissing.length 
+      }
     });
 
     // NIL tools coverage

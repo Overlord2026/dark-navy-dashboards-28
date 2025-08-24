@@ -1,36 +1,51 @@
-// Annuities Review seeder
-import { supabase } from '@/integrations/supabase/client';
+/**
+ * Seeder for annuities-review tool
+ * Creates sample proof slips when tool is installed with seed=true
+ */
 
 export default async function seedAnnuitiesReview() {
   try {
-    // Create sample annuity review data
-    const sampleData = {
-      user_id: 'demo-user',
-      annuity_type: 'fixed_indexed',
-      provider: 'Sample Insurance Co.',
-      annual_premium: 50000,
-      surrender_period: 7,
-      fees: {
-        management: 1.25,
-        rider: 0.75,
-        surrender: 8.5
+    // Create mock proof slips for the annuities review tool
+    const proofSlips = [
+      {
+        id: `ar-${Date.now()}-1`,
+        type: 'Annuity Analysis',
+        tool: 'annuities-review',
+        timestamp: new Date().toISOString(),
+        anchored: true,
+        data: {
+          provider: 'Example Life Insurance Co.',
+          productType: 'Fixed Indexed Annuity',
+          premiumAmount: 100000,
+          guaranteedRate: 3.5,
+          capRate: 7.0,
+          recommendation: 'Proceed with caution - high fees'
+        }
       },
-      review_status: 'pending_analysis',
-      uploaded_documents: [
-        'illustration.pdf',
-        'prospectus.pdf'
-      ],
-      created_at: new Date().toISOString()
-    };
+      {
+        id: `ar-${Date.now()}-2`,
+        type: 'Fee Analysis',
+        tool: 'annuities-review',
+        timestamp: new Date(Date.now() - 7200000).toISOString(), // 2 hours ago
+        anchored: false,
+        data: {
+          managementFee: 1.25,
+          surrenderPeriod: 8,
+          liquidityScore: 3,
+          complexityRating: 'High'
+        }
+      }
+    ];
 
-    console.log('Seeded Annuities Review demo data:', sampleData);
-    
-    // In a real implementation, you would insert into your database
-    // await supabase.from('annuity_reviews').insert(sampleData);
-    
+    // Store in localStorage for demo (in production, this would go to Supabase)
+    const existingSlips = JSON.parse(localStorage.getItem('proofSlips') || '[]');
+    const updatedSlips = [...existingSlips, ...proofSlips];
+    localStorage.setItem('proofSlips', JSON.stringify(updatedSlips));
+
+    console.log('✅ Seeded annuities-review with 2 proof slips');
     return true;
   } catch (error) {
-    console.error('Failed to seed Annuities Review data:', error);
+    console.error('❌ Failed to seed annuities-review:', error);
     return false;
   }
 }
