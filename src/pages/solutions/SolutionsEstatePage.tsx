@@ -73,6 +73,7 @@ export function SolutionsEstatePage() {
                 text="Comprehensive estate planning and wealth transfer tools for family legacy preservation"
                 variant="outline"
                 size="lg"
+                persona="family"
               />
             </div>
           </div>

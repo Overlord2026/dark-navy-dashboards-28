@@ -71,6 +71,7 @@ export function SolutionsInvestmentsPage() {
                 text="Professional investment tools and private market access for sophisticated investors"
                 variant="outline"
                 size="lg"
+                persona="advisor"
               />
             </div>
           </div>

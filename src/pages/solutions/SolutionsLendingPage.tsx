@@ -68,6 +68,7 @@ export function SolutionsLendingPage() {
                 text="Smart lending and credit optimization tools for wealth preservation"
                 variant="outline"
                 size="lg"
+                persona="advisor"
               />
             </div>
           </div>

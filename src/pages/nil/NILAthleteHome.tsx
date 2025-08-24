@@ -136,9 +136,10 @@ export default function NILAthleteHome() {
   };
 
   const handleShare = async () => {
+    const shareText = "🏆 NIL just got easier! NIL compliance and opportunity management system - Perfect for athletes navigating name, image & likeness deals with confidence.";
     const shareData = {
-      title: 'My NIL Athlete Dashboard',
-      text: 'Check out my NIL compliance and opportunity management system',
+      title: 'NIL Athlete Dashboard',
+      text: shareText,
       url: window.location.href
     };
 
@@ -157,11 +158,12 @@ export default function NILAthleteHome() {
     } else {
       try {
         analytics.trackShare('copy', 'nil-athlete');
-        await navigator.clipboard.writeText(window.location.href);
+        const copyText = `${shareText}\n\n${window.location.href}`;
+        await navigator.clipboard.writeText(copyText);
         analytics.trackShareSuccess('copy', 'nil-athlete');
         toast({
           title: "Link Copied",
-          description: "Dashboard link copied to clipboard",
+          description: "Dashboard link with message copied to clipboard",
           action: <Copy className="w-4 h-4" />
         });
       } catch (error) {

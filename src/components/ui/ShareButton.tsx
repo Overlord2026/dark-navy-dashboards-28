@@ -10,6 +10,7 @@ interface ShareButtonProps {
   variant?: 'default' | 'outline' | 'ghost';
   size?: 'default' | 'sm' | 'lg';
   className?: string;
+  persona?: 'retiree' | 'advisor' | 'nil-athlete' | 'family' | 'default';
 }
 
 export default function ShareButton({ 
@@ -18,17 +19,33 @@ export default function ShareButton({
   url = window.location.href,
   variant = 'outline',
   size = 'sm',
-  className 
+  className,
+  persona = 'default'
 }: ShareButtonProps) {
   const [copied, setCopied] = useState(false);
   const { toast } = useToast();
+
+  // Persona-specific share messages for virality
+  const getPersonaShareText = () => {
+    const personaMessages = {
+      'retiree': `🏆 Found the perfect retirement toolkit! ${text} - Tools that actually work for real people planning their next chapter.`,
+      'advisor': `💼 Game-changing tools for financial advisors! ${text} - Finally, professional-grade solutions that clients actually understand.`,
+      'nil-athlete': `🏆 NIL just got easier! ${text} - Perfect for athletes navigating name, image & likeness deals with confidence.`,
+      'family': `💡 Smart money moves made simple! ${text} - Financial planning tools designed for real families.`,
+      'default': text
+    };
+    return personaMessages[persona] || text;
+  };
+
+  const shareText = getPersonaShareText();
 
   const handleShare = async () => {
     // Analytics - share.click
     if (typeof window !== 'undefined' && (window as any).analytics) {
       (window as any).analytics.track('share.click', { 
+        persona,
         url,
-        text,
+        text: shareText,
         title
       });
     }
@@ -38,7 +55,7 @@ export default function ShareButton({
       try {
         await navigator.share({
           title,
-          text,
+          text: shareText,
           url
         });
 
@@ -46,8 +63,9 @@ export default function ShareButton({
         if (typeof window !== 'undefined' && (window as any).analytics) {
           (window as any).analytics.track('share.success', { 
             method: 'native',
+            persona,
             url,
-            text,
+            text: shareText,
             title
           });
         }
@@ -58,9 +76,10 @@ export default function ShareButton({
       }
     }
 
-    // Fallback to clipboard copy
+    // Fallback to clipboard copy (copy shareable text + URL)
     try {
-      await navigator.clipboard.writeText(url);
+      const copyText = `${shareText}\n\n${url}`;
+      await navigator.clipboard.writeText(copyText);
       setCopied(true);
       toast({
         title: "Link copied!",
@@ -71,8 +90,9 @@ export default function ShareButton({
       if (typeof window !== 'undefined' && (window as any).analytics) {
         (window as any).analytics.track('share.success', { 
           method: 'copy',
+          persona,
           url,
-          text,
+          text: shareText,
           title
         });
       }

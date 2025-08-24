@@ -73,6 +73,7 @@ export function SolutionsTaxPage() {
                 text="Proactive tax planning tools for wealth optimization and strategic tax reduction"
                 variant="outline"
                 size="lg"
+                persona="advisor"
               />
             </div>
           </div>

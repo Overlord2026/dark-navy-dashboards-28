@@ -78,6 +78,7 @@ export function Annuities() {
                 text="Complete annuities platform with education, calculators, and compliance tools"
                 variant="outline"
                 size="lg"
+                persona="retiree"
               />
             </div>
           </div>

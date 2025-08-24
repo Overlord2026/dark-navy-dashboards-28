@@ -74,6 +74,7 @@ export function SolutionsInsurancePage() {
                 text="Smart insurance planning tools with life needs analysis and comprehensive coverage review"
                 variant="outline"
                 size="lg"
+                persona="family"
               />
             </div>
           </div>
