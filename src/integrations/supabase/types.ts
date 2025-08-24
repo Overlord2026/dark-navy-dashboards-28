@@ -34625,6 +34625,39 @@ export type Database = {
         }
         Relationships: []
       }
+      user_onboarding: {
+        Row: {
+          consent_ok: boolean
+          created_at: string
+          disclosures_done: boolean
+          id: string
+          profile_complete: boolean
+          updated_at: string
+          user_id: string
+          vault_onboarded: boolean
+        }
+        Insert: {
+          consent_ok?: boolean
+          created_at?: string
+          disclosures_done?: boolean
+          id?: string
+          profile_complete?: boolean
+          updated_at?: string
+          user_id: string
+          vault_onboarded?: boolean
+        }
+        Update: {
+          consent_ok?: boolean
+          created_at?: string
+          disclosures_done?: boolean
+          id?: string
+          profile_complete?: boolean
+          updated_at?: string
+          user_id?: string
+          vault_onboarded?: boolean
+        }
+        Relationships: []
+      }
       user_onboarding_progress: {
         Row: {
           completed_at: string | null
@@ -38971,6 +39004,10 @@ export type Database = {
       get_user_organization_id: {
         Args: Record<PropertyKey, never>
         Returns: string
+      }
+      get_user_readiness: {
+        Args: { user_uuid: string }
+        Returns: Json
       }
       graphql_is_configured: {
         Args: Record<PropertyKey, never>
