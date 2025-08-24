@@ -71,6 +71,7 @@ export const FLAG_DESCRIPTIONS: Record<FeatureFlag, string> = {
   NIL_PUBLIC_ENABLED: 'Show /nil and /nil/index for unauthenticated users',
   NIL_AGENT_ENABLED: 'Enable NIL agent portal and functionality',
   NIL_SCHOOL_ENABLED: 'Enable NIL school portal and functionality',
+  BRAND_PUBLIC_ENABLED: 'Enable brand and local business NIL onboarding',
   ADMIN_TOOLS_ENABLED: 'Show admin tools (panels, ready-check, etc.)',
   INSTALL_DEFAULT_TOOLS_ON_FIRST_LOGIN: 'Auto-install default tools for new users based on their persona'
 };

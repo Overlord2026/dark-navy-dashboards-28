@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { Menu, LogIn, ArrowRight, ChevronDown, Award, Play } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Menu, LogIn, ArrowRight, ChevronDown, Award, Play, Building2 } from 'lucide-react';
 import { getFlag } from '@/lib/flags';
 
 export const PublicNavigation: React.FC = () => {
@@ -43,6 +44,14 @@ export const PublicNavigation: React.FC = () => {
         href: '/demos/nil-school',
         icon: Play,
         description: 'School compliance demonstration'
+      }
+    ] : []),
+    ...(getFlag('BRAND_PUBLIC_ENABLED') ? [
+      { 
+        label: 'For Brands & Local Businesses', 
+        href: '/start/brand',
+        icon: Building2,
+        description: 'Start your NIL campaign in 2 clicks'
       }
     ] : [])
   ];
@@ -95,6 +104,52 @@ export const PublicNavigation: React.FC = () => {
                 {item.label}
               </a>
             ))}
+            
+            {/* Desktop NIL Dropdown */}
+            {getFlag('NIL_PUBLIC_ENABLED') && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    NIL
+                    <ChevronDown className="ml-1 h-3 w-3" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent 
+                  className="w-64 bg-background border shadow-lg z-50"
+                  align="start"
+                >
+                  {nilItems.map((item) => (
+                    <DropdownMenuItem key={item.href} asChild>
+                      <a
+                        href={item.href}
+                        className="flex items-start gap-3 p-3 cursor-pointer hover:bg-muted transition-colors"
+                        onClick={() => {
+                          // Analytics for brand clicks
+                          if (item.href === '/start/brand' && typeof window !== 'undefined' && (window as any).analytics) {
+                            (window as any).analytics.track('brand.start.click', { 
+                              source: 'nil-desktop-dropdown',
+                              campaign: 'quick-start'
+                            });
+                          }
+                        }}
+                      >
+                        <item.icon className="h-4 w-4 mt-0.5 flex-shrink-0 text-primary" />
+                        <div className="min-w-0 flex-1">
+                          <div className="text-sm font-medium">{item.label}</div>
+                          <div className="text-xs text-muted-foreground">
+                            {item.description}
+                          </div>
+                        </div>
+                      </a>
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
           </div>
 
           {/* Desktop Actions */}
@@ -155,7 +210,16 @@ export const PublicNavigation: React.FC = () => {
                               key={item.href}
                               href={item.href}
                               className="group block p-3 rounded-md text-white hover:text-[#D4AF37] hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-[#67E8F9] focus:ring-offset-0 min-h-[44px] transition-colors duration-200"
-                              onClick={() => setIsOpen(false)}
+                              onClick={() => {
+                                setIsOpen(false);
+                                // Analytics for brand clicks
+                                if (item.href === '/start/brand' && typeof window !== 'undefined' && (window as any).analytics) {
+                                  (window as any).analytics.track('brand.start.click', { 
+                                    source: 'nil-mobile-menu',
+                                    campaign: 'quick-start'
+                                  });
+                                }
+                              }}
                             >
                               <div className="flex items-start gap-3">
                                 <item.icon className="h-4 w-4 mt-0.5 flex-shrink-0" />

@@ -102,15 +102,15 @@ function App() {
             {getFlag('ONBOARDING_PUBLIC_ENABLED') && <Route path="/start/healthcare" element={<HealthcareOnboarding segment="providers" />} />}
             {getFlag('ONBOARDING_PUBLIC_ENABLED') && <Route path="/start/nil-athlete" element={<NILOnboardingFlow type="athlete" />} />}
             {getFlag('ONBOARDING_PUBLIC_ENABLED') && <Route path="/start/nil-school" element={<NILOnboardingFlow type="school" />} />}
-            {getFlag('ONBOARDING_PUBLIC_ENABLED') && <Route path="/start/brand" element={<BrandOnboarding />} />}
+            {getFlag('BRAND_PUBLIC_ENABLED') && <Route path="/start/brand" element={<BrandOnboarding />} />}
             
             {/* Family App Routes (Authenticated) */}
             <Route path="/family/home" element={<FamilyHome />} />
             
             {/* Brand Hub Routes */}
-            <Route path="/brand" element={<BrandHub />} />
-            <Route path="/brand/enterprise" element={<BrandHub segment="enterprise" />} />
-            <Route path="/brand/local" element={<BrandHub segment="local-business" />} />
+            {getFlag('BRAND_PUBLIC_ENABLED') && <Route path="/brand" element={<BrandHub />} />}
+            {getFlag('BRAND_PUBLIC_ENABLED') && <Route path="/brand/enterprise" element={<BrandHub segment="enterprise" />} />}
+            {getFlag('BRAND_PUBLIC_ENABLED') && <Route path="/brand/local" element={<BrandHub segment="local-business" />} />}
             
             {/* Private App Routes */}
             <Route path="/onboarding" element={<OnboardingFlow />} />
