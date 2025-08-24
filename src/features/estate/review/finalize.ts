@@ -3,6 +3,7 @@ import { stampPdfBrandHeaderFooter } from '@/lib/pdf/brandFooter';
 import { hash } from '@/lib/canonical';
 import { recordReceipt } from '@/features/receipts/record';
 import type { FinalVersion } from './types';
+import { onReviewFinalReady } from '@/features/vault/autofill/connectors';
 
 export async function finalizeReviewPacket({
   sessionId,
@@ -76,6 +77,13 @@ export async function finalizeReviewPacket({
     reasons: ['meeting_artifacts'],
     created_at: new Date().toISOString()
   } as any);
+
+  // 8) Trigger auto-populate (if enabled)
+  try {
+    await onReviewFinalReady(sessionId, clientId, finalPdfId);
+  } catch (error) {
+    console.warn('[ARP] Auto-populate failed:', error);
+  }
 
   return { finalPdfId, sha256: sha };
 }
