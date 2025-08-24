@@ -3,44 +3,60 @@ import { supabase } from '@/integrations/supabase/client';
 
 export default async function seedWealthVault() {
   try {
-    // Create sample vault data
-    const sampleData = {
-      user_id: 'demo-user',
-      documents: [
-        {
-          type: 'will',
+    // Create mock proof slips for the wealth vault tool
+    const proofSlips = [
+      {
+        id: `wv-${Date.now()}-1`,
+        type: 'Wealth Doc Add',
+        tool: 'wealth-vault',
+        timestamp: new Date().toISOString(),
+        anchored: true,
+        data: {
+          documentType: 'Will',
           title: 'Last Will and Testament',
-          upload_date: new Date().toISOString(),
-          secure_hash: 'demo-hash-123'
-        },
-        {
-          type: 'trust',
+          status: 'Keep-Safe encrypted',
+          hash: 'demo-hash-123',
+          size: '2.4 MB',
+          uploaded: new Date().toISOString()
+        }
+      },
+      {
+        id: `wv-${Date.now()}-2`,
+        type: 'Trust Document',
+        tool: 'wealth-vault',
+        timestamp: new Date(Date.now() - 3600000).toISOString(), // 1 hour ago
+        anchored: true,
+        data: {
+          documentType: 'Trust',
           title: 'Family Trust Agreement',
-          upload_date: new Date().toISOString(),
-          secure_hash: 'demo-hash-456'
-        },
-        {
-          type: 'insurance',
+          status: 'Secured',
+          hash: 'demo-hash-456',
+          beneficiaries: 3,
+          assets: 'Real estate, investments'
+        }
+      },
+      {
+        id: `wv-${Date.now()}-3`,
+        type: 'Insurance Policy',
+        tool: 'wealth-vault',
+        timestamp: new Date(Date.now() - 7200000).toISOString(), // 2 hours ago
+        anchored: false,
+        data: {
+          documentType: 'Insurance',
           title: 'Life Insurance Policy',
-          upload_date: new Date().toISOString(),
-          secure_hash: 'demo-hash-789'
+          coverage: '$500,000',
+          premium: '$2,400/year',
+          beneficiary: 'Spouse'
         }
-      ],
-      access_log: [
-        {
-          action: 'document_uploaded',
-          timestamp: new Date().toISOString(),
-          details: 'Will uploaded and encrypted'
-        }
-      ],
-      created_at: new Date().toISOString()
-    };
+      }
+    ];
 
-    console.log('Seeded Wealth Vault demo data:', sampleData);
-    
-    // In a real implementation, you would insert into your database
-    // await supabase.from('wealth_vault').insert(sampleData);
-    
+    // Store in localStorage for demo (in production, this would go to Supabase)
+    const existingSlips = JSON.parse(localStorage.getItem('proofSlips') || '[]');
+    const updatedSlips = [...existingSlips, ...proofSlips];
+    localStorage.setItem('proofSlips', JSON.stringify(updatedSlips));
+
+    console.log('✅ Seeded wealth-vault with 3 proof slips');
     return true;
   } catch (error) {
     console.error('Failed to seed Wealth Vault data:', error);
