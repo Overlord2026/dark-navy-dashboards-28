@@ -7,6 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ToolGate } from '@/components/tools/ToolGate';
 import { 
   Shield, 
   Users, 
@@ -185,22 +186,30 @@ export const InsuranceDashboard = () => {
                 <CardTitle>Quick Actions</CardTitle>
               </CardHeader>
               <CardContent className="grid grid-cols-2 gap-3">
-                <Button variant="outline" className="h-auto p-4 flex-col gap-2">
-                  <UserPlus className="h-6 w-6" />
-                  <span className="text-sm">Invite Agent</span>
-                </Button>
-                <Button variant="outline" className="h-auto p-4 flex-col gap-2">
-                  <Upload className="h-6 w-6" />
-                  <span className="text-sm">Upload Docs</span>
-                </Button>
-                <Button variant="outline" className="h-auto p-4 flex-col gap-2">
-                  <BarChart3 className="h-6 w-6" />
-                  <span className="text-sm">View Reports</span>
-                </Button>
-                <Button variant="outline" className="h-auto p-4 flex-col gap-2">
-                  <Settings className="h-6 w-6" />
-                  <span className="text-sm">Settings</span>
-                </Button>
+                <ToolGate toolKey="agent-invite" fallbackRoute="/tools/agent-invite">
+                  <Button variant="outline" className="h-auto p-4 flex-col gap-2" data-tool-card="agent-invite">
+                    <UserPlus className="h-6 w-6" />
+                    <span className="text-sm">Invite Agent</span>
+                  </Button>
+                </ToolGate>
+                <ToolGate toolKey="insurance-vault" fallbackRoute="/tools/insurance-vault">
+                  <Button variant="outline" className="h-auto p-4 flex-col gap-2" data-tool-card="insurance-vault">
+                    <Upload className="h-6 w-6" />
+                    <span className="text-sm">Upload Docs</span>
+                  </Button>
+                </ToolGate>
+                <ToolGate toolKey="insurance-reports" fallbackRoute="/tools/insurance-reports">
+                  <Button variant="outline" className="h-auto p-4 flex-col gap-2" data-tool-card="insurance-reports">
+                    <BarChart3 className="h-6 w-6" />
+                    <span className="text-sm">View Reports</span>
+                  </Button>
+                </ToolGate>
+                <ToolGate toolKey="insurance-settings" fallbackRoute="/settings">
+                  <Button variant="outline" className="h-auto p-4 flex-col gap-2" data-tool-card="insurance-settings">
+                    <Settings className="h-6 w-6" />
+                    <span className="text-sm">Settings</span>
+                  </Button>
+                </ToolGate>
               </CardContent>
             </Card>
           </div>

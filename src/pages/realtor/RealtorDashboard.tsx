@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ToolGate } from '@/components/tools/ToolGate';
 import {
   Building2,
   Users,
@@ -265,11 +266,8 @@ const RealtorDashboard: React.FC = () => {
               </Link>
 
               {/* Row 2 */}
-              <button 
-                onClick={() => toast.info('Opening Vault quick launcher...')}
-                className="text-left"
-              >
-                <Card className="bg-brand-dark border-amber-400/20 hover:border-amber-400/40 transition-all duration-300 hover:transform hover:scale-105 cursor-pointer">
+              <ToolGate toolKey="wealth-vault" fallbackRoute="/tools/wealth-vault">
+                <Card className="bg-brand-dark border-amber-400/20 hover:border-amber-400/40 transition-all duration-300 hover:transform hover:scale-105 cursor-pointer" data-tool-card="wealth-vault">
                   <CardHeader className="pb-3">
                     <div className="flex items-center justify-between">
                       <FileText className="h-8 w-8 text-amber-400" />
@@ -283,13 +281,10 @@ const RealtorDashboard: React.FC = () => {
                     <p className="text-brand-text/60 text-sm">Share deeds, settlements, property packs</p>
                   </CardContent>
                 </Card>
-              </button>
+              </ToolGate>
 
-              <button 
-                onClick={() => toast.info('Opening Retirement Roadmap mapper...')}
-                className="text-left"
-              >
-                <Card className="bg-brand-dark border-purple-400/20 hover:border-purple-400/40 transition-all duration-300 hover:transform hover:scale-105 cursor-pointer">
+              <ToolGate toolKey="retirement-roadmap" fallbackRoute="/tools/retirement-roadmap">
+                <Card className="bg-brand-dark border-purple-400/20 hover:border-purple-400/40 transition-all duration-300 hover:transform hover:scale-105 cursor-pointer" data-tool-card="retirement-roadmap">
                   <CardHeader className="pb-3">
                     <div className="flex items-center justify-between">
                       <Calculator className="h-8 w-8 text-purple-400" />
@@ -303,13 +298,10 @@ const RealtorDashboard: React.FC = () => {
                     <p className="text-brand-text/60 text-sm">Map property cashflows to Income phases</p>
                   </CardContent>
                 </Card>
-              </button>
+              </ToolGate>
 
-              <button 
-                onClick={() => toast.info('Opening Entity Manager...')}
-                className="text-left"
-              >
-                <Card className="bg-brand-dark border-pink-400/20 hover:border-pink-400/40 transition-all duration-300 hover:transform hover:scale-105 cursor-pointer">
+              <ToolGate toolKey="entity-trust-map" fallbackRoute="/tools/entity-trust-map">
+                <Card className="bg-brand-dark border-pink-400/20 hover:border-pink-400/40 transition-all duration-300 hover:transform hover:scale-105 cursor-pointer" data-tool-card="entity-trust-map">
                   <CardHeader className="pb-3">
                     <div className="flex items-center justify-between">
                       <BarChart3 className="h-8 w-8 text-pink-400" />
@@ -323,7 +315,7 @@ const RealtorDashboard: React.FC = () => {
                     <p className="text-brand-text/60 text-sm">Map properties to LLCs, compliance reminders</p>
                   </CardContent>
                 </Card>
-              </button>
+              </ToolGate>
             </div>
           </div>
 
@@ -359,20 +351,46 @@ const RealtorDashboard: React.FC = () => {
                 <CardTitle className="text-brand-text">Quick Actions</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
-                {quickActions.map((action, index) => {
-                  const IconComponent = action.icon;
-                  return (
-                    <Button
-                      key={index}
-                      variant="outline"
-                      onClick={action.action}
-                      className="w-full justify-start gap-3 border-brand-primary/20 text-brand-text hover:bg-brand-bg"
-                    >
-                      <IconComponent className={`h-4 w-4 ${action.color}`} />
-                      {action.title}
-                    </Button>
-                  );
-                })}
+                <ToolGate toolKey="realtor-listings" fallbackRoute="/tools/realtor-listings">
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start gap-3 border-brand-primary/20 text-brand-text hover:bg-brand-bg"
+                    data-tool-card="realtor-listings"
+                  >
+                    <Building2 className="h-4 w-4 text-brand-primary" />
+                    Add Listing
+                  </Button>
+                </ToolGate>
+                <ToolGate toolKey="owner-portal" fallbackRoute="/tools/owner-portal">
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start gap-3 border-brand-primary/20 text-brand-text hover:bg-brand-bg"
+                    data-tool-card="owner-portal"
+                  >
+                    <Users className="h-4 w-4 text-brand-accent" />
+                    Invite Owner to Portal
+                  </Button>
+                </ToolGate>
+                <ToolGate toolKey="cap-rate-report" fallbackRoute="/tools/cap-rate-report">
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start gap-3 border-brand-primary/20 text-brand-text hover:bg-brand-bg"
+                    data-tool-card="cap-rate-report"
+                  >
+                    <Calculator className="h-4 w-4 text-emerald-400" />
+                    Generate Cap-Rate Report PDF
+                  </Button>
+                </ToolGate>
+                <ToolGate toolKey="property-vault" fallbackRoute="/tools/property-vault">
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start gap-3 border-brand-primary/20 text-brand-text hover:bg-brand-bg"
+                    data-tool-card="property-vault"
+                  >
+                    <Share className="h-4 w-4 text-amber-400" />
+                    Share Property Pack (Vault)
+                  </Button>
+                </ToolGate>
               </CardContent>
             </Card>
 

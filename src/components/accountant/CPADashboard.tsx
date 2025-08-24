@@ -7,6 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ToolGate } from '@/components/tools/ToolGate';
 import { 
   Calculator, 
   Users, 
@@ -198,10 +199,12 @@ export const CPADashboard = () => {
                   <Badge variant="outline">Mar 15</Badge>
                 </div>
                 
-                <Button variant="outline" className="w-full">
-                  <Calendar className="w-4 h-4 mr-2" />
-                  View Full Tax Calendar
-                </Button>
+                <ToolGate toolKey="tax-calendar" fallbackRoute="/tools/tax-calendar">
+                  <Button variant="outline" className="w-full" data-tool-card="tax-calendar">
+                    <Calendar className="w-4 h-4 mr-2" />
+                    View Full Tax Calendar
+                  </Button>
+                </ToolGate>
               </CardContent>
             </Card>
           </div>
@@ -211,14 +214,18 @@ export const CPADashboard = () => {
           <div className="flex justify-between items-center">
             <h3 className="text-lg font-semibold">Client Management</h3>
             <div className="flex space-x-2">
-              <Button variant="outline">
-                <Upload className="w-4 h-4 mr-2" />
-                Import Clients
-              </Button>
-              <Button>
-                <UserPlus className="w-4 h-4 mr-2" />
-                Invite New Client
-              </Button>
+              <ToolGate toolKey="client-import" fallbackRoute="/tools/client-import">
+                <Button variant="outline" data-tool-card="client-import">
+                  <Upload className="w-4 h-4 mr-2" />
+                  Import Clients
+                </Button>
+              </ToolGate>
+              <ToolGate toolKey="client-invite" fallbackRoute="/tools/client-invite">
+                <Button data-tool-card="client-invite">
+                  <UserPlus className="w-4 h-4 mr-2" />
+                  Invite New Client
+                </Button>
+              </ToolGate>
             </div>
           </div>
 
@@ -261,10 +268,12 @@ export const CPADashboard = () => {
         <TabsContent value="documents" className="space-y-6">
           <div className="flex justify-between items-center">
             <h3 className="text-lg font-semibold">Tax Document Vault</h3>
-            <Button>
-              <Upload className="w-4 h-4 mr-2" />
-              Upload Documents
-            </Button>
+            <ToolGate toolKey="tax-vault" fallbackRoute="/tools/tax-vault">
+              <Button data-tool-card="tax-vault">
+                <Upload className="w-4 h-4 mr-2" />
+                Upload Documents
+              </Button>
+            </ToolGate>
           </div>
 
           <div className="grid lg:grid-cols-2 gap-6">
@@ -407,14 +416,18 @@ export const CPADashboard = () => {
             </div>
             
             <div className="flex justify-center space-x-3">
-              <Button>
-                <Globe className="w-4 h-4 mr-2" />
-                Explore Marketplace
-              </Button>
-              <Button variant="outline">
-                <UserPlus className="w-4 h-4 mr-2" />
-                Refer a Client
-              </Button>
+              <ToolGate toolKey="cpa-marketplace" fallbackRoute="/marketplace">
+                <Button data-tool-card="cpa-marketplace">
+                  <Globe className="w-4 h-4 mr-2" />
+                  Explore Marketplace
+                </Button>
+              </ToolGate>
+              <ToolGate toolKey="client-referral" fallbackRoute="/tools/client-referral">
+                <Button variant="outline" data-tool-card="client-referral">
+                  <UserPlus className="w-4 h-4 mr-2" />
+                  Refer a Client
+                </Button>
+              </ToolGate>
             </div>
           </div>
         </TabsContent>

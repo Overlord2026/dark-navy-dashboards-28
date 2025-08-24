@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import ToolGate from '@/components/ToolGate';
+import { ToolGate } from '@/components/tools/ToolGate';
 import { analytics } from '@/lib/analytics';
 import { getWorkspaceTools } from '@/lib/workspaceTools';
 import familyToolsConfig from '@/config/familyTools.json';
@@ -166,16 +166,35 @@ export default function FamilyHome() {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3">
-                {segmentConfig.quickActions.map((action: any, index: number) => (
-                  <Button
-                    key={index}
-                    variant="outline"
-                    className="h-auto p-4 flex flex-col items-center gap-2 hover:bg-accent transition-colors focus:ring-2 focus:ring-[#67E8F9] focus:ring-offset-2"
-                    onClick={() => handleQuickAction(action)}
-                  >
-                    <div className="text-sm font-medium text-center">{action.label}</div>
-                  </Button>
-                ))}
+                {segmentConfig.quickActions.map((action: any, index: number) => {
+                  // Extract toolKey from route if it matches /tools/ pattern
+                  const toolKeyMatch = action.route?.match(/\/tools\/([^\/]+)/);
+                  const toolKey = toolKeyMatch ? toolKeyMatch[1] : null;
+                  
+                  if (toolKey) {
+                    return (
+                      <ToolGate key={index} toolKey={toolKey}>
+                        <Button
+                          variant="outline"
+                          className="h-auto p-4 flex flex-col items-center gap-2 hover:bg-accent transition-colors focus:ring-2 focus:ring-[#67E8F9] focus:ring-offset-2"
+                        >
+                          <div className="text-sm font-medium text-center">{action.label}</div>
+                        </Button>
+                      </ToolGate>
+                    );
+                  }
+                  
+                  return (
+                    <Button
+                      key={index}
+                      variant="outline"
+                      className="h-auto p-4 flex flex-col items-center gap-2 hover:bg-accent transition-colors focus:ring-2 focus:ring-[#67E8F9] focus:ring-offset-2"
+                      onClick={() => handleQuickAction(action)}
+                    >
+                      <div className="text-sm font-medium text-center">{action.label}</div>
+                    </Button>
+                  );
+                })}
               </div>
             </CardContent>
           </Card>
@@ -218,30 +237,25 @@ export default function FamilyHome() {
 
                         return (
                           <ToolGate key={cardIndex} toolKey={card.toolKey}>
-                            {({ onClick }) => (
-                              <Card 
-                                className="cursor-pointer hover:shadow-md transition-all duration-200 focus-within:ring-2 focus-within:ring-[#67E8F9] focus-within:ring-offset-2"
-                                onClick={() => {
-                                  handleToolCardClick(card.toolKey);
-                                  onClick();
-                                }}
-                                data-tool-card={card.toolKey}
-                              >
-                                <CardContent className="p-4">
-                                  <div className="space-y-2">
-                                    <h3 className="font-semibold text-sm">{catalogItem.label}</h3>
-                                    <p className="text-xs text-muted-foreground line-clamp-2">
-                                      {catalogItem.summary}
-                                    </p>
-                                    {catalogItem.type && (
-                                      <Badge variant="secondary" className="text-xs">
-                                        {catalogItem.type}
-                                      </Badge>
-                                    )}
-                                  </div>
-                                </CardContent>
-                              </Card>
-                            )}
+                            <Card 
+                              className="cursor-pointer hover:shadow-md transition-all duration-200 focus-within:ring-2 focus-within:ring-[#67E8F9] focus-within:ring-offset-2"
+                              onClick={() => handleToolCardClick(card.toolKey)}
+                              data-tool-card={card.toolKey}
+                            >
+                              <CardContent className="p-4">
+                                <div className="space-y-2">
+                                  <h3 className="font-semibold text-sm">{catalogItem.label}</h3>
+                                  <p className="text-xs text-muted-foreground line-clamp-2">
+                                    {catalogItem.summary}
+                                  </p>
+                                  {catalogItem.type && (
+                                    <Badge variant="secondary" className="text-xs">
+                                      {catalogItem.type}
+                                    </Badge>
+                                  )}
+                                </div>
+                              </CardContent>
+                            </Card>
                           </ToolGate>
                         );
                       })}

@@ -26,9 +26,9 @@ export function NILDashboard({ persona }: NILDashboardProps) {
           title: 'Athlete Dashboard',
           subtitle: 'Manage your NIL opportunities and compliance',
           primaryActions: [
-            { label: 'View Offers', href: '/nil/offers', icon: DollarSign },
-            { label: 'Upload Documents', href: '/nil/documents', icon: FileText },
-            { label: 'Connect Bank', href: '/nil/banking', icon: TrendingUp }
+            { label: 'View Offers', href: '/nil/offers', icon: DollarSign, toolKey: 'nil-offers' },
+            { label: 'Upload Documents', href: '/nil/documents', icon: FileText, toolKey: 'nil-vault' },
+            { label: 'Connect Bank', href: '/nil/banking', icon: TrendingUp, toolKey: 'nil-banking' }
           ]
         };
       case 'family':
@@ -36,9 +36,9 @@ export function NILDashboard({ persona }: NILDashboardProps) {
           title: 'Family Dashboard',
           subtitle: 'Support your athlete\'s NIL journey',
           primaryActions: [
-            { label: 'View Athlete Progress', href: '/nil/athlete-overview', icon: Users },
-            { label: 'Financial Overview', href: '/nil/finances', icon: DollarSign },
-            { label: 'Compliance Status', href: '/nil/compliance', icon: CheckCircle }
+            { label: 'View Athlete Progress', href: '/nil/athlete-overview', icon: Users, toolKey: 'nil-progress' },
+            { label: 'Financial Overview', href: '/nil/finances', icon: DollarSign, toolKey: 'nil-finances' },
+            { label: 'Compliance Status', href: '/nil/compliance', icon: CheckCircle, toolKey: 'nil-compliance' }
           ]
         };
       case 'advisor':
@@ -46,9 +46,9 @@ export function NILDashboard({ persona }: NILDashboardProps) {
           title: 'Advisor Dashboard',
           subtitle: 'Guide your athletes through NIL compliance',
           primaryActions: [
-            { label: 'Client Overview', href: '/nil/clients', icon: Users },
-            { label: 'Compliance Tools', href: '/nil/compliance-tools', icon: FileText },
-            { label: 'Reporting', href: '/nil/reports', icon: TrendingUp }
+            { label: 'Client Overview', href: '/nil/clients', icon: Users, toolKey: 'nil-clients' },
+            { label: 'Compliance Tools', href: '/nil/compliance-tools', icon: FileText, toolKey: 'nil-compliance-tools' },
+            { label: 'Reporting', href: '/nil/reports', icon: TrendingUp, toolKey: 'nil-reports' }
           ]
         };
       case 'admin':
@@ -56,9 +56,9 @@ export function NILDashboard({ persona }: NILDashboardProps) {
           title: 'Admin Dashboard',
           subtitle: 'Oversee NIL platform operations',
           primaryActions: [
-            { label: 'User Management', href: '/nil/admin/users', icon: Users },
-            { label: 'Compliance Monitoring', href: '/nil/admin/compliance', icon: AlertCircle },
-            { label: 'Platform Analytics', href: '/nil/admin/analytics', icon: TrendingUp }
+            { label: 'User Management', href: '/nil/admin/users', icon: Users, toolKey: 'nil-admin-users' },
+            { label: 'Compliance Monitoring', href: '/nil/admin/compliance', icon: AlertCircle, toolKey: 'nil-admin-compliance' },
+            { label: 'Platform Analytics', href: '/nil/admin/analytics', icon: TrendingUp, toolKey: 'nil-admin-analytics' }
           ]
         };
     }
@@ -92,16 +92,16 @@ export function NILDashboard({ persona }: NILDashboardProps) {
                 <Icon className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="w-full"
-                  onClick={() => window.location.href = action.href}
-                >
-                  <ToolGate toolKey={`nil-${action.label.toLowerCase().replace(/\s+/g, '-')}`} fallbackRoute={action.href}>
+                <ToolGate toolKey={action.toolKey || `nil-${action.label.toLowerCase().replace(/\s+/g, '-')}`} fallbackRoute={action.href}>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="w-full"
+                    data-tool-card={action.toolKey || `nil-${action.label.toLowerCase().replace(/\s+/g, '-')}`}
+                  >
                     Open
-                  </ToolGate>
-                </Button>
+                  </Button>
+                </ToolGate>
               </CardContent>
             </Card>
           );

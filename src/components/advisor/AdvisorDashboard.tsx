@@ -523,16 +523,16 @@ export function AdvisorDashboard() {
                 <Progress value={90.5} className="w-full" />
               </div>
               <div className="space-y-2">
-                <Button variant="outline" className="w-full" onClick={() => setShowPortfolioTools(true)}>
-                  <ToolGate toolKey="portfolio-analytics" fallbackRoute="/tools/portfolio-tools">
+                <ToolGate toolKey="portfolio-analytics" fallbackRoute="/tools/portfolio-tools">
+                  <Button variant="outline" className="w-full">
                     Portfolio Tools
-                  </ToolGate>
-                </Button>
-                <Button variant="outline" className="w-full" onClick={() => navigate('/advisor/compliance')}>
-                  <ToolGate toolKey="compliance-tracker" fallbackRoute="/tools/compliance-tracker">
+                  </Button>
+                </ToolGate>
+                <ToolGate toolKey="compliance-tracker" fallbackRoute="/tools/compliance-tracker">
+                  <Button variant="outline" className="w-full">
                     Compliance Tracker
-                  </ToolGate>
-                </Button>
+                  </Button>
+                </ToolGate>
               </div>
             </CardContent>
           </Card>

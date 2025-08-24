@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
+import { ToolGate } from '@/components/tools/ToolGate';
 import { 
   Scale, 
   FileText, 
@@ -210,9 +211,11 @@ export const AttorneyDashboard: React.FC = () => {
                 </div>
               ))}
             </div>
-            <Button variant="outline" size="sm" className="w-full mt-4">
-              View All Compliance Items
-            </Button>
+            <ToolGate toolKey="compliance-tracker" fallbackRoute="/tools/compliance-tracker">
+              <Button variant="outline" size="sm" className="w-full mt-4" data-tool-card="compliance-tracker">
+                View All Compliance Items
+              </Button>
+            </ToolGate>
           </CardContent>
         </Card>
         
@@ -237,9 +240,11 @@ export const AttorneyDashboard: React.FC = () => {
                 </div>
               ))}
             </div>
-            <Button variant="outline" size="sm" className="w-full mt-4">
-              View Calendar
-            </Button>
+            <ToolGate toolKey="legal-calendar" fallbackRoute="/tools/legal-calendar">
+              <Button variant="outline" size="sm" className="w-full mt-4" data-tool-card="legal-calendar">
+                View Calendar
+              </Button>
+            </ToolGate>
           </CardContent>
         </Card>
       </div>
@@ -250,10 +255,12 @@ export const AttorneyDashboard: React.FC = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold">Client Cases</h2>
-        <Button>
-          <Plus className="w-4 h-4 mr-2" />
-          New Case
-        </Button>
+        <ToolGate toolKey="case-management" fallbackRoute="/tools/case-management">
+          <Button data-tool-card="case-management">
+            <Plus className="w-4 h-4 mr-2" />
+            New Case
+          </Button>
+        </ToolGate>
       </div>
       
       <div className="flex gap-4">
@@ -514,7 +521,9 @@ export const AttorneyDashboard: React.FC = () => {
               <p className="text-muted-foreground mb-4">
                 Automated document generation and trust management tools
               </p>
-              <Button>Explore Templates</Button>
+              <ToolGate toolKey="estate-templates" fallbackRoute="/tools/estate-templates">
+                <Button data-tool-card="estate-templates">Explore Templates</Button>
+              </ToolGate>
             </div>
           </TabsContent>
           
@@ -529,7 +538,9 @@ export const AttorneyDashboard: React.FC = () => {
               <p className="text-muted-foreground mb-4">
                 Track ownership structures and business relationships
               </p>
-              <Button>Manage Entities</Button>
+              <ToolGate toolKey="entity-management" fallbackRoute="/tools/entity-management">
+                <Button data-tool-card="entity-management">Manage Entities</Button>
+              </ToolGate>
             </div>
           </TabsContent>
           
@@ -544,7 +555,9 @@ export const AttorneyDashboard: React.FC = () => {
               <p className="text-muted-foreground mb-4">
                 Manage incoming client requests and referrals
               </p>
-              <Button>View Leads</Button>
+              <ToolGate toolKey="legal-leads" fallbackRoute="/tools/legal-leads">
+                <Button data-tool-card="legal-leads">View Leads</Button>
+              </ToolGate>
             </div>
           </TabsContent>
           
@@ -555,7 +568,9 @@ export const AttorneyDashboard: React.FC = () => {
               <p className="text-muted-foreground mb-4">
                 Secure communication with clients and professional team members
               </p>
-              <Button>Open Messages</Button>
+              <ToolGate toolKey="legal-collaboration" fallbackRoute="/tools/legal-collaboration">
+                <Button data-tool-card="legal-collaboration">Open Messages</Button>
+              </ToolGate>
             </div>
           </TabsContent>
         </Tabs>
