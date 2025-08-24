@@ -61,6 +61,13 @@ import FamilyReceipts from '@/pages/family/FamilyReceipts';
 import RetirementRoadmapTool from '@/pages/tools/RetirementRoadmapTool';
 import SocialSecurityTool from '@/pages/tools/SocialSecurityTool';
 import AdvisorHome from '@/pages/advisor/AdvisorHome';
+import { AdvisorsLayout } from '@/layouts/AdvisorsLayout';
+import AdvisorsHome from '@/pages/advisors/AdvisorsHome';
+import LeadsPage from '@/pages/advisors/LeadsPage';
+import MeetingsPage from '@/pages/advisors/MeetingsPage';
+import CampaignsPage from '@/pages/advisors/CampaignsPage';
+import PipelinePage from '@/pages/advisors/PipelinePage';
+import AdvisorTools from '@/pages/advisors/AdvisorTools';
 import NILAthleteHome from '@/pages/nil/NILAthleteHome';
 import MarketplacePage from '@/pages/nil/Marketplace';
 import NILIndex from '@/pages/nil/NILIndex';
@@ -124,6 +131,20 @@ function App() {
             <Route path="/family/tools/rmd-check" element={<RMDCheckTool />} />
             <Route path="/family/tools/taxhub-preview" element={<TaxHubPreview />} />
             <Route path="/family/receipts" element={<FamilyReceipts />} />
+            
+            {/* Advisor App Routes */}
+            <Route path="/advisors" element={<Navigate to="/advisors/home" replace />} />
+            <Route path="/advisors/*" element={<AdvisorsLayout />}>
+              <Route path="home" element={<AdvisorsHome />} />
+              <Route path="leads" element={<LeadsPage />} />
+              <Route path="meetings" element={<MeetingsPage />} />
+              <Route path="campaigns" element={<CampaignsPage />} />
+              <Route path="pipeline" element={<PipelinePage />} />
+              <Route path="tools" element={<AdvisorTools />} />
+            </Route>
+            
+            {/* Legacy Advisor Route (redirect) */}
+            <Route path="/advisor/home" element={<Navigate to="/advisors/home" replace />} />
             
             {/* Brand Hub Routes */}
             {getFlag('BRAND_PUBLIC_ENABLED') && <Route path="/brand" element={<BrandHub />} />}
