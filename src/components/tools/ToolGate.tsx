@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useTools } from '@/contexts/ToolsContext';
 import { InstallModal } from '@/components/tools/InstallModal';
 import { getWorkspaceTools } from '@/lib/workspaceTools';
+import { toast } from '@/hooks/use-toast';
+import { useFamilyAnalytics } from '@/lib/familyAnalytics';
 
 interface ToolGateProps {
   toolKey: string;
@@ -18,6 +20,7 @@ export const ToolGate: React.FC<ToolGateProps> = ({
   const navigate = useNavigate();
   const { isToolEnabled, isToolAvailable, getToolInfo } = useTools();
   const [showInstallModal, setShowInstallModal] = useState(false);
+  const analytics = useFamilyAnalytics();
 
   const tool = getToolInfo(toolKey);
 
@@ -27,8 +30,16 @@ export const ToolGate: React.FC<ToolGateProps> = ({
     return <>{children}</>;
   }
 
-  // If tool is enabled, show content
+  // If tool is enabled, show content with success toast
   if (isToolEnabled(toolKey)) {
+    // Show success toast for tool access
+    React.useEffect(() => {
+      const workspace = getWorkspaceTools();
+      analytics.trackSuccess('tool-access', toolKey, { 
+        segment: workspace.segment 
+      });
+    }, [toolKey, analytics]);
+    
     return <>{children}</>;
   }
 
@@ -68,6 +79,21 @@ export const ToolGate: React.FC<ToolGateProps> = ({
           navigate(fallbackRoute || tool.routePub);
         }}
         tool={tool}
+        onInstallSuccess={(toolKey: string, withSeed: boolean) => {
+          const workspace = getWorkspaceTools();
+          analytics.trackSuccess('tool-install', toolKey, { 
+            withSeed, 
+            segment: workspace.segment 
+          });
+          toast({
+            title: "Tool Installed!",
+            description: `${tool.label} is now ready to use.`,
+          });
+        }}
+        onPreview={(toolKey: string) => {
+          const workspace = getWorkspaceTools();
+          analytics.trackToolPreview(toolKey, workspace.segment || 'unknown');
+        }}
       />
       {/* Don't render children until tool is installed */}
     </>

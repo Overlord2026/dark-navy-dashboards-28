@@ -5,11 +5,14 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ToolGate } from '@/components/tools/ToolGate';
-import { analytics } from '@/lib/analytics';
+import { toast } from '@/hooks/use-toast';
 import { getWorkspaceTools } from '@/lib/workspaceTools';
+import { useFamilyAnalytics } from '@/lib/familyAnalytics';
+import { EmptyTabState, EmptyReceiptsState } from '@/components/ui/empty-states';
+import { TabGridSkeleton, ReceiptsStripSkeleton } from '@/components/ui/skeletons';
 import familyToolsConfig from '@/config/familyTools.json';
 import catalogConfig from '@/config/catalogConfig.json';
-import { Clock, Crown, Users, Heart, Briefcase, TrendingUp, Shield, Trophy, ExternalLink, Share, CheckCircle } from 'lucide-react';
+import { Clock, Crown, Users, Heart, Briefcase, TrendingUp, Shield, Trophy, ExternalLink, Share, CheckCircle, Play, Copy } from 'lucide-react';
 
 const segmentIcons = {
   aspiring: Users,
@@ -42,24 +45,40 @@ interface ProofSlip {
 
 export default function FamilyHome() {
   const navigate = useNavigate();
+  const analytics = useFamilyAnalytics();
   const [segment, setSegment] = useState<string>('aspiring');
   const [activeTab, setActiveTab] = useState<string>('');
   const [recentProofSlips, setRecentProofSlips] = useState<ProofSlip[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadStartTime] = useState(Date.now());
 
   useEffect(() => {
-    // Get segment from workspace
-    const workspace = getWorkspaceTools();
-    if (workspace.segment) {
-      setSegment(workspace.segment);
-    }
+    const initializeData = async () => {
+      // Get segment from workspace
+      const workspace = getWorkspaceTools();
+      if (workspace.segment) {
+        setSegment(workspace.segment);
+      }
 
-    // Load recent proof slips (mock data for now)
-    setRecentProofSlips([
-      { id: '1', type: 'Document Upload', timestamp: '2 hours ago', anchored: true },
-      { id: '2', type: 'Account Link', timestamp: '1 day ago', anchored: true },
-      { id: '3', type: 'Goal Created', timestamp: '3 days ago', anchored: false },
-    ]);
-  }, []);
+      // Simulate loading time for skeleton
+      await new Promise(resolve => setTimeout(resolve, 800));
+
+      // Load recent proof slips (mock data for now)
+      setRecentProofSlips([
+        { id: '1', type: 'Document Upload', timestamp: '2 hours ago', anchored: true },
+        { id: '2', type: 'Account Link', timestamp: '1 day ago', anchored: true },
+        { id: '3', type: 'Goal Created', timestamp: '3 days ago', anchored: false },
+      ]);
+
+      setIsLoading(false);
+      
+      // Track page load
+      const loadTime = Date.now() - loadStartTime;
+      analytics.trackPageLoad(workspace.segment || 'aspiring', loadTime, true);
+    };
+
+    initializeData();
+  }, [analytics, loadStartTime]);
 
   const segmentConfig = familyToolsConfig[segment as keyof typeof familyToolsConfig];
   
@@ -72,35 +91,76 @@ export default function FamilyHome() {
   const SegmentIcon = segmentIcons[segment as keyof typeof segmentIcons] || Users;
 
   const handleQuickAction = (action: any) => {
-    analytics.trackEvent('family.quickAction.click', { label: action.label, route: action.route });
+    analytics.trackQuickAction(action.label, action.route, segment);
     navigate(action.route);
   };
 
   const handleTabChange = (tabKey: string) => {
     setActiveTab(tabKey);
-    analytics.trackEvent('family.tab.view', { tabKey, segment });
+    const tabConfig = segmentConfig?.tabs?.find(t => t.key === tabKey);
+    const hasTools = tabConfig?.cards && tabConfig.cards.length > 0;
+    analytics.trackTabView(tabKey, segment, hasTools || false);
   };
 
   const handleOpenDemo = () => {
-    analytics.trackEvent('family.demo.open', { segment });
-    navigate(`/demos/family-${segment}`);
+    const demoType = `families-${segment}`;
+    analytics.trackDemo(demoType, segment);
+    
+    toast({
+      title: "Opening Demo",
+      description: "Loading your personalized 60-second demo...",
+    });
+    
+    // Track demo start time for completion analytics
+    const demoStartTime = Date.now();
+    navigate(`/demos/${demoType}`, { 
+      state: { startTime: demoStartTime, source: 'family-home' }
+    });
   };
 
-  const handleShare = () => {
-    analytics.trackEvent('family.share.click', { segment });
+  const handleShare = async () => {
+    const shareData = {
+      title: 'My Family Financial Hub',
+      text: 'Check out my personalized family office tools',
+      url: window.location.href
+    };
+
     if (navigator.share) {
-      navigator.share({
-        title: 'My Family Financial Hub',
-        text: 'Check out my personalized family office tools',
-        url: window.location.href
-      });
+      try {
+        analytics.trackShare('native', segment);
+        await navigator.share(shareData);
+        analytics.trackShareSuccess('native', segment);
+        toast({
+          title: "Shared Successfully",
+          description: "Your family hub has been shared!",
+        });
+      } catch (error) {
+        console.debug('Share cancelled');
+      }
     } else {
-      navigator.clipboard.writeText(window.location.href);
+      // Fallback to clipboard
+      try {
+        analytics.trackShare('copy', segment);
+        await navigator.clipboard.writeText(window.location.href);
+        analytics.trackShareSuccess('copy', segment);
+        toast({
+          title: "Link Copied",
+          description: "Link copied to clipboard",
+          action: <Copy className="w-4 h-4" />
+        });
+      } catch (error) {
+        toast({
+          title: "Share Failed",
+          description: "Unable to copy link",
+          variant: "destructive"
+        });
+      }
     }
   };
 
-  const handleToolCardClick = (toolKey: string) => {
-    analytics.trackEvent('tool.card.open', { toolKey, segment });
+  const handleToolCardClick = (toolKey: string, tabKey?: string) => {
+    const isInstalled = getWorkspaceTools().installed?.includes(toolKey) || false;
+    analytics.trackToolCard(toolKey, segment, isInstalled, tabKey);
   };
 
   if (!segmentConfig) {
@@ -143,7 +203,7 @@ export default function FamilyHome() {
               onClick={handleOpenDemo}
               className="flex items-center gap-2"
             >
-              <ExternalLink className="w-4 h-4" />
+              <Play className="w-4 h-4" />
               60-sec Demo
             </Button>
             <Button
@@ -219,47 +279,57 @@ export default function FamilyHome() {
 
                 {segmentConfig.tabs.map((tab: any) => (
                   <TabsContent key={tab.key} value={tab.key} className="mt-0">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {tab.cards?.map((card: any, cardIndex: number) => {
-                        const catalogItem = catalogConfig.find((item: any) => item.key === card.toolKey);
-                        
-                        if (!catalogItem) {
-                          return (
-                            <Card key={cardIndex} className="opacity-50">
-                              <CardContent className="p-4">
-                                <div className="text-sm text-muted-foreground">
-                                  Tool not found: {card.toolKey}
-                                </div>
-                              </CardContent>
-                            </Card>
-                          );
-                        }
+                    {isLoading ? (
+                      <TabGridSkeleton />
+                    ) : tab.cards && tab.cards.length > 0 ? (
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {tab.cards.map((card: any, cardIndex: number) => {
+                          const catalogItem = catalogConfig.find((item: any) => item.key === card.toolKey);
+                          
+                          if (!catalogItem) {
+                            return (
+                              <Card key={cardIndex} className="opacity-50">
+                                <CardContent className="p-4">
+                                  <div className="text-sm text-muted-foreground">
+                                    Tool not found: {card.toolKey}
+                                  </div>
+                                </CardContent>
+                              </Card>
+                            );
+                          }
 
-                        return (
-                          <ToolGate key={cardIndex} toolKey={card.toolKey}>
-                            <Card 
-                              className="cursor-pointer hover:shadow-md transition-all duration-200 focus-within:ring-2 focus-within:ring-[#67E8F9] focus-within:ring-offset-2"
-                              onClick={() => handleToolCardClick(card.toolKey)}
-                              data-tool-card={card.toolKey}
-                            >
-                              <CardContent className="p-4">
-                                <div className="space-y-2">
-                                  <h3 className="font-semibold text-sm">{catalogItem.label}</h3>
-                                  <p className="text-xs text-muted-foreground line-clamp-2">
-                                    {catalogItem.summary}
-                                  </p>
-                                  {catalogItem.type && (
-                                    <Badge variant="secondary" className="text-xs">
-                                      {catalogItem.type}
-                                    </Badge>
-                                  )}
-                                </div>
-                              </CardContent>
-                            </Card>
-                          </ToolGate>
-                        );
-                      })}
-                    </div>
+                          return (
+                            <ToolGate key={cardIndex} toolKey={card.toolKey}>
+                              <Card 
+                                className="cursor-pointer hover:shadow-md transition-all duration-200 focus-within:ring-2 focus-within:ring-[#67E8F9] focus-within:ring-offset-2 animate-fade-in"
+                                onClick={() => handleToolCardClick(card.toolKey, tab.key)}
+                                data-tool-card={card.toolKey}
+                              >
+                                <CardContent className="p-4">
+                                  <div className="space-y-2">
+                                    <h3 className="font-semibold text-sm">{catalogItem.label}</h3>
+                                    <p className="text-xs text-muted-foreground line-clamp-2">
+                                      {catalogItem.summary}
+                                    </p>
+                                    {catalogItem.type && (
+                                      <Badge variant="secondary" className="text-xs">
+                                        {catalogItem.type}
+                                      </Badge>
+                                    )}
+                                  </div>
+                                </CardContent>
+                              </Card>
+                            </ToolGate>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <EmptyTabState 
+                        tabKey={tab.key} 
+                        tabLabel={tab.label} 
+                        segment={segment} 
+                      />
+                    )}
                   </TabsContent>
                 ))}
               </Tabs>
@@ -281,15 +351,14 @@ export default function FamilyHome() {
             </Button>
           </CardHeader>
           <CardContent>
-            <div className="space-y-3">
-              {recentProofSlips.length === 0 ? (
-                <div className="text-center py-8 text-muted-foreground">
-                  <p>No recent activity</p>
-                  <p className="text-sm">Start using tools to see your proof slips here</p>
-                </div>
-              ) : (
-                recentProofSlips.map((slip) => (
-                  <div key={slip.id} className="flex items-center justify-between p-3 bg-accent/50 rounded-lg">
+            {isLoading ? (
+              <ReceiptsStripSkeleton />
+            ) : recentProofSlips.length === 0 ? (
+              <EmptyReceiptsState />
+            ) : (
+              <div className="space-y-3">
+                {recentProofSlips.map((slip) => (
+                  <div key={slip.id} className="flex items-center justify-between p-3 bg-accent/50 rounded-lg animate-fade-in">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
                         {slip.anchored ? (
@@ -307,9 +376,9 @@ export default function FamilyHome() {
                       {slip.anchored ? "Verified ✓" : "Processing"}
                     </Badge>
                   </div>
-                ))
-              )}
-            </div>
+                ))}
+              </div>
+            )}
           </CardContent>
         </Card>
 

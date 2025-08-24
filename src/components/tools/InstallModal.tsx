@@ -8,51 +8,50 @@ import { Sparkles, Eye, X } from 'lucide-react';
 import { installTool } from '@/lib/workspaceTools';
 import { getWorkspaceTools } from '@/lib/workspaceTools';
 import { useToast } from '@/hooks/use-toast';
+import { useTools } from '@/contexts/ToolsContext';
 import type { ToolRegistryItem } from '@/contexts/ToolsContext';
 
 interface InstallModalProps {
   isOpen: boolean;
   onClose: () => void;
   tool: ToolRegistryItem;
+  onInstallSuccess?: (toolKey: string, withSeed: boolean) => void;
+  onPreview?: (toolKey: string) => void;
 }
 
 export const InstallModal: React.FC<InstallModalProps> = ({
   isOpen,
   onClose,
-  tool
+  tool,
+  onInstallSuccess,
+  onPreview
 }) => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [seed, setSeed] = useState(true);
+  const { enableTool } = useTools();
+  const [seeding, setSeeding] = useState(true);
   const [isInstalling, setIsInstalling] = useState(false);
-
-  const { key, label, summary, routePriv, routePub, solutions } = tool;
 
   const handleInstall = async () => {
     setIsInstalling(true);
     try {
-      const workspace = getWorkspaceTools();
+      const result = await enableTool(tool.key, seeding);
       
-      // Track install analytics
-      if (typeof window !== 'undefined' && window.analytics) {
-        window.analytics.track('tool.install', { 
-          key, 
-          seed, 
-          persona: workspace.persona, 
-          segment: workspace.segment 
+      if (result) {
+        // Track success
+        onInstallSuccess?.(tool.key, seeding);
+        
+        // Navigate to tool if available
+        if (tool.routePriv) {
+          navigate(tool.routePriv);
+        }
+        onClose();
+      } else {
+        toast({
+          title: "Installation Failed",
+          description: "Please try again",
+          variant: "destructive"
         });
-      }
-      
-      await installTool(key, seed);
-      
-      toast({
-        title: "Tool Installed",
-        description: `${label} is now available in your workspace.`,
-      });
-      
-      onClose();
-      if (routePriv) {
-        navigate(routePriv);
       }
     } catch (error) {
       toast({
@@ -66,13 +65,9 @@ export const InstallModal: React.FC<InstallModalProps> = ({
   };
 
   const handlePreview = () => {
-    // Track preview analytics
-    if (typeof window !== 'undefined' && window.analytics) {
-      window.analytics.track('tool.preview', { key });
-    }
-    
+    onPreview?.(tool.key);
+    navigate(tool.routePub);
     onClose();
-    navigate(routePub || `/preview/${key}`);
   };
 
   const handleClose = () => {
@@ -88,35 +83,35 @@ export const InstallModal: React.FC<InstallModalProps> = ({
           <div className="flex items-center justify-between">
             <DialogTitle className="text-xl font-semibold flex items-center gap-2">
               <Sparkles className="h-5 w-5 text-primary" />
-              {label || 'Install Tool'}
+              {tool.label || 'Install Tool'}
             </DialogTitle>
             <Button variant="ghost" size="sm" onClick={handleClose} disabled={isInstalling}>
               <X className="h-4 w-4" />
             </Button>
           </div>
           <DialogDescription className="text-sm text-muted-foreground">
-            {summary}
+            {tool.summary}
           </DialogDescription>
         </DialogHeader>
 
         {/* Solution tags */}
-        {solutions && solutions.length > 0 && (
+        {tool.solutions && tool.solutions.length > 0 && (
           <div className="flex flex-wrap gap-1">
-            {solutions.slice(0, 3).map((solution) => (
+            {tool.solutions.slice(0, 3).map((solution) => (
               <Badge key={solution} variant="secondary" className="text-xs">
                 {solution}
               </Badge>
             ))}
-            {solutions.length > 3 && (
+            {tool.solutions.length > 3 && (
               <Badge variant="secondary" className="text-xs">
-                +{solutions.length - 3} more
+                +{tool.solutions.length - 3} more
               </Badge>
             )}
           </div>
         )}
 
         <div className="space-y-4">
-          {routePriv ? (
+          {tool.routePriv ? (
             <>
               {/* Demo data option */}
               <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
@@ -127,8 +122,8 @@ export const InstallModal: React.FC<InstallModalProps> = ({
                   </p>
                 </div>
                 <Switch
-                  checked={seed}
-                  onCheckedChange={setSeed}
+                  checked={seeding}
+                  onCheckedChange={setSeeding}
                   disabled={isInstalling}
                 />
               </div>
