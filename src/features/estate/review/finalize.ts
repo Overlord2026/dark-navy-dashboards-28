@@ -4,6 +4,7 @@ import { hash } from '@/lib/canonical';
 import { recordReceipt } from '@/features/receipts/record';
 import type { FinalVersion } from './types';
 import { onReviewFinalReady } from '@/features/vault/autofill/connectors';
+import { mapSignal } from '@/features/estate/checklist/mapper';
 
 export async function finalizeReviewPacket({
   sessionId,
@@ -83,6 +84,17 @@ export async function finalizeReviewPacket({
     await onReviewFinalReady(sessionId, clientId, finalPdfId);
   } catch (error) {
     console.warn('[ARP] Auto-populate failed:', error);
+  }
+
+  // 9) Trigger checklist update
+  try {
+    await mapSignal(clientId, {
+      type: 'arp.final.created',
+      hash: sha,
+      fileId: finalPdfId
+    });
+  } catch (error) {
+    console.warn('[ARP] Checklist update failed:', error);
   }
 
   return { finalPdfId, sha256: sha };

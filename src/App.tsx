@@ -50,6 +50,7 @@ import ReviewSession from '@/pages/attorney/ReviewSession';
 import ReviewView from '@/pages/family/ReviewView';
 import VaultAutofillConsent from '@/pages/family/VaultAutofillConsent';
 import VaultAutofillReview from '@/pages/advisor/VaultAutofillReview';
+import ChecklistExport from '@/pages/supervisor/ChecklistExport';
 import NotFound from '@/pages/NotFound';
 import { getFlag } from '@/lib/flags';
 
@@ -197,6 +198,7 @@ function App() {
             <Route path="/family/review/:id" element={<ReviewView />} />
             <Route path="/family/vault/autofill-consent" element={<VaultAutofillConsent />} />
             <Route path="/advisor/vault/autofill-review" element={<VaultAutofillReview />} />
+            <Route path="/supervisor/checklist" element={<ChecklistExport />} />
             
             {/* Advisor App Routes */}
             <Route path="/advisors" element={<Navigate to="/advisors/home" replace />} />

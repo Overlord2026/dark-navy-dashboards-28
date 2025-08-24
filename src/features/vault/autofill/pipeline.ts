@@ -3,6 +3,7 @@ import { classify, normalizeName, computeHash, suggestFolderAndTags, bumpVersion
 import { writeAndLog } from './write';
 import { recordReceipt } from '@/features/receipts/record';
 import type { IngestSource, IngestPayload } from './connectors';
+import { mapSignal } from '@/features/estate/checklist/mapper';
 
 type DuplicateCheckResult = {
   exists: boolean;
@@ -110,6 +111,19 @@ export async function ingest(payload: IngestPayload) {
   });
   
   // 5) Post-ingest: Update estate checklist (content-free signal)
+  try {
+    await mapSignal(payload.clientId, {
+      type: 'doc.ingested',
+      class: cls,
+      state: payload.meta?.state,
+      hash: sha256,
+      fileId
+    });
+    console.log(`[Vault Autofill] Triggered checklist update for ${cls}`);
+  } catch (error) {
+    console.warn(`[Vault Autofill] Checklist update failed:`, error);
+  }
+
   if (['Will', 'RLT', 'POA', 'HC_POA', 'AD'].includes(cls)) {
     await recordReceipt({
       type: 'Decision-RDS',
@@ -117,8 +131,6 @@ export async function ingest(payload: IngestPayload) {
       reasons: [cls, 'AUTOFILL'],
       created_at: new Date().toISOString()
     } as any);
-    
-    console.log(`[Vault Autofill] Triggered estate checklist update for ${cls}`);
   }
   
   // 6) Success response
