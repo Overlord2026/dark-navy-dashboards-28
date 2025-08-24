@@ -143,8 +143,12 @@ export function BrandOnboarding() {
   return (
     <>
       <Helmet>
-        <title>Brand Onboarding | Family Office Marketplace</title>
-        <meta name="description" content="Get started with your brand campaign management workspace" />
+        <title>Start NIL Campaign — Brands & Local Businesses | myBFOCFO</title>
+        <meta name="description" content="Quick 2-step setup to launch NIL campaigns. Connect with athletes for sponsorships, giveaways, ambassador programs, and event appearances." />
+        <meta property="og:title" content="Start NIL Campaign — Brands & Local Businesses | myBFOCFO" />
+        <meta property="og:description" content="Quick 2-step setup to launch NIL campaigns. Connect with athletes for sponsorships, giveaways, ambassador programs, and event appearances." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={window.location.href} />
       </Helmet>
 
       <div className="min-h-screen bg-background">

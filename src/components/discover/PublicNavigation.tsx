@@ -11,9 +11,9 @@ export const PublicNavigation: React.FC = () => {
   const [isNilOpen, setIsNilOpen] = useState(false);
 
   const navItems = [
-    { label: 'Personas', href: '/discover#personas' },
     { label: 'Goals', href: '/goals' },
     { label: 'Catalog', href: '/catalog' },
+    { label: 'Personas', href: '/discover#personas' },
     { label: 'Proof', href: '/how-it-works' },
     { label: 'Pricing', href: '/pricing' }
   ];
@@ -95,17 +95,7 @@ export const PublicNavigation: React.FC = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            {navItems.map((item) => (
-              <a
-                key={item.label}
-                href={item.href}
-                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-              >
-                {item.label}
-              </a>
-            ))}
-            
-            {/* Desktop NIL Dropdown */}
+            {/* NIL Dropdown - First Priority */}
             {getFlag('NIL_PUBLIC_ENABLED') && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -113,6 +103,12 @@ export const PublicNavigation: React.FC = () => {
                     variant="ghost"
                     size="sm"
                     className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                    onClick={() => {
+                      // Analytics
+                      if (typeof window !== 'undefined' && (window as any).analytics) {
+                        (window as any).analytics.track('nav.nil.open', { source: 'desktop-dropdown' });
+                      }
+                    }}
                   >
                     NIL
                     <ChevronDown className="ml-1 h-3 w-3" />
@@ -128,11 +124,18 @@ export const PublicNavigation: React.FC = () => {
                         href={item.href}
                         className="flex items-start gap-3 p-3 cursor-pointer hover:bg-muted transition-colors"
                         onClick={() => {
-                          // Analytics for brand clicks
-                          if (item.href === '/start/brand' && typeof window !== 'undefined' && (window as any).analytics) {
-                            (window as any).analytics.track('brand.start.click', { 
-                              source: 'nil-desktop-dropdown',
-                              campaign: 'quick-start'
+                          // Analytics for different targets
+                          if (typeof window !== 'undefined' && (window as any).analytics) {
+                            let target = 'unknown';
+                            if (item.href === '/nil') target = 'hub';
+                            else if (item.href === '/nil/index') target = 'index';
+                            else if (item.href === '/demos/nil-athlete') target = 'demo-athlete';
+                            else if (item.href === '/demos/nil-school') target = 'demo-school';
+                            else if (item.href === '/start/brand') target = 'brand-start';
+                            
+                            (window as any).analytics.track('nav.nil.click', { 
+                              target,
+                              source: 'desktop-dropdown'
                             });
                           }
                         }}
@@ -150,6 +153,17 @@ export const PublicNavigation: React.FC = () => {
                 </DropdownMenuContent>
               </DropdownMenu>
             )}
+            
+            {/* Other Nav Items */}
+            {navItems.map((item) => (
+              <a
+                key={item.label}
+                href={item.href}
+                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+              >
+                {item.label}
+              </a>
+            ))}
           </div>
 
           {/* Desktop Actions */}
@@ -187,22 +201,28 @@ export const PublicNavigation: React.FC = () => {
                   {getFlag('NIL_PUBLIC_ENABLED') && (
                     <div className="space-y-2">
                       <Collapsible open={isNilOpen} onOpenChange={setIsNilOpen}>
-                        <CollapsibleTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            className="w-full justify-between text-left text-white hover:text-[#D4AF37] hover:bg-white/10 focus:ring-2 focus:ring-[#67E8F9] focus:ring-offset-0 min-h-[44px] transition-colors duration-200"
-                            aria-expanded={isNilOpen}
-                          >
-                            <div className="flex items-center gap-2">
-                              <Award className="h-5 w-5" />
-                              <span className="font-medium">NIL</span>
-                            </div>
-                            <ChevronDown 
-                              className={`h-4 w-4 transition-transform duration-200 ${
-                                isNilOpen ? 'rotate-180' : ''
-                              }`} 
-                            />
-                          </Button>
+                         <CollapsibleTrigger asChild>
+                           <Button
+                             variant="ghost"
+                             className="w-full justify-between text-left text-white hover:text-[#D4AF37] hover:bg-white/10 focus:ring-2 focus:ring-[#67E8F9] focus:ring-offset-0 min-h-[44px] transition-colors duration-200"
+                             aria-expanded={isNilOpen}
+                             onClick={() => {
+                               // Analytics
+                               if (typeof window !== 'undefined' && (window as any).analytics) {
+                                 (window as any).analytics.track('nav.nil.open', { source: 'mobile-accordion' });
+                               }
+                             }}
+                           >
+                             <div className="flex items-center gap-2">
+                               <Award className="h-5 w-5" />
+                               <span className="font-medium">NIL</span>
+                             </div>
+                             <ChevronDown 
+                               className={`h-4 w-4 transition-transform duration-200 ${
+                                 isNilOpen ? 'rotate-180' : ''
+                               }`} 
+                             />
+                           </Button>
                         </CollapsibleTrigger>
                         <CollapsibleContent className="space-y-1 pl-2">
                           {nilItems.map((item) => (

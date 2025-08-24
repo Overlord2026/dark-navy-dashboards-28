@@ -58,11 +58,11 @@ export default function NILIndex() {
     if (typeof window !== 'undefined' && (window as any).analytics) {
       (window as any).analytics.track('demo.open', { 
         source: 'nil-index-sticky',
-        demoId: 'nil-brand'
+        demoId: 'nil-athlete'
       });
     }
     
-    navigate('/demos/nil-brand');
+    navigate('/demos/nil-athlete');
   };
 
   const handleShare = async () => {
@@ -131,9 +131,13 @@ export default function NILIndex() {
   return (
     <>
       <Helmet>
-        <title>NIL Weekly Index - Market Trends & Opportunities</title>
-        <meta name="description" content="Weekly analysis of NIL market trends, athlete partnerships, and brand collaboration opportunities in name, image, and likeness." />
+        <title>Weekly NIL Index & Discovery | myBFOCFO</title>
+        <meta name="description" content="Weekly analysis of NIL market trends, deals, and opportunities. Comprehensive insights into Name, Image & Likeness partnerships and athlete earnings." />
         <meta name="keywords" content="NIL index, athlete partnerships, brand collaborations, NIL market trends, college sports marketing" />
+        <meta property="og:title" content="Weekly NIL Index & Discovery | myBFOCFO" />
+        <meta property="og:description" content="Weekly analysis of NIL market trends, deals, and opportunities. Comprehensive insights into Name, Image & Likeness partnerships and athlete earnings." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={window.location.href} />
       </Helmet>
 
       <div className="min-h-screen bg-background relative">

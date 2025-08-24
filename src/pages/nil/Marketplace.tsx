@@ -79,10 +79,10 @@ export default function MarketplacePage() {
     if (typeof window !== 'undefined' && (window as any).analytics) {
       (window as any).analytics.track('demo.open', { 
         source: 'nil-marketplace-sticky',
-        demoId: 'nil-brand'
+        demoId: 'nil-athlete'
       });
     }
-    navigate('/demos/nil-brand');
+    navigate('/demos/nil-athlete');
   };
 
   const handleShare = async () => {
@@ -118,8 +118,12 @@ export default function MarketplacePage() {
   return (
     <>
       <Helmet>
-        <title>NIL Marketplace - Athlete Collaborations & Brand Partnerships</title>
-        <meta name="description" content="Connect with athletes, brands, and advisors on NIL partnerships. Compliant collaboration platform for name, image, and likeness deals." />
+        <title>NIL Platform — Athlete as Hero | myBFOCFO</title>
+        <meta name="description" content="Name, Image & Likeness marketplace connecting athletes with brands. Manage NIL deals, compliance, and partnerships in one secure platform." />
+        <meta property="og:title" content="NIL Platform — Athlete as Hero | myBFOCFO" />
+        <meta property="og:description" content="Name, Image & Likeness marketplace connecting athletes with brands. Manage NIL deals, compliance, and partnerships in one secure platform." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={window.location.href} />
       </Helmet>
 
       <div className="min-h-screen bg-background relative">
