@@ -3,7 +3,7 @@ export interface AnchorRef {
   tx_ref?: string;
   timestamp?: string;
   merkle_root?: string;
-  cross_chain_locator?: any[];
+  cross_chain_locator: any[];
 }
 
 export interface Receipt {
