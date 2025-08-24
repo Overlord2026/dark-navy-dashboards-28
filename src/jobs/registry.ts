@@ -29,6 +29,17 @@ jobs.push({
   run: runBeneficiarySync
 });
 
+// Register supervisor digest job
+import { runSupervisorDigest } from './supervisor.digest';
+jobs.push({
+  key: 'supervisor.digest',
+  name: 'Supervisor Digest',
+  description: 'Send daily supervisor digest emails with compliance counts and links',
+  enabledFlag: 'SUPERVISOR_DIGEST_ENABLED',
+  intervalMs: 60 * 60 * 1000, // 1 hour (only sends for matching hourUtc)
+  run: runSupervisorDigest
+});
+
 /**
  * Register a job with the system
  */

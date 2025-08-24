@@ -34,6 +34,7 @@ export default function JobsPanel() {
     BACKGROUND_JOBS_ENABLED: getFlag('BACKGROUND_JOBS_ENABLED'),
     MONITOR_GUARDRAILS_ENABLED: getFlag('MONITOR_GUARDRAILS_ENABLED'),
     SYNC_BENEFICIARIES_ENABLED: getFlag('SYNC_BENEFICIARIES_ENABLED'),
+    SUPERVISOR_DIGEST_ENABLED: getFlag('SUPERVISOR_DIGEST_ENABLED'),
   });
   const [loading, setLoading] = useState<string | null>(null);
 
@@ -174,6 +175,7 @@ export default function JobsPanel() {
                   {flagName === 'BACKGROUND_JOBS_ENABLED' && 'Enable automatic job execution'}
                   {flagName === 'MONITOR_GUARDRAILS_ENABLED' && 'Monitor retirement plan guardrails'}
                   {flagName === 'SYNC_BENEFICIARIES_ENABLED' && 'Check beneficiary designations'}
+                  {flagName === 'SUPERVISOR_DIGEST_ENABLED' && 'Send daily supervisor digest emails'}
                 </p>
               </div>
               <Switch
