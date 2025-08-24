@@ -219,12 +219,18 @@ export default function RulesExport() {
         </p>
           </div>
 
-          <div className="text-sm">
+          <div className="text-sm space-y-2">
             <a 
               href="/admin/rules-replace-county" 
-              className="text-primary hover:text-primary/80 underline"
+              className="block text-primary hover:text-primary/80 underline"
             >
               Replace runtime COUNTY_META from uploaded TS/JSON →
+            </a>
+            <a 
+              href="/admin/rules-replace-states" 
+              className="block text-primary hover:text-primary/80 underline"
+            >
+              Replace runtime STATE RULES (preview & merge) →
             </a>
           </div>
 

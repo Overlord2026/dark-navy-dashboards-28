@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Download, CheckCircle, AlertTriangle } from 'lucide-react';
+import { Download, CheckCircle, Upload, AlertTriangle } from 'lucide-react';
 
 import { ALL_STATES_DC } from '@/features/estate/states/registry';
 import { ESTATE_RULES } from '@/features/estate/states/estateRules';
@@ -91,6 +91,12 @@ export default function RulesCoverage() {
                 <a href="/admin/rules-export" className="flex items-center gap-2">
                   <Download className="h-4 w-4" />
                   Export All Rules (JSON + CSV)
+                </a>
+              </Button>
+              <Button asChild variant="outline" size="sm">
+                <a href="/admin/rules-replace-states" className="flex items-center gap-2">
+                  <Upload className="h-4 w-4" />
+                  Replace STATE RULES
                 </a>
               </Button>
             </div>
