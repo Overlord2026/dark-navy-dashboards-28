@@ -47,6 +47,8 @@ import { SolutionsHub } from '@/components/solutions/SolutionsHub';
 const DemoPage = React.lazy(() => import('@/pages/demos/[persona]'));
 const PreviewPage = React.lazy(() => import('@/components/PreviewPage'));
 import FamilyHome from '@/pages/family/Home';
+import AdvisorHome from '@/pages/advisor/AdvisorHome';
+import NILAthleteHome from '@/pages/nil/NILAthleteHome';
 
 function App() {
   // Check authentication status (simplified for demo)
@@ -76,6 +78,9 @@ function App() {
             {getFlag('NIL_PUBLIC_ENABLED') && <Route path="/nil" element={<Marketplace />} />}
             {getFlag('NIL_PUBLIC_ENABLED') && <Route path="/nil/index" element={<Marketplace />} />}
             
+            {/* New Home Pages */}
+            <Route path="/advisor/home" element={<AdvisorHome />} />
+            <Route path="/nil/athlete/home" element={<NILAthleteHome />} />
             
             {/* Onboarding Routes - Flag Protected */}
             {getFlag('ONBOARDING_PUBLIC_ENABLED') && <Route path="/start/families" element={<FamilyOnboarding />} />}

@@ -187,17 +187,19 @@ const Discover: React.FC = () => {
               <h3 className="text-2xl font-bold mb-6">Tools & Calculators</h3>
               <div className="grid sm:grid-cols-2 gap-4">
                 {[
-                  { title: "Value Calculator", href: "/catalog/value-calculator" },
-                  { title: "Target Analyzer", href: "/catalog/target-analyzer" },
-                  { title: "Tax Optimizer", href: "/catalog/tax-optimizer" },
-                  { title: "Estate Planner", href: "/catalog/estate-planner" },
-                  { title: "Risk Assessor", href: "/catalog/risk-assessor" },
-                  { title: "Portfolio Tracker", href: "/catalog/portfolio-tracker" },
-                  { title: "Income Planner", href: "/catalog/income-planner" },
-                  { title: "Document Vault", href: "/catalog/document-vault" },
+                  { title: "Value Calculator", href: "/tools/value-calculator", toolKey: "value-calculator" },
+                  { title: "Target Analyzer", href: "/tools/target-analyzer", toolKey: "target-analyzer" },
+                  { title: "Tax Optimizer", href: "/tools/tax-optimizer", toolKey: "tax-optimizer" },
+                  { title: "Estate Planner", href: "/tools/estate-planner", toolKey: "estate-planner" },
+                  { title: "Risk Assessor", href: "/tools/risk-assessor", toolKey: "risk-assessor" },
+                  { title: "Portfolio Tracker", href: "/tools/portfolio-tracker", toolKey: "portfolio-tracker" },
+                  { title: "Income Planner", href: "/tools/income-planner", toolKey: "income-planner" },
+                  { title: "Document Vault", href: "/tools/document-vault", toolKey: "wealth-vault" },
                 ].map((tool) => (
                   <Button key={tool.title} variant="ghost" asChild className="justify-start">
-                    <a href={tool.href}>{tool.title}</a>
+                    <a href={tool.href || `/preview/${tool.toolKey}`}>
+                      {tool.title}
+                    </a>
                   </Button>
                 ))}
               </div>

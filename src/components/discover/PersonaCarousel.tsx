@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { ToolGate } from '@/components/tools/ToolGate';
 import { DemoLauncher } from './DemoLauncher';
 import { ShareButton } from './ShareButton';
 import { Play, ExternalLink, ArrowRight } from 'lucide-react';
