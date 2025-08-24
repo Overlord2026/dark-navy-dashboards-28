@@ -22,6 +22,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { recordDecisionRDS } from "@/features/pro/compliance/DecisionTracker";
 import { hash } from "@/lib/canonical";
+import { SuitabilityDecision } from "@/features/insurance/types";
 
 export default function InsuranceLifeToolsPage() {
   const { toast } = useToast();
@@ -100,7 +101,7 @@ export default function InsuranceLifeToolsPage() {
         reasons.push('age_appropriate');
       }
       
-      const result = suitabilityScore >= 70 ? 'approve' : 'review_required';
+      const result: SuitabilityDecision = suitabilityScore >= 70 ? 'approve' : 'review_required';
       
       // Record decision
       const decision = await recordDecisionRDS({
@@ -113,7 +114,7 @@ export default function InsuranceLifeToolsPage() {
           factors: analysis1035.suitabilityFactors
         }),
         reasons,
-        result,
+        result: result as 'approve' | 'deny',
         metadata: {
           suitability_score: suitabilityScore,
           net_value: netValue,

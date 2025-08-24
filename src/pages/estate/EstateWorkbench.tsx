@@ -11,13 +11,15 @@ import {
   Archive,
   Crown,
   TrendingUp,
-  Download
+  Download,
+  Home
 } from 'lucide-react';
 import { buildBinderPack } from '@/features/estate/binder';
 import { recordReceipt } from '@/features/receipts/record';
 import { scanBeneficiaries } from '@/features/estate/beneficiary/sync';
 import { toast } from 'sonner';
-import analytics from '@/lib/analytics';
+import { analytics } from '@/lib/analytics';
+import { FamilyDeedRequest } from '@/features/estate/deeds/FamilyDeedRequest';
 
 const EstateWorkbench = () => {
   const [activeTab, setActiveTab] = useState('diagram');
@@ -27,6 +29,52 @@ const EstateWorkbench = () => {
   const [showDeedRequest, setShowDeedRequest] = useState(false);
   const [showFundingLetters, setShowFundingLetters] = useState(false);
   const [deedRequests] = useState<any[]>([]);
+
+  const handleGenerateTODLetter = () => {
+    const tokens = {
+      date: new Date().toLocaleDateString(),
+      account_holder_name: 'Client Name',
+      institution_name: 'Example Bank',
+      account_number: 'XXX-XXXX',
+      primary_beneficiary: 'Trust Name'
+    };
+    
+    console.log('Generating TOD/POD funding letter with tokens:', tokens);
+    
+    const receipt = {
+      type: 'Decision-RDS',
+      action: 'funding.letter',
+      reasons: ['TOD'],
+      inputs_hash: btoa(JSON.stringify(tokens)),
+      timestamp: new Date().toISOString()
+    };
+    
+    console.log('Decision-RDS recorded for funding letter:', receipt);
+    analytics.track('funding.letter.generated', { type: 'TOD' });
+  };
+
+  const handleGenerate401kLetter = () => {
+    const tokens = {
+      date: new Date().toLocaleDateString(),
+      participant_name: 'Client Name',
+      plan_name: 'Company 401(k) Plan',
+      employee_id: 'EMP123',
+      primary_beneficiary: 'Trust Name'
+    };
+    
+    console.log('Generating 401k beneficiary letter with tokens:', tokens);
+    
+    const receipt = {
+      type: 'Decision-RDS',
+      action: 'funding.letter',
+      reasons: ['401k'],
+      inputs_hash: btoa(JSON.stringify(tokens)),
+      timestamp: new Date().toISOString()
+    };
+    
+    console.log('Decision-RDS recorded for 401k letter:', receipt);
+    analytics.track('funding.letter.generated', { type: '401k' });
+  };
 
   const handleGrantAuthority = async (role: 'POA' | 'Trustee' | 'Executor', subjectId: string) => {
     setLoading(true);
@@ -309,30 +357,31 @@ const EstateWorkbench = () => {
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <FileText className="h-5 w-5" />
+                    <Home className="h-5 w-5" />
                     Property & Funding
                   </CardTitle>
                   <CardDescription>
                     Request deeds and generate funding letters for trust and estate planning
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                    <p className="text-sm text-blue-800">
-                      <strong>UPL Notice:</strong> Deeds are prepared by licensed attorneys only. 
-                      Your request will be routed to a state-licensed attorney.
-                    </p>
-                  </div>
+                <CardContent className="space-y-6">
+                  <FamilyDeedRequest />
                   
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <Button onClick={() => setShowDeedRequest(true)} className="flex items-center gap-2">
-                      <FileText className="h-4 w-4" />
-                      Request a Deed
-                    </Button>
-                    
-                    <Button variant="outline" onClick={() => setShowFundingLetters(true)}>
-                      Generate Funding Letters
-                    </Button>
+                  <div>
+                    <h4 className="font-medium mb-3">Funding Letters</h4>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Generate letters to update beneficiaries on accounts and policies
+                    </p>
+                    <div className="grid gap-3 md:grid-cols-2">
+                      <Button variant="outline" onClick={handleGenerateTODLetter} className="flex items-center gap-2">
+                        <FileText className="h-4 w-4" />
+                        TOD/POD Letters
+                      </Button>
+                      <Button variant="outline" onClick={handleGenerate401kLetter} className="flex items-center gap-2">
+                        <FileText className="h-4 w-4" />
+                        401(k) Beneficiary Letters
+                      </Button>
+                    </div>
                   </div>
                   
                   {deedRequests.length > 0 && (

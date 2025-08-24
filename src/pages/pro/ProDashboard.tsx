@@ -43,6 +43,12 @@ const personaInfo: Record<Exclude<ProPersona, 'advisor'>, {
     description: 'Residential real estate sales and buyer representation',
     icon: Users,
     specializations: ['Buyer Representation', 'Market Analysis', 'Transaction Management', 'Investment Advisory']
+  },
+  medicare: {
+    title: 'Medicare Practice',
+    description: 'Medicare enrollment and benefits planning services',
+    icon: Activity,
+    specializations: ['Medicare Enrollment', 'Plan Comparison', 'Benefits Analysis', 'Annual Review']
   }
 };
 

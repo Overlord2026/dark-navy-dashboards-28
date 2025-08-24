@@ -196,6 +196,41 @@ const personaConfig: Record<Exclude<ProPersona, 'advisor'>, {
         duration: 10
       }
     ]
+  },
+  medicare: {
+    title: '90-Second Medicare Workflow Demo',
+    description: 'Experience the complete Medicare enrollment and planning process.',
+    loadFixtures: () => Promise.resolve({ lead: null, meeting: null, campaign: null, receipts: [] }),
+    steps: [
+      {
+        id: 'medicare-lead-capture',
+        title: 'Medicare Lead Capture',
+        description: 'Capture Medicare enrollment lead with CMS compliance',
+        route: '/medicare/leads',
+        duration: 15
+      },
+      {
+        id: 'medicare-enrollment-import',
+        title: 'Enrollment Meeting',
+        description: 'Import enrollment discussion with plan analysis',
+        route: '/medicare/meetings',
+        duration: 20
+      },
+      {
+        id: 'medicare-plan-comparison',
+        title: 'Plan Comparison Send',
+        description: 'Send CMS-compliant plan comparison materials',
+        route: '/medicare/campaigns',
+        duration: 15
+      },
+      {
+        id: 'medicare-receipts-review',
+        title: 'Enrollment Receipts',
+        description: 'Review CMS compliance and enrollment receipts',
+        route: '/medicare/receipts',
+        duration: 10
+      }
+    ]
   }
 };
 

@@ -17,7 +17,8 @@ const fixtureLoaders: Record<Exclude<ProPersona, 'advisor'>, () => Promise<any>>
   attorney: loadAttorneyFixtures,
   insurance: loadInsuranceFixtures,
   healthcare: loadHealthcareFixtures,
-  realtor: loadRealtorFixtures
+  realtor: loadRealtorFixtures,
+  medicare: () => Promise.resolve({ lead: null, meeting: null, campaign: null, receipts: [] })
 };
 
 const personaLabels: Record<Exclude<ProPersona, 'advisor'>, string> = {
@@ -25,7 +26,8 @@ const personaLabels: Record<Exclude<ProPersona, 'advisor'>, string> = {
   attorney: 'Attorney',
   insurance: 'Insurance',
   healthcare: 'Healthcare',
-  realtor: 'Realtor'
+  realtor: 'Realtor',
+  medicare: 'Medicare'
 };
 
 interface ProDevPanelProps {
@@ -49,7 +51,7 @@ export const ProDevPanel: React.FC<ProDevPanelProps> = ({ className = '' }) => {
   };
 
   const handleLoadAllFixtures = async () => {
-    const personas: ProPersona[] = ['cpa', 'attorney', 'insurance', 'healthcare', 'realtor'];
+    const personas: ProPersona[] = ['cpa', 'attorney', 'insurance', 'healthcare', 'realtor', 'medicare'];
     let loaded = 0;
     
     for (const persona of personas) {

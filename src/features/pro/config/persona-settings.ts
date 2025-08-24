@@ -6,7 +6,8 @@ export const PIPELINE_STAGES: Record<ProPersona, string[]> = {
   attorney: ['New', 'Conflict Check', 'Intake', 'Draft', 'Execute', 'Filed'],
   insurance: ['New', 'Quote', 'Disclosure', 'App', 'Issue', 'Renew'],
   healthcare: ['New', 'Screen', 'Intake', 'Plan', 'Session', 'Follow-up'],
-  realtor: ['New', 'Contacted', 'Showing', 'Offer', 'Escrow', 'Closed']
+  realtor: ['New', 'Contacted', 'Showing', 'Offer', 'Escrow', 'Closed'],
+  medicare: ['New', 'Enrollment', 'Plan Selection', 'Active', 'Annual Review']
 };
 
 export const PERSONA_DISCLAIMERS: Record<ProPersona, {
@@ -40,6 +41,11 @@ export const PERSONA_DISCLAIMERS: Record<ProPersona, {
   realtor: {
     meeting_import: 'Real estate content processed with MLS and fair housing compliance.',
     data_handling: 'Property and client data handled per real estate regulations.'
+  },
+  medicare: {
+    meeting_import: 'Medicare enrollment content processed with CMS compliance requirements.',
+    data_handling: 'Medicare beneficiary data handled per CMS privacy and security standards.',
+    compliance_banner: '🏥 CMS: Medicare enrollment activities must comply with CMS marketing guidelines'
   }
 };
 
@@ -84,6 +90,12 @@ export const PERSONA_IMPORT_SETTINGS: Record<ProPersona, {
     vault_only_content: false,
     additional_reasons: ['fair_housing_compliance'],
     risk_flags: ['discrimination_concern', 'disclosure_issue']
+  },
+  medicare: {
+    display_raw_content: true,
+    vault_only_content: false,
+    additional_reasons: ['cms_compliance', 'enrollment_verification'],
+    risk_flags: ['enrollment_error', 'cms_violation']
   }
 };
 

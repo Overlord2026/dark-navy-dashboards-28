@@ -63,7 +63,8 @@ Best regards,
       policy_version: 'v1.0'
     }
   ],
-  ...PERSONA_TEMPLATE_REPOSITORY
+  ...PERSONA_TEMPLATE_REPOSITORY,
+  medicare: [] // Placeholder for medicare templates
 };
 
 export function getTemplatesByPersona(persona: ProPersona): Template[] {
