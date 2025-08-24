@@ -21,6 +21,12 @@ interface NotaryRequestProps {
   docName?: string;
   onSubmit?: (sessionId: string) => void;
   standalone?: boolean;
+  prefillData?: {
+    state?: string;
+    mode?: 'RON' | 'IN_PERSON';
+    signerName?: string;
+    signerEmail?: string;
+  };
 }
 
 const US_STATES = [
@@ -31,15 +37,15 @@ const US_STATES = [
   'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY'
 ];
 
-export function NotaryRequest({ docId, docName, onSubmit, standalone = false }: NotaryRequestProps) {
+export function NotaryRequest({ docId, docName, onSubmit, standalone = false, prefillData }: NotaryRequestProps) {
   const { toast } = useToast();
   const [formData, setFormData] = useState({
     docId: docId || '',
     docName: docName || '',
-    state: '',
-    mode: 'RON' as 'RON' | 'IN_PERSON',
-    signerName: '',
-    signerEmail: '',
+    state: prefillData?.state || '',
+    mode: prefillData?.mode || 'RON' as 'RON' | 'IN_PERSON',
+    signerName: prefillData?.signerName || '',
+    signerEmail: prefillData?.signerEmail || '',
     signerPhone: '',
     govtIdType: 'drivers_license',
     witnessCount: 0,
