@@ -247,13 +247,6 @@ export const ESTATE_RULES: Record<string,EstateRule> = {
     deedPracticeNote: 'APN and margins enforced; check municipal fees.'
   },
 
-  // Add remaining states with conservative defaults
-  ...Object.fromEntries(
-    ALL_STATES_DC
-      .filter(s => !ESTATE_RULES[s])  // skip ones already seeded
-      .map(s => [s, conservativeEstateRule(s)])
-  ),
-
   'DEFAULT': {
     code: 'DEFAULT',
     will: { witnesses: 2, notary: false },
@@ -262,6 +255,13 @@ export const ESTATE_RULES: Record<string,EstateRule> = {
     poa: { notary: true }
   }
 };
+
+// Add remaining states with conservative defaults - two-step to avoid TDZ
+for (const s of ALL_STATES_DC) {
+  if (!(s in ESTATE_RULES)) {
+    ESTATE_RULES[s] = conservativeEstateRule(s);
+  }
+}
 
 export function getEstateRule(state: string): EstateRule {
   return ESTATE_RULES[state] || ESTATE_RULES['DEFAULT'];

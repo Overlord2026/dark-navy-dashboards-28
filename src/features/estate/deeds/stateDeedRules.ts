@@ -215,13 +215,14 @@ export const DEED_RULES: Record<string, RecordingRule> = {
     eRecordingLikely: true,
   },
 
-  // Add remaining states with conservative defaults
-  ...Object.fromEntries(
-    ALL_STATES_DC
-      .filter(s => !DEED_RULES[s])  // skip ones already seeded
-      .map(s => [s, conservativeDeedRule(s)])
-  ),
 };
+
+// Add remaining states with conservative defaults - two-step to avoid TDZ
+for (const s of ALL_STATES_DC) {
+  if (!(s in DEED_RULES)) {
+    DEED_RULES[s] = conservativeDeedRule(s);
+  }
+}
 
 export function canUseDeed(state: string, kind: DeedType): boolean {
   const rule = DEED_RULES[state] || DEED_RULES['DEFAULT'];

@@ -35,13 +35,14 @@ export const HEALTH_RULES: Record<string, HealthcareRule> = {
   MD: { code:'MD', witnesses:2, notaryRequired:false, healthcareForms:['AdvanceDirective','HealthcarePOA','HIPAA'] },
   WI: { code:'WI', witnesses:2, notaryRequired:false, healthcareForms:['AdvanceDirective','HealthcarePOA','HIPAA'] },
 
-  // Add remaining states with conservative defaults
-  ...Object.fromEntries(
-    ALL_STATES_DC
-      .filter(s => !HEALTH_RULES[s])  // skip ones already seeded
-      .map(s => [s, conservativeHealthRule(s)])
-  ),
 };
+
+// Add remaining states with conservative defaults - two-step to avoid TDZ
+for (const s of ALL_STATES_DC) {
+  if (!(s in HEALTH_RULES)) {
+    HEALTH_RULES[s] = conservativeHealthRule(s);
+  }
+}
 
 // Apply specific overrides for known state terminology
 if (HEALTH_RULES['MA']) HEALTH_RULES['MA'].surrogateTerminology = 'Health Care Proxy';

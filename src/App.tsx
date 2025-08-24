@@ -45,6 +45,9 @@ import RulesReplaceCounty from '@/pages/admin/RulesReplaceCounty';
 import RulesReplaceStates from '@/pages/admin/RulesReplaceStates';
 import CountyQuickAdd from '@/pages/admin/CountyQuickAdd';
 import MarketingPreview from '@/pages/preview/MarketingPreview';
+import NewReviewSession from '@/pages/estate/review/NewReviewSession';
+import ReviewSession from '@/pages/attorney/ReviewSession';
+import ReviewView from '@/pages/family/ReviewView';
 import NotFound from '@/pages/NotFound';
 import { getFlag } from '@/lib/flags';
 

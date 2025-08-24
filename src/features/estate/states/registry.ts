@@ -1,3 +1,5 @@
+import type { DeedType } from '../deeds/stateDeedRules';
+
 export const ALL_STATES_DC = [
   'AL','AK','AR','CO','CT','DE','DC','HI','IA','ID','KS','KY','LA','ME','MN','MS','MT','NE','NV','NH','NM','ND','OK','OR','RI','SC','SD','UT','VT','WV','WY'
   // (leave out the 20 states already seeded: CA, TX, FL, NY, PA, IL, OH, GA, NC, MI, NJ, VA, WA, AZ, MA, TN, IN, MO, MD, WI)
@@ -12,6 +14,7 @@ export function conservativeEstateRule(code: string) {
     will: { witnesses: 2, notary: false, selfProving: true },
     rlt: { notary: true },
     pourOver: { witnesses: 2, notary: false },
+    poa: { notary: true },
     probateNotes: 'Verify county practices; self-proving affidavit recommended.',
     communityProperty: cp,
     todPodAllowed: false,           // TODO: verify TOD/TODD for this state
@@ -22,7 +25,7 @@ export function conservativeEstateRule(code: string) {
 export function conservativeDeedRule(code: string) {
   return {
     code,
-    allowed: ['Warranty', 'SpecialWarranty', 'Quitclaim'],   // baseline
+    allowed: ['Warranty', 'SpecialWarranty', 'Quitclaim'] as DeedType[],   // baseline
     witnesses: 0, 
     notary: true,
     todAvailable: false, 
@@ -41,7 +44,7 @@ export function conservativeHealthRule(code: string) {
     notaryRequired: false, 
     selfProvingAffidavit: true,
     remoteNotaryAllowed: false,
-    healthcareForms: ['AdvanceDirective', 'HealthcarePOA', 'HIPAA'],
+    healthcareForms: ['AdvanceDirective', 'HealthcarePOA', 'HIPAA'] as ('AdvanceDirective'|'LivingWill'|'HealthcarePOA'|'HIPAA'|'Surrogate')[],
     surrogateTerminology: 'Healthcare Agent',
     specialNotes: 'Default placeholder; verify hospital acceptance.'
   };
