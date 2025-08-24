@@ -271,6 +271,27 @@ export const router = createBrowserRouter([
     element: <ComingSoonPage featureName="Health Optimization" description="Comprehensive health optimization and wellness management tools." />
   },
   {
+    path: "/advisor/leads",
+    element: React.createElement(() => {
+      const { ProLeadsPage } = require('./pages/pro/ProLeadsPage');
+      return React.createElement(ProLeadsPage, { persona: 'advisor' });
+    })
+  },
+  {
+    path: "/cpa/leads", 
+    element: React.createElement(() => {
+      const { ProLeadsPage } = require('./pages/pro/ProLeadsPage');
+      return React.createElement(ProLeadsPage, { persona: 'cpa' });
+    })
+  },
+  {
+    path: "/attorney/leads",
+    element: React.createElement(() => {
+      const { ProLeadsPage } = require('./pages/pro/ProLeadsPage');
+      return React.createElement(ProLeadsPage, { persona: 'attorney' });
+    })
+  },
+  {
     path: "/advisor/*",
     element: <ComingSoonPage featureName="Advisor Tools" description="Professional advisor management and client service tools." />
   },
