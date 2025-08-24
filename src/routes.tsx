@@ -328,6 +328,34 @@ export const router = createBrowserRouter([
     })
   },
   {
+    path: "/insurance/home",
+    element: React.createElement(() => {
+      const { InsuranceHomePage } = require('./pages/insurance/InsuranceHomePage');
+      return React.createElement(InsuranceHomePage);
+    })
+  },
+  {
+    path: "/insurance/meetings",
+    element: React.createElement(() => {
+      const { InsuranceMeetingsPage } = require('./pages/insurance/InsuranceMeetingsPage');
+      return React.createElement(InsuranceMeetingsPage);
+    })
+  },
+  {
+    path: "/insurance/pipeline",
+    element: React.createElement(() => {
+      const { InsurancePipelinePage } = require('./pages/insurance/InsurancePipelinePage');
+      return React.createElement(InsurancePipelinePage);
+    })
+  },
+  {
+    path: "/insurance/proof",
+    element: React.createElement(() => {
+      const { InsuranceProofPage } = require('./pages/insurance/InsuranceProofPage');
+      return React.createElement(InsuranceProofPage);
+    })
+  },
+  {
     path: "/insurance",
     element: React.createElement(() => {
       const { ProDashboard } = require('./pages/pro/ProDashboard');
