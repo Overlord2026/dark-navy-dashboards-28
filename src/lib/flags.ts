@@ -73,7 +73,9 @@ export const FLAG_DESCRIPTIONS: Record<FeatureFlag, string> = {
   NIL_SCHOOL_ENABLED: 'Enable NIL school portal and functionality',
   BRAND_PUBLIC_ENABLED: 'Enable brand and local business NIL onboarding',
   ADMIN_TOOLS_ENABLED: 'Show admin tools (panels, ready-check, etc.)',
-  INSTALL_DEFAULT_TOOLS_ON_FIRST_LOGIN: 'Auto-install default tools for new users based on their persona'
+  INSTALL_DEFAULT_TOOLS_ON_FIRST_LOGIN: 'Auto-install default tools for new users based on their persona',
+  ANCHOR_ON_IMPORT: 'Enable blockchain anchoring for imported meetings',
+  MEETING_IMPORT_ENABLED: 'Allow importing meetings from external platforms'
 };
 
 // Hook to use feature flags
