@@ -6,8 +6,26 @@ export interface FamilyOfficeAnalytics {
   page: (name?: string, props?: AnalyticsProps) => void;
   identify: (userId: string, traits?: AnalyticsProps) => void;
   group?: (groupId: string, traits?: AnalyticsProps) => void;
-  // Backward compatibility
+  // Backward compatibility - all these alias to track()
   trackEvent?: (event: string, props?: AnalyticsProps) => void;
+  trackPageView?: (page: string, props?: AnalyticsProps) => void;
+  trackViralShare?: (props?: AnalyticsProps) => void;
+  trackPersonaClaim?: (props?: AnalyticsProps) => void;
+  trackOnboardingStep?: (props?: AnalyticsProps) => void;
+  trackOnboardingStart?: (props?: AnalyticsProps) => void;
+  trackFeatureUsage?: (props?: AnalyticsProps) => void;
+  trackConversion?: (props?: AnalyticsProps) => void;
+  trackSecurityEvent?: (props?: AnalyticsProps) => void;
+  trackFAQUsage?: (props?: AnalyticsProps) => void;
+  trackShareClick?: (props?: AnalyticsProps) => void;
+  trackShareSuccess?: (props?: AnalyticsProps) => void;
+  trackFamilyTabView?: (props?: AnalyticsProps) => void;
+  trackFamilyQuickAction?: (props?: AnalyticsProps) => void;
+  trackToolCardOpen?: (props?: AnalyticsProps) => void;
+  trackFamilySegmentSelection?: (props?: AnalyticsProps) => void;
+  trackFamilyGoalsSelection?: (props?: AnalyticsProps) => void;
+  trackFamilyOnboardingComplete?: (props?: AnalyticsProps) => void;
+  trackFamilyOnboardingStart?: (props?: AnalyticsProps) => void;
 }
 
 // Try to use a runtime client (Segment/Amplitude/etc.) if present, otherwise no-op.
@@ -21,8 +39,31 @@ function makeNoop(): FamilyOfficeAnalytics {
     identify: (id, t) => log('identify', id, t),
     group: (id, t) => log('group', id, t),
   };
-  // alias for legacy callers
-  client.trackEvent = (e, p) => client.track(e, p);
+  // Add all method aliases for legacy callers
+  const addAlias = (methodName: string) => {
+    (client as any)[methodName] = (e: any, p?: any) => client.track(methodName.replace('track', '').toLowerCase(), { event: e, ...p });
+  };
+  
+  addAlias('trackEvent');
+  addAlias('trackPageView');
+  addAlias('trackViralShare');
+  addAlias('trackPersonaClaim');
+  addAlias('trackOnboardingStep');
+  addAlias('trackOnboardingStart');
+  addAlias('trackFeatureUsage');
+  addAlias('trackConversion');
+  addAlias('trackSecurityEvent');
+  addAlias('trackFAQUsage');
+  addAlias('trackShareClick');
+  addAlias('trackShareSuccess');
+  addAlias('trackFamilyTabView');
+  addAlias('trackFamilyQuickAction');
+  addAlias('trackToolCardOpen');
+  addAlias('trackFamilySegmentSelection');
+  addAlias('trackFamilyGoalsSelection');
+  addAlias('trackFamilyOnboardingComplete');
+  addAlias('trackFamilyOnboardingStart');
+  
   return client;
 }
 
@@ -79,6 +120,9 @@ export function initializeAnalytics() {
 export function trackPageView(page: string, props?: AnalyticsProps) {
   analytics.track('page.view', { page, ...props });
 }
+
+// Export missing functions for compatibility
+export function emitReceipt() { /* compatibility stub */ }
 
 // Export BOTH default and named so all imports compile
 export { analytics };
