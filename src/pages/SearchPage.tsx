@@ -1,11 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
+import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { SearchIcon, ArrowRight, User, Briefcase, Calculator, BookOpen, Shield, Star } from 'lucide-react';
-import { buildSearchIndex, searchItems, SearchItem } from '@/lib/searchIndex';
+import { buildSearchIndex, SearchItem } from '@/lib/searchIndex';
+import { scoreItems } from '@/lib/searchScore';
 import SEOHead from '@/components/seo/SEOHead';
 import { PublicNavigation } from '@/components/discover/PublicNavigation';
 import { FooterMinimal } from '@/components/discover/FooterMinimal';
@@ -30,22 +32,38 @@ const kindColors = {
   admin: 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200'
 };
 
+const ALL = 'All';
+
 export default function SearchPage() {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const [query, setQuery] = useState(searchParams.get('q') || '');
-  const [results, setResults] = useState<SearchItem[]>([]);
+  const [kind, setKind] = useState(searchParams.get('type') || ALL);
+  const [persona, setPersona] = useState(searchParams.get('persona') || ALL);
+  const [solution, setSolution] = useState(searchParams.get('solution') || ALL);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
 
   const searchIndex = buildSearchIndex();
+  
+  const filtered = useMemo(() => {
+    let items = searchIndex;
+    if (kind !== ALL) items = items.filter(i => i.kind === kind.toLowerCase());
+    if (persona !== ALL) items = items.filter(i => (i.personas || []).includes(persona));
+    if (solution !== ALL) items = items.filter(i => (i.solutions || []).includes(solution));
+    return items;
+  }, [searchIndex, kind, persona, solution]);
 
-  useEffect(() => {
-    const searchResults = searchItems(query, searchIndex);
-    setResults(searchResults);
-    setSelectedIndex(0);
-  }, [query, searchIndex]);
+  const results = useMemo(() => 
+    query.trim() ? scoreItems(filtered, query) : filtered.map(item => ({item, score: 0, hl: { label: item.label, summary: item.summary }})), 
+    [filtered, query]
+  );
+
+  // Filter options
+  const types = [ALL, 'Persona', 'Solution', 'Tool', 'Course', 'Rail', 'Guide', 'Admin'];
+  const personaOpts = [ALL, 'family', 'retiree', 'advisor', 'cpa', 'attorney', 'insurance', 'healthcare', 'realtor', 'nil', 'school', 'brand'];
+  const solutionOpts = [ALL, 'insurance', 'annuities', 'lending', 'investments', 'tax', 'estate', 'health', 'nil'];
 
   useEffect(() => {
     // Focus search input on mount
@@ -53,13 +71,40 @@ export default function SearchPage() {
   }, []);
 
   useEffect(() => {
-    // Update URL params
+    // Update URL params and page title
+    const params: any = { q: query };
+    if (kind !== ALL) params.type = kind;
+    if (persona !== ALL) params.persona = persona;
+    if (solution !== ALL) params.solution = solution;
+    
     if (query) {
-      setSearchParams({ q: query });
+      setSearchParams(params);
     } else {
       setSearchParams({});
     }
-  }, [query, setSearchParams]);
+
+    document.title = `Search — ${query || ''}`.trim() + ' | myBFOCFO';
+    
+    // Set noindex for search results
+    const robotsMeta = document.querySelector('meta[name="robots"]') || document.createElement('meta');
+    robotsMeta.setAttribute('name', 'robots');
+    robotsMeta.setAttribute('content', 'noindex,follow');
+    if (!robotsMeta.parentNode) document.head.appendChild(robotsMeta);
+  }, [query, kind, persona, solution, setSearchParams]);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Analytics
+    if (typeof window !== 'undefined' && (window as any).analytics) {
+      (window as any).analytics.track('search.submit', { 
+        q: query, 
+        type: kind, 
+        persona, 
+        solution 
+      });
+    }
+  };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'ArrowDown') {
@@ -71,12 +116,21 @@ export default function SearchPage() {
     } else if (e.key === 'Enter') {
       e.preventDefault();
       if (results[selectedIndex]) {
-        handleResultClick(results[selectedIndex]);
+        handleResultClick(results[selectedIndex].item);
       }
     }
   };
 
   const handleResultClick = (item: SearchItem) => {
+    // Analytics for result clicks
+    if (typeof window !== 'undefined' && (window as any).analytics) {
+      (window as any).analytics.track('search.result.click', {
+        id: item.id,
+        kind: item.kind,
+        route: item.route
+      });
+    }
+    
     // Safe routing - prefer public routes
     navigate(item.route);
   };
@@ -93,51 +147,104 @@ export default function SearchPage() {
       <PublicNavigation />
       
       <main className="pt-[var(--header-stack)] pb-16">
-        <div className="container mx-auto px-4 max-w-4xl">
+        <div className="container mx-auto px-4 max-w-6xl">
           {/* Search Header */}
-          <div className="text-center py-12">
+          <div className="py-8">
             <h1 className="text-3xl md:text-4xl font-bold mb-4">Search</h1>
-            <p className="text-lg text-muted-foreground mb-8">
-              Find personas, solutions, tools, courses, and guides
-            </p>
             
-            {/* Search Input */}
-            <div className="relative max-w-2xl mx-auto">
-              <SearchIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-              <Input
-                ref={searchInputRef}
-                type="text"
-                placeholder="Search for tools, personas, solutions..."
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                onKeyDown={handleKeyDown}
-                className="pl-12 pr-4 py-3 text-lg"
-                aria-label="Search"
-              />
-            </div>
+            {/* Search Form */}
+            <form 
+              role="search" 
+              aria-label="Site search" 
+              onSubmit={handleSubmit} 
+              className="space-y-4"
+            >
+              {/* Main Search Input */}
+              <div className="relative max-w-2xl">
+                <SearchIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                <Input
+                  ref={searchInputRef}
+                  type="text"
+                  placeholder="Search tools, solutions, personas…"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  className="pl-12 pr-4 py-3 text-lg"
+                  aria-label="Search"
+                />
+              </div>
+
+              {/* Filter Row */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl">
+                <Select value={kind} onValueChange={setKind}>
+                  <SelectTrigger aria-label="Type">
+                    <SelectValue placeholder="All Types" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {types.map(type => (
+                      <SelectItem key={type} value={type}>{type}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                <Select value={persona} onValueChange={setPersona}>
+                  <SelectTrigger aria-label="Persona">
+                    <SelectValue placeholder="All Personas" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {personaOpts.map(p => (
+                      <SelectItem key={p} value={p}>{p}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                <Select value={solution} onValueChange={setSolution}>
+                  <SelectTrigger aria-label="Solution">
+                    <SelectValue placeholder="All Solutions" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {solutionOpts.map(s => (
+                      <SelectItem key={s} value={s}>{s}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                <Button type="submit" className="bg-gold hover:bg-gold-hover text-navy">
+                  Search
+                </Button>
+              </div>
+            </form>
+
+            {!query && (
+              <p className="text-sm text-muted-foreground mt-4">
+                Tip: try "annuities", "Roth ladder", "NIL athlete"
+              </p>
+            )}
           </div>
 
           {/* Search Results */}
           <div ref={resultsRef} className="space-y-4">
             {query && results.length === 0 && (
-              <div className="text-center py-8">
-                <p className="text-muted-foreground">No results found for "{query}"</p>
-                <p className="text-sm text-muted-foreground mt-2">
-                  Try different keywords or browse our{' '}
-                  <Button variant="link" className="p-0 h-auto" onClick={() => navigate('/solutions')}>
-                    solutions
-                  </Button>
-                </p>
+              <div className="rounded-lg border border-border bg-card p-6">
+                <h3 className="text-lg font-semibold">No results for "{query}"</h3>
+                <p className="text-sm text-muted-foreground mt-1">Try a different term or browse featured areas:</p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <Link to="/solutions/annuities" className="text-primary hover:underline">Annuities</Link>
+                  <Link to="/solutions/investments" className="text-primary hover:underline">Investments</Link>
+                  <Link to="/personas/families?seg=retirees" className="text-primary hover:underline">Retiree Family</Link>
+                  <Link to="/nil/index" className="text-primary hover:underline">NIL Index</Link>
+                </div>
               </div>
             )}
 
-            {results.map((item, index) => {
+            {results.slice(0, 200).map((result, index) => {
+              const { item, score, hl } = result;
               const IconComponent = kindIcons[item.kind] || Calculator;
               const isSelected = index === selectedIndex;
               
               return (
                 <Card 
-                  key={item.id}
+                  key={item.id + '_' + index}
                   className={`cursor-pointer transition-all duration-200 hover:shadow-md ${
                     isSelected ? 'ring-2 ring-primary shadow-md' : ''
                   }`}
@@ -151,17 +258,25 @@ export default function SearchPage() {
                           <IconComponent className="h-5 w-5" />
                         </div>
                         <div>
-                          <CardTitle className="text-lg">{item.label}</CardTitle>
-                          <div className="flex items-center gap-2 mt-1">
+                          <div className="flex items-center gap-2 mb-1">
                             <Badge 
                               variant="secondary" 
                               className={`text-xs ${kindColors[item.kind]}`}
                             >
                               {item.kind}
                             </Badge>
-                            {item.solutions?.map(solution => (
-                              <Badge key={solution} variant="outline" className="text-xs">
-                                {solution}
+                            {score > 0 && (
+                              <div className="text-xs text-muted-foreground">score {score}</div>
+                            )}
+                          </div>
+                          <CardTitle 
+                            className="text-lg"
+                            dangerouslySetInnerHTML={{ __html: hl?.label || item.label }}
+                          />
+                          <div className="flex flex-wrap gap-1 mt-1">
+                            {item.solutions?.map(sol => (
+                              <Badge key={sol} variant="outline" className="text-xs">
+                                {sol}
                               </Badge>
                             ))}
                           </div>
@@ -172,7 +287,14 @@ export default function SearchPage() {
                   </CardHeader>
                   {item.summary && (
                     <CardContent className="pt-0">
-                      <CardDescription>{item.summary}</CardDescription>
+                      <CardDescription 
+                        dangerouslySetInnerHTML={{ __html: hl?.summary || item.summary }}
+                      />
+                      {item.tags?.length && (
+                        <div className="mt-2 text-xs text-muted-foreground">
+                          {item.tags.join(' • ')}
+                        </div>
+                      )}
                     </CardContent>
                   )}
                 </Card>
@@ -182,10 +304,10 @@ export default function SearchPage() {
 
           {/* Popular Items (when no search) */}
           {!query && (
-            <div className="space-y-6">
+            <div className="space-y-8">
               <div>
-                <h2 className="text-xl font-semibold mb-4">Popular Personas</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <h2 className="text-2xl font-semibold mb-6">Popular Personas</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {searchIndex
                     .filter(item => item.kind === 'persona')
                     .slice(0, 6)
@@ -193,12 +315,12 @@ export default function SearchPage() {
                       <Card key={item.id} className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => handleResultClick(item)}>
                         <CardHeader className="pb-2">
                           <div className="flex items-center gap-2">
-                            <User className="h-4 w-4" />
-                            <CardTitle className="text-sm">{item.label}</CardTitle>
+                            <User className="h-5 w-5 text-primary" />
+                            <CardTitle className="text-base">{item.label}</CardTitle>
                           </div>
                         </CardHeader>
                         <CardContent className="pt-0">
-                          <CardDescription className="text-xs">{item.summary}</CardDescription>
+                          <CardDescription className="text-sm">{item.summary}</CardDescription>
                         </CardContent>
                       </Card>
                     ))}
@@ -206,8 +328,8 @@ export default function SearchPage() {
               </div>
 
               <div>
-                <h2 className="text-xl font-semibold mb-4">Popular Tools</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <h2 className="text-2xl font-semibold mb-6">Popular Tools</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {searchIndex
                     .filter(item => item.kind === 'tool')
                     .slice(0, 6)
@@ -215,12 +337,12 @@ export default function SearchPage() {
                       <Card key={item.id} className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => handleResultClick(item)}>
                         <CardHeader className="pb-2">
                           <div className="flex items-center gap-2">
-                            <Calculator className="h-4 w-4" />
-                            <CardTitle className="text-sm">{item.label}</CardTitle>
+                            <Calculator className="h-5 w-5 text-primary" />
+                            <CardTitle className="text-base">{item.label}</CardTitle>
                           </div>
                         </CardHeader>
                         <CardContent className="pt-0">
-                          <CardDescription className="text-xs">{item.summary}</CardDescription>
+                          <CardDescription className="text-sm">{item.summary}</CardDescription>
                         </CardContent>
                       </Card>
                     ))}
@@ -237,6 +359,7 @@ export default function SearchPage() {
               <li>• Search by persona: "families", "advisors", "cpas", "attorneys"</li>
               <li>• Find tools by solution: "investments", "estate", "insurance"</li>
               <li>• Use arrow keys to navigate results, Enter to select</li>
+              <li>• Filter by type, persona, or solution area</li>
             </ul>
           </div>
         </div>
