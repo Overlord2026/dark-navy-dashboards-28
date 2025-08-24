@@ -35,6 +35,7 @@ export default function JobsPanel() {
     MONITOR_GUARDRAILS_ENABLED: getFlag('MONITOR_GUARDRAILS_ENABLED'),
     SYNC_BENEFICIARIES_ENABLED: getFlag('SYNC_BENEFICIARIES_ENABLED'),
     SUPERVISOR_DIGEST_ENABLED: getFlag('SUPERVISOR_DIGEST_ENABLED'),
+    SUPERVISOR_MONTHLY_ENABLED: getFlag('SUPERVISOR_MONTHLY_ENABLED'),
   });
   const [loading, setLoading] = useState<string | null>(null);
 
@@ -176,6 +177,7 @@ export default function JobsPanel() {
                   {flagName === 'MONITOR_GUARDRAILS_ENABLED' && 'Monitor retirement plan guardrails'}
                   {flagName === 'SYNC_BENEFICIARIES_ENABLED' && 'Check beneficiary designations'}
                   {flagName === 'SUPERVISOR_DIGEST_ENABLED' && 'Send daily supervisor digest emails'}
+                  {flagName === 'SUPERVISOR_MONTHLY_ENABLED' && 'Generate monthly supervisor reports'}
                 </p>
               </div>
               <Switch

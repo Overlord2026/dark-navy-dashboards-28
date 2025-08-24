@@ -40,6 +40,17 @@ jobs.push({
   run: runSupervisorDigest
 });
 
+// Register supervisor monthly report job
+import { runSupervisorMonthly } from './supervisor.monthly';
+jobs.push({
+  key: 'supervisor.monthly',
+  name: 'Supervisor Monthly Report',
+  description: 'Generate and send monthly supervisor reports with compliance analytics',
+  enabledFlag: 'SUPERVISOR_MONTHLY_ENABLED',
+  intervalMs: 60 * 60 * 1000, // 1 hour (only sends on configured day/hour)
+  run: runSupervisorMonthly
+});
+
 /**
  * Register a job with the system
  */

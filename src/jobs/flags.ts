@@ -6,6 +6,7 @@ export interface JobFlags {
   MONITOR_GUARDRAILS_ENABLED: boolean;
   SYNC_BENEFICIARIES_ENABLED: boolean;
   SUPERVISOR_DIGEST_ENABLED: boolean;
+  SUPERVISOR_MONTHLY_ENABLED: boolean;
 }
 
 // Default flag values
@@ -14,6 +15,7 @@ const DEFAULT_FLAGS: JobFlags = {
   MONITOR_GUARDRAILS_ENABLED: false,
   SYNC_BENEFICIARIES_ENABLED: false,
   SUPERVISOR_DIGEST_ENABLED: false,
+  SUPERVISOR_MONTHLY_ENABLED: false,
 };
 
 /**
