@@ -1,239 +1,71 @@
-import { ALL_STATES_DC, conservativeDeedRule } from '../states/registry';
+import type { RecordingRule } from './types';
 
-export type DeedType = 'Warranty'|'SpecialWarranty'|'Quitclaim'|'TOD'|'TODD'|'LadyBird';
+// Conservative deed rule generator
+export function conservativeDeedRule(state: string): RecordingRule {
+  return {
+    state,
+    allowed: ['warranty', 'quitclaim'],
+    recordingRequired: true,
+    notaryRequired: true,
+    witnessCount: 0,
+    transferTaxRequired: true,
+    disclosureRequired: true,
+    titleInsuranceRecommended: true
+  };
+}
 
-export type RecordingRule = {
-  code: string;      // 'CA','TX', etc.
-  allowed: DeedType[];
-  todAvailable?: boolean;
-  ladyBirdAvailable?: boolean;       // enhanced life estate — only in select states
-  witnesses: number; 
-  notary: boolean;
-  marginRules?: string;              // county format idiosyncrasies
-  transferTaxes?: string;            // basic guidance (attorney-only compute)
-  eRecordingLikely?: boolean;        // many counties allow; confirm at runtime
-  notes?: string;                    // any local caveats
+// Known state recording rules (seeds)
+const DEED_SEEDS: Record<string, Partial<RecordingRule>> = {
+  CA: {
+    allowed: ['grant', 'quitclaim'],
+    notaryRequired: true,
+    transferTaxRequired: false
+  },
+  TX: {
+    allowed: ['warranty', 'special_warranty'],
+    notaryRequired: true,
+    witnessCount: 2
+  },
+  FL: {
+    allowed: ['warranty', 'quitclaim'],
+    notaryRequired: true,
+    witnessCount: 2
+  },
+  NY: {
+    allowed: ['bargain_sale', 'quitclaim'],
+    notaryRequired: true,
+    transferTaxRequired: true
+  }
 };
 
-export const DEED_RULES: Record<string, RecordingRule> = {
-  'CA': {
-    code: 'CA',
-    allowed: ['Warranty', 'Quitclaim', 'TODD'],
-    witnesses: 0,
-    notary: true,
-    todAvailable: true,
-    ladyBirdAvailable: false,
-    eRecordingLikely: true,
-    marginRules: 'Top margin ~2.5"+ (confirm county).',
-    notes: 'TODD accepted; verify current statute.'
-  },
-  'TX': {
-    code: 'TX',
-    allowed: ['Warranty', 'SpecialWarranty', 'Quitclaim', 'TOD', 'TODD', 'LadyBird'],
-    witnesses: 0,
-    notary: true,
-    todAvailable: true,
-    ladyBirdAvailable: true,
-    eRecordingLikely: true,
-    notes: 'Muniment of title may apply; margin varies.'
-  },
-  'FL': {
-    code: 'FL',
-    allowed: ['Warranty', 'SpecialWarranty', 'Quitclaim', 'LadyBird'],
-    witnesses: 2,
-    notary: true,
-    todAvailable: true,
-    ladyBirdAvailable: true,
-    eRecordingLikely: true,
-    notes: '"Lady Bird" deeds common; confirm county acceptance.'
-  },
-  'NY': {
-    code: 'NY',
-    allowed: ['Warranty', 'SpecialWarranty', 'Quitclaim'],
-    witnesses: 0,
-    notary: true,
-    todAvailable: false,
-    ladyBirdAvailable: false,
-    eRecordingLikely: true,
-    notes: 'TOD/TODD availability limited; verify.'
-  },
-  'PA': {
-    code: 'PA',
-    allowed: ['Warranty', 'SpecialWarranty', 'Quitclaim', 'TODD'],
-    witnesses: 0,
-    notary: true,
-    todAvailable: true,
-    ladyBirdAvailable: false,
-    eRecordingLikely: true,
-    notes: 'Transfer tax considerations; county format.'
-  },
-  'IL': {
-    code: 'IL',
-    allowed: ['Warranty', 'SpecialWarranty', 'Quitclaim', 'TODD'],
-    witnesses: 0,
-    notary: true,
-    todAvailable: true,
-    ladyBirdAvailable: false,
-    eRecordingLikely: true,
-    notes: 'County margin enforcement common.'
-  },
-  'OH': {
-    code: 'OH',
-    allowed: ['Warranty', 'SpecialWarranty', 'Quitclaim', 'TODD'],
-    witnesses: 0,
-    notary: true,
-    todAvailable: true,
-    ladyBirdAvailable: false,
-    eRecordingLikely: true,
-    notes: 'County acceptance varies.'
-  },
-  'GA': {
-    code: 'GA',
-    allowed: ['Warranty', 'SpecialWarranty', 'Quitclaim'],
-    witnesses: 2,
-    notary: true,
-    todAvailable: false,
-    ladyBirdAvailable: false,
-    eRecordingLikely: true,
-    notes: 'Execution formalities strict; check local.'
-  },
-  'NC': {
-    code: 'NC',
-    allowed: ['Warranty', 'SpecialWarranty', 'Quitclaim'],
-    witnesses: 2,
-    notary: true,
-    todAvailable: false,
-    ladyBirdAvailable: false,
-    eRecordingLikely: true,
-    notes: 'Margins/indexing strict.'
-  },
-  'MI': {
-    code: 'MI',
-    allowed: ['Warranty', 'SpecialWarranty', 'Quitclaim', 'TODD', 'LadyBird'],
-    witnesses: 0,
-    notary: true,
-    todAvailable: true,
-    ladyBirdAvailable: true,
-    eRecordingLikely: true,
-    notes: 'Enhanced life estate recognized; verify county.'
-  },
-  'NJ': {
-    code: 'NJ',
-    allowed: ['Warranty', 'SpecialWarranty', 'Quitclaim', 'TODD'],
-    witnesses: 0,
-    notary: true,
-    todAvailable: true,
-    ladyBirdAvailable: false,
-    eRecordingLikely: true,
-    marginRules: 'Top margin ~3" (verify county).',
-    notes: 'TOD/TODD availability and transfer tax vary; verify.'
-  },
-  'VA': {
-    code: 'VA',
-    allowed: ['Warranty', 'SpecialWarranty', 'Quitclaim', 'TODD'],
-    witnesses: 0,
-    notary: true,
-    todAvailable: true,
-    ladyBirdAvailable: false,
-    eRecordingLikely: true,
-    marginRules: 'Top margin ~3"; APN formatting varies by county.'
-  },
-  'WA': {
-    code: 'WA',
-    allowed: ['Warranty', 'SpecialWarranty', 'Quitclaim', 'TODD'],
-    witnesses: 0,
-    notary: true,
-    todAvailable: true,
-    ladyBirdAvailable: false,
-    eRecordingLikely: true,
-    notes: 'Community property impacts vesting; confirm county APN rules.'
-  },
-  'AZ': {
-    code: 'AZ',
-    allowed: ['Warranty', 'SpecialWarranty', 'Quitclaim', 'TODD'],
-    witnesses: 0,
-    notary: true,
-    todAvailable: true,
-    ladyBirdAvailable: false,
-    eRecordingLikely: true,
-    notes: 'Beneficiary deeds permitted; confirm transfer fee.'
-  },
-  'MA': {
-    code: 'MA',
-    allowed: ['Warranty', 'SpecialWarranty', 'Quitclaim'],
-    witnesses: 0,
-    notary: true,
-    todAvailable: false,
-    ladyBirdAvailable: false,
-    eRecordingLikely: true,
-    notes: 'Strict margins/cover conventions; confirm tax.'
-  },
-  'TN': {
-    code: 'TN',
-    allowed: ['Warranty', 'SpecialWarranty', 'Quitclaim', 'TODD'],
-    witnesses: 0,
-    notary: true,
-    todAvailable: true,
-    ladyBirdAvailable: false,
-    eRecordingLikely: true
-  },
-  'IN': {
-    code: 'IN',
-    allowed: ['Warranty', 'SpecialWarranty', 'Quitclaim', 'TODD'],
-    witnesses: 0,
-    notary: true,
-    todAvailable: true,
-    ladyBirdAvailable: false,
-    eRecordingLikely: true
-  },
-  'MO': {
-    code: 'MO',
-    allowed: ['Warranty', 'SpecialWarranty', 'Quitclaim', 'TODD'],
-    witnesses: 0,
-    notary: true,
-    todAvailable: true,
-    ladyBirdAvailable: false,
-    eRecordingLikely: true
-  },
-  'MD': {
-    code: 'MD',
-    allowed: ['Warranty', 'SpecialWarranty', 'Quitclaim', 'TODD'],
-    witnesses: 0,
-    notary: true,
-    todAvailable: true,
-    ladyBirdAvailable: false,
-    eRecordingLikely: true,
-    marginRules: 'Return address/preparer/APN often required; confirm.'
-  },
-  'WI': {
-    code: 'WI',
-    allowed: ['Warranty', 'SpecialWarranty', 'Quitclaim', 'TODD'],
-    witnesses: 0,
-    notary: true,
-    todAvailable: true,
-    ladyBirdAvailable: false,
-    eRecordingLikely: true,
-  },
+// All US states + DC
+const ALL_STATES_DC = [
+  'AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA',
+  'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MD',
+  'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ',
+  'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC',
+  'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY', 'DC'
+];
 
-};
+// Initialize deed rules
+export const DEED_RULES: Record<string, RecordingRule> = {};
 
-// Add remaining states with conservative defaults - two-step to avoid TDZ
-for (const s of ALL_STATES_DC) {
-  if (!(s in DEED_RULES)) {
-    DEED_RULES[s] = conservativeDeedRule(s);
+// Apply seeds
+for (const [state, seed] of Object.entries(DEED_SEEDS)) {
+  DEED_RULES[state] = { ...conservativeDeedRule(state), ...seed };
+}
+
+// Fill remaining states
+for (const state of ALL_STATES_DC) {
+  if (!(state in DEED_RULES)) {
+    DEED_RULES[state] = conservativeDeedRule(state);
   }
 }
 
-export function canUseDeed(state: string, kind: DeedType): boolean {
-  const rule = DEED_RULES[state] || DEED_RULES['DEFAULT'];
-  return rule.allowed.includes(kind);
+export function canUseDeed(state: string, kind: string): boolean {
+  return (DEED_RULES[state]?.allowed || []).includes(kind);
 }
 
-export function getAvailableDeedTypes(state: string): DeedType[] {
-  const rule = DEED_RULES[state] || DEED_RULES['DEFAULT'];
-  return rule.allowed;
-}
-
-export function getDeedRules(state: string): RecordingRule {
-  return DEED_RULES[state] || DEED_RULES['DEFAULT'];
+export function getDeedRule(state: string): RecordingRule {
+  return DEED_RULES[state] || conservativeDeedRule(state);
 }

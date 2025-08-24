@@ -6,6 +6,13 @@ import type { FinalVersion } from './types';
 import { onReviewFinalReady } from '@/features/vault/autofill/connectors';
 import { mapSignal } from '@/features/estate/checklist/mapper';
 
+export async function loadReviewPacketPdfs(session: any) {
+  const letterPdf = await loadPdfFromVault(session.signedLetter?.pdfId || '');
+  const packetPdf = await loadPdfFromVault(session.packet.pdfId);
+  
+  return { letterPdf, packetPdf };
+}
+
 export async function finalizeReviewPacket({
   sessionId,
   clientId,
@@ -151,11 +158,4 @@ export function makeFinalVersion({
     reason 
   };
   return [...(previous || []), entry];
-}
-
-export async function loadReviewPacketPdfs(session: any) {
-  const letterPdf = await loadPdfFromVault(session.signedLetter?.pdfId || '');
-  const packetPdf = await loadPdfFromVault(session.packet.pdfId);
-  
-  return { letterPdf, packetPdf };
 }

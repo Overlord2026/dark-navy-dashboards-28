@@ -1,92 +1,88 @@
-import type { Job } from './types';
-import { enabled } from './flags';
+import { runArpNudgeWeekly } from './arpNudgeWeekly';
+import { runChecklistNightly } from './checklistNightly';
 
-/**
- * Global job registry
- * Individual job modules will push their jobs into this array
- */
-export const jobs: Job[] = [];
+export type JobDefinition = {
+  key: string;
+  enabledFlag: string;
+  intervalMs: number;
+  run: () => Promise<{ ok: boolean; [key: string]: any }>;
+};
 
-// Register guardrails monitor job
-import { runGuardrailsMonitor } from './guardrails.monitor';
-jobs.push({ 
-  key: 'guardrails.monitor', 
-  name: 'Guardrails Monitor',
-  description: 'Monitor retirement roadmap scenarios for out-of-band success probabilities',
-  enabledFlag: 'MONITOR_GUARDRAILS_ENABLED', 
-  intervalMs: 24 * 60 * 60 * 1000, // 24 hours
-  run: runGuardrailsMonitor 
-});
+export const jobs: JobDefinition[] = [
+  {
+    key: 'arp.nudge.weekly',
+    enabledFlag: 'ARP_NUDGE_ENABLED',
+    intervalMs: 7 * 24 * 60 * 60 * 1000, // Weekly
+    run: runArpNudgeWeekly
+  },
+  {
+    key: 'checklist.nightly',
+    enabledFlag: 'CHECKLIST_NIGHTLY_RECOMPUTE',
+    intervalMs: 24 * 60 * 60 * 1000, // Daily
+    run: runChecklistNightly
+  }
+];
 
-// Register beneficiary sync job
-import { runBeneficiarySync } from './beneficiary.sync';
-jobs.push({
-  key: 'beneficiary.sync',
-  name: 'Beneficiary Sync',
-  description: 'Sync estate intents vs account beneficiaries and detect mismatches',
-  enabledFlag: 'SYNC_BENEFICIARIES_ENABLED',
-  intervalMs: 7 * 24 * 60 * 60 * 1000, // 7 days
-  run: runBeneficiarySync
-});
-
-// Register supervisor digest job
-import { runSupervisorDigest } from './supervisor.digest';
-jobs.push({
-  key: 'supervisor.digest',
-  name: 'Supervisor Digest',
-  description: 'Send daily supervisor digest emails with compliance counts and links',
-  enabledFlag: 'SUPERVISOR_DIGEST_ENABLED',
-  intervalMs: 60 * 60 * 1000, // 1 hour (only sends for matching hourUtc)
-  run: runSupervisorDigest
-});
-
-// Register supervisor monthly report job
-import { runSupervisorMonthly } from './supervisor.monthly';
-jobs.push({
-  key: 'supervisor.monthly',
-  name: 'Supervisor Monthly Report',
-  description: 'Generate and send monthly supervisor reports with compliance analytics',
-  enabledFlag: 'SUPERVISOR_MONTHLY_ENABLED',
-  intervalMs: 60 * 60 * 1000, // 1 hour (only sends on configured day/hour)
-  run: runSupervisorMonthly
-});
-
-/**
- * Register a job with the system
- */
-export function registerJob(job: Job): void {
-  // Remove existing job with same key
-  const existingIndex = jobs.findIndex(j => j.key === job.key);
-  if (existingIndex >= 0) {
-    jobs.splice(existingIndex, 1);
+export async function runJob(jobKey: string): Promise<{ ok: boolean; [key: string]: any }> {
+  const job = jobs.find(j => j.key === jobKey);
+  if (!job) {
+    throw new Error(`Job not found: ${jobKey}`);
   }
   
-  jobs.push(job);
-  console.log(`[Jobs] Registered job: ${job.key}`);
+  const enabled = import.meta.env[`VITE_${job.enabledFlag}`] === 'true';
+  if (!enabled) {
+    console.log(`[Jobs] Job ${jobKey} is disabled`);
+    return { ok: true, skipped: true, reason: 'disabled' };
+  }
+  
+  console.log(`[Jobs] Running job: ${jobKey}`);
+  return await job.run();
 }
 
-/**
- * Get all registered jobs
- */
-export function getJobs(): Job[] {
-  return [...jobs];
+export async function runAllJobs(): Promise<Record<string, any>> {
+  const results: Record<string, any> = {};
+  
+  for (const job of jobs) {
+    try {
+      results[job.key] = await runJob(job.key);
+    } catch (error) {
+      results[job.key] = { ok: false, error: String(error) };
+      console.error(`[Jobs] Job ${job.key} failed:`, error);
+    }
+  }
+  
+  return results;
 }
 
-/**
- * Get a specific job by key
- */
-export function getJob(key: string): Job | undefined {
-  return jobs.find(j => j.key === key);
+// Auto-start background jobs if enabled
+export function startBackgroundJobs(): void {
+  const enabled = import.meta.env.VITE_BACKGROUND_JOBS_ENABLED === 'true';
+  if (!enabled) {
+    console.log('[Jobs] Background jobs are disabled');
+    return;
+  }
+  
+  console.log('[Jobs] Starting background job scheduler');
+  
+  jobs.forEach(job => {
+    const jobEnabled = import.meta.env[`VITE_${job.enabledFlag}`] === 'true';
+    if (!jobEnabled) {
+      console.log(`[Jobs] Skipping disabled job: ${job.key}`);
+      return;
+    }
+    
+    console.log(`[Jobs] Scheduling job: ${job.key} (interval: ${job.intervalMs}ms)`);
+    
+    // Run immediately
+    runJob(job.key).catch(error => {
+      console.error(`[Jobs] Initial run of ${job.key} failed:`, error);
+    });
+    
+    // Schedule recurring runs
+    setInterval(() => {
+      runJob(job.key).catch(error => {
+        console.error(`[Jobs] Scheduled run of ${job.key} failed:`, error);
+      });
+    }, job.intervalMs);
+  });
 }
-
-/**
- * Get all enabled jobs
- */
-export function getEnabledJobs(): Job[] {
-  return jobs.filter(job => enabled(job.enabledFlag));
-}
-
-/**
- * Check if job system is enabled
- */
-export { enabled };

@@ -1,328 +1,90 @@
 import { hash } from '@/lib/canonical';
-import { recordReceipt } from '@/features/receipts/record';
-import { getEstateRule } from '@/features/estate/states/estateRules';
-import { getDeedRules } from '@/features/estate/deeds/stateDeedRules';
-import { getHealthRule } from '@/features/estate/states/healthRules';
-import type { ReviewPacketData, ReviewChecklistItem, AttorneyInfo, ReviewLetterData } from './types';
+
+export type ReviewPacketData = {
+  clientName: string;
+  state: string;
+  docIds: string[];
+  createdAt: string;
+  disclaimerText: string;
+  checklist: ReviewChecklistItem[];
+};
+
+export type ReviewChecklistItem = {
+  id: string;
+  title: string;
+  description: string;
+  completed: boolean;
+  required: boolean;
+  category: 'execution' | 'notarization' | 'witnesses' | 'filing' | 'other';
+};
 
 export async function buildReviewPacket(
   clientId: string, 
   state: string, 
   docIds: string[]
 ): Promise<{ bytes: Uint8Array; sha256: string }> {
-  // Get state execution rules
-  const estateRule = getEstateRule(state);
-  const deedRule = getDeedRules(state);
-  const healthRule = getHealthRule(state);
-
-  // Generate checklist based on state rules
-  const checklist = generateStateChecklist(state, estateRule, deedRule, healthRule);
-
-  const packetData: ReviewPacketData = {
-    clientName: `Client ${clientId}`, // In real implementation, fetch from client data
+  console.log(`[Review Builder] Building review packet for ${clientId}, state: ${state}`);
+  
+  // TODO: Integrate with actual PDF builder
+  // This would include:
+  // 1. Cover page with client info and review summary
+  // 2. State-specific execution requirements summary
+  // 3. Document preview pages for each doc in docIds
+  // 4. Execution checklist and signature pages
+  
+  const mockData: ReviewPacketData = {
+    clientName: `Client ${clientId}`,
     state,
     docIds,
     createdAt: new Date().toISOString(),
-    disclaimerText: "This review packet contains preliminary documents that are NOT LEGAL ADVICE until reviewed and signed by a licensed attorney.",
-    checklist
-  };
-
-  // Build PDF content (simplified - in real implementation use pdf-lib or similar)
-  const pdfContent = buildPDFContent(packetData, estateRule, deedRule, healthRule);
-  const pdfBytes = new TextEncoder().encode(pdfContent); // Simplified - would be actual PDF bytes
-
-  const sha256Value = await hash({ clientId, state, docIds, ts: Date.now() });
-  
-  return { bytes: pdfBytes, sha256: sha256Value };
-}
-
-function generateStateChecklist(
-  state: string,
-  estateRule: any,
-  deedRule: any,
-  healthRule: any
-): ReviewChecklistItem[] {
-  const checklist: ReviewChecklistItem[] = [];
-
-  // Will execution requirements
-  checklist.push({
-    id: 'will-witnesses',
-    title: `Will Witnesses (${estateRule.will.witnesses} required)`,
-    description: `Ensure ${estateRule.will.witnesses} witnesses sign the will`,
-    completed: false,
-    required: true,
-    category: 'witnesses'
-  });
-
-  if (estateRule.will.notary) {
-    checklist.push({
-      id: 'will-notary',
-      title: 'Will Notarization',
-      description: 'Will must be notarized',
-      completed: false,
-      required: true,
-      category: 'notarization'
-    });
-  }
-
-  if (estateRule.will.selfProving) {
-    checklist.push({
-      id: 'will-self-proving',
-      title: 'Self-Proving Affidavit',
-      description: 'Attach self-proving affidavit to will',
-      completed: false,
-      required: false,
-      category: 'execution'
-    });
-  }
-
-  // RLT requirements
-  if (estateRule.rlt.notary) {
-    checklist.push({
-      id: 'rlt-notary',
-      title: 'Trust Notarization',
-      description: 'Revocable Living Trust must be notarized',
-      completed: false,
-      required: true,
-      category: 'notarization'
-    });
-  }
-
-  // POA requirements
-  if (estateRule.poa.notary) {
-    checklist.push({
-      id: 'poa-notary',
-      title: 'Power of Attorney Notarization',
-      description: 'Power of Attorney must be notarized',
-      completed: false,
-      required: true,
-      category: 'notarization'
-    });
-  }
-
-  // Healthcare document requirements
-  if (healthRule) {
-    checklist.push({
-      id: 'healthcare-witnesses',
-      title: `Healthcare Document Witnesses (${healthRule.witnesses} required)`,
-      description: `Ensure ${healthRule.witnesses} witnesses sign healthcare documents`,
-      completed: false,
-      required: healthRule.witnesses > 0,
-      category: 'witnesses'
-    });
-
-    if (healthRule.notaryRequired) {
-      checklist.push({
-        id: 'healthcare-notary',
-        title: 'Healthcare Document Notarization',
-        description: 'Healthcare documents must be notarized',
+    disclaimerText: `This review packet contains estate planning documents for ${state} jurisdiction. Please review all execution requirements carefully.`,
+    checklist: [
+      {
+        id: 'witnesses',
+        title: 'Witness Requirements',
+        description: `Ensure proper witness signatures per ${state} law`,
+        completed: false,
+        required: true,
+        category: 'witnesses'
+      },
+      {
+        id: 'notarization',
+        title: 'Notarization',
+        description: 'Complete notarization of required documents',
         completed: false,
         required: true,
         category: 'notarization'
-      });
-    }
-  }
-
-  // Deed requirements (if applicable)
-  if (deedRule && deedRule.notary) {
-    checklist.push({
-      id: 'deed-notary',
-      title: 'Deed Notarization',
-      description: 'Real estate deeds must be notarized',
-      completed: false,
-      required: true,
-      category: 'notarization'
-    });
-  }
-
-  if (deedRule && deedRule.witnesses > 0) {
-    checklist.push({
-      id: 'deed-witnesses',
-      title: `Deed Witnesses (${deedRule.witnesses} required)`,
-      description: `Ensure ${deedRule.witnesses} witnesses sign real estate deeds`,
-      completed: false,
-      required: true,
-      category: 'witnesses'
-    });
-  }
-
-  return checklist;
-}
-
-function buildPDFContent(
-  packetData: ReviewPacketData,
-  estateRule: any,
-  deedRule: any,
-  healthRule: any
-): string {
-  // Simplified PDF content generation
-  let content = `
+      },
+      {
+        id: 'execution_order',
+        title: 'Execution Order',
+        description: 'Sign documents in proper sequence',
+        completed: false,
+        required: true,
+        category: 'execution'
+      }
+    ]
+  };
+  
+  // For demo purposes, create a simple text representation
+  const content = `
 ATTORNEY REVIEW PACKET
-Generated: ${new Date().toLocaleDateString()}
-
-CLIENT: ${packetData.clientName}
-STATE: ${packetData.state}
-
-${packetData.disclaimerText}
-
-STATE EXECUTION SUMMARY:
-=======================
-
-Will Requirements:
-- Witnesses: ${estateRule.will.witnesses}
-- Notary: ${estateRule.will.notary ? 'Required' : 'Not Required'}
-- Self-Proving: ${estateRule.will.selfProving ? 'Available' : 'Not Available'}
-
-Trust Requirements:
-- Notary: ${estateRule.rlt.notary ? 'Required' : 'Not Required'}
-
-Power of Attorney Requirements:
-- Notary: ${estateRule.poa.notary ? 'Required' : 'Not Required'}
+State: ${state}
+Client: ${mockData.clientName}
+Documents: ${docIds.length} documents
+Created: ${mockData.createdAt}
 
 EXECUTION CHECKLIST:
-===================
+${mockData.checklist.map(item => `□ ${item.title}: ${item.description}`).join('\n')}
 
-`;
-
-  packetData.checklist.forEach((item, index) => {
-    content += `${index + 1}. [${item.completed ? 'X' : ' '}] ${item.title}
-   ${item.description}
-   ${item.required ? '(REQUIRED)' : '(OPTIONAL)'}
-
-`;
-  });
-
-  content += `
-DOCUMENT PREVIEWS:
-=================
-
-Document IDs included in this review:
-${packetData.docIds.map(id => `- ${id}`).join('\n')}
-
-[Document previews would be embedded here]
-
-ATTORNEY SIGNATURE REQUIRED BELOW
-_________________________________
-
-This packet has been reviewed by:
-
-Attorney: ___________________________
-Bar Number: _________________________
-Date: _______________________________
-Signature: __________________________
-
-`;
-
-  return content;
-}
-
-export async function buildReviewLetter(options: {
-  clientId: string;
-  state: string;
-  attorney: AttorneyInfo;
-  packetPdfId: string;
-}): Promise<{ bytes: Uint8Array; sha256: string }> {
-  const letterData: ReviewLetterData = {
-    clientName: `Client ${options.clientId}`,
-    state: options.state,
-    attorneyName: options.attorney.name,
-    barNumber: options.attorney.barNo,
-    reviewDate: new Date().toLocaleDateString(),
-    letterBody: generateLetterBody(options.state),
-    recommendations: generateRecommendations(options.state),
-    signatureRequired: true
-  };
-
-  const letterContent = buildLetterContent(letterData);
-  const letterBytes = new TextEncoder().encode(letterContent);
+DISCLAIMER:
+${mockData.disclaimerText}
+  `.trim();
   
-  const sha256Value = await hash({ 
-    clientId: options.clientId, 
-    state: options.state, 
-    attorney: options.attorney.name, 
-    ts: Date.now() 
-  });
-
-  return { bytes: letterBytes, sha256: sha256Value };
-}
-
-function generateLetterBody(state: string): string {
-  return `I have reviewed the estate planning documents prepared for execution in ${state}. Based on my review of the applicable state laws and the client's circumstances, I provide the following analysis and recommendations.`;
-}
-
-function generateRecommendations(state: string): string[] {
-  const estateRule = getEstateRule(state);
-  const recommendations: string[] = [];
-
-  recommendations.push(`Ensure all execution requirements for ${state} are met`);
+  const bytes = new TextEncoder().encode(content);
+  const sha256 = await hash(bytes);
   
-  if (estateRule.will.witnesses > 0) {
-    recommendations.push(`Arrange for ${estateRule.will.witnesses} qualified witnesses for will execution`);
-  }
-
-  if (estateRule.will.notary) {
-    recommendations.push('Schedule notarization appointment for will');
-  }
-
-  if (estateRule.will.selfProving) {
-    recommendations.push('Consider executing self-proving affidavit to simplify probate process');
-  }
-
-  if (estateRule.communityProperty) {
-    recommendations.push('Review community property implications with client');
-  }
-
-  recommendations.push('Verify all documents are properly funded and coordinated');
-  recommendations.push('Provide execution instructions to client');
-
-  return recommendations;
-}
-
-function buildLetterContent(letterData: ReviewLetterData): string {
-  return `
-ATTORNEY REVIEW LETTER
-
-Date: ${letterData.reviewDate}
-
-Re: Estate Planning Document Review - ${letterData.clientName}
-State: ${letterData.state}
-
-Dear ${letterData.clientName},
-
-${letterData.letterBody}
-
-RECOMMENDATIONS:
-${letterData.recommendations.map((rec, i) => `${i + 1}. ${rec}`).join('\n')}
-
-This review is based on current ${letterData.state} law and the information provided. Please contact our office if you have any questions or if circumstances change.
-
-Very truly yours,
-
-${letterData.signatureRequired ? '\n\n_________________________________' : ''}
-${letterData.attorneyName}
-Bar Number: ${letterData.barNumber}
-Licensed to practice in ${letterData.state}
-
-Date: ${letterData.reviewDate}
-`;
-}
-
-export async function applyAttorneyESign(
-  letterBytes: Uint8Array, 
-  attorney: AttorneyInfo
-): Promise<{ bytes: Uint8Array; sha256: string }> {
-  // Simplified e-signature application
-  const originalContent = new TextDecoder().decode(letterBytes);
-  const signedContent = originalContent.replace(
-    '_________________________________',
-    `${attorney.name} (electronically signed)`
-  );
+  console.log(`[Review Builder] Generated packet: ${bytes.length} bytes, hash: ${sha256.slice(0, 16)}...`);
   
-  const signedBytes = new TextEncoder().encode(signedContent);
-  const sha256Value = await hash({ 
-    attorney: attorney.name, 
-    signedAt: new Date().toISOString() 
-  });
-
-  return { bytes: signedBytes, sha256: sha256Value };
+  return { bytes, sha256 };
 }
