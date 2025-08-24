@@ -4,88 +4,70 @@ import { Download, FileArchive, FileText } from 'lucide-react';
 import { trackExportClick } from '@/lib/analytics';
 import { toast } from '@/hooks/use-toast';
 
-interface ExportButtonsProps {
-  exports: {
-    csv?: boolean;
-    zip?: boolean;
-    pdf?: boolean;
-    qr?: boolean;
-  };
-  onExport?: (type: 'csv' | 'zip' | 'pdf' | 'qr') => void;
-  disabled?: boolean;
-  className?: string;
-  toolKey?: string; // optional analytics tag
+export interface ExportButtonsProps {
+  csvEnabled?: boolean;
+  zipEnabled?: boolean;
+  onCsvExport?: () => void;
+  onZipExport?: () => void;
 }
 
-export const ExportButtons: React.FC<ExportButtonsProps> = ({ 
-  exports, 
-  onExport,
-  disabled = false,
-  className = ''
+export const ExportButtons: React.FC<ExportButtonsProps> = ({
+  csvEnabled = true,
+  zipEnabled = true,
+  onCsvExport,
+  onZipExport
 }) => {
-  const handleExport = (type: 'csv' | 'zip' | 'pdf' | 'qr') => {
-    trackExportClick(type);
+  const handleCsvExport = () => {
+    trackExportClick('csv');
     
-    if (onExport) {
-      onExport(type);
+    if (onCsvExport) {
+      onCsvExport();
     } else {
-      // Default export behavior
       toast({
-        title: `${type.toUpperCase()} export started`,
+        title: 'CSV export started',
         description: 'Your export is being prepared'
       });
     }
   };
 
-  const exportButtons = [
-    {
-      type: 'csv' as const,
-      label: 'CSV',
-      icon: FileText,
-      enabled: exports.csv,
-      description: 'Export data as spreadsheet'
-    },
-    {
-      type: 'zip' as const,
-      label: 'ZIP',
-      icon: FileArchive,
-      enabled: exports.zip,
-      description: 'Export documents as archive'
-    },
-    {
-      type: 'pdf' as const,
-      label: 'PDF',
-      icon: FileText,
-      enabled: exports.pdf,
-      description: 'Export as PDF report'
-    },
-    {
-      type: 'qr' as const,
-      label: 'QR',
-      icon: Download,
-      enabled: exports.qr,
-      description: 'Export QR verification code'
+  const handleZipExport = () => {
+    trackExportClick('zip');
+    
+    if (onZipExport) {
+      onZipExport();
+    } else {
+      toast({
+        title: 'ZIP export started',
+        description: 'Your export is being prepared'
+      });
     }
-  ].filter(btn => btn.enabled);
-
-  if (exportButtons.length === 0) return null;
+  };
 
   return (
-    <div className={`flex gap-2 ${className}`}>
-      {exportButtons.map(({ type, label, icon: Icon, description }) => (
+    <div className="flex items-center gap-2">
+      {csvEnabled && (
         <Button
-          key={type}
           variant="outline"
           size="sm"
-          disabled={disabled}
-          onClick={() => handleExport(type)}
-          className="min-h-[44px] focus-visible:ring-2 focus-visible:ring-cyan-400"
-          title={disabled ? 'Export not available' : description}
+          onClick={handleCsvExport}
+          className="flex items-center gap-2"
         >
-          <Icon className="w-4 h-4 mr-2" />
-          {label}
+          <FileText className="w-4 h-4" />
+          Export CSV
         </Button>
-      ))}
+      )}
+      
+      {zipEnabled && (
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={handleZipExport}
+          className="flex items-center gap-2"
+        >
+          <FileArchive className="w-4 h-4" />
+          Export ZIP
+        </Button>
+      )}
     </div>
   );
 };

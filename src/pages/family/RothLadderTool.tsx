@@ -5,13 +5,15 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
+import { ExportButtons } from '@/components/tools/ExportButtons';
+import { ProofStrip } from '@/components/tools/ProofStrip';
 import { recordReceipt } from '@/features/receipts/record';
 import { analytics } from '@/lib/analytics';
 
 export default function RothLadderTool() {
   const { toast } = useToast();
+  const [lastReceiptId, setLastReceiptId] = React.useState<string>('');
   const [formData, setFormData] = React.useState({
     currentAge: '',
     retirementAge: '',
@@ -34,6 +36,8 @@ export default function RothLadderTool() {
       created_at: new Date().toISOString()
     });
 
+    setLastReceiptId(receipt.id);
+
     // Analytics
     analytics.track('family.tool.submit', { 
       tool: 'roth-ladder',
@@ -43,15 +47,26 @@ export default function RothLadderTool() {
 
     toast({
       title: "Analysis Complete",
-      description: (
-        <div className="space-y-2">
-          <p>Roth conversion strategy generated</p>
-          <Badge variant="outline" className="text-xs">
-            Saved to Proof Slips
-          </Badge>
-        </div>
-      )
+      description: "Roth conversion strategy generated and saved to Proof Slips"
     });
+  };
+
+  const handleCsvExport = () => {
+    const csvData = [
+      'Field,Value',
+      `Current Age,${formData.currentAge}`,
+      `Retirement Age,${formData.retirementAge}`,
+      `Traditional IRA Balance,$${formData.traditionalIRA}`,
+      `Current Tax Rate,${formData.currentTaxRate}%`,
+      `Expected Tax Rate,${formData.expectedTaxRate}%`
+    ].join('\n');
+    
+    const blob = new Blob([csvData], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Roth_Ladder_v${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
   };
 
   const handleInputChange = (field: string, value: string) => {
@@ -146,6 +161,16 @@ export default function RothLadderTool() {
               </form>
             </CardContent>
           </Card>
+          
+          {lastReceiptId && <ProofStrip lastReceiptId={lastReceiptId} />}
+          
+          <div className="flex justify-end">
+            <ExportButtons 
+              csvEnabled={!!lastReceiptId}
+              zipEnabled={false}
+              onCsvExport={handleCsvExport}
+            />
+          </div>
         </div>
       </main>
     </>

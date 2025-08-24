@@ -163,7 +163,8 @@ export default function SampleFamilyTool() {
             )}
 
             <ExportButtons
-              exports={{ csv: !!results, zip: !!results }}
+              csvEnabled={!!results}
+              zipEnabled={!!results}
             />
           </div>
         </div>

@@ -5,14 +5,16 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
+import { ExportButtons } from '@/components/tools/ExportButtons';
+import { ProofStrip } from '@/components/tools/ProofStrip';
 import { recordReceipt } from '@/features/receipts/record';
 import { analytics } from '@/lib/analytics';
 import { seedRMDCheck } from '@/tools/seeds/rmd-check';
 
 export default function RMDCheckTool() {
   const { toast } = useToast();
+  const [lastReceiptId, setLastReceiptId] = React.useState<string>('');
   const [formData, setFormData] = React.useState({
     age: '',
     accountBalance: '',
@@ -28,7 +30,7 @@ export default function RMDCheckTool() {
     e.preventDefault();
     
     // Record receipt
-    recordReceipt({
+    const receipt = recordReceipt({
       id: `rmd_${Date.now()}`,
       type: 'Decision-RDS',
       policy_version: 'E-2025.08',
@@ -37,6 +39,8 @@ export default function RMDCheckTool() {
       reasons: ['RMD_COMPLIANCE_CHECK'],
       created_at: new Date().toISOString()
     });
+
+    setLastReceiptId(receipt.id);
 
     // Analytics
     analytics.track('family.tool.submit', { 
@@ -47,15 +51,24 @@ export default function RMDCheckTool() {
 
     toast({
       title: "RMD Analysis Complete",
-      description: (
-        <div className="space-y-2">
-          <p>Required minimum distribution calculated</p>
-          <Badge variant="outline" className="text-xs">
-            Saved to Proof Slips
-          </Badge>
-        </div>
-      )
+      description: "Required minimum distribution calculated and saved to Proof Slips"
     });
+  };
+
+  const handleCsvExport = () => {
+    const csvData = [
+      'Field,Value',
+      `Age,${formData.age}`,
+      `Account Balance,$${formData.accountBalance}`,
+      `Account Type,${formData.accountType}`
+    ].join('\n');
+    
+    const blob = new Blob([csvData], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `RMD_Check_v${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
   };
 
   const handleInputChange = (field: string, value: string) => {
@@ -129,6 +142,16 @@ export default function RMDCheckTool() {
               </form>
             </CardContent>
           </Card>
+          
+          {lastReceiptId && <ProofStrip lastReceiptId={lastReceiptId} />}
+          
+          <div className="flex justify-end">
+            <ExportButtons 
+              csvEnabled={!!lastReceiptId}
+              zipEnabled={false}
+              onCsvExport={handleCsvExport}
+            />
+          </div>
         </div>
       </main>
     </>

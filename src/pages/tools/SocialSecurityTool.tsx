@@ -241,9 +241,9 @@ export default function SocialSecurityTool() {
 
         <div className="flex justify-end">
           <ExportButtons 
-            exports={{ csv: !!results, zip: false }}
-            onExport={(type) => handleExport(type)}
-            toolKey="social-security"
+            csvEnabled={!!results}
+            zipEnabled={false}
+            onCsvExport={() => handleExport('csv')}
           />
         </div>
       </div>
