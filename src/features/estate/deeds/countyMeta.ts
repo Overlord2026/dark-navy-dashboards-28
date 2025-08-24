@@ -271,6 +271,8 @@ export const COUNTY_META: CountyMetaMap = {
   'WI/Racine': { state:'WI', county:'Racine', pageSize:'Letter', topMarginIn:3, leftMarginIn:1, rightMarginIn:1, bottomMarginIn:1, firstPageStamp:{xIn:6.0,yIn:0.5,wIn:2.5,hIn:3.0}, requiresReturnAddress:true, requiresPreparer:true, requiresAPN:true, eRecording:true, providers:['csc'] },
 };
 
+import { getDefaultCountyMeta } from '../states/registry';
+
 export function getCountyKey(state: string, county: string): string { 
   return `${state}/${county}`; 
 }
@@ -282,5 +284,12 @@ export function getCountiesByState(state: string): string[] {
 }
 
 export function getCountyMeta(state: string, county: string): CountyMeta | null {
-  return COUNTY_META[getCountyKey(state, county)] || null;
+  const existing = COUNTY_META[getCountyKey(state, county)];
+  if (existing) return existing;
+  
+  // Return fallback with warning
+  return {
+    ...getDefaultCountyMeta(state, county),
+    notes: `FALLBACK - ${county} County not configured. Verify requirements with ${state} ${county} County Recorder.`
+  } as CountyMeta;
 }

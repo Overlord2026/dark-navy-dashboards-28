@@ -30,6 +30,20 @@ export default function AdminPanel() {
       color: 'text-purple-600'
     },
     {
+      title: 'Rules Coverage',
+      description: 'Estate, deed, and healthcare rules coverage dashboard',
+      icon: FileText,
+      route: '/admin/rules-coverage',
+      color: 'text-green-600'
+    },
+    {
+      title: 'Rules Import',
+      description: 'Bulk import and update estate rules via JSON',
+      icon: Database,
+      route: '/admin/rules-import',
+      color: 'text-cyan-600'
+    },
+    {
       title: 'Publish Panel',
       description: 'Production deployment and CDN management',
       icon: FileText,

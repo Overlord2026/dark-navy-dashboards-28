@@ -1,3 +1,5 @@
+import { ALL_STATES_DC, conservativeEstateRule, conservativeHealthRule } from './registry';
+
 export type EstateRule = {
   code: string;                      // 'CA','TX','FL',...
   will: { witnesses:number; notary:boolean; selfProving?:boolean };
@@ -244,6 +246,14 @@ export const ESTATE_RULES: Record<string,EstateRule> = {
     todPodAllowed: true,
     deedPracticeNote: 'APN and margins enforced; check municipal fees.'
   },
+
+  // Add remaining states with conservative defaults
+  ...Object.fromEntries(
+    ALL_STATES_DC
+      .filter(s => !ESTATE_RULES[s])  // skip ones already seeded
+      .map(s => [s, conservativeEstateRule(s)])
+  ),
+
   'DEFAULT': {
     code: 'DEFAULT',
     will: { witnesses: 2, notary: false },
@@ -253,130 +263,19 @@ export const ESTATE_RULES: Record<string,EstateRule> = {
   }
 };
 
-export const HEALTH_RULES: Record<string, HealthcareRule> = {
-  'CA': {
-    code: 'CA',
-    witnesses: 2,
-    notaryRequired: false,
-    selfProvingAffidavit: true,
-    remoteNotaryAllowed: true,
-    healthcareForms: ['AdvanceDirective', 'HealthcarePOA', 'HIPAA'],
-    surrogateTerminology: 'Health Care Agent',
-    notarizationText: 'State of California, County of ___________\nSubscribed and sworn before me this _____ day of _______, 20__.',
-    witnessEligibility: 'No treating physician; witnesses must be adults'
-  },
-  'TX': {
-    code: 'TX',
-    witnesses: 2,
-    notaryRequired: true,
-    remoteNotaryAllowed: true,
-    healthcareForms: ['AdvanceDirective', 'HealthcarePOA', 'HIPAA', 'LivingWill'],
-    surrogateTerminology: 'Health Care Agent',
-    notarizationText: 'State of Texas, County of ___________\nAcknowledged before me this _____ day of _______, 20__.',
-    witnessEligibility: 'No treating physician; notary cannot serve as witness'
-  },
-  'FL': {
-    code: 'FL',
-    witnesses: 2,
-    notaryRequired: true,
-    remoteNotaryAllowed: true,
-    healthcareForms: ['LivingWill', 'HealthcarePOA', 'HIPAA', 'Surrogate'],
-    surrogateTerminology: 'Health Care Surrogate',
-    specialNotes: 'Florida requires separate Living Will and Health Care Surrogate documents',
-    notarizationText: 'State of Florida, County of ___________\nSworn to and subscribed before me this _____ day of _______, 20__.',
-    witnessEligibility: 'No spouse, blood relative, or beneficiary as witness'
-  },
-  'NY': {
-    code: 'NY',
-    witnesses: 2,
-    notaryRequired: false,
-    remoteNotaryAllowed: false,
-    healthcareForms: ['AdvanceDirective', 'HealthcarePOA', 'HIPAA'],
-    surrogateTerminology: 'Health Care Proxy',
-    specialNotes: 'New York uses Health Care Proxy terminology',
-    witnessEligibility: 'No treating physician or facility operator as witness'
-  },
-  'NJ': {
-    code: 'NJ',
-    witnesses: 2,
-    notaryRequired: false,
-    selfProvingAffidavit: true,
-    remoteNotaryAllowed: true,
-    healthcareForms: ['AdvanceDirective', 'HealthcarePOA', 'HIPAA'],
-    surrogateTerminology: 'Health Care Proxy',
-    specialNotes: 'Hospital policies may vary by system.'
-  },
-  'VA': {
-    code: 'VA',
-    witnesses: 2,
-    notaryRequired: false,
-    remoteNotaryAllowed: true,
-    healthcareForms: ['AdvanceDirective', 'HealthcarePOA', 'HIPAA']
-  },
-  'WA': {
-    code: 'WA',
-    witnesses: 2,
-    notaryRequired: false,
-    healthcareForms: ['AdvanceDirective', 'HealthcarePOA', 'HIPAA'],
-    specialNotes: 'Community property; confirm provider acceptance.'
-  },
-  'AZ': {
-    code: 'AZ',
-    witnesses: 2,
-    notaryRequired: false,
-    healthcareForms: ['AdvanceDirective', 'HealthcarePOA', 'HIPAA'],
-    specialNotes: 'State AD forms widely used.'
-  },
-  'MA': {
-    code: 'MA',
-    witnesses: 2,
-    notaryRequired: false,
-    healthcareForms: ['Surrogate', 'HIPAA'],
-    surrogateTerminology: 'Health Care Proxy'
-  },
-  'TN': {
-    code: 'TN',
-    witnesses: 2,
-    notaryRequired: false,
-    healthcareForms: ['AdvanceDirective', 'HealthcarePOA', 'HIPAA']
-  },
-  'IN': {
-    code: 'IN',
-    witnesses: 2,
-    notaryRequired: false,
-    healthcareForms: ['AdvanceDirective', 'HealthcarePOA', 'HIPAA']
-  },
-  'MO': {
-    code: 'MO',
-    witnesses: 2,
-    notaryRequired: false,
-    healthcareForms: ['AdvanceDirective', 'HealthcarePOA', 'HIPAA']
-  },
-  'MD': {
-    code: 'MD',
-    witnesses: 2,
-    notaryRequired: false,
-    healthcareForms: ['AdvanceDirective', 'HealthcarePOA', 'HIPAA']
-  },
-  'WI': {
-    code: 'WI',
-    witnesses: 2,
-    notaryRequired: false,
-    healthcareForms: ['AdvanceDirective', 'HealthcarePOA', 'HIPAA']
-  },
-  'DEFAULT': {
-    code: 'DEFAULT',
-    witnesses: 2,
-    notaryRequired: true,
-    healthcareForms: ['AdvanceDirective', 'HealthcarePOA', 'HIPAA'],
-    surrogateTerminology: 'Health Care Agent'
-  }
-};
+export function getEstateRule(state: string): EstateRule {
+  return ESTATE_RULES[state] || ESTATE_RULES['DEFAULT'];
+}
+
+export function getAllEstateStates(): string[] {
+  return Object.keys(ESTATE_RULES).filter(k => k !== 'DEFAULT');
+}
 
 export function useEstateRules(state: string): EstateRule {
   return ESTATE_RULES[state] || ESTATE_RULES['DEFAULT'];
 }
 
 export function useHealthcareRules(stateCode: string): HealthcareRule {
-  return HEALTH_RULES[stateCode] || HEALTH_RULES['DEFAULT'];
+  const { getHealthRule } = require('./healthRules');
+  return getHealthRule(stateCode) || getHealthRule('DEFAULT');
 }

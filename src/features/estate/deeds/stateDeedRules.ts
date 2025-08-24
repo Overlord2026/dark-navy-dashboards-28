@@ -1,3 +1,5 @@
+import { ALL_STATES_DC, conservativeDeedRule } from '../states/registry';
+
 export type DeedType = 'Warranty'|'SpecialWarranty'|'Quitclaim'|'TOD'|'TODD'|'LadyBird';
 
 export type RecordingRule = {
@@ -211,25 +213,24 @@ export const DEED_RULES: Record<string, RecordingRule> = {
     todAvailable: true,
     ladyBirdAvailable: false,
     eRecordingLikely: true,
-    notes: 'Marital property; verify local transfer fee.'
   },
-  'DEFAULT': {
-    code: 'DEFAULT',
-    allowed: ['Warranty', 'Quitclaim'],
-    todAvailable: false,
-    ladyBirdAvailable: false,
-    witnesses: 0,
-    notary: true,
-    eRecordingLikely: false
-  }
+
+  // Add remaining states with conservative defaults
+  ...Object.fromEntries(
+    ALL_STATES_DC
+      .filter(s => !DEED_RULES[s])  // skip ones already seeded
+      .map(s => [s, conservativeDeedRule(s)])
+  ),
 };
 
 export function canUseDeed(state: string, kind: DeedType): boolean {
-  return (DEED_RULES[state]?.allowed || DEED_RULES['DEFAULT'].allowed).includes(kind);
+  const rule = DEED_RULES[state] || DEED_RULES['DEFAULT'];
+  return rule.allowed.includes(kind);
 }
 
 export function getAvailableDeedTypes(state: string): DeedType[] {
-  return DEED_RULES[state]?.allowed || DEED_RULES['DEFAULT'].allowed;
+  const rule = DEED_RULES[state] || DEED_RULES['DEFAULT'];
+  return rule.allowed;
 }
 
 export function getDeedRules(state: string): RecordingRule {
