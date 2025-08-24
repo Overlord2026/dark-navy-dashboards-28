@@ -1,4 +1,5 @@
-export { ChecklistConsole as default } from './ChecklistConsole';
+import ChecklistConsole from './ChecklistConsole';
 
 // Export the comprehensive estate management system
-export { ChecklistConsole } from './ChecklistConsole';
+export { ChecklistConsole };
+export default ChecklistConsole;

@@ -5,6 +5,8 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { riskScore, riskBand } from '@/features/estate/console/risk';
 import { loadViews, addView, removeView, exportViews, importViews, SavedView } from '@/features/estate/console/views';
+import { explainFlags, FlagKey } from '@/features/estate/console/explainer';
+import { loadConsoleJobs, scheduleJob, removeConsoleJob, ConsoleJobSpec } from '@/features/estate/console/jobs';
 import { recordReceipt } from '@/features/receipts/record';
 import type { PortfolioRow } from '@/features/estate/console/data';
 
@@ -15,6 +17,13 @@ export default function ChecklistConsole() {
   const [views, setViews] = React.useState<SavedView[]>(loadViews());
   const [selected, setSelected] = React.useState<Set<string>>(new Set());
   const [msg, setMsg] = React.useState('');
+  
+  // Drawer state for flags explainer
+  const [drawer, setDrawer] = React.useState<null | { row: PortfolioRow; expl: ReturnType<typeof explainFlags> }>(null);
+  
+  // Jobs bridge state
+  const [jobs, setJobs] = React.useState<ConsoleJobSpec[]>(loadConsoleJobs());
+  const [jobModal, setJobModal] = React.useState<null | { kind: ConsoleJobSpec['kind']; filter: string; cadence: ConsoleJobSpec['cadence'] }>(null);
 
   // Mock data for demonstration
   const mockData: PortfolioRow[] = [
@@ -110,6 +119,33 @@ export default function ChecklistConsole() {
     } else {
       setSelected(new Set());
     }
+  };
+
+  // Action handlers
+  const prepareReview = (clientId: string, state?: string) => {
+    window.location.assign(`/attorney/review/new?clientId=${clientId}&state=${state}`);
+  };
+
+  const requestDeed = (clientId: string, state?: string) => {
+    window.location.assign(`/estate/workbench?tab=property&clientId=${clientId}&state=${state}`);
+  };
+
+  const inviteConsent = (clientId: string) => {
+    window.location.assign(`/family/vault-consent?clientId=${clientId}`);
+  };
+
+  const openAttorney = (clientId: string) => {
+    window.location.assign(`/attorney/workbench?clientId=${clientId}`);
+  };
+
+  const recomputeChecklist = (clientId: string) => {
+    console.log(`Recomputing checklist for ${clientId}`);
+    recordReceipt({
+      type: 'Decision-RDS',
+      action: 'console.recompute.single',
+      reasons: [clientId],
+      created_at: new Date().toISOString()
+    } as any);
   };
 
   const saveView = () => {
@@ -251,6 +287,15 @@ export default function ChecklistConsole() {
             <Button variant="ghost" size="sm" onClick={exportViewsToClipboard}>Export</Button>
             <Button variant="ghost" size="sm" onClick={importViewsFromClipboard}>Import</Button>
           </div>
+          
+          {/* Schedule Jobs Button */}
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => setJobModal({ kind: 'invite_consent', filter: filter, cadence: 'weekly' })}
+          >
+            Schedule…
+          </Button>
         </div>
 
         {/* Table */}
@@ -370,7 +415,24 @@ export default function ChecklistConsole() {
                     
                     {/* Actions */}
                     <td className="p-2 border">
-                      <Button variant="ghost" size="sm">View</Button>
+                      <div className="flex gap-2">
+                        <Button variant="ghost" size="sm">View</Button>
+                        <button 
+                          className="text-sm underline text-blue-600 hover:text-blue-800"
+                          onClick={() => {
+                            const expl = explainFlags(r);
+                            setDrawer({ row: r, expl });
+                            recordReceipt({
+                              type: 'Decision-RDS',
+                              action: 'console.flags.explain.open',
+                              reasons: [r.clientId],
+                              created_at: new Date().toISOString()
+                            } as any);
+                          }}
+                        >
+                          Why?
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 );
@@ -382,7 +444,203 @@ export default function ChecklistConsole() {
         <div className="text-sm text-gray-600">
           Showing {sorted.length} of {mockData.length} clients
         </div>
+
+        {/* Scheduled Jobs */}
+        <div className="mt-4">
+          <div className="text-sm font-medium mb-1">Scheduled jobs</div>
+          {jobs.length === 0 ? (
+            <div className="text-xs text-gray-500">No jobs scheduled.</div>
+          ) : (
+            <ul className="text-xs">
+              {jobs.map(j => (
+                <li key={j.id} className="flex items-center justify-between border-t py-1">
+                  <div>{j.name} • {j.cadence} • {j.enabled ? 'enabled' : 'disabled'}</div>
+                  <div className="flex items-center gap-2">
+                    <a className="underline" href="/admin/jobs">Open Jobs</a>
+                    <button 
+                      className="underline" 
+                      onClick={() => { 
+                        removeConsoleJob(j.id); 
+                        setJobs(loadConsoleJobs()); 
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       </CardContent>
+
+      {/* Flags Explainer Drawer */}
+      {drawer && (
+        <div className="fixed inset-0 z-40">
+          <div className="absolute inset-0 bg-black/30" onClick={() => setDrawer(null)} />
+          <div className="absolute right-0 top-0 h-full w-full max-w-[520px] bg-white shadow-xl p-4 overflow-auto">
+            <div className="flex items-center justify-between mb-2">
+              <div className="text-sm font-medium">
+                Why is <span className="font-mono">{drawer.row.clientId}</span> risky?
+              </div>
+              <button className="text-sm underline" onClick={() => setDrawer(null)}>
+                Close
+              </button>
+            </div>
+
+            {/* Flag explanations */}
+            {drawer.expl.length === 0 ? (
+              <div className="text-xs text-gray-600">No active flags.</div>
+            ) : drawer.expl.map((e, idx) => (
+              <div key={idx} className="rounded-xl border p-3 mb-2">
+                <div className="text-sm font-semibold">{e.key}</div>
+                <div className="text-xs text-gray-700 mt-1">{e.why}</div>
+                <div className="text-xs font-medium mt-2">Next steps</div>
+                <ul className="text-xs list-disc ml-5 mt-1">
+                  {e.next.map((n, i) => <li key={i}>{n}</li>)}
+                </ul>
+
+                {/* Inline actions (context-aware) */}
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {/* Prepare Review */}
+                  {(e.key === 'noReviewFinal' || e.key === 'signedNoFinal') && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => prepareReview(drawer.row.clientId, drawer.row.state)}
+                    >
+                      Prepare Review
+                    </Button>
+                  )}
+                  {/* Merge & Stamp is on Attorney page; we link there */}
+                  {e.key === 'signedNoFinal' && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => openAttorney(drawer.row.clientId)}
+                    >
+                      Open Attorney
+                    </Button>
+                  )}
+                  {/* Deliver latest */}
+                  {e.key === 'deliveredNotLatest' && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => openAttorney(drawer.row.clientId)}
+                    >
+                      Deliver current version
+                    </Button>
+                  )}
+                  {/* Request Deed */}
+                  {e.key === 'trustWithoutDeed' && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => requestDeed(drawer.row.clientId, drawer.row.state)}
+                    >
+                      Request Deed
+                    </Button>
+                  )}
+                  {/* Invite Consent */}
+                  {(e.key === 'consentMissing' || e.key === 'autofillOff') && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => inviteConsent(drawer.row.clientId)}
+                    >
+                      Invite Consent
+                    </Button>
+                  )}
+                  {/* Recompute */}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => recomputeChecklist(drawer.row.clientId)}
+                  >
+                    Recompute
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Job Scheduling Modal */}
+      {jobModal && (
+        <div className="fixed inset-0 z-40">
+          <div className="absolute inset-0 bg-black/30" onClick={() => setJobModal(null)} />
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[520px] max-w-[96vw] bg-white rounded-xl shadow-xl p-4">
+            <div className="text-sm font-semibold mb-2">Schedule bulk job</div>
+            <div className="grid gap-2">
+              <label className="text-sm">
+                Kind
+                <select 
+                  className="w-full rounded-xl border px-2 py-1" 
+                  value={jobModal.kind}
+                  onChange={e => setJobModal(m => m && ({ ...m, kind: e.target.value as any }))}
+                >
+                  <option value="invite_consent">Invite consent</option>
+                  <option value="nudge_signed_no_final">Nudge signed→no final</option>
+                  <option value="nudge_delivered_not_latest">Nudge delivered not latest</option>
+                  <option value="request_deed">Request deed</option>
+                  <option value="recompute">Recompute checklist</option>
+                </select>
+              </label>
+              <label className="text-sm">
+                Filter cohort
+                <select 
+                  className="w-full rounded-xl border px-2 py-1" 
+                  value={jobModal.filter}
+                  onChange={e => setJobModal(m => m && ({ ...m, filter: e.target.value }))}
+                >
+                  <option value="CONSENT_MISSING">CONSENT_MISSING</option>
+                  <option value="SIGNED_NO_FINAL">SIGNED_NO_FINAL</option>
+                  <option value="DELIVERED_NOT_LATEST">DELIVERED_NOT_LATEST</option>
+                  <option value="TRUST_NO_DEED">TRUST_NO_DEED</option>
+                  <option value="HEALTH_INCOMPLETE">HEALTH_INCOMPLETE</option>
+                </select>
+              </label>
+              <label className="text-sm">
+                Cadence
+                <select 
+                  className="w-full rounded-xl border px-2 py-1" 
+                  value={jobModal.cadence}
+                  onChange={e => setJobModal(m => m && ({ ...m, cadence: e.target.value as any }))}
+                >
+                  <option value="weekly">Weekly</option>
+                  <option value="monthly">Monthly</option>
+                  <option value="once">Once</option>
+                </select>
+              </label>
+            </div>
+            <div className="flex items-center gap-2 mt-3">
+              <Button 
+                onClick={async () => {
+                  const spec: ConsoleJobSpec = {
+                    id: crypto.randomUUID(),
+                    name: `${jobModal.kind} — ${jobModal.filter}`,
+                    kind: jobModal.kind,
+                    filter: jobModal.filter as any,
+                    cadence: jobModal.cadence,
+                    enabled: true,
+                    createdAt: new Date().toISOString()
+                  };
+                  await scheduleJob(spec);
+                  setJobs(loadConsoleJobs());
+                  setJobModal(null);
+                }}
+              >
+                Save
+              </Button>
+              <Button variant="outline" onClick={() => setJobModal(null)}>
+                Cancel
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </Card>
   );
 }
