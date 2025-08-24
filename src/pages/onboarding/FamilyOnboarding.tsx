@@ -53,7 +53,8 @@ export default function FamilyOnboarding() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    analytics.trackFamilyOnboardingStart(state.segment || undefined, { 
+    analytics.trackFamilyOnboardingStart({ 
+      segment: state.segment || undefined,
       referrer: document.referrer
     });
     
@@ -97,7 +98,9 @@ export default function FamilyOnboarding() {
         onboarded: true
       }));
 
-      analytics.trackFamilyOnboardingComplete(state.segment, state.goals, {
+      analytics.trackFamilyOnboardingComplete({
+        segment: state.segment,
+        goals: state.goals,
         email: state.email,
         goals_count: state.goals.length
       });

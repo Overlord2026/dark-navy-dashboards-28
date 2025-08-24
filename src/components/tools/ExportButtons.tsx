@@ -14,6 +14,7 @@ interface ExportButtonsProps {
   onExport?: (type: 'csv' | 'zip' | 'pdf' | 'qr') => void;
   disabled?: boolean;
   className?: string;
+  toolKey?: string; // optional analytics tag
 }
 
 export const ExportButtons: React.FC<ExportButtonsProps> = ({ 

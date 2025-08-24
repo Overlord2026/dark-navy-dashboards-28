@@ -1,84 +1,52 @@
-import { analytics } from './analytics';
+export type MonitorLike = {
+  captureMessage: (msg: string) => void;
+  gauge?: (name: string, value: number) => void;
+  timing?: (name: string, value: number) => void;
+};
+
+// You can swap this with your real monitor (Sentry/Datadog/etc.)
+const monitor: MonitorLike = (window as any).__MONITOR__ || {
+  captureMessage: (msg: string) => console.warn('[monitor]', msg),
+  gauge: (name: string, value: number) => console.info('[gauge]', name, value),
+  timing: (name: string, value: number) => console.info('[timing]', name, value)
+};
+
+function toMsg(err: unknown) {
+  if (err instanceof Error) return err.stack || err.message;
+  return typeof err === 'string' ? err : JSON.stringify(err);
+}
+
+export function logError(err: unknown) {
+  monitor.captureMessage(toMsg(err));
+}
+
+export function logWarn(msg: unknown) {
+  monitor.captureMessage(typeof msg === 'string' ? msg : JSON.stringify(msg));
+}
+
+export function logInfo(msg: unknown) {
+  monitor.captureMessage(typeof msg === 'string' ? msg : JSON.stringify(msg));
+}
+
+export function gauge(name: string, value: number | { value: number }) {
+  const n = typeof value === 'number' ? value : value?.value;
+  monitor.gauge?.(name, Number(n));
+}
+
+export function timing(name: string, value: number | { value: number }) {
+  const n = typeof value === 'number' ? value : value?.value;
+  monitor.timing?.(name, Number(n));
+}
 
 // Global error handler
 export const setupErrorMonitoring = () => {
   // Catch unhandled errors
   window.addEventListener('error', (event) => {
-    analytics.trackError(new Error(event.message), {
-      filename: event.filename,
-      lineno: event.lineno,
-      colno: event.colno,
-      source: 'global_error_handler'
-    });
+    logError(new Error(event.message));
   });
 
   // Catch unhandled promise rejections
   window.addEventListener('unhandledrejection', (event) => {
-    analytics.trackError(new Error(event.reason), {
-      source: 'unhandled_promise_rejection'
-    });
-  });
-
-  // Performance monitoring
-  if ('PerformanceObserver' in window) {
-    try {
-      // Monitor page load performance
-      const perfObserver = new PerformanceObserver((list) => {
-        for (const entry of list.getEntries()) {
-          if (entry.entryType === 'navigation') {
-            const navEntry = entry as PerformanceNavigationTiming;
-            analytics.trackPerformance('page_load_time', { value: navEntry.loadEventEnd - navEntry.loadEventStart });
-            analytics.trackPerformance('dom_content_loaded', { value: navEntry.domContentLoadedEventEnd - navEntry.domContentLoadedEventStart });
-          }
-        }
-      });
-      
-      perfObserver.observe({ entryTypes: ['navigation'] });
-    } catch (e) {
-      console.warn('Performance monitoring not available:', e);
-    }
-  }
-};
-
-// Auth monitoring
-export const monitorAuthEvents = () => {
-  const originalFetch = window.fetch;
-  
-  window.fetch = async (...args) => {
-    const response = await originalFetch(...args);
-    const url = args[0] instanceof Request ? args[0].url : args[0];
-    
-    // Monitor auth-related requests
-    if (typeof url === 'string' && url.includes('/auth/')) {
-      if (!response.ok) {
-        analytics.trackSecurityEvent('auth_failure', {
-          severity: 'medium',
-          url,
-          status: response.status,
-          statusText: response.statusText
-        });
-      }
-    }
-    
-    return response;
-  };
-};
-
-// Database monitoring
-export const monitorDatabaseErrors = (error: any, operation: string) => {
-  analytics.trackError(error, {
-    source: 'database',
-    operation,
-    severity: 'high'
-  });
-};
-
-// API monitoring
-export const monitorAPIErrors = (error: any, endpoint: string, method: string) => {
-  analytics.trackError(error, {
-    source: 'api',
-    endpoint,
-    method,
-    severity: 'medium'
+    logError(new Error(event.reason));
   });
 };

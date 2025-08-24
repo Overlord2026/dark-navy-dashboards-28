@@ -160,7 +160,7 @@ export function FamilyHome() {
           text: 'Check out my family financial workspace',
           url: window.location.href
         });
-        analytics.trackShareSuccess('family_workspace', 'native_share', { segment: session.segment });
+        analytics.trackShareSuccess({ type: 'family_workspace', method: 'native_share', segment: session.segment });
       } catch (error) {
         // User cancelled share or error occurred
         console.log('Share cancelled or failed');
@@ -168,13 +168,13 @@ export function FamilyHome() {
     } else {
       // Fallback: copy to clipboard
       navigator.clipboard.writeText(window.location.href);
-      analytics.trackShareSuccess('family_workspace', 'clipboard', { segment: session.segment });
+      analytics.trackShareSuccess({ type: 'family_workspace', method: 'clipboard', segment: session.segment });
     }
   };
 
   const handleTabChange = (tabKey: string) => {
     setActiveTab(tabKey);
-    analytics.trackFamilyTabView(tabKey, session.segment);
+    analytics.trackFamilyTabView(tabKey, { segment: session.segment });
   };
 
   const handleQuickAction = (action: any) => {
@@ -182,23 +182,25 @@ export function FamilyHome() {
     if (action.label.toLowerCase().includes('invite')) {
       setInviteType('advisor');
       setActiveModal('invite');
-      analytics.trackFamilyQuickAction(action.label, action.route, { segment: session.segment, modal: true });
+      analytics.trackFamilyQuickAction(action.label, { route: action.route, segment: session.segment, modal: true });
       return;
     }
     
     if (action.label.toLowerCase().includes('upload')) {
       setActiveModal('upload');
-      analytics.trackFamilyQuickAction(action.label, action.route, { segment: session.segment, modal: true });
+      analytics.trackFamilyQuickAction(action.label, { route: action.route, segment: session.segment, modal: true });
       return;
     }
     
     // Regular navigation
-    analytics.trackFamilyQuickAction(action.label, action.route, { segment: session.segment });
+    analytics.trackFamilyQuickAction(action.label, { route: action.route, segment: session.segment });
     navigate(action.route);
   };
 
   const handleToolCardClick = (card: any, toolDetails: any, targetRoute: string, tabKey: string) => {
-    analytics.trackToolCardOpen(card.toolKey, toolDetails.title, toolDetails.category, { 
+    analytics.trackToolCardOpen(card.toolKey, { 
+      title: toolDetails.title,
+      category: toolDetails.category,
       segment: session.segment, 
       tab: tabKey,
       route: targetRoute 

@@ -128,7 +128,7 @@ const AthleteProfile: React.FC = () => {
     if (navigator.share) {
       try {
         await navigator.share(shareData);
-        analytics.trackShareSuccess('athlete_profile', 'native_share');
+        analytics.trackShareSuccess({ type: 'athlete_profile', method: 'native_share' });
       } catch (error) {
         // User cancelled or error occurred
       }
@@ -136,7 +136,7 @@ const AthleteProfile: React.FC = () => {
       // Fallback: copy to clipboard
       await navigator.clipboard.writeText(window.location.href);
       toast.success('Profile link copied to clipboard');
-      analytics.trackShareSuccess('athlete_profile', 'clipboard');
+      analytics.trackShareSuccess({ type: 'athlete_profile', method: 'clipboard' });
     }
   };
 

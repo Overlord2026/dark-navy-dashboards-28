@@ -22,7 +22,7 @@ export const SegmentProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setCurrentSegment(detectedSegment);
     
     // Track segment selection
-    analytics.trackOnboardingStart(persona, { segment: detectedSegment });
+    analytics.trackOnboardingStart({ persona, segment: detectedSegment });
   };
 
   const trackSegmentEvent = (event: string, properties: Record<string, any> = {}) => {

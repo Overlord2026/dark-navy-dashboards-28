@@ -216,10 +216,9 @@ export default function RetirementRoadmapTool() {
 
         <div className="flex justify-end">
           <ExportButtons 
+            exports={{ csv: !!results, zip: false }}
+            onExport={(type) => handleExport(type)}
             toolKey="retirement-roadmap"
-            csvEnabled={!!results}
-            zipEnabled={false}
-            onCsvExport={() => handleExport('csv')}
           />
         </div>
       </div>
