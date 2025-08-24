@@ -63,6 +63,20 @@ export const router = createBrowserRouter([
     element: <HomePage />,
   },
   {
+    path: "/start/families",
+    element: React.createElement(() => {
+      const { FamilyOnboarding } = require('./pages/family/FamilyOnboarding');
+      return React.createElement(FamilyOnboarding);
+    })
+  },
+  {
+    path: "/family/home",
+    element: React.createElement(() => {
+      const { FamilyHomePage } = require('./pages/family/FamilyHomePage');
+      return React.createElement(FamilyHomePage);
+    })
+  },
+  {
     path: "/annuities",
     element: <AnnuitiesPage />,
   },

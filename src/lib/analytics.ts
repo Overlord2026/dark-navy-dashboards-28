@@ -208,7 +208,7 @@ class FamilyOfficeAnalytics implements AnalyticsInterface {
 const analyticsInstance = new FamilyOfficeAnalytics();
 
 // Legacy compatibility methods - maintain existing API
-export const analytics = {
+const analytics = {
   track: (event: string, properties?: AnalyticsProperties) => analyticsInstance.track(event, properties),
   identify: analyticsInstance.identify.bind(analyticsInstance),
   page: analyticsInstance.page.bind(analyticsInstance),
