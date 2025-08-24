@@ -7,9 +7,11 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LeadCaptureModal } from "@/components/advisors/LeadCaptureModal";
+import { PipelineBoard } from "@/components/advisors/PipelineBoard";
 import { useLeads, useUpdateLead, useDeleteLead, type LeadsFilters } from "@/hooks/useLeads";
-import { Download, MoreHorizontal, Search, Filter } from 'lucide-react';
+import { Download, MoreHorizontal, Search, Filter, Kanban, List } from 'lucide-react';
 import { format } from 'date-fns';
 
 const statusColors = {
@@ -22,6 +24,7 @@ const statusColors = {
 
 export default function LeadsPage() {
   const [filters, setFilters] = useState<LeadsFilters>({});
+  const [viewMode, setViewMode] = useState<'board' | 'table'>('board');
   const { data: leads = [], isLoading, refetch } = useLeads(filters);
   const updateLead = useUpdateLead();
   const deleteLead = useDeleteLead();
@@ -74,10 +77,30 @@ export default function LeadsPage() {
         {/* Header */}
         <div className="flex justify-between items-start">
           <div>
-            <h1 className="text-2xl font-bold">Leads</h1>
-            <p className="text-muted-foreground">Manage your prospect pipeline</p>
+            <h1 className="text-2xl font-bold">Pipeline</h1>
+            <p className="text-muted-foreground">Track prospects through your sales funnel</p>
           </div>
           <div className="flex gap-2">
+            <div className="flex rounded-lg border">
+              <Button
+                variant={viewMode === 'board' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setViewMode('board')}
+                className="rounded-r-none"
+              >
+                <Kanban className="h-4 w-4 mr-1" />
+                Board
+              </Button>
+              <Button
+                variant={viewMode === 'table' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setViewMode('table')}
+                className="rounded-l-none"
+              >
+                <List className="h-4 w-4 mr-1" />
+                Table
+              </Button>
+            </div>
             <Button onClick={exportToCSV} variant="outline" className="flex items-center gap-2">
               <Download className="h-4 w-4" />
               Export CSV
@@ -178,84 +201,105 @@ export default function LeadsPage() {
           </Card>
         </div>
 
-        {/* Leads Table */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Leads ({leads.length})</CardTitle>
-            <CardDescription>
-              Prospect information with consent tracking and source attribution
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {isLoading ? (
-              <div className="text-center py-8">Loading leads...</div>
-            ) : leads.length === 0 ? (
-              <div className="text-center py-8 text-muted-foreground">
-                No leads found. Use the filters above or capture new leads.
-              </div>
-            ) : (
-              <div className="overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Name</TableHead>
-                      <TableHead>Email</TableHead>
-                      <TableHead>Phone</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead>Source</TableHead>
-                      <TableHead>Created</TableHead>
-                      <TableHead className="w-12"></TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {leads.map((lead) => (
-                      <TableRow key={lead.id}>
-                        <TableCell className="font-medium">
-                          {lead.first_name} {lead.last_name}
-                        </TableCell>
-                        <TableCell>{lead.email || '-'}</TableCell>
-                        <TableCell>{lead.phone || '-'}</TableCell>
-                        <TableCell>
-                          <Badge className={statusColors[lead.lead_status as keyof typeof statusColors] || statusColors.new}>
-                            {lead.lead_status || 'new'}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>{lead.lead_source}</TableCell>
-                        <TableCell>{format(new Date(lead.created_at), 'MMM dd, yyyy')}</TableCell>
-                        <TableCell>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="sm">
-                                <MoreHorizontal className="h-4 w-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuItem onClick={() => handleStatusUpdate(lead.id, 'contacted')}>
-                                Mark as Contacted
-                              </DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => handleStatusUpdate(lead.id, 'qualified')}>
-                                Mark as Qualified
-                              </DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => handleStatusUpdate(lead.id, 'converted')}>
-                                Mark as Converted
-                              </DropdownMenuItem>
-                              <DropdownMenuItem 
-                                onClick={() => handleDelete(lead.id)}
-                                className="text-destructive"
-                              >
-                                Delete
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </TableCell>
+        {/* Pipeline Content */}
+        {viewMode === 'board' ? (
+          <Card>
+            <CardHeader>
+              <CardTitle>Pipeline Board</CardTitle>
+              <CardDescription>
+                Drag leads between stages to update their status. All changes are tracked with Decision-RDS receipts.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <PipelineBoard 
+                searchTerm={filters.search}
+                tagFilter={filters.utm_source}
+                campaignFilter=""
+              />
+            </CardContent>
+          </Card>
+        ) : (
+          <Card>
+            <CardHeader>
+              <CardTitle>Leads ({leads.length})</CardTitle>
+              <CardDescription>
+                Prospect information with consent tracking and source attribution
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {isLoading ? (
+                <div className="text-center py-8">Loading leads...</div>
+              ) : leads.length === 0 ? (
+                <div className="text-center py-8 text-muted-foreground">
+                  No leads found. Use the filters above or capture new leads.
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Email</TableHead>
+                        <TableHead>Phone</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Source</TableHead>
+                        <TableHead>Created</TableHead>
+                        <TableHead className="w-12"></TableHead>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+                    </TableHeader>
+                    <TableBody>
+                      {leads.map((lead) => (
+                        <TableRow key={lead.id}>
+                          <TableCell className="font-medium">
+                            {lead.first_name} {lead.last_name}
+                          </TableCell>
+                          <TableCell>{lead.email || '-'}</TableCell>
+                          <TableCell>{lead.phone || '-'}</TableCell>
+                          <TableCell>
+                            <Badge className={statusColors[lead.lead_status as keyof typeof statusColors] || statusColors.new}>
+                              {lead.lead_status || 'new'}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>{lead.lead_source}</TableCell>
+                          <TableCell>{format(new Date(lead.created_at), 'MMM dd, yyyy')}</TableCell>
+                          <TableCell>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" size="sm">
+                                  <MoreHorizontal className="h-4 w-4" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuItem onClick={() => handleStatusUpdate(lead.id, 'contacted')}>
+                                  Mark as Contacted
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => handleStatusUpdate(lead.id, 'meeting')}>
+                                  Mark as Meeting
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => handleStatusUpdate(lead.id, 'proposal')}>
+                                  Mark as Proposal
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => handleStatusUpdate(lead.id, 'won')}>
+                                  Mark as Won
+                                </DropdownMenuItem>
+                                <DropdownMenuItem 
+                                  onClick={() => handleDelete(lead.id)}
+                                  className="text-destructive"
+                                >
+                                  Delete
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )}
       </div>
     </>
   );

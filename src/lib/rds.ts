@@ -5,7 +5,7 @@
 type Anchor = { chain_id: string; tx_ref: string; ts: number };
 
 type RDS = {
-  type: "Goal-RDS" | "Goal-Update-RDS" | "Month-RDS" | "Professional-RDS";
+  type: "Goal-RDS" | "Goal-Update-RDS" | "Month-RDS" | "Professional-RDS" | "Decision-RDS";
   inputs_hash: string;
   policy_version: string;
   payload: Record<string, unknown>;
@@ -58,6 +58,18 @@ export function recordMonthRDS(payload: Record<string, unknown>) {
 export function recordProfessionalRDS(payload: Record<string, unknown>) {
   const r: RDS = {
     type: "Professional-RDS",
+    inputs_hash: hash(payload),
+    policy_version,
+    payload,
+    timestamp: new Date().toISOString()
+  };
+  console.log("[RDS]", r);
+  return r;
+}
+
+export function recordDecisionRDS(payload: Record<string, unknown>) {
+  const r: RDS = {
+    type: "Decision-RDS",
     inputs_hash: hash(payload),
     policy_version,
     payload,
