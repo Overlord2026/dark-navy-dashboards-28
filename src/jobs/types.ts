@@ -14,6 +14,15 @@ export interface Job {
   run: () => Promise<JobResult>;
 }
 
+export interface JobDefinition {
+  key: string;
+  name?: string;
+  description?: string;
+  enabledFlag: string;
+  intervalMs?: number;
+  run: () => Promise<JobResult>;
+}
+
 export interface JobRun {
   jobKey: string;
   startedAt: string;

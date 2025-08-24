@@ -1,12 +1,7 @@
 import { runArpNudgeWeekly } from './arpNudgeWeekly';
 import { runChecklistNightly } from './checklistNightly';
-
-export type JobDefinition = {
-  key: string;
-  enabledFlag: string;
-  intervalMs: number;
-  run: () => Promise<{ ok: boolean; [key: string]: any }>;
-};
+import { runConsoleScheduledRunner } from './consoleScheduledRunner';
+import type { JobDefinition } from './types';
 
 export const jobs: JobDefinition[] = [
   {
@@ -20,6 +15,12 @@ export const jobs: JobDefinition[] = [
     enabledFlag: 'CHECKLIST_NIGHTLY_RECOMPUTE',
     intervalMs: 24 * 60 * 60 * 1000, // Daily
     run: runChecklistNightly
+  },
+  {
+    key: 'console.scheduled.runner',
+    enabledFlag: 'CHECKLIST_JOBS_BRIDGE',
+    intervalMs: 24 * 60 * 60 * 1000, // Daily - runner decides what's due
+    run: runConsoleScheduledRunner
   }
 ];
 
