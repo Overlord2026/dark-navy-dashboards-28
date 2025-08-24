@@ -57,6 +57,38 @@ async function sha256Hex(str: string) {
   return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
+function stringifyTs(obj: any) {
+  // stable, pretty TS object with quoted keys and 2-space indents
+  const entries = Object.entries(obj || {}).sort(([a], [b]) => String(a).localeCompare(String(b)));
+  const parts = entries.map(([k, v]) => {
+    const vPretty = JSON.stringify(v, null, 2)
+      .split('\n').map((ln, i) => i === 0 ? ln : '  ' + ln).join('\n');
+    return `  ${JSON.stringify(k)}: ${vPretty}`;
+  });
+  return `{\n${parts.join(',\n')}\n}`;
+}
+
+async function downloadCountyTs(countyMeta: any) {
+  const dateIso = new Date().toISOString();
+  const body = stringifyTs(countyMeta);
+  const ts = `// Auto-generated from runtime at ${dateIso}\n` +
+             `// Review with local recorder/counsel before production.\n` +
+             `import type { CountyMetaMap } from '@/features/estate/deeds/countyMeta';\n\n` +
+             `export const COUNTY_META: CountyMetaMap = ${body};\n\n` +
+             `export default COUNTY_META;\n`;
+  const hash = await sha256Hex(ts);
+  download('countyMeta.generated.ts', ts, 'text/plain');
+  
+  recordHealthRDS(
+    'config.county.export.ts',
+    {},
+    'allow',
+    [`counties:${Object.keys(countyMeta || {}).length}`, `sha256:${hash.substring(0, 16)}`]
+  );
+  
+  return { hash };
+}
+
 export default function RulesExport() {
   const [log, setLog] = React.useState('');
   const [loading, setLoading] = React.useState(false);
@@ -226,6 +258,27 @@ export default function RulesExport() {
               <Download className="h-4 w-4" />
               {loading ? 'Exporting...' : 'Export All Rules (JSON + CSV)'}
             </Button>
+            
+            <Button
+              variant="outline"
+              disabled={loading}
+              className="flex items-center gap-2"
+              onClick={async () => {
+                setLoading(true);
+                try {
+                  const res = await downloadCountyTs(COUNTY_META);
+                  setLog((prev) => (prev ? prev + '\n\n' : '') +
+                    `✅ Exported COUNTY_META.ts successfully!\n\nTypeScript module generated with ${Object.keys(COUNTY_META || {}).length} counties\nSHA256: ${res.hash}\n\nFile: countyMeta.generated.ts\nReady to replace or merge into your codebase.`);
+                } catch (error: any) {
+                  setLog((prev) => (prev ? prev + '\n\n' : '') + `❌ County export failed: ${error.message}`);
+                } finally {
+                  setLoading(false);
+                }
+              }}
+            >
+              <FileSpreadsheet className="h-4 w-4" />
+              Export COUNTY_META.ts
+            </Button>
           </div>
 
           <div className="text-sm text-muted-foreground space-y-1">
@@ -236,6 +289,10 @@ export default function RulesExport() {
             <div className="flex items-center gap-2">
               <FileSpreadsheet className="h-4 w-4" />
               CSV files: Separate files for each rule type for quick analysis
+            </div>
+            <div className="flex items-center gap-2">
+              <FileSpreadsheet className="h-4 w-4" />
+              TypeScript module: Ready-to-use COUNTY_META.ts for direct code integration
             </div>
           </div>
 
