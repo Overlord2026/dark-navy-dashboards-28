@@ -463,7 +463,44 @@ export const router = createBrowserRouter([
   },
   {
     path: "/attorney/*",
-    element: <ComingSoonPage featureName="Legal Services" description="Professional legal services and document management." />
+    element: (
+      <div className="min-h-screen bg-background">
+        <div className="border-b">
+          <nav className="container mx-auto px-6 py-3">
+            <div className="flex items-center space-x-6">
+              <Link to="/attorney/home" className="text-sm font-medium">Home</Link>
+              <Link to="/attorney/leads" className="text-sm text-muted-foreground hover:text-foreground">Leads</Link>
+              <Link to="/attorney/meetings" className="text-sm text-muted-foreground hover:text-foreground">Meetings</Link>
+              <Link to="/attorney/matters" className="text-sm text-muted-foreground hover:text-foreground">Matters</Link>
+              <Link to="/attorney/proof" className="text-sm text-muted-foreground hover:text-foreground">Proof</Link>
+            </div>
+          </nav>
+        </div>
+        <Routes>
+          <Route index element={<Navigate to="home" replace />} />
+          <Route path="home" element={React.createElement(() => {
+            const { AttorneyHomePage } = require('./pages/attorneys/AttorneyHomePage');
+            return React.createElement(AttorneyHomePage);
+          })} />
+          <Route path="leads" element={React.createElement(() => {
+            const { AttorneyLeadsPage } = require('./pages/attorneys/AttorneyLeadsPage');
+            return React.createElement(AttorneyLeadsPage);
+          })} />
+          <Route path="meetings" element={React.createElement(() => {
+            const { AttorneyMeetingsPage } = require('./pages/attorneys/AttorneyMeetingsPage');
+            return React.createElement(AttorneyMeetingsPage);
+          })} />
+          <Route path="matters" element={React.createElement(() => {
+            const { AttorneyMattersPage } = require('./pages/attorneys/AttorneyMattersPage');
+            return React.createElement(AttorneyMattersPage);
+          })} />
+          <Route path="proof" element={React.createElement(() => {
+            const { AttorneyProofPage } = require('./pages/attorneys/AttorneyProofPage');
+            return React.createElement(AttorneyProofPage);
+          })} />
+        </Routes>
+      </div>
+    )
   },
   {
     path: "/admin/*",
