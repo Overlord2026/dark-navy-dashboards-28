@@ -11,6 +11,7 @@ import { CATALOG_TOOLS } from '@/data/catalogTools';
 import { DemoLauncher } from '@/components/discover/DemoLauncher';
 import ShareButton from '@/components/ui/ShareButton';
 import { PUBLIC_CONFIG } from '@/config/publicConfig';
+import SchemaBreadcrumbs from '@/components/seo/SchemaBreadcrumbs';
 
 const suitabilityChecks = [
   { factor: 'Age & Time Horizon', description: 'Appropriate for investor age and retirement timeline', icon: CheckCircle },
@@ -50,10 +51,15 @@ export function Annuities() {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="Annuities Solutions - Education, Calculators & Compliance"
+        title="Annuities — Education, Calculators, Proposal Review, Fiduciary Index | myBFOCFO"
         description="Complete annuities platform with education, calculators, proposal review, and fiduciary guidance. SPIA, DIA, MYGA, FIA, VA analysis tools."
         keywords={['annuities', 'annuity calculator', 'SPIA', 'DIA', 'MYGA', 'FIA', 'variable annuity', 'retirement income']}
       />
+      <SchemaBreadcrumbs items={[
+        { name: 'Home', item: `${window.location.origin}/discover` },
+        { name: 'Solutions', item: `${window.location.origin}/solutions` },
+        { name: 'Annuities', item: `${window.location.origin}/solutions/annuities` }
+      ]} />
       {/* Hero Section */}
       <section className="py-16 bg-gradient-to-br from-blue-50 via-background to-indigo-50 dark:from-blue-950/20 dark:via-background dark:to-indigo-950/20">
         <div className="container mx-auto px-4">

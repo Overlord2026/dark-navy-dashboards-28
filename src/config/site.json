@@ -1,0 +1,16 @@
+{
+  "orgName": "myBFOCFO",
+  "url": "https://mybfocfo.com",
+  "logoUrl": "https://mybfocfo.com/og/logo.png",
+  "sameAs": [
+    "https://www.linkedin.com/company/mybfocfo",
+    "https://twitter.com/mybfocfo"
+  ],
+  "contactPoint": [
+    {
+      "telephone": "+1-800-000-0000",
+      "contactType": "customer service",
+      "areaServed": "US"
+    }
+  ]
+}

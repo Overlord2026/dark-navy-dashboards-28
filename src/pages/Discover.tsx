@@ -11,48 +11,11 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Play, ArrowRight, Shield, Users, Zap } from 'lucide-react';
 import { PUBLIC_CONFIG, withFeatureFlag } from '@/config/publicConfig';
+import SchemaOrganization from '@/components/seo/SchemaOrganization';
+import SchemaWebSite from '@/components/seo/SchemaWebSite';
+import SEOHead from '@/components/seo/SEOHead';
 
 const Discover: React.FC = () => {
-  useEffect(() => {
-    // Set SEO meta tags
-    document.title = 'Family Office Platform - Secure Workspace for Families & Professionals';
-    
-    // Meta description
-    const metaDescription = document.querySelector('meta[name="description"]');
-    if (metaDescription) {
-      metaDescription.setAttribute('content', 'One shared workspace for families and their trusted professionals. AI you can trust, receipts you can prove. Organize everything securely with compliance built-in.');
-    } else {
-      const meta = document.createElement('meta');
-      meta.name = 'description';
-      meta.content = 'One shared workspace for families and their trusted professionals. AI you can trust, receipts you can prove. Organize everything securely with compliance built-in.';
-      document.head.appendChild(meta);
-    }
-
-    // OpenGraph tags
-    const ogTags = [
-      { property: 'og:title', content: 'Family Office Platform - Secure Workspace for Families & Professionals' },
-      { property: 'og:description', content: 'One shared workspace for families and their trusted professionals. AI you can trust, receipts you can prove.' },
-      { property: 'og:type', content: 'website' },
-      { property: 'og:url', content: window.location.href },
-      { property: 'og:image', content: `${window.location.origin}/placeholder.svg` },
-      { name: 'twitter:card', content: 'summary_large_image' },
-      { name: 'twitter:title', content: 'Family Office Platform - Secure Workspace for Families & Professionals' },
-      { name: 'twitter:description', content: 'One shared workspace for families and their trusted professionals. AI you can trust, receipts you can prove.' },
-    ];
-
-    ogTags.forEach(tag => {
-      const existing = document.querySelector(`meta[${tag.property ? 'property' : 'name'}="${tag.property || tag.name}"]`);
-      if (existing) {
-        existing.setAttribute('content', tag.content);
-      } else {
-        const meta = document.createElement('meta');
-        if (tag.property) meta.setAttribute('property', tag.property);
-        if (tag.name) meta.setAttribute('name', tag.name);
-        meta.content = tag.content;
-        document.head.appendChild(meta);
-      }
-    });
-  }, []);
 
   const handleStartWorkspace = () => {
     // Analytics
@@ -65,6 +28,14 @@ const Discover: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title="myBFOCFO — One shared workspace for families & pros"
+        description="One shared workspace for families and their trusted professionals. AI you can trust, receipts you can prove. Organize everything securely with compliance built-in."
+        keywords={['family office', 'financial planning', 'wealth management', 'compliance', 'secure workspace']}
+        ogImage="/og/discover.png"
+      />
+      {PUBLIC_CONFIG.DISCOVER_ENABLED && <SchemaOrganization />}
+      {PUBLIC_CONFIG.DISCOVER_ENABLED && <SchemaWebSite />}
       <PublicNavigation />
       
       {/* Hero Section */}

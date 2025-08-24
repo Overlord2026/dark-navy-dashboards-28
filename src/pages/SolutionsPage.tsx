@@ -10,6 +10,7 @@ import SEOHead from '@/components/seo/SEOHead';
 import ShareButton from '@/components/ui/ShareButton';
 import { DemoLauncher } from '@/components/discover/DemoLauncher';
 import { PUBLIC_CONFIG } from '@/config/publicConfig';
+import SchemaBreadcrumbs from '@/components/seo/SchemaBreadcrumbs';
 
 const iconMap = {
   TrendingUp,
@@ -40,10 +41,14 @@ const SolutionsPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="Financial Solutions Hub - Investment, Tax, Estate & Insurance Tools"
+        title="Solutions — Insurance, Annuities, Lending, Investments, Tax, Estate | myBFOCFO"
         description="Comprehensive financial solutions platform with tools for investments, tax planning, estate planning, insurance, and more. Built for families and financial professionals."
         keywords={['financial solutions', 'investment tools', 'tax planning', 'estate planning', 'insurance', 'annuities']}
       />
+      <SchemaBreadcrumbs items={[
+        { name: 'Home', item: `${window.location.origin}/discover` },
+        { name: 'Solutions', item: `${window.location.origin}/solutions` }
+      ]} />
       
       <main className="pt-[var(--header-stack)] scroll-mt-[var(--header-stack)]">
         {/* Hero Section */}
