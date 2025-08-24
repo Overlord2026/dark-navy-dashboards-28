@@ -1,3 +1,11 @@
+export interface AnchorRef {
+  chain_id?: string;
+  tx_ref?: string;
+  timestamp?: string;
+  merkle_root?: string;
+  cross_chain_locator?: any[];
+}
+
 export interface Receipt {
   id: string;
   type: 'Decision-RDS' | 'Vault-RDS' | 'Comms-RDS' | 'Engagement-RDS';
@@ -7,6 +15,92 @@ export interface Receipt {
   policy_version: string;
   anchor_ref?: string;
 }
+
+export type DecisionRDS = {
+  id?: string;
+  type: "Decision-RDS";
+  inputs_hash?: string;
+  policy_version?: string;
+  payload?: Record<string, unknown>;
+  timestamp?: string;
+  anchor_ref?: AnchorRef;
+  result?: string;
+  reasons?: string[];
+  ts?: string;
+  action?: string;
+  asset_id?: string;
+  disclosure_pack?: any;
+};
+
+export type ConsentRDS = {
+  id?: string;
+  type: "Consent-RDS";
+  inputs_hash?: string;
+  policy_version?: string;
+  payload?: Record<string, unknown>;
+  timestamp?: string;
+  anchor_ref?: AnchorRef;
+  result?: string;
+  reason?: string;
+  ts?: string;
+  expiry?: string;
+  scope?: any;
+  consent_time?: string;
+  freshness_score?: number;
+  purpose_of_use?: string;
+  minimum_necessary?: boolean;
+};
+
+export type SettlementRDS = {
+  id?: string;
+  type: "Settlement-RDS";
+  inputs_hash?: string;
+  policy_version?: string;
+  payload?: Record<string, unknown>;
+  timestamp?: string;
+  anchor_ref?: AnchorRef;
+  offerLock?: any;
+  escrow_state?: string;
+  attribution_hash?: string;
+  split_tree_hash?: string;
+  ts?: string;
+};
+
+export type DeltaRDS = {
+  id?: string;
+  type: "Delta-RDS";
+  inputs_hash?: string;
+  policy_version?: string;
+  payload?: Record<string, unknown>;
+  timestamp?: string;
+  anchor_ref?: AnchorRef;
+  prior_ref?: string;
+  diffs?: any[];
+  reasons?: string[];
+  ts?: string;
+};
+
+export type VaultRDS = {
+  id: string;
+  type: "Vault-RDS";
+  inputs_hash: string;
+  policy_version: string;
+  payload: Record<string, unknown>;
+  timestamp: string;
+  anchor_ref?: AnchorRef;
+};
+
+export type CommsRDS = {
+  id: string;
+  type: "Comms-RDS";
+  inputs_hash: string;
+  policy_version: string;
+  payload: Record<string, unknown>;
+  timestamp: string;
+  anchor_ref?: AnchorRef;
+};
+
+export type AnyRDS = DecisionRDS | ConsentRDS | SettlementRDS | DeltaRDS | VaultRDS | CommsRDS;
 
 export type DecisionReasons = 
   | 'meeting_summary' 

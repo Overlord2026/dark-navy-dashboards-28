@@ -30,7 +30,7 @@ interface ParsedData {
   speakers: string[];
   inputs_hash: string;
   transcriptText: string;
-  originalData?: any;
+  originalData: any;
 }
 
 export function ImportMeetingModal({ onImportComplete }: ImportMeetingModalProps) {
