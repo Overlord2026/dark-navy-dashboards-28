@@ -8,24 +8,24 @@ export interface FamilyOfficeAnalytics {
   group?: (groupId: string, traits?: AnalyticsProps) => void;
   // Backward compatibility - all these alias to track()
   trackEvent?: (event: string, props?: AnalyticsProps) => void;
-  trackPageView?: (page: string, props?: AnalyticsProps) => void;
-  trackViralShare?: (props?: AnalyticsProps) => void;
-  trackPersonaClaim?: (props?: AnalyticsProps) => void;
-  trackOnboardingStep?: (props?: AnalyticsProps) => void;
-  trackOnboardingStart?: (props?: AnalyticsProps) => void;
-  trackFeatureUsage?: (props?: AnalyticsProps) => void;
-  trackConversion?: (props?: AnalyticsProps) => void;
-  trackSecurityEvent?: (props?: AnalyticsProps) => void;
-  trackFAQUsage?: (props?: AnalyticsProps) => void;
-  trackShareClick?: (props?: AnalyticsProps) => void;
-  trackShareSuccess?: (props?: AnalyticsProps) => void;
-  trackFamilyTabView?: (props?: AnalyticsProps) => void;
-  trackFamilyQuickAction?: (props?: AnalyticsProps) => void;
-  trackToolCardOpen?: (props?: AnalyticsProps) => void;
-  trackFamilySegmentSelection?: (props?: AnalyticsProps) => void;
-  trackFamilyGoalsSelection?: (props?: AnalyticsProps) => void;
-  trackFamilyOnboardingComplete?: (props?: AnalyticsProps) => void;
-  trackFamilyOnboardingStart?: (props?: AnalyticsProps) => void;
+  trackPageView?: (event: string, props?: AnalyticsProps) => void;
+  trackViralShare?: (event: string, props?: AnalyticsProps) => void;
+  trackPersonaClaim?: (event: string, props?: AnalyticsProps) => void;
+  trackOnboardingStep?: (event: string, props?: AnalyticsProps) => void;
+  trackOnboardingStart?: (event: string, props?: AnalyticsProps) => void;
+  trackFeatureUsage?: (event: string, props?: AnalyticsProps) => void;
+  trackConversion?: (event: string, props?: AnalyticsProps) => void;
+  trackSecurityEvent?: (event: string, props?: AnalyticsProps) => void;
+  trackFAQUsage?: (event: string, props?: AnalyticsProps) => void;
+  trackShareClick?: (event: string, props?: AnalyticsProps) => void;
+  trackShareSuccess?: (event: string, props?: AnalyticsProps) => void;
+  trackFamilyTabView?: (event: string, props?: AnalyticsProps) => void;
+  trackFamilyQuickAction?: (event: string, props?: AnalyticsProps) => void;
+  trackToolCardOpen?: (event: string, props?: AnalyticsProps) => void;
+  trackFamilySegmentSelection?: (event: string, props?: AnalyticsProps) => void;
+  trackFamilyGoalsSelection?: (event: string, props?: AnalyticsProps) => void;
+  trackFamilyOnboardingComplete?: (event: string, props?: AnalyticsProps) => void;
+  trackFamilyOnboardingStart?: (event: string, props?: AnalyticsProps) => void;
 }
 
 // Try to use a runtime client (Segment/Amplitude/etc.) if present, otherwise no-op.
@@ -41,24 +41,24 @@ function makeNoop(): FamilyOfficeAnalytics {
   };
   // Add all method aliases for legacy callers
   client.trackEvent = (e: string, p?: AnalyticsProps) => client.track(e, p);
-  client.trackPageView = (page: string, props?: AnalyticsProps) => client.track('page_view', { page, ...props });
-  client.trackViralShare = (props?: AnalyticsProps) => client.track('viral_share', props);
-  client.trackPersonaClaim = (props?: AnalyticsProps) => client.track('persona_claim', props);
-  client.trackOnboardingStep = (props?: AnalyticsProps) => client.track('onboarding_step', props);
-  client.trackOnboardingStart = (props?: AnalyticsProps) => client.track('onboarding_start', props);
-  client.trackFeatureUsage = (props?: AnalyticsProps) => client.track('feature_usage', props);
-  client.trackConversion = (props?: AnalyticsProps) => client.track('conversion', props);
-  client.trackSecurityEvent = (props?: AnalyticsProps) => client.track('security_event', props);
-  client.trackFAQUsage = (props?: AnalyticsProps) => client.track('faq_usage', props);
-  client.trackShareClick = (props?: AnalyticsProps) => client.track('share_click', props);
-  client.trackShareSuccess = (props?: AnalyticsProps) => client.track('share_success', props);
-  client.trackFamilyTabView = (props?: AnalyticsProps) => client.track('family_tab_view', props);
-  client.trackFamilyQuickAction = (props?: AnalyticsProps) => client.track('family_quick_action', props);
-  client.trackToolCardOpen = (props?: AnalyticsProps) => client.track('tool_card_open', props);
-  client.trackFamilySegmentSelection = (props?: AnalyticsProps) => client.track('family_segment_selection', props);
-  client.trackFamilyGoalsSelection = (props?: AnalyticsProps) => client.track('family_goals_selection', props);
-  client.trackFamilyOnboardingComplete = (props?: AnalyticsProps) => client.track('family_onboarding_complete', props);
-  client.trackFamilyOnboardingStart = (props?: AnalyticsProps) => client.track('family_onboarding_start', props);
+  client.trackPageView = (e: string, props?: AnalyticsProps) => client.track(e, props);
+  client.trackViralShare = (e: string, props?: AnalyticsProps) => client.track(e, props);
+  client.trackPersonaClaim = (e: string, props?: AnalyticsProps) => client.track(e, props);
+  client.trackOnboardingStep = (e: string, props?: AnalyticsProps) => client.track(e, props);
+  client.trackOnboardingStart = (e: string, props?: AnalyticsProps) => client.track(e, props);
+  client.trackFeatureUsage = (e: string, props?: AnalyticsProps) => client.track(e, props);
+  client.trackConversion = (e: string, props?: AnalyticsProps) => client.track(e, props);
+  client.trackSecurityEvent = (e: string, props?: AnalyticsProps) => client.track(e, props);
+  client.trackFAQUsage = (e: string, props?: AnalyticsProps) => client.track(e, props);
+  client.trackShareClick = (e: string, props?: AnalyticsProps) => client.track(e, props);
+  client.trackShareSuccess = (e: string, props?: AnalyticsProps) => client.track(e, props);
+  client.trackFamilyTabView = (e: string, props?: AnalyticsProps) => client.track(e, props);
+  client.trackFamilyQuickAction = (e: string, props?: AnalyticsProps) => client.track(e, props);
+  client.trackToolCardOpen = (e: string, props?: AnalyticsProps) => client.track(e, props);
+  client.trackFamilySegmentSelection = (e: string, props?: AnalyticsProps) => client.track(e, props);
+  client.trackFamilyGoalsSelection = (e: string, props?: AnalyticsProps) => client.track(e, props);
+  client.trackFamilyOnboardingComplete = (e: string, props?: AnalyticsProps) => client.track(e, props);
+  client.trackFamilyOnboardingStart = (e: string, props?: AnalyticsProps) => client.track(e, props);
   
   return client;
 }

@@ -7,6 +7,17 @@ import { enabled } from './flags';
  */
 export const jobs: Job[] = [];
 
+// Register guardrails monitor job
+import { runGuardrailsMonitor } from './guardrails.monitor';
+jobs.push({ 
+  key: 'guardrails.monitor', 
+  name: 'Guardrails Monitor',
+  description: 'Monitor retirement roadmap scenarios for out-of-band success probabilities',
+  enabledFlag: 'MONITOR_GUARDRAILS_ENABLED', 
+  intervalMs: 24 * 60 * 60 * 1000, // 24 hours
+  run: runGuardrailsMonitor 
+});
+
 /**
  * Register a job with the system
  */
