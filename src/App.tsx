@@ -48,6 +48,7 @@ import MarketingPreview from '@/pages/preview/MarketingPreview';
 import NewReviewSession from '@/pages/estate/review/NewReviewSession';
 import ReviewSession from '@/pages/attorney/ReviewSession';
 import ReviewView from '@/pages/family/ReviewView';
+const RolloverWizard = React.lazy(() => import('@/pages/k401/RolloverWizard'));
 import VaultAutofillConsent from '@/pages/family/VaultAutofillConsent';
 import VaultAutofillReview from '@/pages/advisor/VaultAutofillReview';
 import ChecklistExport from '@/pages/supervisor/ChecklistExport';
@@ -240,6 +241,36 @@ function App() {
             <Route path="/pricing" element={<Pricing />} />
             
             
+            {/* K401 Routes */}
+            <Route path="/k401/rollover" element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <RolloverWizard />
+              </Suspense>
+            } />
+            
+            {/* Crypto Routes - Flag Protected */}
+            {getFlag('CRYPTO_ENABLED') && (
+              <Route path="/crypto" element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <CryptoDashboard />
+                </Suspense>
+              } />
+            )}
+            {getFlag('CRYPTO_ENABLED') && (
+              <Route path="/crypto/beneficiaries" element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <BeneficiaryDirectives />
+                </Suspense>
+              } />
+            )}
+            {getFlag('CRYPTO_ENABLED') && getFlag('CRYPTO_TRADE_ENABLED') && (
+              <Route path="/crypto/trade" element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <TradePanel />
+                </Suspense>
+              } />
+            )}
+
             {/* Admin Routes - Flag Protected */}
             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/qa-coverage" element={<QACoverage />} />}
             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/ready-check" element={<ReadyCheck />} />}
