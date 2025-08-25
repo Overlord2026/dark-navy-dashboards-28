@@ -49,6 +49,7 @@ import NewReviewSession from '@/pages/estate/review/NewReviewSession';
 import ReviewSession from '@/pages/attorney/ReviewSession';
 import ReviewView from '@/pages/family/ReviewView';
 const RolloverWizard = React.lazy(() => import('@/pages/k401/RolloverWizard'));
+const AdvisorBook = React.lazy(() => import('@/pages/k401/AdvisorBook'));
 import VaultAutofillConsent from '@/pages/family/VaultAutofillConsent';
 import VaultAutofillReview from '@/pages/advisor/VaultAutofillReview';
 import ChecklistExport from '@/pages/supervisor/ChecklistExport';
@@ -245,6 +246,11 @@ function App() {
             <Route path="/k401/rollover" element={
               <Suspense fallback={<div>Loading...</div>}>
                 <RolloverWizard />
+              </Suspense>
+            } />
+            <Route path="/k401/advisor" element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <AdvisorBook />
               </Suspense>
             } />
             
