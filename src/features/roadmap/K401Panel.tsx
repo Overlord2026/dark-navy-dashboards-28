@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { useMc401k, createMcInput } from './useMc401k';
 import { TrendingUp, TrendingDown, Target, AlertTriangle, Loader2 } from 'lucide-react';
+import K401Strip from './K401Strip';
 
 interface K401PanelProps {
   currentAge?: number;
@@ -103,6 +104,9 @@ export const K401Panel: React.FC<K401PanelProps> = ({
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
+        {/* Live Monte Carlo Strip */}
+        <K401Strip input={mcInput} />
+        
         {/* Current Settings */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-4">
