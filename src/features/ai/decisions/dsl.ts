@@ -1,106 +1,218 @@
-export type Rule = {
-  id: string;
-  when: (ctx: any) => boolean;
-  then: (ctx: any) => { 
-    action: string; 
-    reasons: string[]; 
-    next?: string[];
-    confidence?: number;
-    priority?: number;
-  };
+/**
+ * AI Fabric Decision DSL
+ * Declarative rules engine that produces actions, reasons, and Proof Slips
+ */
+
+import { recordReceipt } from '@/features/receipts/record';
+import { emitEvent } from '@/features/ai/fabric/events';
+
+export type RuleContext = {
+  [key: string]: any;
+  userId?: string;
+  timestamp?: string;
 };
 
-export type RuleResult = {
-  ruleId: string;
+export type RuleDecision = {
   action: string;
   reasons: string[];
   next?: string[];
   confidence?: number;
-  priority?: number;
-  context: any;
-  timestamp: string;
+  metadata?: Record<string, any>;
 };
 
-export type ProofSlip = {
+export type Rule = {
   id: string;
-  ruleId: string;
-  action: string;
-  reasons: string[];
-  context: any;
-  timestamp: string;
-  hash: string;
+  name?: string;
+  description?: string;
+  priority?: number;
+  category?: string;
+  when: (ctx: RuleContext) => boolean;
+  then: (ctx: RuleContext) => RuleDecision;
 };
 
-export function runRules(rules: Rule[], ctx: any): RuleResult[] {
-  const hits = rules
-    .filter(rule => {
-      try {
-        return rule.when(ctx);
-      } catch (error) {
-        console.warn(`Rule ${rule.id} evaluation failed:`, error);
-        return false;
-      }
-    })
-    .map(rule => {
-      const result = rule.then(ctx);
-      return {
-        ruleId: rule.id,
-        ...result,
-        context: ctx,
-        timestamp: new Date().toISOString()
-      };
-    })
-    .sort((a, b) => (b.priority || 0) - (a.priority || 0)); // Sort by priority desc
+export type RuleExecution = {
+  ruleId: string;
+  matched: boolean;
+  decision?: RuleDecision;
+  executionTime: number;
+  context: RuleContext;
+};
 
-  console.log(`[Decision DSL] Executed ${rules.length} rules, ${hits.length} matched`);
-  return hits;
+export type DecisionResult = {
+  executions: RuleExecution[];
+  decisions: RuleDecision[];
+  proofSlip: {
+    inputsHash: string;
+    timestamp: string;
+    rulesExecuted: string[];
+    decisionsReached: number;
+  };
+};
+
+/**
+ * Execute rules against a context and generate Proof Slip
+ */
+export async function runRules(
+  rules: Rule[], 
+  ctx: RuleContext,
+  generateProofSlip = true
+): Promise<DecisionResult> {
+  const startTime = Date.now();
+  const executions: RuleExecution[] = [];
+  const decisions: RuleDecision[] = [];
+  
+  // Sort rules by priority (higher first)
+  const sortedRules = [...rules].sort((a, b) => (b.priority || 0) - (a.priority || 0));
+  
+  console.log(`[Decision DSL] Executing ${sortedRules.length} rules for context:`, ctx);
+  
+  for (const rule of sortedRules) {
+    const ruleStartTime = Date.now();
+    let matched = false;
+    let decision: RuleDecision | undefined;
+    
+    try {
+      matched = rule.when(ctx);
+      
+      if (matched) {
+        decision = rule.then(ctx);
+        decisions.push(decision);
+        
+        console.log(`[Decision DSL] Rule ${rule.id} matched:`, decision);
+        
+        // Record decision receipt (content-free)
+        if (generateProofSlip && ctx.userId) {
+          await recordReceipt({
+            type: 'Decision-RDS',
+            action: decision.action,
+            reasons: decision.reasons,
+            created_at: new Date().toISOString()
+          } as any);
+        }
+      }
+    } catch (error) {
+      console.error(`[Decision DSL] Rule ${rule.id} execution failed:`, error);
+    }
+    
+    executions.push({
+      ruleId: rule.id,
+      matched,
+      decision,
+      executionTime: Date.now() - ruleStartTime,
+      context: ctx
+    });
+  }
+  
+  // Generate Proof Slip
+  const proofSlip = await generateDecisionProofSlip(ctx, executions, decisions);
+  
+  // Emit event for audit trail
+  if (ctx.userId) {
+    await emitEvent({
+      type: 'advise.issued',
+      actor: ctx.userId,
+      subject: 'decision_engine',
+      meta: {
+        rulesExecuted: executions.length,
+        decisionsReached: decisions.length,
+        executionTimeMs: Date.now() - startTime
+      }
+    });
+  }
+  
+  console.log(`[Decision DSL] Completed in ${Date.now() - startTime}ms: ${decisions.length} decisions from ${executions.length} rules`);
+  
+  return {
+    executions,
+    decisions,
+    proofSlip
+  };
 }
 
-export function createProofSlip(result: RuleResult): ProofSlip {
-  const slip: ProofSlip = {
-    id: crypto.randomUUID(),
-    ruleId: result.ruleId,
-    action: result.action,
-    reasons: result.reasons,
-    context: result.context,
-    timestamp: result.timestamp,
-    hash: generateHash(result)
+/**
+ * Generate a cryptographic Proof Slip for decision audit trail
+ */
+async function generateDecisionProofSlip(
+  ctx: RuleContext,
+  executions: RuleExecution[],
+  decisions: RuleDecision[]
+) {
+  const inputsData = {
+    context: ctx,
+    timestamp: new Date().toISOString(),
+    rulesExecuted: executions.map(e => e.ruleId)
   };
   
-  console.log(`[Proof Slip] Generated for rule ${result.ruleId}:`, slip.id);
-  return slip;
+  const inputsHash = await generateHash(JSON.stringify(inputsData));
+  
+  return {
+    inputsHash,
+    timestamp: inputsData.timestamp,
+    rulesExecuted: inputsData.rulesExecuted,
+    decisionsReached: decisions.length
+  };
 }
 
-export function generateHash(data: any): string {
-  // Simple hash generation for proof slips (use proper crypto in production)
-  const str = JSON.stringify(data, Object.keys(data).sort());
-  return btoa(str).slice(0, 16);
+async function generateHash(data: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const hashBuffer = await crypto.subtle.digest('SHA-256', encoder.encode(data));
+  const hashArray = new Uint8Array(hashBuffer);
+  return Array.from(hashArray).map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
-export function validateRule(rule: Rule): boolean {
-  if (!rule.id || typeof rule.id !== 'string') {
-    console.error('Rule missing valid id');
-    return false;
+/**
+ * Rule composition utilities
+ */
+export const Conditions = {
+  and: (...conditions: Array<(ctx: RuleContext) => boolean>) => 
+    (ctx: RuleContext) => conditions.every(c => c(ctx)),
+  
+  or: (...conditions: Array<(ctx: RuleContext) => boolean>) => 
+    (ctx: RuleContext) => conditions.some(c => c(ctx)),
+  
+  not: (condition: (ctx: RuleContext) => boolean) => 
+    (ctx: RuleContext) => !condition(ctx),
+  
+  hasProperty: (property: string) => 
+    (ctx: RuleContext) => property in ctx && ctx[property] != null,
+  
+  equals: (property: string, value: any) => 
+    (ctx: RuleContext) => ctx[property] === value,
+  
+  greaterThan: (property: string, value: number) => 
+    (ctx: RuleContext) => typeof ctx[property] === 'number' && ctx[property] > value,
+  
+  lessThan: (property: string, value: number) => 
+    (ctx: RuleContext) => typeof ctx[property] === 'number' && ctx[property] < value
+};
+
+/**
+ * Rule registry for organizing rules by domain
+ */
+export class RuleRegistry {
+  private rules: Map<string, Rule[]> = new Map();
+  
+  register(domain: string, rules: Rule[]): void {
+    this.rules.set(domain, rules);
   }
   
-  if (typeof rule.when !== 'function') {
-    console.error(`Rule ${rule.id} missing valid when function`);
-    return false;
+  getRules(domain: string): Rule[] {
+    return this.rules.get(domain) || [];
   }
   
-  if (typeof rule.then !== 'function') {
-    console.error(`Rule ${rule.id} missing valid then function`);
-    return false;
+  getAllRules(): Rule[] {
+    return Array.from(this.rules.values()).flat();
   }
   
-  return true;
+  async executeForDomain(domain: string, ctx: RuleContext): Promise<DecisionResult> {
+    const domainRules = this.getRules(domain);
+    return runRules(domainRules, ctx);
+  }
+  
+  getDomains(): string[] {
+    return Array.from(this.rules.keys());
+  }
 }
 
-export function safeRunRules(rules: Rule[], ctx: any): RuleResult[] {
-  const validRules = rules.filter(validateRule);
-  if (validRules.length !== rules.length) {
-    console.warn(`${rules.length - validRules.length} invalid rules filtered out`);
-  }
-  
-  return runRules(validRules, ctx);
-}
+// Global rule registry instance
+export const globalRuleRegistry = new RuleRegistry();

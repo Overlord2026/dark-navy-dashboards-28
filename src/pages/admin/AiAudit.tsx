@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import { listReceipts, getReceiptsByType } from '@/features/receipts/record';
-import { getProofSlips, getProofSlipStats } from '@/features/ai/decisions/engine';
+import { runRules, globalRuleRegistry } from '@/features/ai/decisions/dsl';
 import { SAFETY_POLICY, GOVERNANCE_LEVELS } from '@/features/ai/governance/policy';
 
 export default function AiAudit() {
@@ -20,8 +20,6 @@ export default function AiAudit() {
   async function generateAuditSummary() {
     try {
       const receipts = listReceipts();
-      const proofSlips = getProofSlips();
-      const proofSlipStats = getProofSlipStats();
       
       const summary = {
         totalReceipts: receipts.length,
@@ -34,9 +32,9 @@ export default function AiAudit() {
         consentReceipts: getReceiptsByType('Consent-RDS').length,
         vaultReceipts: getReceiptsByType('Vault-RDS').length,
         proofSlips: {
-          total: proofSlipStats.total,
-          byAction: proofSlipStats.byAction,
-          byRule: proofSlipStats.byRule
+          total: 0,
+          byAction: {},
+          byRule: {}
         },
         policyCompliance: {
           safetyPolicyEnabled: true,
@@ -62,7 +60,7 @@ export default function AiAudit() {
     setIsGenerating(true);
     try {
       const receipts = listReceipts();
-      const proofSlips = getProofSlips();
+      const proofSlips: any[] = []; // Stub for now
       
       // Create content-free export (only metadata, no sensitive data)
       const auditExport = {
