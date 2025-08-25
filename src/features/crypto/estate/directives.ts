@@ -1,4 +1,14 @@
-// Crypto estate directives management
+// Link wallets/addresses to beneficiaries and execution runbooks (off-chain)
+export type BeneficiaryDirective = { 
+  walletId:string; 
+  asset?:string; 
+  shares?:number; 
+  toUserId:string; 
+  unlock:'TOD'|'Executor'|'TimeLock'; 
+  notes?:string 
+};
+
+// Legacy interface for compatibility
 export interface CryptoDirective {
   id: string;
   userId: string;
@@ -11,32 +21,29 @@ export interface CryptoDirective {
   updatedAt: string;
 }
 
-export async function getDirectives(userId: string): Promise<CryptoDirective[]> {
-  // Mock implementation - replace with actual data source
-  const mockDirectives: CryptoDirective[] = [
-    {
-      id: 'dir_1',
-      userId,
-      walletId: 'wallet_btc_main',
-      type: 'transfer',
-      beneficiary: 'Spouse',
-      instructions: 'Transfer all BTC holdings to spouse immediately',
-      accessMethod: 'hardware',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    },
-    {
-      id: 'dir_2', 
-      userId,
-      walletId: 'wallet_eth_defi',
-      type: 'liquidate',
-      beneficiary: 'Estate',
-      instructions: 'Liquidate DeFi positions, convert to USD for estate distribution',
-      accessMethod: 'seed',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    }
-  ];
-  
-  return mockDirectives;
+let DIRS: Record<string,BeneficiaryDirective[]> = {};
+
+export async function setDirectives(userId:string, dirs:BeneficiaryDirective[]){ 
+  DIRS[userId]=dirs; 
+  return dirs; 
+}
+
+export async function getDirectives(userId:string){ 
+  return DIRS[userId]||[]; 
+}
+
+export async function addDirective(userId:string, directive:BeneficiaryDirective){ 
+  if (!DIRS[userId]) DIRS[userId] = [];
+  DIRS[userId].push(directive);
+  return directive;
+}
+
+export async function removeDirective(userId:string, walletId:string, toUserId:string){ 
+  if (!DIRS[userId]) return false;
+  const index = DIRS[userId].findIndex(d => d.walletId === walletId && d.toUserId === toUserId);
+  if (index > -1) {
+    DIRS[userId].splice(index, 1);
+    return true;
+  }
+  return false;
 }
