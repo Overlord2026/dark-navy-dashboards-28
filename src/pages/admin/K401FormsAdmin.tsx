@@ -251,13 +251,16 @@ const K401FormsAdmin = () => {
             <CardHeader>
               <CardTitle>Form Templates</CardTitle>
               <p className="text-sm text-muted-foreground">
-                Merge tags available: {{client.*}}, {{account.*}}, {{advisor.*}}, {{provider.*}}, {{rollover.*}}
+                Merge tags available: client, account, advisor, provider, rollover
               </p>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <div className="bg-gray-50 p-4 rounded-lg text-sm font-mono">
-                  <div className="font-bold mb-2">Available Merge Tags:</div>
+              <div className="bg-gray-50 p-4 rounded-lg text-sm font-mono">
+                <div className="font-bold mb-2">Available Merge Tags:</div>
+                <div className="text-xs text-gray-600 mb-2">
+                  Use double curly braces around these tags in templates
+                </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                     <div>
                       <div className="font-semibold">Client:</div>

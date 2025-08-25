@@ -54,8 +54,7 @@ export async function generatePdfFromTemplate(templateId: string, ctx: MergeCtx)
 
 function getFormTemplate(templateId: string): string {
   const templates: Record<string, string> = {
-    vanguard_rollover_req: `
-# Vanguard 401(k) Rollover Request
+    "vanguard_rollover_req": `# Vanguard 401(k) Rollover Request
 
 **Participant Information:**
 - Name: {{client.name}}
@@ -76,10 +75,8 @@ function getFormTemplate(templateId: string): string {
 
 I hereby request a direct rollover of my 401(k) account to the receiving institution listed above.
 
-Signature: _________________________ Date: _____________
-    `,
-    fidelity_rollover_init: `
-# Fidelity Workplace Services - Rollover Initiation
+Signature: _________________________ Date: _____________`,
+    "fidelity_rollover_init": `# Fidelity Workplace Services - Rollover Initiation
 
 **Employee Information:**
 - Full Name: {{client.name}}
@@ -95,10 +92,8 @@ Signature: _________________________ Date: _____________
 **Authorization:**
 I authorize the distribution of my account as specified above.
 
-Participant Signature: _________________________ Date: _____________
-    `,
-    schwab_rollover_kit: `
-# Charles Schwab 401(k) Distribution Request
+Participant Signature: _________________________ Date: _____________`,
+    "schwab_rollover_kit": `# Charles Schwab 401(k) Distribution Request
 
 **Plan Participant:**
 - Name: {{client.name}}
@@ -111,8 +106,7 @@ Participant Signature: _________________________ Date: _____________
 - Receiving Firm: {{advisor.firm}}
 - Advisor: {{advisor.name}} ({{advisor.phone}})
 
-Signature: _________________________ Date: _____________
-    `
+Signature: _________________________ Date: _____________`
   };
   
   return templates[templateId] || `# Generic 401(k) Form\n\nClient: {{client.name}}\nAccount: {{account.id}}\nProvider: {{provider.name}}`;
