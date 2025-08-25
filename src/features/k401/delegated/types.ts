@@ -1,4 +1,4 @@
-export type DelegatedScope = 'read'|'trade';
+export type DelegatedScope = 'read' | 'trade';
 
 export type DelegatedPolicy = {
   maxUsdPerDay?: number;
@@ -14,7 +14,7 @@ export type DelegatedGrant = {
   advisorUserId: string;
   scopes: DelegatedScope[];        // 'read' always implied
   policy: DelegatedPolicy;
-  status: 'granted'|'revoked'|'expired';
+  status: 'granted' | 'revoked' | 'expired';
   createdAt: string; 
   revokedAt?: string; 
   expiresAt?: string;
@@ -29,5 +29,5 @@ export type DelegatedSession = {
   endsAt: string;
   scope: DelegatedScope[];         // locked from grant
   approvedAt?: string;             // step-up confirmation timestamp
-  status: 'pending'|'active'|'ended'|'expired';
+  status: 'pending' | 'active' | 'ended' | 'expired';
 };

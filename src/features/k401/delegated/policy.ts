@@ -5,7 +5,10 @@ export function planAllowsDelegated(plan: any) {
   return !!(plan?.sdbAvailable || plan?.provider === 'Fidelity' || plan?.provider === 'Schwab');
 }
 
-export function checkTradePolicy(policy: DelegatedPolicy, {asset, usd}: {asset: string; usd: number}) {
+export function checkTradePolicy(
+  policy: DelegatedPolicy, 
+  { asset, usd }: { asset: string; usd: number }
+) {
   if (policy.maxUsdPerDay && usd > policy.maxUsdPerDay) {
     return { ok: false, reason: 'max_usd' };
   }

@@ -1,7 +1,7 @@
 import type { DelegatedGrant, DelegatedSession } from './types';
 
-let GRANTS: Record<string,DelegatedGrant> = {};
-let SESSIONS: Record<string,DelegatedSession> = {};
+let GRANTS: Record<string, DelegatedGrant> = {};
+let SESSIONS: Record<string, DelegatedSession> = {};
 
 export async function upsertGrant(g: DelegatedGrant) { 
   GRANTS[g.grantId] = g; 
