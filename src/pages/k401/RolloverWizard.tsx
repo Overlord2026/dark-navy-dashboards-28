@@ -1,6 +1,6 @@
 import React from 'react';
 import { generatePdfFromTemplate, saveFormToVault, logFormGenerated } from '@/features/k401/forms/merge';
-import { RULES_TOP8 } from '@/features/k401/forms/rulesTop8';
+import { RULES_TOP8, getProviderRule } from '@/features/k401/forms/rulesTop8';
 import { recordReceipt } from '@/features/receipts/record';
 import { maybeAnchor, generateHash } from '@/features/anchors/hooks';
 import { canWrite, getCurrentUserRole, getRoleDisplayName } from '@/features/auth/roles';
@@ -12,11 +12,36 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { FileText, Download, CheckCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import type { MergeCtx } from '@/features/k401/forms/types';
 
 function AdviceSummaryPDF({ ctx }: { ctx: any }) {
   // Create text summary → bytes (replace later with real PDF lib)
   const txt = `PTE 2020-02 Fee Comparison\nCurrent plan fees: ${ctx.currentFees}\nProposed fees: ${ctx.proposedFees}\nRationale: ${ctx.rationale}\n`;
   return new TextEncoder().encode(txt);
+}
+
+async function createRolloverForms(provider: string, ctx: MergeCtx) {
+  const rule = getProviderRule(provider);
+  if (!rule) throw new Error(`No rules found for provider: ${provider}`);
+  
+  const forms: any[] = [];
+  for (const paperwork of rule.paperwork) {
+    const pdf = await generatePdfFromTemplate(paperwork.templateId, ctx);
+    const path = `Estate/401k/Rollover/${provider}/${new Date().getFullYear()}/${paperwork.templateId}-${ctx.client.id}-v1.pdf`;
+    const { fileId } = await saveFormToVault(path, pdf);
+    await logFormGenerated(paperwork.templateId, fileId, provider);
+    
+    forms.push({
+      name: paperwork.name,
+      how: paperwork.how,
+      fileId,
+      uploadUrl: rule.addresses?.uploadUrl || '',
+      fax: rule.addresses?.fax || '',
+      mail: rule.addresses?.mail || '',
+      note: paperwork.note || ''
+    });
+  }
+  return forms;
 }
 
 export default function RolloverWizard() {

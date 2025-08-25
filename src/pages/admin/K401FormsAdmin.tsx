@@ -1,131 +1,136 @@
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { RULES_TOP8, getProviderRule } from '@/features/k401/forms/rulesTop8';
 import { generatePdfFromTemplate, mergeTags } from '@/features/k401/forms/merge';
 import type { ProviderRule, MergeCtx } from '@/features/k401/forms/types';
-import { Upload, Mail, Send, Download, Save, Eye } from 'lucide-react';
-import { toast } from 'sonner';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+import { Badge } from '@/components/ui/badge';
+import { FileText, Download, Settings } from 'lucide-react';
 
-const K401FormsAdmin = () => {
-  const [selectedProvider, setSelectedProvider] = React.useState(RULES_TOP8[0].provider);
-  const [editingRule, setEditingRule] = React.useState<ProviderRule | null>(null);
-  const [previewCtx, setPreviewCtx] = React.useState<MergeCtx>({
+export default function K401FormsAdmin() {
+  const [selectedProvider, setSelectedProvider] = React.useState('Vanguard');
+  const [previewData, setPreviewData] = React.useState<string>('');
+  const [sampleCtx] = React.useState<MergeCtx>({
     client: {
-      id: 'C12345',
+      id: 'C123',
       name: 'John Smith',
-      email: 'john.smith@example.com',
+      email: 'john.smith@email.com',
       phone: '555-0123',
       address: '123 Main St, Anytown, ST 12345',
       ssnLast4: '1234'
     },
     account: {
-      id: 'ACC789',
+      id: 'ACC456',
       provider: selectedProvider,
-      planId: 'PLAN001',
-      balance: 85000,
-      sdb: 'Self-directed brokerage'
+      planId: 'PLAN789',
+      balance: 125000,
+      sdb: 'SDB001'
     },
     advisor: {
-      id: 'ADV456',
-      name: 'Jane Advisor',
-      firm: 'Wealth Management LLC',
-      email: 'jane@wealthmgmt.com',
+      id: 'ADV789',
+      name: 'Sarah Johnson',
+      firm: 'Johnson Financial Advisors',
+      email: 'sarah@johnsonfa.com',
       phone: '555-0456'
     },
     provider: {
       name: selectedProvider,
-      phone: getProviderRule(selectedProvider)?.phone || ''
+      phone: getProviderRule(selectedProvider)?.phone || '',
+      uploadUrl: getProviderRule(selectedProvider)?.addresses?.uploadUrl || '',
+      fax: getProviderRule(selectedProvider)?.addresses?.fax || '',
+      mail: getProviderRule(selectedProvider)?.addresses?.mail || ''
     },
     rollover: {
       type: 'IRA',
-      reason: 'Job change',
-      feeSummaryId: 'FEES123'
+      reason: 'Lower fees and better investment options'
     }
   });
 
-  const currentRule = getProviderRule(selectedProvider);
+  const selectedRule = getProviderRule(selectedProvider);
 
   const handlePreviewForm = async (templateId: string) => {
     try {
-      const pdfBytes = await generatePdfFromTemplate(templateId, previewCtx);
-      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-      const url = URL.createObjectURL(blob);
-      window.open(url, '_blank');
-      toast.success('Form preview opened in new tab');
+      const template = await fetch(`/api/templates/${templateId}`).catch(() => null);
+      if (template) {
+        const content = await template.text();
+        setPreviewData(mergeTags(content, sampleCtx));
+      } else {
+        // Fallback to generating with current system
+        const pdf = await generatePdfFromTemplate(templateId, sampleCtx);
+        const text = new TextDecoder().decode(pdf);
+        setPreviewData(text);
+      }
     } catch (error) {
-      toast.error('Failed to generate preview');
+      console.error('Preview failed:', error);
+      setPreviewData('Preview unavailable');
     }
   };
 
-  const getSubmissionIcon = (how: string) => {
-    switch (how) {
-      case 'upload': return <Upload className="h-4 w-4" />;
-      case 'mail': return <Mail className="h-4 w-4" />;
-      case 'fax': return <Send className="h-4 w-4" />;
-      case 'esubmit': return <Download className="h-4 w-4" />;
-      default: return <Download className="h-4 w-4" />;
-    }
-  };
-
-  const getSubmissionColor = (how: string) => {
-    switch (how) {
-      case 'upload': return 'bg-blue-100 text-blue-800';
-      case 'esubmit': return 'bg-green-100 text-green-800';
-      case 'mail': return 'bg-yellow-100 text-yellow-800';
-      case 'fax': return 'bg-orange-100 text-orange-800';
-      default: return 'bg-gray-100 text-gray-800';
+  const handleDownloadSample = async (templateId: string) => {
+    try {
+      const pdf = await generatePdfFromTemplate(templateId, sampleCtx);
+      const blob = new Blob([pdf], { type: 'application/pdf' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${templateId}-sample.pdf`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Download failed:', error);
     }
   };
 
   return (
-    <div className="container mx-auto py-6 space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">401(k) Provider Forms Kit</h1>
-          <p className="text-muted-foreground">
-            Manage rollover forms for top 8 providers with smart merge tags
-          </p>
-        </div>
-        <Badge variant="outline" className="bg-green-50 text-green-700">
-          {RULES_TOP8.length} Providers Configured
-        </Badge>
+    <div className="container mx-auto p-6 space-y-6">
+      <div>
+        <h1 className="text-3xl font-bold mb-2">401(k) Forms Kit Administration</h1>
+        <p className="text-muted-foreground">
+          Manage provider rules, templates, and preview form generation for the top 8 401(k) providers
+        </p>
       </div>
 
-      <Tabs defaultValue="overview" className="space-y-6">
-        <TabsList>
-          <TabsTrigger value="overview">Provider Overview</TabsTrigger>
-          <TabsTrigger value="preview">Form Preview</TabsTrigger>
-          <TabsTrigger value="rules">Edit Rules</TabsTrigger>
-          <TabsTrigger value="templates">Templates</TabsTrigger>
-        </TabsList>
+      <div className="grid lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-1">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Settings className="h-5 w-5" />
+                Provider Selection
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <label className="text-sm font-medium">Provider</label>
+                <Select value={selectedProvider} onValueChange={setSelectedProvider}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {RULES_TOP8.map(rule => (
+                      <SelectItem key={rule.provider} value={rule.provider}>
+                        {rule.provider}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
 
-        <TabsContent value="overview" className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {RULES_TOP8.map((rule) => (
-              <Card key={rule.provider} className="relative">
-                <CardHeader className="pb-3">
-                  <CardTitle className="flex items-center justify-between text-lg">
-                    {rule.provider}
-                    <Badge variant={rule.acceptsESign ? 'default' : 'secondary'}>
-                      {rule.acceptsESign ? 'eSign' : 'Paper'}
+              {selectedRule && (
+                <div className="space-y-3">
+                  <div>
+                    <span className="text-sm font-medium">E-Sign Support:</span>
+                    <Badge variant={selectedRule.acceptsESign ? "default" : "secondary"} className="ml-2">
+                      {selectedRule.acceptsESign ? 'Yes' : 'No'}
                     </Badge>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="text-sm">
-                    <strong>Phone:</strong> {rule.phone}
                   </div>
-                  
-                  <div className="text-sm">
-                    <strong>Rollover Types:</strong>
+
+                  <div>
+                    <span className="text-sm font-medium">Rollover Types:</span>
                     <div className="flex flex-wrap gap-1 mt-1">
-                      {rule.rolloverTypes.map((type) => (
+                      {selectedRule.rolloverTypes.map(type => (
                         <Badge key={type} variant="outline" className="text-xs">
                           {type}
                         </Badge>
@@ -133,164 +138,125 @@ const K401FormsAdmin = () => {
                     </div>
                   </div>
 
-                  <div className="text-sm">
-                    <strong>Forms ({rule.paperwork.length}):</strong>
-                    <div className="space-y-1 mt-1">
-                      {rule.paperwork.map((paper, idx) => (
-                        <div key={idx} className="flex items-center justify-between text-xs">
-                          <span>{paper.name}</span>
-                          <Badge className={`${getSubmissionColor(paper.how)} text-xs`}>
-                            {getSubmissionIcon(paper.how)}
-                            <span className="ml-1">{paper.how}</span>
-                          </Badge>
-                        </div>
-                      ))}
-                    </div>
+                  <div>
+                    <span className="text-sm font-medium">Contact:</span>
+                    <p className="text-sm text-muted-foreground">{selectedRule.phone}</p>
                   </div>
 
-                  {rule.notes && (
-                    <div className="text-xs text-gray-600 bg-gray-50 p-2 rounded">
-                      {rule.notes}
+                  {selectedRule.addresses && (
+                    <div>
+                      <span className="text-sm font-medium">Addresses:</span>
+                      <div className="text-xs text-muted-foreground space-y-1 mt-1">
+                        {selectedRule.addresses.uploadUrl && (
+                          <div>Upload: {selectedRule.addresses.uploadUrl}</div>
+                        )}
+                        {selectedRule.addresses.fax && (
+                          <div>Fax: {selectedRule.addresses.fax}</div>
+                        )}
+                        {selectedRule.addresses.mail && (
+                          <div>Mail: {selectedRule.addresses.mail}</div>
+                        )}
+                      </div>
                     </div>
                   )}
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
 
-        <TabsContent value="preview" className="space-y-4">
+                  {selectedRule.notes && (
+                    <div>
+                      <span className="text-sm font-medium">Notes:</span>
+                      <p className="text-xs text-muted-foreground">{selectedRule.notes}</p>
+                    </div>
+                  )}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="lg:col-span-2">
           <Card>
             <CardHeader>
-              <CardTitle>Form Preview</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                Select a provider and preview generated forms with sample data
-              </p>
+              <CardTitle className="flex items-center gap-2">
+                <FileText className="h-5 w-5" />
+                Available Forms & Templates
+              </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="provider-select">Provider</Label>
-                  <select
-                    id="provider-select"
-                    value={selectedProvider}
-                    onChange={(e) => setSelectedProvider(e.target.value)}
-                    className="w-full p-2 border rounded-md"
-                  >
-                    {RULES_TOP8.map((rule) => (
-                      <option key={rule.provider} value={rule.provider}>
-                        {rule.provider}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <Label htmlFor="client-name">Client Name</Label>
-                  <Input
-                    id="client-name"
-                    value={previewCtx.client.name}
-                    onChange={(e) => setPreviewCtx(ctx => ({
-                      ...ctx,
-                      client: { ...ctx.client, name: e.target.value }
-                    }))}
-                  />
-                </div>
-              </div>
-
-              {currentRule && (
-                <div className="space-y-3">
-                  <h4 className="font-medium">Available Forms:</h4>
-                  {currentRule.paperwork.map((paper, idx) => (
-                    <div key={idx} className="flex items-center justify-between p-3 border rounded-lg">
-                      <div>
-                        <div className="font-medium">{paper.name}</div>
-                        <div className="text-sm text-gray-600">Template: {paper.templateId}</div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Badge className={getSubmissionColor(paper.how)}>
-                          {getSubmissionIcon(paper.how)}
-                          <span className="ml-1">{paper.how}</span>
+            <CardContent>
+              {selectedRule ? (
+                <div className="space-y-4">
+                  {selectedRule.paperwork.map((form, index) => (
+                    <div key={index} className="border rounded-lg p-4 space-y-3">
+                      <div className="flex items-start justify-between">
+                        <div>
+                          <h3 className="font-medium">{form.name}</h3>
+                          <p className="text-sm text-muted-foreground">Template ID: {form.templateId}</p>
+                          {form.note && (
+                            <p className="text-xs text-muted-foreground mt-1">{form.note}</p>
+                          )}
+                        </div>
+                        <Badge variant={
+                          form.how === 'esubmit' ? 'default' :
+                          form.how === 'upload' ? 'secondary' :
+                          'outline'
+                        }>
+                          {form.how}
                         </Badge>
-                        <Button
-                          size="sm"
+                      </div>
+                      
+                      <div className="flex gap-2">
+                        <Button 
+                          size="sm" 
                           variant="outline"
-                          onClick={() => handlePreviewForm(paper.templateId)}
+                          onClick={() => handlePreviewForm(form.templateId)}
                         >
-                          <Eye className="h-4 w-4 mr-1" />
+                          <FileText className="h-4 w-4 mr-1" />
                           Preview
+                        </Button>
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          onClick={() => handleDownloadSample(form.templateId)}
+                        >
+                          <Download className="h-4 w-4 mr-1" />
+                          Download Sample
                         </Button>
                       </div>
                     </div>
                   ))}
                 </div>
+              ) : (
+                <p className="text-muted-foreground">Select a provider to view available forms</p>
               )}
             </CardContent>
           </Card>
-        </TabsContent>
 
-        <TabsContent value="rules" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Provider Rules Editor</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                Edit submission channels, forms, and provider-specific settings
-              </p>
-            </CardHeader>
-            <CardContent>
-              <div className="text-center text-muted-foreground py-8">
-                <Save className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                Rules editor coming soon. Currently using static configuration.
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
+          {previewData && (
+            <Card className="mt-6">
+              <CardHeader>
+                <CardTitle>Form Preview</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Textarea
+                  value={previewData}
+                  readOnly
+                  className="min-h-[300px] font-mono text-sm"
+                />
+              </CardContent>
+            </Card>
+          )}
+        </div>
+      </div>
 
-        <TabsContent value="templates" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Form Templates</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                Merge tags available: client, account, advisor, provider, rollover
-              </p>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-              <div className="bg-gray-50 p-4 rounded-lg text-sm font-mono">
-                <div className="font-bold mb-2">Available Merge Tags:</div>
-                <div className="text-xs text-gray-600 mb-2">
-                  Use double curly braces around these tags in templates
-                </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                    <div>
-                      <div className="font-semibold">Client:</div>
-                      <div>client.name, client.email</div>
-                      <div>client.phone, client.address</div>
-                      <div>client.ssnLast4</div>
-                    </div>
-                    <div>
-                      <div className="font-semibold">Account:</div>
-                      <div>account.id, account.provider</div>
-                      <div>account.planId, account.balance</div>
-                    </div>
-                    <div>
-                      <div className="font-semibold">Advisor:</div>
-                      <div>advisor.name, advisor.firm</div>
-                      <div>advisor.email, advisor.phone</div>
-                    </div>
-                    <div>
-                      <div className="font-semibold">Rollover:</div>
-                      <div>rollover.type, rollover.reason</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+      <div className="text-xs text-muted-foreground border-t pt-4">
+        <p>
+          This administration interface allows you to preview and test 401(k) rollover forms 
+          for the top 8 providers. Forms are generated using merge tags and saved to the Vault 
+          with content-free receipts for audit compliance.
+        </p>
+        <p className="mt-2">
+          <strong>Merge Tags Available:</strong> {'{{'}client.name{'}}'},  {'{{'}account.id{'}}'},  {'{{'}provider.name{'}}'},  
+          {'{{'}advisor.firm{'}}'},  {'{{'}rollover.type{'}}'},  and more.
+        </p>
+      </div>
     </div>
   );
-};
-
-export default K401FormsAdmin;
+}

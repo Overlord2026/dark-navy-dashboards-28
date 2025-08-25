@@ -76,6 +76,7 @@ function getFormTemplate(templateId: string): string {
 I hereby request a direct rollover of my 401(k) account to the receiving institution listed above.
 
 Signature: _________________________ Date: _____________`,
+
     "fidelity_rollover_init": `# Fidelity Workplace Services - Rollover Initiation
 
 **Employee Information:**
@@ -93,6 +94,7 @@ Signature: _________________________ Date: _____________`,
 I authorize the distribution of my account as specified above.
 
 Participant Signature: _________________________ Date: _____________`,
+
     "schwab_rollover_kit": `# Charles Schwab 401(k) Distribution Request
 
 **Plan Participant:**
@@ -105,6 +107,113 @@ Participant Signature: _________________________ Date: _____________`,
 - Amount: Full Account Balance (\${{account.balance}})
 - Receiving Firm: {{advisor.firm}}
 - Advisor: {{advisor.name}} ({{advisor.phone}})
+
+Signature: _________________________ Date: _____________`,
+
+    "principal_distribution": `# Principal Financial Group - Distribution Request
+
+**Plan Participant Information:**
+- Name: {{client.name}}
+- Account Number: {{account.id}}
+- Plan ID: {{account.planId}}
+- Address: {{client.address}}
+- Phone: {{client.phone}}
+
+**Distribution Details:**
+- Distribution Type: {{rollover.type}}
+- Current Balance: \${{account.balance}}
+- Reason for Distribution: {{rollover.reason}}
+
+**Receiving Institution:**
+- Institution: {{advisor.firm}}
+- Advisor: {{advisor.name}}
+- Contact Phone: {{advisor.phone}}
+
+I request a direct rollover of my account balance to the above institution.
+
+Participant Signature: _________________________ Date: _____________`,
+
+    "empower_rollover_eform": `# Empower Retirement - Electronic Rollover Form
+
+**Participant Details:**
+- Full Name: {{client.name}}
+- Account ID: {{account.id}}
+- Email: {{client.email}}
+- Phone: {{client.phone}}
+
+**Rollover Information:**
+- Rollover Type: {{rollover.type}}
+- Account Balance: \${{account.balance}}
+- Distribution Reason: {{rollover.reason}}
+
+**New Provider Information:**
+- Firm Name: {{advisor.firm}}
+- Advisor: {{advisor.name}}
+- Advisor Email: {{advisor.email}}
+
+Electronic Signature: {{client.name}} Date: _____________`,
+
+    "trp_rollover_form": `# T. Rowe Price - 401(k) Rollover Distribution Form
+
+**Employee Information:**
+- Name: {{client.name}}
+- Employee ID: {{account.id}}
+- Plan ID: {{account.planId}}
+- Address: {{client.address}}
+
+**Distribution Request:**
+- Type: Direct Rollover to {{rollover.type}}
+- Amount: Full Account (\${{account.balance}})
+- Reason: {{rollover.reason}}
+
+**Receiving Institution:**
+- Firm: {{advisor.firm}}
+- Advisor: {{advisor.name}}
+- Phone: {{advisor.phone}}
+
+Signature: _________________________ Date: _____________`,
+
+    "jh_distribution_pkg": `# John Hancock - Distribution Package
+
+**Plan Participant:**
+- Name: {{client.name}}
+- Account Number: {{account.id}}
+- SSN (Last 4): {{client.ssnLast4}}
+- Mailing Address: {{client.address}}
+
+**Distribution Election:**
+- Distribution Type: {{rollover.type}}
+- Current Account Value: \${{account.balance}}
+- Distribution Reason: {{rollover.reason}}
+
+**New Institution Details:**
+- Receiving Firm: {{advisor.firm}}
+- Financial Advisor: {{advisor.name}}
+- Contact Information: {{advisor.phone}}
+
+I hereby elect to roll over my account balance as specified above.
+
+Participant Signature: _________________________ Date: _____________`,
+
+    "merrill_rollover": `# Merrill (Bank of America) - 401(k) Rollover Request
+
+**Plan Participant Information:**
+- Name: {{client.name}}
+- Account Number: {{account.id}}
+- Plan ID: {{account.planId}}
+- Contact Phone: {{client.phone}}
+
+**Rollover Details:**
+- Rollover Type: {{rollover.type}}
+- Account Balance: \${{account.balance}}
+- Distribution Reason: {{rollover.reason}}
+
+**Receiving Institution:**
+- Firm Name: {{advisor.firm}}
+- Advisor Name: {{advisor.name}}
+- Advisor Phone: {{advisor.phone}}
+
+Authorization: I authorize the rollover of my 401(k) account as detailed above.
 
 Signature: _________________________ Date: _____________`
   };
