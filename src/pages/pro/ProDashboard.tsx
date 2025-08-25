@@ -7,6 +7,7 @@ import { ProDashboardNav } from '@/components/pro/ProDashboardNav';
 import { ProDevPanel } from '@/components/pro/ProDevPanel';
 import { Users, FileText, MessageCircle, Shield, Activity } from 'lucide-react';
 import { listReceipts } from '@/features/receipts/record';
+import K401BenefitsBand from '@/features/k401/BenefitsBand';
 
 const personaInfo: Record<Exclude<ProPersona, 'advisor'>, {
   title: string;
@@ -177,6 +178,11 @@ export const ProDashboard: React.FC<ProDashboardProps> = ({ persona }) => {
           </CardContent>
         </Card>
       </div>
+
+      {/* 401(k) Benefits */}
+      {(persona === 'advisor' || persona === 'insurance') && (
+        <K401BenefitsBand persona={persona === 'advisor' ? 'advisor' : 'insurance'} />
+      )}
 
       {/* Development Panel */}
       <ProDevPanel />

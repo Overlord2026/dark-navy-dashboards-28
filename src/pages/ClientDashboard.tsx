@@ -16,6 +16,7 @@ import { useDashboardMetrics } from '@/hooks/useDashboardMetrics';
 import { usePersona } from '@/hooks/usePersona';
 import { CEUpsellCard } from '@/components/compliance/CEUpsellCard';
 import { usePersonaRole } from '@/hooks/usePersonaRole';
+import K401BenefitsBand from '@/features/k401/BenefitsBand';
 
 export function ClientDashboard() {
   // Track dashboard metrics for A/B testing
@@ -58,6 +59,9 @@ export function ClientDashboard() {
           {/* Celebration Progress */}
           <CelebrationProgress />
         </div>
+
+        {/* 401(k) Benefits */}
+        <K401BenefitsBand persona="family" />
 
         {/* Marketplace Highlights */}
         <MarketplaceHighlights />

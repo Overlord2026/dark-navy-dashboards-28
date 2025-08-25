@@ -65,7 +65,7 @@ function getFormTemplate(templateId: string): string {
 
 **Rollover Details:**
 - Type: {{rollover.type}}
-- Current Balance: ${{account.balance}}
+- Current Balance: \${{account.balance}}
 - Reason: {{rollover.reason}}
 
 **New Financial Institution:**
@@ -85,7 +85,7 @@ Signature: _________________________ Date: _____________`,
 - Address: {{client.address}}
 
 **Distribution Request:**
-- Account Balance: ${{account.balance}}
+- Account Balance: \${{account.balance}}
 - Distribution Type: {{rollover.type}}
 - Receiving Institution: {{advisor.firm}}
 
@@ -102,7 +102,7 @@ Participant Signature: _________________________ Date: _____________`,
 
 **Distribution Information:**
 - Distribution Type: Direct Rollover to {{rollover.type}}
-- Amount: Full Account Balance (${{account.balance}})
+- Amount: Full Account Balance (\${{account.balance}})
 - Receiving Firm: {{advisor.firm}}
 - Advisor: {{advisor.name}} ({{advisor.phone}})
 
@@ -136,7 +136,7 @@ export async function saveFormToVault(path: string, bytes: Uint8Array): Promise<
     grant_type: 'POST',
     reasons: ['k401_form_generated'],
     created_at: new Date().toISOString() 
-  } as any);
+  });
   
   return { fileId };
 }
@@ -147,7 +147,7 @@ export async function logFormGenerated(templateId: string, fileId: string, provi
     action: 'k401.form.generated', 
     reasons: [templateId, provider, fileId.split('/').pop()?.split('-')[0] || ''], 
     created_at: new Date().toISOString() 
-  } as any);
+  });
 }
 
 export async function anchorFormIfEnabled(fileId: string, sha256: string): Promise<any | undefined> {
