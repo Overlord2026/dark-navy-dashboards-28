@@ -6,6 +6,7 @@ import { Slider } from '@/components/ui/slider';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { useMc401k } from './useMc401k';
+import K401Strip from './K401Strip';
 import { TrendingUp, TrendingDown, Target, AlertTriangle, Loader2 } from 'lucide-react';
 
 import { canWrite, getCurrentUserRole, getRoleDisplayName } from '@/features/auth/roles';
@@ -118,6 +119,9 @@ export const K401Panel: React.FC<K401PanelProps> = ({
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Monte Carlo simulation running with 10k iterations */}
+        
+        {/* Monte Carlo Results Strip */}
+        <K401Strip input={mcInput} />
         
         {/* Current Settings */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
