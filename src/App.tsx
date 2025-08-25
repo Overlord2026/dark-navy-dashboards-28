@@ -51,6 +51,12 @@ import ReviewSession from '@/pages/attorney/ReviewSession';
 import ReviewView from '@/pages/family/ReviewView';
 const RolloverWizard = React.lazy(() => import('@/pages/k401/RolloverWizard'));
 const AdvisorBook = React.lazy(() => import('@/pages/k401/AdvisorBook'));
+
+// K401 Delegated Access Components
+const ClientGrantAccess = React.lazy(() => import('@/pages/k401/ClientGrantAccess'));
+const AdvisorRequestAccess = React.lazy(() => import('@/pages/k401/AdvisorRequestAccess'));
+const ClientApproveSession = React.lazy(() => import('@/pages/k401/ClientApproveSession'));
+const AdvisorAssistConsole = React.lazy(() => import('@/pages/k401/AdvisorAssistConsole'));
 import VaultAutofillConsent from '@/pages/family/VaultAutofillConsent';
 import VaultAutofillReview from '@/pages/advisor/VaultAutofillReview';
 import ChecklistExport from '@/pages/supervisor/ChecklistExport';
@@ -252,6 +258,28 @@ function App() {
             <Route path="/k401/advisor" element={
               <Suspense fallback={<div>Loading...</div>}>
                 <AdvisorBook />
+              </Suspense>
+            } />
+            
+            {/* K401 Delegated Access Routes */}
+            <Route path="/k401/grant" element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <ClientGrantAccess />
+              </Suspense>
+            } />
+            <Route path="/k401/advisor/request" element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <AdvisorRequestAccess />
+              </Suspense>
+            } />
+            <Route path="/k401/approve" element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <ClientApproveSession />
+              </Suspense>
+            } />
+            <Route path="/k401/advisor/assist" element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <AdvisorAssistConsole />
               </Suspense>
             } />
             
