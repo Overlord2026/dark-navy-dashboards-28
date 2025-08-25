@@ -1,0 +1,34 @@
+entities:
+  Household: 
+    id: string
+    members: string[]
+    advisorId: string
+  Account:   
+    id: string
+    type: '401k' | 'IRA' | 'Taxable'
+    owner: string
+    provider: string
+  Plan:      
+    id: string
+    provider: string
+    sdb: boolean
+  Task:      
+    id: string
+    subject: string
+    due: string
+    status: 'open' | 'done'
+  Document:  
+    id: string
+    kind: string
+    fileId: string
+
+relations:
+  Household-has-Account: 
+    from: Household
+    to: Account
+  Account-in-Plan:       
+    from: Account
+    to: Plan
+  Task-for-Household:    
+    from: Task
+    to: Household
