@@ -75,7 +75,11 @@ export const FLAG_DESCRIPTIONS: Record<FeatureFlag, string> = {
   ADMIN_TOOLS_ENABLED: 'Show admin tools (panels, ready-check, etc.)',
   INSTALL_DEFAULT_TOOLS_ON_FIRST_LOGIN: 'Auto-install default tools for new users based on their persona',
   ANCHOR_ON_IMPORT: 'Enable blockchain anchoring for imported meetings',
-  MEETING_IMPORT_ENABLED: 'Allow importing meetings from external platforms'
+  MEETING_IMPORT_ENABLED: 'Allow importing meetings from external platforms',
+  CRYPTO_ENABLED: 'Enable crypto wallet management and portfolio tracking',
+  CRYPTO_TRADE_ENABLED: 'Enable crypto trading functionality',
+  CRYPTO_SELF_CUSTODY_ENABLED: 'Enable watch-only wallet support',
+  CRYPTO_TAX_ENABLED: 'Enable crypto tax lot tracking and Form 8949 export'
 };
 
 // Hook to use feature flags

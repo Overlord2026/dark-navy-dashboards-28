@@ -95,6 +95,11 @@ import NILAthleteHome from '@/pages/nil/NILAthleteHome';
 import MarketplacePage from '@/pages/nil/Marketplace';
 import NILIndex from '@/pages/nil/NILIndex';
 
+// Crypto Components
+const CryptoDashboard = React.lazy(() => import('@/pages/crypto/CryptoDashboard'));
+const BeneficiaryDirectives = React.lazy(() => import('@/pages/crypto/BeneficiaryDirectives'));
+const TradePanel = React.lazy(() => import('@/pages/crypto/TradePanel'));
+
 function App() {
   // Check authentication status (simplified for demo)
   const isAuthenticated = typeof window !== 'undefined' && 
