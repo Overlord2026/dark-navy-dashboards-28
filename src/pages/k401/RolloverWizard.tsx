@@ -114,7 +114,7 @@ export default function RolloverWizard() {
           // Optional anchoring for forms
           await maybeAnchor('k401.form', formHash);
           
-          await logFormGenerated(p.templateId, form.fileId);
+          await logFormGenerated(p.templateId, form.fileId, provider);
           files.push(form.fileId);
         }
       }
