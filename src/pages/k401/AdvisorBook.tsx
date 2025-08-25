@@ -25,6 +25,11 @@ export default function AdvisorBook() {
 
   async function bulk(kind: 'nudges.match' | 'nudges.rollover') {
     const ids = Object.keys(sel).filter(k => sel[k]);
+    if (ids.length === 0) {
+      alert('Please select clients first');
+      return;
+    }
+    
     await recordReceipt({ 
       type: 'Decision-RDS', 
       action: `k401.book.bulk.${kind}`, 
