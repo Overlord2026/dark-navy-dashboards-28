@@ -40,24 +40,51 @@ export const K401Panel: React.FC<K401PanelProps> = ({
   const userRole = getCurrentUserRole();
   const writable = canWrite(userRole);
   
-  // Create Monte Carlo input
-  const mcInput = React.useMemo(() => 
-    createMcInput(
-      currentAge,
-      retireAge,
-      currentBalance,
-      income,
-      deferralPct,
-      employerMatch,
-      retirementExpenses,
-      {
-        escalationPct: escalationEnabled ? 1 : 0,
-        sims: 10000
-      }
-    ), [currentAge, retireAge, currentBalance, income, deferralPct, employerMatch, retirementExpenses, escalationEnabled]
-  );
+  // Monte Carlo simulation
+  const mc = useMc401k();
+  const { loading, results, runSimulation } = mc;
   
-  const { output, isRunning, error } = useMc401k(mcInput);
+  const currentEmployerMatch = React.useMemo(() => {
+    if (employerMatch.kind === 'none') return 0;
+    if (employerMatch.kind === 'simple') {
+      const matchablePct = Math.min(deferralPct, employerMatch.limitPct || 0);
+      return income * (matchablePct / 100) * ((employerMatch.pct || 0) / 100);
+    }
+    return 0; // Simplified for tiered matches
+  }, [income, deferralPct, employerMatch]);
+  
+  const missedMatch = React.useMemo(() => {
+    if (employerMatch.kind === 'simple' && employerMatch.limitPct) {
+      if (deferralPct < employerMatch.limitPct) {
+        const missedPct = employerMatch.limitPct - deferralPct;
+        return income * (missedPct / 100) * ((employerMatch.pct || 0) / 100);
+      }
+    }
+    return 0;
+  }, [income, deferralPct, employerMatch]);
+  
+  // Run simulation when parameters change
+  React.useEffect(() => {
+    const params = {
+      currentValue: currentBalance,
+      monthlyContribution: (income * (deferralPct / 100)) / 12,
+      employerMatch: currentEmployerMatch / 12,
+      yearsToRetirement: retireAge - currentAge,
+      riskTolerance: 'moderate' as const
+    };
+    runSimulation(params);
+  }, [currentBalance, income, deferralPct, currentEmployerMatch, retireAge, currentAge, runSimulation]);
+  
+  // Convert results to legacy format for existing UI
+  const output = results.length > 0 ? {
+    successProb: results.find(r => r.scenario.includes('50th'))?.probability || 0.5,
+    p10End: currentBalance * 1.8,
+    p50End: currentBalance * 3.2,
+    p90End: currentBalance * 5.1
+  } : null;
+  
+  const isRunning = loading;
+  const error = null;
   
   const getSuccessColor = (probability: number) => {
     if (probability >= 0.85) return 'text-green-600 bg-green-50';
@@ -80,25 +107,6 @@ export const K401Panel: React.FC<K401PanelProps> = ({
     }).format(amount);
   };
   
-  const currentEmployerMatch = React.useMemo(() => {
-    if (employerMatch.kind === 'none') return 0;
-    if (employerMatch.kind === 'simple') {
-      const matchablePct = Math.min(deferralPct, employerMatch.limitPct || 0);
-      return income * (matchablePct / 100) * ((employerMatch.pct || 0) / 100);
-    }
-    return 0; // Simplified for tiered matches
-  }, [income, deferralPct, employerMatch]);
-  
-  const missedMatch = React.useMemo(() => {
-    if (employerMatch.kind === 'simple' && employerMatch.limitPct) {
-      if (deferralPct < employerMatch.limitPct) {
-        const missedPct = employerMatch.limitPct - deferralPct;
-        return income * (missedPct / 100) * ((employerMatch.pct || 0) / 100);
-      }
-    }
-    return 0;
-  }, [income, deferralPct, employerMatch]);
-  
   return (
     <Card className="w-full">
       <CardHeader>
@@ -112,7 +120,7 @@ export const K401Panel: React.FC<K401PanelProps> = ({
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Live Monte Carlo Strip */}
-        <K401Strip input={mcInput} />
+        <K401Strip />
         
         {/* Current Settings */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -206,7 +214,7 @@ export const K401Panel: React.FC<K401PanelProps> = ({
                   {Math.round(output.successProb * 100)}%
                 </div>
                 <div className="text-xs opacity-75">
-                  Money lasts to age {mcInput.longevityAge}
+                  Retirement readiness
                 </div>
               </div>
               
