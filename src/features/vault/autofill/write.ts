@@ -1,4 +1,5 @@
 import { recordReceipt } from '@/features/receipts/record';
+import { maybeAnchor } from '@/features/anchors/hooks';
 
 async function saveToVault(clientId: string, path: string, bytes: Uint8Array): Promise<{ fileId: string }> {
   // TODO: Integrate with actual Vault service (Keep-Safe/WORM)
@@ -70,16 +71,7 @@ export async function writeAndLog({
   } as any);
   
   // Optional anchoring
-  const anchorRef = await anchorIfEnabled(sha256);
-  if (anchorRef) {
-    await recordReceipt({
-      type: 'Decision-RDS',
-      action: 'vault.autofill.anchor',
-      reasons: [sha256.slice(0, 16), anchorRef.batch_id],
-      anchor_ref: anchorRef,
-      created_at: new Date().toISOString()
-    } as any);
-  }
+  const anchorRef = await maybeAnchor('vault.autofill', sha256);
   
   console.log(`[Vault] Successfully stored ${fileId}${anchorRef ? ' (anchored)' : ''}`);
   

@@ -5,7 +5,7 @@ import type { MergeCtx, ProviderRule } from '@/features/k401/forms/types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Download, Upload, Mail, Fax, AlertCircle } from 'lucide-react';
+import { Download, Upload, Mail, Send, AlertCircle } from 'lucide-react';
 
 interface GeneratedForm {
   name: string;
@@ -89,7 +89,7 @@ export const RolloverFormsGenerator: React.FC<RolloverFormsGeneratorProps> = ({
     switch (how) {
       case 'upload': return <Upload className="h-4 w-4" />;
       case 'mail': return <Mail className="h-4 w-4" />;
-      case 'fax': return <Fax className="h-4 w-4" />;
+      case 'fax': return <Send className="h-4 w-4" />;
       case 'esubmit': return <Download className="h-4 w-4" />;
       default: return <AlertCircle className="h-4 w-4" />;
     }

@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { useMc401k, createMcInput } from './useMc401k';
+import { useMc401k } from './useMc401k';
 import { TrendingUp, TrendingDown, Target, AlertTriangle, Loader2 } from 'lucide-react';
 import K401Strip from './K401Strip';
 import { canWrite, getCurrentUserRole, getRoleDisplayName } from '@/features/auth/roles';

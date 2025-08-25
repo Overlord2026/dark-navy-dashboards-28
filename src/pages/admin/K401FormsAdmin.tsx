@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { RULES_TOP8, getProviderRule } from '@/features/k401/forms/rulesTop8';
 import { generatePdfFromTemplate, mergeTags } from '@/features/k401/forms/merge';
 import type { ProviderRule, MergeCtx } from '@/features/k401/forms/types';
-import { Upload, Mail, Fax, Download, Save, Eye } from 'lucide-react';
+import { Upload, Mail, Send, Download, Save, Eye } from 'lucide-react';
 import { toast } from 'sonner';
 
 const K401FormsAdmin = () => {
@@ -67,7 +67,7 @@ const K401FormsAdmin = () => {
     switch (how) {
       case 'upload': return <Upload className="h-4 w-4" />;
       case 'mail': return <Mail className="h-4 w-4" />;
-      case 'fax': return <Fax className="h-4 w-4" />;
+      case 'fax': return <Send className="h-4 w-4" />;
       case 'esubmit': return <Download className="h-4 w-4" />;
       default: return <Download className="h-4 w-4" />;
     }

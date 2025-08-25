@@ -2,6 +2,7 @@ import React from 'react';
 import { generatePdfFromTemplate, saveFormToVault, logFormGenerated } from '@/features/k401/forms/merge';
 import { RULES_TOP8 } from '@/features/k401/forms/rulesTop8';
 import { recordReceipt } from '@/features/receipts/record';
+import { maybeAnchor, generateHash } from '@/features/anchors/hooks';
 import { canWrite, getCurrentUserRole, getRoleDisplayName } from '@/features/auth/roles';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -40,17 +41,22 @@ export default function RolloverWizard() {
     try {
       // Advice Summary
       const pdf = AdviceSummaryPDF({ ctx });
+      const hash = await generateHash(pdf);
       const { fileId } = await saveFormToVault(
         `Estate/401k/Rollover/${provider}/${new Date().getFullYear()}/PTE2020-02-${ctx.client.id}-v1.pdf`,
         pdf as any
       );
       
+      // Record content-free receipt
       await recordReceipt({
         type: 'Decision-RDS',
         action: 'rollover.fee.compare',
-        reasons: [provider, 'pte2020-02'],
+        reasons: [provider, 'pte2020-02', hash.slice(0, 16)],
         created_at: new Date().toISOString()
       } as any);
+      
+      // Optional anchoring
+      await maybeAnchor('k401.advice', hash);
 
       const files = [fileId];
 
@@ -66,10 +72,22 @@ export default function RolloverWizard() {
             rollover: { type: 'IRA' }
           } as any);
           
+          const formHash = await generateHash(merged);
           const form = await saveFormToVault(
             `Estate/401k/Rollover/${provider}/${new Date().getFullYear()}/${p.templateId}-${ctx.client.id}-v1.pdf`,
             merged
           );
+          
+          // Record form generation receipt (content-free)
+          await recordReceipt({
+            type: 'Decision-RDS',
+            action: 'k401.form.generated',
+            reasons: [p.templateId, formHash.slice(0, 16)],
+            created_at: new Date().toISOString()
+          } as any);
+          
+          // Optional anchoring for forms
+          await maybeAnchor('k401.form', formHash);
           
           await logFormGenerated(p.templateId, form.fileId);
           files.push(form.fileId);
@@ -79,7 +97,7 @@ export default function RolloverWizard() {
       setGeneratedFiles(files);
       toast({
         title: "Success",
-        description: "Advice Summary & forms generated to Vault",
+        description: "Advice Summary & forms generated to Vault (with receipts)",
       });
     } catch (error) {
       toast({
