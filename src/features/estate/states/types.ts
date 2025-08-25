@@ -6,11 +6,14 @@ export interface EstateRule {
     notaryRequired: boolean;
     witnesses?: number;
     notary?: boolean;
+    selfProving?: boolean;
   };
   rlt: {
     allowed: boolean;
     successorTrusteeRequired: boolean;
     notary?: boolean;
+    witnesses?: number;
+    trusteeSuccession?: string[];
   };
   pourOver: {
     required: boolean;
@@ -22,10 +25,12 @@ export interface EstateRule {
     durabilityRequired: boolean;
     notary?: boolean;
     witnesses?: number;
+    durability?: string;
   };
   healthcarePoa: {
     required: boolean;
     notaryRequired: boolean;
+    witnessCount?: number;
   };
   advanceDirective: {
     required: boolean;
@@ -46,6 +51,10 @@ export interface EstateRule {
   probateNotes?: string[];
   todPodAllowed?: boolean;
   deedPracticeNote?: string;
+  probateThreshold?: number;
+  homesteadExemption?: number;
+  spousalElection?: boolean;
+  specialNotes?: string[];
 }
 
 export interface HealthcareRule {

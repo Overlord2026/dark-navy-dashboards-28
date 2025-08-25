@@ -6,16 +6,20 @@ export type { EstateRule } from './types';
 export function conservativeEstateRule(state: string): EstateRule {
   return {
     state,
-    will: { required: true, witnessCount: 2, notaryRequired: true },
-    rlt: { allowed: true, successorTrusteeRequired: true },
+    will: { required: true, witnessCount: 2, notaryRequired: true, witnesses: 2, notary: true, selfProving: true },
+    rlt: { allowed: true, successorTrusteeRequired: true, notary: false, witnesses: 0, trusteeSuccession: ['Spouse', 'Adult Children'] },
     pourOver: { required: false, witnessCount: 2 },
-    poa: { required: true, notaryRequired: true, durabilityRequired: true },
-    healthcarePoa: { required: true, notaryRequired: true },
+    poa: { required: true, notaryRequired: true, durabilityRequired: true, notary: true, witnesses: 0, durability: 'Durable' },
+    healthcarePoa: { required: true, notaryRequired: true, witnessCount: 2 },
     advanceDirective: { required: true, witnessCount: 2 },
     hipaa: { required: true },
     propertyDeed: { allowed: ['warranty', 'quitclaim'], recordingRequired: true },
     beneficiaryDesignations: { required: ['401k', 'ira', 'life_insurance'] },
-    fundingRequirements: ['bank_accounts', 'investment_accounts', 'real_estate']
+    fundingRequirements: ['bank_accounts', 'investment_accounts', 'real_estate'],
+    probateThreshold: 150000,
+    homesteadExemption: 50000,
+    spousalElection: true,
+    specialNotes: [`${state} estate planning requirements`]
   };
 }
 
@@ -68,12 +72,28 @@ export function getEstateRule(state: string): EstateRule {
   return ESTATE_RULES[state] || conservativeEstateRule(state);
 }
 
-export function useEstateRules() {
+export function useEstateRules(state?: string) {
+  if (state) {
+    return getEstateRule(state);
+  }
   return { ESTATE_RULES, getEstateRule };
 }
 
 export type { HealthcareRule } from './types';
 
-export function useHealthcareRules() {
+export function useHealthcareRules(state?: string) {
+  if (state) {
+    const rule = getEstateRule(state);
+    return {
+      witnesses: rule.healthcarePoa.witnessCount || 2,
+      notaryRequired: rule.healthcarePoa.notaryRequired,
+      surrogateTerminology: 'Healthcare Proxy',
+      notarizationText: `${state} state notarization requirements`,
+      witnessEligibility: 'Adults who are not related or financially interested',
+      specialNotes: [`${state} specific healthcare directive requirements`],
+      remoteNotaryAllowed: false,
+      healthcareForms: ['Healthcare POA', 'Advance Directive', 'HIPAA Authorization']
+    };
+  }
   return { ESTATE_RULES, getEstateRule };
 }
