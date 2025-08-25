@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { recordReceipt } from '@/features/receipts/record';
+import { maybeAnchor, generateHash } from '@/features/anchors/hooks';
 import type { McInput, McOutput } from '@/workers/mc401k.worker';
 
 export function useMc401k(input: McInput) {
@@ -23,14 +24,19 @@ export function useMc401k(input: McInput) {
     worker.addEventListener('message', handler as any);
     worker.postMessage(input);
     
-    // Log content-free receipt
+    // Log content-free receipt with optional anchoring
     (async () => {
+      const inputHash = await generateHash(JSON.stringify(input));
+      
       await recordReceipt({ 
         type: 'Decision-RDS', 
         action: 'roadmap.mc.run', 
-        reasons: ['401k', 'inputs_hash'], 
+        reasons: ['401k', inputHash.slice(0, 16)], 
         created_at: new Date().toISOString() 
       } as any);
+      
+      // Optional anchoring
+      await maybeAnchor('roadmap.mc', inputHash);
     })();
     
     return () => worker.removeEventListener('message', handler as any);

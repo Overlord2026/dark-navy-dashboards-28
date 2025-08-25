@@ -3,6 +3,7 @@ import { upsertPlan, upsertAccount, upsertContrib } from '@/features/k401/store'
 import { linkProvider } from '@/features/k401/connectors';
 import { recordReceipt } from '@/features/receipts/record';
 import { canWrite, getCurrentUserRole, getRoleDisplayName } from '@/features/auth/roles';
+import { maybeAnchor, generateHash } from '@/features/anchors/hooks';
 
 export default function Link401k(){
   const [provider,setProvider]=React.useState<'Vanguard'|'Fidelity'|'Schwab'|'Other'>('Fidelity');
@@ -20,11 +21,13 @@ export default function Link401k(){
   async function save(){
     const pid = planId||crypto.randomUUID();
     const aid = accountId||crypto.randomUUID();
-    await upsertPlan({ planId:pid, provider, match: matchType==='simple'
+    const planData = { planId:pid, provider, match: matchType==='simple'
       ? { type:'simple', pctOfComp:simplePct, limitPct }
       : matchType==='tiered'
       ? { type:'tiered', tiers:[{ matchPct:100, compPct:3 },{ matchPct:50, compPct:2 }] }
-      : { type:'none' }, updatedAt:new Date().toISOString() });
+      : { type:'none' }, updatedAt:new Date().toISOString() };
+
+    await upsertPlan(planData);
     await upsertAccount({ accountId:aid, planId:pid, ownerUserId:'ME', balance:0,
       sources:{preTax:0,roth:0,employer:0,afterTax:0}, updatedAt:new Date().toISOString() });
     await upsertContrib(aid, { employeePct, employerMatch: matchType==='simple'
@@ -33,8 +36,15 @@ export default function Link401k(){
       : { type:'none' }, frequency:'per_pay' });
 
     if (method==='Aggregator') await linkProvider(aid, provider, 'Plaid' as any, 'consent-123');
+    
+    // Content-free receipts with optional anchoring
+    const planHash = await generateHash(JSON.stringify(planData));
     await recordReceipt({ type:'Consent-RDS', scope:{ 'k401.data':[aid, provider] }, result:'approve', created_at:new Date().toISOString() } as any);
-    await recordReceipt({ type:'Decision-RDS', action:'k401.link', reasons:[provider, method], created_at:new Date().toISOString() } as any);
+    await recordReceipt({ type:'Decision-RDS', action:'k401.link', reasons:[provider, method, planHash.slice(0, 16)], created_at:new Date().toISOString() } as any);
+    
+    // Optional anchoring
+    await maybeAnchor('k401.link', planHash);
+    
     alert('Linked!');
   }
 
