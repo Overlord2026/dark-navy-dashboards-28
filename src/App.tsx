@@ -43,6 +43,7 @@ import RulesCoverage from '@/pages/admin/RulesCoverage';
 import RulesImport from '@/pages/admin/RulesImport';
 import AiAudit from '@/pages/admin/AiAudit';
 import K401ChecklistRunner from '@/pages/admin/K401ChecklistRunner';
+import MigrationHub from '@/pages/admin/MigrationHub';
 import RulesExport from '@/pages/admin/RulesExport';
 import RulesReplaceCounty from '@/pages/admin/RulesReplaceCounty';
 import RulesReplaceStates from '@/pages/admin/RulesReplaceStates';
@@ -324,7 +325,8 @@ function App() {
             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/env" element={<EnvInspector />} />}
             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/ai/audit" element={<AiAudit />} />}
             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/k401/partner" element={<K401Partner />} />}
-            {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/k401/checklist" element={<K401ChecklistRunner />} />}
+             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/k401/checklist" element={<K401ChecklistRunner />} />}
+             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/migration" element={<MigrationHub />} />}
             
             {/* Demo Routes */}
             {getFlag('DEMOS_ENABLED') && (
