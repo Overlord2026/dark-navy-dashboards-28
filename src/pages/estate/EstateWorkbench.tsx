@@ -20,6 +20,7 @@ import { scanBeneficiaries } from '@/features/estate/beneficiary/sync';
 import { toast } from 'sonner';
 import { analytics } from '@/lib/analytics';
 import { FamilyDeedRequest } from '@/features/estate/deeds/FamilyDeedRequest';
+import { includeCryptoInEstatePacket } from '@/features/crypto/estate/includeInEstate';
 
 const EstateWorkbench = () => {
   const [activeTab, setActiveTab] = useState('diagram');
@@ -193,6 +194,12 @@ const EstateWorkbench = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleIncludeCrypto = async () => {
+    const userId = 'demo-user';
+    const walletIds = ['wallet_btc_main', 'wallet_eth_defi'];
+    await includeCryptoInEstatePacket(userId, walletIds);
   };
 
   return (
@@ -468,11 +475,30 @@ const EstateWorkbench = () => {
                   </Button>
                 </div>
                 
+                <div className="border-t pt-4">
+                  <div className="flex justify-between items-center mb-4">
+                    <div>
+                      <p className="font-medium">Crypto Estate Directives</p>
+                      <p className="text-sm text-muted-foreground">
+                        Include crypto directives and statements in estate packet
+                      </p>
+                    </div>
+                    <Button 
+                      onClick={handleIncludeCrypto} 
+                      disabled={loading}
+                      variant="outline"
+                    >
+                      Include Crypto in Estate Packet
+                    </Button>
+                  </div>
+                </div>
+                
                 <div className="p-4 bg-muted rounded-lg">
                   <h3 className="font-medium mb-2">Binder Contents</h3>
                   <ul className="text-sm text-muted-foreground space-y-1">
                     <li>• Estate planning documents (PDFs)</li>
                     <li>• Authority grants and beneficiary forms</li>
+                    <li>• Crypto directives and wallet statements</li>
                     <li>• Receipt trail (content-free)</li>
                     <li>• Manifest with cryptographic hash</li>
                     <li>• Execution checklists by state</li>

@@ -1,54 +1,68 @@
+// Crypto vault export functionality
 import { recordReceipt } from '@/features/receipts/record';
 
-export async function exportStatementsToVault(walletId: string): Promise<{ fileId: string }> {
-  // TODO: fetch statements from exchange; save to Vault (Keep-Safe)
-  const fileId = `vault://crypto/${walletId}/statements-${new Date().getFullYear()}.zip`;
-  
-  await recordReceipt({ 
-    type: 'Vault-RDS', 
-    bucket: 'Keep-Safe', 
-    file_id: fileId, 
-    created_at: new Date().toISOString() 
-  });
-  
-  return { fileId };
+export interface CryptoStatement {
+  walletId: string;
+  balance: number;
+  currency: string;
+  lastUpdated: string;
+  transactions: Array<{
+    hash: string;
+    amount: number;
+    timestamp: string;
+    type: 'send' | 'receive';
+  }>;
 }
 
-export async function exportDirectivesToVault(
-  userId: string, 
-  directives: any[]
-): Promise<{ fileId: string }> {
-  const fileId = `vault://crypto/estate/${userId}/beneficiary-directives-${Date.now()}.pdf`;
-  
-  await recordReceipt({
-    type: 'Vault-RDS',
-    bucket: 'Keep-Safe',
-    file_id: fileId,
-    created_at: new Date().toISOString()
-  });
-  
-  await recordReceipt({
-    type: 'Decision-RDS',
-    action: 'crypto.estate.directives.archived',
-    reasons: [userId, String(directives.length)],
-    created_at: new Date().toISOString()
-  });
-  
-  return { fileId };
-}
+export async function exportStatementsToVault(walletId: string): Promise<void> {
+  try {
+    // Mock crypto statement generation
+    const statement: CryptoStatement = {
+      walletId,
+      balance: Math.random() * 10,
+      currency: walletId.includes('btc') ? 'BTC' : 'ETH',
+      lastUpdated: new Date().toISOString(),
+      transactions: [
+        {
+          hash: `0x${Math.random().toString(16).substr(2, 64)}`,
+          amount: Math.random() * 0.5,
+          timestamp: new Date(Date.now() - Math.random() * 86400000).toISOString(),
+          type: Math.random() > 0.5 ? 'receive' : 'send'
+        }
+      ]
+    };
 
-export async function exportTaxReportToVault(
-  walletId: string,
-  year: number
-): Promise<{ fileId: string }> {
-  const fileId = `vault://crypto/tax/${walletId}/tax-report-${year}.pdf`;
-  
-  await recordReceipt({
-    type: 'Vault-RDS',
-    bucket: 'Keep-Safe',
-    file_id: fileId,
-    created_at: new Date().toISOString()
-  });
-  
-  return { fileId };
+    // Generate statement as JSON (would be PDF in production)
+    const statementJson = JSON.stringify(statement, null, 2);
+    
+    // Save to mock vault storage
+    const vaultFiles = JSON.parse(localStorage.getItem('vault_files') || '[]');
+    const fileName = `crypto_statement_${walletId}_${Date.now()}.json`;
+    
+    vaultFiles.push({
+      id: `file_${Date.now()}`,
+      name: fileName,
+      type: 'crypto_statement',
+      content: statementJson,
+      walletId,
+      uploadedAt: new Date().toISOString(),
+      size: statementJson.length
+    });
+    
+    localStorage.setItem('vault_files', JSON.stringify(vaultFiles));
+    
+    // Record export receipt
+    await recordReceipt({
+      type: 'Vault-RDS',
+      action: 'crypto.statement.export',
+      reasons: [walletId, 'vault_stored'],
+      created_at: new Date().toISOString()
+    } as any);
+    
+    console.log(`✅ Exported crypto statement for wallet ${walletId} to vault`);
+    
+  } catch (error) {
+    console.error(`❌ Failed to export statement for wallet ${walletId}:`, error);
+    throw error;
+  }
 }
