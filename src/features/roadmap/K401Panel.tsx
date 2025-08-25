@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { useMc401k } from './useMc401k';
 import { TrendingUp, TrendingDown, Target, AlertTriangle, Loader2 } from 'lucide-react';
-import K401Strip from './K401Strip';
+
 import { canWrite, getCurrentUserRole, getRoleDisplayName } from '@/features/auth/roles';
 
 interface K401PanelProps {
@@ -40,9 +40,24 @@ export const K401Panel: React.FC<K401PanelProps> = ({
   const userRole = getCurrentUserRole();
   const writable = canWrite(userRole);
   
-  // Monte Carlo simulation
-  const mc = useMc401k();
-  const { loading, results, runSimulation } = mc;
+  // Monte Carlo simulation input
+  const mcInput = React.useMemo(() => ({
+    currentAge,
+    retireAge,
+    longevityAge: 90,
+    currentBalance,
+    income,
+    employeePct: deferralPct,
+    employerRule: employerMatch,
+    annualEscalationPct: escalationEnabled ? 1 : 0,
+    expRetExpenses: retirementExpenses,
+    sims: 10000,
+    mean: 0.07,
+    stdev: 0.15,
+    inflation: 0.025
+  }), [currentAge, retireAge, currentBalance, income, deferralPct, employerMatch, escalationEnabled, retirementExpenses]);
+
+  const { result, loading } = useMc401k(mcInput);
   
   const currentEmployerMatch = React.useMemo(() => {
     if (employerMatch.kind === 'none') return 0;
@@ -63,25 +78,8 @@ export const K401Panel: React.FC<K401PanelProps> = ({
     return 0;
   }, [income, deferralPct, employerMatch]);
   
-  // Run simulation when parameters change
-  React.useEffect(() => {
-    const params = {
-      currentValue: currentBalance,
-      monthlyContribution: (income * (deferralPct / 100)) / 12,
-      employerMatch: currentEmployerMatch / 12,
-      yearsToRetirement: retireAge - currentAge,
-      riskTolerance: 'moderate' as const
-    };
-    runSimulation(params);
-  }, [currentBalance, income, deferralPct, currentEmployerMatch, retireAge, currentAge, runSimulation]);
-  
-  // Convert results to legacy format for existing UI
-  const output = results.length > 0 ? {
-    successProb: results.find(r => r.scenario.includes('50th'))?.probability || 0.5,
-    p10End: currentBalance * 1.8,
-    p50End: currentBalance * 3.2,
-    p90End: currentBalance * 5.1
-  } : null;
+  // Use Monte Carlo results
+  const output = result;
   
   const isRunning = loading;
   const error = null;
@@ -119,8 +117,7 @@ export const K401Panel: React.FC<K401PanelProps> = ({
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
-        {/* Live Monte Carlo Strip */}
-        <K401Strip />
+        {/* Monte Carlo simulation running with 10k iterations */}
         
         {/* Current Settings */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
