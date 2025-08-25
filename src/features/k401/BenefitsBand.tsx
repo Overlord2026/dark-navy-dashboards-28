@@ -21,12 +21,12 @@ function Tile({title, bullets, ctas}:{title:string; bullets:string[]; ctas:Array
 export default function K401BenefitsBand({ persona }:{ persona:'family'|'advisor'|'insurance'}){
   if (persona==='family') return (
     <div className="grid md:grid-cols-3 gap-3">
-      <Tile title="Make your 401(k) work harder"
+      <Tile title="Make your 401(k) work harder — automatically"
         bullets={[
-          'Always capture the match (nudges + auto-escalation).',
-          'Retirement date with ongoing contributions & match.',
-          'One-click Rollover Wizard when it\'s time.',
-          'Managed guidance if in-plan trading is restricted.'
+          'Always capture the match. We monitor contributions and nudge you to full-match.',
+          'See your real retirement date. Your 401(k), ongoing contributions, employer match, expenses, and longevity feed right into your Retirement Roadmap.',
+          'One-click rollover help. When it\'s time, we handle paperwork and tracking; you get a clean, auditable file with all fee comparisons.',
+          'Option to keep assets in-plan. If your employer restricts trading, we provide managed guidance and document every step with tamper-evident receipts.'
         ]}
         ctas={[
           { label:'Link my 401(k)', to:'/k401/link' },
@@ -39,12 +39,12 @@ export default function K401BenefitsBand({ persona }:{ persona:'family'|'advisor
   );
   if (persona==='advisor') return (
     <div className="grid md:grid-cols-3 gap-3">
-      <Tile title="A control plane for every 401(k)"
+      <Tile title="A control plane for every client's 401(k)"
         bullets={[
-          'Book view with risk flags & one-click fixes.',
-          'Managed accounts & SDBA autotrade (explainable).',
-          'Rollover Studio with PTE 2020-02 docs.',
-          'Role-gated views for CPA & attorney.'
+          'Book of plans view. Risk flags: under-match, fee drag, IPS violations, SDBA available but idle, rollover candidates.',
+          'Managed accounts & SDBA autotrade (where permitted) with explainable models and receipts you can prove.',
+          'Rollover Studio. PTE 2020-02 fee comparison, rationale, and paperwork pack — all archived in WORM Vault.',
+          'One team workspace. CPAs and attorneys can see what you see (role-gated), and every recommendation leaves an auditable trail.'
         ]}
         ctas={[
           { label:'Open 401(k) Book', to:'/k401/advisor' },
@@ -58,11 +58,11 @@ export default function K401BenefitsBand({ persona }:{ persona:'family'|'advisor
   // insurance
   return (
     <div className="grid md:grid-cols-3 gap-3">
-      <Tile title="Turn uncertain income into guaranteed income"
+      <Tile title="Turn uncertain income into guaranteed income (when suitable)"
         bullets={[
-          'Rollover-to-annuity path with suitability checks.',
-          'Side-by-side outcomes vs. in-plan.',
-          'Prefilled forms & e-sign; proof-slipped to Vault.'
+          'Rollover-to-annuity checklist baked into the wizard (funding sources, suitability, fee comparison).',
+          'Side-by-side outcomes: staying in the plan vs. partial rollover to a guaranteed income annuity.',
+          'Paperwork & signatures: prefilled forms, e-sign where allowed, all proof-slipped to Vault.'
         ]}
         ctas={[
           { label:'Rollover to Income', to:'/k401/rollover?annuity=true' },
