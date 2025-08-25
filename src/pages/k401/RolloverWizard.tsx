@@ -2,6 +2,7 @@ import React from 'react';
 import { generatePdfFromTemplate, saveFormToVault, logFormGenerated } from '@/features/k401/forms/merge';
 import { RULES_TOP8 } from '@/features/k401/forms/rulesTop8';
 import { recordReceipt } from '@/features/receipts/record';
+import { canWrite, getCurrentUserRole, getRoleDisplayName } from '@/features/auth/roles';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -31,6 +32,8 @@ export default function RolloverWizard() {
   const [isGenerating, setIsGenerating] = React.useState(false);
   const [generatedFiles, setGeneratedFiles] = React.useState<string[]>([]);
   const { toast } = useToast();
+  const userRole = getCurrentUserRole();
+  const writable = canWrite(userRole);
 
   async function generate() {
     setIsGenerating(true);
@@ -95,6 +98,7 @@ export default function RolloverWizard() {
         <h1 className="text-3xl font-bold mb-2">401(k) Rollover Wizard</h1>
         <p className="text-muted-foreground">
           Generate PTE 2020-02 fee comparison and provider forms
+          {!writable && <span className="ml-2 px-2 py-1 bg-amber-100 text-amber-800 rounded-md text-xs">Read-only ({getRoleDisplayName(userRole)})</span>}
         </p>
       </div>
 
@@ -199,8 +203,9 @@ export default function RolloverWizard() {
             </div>
             <Button 
               onClick={generate} 
-              disabled={isGenerating}
+              disabled={isGenerating || !writable}
               className="min-w-[200px]"
+              title={!writable ? "Read-only access" : ""}
             >
               {isGenerating ? (
                 <>Generating...</>

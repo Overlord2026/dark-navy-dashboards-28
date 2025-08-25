@@ -1,5 +1,6 @@
 import React from 'react';
 import { recordReceipt } from '@/features/receipts/record';
+import { canWrite, getCurrentUserRole } from '@/features/auth/roles';
 
 type Row = { 
   clientId: string; 
@@ -32,6 +33,8 @@ export default function AdvisorBook() {
   }
 
   const selectedCount = Object.values(sel).filter(Boolean).length;
+  const userRole = getCurrentUserRole();
+  const writable = canWrite(userRole);
 
   return (
     <div className="p-6 space-y-4">
@@ -39,6 +42,7 @@ export default function AdvisorBook() {
         <h1 className="text-2xl font-semibold">401(k) Book</h1>
         <div className="text-sm text-muted-foreground">
           {rows.length} clients • {selectedCount} selected
+          {!writable && <span className="ml-2 px-2 py-1 bg-amber-100 text-amber-800 rounded-md text-xs">Read-only</span>}
         </div>
       </div>
       
@@ -46,17 +50,24 @@ export default function AdvisorBook() {
         <button 
           className="rounded-xl border border-amber-200 bg-amber-50 text-amber-800 px-3 py-2 text-sm font-medium hover:bg-amber-100 disabled:opacity-50"
           onClick={() => bulk('nudges.match')}
-          disabled={selectedCount === 0}
+          disabled={selectedCount === 0 || !writable}
+          title={!writable ? "Read-only access" : ""}
         >
           Nudge: Full Match ({selectedCount})
         </button>
         <button 
           className="rounded-xl border border-green-200 bg-green-50 text-green-800 px-3 py-2 text-sm font-medium hover:bg-green-100 disabled:opacity-50"
           onClick={() => bulk('nudges.rollover')}
-          disabled={selectedCount === 0}
+          disabled={selectedCount === 0 || !writable}
+          title={!writable ? "Read-only access" : ""}
         >
           Nudge: Rollover ({selectedCount})
         </button>
+        {!writable && (
+          <div className="text-xs text-muted-foreground flex items-center ml-2">
+            Actions disabled in read-only mode
+          </div>
+        )}
       </div>
 
       <div className="rounded-xl border overflow-auto bg-background">

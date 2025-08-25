@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { useMc401k, createMcInput } from './useMc401k';
 import { TrendingUp, TrendingDown, Target, AlertTriangle, Loader2 } from 'lucide-react';
 import K401Strip from './K401Strip';
+import { canWrite, getCurrentUserRole, getRoleDisplayName } from '@/features/auth/roles';
 
 interface K401PanelProps {
   currentAge?: number;
@@ -35,6 +36,9 @@ export const K401Panel: React.FC<K401PanelProps> = ({
   const [deferralPct, setDeferralPct] = React.useState(initialDeferralPct);
   const [escalationEnabled, setEscalationEnabled] = React.useState(true);
   const [retirementExpenses, setRetirementExpenses] = React.useState(expectedExpenses);
+  
+  const userRole = getCurrentUserRole();
+  const writable = canWrite(userRole);
   
   // Create Monte Carlo input
   const mcInput = React.useMemo(() => 
@@ -100,7 +104,10 @@ export const K401Panel: React.FC<K401PanelProps> = ({
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
           <span>401(k) Monte Carlo Analysis</span>
-          {isRunning && <Loader2 className="h-4 w-4 animate-spin" />}
+          <div className="flex items-center gap-2">
+            {!writable && <Badge variant="secondary" className="text-xs">Read-only ({getRoleDisplayName(userRole)})</Badge>}
+            {isRunning && <Loader2 className="h-4 w-4 animate-spin" />}
+          </div>
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -118,7 +125,8 @@ export const K401Panel: React.FC<K401PanelProps> = ({
                 max={22}
                 step={0.5}
                 value={[deferralPct]}
-                onValueChange={(value) => setDeferralPct(value[0])}
+                onValueChange={(value) => writable && setDeferralPct(value[0])}
+                disabled={!writable}
                 className="mt-2"
               />
             </div>
@@ -129,7 +137,8 @@ export const K401Panel: React.FC<K401PanelProps> = ({
                 id="expenses-input"
                 type="number"
                 value={retirementExpenses}
-                onChange={(e) => setRetirementExpenses(Number(e.target.value))}
+                onChange={(e) => writable && setRetirementExpenses(Number(e.target.value))}
+                disabled={!writable}
                 className="mt-1"
               />
             </div>
@@ -139,7 +148,8 @@ export const K401Panel: React.FC<K401PanelProps> = ({
                 type="checkbox"
                 id="escalation-check"
                 checked={escalationEnabled}
-                onChange={(e) => setEscalationEnabled(e.target.checked)}
+                onChange={(e) => writable && setEscalationEnabled(e.target.checked)}
+                disabled={!writable}
               />
               <Label htmlFor="escalation-check">Auto-escalate deferral (+1% annually)</Label>
             </div>
