@@ -14,14 +14,17 @@ export default function ReviewView() {
   const [executionInstructions, setExecutionInstructions] = useState('');
 
   useEffect(() => {
-    if (id) {
-      const sessions = getAllReviewSessions();
-      const foundSession = sessions.find(s => s.id === id);
-      if (foundSession) {
-        setSession(foundSession);
-        setExecutionInstructions(generateExecutionInstructions(foundSession.state));
+    const loadSession = async () => {
+      if (id) {
+        const sessions = await getAllReviewSessions();
+        const foundSession = sessions.find((s: any) => s.id === id);
+        if (foundSession) {
+          setSession(foundSession);
+          setExecutionInstructions(generateExecutionInstructions(foundSession.state));
+        }
       }
-    }
+    };
+    loadSession();
   }, [id]);
 
   const handleDownload = (type: 'packet' | 'letter' | 'instructions') => {

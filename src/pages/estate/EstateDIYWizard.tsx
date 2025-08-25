@@ -30,7 +30,7 @@ const EstateDIYWizard = () => {
   const [paymentComplete, setPaymentComplete] = useState(false);
   const [documentsGenerated, setDocumentsGenerated] = useState(false);
 
-  const estateRules = useEstateRules(formData.state);
+  const estateRules = useEstateRules(formData.state) as any;
   const totalSteps = 6;
   const progress = (currentStep / totalSteps) * 100;
 

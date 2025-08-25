@@ -3,32 +3,119 @@ entities:
     id: string
     members: string[]
     advisorId: string
-  Account:   
+    primaryContact: string
+    taxFilingStatus: 'MFJ' | 'MFS' | 'Single' | 'HOH'
+    estimatedNetWorth: number
+  
+  Account:
     id: string
-    type: '401k' | 'IRA' | 'Taxable'
+    type: '401k' | 'IRA' | 'Roth_IRA' | 'Taxable' | 'HSA' | 'Trust' | 'Custodial'
     owner: string
     provider: string
-  Plan:      
+    balance: number
+    performanceYTD: number
+    riskLevel: 'Conservative' | 'Moderate' | 'Aggressive'
+  
+  Plan:
     id: string
-    provider: string
-    sdb: boolean
-  Task:      
+    provider: 'Vanguard' | 'Fidelity' | 'Schwab' | 'Empower' | 'Principal' | 'Other'
+    planType: '401k' | '403b' | '457' | 'TSP'
+    sdbAvailable: boolean
+    maxContribution: number
+    employerMatch: boolean
+    vestingSchedule: 'Immediate' | 'Graded' | 'Cliff'
+  
+  Task:
     id: string
     subject: string
+    description: string
+    assignee: string
     due: string
-    status: 'open' | 'done'
-  Document:  
+    priority: 'Low' | 'Medium' | 'High' | 'Critical'
+    status: 'open' | 'in_progress' | 'completed' | 'cancelled'
+    category: 'estate' | 'retirement' | 'tax' | 'insurance' | 'investment'
+  
+  Document:
     id: string
-    kind: string
+    kind: 'Will' | 'Trust' | 'POA' | 'Healthcare_POA' | 'HIPAA' | 'Tax_Return' | 'Statement' | 'Policy'
     fileId: string
+    title: string
+    createdAt: string
+    lastModified: string
+    version: number
+    status: 'draft' | 'review' | 'executed' | 'archived'
+  
+  Persona:
+    id: string
+    role: 'Family' | 'Advisor' | 'CPA' | 'Attorney' | 'Insurance' | 'NIL' | 'Health'
+    permissions: string[]
+    accessLevel: 'Read' | 'Write' | 'Admin'
+    specializations: string[]
+
+  Event:
+    id: string
+    type: string
+    timestamp: string
+    actor: string
+    subject: string
+    metadata: object
+    severity: 'Info' | 'Warning' | 'Error' | 'Critical'
 
 relations:
   Household-has-Account: 
     from: Household
     to: Account
-  Account-in-Plan:       
+    relationship: 'owns'
+    
+  Account-in-Plan: 
     from: Account
     to: Plan
-  Task-for-Household:    
+    relationship: 'participates_in'
+    
+  Task-for-Household: 
     from: Task
     to: Household
+    relationship: 'assigned_to'
+    
+  Document-belongs-to-Household:
+    from: Document
+    to: Household
+    relationship: 'property_of'
+    
+  Persona-serves-Household:
+    from: Persona
+    to: Household
+    relationship: 'professional_service'
+    
+  Event-affects-Entity:
+    from: Event
+    to: '*'
+    relationship: 'impacts'
+
+workflows:
+  retirement_planning:
+    trigger: 'assessment_request'
+    steps:
+      - gather_household_data
+      - analyze_current_accounts
+      - project_retirement_needs
+      - generate_recommendations
+      - create_action_tasks
+    
+  estate_planning:
+    trigger: 'estate_review_request'
+    steps:
+      - conflict_check
+      - gather_family_info
+      - draft_documents
+      - attorney_review
+      - execution_coordination
+    
+  tax_planning:
+    trigger: 'tax_season_start'
+    steps:
+      - gather_tax_documents
+      - analyze_tax_situation
+      - identify_optimization_opportunities
+      - implement_strategies
+      - file_returns

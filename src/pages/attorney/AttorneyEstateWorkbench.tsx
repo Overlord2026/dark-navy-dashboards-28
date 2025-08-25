@@ -89,7 +89,7 @@ export default function AttorneyEstateWorkbench() {
         const pdfBytes = await renderEstatePdf(
           docType as 'Will' | 'RLT' | 'POA',
           tokens,
-          estateRules
+          estateRules as any
         );
         console.log(`Generated ${docType}:`, pdfBytes.length, 'bytes');
       }

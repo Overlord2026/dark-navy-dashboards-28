@@ -22,17 +22,17 @@ export default function Link401k(){
     const pid = planId||crypto.randomUUID();
     const aid = accountId||crypto.randomUUID();
     const planData = { planId:pid, provider, match: matchType==='simple'
-      ? { type:'simple', pctOfComp:simplePct, limitPct }
+      ? { type:'simple' as const, pctOfComp:simplePct, limitPct }
       : matchType==='tiered'
-      ? { type:'tiered', tiers:[{ matchPct:100, compPct:3 },{ matchPct:50, compPct:2 }] }
-      : { type:'none' }, updatedAt:new Date().toISOString() };
+      ? { type:'tiered' as const, tiers:[{ matchPct:100, compPct:3 },{ matchPct:50, compPct:2 }] }
+      : { type:'none' as const }, updatedAt:new Date().toISOString() };
 
     await upsertPlan(planData);
     await upsertAccount({ accountId:aid, planId:pid, ownerUserId:'ME', balance:0,
       sources:{preTax:0,roth:0,employer:0,afterTax:0}, updatedAt:new Date().toISOString() });
     await upsertContrib(aid, { employeePct, employerMatch: matchType==='simple'
-      ? { type:'simple', pctOfComp:simplePct, limitPct }
-      : matchType==='tiered'? { type:'tiered', tiers:[{matchPct:100,compPct:3},{matchPct:50,compPct:2}] }
+      ? { type:'simple' as const, pctOfComp:simplePct, limitPct }
+      : matchType==='tiered'? { type:'tiered' as const, tiers:[{matchPct:100,compPct:3},{matchPct:50,compPct:2}] }
       : { type:'none' }, frequency:'per_pay' });
 
     if (method==='Aggregator') await linkProvider(aid, provider, 'Plaid' as any, 'consent-123');

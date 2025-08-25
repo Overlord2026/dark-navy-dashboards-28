@@ -31,15 +31,18 @@ export default function ReviewSession() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (id) {
-      // Load session data
-      const sessions = getAllReviewSessions();
-      const foundSession = sessions.find(s => s.id === id);
-      if (foundSession) {
-        setSession(foundSession);
-        setLetterBody(generateDefaultLetterBody(foundSession.state));
+    const loadSession = async () => {
+      if (id) {
+        // Load session data
+        const sessions = await getAllReviewSessions();
+        const foundSession = sessions.find((s: any) => s.id === id);
+        if (foundSession) {
+          setSession(foundSession);
+          setLetterBody(generateDefaultLetterBody(foundSession.state));
+        }
       }
-    }
+    };
+    loadSession();
   }, [id]);
 
   const generateDefaultLetterBody = (state: string) => {
@@ -70,7 +73,7 @@ Please ensure all execution formalities are followed precisely as outlined to en
       const signedPdfId = `vault://signed_letter_${Date.now()}.pdf`;
 
       // Update session with signed letter
-      await signReviewLetter({
+      await signReviewLetter(session.id, {
         sessionId: session.id,
         attorneyUserId: 'current-attorney-id',
         letterPdfId: signedPdfId,
@@ -78,8 +81,8 @@ Please ensure all execution formalities are followed precisely as outlined to en
       });
 
       // Refresh session data
-      const sessions = getAllReviewSessions();
-      const updatedSession = sessions.find(s => s.id === id);
+      const sessions = await getAllReviewSessions();
+      const updatedSession = sessions.find((s: any) => s.id === id);
       if (updatedSession) {
         setSession(updatedSession);
       }

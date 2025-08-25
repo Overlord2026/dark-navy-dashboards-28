@@ -111,8 +111,8 @@ const HealthcareProWorkbench = () => {
       for (const formType of formsToGenerate) {
         const pdfBytes = await renderHealthcarePdf(
           formType as 'AdvanceDirective' | 'LivingWill' | 'HealthcarePOA' | 'HIPAA' | 'Surrogate',
-          tokens,
-          healthRules
+          tokens as any,
+          healthRules as any
         );
         
         // Save to Vault

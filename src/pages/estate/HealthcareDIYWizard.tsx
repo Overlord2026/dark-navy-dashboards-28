@@ -44,7 +44,7 @@ const HealthcareDIYWizard = () => {
   const [paymentComplete, setPaymentComplete] = useState(false);
   const [documentsGenerated, setDocumentsGenerated] = useState(false);
 
-  const healthRules = useHealthcareRules(formData.state);
+  const healthRules = useHealthcareRules(formData.state) as any;
   const totalSteps = 6;
   const progress = (currentStep / totalSteps) * 100;
 
@@ -121,8 +121,8 @@ const HealthcareDIYWizard = () => {
       for (const formType of selectedForms) {
         const pdfBytes = await renderHealthcarePdf(
           formType as 'AdvanceDirective' | 'LivingWill' | 'HealthcarePOA' | 'HIPAA' | 'Surrogate',
-          tokens,
-          healthRules
+          tokens as any,
+          healthRules as any
         );
         
         // Save to Vault (mock)
