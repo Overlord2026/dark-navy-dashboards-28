@@ -341,8 +341,8 @@ export default function ChecklistConsole() {
                 
                   const total = keys.reduce((n, k) => {
                     const count = items[k]?.originCount ? 
-                      Object.values(items[k].originCount!).reduce((a: number, b: unknown) => a + (typeof b === 'number' ? b : 0), 0) : 0;
-                    return n + count;
+                      Object.values(items[k].originCount!).reduce((a: number, b: unknown) => a + (Number(b) || 0), 0) : 0;
+                    return n + Number(count);
                   }, 0) || 0;
                 
                 const autoPercent = total ? Math.round(((counts.autofill || 0) / total) * 100) : 0;
