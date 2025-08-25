@@ -1,5 +1,7 @@
 import React from 'react';
 import { recordReceipt } from '@/features/receipts/record';
+import { getPartner } from '@/features/k401/partners';
+import { Badge } from '@/components/ui/badge';
 import { canWrite, getCurrentUserRole } from '@/features/auth/roles';
 
 type Row = { 
@@ -36,13 +38,20 @@ export default function AdvisorBook() {
   const userRole = getCurrentUserRole();
   const writable = canWrite(userRole);
 
+  const currentPartner = getPartner();
+
   return (
     <div className="p-6 space-y-4">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold">401(k) Book</h1>
-        <div className="text-sm text-muted-foreground">
-          {rows.length} clients • {selectedCount} selected
-          {!writable && <span className="ml-2 px-2 py-1 bg-amber-100 text-amber-800 rounded-md text-xs">Read-only</span>}
+        <div className="flex items-center gap-3">
+          <Badge variant={currentPartner === 'None' ? 'secondary' : 'default'}>
+            Partner: {currentPartner}
+          </Badge>
+          <div className="text-sm text-muted-foreground">
+            {rows.length} clients • {selectedCount} selected
+            {!writable && <span className="ml-2 px-2 py-1 bg-amber-100 text-amber-800 rounded-md text-xs">Read-only</span>}
+          </div>
         </div>
       </div>
       

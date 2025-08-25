@@ -38,6 +38,7 @@ import AdminPanel from '@/pages/admin/AdminPanel';
 import JobsPanel from '@/pages/admin/JobsPanel';
 import PublishPanel from '@/pages/admin/PublishPanel';
 import { EnvInspector } from '@/pages/admin/EnvInspector';
+import K401Partner from '@/pages/admin/K401Partner';
 import RulesCoverage from '@/pages/admin/RulesCoverage';
 import RulesImport from '@/pages/admin/RulesImport';
 import RulesExport from '@/pages/admin/RulesExport';
@@ -291,6 +292,7 @@ function App() {
             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/jobs" element={<JobsPanel />} />}
             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/publish" element={<PublishPanel />} />}
             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/env" element={<EnvInspector />} />}
+            {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/k401/partner" element={<K401Partner />} />}
             
             {/* Demo Routes */}
             {getFlag('DEMOS_ENABLED') && (
