@@ -51,7 +51,22 @@ export default function WhatIfPanel({ base, persona = 'Family', userId }: WhatIf
   const [isCalculating, setIsCalculating] = React.useState(false);
 
   const { toast } = useToast();
-  const mcHook = useMc401k();
+  // Placeholder for Monte Carlo hook - not actively used in this component
+  const mcInput = {
+    currentAge: base.currentAge || 35,
+    retireAge: base.retirementAge || 65,
+    longevityAge: 90,
+    currentBalance: base.currentBalance || 50000,
+    income: base.annualSalary || 75000,
+    employeePct: (base.employeePct || 0.08) * 100,
+    employerRule: { kind: 'simple' as const, pct: 50, limitPct: 6 },
+    expRetExpenses: (base.monthlyExpenses || 4000) * 12,
+    sims: 10000,
+    mean: base.returnRate || 0.07,
+    stdev: 0.15,
+    inflation: base.inflationRate || 0.025
+  };
+  const mcHook = useMc401k(mcInput);
 
   // Calculate success probability based on scenario changes
   const calculateSuccessProb = React.useCallback((scenarioDelta: ScenarioDelta) => {
