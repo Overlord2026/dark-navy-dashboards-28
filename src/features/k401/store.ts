@@ -1,4 +1,5 @@
-// 401(k) data store with plans, accounts, and contribution schedules
+// 401(k) data store with plans, accounts, contribution schedules, and provider rules
+import type { ProviderRule } from './forms/types';
 
 export type K401Plan = {
   planId: string;
@@ -42,6 +43,7 @@ export type K401ContribSchedule = {
 let PLANS: Record<string, K401Plan> = {};
 let ACCOUNTS: Record<string, K401Account> = {};
 let CONTRIB_SCHEDULES: Record<string, K401ContribSchedule> = {};
+let PROVIDER_RULES: Record<string, ProviderRule> = {};
 
 export async function upsertPlan(plan: K401Plan): Promise<K401Plan> {
   PLANS[plan.planId] = plan;
@@ -69,4 +71,18 @@ export async function getAccounts(userId: string): Promise<K401Account[]> {
 
 export async function getContribSchedule(accountId: string): Promise<K401ContribSchedule | null> {
   return CONTRIB_SCHEDULES[accountId] || null;
+}
+
+// Provider Rules functions
+export async function setProviderRule(rule: ProviderRule): Promise<ProviderRule> {
+  PROVIDER_RULES[rule.provider] = rule;
+  return rule;
+}
+
+export async function getProviderRule(provider: string): Promise<ProviderRule | null> {
+  return PROVIDER_RULES[provider] || null;
+}
+
+export async function listProviderRules(): Promise<ProviderRule[]> {
+  return Object.values(PROVIDER_RULES);
 }

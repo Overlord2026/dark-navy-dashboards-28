@@ -45,6 +45,7 @@ import AiAudit from '@/pages/admin/AiAudit';
 import K401ChecklistRunner from '@/pages/admin/K401ChecklistRunner';
 import MigrationHub from '@/pages/admin/MigrationHub';
 import K401FormsAdmin from '@/pages/admin/K401FormsAdmin';
+import K401ProviderRulesSearch from '@/pages/admin/K401ProviderRulesSearch';
 import RulesExport from '@/pages/admin/RulesExport';
 import AnchorList from '@/pages/admin/AnchorList';
 import ReceiptView from '@/pages/admin/ReceiptView';
@@ -70,6 +71,7 @@ import VaultAutofillReview from '@/pages/advisor/VaultAutofillReview';
 import ChecklistExport from '@/pages/supervisor/ChecklistExport';
 import NotFound from '@/pages/NotFound';
 import { getFlag } from '@/lib/flags';
+import '@/features/k401/init'; // Initialize provider rules
 
 // Onboarding Components
 import FamilyOnboarding from '@/pages/onboarding/FamilyOnboarding';
@@ -332,6 +334,7 @@ function App() {
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/k401/partner" element={<K401Partner />} />}
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/k401/checklist" element={<K401ChecklistRunner />} />}
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/k401/forms" element={<K401FormsAdmin />} />}
+             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/k401/providers/search" element={<K401ProviderRulesSearch />} />}
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/anchors" element={<AnchorList />} />}
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/receipt/:id" element={<ReceiptView />} />}
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/migration-invite" element={<MigrationHubInvite />} />}
