@@ -25,6 +25,11 @@ export function AdminHeaderTools() {
   const nav = useNavigate();
   const [rid, setRid] = React.useState("");
   
+  // Preserve current query params when opening receipts
+  const currentQuery = typeof window !== "undefined" 
+    ? window.location.search 
+    : "";
+  
   if (!isAdminToolsEnabled) return null;
 
   const goto = (path: string) => {
@@ -47,13 +52,13 @@ export function AdminHeaderTools() {
           placeholder="Receipt ID…"
           value={rid}
           onChange={e => setRid(e.target.value)}
-          onKeyDown={e => e.key === 'Enter' && rid && nav(`/admin/receipt/${encodeURIComponent(rid)}`)}
+          onKeyDown={e => e.key === 'Enter' && rid && nav(`/admin/receipt/${encodeURIComponent(rid)}${currentQuery}`)}
         />
         <Button
           variant="ghost"
           size="sm"
           className="h-auto px-2 py-1 text-xs"
-          onClick={() => rid && nav(`/admin/receipt/${encodeURIComponent(rid)}`)}
+          onClick={() => rid && nav(`/admin/receipt/${encodeURIComponent(rid)}${currentQuery}`)}
         >
           Open
         </Button>

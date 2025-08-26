@@ -28,6 +28,16 @@ function toCSV(rows: Row[]) {
   return lines.join("\n");
 }
 
+function toViewerQuery(from: string, to: string, onlyAccepted: boolean, q: string) {
+  const sp = new URLSearchParams();
+  if (from) sp.set("from", from);
+  if (to) sp.set("to", to);
+  if (onlyAccepted) sp.set("anchored", "true");
+  if (q) sp.set("q", q);
+  const s = sp.toString();
+  return s ? `?${s}` : "";
+}
+
 export default function AnchorList() {
   const [all, setAll] = React.useState<Row[]>([]);
   const [q, setQ] = React.useState("");
@@ -148,17 +158,29 @@ export default function AnchorList() {
               </div>
               {isOpen && (
                 <div className="p-4 bg-muted/50 border-t border-border">
-                  <div className="text-xs font-semibold mb-2 text-foreground">Receipt IDs in batch (click to view):</div>
+                  <div className="text-xs font-semibold mb-2 text-foreground">Receipt IDs in batch:</div>
                   <div className="flex flex-wrap gap-2 mb-3">
-                    {(r.included_receipts || []).map(id => (
-                      <button 
-                        key={id} 
-                        className="border border-border rounded px-2 py-1 text-xs hover:bg-muted transition-colors" 
-                        onClick={() => setModalId(id)}
-                      >
-                        {id}
-                      </button>
-                    ))}
+                    {(r.included_receipts || []).map(id => {
+                      const query = toViewerQuery(from, to, onlyAccepted, q);
+                      return (
+                        <div key={id} className="flex gap-1">
+                          <button 
+                            className="border border-border rounded px-2 py-1 text-xs hover:bg-muted transition-colors" 
+                            onClick={() => setModalId(id)}
+                            title="View in modal"
+                          >
+                            {id}
+                          </button>
+                          <a
+                            className="border border-border rounded px-2 py-1 text-xs hover:bg-muted transition-colors text-blue-600 hover:text-blue-800"
+                            href={`/admin/receipt/${encodeURIComponent(id)}${query}`}
+                            title="Open in full viewer (filters preserved)"
+                          >
+                            →
+                          </a>
+                        </div>
+                      );
+                    })}
                     {(!r.included_receipts || r.included_receipts.length === 0) && (
                       <span className="text-xs text-muted-foreground">(none)</span>
                     )}
