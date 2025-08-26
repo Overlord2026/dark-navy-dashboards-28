@@ -1,5 +1,7 @@
 import React from "react";
 import { PublishBatchButton } from "@/components/admin/PublishBatchButton";
+import { PromotePolicyButton } from "@/components/admin/PromotePolicyButton";
+import { RevertTagButton } from "@/components/admin/RevertTagButton";
 
 export function AdminHeader() {
   return (
@@ -21,6 +23,8 @@ export function AdminHeaderTools() {
   return (
     <div className="flex items-center gap-3">
       <PublishBatchButton />
+      <PromotePolicyButton />
+      <RevertTagButton />
     </div>
   );
 }
