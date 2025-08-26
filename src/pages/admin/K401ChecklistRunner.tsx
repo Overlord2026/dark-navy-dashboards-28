@@ -128,15 +128,13 @@ async function checkSmbPartner() {
 // #8 Compliance pack generated (ERISA/PTE 2020-02 + Crypto policy memo)
 async function checkCompliancePack() {
   const ready = localStorage.getItem('k401.compliancePack.ready') === 'true';
-  const date = localStorage.getItem('k401.compliancePack.date');
-  return { pass: ready, note: date ? `generated:${date}` : 'not generated' };
+  return { pass: ready, note: `compliance_pack:${ready}` };
 }
 
 // #9 Broker demo pack generated (30-min demo script + materials)
 async function checkBrokerDemoPack() {
   const ready = localStorage.getItem('k401.brokerDemoPack.ready') === 'true';
-  const date = localStorage.getItem('k401.brokerDemoPack.date');
-  return { pass: ready, note: date ? `generated:${date}` : 'not generated' };
+  return { pass: ready, note: `broker_demo_pack:${ready}` };
 }
 
 // Checklist items ---------------------------------------------------------------
