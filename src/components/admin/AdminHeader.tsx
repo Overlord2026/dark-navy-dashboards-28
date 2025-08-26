@@ -2,6 +2,7 @@ import React from "react";
 import { PublishBatchButton } from "@/components/admin/PublishBatchButton";
 import { PromotePolicyButton } from "@/components/admin/PromotePolicyButton";
 import { RevertTagButton } from "@/components/admin/RevertTagButton";
+import { AnchorNowButton } from "@/components/admin/AnchorNowButton";
 
 export function AdminHeader() {
   return (
@@ -25,6 +26,7 @@ export function AdminHeaderTools() {
       <PublishBatchButton />
       <PromotePolicyButton />
       <RevertTagButton />
+      <AnchorNowButton />
     </div>
   );
 }
