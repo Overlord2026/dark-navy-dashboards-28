@@ -1,5 +1,5 @@
 import React from "react";
-import { sampleCounty, defaultLayout, validateLayout, emitDeltaFromValidation } from "@/features/estate/demo/estateDemo";
+import { sampleCounty, defaultLayout, validateLayout, emitDeltaFromValidation, emitValidationReportRDS } from "@/features/estate/demo/estateDemo";
 
 type Props = { policyVersion: string };
 
@@ -180,6 +180,24 @@ export default function CountyRuleViewer({ policyVersion }: Props){
     downloadText(name, text);
   }
 
+  // NEW: emit Reason-RDS "validation report"
+  async function emitReportReceipt(){
+    setBusy(true);
+    try {
+      // Ensure we have a fresh validation result
+      const v = result ?? validateLayout(layout, sampleCounty);
+      if (!result) setResult(v);
+
+      const id = await emitValidationReportRDS(
+        policyVersion,
+        { pass: v.ok, violations: v.violations, remedies: v.remedies, layout }
+      );
+      alert(`Report receipt emitted: ${id}`);
+    } catch (e:any) {
+      alert(`Emit failed: ${e?.message || e}`);
+    } finally { setBusy(false); }
+  }
+
   return (
     <div className="border rounded p-3 space-y-2">
       <div className="text-sm font-semibold">County Rule Viewer (content-free)</div>
@@ -258,6 +276,10 @@ export default function CountyRuleViewer({ policyVersion }: Props){
             {/* NEW button — Export Validation Report */}
             <button className="border rounded px-3 py-1 text-xs" onClick={exportValidationReport} disabled={busy}>
               Export Validation Report (.txt)
+            </button>
+            {/* NEW: Emit report receipt */}
+            <button className="border rounded px-3 py-1 text-xs" onClick={emitReportReceipt} disabled={busy}>
+              Emit Report Receipt (Reason-RDS)
             </button>
           </div>
           

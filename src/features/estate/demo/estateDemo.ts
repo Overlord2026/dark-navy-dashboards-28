@@ -99,3 +99,75 @@ export async function emitDeltaFromValidation(policyVersion: string, missing: st
   await recordReceipt(r);
   return r.receipt_id;
 }
+
+async function sha256HexBrowser(text: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(text);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+/**
+ * Emit a content-free Reason-RDS for a validation report (PASS/FAIL + reasons).
+ * Fields are tokens/bands only; no PII/PHI or raw images.
+ */
+export async function emitValidationReportRDS(
+  policyVersion: string,
+  summary: { pass: boolean; violations: string[]; remedies: string[]; layout: any }
+){
+  // Build a deterministic, content-free object for hashing
+  const payload = {
+    county: sampleCounty.county_token,
+    policy_version: policyVersion,
+    pass: summary.pass,
+    violations: (summary.violations || []).slice().sort(),
+    remedies: (summary.remedies || []).slice().sort(),
+    // include layout tokens only (inches, flags) — no PII
+    layout: {
+      marginsIn: summary.layout?.marginsIn,
+      stampBoxIn: summary.layout?.stampBoxIn,
+      fontPt: summary.layout?.fontPt,
+      flags: {
+        APN: !!summary.layout?.hasAPN,
+        preparer: !!summary.layout?.hasPreparer,
+        returnAddress: !!summary.layout?.hasReturnAddress
+      }
+    }
+  };
+
+  // Compute inputs_hash
+  function canon(o:any):any{
+    if (Array.isArray(o)) return o.map(canon);
+    if (o && typeof o==="object"){
+      return Object.keys(o).sort().reduce((acc:any,k)=>{ acc[k]=canon(o[k]); return acc; },{});
+    }
+    return o;
+  }
+  const s = JSON.stringify(canon(payload));
+  const ih = "sha256:" + await sha256HexBrowser(s);
+
+  // Emit Reason-RDS (content-free)
+  const r = {
+    receipt_id: `rds_reason_validation_${isoNow()}`,
+    type: "Reason-RDS",
+    ts: isoNow(),
+    policy_version: policyVersion,
+    inputs_hash: ih,
+    // free-text fields avoided; keep reasons[] compact
+    reasons: [
+      summary.pass ? "validation:pass" : "validation:fail",
+      ...payload.violations.map(v => `v:${v}`),
+      ...payload.remedies.map(rm => `r:${rm}`)
+    ],
+    // optional structured summary (content-free)
+    summary: {
+      county_token: sampleCounty.county_token,
+      pass: summary.pass,
+      violations: payload.violations,
+      remedies: payload.remedies
+    }
+  };
+  await recordReceipt(r);
+  return r.receipt_id;
+}
