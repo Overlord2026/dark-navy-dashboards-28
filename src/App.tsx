@@ -58,6 +58,8 @@ import MigrationQueueAdmin from '@/pages/admin/MigrationQueueAdmin';
 import RulesReplaceCounty from '@/pages/admin/RulesReplaceCounty';
 import RulesReplaceStates from '@/pages/admin/RulesReplaceStates';
 import CountyQuickAdd from '@/pages/admin/CountyQuickAdd';
+import CountyMetaEditor from '@/pages/admin/estate/CountyMetaEditor';
+import EstateRonDemo from '@/pages/admin/estate/EstateRonDemo';
 import MarketingPreview from '@/pages/preview/MarketingPreview';
 import NewReviewSession from '@/pages/estate/review/NewReviewSession';
 import ReviewSession from '@/pages/attorney/ReviewSession';
@@ -329,7 +331,9 @@ function App() {
             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/rules-export" element={<RulesExport />} />}
             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/rules-replace-county" element={<RulesReplaceCounty />} />}
             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/rules-replace-states" element={<RulesReplaceStates />} />}
-            {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/county-add" element={<CountyQuickAdd />} />}
+             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/county-add" element={<CountyQuickAdd />} />}
+             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/estate/county-meta" element={<CountyMetaEditor />} />}
+             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/estate/demo" element={<EstateRonDemo />} />}
             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin" element={<AdminPanel />} />}
             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/jobs" element={<JobsPanel />} />}
             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/publish" element={<PublishPanel />} />}

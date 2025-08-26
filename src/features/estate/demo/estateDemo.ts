@@ -327,3 +327,56 @@ export async function batchReportAndAnchorAll(
     audit_receipt_id: res.audit_receipt_id || "none"
   };
 }
+
+export function setCountyList(list: CountyRule[]) {
+  // minimal sanitation: require county_token, margins, stampBox, minFontPt
+  const safe = (list || []).filter(Boolean).map((c:any)=>({
+    county_token: String(c.county_token || "").trim(),
+    pageSize: c.pageSize === "Legal" ? "Legal" : "Letter",
+    marginsIn: {
+      top: Number(c.marginsIn?.top || 0),
+      left: Number(c.marginsIn?.left || 0),
+      right: Number(c.marginsIn?.right || 0),
+      bottom: Number(c.marginsIn?.bottom || 0),
+    },
+    stampBoxIn: {
+      x: Number(c.stampBoxIn?.x || 0),
+      y: Number(c.stampBoxIn?.y || 0),
+      w: Number(c.stampBoxIn?.w || 0),
+      h: Number(c.stampBoxIn?.h || 0)
+    },
+    minFontPt: Number(c.minFontPt || 10),
+    requires: {
+      APN: !!c.requires?.APN,
+      preparer: !!c.requires?.preparer,
+      returnAddress: !!c.requires?.returnAddress
+    }
+  })).filter((c:any)=>c.county_token.length>0);
+  localStorage.setItem(KEY_COUNTY_LIST, JSON.stringify(safe));
+  return safe;
+}
+
+export function upsertCounty(rule: CountyRule) {
+  const list = getCountyList();
+  const i = list.findIndex(c => c.county_token === rule.county_token);
+  if (i >= 0) list[i] = rule; else list.push(rule);
+  setCountyList(list);
+  return list;
+}
+
+export function removeCounty(county_token: string) {
+  const list = getCountyList().filter(c => c.county_token !== county_token);
+  setCountyList(list);
+  return list;
+}
+
+export function newCountyTemplate(): CountyRule {
+  return {
+    county_token: "STATE/County_Name",
+    pageSize: "Letter",
+    marginsIn: { top: 3.0, left: 1.0, right: 1.0, bottom: 1.0 },
+    stampBoxIn: { x: 6.25, y: 0.5, w: 2.25, h: 3.0 },
+    minFontPt: 10,
+    requires: { APN: true, preparer: true, returnAddress: true }
+  };
+}

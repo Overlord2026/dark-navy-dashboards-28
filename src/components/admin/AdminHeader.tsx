@@ -72,6 +72,15 @@ export function AdminHeaderTools() {
       >
         Anchors
       </Button>
+      
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => goto("/admin/estate/county-meta")}
+        title="County metadata editor"
+      >
+        County Meta
+      </Button>
     </div>
   );
 }
