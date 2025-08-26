@@ -4,6 +4,7 @@ import { PromotePolicyButton } from "@/components/admin/PromotePolicyButton";
 import { RevertTagButton } from "@/components/admin/RevertTagButton";
 import { AnchorNowButton } from "@/components/admin/AnchorNowButton";
 import { AutoAnchorToggle } from "@/components/admin/AutoAnchorToggle";
+import { Button } from "@/components/ui/button";
 
 export function AdminHeader() {
   return (
@@ -22,6 +23,12 @@ export function AdminHeaderTools() {
   
   if (!isAdminToolsEnabled) return null;
   
+  const goto = (path: string) => {
+    try {
+      window.location.assign(path);
+    } catch { /* ignore */ }
+  };
+
   return (
     <div className="flex items-center gap-3">
       <PublishBatchButton />
@@ -29,6 +36,14 @@ export function AdminHeaderTools() {
       <RevertTagButton />
       <AnchorNowButton />
       <AutoAnchorToggle />
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => goto("/admin/anchors")}
+        title="View anchor batches"
+      >
+        Anchors
+      </Button>
     </div>
   );
 }

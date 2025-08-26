@@ -15,6 +15,9 @@ export type AuditRDS = {
   env: "dev" | "stage" | "prod";
 };
 
+const KEY_AUDIT_LIST = "audit.rds.list";       // LIST of summary JSONs
+const KEY_AUDIT_LAST = "audit.rds.last";       // fully canonical last JSON
+
 function canonicalJson(obj: any) {
   if (Array.isArray(obj)) return obj.map(canonicalJson);
   if (obj && typeof obj === "object") {
@@ -26,17 +29,41 @@ function canonicalJson(obj: any) {
   return obj;
 }
 
+export function listAuditRDS(): AuditRDS[] {
+  try {
+    return JSON.parse(localStorage.getItem(KEY_AUDIT_LIST) || "[]");
+  } catch {
+    return [];
+  }
+}
+
+function saveAuditList(list: AuditRDS[]) {
+  localStorage.setItem(KEY_AUDIT_LIST, JSON.stringify(list));
+}
+
 export async function writeAuditRDS(data: Omit<AuditRDS, "receipt_id" | "prev_audit_hash">) {
   // Load previous audit for chaining (use your store if available)
-  const prev = window.localStorage.getItem("lastAuditRDS");
+  const prev = window.localStorage.getItem(KEY_AUDIT_LAST);
   const prevHash = prev ? "sha256:" + await sha256HexBrowser(prev) : null;
   const rds: AuditRDS = {
     ...data,
     prev_audit_hash: prevHash,
     receipt_id: `rds_audit_${new Date().toISOString()}`
   };
-  // Persist (content-free)
-  window.localStorage.setItem("lastAuditRDS", JSON.stringify(canonicalJson(rds)));
+
+  // Persist "last" (canonical JSON)
+  window.localStorage.setItem(KEY_AUDIT_LAST, JSON.stringify(canonicalJson(rds)));
+
+  // Append to list (top)
+  const list = listAuditRDS();
+  list.unshift(rds);
+  saveAuditList(list);
+
   console.info("[audit] recorded", rds);
   return rds;
+}
+
+export function clearAuditRDS() {
+  localStorage.removeItem(KEY_AUDIT_LAST);
+  localStorage.removeItem(KEY_AUDIT_LIST);
 }
