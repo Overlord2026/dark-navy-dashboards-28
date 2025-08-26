@@ -8,6 +8,15 @@ export default function CountyRuleViewer({ policyVersion }: Props){
   const [result, setResult] = React.useState<{ok:boolean; violations:string[]; remedies:string[]}|null>(null);
   const [busy, setBusy] = React.useState(false);
 
+  // NEW: small helper to download a text file
+  function downloadText(name: string, text: string) {
+    const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement("a");
+    a.href = url; a.download = name; a.click();
+    URL.revokeObjectURL(url);
+  }
+
   function onNum(path: string, val: string){
     const n = parseFloat(val || "0");
     setLayout(l => {
@@ -96,6 +105,15 @@ export default function CountyRuleViewer({ policyVersion }: Props){
     } finally { setBusy(false); }
   }
 
+  // NEW: export the current ASCII schematic
+  function exportAscii(){
+    const ts = new Date();
+    const pad = (n:number)=>String(n).padStart(2,"0");
+    const stamp = `${ts.getFullYear()}${pad(ts.getMonth()+1)}${pad(ts.getDate())}_${pad(ts.getHours())}${pad(ts.getMinutes())}${pad(ts.getSeconds())}`;
+    const name = `${sampleCounty.county_token.replace("/","_")}_layout_${stamp}.txt`;
+    downloadText(name, asciiSchematic());
+  }
+
   return (
     <div className="border rounded p-3 space-y-2">
       <div className="text-sm font-semibold">County Rule Viewer (content-free)</div>
@@ -161,6 +179,10 @@ export default function CountyRuleViewer({ policyVersion }: Props){
         <div className="space-y-1">
           <div className="font-semibold">ASCII schematic</div>
           <pre className="whitespace-pre text-xs border rounded p-2 bg-white">{asciiSchematic()}</pre>
+          {/* NEW: Export ASCII button */}
+          <button className="border rounded px-3 py-1 text-xs" onClick={exportAscii} disabled={busy}>
+            Export ASCII (.txt)
+          </button>
           <div className="text-xs">
             {result
               ? (result.ok
