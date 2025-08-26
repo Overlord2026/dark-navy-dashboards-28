@@ -134,6 +134,52 @@ export default function CountyRuleViewer({ policyVersion }: Props){
     downloadText(name, asciiSchematic());
   }
 
+  // NEW: Build a content-free validation report (policy header + layout + results)
+  function buildValidationReport(v: {ok:boolean; violations:string[]; remedies:string[]}) {
+    const pad = (n:number)=>String(n).padStart(2,"0");
+    const ts  = new Date();
+    const stamp = `${ts.getFullYear()}-${pad(ts.getMonth()+1)}-${pad(ts.getDate())}T${pad(ts.getHours())}:${pad(ts.getMinutes())}:${pad(ts.getSeconds())}Z`;
+
+    const lines: string[] = [];
+    lines.push(`Estate / RON — Validation Report (content-free)`);
+    lines.push(`Generated: ${stamp}`);
+    lines.push(`County: ${sampleCounty.county_token}`);
+    lines.push(`Policy version: E-2025.08`);
+    lines.push(`Page size: ${sampleCounty.pageSize}`);
+    lines.push(`Policy margins (in): top ${sampleCounty.marginsIn.top}  left ${sampleCounty.marginsIn.left}  right ${sampleCounty.marginsIn.right}  bottom ${sampleCounty.marginsIn.bottom}`);
+    lines.push(`Policy min font: ${sampleCounty.minFontPt} pt`);
+    lines.push(`Required: APN=${sampleCounty.requires.APN}  preparer=${sampleCounty.requires.preparer}  returnAddress=${sampleCounty.requires.returnAddress}`);
+    lines.push(`eRecording: true  provider=DocuSign`);
+    lines.push(``);
+    lines.push(`Candidate layout`);
+    lines.push(`  Margins (in): top ${layout.marginsIn.top}  left ${layout.marginsIn.left}  right ${layout.marginsIn.right}  bottom ${layout.marginsIn.bottom}`);
+    lines.push(`  Stamp-box (in): x ${layout.stampBoxIn.x}  y ${layout.stampBoxIn.y}  w ${layout.stampBoxIn.w}  h ${layout.stampBoxIn.h}`);
+    lines.push(`  Font: ${layout.fontPt} pt`);
+    lines.push(`  Fields: APN=${layout.hasAPN}  preparer=${layout.hasPreparer}  returnAddress=${layout.hasReturnAddress}`);
+    lines.push(``);
+    lines.push(`Result: ${v.ok ? "PASS ✅" : "FAIL ❌"}`);
+    if (!v.ok) {
+      lines.push(`Violations: ${v.violations.length ? v.violations.join(", ") : "(none)"}`);
+      lines.push(`Remedies:   ${v.remedies.length   ? v.remedies.join(", ")   : "(none)"}`);
+    }
+    lines.push(``);
+    lines.push(`Note: This report contains no PII/PHI. All values are policy/layout tokens and inches.`);
+    return lines.join("\n");
+  }
+
+  // NEW: Export Validation Report (.txt)
+  async function exportValidationReport(){
+    // Ensure we have a validation result; if not, run it once
+    const v = result ?? validateLayout(layout, sampleCounty);
+    if (!result) setResult(v);
+    const pad = (n:number)=>String(n).padStart(2,"0");
+    const ts  = new Date();
+    const stamp = `${ts.getFullYear()}${pad(ts.getMonth()+1)}${pad(ts.getDate())}_${pad(ts.getHours())}${pad(ts.getMinutes())}${pad(ts.getSeconds())}`;
+    const name  = `${sampleCounty.county_token.replace("/","_")}_validation_${stamp}.txt`;
+    const text  = buildValidationReport(v);
+    downloadText(name, text);
+  }
+
   return (
     <div className="border rounded p-3 space-y-2">
       <div className="text-sm font-semibold">County Rule Viewer (content-free)</div>
@@ -201,7 +247,7 @@ export default function CountyRuleViewer({ policyVersion }: Props){
           <pre className="whitespace-pre text-xs border rounded p-2 bg-white">{asciiSchematic()}</pre>
           
           {/* NEW: Export + Copy buttons and a tiny "Copied!" hint */}
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <button className="border rounded px-3 py-1 text-xs" onClick={exportAscii} disabled={busy}>
               Export ASCII (.txt)
             </button>
@@ -209,6 +255,10 @@ export default function CountyRuleViewer({ policyVersion }: Props){
               Copy schematic
             </button>
             {copied && <span className="text-xs">Copied!</span>}
+            {/* NEW button — Export Validation Report */}
+            <button className="border rounded px-3 py-1 text-xs" onClick={exportValidationReport} disabled={busy}>
+              Export Validation Report (.txt)
+            </button>
           </div>
           
           <div className="text-xs">
