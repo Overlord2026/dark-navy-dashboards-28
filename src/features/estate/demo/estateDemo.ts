@@ -1,4 +1,5 @@
 import { recordReceipt } from '@/features/receipts/record';
+import { anchorNow } from "@/features/anchor/anchorNow";
 
 export type LayoutSpec = {
   marginsIn: { top:number; left:number; right:number; bottom:number };
@@ -170,4 +171,89 @@ export async function emitValidationReportRDS(
   };
   await recordReceipt(r);
   return r.receipt_id;
+}
+
+/**
+ * Load county rule list (content-free). In production, wire to your real store.
+ * Falls back to [sampleCounty] if none exists.
+ */
+export function getCountyList(): Array<CountyRule> {
+  try {
+    const raw = localStorage.getItem("county.meta.list");
+    if (raw) {
+      const list = JSON.parse(raw);
+      if (Array.isArray(list) && list.length) return list;
+    }
+  } catch { /* ignore */ }
+  return [sampleCounty];
+}
+
+/**
+ * Build a default layout from a county rule (content-free).
+ * This mirrors the policy requirements, no PII/PHI.
+ */
+export function layoutFromRule(rule: CountyRule): LayoutSpec {
+  return {
+    marginsIn: { ...rule.marginsIn },
+    stampBoxIn: { ...rule.stampBoxIn },
+    fontPt: Math.max(10, rule.minFontPt),
+    hasAPN: !!rule.requires.APN,
+    hasPreparer: !!rule.requires.preparer,
+    hasReturnAddress: !!rule.requires.returnAddress
+  };
+}
+
+/**
+ * Emit Reason-RDS validation reports for all (or the first N) counties.
+ * Returns list of emitted receipt_ids and the ISO start time for post-filter anchoring.
+ */
+export async function emitValidationReportsForCounties(
+  policyVersion: string,
+  opts?: { limit?: number }
+){
+  const isoStart = new Date().toISOString();
+  const counties = getCountyList();
+  const take = Math.min(opts?.limit || counties.length, counties.length);
+  const ids: string[] = [];
+
+  for (let i=0; i<take; i++) {
+    const rule = counties[i];
+    const layout = layoutFromRule(rule);
+    const v = validateLayout(layout, rule);
+    const rid = await emitValidationReportRDS(
+      policyVersion,
+      { pass: v.ok, violations: v.violations, remedies: v.remedies, layout }
+    );
+    ids.push(rid);
+  }
+  return { since_iso: isoStart, count: ids.length, receipt_ids: ids };
+}
+
+/**
+ * Batch "Report + Anchor" for all counties (or first N).
+ * 1) emits Reason-RDS for each county,
+ * 2) anchors all newly-emitted Reason-RDS together (single batch),
+ * 3) returns audit info (content-free).
+ */
+export async function batchReportAndAnchorAll(
+  policyVersion: string,
+  env: "dev"|"stage"|"prod",
+  opts?: { limit?: number; threshold?: { n:number; m:number } }
+){
+  // Emit (content-free) reports first
+  const emitted = await emitValidationReportsForCounties(policyVersion, { limit: opts?.limit });
+
+  // Anchor the Reason-RDS receipts
+  const res = await anchorNow({
+    env,
+    include_types: ["Reason-RDS"],
+    max_batch: opts?.limit || 500
+  });
+
+  return {
+    ok: res.ok,
+    reports_emitted: emitted.count,
+    merkle_root: res.merkle_root || "none",
+    audit_receipt_id: res.audit_receipt_id || "none"
+  };
 }
