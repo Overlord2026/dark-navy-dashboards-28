@@ -1,10 +1,12 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { PublishBatchButton } from "@/components/admin/PublishBatchButton";
 import { PromotePolicyButton } from "@/components/admin/PromotePolicyButton";
 import { RevertTagButton } from "@/components/admin/RevertTagButton";
 import { AnchorNowButton } from "@/components/admin/AnchorNowButton";
 import { AutoAnchorToggle } from "@/components/admin/AutoAnchorToggle";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 export function AdminHeader() {
   return (
@@ -20,9 +22,11 @@ export function AdminHeader() {
 export function AdminHeaderTools() {
   // Guard with ADMIN role check if needed
   const isAdminToolsEnabled = import.meta.env.VITE_ADMIN_TOOLS_ENABLED !== 'false';
+  const nav = useNavigate();
+  const [rid, setRid] = React.useState("");
   
   if (!isAdminToolsEnabled) return null;
-  
+
   const goto = (path: string) => {
     try {
       window.location.assign(path);
@@ -36,6 +40,25 @@ export function AdminHeaderTools() {
       <RevertTagButton />
       <AnchorNowButton />
       <AutoAnchorToggle />
+      
+      <div className="inline-flex items-center gap-1 border border-border rounded-lg px-3 py-1">
+        <Input
+          className="border-0 outline-none text-sm bg-transparent h-auto p-0 w-32"
+          placeholder="Receipt ID…"
+          value={rid}
+          onChange={e => setRid(e.target.value)}
+          onKeyDown={e => e.key === 'Enter' && rid && nav(`/admin/receipt/${encodeURIComponent(rid)}`)}
+        />
+        <Button
+          variant="ghost"
+          size="sm"
+          className="h-auto px-2 py-1 text-xs"
+          onClick={() => rid && nav(`/admin/receipt/${encodeURIComponent(rid)}`)}
+        >
+          Open
+        </Button>
+      </div>
+      
       <Button
         variant="outline"
         size="sm"

@@ -47,6 +47,7 @@ import MigrationHub from '@/pages/admin/MigrationHub';
 import K401FormsAdmin from '@/pages/admin/K401FormsAdmin';
 import RulesExport from '@/pages/admin/RulesExport';
 import AnchorList from '@/pages/admin/AnchorList';
+import ReceiptView from '@/pages/admin/ReceiptView';
 import RulesReplaceCounty from '@/pages/admin/RulesReplaceCounty';
 import RulesReplaceStates from '@/pages/admin/RulesReplaceStates';
 import CountyQuickAdd from '@/pages/admin/CountyQuickAdd';
@@ -330,6 +331,7 @@ function App() {
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/k401/checklist" element={<K401ChecklistRunner />} />}
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/k401/forms" element={<K401FormsAdmin />} />}
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/anchors" element={<AnchorList />} />}
+             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/receipt/:id" element={<ReceiptView />} />}
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/migration" element={<MigrationHub />} />}
             
             {/* Demo Routes */}

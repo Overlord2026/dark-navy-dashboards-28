@@ -1,5 +1,6 @@
 import React from "react";
 import { listAuditRDS } from "@/features/receipts/audit";
+import { ReceiptViewerModal } from "@/components/admin/ReceiptViewerModal";
 
 type Row = ReturnType<typeof listAuditRDS>[number];
 
@@ -33,6 +34,7 @@ export default function AnchorList() {
   const [onlyAccepted, setOnlyAccepted] = React.useState(false);
   const [from, setFrom] = React.useState<string>("");
   const [to, setTo] = React.useState<string>("");
+  const [modalId, setModalId] = React.useState<string | null>(null);
 
   React.useEffect(() => {
     setAll(listAuditRDS());
@@ -146,11 +148,22 @@ export default function AnchorList() {
               </div>
               {isOpen && (
                 <div className="p-4 bg-muted/50 border-t border-border">
-                  <div className="text-xs font-semibold mb-2 text-foreground">Receipt IDs in batch:</div>
-                  <pre className="whitespace-pre-wrap text-xs font-mono bg-background border border-border rounded p-2 text-foreground">
-                    {(r.included_receipts || []).join("\n") || "(none)"}
-                  </pre>
-                  <div className="mt-3 text-xs text-muted-foreground space-y-1">
+                  <div className="text-xs font-semibold mb-2 text-foreground">Receipt IDs in batch (click to view):</div>
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    {(r.included_receipts || []).map(id => (
+                      <button 
+                        key={id} 
+                        className="border border-border rounded px-2 py-1 text-xs hover:bg-muted transition-colors" 
+                        onClick={() => setModalId(id)}
+                      >
+                        {id}
+                      </button>
+                    ))}
+                    {(!r.included_receipts || r.included_receipts.length === 0) && (
+                      <span className="text-xs text-muted-foreground">(none)</span>
+                    )}
+                  </div>
+                  <div className="text-xs text-muted-foreground space-y-1">
                     <div>Policy version: <code>{r.policy_version || "-"}</code></div>
                     <div>Prev audit hash: <code className="break-all">{r.prev_audit_hash || "-"}</code></div>
                     <div>Reasons: <code>{(r.reasons || []).join(", ") || "-"}</code></div>
@@ -166,6 +179,8 @@ export default function AnchorList() {
           </div>
         )}
       </div>
+      
+      {modalId && <ReceiptViewerModal id={modalId} onClose={() => setModalId(null)} />}
     </div>
   );
 }
