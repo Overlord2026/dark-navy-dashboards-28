@@ -1,5 +1,7 @@
 /* eslint-disable no-console */
 import { writeLaunchTagRDS } from "@/features/release/launchTag";
+import { getAutoAnchorAfterPublish } from "@/features/release/autoAnchor";
+import { anchorNow } from "@/features/anchor/anchorNow";
 
 // Import existing tools with safe fallbacks
 let runVerifyReceipts: () => Promise<{pass: boolean; fails?: string[]}> = async () => ({ pass: true });
@@ -75,11 +77,21 @@ export async function publishBatch(opts: PublishBatchOptions) {
   
   const rds = await writeLaunchTagRDS(summary);
 
-  // 3) Build Release Summary (markdown) for Admin → Release Notes
+  // 3) Auto-anchor receipts when checks pass and setting is enabled
+  try {
+    if (allPass && getAutoAnchorAfterPublish()) {
+      console.info("[publish] auto-anchor enabled — anchoring now…");
+      await anchorNow({ env: opts.env, include_types: undefined }); // all unanchored by default
+    }
+  } catch (e) {
+    console.warn("[publish] auto-anchor failed (non-fatal):", e);
+  }
+
+  // 4) Build Release Summary (markdown) for Admin → Release Notes
   const md = renderReleaseSummary(rds);
   console.info("[publish] release summary:\n", md);
 
-  // 4) Open Rules Export (UI)
+  // 5) Open Rules Export (UI)
   try {
     // If running in browser, route to export page
     if (typeof window !== "undefined") {
@@ -90,7 +102,7 @@ export async function publishBatch(opts: PublishBatchOptions) {
     console.warn("[publish] could not open rules export UI", e);
   }
 
-  // 5) Return results to caller/CLI
+  // 6) Return results to caller/CLI
   return { ok: allPass, rds, summary_md: md };
 }
 

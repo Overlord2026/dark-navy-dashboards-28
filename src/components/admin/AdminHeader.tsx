@@ -3,6 +3,7 @@ import { PublishBatchButton } from "@/components/admin/PublishBatchButton";
 import { PromotePolicyButton } from "@/components/admin/PromotePolicyButton";
 import { RevertTagButton } from "@/components/admin/RevertTagButton";
 import { AnchorNowButton } from "@/components/admin/AnchorNowButton";
+import { AutoAnchorToggle } from "@/components/admin/AutoAnchorToggle";
 
 export function AdminHeader() {
   return (
@@ -27,6 +28,7 @@ export function AdminHeaderTools() {
       <PromotePolicyButton />
       <RevertTagButton />
       <AnchorNowButton />
+      <AutoAnchorToggle />
     </div>
   );
 }
