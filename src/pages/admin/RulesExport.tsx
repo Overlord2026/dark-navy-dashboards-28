@@ -176,6 +176,14 @@ export default function RulesExport() {
   const [loading, setLoading] = React.useState(false);
   const dateTag = new Date().toISOString().slice(0, 19).replace(/[:T]/g, '').replace(/-/g, '');
 
+  // Check if we were opened by Publish Batch
+  React.useEffect(() => {
+    const publishSummary = localStorage.getItem('lastReleaseSummary');
+    if (publishSummary) {
+      setLog(`📋 Opened from Publish Batch:\n\n${publishSummary}\n\n${'='.repeat(50)}\n\n`);
+    }
+  }, []);
+
   function summarize(obj: any) { 
     return obj ? Object.keys(obj).length : 0; 
   }
@@ -275,10 +283,12 @@ export default function RulesExport() {
         ]
       );
 
-      setLog(`✅ Exported rules successfully!\n\nCounts:\n- Estate rules: ${estateRows.length}\n- Deed rules: ${deedRows.length}\n- Health rules: ${healthRows.length}\n- County metadata: ${countyRows.length}\n\nSHA256: ${hash}\n\nFiles downloaded:\n- rules_export_${dateTag}.json (pretty)\n- rules_export_${dateTag}.min.json (minified)\n- CSV files for each rule type`);
+      const exportLog = `✅ Exported rules successfully!\n\nCounts:\n- Estate rules: ${estateRows.length}\n- Deed rules: ${deedRows.length}\n- Health rules: ${healthRows.length}\n- County metadata: ${countyRows.length}\n\nSHA256: ${hash}\n\nFiles downloaded:\n- rules_export_${dateTag}.json (pretty)\n- rules_export_${dateTag}.min.json (minified)\n- CSV files for each rule type`;
+      
+      setLog(prev => prev + exportLog);
 
     } catch (error: any) {
-      setLog(`❌ Export failed: ${error.message}`);
+      setLog(prev => prev + `❌ Export failed: ${error.message}`);
     } finally {
       setLoading(false);
     }
