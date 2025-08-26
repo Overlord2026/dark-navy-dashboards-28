@@ -114,6 +114,24 @@ export default function ReceiptView() {
     setSp(new URLSearchParams());
   }
 
+  // NEW: Export the current filtered window as JSON
+  async function exportWindowJSON() {
+    setBusy(true);
+    try {
+      const window = await fetchWindow();
+      const payload = JSON.stringify(window, null, 2);
+      const blob = new Blob([payload], { type: "application/json;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "receipts_window.json";
+      a.click();
+      URL.revokeObjectURL(url);
+    } finally {
+      setBusy(false);
+    }
+  }
+
   // keep local state in sync if URL query changes externally
   React.useEffect(() => {
     setFilters(parseFilters(sp));
@@ -211,6 +229,9 @@ export default function ReceiptView() {
             </Button>
             <Button variant="outline" size="sm" onClick={downloadJSON}>
               Export JSON
+            </Button>
+            <Button variant="outline" size="sm" onClick={exportWindowJSON} disabled={busy}>
+              Export Window JSON
             </Button>
             <Button variant="outline" size="sm" onClick={() => goPrevNext(-1)} disabled={busy}>
               Prev
