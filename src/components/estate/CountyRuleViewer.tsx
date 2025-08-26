@@ -7,6 +7,8 @@ export default function CountyRuleViewer({ policyVersion }: Props){
   const [layout, setLayout] = React.useState(defaultLayout);
   const [result, setResult] = React.useState<{ok:boolean; violations:string[]; remedies:string[]}|null>(null);
   const [busy, setBusy] = React.useState(false);
+  // NEW: lightweight "copied" feedback flag
+  const [copied, setCopied] = React.useState(false);
 
   // NEW: small helper to download a text file
   function downloadText(name: string, text: string) {
@@ -105,6 +107,24 @@ export default function CountyRuleViewer({ policyVersion }: Props){
     } finally { setBusy(false); }
   }
 
+  // NEW: copy the current ASCII schematic to clipboard (with fallback)
+  async function copyAscii(){
+    const text = asciiSchematic();
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(text);
+      } else {
+        const ta = document.createElement("textarea");
+        ta.value = text; ta.style.position="fixed"; ta.style.opacity="0";
+        document.body.appendChild(ta); ta.select(); document.execCommand("copy"); document.body.removeChild(ta);
+      }
+      setCopied(true);
+      setTimeout(()=>setCopied(false), 1600);
+    } catch {
+      // no-op; leave silently
+    }
+  }
+
   // NEW: export the current ASCII schematic
   function exportAscii(){
     const ts = new Date();
@@ -179,10 +199,18 @@ export default function CountyRuleViewer({ policyVersion }: Props){
         <div className="space-y-1">
           <div className="font-semibold">ASCII schematic</div>
           <pre className="whitespace-pre text-xs border rounded p-2 bg-white">{asciiSchematic()}</pre>
-          {/* NEW: Export ASCII button */}
-          <button className="border rounded px-3 py-1 text-xs" onClick={exportAscii} disabled={busy}>
-            Export ASCII (.txt)
-          </button>
+          
+          {/* NEW: Export + Copy buttons and a tiny "Copied!" hint */}
+          <div className="flex items-center gap-2">
+            <button className="border rounded px-3 py-1 text-xs" onClick={exportAscii} disabled={busy}>
+              Export ASCII (.txt)
+            </button>
+            <button className="border rounded px-3 py-1 text-xs" onClick={copyAscii} disabled={busy}>
+              Copy schematic
+            </button>
+            {copied && <span className="text-xs">Copied!</span>}
+          </div>
+          
           <div className="text-xs">
             {result
               ? (result.ok
