@@ -114,6 +114,46 @@ export default function ReceiptView() {
     setSp(new URLSearchParams());
   }
 
+  // NEW: convert window objects to a flat CSV row (content-free)
+  function toCSV(rows: any[]): string {
+    const head = ["receipt_id", "type", "ts", "policy_version", "inputs_hash", "anchored", "merkle_root", "reasons"];
+    const lines = [head.join(",")];
+    rows.forEach(r => {
+      const anchored = r.anchor_ref ? "yes" : "no";
+      const merkle = r.anchor_ref?.merkle_root || "";
+      const reasons = (r.reasons || []).join("|");
+      lines.push([
+        r.receipt_id ?? "",
+        r.type ?? "",
+        r.ts ?? "",
+        r.policy_version ?? "",
+        r.inputs_hash ?? "",
+        anchored,
+        merkle,
+        `"${reasons}"`
+      ].join(","));
+    });
+    return lines.join("\n");
+  }
+
+  // NEW: Export filtered window as CSV
+  async function exportWindowCSV() {
+    setBusy(true);
+    try {
+      const window = await fetchWindow();
+      const csv = toCSV(window);
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "receipts_window.csv";
+      a.click();
+      URL.revokeObjectURL(url);
+    } finally {
+      setBusy(false);
+    }
+  }
+
   // NEW: Export the current filtered window as JSON
   async function exportWindowJSON() {
     setBusy(true);
@@ -232,6 +272,9 @@ export default function ReceiptView() {
             </Button>
             <Button variant="outline" size="sm" onClick={exportWindowJSON} disabled={busy}>
               Export Window JSON
+            </Button>
+            <Button variant="outline" size="sm" onClick={exportWindowCSV} disabled={busy}>
+              Export Window CSV
             </Button>
             <Button variant="outline" size="sm" onClick={() => goPrevNext(-1)} disabled={busy}>
               Prev
