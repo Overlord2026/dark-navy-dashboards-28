@@ -1,6 +1,8 @@
 import React from 'react';
 import { recordReceipt } from '@/features/receipts/record';
 import { getPartner } from '@/features/k401/partners';
+import { runAdviceOnlyDemo, hasRecentAdviceDemo } from '@/features/k401/adviceOnlyDemo';
+import { exportCurrentRules } from '@/features/release/rulesExport';
 
 // Local helpers ----------------------------------------------------------------
 
@@ -220,7 +222,10 @@ export default function K401ChecklistRunner() {
     for (const it of ITEMS) {
       const res = await it.check();
       next[it.key] = { pass: res.pass, note: res.note, at: new Date().toISOString(), version };
-      if (res.pass) completed.push(it.key);
+      if (res.pass) {
+        completed.push(it.key);
+        await logDone(it.key, version); // Log k401.done for each passing item
+      }
     }
     setState(next); saveState(next);
     if (completed.length) await logSummary(version, completed);
@@ -231,6 +236,47 @@ export default function K401ChecklistRunner() {
     const next = { ...state, [key]: { pass: true, note: 'manual', at: new Date().toISOString(), version } };
     setState(next); saveState(next);
     await logDone(key, version);
+  }
+
+  async function publishBatch() {
+    // Export current rules and append hash to release notes
+    const { json: rules, hash } = await exportCurrentRules();
+    
+    // Record rules export
+    await recordReceipt({
+      type: 'Decision-RDS',
+      action: 'rules.exported',
+      reasons: [`hash:${hash}`, 'k401_rules', version],
+      created_at: new Date().toISOString()
+    } as any);
+
+    // Generate release notes with rules hash
+    const releaseNotes = `K401 Release ${version}\n\n- Checklist completed: ${doneCount}/${ITEMS.length}\n- Rules hash: ${hash}\n- Generated: ${new Date().toISOString()}`;
+    
+    // Download release notes
+    const blob = new Blob([releaseNotes], { type: 'text/plain' });
+    const a = document.createElement('a'); 
+    a.href = URL.createObjectURL(blob);
+    a.download = `k401_release_${version}.txt`; 
+    a.click(); 
+    URL.revokeObjectURL(a.href);
+
+    // Log final k401.launch
+    await recordReceipt({
+      type: 'Decision-RDS',
+      action: 'k401.launch',
+      reasons: [version, `completed:${doneCount}`, `hash:${hash}`],
+      created_at: new Date().toISOString()
+    } as any);
+  }
+
+  async function runAdviceDemo() {
+    try {
+      const result = await runAdviceOnlyDemo();
+      alert('✅ Advice-only demo completed! Check receipts for Delivery-RDS and Reconciliation-RDS.');
+    } catch (error) {
+      alert('❌ Demo failed: ' + (error as Error).message);
+    }
   }
 
   function exportJson() {
@@ -248,7 +294,11 @@ export default function K401ChecklistRunner() {
           <input className="ml-2 rounded-xl border px-3 py-1" value={version} onChange={e=>setVersion(e.target.value)} />
         </label>
         <button className="rounded-xl border px-3 py-2" onClick={runAll} disabled={running}>Run all checks</button>
-        <button className="rounded-xl border px-3 py-2" onClick={exportJson}>Export checklist JSON</button>
+        <button className="rounded-xl border px-3 py-2 bg-green-50" onClick={publishBatch} disabled={running}>Publish Batch</button>
+        <button className="rounded-xl border px-3 py-2" onClick={exportJson}>Export JSON</button>
+        <button className="rounded-xl border px-3 py-2 bg-blue-50" onClick={runAdviceDemo} disabled={running}>
+          Advice-only Demo {hasRecentAdviceDemo() ? '✅' : ''}
+        </button>
         <div className="text-sm text-gray-600">Completed: {doneCount}/{ITEMS.length}</div>
       </div>
 

@@ -1,11 +1,16 @@
 import { useEffect, useMemo, useState } from 'react';
 import { recordReceipt } from '@/features/receipts/record';
 import { maybeAnchor, generateHash } from '@/features/anchors/hooks';
+import { useCMA, useGlideForAge } from '@/features/k401/cma/hooks';
 import type { McInput, McOutput } from '@/workers/mc401k.worker';
 
 export function useMc401k(input: McInput) {
   const [out, setOut] = useState<McOutput | null>(null);
   const [loading, setLoading] = useState(false);
+  
+  // Get live CMA and glide path data
+  const cma = useCMA();
+  const glideForAge = useGlideForAge;
   
   const worker = useMemo(() => 
     new Worker(new URL('../../workers/mc401k.worker.ts', import.meta.url), { type: 'module' }), 
@@ -22,7 +27,15 @@ export function useMc401k(input: McInput) {
     };
     
     worker.addEventListener('message', handler as any);
-    worker.postMessage(input);
+    
+    // Enhance input with live CMA data and glide path
+    const enhancedInput = {
+      ...input,
+      cma,
+      glideForAge: input.age ? glideForAge(input.age) : undefined
+    };
+    
+    worker.postMessage(enhancedInput);
     
     // Log content-free receipt with optional anchoring
     (async () => {
