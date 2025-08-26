@@ -49,6 +49,7 @@ import K401ProviderRulesSearch from '@/pages/admin/K401ProviderRulesSearch';
 import K401CMAUploader from '@/pages/admin/K401CMAUploader';
 import ROICalculator from '@/pages/broker/ROICalculator';
 import BrokerKit from '@/pages/broker/BrokerKit';
+import K401CompliancePack from '@/pages/admin/K401CompliancePack';
 import RulesExport from '@/pages/admin/RulesExport';
 import AnchorList from '@/pages/admin/AnchorList';
 import ReceiptView from '@/pages/admin/ReceiptView';
@@ -339,6 +340,7 @@ function App() {
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/k401/forms" element={<K401FormsAdmin />} />}
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/k401/providers/search" element={<K401ProviderRulesSearch />} />}
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/k401/cma" element={<K401CMAUploader />} />}
+             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/k401/compliance-pack" element={<K401CompliancePack />} />}
              
              {/* Broker Routes */}
              <Route path="/broker/roi" element={<ROICalculator />} />

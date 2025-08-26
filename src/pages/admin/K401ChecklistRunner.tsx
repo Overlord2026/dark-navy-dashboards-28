@@ -11,7 +11,9 @@ type ItemKey =
   | 'advisor_book'
   | 'role_gated_ro'
   | 'receipts_anchors'
-  | 'smb_partner';
+  | 'smb_partner'
+  | 'compliance_pack'
+  | 'broker_demo_pack';
 
 type Item = {
   key: ItemKey;
@@ -123,6 +125,20 @@ async function checkSmbPartner() {
   } catch { return { pass: false, note: 'partner:unknown' }; }
 }
 
+// #8 Compliance pack generated (ERISA/PTE 2020-02 + Crypto policy memo)
+async function checkCompliancePack() {
+  const ready = localStorage.getItem('k401.compliancePack.ready') === 'true';
+  const date = localStorage.getItem('k401.compliancePack.date');
+  return { pass: ready, note: date ? `generated:${date}` : 'not generated' };
+}
+
+// #9 Broker demo pack generated (30-min demo script + materials)
+async function checkBrokerDemoPack() {
+  const ready = localStorage.getItem('k401.brokerDemoPack.ready') === 'true';
+  const date = localStorage.getItem('k401.brokerDemoPack.date');
+  return { pass: ready, note: date ? `generated:${date}` : 'not generated' };
+}
+
 // Checklist items ---------------------------------------------------------------
 
 const ITEMS: Item[] = [
@@ -167,6 +183,18 @@ const ITEMS: Item[] = [
     title: 'SMB plan creation partner (white-label) agreed',
     desc: 'Partner set in Admin → K401 Partner',
     check: checkSmbPartner
+  },
+  {
+    key: 'compliance_pack',
+    title: 'Compliance pack generated (ERISA/PTE 2020-02 + Crypto policy)',
+    desc: '2-page compliance overview with policy memos → Vault',
+    check: checkCompliancePack
+  },
+  {
+    key: 'broker_demo_pack',
+    title: 'Broker demo pack generated (30-min script + materials)',
+    desc: 'Demo script and presentation materials → Vault',
+    check: checkBrokerDemoPack
   }
 ];
 
