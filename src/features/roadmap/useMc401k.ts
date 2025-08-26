@@ -32,7 +32,7 @@ export function useMc401k(input: McInput) {
     const enhancedInput = {
       ...input,
       cma,
-      glideForAge: input.age ? glideForAge(input.age) : undefined
+      glideForAge: input.currentAge ? glideForAge(input.currentAge) : undefined
     };
     
     worker.postMessage(enhancedInput);
