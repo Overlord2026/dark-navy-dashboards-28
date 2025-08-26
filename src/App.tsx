@@ -46,6 +46,7 @@ import K401ChecklistRunner from '@/pages/admin/K401ChecklistRunner';
 import MigrationHub from '@/pages/admin/MigrationHub';
 import K401FormsAdmin from '@/pages/admin/K401FormsAdmin';
 import K401ProviderRulesSearch from '@/pages/admin/K401ProviderRulesSearch';
+import K401CMAUploader from '@/pages/admin/K401CMAUploader';
 import RulesExport from '@/pages/admin/RulesExport';
 import AnchorList from '@/pages/admin/AnchorList';
 import ReceiptView from '@/pages/admin/ReceiptView';
@@ -335,6 +336,7 @@ function App() {
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/k401/checklist" element={<K401ChecklistRunner />} />}
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/k401/forms" element={<K401FormsAdmin />} />}
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/k401/providers/search" element={<K401ProviderRulesSearch />} />}
+             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/k401/cma" element={<K401CMAUploader />} />}
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/anchors" element={<AnchorList />} />}
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/receipt/:id" element={<ReceiptView />} />}
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/migration-invite" element={<MigrationHubInvite />} />}
