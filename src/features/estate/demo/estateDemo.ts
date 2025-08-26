@@ -173,13 +173,16 @@ export async function emitValidationReportRDS(
   return r.receipt_id;
 }
 
+const KEY_COUNTY_LIST = "county.meta.list";
+const KEY_LAST_BATCH  = "estate.batch.last";   // stores { ts, policy_version, merkle_root, audit_receipt_id, receipt_ids[] }
+
 /**
  * Load county rule list (content-free). In production, wire to your real store.
  * Falls back to [sampleCounty] if none exists.
  */
 export function getCountyList(): Array<CountyRule> {
   try {
-    const raw = localStorage.getItem("county.meta.list");
+    const raw = localStorage.getItem(KEY_COUNTY_LIST);
     if (raw) {
       const list = JSON.parse(raw);
       if (Array.isArray(list) && list.length) return list;
@@ -229,11 +232,68 @@ export async function emitValidationReportsForCounties(
   return { since_iso: isoStart, count: ids.length, receipt_ids: ids };
 }
 
+/** Build and download County Meta CSV (content-free). */
+export function exportCountyMetaCSV() {
+  const list = getCountyList();
+  const head = [
+    "state","county","pageSize",
+    "margin_top","margin_left","margin_right","margin_bottom",
+    "stamp_x","stamp_y","stamp_w","stamp_h",
+    "minFontPt","requires_APN","requires_preparer","requires_returnAddress",
+    "policy_version"
+  ];
+  const lines = [head.join(",")];
+  list.forEach(c=>{
+    const [state, county] = String(c.county_token).split("_",2);
+    lines.push([
+      state || "", county || "", c.pageSize,
+      c.marginsIn.top, c.marginsIn.left, c.marginsIn.right, c.marginsIn.bottom,
+      c.stampBoxIn.x, c.stampBoxIn.y, c.stampBoxIn.w, c.stampBoxIn.h,
+      c.minFontPt, Number(!!c.requires.APN), Number(!!c.requires.preparer), Number(!!c.requires.returnAddress),
+      "E-2025.08"
+    ].join(","));
+  });
+  const blob = new Blob([lines.join("\n")], { type:"text/csv;charset=utf-8" });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement("a");
+  a.href = url; a.download = "county_meta.csv"; a.click();
+  URL.revokeObjectURL(url);
+}
+
+/** Store the last batch summary locally (content-free). */
+function setLastBatch(summary: { ts:string; policy_version:string; merkle_root:string; audit_receipt_id:string; receipt_ids:string[] }) {
+  try { localStorage.setItem(KEY_LAST_BATCH, JSON.stringify(summary)); } catch {}
+}
+
+export function getLastBatch() {
+  try { return JSON.parse(localStorage.getItem(KEY_LAST_BATCH)||"null"); } catch { return null; }
+}
+
+/** Export the last batch result (if any) to CSV (content-free). */
+export function exportLastBatchCSV() {
+  const last = getLastBatch();
+  if (!last) {
+    alert("No last batch summary found.");
+    return;
+  }
+  const head = ["batch_ts","policy_version","merkle_root","audit_receipt_id","receipt_id"];
+  const lines = [head.join(",")];
+  (last.receipt_ids || []).forEach((id: string)=>{
+    lines.push([last.ts, last.policy_version, last.merkle_root, last.audit_receipt_id, id].join(","));
+  });
+  const blob = new Blob([lines.join("\n")], { type:"text/csv;charset=utf-8" });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement("a");
+  a.href = url; a.download = "last_batch_receipts.csv"; a.click();
+  URL.revokeObjectURL(url);
+}
+
 /**
  * Batch "Report + Anchor" for all counties (or first N).
  * 1) emits Reason-RDS for each county,
  * 2) anchors all newly-emitted Reason-RDS together (single batch),
  * 3) returns audit info (content-free).
+ * (UPDATED) Stores a content-free summary to KEY_LAST_BATCH for CSV export.
  */
 export async function batchReportAndAnchorAll(
   policyVersion: string,
@@ -249,6 +309,16 @@ export async function batchReportAndAnchorAll(
     include_types: ["Reason-RDS"],
     max_batch: opts?.limit || 500
   });
+
+  // store last batch summary for CSV export (content-free)
+  const summary = {
+    ts: new Date().toISOString(),
+    policy_version: policyVersion,
+    merkle_root: res.merkle_root || "",
+    audit_receipt_id: res.audit_receipt_id || "",
+    receipt_ids: emitted.receipt_ids || []
+  };
+  setLastBatch(summary);
 
   return {
     ok: res.ok,

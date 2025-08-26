@@ -1,6 +1,6 @@
 import React from 'react';
 import CountyRuleViewer from "@/components/estate/CountyRuleViewer";
-import { batchReportAndAnchorAll } from "@/features/estate/demo/estateDemo";
+import { batchReportAndAnchorAll, exportCountyMetaCSV, exportLastBatchCSV } from "@/features/estate/demo/estateDemo";
 
 export default function EstateRonDemoPage(){
   const pv = "E-2025.08";
@@ -39,6 +39,14 @@ export default function EstateRonDemoPage(){
           Batch Report + Anchor (all counties)
         </button>
         
+        {/* NEW: CSV exports */}
+        <button className="border rounded px-3 py-1" disabled={busy} onClick={()=>exportCountyMetaCSV()}>
+          Export County Meta CSV
+        </button>
+        <button className="border rounded px-3 py-1" disabled={busy} onClick={()=>exportLastBatchCSV()}>
+          Export Last Batch CSV
+        </button>
+        
         <button className="border rounded px-3 py-1" onClick={()=>setLog([])} title="Clear log">Reset Demo</button>
       </div>
 
@@ -51,7 +59,7 @@ export default function EstateRonDemoPage(){
       </div>
 
       <div className="text-xs text-gray-600">
-        All receipts are content-free (bands/tokens + hashes). No PII/PHI is stored. Use Anchors and Receipt Viewer to inspect details.
+        All receipts are content-free (bands/tokens + hashes). No PII/PHI is stored. CSV exports are content-free: county inches/tokens for metadata; batch summary with receipt IDs and hashes.
       </div>
     </div>
   );
