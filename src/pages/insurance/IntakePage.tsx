@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { Shield, Home, Car } from 'lucide-react';
 import { toast } from 'sonner';
 
-export default function InsuranceIntakePage() {
+export function IntakePage() {
   const navigate = useNavigate();
   const [insuranceType, setInsuranceType] = useState<'home' | 'auto'>('home');
   const [loading, setLoading] = useState(false);
@@ -368,3 +368,5 @@ export default function InsuranceIntakePage() {
     </div>
   );
 }
+
+export default IntakePage;
