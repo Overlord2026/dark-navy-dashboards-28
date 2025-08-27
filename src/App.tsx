@@ -137,6 +137,17 @@ const CryptoDashboard = React.lazy(() => import('@/pages/crypto/CryptoDashboard'
 const BeneficiaryDirectives = React.lazy(() => import('@/pages/crypto/BeneficiaryDirectives'));
 const TradePanel = React.lazy(() => import('@/pages/crypto/TradePanel'));
 
+// Insurance & Marketplace
+import { IntakePage as InsuranceIntakePage } from './pages/insurance/IntakePage';
+import { QuotePage } from './pages/insurance/QuotePage';
+import { BindPage } from './pages/insurance/BindPage';
+import { FNOLPage } from './pages/insurance/FNOLPage';
+import { AssetsPage as FamilyAssetsPage } from './pages/family/AssetsPage';
+import { AssetDetailPage } from './pages/family/AssetDetailPage';
+import { MeetingsPage as ProMeetingsPage } from './pages/pros/MeetingsPage';
+import { AgentsPage } from './pages/marketplace/AgentsPage';
+import { QuoteStartPage } from './pages/marketplace/QuoteStartPage';
+
 function App() {
   // Check authentication status (simplified for demo)
   const isAuthenticated = typeof window !== 'undefined' && 
@@ -196,6 +207,13 @@ function App() {
           {/* Family Assets Routes */}
           <Route path="/family/assets" element={<FamilyAssetsPage />} />
           <Route path="/family/assets/:id" element={<AssetDetailPage />} />
+          
+          {/* Professional Meeting Tools */}
+          <Route path="/pros/meetings" element={<ProMeetingsPage />} />
+          
+          {/* Marketplace & Quotes */}
+          <Route path="/agents" element={<AgentsPage />} />
+          <Route path="/quotes/start" element={<QuoteStartPage />} />
             {/* Estate Planning Routes */}
             <Route path="/estate/workbench" element={
               <Suspense fallback={<div>Loading...</div>}>
