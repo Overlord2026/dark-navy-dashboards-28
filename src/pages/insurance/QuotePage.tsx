@@ -10,7 +10,7 @@ import { replayVerify } from '@/services/receipts';
 import { Shield, FileText, CheckCircle, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 
-export default function QuotePage() {
+export function QuotePage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
@@ -292,3 +292,5 @@ export default function QuotePage() {
     </div>
   );
 }
+
+export default QuotePage;
