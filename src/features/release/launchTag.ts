@@ -1,3 +1,5 @@
+import { canonicalJson, sha256Hex } from '@/lib/canonical';
+
 export type AnchorRef = {
   merkle_root: string;
   cross_chain_locator?: Array<{ chain: string; txid: string }>;
@@ -22,33 +24,16 @@ export type LaunchTagRDS = {
   launch_tag: string;             // human tag, e.g., "2025.09.0"
 };
 
-function canonicalJson(obj: any) {
-  // string-safe canonicalizer (keys sorted)
-  if (Array.isArray(obj)) return obj.map(canonicalJson);
-  if (obj && typeof obj === "object") {
-    return Object.keys(obj).sort().reduce((acc: any, k: string) => {
-      acc[k] = canonicalJson(obj[k]);
-      return acc;
-    }, {});
-  }
-  return obj;
-}
-
-export async function sha256HexBrowser(data: string): Promise<string> {
-  // Web Crypto for browser; node fallback if needed
-  if (typeof window !== "undefined" && window.crypto?.subtle) {
-    const enc = new TextEncoder().encode(data);
-    const dig = await window.crypto.subtle.digest("SHA-256", enc);
-    return [...new Uint8Array(dig)].map(b => b.toString(16).padStart(2,"0")).join("");
-  } else {
-    const { createHash } = await import("node:crypto");
-    return createHash("sha256").update(data, "utf8").digest("hex");
-  }
+// Create a reproducible "launch tag" (sha256 of canonicalized payload)
+export async function makeLaunchTag(payload: unknown): Promise<string> {
+  const json = canonicalJson(payload);
+  const hex = await sha256Hex(json);
+  return 'sha256:' + hex;
 }
 
 export async function writeLaunchTagRDS(summary: Omit<LaunchTagRDS,"inputs_hash"|"receipt_id">) {
   const canon = canonicalJson(summary);
-  const hash = await sha256HexBrowser(JSON.stringify(canon));
+  const hash = await sha256Hex(JSON.stringify(canon));
   const rds: LaunchTagRDS = {
     ...summary,
     inputs_hash: `sha256:${hash}`,
