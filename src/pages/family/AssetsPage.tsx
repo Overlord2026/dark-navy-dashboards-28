@@ -14,7 +14,7 @@ import {
   Plus, Calendar, AlertTriangle, TrendingUp 
 } from 'lucide-react';
 
-export default function FamilyAssetsPage() {
+export function AssetsPage() {
   const navigate = useNavigate();
   const [assets, setAssets] = useState([]);
   const [summary, setSummary] = useState(null);

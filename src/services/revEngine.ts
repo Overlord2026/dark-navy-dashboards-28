@@ -136,7 +136,7 @@ export async function applyRules(period: string, iarId: string): Promise<Revenue
     );
 
     const { error: ledgerError } = await supabase
-      .from('revenue_ledger')
+      .from('rev_ledger')
       .insert(entriesWithHashes);
 
     if (ledgerError) throw ledgerError;
