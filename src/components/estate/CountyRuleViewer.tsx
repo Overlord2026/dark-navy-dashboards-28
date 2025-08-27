@@ -1,14 +1,50 @@
 import React from "react";
-import { sampleCounty, defaultLayout, validateLayout, emitDeltaFromValidation, emitValidationReportRDS } from "@/features/estate/demo/estateDemo";
+import {
+  // remove sampleCounty import; keep defaultLayout, validate, emitDelta
+  defaultLayout, validateLayout, emitDeltaFromValidation
+} from "@/features/estate/demo/estateDemo";
+import {
+  getCountyList,               // NEW
+  type CountyRule
+} from "@/features/estate/demo/estateDemo";
+import { emitValidationReportRDS } from "@/features/estate/demo/estateDemo";
+import { anchorNow } from "@/features/anchor/anchorNow";
 
 type Props = { policyVersion: string };
 
 export default function CountyRuleViewer({ policyVersion }: Props){
+  // NEW: county list + selection
+  const [counties] = React.useState<CountyRule[]>(getCountyList());
+  const [countyIx, setCountyIx] = React.useState<number>(0);
+  const county = counties[countyIx] || {
+    county_token: "CA/Los_Angeles",
+    pageSize: "Letter",
+    marginsIn: { top: 3.0, left: 1.0, right: 1.0, bottom: 1.0 },
+    stampBoxIn: { x: 6.25, y: 0.5, w: 2.25, h: 3.0 },
+    minFontPt: 10,
+    requires: { APN: true, preparer: true, returnAddress: true },
+    eRecording: true,
+    provider: "simplifile",
+    policy_version: "ER-2025.09"
+  } as CountyRule;
+  // NEW: lightweight "copied" feedback flag
   const [layout, setLayout] = React.useState(defaultLayout);
   const [result, setResult] = React.useState<{ok:boolean; violations:string[]; remedies:string[]}|null>(null);
   const [busy, setBusy] = React.useState(false);
-  // NEW: lightweight "copied" feedback flag
   const [copied, setCopied] = React.useState(false);
+
+  // Reset layout when county changes (start from county policy)
+  React.useEffect(()=>{
+    setLayout({
+      marginsIn: { ...county.marginsIn },
+      stampBoxIn: { ...county.stampBoxIn },
+      fontPt: Math.max(10, county.minFontPt),
+      hasAPN: !!county.requires.APN,
+      hasPreparer: !!county.requires.preparer,
+      hasReturnAddress: !!county.requires.returnAddress
+    });
+    setResult(null);
+  }, [countyIx]);
 
   // NEW: small helper to download a text file
   function downloadText(name: string, text: string) {
@@ -41,12 +77,12 @@ export default function CountyRuleViewer({ policyVersion }: Props){
 
   function fixToPolicy(){
     setLayout({
-      marginsIn: { ...sampleCounty.marginsIn },
-      stampBoxIn: { ...sampleCounty.stampBoxIn },
-      fontPt: Math.max(layout.fontPt, sampleCounty.minFontPt),
-      hasAPN: sampleCounty.requires.APN ? true : layout.hasAPN,
-      hasPreparer: sampleCounty.requires.preparer ? true : layout.hasPreparer,
-      hasReturnAddress: sampleCounty.requires.returnAddress ? true : layout.hasReturnAddress
+      marginsIn: { ...county.marginsIn },
+      stampBoxIn: { ...county.stampBoxIn },
+      fontPt: Math.max(layout.fontPt, county.minFontPt),
+      hasAPN: county.requires.APN ? true : layout.hasAPN,
+      hasPreparer: county.requires.preparer ? true : layout.hasPreparer,
+      hasReturnAddress: county.requires.returnAddress ? true : layout.hasReturnAddress
     });
     setResult(null);
   }
@@ -64,10 +100,10 @@ export default function CountyRuleViewer({ policyVersion }: Props){
     function inchToRows(inch:number){ return Math.round((inch/11)* (H-2)); }
     function inchToCols(inch:number){ return Math.round((inch/8.5)* (W-2)); }
 
-    const topRows   = inchToRows(sampleCounty.marginsIn.top);
-    const leftCols  = inchToCols(sampleCounty.marginsIn.left);
-    const rightCols = inchToCols(sampleCounty.marginsIn.right);
-    const bottomRows= inchToRows(sampleCounty.marginsIn.bottom);
+    const topRows   = inchToRows(county.marginsIn.top);
+    const leftCols  = inchToCols(county.marginsIn.left);
+    const rightCols = inchToCols(county.marginsIn.right);
+    const bottomRows= inchToRows(county.marginsIn.bottom);
 
     // Shade margins using dots (.)
     for (let y=1; y<=topRows && y<H-1; y++) for (let x=1; x<W-1; x++) grid[y][x]=".";
@@ -86,8 +122,8 @@ export default function CountyRuleViewer({ policyVersion }: Props){
 
     const lines = grid.map(r => r.join(""));
     return [
-      `County: ${sampleCounty.county_token}  Page: ${sampleCounty.pageSize}`,
-      `Policy margins (in): top ${sampleCounty.marginsIn.top}  left ${sampleCounty.marginsIn.left}  right ${sampleCounty.marginsIn.right}  bottom ${sampleCounty.marginsIn.bottom}`,
+      `County: ${county.county_token}  Page: ${county.pageSize}`,
+      `Policy margins (in): top ${county.marginsIn.top}  left ${county.marginsIn.left}  right ${county.marginsIn.right}  bottom ${county.marginsIn.bottom}`,
       `Layout stamp-box (in): x ${layout.stampBoxIn.x}  y ${layout.stampBoxIn.y}  w ${layout.stampBoxIn.w}  h ${layout.stampBoxIn.h}`,
       "",
       ...lines
@@ -95,7 +131,7 @@ export default function CountyRuleViewer({ policyVersion }: Props){
   }
 
   async function validate(){
-    const v = validateLayout(layout, sampleCounty);
+    const v = validateLayout(layout, county);
     setResult(v);
   }
   async function emitDelta(){
@@ -130,7 +166,7 @@ export default function CountyRuleViewer({ policyVersion }: Props){
     const ts = new Date();
     const pad = (n:number)=>String(n).padStart(2,"0");
     const stamp = `${ts.getFullYear()}${pad(ts.getMonth()+1)}${pad(ts.getDate())}_${pad(ts.getHours())}${pad(ts.getMinutes())}${pad(ts.getSeconds())}`;
-    const name = `${sampleCounty.county_token.replace("/","_")}_layout_${stamp}.txt`;
+    const name = `${county.county_token.replace("/","_")}_layout_${stamp}.txt`;
     downloadText(name, asciiSchematic());
   }
 
@@ -143,13 +179,13 @@ export default function CountyRuleViewer({ policyVersion }: Props){
     const lines: string[] = [];
     lines.push(`Estate / RON — Validation Report (content-free)`);
     lines.push(`Generated: ${stamp}`);
-    lines.push(`County: ${sampleCounty.county_token}`);
-    lines.push(`Policy version: E-2025.08`);
-    lines.push(`Page size: ${sampleCounty.pageSize}`);
-    lines.push(`Policy margins (in): top ${sampleCounty.marginsIn.top}  left ${sampleCounty.marginsIn.left}  right ${sampleCounty.marginsIn.right}  bottom ${sampleCounty.marginsIn.bottom}`);
-    lines.push(`Policy min font: ${sampleCounty.minFontPt} pt`);
-    lines.push(`Required: APN=${sampleCounty.requires.APN}  preparer=${sampleCounty.requires.preparer}  returnAddress=${sampleCounty.requires.returnAddress}`);
-    lines.push(`eRecording: true  provider=DocuSign`);
+    lines.push(`County: ${county.county_token}`);
+    lines.push(`Policy version: ${(county as any).policy_version || "ER-2025.09"}`);
+    lines.push(`Page size: ${county.pageSize}`);
+    lines.push(`Policy margins (in): top ${county.marginsIn.top}  left ${county.marginsIn.left}  right ${county.marginsIn.right}  bottom ${county.marginsIn.bottom}`);
+    lines.push(`Policy min font: ${county.minFontPt} pt`);
+    lines.push(`Required: APN=${county.requires.APN}  preparer=${county.requires.preparer}  returnAddress=${county.requires.returnAddress}`);
+    lines.push(`eRecording: ${!!(county as any).eRecording}  provider=${(county as any).provider || "-"}`);
     lines.push(``);
     lines.push(`Candidate layout`);
     lines.push(`  Margins (in): top ${layout.marginsIn.top}  left ${layout.marginsIn.left}  right ${layout.marginsIn.right}  bottom ${layout.marginsIn.bottom}`);
@@ -170,12 +206,12 @@ export default function CountyRuleViewer({ policyVersion }: Props){
   // NEW: Export Validation Report (.txt)
   async function exportValidationReport(){
     // Ensure we have a validation result; if not, run it once
-    const v = result ?? validateLayout(layout, sampleCounty);
+    const v = result ?? validateLayout(layout, county);
     if (!result) setResult(v);
     const pad = (n:number)=>String(n).padStart(2,"0");
     const ts  = new Date();
     const stamp = `${ts.getFullYear()}${pad(ts.getMonth()+1)}${pad(ts.getDate())}_${pad(ts.getHours())}${pad(ts.getMinutes())}${pad(ts.getSeconds())}`;
-    const name  = `${sampleCounty.county_token.replace("/","_")}_validation_${stamp}.txt`;
+    const name  = `${county.county_token.replace("/","_")}_validation_${stamp}.txt`;
     const text  = buildValidationReport(v);
     downloadText(name, text);
   }
@@ -185,7 +221,7 @@ export default function CountyRuleViewer({ policyVersion }: Props){
     setBusy(true);
     try {
       // Ensure we have a fresh validation result
-      const v = result ?? validateLayout(layout, sampleCounty);
+      const v = result ?? validateLayout(layout, county);
       if (!result) setResult(v);
 
       const id = await emitValidationReportRDS(
@@ -201,6 +237,18 @@ export default function CountyRuleViewer({ policyVersion }: Props){
   return (
     <div className="border rounded p-3 space-y-2">
       <div className="text-sm font-semibold">County Rule Viewer (content-free)</div>
+
+      {/* NEW: county dropdown */}
+      <div className="text-sm mb-2">
+        <label className="inline-flex items-center gap-2">County
+          <select className="border rounded px-2 py-1"
+                  value={countyIx}
+                  onChange={e=>setCountyIx(Math.max(0, parseInt(e.target.value,10)||0))}>
+            {counties.map((c,ix)=> <option key={c.county_token} value={ix}>{c.county_token}</option>)}
+          </select>
+        </label>
+        <span className="ml-3 text-xs opacity-70">Policy: {(county as any).policy_version || "ER-2025.09"}</span>
+      </div>
 
       {/* Layout form */}
       <div className="grid grid-cols-2 gap-2 text-sm">
