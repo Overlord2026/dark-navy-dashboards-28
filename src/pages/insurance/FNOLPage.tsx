@@ -11,7 +11,7 @@ import { inputs_hash } from '@/lib/canonical';
 import { AlertTriangle, Phone, FileText } from 'lucide-react';
 import { toast } from 'sonner';
 
-export default function FNOLPage() {
+function FNOLPage() {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     policy_number: '',
@@ -142,3 +142,6 @@ export default function FNOLPage() {
     </div>
   );
 }
+
+export { FNOLPage };
+export default FNOLPage;
