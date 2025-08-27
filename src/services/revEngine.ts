@@ -161,7 +161,7 @@ export async function applyRules(period: string, iarId: string): Promise<Revenue
 export async function processPayout(iarId: string, period: string): Promise<string> {
   // Get ledger entries for period
   const { data: entries, error } = await supabase
-    .from('revenue_ledger')
+    .from('rev_ledger')
     .select('*')
     .eq('iar_id', iarId)
     .eq('period', period);
@@ -251,7 +251,7 @@ export async function getRevenueSummary(iarId: string, periods: string[] = []): 
   periods_processed: number;
 }> {
   let query = supabase
-    .from('revenue_ledger')
+    .from('rev_ledger')
     .select('gross_revenue, net_revenue, split_amount')
     .eq('iar_id', iarId);
 
