@@ -7,8 +7,8 @@ export async function exportCurrentRules(): Promise<{ json: any; hash: string }>
   // TODO: replace with live policy/rules getter
   const activeRaw = localStorage.getItem(KEY_ACTIVE);
   const json = activeRaw ? JSON.parse(activeRaw) : { policies: [], version: "UNKNOWN" };
-  const { sha256HexBrowser } = await import("@/features/release/launchTag");
-  const hash = "sha256:" + await sha256HexBrowser(JSON.stringify(json));
+  const { sha256Hex } = await import("@/lib/canonical");
+  const hash = "sha256:" + await sha256Hex(JSON.stringify(json));
   return { json, hash };
 }
 

@@ -1,4 +1,4 @@
-import { sha256HexBrowser } from "@/features/release/launchTag";
+import { sha256Hex } from "@/lib/canonical";
 
 export type RevertTagRDS = {
   receipt_id: string;           // rds_revert_<iso>
@@ -26,7 +26,7 @@ function canonicalJson(obj: any) {
 
 export async function writeRevertTagRDS(data: Omit<RevertTagRDS, "inputs_hash" | "receipt_id">) {
   const canon = canonicalJson(data);
-  const hash = await sha256HexBrowser(JSON.stringify(canon));
+  const hash = await sha256Hex(JSON.stringify(canon));
   const rds: RevertTagRDS = {
     ...data,
     inputs_hash: `sha256:${hash}`,

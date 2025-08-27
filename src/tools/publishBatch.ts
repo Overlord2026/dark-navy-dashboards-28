@@ -93,8 +93,8 @@ export async function publishBatch(opts: PublishBatchOptions) {
   // Include current rules hash
   try {
     const rulesJSON = localStorage.getItem("rulesync.current") || "{}";
-    const { sha256HexBrowser } = await import("@/features/release/launchTag");
-    const hash = "sha256:" + await sha256HexBrowser(rulesJSON);
+    const { sha256Hex } = await import("@/lib/canonical");
+    const hash = "sha256:" + await sha256Hex(rulesJSON);
     md += `\n- **Rules hash:** ${hash}`;
   } catch {
     // Rules hash optional if RuleSync not available
