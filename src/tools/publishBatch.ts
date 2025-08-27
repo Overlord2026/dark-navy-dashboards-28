@@ -88,7 +88,18 @@ export async function publishBatch(opts: PublishBatchOptions) {
   }
 
   // 4) Build Release Summary (markdown) for Admin → Release Notes
-  const md = renderReleaseSummary(rds);
+  let md = renderReleaseSummary(rds);
+  
+  // Include current rules hash
+  try {
+    const rulesJSON = localStorage.getItem("rulesync.current") || "{}";
+    const { sha256HexBrowser } = await import("@/features/release/launchTag");
+    const hash = "sha256:" + await sha256HexBrowser(rulesJSON);
+    md += `\n- **Rules hash:** ${hash}`;
+  } catch {
+    // Rules hash optional if RuleSync not available
+  }
+  
   console.info("[publish] release summary:\n", md);
 
   // 5) Open Rules Export (UI)

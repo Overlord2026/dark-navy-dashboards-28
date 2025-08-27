@@ -81,6 +81,15 @@ export function AdminHeaderTools() {
       >
         County Meta
       </Button>
+      
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => goto("/admin/rulesync")}
+        title="RuleSync administration"
+      >
+        RuleSync
+      </Button>
     </div>
   );
 }
