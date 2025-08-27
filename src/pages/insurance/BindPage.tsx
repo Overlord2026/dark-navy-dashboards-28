@@ -12,7 +12,7 @@ import { getQuote } from '@/services/ratingStub';
 import { Shield, CheckCircle, FileText, CreditCard, Signature, Eye, Lock } from 'lucide-react';
 import { toast } from 'sonner';
 
-export default function BindPage() {
+export function BindPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
@@ -352,3 +352,5 @@ export default function BindPage() {
     </div>
   );
 }
+
+export default BindPage;
