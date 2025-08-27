@@ -65,6 +65,10 @@ import MarketingPreview from '@/pages/preview/MarketingPreview';
 import NewReviewSession from '@/pages/estate/review/NewReviewSession';
 import ReviewSession from '@/pages/attorney/ReviewSession';
 import ReviewView from '@/pages/family/ReviewView';
+
+// Trust Rails Admin Pages
+import ReceiptsViewer from '@/pages/admin/receipts/ReceiptsViewer';
+import TrustAnchors from '@/pages/admin/anchors/Anchors';
 const RolloverWizard = React.lazy(() => import('@/pages/k401/RolloverWizard'));
 const AdvisorBook = React.lazy(() => import('@/pages/k401/AdvisorBook'));
 
@@ -353,6 +357,8 @@ function App() {
              <Route path="/broker/kit" element={<BrokerKit />} />
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/anchors" element={<AnchorList />} />}
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/receipt/:id" element={<ReceiptView />} />}
+             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/receipts" element={<ReceiptsViewer />} />}
+             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/trust-anchors" element={<TrustAnchors />} />}
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/migration-invite" element={<MigrationHubInvite />} />}
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/migration-queue" element={<MigrationQueueAdmin />} />}
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/migration" element={<MigrationHub />} />}
