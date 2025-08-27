@@ -124,7 +124,7 @@ export function InvitesPage() {
     setLoading(true);
     try {
       const inviteIds = invites.map(inv => inv.id);
-      const result = await sendInvites(inviteIds, campaignCtx.channel);
+      const result = await sendInvites(inviteIds, campaignCtx.channel as "email" | "sms");
       
       toast.success(`Sent ${result.sent} invites, ${result.failed} failed`);
       
@@ -257,7 +257,7 @@ export function InvitesPage() {
                 </div>
                 <div>
                   <Label htmlFor="channel">Channel *</Label>
-                  <Select value={campaignCtx.channel} onValueChange={(value) => 
+                   <Select value={campaignCtx.channel} onValueChange={(value: "email" | "sms") => 
                     setCampaignCtx(prev => ({ ...prev, channel: value }))
                   }>
                     <SelectTrigger>
@@ -266,7 +266,7 @@ export function InvitesPage() {
                     <SelectContent>
                       <SelectItem value="email">Email</SelectItem>
                       <SelectItem value="sms">SMS</SelectItem>
-                      <SelectItem value="linkedin">LinkedIn</SelectItem>
+                      
                     </SelectContent>
                   </Select>
                 </div>

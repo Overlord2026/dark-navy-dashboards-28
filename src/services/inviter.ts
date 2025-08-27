@@ -12,7 +12,7 @@ export interface CampaignContext {
   campaign_id: string;
   metro?: string;
   specialty?: string;
-  channel: 'email' | 'sms' | 'linkedin';
+  channel: 'email' | 'sms';
   inviter_id?: string;
 }
 

@@ -62,7 +62,7 @@ export function BindPage() {
     
     setProcessing(true);
     try {
-      await updateChecklistItem(binding.id, item, checked);
+      await updateChecklistItem(binding.id, item as keyof BindingChecklist, checked);
       
       // Update local state
       setBinding(prev => ({
@@ -180,7 +180,7 @@ export function BindPage() {
                   <Checkbox
                     id="identity_verified"
                     checked={binding.checklist.identity_verified}
-                    onCheckedChange={(checked) => handleChecklistUpdate('identity_verified', checked)}
+                    onCheckedChange={(checked) => handleChecklistUpdate('identity_verified', Boolean(checked))}
                     disabled={processing}
                   />
                   <div className="flex items-center gap-2">
@@ -198,7 +198,7 @@ export function BindPage() {
                   <Checkbox
                     id="payment_method_confirmed"
                     checked={binding.checklist.payment_method_confirmed}
-                    onCheckedChange={(checked) => handleChecklistUpdate('payment_method_confirmed', checked)}
+                    onCheckedChange={(checked) => handleChecklistUpdate('payment_method_confirmed', Boolean(checked))}
                     disabled={processing}
                   />
                   <div className="flex items-center gap-2">
@@ -216,7 +216,7 @@ export function BindPage() {
                   <Checkbox
                     id="disclosures_accepted"
                     checked={binding.checklist.disclosures_accepted}
-                    onCheckedChange={(checked) => handleChecklistUpdate('disclosures_accepted', checked)}
+                    onCheckedChange={(checked) => handleChecklistUpdate('disclosures_accepted', Boolean(checked))}
                     disabled={processing}
                   />
                   <div className="flex items-center gap-2">
@@ -234,7 +234,7 @@ export function BindPage() {
                   <Checkbox
                     id="underwriting_approved"
                     checked={binding.checklist.underwriting_approved}
-                    onCheckedChange={(checked) => handleChecklistUpdate('underwriting_approved', checked)}
+                    onCheckedChange={(checked) => handleChecklistUpdate('underwriting_approved', Boolean(checked))}
                     disabled={processing}
                   />
                   <div className="flex items-center gap-2">
