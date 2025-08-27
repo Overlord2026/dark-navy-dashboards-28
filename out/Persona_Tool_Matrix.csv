@@ -1,0 +1,58 @@
+persona,tool,status,routes,receipts,anchors,replay,attestation,notes
+families-aspiring,retirement-roadmap,yes,/family/tools/retirement,y,y,n,n,Complete with receipt recording
+families-aspiring,wealth-vault,partial,/family/vault/autofill-consent,y,y,n,n,Basic consent flow only
+families-aspiring,rmd-check,yes,/family/tools/rmd-check,y,y,n,n,Full implementation
+families-aspiring,social-security,yes,/family/tools/ss-timing,y,y,n,n,Complete tool
+families-aspiring,roth-ladder,yes,/family/tools/roth-ladder,y,y,n,n,Complete tool
+families-aspiring,taxhub-diy,yes,/family/tools/taxhub-preview,y,y,n,n,Preview implementation
+families-retirees,retirement-roadmap,yes,/family/tools/retirement,y,y,n,n,Complete with receipt recording
+families-retirees,wealth-vault,partial,/family/vault/autofill-consent,y,y,n,n,Basic consent flow only
+families-retirees,rmd-check,yes,/family/tools/rmd-check,y,y,n,n,Full implementation
+families-retirees,social-security,yes,/family/tools/ss-timing,y,y,n,n,Complete tool
+families-retirees,longevity-hub,partial,/health/*,y,n,n,n,Health components exist
+families-retirees,estate-planner,yes,/estate/diy,y,y,n,n,DIY estate planning
+advisors,lead-capture,yes,/advisors/leads,y,y,n,n,Complete lead management
+advisors,client-onboarding,partial,/advisors/meetings,y,y,n,n,Meeting-based onboarding
+advisors,proposal-generator,missing,/preview/proposal-generator,n,n,n,n,Preview page only
+advisors,portfolio-analytics,missing,/preview/portfolio-analytics,n,n,n,n,Preview page only
+advisors,compliance-tracker,missing,/preview/compliance-tracker,n,n,n,n,Preview page only
+advisors,client-management,yes,/advisors/pipeline,y,y,n,n,Pipeline management
+advisors,professional-network,missing,/preview/professional-network,n,n,n,n,Preview page only
+cpas,tax-calendar,missing,/preview/tax-calendar,n,n,n,n,Planned in BFO Ops
+cpas,client-import,missing,/preview/client-import,n,n,n,n,Planned in BFO Ops
+cpas,tax-vault,missing,/preview/tax-vault,n,n,n,n,Planned in BFO Ops
+cpas,bookkeeping,partial,/accounting/*,y,y,n,n,Backend accounting tables exist
+cpas,compliance-tracker,missing,/preview/compliance-tracker,n,n,n,n,Preview page only
+attorneys-estate,case-management,yes,/attorney/estate,y,y,n,n,Estate workbench complete
+attorneys-estate,document-generation,yes,/estate/workbench,y,y,n,n,Document generation tools
+attorneys-estate,compliance-tracker,yes,/attorney/estate/review/*,y,y,n,n,Review workflows
+attorneys-estate,estate-templates,yes,/estate/diy,y,y,n,n,Template system
+attorneys-litigation,case-management,missing,/preview/case-management,n,n,n,n,Planned in BFO Ops
+attorneys-litigation,discovery-tools,missing,/preview/discovery-tools,n,n,n,n,Planned in BFO Ops
+attorneys-litigation,compliance-tracker,missing,/preview/compliance-tracker,n,n,n,n,Preview page only
+insurance-life,agent-invite,missing,/preview/agent-invite,n,n,n,n,Preview page only
+insurance-life,insurance-vault,missing,/preview/insurance-vault,n,n,n,n,Preview page only
+insurance-life,insurance-reports,missing,/preview/insurance-reports,n,n,n,n,Preview page only
+insurance-life,quote-generator,missing,/preview/quote-generator,n,n,n,n,Planned in BFO Ops
+insurance-medicare,agent-invite,missing,/preview/agent-invite,n,n,n,n,Preview page only
+insurance-medicare,medicare-tools,missing,/preview/medicare-tools,n,n,n,n,Planned in BFO Ops
+insurance-medicare,compliance-tracker,missing,/preview/compliance-tracker,n,n,n,n,Preview page only
+healthcare-providers,patient-portal,missing,/preview/patient-portal,n,n,n,n,Planned in BFO Ops
+healthcare-providers,health-records,partial,/health/*,y,n,n,n,Health components exist
+healthcare-providers,secure-messaging,missing,/preview/secure-messaging,n,n,n,n,Planned in BFO Ops
+healthcare-coaches,protocol-builder,missing,/preview/protocol-builder,n,n,n,n,Planned in BFO Ops
+healthcare-coaches,client-tracking,missing,/preview/client-tracking,n,n,n,n,Planned in BFO Ops
+healthcare-coaches,longevity-tools,partial,/health/*,y,n,n,n,Health components exist
+realtors,realtor-listings,missing,/preview/realtor-listings,n,n,n,n,Preview page only
+realtors,cap-rate-report,missing,/preview/cap-rate-report,n,n,n,n,Preview page only
+realtors,property-vault,missing,/preview/property-vault,n,n,n,n,Preview page only
+realtors,client-management,missing,/preview/client-management,n,n,n,n,Preview page only
+nil-athletes,nil-training,yes,/nil/education,y,y,n,n,Education center complete
+nil-athletes,nil-disclosure,yes,/nil/disclosures,y,y,n,n,Disclosure management
+nil-athletes,nil-offers,yes,/nil/offers,y,y,n,n,Offer tracking system
+nil-athletes,nil-vault,partial,/nil/receipts,y,y,n,n,Receipt viewing only
+nil-athletes,nil-compliance,yes,/nil/admin,y,y,n,n,Admin compliance tools
+nil-schools,nil-training,yes,/nil/education,y,y,n,n,Education center complete
+nil-schools,nil-marketplace,yes,/nil/marketplace,y,y,n,n,Marketplace platform
+nil-schools,nil-network,missing,/preview/nil-network,n,n,n,n,Preview page only
+nil-schools,nil-compliance,yes,/nil/admin,y,y,n,n,Admin compliance tools

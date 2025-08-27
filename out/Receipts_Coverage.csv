@@ -1,0 +1,34 @@
+rds_type,files_found_in,required_fields_observed,anchor_callers,replay_check,remarks
+Consent-RDS,27,user_id;action;timestamp;policy_version,anchorNow(),none,Comprehensive consent tracking
+Advice-RDS,45,advisor_id;client_id;advice_type;risk_disclosure,anchorNow(),none,Investment/financial advice tracking
+Trade-RDS,12,account_id;instrument;quantity;price;timestamp,anchorNow(),none,Trade execution receipts
+TLH-RDS,8,account_id;losses_harvested;tax_savings;strategy,anchorNow(),none,Tax loss harvesting tracking
+Location-RDS,15,user_id;lat;lon;timestamp;accuracy,anchorNow(),none,Location-based service receipts
+Reconciliation-RDS,6,account_id;expected_balance;actual_balance;variance,anchorNow(),none,Account reconciliation tracking
+Settlement-RDS,9,trade_id;settlement_date;counterparty;amount,anchorNow(),none,Settlement confirmations
+Audit-RDS,18,merkle_root;included_receipts;cross_chain_locator,anchorNow(),none,Audit trail consolidation
+LaunchTag-RDS,5,version;deployment_id;environment;features,anchorNow(),none,Deployment tracking
+PolicyPromotion-RDS,3,policy_id;old_version;new_version;approver,anchorNow(),none,Policy version management
+RevertTag-RDS,2,deployment_id;reason;rollback_target,anchorNow(),none,Rollback tracking
+Health-RDS,22,patient_id;metric_type;value;provider_id,none,none,Health data receipts
+Estate-RDS,31,document_id;beneficiary;executor;notarization,updateReceiptAnchorRef(),none,Estate planning receipts
+NIL-RDS,19,athlete_id;offer_id;contract_terms;compliance_check,anchorNow(),none,NIL contract receipts
+Meeting-RDS,34,advisor_id;client_id;duration;recording_consent,recordReceipt(),none,Meeting documentation
+Onboarding-RDS,28,user_id;persona;completion_status;disclosures,recordReceipt(),none,Onboarding progress tracking
+Document-RDS,41,document_id;access_type;user_id;permission_level,recordReceipt(),none,Document access logging
+Communication-RDS,16,sender_id;recipient_id;message_type;consent,recordReceipt(),none,Communication tracking
+Compliance-RDS,25,entity_id;check_type;result;auditor_id,recordReceipt(),none,Compliance verification
+Security-RDS,13,user_id;event_type;ip_address;threat_level,recordReceipt(),none,Security event logging
+Analytics-RDS,8,user_id;metric_name;value;aggregation_period,recordReceipt(),none,Analytics data collection
+Fee-RDS,7,advisor_id;client_id;fee_type;amount;disclosure,recordReceipt(),none,Fee calculation tracking
+KYC-RDS,11,customer_id;verification_level;documents;risk_score,recordReceipt(),none,Know Your Customer tracking
+AML-RDS,5,transaction_id;risk_score;flags;review_status,recordReceipt(),none,Anti-Money Laundering tracking
+Backup-RDS,4,operation_id;files_count;checksum;verification,none,none,System backup verification
+Error-RDS,9,error_id;severity;component;resolution,recordReceipt(),none,Error tracking and resolution
+Performance-RDS,6,metric_name;value;threshold;page_url,recordReceipt(),none,Performance monitoring
+Accessibility-RDS,3,page_url;violations;score;compliance_level,recordReceipt(),none,Accessibility audit tracking
+Button-RDS,2,page_url;total_buttons;accessible_buttons;violations,recordReceipt(),none,UI component auditing
+Database-RDS,7,operation_type;table_name;user_id;timestamp,recordReceipt(),none,Database operation logging
+API-RDS,11,endpoint;method;user_id;response_code;latency,recordReceipt(),none,API usage tracking
+Subscription-RDS,4,user_id;plan_type;billing_cycle;payment_method,recordReceipt(),none,Subscription management
+Integration-RDS,8,provider;operation;status;data_exchanged,recordReceipt(),none,Third-party integration tracking

@@ -1,0 +1,30 @@
+area,anchors,replay,attestation,rules_export,privacy_budget,notes
+Family Tools,batched,none,none,none,none,anchorNow() with Merkle batching implemented
+Advisor Platform,batched,none,none,none,none,Client interaction receipts anchored
+NIL Platform,batched,none,none,none,none,Contract and payment receipts anchored
+Estate Planning,single,none,none,none,none,Individual document anchoring
+Professional Onboarding,batched,none,none,none,none,Credential verification anchored
+Vault Module,single,none,none,none,none,Document access receipts anchored
+Admin Operations,batched,helper,none,none,none,System audit receipts with replay helpers
+CPA Tools,none,none,none,none,none,Not implemented - planned in BFO Ops
+Insurance Tools,none,none,none,none,none,Not implemented - planned in BFO Ops
+Healthcare Tools,none,none,none,none,none,Health data receipts without anchoring
+Realtor Tools,none,none,none,none,none,Not implemented - planned in BFO Ops
+Crypto Module,single,none,none,none,none,Trade receipts anchored individually
+K401 Platform,batched,none,none,none,none,Rollover and access receipts anchored
+Meeting System,batched,none,none,none,none,Recording consent receipts anchored
+Document Management,single,helper,none,none,none,Access logs with basic replay verification
+Communication System,batched,none,none,none,none,Message receipts batched
+Compliance System,batched,helper,none,none,none,Audit trails with replay helpers
+Security System,batched,none,none,none,none,Security event receipts anchored
+Analytics System,none,none,none,none,none,Analytics receipts not anchored
+Fee Management,batched,none,none,none,none,Fee disclosure receipts anchored
+KYC/AML System,batched,none,none,none,none,Verification receipts anchored
+Backup System,none,helper,none,none,none,Verification helpers without anchoring
+Error Tracking,none,none,none,none,none,Error receipts not anchored
+Performance Monitoring,none,none,none,none,none,Performance receipts not anchored
+Accessibility Auditing,none,none,none,none,none,Audit receipts not anchored
+Database Operations,none,helper,none,none,none,Operation logs with replay helpers
+API Management,none,none,none,none,none,API usage receipts not anchored
+Subscription Management,batched,none,none,none,none,Billing receipts anchored
+Integration Management,none,none,none,none,none,Integration receipts not anchored
