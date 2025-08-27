@@ -186,7 +186,16 @@ function App() {
             {getFlag('ONBOARDING_PUBLIC_ENABLED') && <Route path="/start/nil-athlete" element={<NILOnboardingFlow type="athlete" />} />}
             {getFlag('ONBOARDING_PUBLIC_ENABLED') && <Route path="/start/nil-school" element={<NILOnboardingFlow type="school" />} />}
             {getFlag('BRAND_PUBLIC_ENABLED') && <Route path="/start/brand" element={<BrandOnboarding />} />}
-            
+          
+          {/* Insurance Hub Routes */}
+          <Route path="/insurance/intake" element={<InsuranceIntakePage />} />
+          <Route path="/insurance/quote/:id" element={<QuotePage />} />
+          <Route path="/insurance/bind/:id" element={<BindPage />} />
+          <Route path="/insurance/fnol/:id" element={<FNOLPage />} />
+          
+          {/* Family Assets Routes */}
+          <Route path="/family/assets" element={<FamilyAssetsPage />} />
+          <Route path="/family/assets/:id" element={<AssetDetailPage />} />
             {/* Estate Planning Routes */}
             <Route path="/estate/workbench" element={
               <Suspense fallback={<div>Loading...</div>}>

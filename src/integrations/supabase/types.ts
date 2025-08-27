@@ -2180,6 +2180,7 @@ export type Database = {
           name: string
           phone: string | null
           specializations: string[]
+          specialties: Json | null
           total_reviews: number | null
           updated_at: string
           user_id: string | null
@@ -2206,6 +2207,7 @@ export type Database = {
           name: string
           phone?: string | null
           specializations?: string[]
+          specialties?: Json | null
           total_reviews?: number | null
           updated_at?: string
           user_id?: string | null
@@ -2232,6 +2234,7 @@ export type Database = {
           name?: string
           phone?: string | null
           specializations?: string[]
+          specialties?: Json | null
           total_reviews?: number | null
           updated_at?: string
           user_id?: string | null
@@ -4092,6 +4095,233 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      asset_advice: {
+        Row: {
+          advice_summary: string
+          advice_type: string
+          asset_id: string
+          created_at: string
+          detailed_analysis: Json | null
+          id: string
+          priority_level: string
+          recommended_actions: Json | null
+          resolved_at: string | null
+          status: string
+        }
+        Insert: {
+          advice_summary: string
+          advice_type: string
+          asset_id: string
+          created_at?: string
+          detailed_analysis?: Json | null
+          id?: string
+          priority_level: string
+          recommended_actions?: Json | null
+          resolved_at?: string | null
+          status?: string
+        }
+        Update: {
+          advice_summary?: string
+          advice_type?: string
+          asset_id?: string
+          created_at?: string
+          detailed_analysis?: Json | null
+          id?: string
+          priority_level?: string
+          recommended_actions?: Json | null
+          resolved_at?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "asset_advice_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "assets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      asset_docs: {
+        Row: {
+          asset_id: string
+          created_by: string
+          document_name: string
+          document_type: string
+          expiry_date: string | null
+          file_size_bytes: number | null
+          id: string
+          upload_date: string
+          vault_hash: string
+        }
+        Insert: {
+          asset_id: string
+          created_by: string
+          document_name: string
+          document_type: string
+          expiry_date?: string | null
+          file_size_bytes?: number | null
+          id?: string
+          upload_date?: string
+          vault_hash: string
+        }
+        Update: {
+          asset_id?: string
+          created_by?: string
+          document_name?: string
+          document_type?: string
+          expiry_date?: string | null
+          file_size_bytes?: number | null
+          id?: string
+          upload_date?: string
+          vault_hash?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "asset_docs_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "assets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      asset_extracts: {
+        Row: {
+          asset_doc_id: string
+          confidence_score: number | null
+          extracted_data: Json
+          extraction_type: string
+          id: string
+          processed_at: string
+          processor_version: string | null
+        }
+        Insert: {
+          asset_doc_id: string
+          confidence_score?: number | null
+          extracted_data: Json
+          extraction_type: string
+          id?: string
+          processed_at?: string
+          processor_version?: string | null
+        }
+        Update: {
+          asset_doc_id?: string
+          confidence_score?: number | null
+          extracted_data?: Json
+          extraction_type?: string
+          id?: string
+          processed_at?: string
+          processor_version?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "asset_extracts_asset_doc_id_fkey"
+            columns: ["asset_doc_id"]
+            isOneToOne: false
+            referencedRelation: "asset_docs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      asset_reminders: {
+        Row: {
+          acknowledged_at: string | null
+          asset_id: string
+          created_at: string
+          description: string | null
+          id: string
+          notification_methods: Json | null
+          reminder_date: string
+          reminder_type: string
+          sent_at: string | null
+          status: string
+          title: string
+        }
+        Insert: {
+          acknowledged_at?: string | null
+          asset_id: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          notification_methods?: Json | null
+          reminder_date: string
+          reminder_type: string
+          sent_at?: string | null
+          status?: string
+          title: string
+        }
+        Update: {
+          acknowledged_at?: string | null
+          asset_id?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          notification_methods?: Json | null
+          reminder_date?: string
+          reminder_type?: string
+          sent_at?: string | null
+          status?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "asset_reminders_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "assets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      assets: {
+        Row: {
+          acquisition_date: string | null
+          asset_name: string
+          asset_type: string
+          created_at: string
+          current_value_band: string | null
+          id: string
+          last_appraisal_date: string | null
+          location_zip_first3: string | null
+          metadata: Json | null
+          next_appraisal_due: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          acquisition_date?: string | null
+          asset_name: string
+          asset_type: string
+          created_at?: string
+          current_value_band?: string | null
+          id?: string
+          last_appraisal_date?: string | null
+          location_zip_first3?: string | null
+          metadata?: Json | null
+          next_appraisal_due?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          acquisition_date?: string | null
+          asset_name?: string
+          asset_type?: string
+          created_at?: string
+          current_value_band?: string | null
+          id?: string
+          last_appraisal_date?: string | null
+          location_zip_first3?: string | null
+          metadata?: Json | null
+          next_appraisal_due?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       attorney_bar_status: {
         Row: {
