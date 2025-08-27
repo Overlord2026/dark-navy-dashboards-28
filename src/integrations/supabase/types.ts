@@ -5308,6 +5308,63 @@ export type Database = {
           },
         ]
       }
+      automation_runs: {
+        Row: {
+          attestation_hash: string | null
+          explain: Json | null
+          finished_at: string | null
+          household_id: string
+          id: string
+          key: string
+          started_at: string | null
+          status: string
+        }
+        Insert: {
+          attestation_hash?: string | null
+          explain?: Json | null
+          finished_at?: string | null
+          household_id: string
+          id?: string
+          key: string
+          started_at?: string | null
+          status: string
+        }
+        Update: {
+          attestation_hash?: string | null
+          explain?: Json | null
+          finished_at?: string | null
+          household_id?: string
+          id?: string
+          key?: string
+          started_at?: string | null
+          status?: string
+        }
+        Relationships: []
+      }
+      automations: {
+        Row: {
+          enabled: boolean | null
+          inputs: Json | null
+          key: string
+          name: string
+          price_cents: number | null
+        }
+        Insert: {
+          enabled?: boolean | null
+          inputs?: Json | null
+          key: string
+          name: string
+          price_cents?: number | null
+        }
+        Update: {
+          enabled?: boolean | null
+          inputs?: Json | null
+          key?: string
+          name?: string
+          price_cents?: number | null
+        }
+        Relationships: []
+      }
       backup_operations: {
         Row: {
           backup_location: string | null
@@ -11119,6 +11176,74 @@ export type Database = {
         }
         Relationships: []
       }
+      diligence_artifacts: {
+        Row: {
+          artifact_hash: string
+          case_id: string | null
+          created_at: string | null
+          id: string
+          kind: string
+        }
+        Insert: {
+          artifact_hash: string
+          case_id?: string | null
+          created_at?: string | null
+          id?: string
+          kind: string
+        }
+        Update: {
+          artifact_hash?: string
+          case_id?: string | null
+          created_at?: string | null
+          id?: string
+          kind?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "diligence_artifacts_case_id_fkey"
+            columns: ["case_id"]
+            isOneToOne: false
+            referencedRelation: "diligence_cases"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      diligence_cases: {
+        Row: {
+          advisor_name: string
+          crd: string | null
+          created_at: string | null
+          flags: Json | null
+          iard: string | null
+          id: string
+          score: number | null
+          sources: Json | null
+          status: string | null
+        }
+        Insert: {
+          advisor_name: string
+          crd?: string | null
+          created_at?: string | null
+          flags?: Json | null
+          iard?: string | null
+          id?: string
+          score?: number | null
+          sources?: Json | null
+          status?: string | null
+        }
+        Update: {
+          advisor_name?: string
+          crd?: string | null
+          created_at?: string | null
+          flags?: Json | null
+          iard?: string | null
+          id?: string
+          score?: number | null
+          sources?: Json | null
+          status?: string | null
+        }
+        Relationships: []
+      }
       disaster_recovery_checklist: {
         Row: {
           actual_data_loss: unknown | null
@@ -16252,6 +16377,74 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      iar_pages: {
+        Row: {
+          blocks: Json | null
+          id: string
+          path: string
+          site_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          blocks?: Json | null
+          id?: string
+          path: string
+          site_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          blocks?: Json | null
+          id?: string
+          path?: string
+          site_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "iar_pages_site_id_fkey"
+            columns: ["site_id"]
+            isOneToOne: false
+            referencedRelation: "iar_sites"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      iar_sites: {
+        Row: {
+          disclosures: Json | null
+          iar_id: string
+          id: string
+          sections: Json | null
+          slug: string
+          status: string | null
+          theme: Json | null
+          updated_at: string | null
+          version: string | null
+        }
+        Insert: {
+          disclosures?: Json | null
+          iar_id: string
+          id?: string
+          sections?: Json | null
+          slug: string
+          status?: string | null
+          theme?: Json | null
+          updated_at?: string | null
+          version?: string | null
+        }
+        Update: {
+          disclosures?: Json | null
+          iar_id?: string
+          id?: string
+          sections?: Json | null
+          slug?: string
+          status?: string | null
+          theme?: Json | null
+          updated_at?: string | null
+          version?: string | null
+        }
+        Relationships: []
       }
       impact_milestones: {
         Row: {
@@ -29322,6 +29515,114 @@ export type Database = {
         }
         Relationships: []
       }
+      rev_ledger: {
+        Row: {
+          created_at: string | null
+          gross_cents: number
+          household_id: string
+          iar_id: string
+          id: string
+          net_cents: number
+          payout_id: string | null
+          period: string
+          product: string
+          reasons: Json | null
+          split_cents: number
+          status: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          gross_cents: number
+          household_id: string
+          iar_id: string
+          id?: string
+          net_cents: number
+          payout_id?: string | null
+          period: string
+          product: string
+          reasons?: Json | null
+          split_cents: number
+          status?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          gross_cents?: number
+          household_id?: string
+          iar_id?: string
+          id?: string
+          net_cents?: number
+          payout_id?: string | null
+          period?: string
+          product?: string
+          reasons?: Json | null
+          split_cents?: number
+          status?: string | null
+        }
+        Relationships: []
+      }
+      rev_payouts: {
+        Row: {
+          batch_id: string
+          id: string
+          method: string
+          notes: Json | null
+          pay_date: string
+          total_cents: number
+        }
+        Insert: {
+          batch_id: string
+          id?: string
+          method: string
+          notes?: Json | null
+          pay_date: string
+          total_cents: number
+        }
+        Update: {
+          batch_id?: string
+          id?: string
+          method?: string
+          notes?: Json | null
+          pay_date?: string
+          total_cents?: number
+        }
+        Relationships: []
+      }
+      rev_rules: {
+        Row: {
+          basis: string
+          created_at: string | null
+          eff_from: string
+          eff_through: string | null
+          iar_id: string
+          id: string
+          product: string
+          split_pct: number
+          tiers: Json | null
+        }
+        Insert: {
+          basis: string
+          created_at?: string | null
+          eff_from: string
+          eff_through?: string | null
+          iar_id: string
+          id?: string
+          product: string
+          split_pct: number
+          tiers?: Json | null
+        }
+        Update: {
+          basis?: string
+          created_at?: string | null
+          eff_from?: string
+          eff_through?: string | null
+          iar_id?: string
+          id?: string
+          product?: string
+          split_pct?: number
+          tiers?: Json | null
+        }
+        Relationships: []
+      }
       revocations: {
         Row: {
           consent_id: string
@@ -33420,6 +33721,272 @@ export type Database = {
           },
         ]
       }
+      transition_accounts: {
+        Row: {
+          household_id: string
+          id: string
+          keep_number: boolean | null
+          last_event_at: string | null
+          source_custodian: string
+          status: string | null
+          target_platform: string
+          transition_id: string | null
+        }
+        Insert: {
+          household_id: string
+          id?: string
+          keep_number?: boolean | null
+          last_event_at?: string | null
+          source_custodian: string
+          status?: string | null
+          target_platform: string
+          transition_id?: string | null
+        }
+        Update: {
+          household_id?: string
+          id?: string
+          keep_number?: boolean | null
+          last_event_at?: string | null
+          source_custodian?: string
+          status?: string | null
+          target_platform?: string
+          transition_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transition_accounts_transition_id_fkey"
+            columns: ["transition_id"]
+            isOneToOne: false
+            referencedRelation: "transitions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      transition_contacts: {
+        Row: {
+          bounced: boolean | null
+          clicked_count: number | null
+          email_hash: string
+          first_sent_at: string | null
+          household_id: string
+          id: string
+          last_sent_at: string | null
+          opened_count: number | null
+          opted_out: boolean | null
+          sends_count: number | null
+          status: string | null
+          suppression_reason: string | null
+          transition_id: string | null
+        }
+        Insert: {
+          bounced?: boolean | null
+          clicked_count?: number | null
+          email_hash: string
+          first_sent_at?: string | null
+          household_id: string
+          id?: string
+          last_sent_at?: string | null
+          opened_count?: number | null
+          opted_out?: boolean | null
+          sends_count?: number | null
+          status?: string | null
+          suppression_reason?: string | null
+          transition_id?: string | null
+        }
+        Update: {
+          bounced?: boolean | null
+          clicked_count?: number | null
+          email_hash?: string
+          first_sent_at?: string | null
+          household_id?: string
+          id?: string
+          last_sent_at?: string | null
+          opened_count?: number | null
+          opted_out?: boolean | null
+          sends_count?: number | null
+          status?: string | null
+          suppression_reason?: string | null
+          transition_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transition_contacts_transition_id_fkey"
+            columns: ["transition_id"]
+            isOneToOne: false
+            referencedRelation: "transitions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      transition_email_queue: {
+        Row: {
+          contact_id: string | null
+          created_at: string | null
+          id: string
+          last_error: string | null
+          scheduled_at: string
+          send_after: string
+          status: string | null
+          token_hash: string
+          transition_id: string | null
+        }
+        Insert: {
+          contact_id?: string | null
+          created_at?: string | null
+          id?: string
+          last_error?: string | null
+          scheduled_at: string
+          send_after: string
+          status?: string | null
+          token_hash: string
+          transition_id?: string | null
+        }
+        Update: {
+          contact_id?: string | null
+          created_at?: string | null
+          id?: string
+          last_error?: string | null
+          scheduled_at?: string
+          send_after?: string
+          status?: string | null
+          token_hash?: string
+          transition_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transition_email_queue_contact_id_fkey"
+            columns: ["contact_id"]
+            isOneToOne: false
+            referencedRelation: "transition_contacts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transition_email_queue_transition_id_fkey"
+            columns: ["transition_id"]
+            isOneToOne: false
+            referencedRelation: "transitions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      transition_emails: {
+        Row: {
+          body_tpl_md: string
+          created_at: string | null
+          enabled: boolean | null
+          footer_disclaimer_md: string | null
+          from_email: string
+          from_name: string
+          id: string
+          reply_to: string | null
+          step: string
+          subject_tpl: string
+          template_key: string
+          transition_id: string | null
+        }
+        Insert: {
+          body_tpl_md: string
+          created_at?: string | null
+          enabled?: boolean | null
+          footer_disclaimer_md?: string | null
+          from_email: string
+          from_name: string
+          id?: string
+          reply_to?: string | null
+          step: string
+          subject_tpl: string
+          template_key: string
+          transition_id?: string | null
+        }
+        Update: {
+          body_tpl_md?: string
+          created_at?: string | null
+          enabled?: boolean | null
+          footer_disclaimer_md?: string | null
+          from_email?: string
+          from_name?: string
+          id?: string
+          reply_to?: string | null
+          step?: string
+          subject_tpl?: string
+          template_key?: string
+          transition_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transition_emails_transition_id_fkey"
+            columns: ["transition_id"]
+            isOneToOne: false
+            referencedRelation: "transitions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      transition_events: {
+        Row: {
+          contact_id: string | null
+          event: string
+          id: string
+          meta: Json | null
+          transition_id: string | null
+          ts: string | null
+        }
+        Insert: {
+          contact_id?: string | null
+          event: string
+          id?: string
+          meta?: Json | null
+          transition_id?: string | null
+          ts?: string | null
+        }
+        Update: {
+          contact_id?: string | null
+          event?: string
+          id?: string
+          meta?: Json | null
+          transition_id?: string | null
+          ts?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transition_events_transition_id_fkey"
+            columns: ["transition_id"]
+            isOneToOne: false
+            referencedRelation: "transitions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      transitions: {
+        Row: {
+          advisor_id: string
+          consent_deadline: string
+          created_at: string | null
+          custodian: string
+          id: string
+          policy_notes: string | null
+          start_date: string
+        }
+        Insert: {
+          advisor_id: string
+          consent_deadline: string
+          created_at?: string | null
+          custodian: string
+          id?: string
+          policy_notes?: string | null
+          start_date: string
+        }
+        Update: {
+          advisor_id?: string
+          consent_deadline?: string
+          created_at?: string | null
+          custodian?: string
+          id?: string
+          policy_notes?: string | null
+          start_date?: string
+        }
+        Relationships: []
+      }
       trial_grants: {
         Row: {
           converted_at: string | null
@@ -35679,6 +36246,27 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      vault_objects: {
+        Row: {
+          created_at: string | null
+          id: string
+          kind: string
+          object_hash: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          kind: string
+          object_hash: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          kind?: string
+          object_hash?: string
+        }
+        Relationships: []
       }
       vault_sessions: {
         Row: {
