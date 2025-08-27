@@ -128,12 +128,16 @@ export async function applyRules(period: string, iarId: string): Promise<Revenue
 
   // Insert to ledger
   if (ledgerEntries.length > 0) {
-    const { error: ledgerError } = await supabase
-      .from('revenue_ledger')
-      .insert(ledgerEntries.map(entry => ({
+    const entriesWithHashes = await Promise.all(
+      ledgerEntries.map(async (entry) => ({
         ...entry,
         reasons_hash: await inputs_hash({ reasons: entry.reasons }) // Content-free
-      })));
+      }))
+    );
+
+    const { error: ledgerError } = await supabase
+      .from('revenue_ledger')
+      .insert(entriesWithHashes);
 
     if (ledgerError) throw ledgerError;
   }
