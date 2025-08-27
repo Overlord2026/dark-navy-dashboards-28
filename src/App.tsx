@@ -69,6 +69,13 @@ import ReviewView from '@/pages/family/ReviewView';
 // Trust Rails Admin Pages
 import ReceiptsViewer from '@/pages/admin/receipts/ReceiptsViewer';
 import TrustAnchors from '@/pages/admin/anchors/Anchors';
+
+// BFO Ops Admin Pages
+import SitesAdmin from '@/pages/admin/sites/SitesAdmin';
+import RevenueAdmin from '@/pages/admin/revenue/RevenueAdmin';
+import AutomationsAdmin from '@/pages/admin/automations/AutomationsAdmin';
+import TransitionDetail from '@/pages/admin/transition/TransitionDetail';
+import DiligenceAdmin from '@/pages/admin/diligence/DiligenceAdmin';
 const RolloverWizard = React.lazy(() => import('@/pages/k401/RolloverWizard'));
 const AdvisorBook = React.lazy(() => import('@/pages/k401/AdvisorBook'));
 
@@ -359,6 +366,11 @@ function App() {
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/receipt/:id" element={<ReceiptView />} />}
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/receipts" element={<ReceiptsViewer />} />}
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/trust-anchors" element={<TrustAnchors />} />}
+             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/sites" element={<SitesAdmin />} />}
+             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/revenue" element={<RevenueAdmin />} />}
+             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/automations" element={<AutomationsAdmin />} />}
+             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/transition/:id" element={<TransitionDetail />} />}
+             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/diligence" element={<DiligenceAdmin />} />}
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/migration-invite" element={<MigrationHubInvite />} />}
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/migration-queue" element={<MigrationQueueAdmin />} />}
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/migration" element={<MigrationHub />} />}
