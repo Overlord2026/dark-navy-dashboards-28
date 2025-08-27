@@ -356,7 +356,7 @@ export default function DiligenceAdmin() {
                   </div>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm font-medium">High Risk (<6.0)</span>
+                  <span className="text-sm font-medium">High Risk (&lt;6.0)</span>
                   <div className="flex items-center gap-2">
                     <div className="w-32 bg-secondary rounded-full h-2">
                       <div 
