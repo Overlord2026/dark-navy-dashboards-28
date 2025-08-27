@@ -1,4 +1,4 @@
-import { sha256HexBrowser } from "./launchTag";
+import { sha256Hex } from "@/lib/canonical";
 
 export async function exportCurrentRules(): Promise<{ json: any; hash: string }> {
   // Pull current runtime rules/policies from store
@@ -19,7 +19,7 @@ export async function exportCurrentRules(): Promise<{ json: any; hash: string }>
   };
   
   const canon = JSON.stringify(rules);
-  const hash = "sha256:" + (await sha256HexBrowser(canon));
+  const hash = "sha256:" + (await sha256Hex(canon));
   
   return { json: rules, hash };
 }
