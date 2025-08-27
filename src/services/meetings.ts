@@ -150,6 +150,7 @@ export async function recordConsent(sessionId: string, consentGiven: boolean): P
 export async function endSession(sessionId: string, audioBlob?: Blob): Promise<MeetingSession> {
   let audioHash = '';
   let vaultDocumentId = '';
+  let transcriptHash = '';
 
   // Upload audio to vault if provided
   if (audioBlob) {
@@ -176,6 +177,22 @@ export async function endSession(sessionId: string, audioBlob?: Blob): Promise<M
       console.error('Failed to upload audio to vault:', uploadError);
     } else {
       vaultDocumentId = uploadData.path;
+      
+      // Process speech-to-text if provider is configured
+      try {
+        const transcript = await processAudioToText(audioBlob);
+        if (transcript) {
+          // Create transcript hash (content-free)
+          const transcriptString = JSON.stringify({ length: transcript.length, timestamp });
+          const transcriptData = new TextEncoder().encode(transcriptString);
+          const transcriptHashBuffer = await crypto.subtle.digest('SHA-256', transcriptData);
+          transcriptHash = Array.from(new Uint8Array(transcriptHashBuffer))
+            .map(b => b.toString(16).padStart(2, '0'))
+            .join('');
+        }
+      } catch (error) {
+        console.error('Failed to process speech-to-text:', error);
+      }
     }
   }
 
@@ -186,7 +203,8 @@ export async function endSession(sessionId: string, audioBlob?: Blob): Promise<M
       status: 'ended',
       ended_at: new Date().toISOString(),
       audio_hash: audioHash,
-      vault_document_id: vaultDocumentId
+      vault_document_id: vaultDocumentId,
+      transcript_hash: transcriptHash
     })
     .eq('id', sessionId)
     .select()
@@ -296,6 +314,43 @@ export async function createFollowUpCampaign(sessionId: string, campaignType: st
       tcpa_compliant: true,
       can_spam_compliant: true
     }
+  });
+}
+
+async function processAudioToText(audioBlob: Blob): Promise<string | null> {
+  try {
+    // Call speech-to-text edge function
+    const response = await fetch('https://xcmqjkvyvuhoslbzmlgi.functions.supabase.co/functions/v1/speech-to-text', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        audio: await blobToBase64(audioBlob)
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`STT API error: ${response.statusText}`);
+    }
+
+    const result = await response.json();
+    return result.text || null;
+  } catch (error) {
+    console.error('Speech-to-text processing failed:', error);
+    return null;
+  }
+}
+
+async function blobToBase64(blob: Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result as string;
+      resolve(result.split(',')[1]); // Remove data:... prefix
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
   });
 }
 

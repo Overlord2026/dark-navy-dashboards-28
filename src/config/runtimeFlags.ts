@@ -9,7 +9,12 @@ export const runtimeFlags = {
   demoMode: true,
   demoPlan: "premium" as const,
   demoSegment: "retirees" as const,
-  prelaunchMode: true
+  prelaunchMode: true,
+  
+  // External provider availability
+  mailProviderConfigured: false,
+  speechToTextEnabled: false,
+  weatherAlertsEnabled: false
 };
 
 // Helper to check if email functionality is available
@@ -21,4 +26,15 @@ export const isDevelopment = () => runtimeFlags.debugMode;
 // Helper to enable email when secrets are configured
 export const enableEmailDelivery = () => {
   runtimeFlags.emailEnabled = true;
+  runtimeFlags.mailProviderConfigured = true;
+};
+
+// Helper to enable speech-to-text when configured
+export const enableSpeechToText = () => {
+  runtimeFlags.speechToTextEnabled = true;
+};
+
+// Helper to enable weather alerts when configured  
+export const enableWeatherAlerts = () => {
+  runtimeFlags.weatherAlertsEnabled = true;
 };
