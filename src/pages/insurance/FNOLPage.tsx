@@ -32,7 +32,7 @@ export default function FNOLPage() {
     setLoading(true);
     try {
       const damageAmount = parseFloat(formData.estimated_damage) || 0;
-      const damageB and = bandDamageEstimate(damageAmount);
+      const damageBand = bandDamageEstimate(damageAmount);
       
       const intake = {
         policy_number: formData.policy_number,
