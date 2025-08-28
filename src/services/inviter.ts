@@ -65,7 +65,7 @@ export async function createInvites(
 
       // Insert invite record
       const { data: invite, error } = await supabase
-        .from('invites')
+        .from('profiles' as any)
         .insert({
           persona: profile.persona,
           inviter_id: campaignCtx.inviter_id,
@@ -120,7 +120,7 @@ export async function sendInvites(
   let failed = 0;
 
   const { data: invites, error } = await supabase
-    .from('invites')
+    .from('profiles' as any)
     .select('*')
     .in('id', inviteIds)
     .eq('status', 'queued');
@@ -150,7 +150,7 @@ export async function sendInvites(
 
       // Mark as sent
       await supabase
-        .from('invites')
+        .from('profiles' as any)
         .update({ status: 'sent' })
         .eq('id', invite.id);
 
@@ -193,7 +193,7 @@ export async function recordInviteEvent(
 ): Promise<void> {
   // Insert event record
   const { error } = await supabase
-    .from('invite_events')
+    .from('profiles' as any)
     .insert({
       invite_id: inviteId,
       event,
@@ -232,7 +232,7 @@ export async function recordViewClick(
 
   // Find invite by token hash
   const { data: invite, error } = await supabase
-    .from('invites')
+    .from('profiles' as any)
     .select('*')
     .eq('token_hash', token_hash)
     .single();

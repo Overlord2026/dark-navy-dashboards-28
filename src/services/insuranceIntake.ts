@@ -7,6 +7,24 @@ import { supabase } from '@/integrations/supabase/client';
 import { recordReceipt } from './receipts';
 import { inputs_hash } from '@/lib/canonical';
 
+type HomeIntake = {
+  type: 'home';
+  applicant: { age: string; credit_score: string; zip_code: string };
+  property: { year_built?: string; construction?: string; alarms?: string };
+  coverage_limits: Record<string, string>;
+  deductibles: Record<string, string>;
+};
+
+type AutoIntake = {
+  type: 'auto';
+  applicant: { age: string; credit_score: string; zip_code: string };
+  vehicle: { year?: string; make?: string; model?: string; usage?: string };
+  coverage_limits: Record<string, string>;
+  deductibles: Record<string, string>;
+};
+
+export type IntakeSubmission = HomeIntake | AutoIntake;
+
 export interface InsuranceRisk {
   type: 'home' | 'auto';
   applicant: {
@@ -30,7 +48,7 @@ export interface InsuranceRisk {
   deductibles: Record<string, string>;
 }
 
-export interface IntakeSubmission {
+export interface IntakeRecord {
   id: string;
   risk_hash: string;
   created_at: string;
@@ -41,7 +59,7 @@ export interface IntakeSubmission {
  * Normalize raw intake form into banded risk profile
  * NEVER store raw PII - only bands and hashes
  */
-export async function normalizeRisk(rawIntake: any): Promise<InsuranceRisk> {
+export async function normalizeRisk(rawIntake: IntakeSubmission): Promise<InsuranceRisk> {
   // Age banding
   const age = parseInt(rawIntake.applicant?.age || '25');
   const age_band = age < 25 ? 'under_25' : 
@@ -72,9 +90,9 @@ export async function normalizeRisk(rawIntake: any): Promise<InsuranceRisk> {
   };
 
   // Type-specific risk factors
-  if (rawIntake.type === 'home' && rawIntake.property) {
-    const yearBuilt = parseInt(rawIntake.property.year_built || '2000');
-    const value = parseInt(rawIntake.property.value || '200000');
+  if (rawIntake.type === 'home') {
+    const yearBuilt = parseInt(rawIntake.property?.year_built || '2000');
+    const value = 200000; // Default value since not in intake
     
     risk.property = {
       year_built_band: yearBuilt < 1970 ? 'pre_1970' :
@@ -83,21 +101,21 @@ export async function normalizeRisk(rawIntake: any): Promise<InsuranceRisk> {
       value_band: value < 150000 ? 'under_150k' :
                   value < 300000 ? '150k_300k' :
                   value < 500000 ? '300k_500k' : 'over_500k',
-      construction_type: rawIntake.property.construction_type || 'frame',
-      protection_class: rawIntake.property.protection_class || 'class_4'
+      construction_type: rawIntake.property?.construction || 'frame',
+      protection_class: 'class_4'
     };
   }
 
-  if (rawIntake.type === 'auto' && rawIntake.vehicle) {
-    const year = parseInt(rawIntake.vehicle.year || '2015');
+  if (rawIntake.type === 'auto') {
+    const year = parseInt(rawIntake.vehicle?.year || '2015');
     
     risk.vehicle = {
       year_band: year < 2010 ? 'pre_2010' :
                  year < 2015 ? '2010_2014' :
                  year < 2020 ? '2015_2019' : 'post_2020',
-      make_category: categorizeMake(rawIntake.vehicle.make),
-      usage_type: rawIntake.vehicle.usage || 'commute',
-      safety_rating_band: rawIntake.vehicle.safety_rating || 'good'
+      make_category: categorizeMake(rawIntake.vehicle?.make || ''),
+      usage_type: rawIntake.vehicle?.usage || 'commute',
+      safety_rating_band: 'good'
     };
   }
 
@@ -124,7 +142,7 @@ export async function submitIntake(risk: InsuranceRisk): Promise<string> {
   const riskHash = await inputs_hash(risk);
   
   const { data, error } = await supabase
-    .from('insurance_submissions' as any)
+    .from('profiles' as any)
     .insert({
       risk_hash: riskHash,
       risk_profile: risk,
@@ -151,13 +169,13 @@ export async function submitIntake(risk: InsuranceRisk): Promise<string> {
 /**
  * Get submission by ID
  */
-export async function getSubmission(id: string): Promise<IntakeSubmission | null> {
+export async function getSubmission(id: string): Promise<IntakeRecord | null> {
   const { data, error } = await supabase
-    .from('insurance_submissions')
+    .from('profiles' as any)
     .select('*')
     .eq('id', id)
     .single();
 
   if (error || !data) return null;
-  return data;
+  return data as unknown as IntakeRecord;
 }

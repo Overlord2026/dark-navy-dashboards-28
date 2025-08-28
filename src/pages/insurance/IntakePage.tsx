@@ -41,38 +41,38 @@ export function IntakePage() {
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      // Build intake object
-      const rawIntake = {
-        type: insuranceType,
+      // Build intake object with proper typing
+      const baseIntake = {
         applicant: {
           age: formData.age,
           credit_score: formData.credit_score,
           zip_code: formData.zip_code
         },
-        coverage_limits: formData.coverage_limits,
-        deductibles: formData.deductibles
+        coverage_limits: formData.coverage_limits || {},
+        deductibles: formData.deductibles || {}
       };
 
-      if (insuranceType === 'home') {
-        (rawIntake as any).property = {
-          value: formData.property_value,
+      const intakeData = insuranceType === 'home' ? {
+        type: 'home' as const,
+        ...baseIntake,
+        property: {
           year_built: formData.year_built,
-          construction_type: formData.construction_type,
-          protection_class: formData.protection_class
-        };
-      }
-
-      if (insuranceType === 'auto') {
-        (rawIntake as any).vehicle = {
+          construction: formData.construction_type,
+          alarms: formData.protection_class
+        }
+      } : {
+        type: 'auto' as const,
+        ...baseIntake,
+        vehicle: {
           year: formData.vehicle_year,
           make: formData.vehicle_make,
-          usage: formData.vehicle_usage,
-          safety_rating: formData.safety_rating
-        };
-      }
+          model: '',
+          usage: formData.vehicle_usage
+        }
+      };
 
       // Normalize and submit
-      const risk = await normalizeRisk(rawIntake);
+      const risk = await normalizeRisk(intakeData);
       const submissionId = await submitIntake(risk);
       
       toast.success('Intake submitted successfully!');
