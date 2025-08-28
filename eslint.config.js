@@ -33,6 +33,14 @@ export default tseslint.config(
         {
           "selector": "CallExpression[callee.object.name='analytics'][callee.property.name='track'][arguments.length>2]",
           "message": "analytics.track only accepts (event, props?). Remove extra positional args."
+        },
+        {
+          "selector": "CallExpression[callee.object.name='localStorage'][callee.property.name='setItem']",
+          "message": "Avoid storing sensitive data in localStorage. Use Supabase auth state for sessions."
+        },
+        {
+          "selector": "CallExpression[callee.object.name='sessionStorage'][callee.property.name='setItem']",
+          "message": "Review sessionStorage usage. Consider memory-only storage for sensitive data."
         }
       ],
       // A11y specific rules
