@@ -11,6 +11,7 @@ import { scoreItems } from '@/lib/searchScore';
 import SEOHead from '@/components/seo/SEOHead';
 import { PublicNavigation } from '@/components/discover/PublicNavigation';
 import { FooterMinimal } from '@/components/discover/FooterMinimal';
+import { sanitizeHtml } from '@/lib/sanitize';
 
 const kindIcons = {
   persona: User,
@@ -271,7 +272,7 @@ export default function SearchPage() {
                           </div>
                           <CardTitle 
                             className="text-lg"
-                            dangerouslySetInnerHTML={{ __html: hl?.label || item.label }}
+                            dangerouslySetInnerHTML={{ __html: sanitizeHtml(hl?.label || item.label) }}
                           />
                           <div className="flex flex-wrap gap-1 mt-1">
                             {item.solutions?.map(sol => (
@@ -288,7 +289,7 @@ export default function SearchPage() {
                   {item.summary && (
                     <CardContent className="pt-0">
                       <CardDescription 
-                        dangerouslySetInnerHTML={{ __html: hl?.summary || item.summary }}
+                        dangerouslySetInnerHTML={{ __html: sanitizeHtml(hl?.summary || item.summary) }}
                       />
                       {item.tags?.length && (
                         <div className="mt-2 text-xs text-muted-foreground">

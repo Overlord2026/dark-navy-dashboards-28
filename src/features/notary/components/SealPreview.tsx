@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { generateSealPreviewSVG } from '@/lib/report/sealTemplate';
 import { Stamp, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { sanitizeHtml } from '@/lib/sanitize';
 
 interface SealPreviewProps {
   notaryInfo: {
@@ -47,7 +48,7 @@ export function SealPreview({ notaryInfo, onDownloadReceipt }: SealPreviewProps)
         {/* Seal Preview */}
         <div 
           className="border rounded-lg p-4 bg-white"
-          dangerouslySetInnerHTML={{ __html: sealSVG }}
+          dangerouslySetInnerHTML={{ __html: sanitizeHtml(sealSVG) }}
         />
         
         {/* Security Features */}
