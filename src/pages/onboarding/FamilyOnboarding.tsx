@@ -90,13 +90,8 @@ export default function FamilyOnboarding() {
       // Simulate API call to create workspace
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Store session data
-      localStorage.setItem('user_session', JSON.stringify({
-        email: state.email,
-        segment: state.segment,
-        goals: state.goals,
-        onboarded: true
-      }));
+      // Note: Session data now handled by AuthContext only
+      // Removed localStorage token storage for security
 
       analytics.trackFamilyOnboardingComplete({
         segment: state.segment,
