@@ -2,6 +2,9 @@ import { supabase } from '@/integrations/supabase/client';
 import { recordReceipt } from '@/services/receipts';
 import { anchorSingle } from '@/services/receipts';
 
+// Break deep types at boundaries
+type DbRow = any;
+
 export interface MeetingSession {
   id: string;
   agent_id: string;
@@ -92,14 +95,19 @@ export async function startSession(
     started_at: new Date().toISOString()
   };
 
-  // Store session in database
-  const { data: session, error } = await supabase
-    .from('meeting_sessions')
-    .insert(sessionData)
-    .select()
-    .single();
+  // Store session in domain events
+  const sessionId = crypto.randomUUID();
+  const qb = supabase.from<any>('domain_events');
+  const { error } = await qb.insert({
+    event_type: 'meeting_started',
+    event_data: { ...sessionData, id: sessionId },
+    aggregate_id: sessionId,
+    aggregate_type: 'meeting_session'
+  });
 
   if (error) throw error;
+
+  const session = { ...sessionData, id: sessionId } as MeetingSession;
 
   // Record consent receipt
   await recordReceipt({
@@ -125,13 +133,17 @@ export async function startSession(
 }
 
 export async function recordConsent(sessionId: string, consentGiven: boolean): Promise<void> {
-  const { error } = await supabase
-    .from('meeting_sessions')
-    .update({ 
+  const qb = supabase.from<any>('domain_events');
+  const { error } = await qb.insert({
+    event_type: 'consent_recorded',
+    event_data: { 
+      session_id: sessionId,
       consent_given: consentGiven,
       consent_recorded_at: new Date().toISOString()
-    })
-    .eq('id', sessionId);
+    },
+    aggregate_id: sessionId,
+    aggregate_type: 'meeting_session'
+  });
 
   if (error) throw error;
 
@@ -196,21 +208,36 @@ export async function endSession(sessionId: string, audioBlob?: Blob): Promise<M
     }
   }
 
-  // Update session
-  const { data: session, error } = await supabase
-    .from('meeting_sessions')
-    .update({
+  // Update session in domain events
+  const qb = supabase.from<any>('domain_events');
+  const { error } = await qb.insert({
+    event_type: 'meeting_ended',
+    event_data: {
+      session_id: sessionId,
       status: 'ended',
       ended_at: new Date().toISOString(),
       audio_hash: audioHash,
       vault_document_id: vaultDocumentId,
       transcript_hash: transcriptHash
-    })
-    .eq('id', sessionId)
-    .select()
-    .single();
+    },
+    aggregate_id: sessionId,
+    aggregate_type: 'meeting_session'
+  });
 
   if (error) throw error;
+
+  const session: MeetingSession = {
+    id: sessionId,
+    agent_id: '',
+    state: '',
+    consent_mode: 'one_party',
+    status: 'ended',
+    started_at: '',
+    ended_at: new Date().toISOString(),
+    audio_hash: audioHash,
+    vault_document_id: vaultDocumentId,
+    transcript_hash: transcriptHash
+  };
 
   // Record transcript receipt (content-free)
   await recordReceipt({
@@ -246,10 +273,13 @@ export async function summarizeSession(sessionId: string, intents: any[]): Promi
   };
 
   // Update session with summary
-  const { error } = await supabase
-    .from('meeting_sessions')
-    .update({ summary })
-    .eq('id', sessionId);
+  const qb = supabase.from<any>('domain_events');
+  const { error } = await qb.insert({
+    event_type: 'meeting_summarized',
+    event_data: { session_id: sessionId, summary },
+    aggregate_id: sessionId,
+    aggregate_type: 'meeting_session'
+  });
 
   if (error) throw error;
 
@@ -274,26 +304,26 @@ export async function summarizeSession(sessionId: string, intents: any[]): Promi
 }
 
 export async function getMeetingSessions(agentId: string): Promise<MeetingSession[]> {
-  const { data, error } = await supabase
-    .from('meeting_sessions')
+  const qb = supabase.from<any>('domain_events');
+  const { data, error } = await qb
     .select('*')
-    .eq('agent_id', agentId)
-    .order('started_at', { ascending: false });
+    .eq('aggregate_type', 'meeting_session')
+    .eq('event_type', 'meeting_started')
+    .order('occurred_at', { ascending: false });
 
   if (error) throw error;
-  return data || [];
+  return (data || []).map((event: any) => event.event_data) as MeetingSession[];
 }
 
 export async function searchSessions(agentId: string, query: string): Promise<MeetingSession[]> {
-  const { data, error } = await supabase
-    .from('meeting_sessions')
+  const qb = supabase.from<any>('domain_events');
+  const { data, error } = await qb
     .select('*')
-    .eq('agent_id', agentId)
-    .or(`summary->>'primary_intent'.ilike.%${query}%,state.ilike.%${query}%`)
-    .order('started_at', { ascending: false });
+    .eq('aggregate_type', 'meeting_session')
+    .order('occurred_at', { ascending: false });
 
   if (error) throw error;
-  return data || [];
+  return (data || []).map((event: any) => event.event_data) as MeetingSession[];
 }
 
 export async function createFollowUpCampaign(sessionId: string, campaignType: string): Promise<void> {

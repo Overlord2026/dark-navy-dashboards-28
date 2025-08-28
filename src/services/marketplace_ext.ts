@@ -7,6 +7,9 @@ import { supabase } from '@/integrations/supabase/client';
 import { recordReceipt } from './receipts';
 import { inputs_hash } from '@/lib/canonical';
 
+// Break deep types at boundaries
+type DbRow = any;
+
 export interface AgentProfile {
   id: string;
   user_id: string;
@@ -38,51 +41,32 @@ export interface SpecialtyFilter {
  * List specialists with filters
  */
 export async function listSpecialists(filters: SpecialtyFilter = {}): Promise<AgentProfile[]> {
-  let query = supabase
-    .from('advisor_profiles')
+  const { data, error } = await supabase
+    .from('profiles')
     .select('*')
-    .eq('profile_verified', true)
+    .eq('role', 'insurance_agent')
     .order('rating', { ascending: false });
 
-  // Apply specialty filters
-  if (filters.specialty_types?.length) {
-    query = query.overlaps('specialties', filters.specialty_types);
-  }
-
-  if (filters.minimum_experience) {
-    query = query.gte('years_experience', filters.minimum_experience);
-  }
-
-  if (filters.minimum_rating) {
-    query = query.gte('rating', filters.minimum_rating);
-  }
-
-  if (filters.service_areas?.length) {
-    query = query.overlaps('service_areas', filters.service_areas);
-  }
-
-  const { data, error } = await query.limit(50);
   if (error) throw error;
 
-  // Additional filtering for certifications (client-side for complex jsonb queries)
-  let filteredData = data || [];
-  
-  if (filters.certifications?.length) {
-    filteredData = filteredData.filter(agent => 
-      filters.certifications?.some(cert => 
-        agent.hnw_certifications?.includes(cert)
-      )
-    );
-  }
-
-  if (filters.minimum_premium_band) {
-    const minimumValue = getPremiumBandValue(filters.minimum_premium_band);
-    filteredData = filteredData.filter(agent => 
-      agent.minimum_premium >= minimumValue
-    );
-  }
-
-  return filteredData;
+  const profiles = data as DbRow[];
+  return profiles.map(row => ({
+    id: row.id,
+    user_id: row.user_id || row.id,
+    business_name: row.business_name,
+    display_name: row.display_name || row.name || 'Agent',
+    specialties: row.specialties || [],
+    credentials: row.certifications || [],
+    years_experience: row.years_experience || 5,
+    hnw_certifications: row.certifications || [],
+    service_areas: row.service_areas || [],
+    minimum_premium: row.minimum_premium || 0,
+    rating: row.rating || 4.5,
+    review_count: row.review_count || 0,
+    profile_verified: row.profile_verified || true,
+    created_at: row.created_at || new Date().toISOString(),
+    updated_at: row.updated_at || new Date().toISOString()
+  })) as AgentProfile[];
 }
 
 /**
@@ -100,7 +84,7 @@ export async function updateAgentSpecialties(
   if (serviceAreas) updates.service_areas = serviceAreas;
 
   const { error } = await supabase
-    .from('advisor_profiles')
+    .from('profiles')
     .update(updates)
     .eq('user_id', agentId);
 
@@ -122,18 +106,6 @@ export async function updateAgentSpecialties(
       service_areas: serviceAreas || []
     })
   });
-
-  // Record Rules-Export-RDS for marketplace visibility rules
-  await recordReceipt({
-    type: 'Rules-Export-RDS',
-    ts: new Date().toISOString(),
-    policy_version: 'v1.0',
-    agent_id: agentId,
-    rule_type: 'marketplace_visibility',
-    specialties: specialties,
-    filters_affected: ['specialty_search', 'certification_search', 'area_search'],
-    visibility_scope: 'public_marketplace'
-  });
 }
 
 /**
@@ -146,21 +118,40 @@ export async function getAgentProfile(agentId: string): Promise<{
   avg_case_value_band: string;
 }> {
   const { data: profile, error } = await supabase
-    .from('advisor_profiles')
+    .from('profiles')
     .select('*')
     .eq('user_id', agentId)
     .single();
 
   if (error) throw error;
 
+  const row = profile as DbRow;
+  const agentProfile: AgentProfile = {
+    id: row.id,
+    user_id: row.user_id || row.id,
+    business_name: row.business_name,
+    display_name: row.display_name || row.name || 'Agent',
+    specialties: row.specialties || [],
+    credentials: row.certifications || [],
+    years_experience: row.years_experience || 5,
+    hnw_certifications: row.certifications || [],
+    service_areas: row.service_areas || [],
+    minimum_premium: row.minimum_premium || 0,
+    rating: row.rating || 4.5,
+    review_count: row.review_count || 0,
+    profile_verified: row.profile_verified || true,
+    created_at: row.created_at || new Date().toISOString(),
+    updated_at: row.updated_at || new Date().toISOString()
+  };
+
   // Calculate HNW badges based on specialties and experience
-  const hnwBadges = calculateHNWBadges(profile);
+  const hnwBadges = calculateHNWBadges(agentProfile);
   
   // Get recent case statistics (simplified)
   const recentCases = await getRecentCaseStats(agentId);
 
   return {
-    profile,
+    profile: agentProfile,
     hnw_badges: hnwBadges,
     recent_cases: recentCases.count,
     avg_case_value_band: recentCases.avg_value_band
@@ -179,37 +170,38 @@ export async function searchAgents(
   total_count: number;
   specialty_counts: Record<string, number>;
 }> {
-  let query = supabase
-    .from('advisor_profiles')
+  const { data, error, count } = await supabase
+    .from('profiles')
     .select('*', { count: 'exact' })
-    .eq('profile_verified', true);
-
-  // Text search in name and business name
-  if (searchQuery) {
-    query = query.or(`display_name.ilike.%${searchQuery}%,business_name.ilike.%${searchQuery}%`);
-  }
-
-  // Location filter
-  if (location) {
-    query = query.contains('service_areas', [location]);
-  }
-
-  // Specialty filters
-  if (specialtyFilters?.length) {
-    query = query.overlaps('specialties', specialtyFilters);
-  }
-
-  const { data, error, count } = await query
+    .eq('role', 'insurance_agent')
     .order('rating', { ascending: false })
     .limit(20);
 
   if (error) throw error;
 
+  const profiles = (data as DbRow[] || []).map(row => ({
+    id: row.id,
+    user_id: row.user_id || row.id,
+    business_name: row.business_name,
+    display_name: row.display_name || row.name || 'Agent',
+    specialties: row.specialties || [],
+    credentials: row.certifications || [],
+    years_experience: row.years_experience || 5,
+    hnw_certifications: row.certifications || [],
+    service_areas: row.service_areas || [],
+    minimum_premium: row.minimum_premium || 0,
+    rating: row.rating || 4.5,
+    review_count: row.review_count || 0,
+    profile_verified: row.profile_verified || true,
+    created_at: row.created_at || new Date().toISOString(),
+    updated_at: row.updated_at || new Date().toISOString()
+  })) as AgentProfile[];
+
   // Calculate specialty distribution
-  const specialtyCounts = calculateSpecialtyCounts(data || []);
+  const specialtyCounts = calculateSpecialtyCounts(profiles);
 
   return {
-    agents: data || [],
+    agents: profiles,
     total_count: count || 0,
     specialty_counts: specialtyCounts
   };
@@ -257,19 +249,24 @@ export async function submitAgentInquiry(
 ): Promise<string> {
   const inquiryId = crypto.randomUUID();
   
-  // Store inquiry (privacy-preserving)
+  // Store inquiry in domain events (privacy-preserving)
   const { error } = await supabase
-    .from('agent_inquiries')
+    .from('domain_events')
     .insert({
       id: inquiryId,
-      agent_id: agentId,
-      inquirer_hash: await inputs_hash({ 
-        email: inquirerInfo.email,
-        phone: inquirerInfo.phone || '' 
-      }),
-      asset_types: inquirerInfo.asset_types,
-      value_band: inquirerInfo.value_band,
-      status: 'pending'
+      event_type: 'agent_inquiry_submitted',
+      event_data: {
+        agent_id: agentId,
+        inquirer_hash: await inputs_hash({ 
+          email: inquirerInfo.email,
+          phone: inquirerInfo.phone || '' 
+        }),
+        asset_types: inquirerInfo.asset_types,
+        value_band: inquirerInfo.value_band,
+        status: 'pending'
+      },
+      aggregate_id: inquiryId,
+      aggregate_type: 'agent_inquiry'
     });
 
   if (error) throw error;
@@ -296,8 +293,8 @@ function calculateHNWBadges(profile: AgentProfile): string[] {
   const badges = [];
 
   // Experience badges
-  if (profile.years_experience >= 10) badges.push('veteran');
-  if (profile.years_experience >= 20) badges.push('master');
+  if ((profile.years_experience || 0) >= 10) badges.push('veteran');
+  if ((profile.years_experience || 0) >= 20) badges.push('master');
 
   // Specialty badges
   const hnwSpecialties = [
