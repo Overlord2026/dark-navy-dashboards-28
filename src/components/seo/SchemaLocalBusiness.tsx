@@ -1,4 +1,5 @@
 import React from 'react';
+import { sanitizeHtml } from '@/lib/sanitize';
 
 type Props = {
   name: string;
@@ -47,6 +48,6 @@ export default function SchemaLocalBusiness(props: Props) {
   };
 
   return (
-    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: sanitizeHtml(JSON.stringify(jsonLd)) }} />
   );
 }

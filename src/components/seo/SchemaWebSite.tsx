@@ -1,4 +1,5 @@
 import React from 'react';
+import { sanitizeHtml } from '@/lib/sanitize';
 import site from '@/config/site.json';
 
 export default function SchemaWebSite() {
@@ -15,5 +16,5 @@ export default function SchemaWebSite() {
     }
   };
   
-  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(sd) }} />;
+  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: sanitizeHtml(JSON.stringify(sd)) }} />;
 }

@@ -1,4 +1,5 @@
 import React from 'react';
+import { sanitizeHtml } from '@/lib/sanitize';
 import site from '@/config/site.json';
 
 export default function SchemaOrganization() {
@@ -12,5 +13,5 @@ export default function SchemaOrganization() {
     ...(site.contactPoint?.length ? { "contactPoint": site.contactPoint.map((c: any) => ({ "@type": "ContactPoint", ...c })) } : {})
   };
   
-  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(sd) }} />;
+  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: sanitizeHtml(JSON.stringify(sd)) }} />;
 }
