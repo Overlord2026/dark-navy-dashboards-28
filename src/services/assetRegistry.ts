@@ -7,12 +7,46 @@ import { supabase } from '@/integrations/supabase/client';
 import { recordReceipt } from './receipts';
 import { inputs_hash } from '@/lib/canonical';
 
+type AssetType =
+  | 'home_high_value' | 'exotic_auto' | 'marine_boat' | 'marine_yacht' | 'rv'
+  | 'fine_art' | 'jewelry' | 'umbrella' | 'flood' | 'earthquake'
+  | 'landlord_property' | 'entity_owned' | 'cyber' | 'kidnap_ransom';
+
+type AssetDocType =
+  | 'declaration' | 'appraisal' | 'survey' | 'registration'
+  | 'certificate' | 'inspection' | 'photos' | 'title' | 'other';
+
+type ReminderType =
+  | 'appraisal_due' | 'registration_renewal' | 'marine_layup'
+  | 'storm_alert' | 'umbrella_check' | 'policy_renewal';
+
+const assetTypeMap: Record<string, AssetType> = {
+  flood:'flood', home_high_value:'home_high_value', exotic_auto:'exotic_auto',
+  marine_boat:'marine_boat', marine_yacht:'marine_yacht', rv:'rv',
+  fine_art:'fine_art', jewelry:'jewelry', umbrella:'umbrella', earthquake:'earthquake',
+  landlord_property:'landlord_property', entity_owned:'entity_owned',
+  cyber:'cyber', kidnap_ransom:'kidnap_ransom'
+};
+
+const docTypeMap: Record<string, AssetDocType> = {
+  declaration:'declaration', appraisal:'appraisal', survey:'survey', registration:'registration',
+  certificate:'certificate', inspection:'inspection', photos:'photos', title:'title', other:'other'
+};
+
+const reminderTypeMap: Record<string, ReminderType> = {
+  appraisal_due:'appraisal_due', registration_renewal:'registration_renewal',
+  marine_layup:'marine_layup', storm_alert:'storm_alert',
+  umbrella_check:'umbrella_check', policy_renewal:'policy_renewal'
+};
+
+function asAssetType(s: string): AssetType { return assetTypeMap[s] ?? 'home_high_value'; }
+function asDocType(s: string): AssetDocType { return docTypeMap[s] ?? 'other'; }
+function asReminderType(s: string): ReminderType { return reminderTypeMap[s] ?? 'policy_renewal'; }
+
 export interface Asset {
   id: string;
   user_id: string;
-  asset_type: 'home_high_value' | 'exotic_auto' | 'marine_boat' | 'marine_yacht' | 
-              'rv' | 'fine_art' | 'jewelry' | 'umbrella' | 'flood' | 'earthquake' | 
-              'landlord_property' | 'entity_owned' | 'cyber' | 'kidnap_ransom';
+  asset_type: AssetType;
   asset_name: string;
   acquisition_date?: string;
   current_value_band?: 'under_100k' | '100k_500k' | '500k_1m' | '1m_5m' | '5m_10m' | 'over_10m';
@@ -28,8 +62,7 @@ export interface Asset {
 export interface AssetDoc {
   id: string;
   asset_id: string;
-  document_type: 'declaration' | 'appraisal' | 'survey' | 'title' | 'registration' | 
-                 'certificate' | 'inspection' | 'photos' | 'other';
+  document_type: AssetDocType;
   document_name: string;
   vault_hash: string;
   file_size_bytes?: number;
@@ -41,8 +74,7 @@ export interface AssetDoc {
 export interface AssetReminder {
   id: string;
   asset_id: string;
-  reminder_type: 'appraisal_due' | 'registration_renewal' | 'marine_layup' | 
-                 'storm_alert' | 'umbrella_check' | 'policy_renewal';
+  reminder_type: ReminderType;
   reminder_date: string;
   title: string;
   description?: string;
@@ -103,9 +135,9 @@ export async function getAssets(filters?: {
 
   const { data, error } = await query;
   if (error) throw error;
-  return (data || []).map(item => ({
-    ...item,
-    asset_type: item.asset_type as Asset['asset_type']
+  return (data || []).map(r => ({
+    ...r,
+    asset_type: asAssetType(String(r.asset_type))
   })) as Asset[];
 }
 
@@ -128,10 +160,10 @@ export async function getAssetDetails(assetId: string): Promise<{
   if (assetResult.error) throw assetResult.error;
 
   return {
-    asset: { ...assetResult.data, asset_type: assetResult.data.asset_type as Asset['asset_type'] } as Asset,
-    documents: (docsResult.data || []).map(doc => ({ ...doc, document_type: doc.document_type as AssetDoc['document_type'] })) as AssetDoc[],
+    asset: { ...assetResult.data, asset_type: asAssetType(String(assetResult.data.asset_type)) } as Asset,
+    documents: (docsResult.data || []).map(d => ({ ...d, document_type: asDocType(String(d.document_type)) })) as AssetDoc[],
     advice: adviceResult.data || [],
-    reminders: (remindersResult.data || []).map(reminder => ({ ...reminder, reminder_type: reminder.reminder_type as AssetReminder['reminder_type'] })) as AssetReminder[]
+    reminders: (remindersResult.data || []).map(x => ({ ...x, reminder_type: asReminderType(String(x.reminder_type)) })) as AssetReminder[]
   };
 }
 
