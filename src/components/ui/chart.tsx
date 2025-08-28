@@ -1,6 +1,6 @@
 import * as React from "react"
 import * as RechartsPrimitive from "recharts"
-import { sanitizeHtml } from "@/lib/sanitize"
+import { jsonLdSafe } from "@/lib/jsonLd"
 
 import { cn } from "@/lib/utils"
 

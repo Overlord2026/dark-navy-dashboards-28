@@ -11,7 +11,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/animated-alert-dialog";
 import { Mail, HelpCircle, Users } from "lucide-react";
-import { sanitizeHtml } from '@/lib/sanitize';
+import { jsonLdSafe } from '@/lib/jsonLd';
 
 interface LearnMoreDialogProps {
   open: boolean;

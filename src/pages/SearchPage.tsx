@@ -11,7 +11,7 @@ import { scoreItems } from '@/lib/searchScore';
 import SEOHead from '@/components/seo/SEOHead';
 import { PublicNavigation } from '@/components/discover/PublicNavigation';
 import { FooterMinimal } from '@/components/discover/FooterMinimal';
-import { sanitizeHtml } from '@/lib/sanitize';
+import { jsonLdSafe } from '@/lib/jsonLd';
 
 const kindIcons = {
   persona: User,
@@ -270,10 +270,9 @@ export default function SearchPage() {
                               <div className="text-xs text-muted-foreground">score {score}</div>
                             )}
                           </div>
-                          <CardTitle 
-                            className="text-lg"
-                            dangerouslySetInnerHTML={{ __html: sanitizeHtml(hl?.label || item.label) }}
-                          />
+                          <CardTitle className="text-lg">
+                            {hl?.label || item.label}
+                          </CardTitle>
                           <div className="flex flex-wrap gap-1 mt-1">
                             {item.solutions?.map(sol => (
                               <Badge key={sol} variant="outline" className="text-xs">
@@ -288,9 +287,9 @@ export default function SearchPage() {
                   </CardHeader>
                   {item.summary && (
                     <CardContent className="pt-0">
-                      <CardDescription 
-                        dangerouslySetInnerHTML={{ __html: sanitizeHtml(hl?.summary || item.summary) }}
-                      />
+                      <CardDescription>
+                        {hl?.summary || item.summary}
+                      </CardDescription>
                       {item.tags?.length && (
                         <div className="mt-2 text-xs text-muted-foreground">
                           {item.tags.join(' • ')}

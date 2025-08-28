@@ -6,7 +6,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { FileText, Download, Eye, Share2, Loader2 } from 'lucide-react';
 import { SearchResult } from '@/services/searchIndex';
 import { cn } from '@/lib/utils';
-import { renderSafeHighlight } from '@/lib/sanitize';
+import { sanitizeHtml } from '@/lib/sanitize';
 
 interface SearchResultsProps {
   results: SearchResult[];

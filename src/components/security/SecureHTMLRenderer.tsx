@@ -1,6 +1,6 @@
 import React from 'react';
 import DOMPurify from 'dompurify';
-import { sanitizeHtml } from '@/lib/sanitize';
+import { jsonLdSafe } from '@/lib/jsonLd';
 
 interface SecureHTMLRendererProps {
   content: string;
@@ -47,7 +47,7 @@ export const SecureHTMLRenderer: React.FC<SecureHTMLRendererProps> = ({
   return (
     <div 
       className={className}
-      dangerouslySetInnerHTML={{ __html: sanitizeHtml(sanitizedContent) }}
+      dangerouslySetInnerHTML={{ __html: sanitizedContent }}
     />
   );
 };
