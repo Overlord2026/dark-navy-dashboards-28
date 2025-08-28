@@ -17,7 +17,26 @@
     "security/detect-object-injection": "warn",
     "security/detect-new-buffer": "error",
     "security/detect-pseudoRandomBytes": "error",
-    "no-console": ["error", { "allow": ["warn", "error"] }]
+    "no-console": ["error", { "allow": ["warn", "error"] }],
+    "no-restricted-syntax": [
+      "error",
+      {
+        "selector": "CallExpression[callee.object.name=\"localStorage\"][callee.property.name=\"setItem\"]",
+        "message": "Do not store sensitive data in localStorage. Use secure session storage or allowlisted keys only."
+      },
+      {
+        "selector": "MemberExpression[object.name=\"localStorage\"][property.name=\"setItem\"]",
+        "message": "localStorage.setItem usage detected. Ensure only non-sensitive data is stored."
+      },
+      {
+        "selector": "Literal[value=/.*service_role.*/]",
+        "message": "Service role keys must not be present in client-side code."
+      },
+      {
+        "selector": "Literal[value=/.*secret.*/i]",
+        "message": "Potential secret detected in client code. Move to server-side environment."
+      }
+    ]
   },
   "env": {
     "browser": true,
