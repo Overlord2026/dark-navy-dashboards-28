@@ -1,4 +1,5 @@
 import { Helmet } from 'react-helmet-async';
+import { jsonLdSafe } from '@/lib/jsonLd';
 
 interface SEOHeadProps {
   title: string;
@@ -59,8 +60,8 @@ export default function SEOHead({
       <meta name="author" content="MyBFOCFO" />
       
       {/* Schema.org JSON-LD for Better SEO */}
-      <script type="application/ld+json">
-        {JSON.stringify({
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ 
+        __html: jsonLdSafe({
           "@context": "https://schema.org",
           "@type": "WebSite",
           "name": "MyBFOCFO",
@@ -74,8 +75,8 @@ export default function SEOHead({
             },
             "query-input": "required name=search_term_string"
           }
-        })}
-      </script>
+        })
+      }} />
     </Helmet>
   );
 }
