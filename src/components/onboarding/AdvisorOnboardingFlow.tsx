@@ -36,13 +36,19 @@ interface AdvisorOnboardingData {
   clients_invited: boolean;
 }
 
-interface AdvisorProfile {
+type AdvisorProfile = {
   firm_name?: string;
   bio?: string;
-  specialties?: string[];
+  specialties: string[];
   certifications?: string[];
   years_experience?: number;
   license_states?: string[];
+};
+
+function toStringArray(x: unknown): string[] {
+  if (Array.isArray(x)) return x.filter((v): v is string => typeof v === 'string');
+  if (typeof x === 'string') return x.split(',').map(s => s.trim()).filter(Boolean);
+  return [];
 }
 
 export const AdvisorOnboardingFlow = () => {
@@ -56,7 +62,9 @@ export const AdvisorOnboardingFlow = () => {
     book_setup_completed: false,
     clients_invited: false
   });
-  const [advisorProfile, setAdvisorProfile] = useState<AdvisorProfile>({});
+  const [advisorProfile, setAdvisorProfile] = useState<AdvisorProfile>({
+    specialties: []
+  });
 
   useEffect(() => {
     checkOnboardingStatus();
@@ -77,7 +85,11 @@ export const AdvisorOnboardingFlow = () => {
     }
 
     if (advisorData) {
-      setAdvisorProfile(advisorData);
+      setAdvisorProfile(prev => ({
+        ...prev,
+        ...advisorData,
+        specialties: toStringArray((advisorData as any).specialties),
+      }) as AdvisorProfile);
       setOnboardingData({
         profile_completed: !!(advisorData.bio),
         credentials_added: !!(advisorData.certifications?.length),
