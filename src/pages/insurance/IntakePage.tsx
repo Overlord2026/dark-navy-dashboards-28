@@ -54,7 +54,7 @@ export function IntakePage() {
       };
 
       if (insuranceType === 'home') {
-        rawIntake.property = {
+        (rawIntake as any).property = {
           value: formData.property_value,
           year_built: formData.year_built,
           construction_type: formData.construction_type,
@@ -63,7 +63,7 @@ export function IntakePage() {
       }
 
       if (insuranceType === 'auto') {
-        rawIntake.vehicle = {
+        (rawIntake as any).vehicle = {
           year: formData.vehicle_year,
           make: formData.vehicle_make,
           usage: formData.vehicle_usage,

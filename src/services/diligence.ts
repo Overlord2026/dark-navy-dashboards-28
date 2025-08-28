@@ -112,14 +112,13 @@ export async function openCase(params: {
   });
 
   const { data, error } = await supabase
-    .from('diligence_cases')
+    .from('diligence_cases' as any)
     .insert({
-      advisor_name_hash: advisorHash,
-      crd_number: params.crd,
-      iard_number: params.iard,
+      advisor_name: params.advisor_name,
+      crd: params.crd || '',
+      iard: params.iard || '',
       status: 'open',
-      risk_score: 0,
-      created_by: params.created_by,
+      score: 0,
       created_at: new Date().toISOString()
     })
     .select('id')
@@ -131,13 +130,13 @@ export async function openCase(params: {
   await recordReceipt({
     type: 'DueDiligence-RDS',
     ts: new Date().toISOString(),
-    case_id: data.id,
+    case_id: (data as any).id,
     advisor_hash: advisorHash,
     action: 'case_opened',
     policy_version: 'v1.0'
   });
 
-  return data.id;
+  return (data as any).id;
 }
 
 /**
@@ -230,7 +229,7 @@ export async function scoreCase(
 
   // Insert scores
   const { error: scoresError } = await supabase
-    .from('diligence_case_scores')
+    .from('diligence_case_scores' as any)
     .insert(caseScores);
 
   if (scoresError) throw scoresError;
@@ -243,9 +242,9 @@ export async function scoreCase(
 
   // Update case
   const { error: updateError } = await supabase
-    .from('diligence_cases')
+    .from('diligence_cases' as any)
     .update({
-      risk_score: weightedScore,
+      score: weightedScore,
       status: 'completed',
       completed_at: new Date().toISOString()
     })
@@ -267,7 +266,7 @@ export async function scoreCase(
   return {
     total_score: weightedScore,
     weighted_score: weightedScore,
-    risk_level
+    risk_level: riskLevel
   };
 }
 
@@ -302,7 +301,7 @@ export async function getCaseSummary(caseId: string): Promise<{
   risk_assessment: string;
 }> {
   const { data: caseData, error: caseError } = await supabase
-    .from('diligence_cases')
+    .from('diligence_cases' as any)
     .select('*')
     .eq('id', caseId)
     .single();
@@ -310,7 +309,7 @@ export async function getCaseSummary(caseId: string): Promise<{
   if (caseError) throw caseError;
 
   const { data: scores, error: scoresError } = await supabase
-    .from('diligence_case_scores')
+    .from('diligence_case_scores' as any)
     .select('*')
     .eq('case_id', caseId);
 
@@ -320,13 +319,18 @@ export async function getCaseSummary(caseId: string): Promise<{
   const backgroundChecks: BackgroundCheckResult[] = [];
 
   const riskAssessment = 
-    caseData.risk_score >= 8 ? 'Low Risk - Meets all compliance standards' :
-    caseData.risk_score >= 6 ? 'Medium Risk - Some concerns require monitoring' :
+    (caseData as any).score >= 8 ? 'Low Risk - Meets all compliance standards' :
+    (caseData as any).score >= 6 ? 'Medium Risk - Some concerns require monitoring' :
     'High Risk - Significant issues require escalation';
 
   return {
-    case: caseData,
-    scores: scores || [],
+    case: {
+      ...(caseData as any),
+      advisor_name_hash: '', 
+      risk_score: (caseData as any).score || 0,
+      created_by: 'system'
+    } as DiligenceCase,
+    scores: (scores || []) as unknown as CaseScore[],
     background_checks: backgroundChecks,
     risk_assessment: riskAssessment
   };
@@ -337,7 +341,7 @@ export async function getCaseSummary(caseId: string): Promise<{
  */
 export async function listCases(status?: string): Promise<DiligenceCase[]> {
   let query = supabase
-    .from('diligence_cases')
+    .from('diligence_cases' as any)
     .select('*')
     .order('created_at', { ascending: false });
 
@@ -347,7 +351,12 @@ export async function listCases(status?: string): Promise<DiligenceCase[]> {
 
   const { data, error } = await query;
   if (error) throw error;
-  return data || [];
+  return (data || []).map((item: any) => ({
+    ...item,
+    advisor_name_hash: '', 
+    risk_score: item.score || 0,
+    created_by: 'system'
+  })) as DiligenceCase[];
 }
 
 /**

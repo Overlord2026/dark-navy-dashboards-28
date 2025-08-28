@@ -42,7 +42,7 @@ export function QuotePage() {
       
       if (!quoteData && submissionData.status === 'submitted') {
         // Generate quote if it doesn't exist
-        const risk = submissionData.risk_profile;
+        const risk = (submissionData as any).risk_profile;
         quoteData = await generateQuote(id, risk);
       }
 
@@ -176,7 +176,7 @@ export function QuotePage() {
                       <TableCell className="font-medium capitalize">
                         {coverage.replace(/_/g, ' ')}
                       </TableCell>
-                      <TableCell>{limit}</TableCell>
+                      <TableCell>{String(limit)}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

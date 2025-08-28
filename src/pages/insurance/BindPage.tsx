@@ -12,6 +12,18 @@ import { getQuote } from '@/services/ratingStub';
 import { Shield, CheckCircle, FileText, CreditCard, Signature, Eye, Lock } from 'lucide-react';
 import { toast } from 'sonner';
 
+// Add a checklist type
+type BindingChecklist = {
+  identity_verified: boolean;
+  payment_method_confirmed: boolean;
+  disclosures_accepted: boolean;
+  underwriting_approved: boolean;
+  application_signed: boolean;
+};
+
+const toBool = (v: string | boolean | undefined): boolean =>
+  typeof v === 'boolean' ? v : v === 'true';
+
 export function BindPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -57,12 +69,12 @@ export function BindPage() {
     }
   };
 
-  const handleChecklistUpdate = async (item: string, checked: boolean) => {
+  const handleChecklistUpdate = async (item: keyof BindingChecklist, checked: boolean) => {
     if (!binding) return;
     
     setProcessing(true);
     try {
-      await updateChecklistItem(binding.id, item as keyof BindingChecklist, checked);
+      await updateChecklistItem(binding.id, item, checked);
       
       // Update local state
       setBinding(prev => ({
@@ -179,8 +191,8 @@ export function BindPage() {
                 <div className="flex items-center space-x-3">
                   <Checkbox
                     id="identity_verified"
-                    checked={binding.checklist.identity_verified}
-                    onCheckedChange={(checked) => handleChecklistUpdate('identity_verified', Boolean(checked))}
+                    checked={toBool(binding.checklist.identity_verified)}
+                    onCheckedChange={(checked) => handleChecklistUpdate('identity_verified', toBool(checked))}
                     disabled={processing}
                   />
                   <div className="flex items-center gap-2">
@@ -197,8 +209,8 @@ export function BindPage() {
                 <div className="flex items-center space-x-3">
                   <Checkbox
                     id="payment_method_confirmed"
-                    checked={binding.checklist.payment_method_confirmed}
-                    onCheckedChange={(checked) => handleChecklistUpdate('payment_method_confirmed', Boolean(checked))}
+                    checked={toBool(binding.checklist.payment_method_confirmed)}
+                    onCheckedChange={(checked) => handleChecklistUpdate('payment_method_confirmed', toBool(checked))}
                     disabled={processing}
                   />
                   <div className="flex items-center gap-2">
@@ -215,8 +227,8 @@ export function BindPage() {
                 <div className="flex items-center space-x-3">
                   <Checkbox
                     id="disclosures_accepted"
-                    checked={binding.checklist.disclosures_accepted}
-                    onCheckedChange={(checked) => handleChecklistUpdate('disclosures_accepted', Boolean(checked))}
+                    checked={toBool(binding.checklist.disclosures_accepted)}
+                    onCheckedChange={(checked) => handleChecklistUpdate('disclosures_accepted', toBool(checked))}
                     disabled={processing}
                   />
                   <div className="flex items-center gap-2">
@@ -233,8 +245,8 @@ export function BindPage() {
                 <div className="flex items-center space-x-3">
                   <Checkbox
                     id="underwriting_approved"
-                    checked={binding.checklist.underwriting_approved}
-                    onCheckedChange={(checked) => handleChecklistUpdate('underwriting_approved', Boolean(checked))}
+                    checked={toBool(binding.checklist.underwriting_approved)}
+                    onCheckedChange={(checked) => handleChecklistUpdate('underwriting_approved', toBool(checked))}
                     disabled={processing}
                   />
                   <div className="flex items-center gap-2">
@@ -252,7 +264,7 @@ export function BindPage() {
                   <div className="flex items-center space-x-3 mb-3">
                     <Checkbox
                       id="application_signed"
-                      checked={binding.checklist.application_signed}
+                      checked={toBool(binding.checklist.application_signed)}
                       disabled={true}
                     />
                     <div className="flex items-center gap-2">

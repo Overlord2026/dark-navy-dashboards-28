@@ -125,7 +125,7 @@ export async function updateClaimStatus(
  */
 export async function assignAdjuster(claimId: string, adjusterUserId: string): Promise<void> {
   const { error } = await supabase
-    .from('insurance_claims')
+    .from('insurance_claims' as any)
     .update({ 
       assigned_adjuster: adjusterUserId,
       status: 'assigned',
@@ -158,24 +158,24 @@ export async function getClaimsDashboard(): Promise<{
   };
 }> {
   const { data: claims, error } = await supabase
-    .from('insurance_claims')
+    .from('insurance_claims' as any)
     .select('*')
     .neq('status', 'closed')
     .order('created_at', { ascending: false });
 
   if (error) throw error;
 
-  const highPriority = claims?.filter(c => ['high', 'urgent'].includes(c.priority)).length || 0;
-  const unassigned = claims?.filter(c => !c.assigned_adjuster).length || 0;
+  const highPriority = claims?.filter((c: any) => ['high', 'urgent'].includes(c.priority)).length || 0;
+  const unassigned = claims?.filter((c: any) => !c.assigned_adjuster).length || 0;
   
   const avgAge = claims?.length ? 
-    claims.reduce((sum, claim) => {
+    claims.reduce((sum: number, claim: any) => {
       const ageMs = Date.now() - new Date(claim.created_at).getTime();
       return sum + (ageMs / (1000 * 60 * 60 * 24)); // days
     }, 0) / claims.length : 0;
 
   return {
-    open_claims: claims || [],
+    open_claims: (claims || []) as ClaimRecord[],
     summary: {
       total_open: claims?.length || 0,
       high_priority: highPriority,
@@ -190,13 +190,13 @@ export async function getClaimsDashboard(): Promise<{
  */
 export async function getClaim(id: string): Promise<ClaimRecord | null> {
   const { data, error } = await supabase
-    .from('insurance_claims')
+    .from('insurance_claims' as any)
     .select('*')
     .eq('id', id)
     .single();
 
   if (error || !data) return null;
-  return data;
+  return data as ClaimRecord;
 }
 
 /**

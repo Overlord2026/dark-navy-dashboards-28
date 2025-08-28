@@ -101,7 +101,7 @@ export async function checkAutomationEntitlement(
   
   // Check user entitlements
   const { data: entitlement, error } = await supabase
-    .from('user_entitlements')
+    .from('user_entitlements' as any)
     .select('*')
     .eq('user_id', userId)
     .eq('feature_key', `automation_${automationKey}`)
@@ -111,7 +111,7 @@ export async function checkAutomationEntitlement(
   if (error) return false;
   
   // Check tier access
-  const userTier = entitlement?.tier || 'basic';
+  const userTier = (entitlement as any)?.tier || 'basic';
   const requiredTiers = {
     basic: ['basic', 'premium', 'enterprise'],
     premium: ['premium', 'enterprise'],
@@ -130,13 +130,13 @@ export async function enrollHousehold(
   parameters: Record<string, any> = {}
 ): Promise<void> {
   const { error } = await supabase
-    .from('automation_enrollments')
+    .from('automation_enrollments' as any)
     .insert({
       household_id: householdId,
-      automation_key: automationKey,
-      parameters,
-      enrolled_at: new Date().toISOString(),
-      active: true
+      feature_key: automationKey,
+      granted_at: new Date().toISOString(),
+      plan: 'automation',
+      user_id: householdId
     });
 
   if (error) throw error;
@@ -268,13 +268,35 @@ async function executeAutomation(
  */
 export async function getHouseholdAutomations(householdId: string): Promise<HouseholdEnrollment[]> {
   const { data, error } = await supabase
-    .from('automation_enrollments')
+    .from('automation_enrollments' as any)
     .select('*')
     .eq('household_id', householdId)
     .eq('active', true);
 
   if (error) throw error;
-  return data || [];
+  return (data || []).map((e: any) => ({
+    household_id: e.household_id,
+    automation_key: e.feature_key,
+    enrolled_at: e.granted_at,
+    parameters: {},
+    active: true
+  })) as HouseholdEnrollment[];
+}
+
+/**
+ * Unenroll household from automation
+ */
+export async function unenrollHousehold(
+  householdId: string,
+  automationKey: AutomationKey
+): Promise<void> {
+  const { error } = await supabase
+    .from('automation_enrollments' as any)
+    .update({ active: false, disenrolled_at: new Date().toISOString() })
+    .eq('household_id', householdId)
+    .eq('feature_key', automationKey);
+
+  if (error) throw error;
 }
 
 /**
@@ -286,7 +308,7 @@ export async function getAutomationHistory(
   limit: number = 50
 ): Promise<any[]> {
   let query = supabase
-    .from('automation_runs')
+    .from('automation_runs' as any)
     .select('*')
     .eq('household_id', householdId)
     .order('created_at', { ascending: false })

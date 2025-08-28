@@ -103,7 +103,10 @@ export async function getAssets(filters?: {
 
   const { data, error } = await query;
   if (error) throw error;
-  return data || [];
+  return (data || []).map(item => ({
+    ...item,
+    asset_type: item.asset_type as Asset['asset_type']
+  })) as Asset[];
 }
 
 /**
@@ -125,10 +128,10 @@ export async function getAssetDetails(assetId: string): Promise<{
   if (assetResult.error) throw assetResult.error;
 
   return {
-    asset: assetResult.data,
-    documents: docsResult.data || [],
+    asset: { ...assetResult.data, asset_type: assetResult.data.asset_type as Asset['asset_type'] } as Asset,
+    documents: (docsResult.data || []).map(doc => ({ ...doc, document_type: doc.document_type as AssetDoc['document_type'] })) as AssetDoc[],
     advice: adviceResult.data || [],
-    reminders: remindersResult.data || []
+    reminders: (remindersResult.data || []).map(reminder => ({ ...reminder, reminder_type: reminder.reminder_type as AssetReminder['reminder_type'] })) as AssetReminder[]
   };
 }
 

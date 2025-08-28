@@ -124,7 +124,7 @@ export async function submitIntake(risk: InsuranceRisk): Promise<string> {
   const riskHash = await inputs_hash(risk);
   
   const { data, error } = await supabase
-    .from('insurance_submissions')
+    .from('insurance_submissions' as any)
     .insert({
       risk_hash: riskHash,
       risk_profile: risk,
@@ -141,11 +141,11 @@ export async function submitIntake(risk: InsuranceRisk): Promise<string> {
     ts: new Date().toISOString(),
     policy_version: 'v1.0',
     risk_hash: riskHash,
-    submission_id: data.id,
+    submission_id: (data as any).id,
     coverage_type: risk.type
   });
 
-  return data.id;
+  return (data as any).id;
 }
 
 /**

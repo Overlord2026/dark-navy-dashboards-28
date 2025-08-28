@@ -53,7 +53,7 @@ export async function initializeBinding(quoteId: string): Promise<PolicyBinding>
   };
 
   const { error } = await supabase
-    .from('insurance_bindings')
+    .from('insurance_bindings' as any)
     .insert({
       id: binding.id,
       quote_id: quoteId,
@@ -80,7 +80,7 @@ export async function updateChecklistItem(
 ): Promise<void> {
   // Get current binding
   const { data: binding, error: fetchError } = await supabase
-    .from('insurance_bindings')
+    .from('insurance_bindings' as any)
     .select('*')
     .eq('id', bindingId)
     .single();
@@ -88,8 +88,8 @@ export async function updateChecklistItem(
   if (fetchError || !binding) throw new Error('Binding not found');
 
   // Update checklist
-  const updatedChecklist = { ...binding.checklist, [item]: completed };
-  const updatedDocuments = { ...binding.documents };
+  const updatedChecklist = { ...(binding as any).checklist, [item]: completed };
+  const updatedDocuments = { ...(binding as any).documents };
   
   // Store document URL if provided
   if (documentUrl) {
@@ -104,7 +104,7 @@ export async function updateChecklistItem(
   }
 
   await supabase
-    .from('insurance_bindings')
+    .from('insurance_bindings' as any)
     .update({
       checklist: updatedChecklist,
       documents: updatedDocuments
@@ -126,30 +126,30 @@ export async function completeBind(bindingId: string): Promise<void> {
   
   // Update binding status
   const { data: binding, error } = await supabase
-    .from('insurance_bindings')
+    .from('insurance_bindings' as any)
     .update({ 
       status: 'bound', 
       bound_at: boundAt 
     })
     .eq('id', bindingId)
-    .select('*, insurance_quotes(*)')
+    .select('*')
     .single();
 
   if (error || !binding) throw error;
 
   // Update quote status
   await supabase
-    .from('insurance_quotes')
+    .from('insurance_quotes' as any)
     .update({ status: 'bound' })
-    .eq('id', binding.quote_id);
+    .eq('id', (binding as any).quote_id);
 
   // Generate policy documents (stub)
   const policyDocsUrl = await generatePolicyDocuments(binding);
   await supabase
-    .from('insurance_bindings')
+    .from('insurance_bindings' as any)
     .update({
       documents: {
-        ...binding.documents,
+        ...(binding as any).documents,
         policy_documents_url: policyDocsUrl
       }
     })
@@ -158,9 +158,9 @@ export async function completeBind(bindingId: string): Promise<void> {
   // Record Bind-RDS
   const bindHash = await inputs_hash({
     binding_id: bindingId,
-    policy_number: binding.policy_number,
-    quote_id: binding.quote_id,
-    effective_date: binding.effective_date,
+    policy_number: (binding as any).policy_number,
+    quote_id: (binding as any).quote_id,
+    effective_date: (binding as any).effective_date,
     bound_at: boundAt
   });
 
@@ -169,9 +169,9 @@ export async function completeBind(bindingId: string): Promise<void> {
     ts: boundAt,
     policy_version: 'v1.0',
     binding_id: bindingId,
-    policy_number: binding.policy_number,
+    policy_number: (binding as any).policy_number,
     bind_hash: bindHash,
-    premium_band: binding.insurance_quotes?.premium_band || 'unknown'
+    premium_band: (binding as any).insurance_quotes?.premium_band || 'unknown'
   });
 
   // Optional anchor single on bind
@@ -188,9 +188,9 @@ export async function completeBind(bindingId: string): Promise<void> {
     ts: boundAt,
     policy_version: 'v1.0',
     binding_id: bindingId,
-    policy_number: binding.policy_number,
+    policy_number: (binding as any).policy_number,
     payment_type: 'initial_premium',
-    amount_band: binding.insurance_quotes?.premium_band || 'unknown'
+    amount_band: (binding as any).insurance_quotes?.premium_band || 'unknown'
   });
 }
 
@@ -239,7 +239,7 @@ function generatePolicyNumber(): string {
  */
 export async function getBinding(id: string): Promise<PolicyBinding | null> {
   const { data, error } = await supabase
-    .from('insurance_bindings')
+    .from('insurance_bindings' as any)
     .select('*')
     .eq('id', id)
     .single();
@@ -247,13 +247,13 @@ export async function getBinding(id: string): Promise<PolicyBinding | null> {
   if (error || !data) return null;
   
   return {
-    id: data.id,
-    quote_id: data.quote_id,
-    policy_number: data.policy_number,
-    effective_date: data.effective_date,
-    status: data.status,
-    checklist: data.checklist,
-    documents: data.documents,
-    bound_at: data.bound_at
+    id: (data as any).id,
+    quote_id: (data as any).quote_id,
+    policy_number: (data as any).policy_number,
+    effective_date: (data as any).effective_date,
+    status: (data as any).status,
+    checklist: (data as any).checklist,
+    documents: (data as any).documents,
+    bound_at: (data as any).bound_at
   };
 }
