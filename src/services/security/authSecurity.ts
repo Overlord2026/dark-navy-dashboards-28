@@ -4,6 +4,7 @@ import { PasswordPolicyValidator, PasswordValidationResult } from './passwordPol
 import { auditLog } from '@/services/auditLog/auditLogService';
 import { mfaBypassService } from './mfaBypassService';
 import { getEnvironmentConfig } from '@/utils/environment';
+import { log } from '@/lib/logger';
 
 export interface PrivilegedRole {
   role: string;
@@ -54,7 +55,7 @@ export class AuthSecurityService {
     // Check environment - disable MFA enforcement in non-production environments
     const env = getEnvironmentConfig();
     if (!env.isProduction) {
-      console.log('MFA enforcement disabled in non-production environment');
+      log.info('MFA enforcement disabled in non-production environment');
       return {
         requiresMFA: false,
         mfaEnabled: true, // Pretend MFA is enabled to avoid UI issues
@@ -82,7 +83,7 @@ export class AuthSecurityService {
       .single();
 
     if (error || !profile) {
-      console.error('Error checking MFA status:', error);
+      log.error('Error checking MFA status:', error);
       return {
         requiresMFA: true,
         mfaEnabled: false,
@@ -134,7 +135,7 @@ export class AuthSecurityService {
       const { error } = await supabase.auth.admin.signOut(userId, 'global');
       
       if (error) {
-        console.error('Error rotating user sessions:', error);
+        log.error('Error rotating user sessions:', error);
         throw error;
       }
 
@@ -222,7 +223,7 @@ export class AuthSecurityService {
         recommendations
       };
     } catch (error) {
-      console.error('Error auditing user accounts:', error);
+      log.error('Error auditing user accounts:', error);
       throw error;
     }
   }

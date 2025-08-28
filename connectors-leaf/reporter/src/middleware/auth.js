@@ -1,4 +1,12 @@
 import { supabase } from '../index.js'
+// Create local redacting logger for auth middleware
+const SENSITIVE = /(Bearer\s+[A-Za-z0-9._-]+|sk-[A-Za-z0-9]{20,}|eyJ[A-Za-z0-9._-]+)/g;
+const redactSensitive = (arg) => String(arg).replace(SENSITIVE, '[REDACTED]');
+const log = {
+  info: (...args) => console.info(...args.map(redactSensitive)),
+  warn: (...args) => console.warn(...args.map(redactSensitive)),
+  error: (...args) => console.error(...args.map(redactSensitive))
+};
 
 export async function authenticateUser(req, res, next) {
   try {
@@ -25,7 +33,7 @@ export async function authenticateUser(req, res, next) {
       .single()
 
     if (profileError) {
-      console.error('Failed to fetch user profile:', profileError)
+      log.error('Failed to fetch user profile:', profileError)
       return res.status(401).json({ error: 'User profile not found' })
     }
 
@@ -40,7 +48,7 @@ export async function authenticateUser(req, res, next) {
 
     next()
   } catch (error) {
-    console.error('Authentication error:', error)
+    log.error('Authentication error:', error)
     res.status(500).json({ error: 'Authentication service error' })
   }
 }
