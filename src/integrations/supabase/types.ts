@@ -5538,6 +5538,33 @@ export type Database = {
           },
         ]
       }
+      automation_enrollments: {
+        Row: {
+          feature_key: string
+          granted_at: string
+          household_id: string | null
+          id: string
+          plan: string | null
+          user_id: string
+        }
+        Insert: {
+          feature_key: string
+          granted_at?: string
+          household_id?: string | null
+          id?: string
+          plan?: string | null
+          user_id: string
+        }
+        Update: {
+          feature_key?: string
+          granted_at?: string
+          household_id?: string | null
+          id?: string
+          plan?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       automation_runs: {
         Row: {
           attestation_hash: string | null
@@ -29757,6 +29784,7 @@ export type Database = {
           period: string
           product: string
           reasons: Json | null
+          reasons_hash: string | null
           split_cents: number
           status: string | null
         }
@@ -29771,6 +29799,7 @@ export type Database = {
           period: string
           product: string
           reasons?: Json | null
+          reasons_hash?: string | null
           split_cents: number
           status?: string | null
         }
@@ -29785,6 +29814,7 @@ export type Database = {
           period?: string
           product?: string
           reasons?: Json | null
+          reasons_hash?: string | null
           split_cents?: number
           status?: string | null
         }
