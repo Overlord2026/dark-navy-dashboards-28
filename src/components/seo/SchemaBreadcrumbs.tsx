@@ -1,5 +1,5 @@
 import React from 'react';
-import { sanitizeHtml } from '@/lib/sanitize';
+import { jsonLdSafe } from '@/lib/jsonLd';
 
 type Crumb = { name: string; item: string };
 
@@ -15,5 +15,5 @@ export default function SchemaBreadcrumbs({ items }: { items: Crumb[] }) {
     }))
   };
   
-  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: sanitizeHtml(JSON.stringify(sd)) }} />;
+  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdSafe(sd) }} />;
 }
