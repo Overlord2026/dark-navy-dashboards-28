@@ -31,6 +31,11 @@ export const ROLE_GROUPS = {
   TENANT_ADMIN_ACCESS: ['tenant_admin', 'admin', 'system_administrator'],
 } as const;
 
+// Wherever you convert from a readonly tuple to RoleLevel[]
+function asRoleArray<T extends readonly string[]>(tuple: T): RoleLevel[] {
+  return [...tuple] as unknown as RoleLevel[]; // widen readonly → mutable array of your union
+}
+
 /**
  * Secure role-based access control hook
  */
@@ -69,7 +74,7 @@ export const useRoleAccess = () => {
    * Check if user has role from predefined groups
    */
   const hasRoleAccess = (roleGroup: keyof typeof ROLE_GROUPS): boolean => {
-    return hasAnyRole(ROLE_GROUPS[roleGroup] as RoleLevel[]);
+    return hasAnyRole(asRoleArray(ROLE_GROUPS[roleGroup]));
   };
 
   /**
