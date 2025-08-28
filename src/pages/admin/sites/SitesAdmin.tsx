@@ -29,7 +29,10 @@ export default function SitesAdmin() {
       // Get current user's IAR ID (mock for now)
       const iarId = 'current_user_iar_id';
       const sitesData = await listSites(iarId);
-      setSites(sitesData);
+      setSites(sitesData.map(ms => ({
+        ...ms,
+        created_at: new Date().toISOString(), // MicroSite doesn't have created_at, so we add it
+      })) as Site[]);
     } catch (error) {
       console.error('Failed to fetch sites:', error);
     } finally {
