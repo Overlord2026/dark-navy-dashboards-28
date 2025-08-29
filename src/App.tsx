@@ -189,6 +189,11 @@ function App() {
               <Navigate to="/nil/onboarding" replace />
             } />
             
+            {/* Route Redirects */}
+            <Route path="/family" element={<Navigate to="/family/home" replace />} />
+            <Route path="/onboarding/family" element={<Navigate to="/start/families" replace />} />
+            <Route path="/pros/advisors" element={<Navigate to="/personas/advisors" replace />} />
+            
             {/* Public Pages - Flag Protected */}
             {getFlag('PUBLIC_DISCOVER_ENABLED') && <Route path="/discover" element={<Discover />} />}
             {getFlag('PUBLIC_DISCOVER_ENABLED') && <Route path="/search" element={<SearchPage />} />}
@@ -225,6 +230,7 @@ function App() {
             {/* Persona Dashboard Routes */}
             <Route path="/personas/advisors" element={<Advisors />} />
             <Route path="/personas/insurance" element={<Insurance />} />
+            <Route path="/insurance" element={<Insurance />} />
             
             {/* Full Persona Dashboard Routes */}
             <Route path="/personas/advisors/full" element={<AdvisorPersonaDashboard />} />
@@ -468,7 +474,7 @@ function App() {
               </Suspense>
             } />
             
-            {/* 404 Route */}
+            {/* NotFound Route */}
             <Route path="*" element={<NotFound />} />
           </Routes>
           
