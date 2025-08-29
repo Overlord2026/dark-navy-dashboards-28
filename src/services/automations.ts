@@ -273,13 +273,16 @@ export async function getHouseholdAutomations(householdId: string): Promise<Hous
     .eq('active', true);
 
   if (error) throw error;
-  return (data || []).map((e: any) => ({
-    household_id: e.household_id,
+  
+  const appEnrollments: HouseholdEnrollment[] = (data ?? []).map((e: any) => ({
+    household_id: e.household_id ?? '',
     automation_key: e.feature_key,
-    enrolled_at: e.granted_at,
+    enrolled_at: e.granted_at ?? new Date().toISOString(),
     parameters: {},
     active: true
-  })) as HouseholdEnrollment[];
+  }));
+  
+  return appEnrollments;
 }
 
 /**
