@@ -99,6 +99,13 @@ import NILOnboardingFlow from '@/pages/onboarding/NILOnboarding';
 import { BrandOnboarding } from '@/pages/brand/BrandOnboarding';
 import { BrandHub } from '@/pages/brand/BrandHub';
 import { SolutionsHub } from '@/components/solutions/SolutionsHub';
+import StarterPage from '@/pages/learn/StarterPage';
+import AdvisorPersonaDashboard from '@/pages/personas/AdvisorPersonaDashboard';
+import InsurancePersonaDashboard from '@/pages/personas/InsurancePersonaDashboard';
+import AccountantPersonaDashboard from '@/pages/personas/AccountantPersonaDashboard';
+import AttorneyPersonaDashboard from '@/pages/personas/AttorneyPersonaDashboard';
+import FamilyRetireePersonaDashboard from '@/pages/personas/FamilyRetireePersonaDashboard';
+import FamilyAspiringPersonaDashboard from '@/pages/personas/FamilyAspiringPersonaDashboard';
 
 const DemoPage = React.lazy(() => import('@/pages/demos/[persona]'));
 const PreviewPage = React.lazy(() => import('@/components/PreviewPage'));
@@ -197,6 +204,17 @@ function App() {
             {getFlag('ONBOARDING_PUBLIC_ENABLED') && <Route path="/start/nil-athlete" element={<NILOnboardingFlow type="athlete" />} />}
             {getFlag('ONBOARDING_PUBLIC_ENABLED') && <Route path="/start/nil-school" element={<NILOnboardingFlow type="school" />} />}
             {getFlag('BRAND_PUBLIC_ENABLED') && <Route path="/start/brand" element={<BrandOnboarding />} />}
+            
+            {/* Persona Dashboard Routes */}
+            <Route path="/personas/advisors" element={<AdvisorPersonaDashboard />} />
+            <Route path="/personas/insurance" element={<InsurancePersonaDashboard />} />
+            <Route path="/personas/accountants" element={<AccountantPersonaDashboard />} />
+            <Route path="/personas/attorneys" element={<AttorneyPersonaDashboard />} />
+            <Route path="/personas/families/retirees" element={<FamilyRetireePersonaDashboard />} />
+            <Route path="/personas/families/aspiring" element={<FamilyAspiringPersonaDashboard />} />
+            
+            {/* Learn/Booking Routes */}
+            <Route path="/learn/:persona/starter" element={<StarterPage />} />
           
           {/* Insurance Hub Routes */}
           <Route path="/insurance/intake" element={<InsuranceIntakePage />} />
