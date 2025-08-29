@@ -17,28 +17,22 @@ interface MigrationInfo {
 
 const KNOWN_MIGRATIONS: MigrationInfo[] = [
   {
-    version: '2025-08-27_bfo_ops_fix_pack_v2',
-    name: 'BFO Operations Complete Setup',
-    description: 'IAR sites, revenue rules, automation system, transitions, diligence tracking, vault objects',
-    file_path: 'supabase/migrations/2025-08-27_bfo_ops_fix_pack_v2.sql'
+    version: '2025-08-28_insurance_support',
+    name: 'Insurance Support Tables',
+    description: 'Personal lines intake (insurance_submissions) and FNOL claims (insurance_claims)',
+    file_path: 'supabase/migrations/2025-08-28_insurance_support.sql'
   },
   {
-    version: '2025-08-27_rls_three_tables',
-    name: 'RLS Policies for AIES Tables',
-    description: 'Row Level Security for aies_consent_grants, aies_policies, aies_connector_health',
-    file_path: 'supabase/migrations/2025-08-27_rls_three_tables.sql'
+    version: '2025-08-28_view_security_barrier',
+    name: 'View Security Hardening',
+    description: 'Set security_barrier=true on all public views',
+    file_path: 'supabase/migrations/2025-08-28_view_security_barrier.sql'
   },
   {
-    version: '2025-08-27_view_security_barrier',
-    name: 'View Security Enhancement',
-    description: 'Set security_barrier = true on all public views for enhanced security',
-    file_path: 'supabase/migrations/2025-08-27_view_security_barrier.sql'
-  },
-  {
-    version: '2025-08-27_functions_hardening',
+    version: '2025-08-28_functions_hardening',
     name: 'Function Security Hardening',
-    description: 'Add SECURITY DEFINER and search_path protection to custom functions',
-    file_path: 'supabase/migrations/2025-08-27_functions_hardening.sql'
+    description: 'Set safe search_path on SECURITY DEFINER functions',
+    file_path: 'supabase/migrations/2025-08-28_functions_hardening.sql'
   }
 ];
 

@@ -1,37 +1,23 @@
-# Supabase Database Migrations
+# Supabase Migrations
 
-This directory contains idempotent SQL migration files for the BFO MVP Client App database.
-
-## Environment Setup
-
-Before running migrations, set these environment variables:
+## Env
+Set in your shell (or CI secrets):
 
 ```bash
 export SUPABASE_PROJECT_REF=xcmqjkvyvuhoslbzmlgi
-export SUPABASE_DB_URL=postgres://postgres:[SERVICE_PW]@db.xcmqjkvyvuhoslbzmlgi.supabase.co:5432/postgres
+export SUPABASE_DB_URL="postgres://postgres:[SERVICE_PW]@db.xcmqjkvyvuhoslbzmlgi.supabase.co:5432/postgres"
 ```
 
 Replace `[SERVICE_PW]` with your actual service role password from Supabase Dashboard > Settings > Database.
 
-### Installation Requirements
 ```bash
-# Install Supabase CLI (if not already installed)
-npm install -g supabase
+npm run db:migrate:dev    # apply migrations to the linked DB
+npm run db:diff           # see diffs vs. linked project
 ```
 
-## Running Migrations
-
-### Development Environment
-```bash
-# Apply all pending migrations
-npm run db:migrate:dev
-
-# Check migration status
-npm run db:status
-
-# View differences between local and remote
-npm run db:diff
-```
+## Policy
+- All SQL idempotent (IF NOT EXISTS).
+- No destructive drops in migrations; create a new forward fix if needed.
 
 ### Production Environment
 ```bash

@@ -13,11 +13,40 @@ interface Migration {
   checksum: string | null;
 }
 
+const EXPECTED_MIGRATIONS = [
+  {
+    version: '2025-08-28_insurance_support',
+    name: 'Insurance Support Tables',
+    description: 'Personal lines intake (insurance_submissions) and FNOL claims (insurance_claims)',
+    file_path: 'supabase/migrations/2025-08-28_insurance_support.sql'
+  },
+  {
+    version: '2025-08-28_view_security_barrier', 
+    name: 'View Security Hardening',
+    description: 'Set security_barrier=true on all public views',
+    file_path: 'supabase/migrations/2025-08-28_view_security_barrier.sql'
+  },
+  {
+    version: '2025-08-28_functions_hardening',
+    name: 'Function Security Hardening', 
+    description: 'Set safe search_path on SECURITY DEFINER functions',
+    file_path: 'supabase/migrations/2025-08-28_functions_hardening.sql'
+  }
+];
+
 interface MigrationStatusTableProps {
   migrations: Migration[];
 }
 
 export default function MigrationStatusTable({ migrations }: MigrationStatusTableProps) {
+  // Use expected migrations with mock applied status for read-only display
+  const displayMigrations = EXPECTED_MIGRATIONS.map(migration => ({
+    ...migration,
+    applied: false, // In real implementation, check against database
+    applied_at: null,
+    checksum: null
+  }));
+
   const getStatusIcon = (applied: boolean) => {
     if (applied) {
       return <CheckCircle className="h-4 w-4 text-green-500" />;
@@ -56,7 +85,7 @@ export default function MigrationStatusTable({ migrations }: MigrationStatusTabl
           </div>
         ) : (
           <div className="space-y-3">
-            {migrations.map((migration, index) => (
+            {displayMigrations.map((migration, index) => (
               <div key={migration.version}>
                 <div className="flex items-start justify-between p-4 rounded-lg bg-muted/50 hover:bg-muted/70 transition-colors">
                   <div className="flex items-start gap-3 flex-1">
@@ -89,7 +118,7 @@ export default function MigrationStatusTable({ migrations }: MigrationStatusTabl
                     )}
                   </div>
                 </div>
-                {index < migrations.length - 1 && (
+                {index < displayMigrations.length - 1 && (
                   <div className="h-px bg-border my-2" />
                 )}
               </div>
@@ -97,7 +126,7 @@ export default function MigrationStatusTable({ migrations }: MigrationStatusTabl
           </div>
         )}
         
-        {migrations.length > 0 && (
+        {displayMigrations.length > 0 && (
           <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
             <div className="flex items-start gap-2">
               <AlertTriangle className="h-4 w-4 text-blue-600 mt-0.5" />
