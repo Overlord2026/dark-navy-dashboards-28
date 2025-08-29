@@ -17045,6 +17045,39 @@ export type Database = {
         }
         Relationships: []
       }
+      insurance_claims: {
+        Row: {
+          claim_number: string | null
+          created_at: string
+          id: string
+          intake_data: Json
+          policy_number: string | null
+          priority: string | null
+          status: string | null
+          updated_at: string
+        }
+        Insert: {
+          claim_number?: string | null
+          created_at?: string
+          id?: string
+          intake_data?: Json
+          policy_number?: string | null
+          priority?: string | null
+          status?: string | null
+          updated_at?: string
+        }
+        Update: {
+          claim_number?: string | null
+          created_at?: string
+          id?: string
+          intake_data?: Json
+          policy_number?: string | null
+          priority?: string | null
+          status?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       insurance_policies: {
         Row: {
           coverage: string
@@ -17099,6 +17132,27 @@ export type Database = {
           type?: string
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      insurance_submissions: {
+        Row: {
+          created_at: string
+          id: string
+          intake: Json
+          risk_hash: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          intake?: Json
+          risk_hash: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          intake?: Json
+          risk_hash?: string
         }
         Relationships: []
       }
@@ -28507,6 +28561,38 @@ export type Database = {
             columns: ["proposal_id"]
             isOneToOne: false
             referencedRelation: "draft_proposals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      prospect_invitation_events: {
+        Row: {
+          event: string
+          id: string
+          invite_id: string
+          meta: Json
+          ts: string
+        }
+        Insert: {
+          event: string
+          id?: string
+          invite_id: string
+          meta?: Json
+          ts?: string
+        }
+        Update: {
+          event?: string
+          id?: string
+          invite_id?: string
+          meta?: Json
+          ts?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prospect_invitation_events_invite_id_fkey"
+            columns: ["invite_id"]
+            isOneToOne: false
+            referencedRelation: "prospect_invitations"
             referencedColumns: ["id"]
           },
         ]
