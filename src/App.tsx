@@ -386,8 +386,8 @@ function App() {
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/k401/cma" element={<K401CMAUploader />} />}
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/k401/compliance-pack" element={<K401CompliancePack />} />}
              
-             {/* Broker Routes */}
-             <Route path="/broker/roi" element={<ROICalculator />} />
+              {/* Broker Routes */}
+              <Route path="/broker/roi" element={<div>ROI Calculator Coming Soon</div>} />
              <Route path="/broker/kit" element={<BrokerKit />} />
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/anchors" element={<AnchorList />} />}
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/receipt/:id" element={<ReceiptView />} />}
