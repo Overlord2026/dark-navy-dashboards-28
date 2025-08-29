@@ -215,10 +215,22 @@ export async function getPublishedSite(slug: string): Promise<MicroSite | null> 
     .select('*')
     .eq('slug', slug)
     .eq('status', 'published')
-    .single();
+    .maybeSingle();
 
-  if (error) return null;
-  return data as unknown as MicroSite;
+  if (error || !data) return null;
+  
+  // Map iar_sites row to MicroSite format
+  return {
+    id: data.id,
+    iar_id: data.iar_id,
+    slug: data.slug,
+    title: (data as any).title || data.slug, // Default title to slug if missing
+    status: data.status,
+    blocks: (data as any).blocks || [], // Default to empty array if missing
+    compliance_version: (data as any).compliance_version || 'v2024.1',
+    published_at: (data as any).published_at,
+    analytics_enabled: (data as any).analytics_enabled ?? false // Default to false if missing
+  } as MicroSite;
 }
 
 /**
@@ -232,5 +244,17 @@ export async function listSites(iarId: string): Promise<MicroSite[]> {
     .order('created_at', { ascending: false });
 
   if (error) throw error;
-  return (data || []) as unknown as MicroSite[];
+  
+  // Map iar_sites rows to MicroSite format
+  return (data || []).map(row => ({
+    id: row.id,
+    iar_id: row.iar_id,
+    slug: row.slug,
+    title: (row as any).title || row.slug, // Default title to slug if missing
+    status: row.status,
+    blocks: (row as any).blocks || [], // Default to empty array if missing
+    compliance_version: (row as any).compliance_version || 'v2024.1',
+    published_at: (row as any).published_at,
+    analytics_enabled: (row as any).analytics_enabled ?? false // Default to false if missing
+  })) as MicroSite[];
 }

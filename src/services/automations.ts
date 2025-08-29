@@ -129,14 +129,15 @@ export async function enrollHousehold(
   automationKey: AutomationKey,
   parameters: Record<string, any> = {}
 ): Promise<void> {
-  const qb = (supabase as any).from('automation_enrollments');
-  const { error } = await qb.insert({
-    household_id: householdId,
-    feature_key: automationKey,
-    granted_at: new Date().toISOString(),
-    plan: 'automation',
-    user_id: householdId
-  });
+  const { error } = await supabase
+    .from('automation_enrollments')
+    .insert({
+      household_id: householdId,
+      feature_key: automationKey,
+      granted_at: new Date().toISOString(),
+      plan: 'automation',
+      user_id: householdId
+    } as any);
 
   if (error) throw error;
 
@@ -266,8 +267,8 @@ async function executeAutomation(
  * Gets automation status for household
  */
 export async function getHouseholdAutomations(householdId: string): Promise<HouseholdEnrollment[]> {
-  const qb = (supabase as any).from('automation_enrollments');
-  const { data, error } = await qb
+  const { data, error } = await (supabase as any)
+    .from('automation_enrollments')
     .select('*')
     .eq('household_id', householdId)
     .eq('active', true);
@@ -292,9 +293,12 @@ export async function unenrollHousehold(
   householdId: string,
   automationKey: AutomationKey
 ): Promise<void> {
-  const qb = (supabase as any).from('automation_enrollments');
-  const { error } = await qb
-    .update({ active: false, disenrolled_at: new Date().toISOString() })
+  const { error } = await supabase
+    .from('automation_enrollments')
+    .update({ 
+      active: false, 
+      disenrolled_at: new Date().toISOString() 
+    } as any)
     .eq('household_id', householdId)
     .eq('feature_key', automationKey);
 
