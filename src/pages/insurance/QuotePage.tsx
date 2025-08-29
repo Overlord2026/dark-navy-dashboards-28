@@ -41,9 +41,9 @@ export function QuotePage() {
       let quoteData = await getQuote(id); // Try using submission ID
       
       if (!quoteData && submissionData.status === 'submitted') {
-        // Generate quote if it doesn't exist
-        const risk = (submissionData as any).risk_profile;
-        quoteData = await generateQuote(id, risk);
+        // Generate quote using submission data
+        // Note: risk reconstruction would happen in generateQuote
+        quoteData = await generateQuote(id, submissionData as any);
       }
 
       setQuote(quoteData);
@@ -232,6 +232,12 @@ export function QuotePage() {
             <div>
               <label className="text-sm font-medium">Quote ID</label>
               <p className="text-sm font-mono">{quote.id.slice(0, 8)}...</p>
+            </div>
+            <div>
+              <label className="text-sm font-medium">Submission Hash</label>
+              <p className="text-sm text-muted-foreground">
+                {submission?.risk_hash?.slice(0,12)}…
+              </p>
             </div>
             <div>
               <label className="text-sm font-medium">Effective Date</label>

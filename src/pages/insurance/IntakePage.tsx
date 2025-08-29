@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { normalizeRisk, submitIntake } from '@/services/insuranceIntake';
+import { submitIntake, InsuranceRisk } from '@/services/insuranceIntake';
 import { useNavigate } from 'react-router-dom';
 import { Shield, Home, Car } from 'lucide-react';
 import { toast } from 'sonner';
@@ -38,41 +38,49 @@ export function IntakePage() {
     deductibles: {} as Record<string, string>
   });
 
+  // Map UI form to risk
+  const toRisk = (form: any, type: 'home'|'auto'): InsuranceRisk => {
+    if (type === 'home') {
+      return {
+        type: 'home',
+        applicant: {
+          age_band: form.age,
+          credit_band: form.credit_score,
+          location_zip_first3: form.zip_code.slice(0,3)
+        },
+        property: {
+          year_built_band: form.year_built,
+          value_band: form.property_value,
+          construction_type: form.construction_type,
+          protection_class: form.protection_class,
+        },
+        coverage_limits: form.coverage_limits || {},
+        deductibles: form.deductibles || {}
+      };
+    }
+    return {
+      type: 'auto',
+      applicant: {
+        age_band: form.age,
+        credit_band: form.credit_score,
+        location_zip_first3: form.zip_code.slice(0,3)
+      },
+      vehicle: {
+        year_band: form.vehicle_year,
+        make_category: form.vehicle_make,
+        usage_type: form.vehicle_usage,
+        safety_rating_band: form.safety_rating,
+      },
+      coverage_limits: form.coverage_limits || {},
+      deductibles: form.deductibles || {}
+    };
+  };
+
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      // Build intake object with proper typing
-      const baseIntake = {
-        applicant: {
-          age: formData.age,
-          credit_score: formData.credit_score,
-          zip_code: formData.zip_code
-        },
-        coverage_limits: formData.coverage_limits || {},
-        deductibles: formData.deductibles || {}
-      };
-
-      const intakeData = insuranceType === 'home' ? {
-        type: 'home' as const,
-        ...baseIntake,
-        property: {
-          year_built: formData.year_built,
-          construction: formData.construction_type,
-          alarms: formData.protection_class
-        }
-      } : {
-        type: 'auto' as const,
-        ...baseIntake,
-        vehicle: {
-          year: formData.vehicle_year,
-          make: formData.vehicle_make,
-          model: '',
-          usage: formData.vehicle_usage
-        }
-      };
-
-      // Normalize and submit
-      const risk = await normalizeRisk(intakeData);
+      // Convert form data to risk using discriminated union
+      const risk = toRisk(formData, insuranceType);
       const submissionId = await submitIntake(risk);
       
       toast.success('Intake submitted successfully!');
