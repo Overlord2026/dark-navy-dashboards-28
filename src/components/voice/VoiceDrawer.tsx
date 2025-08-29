@@ -32,6 +32,14 @@ export function VoiceDrawer({
     try {
       const data = await callEdgeJSON(endpoint, { notes, persona });
       setResult(data);
+      
+      // Save meeting note on success (fail open)
+      try {
+        const { saveMeetingNote } = await import('@/services/notes');
+        await saveMeetingNote({ persona, text: notes });
+      } catch (noteError) {
+        console.warn('Failed to save meeting note:', noteError);
+      }
     } catch (e:any) {
       setResult({ error: e.message });
     } finally {
