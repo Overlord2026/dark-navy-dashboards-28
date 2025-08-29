@@ -38166,6 +38166,7 @@ export type Database = {
           meeting_types: string[] | null
           name: string | null
           specializations: string[] | null
+          specialties: Json | null
           total_reviews: number | null
           years_experience: number | null
         }
@@ -38184,6 +38185,7 @@ export type Database = {
           meeting_types?: string[] | null
           name?: string | null
           specializations?: string[] | null
+          specialties?: Json | null
           total_reviews?: number | null
           years_experience?: number | null
         }
@@ -38202,6 +38204,7 @@ export type Database = {
           meeting_types?: string[] | null
           name?: string | null
           specializations?: string[] | null
+          specialties?: Json | null
           total_reviews?: number | null
           years_experience?: number | null
         }
@@ -38287,40 +38290,28 @@ export type Database = {
       }
       v_advisor_email_templates_public: {
         Row: {
-          advisor_id: string | null
-          body_template: string | null
-          brand_settings: Json | null
           compliance_approved: boolean | null
           created_at: string | null
           id: string | null
           is_active: boolean | null
-          subject_template: string | null
           template_name: string | null
           template_type: string | null
           updated_at: string | null
         }
         Insert: {
-          advisor_id?: string | null
-          body_template?: string | null
-          brand_settings?: Json | null
           compliance_approved?: boolean | null
           created_at?: string | null
           id?: string | null
           is_active?: boolean | null
-          subject_template?: string | null
           template_name?: string | null
           template_type?: string | null
           updated_at?: string | null
         }
         Update: {
-          advisor_id?: string | null
-          body_template?: string | null
-          brand_settings?: Json | null
           compliance_approved?: boolean | null
           created_at?: string | null
           id?: string | null
           is_active?: boolean | null
-          subject_template?: string | null
           template_name?: string | null
           template_type?: string | null
           updated_at?: string | null
@@ -38509,10 +38500,7 @@ export type Database = {
       v_cpa_welcome_templates_public: {
         Row: {
           client_type: string | null
-          cpa_partner_id: string | null
           created_at: string | null
-          created_by: string | null
-          email_content: string | null
           id: string | null
           includes_video: boolean | null
           is_default: boolean | null
@@ -38523,10 +38511,7 @@ export type Database = {
         }
         Insert: {
           client_type?: string | null
-          cpa_partner_id?: string | null
           created_at?: string | null
-          created_by?: string | null
-          email_content?: string | null
           id?: string | null
           includes_video?: boolean | null
           is_default?: boolean | null
@@ -38537,10 +38522,7 @@ export type Database = {
         }
         Update: {
           client_type?: string | null
-          cpa_partner_id?: string | null
           created_at?: string | null
-          created_by?: string | null
-          email_content?: string | null
           id?: string | null
           includes_video?: boolean | null
           is_default?: boolean | null
@@ -38549,22 +38531,7 @@ export type Database = {
           updated_at?: string | null
           video_url?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "cpa_welcome_templates_cpa_partner_id_fkey"
-            columns: ["cpa_partner_id"]
-            isOneToOne: false
-            referencedRelation: "cpa_partners"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "cpa_welcome_templates_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "cpa_staff"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       v_data_classification_public: {
         Row: {
