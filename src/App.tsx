@@ -106,6 +106,9 @@ import AccountantPersonaDashboard from '@/pages/personas/AccountantPersonaDashbo
 import AttorneyPersonaDashboard from '@/pages/personas/AttorneyPersonaDashboard';
 import FamilyRetireePersonaDashboard from '@/pages/personas/FamilyRetireePersonaDashboard';
 import FamilyAspiringPersonaDashboard from '@/pages/personas/FamilyAspiringPersonaDashboard';
+import Advisors from '@/pages/personas/Advisors';
+import Insurance from '@/pages/personas/Insurance';
+import DemoPersona from '@/pages/learn/DemoPersona';
 
 const DemoPage = React.lazy(() => import('@/pages/demos/[persona]'));
 const PreviewPage = React.lazy(() => import('@/components/PreviewPage'));
@@ -220,8 +223,12 @@ function App() {
             {getFlag('BRAND_PUBLIC_ENABLED') && <Route path="/start/brand" element={<BrandOnboarding />} />}
             
             {/* Persona Dashboard Routes */}
-            <Route path="/personas/advisors" element={<AdvisorPersonaDashboard />} />
-            <Route path="/personas/insurance" element={<InsurancePersonaDashboard />} />
+            <Route path="/personas/advisors" element={<Advisors />} />
+            <Route path="/personas/insurance" element={<Insurance />} />
+            
+            {/* Full Persona Dashboard Routes */}
+            <Route path="/personas/advisors/full" element={<AdvisorPersonaDashboard />} />
+            <Route path="/personas/insurance/full" element={<InsurancePersonaDashboard />} />
             <Route path="/personas/accountants" element={<AccountantPersonaDashboard />} />
             <Route path="/personas/attorneys" element={<AttorneyPersonaDashboard />} />
             <Route path="/personas/families/retirees" element={<FamilyRetireePersonaDashboard />} />
@@ -229,6 +236,11 @@ function App() {
             
             {/* Learn/Booking Routes */}
             <Route path="/learn/:persona/starter" element={<StarterPage />} />
+            <Route path="/learn/demo/:persona" element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <DemoPersona />
+              </Suspense>
+            } />
           
           {/* Insurance Hub Routes */}
           <Route path="/insurance/intake" element={<InsuranceIntakePage />} />
