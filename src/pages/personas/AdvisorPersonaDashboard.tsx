@@ -3,12 +3,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRight, Calculator, FileText, TrendingUp, Users, Play, Calendar, BookOpen } from 'lucide-react';
-import VoiceMic from '@/components/voice/VoiceMic';
+import VoiceDrawer from '@/components/voice/VoiceDrawer';
 import { Link } from 'react-router-dom';
 
 const AdvisorPersonaDashboard = () => {
-  const [transcript, setTranscript] = useState('');
-  const [summary, setSummary] = useState<any>(null);
   const tools = [
     {
       title: 'Retirement Roadmap',
@@ -71,14 +69,7 @@ const AdvisorPersonaDashboard = () => {
             <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
               Grow Your Practice with Confidence
             </h1>
-            <VoiceMic
-              label="Meeting Notes"
-              persona="advisor"
-              autoSummarize
-              onTranscript={setTranscript}
-              onSummary={setSummary}
-              size="sm"
-            />
+            <VoiceDrawer triggerLabel="Meeting Notes" persona="advisor" />
           </div>
           <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
             Access professional-grade planning tools, automate compliance workflows, 

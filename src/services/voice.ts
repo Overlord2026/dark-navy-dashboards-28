@@ -57,3 +57,37 @@ export async function summarizeMeeting(notes: string): Promise<any> {
   }
   return res.json();
 }
+
+// --- Save meeting note to database ----------------------------------------
+export interface SaveMeetingNoteParams {
+  persona: string;
+  context_ref?: string;
+  transcript: string;
+  summary?: any;
+  saveToVault: boolean;
+}
+
+export async function saveMeetingNote(params: SaveMeetingNoteParams): Promise<void> {
+  const { persona, context_ref, transcript, summary, saveToVault } = params;
+  
+  // Get current user
+  const { data: { user }, error: userError } = await supabase.auth.getUser();
+  if (userError || !user) {
+    throw new Error('User not authenticated');
+  }
+  
+  const { error } = await supabase
+    .from('meeting_notes' as any)
+    .insert({
+      user_id: user.id,
+      persona,
+      context_ref,
+      transcript,
+      summary,
+      save_to_vault: saveToVault
+    });
+
+  if (error) {
+    throw new Error(`Failed to save meeting note: ${error.message}`);
+  }
+}

@@ -29,6 +29,7 @@ import { ReceiptsModal } from '@/components/modals/ReceiptsModal';
 import { FamilyE2EDemo } from '@/components/demos/FamilyE2EDemo';
 import { ReadyBanner } from '@/components/onboarding/ReadyBanner';
 import { useReadyCheck } from '@/hooks/useReadyCheck';
+import VoiceDrawer from '@/components/voice/VoiceDrawer';
 
 type FamilySegment = 'aspiring' | 'retirees';
 type ModalType = 'invite' | 'upload' | 'receipts' | 'none';
@@ -274,6 +275,7 @@ export function FamilyHome() {
               </div>
               
               <div className="flex items-center gap-2">
+                <VoiceDrawer triggerLabel="Record" persona="family" />
                 <FamilyE2EDemo className="min-h-[44px]" />
                 <Button 
                   variant="ghost" 

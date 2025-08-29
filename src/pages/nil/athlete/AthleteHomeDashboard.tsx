@@ -26,6 +26,7 @@ import {
 import FTCComplianceBanner from '@/components/nil/FTCComplianceBanner';
 import { NILActions } from '@/lib/nil/proofSlips';
 import { nilAnalytics } from '@/lib/nil/analytics';
+import VoiceDrawer from '@/components/voice/VoiceDrawer';
 
 interface AthleteConfig {
   quickActions: Array<{
@@ -157,6 +158,7 @@ const AthleteHomeDashboard = () => {
           <p className="text-muted-foreground">Manage your NIL opportunities and compliance</p>
         </div>
         <div className="flex gap-2">
+          <VoiceDrawer triggerLabel="Record" persona="nil" />
           <Button variant="outline">
             <TrendingUp className="h-4 w-4 mr-2" />
             View Analytics
