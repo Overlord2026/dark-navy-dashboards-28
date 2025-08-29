@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PublishBatchButton } from "@/components/admin/PublishBatchButton";
 import { PromotePolicyButton } from "@/components/admin/PromotePolicyButton";
@@ -7,13 +7,26 @@ import { AnchorNowButton } from "@/components/admin/AnchorNowButton";
 import { AutoAnchorToggle } from "@/components/admin/AutoAnchorToggle";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { VoiceMicButton } from "@/components/voice/VoiceMicButton";
+import { VoiceDrawer } from "@/components/voice/VoiceDrawer";
 
 export function AdminHeader() {
+  const [voiceOpen, setVoiceOpen] = useState(false);
+  
   return (
     <div className="border-b border-border bg-background">
       <div className="flex h-14 items-center justify-between px-6">
         <h1 className="text-lg font-semibold text-foreground">Admin Dashboard</h1>
-        <AdminHeaderTools />
+        <div className="flex items-center gap-3">
+          <VoiceMicButton onClick={() => setVoiceOpen(true)} />
+          <AdminHeaderTools />
+        </div>
+        <VoiceDrawer 
+          open={voiceOpen} 
+          onClose={() => setVoiceOpen(false)} 
+          persona="admin" 
+          endpoint="meeting-summary" 
+        />
       </div>
     </div>
   );
@@ -23,7 +36,7 @@ export function AdminHeaderTools() {
   // Guard with ADMIN role check if needed
   const isAdminToolsEnabled = import.meta.env.VITE_ADMIN_TOOLS_ENABLED !== 'false';
   const nav = useNavigate();
-  const [rid, setRid] = React.useState("");
+  const [rid, setRid] = useState("");
   
   // Preserve current query params when opening receipts
   const currentQuery = typeof window !== "undefined" 

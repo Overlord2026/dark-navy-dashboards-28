@@ -26,7 +26,7 @@ import {
 import FTCComplianceBanner from '@/components/nil/FTCComplianceBanner';
 import { NILActions } from '@/lib/nil/proofSlips';
 import { nilAnalytics } from '@/lib/nil/analytics';
-import VoiceDrawer from '@/components/voice/VoiceDrawer';
+import { VoiceDrawer } from '@/components/voice/VoiceDrawer';
 
 interface AthleteConfig {
   quickActions: Array<{

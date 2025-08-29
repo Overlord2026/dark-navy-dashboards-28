@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRight, Calculator, FileText, TrendingUp, Users, Play, Calendar, BookOpen } from 'lucide-react';
-import VoiceDrawer from '@/components/voice/VoiceDrawer';
+import { VoiceDrawer } from '@/components/voice/VoiceDrawer';
 import { Link } from 'react-router-dom';
 
 const AdvisorPersonaDashboard = () => {

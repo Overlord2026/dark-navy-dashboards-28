@@ -29,7 +29,7 @@ import { ReceiptsModal } from '@/components/modals/ReceiptsModal';
 import { FamilyE2EDemo } from '@/components/demos/FamilyE2EDemo';
 import { ReadyBanner } from '@/components/onboarding/ReadyBanner';
 import { useReadyCheck } from '@/hooks/useReadyCheck';
-import VoiceDrawer from '@/components/voice/VoiceDrawer';
+import { VoiceDrawer } from '@/components/voice/VoiceDrawer';
 
 type FamilySegment = 'aspiring' | 'retirees';
 type ModalType = 'invite' | 'upload' | 'receipts' | 'none';

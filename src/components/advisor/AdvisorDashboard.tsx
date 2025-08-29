@@ -36,6 +36,8 @@ import { format } from 'date-fns';
 import { PlanImportWizard } from './PlanImportWizard';
 import { AdvisorOnboardingBanner } from './AdvisorOnboardingBanner';
 import { SWAGDashboardMetrics } from './SWAGDashboardMetrics';
+import { VoiceMicButton } from '@/components/voice/VoiceMicButton';
+import { VoiceDrawer } from '@/components/voice/VoiceDrawer';
 
 interface Client {
   id: string;
@@ -56,6 +58,7 @@ export function AdvisorDashboard() {
   const [showPortfolioTools, setShowPortfolioTools] = useState(false);
   const [showPlanImport, setShowPlanImport] = useState(false);
   const [showOnboardingBanner, setShowOnboardingBanner] = useState(true);
+  const [voiceOpen, setVoiceOpen] = useState(false);
   const [clients, setClients] = useState<Client[]>([]);
   const [metrics, setMetrics] = useState({
     totalClients: 0,
@@ -265,6 +268,7 @@ export function AdvisorDashboard() {
                 </div>
               </div>
               <div className="hidden lg:flex flex-col gap-2">
+                <VoiceMicButton onClick={() => setVoiceOpen(true)} />
                 <Button 
                   variant="secondary"
                   className="gap-2"
@@ -590,6 +594,14 @@ export function AdvisorDashboard() {
       <PlanImportWizard 
         open={showPlanImport} 
         onOpenChange={setShowPlanImport} 
+      />
+      
+      {/* Voice Drawer */}
+      <VoiceDrawer 
+        open={voiceOpen} 
+        onClose={() => setVoiceOpen(false)} 
+        persona="advisor" 
+        endpoint="meeting-summary" 
       />
     </motion.div>
   );
