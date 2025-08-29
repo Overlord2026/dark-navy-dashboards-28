@@ -1,191 +1,141 @@
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Mic, Save, Loader2 } from 'lucide-react';
-import VoiceMic from './VoiceMic';
-import { useToast } from '@/hooks/use-toast';
-import { VOICE_CONFIG, type VoicePersona } from '@/config/voice';
-import { saveMeetingNote } from '@/services/voice';
-import { analytics } from '@/lib/analytics';
+import { Label } from '@/components/ui/label';
+import { Mic } from 'lucide-react';
+
+// Conditional imports with fallbacks
+let VoiceMic: React.ComponentType<any> | null = null;
+let saveMeetingNote: ((params: any) => void) | null = null;
+
+try {
+  VoiceMic = require('./VoiceMic').default;
+} catch {
+  // VoiceMic not available
+}
+
+try {
+  saveMeetingNote = require('@/services/voice').saveMeetingNote;
+} catch {
+  // saveMeetingNote not available
+}
 
 interface VoiceDrawerProps {
   triggerLabel?: string;
-  persona?: 'family' | 'advisor' | 'cpa' | 'attorney' | 'insurance' | 'nil' | 'other';
+  persona?: string;
   context_ref?: string;
 }
 
-export default function VoiceDrawer({ 
-  triggerLabel = 'Record', 
-  persona = 'family',
+const VoiceDrawer: React.FC<VoiceDrawerProps> = ({ 
+  triggerLabel = "Voice Capture", 
+  persona = "family",
   context_ref 
-}: VoiceDrawerProps) {
-  const { toast } = useToast();
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [transcript, setTranscript] = useState('');
-  const [summary, setSummary] = useState<any>(null);
-  const [saveToVault, setSaveToVault] = useState(true);
-  const [isSaving, setIsSaving] = useState(false);
+  const [summary, setSummary] = useState('');
 
-  // Map personas to VoicePersona types
-  const getVoicePersona = (p: string): VoicePersona => {
-    if (p === 'cpa') return 'accountant';
-    if (p === 'nil' || p === 'other') return 'family';
-    return p as VoicePersona;
-  };
-  
-  const voicePersona = getVoicePersona(persona);
-  
-  // Only show if voice is enabled for this persona
-  if (!VOICE_CONFIG.VOICE_ENABLED || !VOICE_CONFIG.VOICE_PER_PERSONA[voicePersona]) {
-    return null;
-  }
-
-  const handleOpen = () => {
-    setIsOpen(true);
-    analytics.trackEvent?.('assistant.open', { persona, context_ref });
+  const handleTranscript = (transcriptText: string) => {
+    setTranscript(transcriptText);
   };
 
-  const handleClose = () => {
-    setIsOpen(false);
-    setTranscript('');
-    setSummary(null);
-    setSaveToVault(true);
+  const handleSummary = (summaryData: any) => {
+    setSummary(JSON.stringify(summaryData, null, 2));
   };
 
-  const handleSave = async () => {
-    if (!transcript.trim()) {
-      toast({
-        title: 'No transcript to save',
-        description: 'Please record some audio first.',
-        variant: 'destructive'
-      });
-      return;
-    }
-
-    setIsSaving(true);
-    try {
-      await saveMeetingNote({
-        persona,
-        context_ref,
-        transcript: transcript.trim(),
+  const handleSaveNote = () => {
+    if (saveMeetingNote) {
+      saveMeetingNote({
+        persona: persona || 'family',
+        transcript,
         summary,
-        saveToVault
+        saveToVault: true
       });
-
-      toast({
-        title: 'Meeting note saved',
-        description: saveToVault ? 'Saved to notes and vault' : 'Saved to meeting notes'
-      });
-
-      analytics.trackEvent?.('assistant.session_end', { 
-        persona, 
-        context_ref, 
-        saved: true, 
-        vault: saveToVault 
-      });
-
-      handleClose();
-    } catch (error: any) {
-      toast({
-        title: 'Failed to save note',
-        description: error?.message || 'Please try again',
-        variant: 'destructive'
-      });
-    } finally {
-      setIsSaving(false);
+      setIsOpen(false);
+      // Reset form
+      setTranscript('');
+      setSummary('');
     }
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm" onClick={handleOpen}>
+        <Button variant="outline" size="sm">
           <Mic className="w-4 h-4 mr-2" />
           {triggerLabel}
         </Button>
       </DialogTrigger>
-      
-      <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
+      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Voice Assistant</DialogTitle>
+          <DialogTitle>Voice capture</DialogTitle>
         </DialogHeader>
         
-        <div className="space-y-6">
-          {/* Voice Recording */}
-          <div className="flex justify-center">
-            <VoiceMic
-              label="Record"
-              persona={persona}
-              autoSummarize
-              onTranscript={setTranscript}
-              onSummary={setSummary}
-              size="lg"
-            />
+        <div className="space-y-4">
+          {/* Voice Recording Component */}
+          <div className="border rounded-lg p-4">
+            {VoiceMic ? (
+              <VoiceMic 
+                autoSummarize={true}
+                onTranscript={handleTranscript}
+                onSummary={handleSummary}
+              />
+            ) : (
+              <div className="text-center py-4 text-muted-foreground">
+                <Mic className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                <p className="text-sm">VoiceMic component not available</p>
+              </div>
+            )}
           </div>
 
-          {/* Transcript */}
+          {/* Transcript Area */}
           <div className="space-y-2">
             <Label htmlFor="transcript">Transcript (editable)</Label>
             <Textarea
               id="transcript"
               value={transcript}
               onChange={(e) => setTranscript(e.target.value)}
-              placeholder="Your recorded transcript will appear here..."
-              className="min-h-[120px]"
+              placeholder="Voice transcript will appear here..."
+              className="min-h-[100px]"
             />
           </div>
 
-          {/* Summary */}
-          {summary && (
-            <div className="space-y-2">
-              <Label htmlFor="summary">Summary (readonly)</Label>
-              <Textarea
-                id="summary"
-                value={JSON.stringify(summary, null, 2)}
-                readOnly
-                className="min-h-[100px] bg-muted"
-              />
+          {/* Summary Area */}
+          <div className="space-y-2">
+            <Label htmlFor="summary">Summary (JSON, read-only)</Label>
+            <Textarea
+              id="summary"
+              value={summary}
+              readOnly
+              placeholder="AI summary will appear here as JSON..."
+              className="min-h-[100px] bg-muted font-mono text-sm"
+            />
+          </div>
+
+          {/* Save Button */}
+          <div className="flex justify-end space-x-2">
+            <Button variant="outline" onClick={() => setIsOpen(false)}>
+              Cancel
+            </Button>
+            <Button 
+              onClick={handleSaveNote} 
+              disabled={!transcript || !saveMeetingNote}
+            >
+              {saveMeetingNote ? 'Save Note' : 'Save function not available'}
+            </Button>
+          </div>
+
+          {/* Notice for missing dependencies */}
+          {(!VoiceMic || !saveMeetingNote) && (
+            <div className="text-xs text-muted-foreground p-2 bg-muted rounded">
+              Notice: {!VoiceMic && 'VoiceMic component'}{!VoiceMic && !saveMeetingNote && ' and '}{!saveMeetingNote && 'saveMeetingNote function'} not available
             </div>
           )}
-
-          {/* Save Options */}
-          <div className="space-y-4">
-            <div className="flex items-center space-x-2">
-              <Switch
-                id="save-to-vault"
-                checked={saveToVault}
-                onCheckedChange={setSaveToVault}
-              />
-              <Label htmlFor="save-to-vault">Save to Vault</Label>
-            </div>
-
-            <div className="flex gap-2 justify-end">
-              <Button variant="outline" onClick={handleClose} disabled={isSaving}>
-                Cancel
-              </Button>
-              <Button 
-                onClick={handleSave} 
-                disabled={!transcript.trim() || isSaving}
-              >
-                {isSaving ? (
-                  <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Saving...
-                  </>
-                ) : (
-                  <>
-                    <Save className="w-4 h-4 mr-2" />
-                    Save Note
-                  </>
-                )}
-              </Button>
-            </div>
-          </div>
         </div>
       </DialogContent>
     </Dialog>
   );
-}
+};
+
+export default VoiceDrawer;
