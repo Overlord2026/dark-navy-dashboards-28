@@ -8,6 +8,8 @@ import { recordReceipt } from './receipts';
 import { inputs_hash } from '@/lib/canonical';
 import { InsuranceRisk } from './insuranceIntake';
 
+type DbQuoteRow = any;
+
 export interface QuoteWorksheet {
   id: string;
   submission_id: string;
@@ -54,25 +56,20 @@ export async function generateQuote(submissionId: string, risk: InsuranceRisk): 
   };
 
   // Store worksheet
-  const { error } = await supabase
-    .from('insurance_quotes')
-    .insert({
-      id: worksheet.id,
-      submission_id: submissionId,
-      premium_band: premiumBand,
-      coverage_summary: worksheet.coverage_summary,
-      rating_factors: ratingFactors,
-      effective_date: worksheet.effective_date,
-      status: 'quoted'
-    });
+  const { error } = await (supabase as any).from('insurance_quotes').insert({
+    id: worksheet.id,
+    submission_id: submissionId,
+    premium_band: premiumBand,
+    coverage_summary: worksheet.coverage_summary,
+    rating_factors: ratingFactors,
+    effective_date: worksheet.effective_date,
+    status: 'quoted'
+  });
 
   if (error) throw error;
 
   // Update submission status
-  await supabase
-    .from('insurance_submissions')
-    .update({ status: 'quoted' })
-    .eq('id', submissionId);
+  await (supabase as any).from('insurance_submissions').update({ status: 'quoted' }).eq('id', submissionId);
 
   // Record Quote-RDS
   const quoteHash = await inputs_hash({
@@ -206,21 +203,22 @@ function buildCoverageSummary(risk: InsuranceRisk): Record<string, string> {
  * Get quote by ID
  */
 export async function getQuote(id: string): Promise<QuoteWorksheet | null> {
-  const { data, error } = await supabase
+  const { data, error } = await (supabase as any)
     .from('insurance_quotes')
     .select('*')
     .eq('id', id)
-    .single();
+    .maybeSingle();
 
   if (error || !data) return null;
+  const row = data as DbQuoteRow;
   
   return {
-    id: data.id,
-    submission_id: data.submission_id,
-    premium_band: data.premium_band,
-    coverage_summary: data.coverage_summary,
-    rating_factors: data.rating_factors,
-    effective_date: data.effective_date,
-    quoted_at: data.created_at
+    id: row.id,
+    submission_id: row.submission_id,
+    premium_band: row.premium_band,
+    coverage_summary: row.coverage_summary,
+    rating_factors: row.rating_factors,
+    effective_date: row.effective_date,
+    quoted_at: row.created_at
   };
 }

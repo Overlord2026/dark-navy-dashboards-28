@@ -8,6 +8,9 @@ import { recordReceipt } from './receipts';
 import { withAttestation } from './attestation';
 import { inputs_hash } from '@/lib/canonical';
 
+type DbCampaignRow = any;
+type DbJobRow = any;
+
 export interface RemarketingCampaign {
   id: string;
   policy_numbers: string[];
@@ -62,7 +65,7 @@ export async function createRemarketingCampaign(
   };
 
   // Store campaign
-  const { error } = await supabase
+  const { error } = await (supabase as any)
     .from('remarketing_campaigns')
     .insert({
       id: campaignId,
@@ -94,18 +97,18 @@ export async function createRemarketingCampaign(
  * Execute remarketing campaign with attestation
  */
 export async function executeRemarketingCampaign(campaignId: string): Promise<void> {
-  await withAttestation(async () => {
+  await withAttestation('remarketing_campaign', async () => {
     // Get campaign
-    const { data: campaign, error } = await supabase
+    const { data: campaign, error } = await (supabase as any)
       .from('remarketing_campaigns')
       .select('*')
       .eq('id', campaignId)
-      .single();
+      .maybeSingle();
 
     if (error || !campaign) throw new Error('Campaign not found');
 
     // Update status
-    await supabase
+    await (supabase as any)
       .from('remarketing_campaigns')
       .update({ status: 'running' })
       .eq('id', campaignId);
@@ -115,7 +118,7 @@ export async function executeRemarketingCampaign(campaignId: string): Promise<vo
     
     // Store jobs
     if (jobs.length > 0) {
-      const { error: jobsError } = await supabase
+      const { error: jobsError } = await (supabase as any)
         .from('remarketing_jobs')
         .insert(jobs);
 
@@ -150,12 +153,12 @@ export async function executeRemarketingCampaign(campaignId: string): Promise<vo
     });
 
     // Update campaign status
-    await supabase
+    await (supabase as any)
       .from('remarketing_campaigns')
       .update({ status: 'completed' })
       .eq('id', campaignId);
 
-  }, `remarketing_campaign_${campaignId}`);
+  });
 }
 
 /**
@@ -176,7 +179,7 @@ async function findEligiblePolicies(
   rangeEnd.setDate(rangeEnd.getDate() + 15);
 
   // Query eligible policies (simplified)
-  const { data: policies, error } = await supabase
+  const { data: policies, error } = await (supabase as any)
     .from('insurance_bindings')
     .select('policy_number')
     .eq('status', 'bound')
@@ -299,7 +302,7 @@ export async function getRemarketingDashboard(): Promise<{
   sent_today: number;
   response_rate: number;
 }> {
-  const { data: campaigns, error } = await supabase
+  const { data: campaigns, error } = await (supabase as any)
     .from('remarketing_campaigns')
     .select('*')
     .in('status', ['scheduled', 'running'])
@@ -307,7 +310,7 @@ export async function getRemarketingDashboard(): Promise<{
 
   if (error) throw error;
 
-  const { data: jobStats } = await supabase
+  const { data: jobStats } = await (supabase as any)
     .rpc('get_remarketing_stats'); // Would need to create this function
 
   return {
