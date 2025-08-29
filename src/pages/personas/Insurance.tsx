@@ -31,7 +31,7 @@ export default function Insurance() {
         {/* Header with Voice Drawer */}
         <div className="relative mb-8">
           <div className="absolute top-0 right-0">
-            <VoiceDrawer />
+            <VoiceDrawer triggerLabel="Voice AI" persona="insurance" />
           </div>
         </div>
 
