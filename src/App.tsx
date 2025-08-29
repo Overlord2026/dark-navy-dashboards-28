@@ -154,11 +154,25 @@ import { AssetDetailPage } from './pages/family/AssetDetailPage';
 import { MeetingsPage as ProMeetingsPage } from './pages/pros/MeetingsPage';
 import { AgentsPage } from './pages/marketplace/AgentsPage';
 import { QuoteStartPage } from './pages/marketplace/QuoteStartPage';
+import { supabase } from '@/integrations/supabase/client';
 
 function App() {
-  // Check authentication status (simplified for demo)
-  const isAuthenticated = typeof window !== 'undefined' && 
-    (localStorage.getItem('user_session') || localStorage.getItem('auth_token'));
+  // Check authentication status using Supabase session
+  const [isAuthenticated, setIsAuthenticated] = React.useState(false);
+  
+  React.useEffect(() => {
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setIsAuthenticated(!!session);
+    });
+    
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (_event, session) => setIsAuthenticated(!!session)
+    );
+    
+    return () => subscription.unsubscribe();
+  }, []);
 
   return (
     <ToolsProvider>
