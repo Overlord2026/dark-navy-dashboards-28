@@ -75,14 +75,47 @@ export function evaluatePolicy(scope: string, context: Record<string, any>): Pol
 }
 
 function evaluateCondition(condition: string, context: Record<string, any>): boolean {
-  // Stub condition evaluator - replace with proper expression engine
+  // Safe allow-list evaluator - no eval() usage
   try {
-    // Simple string replacements for demo
-    let expr = condition;
-    for (const [key, value] of Object.entries(context)) {
-      expr = expr.replace(new RegExp(key, 'g'), JSON.stringify(value));
+    // Parse simple comparison expressions only
+    const trimmed = condition.trim();
+    
+    // Allow-list of safe operators
+    const comparisonMatch = trimmed.match(/^(\w+)\s*(>|<|>=|<=|===|!==)\s*(.+)$/);
+    if (comparisonMatch) {
+      const [, leftKey, operator, rightValue] = comparisonMatch;
+      const leftVal = context[leftKey];
+      
+      // Parse right side value
+      let rightVal;
+      if (rightValue === 'true') rightVal = true;
+      else if (rightValue === 'false') rightVal = false;
+      else if (/^\d+$/.test(rightValue)) rightVal = parseInt(rightValue);
+      else if (/^\d+\.\d+$/.test(rightValue)) rightVal = parseFloat(rightValue);
+      else if (rightValue.startsWith('"') && rightValue.endsWith('"')) {
+        rightVal = rightValue.slice(1, -1);
+      } else {
+        rightVal = rightValue;
+      }
+      
+      // Safe comparison operations
+      switch (operator) {
+        case '>': return Number(leftVal) > Number(rightVal);
+        case '<': return Number(leftVal) < Number(rightVal);
+        case '>=': return Number(leftVal) >= Number(rightVal);
+        case '<=': return Number(leftVal) <= Number(rightVal);
+        case '===': return leftVal === rightVal;
+        case '!==': return leftVal !== rightVal;
+        default: return false;
+      }
     }
-    return eval(expr);
+    
+    // Handle simple boolean checks
+    if (trimmed in context) {
+      return Boolean(context[trimmed]);
+    }
+    
+    return false;
   } catch {
     return false;
   }
