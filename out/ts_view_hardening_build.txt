@@ -1,0 +1,68 @@
+View Hardening Migration - Manual Patch Required
+
+Since supabase/migrations/ is read-only, create this file manually:
+
+FILE: supabase/migrations/2025-08-29_view_hardening.sql
+```sql
+-- View Hardening Migration
+-- Idempotent (safe to run repeatedly)
+------------------------------------------------
+-- 1) Set security_barrier=true on ALL public views
+DO $$
+DECLARE r record;
+BEGIN
+  FOR r IN
+    SELECT n.nspname, c.relname
+    FROM pg_class c
+    JOIN pg_namespace n ON n.oid = c.relnamespace
+    WHERE n.nspname='public' AND c.relkind='v'
+  LOOP
+    EXECUTE format('ALTER VIEW %I.%I SET (security_barrier=true);', r.nspname, r.relname);
+  END LOOP;
+END$$;
+
+-- 2) Tighten PUBLIC access on sensitive views (revoke from PUBLIC)
+--    and grant read to authenticated + service_role
+DO $$
+DECLARE v text;
+BEGIN
+  FOR v IN SELECT unnest(ARRAY[
+    'aies_receipts_redacted',
+    'v_nil_disclosures_admin',  
+    'v_user_onboarding_status'
+  ])
+  LOOP
+    EXECUTE format('REVOKE ALL ON VIEW public.%I FROM PUBLIC;', v);
+    EXECUTE format('GRANT SELECT ON VIEW public.%I TO authenticated, service_role;', v);
+  END LOOP;
+END$$;
+------------------------------------------------
+```
+
+PACKAGE.JSON PATCH REQUIRED:
+Since package.json is read-only, add these scripts manually:
+```json
+{
+  "scripts": {
+    "db:migrate:dev": "supabase db push --project-ref $SUPABASE_PROJECT_REF --db-url $SUPABASE_DB_URL",
+    "db:diff": "supabase db diff --linked"
+  }
+}
+```
+
+ADMIN INFRASTRUCTURE STATUS:
+✅ supabase/README.md - Already exists with migration instructions
+✅ src/components/admin/MigrationStatusTable.tsx - Already exists
+✅ src/pages/admin/DbMigrations.tsx - Already exists
+✅ Route /admin/db/migrations - Already registered in App.tsx (line 447)
+
+TO RUN MIGRATION LOCALLY:
+1. Set environment variables:
+   export SUPABASE_PROJECT_REF=xcmqjkvyvuhoslbzmlgi
+   export SUPABASE_DB_URL="postgres://postgres:[SERVICE_PW]@db.xcmqjkvyvuhoslbzmlgi.supabase.co:5432/postgres"
+
+2. Apply migration:
+   npm run db:migrate:dev
+
+3. Verify changes:
+   npm run db:diff

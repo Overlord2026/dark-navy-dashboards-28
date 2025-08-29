@@ -17,6 +17,12 @@ interface MigrationInfo {
 
 const KNOWN_MIGRATIONS: MigrationInfo[] = [
   {
+    version: '2025-08-29_view_hardening',
+    name: 'View Hardening Security',
+    description: 'Set security_barrier=true on all public views and tighten sensitive view access',
+    file_path: 'supabase/migrations/2025-08-29_view_hardening.sql'
+  },
+  {
     version: '2025-08-28_insurance_support',
     name: 'Insurance Support Tables',
     description: 'Personal lines intake (insurance_submissions) and FNOL claims (insurance_claims)',
