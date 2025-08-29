@@ -1,7 +1,7 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
-const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
+const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY');
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -39,7 +39,8 @@ serve(async (req) => {
   try {
     const { documentType, documentContent, state, fileName }: DocumentReviewRequest = await req.json();
 
-    if (!openAIApiKey) {
+    if (!OPENAI_API_KEY) {
+      console.log('OPENAI_API_KEY set ✅: false');
       return new Response(
         JSON.stringify({ error: 'OpenAI API key not configured' }),
         { 
@@ -80,7 +81,7 @@ Focus on practical, actionable feedback that helps ensure regulatory compliance.
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${openAIApiKey}`,
+        'Authorization': `Bearer ${OPENAI_API_KEY}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({

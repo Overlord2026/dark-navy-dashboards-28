@@ -165,10 +165,10 @@ function extractSpecializationNeeds(responses: any): string[] {
 }
 
 async function analyzeMatches(advisors: AdvisorProfile[], responses: any, complexityScore: number) {
-  const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
+  const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY');
   
-  if (!openAIApiKey) {
-    console.log('No OpenAI API key, using rule-based matching');
+  if (!OPENAI_API_KEY) {
+    console.log('OPENAI_API_KEY set ✅: false - using rule-based matching');
     return ruleBasedMatching(advisors, responses, complexityScore);
   }
 
@@ -223,7 +223,7 @@ async function analyzeMatches(advisors: AdvisorProfile[], responses: any, comple
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${openAIApiKey}`,
+        'Authorization': `Bearer ${OPENAI_API_KEY}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({

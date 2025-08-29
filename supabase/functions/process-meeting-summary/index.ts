@@ -153,8 +153,8 @@ serve(async (req) => {
 });
 
 async function transcribeAudio(audioBlob: Blob): Promise<string> {
-  const openaiApiKey = Deno.env.get('OPENAI_API_KEY');
-  if (!openaiApiKey) {
+  const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY');
+  if (!OPENAI_API_KEY) {
     throw new Error('OpenAI API key not configured');
   }
 
@@ -167,7 +167,7 @@ async function transcribeAudio(audioBlob: Blob): Promise<string> {
   const response = await fetch('https://api.openai.com/v1/audio/transcriptions', {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${openaiApiKey}`,
+      'Authorization': `Bearer ${OPENAI_API_KEY}`,
     },
     body: formData,
   });
@@ -182,8 +182,8 @@ async function transcribeAudio(audioBlob: Blob): Promise<string> {
 }
 
 async function generateMeetingAnalysis(transcription: string, recording: any) {
-  const openaiApiKey = Deno.env.get('OPENAI_API_KEY');
-  if (!openaiApiKey) {
+  const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY');
+  if (!OPENAI_API_KEY) {
     throw new Error('OpenAI API key not configured');
   }
 
@@ -235,7 +235,7 @@ Please provide a thorough analysis focusing on actionable items and key outcomes
   const response = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${openaiApiKey}`,
+      'Authorization': `Bearer ${OPENAI_API_KEY}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({

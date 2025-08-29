@@ -1,7 +1,7 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
-const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
+const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY');
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -15,9 +15,11 @@ serve(async (req) => {
   }
 
   try {
-    if (!openAIApiKey) {
+    if (!OPENAI_API_KEY) {
+      console.log('OPENAI_API_KEY set ✅: false');
       throw new Error('OPENAI_API_KEY is not set in Supabase secrets');
     }
+    console.log('OPENAI_API_KEY set ✅: true');
 
     const { prompt, size = "1024x1024", quality = "standard", style = "vivid" } = await req.json();
 
@@ -26,7 +28,7 @@ serve(async (req) => {
     const response = await fetch('https://api.openai.com/v1/images/generations', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${openAIApiKey}`,
+        'Authorization': `Bearer ${OPENAI_API_KEY}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({

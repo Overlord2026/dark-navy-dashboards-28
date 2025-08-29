@@ -20,8 +20,12 @@ serve(async (req) => {
   try {
     logStep("Starting AI tax analysis");
 
-    const openaiKey = Deno.env.get("OPENAI_API_KEY");
-    if (!openaiKey) throw new Error("OPENAI_API_KEY is not set");
+    const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
+    if (!OPENAI_API_KEY) {
+      console.log('OPENAI_API_KEY set ✅: false');
+      throw new Error("OPENAI_API_KEY is not set");
+    }
+    console.log('OPENAI_API_KEY set ✅: true');
 
     // Use service role for secure database access
     const supabaseAdmin = createClient(
@@ -130,7 +134,7 @@ Provide structured, actionable advice in JSON format with the following structur
       const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${openaiKey}`,
+          'Authorization': `Bearer ${OPENAI_API_KEY}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({

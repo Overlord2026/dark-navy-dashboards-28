@@ -19,11 +19,13 @@ serve(async (req) => {
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseKey);
     
-    const openaiApiKey = Deno.env.get('OPENAI_API_KEY');
+    const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY');
     
-    if (!openaiApiKey) {
+    if (!OPENAI_API_KEY) {
+      console.log('OPENAI_API_KEY set ✅: false');
       throw new Error('OpenAI API key not configured');
     }
+    console.log('OPENAI_API_KEY set ✅: true');
 
     // Get meeting details
     const { data: meeting, error: meetingError } = await supabase
@@ -69,7 +71,7 @@ serve(async (req) => {
     const openaiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${openaiApiKey}`,
+        'Authorization': `Bearer ${OPENAI_API_KEY}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -108,7 +110,7 @@ serve(async (req) => {
     const actionItemsResponse = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${openaiApiKey}`,
+        'Authorization': `Bearer ${OPENAI_API_KEY}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({

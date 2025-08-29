@@ -282,9 +282,10 @@ async function analyzeLossHarvesting(params: any) {
 }
 
 async function getAIRecommendations(scenarioType: string, params: any, analysis: any): Promise<string> {
-  const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
+  const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY');
   
-  if (!openAIApiKey) {
+  if (!OPENAI_API_KEY) {
+    console.log('OPENAI_API_KEY set ✅: false');
     return getDefaultRecommendations(scenarioType, analysis);
   }
 
@@ -308,7 +309,7 @@ async function getAIRecommendations(scenarioType: string, params: any, analysis:
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${openAIApiKey}`,
+        'Authorization': `Bearer ${OPENAI_API_KEY}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({

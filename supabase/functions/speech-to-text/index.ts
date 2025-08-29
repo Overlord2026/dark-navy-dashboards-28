@@ -62,10 +62,12 @@ const handler = async (req: Request): Promise<Response> => {
 };
 
 async function processWithOpenAI(audio: string): Promise<string> {
-  const apiKey = Deno.env.get('STT_API_KEY') || Deno.env.get('OPENAI_API_KEY');
-  if (!apiKey) {
+  const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY');
+  if (!OPENAI_API_KEY) {
+    console.log('OPENAI_API_KEY set ✅: false');
     throw new Error('OpenAI API key not configured');
   }
+  console.log('OPENAI_API_KEY set ✅: true');
 
   // Convert base64 to blob
   const binaryString = atob(audio);
@@ -82,7 +84,7 @@ async function processWithOpenAI(audio: string): Promise<string> {
   const response = await fetch('https://api.openai.com/v1/audio/transcriptions', {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${apiKey}`,
+      'Authorization': `Bearer ${OPENAI_API_KEY}`,
     },
     body: formData,
   });
