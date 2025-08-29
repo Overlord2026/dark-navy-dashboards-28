@@ -15,7 +15,7 @@ export function VoiceDrawer({
   open: controlledOpen, 
   onClose: controlledOnClose, 
   persona, 
-  endpoint = 'meeting-summary',
+  endpoint = 'generate-meeting-summary',
   triggerLabel 
 }: VoiceDrawerProps) {
   const [internalOpen, setInternalOpen] = React.useState(false);
