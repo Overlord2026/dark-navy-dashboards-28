@@ -3,7 +3,8 @@ export async function saveMeetingNote({ persona, text }: { persona: string; text
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error('Auth required');
   
-  const { error } = await supabase.from('meeting_notes').insert({ 
+  // Use any type temporarily until Supabase types are regenerated
+  const { error } = await (supabase as any).from('meeting_notes').insert({ 
     user_id: user.id, 
     persona, 
     text 
