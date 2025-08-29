@@ -41,7 +41,7 @@ export interface SpecialtyFilter {
  * List specialists with filters
  */
 export async function listSpecialists(filters: SpecialtyFilter = {}): Promise<AgentProfile[]> {
-  const { data, error } = await supabase
+  const { data, error } = await (supabase as any)
     .from('profiles')
     .select('*')
     .eq('role', 'insurance_agent')
@@ -83,7 +83,7 @@ export async function updateAgentSpecialties(
   if (certifications) updates.hnw_certifications = certifications;
   if (serviceAreas) updates.service_areas = serviceAreas;
 
-  const { error } = await supabase
+  const { error } = await (supabase as any)
     .from('profiles')
     .update(updates)
     .eq('user_id', agentId);
@@ -117,7 +117,7 @@ export async function getAgentProfile(agentId: string): Promise<{
   recent_cases: number;
   avg_case_value_band: string;
 }> {
-  const { data: profile, error } = await supabase
+  const { data: profile, error } = await (supabase as any)
     .from('profiles')
     .select('*')
     .eq('user_id', agentId)
@@ -170,7 +170,7 @@ export async function searchAgents(
   total_count: number;
   specialty_counts: Record<string, number>;
 }> {
-  const { data, error, count } = await supabase
+  const { data, error, count } = await (supabase as any)
     .from('profiles')
     .select('*', { count: 'exact' })
     .eq('role', 'insurance_agent')
@@ -208,32 +208,6 @@ export async function searchAgents(
 }
 
 /**
- * Get marketplace analytics for agent
- */
-export async function getMarketplaceAnalytics(agentId: string): Promise<{
-  profile_views: number;
-  inquiry_count: number;
-  conversion_rate: number;
-  avg_response_time_hours: number;
-  specialty_performance: Record<string, number>;
-}> {
-  // In real implementation, would query analytics tables
-  // For now, return placeholder data
-  return {
-    profile_views: 156,
-    inquiry_count: 23,
-    conversion_rate: 0.18,
-    avg_response_time_hours: 2.4,
-    specialty_performance: {
-      'high_value_home': 8,
-      'fine_art': 5,
-      'marine': 3,
-      'cyber': 7
-    }
-  };
-}
-
-/**
  * Submit agent inquiry with tracking
  */
 export async function submitAgentInquiry(
@@ -250,14 +224,15 @@ export async function submitAgentInquiry(
   const inquiryId = crypto.randomUUID();
   
   // Store inquiry in domain events (privacy-preserving)
-  const { error } = await supabase
+  const { error } = await (supabase as any)
     .from('domain_events')
     .insert({
-      id: inquiryId,
       event_type: 'agent_inquiry_submitted',
+      event_hash: await inputs_hash({ type: 'agent_inquiry' }),
+      sequence_number: Date.now(),
       event_data: {
         agent_id: agentId,
-        inquirer_hash: await inputs_hash({ 
+        inquirer_hash: await inputs_hash({
           email: inquirerInfo.email,
           phone: inquirerInfo.phone || '' 
         }),
@@ -357,24 +332,6 @@ function calculateSpecialtyCounts(agents: AgentProfile[]): Record<string, number
   return counts;
 }
 
-/**
- * Convert premium band to numeric value for filtering
- */
-function getPremiumBandValue(band: string): number {
-  const bandValues = {
-    'under_5k': 2500,
-    '5k_25k': 15000,
-    '25k_100k': 62500,
-    '100k_500k': 300000,
-    'over_500k': 750000
-  };
-  
-  return bandValues[band] || 0;
-}
-
-/**
- * Get available specialties list
- */
 export function getAvailableSpecialties(): Record<string, string> {
   return {
     'high_value_home': 'High-Value Homeowners',
@@ -393,9 +350,6 @@ export function getAvailableSpecialties(): Record<string, string> {
   };
 }
 
-/**
- * Get available certifications
- */
 export function getAvailableCertifications(): Record<string, string> {
   return {
     'CPCU': 'Chartered Property Casualty Underwriter',

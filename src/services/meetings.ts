@@ -1,6 +1,7 @@
 import { supabase } from '@/integrations/supabase/client';
 import { recordReceipt } from '@/services/receipts';
 import { anchorSingle } from '@/services/receipts';
+import { inputs_hash } from '@/lib/canonical';
 
 // Break deep types at boundaries
 type DbRow = any;
@@ -41,31 +42,6 @@ const CONSENT_REQUIREMENTS: Record<string, ConsentRequirement> = {
     state: 'IL',
     consent_mode: 'two_party',
     disclosure_text: 'This call is being recorded. Do you consent to recording?'
-  },
-  'MA': {
-    state: 'MA',
-    consent_mode: 'two_party',
-    disclosure_text: 'This call is being recorded. Do you consent to recording?'
-  },
-  'MT': {
-    state: 'MT',
-    consent_mode: 'two_party',
-    disclosure_text: 'This call is being recorded. Do you consent to recording?'
-  },
-  'NH': {
-    state: 'NH',
-    consent_mode: 'two_party',
-    disclosure_text: 'This call is being recorded. Do you consent to recording?'
-  },
-  'PA': {
-    state: 'PA',
-    consent_mode: 'two_party',
-    disclosure_text: 'This call is being recorded. Do you consent to recording?'
-  },
-  'WA': {
-    state: 'WA',
-    consent_mode: 'two_party',
-    disclosure_text: 'This call is being recorded. Do you consent to recording?'
   }
 };
 
@@ -97,13 +73,16 @@ export async function startSession(
 
   // Store session in domain events
   const sessionId = crypto.randomUUID();
-  const qb = supabase.from<any>('domain_events');
-  const { error } = await qb.insert({
-    event_type: 'meeting_started',
-    event_data: { ...sessionData, id: sessionId },
-    aggregate_id: sessionId,
-    aggregate_type: 'meeting_session'
-  });
+  const { error } = await (supabase as any)
+    .from('domain_events')
+    .insert({
+      event_type: 'meeting_started',
+      event_hash: await inputs_hash({ type: 'meeting_started' }),
+      sequence_number: Date.now(),
+      event_data: { ...sessionData, id: sessionId },
+      aggregate_id: sessionId,
+      aggregate_type: 'meeting_session'
+    });
 
   if (error) throw error;
 
@@ -113,7 +92,7 @@ export async function startSession(
   await recordReceipt({
     type: 'MeetingConsent-RDS',
     ts: new Date().toISOString(),
-    inputs_hash: await hashInputs({
+    inputs_hash: await inputs_hash({
       agent_id: agentId,
       family_id: familyId,
       state,
@@ -133,17 +112,20 @@ export async function startSession(
 }
 
 export async function recordConsent(sessionId: string, consentGiven: boolean): Promise<void> {
-  const qb = supabase.from<any>('domain_events');
-  const { error } = await qb.insert({
-    event_type: 'consent_recorded',
-    event_data: { 
-      session_id: sessionId,
-      consent_given: consentGiven,
-      consent_recorded_at: new Date().toISOString()
-    },
-    aggregate_id: sessionId,
-    aggregate_type: 'meeting_session'
-  });
+  const { error } = await (supabase as any)
+    .from('domain_events')
+    .insert({
+      event_type: 'consent_recorded',
+      event_hash: await inputs_hash({ type: 'consent_recorded' }),
+      sequence_number: Date.now(),
+      event_data: { 
+        session_id: sessionId,
+        consent_given: consentGiven,
+        consent_recorded_at: new Date().toISOString()
+      },
+      aggregate_id: sessionId,
+      aggregate_type: 'meeting_session'
+    });
 
   if (error) throw error;
 
@@ -151,7 +133,7 @@ export async function recordConsent(sessionId: string, consentGiven: boolean): P
   await recordReceipt({
     type: 'MeetingConsent-RDS',
     ts: new Date().toISOString(),
-    inputs_hash: await hashInputs({ session_id: sessionId, consent_given: consentGiven }),
+    inputs_hash: await inputs_hash({ session_id: sessionId, consent_given: consentGiven }),
     policy_version: 'v1.0',
     outcome: consentGiven ? 'consent_granted' : 'consent_denied',
     reasons: [consentGiven ? 'explicit_consent' : 'consent_refused'],
@@ -209,20 +191,23 @@ export async function endSession(sessionId: string, audioBlob?: Blob): Promise<M
   }
 
   // Update session in domain events
-  const qb = supabase.from<any>('domain_events');
-  const { error } = await qb.insert({
-    event_type: 'meeting_ended',
-    event_data: {
-      session_id: sessionId,
-      status: 'ended',
-      ended_at: new Date().toISOString(),
-      audio_hash: audioHash,
-      vault_document_id: vaultDocumentId,
-      transcript_hash: transcriptHash
-    },
-    aggregate_id: sessionId,
-    aggregate_type: 'meeting_session'
-  });
+  const { error } = await (supabase as any)
+    .from('domain_events')
+    .insert({
+      event_type: 'meeting_ended',
+      event_hash: await inputs_hash({ type: 'meeting_ended' }),
+      sequence_number: Date.now(),
+      event_data: {
+        session_id: sessionId,
+        status: 'ended',
+        ended_at: new Date().toISOString(),
+        audio_hash: audioHash,
+        vault_document_id: vaultDocumentId,
+        transcript_hash: transcriptHash
+      },
+      aggregate_id: sessionId,
+      aggregate_type: 'meeting_session'
+    });
 
   if (error) throw error;
 
@@ -243,7 +228,7 @@ export async function endSession(sessionId: string, audioBlob?: Blob): Promise<M
   await recordReceipt({
     type: 'Transcript-RDS',
     ts: new Date().toISOString(),
-    inputs_hash: await hashInputs({
+    inputs_hash: await inputs_hash({
       session_id: sessionId,
       audio_hash: audioHash,
       vault_document_id: vaultDocumentId
@@ -266,20 +251,23 @@ export async function summarizeSession(sessionId: string, intents: any[]): Promi
     intents: intents.map(intent => ({
       type: intent.type,
       confidence: intent.confidence,
-      band: intent.band // e.g., 'switch_carrier', 'add_driver', 'discount_inquiry'
+      band: intent.band
     })),
     intent_count: intents.length,
     primary_intent: intents[0]?.type || 'general_inquiry'
   };
 
   // Update session with summary
-  const qb = supabase.from<any>('domain_events');
-  const { error } = await qb.insert({
-    event_type: 'meeting_summarized',
-    event_data: { session_id: sessionId, summary },
-    aggregate_id: sessionId,
-    aggregate_type: 'meeting_session'
-  });
+  const { error } = await (supabase as any)
+    .from('domain_events')
+    .insert({
+      event_type: 'meeting_summarized',
+      event_hash: await inputs_hash({ type: 'meeting_summarized' }),
+      sequence_number: Date.now(),
+      event_data: { session_id: sessionId, summary },
+      aggregate_id: sessionId,
+      aggregate_type: 'meeting_session'
+    });
 
   if (error) throw error;
 
@@ -287,7 +275,7 @@ export async function summarizeSession(sessionId: string, intents: any[]): Promi
   await recordReceipt({
     type: 'Funnel-RDS',
     ts: new Date().toISOString(),
-    inputs_hash: await hashInputs({
+    inputs_hash: await inputs_hash({
       session_id: sessionId,
       intent_bands: summary.intents.map(i => i.band),
       intent_count: summary.intent_count
@@ -304,8 +292,8 @@ export async function summarizeSession(sessionId: string, intents: any[]): Promi
 }
 
 export async function getMeetingSessions(agentId: string): Promise<MeetingSession[]> {
-  const qb = supabase.from<any>('domain_events');
-  const { data, error } = await qb
+  const { data, error } = await (supabase as any)
+    .from('domain_events')
     .select('*')
     .eq('aggregate_type', 'meeting_session')
     .eq('event_type', 'meeting_started')
@@ -316,8 +304,8 @@ export async function getMeetingSessions(agentId: string): Promise<MeetingSessio
 }
 
 export async function searchSessions(agentId: string, query: string): Promise<MeetingSession[]> {
-  const qb = supabase.from<any>('domain_events');
-  const { data, error } = await qb
+  const { data, error } = await (supabase as any)
+    .from('domain_events')
     .select('*')
     .eq('aggregate_type', 'meeting_session')
     .order('occurred_at', { ascending: false });
@@ -331,7 +319,7 @@ export async function createFollowUpCampaign(sessionId: string, campaignType: st
   await recordReceipt({
     type: 'Campaign-RDS',
     ts: new Date().toISOString(),
-    inputs_hash: await hashInputs({
+    inputs_hash: await inputs_hash({
       session_id: sessionId,
       campaign_type: campaignType
     }),
@@ -382,15 +370,4 @@ async function blobToBase64(blob: Blob): Promise<string> {
     reader.onerror = reject;
     reader.readAsDataURL(blob);
   });
-}
-
-async function hashInputs(inputs: any): Promise<string> {
-  const inputString = JSON.stringify(inputs, Object.keys(inputs).sort());
-  const encoder = new TextEncoder();
-  const data = encoder.encode(inputString);
-  const crypto = window.crypto || (globalThis as any).crypto;
-  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-  return Array.from(new Uint8Array(hashBuffer))
-    .map(b => b.toString(16).padStart(2, '0'))
-    .join('');
 }
