@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import VoiceMic from '@/components/voice/VoiceMic';
 import { ArrowRight, TrendingUp, Home, Wallet, Shield, Calculator, Play, Calendar, BookOpen } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const FamilyAspiringPersonaDashboard = () => {
+  const [transcript, setTranscript] = useState('');
+  const [summary, setSummary] = useState<any>(null);
   const tools = [
     {
       title: 'Wealth Vault',
@@ -64,9 +67,19 @@ const FamilyAspiringPersonaDashboard = () => {
           <Badge variant="secondary" className="mb-4">
             Aspiring Families
           </Badge>
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-            Build Your Financial Future
-          </h1>
+          <div className="flex items-center justify-center gap-8 mb-6">
+            <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+              Build Your Financial Future
+            </h1>
+            <VoiceMic
+              label="Speak"
+              persona="family"
+              autoSummarize
+              onTranscript={setTranscript}
+              onSummary={setSummary}
+              size="sm"
+            />
+          </div>
           <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
             Start your wealth-building journey with the right tools and guidance. 
             From first home purchases to retirement planning, we're here to help you succeed.

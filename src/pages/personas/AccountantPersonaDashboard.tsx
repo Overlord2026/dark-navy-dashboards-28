@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import VoiceMic from '@/components/voice/VoiceMic';
 import { ArrowRight, Calculator, FileText, TrendingUp, Building, Play, Calendar, BookOpen } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const AccountantPersonaDashboard = () => {
+  const [transcript, setTranscript] = useState('');
   const tools = [
     {
       title: 'Estate Tax Planning',
@@ -50,9 +52,18 @@ const AccountantPersonaDashboard = () => {
           <Badge variant="secondary" className="mb-4">
             Certified Public Accountants
           </Badge>
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-            Advanced Tax & Estate Planning
-          </h1>
+          <div className="flex items-center justify-center gap-8 mb-6">
+            <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+              Advanced Tax & Estate Planning
+            </h1>
+            <VoiceMic
+              label="Client Notes"
+              persona="cpa"
+              autoSummarize={false}
+              onTranscript={setTranscript}
+              size="sm"
+            />
+          </div>
           <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
             Professional-grade tax planning, estate analysis, and business valuation tools 
             designed specifically for CPAs and tax professionals.

@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRight, Calculator, FileText, TrendingUp, Users, Play, Calendar, BookOpen } from 'lucide-react';
+import VoiceMic from '@/components/voice/VoiceMic';
 import { Link } from 'react-router-dom';
 
 const AdvisorPersonaDashboard = () => {
+  const [transcript, setTranscript] = useState('');
+  const [summary, setSummary] = useState<any>(null);
   const tools = [
     {
       title: 'Retirement Roadmap',
@@ -64,9 +67,19 @@ const AdvisorPersonaDashboard = () => {
           <Badge variant="secondary" className="mb-4">
             Financial Advisors
           </Badge>
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-            Grow Your Practice with Confidence
-          </h1>
+          <div className="flex items-center justify-center gap-8 mb-6">
+            <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+              Grow Your Practice with Confidence
+            </h1>
+            <VoiceMic
+              label="Meeting Notes"
+              persona="advisor"
+              autoSummarize
+              onTranscript={setTranscript}
+              onSummary={setSummary}
+              size="sm"
+            />
+          </div>
           <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
             Access professional-grade planning tools, automate compliance workflows, 
             and deliver exceptional client experiences with our integrated advisor platform.

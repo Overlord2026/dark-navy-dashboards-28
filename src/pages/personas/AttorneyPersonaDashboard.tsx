@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import VoiceMic from '@/components/voice/VoiceMic';
 import { ArrowRight, Scale, FileText, Shield, Users, Play, Calendar, BookOpen } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const AttorneyPersonaDashboard = () => {
+  const [transcript, setTranscript] = useState('');
   const tools = [
     {
       title: 'Estate Workbench',
@@ -50,9 +52,18 @@ const AttorneyPersonaDashboard = () => {
           <Badge variant="secondary" className="mb-4">
             Estate Planning Attorneys
           </Badge>
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-            Modern Estate Planning Practice
-          </h1>
+          <div className="flex items-center justify-center gap-8 mb-6">
+            <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+              Modern Estate Planning Practice
+            </h1>
+            <VoiceMic
+              label="Case Notes"
+              persona="attorney"
+              autoSummarize={false}
+              onTranscript={setTranscript}
+              size="sm"
+            />
+          </div>
           <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
             Streamline your estate planning practice with professional document automation, 
             client collaboration tools, and compliance management designed for modern law firms.

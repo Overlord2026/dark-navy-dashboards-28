@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRight, Shield, Heart, Wallet, Home, Calculator, Play, Calendar, BookOpen } from 'lucide-react';
-import { VoiceBar } from '@/components/voice/VoiceBar';
-import { isVoiceEnabledForPersona } from '@/config/voice';
+import VoiceMic from '@/components/voice/VoiceMic';
 import { Link } from 'react-router-dom';
 
 const FamilyRetireePersonaDashboard = () => {
+  const [transcript, setTranscript] = useState('');
+  const [summary, setSummary] = useState<any>(null);
   const tools = [
     {
       title: 'Wealth Vault',
@@ -66,20 +67,23 @@ const FamilyRetireePersonaDashboard = () => {
           <Badge variant="secondary" className="mb-4">
             Retiree Families
           </Badge>
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-            Secure Your Golden Years
-          </h1>
+          <div className="flex items-center justify-center gap-8 mb-6">
+            <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+              Secure Your Golden Years
+            </h1>
+            <VoiceMic
+              label="Speak"
+              persona="family"
+              autoSummarize
+              onTranscript={setTranscript}
+              onSummary={setSummary}
+              size="sm"
+            />
+          </div>
           <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
             Protect your legacy, manage your health, and ensure your family's financial security 
             with tools designed for retirees and their loved ones.
           </p>
-
-          {/* Voice Assistant */}
-          {isVoiceEnabledForPersona('family') && (
-            <div className="mb-8">
-              <VoiceBar persona="family" context={{ persona: 'family' }} />
-            </div>
-          )}
           
           {/* Main CTAs */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">

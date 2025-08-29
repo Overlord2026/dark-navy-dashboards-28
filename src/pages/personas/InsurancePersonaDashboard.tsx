@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRight, Shield, FileText, Calculator, AlertTriangle, Play, Calendar, BookOpen } from 'lucide-react';
+import VoiceMic from '@/components/voice/VoiceMic';
 import { Link } from 'react-router-dom';
 
 const InsurancePersonaDashboard = () => {
+  const [transcript, setTranscript] = useState('');
   const tools = [
     {
       title: 'Intake (Home/Auto)',
@@ -50,9 +52,18 @@ const InsurancePersonaDashboard = () => {
           <Badge variant="secondary" className="mb-4">
             Insurance Agents
           </Badge>
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-            Streamline Your Insurance Operations
-          </h1>
+          <div className="flex items-center justify-center gap-8 mb-6">
+            <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+              Streamline Your Insurance Operations
+            </h1>
+            <VoiceMic
+              label="Record Notes"
+              persona="insurance"
+              autoSummarize={false}
+              onTranscript={setTranscript}
+              size="sm"
+            />
+          </div>
           <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
             From client intake to claims processing, manage your entire insurance workflow 
             with modern tools designed for today's insurance professionals.
