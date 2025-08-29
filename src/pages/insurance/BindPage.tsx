@@ -93,6 +93,11 @@ export function BindPage() {
     }
   };
 
+  const onToggle = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const key = e.currentTarget.name as keyof BindingChecklist;
+    updateChecklistItem(binding.id, key, toBool(e.currentTarget.checked));
+  };
+
   const handleESign = async () => {
     if (!binding || !signerEmail) return;
     
