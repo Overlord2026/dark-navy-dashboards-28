@@ -1,6 +1,7 @@
 import React from 'react';
 import { callEdgeJSON } from '@/services/aiEdge';
 import { VoiceMicButton } from './VoiceMicButton';
+import { useRealtimeVoice } from '@/hooks/useRealtimeVoice';
 
 interface VoiceDrawerProps {
   open?: boolean; 
@@ -112,6 +113,8 @@ function VoiceDrawerContent({
   onSend,
   setResult
 }: VoiceDrawerContentProps) {
+  const { ready, live, error, start, stop, audioElRef } = useRealtimeVoice();
+  
   if (!open) return null;
   
   return (
@@ -123,6 +126,23 @@ function VoiceDrawerContent({
         </div>
         <div className="text-xs rounded border p-2 bg-amber-50 text-amber-900 mb-2">
           Educational assistance only. Not financial, tax, or legal advice. Consult your professional.
+        </div>
+        <div className="mt-3 space-y-2">
+          <div className="text-xs text-slate-600">
+            Live assistant (WebRTC). Your mic is used during a session; nothing is stored unless you choose to save.
+          </div>
+          <audio ref={audioElRef} autoPlay />
+          <div className="flex gap-2">
+            <button
+              onClick={()=>start({ tokenPath: '/functions/v1/realtime-ephemeral-token' })}
+              disabled={!ready || live}
+              className="px-3 py-1.5 rounded bg-emerald-600 text-white disabled:opacity-50"
+            >
+              {ready ? (live ? 'Live…' : 'Go Live') : 'WebRTC unsupported'}
+            </button>
+            <button onClick={stop} disabled={!live} className="px-3 py-1.5 rounded bg-slate-200">Stop</button>
+          </div>
+          {error && <div className="text-xs text-red-600">Voice error: {error}</div>}
         </div>
         <textarea className="w-full border rounded p-2 mb-2" rows={5} value={notes} onChange={e=>setNotes(e.target.value)} placeholder="Type or paste notes..." />
         <div className="flex gap-2">
