@@ -3,6 +3,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRight, Shield, Heart, Wallet, Home, Calculator, Play, Calendar, BookOpen } from 'lucide-react';
+import { VoiceBar } from '@/components/voice/VoiceBar';
+import { isVoiceEnabledForPersona } from '@/config/voice';
 import { Link } from 'react-router-dom';
 
 const FamilyRetireePersonaDashboard = () => {
@@ -71,6 +73,13 @@ const FamilyRetireePersonaDashboard = () => {
             Protect your legacy, manage your health, and ensure your family's financial security 
             with tools designed for retirees and their loved ones.
           </p>
+
+          {/* Voice Assistant */}
+          {isVoiceEnabledForPersona('family') && (
+            <div className="mb-8">
+              <VoiceBar persona="family" context={{ persona: 'family' }} />
+            </div>
+          )}
           
           {/* Main CTAs */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
