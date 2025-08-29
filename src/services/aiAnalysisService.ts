@@ -1,5 +1,5 @@
 
-import { supabase } from '@/lib/supabase';
+import { aiEdge } from '@/services/aiEdge';
 import { secretsValidator } from '@/services/security/secretsValidator';
 
 /**
@@ -26,23 +26,7 @@ export const generateStockAnalysis = async (stockData: any): Promise<string> => 
     
     console.log('Generating stock analysis via secure Edge Function');
 
-    const { data, error } = await supabase.functions.invoke('ai-analysis', {
-      body: {
-        stockData,
-        analysisType: 'stock'
-      }
-    });
-
-    if (error) {
-      console.error('Edge Function error:', error);
-      return `Error generating analysis: ${error.message || 'Edge Function call failed'}`;
-    }
-
-    if (data?.error) {
-      console.error('AI Analysis error:', data.error);
-      return `Error generating analysis: ${data.details || data.error}`;
-    }
-
+    const data = await aiEdge.generateAnalysis(stockData, 'stock');
     return data?.analysis || "Analysis could not be generated.";
   } catch (error) {
     console.error('Error calling AI analysis Edge Function:', error);
@@ -66,24 +50,7 @@ export const generatePortfolioAnalysis = async (
     
     console.log('Generating portfolio analysis via secure Edge Function');
 
-    const { data, error } = await supabase.functions.invoke('ai-analysis', {
-      body: {
-        stockData: portfolioData,
-        analysisType: 'portfolio',
-        portfolioName
-      }
-    });
-
-    if (error) {
-      console.error('Edge Function error:', error);
-      return `Error generating portfolio analysis: ${error.message || 'Edge Function call failed'}`;
-    }
-
-    if (data?.error) {
-      console.error('AI Portfolio Analysis error:', data.error);
-      return `Error generating portfolio analysis: ${data.details || data.error}`;
-    }
-
+    const data = await aiEdge.generateAnalysis(portfolioData, 'portfolio', portfolioName);
     return data?.analysis || "Portfolio analysis could not be generated.";
   } catch (error) {
     console.error('Error calling portfolio analysis Edge Function:', error);

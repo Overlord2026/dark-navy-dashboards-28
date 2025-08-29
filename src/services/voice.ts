@@ -35,27 +35,8 @@ export async function transcribeAudio(audio: Blob): Promise<{ text: string }> {
 
 // --- Meeting summary (Edge function: generate-meeting-summary) ---------------
 export async function summarizeMeeting(notes: string): Promise<any> {
-  const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-meeting-summary`;
-
-  const jwt = await supabase.auth
-    .getSession()
-    .then(r => r.data.session?.access_token)
-    .catch(() => undefined);
-
-  const res = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      ...(jwt ? { Authorization: `Bearer ${jwt}` } : {})
-    },
-    body: JSON.stringify({ notes })
-  });
-
-  if (!res.ok) {
-    const err = await res.text().catch(() => '');
-    throw new Error(`Summary error (${res.status}): ${err}`);
-  }
-  return res.json();
+  const { aiEdge } = await import('@/services/aiEdge');
+  return await aiEdge.generateMeetingSummary(notes);
 }
 
 // --- Save meeting note to database ----------------------------------------
