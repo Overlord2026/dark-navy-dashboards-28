@@ -4,21 +4,20 @@ This directory contains idempotent SQL migration files for the BFO MVP Client Ap
 
 ## Environment Setup
 
-1. **Copy environment variables:**
-   ```bash
-   cp .env.example .env.local
-   ```
+Before running migrations, set these environment variables:
 
-2. **Set required variables in `.env.local`:**
-   ```bash
-   SUPABASE_PROJECT_REF=xcmqjkvyvuhoslbzmlgi
-   SUPABASE_DB_URL=postgres://postgres:[YOUR_SERVICE_PASSWORD]@db.xcmqjkvyvuhoslbzmlgi.supabase.co:5432/postgres
-   ```
+```bash
+export SUPABASE_PROJECT_REF=xcmqjkvyvuhoslbzmlgi
+export SUPABASE_DB_URL=postgres://postgres:[SERVICE_PW]@db.xcmqjkvyvuhoslbzmlgi.supabase.co:5432/postgres
+```
 
-3. **Install Supabase CLI (if not already installed):**
-   ```bash
-   npm install -g supabase
-   ```
+Replace `[SERVICE_PW]` with your actual service role password from Supabase Dashboard > Settings > Database.
+
+### Installation Requirements
+```bash
+# Install Supabase CLI (if not already installed)
+npm install -g supabase
+```
 
 ## Running Migrations
 
