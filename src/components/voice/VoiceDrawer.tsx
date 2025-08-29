@@ -1,7 +1,8 @@
 import React from 'react';
 import { callEdgeJSON } from '@/services/aiEdge';
-import { VoiceMicButton } from './VoiceMicButton';
 import { useRealtimeVoice } from '@/hooks/useRealtimeVoice';
+import { personaBanner, ADVICE_GUARDS } from '@/policy/adviceGuard';
+import type { PersonaKey } from '@/policy/adviceGuard';
 
 interface VoiceDrawerProps {
   open?: boolean; 
