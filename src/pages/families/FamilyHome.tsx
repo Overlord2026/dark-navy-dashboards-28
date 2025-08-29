@@ -1,5 +1,6 @@
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
+import VoiceDrawer from '@/components/voice/VoiceDrawer';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
@@ -48,7 +49,10 @@ export default function FamilyHome() {
     <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-primary/5">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-8 relative">
+          <div className="absolute top-0 right-0">
+            <VoiceDrawer />
+          </div>
           <Badge className={`mb-4 ${badge.color}`}>
             {badge.label}
           </Badge>
