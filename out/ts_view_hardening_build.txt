@@ -1,13 +1,14 @@
-View Hardening Migration - Manual Patch Required
+View Hardening Migration - Manual Creation Required
 
-Since supabase/migrations/ is read-only, create this file manually:
+MIGRATION FILE REQUIRED (supabase/migrations/ is read-only):
+Create: supabase/migrations/2025-08-29_view_hardening.sql
 
-FILE: supabase/migrations/2025-08-29_view_hardening.sql
 ```sql
 -- View Hardening Migration
 -- Idempotent (safe to run repeatedly)
 ------------------------------------------------
--- 1) Set security_barrier=true on ALL public views
+
+-- Set security_barrier=true on all public views (idempotent)
 DO $$
 DECLARE r record;
 BEGIN
@@ -21,8 +22,7 @@ BEGIN
   END LOOP;
 END$$;
 
--- 2) Tighten PUBLIC access on sensitive views (revoke from PUBLIC)
---    and grant read to authenticated + service_role
+-- Revoke PUBLIC and grant SELECT to authenticated and service_role on the sensitive views
 DO $$
 DECLARE v text;
 BEGIN
@@ -36,11 +36,11 @@ BEGIN
     EXECUTE format('GRANT SELECT ON VIEW public.%I TO authenticated, service_role;', v);
   END LOOP;
 END$$;
-------------------------------------------------
 ```
 
-PACKAGE.JSON PATCH REQUIRED:
-Since package.json is read-only, add these scripts manually:
+PACKAGE.JSON SCRIPTS REQUIRED (package.json is read-only):
+Add these scripts manually to package.json:
+
 ```json
 {
   "scripts": {
@@ -50,19 +50,15 @@ Since package.json is read-only, add these scripts manually:
 }
 ```
 
-ADMIN INFRASTRUCTURE STATUS:
-✅ supabase/README.md - Already exists with migration instructions
-✅ src/components/admin/MigrationStatusTable.tsx - Already exists
-✅ src/pages/admin/DbMigrations.tsx - Already exists
-✅ Route /admin/db/migrations - Already registered in App.tsx (line 447)
+INFRASTRUCTURE STATUS:
+✅ Migration file content specified
+✅ Package.json scripts documented  
+✅ Admin migration UI already exists at /admin/db/migrations
 
-TO RUN MIGRATION LOCALLY:
-1. Set environment variables:
+TO RUN MIGRATION:
+1. Create the migration file manually with content above
+2. Add package.json scripts manually
+3. Set environment variables:
    export SUPABASE_PROJECT_REF=xcmqjkvyvuhoslbzmlgi
    export SUPABASE_DB_URL="postgres://postgres:[SERVICE_PW]@db.xcmqjkvyvuhoslbzmlgi.supabase.co:5432/postgres"
-
-2. Apply migration:
-   npm run db:migrate:dev
-
-3. Verify changes:
-   npm run db:diff
+4. Run: npm run db:migrate:dev
