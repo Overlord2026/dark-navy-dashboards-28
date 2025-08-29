@@ -21,11 +21,11 @@ export interface StormAlert {
  * Run asset reminders job with attestation
  */
 export async function runReminders(): Promise<void> {
-  await withAttestation(async () => {
+  await withAttestation('asset_reminders_job', async () => {
     const today = new Date().toISOString().split('T')[0];
     
     // Get pending reminders for today
-    const { data: reminders, error } = await supabase
+    const { data: reminders, error } = await (supabase as any)
       .from('asset_reminders')
       .select('*, assets(*)')
       .eq('status', 'pending')
@@ -47,7 +47,7 @@ export async function runReminders(): Promise<void> {
     // Umbrella underlying policy checks
     await checkUmbrellaUnderlying();
 
-  }, 'asset_reminders_job');
+  });
 }
 
 /**

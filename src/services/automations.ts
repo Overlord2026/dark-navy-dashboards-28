@@ -14,7 +14,7 @@ export interface AutomationConfig {
   key: AutomationKey;
   name: string;
   description: string;
-  price_tier: 'basic' | 'premium' | 'enterprise';
+  price_plan: 'basic' | 'premium' | 'enterprise';
   min_account_value: number;
   frequency: 'daily' | 'weekly' | 'monthly' | 'quarterly';
   enabled: boolean;
@@ -42,7 +42,7 @@ const AUTOMATION_REGISTRY: Record<AutomationKey, AutomationConfig> = {
     key: 'rebalance',
     name: 'Portfolio Rebalancing',
     description: 'Automatically rebalance portfolios to target allocations',
-    price_tier: 'basic',
+    price_plan: 'basic',
     min_account_value: 10000,
     frequency: 'monthly',
     enabled: true
@@ -51,7 +51,7 @@ const AUTOMATION_REGISTRY: Record<AutomationKey, AutomationConfig> = {
     key: 'tlh',
     name: 'Tax Loss Harvesting',
     description: 'Harvest tax losses while maintaining portfolio exposure',
-    price_tier: 'premium',
+    price_plan: 'premium',
     min_account_value: 50000,
     frequency: 'daily',
     enabled: true
@@ -60,7 +60,7 @@ const AUTOMATION_REGISTRY: Record<AutomationKey, AutomationConfig> = {
     key: 'drift_check',
     name: 'Drift Monitoring',
     description: 'Monitor and alert on portfolio drift from targets',
-    price_tier: 'basic',
+    price_plan: 'basic',
     min_account_value: 5000,
     frequency: 'daily',
     enabled: true
@@ -69,7 +69,7 @@ const AUTOMATION_REGISTRY: Record<AutomationKey, AutomationConfig> = {
     key: 'cash_sweep',
     name: 'Cash Sweep',
     description: 'Automatically invest excess cash above threshold',
-    price_tier: 'basic',
+    price_plan: 'basic',
     min_account_value: 1000,
     frequency: 'weekly',
     enabled: true
@@ -100,25 +100,25 @@ export async function checkAutomationEntitlement(
   const config = AUTOMATION_REGISTRY[automationKey];
   
   // Check user entitlements
-  const { data: entitlement, error } = await supabase
-    .from('user_entitlements' as any)
+  const qb = (supabase as any).from('user_entitlements');
+  const { data: entitlement, error } = await qb
     .select('*')
     .eq('user_id', userId)
     .eq('feature_key', `automation_${automationKey}`)
     .eq('active', true)
-    .single();
+    .limit(1);
 
   if (error) return false;
   
-  // Check tier access
-  const userTier = (entitlement as any)?.tier || 'basic';
-  const requiredTiers = {
+  // Check plan access
+  const userPlan = (entitlement as any)?.plan || 'basic';
+  const requiredPlans = {
     basic: ['basic', 'premium', 'enterprise'],
     premium: ['premium', 'enterprise'],
     enterprise: ['enterprise']
   };
 
-  return requiredTiers[config.price_tier].includes(userTier);
+  return requiredPlans[config.price_plan].includes(userPlan);
 }
 
 /**
@@ -129,15 +129,14 @@ export async function enrollHousehold(
   automationKey: AutomationKey,
   parameters: Record<string, any> = {}
 ): Promise<void> {
-  const { error } = await supabase
-    .from('automation_enrollments' as any)
-    .insert({
-      household_id: householdId,
-      feature_key: automationKey,
-      granted_at: new Date().toISOString(),
-      plan: 'automation',
-      user_id: householdId
-    });
+  const qb = (supabase as any).from('automation_enrollments');
+  const { error } = await qb.insert({
+    household_id: householdId,
+    feature_key: automationKey,
+    granted_at: new Date().toISOString(),
+    plan: 'automation',
+    user_id: householdId
+  });
 
   if (error) throw error;
 
@@ -267,8 +266,8 @@ async function executeAutomation(
  * Gets automation status for household
  */
 export async function getHouseholdAutomations(householdId: string): Promise<HouseholdEnrollment[]> {
-  const { data, error } = await supabase
-    .from('automation_enrollments' as any)
+  const qb = (supabase as any).from('automation_enrollments');
+  const { data, error } = await qb
     .select('*')
     .eq('household_id', householdId)
     .eq('active', true);
@@ -290,8 +289,8 @@ export async function unenrollHousehold(
   householdId: string,
   automationKey: AutomationKey
 ): Promise<void> {
-  const { error } = await supabase
-    .from('automation_enrollments' as any)
+  const qb = (supabase as any).from('automation_enrollments');
+  const { error } = await qb
     .update({ active: false, disenrolled_at: new Date().toISOString() })
     .eq('household_id', householdId)
     .eq('feature_key', automationKey);
@@ -307,8 +306,8 @@ export async function getAutomationHistory(
   automationKey?: AutomationKey,
   limit: number = 50
 ): Promise<any[]> {
-  let query = supabase
-    .from('automation_runs' as any)
+  const qb = (supabase as any).from('automation_runs');
+  let query = qb
     .select('*')
     .eq('household_id', householdId)
     .order('created_at', { ascending: false })

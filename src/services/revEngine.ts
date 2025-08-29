@@ -7,6 +7,9 @@ import { supabase } from '@/integrations/supabase/client';
 import { recordReceipt } from './receipts';
 import { inputs_hash } from '@/lib/canonical';
 
+type DbRevenueRow = any;
+type DbRuleRow = any;
+
 export interface RevenueRule {
   id: string;
   rule_type: 'commission_split' | 'override' | 'bonus' | 'royalty';
@@ -56,7 +59,7 @@ export async function importRevenue(
     imported_at: new Date().toISOString()
   }));
 
-  const { error } = await supabase
+  const { error } = await (supabase as any)
     .from('revenue_import')
     .insert(normalizedData);
 
@@ -93,7 +96,7 @@ export async function applyRules(
   // If no entries provided, compute them from imported revenue
   if (!computedEntries) {
     // Get imported revenue for period
-    const { data: imports, error: importError } = await supabase
+    const { data: imports, error: importError } = await (supabase as any)
       .from('revenue_import')
       .select('*')
       .eq('period', period)
@@ -102,7 +105,7 @@ export async function applyRules(
     if (importError) throw importError;
 
     // Get active rules
-    const { data: rules, error: rulesError } = await supabase
+    const { data: rules, error: rulesError } = await (supabase as any)
       .from('revenue_rules')
       .select('*')
       .eq('iar_id', iarId)
@@ -112,10 +115,10 @@ export async function applyRules(
     if (rulesError) throw rulesError;
 
     computedEntries = [];
-    const grossRevenue = imports?.reduce((sum, imp) => sum + imp.gross_amount, 0) || 0;
+    const grossRevenue = (imports as DbRevenueRow[])?.reduce((sum, imp) => sum + imp.gross_amount, 0) || 0;
 
     // Apply rules logic
-    for (const rule of rules || []) {
+    for (const rule of (rules as DbRuleRow[]) || []) {
       const splitAmount = grossRevenue * (rule.split_percentage / 100);
       const reasons = [`Applied rule ${rule.rule_type}`, `Split: ${rule.split_percentage}%`];
 
@@ -147,7 +150,7 @@ export async function applyRules(
 
   // Insert to ledger with correct table name
   if (rows.length > 0) {
-    const { error: ledgerError } = await supabase
+    const { error: ledgerError } = await (supabase as any)
       .from('rev_ledger')
       .insert(rows);
 
@@ -172,7 +175,7 @@ export async function applyRules(
  */
 export async function processPayout(iarId: string, period: string): Promise<string> {
   // Get ledger entries for period
-  const { data: entries, error } = await supabase
+  const { data: entries, error } = await (supabase as any)
     .from('rev_ledger')
     .select('*')
     .eq('iar_id', iarId)
@@ -183,7 +186,7 @@ export async function processPayout(iarId: string, period: string): Promise<stri
   const totalPayout = entries?.reduce((sum, entry) => sum + entry.split_amount, 0) || 0;
 
   // Create payout request
-  const { data: payout, error: payoutError } = await supabase
+  const { data: payout, error: payoutError } = await (supabase as any)
     .from('payout_requests')
     .insert({
       period,
@@ -194,7 +197,7 @@ export async function processPayout(iarId: string, period: string): Promise<stri
       created_at: new Date().toISOString()
     })
     .select('id')
-    .single();
+    .maybeSingle();
 
   if (payoutError) throw payoutError;
 
@@ -226,6 +229,7 @@ export async function processPayout(iarId: string, period: string): Promise<stri
     })
   ]);
 
+  if (!payout) throw new Error('Failed to create payout request');
   return payout.id;
 }
 
@@ -262,7 +266,7 @@ export async function getRevenueSummary(iarId: string, periods: string[] = []): 
   total_splits: number;
   periods_processed: number;
 }> {
-  let query = supabase
+  let query = (supabase as any)
     .from('rev_ledger')
     .select('gross_revenue, net_revenue, split_amount')
     .eq('iar_id', iarId);
