@@ -130,7 +130,7 @@ export async function planSchedule(
     end_date: endDate.toISOString()
   };
 
-  const { error } = await supabase
+  const { error } = await (supabase as any)
     .from('transition_schedules')
     .insert(schedule);
 
@@ -233,9 +233,9 @@ export async function sendEmail(
   if (emailResult.error) throw emailResult.error;
 
   // Update contact
-  const { error: updateError } = await supabase
+  const { error: updateError } = await (supabase as any)
     .from('transition_contacts')
-    .update({ last_email_sent: new Date().toISOString() })
+    .update({ last_sent_at: new Date().toISOString() })
     .eq('id', contactId);
 
   if (updateError) throw updateError;
@@ -319,20 +319,20 @@ export async function processWebhook(
  * Replay verification for deterministic schedule checking
  */
 export async function replayVerify(transitionId: string): Promise<boolean> {
-  const { data: schedule, error } = await supabase
+  const { data: schedule, error } = await (supabase as any)
     .from('transition_schedules')
     .select('*')
     .eq('transition_id', transitionId)
-    .single();
+    .maybeSingle();
 
   if (error) return false;
 
   // Verify schedule integrity
   const expectedHash = await inputs_hash({
-    cadence: schedule.cadence,
-    quota_per_day: schedule.quota_per_day,
-    start_date: schedule.start_date,
-    end_date: schedule.end_date
+    cadence: (schedule as any).cadence,
+    quota_per_day: (schedule as any).quota_per_day,
+    start_date: (schedule as any).start_date,
+    end_date: (schedule as any).end_date
   });
 
   // Compare with stored hash (would be stored during creation)
@@ -349,17 +349,17 @@ export async function getTransitionSummary(transitionId: string): Promise<{
   bounces: number;
   completion_rate: number;
 }> {
-  const { data: contacts, error } = await supabase
+  const { data: contacts, error } = await (supabase as any)
     .from('transition_contacts')
-    .select('status, last_email_sent')
+    .select('status, last_sent_at')
     .eq('transition_id', transitionId);
 
   if (error) throw error;
 
   const total = contacts?.length || 0;
-  const sent = contacts?.filter(c => c.last_email_sent).length || 0;
-  const optOuts = contacts?.filter(c => c.status === 'opted_out').length || 0;
-  const bounces = contacts?.filter(c => c.status === 'bounced').length || 0;
+  const sent = contacts?.filter(c => (c as any).last_sent_at).length || 0;
+  const optOuts = contacts?.filter(c => (c as any).status === 'opted_out').length || 0;
+  const bounces = contacts?.filter(c => (c as any).status === 'bounced').length || 0;
 
   return {
     total_contacts: total,

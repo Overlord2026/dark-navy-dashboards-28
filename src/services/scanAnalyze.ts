@@ -289,7 +289,7 @@ async function simulateOCR(vaultHash: string, assetType: string): Promise<any> {
       baseData.coverage_bands = [
         { coverage_type: 'scheduled_art', limit_band: '100k_500k', deductible_band: 'none' }
       ];
-      baseData.valuation_bands = {
+      (baseData as any).valuation_bands = {
         appraised_value_band: '100k_500k',
         appraisal_date: '2023-01-01',
         appraiser_category: 'certified'

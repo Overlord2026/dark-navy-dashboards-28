@@ -70,7 +70,7 @@ export async function fetchWeatherAlerts(
 
 export async function processStormAlert(alert: WeatherAlert): Promise<void> {
   // Store alert in database
-  const { error } = await supabase
+  const { error } = await (supabase as any)
     .from('weather_alerts')
     .insert({
       alert_type: alert.alert_type,
@@ -111,7 +111,7 @@ export async function processStormAlert(alert: WeatherAlert): Promise<void> {
 }
 
 export async function getActiveAlerts(userLocation: { state: string; zip_code?: string }): Promise<WeatherAlert[]> {
-  const { data, error } = await supabase
+  const { data, error } = await (supabase as any)
     .from('weather_alerts')
     .select('*')
     .eq('location->>state', userLocation.state)
@@ -124,7 +124,7 @@ export async function getActiveAlerts(userLocation: { state: string; zip_code?: 
     return [];
   }
 
-  return data || [];
+  return (data || []) as WeatherAlert[];
 }
 
 export async function sendStormNotifications(alert: WeatherAlert, clientIds: string[]): Promise<void> {

@@ -129,7 +129,7 @@ export async function publishSite(siteId: string): Promise<void> {
   if (fetchError) throw fetchError;
 
   // Inject mandatory disclosures
-  const blocks = site.blocks.map((block: SiteBlock) => {
+  const blocks = (site as any).blocks.map((block: SiteBlock) => {
     if (block.type === 'disclosures') {
       return {
         ...block,
@@ -218,7 +218,7 @@ export async function getPublishedSite(slug: string): Promise<MicroSite | null> 
     .single();
 
   if (error) return null;
-  return data;
+  return data as unknown as MicroSite;
 }
 
 /**
@@ -232,5 +232,5 @@ export async function listSites(iarId: string): Promise<MicroSite[]> {
     .order('created_at', { ascending: false });
 
   if (error) throw error;
-  return data || [];
+  return (data || []) as unknown as MicroSite[];
 }

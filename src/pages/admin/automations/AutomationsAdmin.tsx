@@ -137,8 +137,8 @@ export default function AutomationsAdmin() {
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
                         <h3 className="text-lg font-semibold">{automation.name}</h3>
-                        <Badge className={getPriceTierColor(automation.price_tier)}>
-                          {automation.price_tier}
+                        <Badge className={getPriceTierColor(automation.price_plan)}>
+                          {automation.price_plan}
                         </Badge>
                         <Badge variant={automation.enabled ? 'default' : 'secondary'}>
                           {automation.enabled ? 'Enabled' : 'Disabled'}
