@@ -47,7 +47,7 @@ import MigrationHub from '@/pages/admin/MigrationHub';
 import K401FormsAdmin from '@/pages/admin/K401FormsAdmin';
 import K401ProviderRulesSearch from '@/pages/admin/K401ProviderRulesSearch';
 import K401CMAUploader from '@/pages/admin/K401CMAUploader';
-import ROICalculator from '@/pages/broker/ROICalculator';
+import DbMigrations from '@/pages/admin/DbMigrations';
 import BrokerKit from '@/pages/broker/BrokerKit';
 import K401CompliancePack from '@/pages/admin/K401CompliancePack';
 import RulesExport from '@/pages/admin/RulesExport';
@@ -399,8 +399,9 @@ function App() {
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/transition/:id" element={<TransitionDetail />} />}
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/diligence" element={<DiligenceAdmin />} />}
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/migration-invite" element={<MigrationHubInvite />} />}
-             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/migration-queue" element={<MigrationQueueAdmin />} />}
-             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/migration" element={<MigrationHub />} />}
+              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/migration-queue" element={<MigrationQueueAdmin />} />}
+              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/db/migrations" element={<DbMigrations />} />}
+              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/migration" element={<MigrationHub />} />}
             
             {/* Demo Routes */}
             {getFlag('DEMOS_ENABLED') && (
