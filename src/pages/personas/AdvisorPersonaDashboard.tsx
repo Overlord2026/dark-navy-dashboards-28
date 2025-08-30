@@ -61,11 +61,15 @@ const AdvisorPersonaDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
-      <PersonaSubHeader 
-        title="Welcome back, Financial Advisor"
-        subtitle="Your professional dashboard and automation tools live here"
-        right={<VoiceDrawer triggerLabel="🎙️ Ask AI" persona="advisor" endpoint="meeting-summary" />}
-      />
+      <PersonaSubHeader>
+        <div className="flex items-center justify-between w-full">
+          <div>
+            <h2 className="text-lg font-semibold text-bfo-gold">Welcome back, Financial Advisor</h2>
+            <p className="opacity-90 text-sm text-white">Your professional dashboard and automation tools live here</p>
+          </div>
+          <VoiceDrawer triggerLabel="🎙️ Ask AI" persona="advisor" endpoint="meeting-summary" />
+        </div>
+      </PersonaSubHeader>
       <div className="container mx-auto px-4 py-8">
         {/* Hero Section */}
         <div className="text-center max-w-4xl mx-auto mb-12">

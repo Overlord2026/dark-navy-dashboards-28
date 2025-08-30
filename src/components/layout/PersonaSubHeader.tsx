@@ -1,21 +1,11 @@
 import React from 'react';
 
-type Props = {
-  title: string;
-  subtitle?: string;
-  right?: React.ReactNode; // e.g., Voice button / CTA
-};
-
-export function PersonaSubHeader({ title, subtitle, right }: Props) {
+export function PersonaSubHeader({ children }: { children: React.ReactNode }) {
   return (
-    <section className="sticky top-[var(--header-h)] z-40 bfo-subheader bfo-no-blur w-full">
-      <div className="mx-auto max-w-7xl px-4 py-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h2 className="text-lg font-semibold">{title}</h2>
-          {subtitle && <p className="opacity-90 text-sm">{subtitle}</p>}
-        </div>
-        {right ? <div className="flex items-center gap-2">{right}</div> : null}
+    <div className="fixed top-[var(--header-h)] left-0 right-0 z-40 bfo-subheader bfo-no-blur">
+      <div className="mx-auto h-10 px-4 sm:px-6 lg:px-8 flex items-center">
+        {children /* make its text gold or white per item */}
       </div>
-    </section>
+    </div>
   );
 }

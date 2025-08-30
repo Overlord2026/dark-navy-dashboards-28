@@ -48,11 +48,15 @@ const AttorneyPersonaDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
-      <PersonaSubHeader 
-        title="Welcome back, Attorney"
-        subtitle="Professional estate planning and legal tools at your service"
-        right={<VoiceMic label="Record Notes" persona="attorney" autoSummarize={false} onTranscript={setTranscript} size="sm" />}
-      />
+      <PersonaSubHeader>
+        <div className="flex items-center justify-between w-full">
+          <div>
+            <h2 className="text-lg font-semibold text-bfo-gold">Welcome back, Attorney</h2>
+            <p className="opacity-90 text-sm text-white">Professional estate planning and legal tools at your service</p>
+          </div>
+          <VoiceMic label="Record Notes" persona="attorney" autoSummarize={false} onTranscript={setTranscript} size="sm" />
+        </div>
+      </PersonaSubHeader>
       <div className="container mx-auto px-4 py-8">
         {/* Hero Section */}
         <div className="text-center max-w-4xl mx-auto mb-12">

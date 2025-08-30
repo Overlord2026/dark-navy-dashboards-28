@@ -63,11 +63,15 @@ const FamilyAspiringPersonaDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
-      <PersonaSubHeader 
-        title="Welcome back, Aspiring Family"
-        subtitle="Build your financial future with smart planning tools"
-        right={<VoiceMic label="Speak" persona="family" autoSummarize onTranscript={setTranscript} onSummary={setSummary} size="sm" />}
-      />
+      <PersonaSubHeader>
+        <div className="flex items-center justify-between w-full">
+          <div>
+            <h2 className="text-lg font-semibold text-bfo-gold">Welcome back, Aspiring Family</h2>
+            <p className="opacity-90 text-sm text-white">Build your financial future with smart planning tools</p>
+          </div>
+          <VoiceMic label="Speak" persona="family" autoSummarize onTranscript={setTranscript} onSummary={setSummary} size="sm" />
+        </div>
+      </PersonaSubHeader>
       <div className="container mx-auto px-4 py-8">
         {/* Hero Section */}
         <div className="text-center max-w-4xl mx-auto mb-12">

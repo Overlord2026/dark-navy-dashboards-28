@@ -23,10 +23,12 @@ import { PostReturnEngagement } from '@/components/cpa/PostReturnEngagement';
 export default function CPADashboard() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-primary/5">
-      <PersonaSubHeader 
-        title="CPA Console"
-        subtitle="Complete practice management suite for modern CPAs"
-      />
+      <PersonaSubHeader>
+        <div>
+          <h2 className="text-lg font-semibold text-bfo-gold">CPA Console</h2>
+          <p className="opacity-90 text-sm text-white">Complete practice management suite for modern CPAs</p>
+        </div>
+      </PersonaSubHeader>
       <div className="space-y-6 p-6">
         <DashboardHeader 
           heading="CPA Practice Management Suite"

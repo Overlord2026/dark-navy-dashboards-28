@@ -179,10 +179,12 @@ export default function NILAthleteHome() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/5">
-      <PersonaSubHeader 
-        title="NIL Athlete Hub"
-        subtitle="Navigate name, image & likeness deals with confidence"
-        right={
+      <PersonaSubHeader>
+        <div className="flex items-center justify-between w-full">
+          <div>
+            <h2 className="text-lg font-semibold text-bfo-gold">NIL Athlete Hub</h2>
+            <p className="opacity-90 text-sm text-white">Navigate name, image & likeness deals with confidence</p>
+          </div>
           <div className="flex items-center gap-2">
             <Button
               variant="outline"
@@ -203,8 +205,8 @@ export default function NILAthleteHome() {
               Share
             </Button>
           </div>
-        }
-      />
+        </div>
+      </PersonaSubHeader>
       <div className="container mx-auto px-4 py-6 space-y-6">
 
         {/* Quick Actions */}

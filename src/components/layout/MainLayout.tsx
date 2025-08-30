@@ -31,7 +31,7 @@ export function MainLayout({ children }: MainLayoutProps) {
         <GlobalErrorBoundary>
           <Header />
         </GlobalErrorBoundary>
-        <main>
+        <main className="pt-[96px]">
           <GlobalErrorBoundary>
             {children}
           </GlobalErrorBoundary>

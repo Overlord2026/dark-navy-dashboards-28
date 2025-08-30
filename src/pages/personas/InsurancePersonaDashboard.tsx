@@ -48,11 +48,15 @@ const InsurancePersonaDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
-      <PersonaSubHeader 
-        title="Welcome back, Insurance Agent"
-        subtitle="Manage your entire insurance workflow with modern tools"
-        right={<VoiceMic label="Record Notes" persona="insurance" autoSummarize={false} onTranscript={setTranscript} size="sm" />}
-      />
+      <PersonaSubHeader>
+        <div className="flex items-center justify-between w-full">
+          <div>
+            <h2 className="text-lg font-semibold text-bfo-gold">Welcome back, Insurance Agent</h2>
+            <p className="opacity-90 text-sm text-white">Manage your entire insurance workflow with modern tools</p>
+          </div>
+          <VoiceMic label="Record Notes" persona="insurance" autoSummarize={false} onTranscript={setTranscript} size="sm" />
+        </div>
+      </PersonaSubHeader>
       <div className="container mx-auto px-4 py-8">
         {/* Hero Section */}
         <div className="text-center max-w-4xl mx-auto mb-12">

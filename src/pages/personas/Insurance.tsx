@@ -28,11 +28,15 @@ export default function Insurance() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-primary/5">
-      <PersonaSubHeader 
-        title="Insurance Hub"
-        subtitle="Accelerate underwriting and streamline claims processing"
-        right={<VoiceDrawer triggerLabel="🎙️ Ask AI" persona="insurance" endpoint="meeting-summary" />}
-      />
+      <PersonaSubHeader>
+        <div className="flex items-center justify-between w-full">
+          <div>
+            <h2 className="text-lg font-semibold text-bfo-gold">Insurance Hub</h2>
+            <p className="opacity-90 text-sm text-white">Accelerate underwriting and streamline claims processing</p>
+          </div>
+          <VoiceDrawer triggerLabel="🎙️ Ask AI" persona="insurance" endpoint="meeting-summary" />
+        </div>
+      </PersonaSubHeader>
       <div className="container mx-auto px-4 py-8">
 
         {/* Hero Section */}

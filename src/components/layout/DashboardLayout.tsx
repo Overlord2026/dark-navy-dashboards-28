@@ -21,7 +21,7 @@ export function DashboardLayout() {
             </ErrorBoundary>
           </div>
           
-          <main className="flex-1 p-3 sm:p-4 lg:p-6 min-h-0 pt-16 lg:pt-6">
+          <main className="flex-1 p-3 sm:p-4 lg:p-6 min-h-0 pt-[96px]">
             <ErrorBoundary>
               <Outlet />
             </ErrorBoundary>

@@ -29,11 +29,15 @@ export default function Advisors() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-primary/5">
-      <PersonaSubHeader 
-        title="Advisor Control Center"
-        subtitle="Streamline your practice with advanced tools and client management"
-        right={<VoiceDrawer triggerLabel="Voice AI" persona="advisor" />}
-      />
+      <PersonaSubHeader>
+        <div className="flex items-center justify-between w-full">
+          <div>
+            <h2 className="text-lg font-semibold text-bfo-gold">Advisor Control Center</h2>
+            <p className="opacity-90 text-sm text-white">Streamline your practice with advanced tools and client management</p>
+          </div>
+          <VoiceDrawer triggerLabel="Voice AI" persona="advisor" />
+        </div>
+      </PersonaSubHeader>
       <div className="container mx-auto px-4 py-8">
 
         {/* Hero Section */}
