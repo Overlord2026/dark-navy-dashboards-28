@@ -15,6 +15,10 @@ import { Textarea } from '@/components/ui/textarea';
 interface VoiceDrawerProps {
   persona: string;
   onNoteSaved?: (note: string) => void;
+  open?: boolean;
+  onClose?: () => void;
+  triggerLabel?: string;
+  endpoint?: string;
 }
 
 const FORBIDDEN_TOPICS = [
@@ -29,9 +33,24 @@ const COMPLIANCE_CONTACTS = {
   insurance: { name: 'DOI Compliance', phone: '1-800-555-0166' }
 };
 
-export function VoiceDrawer({ persona, onNoteSaved }: VoiceDrawerProps) {
+export function VoiceDrawer({ 
+  persona, 
+  onNoteSaved, 
+  open: controlledOpen, 
+  onClose, 
+  triggerLabel = "Voice Assistant",
+  endpoint 
+}: VoiceDrawerProps) {
   const { toast } = useToast();
-  const [open, setOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(false);
+  const open = controlledOpen ?? internalOpen;
+  const setOpen = (value: boolean) => {
+    if (controlledOpen !== undefined) {
+      if (!value) onClose?.();
+    } else {
+      setInternalOpen(value);
+    }
+  };
   const [transcript, setTranscript] = useState('');
   const [recentNotes, setRecentNotes] = useState<string[]>([]);
   const [isRecording, setIsRecording] = useState(false);
@@ -78,7 +97,7 @@ export function VoiceDrawer({ persona, onNoteSaved }: VoiceDrawerProps) {
       <DrawerTrigger asChild>
         <Button variant="outline" size="sm" className="gap-2">
           <Mic className="h-4 w-4" />
-          Voice Assistant
+          {triggerLabel}
         </Button>
       </DrawerTrigger>
       <DrawerContent className="max-h-[80vh]">

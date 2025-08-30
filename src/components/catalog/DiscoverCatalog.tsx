@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { getCategoryIcon, formatPrice } from '@/lib/catalog-utils';
 import { 
   Search, 
   Filter, 
@@ -182,7 +183,7 @@ export function DiscoverCatalog() {
   const [selectedPersona, setSelectedPersona] = useState('all');
   const [sortBy, setSortBy] = useState('rating');
 
-  const getCategoryIcon = (category: string) => {
+  const getCategoryIconLocal = (category: string) => {
     switch (category) {
       case 'solution': return <Building2 className="h-4 w-4" />;
       case 'tool': return <Calculator className="h-4 w-4" />;
@@ -192,7 +193,7 @@ export function DiscoverCatalog() {
     }
   };
 
-  const formatPrice = (price: number, recurring: boolean) => {
+  const formatPriceLocal = (price: number, recurring: boolean) => {
     const formatted = price === 0 ? 'Free' : `$${price.toLocaleString()}`;
     return recurring ? `${formatted}/month` : formatted;
   };
@@ -350,7 +351,7 @@ function CatalogItemCard({ item }: { item: CatalogItem }) {
               <CardTitle className="text-lg line-clamp-1">{item.name}</CardTitle>
               <div className="flex items-center gap-2 mt-1">
                 <Badge variant="outline" className="gap-1">
-                  {getCategoryIcon(item.category)}
+                  {getCategoryIconLocal(item.category)}
                   {item.category}
                 </Badge>
                 <div className="flex items-center gap-1">
@@ -369,7 +370,7 @@ function CatalogItemCard({ item }: { item: CatalogItem }) {
       <CardContent className="space-y-4">
         <div className="flex items-center justify-between">
           <div className="text-2xl font-bold text-primary">
-            {formatPrice(item.price, item.recurring)}
+            {formatPriceLocal(item.price, item.recurring)}
           </div>
           <div className="flex items-center gap-1 text-sm text-muted-foreground">
             <Users className="h-4 w-4" />
@@ -428,7 +429,7 @@ function CatalogItemRow({ item }: { item: CatalogItem }) {
               <div className="flex items-center gap-3">
                 <h3 className="font-semibold text-lg">{item.name}</h3>
                 <Badge variant="outline" className="gap-1">
-                  {getCategoryIcon(item.category)}
+                  {getCategoryIconLocal(item.category)}
                   {item.category}
                 </Badge>
                 <div className="flex items-center gap-1">
@@ -454,7 +455,7 @@ function CatalogItemRow({ item }: { item: CatalogItem }) {
           
           <div className="text-right space-y-2">
             <div className="text-2xl font-bold text-primary">
-              {formatPrice(item.price, item.recurring)}
+              {formatPriceLocal(item.price, item.recurring)}
             </div>
             
             <Button size="sm">
