@@ -1,155 +1,116 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from '@/components/ui/drawer';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Mic, MicOff, Send, Shield, AlertTriangle, PhoneCall } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-import { saveMeetingNote } from '@/services/notes';
-import { transcribeAudio } from '@/services/voice';
-import { useRealtimeVoice } from '@/hooks/useRealtimeVoice';
-import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
+import React from 'react';
+import { callEdgeJSON } from '@/services/aiEdge';
+// remove any old imports of useRealtimeVoice if not used
+// import { useRealtimeVoice } from '@/hooks/useRealtimeVoice';
 
-interface VoiceDrawerProps {
-  persona: string;
-  onNoteSaved?: (note: string) => void;
+export interface VoiceDrawerProps {
+  /** Optional controlled open state; if omitted, component manages its own */
   open?: boolean;
+  /** Optional controlled close handler; used only when `open` is provided */
   onClose?: () => void;
-  triggerLabel?: string;
+  /** Persona key for policy guardrails (e.g., "family","advisor","cpa","attorney","insurance","nil") */
+  persona: string;
+  /** Edge function endpoint slug; defaults to 'meeting-summary' */
   endpoint?: string;
+  /** Optional label for the trigger button; if omitted, render icon button */
+  triggerLabel?: string;
 }
 
-const FORBIDDEN_TOPICS = [
-  'insider trading', 'market manipulation', 'tax evasion', 'money laundering',
-  'bribery', 'kickbacks', 'ponzi', 'pyramid scheme', 'cryptocurrency scam'
-];
-
-const COMPLIANCE_CONTACTS = {
-  advisor: { name: 'Compliance Dept', phone: '1-800-555-0199' },
-  cpa: { name: 'Ethics Hotline', phone: '1-800-555-0188' },
-  attorney: { name: 'Bar Association', phone: '1-800-555-0177' },
-  insurance: { name: 'DOI Compliance', phone: '1-800-555-0166' }
-};
-
-export function VoiceDrawer({ 
-  persona, 
-  onNoteSaved, 
-  open: controlledOpen, 
-  onClose, 
-  triggerLabel = "Voice Assistant",
-  endpoint 
+export function VoiceDrawer({
+  open: controlledOpen,
+  onClose: controlledOnClose,
+  persona,
+  endpoint = 'meeting-summary',
+  triggerLabel
 }: VoiceDrawerProps) {
-  const { toast } = useToast();
-  const [internalOpen, setInternalOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = React.useState(false);
+  const [notes, setNotes] = React.useState('');
+  const [busy, setBusy] = React.useState(false);
+  const [result, setResult] = React.useState<any>(null);
+  const [consent, setConsent] = React.useState(false);
+  const [handoff, setHandoff] = React.useState<string | null>(null);
+
   const open = controlledOpen ?? internalOpen;
-  const setOpen = (value: boolean) => {
-    if (controlledOpen !== undefined) {
-      if (!value) onClose?.();
-    } else {
-      setInternalOpen(value);
-    }
-  };
-  const [transcript, setTranscript] = useState('');
-  const [recentNotes, setRecentNotes] = useState<string[]>([]);
-  const [isRecording, setIsRecording] = useState(false);
-  const [liveMode, setLiveMode] = useState(false);
-  const [consentGiven, setConsentGiven] = useState(false);
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const chunksRef = useRef<Blob[]>([]);
-  
-  const { ready, live, error, start, stop, audioElRef } = useRealtimeVoice();
-  
-  const VOICE_LIVE_ENABLED = false; // Feature flag
+  const close = () => (controlledOnClose ? controlledOnClose() : setInternalOpen(false));
+  const openSelf = () => setInternalOpen(true);
 
-  const checkForbiddenTopics = (text: string): string[] => {
-    return FORBIDDEN_TOPICS.filter(topic => 
-      text.toLowerCase().includes(topic.toLowerCase())
-    );
-  };
-
-  const handleSaveNote = async () => {
-    if (!transcript.trim()) return;
-
+  async function onSend() {
+    if (!notes.trim()) return;
+    setBusy(true);
     try {
-      await saveMeetingNote({ persona, text: transcript });
-      setRecentNotes(prev => [transcript, ...prev.slice(0, 2)]);
-      onNoteSaved?.(transcript);
-      setTranscript('');
-      
-      toast({
-        title: "Note Saved",
-        description: "Meeting note saved successfully",
-      });
-    } catch (err) {
-      console.error('Save error:', err);
-      toast({
-        title: "Save Failed",
-        description: "Could not save meeting note",
-        variant: "destructive"
-      });
+      const data = await callEdgeJSON(endpoint, { notes, persona });
+      setResult(data);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setBusy(false);
     }
-  };
+  }
 
   return (
-    <Drawer open={open} onOpenChange={setOpen}>
-      <DrawerTrigger asChild>
-        <Button variant="outline" size="sm" className="gap-2">
-          <Mic className="h-4 w-4" />
+    <div>
+      {/* Trigger */}
+      {triggerLabel ? (
+        <button type="button" onClick={openSelf} className="btn btn-outline">
           {triggerLabel}
-        </Button>
-      </DrawerTrigger>
-      <DrawerContent className="max-h-[80vh]">
-        <DrawerHeader>
-          <DrawerTitle className="flex items-center gap-2">
-            <Mic className="h-5 w-5" />
-            Voice Assistant - {persona.charAt(0).toUpperCase() + persona.slice(1)}
-          </DrawerTitle>
-        </DrawerHeader>
-        
-        <div className="p-6 space-y-6">
-          <div className="space-y-3">
-            <div className="flex items-center space-x-2">
-              <Switch
-                id="consent"
-                checked={consentGiven}
-                onCheckedChange={setConsentGiven}
-              />
-              <Label htmlFor="consent" className="text-sm">
-                I consent to audio recording and transcription for meeting notes
-              </Label>
+        </button>
+      ) : (
+        <button aria-label="Open voice assistant" onClick={openSelf} className="icon-button">🎤</button>
+      )}
+
+      {/* Drawer */}
+      {open && (
+        <div role="dialog" aria-modal="true" className="fixed inset-0 z-40 bg-black/30">
+          <div className="fixed right-0 top-0 h-full w-full max-w-md bg-white shadow-xl p-4 z-50">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-lg font-semibold">Voice Assistant</h3>
+              <button onClick={close} className="text-sm text-gray-600">Close</button>
             </div>
-          </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="transcript">Transcript</Label>
-            <Textarea
-              id="transcript"
-              value={transcript}
-              onChange={(e) => setTranscript(e.target.value)}
-              placeholder="Transcript will appear here..."
-              className="min-h-[120px]"
+            <div className="mb-2 text-xs text-gray-500">
+              Persona: <span className="font-mono">{persona}</span>
+            </div>
+
+            <label className="block text-sm font-medium mb-1">Consent</label>
+            <div className="flex gap-2 items-center mb-3 text-sm">
+              <input id="consent" type="checkbox" checked={consent} onChange={e=>setConsent(e.target.checked)} />
+              <label htmlFor="consent">I understand this is educational, not advice; data may be summarized with policy guardrails.</label>
+            </div>
+
+            <label className="block text-sm font-medium mb-1">Speak/type your notes</label>
+            <textarea
+              className="w-full h-32 border rounded p-2 text-sm"
+              placeholder="e.g., Compare rollover vs. stay in plan; list fees and pros/cons…"
+              value={notes}
+              onChange={e=>setNotes(e.target.value)}
             />
-            
-            <Button
-              onClick={handleSaveNote}
-              disabled={!transcript.trim()}
-              className="gap-2"
-            >
-              <Send className="h-4 w-4" />
-              Save Meeting Note
-            </Button>
-          </div>
 
-          <Alert>
-            <Shield className="h-4 w-4" />
-            <AlertDescription className="text-sm">
-              <strong>Compliance Guardian Active:</strong> Forbidden topics monitored.
-            </AlertDescription>
-          </Alert>
+            <div className="mt-3 flex items-center gap-2">
+              <button
+                type="button"
+                disabled={!consent || busy || !notes.trim()}
+                onClick={onSend}
+                className="btn btn-primary"
+              >
+                {busy ? 'Summarizing…' : 'Generate summary'}
+              </button>
+              <button type="button" className="btn btn-secondary" onClick={()=>setHandoff('Please schedule with a licensed professional.')}>
+                Request human hand-off
+              </button>
+            </div>
+
+            {handoff && <p className="mt-2 text-xs text-amber-700">{handoff}</p>}
+
+            {result && (
+              <div className="mt-4 p-3 bg-gray-50 border rounded text-sm whitespace-pre-wrap">
+                {result.summary ?? JSON.stringify(result, null, 2)}
+              </div>
+            )}
+          </div>
         </div>
-      </DrawerContent>
-    </Drawer>
+      )}
+    </div>
   );
 }
+
+export default VoiceDrawer;
