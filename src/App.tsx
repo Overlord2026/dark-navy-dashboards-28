@@ -5,6 +5,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import { ToolsProvider } from '@/contexts/ToolsContext';
 import { Toaster } from '@/components/ui/toaster';
 import DevPanel from '@/components/dev/DevPanel';
+import { AutoLoadDemo } from '@/components/AutoLoadDemo';
 import CTAStickyBar from '@/components/ui/CTAStickyBar';
 import NILOnboarding from '@/pages/nil/Onboarding';
 import Education from '@/pages/nil/Education';
@@ -501,6 +502,7 @@ function App() {
           
           <Toaster />
           <DevPanel />
+          <AutoLoadDemo />
           
           
           {/* Show CTA bar on public pages only - Flag Protected */}
