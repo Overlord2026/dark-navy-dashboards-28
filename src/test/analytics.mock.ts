@@ -3,14 +3,29 @@
 import type { FamilyOfficeAnalytics } from '@/lib/analytics';
 
 // Create a comprehensive mock that supports all analytics methods
-const mockAnalytics: FamilyOfficeAnalytics = {
+const mockAnalytics = {
   track: jest.fn(),
+  trackEvent: jest.fn(),
+  trackPageView: jest.fn(),
+  trackFeatureUsage: jest.fn(),
+  trackConversion: jest.fn(),
+  trackViralShare: jest.fn(),
+  trackPersonaClaim: jest.fn(),
+  trackOnboardingStep: jest.fn(),
+  trackSecurityEvent: jest.fn(),
+  trackFAQUsage: jest.fn(),
+  trackShareClick: jest.fn(),
+  trackShareSuccess: jest.fn(),
+  trackFamilyTabView: jest.fn(),
+  trackFamilyQuickAction: jest.fn(),
+  trackToolCardOpen: jest.fn(),
+  trackFamilySegmentSelection: jest.fn(),
+  trackFamilyGoalsSelection: jest.fn(),
+  trackFamilyOnboardingStart: jest.fn(),
+  trackFamilyOnboardingComplete: jest.fn(),
   page: jest.fn(),
   identify: jest.fn(),
-  group: jest.fn(),
-  trackEvent: function(event: string, props?: Record<string, any>) {
-    return this.track(event, props);
-  }
+  group: jest.fn()
 };
 
 // Set up global analytics mock

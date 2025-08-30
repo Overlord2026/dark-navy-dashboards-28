@@ -1,116 +1,90 @@
-/**
- * Unified analytics shim that never crashes when the underlying vendor SDK
- * is missing a method. Supports both:
- *   - track('eventName', { ...props })
- *   - track({ event: 'eventName', ...props })
- */
+type AnyAnalytics = { [k: string]: (...a: any[]) => void } | undefined | null;
+const a: AnyAnalytics = (globalThis as any).analytics ?? ({} as any);
 
-export interface AnalyticsProps {
-  event?: string;
-  [k: string]: any;
-}
-
-type AnyAnalytics = { [k: string]: any } | null | undefined;
-
-// Try a few globals: window.analytics, globalThis.analytics, etc.
-const vendor: AnyAnalytics =
-  (globalThis as any)?.analytics ??
-  (globalThis as any)?.window?.analytics ??
-  null;
-
-function safeCall(method: string, ...args: any[]) {
-  try {
-    if (vendor && typeof vendor[method] === 'function') {
-      vendor[method](...args);
-    }
-  } catch {
-    // no-op
-  }
-}
-
-// Overload types (so both signatures compile)
-export function track(event: string, props?: AnalyticsProps): void;
-export function track(props: AnalyticsProps): void;
-export function track(arg1?: string | AnalyticsProps, arg2?: AnalyticsProps): void {
-  // Normalize to vendor.track(name, props)
-  if (typeof arg1 === 'string') {
-    safeCall('track', arg1, arg2 ?? {});
-    return;
-  }
-  // arg1 is object form
-  const obj = (arg1 ?? {}) as AnalyticsProps;
-  const name = obj.event ?? 'event';
-  // Send a shallow clone in case vendor mutates the object
-  const clone = { ...obj };
-  delete clone.event;
-  safeCall('track', name, clone);
-}
-
-// The main API object (kept for existing imports)
 export const analytics = {
-  track,
-  trackEvent: track, // Alias for compatibility
-  trackPageView(props?: AnalyticsProps) {
-    track('page_view', props);
+  track(event: string, props?: Record<string, any>) {
+    if (typeof (a as any)?.track === 'function') (a as any).track(event, props);
   },
-  trackFeatureUsage(event: string, props?: AnalyticsProps) {
-    track(event, props);
+  trackEvent(event: string, props?: Record<string, any>) {
+    if (typeof (a as any)?.track === 'function') (a as any).track(event, props);
   },
-  trackConversion(event: string, props?: AnalyticsProps) {
-    track(event, props);
+  trackPageView(event?: string, props?: Record<string, any>) {
+    if (typeof (a as any)?.track === 'function') (a as any).track(event || 'page_view', props);
   },
-  trackViralShare(event: string, props?: AnalyticsProps) {
-    track(event, props);
+  trackFeatureUsage(event: string, props?: Record<string, any>) {
+    if (typeof (a as any)?.track === 'function') (a as any).track(event, props);
   },
-  trackPersonaClaim(event: string, props?: AnalyticsProps) {
-    track(event, props);
+  trackConversion(event: string, props?: Record<string, any>) {
+    if (typeof (a as any)?.track === 'function') (a as any).track(event, props);
   },
-  trackOnboardingStep(event: string, props?: AnalyticsProps) {
-    track(event, props);
+  trackViralShare(event: string, props?: Record<string, any>) {
+    if (typeof (a as any)?.track === 'function') (a as any).track(event, props);
   },
-  trackSecurityEvent(event: string, props?: AnalyticsProps) {
-    track(event, props);
+  trackPersonaClaim(event: string, props?: Record<string, any>) {
+    if (typeof (a as any)?.track === 'function') (a as any).track(event, props);
   },
-  trackFAQUsage(event: string, props?: AnalyticsProps) {
-    track(event, props);
+  trackOnboardingStep(event: string, props?: Record<string, any>) {
+    if (typeof (a as any)?.track === 'function') (a as any).track(event, props);
   },
-  trackFamilyOnboardingStart(props?: AnalyticsProps) {
-    // Prefer vendor's bespoke method if present; otherwise generic event
-    if (vendor && typeof vendor.trackFamilyOnboardingStart === 'function') {
-      safeCall('trackFamilyOnboardingStart', props ?? {});
+  trackSecurityEvent(event: string, props?: Record<string, any>) {
+    if (typeof (a as any)?.track === 'function') (a as any).track(event, props);
+  },
+  trackFAQUsage(event: string, props?: Record<string, any>) {
+    if (typeof (a as any)?.track === 'function') (a as any).track(event, props);
+  },
+  trackShareClick(event?: string, props?: Record<string, any>) {
+    if (typeof (a as any)?.track === 'function') (a as any).track(event || 'share_click', props);
+  },
+  trackShareSuccess(event?: string, props?: Record<string, any>) {
+    if (typeof (a as any)?.track === 'function') (a as any).track(event || 'share_success', props);
+  },
+  trackFamilyTabView(event?: string, props?: Record<string, any>) {
+    if (typeof (a as any)?.track === 'function') (a as any).track(event || 'family_tab_view', props);
+  },
+  trackFamilyQuickAction(event?: string, props?: Record<string, any>) {
+    if (typeof (a as any)?.track === 'function') (a as any).track(event || 'family_quick_action', props);
+  },
+  trackToolCardOpen(event?: string, props?: Record<string, any>) {
+    if (typeof (a as any)?.track === 'function') (a as any).track(event || 'tool_card_open', props);
+  },
+  trackFamilySegmentSelection(event?: string, props?: Record<string, any>) {
+    if (typeof (a as any)?.track === 'function') (a as any).track(event || 'family_segment_selection', props);
+  },
+  trackFamilyGoalsSelection(event?: string, props?: Record<string, any>) {
+    if (typeof (a as any)?.track === 'function') (a as any).track(event || 'family_goals_selection', props);
+  },
+  trackFamilyOnboardingStart(props?: Record<string, any>) {
+    if (typeof (a as any)?.trackFamilyOnboardingStart === 'function') {
+      (a as any).trackFamilyOnboardingStart(props);
     } else {
-      track('family_onboarding_start', props);
+      analytics.track('family_onboarding_start', props);
     }
   },
-  trackFamilyOnboardingComplete(props?: AnalyticsProps) {
-    track('family_onboarding_complete', props);
+  trackFamilyOnboardingComplete(props?: Record<string, any>) {
+    if (typeof (a as any)?.track === 'function') (a as any).track('family_onboarding_complete', props);
   },
-  trackShareClick(props?: AnalyticsProps) {
-    track('share_click', props);
+  page(props?: Record<string, any>) {
+    if (typeof (a as any)?.page === 'function') (a as any).page(props);
   },
-  trackShareSuccess(props?: AnalyticsProps) {
-    track('share_success', props);
+  identify(userId?: string, traits?: Record<string, any>) {
+    if (typeof (a as any)?.identify === 'function') (a as any).identify(userId, traits);
   },
-  trackFamilyTabView(props?: AnalyticsProps) {
-    track('family_tab_view', props);
-  },
-  trackFamilyQuickAction(props?: AnalyticsProps) {
-    track('family_quick_action', props);
-  },
-  trackToolCardOpen(props?: AnalyticsProps) {
-    track('tool_card_open', props);
-  },
-  trackFamilySegmentSelection(props?: AnalyticsProps) {
-    track('family_segment_selection', props);
-  },
-  trackFamilyGoalsSelection(props?: AnalyticsProps) {
-    track('family_goals_selection', props);
-  },
+  group(groupId?: string, traits?: Record<string, any>) {
+    if (typeof (a as any)?.group === 'function') (a as any).group(groupId, traits);
+  }
 };
 
-// Additional helper functions
-export function trackExportClick(kind: 'csv'|'zip'|'pdf'|'json'|'other', props?: AnalyticsProps) {
-  track('export_click', { kind, ...(props || {}) });
+// Helper functions
+export function track(event: string, props?: Record<string, any>) {
+  analytics.track(event, props);
+}
+
+export function trackExportClick(kind: 'csv'|'zip'|'pdf'|'json'|'other', props?: Record<string, any>) {
+  analytics.track('export_click', { kind, ...(props || {}) });
+}
+
+export function emitReceipt(props?: Record<string, any>) {
+  analytics.track('receipt_emit', props || {});
 }
 
 export function initializeAnalytics(opts?: { writeKey?: string; endpoint?: string; userId?: string; traits?: Record<string, any> }) {
@@ -127,13 +101,8 @@ export function initializeAnalytics(opts?: { writeKey?: string; endpoint?: strin
   return w.analytics;
 }
 
-// For test suites that import default as FamilyOfficeAnalytics:
-const FamilyOfficeAnalytics = analytics;
+// Type alias for compatibility
+export type FamilyOfficeAnalytics = typeof analytics;
 
-// Export defaults and named the same way to satisfy both patterns:
-//   import analytics from '@/lib/analytics'
-//   import { analytics, track } from '@/lib/analytics'
-//   import FamilyOfficeAnalytics from '@/lib/analytics'
-//   import { FamilyOfficeAnalytics } from '@/lib/analytics'
-export default FamilyOfficeAnalytics;
-export { analytics, FamilyOfficeAnalytics, track };
+// Default export
+export default analytics;
