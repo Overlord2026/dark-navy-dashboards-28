@@ -1,6 +1,7 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import { Header } from './Header';
+import BrandHeader from './BrandHeader';
+import TopNav from './TopNav';
 import { AccordionSidebar } from '@/components/navigation/NewAccordionSidebar';
 import { ErrorBoundary } from '@/components/ui/error-boundary';
 import { useTheme } from "@/context/ThemeContext";
@@ -17,7 +18,8 @@ export function DashboardLayout() {
           {/* Header for desktop only - mobile header is in sidebar */}
           <div className="hidden lg:block">
             <ErrorBoundary>
-              <Header />
+              <BrandHeader />
+              <TopNav />
             </ErrorBoundary>
           </div>
           
