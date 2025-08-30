@@ -118,7 +118,8 @@ export function AdvisorToolsPage() {
       const shortfall = Math.max(0, neededCapital - futureValue);
 
       // Emit Decision-RDS receipt
-      await emitReceipt('Decision-RDS', {
+      await emitReceipt({
+        type: 'Decision-RDS',
         action: 'tool.roadmap.calculated',
         clientName: roadmapData.clientName,
         calculation: {
@@ -172,7 +173,8 @@ export function AdvisorToolsPage() {
       const annualFee = portfolioValue * feeRate;
 
       // Emit Decision-RDS receipt
-      await emitReceipt('Decision-RDS', {
+      await emitReceipt({
+        type: 'Decision-RDS',
         action: 'tool.proposal.generated',
         clientName: proposalData.clientName,
         proposal: {

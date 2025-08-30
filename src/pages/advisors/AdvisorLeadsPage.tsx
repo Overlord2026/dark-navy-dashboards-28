@@ -93,7 +93,8 @@ export function AdvisorLeadsPage() {
 
     try {
       // Emit Consent-RDS receipt for PTC consent
-      await emitReceipt('Consent-RDS', {
+      await emitReceipt({
+        type: 'Consent-RDS',
         action: 'lead.consent.captured',
         leadName: newLead.name,
         leadEmail: newLead.email,

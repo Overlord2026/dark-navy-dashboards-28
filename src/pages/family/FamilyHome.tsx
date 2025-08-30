@@ -174,7 +174,7 @@ export function FamilyHome() {
           text: 'Check out my family financial workspace',
           url: window.location.href
         });
-        analytics.trackShareSuccess({ type: 'family_workspace', method: 'native_share', segment: session.segment });
+        analytics.trackShareSuccess('share_success', { type: 'family_workspace', method: 'native_share', segment: session.segment });
       } catch (error) {
         // User cancelled share or error occurred
         console.log('Share cancelled or failed');
@@ -182,7 +182,7 @@ export function FamilyHome() {
     } else {
       // Fallback: copy to clipboard
       navigator.clipboard.writeText(window.location.href);
-      analytics.trackShareSuccess({ type: 'family_workspace', method: 'clipboard', segment: session.segment });
+      analytics.trackShareSuccess('share_success', { type: 'family_workspace', method: 'clipboard', segment: session.segment });
     }
   };
 

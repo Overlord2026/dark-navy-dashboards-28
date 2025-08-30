@@ -79,7 +79,8 @@ export function AdvisorMeetingsPage() {
     setIsRecording(true);
     
     try {
-      await emitReceipt('Call-RDS', {
+      await emitReceipt({
+        type: 'Call-RDS',
         action: 'call.record.start',
         timestamp: new Date().toISOString(),
         recordingType: 'live'
@@ -103,21 +104,24 @@ export function AdvisorMeetingsPage() {
     
     try {
       // Emit stop receipt
-      await emitReceipt('Call-RDS', {
+      await emitReceipt({
+        type: 'Call-RDS',
         action: 'call.record.stop',
         timestamp: new Date().toISOString(),
         duration: '45 minutes'
       });
 
       // Generate AI summary
-      await emitReceipt('Decision-RDS', {
+      await emitReceipt({
+        type: 'Decision-RDS',
         action: 'meeting.summary.generated',
         summaryType: 'AI_generated',
         clientName: 'Current Client'
       });
 
       // Vault the recording
-      await emitReceipt('Vault-RDS', {
+      await emitReceipt({
+        type: 'Vault-RDS',
         action: 'recording.vaulted',
         documentType: 'meeting_recording',
         keepSafe: true
@@ -148,7 +152,8 @@ export function AdvisorMeetingsPage() {
 
     try {
       // Generate AI summary from transcript
-      await emitReceipt('Decision-RDS', {
+      await emitReceipt({
+        type: 'Decision-RDS',
         action: 'meeting.summary.generated',
         summaryType: 'AI_from_transcript',
         clientName: importData.clientName,
@@ -156,7 +161,8 @@ export function AdvisorMeetingsPage() {
       });
 
       // Vault the transcript and summary
-      await emitReceipt('Vault-RDS', {
+      await emitReceipt({
+        type: 'Vault-RDS',
         action: 'transcript.vaulted',
         documentType: 'meeting_transcript',
         platform: importData.platform,
@@ -166,7 +172,8 @@ export function AdvisorMeetingsPage() {
       // Optional anchor batch
       const anchorEnabled = false; // Feature flag
       if (anchorEnabled) {
-        await emitReceipt('Anchor-RDS', {
+        await emitReceipt({
+          type: 'Anchor-RDS',
           action: 'meeting.anchored',
           meetingId: 'imported-' + Date.now(),
           batchProcess: true

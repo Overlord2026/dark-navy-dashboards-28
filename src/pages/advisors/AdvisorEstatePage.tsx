@@ -45,7 +45,7 @@ const AdvisorEstatePage = () => {
         created_at: new Date().toISOString()
       } as any);
       
-      analytics.track('advisor.estate.intake', { clientState: clientData.state });
+      analytics.trackEvent('advisor.estate.intake', { clientState: clientData.state });
       toast.success('Client intake completed');
     } catch (error) {
       toast.error('Failed to save intake data');
@@ -70,7 +70,7 @@ const AdvisorEstatePage = () => {
         } as any);
       }
       
-      analytics.track('advisor.estate.beneficiary.sync', { mismatches: foundMismatches.length });
+      analytics.trackEvent('advisor.estate.beneficiary.sync', { mismatches: foundMismatches.length });
       toast.success('Beneficiary analysis completed');
     } catch (error) {
       toast.error('Failed to sync beneficiaries');
@@ -90,7 +90,7 @@ const AdvisorEstatePage = () => {
         created_at: new Date().toISOString()
       } as any);
       
-      analytics.track('advisor.estate.survivorship', { state: clientData.state });
+      analytics.trackEvent('advisor.estate.survivorship', { state: clientData.state });
       toast.success('Survivorship analysis completed');
     } catch (error) {
       toast.error('Failed to run survivorship analysis');
@@ -113,7 +113,7 @@ const AdvisorEstatePage = () => {
         created_at: new Date().toISOString()
       } as any);
       
-      analytics.track('export.click', { kind: 'pdf', type: 'funding_letters' });
+      analytics.trackEvent('export.click', { kind: 'pdf', type: 'funding_letters' });
       toast.success('Funding letters generated and stored');
     } catch (error) {
       toast.error('Failed to generate funding letters');
@@ -132,7 +132,7 @@ const AdvisorEstatePage = () => {
         created_at: new Date().toISOString()
       } as any);
       
-      analytics.track('advisor.estate.referral', { state: clientData.state });
+      analytics.trackEvent('advisor.estate.referral', { state: clientData.state });
       toast.success('Attorney referral request sent');
     } catch (error) {
       toast.error('Failed to send attorney referral');

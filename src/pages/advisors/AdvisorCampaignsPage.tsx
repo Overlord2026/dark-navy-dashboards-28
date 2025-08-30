@@ -181,7 +181,8 @@ DISCLAIMER: Social Security benefits are subject to change. This analysis is for
 
     try {
       // Emit Comms-RDS receipt for each send
-      await emitReceipt('Comms-RDS', {
+      await emitReceipt({
+        type: 'Comms-RDS',
         action: 'campaign.email.sent',
         templateId: selectedTemplate.id,
         templateName: selectedTemplate.name,

@@ -149,7 +149,7 @@ export const FamilyOnboarding: React.FC = () => {
       return;
     }
     
-    analytics.trackFamilyGoalsSelection(selectedGoals);
+    analytics.trackFamilyGoalsSelection('family_goals_selection', { goals: selectedGoals });
     setCurrentStep(3);
   };
 
