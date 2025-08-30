@@ -52,6 +52,14 @@
   .gold-shadow {
     box-shadow: 0 0 0 1px rgba(212, 175, 55, 0.15), 0 2px 10px rgba(0,0,0,0.35);
   }
+
+  /* Accessible link focus on black */
+  a:focus-visible, button:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px #D4AF37, 0 0 0 4px #000000;
+  }
+
+  :root {
     
     /* BFO Color System - Exact Hex Conversions */
     /* Ink Black #0A0A0A (primary dark / button bg) */
