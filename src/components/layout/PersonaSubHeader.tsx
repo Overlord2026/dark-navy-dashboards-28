@@ -8,7 +8,7 @@ type Props = {
 
 export function PersonaSubHeader({ title, subtitle, right }: Props) {
   return (
-    <section className="sticky top-[var(--header-height,0)] z-40 w-full bg-bfo-black text-bfo-gold border-y border-bfo-gold">
+    <section className="sticky top-[var(--header-h)] z-40 bfo-subheader bfo-no-blur w-full">
       <div className="mx-auto max-w-7xl px-4 py-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="text-lg font-semibold">{title}</h2>

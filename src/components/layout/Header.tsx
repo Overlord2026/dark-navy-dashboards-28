@@ -5,7 +5,7 @@ import { BRAND } from '@/theme/brand';
 function Header() {
   return (
     <header
-      className="sticky top-0 z-50 w-full bg-bfo-black text-white border-b border-bfo-gold"
+      className="sticky top-0 z-50 bfo-header bfo-no-blur w-full"
       role="banner"
     >
       <div className="mx-auto max-w-7xl flex items-center justify-between px-4 py-2">

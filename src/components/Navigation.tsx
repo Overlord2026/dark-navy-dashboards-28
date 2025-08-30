@@ -7,7 +7,7 @@ export function Navigation() {
   const { userProfile } = useUser();
   
   return (
-    <nav className="sticky top-0 z-50 bg-brand-black gold-border gold-shadow backdrop-blur supports-[backdrop-filter]:bg-brand-black" role="banner">
+    <nav className="sticky top-0 z-50 bfo-header bfo-no-blur" role="banner">
       <div className="container flex h-14 items-center justify-between">
         <div className="mr-4 hidden md:flex">
           <Link to="/" className="mr-6 flex items-center space-x-2">
