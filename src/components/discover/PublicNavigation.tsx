@@ -90,7 +90,7 @@ export const PublicNavigation: React.FC = () => {
           {/* Logo */}
           <div className="flex items-center">
             <a href="/discover" className="text-xl font-bold bg-gradient-to-r from-gold to-accent bg-clip-text text-transparent">
-              Family Office Platform
+              <img src="/brand/bfo-logo-gold.svg" alt="Boutique Family Office" className="h-6 w-auto" />
             </a>
           </div>
 

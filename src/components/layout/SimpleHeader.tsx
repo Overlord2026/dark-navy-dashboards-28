@@ -1,6 +1,7 @@
 import React from 'react';
 
-// Neutralized — legacy placeholder that showed "Family Office Platform"
 export default function SimpleHeader() { 
-  return null;
+  return (
+    <img src="/brand/bfo-logo-gold.svg" alt="Boutique Family Office" className="h-6 w-auto" />
+  );
 }

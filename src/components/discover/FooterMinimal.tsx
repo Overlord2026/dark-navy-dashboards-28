@@ -40,7 +40,7 @@ export const FooterMinimal: React.FC = () => {
           <div className="lg:col-span-1">
             <div className="mb-4">
               <h3 className="text-xl font-bold bg-gradient-to-r from-gold to-accent bg-clip-text text-transparent">
-                Family Office Platform
+                <img src="/brand/bfo-logo-gold.svg" alt="Boutique Family Office" className="h-6 w-auto" />
               </h3>
             </div>
             <p className="text-white/80 text-sm leading-relaxed mb-4">
