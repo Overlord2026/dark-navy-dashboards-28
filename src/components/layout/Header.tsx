@@ -1,87 +1,43 @@
+import React from 'react';
+import { BRAND } from '@/theme/brand';
 
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useUser } from '@/context/UserContext';
-import { useRoleContext, RoleSwitcher } from '@/context/RoleContext';
-import { getRoleDisplayName } from '@/utils/roleHierarchy';
-import { AdminPortalLink } from '@/components/navigation/AdminPortalLink';
-import { ClientTierToggle } from '@/components/dev/ClientTierToggle';
-import { MegaMenu } from '@/components/navigation/MegaMenu';
-// Debug components removed for production
-import { Button } from '@/components/ui/button';
-import { LogOut, User, Home } from 'lucide-react';
-
-export function Header() {
-  const { userProfile, logout } = useUser();
-  const { getRoleDashboard } = useRoleContext();
-  
-  // If no user is logged in, show the mega menu
-  if (!userProfile) {
-    return <MegaMenu />;
-  }
-  
-  // Dev tools disabled for production security
-  const currentRole = userProfile?.role || 'client';
-  const currentTier = userProfile?.client_tier || 'basic';
-  const dashboardPath = getRoleDashboard();
-  
-  // QA mode disabled for production security
-  const isInQAMode = false;
-
+function Header() {
   return (
-    <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      {/* QA Mode Banner */}
-      {isInQAMode && (
-        <div className="bg-amber-500 text-amber-950 px-4 py-2 text-center text-sm font-medium">
-          🔧 QA MODE: Emulating {getRoleDisplayName(currentRole)} {currentRole === 'client' && currentTier === 'premium' ? 'Premium' : ''}
+    <header
+      className="sticky top-0 z-50 w-full bg-black text-white gold-border gold-shadow"
+      role="banner"
+      style={{ borderTopColor: BRAND.gold, borderBottomColor: BRAND.gold }}
+    >
+      <div className="mx-auto max-w-7xl flex items-center justify-between px-4 py-2">
+        {/* Left: Logo group */}
+        <div className="flex items-center gap-3">
+          {/* Keep the tree in gold; wordmark in white */}
+          <img
+            src="/assets/brand/bfo-tree-gold.svg"
+            alt="BFO tree"
+            className="h-6 w-auto"
+          />
+          <span className="font-semibold tracking-wide text-white">
+            Boutique Family Office
+          </span>
         </div>
-      )}
-      
-      <div className="container flex h-14 items-center justify-between px-4">
-        <div className="flex items-center space-x-4">
-          <Link to="/" className="flex items-center space-x-2">
-            <span className="font-bold">Family Office</span>
-          </Link>
-        </div>
-        
-        <div className="flex items-center space-x-4">
-          {userProfile && (
-            <>
-              {/* Dashboard link based on current role */}
-              <Button
-                variant="ghost"
-                size="sm"
-                asChild
-                className="text-foreground hover:text-foreground/80"
-              >
-                <Link to={dashboardPath}>
-                  <Home className="h-4 w-4 mr-2" />
-                  Dashboard
-                </Link>
-              </Button>
-              
-              {/* Dev tools disabled for production security */}
-              
-              <AdminPortalLink />
-              
-              <div className="flex items-center space-x-2 text-sm">
-                <User className="h-4 w-4" />
-                <span>{userProfile.name || userProfile.email}</span>
-                <span className="text-muted-foreground">
-                  ({getRoleDisplayName(currentRole)}{currentRole === 'client' && currentTier === 'premium' ? ' Premium' : ''})
-                </span>
-              </div>
-              
-              <Button variant="outline" size="sm" onClick={logout}>
-                <LogOut className="h-4 w-4 mr-2" />
-                Logout
-              </Button>
-            </>
-          )}
-        </div>
+
+        {/* Right: nav */}
+        <nav className="flex items-center gap-6">
+          <a className="text-white hover:text-[#D4AF37]" href="/discover">Discover</a>
+          <a className="text-white hover:text-[#D4AF37]" href="/solutions">Solutions</a>
+          <a className="text-white hover:text-[#D4AF37]" href="/personas/advisors">Advisors</a>
+          <a
+            className="rounded-md border border-[#D4AF37] px-3 py-1 text-[#D4AF37] hover:bg-[#D4AF37] hover:text-black transition-colors"
+            href="/book"
+          >
+            Book Demo
+          </a>
+        </nav>
       </div>
-      
-      {/* Debug components removed for production */}
     </header>
   );
 }
+
+export { Header };
+export default Header;
