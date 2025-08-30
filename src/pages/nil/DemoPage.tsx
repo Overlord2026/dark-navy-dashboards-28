@@ -4,12 +4,13 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { ExternalLink, RotateCcw, CheckCircle2, Users, FileText, DollarSign, Package, ShieldCheck } from 'lucide-react';
+import { ExternalLink, RotateCcw, CheckCircle2, Users, FileText, DollarSign, Package, ShieldCheck, Download } from 'lucide-react';
 import { loadNilFixtures, getNilSnapshot, clearNilFixtures, forceResetNilFixtures, getNilFixturesHealth } from '@/fixtures/fixtures.nil';
-import { listReceipts } from '@/features/receipts/record';
+import { listReceipts, getReceiptsByType } from '@/features/receipts/record';
 import { toast } from 'sonner';
 import { GoldButton, GoldOutlineButton } from '@/components/ui/brandButtons';
 import NilReceiptsStrip from '@/components/nil/NilReceiptsStrip';
+import JSZip from 'jszip';
 
 export default function NILDemoPage() {
   const navigate = useNavigate();
@@ -52,6 +53,85 @@ export default function NILDemoPage() {
 
   const goToMarketplace = () => {
     navigate('/nil');
+  };
+
+  const handleExportDemoPack = async () => {
+    try {
+      setLoading(true);
+      
+      const zip = new JSZip();
+      const allReceipts = listReceipts();
+      const last20 = allReceipts.slice(0, 20); // Get latest 20
+      
+      // 1. receipts.csv
+      const csvHeaders = 'id,type,action,result,ts,anchor_accepted\n';
+      const csvRows = last20.map(r => {
+        const id = r.id || '';
+        const type = r.type || '';
+        const action = r.action || '';
+        const result = r.result || r.status || '';
+        const ts = r.created_at || r.timestamp || '';
+        const anchorAccepted = r.anchor_ref?.accepted || r.anchor_ref?.status === 'anchored' ? 'true' : 'false';
+        return `"${id}","${type}","${action}","${result}","${ts}","${anchorAccepted}"`;
+      }).join('\n');
+      zip.file('receipts.csv', csvHeaders + csvRows);
+      
+      // 2. escrow_timeline.csv (if any Settlement-RDS receipts exist)
+      const escrowReceipts = getReceiptsByType('Settlement-RDS');
+      if (escrowReceipts.length > 0) {
+        const escrowHeaders = 'offer_id,escrow_state,timestamp,receipt_id\n';
+        const escrowRows = escrowReceipts.map(r => {
+          const offerId = r.offer_id || r.reasons?.[0] || '';
+          const state = r.escrow_state || '';
+          const ts = r.created_at || r.timestamp || '';
+          const id = r.id || '';
+          return `"${offerId}","${state}","${ts}","${id}"`;
+        }).join('\n');
+        zip.file('escrow_timeline.csv', escrowHeaders + escrowRows);
+      }
+      
+      // 3. README.txt
+      const readme = `NIL Demo Pack Export
+Generated: ${new Date().toISOString()}
+
+Contents:
+- receipts.csv: Last 20 NIL platform receipts (content-free)
+- escrow_timeline.csv: Escrow state changes (if any)
+- README.txt: This file
+
+About Receipts:
+All receipts are content-free and privacy-first. They contain no PII or sensitive data.
+Only action types, timestamps, and cryptographic anchors are recorded.
+
+Anchoring:
+Some receipts may be cryptographically anchored for tamper-evidence.
+Anchor acceptance indicated in "anchor_accepted" column.
+
+Questions? Contact support for more information about receipt verification.
+`;
+      zip.file('README.txt', readme);
+      
+      // Generate and download
+      const content = await zip.generateAsync({ type: 'blob' });
+      const url = URL.createObjectURL(content);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `nil-demo-pack-${new Date().toISOString().split('T')[0]}.zip`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
+      toast.success('Demo Pack Exported!', {
+        description: `Downloaded ZIP with ${last20.length} receipts and documentation`
+      });
+      
+    } catch (error) {
+      console.error('Export failed:', error);
+      toast.error('Export failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Analytics calculations
@@ -276,6 +356,17 @@ export default function NILDemoPage() {
               >
                 🔄 Force Reset (Clear Caches)
               </GoldOutlineButton>
+
+              <Separator className="bg-bfo-gold/30" />
+
+              <GoldButton 
+                onClick={handleExportDemoPack}
+                disabled={loading}
+                className="w-full"
+              >
+                <Download className="h-4 w-4 mr-2" />
+                {loading ? 'Exporting...' : 'Export Demo Pack'}
+              </GoldButton>
             </CardContent>
           </Card>
 
