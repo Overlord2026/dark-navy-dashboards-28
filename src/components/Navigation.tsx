@@ -11,9 +11,12 @@ export function Navigation() {
       <div className="container flex h-14 items-center justify-between">
         <div className="mr-4 hidden md:flex">
           <Link to="/" className="mr-6 flex items-center space-x-2">
-            <span className="hidden font-bold sm:inline-block text-brand-white">
-              Family Office Platform
-            </span>
+            <img
+              src="/brand/bfo_logo_gold.svg"
+              onError={(e) => (e.currentTarget.src = '/brand/bfo_logo_gold.png')}
+              alt="Boutique Family Office"
+              className="h-7 w-auto"
+            />
           </Link>
           <div className="flex items-center space-x-6">
             <Link to="/goals" className="text-sm font-medium text-brand-gold hover:text-brand-white transition-colors">
