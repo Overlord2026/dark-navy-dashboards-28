@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { ExternalLink, RotateCcw, CheckCircle2, Users, FileText, DollarSign, Package } from 'lucide-react';
 import { loadNilFixtures, getNilSnapshot, clearNilFixtures } from '@/fixtures/fixtures.nil';
+import { listReceipts } from '@/features/receipts/record';
 import { toast } from 'sonner';
 import { GoldButton, GoldOutlineButton } from '@/components/ui/brandButtons';
 import NilReceiptsStrip from '@/components/nil/NilReceiptsStrip';
@@ -41,6 +42,25 @@ export default function NILDemoPage() {
     navigate('/nil');
   };
 
+  // Analytics calculations
+  const getAnalytics = () => {
+    const receipts = listReceipts();
+    const anchoredCount = receipts.filter(r => r.anchor_ref?.accepted || r.anchor_ref?.status === 'anchored').length;
+    const totalReceipts = receipts.length;
+    
+    return {
+      invitesPending: snapshot?.counts.invites || 0,
+      modulesCompleted: snapshot?.counts.education || 0,
+      offersCreated: snapshot?.counts.offers || 0,
+      catalogClicks: snapshot?.counts.catalog || 0,
+      receiptsTotal: totalReceipts,
+      receiptsAnchored: anchoredCount,
+      healthyStatus: totalReceipts >= 3 && anchoredCount >= 1
+    };
+  };
+
+  const analytics = getAnalytics();
+
   return (
     <div className="min-h-screen bg-bfo-black text-white">
       <div className="max-w-4xl mx-auto space-y-6 py-8 px-4">
@@ -57,6 +77,98 @@ export default function NILDemoPage() {
             </Badge>
           )}
         </div>
+
+        {/* Analytics Panel */}
+        {snapshot && (
+          <Card className="bg-[#24313d] border-bfo-gold/40 rounded-xl">
+            <CardHeader className="border-b border-bfo-gold/30">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-white font-semibold">NIL Analytics Dashboard</CardTitle>
+                <Badge 
+                  className={`${
+                    analytics.healthyStatus 
+                      ? 'bg-green-500/20 text-green-400 border-green-500/30' 
+                      : 'bg-gray-500/20 text-gray-400 border-gray-500/30'
+                  }`}
+                >
+                  {analytics.healthyStatus ? 'Healthy ✓' : 'Initializing...'}
+                </Badge>
+              </div>
+              <CardDescription className="text-white/70">
+                Investor-friendly metrics (content-free, privacy-first)
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <div className="p-4 rounded-lg bg-bfo-black/30 border border-bfo-gold/20">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-2xl font-bold text-bfo-gold">{analytics.invitesPending}</p>
+                      <p className="text-sm text-white/60">Invites Sent</p>
+                    </div>
+                    <Users className="h-6 w-6 text-bfo-gold/60" />
+                  </div>
+                </div>
+                
+                <div className="p-4 rounded-lg bg-bfo-black/30 border border-bfo-gold/20">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-2xl font-bold text-bfo-gold">{analytics.modulesCompleted}</p>
+                      <p className="text-sm text-white/60">Modules Done</p>
+                    </div>
+                    <CheckCircle2 className="h-6 w-6 text-bfo-gold/60" />
+                  </div>
+                </div>
+                
+                <div className="p-4 rounded-lg bg-bfo-black/30 border border-bfo-gold/20">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-2xl font-bold text-bfo-gold">{analytics.offersCreated}</p>
+                      <p className="text-sm text-white/60">Offers Created</p>
+                    </div>
+                    <DollarSign className="h-6 w-6 text-bfo-gold/60" />
+                  </div>
+                </div>
+                
+                <div className="p-4 rounded-lg bg-bfo-black/30 border border-bfo-gold/20">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-2xl font-bold text-bfo-gold">{analytics.catalogClicks}</p>
+                      <p className="text-sm text-white/60">Catalog Views</p>
+                    </div>
+                    <Package className="h-6 w-6 text-bfo-gold/60" />
+                  </div>
+                </div>
+                
+                <div className="p-4 rounded-lg bg-bfo-black/30 border border-bfo-gold/20">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-2xl font-bold text-bfo-gold">{analytics.receiptsTotal}</p>
+                      <p className="text-sm text-white/60">Receipts Total</p>
+                    </div>
+                    <FileText className="h-6 w-6 text-bfo-gold/60" />
+                  </div>
+                </div>
+                
+                <div className="p-4 rounded-lg bg-bfo-black/30 border border-bfo-gold/20">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-2xl font-bold text-green-400">{analytics.receiptsAnchored}</p>
+                      <p className="text-sm text-white/60">Anchored ✓</p>
+                    </div>
+                    <CheckCircle2 className="h-6 w-6 text-green-400/60" />
+                  </div>
+                </div>
+              </div>
+              
+              <div className="mt-4 p-3 rounded-lg bg-bfo-gold/10 border border-bfo-gold/30">
+                <p className="text-xs text-bfo-gold/80">
+                  🛡️ Privacy-first: All metrics are content-free. No PII tracked or stored.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         <div className="grid gap-6 md:grid-cols-2">
           {/* Demo Reset Controls */}
