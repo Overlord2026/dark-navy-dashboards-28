@@ -14,6 +14,7 @@ import { ConsentRDS } from '@/features/receipts/types';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import { getFlag } from '@/lib/flags';
+import { DemoTipsPopover } from '@/components/nil/DemoTipsPopover';
 
 export default function MarketplacePage() {
   const navigate = useNavigate();
@@ -279,6 +280,8 @@ export default function MarketplacePage() {
             </div>
           </div>
         </div>
+        
+        <DemoTipsPopover />
       </div>
     </>
   );

@@ -148,6 +148,7 @@ import AdvisorTools from '@/pages/advisors/AdvisorTools';
 import NILAthleteHome from '@/pages/nil/NILAthleteHome';
 import MarketplacePage from '@/pages/nil/Marketplace';
 import NILIndex from '@/pages/nil/NILIndex';
+import NILDemoPage from '@/pages/nil/DemoPage';
 
 // Crypto Components
 const CryptoDashboard = React.lazy(() => import('@/pages/crypto/CryptoDashboard'));
@@ -182,6 +183,26 @@ function App() {
     );
     
     return () => subscription.unsubscribe();
+  }, []);
+
+  // Query param demo auto-loading
+  React.useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const demo = params.get('demo');
+    
+    if (demo === 'nil_coach' || demo === 'nil_mom') {
+      const profile = demo === 'nil_coach' ? 'coach' : 'mom';
+      console.log('Auto-loading NIL demo for:', profile);
+      
+      // Dynamic import to avoid circular dependency
+      import('@/fixtures/fixtures.nil').then(({ loadNilFixtures }) => {
+        loadNilFixtures(profile).then(() => {
+          // Remove query param and redirect to NIL
+          window.history.replaceState({}, '', '/nil');
+          window.location.href = '/nil';
+        });
+      });
+    }
   }, []);
 
   return (
@@ -223,6 +244,7 @@ function App() {
             {/* NIL Public Pages */}
             {getFlag('NIL_PUBLIC_ENABLED') && <Route path="/nil" element={<MarketplacePage />} />}
             {getFlag('NIL_PUBLIC_ENABLED') && <Route path="/nil/index" element={<NILIndex />} />}
+            {getFlag('NIL_PUBLIC_ENABLED') && <Route path="/nil/demo" element={<NILDemoPage />} />}
             
             {/* New Home Pages */}
             <Route path="/advisor/home" element={<AdvisorHome />} />
