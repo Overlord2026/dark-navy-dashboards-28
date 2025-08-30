@@ -40,7 +40,7 @@ const Discover: React.FC = () => {
       <PublicNavigation />
       
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-navy via-navy-light to-navy/90 pt-20 pb-16">
+      <section className="relative overflow-hidden bg-[var(--bfo-black)] text-white pt-20 pb-16">
         <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />
         <div className="container mx-auto px-6 relative">
           <div className="text-center max-w-4xl mx-auto space-y-8">

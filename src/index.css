@@ -288,17 +288,26 @@
     --header-h:  56px;
   }
 
-  /* Hard-kill any accidental translucency/blur */
+  /* Kill any translucency/blur everywhere the headers might appear */
   .bfo-no-blur {
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
   }
 
-  /* Premium skins */
+  /* Opaque premium skins */
   .bfo-header {
+    position: fixed; /* ensure fixed even if a wrapper adds sticky */
     background: var(--bfo-black) !important;
     border-bottom: 1px solid var(--bfo-gold) !important;
     color: #fff;
+  }
+
+  /* Nuke pseudo-element overlays (common "glass" technique) */
+  .bfo-header::before, .bfo-header::after,
+  .bfo-subheader::before, .bfo-subheader::after,
+  header::before, header::after {
+    content: none !important;
+    display: none !important;
   }
 
   .bfo-subheader {
@@ -308,9 +317,14 @@
     color: var(--bfo-gold);
   }
 
-  /* Ensure page body behind the hero is also pure black */
+  /* Body stays black so hero has a true black starter plane */
   html, body { 
     background-color: var(--bfo-black); 
+  }
+
+  /* Optional: account for iPhone safe area without changing height */
+  @supports(padding: env(safe-area-inset-top)) {
+    .bfo-header { padding-top: env(safe-area-inset-top); }
   }
 
   /* Brand Utility Classes */
