@@ -2,6 +2,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { VoiceDrawer } from '@/components/voice/VoiceDrawer';
+import { PersonaSubHeader } from '@/components/layout/PersonaSubHeader';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 
@@ -27,13 +28,12 @@ export default function Advisors() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-primary/5">
+      <PersonaSubHeader 
+        title="Advisor Control Center"
+        subtitle="Streamline your practice with advanced tools and client management"
+        right={<VoiceDrawer triggerLabel="Voice AI" persona="advisor" />}
+      />
       <div className="container mx-auto px-4 py-8">
-        {/* Header with Voice Drawer */}
-        <div className="relative mb-8">
-          <div className="absolute top-0 right-0">
-            <VoiceDrawer triggerLabel="Voice AI" persona="advisor" />
-          </div>
-        </div>
 
         {/* Hero Section */}
         <div className="text-center mb-12">

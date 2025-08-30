@@ -1,6 +1,7 @@
 import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DashboardHeader } from '@/components/ui/DashboardHeader';
+import { PersonaSubHeader } from '@/components/layout/PersonaSubHeader';
 import { CPAOnboardingModule } from '@/components/cpa/CPAOnboardingModule';
 import { ClientOrganizerModule } from '@/components/cpa/ClientOrganizerModule';
 import { CommunicationsDashboard } from '@/components/cpa/CommunicationsDashboard';
@@ -21,11 +22,16 @@ import { PostReturnEngagement } from '@/components/cpa/PostReturnEngagement';
 
 export default function CPADashboard() {
   return (
-    <div className="space-y-6 p-6">
-      <DashboardHeader 
-        heading="CPA Practice Management Suite"
-        text="Complete practice management platform with onboarding, client communication, document management, and analytics"
+    <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-primary/5">
+      <PersonaSubHeader 
+        title="CPA Console"
+        subtitle="Complete practice management suite for modern CPAs"
       />
+      <div className="space-y-6 p-6">
+        <DashboardHeader 
+          heading="CPA Practice Management Suite"
+          text="Complete practice management platform with onboarding, client communication, document management, and analytics"
+        />
 
       <Tabs defaultValue="setup" className="space-y-6">
         <TabsList className="grid w-full grid-cols-12 text-xs">
@@ -95,6 +101,7 @@ export default function CPADashboard() {
           <PostReturnEngagement />
         </TabsContent>
       </Tabs>
+      </div>
     </div>
   );
 }

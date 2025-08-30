@@ -9,6 +9,7 @@ import { CATALOG_TOOLS } from '@/data/catalogTools';
 import { getDemoById } from '@/config/demoConfig';
 import { DemoLauncher } from '@/components/discover/DemoLauncher';
 import ShareButton from '@/components/ui/ShareButton';
+import { PageHero } from '@/components/layout/PageHero';
 import { PUBLIC_CONFIG } from '@/config/publicConfig';
 
 const IconMap = {
@@ -70,19 +71,11 @@ export default function Solutions() {
         description="Complete financial solutions for professionals and families. Insurance, annuities, investments, tax planning, estate management, and compliance tools."
         keywords={['financial solutions', 'insurance tools', 'investment platform', 'tax planning', 'estate planning', 'annuities']}
       />
-      {/* Hero Section */}
-      <section className="py-16 bg-gradient-to-br from-primary/5 via-background to-secondary/5">
-        <div className="container mx-auto px-4">
-          <div className="text-center max-w-3xl mx-auto">
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">
-              Complete Solutions for Financial Professionals
-            </h1>
-            <p className="text-xl text-muted-foreground mb-8">
-              Integrated tools and workflows for insurance, investments, tax planning, and more—all in one platform.
-            </p>
-          </div>
-        </div>
-      </section>
+      
+      <PageHero
+        title="Solutions"
+        subtitle="Investments, Tax, Estate, Insurance, Healthcare, and NIL — integrated with policy guardrails."
+      />
 
       {/* Solutions Grid */}
       <section className="py-16">

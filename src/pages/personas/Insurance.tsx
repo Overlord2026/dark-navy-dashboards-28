@@ -2,6 +2,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { VoiceDrawer } from '@/components/voice/VoiceDrawer';
+import { PersonaSubHeader } from '@/components/layout/PersonaSubHeader';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 
@@ -27,17 +28,12 @@ export default function Insurance() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-primary/5">
+      <PersonaSubHeader 
+        title="Insurance Hub"
+        subtitle="Accelerate underwriting and streamline claims processing"
+        right={<VoiceDrawer triggerLabel="🎙️ Ask AI" persona="insurance" endpoint="meeting-summary" />}
+      />
       <div className="container mx-auto px-4 py-8">
-        {/* Header with Voice Drawer */}
-        <div className="relative mb-8">
-          <div className="absolute top-0 right-0">
-            <VoiceDrawer 
-              triggerLabel="🎙️ Ask AI" 
-              persona="insurance" 
-              endpoint="meeting-summary"
-            />
-          </div>
-        </div>
 
         {/* Hero Section */}
         <div className="text-center mb-12">

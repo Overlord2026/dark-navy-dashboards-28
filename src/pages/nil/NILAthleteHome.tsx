@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { PersonaSubHeader } from '@/components/layout/PersonaSubHeader';
 import { ToolGate } from '@/components/tools/ToolGate';
 import { toast } from '@/hooks/use-toast';
 import { EmptyReceiptsState } from '@/components/ui/empty-states';
@@ -178,21 +179,10 @@ export default function NILAthleteHome() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/5">
-      <div className="container mx-auto px-4 py-6 space-y-6">
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
-              <Trophy className="w-6 h-6 text-primary" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold">NIL Athlete Hub</h1>
-              <Badge variant="outline" className="mt-1">
-                Name, Image & Likeness
-              </Badge>
-            </div>
-          </div>
-          
+      <PersonaSubHeader 
+        title="NIL Athlete Hub"
+        subtitle="Navigate name, image & likeness deals with confidence"
+        right={
           <div className="flex items-center gap-2">
             <Button
               variant="outline"
@@ -213,7 +203,9 @@ export default function NILAthleteHome() {
               Share
             </Button>
           </div>
-        </div>
+        }
+      />
+      <div className="container mx-auto px-4 py-6 space-y-6">
 
         {/* Quick Actions */}
         <Card>
