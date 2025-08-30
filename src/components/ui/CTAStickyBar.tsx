@@ -44,8 +44,8 @@ export default function CTAStickyBar({ className }: CTAStickyBarProps) {
   };
 
   return (
-    <div className={`fixed bottom-0 left-0 right-0 z-50 ${className}`}>
-      <div className="bg-brand-black text-brand-gold shadow-lg border-t border-brand-gold">
+    <div className={`fixed bottom-0 left-0 right-0 z-50 ${className}`} role="complementary">
+      <div className="bg-brand-black text-brand-gold gold-border gold-shadow">
         <div className="container mx-auto px-4 py-3">
           <div className="flex items-center justify-between gap-4">
             
