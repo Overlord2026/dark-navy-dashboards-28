@@ -43,7 +43,7 @@ export default function RMDCheckTool() {
     setLastReceiptId(receipt.id);
 
     // Analytics
-    analytics.track('family.tool.submit', { 
+    analytics.trackEvent('family.tool.submit', { 
       tool: 'rmd-check',
       age: formData.age,
       accountType: formData.accountType

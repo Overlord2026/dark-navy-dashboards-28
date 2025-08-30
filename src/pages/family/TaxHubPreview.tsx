@@ -24,7 +24,7 @@ export default function TaxHubPreview() {
       created_at: new Date().toISOString()
     });
 
-    analytics.track('family.tool.demo', { 
+    analytics.trackEvent('family.tool.demo', { 
       tool: 'taxhub-preview',
       feature
     });

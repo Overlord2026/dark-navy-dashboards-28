@@ -39,7 +39,7 @@ export default function RothLadderTool() {
     setLastReceiptId(receipt.id);
 
     // Analytics
-    analytics.track('family.tool.submit', { 
+    analytics.trackEvent('family.tool.submit', { 
       tool: 'roth-ladder',
       currentAge: formData.currentAge,
       retirementAge: formData.retirementAge

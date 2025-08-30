@@ -153,7 +153,7 @@ export const FamilyHomePage: React.FC = () => {
     setRecentReceipts(receipts);
 
     // Track page view
-    analytics.track('family.home.viewed');
+    analytics.trackEvent('family.home.viewed');
   }, []);
 
   const quickActions: QuickAction[] = [
@@ -215,7 +215,7 @@ export const FamilyHomePage: React.FC = () => {
   ];
 
   const handleStartDemo = () => {
-    analytics.track('demo.e2e.start', { persona: 'family', type: 'retiree' });
+    analytics.trackEvent('demo.e2e.start', { persona: 'family', type: 'retiree' });
     toast.success('Starting 90-second family demo...');
     
     // In a real implementation, this would open the demo overlay

@@ -85,7 +85,7 @@ export default function FamilyOnboarding() {
     setLoading(true);
     
     try {
-      analytics.trackFamilyGoalsSelection('family_goals_selection', { goals: state.goals, segment: state.segment });
+      analytics.trackEvent('family_goals_selection', { goals: state.goals, segment: state.segment });
 
       // Simulate API call to create workspace
       await new Promise(resolve => setTimeout(resolve, 1000));
