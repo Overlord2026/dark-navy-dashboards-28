@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { getReceiptsCount } from '@/features/receipts/record';
 import { GoldButton, GoldOutlineButton } from '@/components/ui/brandButtons';
+import ComplianceRibbon from './ComplianceRibbon';
 
 interface NILLayoutProps {
   children: ReactNode;
@@ -96,6 +97,8 @@ export default function NILLayout({ children, title, description }: NILLayoutPro
           </main>
         </div>
       </div>
+      
+      <ComplianceRibbon />
     </div>
   );
 }
