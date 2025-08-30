@@ -348,7 +348,7 @@ export default function ProOnboarding() {
   const progress = (currentStep / 3) * 100;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-background/80 p-4">
+    <div className="min-h-screen bg-bfo-black p-4">
       <div className="max-w-4xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

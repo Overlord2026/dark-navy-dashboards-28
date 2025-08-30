@@ -370,7 +370,7 @@ export default function PropertyManagerOnboarding() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-background/80 p-4">
+    <div className="min-h-screen bg-bfo-black p-4">
       <div className="max-w-4xl mx-auto">
         {/* Progress Header */}
         <div className="mb-8">

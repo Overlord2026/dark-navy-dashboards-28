@@ -162,7 +162,7 @@ export default function LinkedInImport() {
 
   if (loading && !linkedInProfile) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-background to-background/80 flex items-center justify-center">
+      <div className="min-h-screen bg-bfo-black flex items-center justify-center">
         <Card className="w-full max-w-md">
           <CardContent className="p-8 text-center">
             <LinkedinIcon className="w-16 h-16 mx-auto mb-4 text-blue-600" />
@@ -176,7 +176,7 @@ export default function LinkedInImport() {
 
   if (!linkedInProfile) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-background to-background/80 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-bfo-black flex items-center justify-center p-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -240,7 +240,7 @@ export default function LinkedInImport() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-background/80 p-4">
+    <div className="min-h-screen bg-bfo-black p-4">
       <div className="max-w-4xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

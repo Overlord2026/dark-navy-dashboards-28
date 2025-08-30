@@ -204,7 +204,7 @@ export const PersonalizationSettings: React.FC = () => {
     return (
       <div className={`relative ${!hasAccess ? 'opacity-60' : ''}`}>
         {!hasAccess && (
-          <div className="absolute inset-0 bg-gradient-to-r from-background/50 to-background/80 backdrop-blur-sm rounded-lg z-10 flex items-center justify-center">
+          <div className="absolute inset-0 bg-bfo-black/90 backdrop-blur-sm rounded-lg z-10 flex items-center justify-center">
             <div className="text-center space-y-2">
               <Crown className="h-6 w-6 text-amber-500 mx-auto" />
               <p className="text-sm font-medium">Premium Feature</p>

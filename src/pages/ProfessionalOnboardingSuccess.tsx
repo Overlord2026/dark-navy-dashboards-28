@@ -37,7 +37,7 @@ export default function ProfessionalOnboardingSuccess() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-background/80 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-bfo-black flex items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
