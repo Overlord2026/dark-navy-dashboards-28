@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { GoldButton, GoldOutlineButton } from '@/components/ui/brandButtons';
 import { Badge } from '@/components/ui/badge';
 import { useNavigate } from 'react-router-dom';
 import { Play, Users, TrendingUp, Calculator, Shield, Receipt, FileText, Heart, CheckCircle, Award } from 'lucide-react';
@@ -64,10 +65,10 @@ const SolutionsPage: React.FC = () => {
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 {PUBLIC_CONFIG.DEMOS_ENABLED && (
-                  <Button size="lg" onClick={handleDemo} className="flex items-center gap-2">
+                  <GoldButton onClick={handleDemo} className="flex items-center gap-2 text-lg px-8 py-3">
                     <Play className="w-5 h-5" />
                     See 60-Second Demo
-                  </Button>
+                  </GoldButton>
                 )}
                 
                 <ShareButton
@@ -137,9 +138,9 @@ const SolutionsPage: React.FC = () => {
                           </div>
                         ))}
                       </div>
-                      <Button variant="outline" className="w-full">
+                      <GoldOutlineButton className="w-full">
                         Explore {category.title}
-                      </Button>
+                      </GoldOutlineButton>
                     </CardContent>
                   </Card>
                 );

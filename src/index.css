@@ -39,6 +39,11 @@
     
     /* White #FFFFFF for contrast */
     --brand-white: 0 0% 100%;
+    
+    /* Brand CSS Classes */
+    --brand-black-raw: #000000;
+    --brand-gold-raw:  #D4AF37;
+    --brand-white-raw: #FFFFFF;
   }
 
   /* Premium gold border for branded bars */
@@ -772,7 +777,15 @@
   :root {
     --border: 0 0% 30%;
     --muted: 0 0% 95%;
-  }
+}
+
+/* Brand CSS Classes for easy theming */
+.bg-brand-black { background-color: var(--brand-black-raw); }
+.text-brand-gold { color: var(--brand-gold-raw); }
+.border-brand-gold { border-color: var(--brand-gold-raw); }
+.bg-brand-gold { background-color: var(--brand-gold-raw); }
+.text-brand-black { color: var(--brand-black-raw); }
+.text-brand-white { color: var(--brand-white-raw); }
 }
 
 /* Reduced Motion */

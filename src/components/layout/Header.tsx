@@ -1,4 +1,5 @@
 import React from 'react';
+import { GoldOutlineLinkButton } from '@/components/ui/brandButtons';
 import { BRAND } from '@/theme/brand';
 
 function Header() {
@@ -27,12 +28,9 @@ function Header() {
           <a className="text-white hover:text-[#D4AF37]" href="/discover">Discover</a>
           <a className="text-white hover:text-[#D4AF37]" href="/solutions">Solutions</a>
           <a className="text-white hover:text-[#D4AF37]" href="/personas/advisors">Advisors</a>
-          <a
-            className="rounded-md border border-[#D4AF37] px-3 py-1 text-[#D4AF37] hover:bg-[#D4AF37] hover:text-black transition-colors"
-            href="/book"
-          >
+          <GoldOutlineLinkButton href="/book">
             Book Demo
-          </a>
+          </GoldOutlineLinkButton>
         </nav>
       </div>
     </header>
