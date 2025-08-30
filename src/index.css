@@ -39,6 +39,19 @@
     
     /* White #FFFFFF for contrast */
     --brand-white: 0 0% 100%;
+  }
+
+  /* Premium gold border for branded bars */
+  .gold-border {
+    border-color: #D4AF37 !important;
+    border-width: 1px !important;
+    border-style: solid !important;
+  }
+
+  /* Optional: subtle glow on black */
+  .gold-shadow {
+    box-shadow: 0 0 0 1px rgba(212, 175, 55, 0.15), 0 2px 10px rgba(0,0,0,0.35);
+  }
     
     /* BFO Color System - Exact Hex Conversions */
     /* Ink Black #0A0A0A (primary dark / button bg) */
