@@ -1,20 +1,30 @@
 import { Link } from 'react-router-dom';
+import { getNilFixturesHealth } from '@/fixtures/fixtures.nil';
 import { listReceipts } from '@/features/receipts/record';
 import { Check } from 'lucide-react';
 
 export default function NilReceiptsStrip() {
-  // Get last 5 NIL-related receipts
-  const allReceipts = listReceipts();
-  const nilReceipts = allReceipts
-    .filter(receipt => 
-      receipt.context === 'NIL' || 
-      receipt.type?.includes('NIL') ||
-      receipt.action === 'education' ||
-      receipt.action === 'offer_create' ||
-      receipt.action === 'invite_create' ||
-      receipt.action === 'catalog_view'
-    )
-    .slice(0, 5);
+  // Get health status and receipts safely
+  const health = getNilFixturesHealth();
+  
+  // Get last 5 NIL-related receipts with fallback handling
+  let nilReceipts = [];
+  try {
+    const allReceipts = listReceipts();
+    nilReceipts = allReceipts
+      .filter(receipt => 
+        receipt.context === 'NIL' || 
+        receipt.type?.includes('NIL') ||
+        receipt.action === 'education' ||
+        receipt.action === 'offer_create' ||
+        receipt.action === 'invite_create' ||
+        receipt.action === 'catalog_view'
+      )
+      .slice(0, 5);
+  } catch (error) {
+    // Use fallback receipts from health check if needed
+    nilReceipts = health.dataLoaded?.receipts ? [] : [];
+  }
 
   if (nilReceipts.length === 0) {
     return null;
@@ -25,7 +35,12 @@ export default function NilReceiptsStrip() {
       <div className="container mx-auto px-4 py-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4 overflow-x-auto">
-            <span className="text-xs text-white/60 whitespace-nowrap">Trust Rails:</span>
+            <div className="flex items-center space-x-2">
+              <span className="text-xs text-white/60 whitespace-nowrap">Trust Rails:</span>
+              {health.isUsingFallback && (
+                <span className="text-xs text-orange-400/80 whitespace-nowrap">(Fallback)</span>
+              )}
+            </div>
             {nilReceipts.map((receipt, index) => (
               <Link
                 key={receipt.id || index}

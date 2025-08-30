@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { ExternalLink, RotateCcw, CheckCircle2, Users, FileText, DollarSign, Package } from 'lucide-react';
-import { loadNilFixtures, getNilSnapshot, clearNilFixtures } from '@/fixtures/fixtures.nil';
+import { loadNilFixtures, getNilSnapshot, clearNilFixtures, forceResetNilFixtures, getNilFixturesHealth } from '@/fixtures/fixtures.nil';
 import { listReceipts } from '@/features/receipts/record';
 import { toast } from 'sonner';
 import { GoldButton, GoldOutlineButton } from '@/components/ui/brandButtons';
@@ -15,12 +15,14 @@ export default function NILDemoPage() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [snapshot, setSnapshot] = useState(getNilSnapshot());
+  const [health, setHealth] = useState(getNilFixturesHealth());
 
   const handleResetDemo = async (profile: 'coach' | 'mom') => {
     setLoading(true);
     try {
       const result = await loadNilFixtures(profile);
       setSnapshot(result);
+      setHealth(getNilFixturesHealth());
       toast.success(`NIL Demo loaded for ${profile} persona`, {
         description: `Created ${result.counts.invites} invites, ${result.counts.receipts} receipts, and ${result.counts.education} education modules`
       });
@@ -35,7 +37,17 @@ export default function NILDemoPage() {
   const handleClearDemo = () => {
     clearNilFixtures();
     setSnapshot(null);
+    setHealth(getNilFixturesHealth());
     toast.success('NIL Demo cleared');
+  };
+
+  const handleForceReset = () => {
+    forceResetNilFixtures();
+    setSnapshot(null);
+    setHealth(getNilFixturesHealth());
+    toast.success('NIL Demo force reset completed', {
+      description: 'All caches cleared and state reset'
+    });
   };
 
   const goToMarketplace = () => {
@@ -71,11 +83,23 @@ export default function NILDemoPage() {
               Load sample data for NIL demonstrations and testing
             </p>
           </div>
-          {snapshot && (
-            <Badge variant="outline" className="px-3 py-1 border-bfo-gold/40 text-bfo-gold">
-              Last loaded: {new Date(snapshot.lastLoaded).toLocaleString()}
-            </Badge>
-          )}
+          <div className="flex items-center space-x-2">
+            {health.isUsingFallback && (
+              <Badge variant="outline" className="border-orange-500/40 text-orange-400">
+                Fallback Mode
+              </Badge>
+            )}
+            {health.skipAnchoring && (
+              <Badge variant="outline" className="border-blue-500/40 text-blue-400">
+                No Anchoring
+              </Badge>
+            )}
+            {snapshot && (
+              <Badge variant="outline" className="px-3 py-1 border-bfo-gold/40 text-bfo-gold">
+                Last loaded: {new Date(snapshot.lastLoaded).toLocaleString()}
+              </Badge>
+            )}
+          </div>
         </div>
 
         {/* Analytics Panel */}
@@ -206,6 +230,13 @@ export default function NILDemoPage() {
                 className="w-full"
               >
                 Clear NIL Demo
+              </GoldOutlineButton>
+
+              <GoldOutlineButton 
+                onClick={handleForceReset}
+                className="w-full border-orange-500/40 text-orange-400 hover:bg-orange-500/10"
+              >
+                🔄 Force Reset (Clear Caches)
               </GoldOutlineButton>
             </CardContent>
           </Card>
