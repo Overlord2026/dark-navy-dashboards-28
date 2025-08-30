@@ -15,6 +15,7 @@ import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import { getFlag } from '@/lib/flags';
 import { DemoTipsPopover } from '@/components/nil/DemoTipsPopover';
+import { GoldButton, GoldOutlineButton } from '@/components/ui/brandButtons';
 
 export default function MarketplacePage() {
   const navigate = useNavigate();
@@ -138,67 +139,70 @@ export default function MarketplacePage() {
         <meta property="og:url" content={window.location.href} />
       </Helmet>
 
-      <div className="min-h-screen bg-background relative">
+      <div className="min-h-screen bg-bfo-black text-white relative">
         <div className="container mx-auto py-8 pb-24">
           <div className="mb-8">
             <div className="flex items-center gap-3 mb-2">
-              <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
-                <Award className="w-5 h-5 text-primary" />
+              <div className="w-8 h-8 bg-bfo-gold/20 rounded-lg flex items-center justify-center">
+                <Award className="w-5 h-5 text-bfo-gold" />
               </div>
-              <h1 className="text-3xl font-bold">NIL Marketplace</h1>
+              <h1 className="text-3xl font-bold text-white">NIL Marketplace</h1>
             </div>
-            <p className="text-muted-foreground">
+            <p className="text-white/70">
               Collaborate with advisors, CPAs, and attorneys on NIL contracts
             </p>
           </div>
 
           <div className="grid gap-6">
             {/* Invite Section */}
-            <Card>
-              <CardHeader>
+            <Card className="bg-[#24313d] border-bfo-gold/40 rounded-xl">
+              <CardHeader className="border-b border-bfo-gold/30">
                 <div className="flex items-center justify-between">
                   <div>
-                    <CardTitle className="flex items-center gap-2">
-                      <UserPlus className="h-5 w-5" />
+                    <CardTitle className="flex items-center gap-2 text-white font-semibold">
+                      <UserPlus className="h-5 w-5 text-bfo-gold" />
                       Professional Invites
                     </CardTitle>
-                    <CardDescription>Invite professionals to collaborate on your NIL deals</CardDescription>
+                    <CardDescription className="text-white/70">
+                      Invite professionals to collaborate on your NIL deals
+                    </CardDescription>
                   </div>
-                  <Button onClick={() => setShowInviteForm(true)}>
+                  <GoldButton onClick={() => setShowInviteForm(true)}>
                     Send Invite
-                  </Button>
+                  </GoldButton>
                 </div>
               </CardHeader>
               <CardContent>
                 {showInviteForm && (
-                  <div className="mb-6 p-4 border rounded-lg space-y-4">
+                  <div className="mb-6 p-4 border border-bfo-gold/30 rounded-lg space-y-4 bg-bfo-black/30">
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <Label>Professional Role</Label>
+                        <Label className="text-white">Professional Role</Label>
                         <Select value={inviteForm.role} onValueChange={(value: any) => setInviteForm(prev => ({ ...prev, role: value }))}>
-                          <SelectTrigger>
+                          <SelectTrigger className="bg-[#24313d] border-bfo-gold/40 text-white">
                             <SelectValue />
                           </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="advisor">Financial Advisor</SelectItem>
-                            <SelectItem value="cpa">CPA/Accountant</SelectItem>
-                            <SelectItem value="attorney">Attorney</SelectItem>
+                          <SelectContent className="bg-[#24313d] border-bfo-gold/40">
+                            <SelectItem value="advisor" className="text-white hover:bg-bfo-gold/20">Financial Advisor</SelectItem>
+                            <SelectItem value="cpa" className="text-white hover:bg-bfo-gold/20">CPA/Accountant</SelectItem>
+                            <SelectItem value="attorney" className="text-white hover:bg-bfo-gold/20">Attorney</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
                       <div>
-                        <Label>Email Address</Label>
+                        <Label className="text-white">Email Address</Label>
                         <Input
                           type="email"
                           value={inviteForm.email}
                           onChange={(e) => setInviteForm(prev => ({ ...prev, email: e.target.value }))}
                           placeholder="professional@example.com"
+                          className="bg-[#24313d] border-bfo-gold/40 text-white placeholder:text-white/50"
                         />
                       </div>
                     </div>
                     <div className="flex gap-2">
-                      <Button onClick={handleSendInvite}>Send Invite</Button>
-                      <Button variant="outline" onClick={() => setShowInviteForm(false)}>Cancel</Button>
+                      <GoldButton onClick={handleSendInvite}>Send Invite</GoldButton>
+                      <GoldOutlineButton onClick={() => setShowInviteForm(false)}>Cancel</GoldOutlineButton>
                     </div>
                   </div>
                 )}
@@ -206,19 +210,25 @@ export default function MarketplacePage() {
                 {invites.length > 0 ? (
                   <div className="space-y-3">
                     {invites.map((invite) => (
-                      <div key={invite.id} className="flex items-center justify-between p-3 border rounded">
+                      <div key={invite.id} className="flex items-center justify-between p-3 border border-bfo-gold/30 rounded bg-bfo-black/30">
                         <div>
-                          <p className="font-medium">{invite.email}</p>
-                          <p className="text-sm text-muted-foreground capitalize">{invite.role}</p>
+                          <p className="font-medium text-white">{invite.email}</p>
+                          <p className="text-sm text-white/70 capitalize">{invite.role}</p>
                         </div>
-                        <Badge variant={invite.status === 'accepted' ? 'default' : 'secondary'}>
+                        <Badge 
+                          variant={invite.status === 'accepted' ? 'default' : 'secondary'}
+                          className={invite.status === 'accepted' 
+                            ? 'bg-bfo-gold text-black' 
+                            : 'bg-white/10 text-white border-white/20'
+                          }
+                        >
                           {invite.status}
                         </Badge>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <p className="text-muted-foreground text-center py-4">No invites sent yet</p>
+                  <p className="text-white/50 text-center py-4">No invites sent yet</p>
                 )}
               </CardContent>
             </Card>
@@ -226,41 +236,38 @@ export default function MarketplacePage() {
         </div>
 
         {/* Sticky Action Row */}
-        <div className="fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur border-t">
+        <div className="fixed bottom-0 left-0 right-0 z-50 bg-bfo-black/95 backdrop-blur border-t border-bfo-gold/30">
           <div className="container mx-auto px-4 py-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 {getFlag('BRAND_PUBLIC_ENABLED') && (
-                  <Button 
+                  <GoldButton 
                     onClick={handleBrandStart}
                     className="flex items-center gap-2 min-h-[44px]"
                   >
                     <Building2 className="w-4 h-4" />
                     For Brands & Local Businesses
-                  </Button>
+                  </GoldButton>
                 )}
                 
                 {getFlag('DEMOS_ENABLED') && (
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button 
-                        variant="outline" 
-                        className="flex items-center gap-2 min-h-[44px]"
-                      >
+                      <GoldOutlineButton className="flex items-center gap-2 min-h-[44px]">
                         <Play className="w-4 h-4" />
                         See 60-sec Demo
                         <ChevronDown className="w-4 h-4" />
-                      </Button>
+                      </GoldOutlineButton>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent 
-                      className="z-50 bg-background border shadow-lg"
+                      className="z-50 bg-[#24313d] border-bfo-gold/40 shadow-lg"
                       align="start"
                     >
-                      <DropdownMenuItem onClick={handleAthleteDemo}>
+                      <DropdownMenuItem onClick={handleAthleteDemo} className="text-white hover:bg-bfo-gold/20">
                         <Award className="w-4 h-4 mr-2" />
                         Athlete Demo
                       </DropdownMenuItem>
-                      <DropdownMenuItem onClick={handleSchoolDemo}>
+                      <DropdownMenuItem onClick={handleSchoolDemo} className="text-white hover:bg-bfo-gold/20">
                         <Building2 className="w-4 h-4 mr-2" />
                         School Demo
                       </DropdownMenuItem>
@@ -272,7 +279,7 @@ export default function MarketplacePage() {
               <Button
                 variant="ghost"
                 onClick={handleShare}
-                className="flex items-center gap-2 min-h-[44px]"
+                className="flex items-center gap-2 min-h-[44px] text-bfo-gold hover:text-[#f4d66e] hover:bg-bfo-gold/10"
               >
                 <Share className="w-4 h-4" />
                 Share

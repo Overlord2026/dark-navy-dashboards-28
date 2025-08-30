@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { getReceiptsCount } from '@/features/receipts/record';
+import { GoldButton, GoldOutlineButton } from '@/components/ui/brandButtons';
 
 interface NILLayoutProps {
   children: ReactNode;
@@ -27,26 +28,28 @@ export default function NILLayout({ children, title, description }: NILLayoutPro
   const receiptCount = getReceiptsCount();
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-bfo-black text-white">
       {/* Header */}
-      <header className="border-b border-border bg-card">
+      <header className="border-b border-bfo-gold/30 bg-bfo-black">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <Link to="/nil/onboarding" className="text-xl font-bold">
+              <Link to="/nil/onboarding" className="text-xl font-bold text-white hover:text-bfo-gold transition-colors">
                 NIL Hub
               </Link>
-              <Badge variant="secondary">Demo Mode</Badge>
+              <Badge variant="secondary" className="bg-bfo-gold/20 text-bfo-gold border-bfo-gold/30">
+                Demo Mode
+              </Badge>
             </div>
             
             <div className="flex items-center space-x-4">
-              <Badge variant="outline">
+              <Badge variant="outline" className="border-bfo-gold/40 text-bfo-gold">
                 Receipts: {receiptCount}
               </Badge>
               <Link to="/pricing">
-                <Button variant="outline" size="sm">
+                <GoldOutlineButton>
                   Upgrade
-                </Button>
+                </GoldOutlineButton>
               </Link>
             </div>
           </div>
@@ -63,10 +66,10 @@ export default function NILLayout({ children, title, description }: NILLayoutPro
                 <Link
                   key={item.name}
                   to={item.href}
-                  className={`flex items-center space-x-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                  className={`flex items-center space-x-3 px-3 py-2 rounded-xl text-sm font-medium transition-colors ${
                     isActive
-                      ? 'bg-primary text-primary-foreground'
-                      : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                      ? 'bg-[#24313d] text-bfo-gold border border-bfo-gold/40'
+                      : 'text-white hover:text-bfo-gold hover:bg-[#24313d]/50'
                   }`}
                 >
                   <span>{item.icon}</span>
@@ -78,12 +81,14 @@ export default function NILLayout({ children, title, description }: NILLayoutPro
 
           {/* Main Content */}
           <main className="flex-1">
-            <Card>
-              <CardHeader>
-                <CardTitle>{title}</CardTitle>
-                {description && <CardDescription>{description}</CardDescription>}
+            <Card className="bg-[#24313d] border-bfo-gold/40 rounded-xl">
+              <CardHeader className="border-b border-bfo-gold/30">
+                <CardTitle className="text-white font-semibold">{title}</CardTitle>
+                {description && (
+                  <CardDescription className="text-white/70">{description}</CardDescription>
+                )}
               </CardHeader>
-              <CardContent>
+              <CardContent className="text-white">
                 {children}
               </CardContent>
             </Card>
