@@ -291,14 +291,14 @@ export const BFOHeader: React.FC<BFOHeaderProps> = ({
 
       {/* Persona Sub-Banner */}
       {showPersonaBanner && personaLinks.length > 0 && (
-        <div className="bg-muted/50 border-b border-border">
-          <div className="container mx-auto px-4">
-            <div className="flex items-center space-x-1 py-2 overflow-x-auto scrollbar-hide">
+        <div className="bg-black text-[#D4AF37] gold-border w-full">
+          <div className="mx-auto max-w-7xl px-4 py-4">
+            <div className="flex items-center space-x-1 overflow-x-auto scrollbar-hide">
               {personaLinks.map((link, index) => (
                 <div key={index} className="flex items-center space-x-1 flex-shrink-0">
                   <Link
                     to={link.href}
-                    className="flex items-center space-x-1 px-3 py-1 text-sm text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-accent"
+                    className="flex items-center space-x-1 px-3 py-1 text-sm text-white hover:text-[#D4AF37] transition-colors rounded-md hover:bg-[#D4AF37]/10"
                     target={link.external ? '_blank' : undefined}
                     rel={link.external ? 'noopener noreferrer' : undefined}
                   >
