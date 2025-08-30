@@ -62,6 +62,7 @@ export default function NILDemoPage() {
     const cosignRequests = receipts.filter(r => r.action === 'cosign.request').length;
     const cosignApprovals = receipts.filter(r => r.action === 'cosign.approve').length;
     const brandContacts = receipts.filter(r => r.action === 'brand.contact').length;
+    const indexWatches = receipts.filter(r => r.action === 'index.watch').length;
     
     return {
       invitesPending: snapshot?.counts.invites || 0,
@@ -73,6 +74,7 @@ export default function NILDemoPage() {
       cosignRequests,
       cosignApprovals,
       brandContacts,
+      indexWatches,
       healthyStatus: totalReceipts >= 3 && anchoredCount >= 1
     };
   };

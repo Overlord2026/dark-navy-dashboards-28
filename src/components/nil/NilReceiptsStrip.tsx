@@ -22,6 +22,7 @@ export default function NilReceiptsStrip() {
         receipt.action === 'invite_create' ||
         receipt.action === 'catalog_view' ||
         receipt.action === 'brand.contact' ||
+        receipt.action === 'index.watch' ||
         receipt.action?.startsWith('cosign.')
       )
       .slice(0, 5);

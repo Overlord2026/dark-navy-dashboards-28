@@ -20,6 +20,7 @@ import Contract from '@/pages/nil/Contract';
 import Payments from '@/pages/nil/Payments';
 import Disputes from '@/pages/nil/Disputes';
 import Receipts from '@/pages/nil/Receipts';
+import Index from '@/pages/nil/Index';
 import Admin from '@/pages/nil/Admin';
 import NilReadyCheckPage from '@/pages/nil/admin/NilReadyCheckPage';
 import Pricing from '@/pages/Pricing';
@@ -245,7 +246,7 @@ function App() {
             
             {/* NIL Public Pages */}
             {getFlag('NIL_PUBLIC_ENABLED') && <Route path="/nil" element={<MarketplacePage />} />}
-            {getFlag('NIL_PUBLIC_ENABLED') && <Route path="/nil/index" element={<NILIndex />} />}
+            {getFlag('NIL_PUBLIC_ENABLED') && <Route path="/nil/index" element={<Index />} />}
             {getFlag('NIL_PUBLIC_ENABLED') && <Route path="/nil/demo" element={<NILDemoPage />} />}
             
             {/* New Home Pages */}
@@ -401,6 +402,7 @@ function App() {
             <Route path="/nil/contract/:id" element={<Contract />} />
             <Route path="/nil/payments" element={<Payments />} />
             <Route path="/nil/disputes" element={<Disputes />} />
+            <Route path="/nil/index" element={<Index />} />
             <Route path="/nil/receipts" element={<Receipts />} />
             <Route path="/nil/admin" element={<Admin />} />
             <Route path="/nil/admin/ready-check" element={<NilReadyCheckPage />} />

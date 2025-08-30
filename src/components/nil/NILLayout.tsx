@@ -13,6 +13,7 @@ interface NILLayoutProps {
 }
 
 const navigation = [
+  { name: 'Index', href: '/nil/index', icon: '📊' },
   { name: 'Education', href: '/nil/education', icon: '📚' },
   { name: 'Search', href: '/nil/search', icon: '🔍' },
   { name: 'Goals', href: '/nil/goals', icon: '🎯' },
