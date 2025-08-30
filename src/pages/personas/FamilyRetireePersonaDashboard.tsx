@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { GoldButton, GoldOutlineButton } from '@/components/ui/brandButtons';
+import { GoldButton, GoldOutlineButton, GoldRouterLink, GoldOutlineRouterLink } from '@/components/ui/brandButtons';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRight, Shield, Heart, Wallet, Home, Calculator, Play, Calendar, BookOpen } from 'lucide-react';
 import VoiceMic from '@/components/voice/VoiceMic';
@@ -158,12 +158,13 @@ const FamilyRetireePersonaDashboard = () => {
               <p className="text-muted-foreground mb-6">
                 Set up your family workspace with document storage, health planning, and estate management tools.
               </p>
-              <Button asChild size="lg" className="w-full md:w-auto">
-                <Link to="/start/families">
-                  Start Workspace
-                  <ArrowRight className="h-5 w-5 ml-2" />
-                </Link>
-              </Button>
+              <GoldRouterLink 
+                to="/start/families"
+                className="w-full md:w-auto flex items-center gap-2 px-6 py-3"
+              >
+                Start Workspace
+                <ArrowRight className="h-5 w-5" />
+              </GoldRouterLink>
             </CardContent>
           </Card>
         </div>

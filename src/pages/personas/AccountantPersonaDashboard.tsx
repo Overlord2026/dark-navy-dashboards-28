@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { GoldButton, GoldOutlineButton } from '@/components/ui/brandButtons';
+import { GoldButton, GoldOutlineButton, GoldRouterLink, GoldOutlineRouterLink } from '@/components/ui/brandButtons';
 import { Badge } from '@/components/ui/badge';
 import VoiceMic from '@/components/voice/VoiceMic';
 import { ArrowRight, Calculator, FileText, TrendingUp, Building, Play, Calendar, BookOpen } from 'lucide-react';
@@ -143,12 +143,13 @@ const AccountantPersonaDashboard = () => {
               <p className="text-muted-foreground mb-6">
                 Set up your CPA workspace with tax planning tools, client management, and compliance tracking.
               </p>
-              <Button asChild size="lg" className="w-full md:w-auto">
-                <Link to="/start/cpas">
-                  Start Workspace
-                  <ArrowRight className="h-5 w-5 ml-2" />
-                </Link>
-              </Button>
+              <GoldRouterLink 
+                to="/start/cpas"
+                className="w-full md:w-auto flex items-center gap-2 px-6 py-3"
+              >
+                Start Workspace
+                <ArrowRight className="h-5 w-5" />
+              </GoldRouterLink>
             </CardContent>
           </Card>
         </div>

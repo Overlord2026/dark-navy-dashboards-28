@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { GoldButton, GoldOutlineButton } from '@/components/ui/brandButtons';
+import { GoldButton, GoldOutlineButton, GoldRouterLink, GoldOutlineRouterLink } from '@/components/ui/brandButtons';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRight, Shield, FileText, Calculator, AlertTriangle, Play, Calendar, BookOpen } from 'lucide-react';
 import VoiceMic from '@/components/voice/VoiceMic';
@@ -143,12 +143,13 @@ const InsurancePersonaDashboard = () => {
               <p className="text-muted-foreground mb-6">
                 Set up your insurance workspace with client management, quoting tools, and claims processing.
               </p>
-              <Button asChild size="lg" className="w-full md:w-auto">
-                <Link to="/start/insurance">
-                  Start Workspace
-                  <ArrowRight className="h-5 w-5 ml-2" />
-                </Link>
-              </Button>
+              <GoldRouterLink 
+                to="/start/insurance"
+                className="w-full md:w-auto flex items-center gap-2 px-6 py-3"
+              >
+                Start Workspace
+                <ArrowRight className="h-5 w-5" />
+              </GoldRouterLink>
             </CardContent>
           </Card>
         </div>

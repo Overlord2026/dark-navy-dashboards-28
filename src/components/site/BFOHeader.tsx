@@ -4,7 +4,7 @@ import { Menu, ChevronDown, ExternalLink } from 'lucide-react';
 import { getStartedRoute } from '@/utils/getStartedUtils';
 import MastheadPersonaToggle from './MastheadPersonaToggle';
 import { Button } from '@/components/ui/button';
-import { GoldButton, GoldOutlineButton } from '@/components/ui/brandButtons';
+import { GoldButton, GoldOutlineButton, GoldRouterLink, GoldOutlineRouterLink } from '@/components/ui/brandButtons';
 import { Badge } from '@/components/ui/badge';
 import {
   NavigationMenu,
@@ -199,12 +199,12 @@ export const BFOHeader: React.FC<BFOHeaderProps> = ({
 
             {/* Actions */}
             <div className="flex items-center space-x-4">
-              <GoldOutlineButton>
-                <Link to="/login">Sign In</Link>
-              </GoldOutlineButton>
-              <GoldButton>
-                <Link to={getStartedRoute()}>Get Started</Link>
-              </GoldButton>
+              <GoldOutlineRouterLink to="/login">
+                Sign In
+              </GoldOutlineRouterLink>
+              <GoldRouterLink to={getStartedRoute()}>
+                Get Started
+              </GoldRouterLink>
               
               {/* Mobile Menu */}
               <Sheet>
