@@ -18,6 +18,19 @@ export default function NILDemoPage() {
   const [snapshot, setSnapshot] = useState(getNilSnapshot());
   const [health, setHealth] = useState(getNilFixturesHealth());
 
+  // Handle auto-loading demo from query params
+  React.useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const demo = params.get('demo');
+    
+    if (demo === 'nil_coach' || demo === 'nil_mom') {
+      const profile = demo === 'nil_coach' ? 'coach' : 'mom';
+      handleResetDemo(profile);
+      // Clean up URL
+      window.history.replaceState({}, '', '/nil/demo');
+    }
+  }, []);
+
   const handleResetDemo = async (profile: 'coach' | 'mom') => {
     setLoading(true);
     try {
