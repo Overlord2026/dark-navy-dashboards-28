@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { GoldButton, GoldOutlineButton } from '@/components/ui/brandButtons';
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { 
@@ -128,14 +129,17 @@ export default function PublicTaxCenter() {
               Free resources, expert insights, and professional guidance to optimize your tax situation
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" onClick={handleGetStarted}>
-                <Calendar className="mr-2 h-5 w-5" />
+              <GoldButton 
+                className="flex items-center gap-2 px-6 py-3 text-lg"
+                onClick={handleGetStarted}
+              >
+                <Calendar className="h-5 w-5" />
                 Schedule Free Consultation
-              </Button>
-              <Button size="lg" variant="outline">
-                <Calculator className="mr-2 h-5 w-5" />
+              </GoldButton>
+              <GoldOutlineButton className="flex items-center gap-2 px-6 py-3 text-lg">
+                <Calculator className="h-5 w-5" />
                 Try Free Tax Calculator
-              </Button>
+              </GoldOutlineButton>
             </div>
           </div>
         </div>
@@ -275,14 +279,17 @@ export default function PublicTaxCenter() {
             Connect with our network of verified tax professionals for personalized guidance and advanced planning strategies
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" onClick={handleGetStarted}>
-              <Calendar className="mr-2 h-5 w-5" />
+            <GoldButton 
+              className="flex items-center gap-2 px-6 py-3 text-lg"
+              onClick={handleGetStarted}
+            >
+              <Calendar className="h-5 w-5" />
               Schedule Consultation
-            </Button>
-            <Button size="lg" variant="outline">
-              <BookOpen className="mr-2 h-5 w-5" />
+            </GoldButton>
+            <GoldOutlineButton className="flex items-center gap-2 px-6 py-3 text-lg">
+              <BookOpen className="h-5 w-5" />
               Explore Premium Tools
-            </Button>
+            </GoldOutlineButton>
           </div>
         </section>
       </div>

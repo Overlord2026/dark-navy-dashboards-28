@@ -3,6 +3,7 @@ import { Progress } from '@/components/ui/progress';
 import { Card, CardContent } from '@/components/ui/card';
 import { ChevronLeft, ChevronRight, MessageCircle, Sparkles, Archive } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { GoldButton, GoldOutlineButton } from '@/components/ui/brandButtons';
 import { Badge } from '@/components/ui/badge';
 import { WelcomeStep } from './steps/WelcomeStep';
 import { SecureAccountStep } from './steps/SecureAccountStep';
@@ -322,14 +323,14 @@ export const ClientOnboardingFlow: React.FC<ClientOnboardingFlowProps> = ({
               )}
             </div>
 
-            <Button
+            <GoldButton
               onClick={handleNext}
               disabled={currentStep === stepTitles.length - 1}
-              className="w-full md:w-auto btn-primary-gold flex items-center gap-2 order-3"
+              className="w-full md:w-auto flex items-center gap-2 order-3 px-6 py-3"
             >
               {currentStep === stepTitles.length - 1 ? 'Complete' : 'Next'}
               <ChevronRight className="h-4 w-4" />
-            </Button>
+            </GoldButton>
           </div>
 
           {/* Partner Attribution */}

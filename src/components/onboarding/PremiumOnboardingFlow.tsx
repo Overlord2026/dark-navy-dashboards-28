@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
+import { GoldButton, GoldOutlineButton } from '@/components/ui/brandButtons';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -300,14 +301,13 @@ export const PremiumOnboardingFlow: React.FC<PremiumOnboardingFlowProps> = ({ on
               exit={{ opacity: 0, scale: 0.95 }}
               className="text-center"
             >
-              <Button
+              <GoldButton
                 onClick={handleFinish}
-                size="lg"
-                className="btn-primary-gold touch-target text-lg px-8 py-4"
+                className="flex items-center gap-2 px-8 py-4 text-lg"
               >
-                <LayoutDashboard className="h-5 w-5 mr-2" />
+                <LayoutDashboard className="h-5 w-5" />
                 Enter Your Dashboard
-              </Button>
+              </GoldButton>
             </motion.div>
           )}
         </AnimatePresence>

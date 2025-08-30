@@ -8,6 +8,7 @@ import { PublicNavigation } from '@/components/discover/PublicNavigation';
 import { ShareButton } from '@/components/discover/ShareButton';
 import { DemoLauncher } from '@/components/discover/DemoLauncher';
 import { Button } from '@/components/ui/button';
+import { GoldButton, GoldOutlineButton } from '@/components/ui/brandButtons';
 import { Badge } from '@/components/ui/badge';
 import { Play, ArrowRight, Shield, Users, Zap } from 'lucide-react';
 import { PUBLIC_CONFIG, withFeatureFlag } from '@/config/publicConfig';
@@ -55,10 +56,13 @@ const Discover: React.FC = () => {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Button size="lg" className="bg-gold hover:bg-gold-hover text-navy font-semibold px-8 py-4" onClick={handleStartWorkspace}>
-                <ArrowRight className="mr-2 h-5 w-5" />
+              <GoldButton 
+                className="flex items-center gap-2 px-8 py-4 text-lg"
+                onClick={handleStartWorkspace}
+              >
+                <ArrowRight className="h-5 w-5" />
                 Start your workspace
-              </Button>
+              </GoldButton>
               {withFeatureFlag('DEMOS_ENABLED',
                 <DemoLauncher 
                   demoId="overview"

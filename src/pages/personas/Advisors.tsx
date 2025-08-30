@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
+import { GoldButton, GoldOutlineButton } from '@/components/ui/brandButtons';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { VoiceDrawer } from '@/components/voice/VoiceDrawer';
 import { PersonaSubHeader } from '@/components/layout/PersonaSubHeader';
@@ -56,31 +57,23 @@ export default function Advisors() {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Button 
-                onClick={handleOpenCatalog}
-                className="h-auto p-6 flex flex-col items-center gap-2"
-              >
+              <GoldOutlineButton className="h-auto p-6 flex flex-col items-center gap-2">
                 <span className="text-lg font-semibold">Open Catalog</span>
                 <span className="text-sm opacity-80">Browse all tools</span>
-              </Button>
+              </GoldOutlineButton>
               
-              <Button 
+              <GoldButton 
                 onClick={handleRunDemo}
-                variant="outline"
                 className="h-auto p-6 flex flex-col items-center gap-2"
               >
                 <span className="text-lg font-semibold">Run 90s Demo</span>
                 <span className="text-sm opacity-80">Quick preview</span>
-              </Button>
+              </GoldButton>
               
-              <Button 
-                onClick={handleBookMeeting}
-                variant="secondary"
-                className="h-auto p-6 flex flex-col items-center gap-2"
-              >
+              <GoldOutlineButton className="h-auto p-6 flex flex-col items-center gap-2">
                 <span className="text-lg font-semibold">Book 15-min</span>
                 <span className="text-sm opacity-80">Personal walkthrough</span>
-              </Button>
+              </GoldOutlineButton>
             </div>
           </CardContent>
         </Card>
