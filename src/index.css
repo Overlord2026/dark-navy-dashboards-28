@@ -59,6 +59,14 @@
     box-shadow: 0 0 0 2px #D4AF37, 0 0 0 4px #000000;
   }
 
+  /* Keep banners black/gold even in dark mode */
+  [data-theme="dark"] header[role="banner"],
+  [data-theme="dark"] .persona-subheader,
+  [data-theme="dark"] .cta-sticky-bar {
+    background-color: #000 !important;
+    color: #D4AF37 !important;
+  }
+
   :root {
     
     /* BFO Color System - Exact Hex Conversions */
