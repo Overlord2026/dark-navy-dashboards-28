@@ -1,7 +1,5 @@
 
 import React from 'react';
-import BrandHeader from './BrandHeader';
-import TopNav from './TopNav';
 import { GlobalErrorBoundary } from '@/components/monitoring/GlobalErrorBoundary';
 import { PerformanceMonitor } from '@/components/monitoring/PerformanceMonitor';
 import { BFOBrandBanner, BFOCornerBug } from '@/components/branding/BFOBrandBanner';
@@ -29,11 +27,7 @@ export function MainLayout({ children }: MainLayoutProps) {
           sublinks={sublinks}
         />
         <BFOCornerBug position="bottom-right" />
-        <GlobalErrorBoundary>
-          <BrandHeader />
-          <TopNav />
-        </GlobalErrorBoundary>
-        <main className="pt-[96px]">
+        <main>
           <GlobalErrorBoundary>
             {children}
           </GlobalErrorBoundary>
