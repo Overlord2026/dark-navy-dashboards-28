@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { getCategoryIcon, formatPrice } from '@/lib/catalog-utils';
 import { 
   Search, 
   Filter, 
@@ -18,8 +17,32 @@ import {
   TrendingUp,
   GraduationCap,
   FileText,
-  Calculator
+  Calculator,
+  Briefcase,
+  Stethoscope,
+  Sparkles
 } from 'lucide-react';
+
+// Helper functions for catalog display
+function getCategoryIcon(key?: string) {
+  switch (key) {
+    case 'advisors': return <Briefcase className="h-4 w-4" />;
+    case 'cpa': return <BookOpen className="h-4 w-4" />;
+    case 'attorney': return <Shield className="h-4 w-4" />;
+    case 'healthcare': return <Stethoscope className="h-4 w-4" />;
+    case 'education': return <Sparkles className="h-4 w-4" />;
+    case 'solution': return <Building2 className="h-4 w-4" />;
+    case 'tool': return <Calculator className="h-4 w-4" />;
+    case 'ce': return <GraduationCap className="h-4 w-4" />;
+    case 'service': return <Users className="h-4 w-4" />;
+    default: return <DollarSign className="h-4 w-4" />;
+  }
+}
+
+function formatPrice(cents?: number) {
+  if (typeof cents !== 'number') return '—';
+  return `$${(cents / 100).toFixed(2)}`;
+}
 
 interface CatalogItem {
   id: string;
@@ -338,7 +361,7 @@ function CatalogItemCard({ item }: { item: CatalogItem }) {
               <CardTitle className="text-lg line-clamp-1">{item.name}</CardTitle>
               <div className="flex items-center gap-2 mt-1">
                 <Badge variant="outline" className="gap-1">
-                  <Star className="h-4 w-4" />
+                  {getCategoryIcon(item.category)}
                   {item.category}
                 </Badge>
                 <div className="flex items-center gap-1">
@@ -416,7 +439,7 @@ function CatalogItemRow({ item }: { item: CatalogItem }) {
               <div className="flex items-center gap-3">
                 <h3 className="font-semibold text-lg">{item.name}</h3>
                 <Badge variant="outline" className="gap-1">
-                  <Star className="h-4 w-4" />
+                  {getCategoryIcon(item.category)}
                   {item.category}
                 </Badge>
                 <div className="flex items-center gap-1">
