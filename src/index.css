@@ -282,25 +282,25 @@
 
   /* BFO Premium Brand CSS Variables */
   :root {
-    --bfo-black: #0B0F14;
-    --bfo-gold:  #D4AF37;
+    --bfo-black: #0B0F14; /* deep black */
+    --bfo-gold:  #D4AF37; /* metallic gold */
     --bfo-navy:  #0B1E33;
     --header-h:  56px;
   }
 
-  /* Hard-kill any accidental translucency/blur on iOS/Safari */
+  /* Hard-kill any accidental translucency/blur */
   .bfo-no-blur {
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
   }
 
-  /* Premium header/subheader skins */
+  /* Premium skins */
   .bfo-header {
     background: var(--bfo-black) !important;
     border-bottom: 1px solid var(--bfo-gold) !important;
     color: #fff;
   }
-  
+
   .bfo-subheader {
     background: var(--bfo-black) !important;
     border-top: 1px solid var(--bfo-gold) !important;
@@ -308,9 +308,9 @@
     color: var(--bfo-gold);
   }
 
-  /* Ensure the page background under the hero is also black */
-  body {
-    background-color: var(--bfo-black);
+  /* Ensure page body behind the hero is also pure black */
+  html, body { 
+    background-color: var(--bfo-black); 
   }
 
   /* Brand Utility Classes */
