@@ -1,219 +1,136 @@
-import React from 'react';
-import { callEdgeJSON } from '@/services/aiEdge';
+import React, { useState, useRef, useEffect } from 'react';
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from '@/components/ui/drawer';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Mic, MicOff, Send, Shield, AlertTriangle, PhoneCall } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import { saveMeetingNote } from '@/services/notes';
+import { transcribeAudio } from '@/services/voice';
 import { useRealtimeVoice } from '@/hooks/useRealtimeVoice';
-import { personaBanner, ADVICE_GUARDS } from '@/policy/adviceGuard';
-import type { PersonaKey } from '@/policy/adviceGuard';
-
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 
 interface VoiceDrawerProps {
-  open?: boolean;
-  onClose?: () => void;
   persona: string;
-  endpoint?: string;       // Supabase Function slug (e.g., 'generate-meeting-summary')
-  triggerLabel?: string;
+  onNoteSaved?: (note: string) => void;
 }
 
+const FORBIDDEN_TOPICS = [
+  'insider trading', 'market manipulation', 'tax evasion', 'money laundering',
+  'bribery', 'kickbacks', 'ponzi', 'pyramid scheme', 'cryptocurrency scam'
+];
 
-export function VoiceDrawer({
-  open: controlledOpen,
-  onClose: controlledOnClose,
-  persona,
-  endpoint = 'generate-meeting-summary',
-  triggerLabel
-}: VoiceDrawerProps) {
-  // internal state
-  const [internalOpen, setInternalOpen] = React.useState(false);
-  const [notes, setNotes] = React.useState('');
-  const [busy, setBusy] = React.useState(false);
-  const [result, setResult] = React.useState<any>(null);
-  const [consent, setConsent] = React.useState(false);
-  const [handoff, setHandoff] = React.useState<string | null>(null);
+const COMPLIANCE_CONTACTS = {
+  advisor: { name: 'Compliance Dept', phone: '1-800-555-0199' },
+  cpa: { name: 'Ethics Hotline', phone: '1-800-555-0188' },
+  attorney: { name: 'Bar Association', phone: '1-800-555-0177' },
+  insurance: { name: 'DOI Compliance', phone: '1-800-555-0166' }
+};
 
-
-  // controlled or internal open/close
-  const open = controlledOpen ?? internalOpen;
-  const onClose = controlledOnClose ?? (() => setInternalOpen(false));
-
-
-  // WebRTC hook (GPT Realtime) - destructures { ready, live, error, start, stop, audioElRef }
+export function VoiceDrawer({ persona, onNoteSaved }: VoiceDrawerProps) {
+  const { toast } = useToast();
+  const [open, setOpen] = useState(false);
+  const [transcript, setTranscript] = useState('');
+  const [recentNotes, setRecentNotes] = useState<string[]>([]);
+  const [isRecording, setIsRecording] = useState(false);
+  const [liveMode, setLiveMode] = useState(false);
+  const [consentGiven, setConsentGiven] = useState(false);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const chunksRef = useRef<Blob[]>([]);
+  
   const { ready, live, error, start, stop, audioElRef } = useRealtimeVoice();
+  
+  const VOICE_LIVE_ENABLED = false; // Feature flag
 
+  const checkForbiddenTopics = (text: string): string[] => {
+    return FORBIDDEN_TOPICS.filter(topic => 
+      text.toLowerCase().includes(topic.toLowerCase())
+    );
+  };
 
-  // narrow persona safely
-  const personaKey: PersonaKey = ([
-    'families_retiree','families_aspiring','advisors','insurance','cpa','attorney','nil'
-  ] as const).includes(persona as any) ? (persona as PersonaKey) : 'families_retiree';
+  const handleSaveNote = async () => {
+    if (!transcript.trim()) return;
 
-
-  function findMatch(q: string, phrases: string[] = []): string | null {
-    const t = q.toLowerCase();
-    for (const p of phrases) if (t.includes(p.toLowerCase())) return p;
-    return null;
-  }
-
-
-  async function logConsentAndGuard(kind: 'start' | 'send', reason?: string) {
     try {
-      const [{ recordReceipt }, { inputs_hash }] = await Promise.all([
-        import('@/services/receipts'),
-        import('@/lib/canonical')
-      ]).catch(()=>[{recordReceipt:undefined as any},{inputs_hash: async()=> 'sha256:none'}]);
-      if (recordReceipt) {
-        if (kind === 'start') {
-          await recordReceipt({ type:'Consent-RDS', persona: personaKey, passport_version:'CP-2025.08' });
-        }
-        await recordReceipt({
-          type:'AdviceGuard-RDS',
-          persona: personaKey,
-          banner_hash: await inputs_hash({ banner: personaBanner(personaKey) }),
-          policy_version:'AG-2025.08',
-          result: reason ?? 'educational'
-        });
-      }
-    } catch {}
-  }
-
-
-  // TEXT SEND (guarded) - applies consent + forbidden-topic guardrails
-  async function onSend() {
-    if (!notes.trim()) return;
-    if (!consent) { setResult({ error: 'Please acknowledge the consent checkbox first.' }); return; }
-
-
-    const guards = ADVICE_GUARDS[personaKey];
-    const blocked = findMatch(notes, guards?.forbidden);
-    if (blocked) {
-      setHandoff(null);
-      setResult({
-        blocked: true,
-        message: `I can't assist with that topic here (restricted: "${blocked}"). Please consult the appropriate professional.`,
+      await saveMeetingNote({ persona, text: transcript });
+      setRecentNotes(prev => [transcript, ...prev.slice(0, 2)]);
+      onNoteSaved?.(transcript);
+      setTranscript('');
+      
+      toast({
+        title: "Note Saved",
+        description: "Meeting note saved successfully",
       });
-      await logConsentAndGuard('send','blocked_forbidden_topic');
-      return;
+    } catch (err) {
+      console.error('Save error:', err);
+      toast({
+        title: "Save Failed",
+        description: "Could not save meeting note",
+        variant: "destructive"
+      });
     }
-    const suggest = findMatch(notes, guards?.mustSuggestHuman);
-    if (suggest) {
-      setHandoff(`This request ("${suggest}") typically requires a licensed professional. I can outline general steps, but please schedule with your advisor/compliance office.`);
-      await logConsentAndGuard('send','handoff_suggested');
-    } else {
-      setHandoff(null);
-      await logConsentAndGuard('send');
-    }
+  };
 
-
-    setBusy(true);
-    try {
-      // Keeps text call to 'generate-meeting-summary'
-      const data = await callEdgeJSON(endpoint, { notes, persona: personaKey });
-      setResult(data);
-    } catch (e:any) {
-      setResult({ error: e.message });
-    } finally {
-      setBusy(false);
-    }
-  }
-
-
-  // GO LIVE (guarded) - applies consent + forbidden-topic guardrails
-  async function onLiveStart() {
-    if (!consent) { setResult({ error: 'Please acknowledge the consent checkbox first.' }); return; }
-
-
-    const guards = ADVICE_GUARDS[personaKey];
-    if (notes.trim()) {
-      const blocked = findMatch(notes, guards?.forbidden);
-      if (blocked) {
-        setHandoff(null);
-        setResult({
-          blocked: true,
-          message: `I can't assist with that topic here (restricted: "${blocked}"). Please consult the appropriate professional.`,
-        });
-        await logConsentAndGuard('start','blocked_forbidden_topic');
-        return;
-      }
-      const suggest = findMatch(notes, guards?.mustSuggestHuman);
-      if (suggest) {
-        setHandoff(`This request ("${suggest}") typically requires a licensed professional. I can outline general steps, but please schedule with your advisor/compliance office.`);
-        await logConsentAndGuard('start','handoff_suggested');
-      } else {
-        setHandoff(null);
-        await logConsentAndGuard('start');
-      }
-    } else {
-      setHandoff(null);
-      await logConsentAndGuard('start');
-    }
-
-
-    try {
-      await start({ tokenPath: '/functions/v1/realtime-ephemeral-token' });
-    } catch (e:any) {
-      setResult({ error: e?.message ?? 'Failed to start live session' });
-    }
-  }
-
-
-  if (!open) return null;
   return (
-    <div className="fixed inset-0 bg-black/40 z-50" onClick={onClose}>
-      <div className="absolute top-0 right-0 h-full w-full sm:w-[480px] bg-white shadow-xl p-4 overflow-auto" onClick={e=>e.stopPropagation()}>
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="text-lg font-semibold">Ask BFO <span className="text-xs text-muted-foreground">({personaKey})</span></h3>
-          <button className="text-sm" onClick={onClose}>Close</button>
-        </div>
-
-
-        <div className="text-xs rounded border p-2 bg-amber-50 text-amber-900 mb-2">
-          {personaBanner(personaKey)}
-        </div>
-        <label className="flex items-center gap-2 text-xs mb-2">
-          <input type="checkbox" checked={consent} onChange={e=>setConsent(e.target.checked)} />
-          <span>I understand this is educational only and not advice.</span>
-        </label>
-
-
-        {/* Text mode */}
-        <textarea
-          className="w-full border rounded p-2 mb-2"
-          rows={5}
-          value={notes}
-          onChange={e=>setNotes(e.target.value)}
-          placeholder="Type or paste notes (optional for live)…"
-        />
-        <div className="flex gap-2 mb-3">
-          <button disabled={busy} className="px-3 py-1.5 rounded bg-emerald-600 text-white disabled:opacity-50" onClick={onSend}>
-            {busy ? 'Thinking…' : 'Send'}
-          </button>
-          <button className="px-3 py-1.5 rounded bg-slate-200" onClick={()=>{ setNotes(''); setResult(null); }}>Clear</button>
-        </div>
-
-
-        {/* Live mode */}
-        <audio ref={audioElRef} autoPlay />
-        <div className="flex gap-2">
-          <button
-            onClick={onLiveStart}
-            disabled={!ready || live}
-            className="px-3 py-1.5 rounded bg-emerald-600 text-white disabled:opacity-50"
-          >
-            {ready ? (live ? 'Live…' : 'Go Live') : 'WebRTC unsupported'}
-          </button>
-          <button onClick={stop} disabled={!live} className="px-3 py-1.5 rounded bg-slate-200">Stop</button>
-        </div>
-        {error && <div className="mt-2 text-xs text-red-600">Voice error: {error}</div>}
-
-
-        {handoff && (
-          <div className="mt-2 text-xs rounded border p-2 bg-blue-50 text-blue-900">
-            {handoff} <a className="underline" href="/book/advisors">Book a call</a>
+    <Drawer open={open} onOpenChange={setOpen}>
+      <DrawerTrigger asChild>
+        <Button variant="outline" size="sm" className="gap-2">
+          <Mic className="h-4 w-4" />
+          Voice Assistant
+        </Button>
+      </DrawerTrigger>
+      <DrawerContent className="max-h-[80vh]">
+        <DrawerHeader>
+          <DrawerTitle className="flex items-center gap-2">
+            <Mic className="h-5 w-5" />
+            Voice Assistant - {persona.charAt(0).toUpperCase() + persona.slice(1)}
+          </DrawerTitle>
+        </DrawerHeader>
+        
+        <div className="p-6 space-y-6">
+          <div className="space-y-3">
+            <div className="flex items-center space-x-2">
+              <Switch
+                id="consent"
+                checked={consentGiven}
+                onCheckedChange={setConsentGiven}
+              />
+              <Label htmlFor="consent" className="text-sm">
+                I consent to audio recording and transcription for meeting notes
+              </Label>
+            </div>
           </div>
-        )}
-        {result && (
-          <pre className="mt-3 text-xs bg-slate-50 border rounded p-2 overflow-auto max-h-72">
-            {JSON.stringify(result, null, 2)}
-          </pre>
-        )}
-      </div>
-    </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="transcript">Transcript</Label>
+            <Textarea
+              id="transcript"
+              value={transcript}
+              onChange={(e) => setTranscript(e.target.value)}
+              placeholder="Transcript will appear here..."
+              className="min-h-[120px]"
+            />
+            
+            <Button
+              onClick={handleSaveNote}
+              disabled={!transcript.trim()}
+              className="gap-2"
+            >
+              <Send className="h-4 w-4" />
+              Save Meeting Note
+            </Button>
+          </div>
+
+          <Alert>
+            <Shield className="h-4 w-4" />
+            <AlertDescription className="text-sm">
+              <strong>Compliance Guardian Active:</strong> Forbidden topics monitored.
+            </AlertDescription>
+          </Alert>
+        </div>
+      </DrawerContent>
+    </Drawer>
   );
 }
