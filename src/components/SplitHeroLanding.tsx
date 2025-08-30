@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from '@/components/ui/button';
+import { GoldButton, GoldOutlineButton } from '@/components/ui/brandButtons';
 import { BFOHeader } from '@/components/site/BFOHeader';
 import { BrandedFooter } from '@/components/ui/BrandedFooter';
 import analytics from '@/lib/analytics';
@@ -54,21 +54,18 @@ export const SplitHeroLanding: React.FC = () => {
                   </p>
                 </div>
                 <div className="space-y-3">
-                  <Button 
-                    size="lg" 
-                    className="w-full bg-emerald-600 hover:bg-emerald-700 text-white"
+                  <GoldButton 
+                    className="w-full text-lg px-6 py-3"
                     onClick={handleFamilyClick}
                   >
                     See How It Works
-                  </Button>
-                  <Button 
-                    size="lg" 
-                    variant="outline" 
-                    className="w-full border-emerald-600 text-emerald-600 hover:bg-emerald-50"
+                  </GoldButton>
+                  <GoldOutlineButton 
+                    className="w-full text-lg px-6 py-3"
                     onClick={handleFamilyClick}
                   >
                     Try the Value Calculator
-                  </Button>
+                  </GoldOutlineButton>
                 </div>
               </div>
 
@@ -86,21 +83,18 @@ export const SplitHeroLanding: React.FC = () => {
                   </p>
                 </div>
                 <div className="space-y-3">
-                  <Button 
-                    size="lg" 
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                  <GoldButton 
+                    className="w-full text-lg px-6 py-3"
                     onClick={handleProsClick}
                   >
                     Explore Tools
-                  </Button>
-                  <Button 
-                    size="lg" 
-                    variant="outline" 
-                    className="w-full border-blue-600 text-blue-600 hover:bg-blue-50"
+                  </GoldButton>
+                  <GoldOutlineButton 
+                    className="w-full text-lg px-6 py-3"
                     onClick={handleProsClick}
                   >
                     Book a Demo
-                  </Button>
+                  </GoldOutlineButton>
                 </div>
                 <div className="text-sm text-muted-foreground mt-4">
                   Advisors · CPAs · Attorneys · Insurance · Healthcare · Realtors · Bank/Trust

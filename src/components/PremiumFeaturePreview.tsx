@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { GoldButton, GoldOutlineButton } from '@/components/ui/brandButtons';
 import { Lock, Star, Shield, TrendingUp, Users, Heart } from 'lucide-react';
 
 const premiumFeatures = [
@@ -82,17 +82,16 @@ export function PremiumFeaturePreview() {
           No pressure—just a conversation about your family's unique needs.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button 
-            size="lg"
-            className="bg-primary hover:bg-primary/90 text-primary-foreground"
+          <GoldButton 
+            className="text-lg px-8 py-3"
             onClick={() => window.open('https://calendly.com/tonygomes/talk-with-tony', '_blank')}
           >
             <Star className="h-4 w-4 mr-2" />
             Schedule Premium Review
-          </Button>
-          <Button variant="outline" size="lg">
+          </GoldButton>
+          <GoldOutlineButton className="text-lg px-8 py-3">
             Learn More About Premium
-          </Button>
+          </GoldOutlineButton>
         </div>
       </div>
     </div>

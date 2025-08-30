@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { GoldButton, GoldOutlineButton, GoldRouterLink, GoldOutlineRouterLink } from '@/components/ui/brandButtons';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRight, Calculator, Users, TrendingUp, Shield, Heart, Briefcase, Building, Activity, Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -128,18 +129,14 @@ export default function WelcomePage() {
             Your comprehensive family office platform for managing wealth, health, and legacy across generations.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Link to="/value-calculator">
-              <Button size="lg" className="text-lg px-8 py-3">
-                Try the Calculator
-                <Calculator className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
-            <Link to="/persona-preview/client-family">
-              <Button variant="outline" size="lg" className="text-lg px-8 py-3">
-                Explore Platform
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
+            <GoldRouterLink to="/value-calculator" className="text-lg px-8 py-3">
+              Try the Calculator
+              <Calculator className="ml-2 h-5 w-5" />
+            </GoldRouterLink>
+            <GoldOutlineRouterLink to="/persona-preview/client-family" className="text-lg px-8 py-3">
+              Explore Platform
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </GoldOutlineRouterLink>
           </div>
         </div>
 
@@ -298,17 +295,13 @@ export default function WelcomePage() {
           </CardHeader>
           <CardContent className="pt-0">
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/auth/signup">
-                <Button size="lg" className="text-lg px-8 py-3">
-                  Get Started Free
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
-              </Link>
-              <Link to="/retirement-analyzer">
-                <Button variant="outline" size="lg" className="text-lg px-8 py-3">
-                  Try Demo First
-                </Button>
-              </Link>
+              <GoldRouterLink to="/auth/signup" className="text-lg px-8 py-3">
+                Get Started Free
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </GoldRouterLink>
+              <GoldOutlineRouterLink to="/retirement-analyzer" className="text-lg px-8 py-3">
+                Try Demo First
+              </GoldOutlineRouterLink>
             </div>
             <p className="text-sm text-muted-foreground mt-4">
               No credit card required • 14-day free trial • Cancel anytime
@@ -319,16 +312,14 @@ export default function WelcomePage() {
 
       {/* Sticky CTA Button */}
       <div className="fixed bottom-6 right-6 z-50">
-        <Link to="/value-calculator">
-          <Button 
-            size="lg" 
-            className="shadow-lg hover:shadow-xl transition-shadow rounded-full px-6 py-3"
-            onClick={() => analyticsEvents.trackNavigationClick('sticky_calculator_cta', '/value-calculator', 'sticky_button')}
-          >
-            <Calculator className="mr-2 h-5 w-5" />
-            Try Calculator
-          </Button>
-        </Link>
+        <GoldRouterLink 
+          to="/value-calculator"
+          className="shadow-lg hover:shadow-xl transition-shadow rounded-full px-6 py-3"
+          onClick={() => analyticsEvents.trackNavigationClick('sticky_calculator_cta', '/value-calculator', 'sticky_button')}
+        >
+          <Calculator className="mr-2 h-5 w-5" />
+          Try Calculator
+        </GoldRouterLink>
       </div>
     </div>
   );
