@@ -61,6 +61,7 @@ export default function NILDemoPage() {
     const totalReceipts = receipts.length;
     const cosignRequests = receipts.filter(r => r.action === 'cosign.request').length;
     const cosignApprovals = receipts.filter(r => r.action === 'cosign.approve').length;
+    const brandContacts = receipts.filter(r => r.action === 'brand.contact').length;
     
     return {
       invitesPending: snapshot?.counts.invites || 0,
@@ -71,6 +72,7 @@ export default function NILDemoPage() {
       receiptsAnchored: anchoredCount,
       cosignRequests,
       cosignApprovals,
+      brandContacts,
       healthyStatus: totalReceipts >= 3 && anchoredCount >= 1
     };
   };
@@ -127,7 +129,7 @@ export default function NILDemoPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 <div className="p-4 rounded-lg bg-bfo-black/30 border border-bfo-gold/20">
                   <div className="flex items-center justify-between">
                     <div>
@@ -205,6 +207,16 @@ export default function NILDemoPage() {
                       <p className="text-sm text-white/60">Co-Signs Approved</p>
                     </div>
                     <CheckCircle2 className="h-6 w-6 text-green-400/60" />
+                  </div>
+                </div>
+                
+                <div className="p-4 rounded-lg bg-bfo-black/30 border border-bfo-gold/20">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-2xl font-bold text-bfo-gold">{analytics.brandContacts}</p>
+                      <p className="text-sm text-white/60">Brand Contacts</p>
+                    </div>
+                    <Users className="h-6 w-6 text-bfo-gold/60" />
                   </div>
                 </div>
               </div>
