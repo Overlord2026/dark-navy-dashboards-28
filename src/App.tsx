@@ -153,6 +153,7 @@ import MarketplacePage from '@/pages/nil/Marketplace';
 import NILIndex from '@/pages/nil/NILIndex';
 import NILDemoPage from '@/pages/nil/DemoPage';
 import NILTourPage from '@/pages/nil/TourPage';
+import InvestorRollupPage from '@/pages/investor/InvestorRollupPage';
 
 // Crypto Components
 const CryptoDashboard = React.lazy(() => import('@/pages/crypto/CryptoDashboard'));
@@ -288,6 +289,9 @@ function App() {
             <Route path="/admin/security" element={<SecurityDashboard />} />
             <Route path="/admin/migrations" element={<AdminMigrations />} />
             <Route path="/admin/ip-tracker" element={<IPTracker />} />
+            
+            {/* Investor Routes */}
+            <Route path="/investor/rollup" element={<InvestorRollupPage />} />
             
             <Route path="/insurance" element={<Insurance />} />
             
