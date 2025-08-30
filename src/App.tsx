@@ -109,6 +109,10 @@ import FamilyAspiringPersonaDashboard from '@/pages/personas/FamilyAspiringPerso
 import Advisors from '@/pages/personas/Advisors';
 import Insurance from '@/pages/personas/Insurance';
 import DemoPersona from '@/pages/learn/DemoPersona';
+import { PersonaDashboard } from '@/components/bfo/PersonaDashboard';
+import { SecurityDashboard } from '@/components/bfo/SecurityDashboard';
+import { AdminMigrations } from '@/components/bfo/AdminMigrations';
+import { IPTracker } from '@/components/bfo/IPTracker';
 
 const DemoPage = React.lazy(() => import('@/pages/demos/[persona]'));
 const PreviewPage = React.lazy(() => import('@/components/PreviewPage'));
@@ -228,8 +232,22 @@ function App() {
             {getFlag('BRAND_PUBLIC_ENABLED') && <Route path="/start/brand" element={<BrandOnboarding />} />}
             
             {/* Persona Dashboard Routes */}
-            <Route path="/personas/advisors" element={<Advisors />} />
-            <Route path="/personas/insurance" element={<Insurance />} />
+            <Route path="/personas/advisors" element={<PersonaDashboard personaId="advisors" />} />
+            <Route path="/personas/insurance" element={<PersonaDashboard personaId="insurance" />} />
+            <Route path="/personas/insurance/:subPersonaId" element={<PersonaDashboard personaId="insurance" />} />
+            <Route path="/personas/attorney" element={<PersonaDashboard personaId="attorney" />} />
+            <Route path="/personas/attorney/:subPersonaId" element={<PersonaDashboard personaId="attorney" />} />
+            <Route path="/personas/cpa" element={<PersonaDashboard personaId="cpa" />} />
+            <Route path="/personas/healthcare" element={<PersonaDashboard personaId="healthcare" />} />
+            <Route path="/personas/healthcare/:subPersonaId" element={<PersonaDashboard personaId="healthcare" />} />
+            <Route path="/personas/nil" element={<PersonaDashboard personaId="nil" />} />
+            <Route path="/family/home" element={<PersonaDashboard personaId="family" />} />
+            
+            {/* Admin & Security Routes */}
+            <Route path="/admin/security" element={<SecurityDashboard />} />
+            <Route path="/admin/migrations" element={<AdminMigrations />} />
+            <Route path="/admin/ip-tracker" element={<IPTracker />} />
+            
             <Route path="/insurance" element={<Insurance />} />
             
             {/* Full Persona Dashboard Routes */}
