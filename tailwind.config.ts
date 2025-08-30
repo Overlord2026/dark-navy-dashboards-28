@@ -22,6 +22,11 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         
+        // Brand Colors - Black & Gold
+        'brand-black': 'hsl(var(--brand-black))',
+        'brand-gold': 'hsl(var(--brand-gold))',
+        'brand-white': 'hsl(var(--brand-white))',
+        
         // New BFO palette (HSL semantic tokens)
         'ink': 'hsl(var(--ink-black))',
         'navy': 'hsl(var(--bfo-navy))', 

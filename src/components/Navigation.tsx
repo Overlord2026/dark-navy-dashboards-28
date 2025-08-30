@@ -7,22 +7,22 @@ export function Navigation() {
   const { userProfile } = useUser();
   
   return (
-    <nav className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <nav className="sticky top-0 z-50 border-b border-brand-gold bg-brand-black backdrop-blur supports-[backdrop-filter]:bg-brand-black">
       <div className="container flex h-14 items-center justify-between">
         <div className="mr-4 hidden md:flex">
           <Link to="/" className="mr-6 flex items-center space-x-2">
-            <span className="hidden font-bold sm:inline-block">
+            <span className="hidden font-bold sm:inline-block text-brand-white">
               Family Office Platform
             </span>
           </Link>
           <div className="flex items-center space-x-6">
-            <Link to="/goals" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+            <Link to="/goals" className="text-sm font-medium text-brand-gold hover:text-brand-white transition-colors">
               Goals
             </Link>
-            <Link to="/receipts" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+            <Link to="/receipts" className="text-sm font-medium text-brand-gold hover:text-brand-white transition-colors">
               Receipts
             </Link>
-            <Link to="/nil-onboarding" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+            <Link to="/nil-onboarding" className="text-sm font-medium text-brand-gold hover:text-brand-white transition-colors">
               NIL Onboarding
             </Link>
           </div>

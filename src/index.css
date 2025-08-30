@@ -30,6 +30,16 @@
     /* Header Stack Height for Sticky Navigation */
     --header-stack: 112px;
     
+    /* Brand Color System - Black & Gold */
+    /* Pure Black #000000 for headers/navigation */
+    --brand-black: 0 0% 0%;
+    
+    /* Pure Gold #D4AF37 for accents/text */
+    --brand-gold: 45 71% 52%;
+    
+    /* White #FFFFFF for contrast */
+    --brand-white: 0 0% 100%;
+    
     /* BFO Color System - Exact Hex Conversions */
     /* Ink Black #0A0A0A (primary dark / button bg) */
     --ink-black: 0 0% 4%;

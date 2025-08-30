@@ -45,7 +45,7 @@ export default function CTAStickyBar({ className }: CTAStickyBarProps) {
 
   return (
     <div className={`fixed bottom-0 left-0 right-0 z-50 ${className}`}>
-      <div className="bg-primary text-primary-foreground shadow-lg border-t">
+      <div className="bg-brand-black text-brand-gold shadow-lg border-t border-brand-gold">
         <div className="container mx-auto px-4 py-3">
           <div className="flex items-center justify-between gap-4">
             
@@ -78,7 +78,7 @@ export default function CTAStickyBar({ className }: CTAStickyBarProps) {
                 variant="outline"
                 size="sm"
                 onClick={handleBookDemo}
-                className="hidden md:flex items-center gap-2 bg-white/10 border-white/20 text-white hover:bg-white/20"
+                className="hidden md:flex items-center gap-2 bg-brand-gold/10 border-brand-gold text-brand-gold hover:bg-brand-gold/20"
               >
                 <Calendar className="w-4 h-4" />
                 Book Demo
@@ -88,7 +88,7 @@ export default function CTAStickyBar({ className }: CTAStickyBarProps) {
                 variant="ghost"
                 size="sm"
                 onClick={handleLogin}
-                className="text-white hover:bg-white/10"
+                className="text-brand-gold hover:bg-brand-gold/10"
               >
                 <ExternalLink className="w-4 h-4 md:mr-1" />
                 <span className="hidden md:inline">Log In</span>
@@ -109,7 +109,7 @@ export default function CTAStickyBar({ className }: CTAStickyBarProps) {
                 variant="ghost"
                 size="sm"
                 onClick={() => setIsVisible(false)}
-                className="text-white hover:bg-white/10 p-1"
+                className="text-brand-gold hover:bg-brand-gold/10 p-1"
                 aria-label="Close"
               >
                 <X className="w-4 h-4" />
