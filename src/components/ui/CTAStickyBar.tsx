@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { GoldButton, GoldOutlineButton } from '@/components/ui/brandButtons';
 import { X, Calendar, Users, ExternalLink } from 'lucide-react';
 import { PERSONA_CONFIG } from '@/config/personaConfig';
 import { PUBLIC_CONFIG } from '@/config/publicConfig';
@@ -69,25 +70,21 @@ export default function CTAStickyBar({ className }: CTAStickyBarProps) {
 
             {/* Actions */}
             <div className="flex items-center gap-2 shrink-0">
-              <Button
-                variant="secondary"
-                size="sm"
+              <GoldButton
                 onClick={handleStartWorkspace}
-                className="hidden sm:flex items-center gap-2"
+                className="hidden sm:flex items-center gap-2 px-4 py-2"
               >
                 <Users className="w-4 h-4" />
                 Start Workspace
-              </Button>
+              </GoldButton>
 
-              <Button
-                variant="outline"
-                size="sm"
+              <GoldOutlineButton
                 onClick={handleBookDemo}
-                className="hidden md:flex items-center gap-2 rounded-md border border-[#D4AF37] px-3 py-1 text-[#D4AF37] hover:bg-[#D4AF37] hover:text-black transition-colors"
+                className="hidden md:flex items-center gap-2 px-4 py-2"
               >
                 <Calendar className="w-4 h-4" />
                 Book Demo
-              </Button>
+              </GoldOutlineButton>
 
               <Button
                 variant="ghost"
@@ -100,14 +97,12 @@ export default function CTAStickyBar({ className }: CTAStickyBarProps) {
               </Button>
 
               {/* Mobile CTA */}
-              <Button
-                variant="secondary"
-                size="sm"
+              <GoldButton
                 onClick={handleStartWorkspace}
-                className="sm:hidden"
+                className="sm:hidden px-3 py-1"
               >
                 Start
-              </Button>
+              </GoldButton>
 
               {/* Close Button */}
               <Button

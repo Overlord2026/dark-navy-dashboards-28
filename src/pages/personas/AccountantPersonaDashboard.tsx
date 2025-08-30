@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { GoldButton, GoldOutlineButton } from '@/components/ui/brandButtons';
 import { Badge } from '@/components/ui/badge';
 import VoiceMic from '@/components/voice/VoiceMic';
 import { ArrowRight, Calculator, FileText, TrendingUp, Building, Play, Calendar, BookOpen } from 'lucide-react';
@@ -70,24 +71,24 @@ const AccountantPersonaDashboard = () => {
           
           {/* Main CTAs */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
-            <Button asChild size="lg" variant="outline" className="h-14">
-              <Link to="/discover?persona=accountant&solutions=tax%2Cestate%2Cbusiness">
-                <BookOpen className="h-5 w-5 mr-2" />
-                Open Catalog
+            <GoldOutlineButton className="h-14 flex flex-col items-center justify-center gap-2">
+              <Link to="/discover?persona=accountant&solutions=tax%2Cestate%2Cbusiness" className="flex flex-col items-center gap-2">
+                <BookOpen className="h-5 w-5" />
+                <span>Open Catalog</span>
               </Link>
-            </Button>
+            </GoldOutlineButton>
             
-            <Button size="lg" onClick={handleDemoLaunch} className="h-14">
-              <Play className="h-5 w-5 mr-2" />
-              Run 90-Second Demo
-            </Button>
+            <GoldButton onClick={handleDemoLaunch} className="h-14 flex flex-col items-center justify-center gap-2">
+              <Play className="h-5 w-5" />
+              <span>Run 90-Second Demo</span>
+            </GoldButton>
             
-            <Button asChild size="lg" variant="outline" className="h-14">
-              <Link to="/learn/accountant/starter">
-                <Calendar className="h-5 w-5 mr-2" />
-                Book 15-Min Overview
+            <GoldOutlineButton className="h-14 flex flex-col items-center justify-center gap-2">
+              <Link to="/learn/accountant/starter" className="flex flex-col items-center gap-2">
+                <Calendar className="h-5 w-5" />
+                <span>Book 15-Min Overview</span>
               </Link>
-            </Button>
+            </GoldOutlineButton>
           </div>
         </div>
 

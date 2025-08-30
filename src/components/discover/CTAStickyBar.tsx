@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
+import { GoldButton, GoldOutlineButton } from '@/components/ui/brandButtons';
 import { ArrowRight, Play, LogIn } from 'lucide-react';
 import { DemoLauncher } from './DemoLauncher';
 
@@ -47,31 +48,30 @@ export const CTAStickyBar: React.FC = () => {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-t border-border shadow-lg">
+    <div className="fixed bottom-0 left-0 right-0 z-50 bg-black/95 backdrop-blur-sm border-t border-[#D4AF37] shadow-lg">
       <div className="container mx-auto px-6 py-3">
         <div className="flex items-center justify-center gap-3">
-          <Button 
-            size="sm" 
-            className="bg-gold hover:bg-gold-hover text-navy font-semibold"
+          <GoldButton 
+            className="flex items-center gap-2 px-4 py-2"
             onClick={handleStartWorkspace}
           >
-            <ArrowRight className="mr-2 h-4 w-4" />
+            <ArrowRight className="h-4 w-4" />
             Start workspace
-          </Button>
+          </GoldButton>
           
-          <Button 
-            variant="outline" 
-            size="sm"
+          <GoldOutlineButton 
+            className="flex items-center gap-2 px-4 py-2"
             onClick={handleBookDemo}
           >
-            <Play className="mr-2 h-4 w-4" />
+            <Play className="h-4 w-4" />
             Book demo
-          </Button>
+          </GoldOutlineButton>
           
           <Button 
             variant="ghost" 
             size="sm"
             onClick={handleLogin}
+            className="text-[#D4AF37] hover:bg-[#D4AF37]/10"
           >
             <LogIn className="mr-2 h-4 w-4" />
             Log in
