@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { GoldButton, GoldOutlineButton } from "@/components/ui/brandButtons";
 import { Slider } from "@/components/ui/slider";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -322,12 +323,12 @@ export default function HealthcareSavingsCalculator() {
                 while improving quality of life.
               </p>
               <div className="flex gap-3 pt-2">
-                <Button className="bg-primary">
+                <GoldButton>
                   Schedule Health Consultation
-                </Button>
-                <Button variant="outline">
+                </GoldButton>
+                <GoldOutlineButton>
                   View Health Plans
-                </Button>
+                </GoldOutlineButton>
               </div>
             </div>
           </div>

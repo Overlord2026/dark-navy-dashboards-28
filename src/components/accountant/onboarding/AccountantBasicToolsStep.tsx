@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { GoldButton } from '@/components/ui/brandButtons';
 import { 
   Users, 
   FileText, 
@@ -129,9 +129,9 @@ export const AccountantBasicToolsStep: React.FC = () => {
           Test the platform, invite a few clients, and see the difference immediately.
         </p>
         
-        <Button className="bg-green-600 hover:bg-green-700 text-white">
+        <GoldButton>
           Start Free Account
-        </Button>
+        </GoldButton>
       </motion.div>
     </div>
   );

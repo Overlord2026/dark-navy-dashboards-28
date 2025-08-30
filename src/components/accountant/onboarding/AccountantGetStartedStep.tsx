@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { GoldButton, GoldOutlineButton } from '@/components/ui/brandButtons';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { 
@@ -90,10 +91,10 @@ export const AccountantGetStartedStep: React.FC = () => {
                 ))}
               </div>
               
-              <Button className="w-full bg-green-600 hover:bg-green-700 text-white">
+              <GoldButton className="w-full">
                 Start Free Account
                 <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
+              </GoldButton>
               
               <p className="text-xs text-center text-muted-foreground">
                 No credit card required • Upgrade anytime
@@ -143,17 +144,17 @@ export const AccountantGetStartedStep: React.FC = () => {
               </div>
               
               <div className="space-y-3">
-                <Button 
-                  className="w-full bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-white"
+                <GoldButton 
+                  className="w-full"
                   onClick={() => setShowPremiumModal(true)}
                 >
                   Start Free Trial
                   <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
+                </GoldButton>
                 
-                <Button variant="outline" className="w-full border-primary text-primary hover:bg-primary hover:text-white">
+                <GoldOutlineButton className="w-full">
                   Schedule Demo
-                </Button>
+                </GoldOutlineButton>
               </div>
               
               <p className="text-xs text-center text-muted-foreground">
@@ -255,12 +256,12 @@ export const AccountantGetStartedStep: React.FC = () => {
             </div>
             
             <div className="flex gap-4">
-              <Button className="flex-1 bg-gradient-to-r from-primary to-primary/90">
+              <GoldButton className="flex-1">
                 Start 30-Day Free Trial
-              </Button>
-              <Button variant="outline" className="flex-1">
+              </GoldButton>
+              <GoldOutlineButton className="flex-1">
                 Learn More
-              </Button>
+              </GoldOutlineButton>
             </div>
           </div>
         </DialogContent>

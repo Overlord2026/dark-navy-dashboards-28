@@ -1,6 +1,6 @@
 import React from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
+import { GoldButton, GoldOutlineButton } from '@/components/ui/brandButtons';
 import { CheckCircle, Calendar, ArrowRight } from 'lucide-react';
 
 interface ValueModalProps {
@@ -44,16 +44,16 @@ export function ValueModal({ open, onClose }: ValueModalProps) {
           </ul>
           
           <div className="flex flex-col gap-3 pt-4">
-            <Button 
-              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+            <GoldButton 
+              className="w-full"
               onClick={handleSchedule}
             >
               <Calendar className="h-4 w-4 mr-2" />
               Book a Family Office Review
-            </Button>
-            <Button variant="outline" onClick={onClose} className="w-full">
+            </GoldButton>
+            <GoldOutlineButton onClick={onClose} className="w-full">
               Continue Browsing
-            </Button>
+            </GoldOutlineButton>
           </div>
         </div>
       </DialogContent>
