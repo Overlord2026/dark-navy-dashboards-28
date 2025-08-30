@@ -8,6 +8,7 @@ import { ExternalLink, RotateCcw, CheckCircle2, Users, FileText, DollarSign, Pac
 import { loadNilFixtures, getNilSnapshot, clearNilFixtures } from '@/fixtures/fixtures.nil';
 import { toast } from 'sonner';
 import { GoldButton, GoldOutlineButton } from '@/components/ui/brandButtons';
+import NilReceiptsStrip from '@/components/nil/NilReceiptsStrip';
 
 export default function NILDemoPage() {
   const navigate = useNavigate();
@@ -203,6 +204,7 @@ export default function NILDemoPage() {
           </Card>
         )}
       </div>
+      <NilReceiptsStrip />
     </div>
   );
 }

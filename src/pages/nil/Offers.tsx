@@ -13,6 +13,10 @@ import { createOffer, checkConflicts, getOffers, NILOffer } from '@/features/nil
 import { previewSplit, calculateSplitAmounts } from '@/features/nil/splits/preview';
 import { recordReceipt } from '@/features/receipts/record';
 import { hash } from '@/lib/canonical';
+import { toast } from 'sonner';
+import { GoldButton, GoldOutlineButton } from '@/components/ui/brandButtons';
+import NilReceiptsStrip from '@/components/nil/NilReceiptsStrip';
+
 // Mock anchor batch function for demo
 const anchorBatch = async (hashes: string[]) => ({
   merkle_root: `root-${Date.now()}`,
@@ -23,8 +27,6 @@ const anchorBatch = async (hashes: string[]) => ({
     anchor_epoch: 1
   }]
 });
-import { toast } from 'sonner';
-import { GoldButton, GoldOutlineButton } from '@/components/ui/brandButtons';
 
 export default function OffersPage() {
   const [offers, setOffers] = React.useState<NILOffer[]>([]);
@@ -399,6 +401,7 @@ export default function OffersPage() {
         )}
         </div>
       </div>
+      <NilReceiptsStrip />
     </div>
   );
 }

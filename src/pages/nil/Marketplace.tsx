@@ -16,6 +16,7 @@ import { useNavigate } from 'react-router-dom';
 import { getFlag } from '@/lib/flags';
 import { DemoTipsPopover } from '@/components/nil/DemoTipsPopover';
 import { GoldButton, GoldOutlineButton } from '@/components/ui/brandButtons';
+import NilReceiptsStrip from '@/components/nil/NilReceiptsStrip';
 
 export default function MarketplacePage() {
   const navigate = useNavigate();
@@ -289,6 +290,7 @@ export default function MarketplacePage() {
         </div>
         
         <DemoTipsPopover />
+        <NilReceiptsStrip />
       </div>
     </>
   );

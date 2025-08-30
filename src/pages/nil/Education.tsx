@@ -6,6 +6,7 @@ import { CheckCircle, Circle, BookOpen } from 'lucide-react';
 import { getModules, completeModule, EducationModule } from '@/features/nil/education/api';
 import { toast } from 'sonner';
 import { GoldButton, GoldOutlineButton } from '@/components/ui/brandButtons';
+import NilReceiptsStrip from '@/components/nil/NilReceiptsStrip';
 
 export default function EducationPage() {
   const [modules, setModules] = React.useState<EducationModule[]>([]);
@@ -119,6 +120,7 @@ export default function EducationPage() {
           </div>
         </div>
       </div>
+      <NilReceiptsStrip />
     </div>
   );
 }
