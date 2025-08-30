@@ -2,6 +2,7 @@
 import React from 'react'
 import { loadFixtures as loadNil, dehydrateState as deNil, hydrateState as hyNil } from '@/fixtures/fixtures'
 import { loadHealthFixtures, dehydrateHealthState, hydrateHealthState } from '@/fixtures/fixtures.health'
+import { loadInvestorDemoFixtures } from '@/fixtures/demo'
 
 export default function FixturesPanel() {
   const [profile, setProfile] = React.useState<'coach'|'mom'>('coach')
@@ -27,6 +28,11 @@ export default function FixturesPanel() {
         <button className="border rounded px-3 py-1" onClick={()=>loadHealthFixtures()}>Load Health</button>
         <button className="border rounded px-3 py-1" onClick={()=>setJson(dehydrateHealthState())}>Save Health JSON</button>
         <button className="border rounded px-3 py-1" onClick={()=>hydrateHealthState(JSON.parse(json))}>Restore Health JSON</button>
+      </section>
+
+      <section className="space-x-2">
+        <h2 className="font-semibold">Investor Demo</h2>
+        <button className="border rounded px-3 py-1" onClick={()=>loadInvestorDemoFixtures()}>Load Demo Data</button>
       </section>
 
       <textarea className="w-full h-48 border rounded p-2" value={json} onChange={e=>setJson(e.target.value)} placeholder="JSON snapshot…" />
