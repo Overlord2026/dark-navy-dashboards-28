@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { ExternalLink, RotateCcw, CheckCircle2, Users, FileText, DollarSign, Package } from 'lucide-react';
+import { ExternalLink, RotateCcw, CheckCircle2, Users, FileText, DollarSign, Package, ShieldCheck } from 'lucide-react';
 import { loadNilFixtures, getNilSnapshot, clearNilFixtures, forceResetNilFixtures, getNilFixturesHealth } from '@/fixtures/fixtures.nil';
 import { listReceipts } from '@/features/receipts/record';
 import { toast } from 'sonner';
@@ -59,6 +59,8 @@ export default function NILDemoPage() {
     const receipts = listReceipts();
     const anchoredCount = receipts.filter(r => r.anchor_ref?.accepted || r.anchor_ref?.status === 'anchored').length;
     const totalReceipts = receipts.length;
+    const cosignRequests = receipts.filter(r => r.action === 'cosign.request').length;
+    const cosignApprovals = receipts.filter(r => r.action === 'cosign.approve').length;
     
     return {
       invitesPending: snapshot?.counts.invites || 0,
@@ -67,6 +69,8 @@ export default function NILDemoPage() {
       catalogClicks: snapshot?.counts.catalog || 0,
       receiptsTotal: totalReceipts,
       receiptsAnchored: anchoredCount,
+      cosignRequests,
+      cosignApprovals,
       healthyStatus: totalReceipts >= 3 && anchoredCount >= 1
     };
   };
@@ -123,7 +127,7 @@ export default function NILDemoPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="p-4 rounded-lg bg-bfo-black/30 border border-bfo-gold/20">
                   <div className="flex items-center justify-between">
                     <div>
@@ -179,6 +183,26 @@ export default function NILDemoPage() {
                     <div>
                       <p className="text-2xl font-bold text-green-400">{analytics.receiptsAnchored}</p>
                       <p className="text-sm text-white/60">Anchored ✓</p>
+                    </div>
+                    <CheckCircle2 className="h-6 w-6 text-green-400/60" />
+                  </div>
+                </div>
+                
+                <div className="p-4 rounded-lg bg-bfo-black/30 border border-bfo-gold/20">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-2xl font-bold text-bfo-gold">{analytics.cosignRequests}</p>
+                      <p className="text-sm text-white/60">Co-Sign Requests</p>
+                    </div>
+                    <ShieldCheck className="h-6 w-6 text-bfo-gold/60" />
+                  </div>
+                </div>
+                
+                <div className="p-4 rounded-lg bg-bfo-black/30 border border-bfo-gold/20">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-2xl font-bold text-green-400">{analytics.cosignApprovals}</p>
+                      <p className="text-sm text-white/60">Co-Signs Approved</p>
                     </div>
                     <CheckCircle2 className="h-6 w-6 text-green-400/60" />
                   </div>

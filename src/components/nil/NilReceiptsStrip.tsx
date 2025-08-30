@@ -18,7 +18,8 @@ export default function NilReceiptsStrip() {
         receipt.action === 'education' ||
         receipt.action === 'offer_create' ||
         receipt.action === 'invite_create' ||
-        receipt.action === 'catalog_view'
+        receipt.action === 'catalog_view' ||
+        receipt.action?.startsWith('cosign.')
       )
       .slice(0, 5);
   } catch (error) {

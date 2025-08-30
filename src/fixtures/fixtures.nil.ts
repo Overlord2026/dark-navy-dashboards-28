@@ -22,6 +22,8 @@ interface NILSnapshot {
     education: number
     offers: number
     catalog: number
+    cosignRequests: number
+    cosignApprovals: number
   }
   lastLoaded: string
 }
@@ -268,7 +270,9 @@ export async function loadNilFixtures(profile: Profile = 'coach'): Promise<NILSn
         receipts: receipts.length,
         education: state.educationModules.length,
         offers: state.offers.length,
-        catalog: state.catalogItems.length
+        catalog: state.catalogItems.length,
+        cosignRequests: 0, // Will be updated dynamically
+        cosignApprovals: 0  // Will be updated dynamically
       },
       lastLoaded: new Date().toISOString()
     }
@@ -283,13 +287,15 @@ export async function loadNilFixtures(profile: Profile = 'coach'): Promise<NILSn
     // Fallback to minimal snapshot
     const fallbackSnapshot: NILSnapshot = {
       profile,
-      counts: {
-        invites: 0,
-        receipts: 0,
-        education: 0,
-        offers: 0,
-        catalog: 0
-      },
+        counts: {
+          invites: 0,
+          receipts: 0,
+          education: 0,
+          offers: 0,
+          catalog: 0,
+          cosignRequests: 0,
+          cosignApprovals: 0
+        },
       lastLoaded: new Date().toISOString()
     }
     
@@ -310,7 +316,9 @@ export function dehydrateNilState(): string {
           receipts: receipts.length,
           education: state.educationModules.length,
           offers: state.offers.length,
-          catalog: state.catalogItems.length
+          catalog: state.catalogItems.length,
+          cosignRequests: 0,
+          cosignApprovals: 0
         },
         lastLoaded: new Date().toISOString()
       }

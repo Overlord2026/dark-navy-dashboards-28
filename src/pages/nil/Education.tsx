@@ -2,14 +2,17 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { CheckCircle, Circle, BookOpen } from 'lucide-react';
+import { CheckCircle, Circle, BookOpen, ShieldCheck } from 'lucide-react';
 import { getModules, completeModule, EducationModule } from '@/features/nil/education/api';
 import { toast } from 'sonner';
 import { GoldButton, GoldOutlineButton } from '@/components/ui/brandButtons';
 import NilReceiptsStrip from '@/components/nil/NilReceiptsStrip';
+import { GuardianCosignModal } from '@/components/nil/GuardianCosignModal';
 
 export default function EducationPage() {
   const [modules, setModules] = React.useState<EducationModule[]>([]);
+  const [showCosignModal, setShowCosignModal] = React.useState(false);
+  const [selectedModule, setSelectedModule] = React.useState<EducationModule | null>(null);
 
   React.useEffect(() => {
     getModules().then(setModules);
@@ -41,6 +44,19 @@ export default function EducationPage() {
     } catch (error) {
       toast.error('Failed to complete module');
     }
+  };
+
+  const handleRequestCosign = (module: EducationModule) => {
+    setSelectedModule(module);
+    setShowCosignModal(true);
+  };
+
+  const handleCosignSuccess = () => {
+    setShowCosignModal(false);
+    setSelectedModule(null);
+    toast.success('Co-sign completed', {
+      description: 'Guardian approval received for education module'
+    });
   };
 
   const completedCount = modules.filter(m => m.status === 'done').length;
@@ -108,9 +124,20 @@ export default function EducationPage() {
                         {module.status === 'done' ? 'Complete' : 'Pending'}
                       </Badge>
                       {module.status === 'todo' && (
-                        <GoldButton onClick={() => handleCompleteModule(module.id)}>
-                          Complete
-                        </GoldButton>
+                        <div className="flex gap-2">
+                          <GoldButton onClick={() => handleCompleteModule(module.id)}>
+                            Complete
+                          </GoldButton>
+                          {module.id === 'disclosure_ftc' && (
+                            <GoldOutlineButton 
+                              onClick={() => handleRequestCosign(module)}
+                              className="flex items-center gap-1"
+                            >
+                              <ShieldCheck className="h-4 w-4" />
+                              Request Co-Sign
+                            </GoldOutlineButton>
+                          )}
+                        </div>
                       )}
                     </div>
                   </div>
@@ -121,6 +148,14 @@ export default function EducationPage() {
         </div>
       </div>
       <NilReceiptsStrip />
+      
+      <GuardianCosignModal
+        isOpen={showCosignModal}
+        onClose={() => setShowCosignModal(false)}
+        context="education"
+        contextData={{ moduleId: selectedModule?.id, moduleTitle: selectedModule?.title }}
+        onSuccess={handleCosignSuccess}
+      />
     </div>
   );
 }

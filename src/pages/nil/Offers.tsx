@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { CalendarIcon, AlertTriangle, DollarSign, Users } from 'lucide-react';
+import { CalendarIcon, AlertTriangle, DollarSign, Users, ShieldCheck } from 'lucide-react';
 import { format } from 'date-fns';
 import { createOffer, checkConflicts, getOffers, NILOffer } from '@/features/nil/offers/store';
 import { previewSplit, calculateSplitAmounts } from '@/features/nil/splits/preview';
@@ -16,6 +16,7 @@ import { hash } from '@/lib/canonical';
 import { toast } from 'sonner';
 import { GoldButton, GoldOutlineButton } from '@/components/ui/brandButtons';
 import NilReceiptsStrip from '@/components/nil/NilReceiptsStrip';
+import { GuardianCosignModal } from '@/components/nil/GuardianCosignModal';
 
 // Mock anchor batch function for demo
 const anchorBatch = async (hashes: string[]) => ({
@@ -34,6 +35,8 @@ export default function OffersPage() {
   const [conflicts, setConflicts] = React.useState<{ ok: boolean; conflicts?: string[] } | null>(null);
   const [splits, setSplits] = React.useState<any[]>([]);
   const [showCreateForm, setShowCreateForm] = React.useState(false);
+  const [showCosignModal, setShowCosignModal] = React.useState(false);
+  const [selectedOfferForCosign, setSelectedOfferForCosign] = React.useState<NILOffer | null>(null);
   
   // Form state
   const [formData, setFormData] = React.useState({
@@ -141,19 +144,42 @@ export default function OffersPage() {
     }));
   };
 
+  const handleRequestCosign = (offer: NILOffer) => {
+    setSelectedOfferForCosign(offer);
+    setShowCosignModal(true);
+  };
+
+  const handleCosignSuccess = () => {
+    setShowCosignModal(false);
+    setSelectedOfferForCosign(null);
+    toast.success('Co-sign completed', {
+      description: 'Guardian approval received for offer'
+    });
+  };
+
   return (
     <div className="min-h-screen bg-bfo-black text-white">
       <div className="container mx-auto py-8">
         <div className="mb-8">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold mb-2 text-white">NIL Offers</h1>
-              <p className="text-white/70">Create and manage your NIL offers</p>
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-3xl font-bold mb-2 text-white">NIL Offers</h1>
+                <p className="text-white/70">Create and manage your NIL offers</p>
+              </div>
+              <div className="flex gap-2">
+                <GoldOutlineButton 
+                  onClick={() => handleRequestCosign(offers[0])}
+                  disabled={offers.length === 0}
+                  className="flex items-center gap-1"
+                >
+                  <ShieldCheck className="h-4 w-4" />
+                  Request Co-Sign
+                </GoldOutlineButton>
+                <GoldButton onClick={() => setShowCreateForm(true)}>
+                  Create New Offer
+                </GoldButton>
+              </div>
             </div>
-            <GoldButton onClick={() => setShowCreateForm(true)}>
-              Create New Offer
-            </GoldButton>
-          </div>
         </div>
 
         <div className="grid gap-6">
@@ -402,6 +428,18 @@ export default function OffersPage() {
         </div>
       </div>
       <NilReceiptsStrip />
+      
+      <GuardianCosignModal
+        isOpen={showCosignModal}
+        onClose={() => setShowCosignModal(false)}
+        context="offer"
+        contextData={{ 
+          offerId: selectedOfferForCosign?.id, 
+          brand: selectedOfferForCosign?.brand,
+          amount: selectedOfferForCosign?.amount 
+        }}
+        onSuccess={handleCosignSuccess}
+      />
     </div>
   );
 }
