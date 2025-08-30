@@ -327,6 +327,15 @@
     .bfo-header { padding-top: env(safe-area-inset-top); }
   }
 
+  /* Kill any accidental legacy header that slips through */
+  header:has(.brand-text),
+  header:has(.site-title),
+  header:has(.logo-text),
+  header:has(.marketing-nav),
+  .header, .site-header, .marketing-header, .topbar, .top-bar {
+    display: none !important;
+  }
+
   /* Brand Utility Classes */
   .bg-brand-black { background-color: var(--bfo-black); }
   .text-brand-gold { color: var(--bfo-gold); }
