@@ -35,8 +35,8 @@ export function VoiceDrawer({
   const onClose = controlledOnClose ?? (() => setInternalOpen(false));
 
 
-  // WebRTC hook (GPT Realtime)
-  const { ready, live, error: liveError, start, stop, audioElRef } = useRealtimeVoice();
+  // WebRTC hook (GPT Realtime) - destructures { ready, live, error, start, stop, audioElRef }
+  const { ready, live, error, start, stop, audioElRef } = useRealtimeVoice();
 
 
   // narrow persona safely
@@ -74,7 +74,7 @@ export function VoiceDrawer({
   }
 
 
-  // TEXT SEND (guarded)
+  // TEXT SEND (guarded) - applies consent + forbidden-topic guardrails
   async function onSend() {
     if (!notes.trim()) return;
     if (!consent) { setResult({ error: 'Please acknowledge the consent checkbox first.' }); return; }
@@ -103,6 +103,7 @@ export function VoiceDrawer({
 
     setBusy(true);
     try {
+      // Keeps text call to 'generate-meeting-summary'
       const data = await callEdgeJSON(endpoint, { notes, persona: personaKey });
       setResult(data);
     } catch (e:any) {
@@ -113,7 +114,7 @@ export function VoiceDrawer({
   }
 
 
-  // LIVE START (guarded)
+  // GO LIVE (guarded) - applies consent + forbidden-topic guardrails
   async function onLiveStart() {
     if (!consent) { setResult({ error: 'Please acknowledge the consent checkbox first.' }); return; }
 
@@ -199,7 +200,7 @@ export function VoiceDrawer({
           </button>
           <button onClick={stop} disabled={!live} className="px-3 py-1.5 rounded bg-slate-200">Stop</button>
         </div>
-        {liveError && <div className="mt-2 text-xs text-red-600">Voice error: {liveError}</div>}
+        {error && <div className="mt-2 text-xs text-red-600">Voice error: {error}</div>}
 
 
         {handoff && (
