@@ -4,7 +4,7 @@ import { useParams, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { UserProfileSection } from "@/components/sidebar/UserProfileSection";
-import { Header } from "@/components/ui/Header";
+
 import { useTheme } from "@/context/ThemeContext";
 import { useAuth } from "@/context/AuthContext";
 import { AdvisorSection } from "@/components/profile/AdvisorSection";
@@ -192,7 +192,7 @@ export function ThreeColumnLayout({
             </Sheet>
           </div>
         )}
-        <Header />
+        
       </div>
       
       <div className="flex flex-1 overflow-hidden">
