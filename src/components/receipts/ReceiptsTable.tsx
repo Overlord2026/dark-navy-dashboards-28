@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import { Download, Eye, Shield, Search } from 'lucide-react';
+import { Download, Eye, Shield, Search, GitBranch } from 'lucide-react';
 import { listReceipts, getReceiptsByType } from '@/features/receipts/record';
 import { AnyRDS } from '@/features/receipts/types';
 import { acceptNofM } from '@/features/anchor/providers';
@@ -218,11 +218,14 @@ export default function ReceiptsTable() {
                       <TableCell className="font-mono text-sm">
                         {receipt.id.slice(0, 8)}...
                       </TableCell>
-                      <TableCell>
-                        <Badge variant={getReceiptBadgeVariant(receipt.type)}>
-                          {receipt.type}
-                        </Badge>
-                      </TableCell>
+                       <TableCell>
+                         <div className="flex items-center gap-1">
+                           <Badge variant={getReceiptBadgeVariant(receipt.type)}>
+                             {receipt.type === 'Delta-RDS' && <GitBranch className="h-3 w-3 mr-1" />}
+                             {receipt.type}
+                           </Badge>
+                         </div>
+                       </TableCell>
                       <TableCell>{new Date(receipt.ts).toLocaleString()}</TableCell>
                       <TableCell>
                         {'reasons' in receipt && receipt.reasons.length > 0 && (

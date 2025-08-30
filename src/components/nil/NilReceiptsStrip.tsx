@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { getNilFixturesHealth } from '@/fixtures/fixtures.nil';
 import { listReceipts } from '@/features/receipts/record';
-import { Check } from 'lucide-react';
+import { Check, GitBranch } from 'lucide-react';
 
 export default function NilReceiptsStrip() {
   // Get health status and receipts safely
@@ -15,6 +15,8 @@ export default function NilReceiptsStrip() {
       .filter(receipt => 
         receipt.context === 'NIL' || 
         receipt.type?.includes('NIL') ||
+        receipt.type === 'Settlement-RDS' ||
+        receipt.type === 'Delta-RDS' ||
         receipt.action === 'education' ||
         receipt.action === 'offer_create' ||
         receipt.action === 'invite_create' ||
@@ -49,8 +51,11 @@ export default function NilReceiptsStrip() {
                 className="flex items-center space-x-2 px-3 py-1 rounded-lg bg-[#24313d]/60 hover:bg-[#24313d] transition-colors group whitespace-nowrap"
               >
                 <span className="text-xs text-white/80 group-hover:text-white">
-                  {receipt.type || 'Action'} • {receipt.result || 'completed'}
+                  {receipt.type || 'Action'} • {receipt.result || receipt.escrow_state || 'completed'}
                 </span>
+                {receipt.type === 'Delta-RDS' && (
+                  <GitBranch className="h-3 w-3 text-red-400" />
+                )}
                 {(receipt.anchor_ref?.accepted || receipt.anchor_ref?.status === 'anchored') && (
                   <Check className="h-3 w-3 text-bfo-gold" />
                 )}

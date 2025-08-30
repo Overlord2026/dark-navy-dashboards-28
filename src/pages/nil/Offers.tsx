@@ -7,9 +7,10 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { CalendarIcon, AlertTriangle, DollarSign, Users, ShieldCheck } from 'lucide-react';
+import { CalendarIcon, AlertTriangle, DollarSign, Users, ShieldCheck, TrendingUp, TrendingDown, GitBranch } from 'lucide-react';
 import { format } from 'date-fns';
 import { createOffer, checkConflicts, getOffers, NILOffer } from '@/features/nil/offers/store';
+import type { SettlementRDS, DeltaRDS } from '@/features/receipts/types';
 import { previewSplit, calculateSplitAmounts } from '@/features/nil/splits/preview';
 import { recordReceipt } from '@/features/receipts/record';
 import { hash } from '@/lib/canonical';
@@ -37,6 +38,8 @@ export default function OffersPage() {
   const [showCreateForm, setShowCreateForm] = React.useState(false);
   const [showCosignModal, setShowCosignModal] = React.useState(false);
   const [selectedOfferForCosign, setSelectedOfferForCosign] = React.useState<NILOffer | null>(null);
+  const [escrowStates, setEscrowStates] = React.useState<Record<string, string>>({});
+  const [lastSettlementIds, setLastSettlementIds] = React.useState<Record<string, string>>({});
   
   // Form state
   const [formData, setFormData] = React.useState({
@@ -155,6 +158,78 @@ export default function OffersPage() {
     toast.success('Co-sign completed', {
       description: 'Guardian approval received for offer'
     });
+  };
+
+  const handleEscrowAction = async (offerId: string, action: 'hold' | 'release' | 'dispute') => {
+    try {
+      const offer = offers.find(o => o.id === offerId);
+      if (!offer) return;
+
+      if (action === 'dispute') {
+        // Create Delta-RDS for dispute
+        const priorRef = lastSettlementIds[offerId];
+        if (!priorRef) {
+          toast.error('No prior settlement to dispute');
+          return;
+        }
+
+        const deltaReceipt: DeltaRDS = {
+          id: `delta_${Date.now()}`,
+          type: 'Delta-RDS',
+          inputs_hash: await hash({ offerId, action, prior: priorRef }),
+          policy_version: 'NIL-2025.01',
+          prior_ref: priorRef,
+          diffs: [{
+            field: 'escrow_state',
+            from: escrowStates[offerId] || 'released',
+            to: 'disputed'
+          }],
+          reasons: ['DISPUTE_INITIATED', 'ESCROW_CONTESTED'],
+          ts: new Date().toISOString(),
+          anchor_ref: await anchorBatch([await hash({ offerId, action })]).catch(() => null)
+        };
+
+        recordReceipt(deltaReceipt);
+        setEscrowStates(prev => ({ ...prev, [offerId]: 'disputed' }));
+        
+        toast.success('Dispute initiated', {
+          description: `Delta-RDS receipt generated for offer ${offer.brand}`,
+          action: {
+            label: 'View Receipt',
+            onClick: () => window.location.href = '/nil/receipts'
+          }
+        });
+      } else {
+        // Create Settlement-RDS for hold/release
+        const settlementReceipt: SettlementRDS = {
+          id: `settlement_${Date.now()}`,
+          type: 'Settlement-RDS',
+          inputs_hash: await hash({ offerId, action }),
+          policy_version: 'NIL-2025.01',
+          escrow_state: action === 'hold' ? 'held' : 'released',
+          offerLock: offer.offerLock || offerId,
+          attribution_hash: await hash({ brand: offer.brand, category: offer.category }),
+          split_tree_hash: await hash({ amount: offer.amount, channels: offer.channels }),
+          ts: new Date().toISOString(),
+          anchor_ref: await anchorBatch([await hash({ offerId, action })]).catch(() => null)
+        };
+
+        recordReceipt(settlementReceipt);
+        setEscrowStates(prev => ({ ...prev, [offerId]: action === 'hold' ? 'held' : 'released' }));
+        setLastSettlementIds(prev => ({ ...prev, [offerId]: settlementReceipt.id! }));
+        
+        toast.success(`Escrow ${action}${action === 'hold' ? '' : 'd'}`, {
+          description: `Settlement-RDS receipt generated for offer ${offer.brand}`,
+          action: {
+            label: 'View Receipt',
+            onClick: () => window.location.href = '/nil/receipts'
+          }
+        });
+      }
+    } catch (error) {
+      console.error('Failed to process escrow action:', error);
+      toast.error(`Failed to ${action} escrow`);
+    }
   };
 
   return (
@@ -339,9 +414,24 @@ export default function OffersPage() {
                         <p className="text-sm text-bfo-gold">${offer.amount.toLocaleString()}</p>
                       </div>
                       <div className="text-right">
-                        <p className="text-sm text-white/70">
-                          {offer.startDate} - {offer.endDate}
-                        </p>
+                        <div className="flex items-center gap-2 mb-2">
+                          <p className="text-sm text-white/70">
+                            {offer.startDate} - {offer.endDate}
+                          </p>
+                          {escrowStates[offer.id] && (
+                            <Badge 
+                              variant="outline" 
+                              className={`text-xs ${
+                                escrowStates[offer.id] === 'held' ? 'border-yellow-500/40 text-yellow-400' :
+                                escrowStates[offer.id] === 'released' ? 'border-green-500/40 text-green-400' :
+                                'border-red-500/40 text-red-400'
+                              }`}
+                            >
+                              {escrowStates[offer.id] === 'disputed' && <GitBranch className="h-3 w-3 mr-1" />}
+                              {escrowStates[offer.id]}
+                            </Badge>
+                          )}
+                        </div>
                         <div className="flex gap-1 mt-1">
                           {offer.channels.map(channel => (
                             <Badge key={channel} variant="outline" className="text-xs border-bfo-gold/30 text-bfo-gold">
@@ -421,6 +511,81 @@ export default function OffersPage() {
                     </div>
                   </div>
                 ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {selectedOffer && (
+          <Card className="bg-[#24313d] border-bfo-gold/40 rounded-xl">
+            <CardHeader className="border-b border-bfo-gold/30">
+              <CardTitle className="flex items-center gap-2 text-white font-semibold">
+                <TrendingUp className="h-5 w-5 text-bfo-gold" />
+                Simulate Escrow
+              </CardTitle>
+              <CardDescription className="text-white/70">
+                Demo escrow lifecycle (Settlement-RDS → Delta-RDS)
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between p-3 bg-bfo-black/30 rounded-lg border border-bfo-gold/20">
+                  <div>
+                    <p className="font-medium text-white">Current State</p>
+                    <p className="text-sm text-white/70">
+                      {escrowStates[selectedOffer] || 'No escrow actions yet'}
+                    </p>
+                  </div>
+                  {escrowStates[selectedOffer] && (
+                    <Badge 
+                      variant="outline" 
+                      className={`${
+                        escrowStates[selectedOffer] === 'held' ? 'border-yellow-500/40 text-yellow-400' :
+                        escrowStates[selectedOffer] === 'released' ? 'border-green-500/40 text-green-400' :
+                        'border-red-500/40 text-red-400'
+                      }`}
+                    >
+                      {escrowStates[selectedOffer] === 'disputed' && <GitBranch className="h-3 w-3 mr-1" />}
+                      {escrowStates[selectedOffer]}
+                    </Badge>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-3 gap-3">
+                  <GoldOutlineButton 
+                    onClick={() => handleEscrowAction(selectedOffer, 'hold')}
+                    className="flex items-center gap-1"
+                    disabled={escrowStates[selectedOffer] === 'held'}
+                  >
+                    <TrendingDown className="h-4 w-4" />
+                    Hold
+                  </GoldOutlineButton>
+                  
+                  <GoldOutlineButton 
+                    onClick={() => handleEscrowAction(selectedOffer, 'release')}
+                    className="flex items-center gap-1"
+                    disabled={!escrowStates[selectedOffer] || escrowStates[selectedOffer] === 'released'}
+                  >
+                    <TrendingUp className="h-4 w-4" />
+                    Release
+                  </GoldOutlineButton>
+                  
+                  <GoldOutlineButton 
+                    onClick={() => handleEscrowAction(selectedOffer, 'dispute')}
+                    className="flex items-center gap-1 border-red-500/40 text-red-400 hover:bg-red-500/10"
+                    disabled={!lastSettlementIds[selectedOffer] || escrowStates[selectedOffer] === 'disputed'}
+                  >
+                    <GitBranch className="h-4 w-4" />
+                    Dispute
+                  </GoldOutlineButton>
+                </div>
+
+                <div className="text-xs text-white/50 bg-bfo-black/30 p-3 rounded-lg">
+                  <p className="font-medium mb-1">Demo Flow:</p>
+                  <p>1. Hold → Settlement-RDS (escrow_state: 'held')</p>
+                  <p>2. Release → Settlement-RDS (escrow_state: 'released')</p>
+                  <p>3. Dispute → Delta-RDS (prior_ref + diffs)</p>
+                </div>
               </div>
             </CardContent>
           </Card>
