@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { ArrowRight, Shield, Heart, Wallet, Home, Calculator, Play, Calendar, BookOpen } from 'lucide-react';
 import VoiceMic from '@/components/voice/VoiceMic';
 import { Link } from 'react-router-dom';
+import { PersonaSubHeader } from '@/components/layout/PersonaSubHeader';
 
 const FamilyRetireePersonaDashboard = () => {
   const [transcript, setTranscript] = useState('');
@@ -61,6 +62,11 @@ const FamilyRetireePersonaDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
+      <PersonaSubHeader 
+        title="Welcome back, Retiree Family"
+        subtitle="Manage your retirement with confidence and clarity"
+        right={<VoiceMic label="Speak" persona="family" autoSummarize onTranscript={setTranscript} onSummary={setSummary} size="sm" />}
+      />
       <div className="container mx-auto px-4 py-8">
         {/* Hero Section */}
         <div className="text-center max-w-4xl mx-auto mb-12">
@@ -71,14 +77,6 @@ const FamilyRetireePersonaDashboard = () => {
             <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
               Secure Your Golden Years
             </h1>
-            <VoiceMic
-              label="Speak"
-              persona="family"
-              autoSummarize
-              onTranscript={setTranscript}
-              onSummary={setSummary}
-              size="sm"
-            />
           </div>
           <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
             Protect your legacy, manage your health, and ensure your family's financial security 

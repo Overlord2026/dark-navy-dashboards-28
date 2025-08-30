@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { ArrowRight, Shield, FileText, Calculator, AlertTriangle, Play, Calendar, BookOpen } from 'lucide-react';
 import VoiceMic from '@/components/voice/VoiceMic';
 import { Link } from 'react-router-dom';
+import { PersonaSubHeader } from '@/components/layout/PersonaSubHeader';
 
 const InsurancePersonaDashboard = () => {
   const [transcript, setTranscript] = useState('');
@@ -46,6 +47,11 @@ const InsurancePersonaDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
+      <PersonaSubHeader 
+        title="Welcome back, Insurance Agent"
+        subtitle="Manage your entire insurance workflow with modern tools"
+        right={<VoiceMic label="Record Notes" persona="insurance" autoSummarize={false} onTranscript={setTranscript} size="sm" />}
+      />
       <div className="container mx-auto px-4 py-8">
         {/* Hero Section */}
         <div className="text-center max-w-4xl mx-auto mb-12">
@@ -56,13 +62,6 @@ const InsurancePersonaDashboard = () => {
             <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
               Streamline Your Insurance Operations
             </h1>
-            <VoiceMic
-              label="Record Notes"
-              persona="insurance"
-              autoSummarize={false}
-              onTranscript={setTranscript}
-              size="sm"
-            />
           </div>
           <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
             From client intake to claims processing, manage your entire insurance workflow 

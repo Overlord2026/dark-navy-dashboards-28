@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import VoiceMic from '@/components/voice/VoiceMic';
 import { ArrowRight, Scale, FileText, Shield, Users, Play, Calendar, BookOpen } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { PersonaSubHeader } from '@/components/layout/PersonaSubHeader';
 
 const AttorneyPersonaDashboard = () => {
   const [transcript, setTranscript] = useState('');
@@ -46,6 +47,11 @@ const AttorneyPersonaDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
+      <PersonaSubHeader 
+        title="Welcome back, Attorney"
+        subtitle="Professional estate planning and legal tools at your service"
+        right={<VoiceMic label="Record Notes" persona="attorney" autoSummarize={false} onTranscript={setTranscript} size="sm" />}
+      />
       <div className="container mx-auto px-4 py-8">
         {/* Hero Section */}
         <div className="text-center max-w-4xl mx-auto mb-12">
@@ -56,13 +62,6 @@ const AttorneyPersonaDashboard = () => {
             <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
               Modern Estate Planning Practice
             </h1>
-            <VoiceMic
-              label="Case Notes"
-              persona="attorney"
-              autoSummarize={false}
-              onTranscript={setTranscript}
-              size="sm"
-            />
           </div>
           <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
             Streamline your estate planning practice with professional document automation, 

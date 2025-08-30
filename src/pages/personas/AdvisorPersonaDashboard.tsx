@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { ArrowRight, Calculator, FileText, TrendingUp, Users, Play, Calendar, BookOpen } from 'lucide-react';
 import { VoiceDrawer } from '@/components/voice/VoiceDrawer';
 import { Link } from 'react-router-dom';
+import { PersonaSubHeader } from '@/components/layout/PersonaSubHeader';
 
 const AdvisorPersonaDashboard = () => {
   const tools = [
@@ -59,6 +60,11 @@ const AdvisorPersonaDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
+      <PersonaSubHeader 
+        title="Welcome back, Financial Advisor"
+        subtitle="Your professional dashboard and automation tools live here"
+        right={<VoiceDrawer triggerLabel="🎙️ Ask AI" persona="advisor" endpoint="meeting-summary" />}
+      />
       <div className="container mx-auto px-4 py-8">
         {/* Hero Section */}
         <div className="text-center max-w-4xl mx-auto mb-12">
@@ -69,11 +75,6 @@ const AdvisorPersonaDashboard = () => {
             <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
               Grow Your Practice with Confidence
             </h1>
-            <VoiceDrawer 
-              triggerLabel="🎙️ Ask AI" 
-              persona="advisor" 
-              endpoint="meeting-summary"
-            />
           </div>
           <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
             Access professional-grade planning tools, automate compliance workflows, 
