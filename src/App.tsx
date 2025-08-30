@@ -11,6 +11,8 @@ import TopNav from '@/components/layout/TopNav';
 import CTAStickyBar from '@/components/ui/CTAStickyBar';
 import NILOnboarding from '@/pages/nil/Onboarding';
 import Education from '@/pages/nil/Education';
+import Search from '@/pages/nil/Search';
+import Goals from '@/pages/nil/Goals';
 import Disclosures from '@/pages/nil/Disclosures';
 import Offers from '@/pages/nil/Offers';
 import Marketplace from '@/pages/nil/Marketplace';
@@ -391,6 +393,8 @@ function App() {
             <Route path="/onboarding" element={<OnboardingFlow />} />
             <Route path="/nil/onboarding" element={<NILOnboarding />} />
             <Route path="/nil/education" element={<Education />} />
+            <Route path="/nil/search" element={<Search />} />
+            <Route path="/nil/goals" element={<Goals />} />
             <Route path="/nil/disclosures" element={<Disclosures />} />
             <Route path="/nil/offers" element={<Offers />} />
             <Route path="/nil/marketplace" element={<Marketplace />} />

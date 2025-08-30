@@ -14,11 +14,11 @@ interface NILLayoutProps {
 
 const navigation = [
   { name: 'Education', href: '/nil/education', icon: '📚' },
-  { name: 'Disclosures', href: '/nil/disclosures', icon: '📋' },
+  { name: 'Search', href: '/nil/search', icon: '🔍' },
+  { name: 'Goals', href: '/nil/goals', icon: '🎯' },
   { name: 'Offers', href: '/nil/offers', icon: '💼' },
   { name: 'Marketplace', href: '/nil/marketplace', icon: '🤝' },
   { name: 'Payments', href: '/nil/payments', icon: '💰' },
-  { name: 'Disputes', href: '/nil/disputes', icon: '⚖️' },
   { name: 'Receipts', href: '/nil/receipts', icon: '🧾' },
   { name: 'Admin', href: '/nil/admin', icon: '⚙️' },
 ];

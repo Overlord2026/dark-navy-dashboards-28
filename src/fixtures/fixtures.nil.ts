@@ -26,12 +26,16 @@ const state: {
   educationModules: any[]
   offers: any[]
   catalogItems: any[]
+  searchRows: any[]
+  goals: any[]
 } = { 
   snapshot: null,
   invites: [],
   educationModules: [],
   offers: [],
-  catalogItems: []
+  catalogItems: [],
+  searchRows: [],
+  goals: []
 }
 
 // Demo data generators
@@ -100,6 +104,15 @@ export async function loadNilFixtures(profile: Profile = 'coach') {
   const offer = createDemoOffer(profile)
   state.offers = [offer]
   state.catalogItems = createDemoCatalog()
+  state.searchRows = [
+    { id: 'search_1', term: '#LocalBusiness', category: 'hashtag', trending: true, actionPath: '/nil/offers', actionLabel: 'Create Offer' },
+    { id: 'search_2', term: 'Campus Coffee Co.', category: 'local_brand', trending: false, actionPath: '/nil/marketplace', actionLabel: 'View Brand' },
+    { id: 'search_3', term: 'State University', category: 'school', trending: false, actionPath: '/nil/offers', actionLabel: 'Check Rules' }
+  ]
+  state.goals = [
+    { id: 'goal_1', title: 'Land 2 local brand deals this month', description: 'Focus on food & beverage partnerships', progress: 65, status: 'on_track', deadline: '2025-09-30', category: 'Partnerships', actionPath: '/nil/offers', actionLabel: 'Create Offer' },
+    { id: 'goal_2', title: 'Complete compliance training', description: 'Finish all required NIL education modules', progress: 100, status: 'active', deadline: '2025-09-15', category: 'Education', actionPath: '/nil/education', actionLabel: 'View Progress' }
+  ]
   
   // Generate content-free receipts
   const receipts = []
@@ -261,4 +274,12 @@ export function getNilCatalogItems() {
 
 export function getNilSnapshot() {
   return state.snapshot
+}
+
+export function getNilSearchRows() {
+  return state.searchRows
+}
+
+export function getNilGoals() {
+  return state.goals
 }
