@@ -158,7 +158,11 @@ const AthleteHomeDashboard = () => {
           <p className="text-muted-foreground">Manage your NIL opportunities and compliance</p>
         </div>
         <div className="flex gap-2">
-          <VoiceDrawer triggerLabel="Record" persona="nil" />
+          <VoiceDrawer 
+            triggerLabel="🎙️ Ask AI" 
+            persona="athlete" 
+            endpoint="meeting-summary"
+          />
           <Button variant="outline">
             <TrendingUp className="h-4 w-4 mr-2" />
             View Analytics

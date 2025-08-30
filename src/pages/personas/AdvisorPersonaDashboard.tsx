@@ -69,7 +69,11 @@ const AdvisorPersonaDashboard = () => {
             <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
               Grow Your Practice with Confidence
             </h1>
-            <VoiceDrawer triggerLabel="Meeting Notes" persona="advisor" />
+            <VoiceDrawer 
+              triggerLabel="🎙️ Ask AI" 
+              persona="advisor" 
+              endpoint="meeting-summary"
+            />
           </div>
           <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
             Access professional-grade planning tools, automate compliance workflows, 

@@ -51,7 +51,11 @@ export default function FamilyHome() {
         {/* Header */}
         <div className="text-center mb-8 relative">
           <div className="absolute top-0 right-0">
-            <VoiceDrawer triggerLabel="Talk to BFO" persona="families_retiree" />
+            <VoiceDrawer 
+              triggerLabel="🎙️ Ask AI" 
+              persona="family" 
+              endpoint="meeting-summary"
+            />
           </div>
           <Badge className={`mb-4 ${badge.color}`}>
             {badge.label}
