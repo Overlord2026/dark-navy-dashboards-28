@@ -78,23 +78,23 @@ export function PersonaDashboard({ personaId, subPersonaId }: PersonaDashboardPr
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <div className="bg-gradient-to-r from-primary to-primary-foreground text-primary-foreground p-6">
-        <div className="max-w-7xl mx-auto">
+      <section className="bg-black text-[#D4AF37] gold-border w-full">
+        <div className="mx-auto max-w-7xl px-4 py-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold">{currentConfig?.name || persona.name}</h1>
-              <p className="text-primary-foreground/80 mt-2">
-                {subPersona ? subPersona.description : `Professional dashboard for ${persona.name.toLowerCase()}`}
+              <h1 className="text-3xl font-bold text-white">Welcome back, {currentConfig?.name || persona.name}</h1>
+              <p className="text-white/80 mt-2 opacity-90">
+                {subPersona ? subPersona.description : `Your professional dashboard and automations live here.`}
               </p>
             </div>
             <div className="flex gap-2">
               {quickActions.map((action, index) => (
                 <Button
                   key={index}
-                  variant="secondary"
+                  variant="outline"
                   size="sm"
                   onClick={action.action}
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-2 border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-black transition-colors"
                 >
                   <action.icon className="h-4 w-4" />
                   {action.label}
@@ -103,11 +103,11 @@ export function PersonaDashboard({ personaId, subPersonaId }: PersonaDashboardPr
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* Sub-persona tabs */}
       {persona.subPersonas && !subPersonaId && (
-        <div className="bg-card border-b">
+        <div className="bg-black text-[#D4AF37] border-b border-[#D4AF37]">
           <div className="max-w-7xl mx-auto px-6">
             <Tabs value={subPersonaId || 'overview'} className="w-full">
               <TabsList className="grid w-full" style={{ gridTemplateColumns: `repeat(${persona.subPersonas.length + 1}, 1fr)` }}>
