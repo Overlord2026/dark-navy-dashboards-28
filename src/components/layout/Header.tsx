@@ -5,9 +5,8 @@ import { BRAND } from '@/theme/brand';
 function Header() {
   return (
     <header
-      className="sticky top-0 z-50 w-full bg-black text-white gold-border gold-shadow"
+      className="sticky top-0 z-50 w-full bg-bfo-black text-white border-b border-bfo-gold"
       role="banner"
-      style={{ borderTopColor: BRAND.gold, borderBottomColor: BRAND.gold }}
     >
       <div className="mx-auto max-w-7xl flex items-center justify-between px-4 py-2">
         {/* Left: Logo group */}
@@ -25,9 +24,9 @@ function Header() {
 
         {/* Right: nav */}
         <nav className="flex items-center gap-6">
-          <a className="text-white hover:text-[#D4AF37]" href="/discover">Discover</a>
-          <a className="text-white hover:text-[#D4AF37]" href="/solutions">Solutions</a>
-          <a className="text-white hover:text-[#D4AF37]" href="/personas/advisors">Advisors</a>
+          <a className="text-white hover:text-bfo-gold" href="/discover">Discover</a>
+          <a className="text-white hover:text-bfo-gold" href="/solutions">Solutions</a>
+          <a className="text-white hover:text-bfo-gold" href="/personas/advisors">Advisors</a>
           <GoldOutlineLinkButton href="/book">
             Book Demo
           </GoldOutlineLinkButton>

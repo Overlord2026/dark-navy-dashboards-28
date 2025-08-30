@@ -279,6 +279,31 @@
     --confetti-mint: var(--mint);
     --confetti-navy: var(--bfo-navy);
   }
+
+  /* BFO Premium Brand CSS Variables */
+  :root {
+    --bfo-black: #0B0F14;
+    --bfo-gold:  #D4AF37;
+    --bfo-navy:  #0B1E33;
+  }
+
+  /* Premium Banner Utilities */
+  .bfo-header {
+    background: var(--bfo-black);
+    border-bottom: 1px solid var(--bfo-gold);
+  }
+
+  .bfo-subheader {
+    background: var(--bfo-black);
+    border-top: 1px solid var(--bfo-gold);
+    border-bottom: 1px solid var(--bfo-gold);
+    color: var(--bfo-gold);
+  }
+
+  /* Brand Utility Classes */
+  .bg-brand-black { background-color: var(--bfo-black); }
+  .text-brand-gold { color: var(--bfo-gold); }
+  .border-brand-gold { border-color: var(--bfo-gold); }
 }
 
 @layer base {
