@@ -8,7 +8,7 @@ export default function TopNav() {
   );
 
   return (
-    <div className="bfo-subheader bfo-no-blur fixed top-[calc(var(--header-h))] left-0 right-0 z-[90]">
+    <div className="sticky top-[56px] z-40 bg-bfo-black text-bfo-gold border-y border-bfo-gold bfo-no-blur">
       <div className="mx-auto h-10 px-4 sm:px-6 lg:px-8 flex items-center">
         <nav className="flex items-center gap-2">
           {item('/nil', 'NIL')}

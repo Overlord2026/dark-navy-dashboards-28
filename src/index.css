@@ -294,6 +294,24 @@
     -webkit-backdrop-filter: none !important;
   }
 
+  /* Kill any iOS/Safari blur or semi-transparency system-wide */
+  .bfo-no-blur{
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* If any legacy header/subheader accidentally mounts, pin it to black */
+  header, .site-header, .simple-header, .legacy-header{
+    background: var(--bfo-black) !important;
+    border-bottom: 1px solid var(--bfo-gold) !important;
+    color: #fff !important;
+  }
+
+  /* Ensure page background is black beneath hero */
+  body { 
+    background-color: var(--bfo-black); 
+  }
+
   /* Opaque premium skins */
   .bfo-header {
     position: fixed; /* ensure fixed even if a wrapper adds sticky */
@@ -315,11 +333,6 @@
     border-top: 1px solid var(--bfo-gold) !important;
     border-bottom: 1px solid var(--bfo-gold) !important;
     color: var(--bfo-gold);
-  }
-
-  /* Body stays black so hero has a true black starter plane */
-  html, body { 
-    background-color: var(--bfo-black); 
   }
 
   /* Optional: account for iPhone safe area without changing height */
