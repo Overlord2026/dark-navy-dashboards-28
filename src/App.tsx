@@ -117,6 +117,7 @@ import AdvisorPersonaDashboard from '@/pages/personas/AdvisorPersonaDashboard';
 import AdvisorDashboardWithSideNav from '@/pages/personas/AdvisorDashboardWithSideNav';
 import AccountantDashboard from '@/pages/pros/AccountantDashboard';
 import Attorneys from '@/pages/pros/Attorneys';
+import FamilyRoadmap from '@/pages/family/FamilyRoadmap';
 import InsurancePersonaDashboard from '@/pages/personas/InsurancePersonaDashboard';
 import AccountantPersonaDashboard from '@/pages/personas/AccountantPersonaDashboard';
 import AttorneyPersonaDashboard from '@/pages/personas/AttorneyPersonaDashboard';
@@ -249,6 +250,9 @@ function App() {
             <Route path="/catalog" element={<CatalogPage />} />
             <Route path="/goals" element={<GoalsPage />} />
             <Route path="/health" element={<HealthcareLanding />} />
+            
+            {/* Family Routes */}
+            <Route path="/family/roadmap" element={<FamilyRoadmap />} />
             
             {/* Route Redirects */}
             <Route path="/family" element={<Navigate to="/family/home" replace />} />
