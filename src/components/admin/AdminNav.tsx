@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { Database, Shield, Users, Settings } from 'lucide-react';
+import { Database, Shield, Users, Settings, FileText } from 'lucide-react';
 
 const adminNavItems = [
   {
@@ -21,6 +21,12 @@ const adminNavItems = [
     href: '/admin/users',
     icon: Users,
     description: 'User management and roles'
+  },
+  {
+    title: 'IP HQ',
+    href: '/admin/iphq',
+    icon: FileText,
+    description: 'IP filings and patent tracking'
   },
   {
     title: 'Settings',

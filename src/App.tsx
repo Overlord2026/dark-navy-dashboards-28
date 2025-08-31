@@ -131,6 +131,8 @@ import { SecurityDashboard } from '@/components/bfo/SecurityDashboard';
 import { AdminMigrations } from '@/components/bfo/AdminMigrations';
 import { IPTracker } from '@/components/bfo/IPTracker';
 import AdminHQ from '@/pages/admin/AdminHQ';
+import IPHQ from '@/pages/admin/IPHQ';
+import RequireAdmin from '@/components/auth/RequireAdmin';
 
 const DemoPage = React.lazy(() => import('@/pages/demos/[persona]'));
 const PreviewPage = React.lazy(() => import('@/components/PreviewPage'));
