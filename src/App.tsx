@@ -2,6 +2,7 @@ import React, { Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider } from "next-themes";
 import { HelmetProvider } from 'react-helmet-async';
+import '@/styles/brand.css';
 import BrandHeader from '@/components/layout/BrandHeader';
 import { MegaMenu } from '@/components/nav/MegaMenu';
 import { ToolsProvider } from '@/contexts/ToolsContext';
@@ -135,6 +136,10 @@ import IPHQ from '@/pages/admin/IPHQ';
 import RequireAdmin from '@/components/auth/RequireAdmin';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 
+// Marketplace imports
+import MarketplaceIndex from '@/pages/marketplace/Index';
+import MarketplaceAdvisors from '@/pages/marketplace/Advisors';
+
 const DemoPage = React.lazy(() => import('@/pages/demos/[persona]'));
 const PreviewPage = React.lazy(() => import('@/components/PreviewPage'));
 
@@ -189,6 +194,9 @@ import { MeetingsPage as ProMeetingsPage } from './pages/pros/MeetingsPage';
 import { AgentsPage } from './pages/marketplace/AgentsPage';
 import { QuoteStartPage } from './pages/marketplace/QuoteStartPage';
 import { supabase } from '@/integrations/supabase/client';
+
+// Stub component for avoiding 404s
+const Stub = ({ title }: { title: string }) => <div className="p-10 text-white text-2xl">{title}</div>;
 
 function App() {
   // Check authentication status using Supabase session
@@ -270,6 +278,16 @@ function App() {
             <Route path="/pros/attorneys" element={<Attorneys />} />
             <Route path="/pros/insurance/life" element={<Navigate to="/personas/insurance/life" replace />} />
             <Route path="/pros/insurance/other" element={<Navigate to="/personas/insurance" replace />} />
+            
+            
+            {/* Marketplace Routes */}
+            <Route path="/marketplace" element={<MarketplaceIndex />} />
+            <Route path="/marketplace/advisors" element={<MarketplaceAdvisors />} />
+            
+            {/* Stub routes to avoid 404s */}
+            <Route path="/platform" element={<Stub title="Platform overview (stub)" />} />
+            <Route path="/solutions" element={<Stub title="Solutions (stub)" />} />
+            <Route path="/services" element={<Stub title="Services (stub)" />} />
             
             {/* Helpful redirects for old links */}
             <Route path="/personas" element={<Navigate to="/pros" replace />} />

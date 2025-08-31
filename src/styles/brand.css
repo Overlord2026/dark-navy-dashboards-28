@@ -1,0 +1,42 @@
+:root {
+  --bfo-black: #0B0F14;
+  --bfo-navy: #0E1A27;
+  --bfo-gold: #D4AF37;
+  --bfo-slate: #1D2935;
+}
+
+.bfo-header {
+  background: var(--bfo-black) !important;
+  border-bottom: 1px solid var(--bfo-gold) !important;
+  color: #fff;
+}
+
+.bfo-subheader {
+  background: var(--bfo-black) !important;
+  border-top: 1px solid var(--bfo-gold) !important;
+  border-bottom: 1px solid var(--bfo-gold) !important;
+  color: var(--bfo-gold);
+}
+
+.bfo-card {
+  background: var(--bfo-navy);
+  border: 1px solid transparent;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .35);
+}
+
+.bfo-card:hover {
+  border-color: var(--bfo-gold);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, .45);
+}
+
+.bfo-chip {
+  border: 1px solid var(--bfo-gold);
+  color: var(--bfo-gold);
+  border-radius: 12px;
+  padding: 2px 8px;
+}
+
+body {
+  background: var(--bfo-black);
+}

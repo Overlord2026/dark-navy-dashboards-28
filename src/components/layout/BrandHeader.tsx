@@ -16,15 +16,17 @@ const Logo = () => (
 
 function BrandHeader() {
   return (
-    <header className="sticky top-0 z-50 bfo-no-blur" style={{ backgroundColor: '#0B0F14', borderBottom: '1px solid #D4AF37' }}>
+    <header className="sticky top-0 z-50 bfo-header">
       <div className="mx-auto flex h-[56px] items-center gap-3 px-4">
         <Logo />
 
         <nav className="ml-auto hidden md:flex items-center gap-6">
           <RunNILDemo />
+          <Link to="/marketplace" className="text-white hover:text-[var(--bfo-gold)]">Marketplace</Link>
+          <Link to="/marketplace/advisors" className="text-white hover:text-[var(--bfo-gold)]">Advisors</Link>
           <Link to="/admin/ip" className="text-bfo-gold hover:underline">HQ · IP Filings</Link>
-          <a className="text-white hover:text-bfo-gold" href="/book">Book Demo</a>
-          <a className="text-white hover:text-bfo-gold" href="/login">Log In</a>
+          <a className="text-white hover:text-[var(--bfo-gold)]" href="/book">Book Demo</a>
+          <a className="text-white hover:text-[var(--bfo-gold)]" href="/login">Log In</a>
         </nav>
       </div>
     </header>
