@@ -17869,6 +17869,294 @@ export type Database = {
           },
         ]
       }
+      ip_artifacts: {
+        Row: {
+          filing_id: string | null
+          hash: string | null
+          id: string
+          kind: string
+          url: string
+        }
+        Insert: {
+          filing_id?: string | null
+          hash?: string | null
+          id?: string
+          kind: string
+          url: string
+        }
+        Update: {
+          filing_id?: string | null
+          hash?: string | null
+          id?: string
+          kind?: string
+          url?: string
+        }
+        Relationships: []
+      }
+      ip_claim_links: {
+        Row: {
+          claim_no: number
+          context: string | null
+          family_code: string
+          first_seen: string | null
+          id: string
+          last_seen: string | null
+          repo_path: string
+        }
+        Insert: {
+          claim_no: number
+          context?: string | null
+          family_code: string
+          first_seen?: string | null
+          id?: string
+          last_seen?: string | null
+          repo_path: string
+        }
+        Update: {
+          claim_no?: number
+          context?: string | null
+          family_code?: string
+          first_seen?: string | null
+          id?: string
+          last_seen?: string | null
+          repo_path?: string
+        }
+        Relationships: []
+      }
+      ip_claims: {
+        Row: {
+          body: string
+          claim_no: number
+          family_code: string
+          hash_hex: string | null
+          id: string
+        }
+        Insert: {
+          body: string
+          claim_no: number
+          family_code: string
+          hash_hex?: string | null
+          id?: string
+        }
+        Update: {
+          body?: string
+          claim_no?: number
+          family_code?: string
+          hash_hex?: string | null
+          id?: string
+        }
+        Relationships: []
+      }
+      ip_crossrefs: {
+        Row: {
+          filing_id: string | null
+          id: string
+          related_family: string
+          relation: string
+        }
+        Insert: {
+          filing_id?: string | null
+          id?: string
+          related_family: string
+          relation?: string
+        }
+        Update: {
+          filing_id?: string | null
+          id?: string
+          related_family?: string
+          relation?: string
+        }
+        Relationships: []
+      }
+      ip_deadlines: {
+        Row: {
+          created_at: string | null
+          due: string
+          family_code: string
+          id: string
+          item: string
+          link: string | null
+          status: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          due: string
+          family_code: string
+          id?: string
+          item: string
+          link?: string | null
+          status?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          due?: string
+          family_code?: string
+          id?: string
+          item?: string
+          link?: string | null
+          status?: string | null
+        }
+        Relationships: []
+      }
+      ip_decisions: {
+        Row: {
+          decided_at: string | null
+          decision: string
+          family_code: string
+          id: string
+          impact: string | null
+          rationale: string | null
+        }
+        Insert: {
+          decided_at?: string | null
+          decision: string
+          family_code: string
+          id?: string
+          impact?: string | null
+          rationale?: string | null
+        }
+        Update: {
+          decided_at?: string | null
+          decision?: string
+          family_code?: string
+          id?: string
+          impact?: string | null
+          rationale?: string | null
+        }
+        Relationships: []
+      }
+      ip_families: {
+        Row: {
+          created_at: string
+          fam_title: string
+          family_code: string
+          id: string
+          notes: string | null
+        }
+        Insert: {
+          created_at?: string
+          fam_title: string
+          family_code: string
+          id?: string
+          notes?: string | null
+        }
+        Update: {
+          created_at?: string
+          fam_title?: string
+          family_code?: string
+          id?: string
+          notes?: string | null
+        }
+        Relationships: []
+      }
+      ip_filings: {
+        Row: {
+          application_no: string | null
+          artifact_url_1: string | null
+          artifact_url_2: string | null
+          artifact_url_3: string | null
+          artifact_url_4: string | null
+          artifact_url_5: string | null
+          created_at: string
+          family_code: string
+          filing_date: string | null
+          filing_kind: string
+          filing_title: string
+          id: string
+          notes: string | null
+          status: string | null
+        }
+        Insert: {
+          application_no?: string | null
+          artifact_url_1?: string | null
+          artifact_url_2?: string | null
+          artifact_url_3?: string | null
+          artifact_url_4?: string | null
+          artifact_url_5?: string | null
+          created_at?: string
+          family_code: string
+          filing_date?: string | null
+          filing_kind: string
+          filing_title: string
+          id?: string
+          notes?: string | null
+          status?: string | null
+        }
+        Update: {
+          application_no?: string | null
+          artifact_url_1?: string | null
+          artifact_url_2?: string | null
+          artifact_url_3?: string | null
+          artifact_url_4?: string | null
+          artifact_url_5?: string | null
+          created_at?: string
+          family_code?: string
+          filing_date?: string | null
+          filing_kind?: string
+          filing_title?: string
+          id?: string
+          notes?: string | null
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ip_filings_family_code_fkey"
+            columns: ["family_code"]
+            isOneToOne: false
+            referencedRelation: "ip_families"
+            referencedColumns: ["family_code"]
+          },
+          {
+            foreignKeyName: "ip_filings_family_code_fkey"
+            columns: ["family_code"]
+            isOneToOne: false
+            referencedRelation: "v_ip_counts_by_family"
+            referencedColumns: ["family_code"]
+          },
+        ]
+      }
+      ip_filings_stage: {
+        Row: {
+          application_no: string | null
+          artifact_url_1: string | null
+          artifact_url_2: string | null
+          artifact_url_3: string | null
+          artifact_url_4: string | null
+          artifact_url_5: string | null
+          family_code: string | null
+          filing_date: string | null
+          filing_kind: string | null
+          filing_title: string | null
+          notes: string | null
+        }
+        Insert: {
+          application_no?: string | null
+          artifact_url_1?: string | null
+          artifact_url_2?: string | null
+          artifact_url_3?: string | null
+          artifact_url_4?: string | null
+          artifact_url_5?: string | null
+          family_code?: string | null
+          filing_date?: string | null
+          filing_kind?: string | null
+          filing_title?: string | null
+          notes?: string | null
+        }
+        Update: {
+          application_no?: string | null
+          artifact_url_1?: string | null
+          artifact_url_2?: string | null
+          artifact_url_3?: string | null
+          artifact_url_4?: string | null
+          artifact_url_5?: string | null
+          family_code?: string | null
+          filing_date?: string | null
+          filing_kind?: string | null
+          filing_title?: string | null
+          notes?: string | null
+        }
+        Relationships: []
+      }
       ip_hits: {
         Row: {
           abstract: string | null
@@ -17905,6 +18193,33 @@ export type Database = {
           title?: string | null
           ts?: string | null
           updated_at?: string | null
+        }
+        Relationships: []
+      }
+      ip_prior_art: {
+        Row: {
+          citation: string | null
+          created_at: string | null
+          family_code: string
+          id: string
+          notes: string | null
+          ref_id: string | null
+        }
+        Insert: {
+          citation?: string | null
+          created_at?: string | null
+          family_code: string
+          id?: string
+          notes?: string | null
+          ref_id?: string | null
+        }
+        Update: {
+          citation?: string | null
+          created_at?: string | null
+          family_code?: string
+          id?: string
+          notes?: string | null
+          ref_id?: string | null
         }
         Relationships: []
       }
@@ -26486,6 +26801,54 @@ export type Database = {
         }
         Relationships: []
       }
+      pro_inquiries: {
+        Row: {
+          consent_tos: boolean | null
+          created_at: string | null
+          email: string
+          full_name: string
+          id: string
+          message: string | null
+          persona: string
+          pro_id: string
+        }
+        Insert: {
+          consent_tos?: boolean | null
+          created_at?: string | null
+          email: string
+          full_name: string
+          id?: string
+          message?: string | null
+          persona: string
+          pro_id: string
+        }
+        Update: {
+          consent_tos?: boolean | null
+          created_at?: string | null
+          email?: string
+          full_name?: string
+          id?: string
+          message?: string | null
+          persona?: string
+          pro_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pro_inquiries_pro_id_fkey"
+            columns: ["pro_id"]
+            isOneToOne: false
+            referencedRelation: "pros"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pro_inquiries_pro_id_fkey"
+            columns: ["pro_id"]
+            isOneToOne: false
+            referencedRelation: "v_public_pros"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       product_audit_log: {
         Row: {
           action_type: string
@@ -28591,6 +28954,45 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      pros: {
+        Row: {
+          avatar_url: string | null
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          location: string | null
+          name: string
+          rating: number | null
+          tags: string[] | null
+          title: string
+          years_exp: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          location?: string | null
+          name: string
+          rating?: number | null
+          tags?: string[] | null
+          title: string
+          years_exp?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          location?: string | null
+          name?: string
+          rating?: number | null
+          tags?: string[] | null
+          title?: string
+          years_exp?: string | null
+        }
+        Relationships: []
       }
       prospect_invitation_events: {
         Row: {
@@ -37724,6 +38126,30 @@ export type Database = {
         }
         Relationships: []
       }
+      weather_alerts: {
+        Row: {
+          alert: Json
+          created_at: string | null
+          id: string
+          user_id: string
+          zip_first3: string
+        }
+        Insert: {
+          alert?: Json
+          created_at?: string | null
+          id?: string
+          user_id: string
+          zip_first3: string
+        }
+        Update: {
+          alert?: Json
+          created_at?: string | null
+          id?: string
+          user_id?: string
+          zip_first3?: string
+        }
+        Relationships: []
+      }
       webhook_configs: {
         Row: {
           created_at: string
@@ -38871,6 +39297,50 @@ export type Database = {
           },
         ]
       }
+      v_ip_counts_by_family: {
+        Row: {
+          fam_title: string | null
+          family_code: string | null
+          nonprovisional_count: number | null
+          provisional_count: number | null
+          total_count: number | null
+        }
+        Relationships: []
+      }
+      v_ip_filings_by_family: {
+        Row: {
+          application_no: string | null
+          artifact_url_1: string | null
+          artifact_url_2: string | null
+          artifact_url_3: string | null
+          artifact_url_4: string | null
+          artifact_url_5: string | null
+          created_at: string | null
+          fam_title: string | null
+          family_code: string | null
+          filing_date: string | null
+          filing_kind: string | null
+          filing_title: string | null
+          notes: string | null
+          status: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ip_filings_family_code_fkey"
+            columns: ["family_code"]
+            isOneToOne: false
+            referencedRelation: "ip_families"
+            referencedColumns: ["family_code"]
+          },
+          {
+            foreignKeyName: "ip_filings_family_code_fkey"
+            columns: ["family_code"]
+            isOneToOne: false
+            referencedRelation: "v_ip_counts_by_family"
+            referencedColumns: ["family_code"]
+          },
+        ]
+      }
       v_legal_document_templates_public: {
         Row: {
           attorney_id: string | null
@@ -38999,6 +39469,39 @@ export type Database = {
           },
         ]
       }
+      v_public_pros: {
+        Row: {
+          avatar_url: string | null
+          id: string | null
+          location: string | null
+          name: string | null
+          rating: number | null
+          tags: string[] | null
+          title: string | null
+          years_exp: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          id?: string | null
+          location?: string | null
+          name?: string | null
+          rating?: number | null
+          tags?: string[] | null
+          title?: string | null
+          years_exp?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          id?: string | null
+          location?: string | null
+          name?: string | null
+          rating?: number | null
+          tags?: string[] | null
+          title?: string | null
+          years_exp?: string | null
+        }
+        Relationships: []
+      }
       v_referral_leaderboard: {
         Row: {
           owner_id: string | null
@@ -39075,6 +39578,15 @@ export type Database = {
           persona: string | null
           steps_done: number | null
           user_id: string | null
+        }
+        Relationships: []
+      }
+      v_view_grants_audit: {
+        Row: {
+          grantee: unknown | null
+          privilege_type: string | null
+          table_name: unknown | null
+          table_schema: unknown | null
         }
         Relationships: []
       }
