@@ -262,9 +262,6 @@ function App() {
             <Route path="/healthcare" element={<Navigate to="/health" replace />} />
             <Route path="/discover" element={<Navigate to="/catalog" replace />} />
             
-            {/* Redirect any stale /personas paths that don't exist */}
-            <Route path="/personas" element={<Navigate to="/pros" replace />} />
-            
             {/* Public Pages - Flag Protected */}
             {getFlag('PUBLIC_DISCOVER_ENABLED') && <Route path="/discover" element={<Discover />} />}
             {getFlag('PUBLIC_DISCOVER_ENABLED') && <Route path="/search" element={<SearchPage />} />}
