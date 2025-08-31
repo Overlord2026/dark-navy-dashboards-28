@@ -24,6 +24,13 @@ import Index from '@/pages/nil/Index';
 import Admin from '@/pages/nil/Admin';
 import NilReadyCheckPage from '@/pages/nil/admin/NilReadyCheckPage';
 import Pricing from '@/pages/Pricing';
+
+// Landing page imports
+import FamiliesLanding from '@/pages/landing/FamiliesLanding';
+import ProsLanding from '@/pages/landing/ProsLanding';
+import GoalsPage from '@/pages/landing/GoalsPage';
+import CatalogPage from '@/pages/landing/CatalogPage';
+import HealthcareLanding from '@/pages/landing/HealthcareLanding';
 import FixturesPanel from '@/pages/dev/FixturesPanel';
 import Discover from '@/pages/Discover';
 import SearchPage from '@/pages/SearchPage';
@@ -230,30 +237,30 @@ function App() {
               <Navigate to="/nil/onboarding" replace />
             } />
             
+            {/* NEW: Primary nav landing pages */}
+            <Route path="/families" element={<FamiliesLanding />} />
+            <Route path="/pros" element={<ProsLanding />} />
+            <Route path="/catalog" element={<CatalogPage />} />
+            <Route path="/goals" element={<GoalsPage />} />
+            <Route path="/health" element={<HealthcareLanding />} />
+            
             {/* Route Redirects */}
             <Route path="/family" element={<Navigate to="/family/home" replace />} />
-            <Route path="/start/families" element={<Navigate to="/family/home" replace />} />
             <Route path="/advisors" element={<Navigate to="/pros/advisors" replace />} />
             <Route path="/insurance" element={<Navigate to="/pros/insurance" replace />} />
             <Route path="/onboarding/family" element={<Navigate to="/start/families" replace />} />
             
-            {/* New Pros Routes (aliases to personas) */}
-            <Route path="/pros" element={<Navigate to="/pros/advisors" replace />} />
+            {/* Pros sub-routes */}
             <Route path="/pros/advisors" element={<Navigate to="/personas/advisors" replace />} />
-            <Route path="/pros/cpas" element={<Navigate to="/personas/accountants" replace />} />
+            <Route path="/pros/accountants" element={<Navigate to="/personas/accountants" replace />} />
             <Route path="/pros/attorneys" element={<Navigate to="/personas/attorneys" replace />} />
-            <Route path="/pros/insurance" element={<Navigate to="/personas/insurance" replace />} />
-            <Route path="/pros/insurance/life-annuity" element={<Navigate to="/personas/insurance/life" replace />} />
-            <Route path="/pros/insurance/pc" element={<Navigate to="/personas/insurance/pc" replace />} />
-            <Route path="/pros/insurance/medicare-ltc" element={<Navigate to="/personas/insurance/medicare" replace />} />
+            <Route path="/pros/insurance/life" element={<Navigate to="/personas/insurance/life" replace />} />
+            <Route path="/pros/insurance/other" element={<Navigate to="/personas/insurance" replace />} />
             
-            {/* Families Routes */}
-            <Route path="/families" element={<Navigate to="/family/home" replace />} />
-            <Route path="/families/retirees" element={<Navigate to="/personas/families/retirees" replace />} />
-            <Route path="/families/aspiring" element={<Navigate to="/personas/families/aspiring" replace />} />
-            
-            {/* Healthcare Route */}
-            <Route path="/health" element={<Navigate to="/personas/healthcare" replace />} />
+            {/* Helpful redirects for old links */}
+            <Route path="/personas" element={<Navigate to="/pros" replace />} />
+            <Route path="/healthcare" element={<Navigate to="/health" replace />} />
+            <Route path="/discover" element={<Navigate to="/catalog" replace />} />
             
             {/* Redirect any stale /personas paths that don't exist */}
             <Route path="/personas" element={<Navigate to="/pros" replace />} />
