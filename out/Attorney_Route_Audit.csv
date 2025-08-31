@@ -1,0 +1,11 @@
+route,file,exists,loads_200,brand_ok,mobile_ok,notes
+/marketplace/attorneys,MISSING,no,no,no,no,Attorney marketplace listing needed
+/marketplace/attorneys/:id,MISSING,no,no,no,no,Attorney profile pages needed
+/estate/workbench,MISSING,no,no,no,no,Core estate planning workbench required
+/attorneys/home,MISSING,no,no,no,no,Attorney dashboard needed
+/personas/attorneys,src/pages/personas/AttorneyPersonaDashboard.tsx,yes,yes,yes,yes,Exists but needs enhancement
+/attorney/estate,src/pages/attorney/AttorneyEstateWorkbench.tsx,yes,yes,partial,yes,Basic stub exists
+/attorney/litigation,src/pages/attorney/LitigationAttorneyDashboard.tsx,yes,yes,partial,yes,Litigation-specific dashboard
+/legal/documents,MISSING,no,no,no,no,Legal document library needed
+/attorney/compliance,MISSING,no,no,no,no,Attorney compliance tracking needed
+/attorney/bar-status,MISSING,no,no,no,no,Bar admission tracking needed
