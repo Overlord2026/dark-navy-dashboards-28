@@ -114,6 +114,7 @@ import { BrandHub } from '@/pages/brand/BrandHub';
 import { SolutionsHub } from '@/components/solutions/SolutionsHub';
 import StarterPage from '@/pages/learn/StarterPage';
 import AdvisorPersonaDashboard from '@/pages/personas/AdvisorPersonaDashboard';
+import AdvisorDashboardWithSideNav from '@/pages/personas/AdvisorDashboardWithSideNav';
 import InsurancePersonaDashboard from '@/pages/personas/InsurancePersonaDashboard';
 import AccountantPersonaDashboard from '@/pages/personas/AccountantPersonaDashboard';
 import AttorneyPersonaDashboard from '@/pages/personas/AttorneyPersonaDashboard';
@@ -147,6 +148,9 @@ import TaxHubPreview from '@/pages/family/TaxHubPreview';
 import FamilyReceipts from '@/pages/family/FamilyReceipts';
 import RetirementRoadmapTool from '@/pages/tools/RetirementRoadmapTool';
 import SocialSecurityTool from '@/pages/tools/SocialSecurityTool';
+import EstateToolPage from '@/pages/tools/EstateToolPage';
+import TaxToolPage from '@/pages/tools/TaxToolPage';
+import VaultPage from '@/pages/tools/VaultPage';
 import AdvisorHome from '@/pages/advisor/AdvisorHome';
 import { AdvisorsLayout } from '@/layouts/AdvisorsLayout';
 import AdvisorsHome from '@/pages/advisors/AdvisorsHome';
@@ -251,7 +255,7 @@ function App() {
             <Route path="/onboarding/family" element={<Navigate to="/start/families" replace />} />
             
             {/* Pros sub-routes */}
-            <Route path="/pros/advisors" element={<Navigate to="/personas/advisors" replace />} />
+            <Route path="/pros/advisors" element={<AdvisorDashboardWithSideNav />} />
             <Route path="/pros/accountants" element={<Navigate to="/personas/accountants" replace />} />
             <Route path="/pros/attorneys" element={<Navigate to="/personas/attorneys" replace />} />
             <Route path="/pros/insurance/life" element={<Navigate to="/personas/insurance/life" replace />} />
@@ -397,6 +401,12 @@ function App() {
             <Route path="/family/tools/rmd-check" element={<RMDCheckTool />} />
             <Route path="/family/tools/taxhub-preview" element={<TaxHubPreview />} />
             <Route path="/family/receipts" element={<FamilyReceipts />} />
+            
+            {/* Tool Pages */}
+            <Route path="/tools/retirement" element={<RetirementRoadmapTool />} />
+            <Route path="/tools/estate" element={<EstateToolPage />} />
+            <Route path="/tools/tax" element={<TaxToolPage />} />
+            <Route path="/tools/vault" element={<VaultPage />} />
             
             {/* Estate Review Routes */}
             <Route path="/estate/review/new" element={<NewReviewSession />} />
