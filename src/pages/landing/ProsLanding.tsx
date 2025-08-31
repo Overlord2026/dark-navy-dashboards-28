@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import RunAdvisorDemo from '@/components/demos/RunAdvisorDemo';
+import RunNILDemo from '@/components/demos/RunNILDemo';
 
 export default function ProsLanding() {
   return (
@@ -8,7 +9,10 @@ export default function ProsLanding() {
       <p className="mb-6 max-w-2xl text-lg opacity-80">
         Choose your practice area to load a demo dashboard with tools and automations.
       </p>
-      <div className="mb-8"><RunAdvisorDemo /></div>
+      <div className="flex gap-3 mb-8 flex-wrap">
+        <RunAdvisorDemo />
+        <RunNILDemo />
+      </div>
       <div className="grid gap-4 md:grid-cols-3">
         <Tile label="Financial Advisors" to="/pros/advisors" />
         <Tile label="Accountants (CPA/EA)" to="/pros/accountants" />
