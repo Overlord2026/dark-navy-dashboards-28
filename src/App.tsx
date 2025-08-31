@@ -146,6 +146,9 @@ const CpaMarketplace = React.lazy(() => import('@/pages/marketplace/CpaMarketpla
 const CpaProfile = React.lazy(() => import('@/pages/marketplace/CpaProfile'));
 const TaxProjectionTool = React.lazy(() => import('@/pages/tools/TaxProjectionTool'));
 const ContinuingEducation = React.lazy(() => import('@/pages/learn/ContinuingEducation'));
+const TaxHubPro = React.lazy(() => import('@/pages/taxhub/TaxHubPro'));
+const CpaTools = React.lazy(() => import('@/pages/cpa/CpaTools'));
+const CpaLearn = React.lazy(() => import('@/pages/cpa/CpaLearn'));
 
 const DemoPage = React.lazy(() => import('@/pages/demos/[persona]'));
 const PreviewPage = React.lazy(() => import('@/components/PreviewPage'));
@@ -297,6 +300,9 @@ function App() {
             <Route path="/marketplace/cpas/:id" element={<React.Suspense fallback={<div>Loading...</div>}><CpaProfile /></React.Suspense>} />
             <Route path="/tools/tax-projection" element={<React.Suspense fallback={<div>Loading...</div>}><TaxProjectionTool /></React.Suspense>} />
             <Route path="/learn/ce" element={<React.Suspense fallback={<div>Loading...</div>}><ContinuingEducation /></React.Suspense>} />
+            <Route path="/taxhub/pro" element={<React.Suspense fallback={<div>Loading...</div>}><TaxHubPro /></React.Suspense>} />
+            <Route path="/cpa/tools" element={<React.Suspense fallback={<div>Loading...</div>}><CpaTools /></React.Suspense>} />
+            <Route path="/cpa/learn" element={<React.Suspense fallback={<div>Loading...</div>}><CpaLearn /></React.Suspense>} />
             <Route path="/families/retirees/goals" element={<RetireeGoals />} />
             
             {/* Stub routes to avoid 404s */}

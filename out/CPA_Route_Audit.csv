@@ -1,0 +1,12 @@
+route,file,exists,loads_200,seo_title,header_black_gold,subheader_black_gold,has_404,has_bfo_cards,mobile_ok,notes
+/cpas/home,src/pages/cpas/CpaHome.tsx,yes,yes,yes,yes,yes,no,yes,yes,Uses bfo-card and PersonaSubHeader correctly
+/marketplace/cpas,src/pages/marketplace/CpaMarketplace.tsx,yes,yes,yes,yes,no,no,yes,yes,Missing PersonaSubHeader with gold accent
+/marketplace/cpas/:id,src/pages/marketplace/CpaProfile.tsx,yes,yes,partial,yes,no,no,yes,yes,Contact form exists but needs ProInquiry integration
+/cpa/estate,src/pages/cpa/CPAEstatePage.tsx,yes,yes,yes,yes,no,no,partial,yes,Estate planning tool with suspense loading
+/taxhub/pro,MISSING,no,no,no,no,no,yes,no,no,Critical CPA console missing - needs creation
+/cpa/tools,MISSING,no,no,no,no,no,yes,no,no,Tools hub needed for CPA workflows
+/cpa/learn,MISSING,no,no,no,no,no,yes,no,no,CE learning center required
+/personas/cpa,src/pages/personas/AccountantPersonaDashboard.tsx,yes,yes,yes,yes,yes,no,yes,yes,Exists as AccountantPersonaDashboard
+/tools/tax-projection,src/pages/tools/TaxProjectionTool.tsx,yes,yes,yes,yes,no,no,yes,yes,Tax projection tool available
+/learn/ce,src/pages/learn/ContinuingEducation.tsx,yes,yes,yes,yes,no,no,yes,yes,CE tracking page exists
+/start/cpas,src/pages/onboarding/ProfessionalOnboarding.tsx,yes,yes,yes,yes,no,no,yes,yes,Professional onboarding flow
