@@ -139,6 +139,7 @@ import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 // Marketplace imports
 import MarketplaceIndex from '@/pages/marketplace/Index';
 import MarketplaceAdvisors from '@/pages/marketplace/Advisors';
+import AdvisorProfile from '@/pages/marketplace/AdvisorProfile';
 
 const DemoPage = React.lazy(() => import('@/pages/demos/[persona]'));
 const PreviewPage = React.lazy(() => import('@/components/PreviewPage'));
@@ -284,6 +285,7 @@ function App() {
             {/* Marketplace Routes */}
             <Route path="/marketplace" element={<MarketplaceIndex />} />
             <Route path="/marketplace/advisors" element={<MarketplaceAdvisors />} />
+            <Route path="/marketplace/advisors/:id" element={<AdvisorProfile />} />
             <Route path="/families/retirees/goals" element={<RetireeGoals />} />
             
             {/* Stub routes to avoid 404s */}

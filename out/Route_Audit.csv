@@ -1,0 +1,18 @@
+route,file,exists,loads_200,seo_title,header_black_gold,subheader_black_gold,has_404,has_bfo_cards,mobile_ok,notes
+/advisors,src/App.tsx redirect,true,true,Redirects to /advisors/home,true,false,false,false,true,Navigate redirect to /advisors/home
+/advisors/home,src/pages/advisors/AdvisorsHome.tsx,true,true,Advisor Dashboard | Business Overview & Quick Actions,true,true,false,false,true,Uses AdvisorsLayout with tab navigation
+/advisors/leads,src/pages/advisors/LeadsPage.tsx,true,true,Leads Management,true,true,false,false,true,Part of AdvisorsLayout
+/advisors/meetings,src/pages/advisors/MeetingsPage.tsx,true,true,Meetings Schedule,true,true,false,false,true,Part of AdvisorsLayout
+/advisors/campaigns,src/pages/advisors/CampaignsPage.tsx,true,true,Marketing Campaigns,true,true,false,false,true,Part of AdvisorsLayout
+/advisors/pipeline,src/pages/advisors/PipelinePage.tsx,true,true,Sales Pipeline,true,true,false,false,true,Part of AdvisorsLayout
+/advisors/tools,src/pages/advisors/AdvisorTools.tsx,true,true,Advisor Tools,true,true,false,false,true,Part of AdvisorsLayout
+/advisor/home,src/pages/advisor/AdvisorHome.tsx,true,true,Legacy advisor dashboard,true,false,false,true,true,Uses bfo-card sections - different from /advisors/home
+/marketplace/advisors,src/pages/marketplace/Advisors.tsx,true,true,Meet Our Expert Advisors,true,false,false,true,true,Filter interface with bfo-card advisor cards
+/marketplace/advisors/:id,Missing,false,false,N/A,false,false,true,false,false,404 - Individual advisor profile page missing
+/pros/advisors,src/pages/personas/AdvisorDashboardWithSideNav.tsx,true,true,Advisor Persona Dashboard,true,true,false,false,true,Three-column persona layout
+/personas/advisors,src/pages/personas/PersonaDashboard.tsx,true,true,Advisor Persona,true,true,false,false,true,Generic persona dashboard
+/personas/advisors/full,src/pages/personas/AdvisorPersonaDashboard.tsx,true,true,Full Advisor Dashboard,true,true,false,false,true,Enhanced advisor persona view
+/advisors/estate,src/pages/advisors/AdvisorEstatePage.tsx,true,true,Advisor Estate Planning,true,false,false,false,true,Lazy loaded advisor estate tools
+/k401/advisor,src/pages/k401/AdvisorBook.tsx,true,true,401k Advisor Book,true,false,false,false,true,401k-specific advisor tools
+/k401/advisor/request,src/pages/k401/AdvisorRequestAccess.tsx,true,true,Request Advisor Access,true,false,false,false,true,Access request flow
+/k401/advisor/assist,src/pages/k401/AdvisorAssistConsole.tsx,true,true,Advisor Assist Console,true,false,false,false,true,AI assistance for advisors
