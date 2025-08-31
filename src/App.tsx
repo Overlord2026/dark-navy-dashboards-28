@@ -130,6 +130,7 @@ import { PersonaDashboard } from '@/components/bfo/PersonaDashboard';
 import { SecurityDashboard } from '@/components/bfo/SecurityDashboard';
 import { AdminMigrations } from '@/components/bfo/AdminMigrations';
 import { IPTracker } from '@/components/bfo/IPTracker';
+import AdminHQ from '@/pages/admin/AdminHQ';
 
 const DemoPage = React.lazy(() => import('@/pages/demos/[persona]'));
 const PreviewPage = React.lazy(() => import('@/components/PreviewPage'));

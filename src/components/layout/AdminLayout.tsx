@@ -33,6 +33,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
 
   const adminNavItems = [
     { href: '/admin', icon: Home, label: 'Dashboard' },
+    { href: '/admin/hq', icon: Globe, label: 'HQ' },
     { href: '/admin/ready-check', icon: CheckCircle, label: 'Ready Check' },
     { href: '/admin/publish', icon: Globe, label: 'Publish' },
     { href: '/admin/env', icon: Monitor, label: 'Environment' },
