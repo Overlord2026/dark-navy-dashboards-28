@@ -312,6 +312,11 @@
     background-color: var(--bfo-black); 
   }
 
+  /* Additional kill switches for legacy headers */
+  header.simple-header, .simple-header, .legacy-header{ 
+    display:none !important; 
+  }
+
   /* Opaque premium skins */
   .bfo-header {
     position: fixed; /* ensure fixed even if a wrapper adds sticky */

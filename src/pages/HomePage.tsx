@@ -1,7 +1,8 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { MainLayout } from '@/components/layout/MainLayout';
+import BrandHeader from '@/components/layout/BrandHeader';
+import TopNav from '@/components/layout/TopNav';
 import { useUser } from '@/context/UserContext';
 import { AdminActions } from '@/components/dashboard/AdminActions';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -75,7 +76,9 @@ export function HomePage() {
   ];
 
   return (
-    <MainLayout>
+    <>
+      <BrandHeader />
+      <TopNav />
       <PageTransition>
         <div className="container mx-auto px-4 py-8">
           <StaggerContainer className="space-y-8">
@@ -85,7 +88,7 @@ export function HomePage() {
                 visible: { opacity: 1, y: 0 }
               }}
             >
-              <h1 className="text-4xl font-bold mb-2">Welcome to Family Office Platform</h1>
+              <h1 className="text-4xl font-bold mb-2">Welcome to <img src="/brand/bfo-logo-gold.svg" alt="BFO" className="inline h-8 w-auto" /></h1>
               <p className="text-xl text-muted-foreground">
                 Comprehensive wealth management and family office solutions
               </p>
@@ -155,6 +158,6 @@ export function HomePage() {
           </StaggerContainer>
         </div>
       </PageTransition>
-    </MainLayout>
+    </>
   );
 }
