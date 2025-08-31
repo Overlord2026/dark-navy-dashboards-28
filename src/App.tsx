@@ -133,6 +133,7 @@ import { IPTracker } from '@/components/bfo/IPTracker';
 import AdminHQ from '@/pages/admin/AdminHQ';
 import IPHQ from '@/pages/admin/IPHQ';
 import RequireAdmin from '@/components/auth/RequireAdmin';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 
 const DemoPage = React.lazy(() => import('@/pages/demos/[persona]'));
 const PreviewPage = React.lazy(() => import('@/components/PreviewPage'));
@@ -326,7 +327,7 @@ function App() {
             <Route path="/admin/security" element={<SecurityDashboard />} />
             <Route path="/admin/migrations" element={<AdminMigrations />} />
             <Route path="/admin/ip-tracker" element={<IPTracker />} />
-            <Route path="/admin/hq" element={<IPHQ />} />
+            <Route path="/admin/ip" element={<ProtectedRoute requiredRole="admin"><IPHQ/></ProtectedRoute>} />
             
             {/* Investor Routes */}
             <Route path="/investor/rollup" element={<InvestorRollupPage />} />
