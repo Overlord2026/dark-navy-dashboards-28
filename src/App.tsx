@@ -116,6 +116,7 @@ import StarterPage from '@/pages/learn/StarterPage';
 import AdvisorPersonaDashboard from '@/pages/personas/AdvisorPersonaDashboard';
 import AdvisorDashboardWithSideNav from '@/pages/personas/AdvisorDashboardWithSideNav';
 import AccountantDashboard from '@/pages/pros/AccountantDashboard';
+import Attorneys from '@/pages/pros/Attorneys';
 import InsurancePersonaDashboard from '@/pages/personas/InsurancePersonaDashboard';
 import AccountantPersonaDashboard from '@/pages/personas/AccountantPersonaDashboard';
 import AttorneyPersonaDashboard from '@/pages/personas/AttorneyPersonaDashboard';
@@ -258,7 +259,7 @@ function App() {
             {/* Pros sub-routes */}
             <Route path="/pros/advisors" element={<AdvisorDashboardWithSideNav />} />
             <Route path="/pros/accountants" element={<AccountantDashboard />} />
-            <Route path="/pros/attorneys" element={<Navigate to="/personas/attorneys" replace />} />
+            <Route path="/pros/attorneys" element={<Attorneys />} />
             <Route path="/pros/insurance/life" element={<Navigate to="/personas/insurance/life" replace />} />
             <Route path="/pros/insurance/other" element={<Navigate to="/personas/insurance" replace />} />
             

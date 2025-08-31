@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import RunNILDemo from '@/components/demos/RunNILDemo';
 
 const Logo = () => (
   <Link to="/" className="flex items-center gap-3">
@@ -20,6 +21,7 @@ function BrandHeader() {
         <Logo />
 
         <nav className="ml-auto hidden md:flex items-center gap-6">
+          <RunNILDemo />
           <a className="text-white hover:text-bfo-gold" href="/book">Book Demo</a>
           <a className="text-white hover:text-bfo-gold" href="/login">Log In</a>
         </nav>
