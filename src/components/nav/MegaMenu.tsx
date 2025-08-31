@@ -36,7 +36,7 @@ function NavDropdown({ item }: { item: NavItem }) {
       </DropdownMenuTrigger>
       <DropdownMenuContent 
         align="start" 
-        className="min-w-[220px] bg-background border border-border"
+        className="min-w-[220px] bg-background border border-border z-50"
       >
         {item.children?.map((child) => (
           <DropdownMenuItem key={child.label} asChild>
@@ -57,7 +57,7 @@ function MobileMoreMenu({ items }: { items: NavItem[] }) {
         <Menu className="h-4 w-4 mr-1" />
         More
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="bg-background border border-border">
+      <DropdownMenuContent align="end" className="bg-background border border-border z-50">
         {items.map((item) => (
           <DropdownMenuItem key={item.label} asChild>
             {item.path ? (

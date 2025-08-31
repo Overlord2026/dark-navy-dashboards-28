@@ -13,35 +13,22 @@ export const NAV: NavItem[] = [
   {
     label: 'Families',
     children: [
-      { label: 'Retirees', path: '/families/retirees' },
-      { label: 'Aspiring Families', path: '/families/aspiring' },
+      { label: 'Overview', path: '/families' },
+      { label: 'Retirees', path: '/start/families?segment=retirees' },
+      { label: 'Aspiring Families', path: '/start/families?segment=aspiring' },
     ],
   },
   {
     label: 'Service Professionals',
     children: [
+      { label: 'Overview', path: '/pros' },
       { label: 'Financial Advisors', path: '/pros/advisors' },
-      { label: 'Accountants (CPAs/EA)', path: '/pros/accountants' },
-      { label: 'Attorneys (Estate / Litigation)', path: '/pros/attorneys' },
-      { label: 'Insurance — Life & Annuities', path: '/pros/insurance/life' },
-      { label: 'Insurance — P&C', path: '/pros/insurance/pc' },
-      { label: 'Insurance — Medicare', path: '/pros/insurance/medicare' },
-      { label: 'Insurance — Long-Term Care', path: '/pros/insurance/ltc' },
+      { label: 'Accountants', path: '/pros/accountants' },
+      { label: 'Attorneys', path: '/pros/attorneys' },
+      { label: 'Insurance (Life/Annuity)', path: '/pros/insurance/life' },
+      { label: 'Insurance (P&C/Medicare/LTC)', path: '/pros/insurance/other' },
     ],
   },
-  {
-    label: 'Healthcare',
-    children: [
-      { label: 'Health Hub (Family)', path: '/health/hub' },
-      { label: 'Providers / Clinics', path: '/health/providers' },
-      { label: 'Longevity Programs', path: '/health/longevity' },
-    ],
-  },
-  {
-    label: 'Solutions',
-    children: [
-      { label: 'Wealth Solutions', path: '/solutions/wealth' },
-      { label: 'Health Solutions', path: '/solutions/health' },
-    ],
-  },
+  { label: 'Healthcare', path: '/health' },
+  { label: 'Solutions', path: '/solutions' },
 ];
