@@ -22,6 +22,7 @@ function BrandHeader() {
 
         <nav className="ml-auto hidden md:flex items-center gap-6">
           <RunNILDemo />
+          <a href="/admin/hq" className="text-bfo-gold hover:underline">HQ · IP Filings</a>
           <a className="text-white hover:text-bfo-gold" href="/book">Book Demo</a>
           <a className="text-white hover:text-bfo-gold" href="/login">Log In</a>
         </nav>
