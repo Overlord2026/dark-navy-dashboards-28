@@ -8,7 +8,7 @@ route,file,exists,loads_200,seo_title,header_black_gold,subheader_black_gold,has
 /advisors/tools,src/pages/advisors/AdvisorTools.tsx,true,true,Advisor Tools,true,true,false,false,true,Part of AdvisorsLayout
 /advisor/home,src/pages/advisor/AdvisorHome.tsx,true,true,Legacy advisor dashboard,true,false,false,true,true,Uses bfo-card sections - different from /advisors/home
 /marketplace/advisors,src/pages/marketplace/Advisors.tsx,true,true,Meet Our Expert Advisors,true,false,false,true,true,Filter interface with bfo-card advisor cards
-/marketplace/advisors/:id,Missing,false,false,N/A,false,false,true,false,false,404 - Individual advisor profile page missing
+/marketplace/advisors/:id,src/pages/marketplace/AdvisorProfile.tsx,true,true,Advisor Profile,true,false,false,true,true,Individual advisor profile page with contact form
 /pros/advisors,src/pages/personas/AdvisorDashboardWithSideNav.tsx,true,true,Advisor Persona Dashboard,true,true,false,false,true,Three-column persona layout
 /personas/advisors,src/pages/personas/PersonaDashboard.tsx,true,true,Advisor Persona,true,true,false,false,true,Generic persona dashboard
 /personas/advisors/full,src/pages/personas/AdvisorPersonaDashboard.tsx,true,true,Full Advisor Dashboard,true,true,false,false,true,Enhanced advisor persona view
@@ -16,3 +16,14 @@ route,file,exists,loads_200,seo_title,header_black_gold,subheader_black_gold,has
 /k401/advisor,src/pages/k401/AdvisorBook.tsx,true,true,401k Advisor Book,true,false,false,false,true,401k-specific advisor tools
 /k401/advisor/request,src/pages/k401/AdvisorRequestAccess.tsx,true,true,Request Advisor Access,true,false,false,false,true,Access request flow
 /k401/advisor/assist,src/pages/k401/AdvisorAssistConsole.tsx,true,true,Advisor Assist Console,true,false,false,false,true,AI assistance for advisors
+/cpas,src/pages/CPAAccountantIntroPage.tsx,true,true,CPAs & Accountants Platform,true,false,false,false,true,Landing page for CPA professionals
+/cpas/home,Missing,false,false,N/A,false,false,true,false,false,CPA workspace dashboard missing
+/marketplace/cpas,Missing,false,false,N/A,false,false,true,false,false,CPA marketplace listing missing
+/marketplace/cpas/:id,Missing,false,false,N/A,false,false,true,false,false,Individual CPA profile missing
+/personas/cpa,src/pages/personas/AccountantPersonaDashboard.tsx,true,true,CPA Persona Dashboard,true,true,false,false,true,Three-column CPA persona layout
+/tools/tax-hub,src/pages/family/TaxHubPreview.tsx,true,true,Tax Planning Hub,true,false,false,false,true,Tax planning tools interface
+/tools/tax-projection,Missing,false,false,N/A,false,false,true,false,false,Multi-year tax projection tool missing
+/learn/ce,Missing,false,false,N/A,false,false,true,false,false,Continuing education center missing
+/pros/cpas,src/pages/pros/AccountantDashboard.tsx,true,true,CPA Professional Dashboard,true,false,false,false,true,Professional CPA dashboard
+/accountant/dashboard,src/pages/AccountantDashboardPage.tsx,true,true,CPA Dashboard,true,true,false,false,true,Three-column CPA dashboard
+/accountant/onboarding,src/pages/AccountantOnboardingPage.tsx,true,true,CPA Onboarding,true,true,false,false,true,CPA firm setup process

@@ -1,4 +1,4 @@
-# Financial Advisor Persona - Wireframe & Sitemap
+# Financial Advisor & CPA Persona - Wireframe & Sitemap
 
 ## Global Navigation Map
 
@@ -9,6 +9,7 @@
   - Run NIL Demo
   - Marketplace → `/marketplace`
   - Advisors → `/marketplace/advisors`
+  - CPAs → `/marketplace/cpas`
   - HQ · IP Filings → `/admin/ip`
   - Book Demo (external)
   - Log In (external)
@@ -31,8 +32,24 @@
 | GET | `/advisors/tools` | AdvisorTools | Public | ✅ 200 | Advisor Tools |
 | GET | `/advisor/home` | Navigate redirect | Public | ✅ 200 | → /advisors/home |
 | GET | `/marketplace/advisors` | MarketplaceAdvisors | Public | ✅ 200 | Find Expert Advisors |
-| GET | `/marketplace/advisors/:id` | Missing | Public | ❌ 404 | **NEEDS STUB** |
+| GET | `/marketplace/advisors/:id` | AdvisorProfile | Public | ✅ 200 | Advisor Profile |
 | GET | `/pros/advisors` | AdvisorDashboardWithSideNav | Public | ✅ 200 | Advisor Persona Dashboard |
+
+## Route Tree - CPAs/Accountants
+
+| Method | Path | Component | Guard/Public | Page Status | SEO Title |
+|--------|------|-----------|--------------|-------------|-----------|
+| GET | `/cpas` | CPAAccountantIntroPage | Public | ✅ 200 | CPAs & Accountants Platform |
+| GET | `/cpas/home` | Missing | Public | ❌ 404 | **NEEDS STUB** |
+| GET | `/marketplace/cpas` | Missing | Public | ❌ 404 | **NEEDS STUB** |
+| GET | `/marketplace/cpas/:id` | Missing | Public | ❌ 404 | **NEEDS STUB** |
+| GET | `/personas/cpa` | AccountantPersonaDashboard | Public | ✅ 200 | CPA Persona Dashboard |
+| GET | `/tools/tax-hub` | TaxHubPreview | Public | ✅ 200 | Tax Planning Hub |
+| GET | `/tools/tax-projection` | Missing | Public | ❌ 404 | **NEEDS STUB** |
+| GET | `/learn/ce` | Missing | Public | ❌ 404 | **NEEDS STUB** |
+| GET | `/pros/cpas` | AccountantDashboard | Public | ✅ 200 | CPA Professional Dashboard |
+| GET | `/accountant/dashboard` | AccountantDashboardPage | Public | ✅ 200 | CPA Dashboard |
+| GET | `/accountant/onboarding` | AccountantOnboardingPage | Public | ✅ 200 | CPA Onboarding |
 
 ## Page Wireframes
 
@@ -97,48 +114,74 @@ Classes: Standard shadcn Cards (NOT bfo-card)
 Classes: Uses bfo-card for advisor cards
 ```
 
-### 3. `/advisor/home` - AdvisorHome (Legacy, different from /advisors/home)
+### 3. `/cpas` - CPAAccountantIntroPage
+```
+┌─────────────────────────────────────────────────────────────┐
+│ HEADER (bfo-header): [Logo] [CPAs] [Nav items]             │
+├─────────────────────────────────────────────────────────────┤
+│ MAIN CONTENT:                                               │
+│ ┌─ Hero Section ────────────────────────────────────────┐   │
+│ │ "CPAs & Accountants"                                 │   │
+│ │ "Streamline your workflows, maximize client value"   │   │
+│ │ [Get Started as a CPA] [Book Demo]                   │   │
+│ └─────────────────────────────────────────────────────────┘   │
+│                                                             │
+│ ┌─ Features Grid (3x2) ─────────────────────────────────┐   │
+│ │ [Tax Optimization] [Entity Planning] [Client Portals] │   │
+│ │ [Workflow Auto]    [Compliance]     [Revenue Tools]   │   │
+│ └─────────────────────────────────────────────────────────┘   │
+│                                                             │
+│ ┌─ Testimonials ────────────────────────────────────────┐   │
+│ │ "Join 1,200+ CPAs Growing Their Practices"           │   │
+│ │ Customer stories and stats                           │   │
+│ └─────────────────────────────────────────────────────────┘   │
+│                                                             │
+│ ┌─ Pricing Tiers ───────────────────────────────────────┐   │
+│ │ [Starter] [Professional] [Elite]                     │   │
+│ └─────────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────┘
+
+Classes: Standard shadcn Cards (NOT bfo-card)
+```
+
+### 4. `/personas/cpa` - AccountantPersonaDashboard
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │ HEADER (bfo-header): [Logo] [Nav items]                    │
 ├─────────────────────────────────────────────────────────────┤
-│ MAIN CONTENT:                                               │
-│ ┌─ Persona Hero ────────────────────────────────────────┐   │
-│ │ "Advisor Dashboard" with segment display             │   │
-│ │ [60-sec Demo] [Share] buttons                       │   │
-│ └─────────────────────────────────────────────────────────┘   │
-│                                                             │
-│ ┌─ bfo-card: Quick Actions ─────────────────────────────┐   │
-│ │ H2: "Quick Actions" (gold text)                      │   │
-│ │ Grid of tool cards with icons                       │   │
-│ └─────────────────────────────────────────────────────────┘   │
-│                                                             │
-│ ┌─ bfo-card: Recent Client Activity ────────────────────┐   │
-│ │ H2: "Recent Client Activity" (gold text)            │   │
-│ │ List of recent proof slips/receipts                 │   │
-│ │ [View All Receipts] button                          │   │
-│ └─────────────────────────────────────────────────────────┘   │
+│ SUBHEADER (bfo-subheader): [Dashboard][Clients][Tools]...  │
+├─────────────────────────────────────────────────────────────┤
+│ THREE-COLUMN LAYOUT:                                        │
+│ ┌─ Left ─┐ ┌─────── Main Content ──────┐ ┌─ Right ─┐      │
+│ │ Nav    │ │ ┌─ CPA Overview ─────────┐ │ │ Recent │       │
+│ │ Menu   │ │ │ • Active Clients: 42  │ │ │ Activity│       │
+│ │        │ │ │ • Tax Season Progress │ │ │         │       │
+│ │ • Home │ │ │ • CE Requirements     │ │ │ • New   │       │
+│ │ • Tools│ │ └─────────────────────┘ │ │   client │       │
+│ │ • CE   │ │                        │ │ • Filed  │       │
+│ │ • Docs │ │ ┌─ Client Management ───┐ │ │   return│       │
+│ │        │ │ │ Quick access to      │ │ │         │       │
+│ │        │ │ │ client tools         │ │ │         │       │
+│ │        │ │ └─────────────────────┘ │ │         │       │
+│ └────────┘ └─────────────────────────┘ └─────────┘       │
 └─────────────────────────────────────────────────────────────┘
 
-Classes: Uses bfo-card for main sections
+Classes: Standard layouts with persona dashboard
 ```
 
 ## Missing Components & Routes
 
-### 1. Advisor Profile Detail Page
-- **Route:** `/marketplace/advisors/:id`
-- **Status:** 404 - Missing
-- **Required:** Individual advisor profile with contact form
+### CPA Routes Needing Stubs
+1. **Route:** `/cpas/home` - CPA workspace dashboard
+2. **Route:** `/marketplace/cpas` - Find CPA professionals
+3. **Route:** `/marketplace/cpas/:id` - Individual CPA profile
+4. **Route:** `/tools/tax-projection` - Multi-year tax projector
+5. **Route:** `/learn/ce` - Continuing education center
 
-### 2. Advisor Inquiry Flow
-- **Table:** `pro_inquiries` (check if exists)
-- **Edge Function:** `send-pro-inquiry` (check if exists)
-- **Status:** Needs verification
-
-### 3. Advisor CE/Learning Hub
-- **Route:** `/advisors/learn` or `/ce/advisors`
-- **Status:** Not found
-- **Purpose:** Continuing education for advisors
+### Required Infrastructure
+1. **Table:** `pro_inquiries` (for contact forms)
+2. **Edge Function:** `pro-inquiry-email` (for inquiry handling)
+3. **ProInquiryForm** component integration
 
 ## Brand Implementation Status
 
@@ -152,7 +195,8 @@ Classes: Uses bfo-card for main sections
 - ✅ AdvisorCard.tsx uses `bfo-card`
 - ✅ AdvisorHome.tsx converted to `bfo-card`
 - ❌ AdvisorsHome.tsx still uses standard shadcn Cards
-- ❌ Other advisor pages need audit
+- ❌ CPAAccountantIntroPage.tsx uses standard Cards
+- ❌ Other CPA pages need audit
 
 ### Buttons
 - ⚠️ Mix of brand gold buttons and standard shadcn buttons
