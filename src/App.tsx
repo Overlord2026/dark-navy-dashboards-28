@@ -163,6 +163,7 @@ import SocialSecurityTool from '@/pages/tools/SocialSecurityTool';
 import EstateToolPage from '@/pages/tools/EstateToolPage';
 import TaxToolPage from '@/pages/tools/TaxToolPage';
 import VaultPage from '@/pages/tools/VaultPage';
+import RetireeGoals from '@/pages/families/RetireeGoals';
 import AdvisorHome from '@/pages/advisor/AdvisorHome';
 import { AdvisorsLayout } from '@/layouts/AdvisorsLayout';
 import AdvisorsHome from '@/pages/advisors/AdvisorsHome';
@@ -283,6 +284,7 @@ function App() {
             {/* Marketplace Routes */}
             <Route path="/marketplace" element={<MarketplaceIndex />} />
             <Route path="/marketplace/advisors" element={<MarketplaceAdvisors />} />
+            <Route path="/families/retirees/goals" element={<RetireeGoals />} />
             
             {/* Stub routes to avoid 404s */}
             <Route path="/platform" element={<Stub title="Platform overview (stub)" />} />

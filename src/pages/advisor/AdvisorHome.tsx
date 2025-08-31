@@ -206,11 +206,9 @@ export default function AdvisorHome() {
         </div>
 
         {/* Quick Actions */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Quick Actions</CardTitle>
-          </CardHeader>
-          <CardContent>
+        <section className="bfo-card p-5">
+          <h2 className="text-[var(--bfo-gold)] font-semibold mb-3">Quick Actions</h2>
+          <div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
               {quickActions.map((action, index) => {
                 const Icon = action.icon;
@@ -230,14 +228,14 @@ export default function AdvisorHome() {
                   </ToolGate>
                 );
               })}
-            </div>
-          </CardContent>
-        </Card>
+             </div>
+          </div>
+        </section>
 
         {/* Recent Client Activity */}
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-lg">Recent Client Activity</CardTitle>
+        <section className="bfo-card p-5">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-[var(--bfo-gold)] font-semibold">Recent Client Activity</h2>
             <Button
               variant="outline"
               size="sm"
@@ -246,8 +244,8 @@ export default function AdvisorHome() {
             >
               View All Receipts
             </Button>
-          </CardHeader>
-          <CardContent>
+          </div>
+          <div>
             {isLoading ? (
               <ReceiptsStripSkeleton />
             ) : recentProofSlips.length === 0 ? (
@@ -278,8 +276,8 @@ export default function AdvisorHome() {
                 ))}
               </div>
             )}
-          </CardContent>
-        </Card>
+          </div>
+        </section>
 
         {/* Performance Metrics */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

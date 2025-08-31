@@ -222,11 +222,9 @@ export default function FamilyHome() {
 
         {/* Quick Actions */}
         {segmentConfig.quickActions && segmentConfig.quickActions.length > 0 && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Quick Actions</CardTitle>
-            </CardHeader>
-            <CardContent>
+          <section className="bfo-card p-5">
+            <h2 className="text-[var(--bfo-gold)] font-semibold mb-3">Quick Actions</h2>
+            <div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3">
                 {segmentConfig.quickActions.map((action: any, index: number) => {
                   // Extract toolKey from route if it matches /tools/ pattern
@@ -256,10 +254,10 @@ export default function FamilyHome() {
                       <div className="text-sm font-medium text-center">{action.label}</div>
                     </Button>
                   );
-                })}
-              </div>
-            </CardContent>
-          </Card>
+                 })}
+               </div>
+            </div>
+          </section>
         )}
 
         {/* Tool Tabs */}
