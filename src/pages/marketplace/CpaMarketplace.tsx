@@ -1,6 +1,6 @@
 // TODO: flesh out per /out/CPA_UX_Wireframes.md
 import React from 'react';
-import { BrandHeader } from '@/components/site/BrandHeader';
+import { BrandHeader } from '@/components/layout/BrandHeader';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';

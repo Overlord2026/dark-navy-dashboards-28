@@ -1,7 +1,7 @@
 // TODO: flesh out per /out/CPA_UX_Wireframes.md
 import React from 'react';
-import { BrandHeader } from '@/components/site/BrandHeader';
-import { PersonaSubHeader } from '@/components/site/PersonaSubHeader';
+import { BrandHeader } from '@/components/layout/BrandHeader';
+import { PersonaSubHeader } from '@/components/layout/PersonaSubHeader';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Calculator, Users, BookOpen } from 'lucide-react';
 
@@ -9,7 +9,9 @@ export default function CpaHome() {
   return (
     <div className="min-h-screen bg-background">
       <BrandHeader />
-      <PersonaSubHeader />
+      <PersonaSubHeader>
+        <span className="text-bfo-gold">CPA Dashboard</span>
+      </PersonaSubHeader>
       
       <div className="container mx-auto px-4 py-8">
         <div className="space-y-6">

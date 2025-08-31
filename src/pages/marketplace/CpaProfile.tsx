@@ -1,7 +1,7 @@
 // TODO: flesh out per /out/CPA_UX_Wireframes.md
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { BrandHeader } from '@/components/site/BrandHeader';
+import { BrandHeader } from '@/components/layout/BrandHeader';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
