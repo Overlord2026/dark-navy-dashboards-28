@@ -9,7 +9,7 @@ interface BrandBarProps {
 export const BrandBar: React.FC<BrandBarProps> = ({ className = '' }) => {
   const navigate = useNavigate();
   return (
-    <div className={`sticky top-0 z-50 w-full h-14 bg-background border-b border-border backdrop-blur-md ${className}`}>
+    <div className={`sticky top-0 z-50 w-full h-14 bg-background border-b border-border ${className}`}>
       <div className="container flex items-center justify-between h-full px-4">
         {/* Brand Logo */}
         <Link 

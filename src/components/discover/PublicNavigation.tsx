@@ -89,7 +89,7 @@ export const PublicNavigation: React.FC = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center">
-            <a href="/discover" className="text-xl font-bold bg-gradient-to-r from-gold to-accent bg-clip-text text-transparent">
+            <a href="/discover" className="flex items-center">
               <img src="/brand/bfo-logo-gold.svg" alt="Boutique Family Office" className="h-6 w-auto" />
             </a>
           </div>

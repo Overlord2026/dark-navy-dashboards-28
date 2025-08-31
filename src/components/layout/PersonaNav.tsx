@@ -187,7 +187,7 @@ export const PersonaNav: React.FC<PersonaNavProps> = ({ className = '' }) => {
 
   return (
     <>
-      <nav className={`sticky top-14 z-40 w-full bg-background/95 backdrop-blur-md border-b border-border ${className}`}>
+      <nav className={`sticky top-14 z-40 w-full bg-background border-b border-border ${className}`}>
         <div className="container">
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center space-x-1 h-12">
@@ -245,7 +245,7 @@ export const PersonaNav: React.FC<PersonaNavProps> = ({ className = '' }) => {
         <div className="fixed inset-0 z-50 lg:hidden">
           {/* Backdrop */}
           <div 
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm"
+            className="fixed inset-0 bg-black/50"
             onClick={() => setIsMobileMenuOpen(false)}
             aria-hidden="true"
           />

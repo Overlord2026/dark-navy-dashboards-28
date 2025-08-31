@@ -15,8 +15,8 @@ const Logo = () => (
 
 export default function BrandHeader() {
   return (
-    <header className="bfo-header bfo-no-blur fixed top-0 left-0 right-0 z-[100]">
-      <div className="mx-auto flex h-[var(--header-h)] items-center px-4 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-50 bfo-no-blur bg-bfo-black border-b border-bfo-gold">
+      <div className="mx-auto flex h-[56px] items-center gap-3 px-4">
         <Logo />
 
         <nav className="ml-auto hidden md:flex items-center gap-6">

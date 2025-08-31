@@ -6,7 +6,7 @@ export function StickyTopBanner() {
   const brandLogoConfig = getLogoConfig('brand');
   
   return (
-    <div className="sticky top-0 z-50 w-full backdrop-blur-sm bg-navy border-b border-white/10">
+    <div className="sticky top-0 z-50 w-full bg-navy border-b border-white/10">
       <div className="flex items-center justify-start h-14 px-4 sm:h-16 sm:px-6">
         <div className="flex items-center">
           <img 
