@@ -47,15 +47,33 @@ export default function IPHQ() {
 
   const load = React.useCallback(async () => {
     setLoading(true);
-    // Using rpc call since view may not be in types yet
-    const { data, error } = await supabase.rpc('get_ip_filings_data');
-    if (error) {
-      console.error(error);
-      setRows([]);
-      setLoading(false);
-      return;
-    }
-    let filtered = (data ?? []) as Filing[];
+    // TODO: Replace with actual view query once v_ip_filings_by_family is created
+    // For now, using mock data structure
+    const mockData: Filing[] = [
+      {
+        id: '1',
+        family_code: 'P6',
+        filing_kind: 'PROVISIONAL',
+        filing_title: 'Wallet Consent Protocol',
+        filing_date: '2024-01-15',
+        application_no: '63/862,941',
+        artifact_url_1: 'https://example.com/art1.pdf',
+        notes: 'Initial provisional filing'
+      },
+      {
+        id: '2',
+        family_code: 'AIES',
+        filing_kind: 'NONPROVISIONAL',
+        filing_title: 'AI Ethics Framework',
+        filing_date: '2024-02-20',
+        application_no: '18/123,456',
+        artifact_url_1: 'https://example.com/art2.pdf',
+        artifact_url_2: 'https://example.com/art2b.pdf',
+        notes: 'Continuation of provisional'
+      }
+    ];
+    
+    let filtered = mockData;
 
     if (family !== 'All') filtered = filtered.filter(r => r.family_code === family);
     if (kind !== 'All')   filtered = filtered.filter(r => r.filing_kind === kind);

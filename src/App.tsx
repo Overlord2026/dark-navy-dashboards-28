@@ -326,6 +326,7 @@ function App() {
             <Route path="/admin/security" element={<SecurityDashboard />} />
             <Route path="/admin/migrations" element={<AdminMigrations />} />
             <Route path="/admin/ip-tracker" element={<IPTracker />} />
+            <Route path="/admin/iphq" element={<IPHQ />} />
             
             {/* Investor Routes */}
             <Route path="/investor/rollup" element={<InvestorRollupPage />} />
