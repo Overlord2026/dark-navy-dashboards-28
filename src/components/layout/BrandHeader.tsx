@@ -13,7 +13,7 @@ const Logo = () => (
   </Link>
 );
 
-export default function BrandHeader() {
+function BrandHeader() {
   return (
     <header className="sticky top-0 z-50 bfo-no-blur bg-bfo-black border-b border-bfo-gold">
       <div className="mx-auto flex h-[56px] items-center gap-3 px-4">
@@ -27,3 +27,6 @@ export default function BrandHeader() {
     </header>
   );
 }
+
+export default BrandHeader;
+export { BrandHeader };
