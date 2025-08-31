@@ -3,7 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider } from "next-themes";
 import { HelmetProvider } from 'react-helmet-async';
 import BrandHeader from '@/components/layout/BrandHeader';
-import TopNav from '@/components/layout/TopNav';
+import { MegaMenu } from '@/components/nav/MegaMenu';
 import { ToolsProvider } from '@/contexts/ToolsContext';
 import { Toaster } from '@/components/ui/toaster';
 import DevPanel from '@/components/dev/DevPanel';
@@ -221,7 +221,7 @@ function App() {
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           <div className="min-h-screen bg-background text-foreground">
             <BrandHeader />
-            <TopNav />
+            <MegaMenu />
             <div>
             <Routes>
             <Route path="/" element={

@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import BrandHeader from '@/components/layout/BrandHeader';
-import TopNav from '@/components/layout/TopNav';
+import { MegaMenu } from '@/components/nav/MegaMenu';
 import { useUser } from '@/context/UserContext';
 import { AdminActions } from '@/components/dashboard/AdminActions';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -78,7 +78,7 @@ export function HomePage() {
   return (
     <>
       <BrandHeader />
-      <TopNav />
+      <MegaMenu />
       <PageTransition>
         <div className="container mx-auto px-4 py-8">
           <StaggerContainer className="space-y-8">

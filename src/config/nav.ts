@@ -1,47 +1,47 @@
 // src/config/nav.ts
 export type NavItem = {
-  label: string;
-  href?: string;
-  children?: NavItem[];
-  external?: boolean;
+  label: string;
+  path?: string;
+  children?: { label: string; path: string }[];
 };
 
 export const NAV: NavItem[] = [
-  { label: 'NIL', href: '/nil' },
-  { label: 'Search', href: '/nil/search' },
-  { label: 'Goals', href: '/nil/goals' },
-  { label: 'Catalog', href: '/catalog' },
-
-  // Families (Retirees first)
-  {
-    label: 'Families',
-    children: [
-      { label: 'Retirees', href: '/families/retirees' },
-      { label: 'Aspiring Families', href: '/families/aspiring' },
-    ]
-  },
-
-  // Service Professionals with insurance sub-persona
-  {
-    label: 'Service Professionals',
-    children: [
-      { label: 'Financial Advisors', href: '/pros/advisors' },
-      { label: 'Accountants (CPAs)', href: '/pros/cpas' },
-      { label: 'Attorneys', href: '/pros/attorneys' },
-      {
-        label: 'Insurance',
-        children: [
-          { label: 'Life & Annuity', href: '/pros/insurance/life-annuity' },
-          { label: 'Property & Casualty', href: '/pros/insurance/pc' },
-          { label: 'Medicare & LTC', href: '/pros/insurance/medicare-ltc' },
-        ]
-      },
-    ]
-  },
-
-  // Expose the health hub explicitly
-  { label: 'Healthcare', href: '/health' },
-
-  // Keep Solutions
-  { label: 'Solutions', href: '/solutions' },
+  { label: 'NIL', path: '/nil' },
+  { label: 'Search', path: '/search' },
+  { label: 'Goals', path: '/goals' },
+  { label: 'Catalog', path: '/catalog' },
+  {
+    label: 'Families',
+    children: [
+      { label: 'Retirees', path: '/families/retirees' },
+      { label: 'Aspiring Families', path: '/families/aspiring' },
+    ],
+  },
+  {
+    label: 'Service Professionals',
+    children: [
+      { label: 'Financial Advisors', path: '/pros/advisors' },
+      { label: 'Accountants (CPAs/EA)', path: '/pros/accountants' },
+      { label: 'Attorneys (Estate / Litigation)', path: '/pros/attorneys' },
+      { label: 'Insurance — Life & Annuities', path: '/pros/insurance/life' },
+      { label: 'Insurance — P&C', path: '/pros/insurance/pc' },
+      { label: 'Insurance — Medicare', path: '/pros/insurance/medicare' },
+      { label: 'Insurance — Long-Term Care', path: '/pros/insurance/ltc' },
+    ],
+  },
+  {
+    label: 'Healthcare',
+    children: [
+      { label: 'Health Hub (Family)', path: '/health/hub' },
+      { label: 'Providers / Clinics', path: '/health/providers' },
+      { label: 'Longevity Programs', path: '/health/longevity' },
+    ],
+  },
+  {
+    label: 'Solutions',
+    children: [
+      { label: 'Wealth Solutions', path: '/solutions/wealth' },
+      { label: 'Health Solutions', path: '/solutions/health' },
+    ],
+  },
 ];

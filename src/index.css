@@ -2,6 +2,7 @@
 @import './styles/celebration.css';
 @import './styles/mobile-fixes.css';
 @import './styles/dashboard.css';
+@import './styles/nav.css';
 
 @tailwind base;
 @tailwind components;
