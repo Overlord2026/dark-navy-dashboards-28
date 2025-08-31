@@ -80,41 +80,37 @@ export function MegaMenu() {
   return (
     <div className="sticky-safe bg-bfo-black text-white border-y border-bfo-gold">
       <div className="container mx-auto px-4">
-        <nav 
-          className="nav-row py-2"
-          role="navigation"
-          aria-label="Main navigation"
-        >
-          {/* Always visible items */}
-          <div className="flex items-center gap-2 overflow-x-auto lg:gap-4">
+        <nav className="w-full overflow-x-auto py-2" role="navigation" aria-label="Main navigation">
+          <ul className="flex gap-6 whitespace-nowrap">
+            {/* Always visible items */}
             {visibleItems.map((item) => (
-              <div key={item.label}>
+              <li key={item.label}>
                 {item.children ? (
                   <NavDropdown item={item} />
                 ) : (
                   <NavLink item={item} />
                 )}
-              </div>
+              </li>
             ))}
             
             {/* Hidden items on larger screens */}
-            <div className="hidden lg:flex items-center gap-4">
-              {hiddenItems.map((item) => (
-                <div key={item.label}>
-                  {item.children ? (
-                    <NavDropdown item={item} />
-                  ) : (
-                    <NavLink item={item} />
-                  )}
-                </div>
-              ))}
-            </div>
+            {hiddenItems.map((item) => (
+              <li key={item.label} className="hidden lg:block">
+                {item.children ? (
+                  <NavDropdown item={item} />
+                ) : (
+                  <NavLink item={item} />
+                )}
+              </li>
+            ))}
             
             {/* Mobile "More" menu */}
             {hiddenItems.length > 0 && (
-              <MobileMoreMenu items={hiddenItems} />
+              <li className="lg:hidden">
+                <MobileMoreMenu items={hiddenItems} />
+              </li>
             )}
-          </div>
+          </ul>
         </nav>
       </div>
     </div>
