@@ -73,7 +73,7 @@ export default function FamiliesStart() {
       
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-md mx-auto">
-          <div className="bfo-card p-8">
+          <div className="bfo-card">
             <div className="text-center mb-8">
               <h1 className="text-3xl font-bold text-white mb-2">Get Started</h1>
               <p className="text-white/70">Join thousands of families securing their financial future</p>
@@ -82,62 +82,62 @@ export default function FamiliesStart() {
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-white mb-2">
+                  <label className="block text-sm text-white mb-2">
                     First Name
                   </label>
-                  <Input
+                  <input
                     type="text"
                     value={formData.first_name}
                     onChange={(e) => setFormData(prev => ({ ...prev, first_name: e.target.value }))}
                     required
-                    className="bg-bfo-purple border-bfo-gold text-white"
+                    className="input-black"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-white mb-2">
+                  <label className="block text-sm text-white mb-2">
                     Last Name
                   </label>
-                  <Input
+                  <input
                     type="text"
                     value={formData.last_name}
                     onChange={(e) => setFormData(prev => ({ ...prev, last_name: e.target.value }))}
                     required
-                    className="bg-bfo-purple border-bfo-gold text-white"
+                    className="input-black"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-white mb-2">
+                <label className="block text-sm text-white mb-2">
                   Email
                 </label>
-                <Input
+                <input
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
                   required
-                  className="bg-bfo-purple border-bfo-gold text-white"
+                  className="input-black"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-white mb-2">
+                <label className="block text-sm text-white mb-2">
                   Phone (Cell)
                 </label>
-                <Input
+                <input
                   type="tel"
                   value={formData.phone}
                   onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
-                  className="bg-bfo-purple border-bfo-gold text-white"
+                  className="input-black"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-white mb-2">
+                <label className="block text-sm text-white mb-2">
                   Which best describes you?
                 </label>
                 <Select value={formData.persona} onValueChange={(value) => setFormData(prev => ({ ...prev, persona: value }))}>
-                  <SelectTrigger className="bg-bfo-purple border-bfo-gold text-white">
+                  <SelectTrigger className="input-black">
                     <SelectValue placeholder="Select your situation" />
                   </SelectTrigger>
                   <SelectContent>
@@ -147,13 +147,13 @@ export default function FamiliesStart() {
                 </Select>
               </div>
 
-              <Button
+              <button
                 type="submit"
                 disabled={submitting}
-                className="w-full gold-button"
+                className="btn-gold w-full"
               >
                 {submitting ? 'Creating Account...' : 'Get Started'}
-              </Button>
+              </button>
             </form>
           </div>
         </div>

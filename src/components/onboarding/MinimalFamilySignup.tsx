@@ -76,74 +76,70 @@ export default function MinimalFamilySignup({ onComplete }: MinimalFamilySignupP
 
   return (
     <div className="max-w-md mx-auto">
-      <div className="bfo-card p-8">
-        <div className="text-center mb-6">
-          <h2 className="text-2xl font-bold text-white mb-2">Start Your Workspace</h2>
-          <p className="text-white/80">Just 4 quick details to get started</p>
+        <div className="bfo-card">
+          <div className="text-center mb-6">
+            <h2 className="text-2xl font-bold text-white mb-2">Start Your Workspace</h2>
+            <p className="text-white/80">Just 4 quick details to get started</p>
+          </div>
+          
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="text-sm text-white">First Name</label>
+              <input
+                value={formData.first_name}
+                onChange={(e) => handleInputChange('first_name', e.target.value)}
+                className="input-black"
+                placeholder="John"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="text-sm text-white">Last Name</label>
+              <input
+                value={formData.last_name}
+                onChange={(e) => handleInputChange('last_name', e.target.value)}
+                className="input-black"
+                placeholder="Smith"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="text-sm text-white">Email</label>
+              <input
+                type="email"
+                value={formData.email}
+                onChange={(e) => handleInputChange('email', e.target.value)}
+                className="input-black"
+                placeholder="john@example.com"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="text-sm text-white">Mobile Phone</label>
+              <input
+                type="tel"
+                value={formData.phone}
+                onChange={(e) => handleInputChange('phone', e.target.value)}
+                className="input-black"
+                placeholder="(555) 123-4567"
+                required
+              />
+            </div>
+
+            <div className="pt-4">
+              <button
+                type="submit"
+                disabled={!isFormValid() || loading}
+                className="btn-gold w-full"
+              >
+                {loading ? 'Creating workspace...' : 'Start workspace'}
+              </button>
+            </div>
+          </form>
         </div>
-        
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="first_name" className="text-white">First Name</Label>
-            <Input
-              id="first_name"
-              value={formData.first_name}
-              onChange={(e) => handleInputChange('first_name', e.target.value)}
-              className="bg-white/10 border-bfo-gold/30 text-white placeholder:text-white/50"
-              placeholder="John"
-              required
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="last_name" className="text-white">Last Name</Label>
-            <Input
-              id="last_name"
-              value={formData.last_name}
-              onChange={(e) => handleInputChange('last_name', e.target.value)}
-              className="bg-white/10 border-bfo-gold/30 text-white placeholder:text-white/50"
-              placeholder="Smith"
-              required
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="email" className="text-white">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              value={formData.email}
-              onChange={(e) => handleInputChange('email', e.target.value)}
-              className="bg-white/10 border-bfo-gold/30 text-white placeholder:text-white/50"
-              placeholder="john@example.com"
-              required
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="phone" className="text-white">Mobile Phone</Label>
-            <Input
-              id="phone"
-              type="tel"
-              value={formData.phone}
-              onChange={(e) => handleInputChange('phone', e.target.value)}
-              className="bg-white/10 border-bfo-gold/30 text-white placeholder:text-white/50"
-              placeholder="(555) 123-4567"
-              required
-            />
-          </div>
-
-          <div className="pt-4">
-            <Button
-              type="submit"
-              disabled={!isFormValid() || loading}
-              className="w-full bfo-cta h-12"
-            >
-              {loading ? 'Creating workspace...' : 'Start workspace'}
-            </Button>
-          </div>
-        </form>
-      </div>
     </div>
   );
 }

@@ -42,42 +42,43 @@ export default function FamilyOnboarding() {
   };
 
   return (
-    <div className="min-h-[80vh] bg-bfo-black text-white">
+    <div className="min-h-[80vh] bg-[hsl(var(--bfo-black))] text-white">
       <div className="max-w-xl mx-auto p-6">
-        <h1 className="text-3xl font-semibold mb-2">Create your family workspace</h1>
-        <p className="text-gray-300 mb-6">Just the basics—so we can personalize your experience.</p>
+        <h1 className="text-3xl font-semibold mb-2 text-white">Create your family workspace</h1>
+        <p className="text-white/70 mb-6">Just the basics—so we can personalize your experience.</p>
 
-        <form onSubmit={onSubmit} className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="text-sm text-gray-400">First name</label>
-              <input name="first_name" value={form.first_name} onChange={onChange}
-                className="w-full p-3 rounded border border-bfo-gold bg-bfo-black text-white" />
+        <div className="bfo-card">
+          <form onSubmit={onSubmit} className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm text-white">First name</label>
+                <input name="first_name" value={form.first_name} onChange={onChange}
+                  className="input-black" />
+              </div>
+              <div>
+                <label className="text-sm text-white">Last name</label>
+                <input name="last_name" value={form.last_name} onChange={onChange}
+                  className="input-black" />
+              </div>
             </div>
             <div>
-              <label className="text-sm text-gray-400">Last name</label>
-              <input name="last_name" value={form.last_name} onChange={onChange}
-                className="w-full p-3 rounded border border-bfo-gold bg-bfo-black text-white" />
+              <label className="text-sm text-white">Email</label>
+              <input name="email" value={form.email} onChange={onChange} type="email"
+                className="input-black" />
             </div>
-          </div>
-          <div>
-            <label className="text-sm text-gray-400">Email</label>
-            <input name="email" value={form.email} onChange={onChange} type="email"
-              className="w-full p-3 rounded border border-bfo-gold bg-bfo-black text-white" />
-          </div>
-          <div>
-            <label className="text-sm text-gray-400">Cell phone</label>
-            <input name="phone" value={form.phone} onChange={onChange} placeholder="+1 555 555 5555"
-              className="w-full p-3 rounded border border-bfo-gold bg-bfo-black text-white" />
-          </div>
+            <div>
+              <label className="text-sm text-white">Cell phone</label>
+              <input name="phone" value={form.phone} onChange={onChange} placeholder="+1 555 555 5555"
+                className="input-black" />
+            </div>
 
-          {msg && <div className="text-bfo-gold text-sm">{msg}</div>}
+            {msg && <div className="text-[#D4AF37] text-sm">{msg}</div>}
 
-          <button disabled={busy}
-            className="px-4 py-3 rounded bg-bfo-gold text-black hover:opacity-90 disabled:opacity-50">
-            {busy ? 'Saving…' : 'Save & continue'}
-          </button>
-        </form>
+            <button disabled={busy} type="submit" className="btn-gold">
+              {busy ? 'Saving…' : 'Save & continue'}
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );
