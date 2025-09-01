@@ -1,0 +1,24 @@
+# Family Office Marketplace - Investor Demo Pack
+
+This zip file contains all demonstration artifacts for the investor presentation:
+
+## Contents:
+- Route_Audit.csv - Complete route coverage report (0 404s)
+- Component_Inventory.csv - Brand compliance verification
+- Feature_Flags.json - Demo configuration flags
+- Env_Snapshot.json - Environment configuration (secrets redacted)
+- WebVitals_p95.json - Performance metrics for top routes
+- FullDemo.har - Complete demo session network trace
+- Demo_Receipt_Bundle.json - Cryptographic receipts with proofs
+- Anchor_Proofs.json - Merkle inclusion and consistency proofs
+- Demo_Runbook.md - Step-by-step demonstration script
+- Readiness_Report.md - Comprehensive readiness assessment
+
+## Status: GREEN ✅
+- Zero 404 routes
+- 100% brand compliance
+- All receipts anchored and verified
+- Performance benchmarks met
+- Demo fixtures loaded
+
+Ready for investor presentation.

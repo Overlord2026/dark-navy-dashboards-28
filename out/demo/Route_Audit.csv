@@ -1,0 +1,55 @@
+path,title,owner,mobile_ok,has_404
+/,Home,Marketing,true,false
+/families,Families,Marketing,true,false
+/families/retirees,Retirees,Marketing,true,false
+/families/aspiring,Aspiring,Marketing,true,false
+/pros,Service Pros,Marketing,true,false
+/pros/advisors,Financial Advisors,Marketing,true,false
+/pros/cpa,CPAs,Marketing,true,false
+/pros/attorney,Attorneys,Marketing,true,false
+/pros/insurance,Insurance,Marketing,true,false
+/pros/insurance/life,Life Insurance,Marketing,true,false
+/pros/insurance/annuity,Annuity,Marketing,true,false
+/pros/insurance/pc,P&C Insurance,Marketing,true,false
+/pros/insurance/medicare,Medicare,Marketing,true,false
+/pros/insurance/ltc,Long-Term Care,Marketing,true,false
+/nil,NIL,Marketing,true,false
+/healthcare,Healthcare,Marketing,true,false
+/solutions,Solutions,Marketing,true,false
+/learn,Learn,Marketing,true,false
+/pricing,Pricing,Marketing,true,false
+/about,About,Marketing,true,false
+/contact,Contact,Marketing,true,false
+/help,Help,CPO,true,false
+/login,Login,CTO,true,false
+/signup,Sign Up,CTO,true,false
+/dashboard,Dashboard,CPO,false,false
+/onboarding,Onboarding,CPO,true,false
+/onboarding/families,Family Onboarding,CPO,true,false
+/onboarding/advisors,Advisor Onboarding,CPO,true,false
+/admin,Admin Portal,CTO,false,false
+/admin/hq,HQ Dashboard,CTO,false,false
+/admin/hq/ip,IP HQ,CTO,false,false
+/admin/security,Security Dashboard,CTO,false,false
+/admin/publish,Publish Dashboard,CTO,false,false
+/personas/advisors,Advisors,CPO,false,false
+/personas/insurance,Insurance,CTO,false,false
+/personas/attorney,Attorney,CTO,false,false
+/personas/cpa,CPA,CTO,false,false
+/personas/healthcare,Healthcare,CTO,false,false
+/personas/nil,NIL,CTO,false,false
+/family/home,Family Home,CPO,false,false
+/advisors/home,Advisor Home,CPO,false,false
+/marketplace,Marketplace,CPO,true,false
+/marketplace/investments,Investment Marketplace,CPO,false,false
+/marketplace/services,Service Marketplace,CPO,false,false
+/nil/index,NIL Index,CTO,true,false
+/nil/onboarding,NIL Onboarding,CTO,true,false
+/nil/education,NIL Education,CTO,true,false
+/nil/admin,NIL Admin,CTO,false,false
+/health/dashboard,Health Dashboard,CPO,false,false
+/health/pa,Prior Authorization,CPO,false,false
+/health/hsa,HSA Management,CPO,false,false
+/tools/calculator,Calculator,CPO,true,false
+/tools/retirement,Retirement Tools,CPO,true,false
+/tools/tax,Tax Tools,CPO,true,false

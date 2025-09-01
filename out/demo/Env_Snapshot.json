@@ -1,0 +1,37 @@
+{
+  "timestamp": "2025-09-01T12:00:00Z",
+  "environment": "demo",
+  "config": {
+    "SUPABASE_PROJECT_ID": "xcmqjkvyvuhoslbzmlgi",
+    "SUPABASE_URL": "https://xcmqjkvyvuhoslbzmlgi.supabase.co",
+    "SUPABASE_ANON_KEY": "[REDACTED]",
+    "NODE_ENV": "production",
+    "VITE_APP_NAME": "Family Office Marketplace",
+    "VITE_APP_VERSION": "1.0.0",
+    "VITE_DEMO_MODE": "true",
+    "VITE_VOICE_ENABLED": "false",
+    "APP_DOMAIN": "lovable.app",
+    "CDN_URL": "https://cdn.lovable.app",
+    "ANALYTICS_ENABLED": "true",
+    "PERFORMANCE_MONITORING": "true",
+    "ERROR_REPORTING": "true",
+    "DATABASE_MIGRATIONS": "auto",
+    "CACHE_TTL": "3600",
+    "RATE_LIMIT_REQUESTS": "1000",
+    "RATE_LIMIT_WINDOW": "900"
+  },
+  "secrets": {
+    "OPENAI_API_KEY": "[REDACTED]",
+    "STRIPE_SECRET_KEY": "[REDACTED]",
+    "RESEND_API_KEY": "[REDACTED]",
+    "PLAID_CLIENT_ID": "[REDACTED]",
+    "PLAID_SECRET": "[REDACTED]",
+    "DOCUSIGN_INTEGRATION_KEY": "[REDACTED]"
+  },
+  "build_info": {
+    "build_time": "2025-09-01T12:00:00Z",
+    "commit_hash": "abc123def456",
+    "branch": "main",
+    "version": "1.0.0"
+  }
+}

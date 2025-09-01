@@ -1,0 +1,112 @@
+{
+  "bundle_id": "demo_receipt_bundle_2025_09_01",
+  "created_at": "2025-09-01T12:00:00Z",
+  "description": "Demo receipt bundle for investor presentation",
+  "receipts": [
+    {
+      "receipt_id": "rec_retirement_roadmap_001",
+      "type": "Decision-RDS",
+      "action": "retirement_roadmap_planning",
+      "timestamp": "2025-09-01T12:00:00Z",
+      "inputs_hash": "sha256:abc123...",
+      "policy_hash": "sha256:def456...", 
+      "model_id": "retirement-planner-v2.1",
+      "outputs_fp": "sha256:ghi789...",
+      "receipt_hash": "sha256:jkl012...",
+      "anchor_ref": {
+        "anchor_type": "blockchain",
+        "transaction_hash": "0x1234567890abcdef",
+        "block_number": 12345678,
+        "merkle_root": "sha256:merkle_root_123"
+      },
+      "proofs": {
+        "inclusion_proof": ["sha256:sibling1", "sha256:sibling2"],
+        "consistency_proof": ["sha256:old_root", "sha256:new_root"]
+      }
+    },
+    {
+      "receipt_id": "rec_401k_benchmark_002",
+      "type": "Decision-RDS",
+      "action": "401k_fee_comparison",
+      "timestamp": "2025-09-01T12:01:30Z",
+      "inputs_hash": "sha256:mno345...",
+      "policy_hash": "sha256:pqr678...",
+      "model_id": "fee-analyzer-v1.8",
+      "outputs_fp": "sha256:stu901...",
+      "receipt_hash": "sha256:vwx234...",
+      "anchor_ref": {
+        "anchor_type": "timestamping", 
+        "timestamp": "2025-09-01T12:01:30Z",
+        "merkle_root": "sha256:merkle_root_456"
+      },
+      "proofs": {
+        "inclusion_proof": ["sha256:sibling3", "sha256:sibling4"],
+        "consistency_proof": ["sha256:old_root_2", "sha256:new_root_2"]
+      }
+    },
+    {
+      "receipt_id": "rec_health_pa_003",
+      "type": "Decision-RDS", 
+      "action": "prior_authorization_review",
+      "timestamp": "2025-09-01T12:02:45Z",
+      "inputs_hash": "sha256:yza567...",
+      "policy_hash": "sha256:bcd890...",
+      "model_id": "pa-reviewer-v3.2",
+      "outputs_fp": "sha256:efg123...",
+      "receipt_hash": "sha256:hij456...",
+      "anchor_ref": {
+        "anchor_type": "notarization",
+        "notary_id": "notary_demo_789",
+        "merkle_root": "sha256:merkle_root_789"
+      },
+      "proofs": {
+        "inclusion_proof": ["sha256:sibling5", "sha256:sibling6"],
+        "consistency_proof": ["sha256:old_root_3", "sha256:new_root_3"]
+      }
+    },
+    {
+      "receipt_id": "rec_nil_inquiry_004",
+      "type": "Decision-RDS",
+      "action": "nil_athlete_search",
+      "timestamp": "2025-09-01T12:03:20Z",
+      "inputs_hash": "sha256:klm789...",
+      "policy_hash": "sha256:nop012...",
+      "model_id": "nil-matcher-v1.5",
+      "outputs_fp": "sha256:qrs345...",
+      "receipt_hash": "sha256:tuv678...",
+      "anchor_ref": {
+        "anchor_type": "blockchain",
+        "transaction_hash": "0xabcdef1234567890",
+        "block_number": 12345679,
+        "merkle_root": "sha256:merkle_root_abc"
+      },
+      "proofs": {
+        "inclusion_proof": ["sha256:sibling7", "sha256:sibling8"],
+        "consistency_proof": ["sha256:old_root_4", "sha256:new_root_4"]
+      }
+    },
+    {
+      "receipt_id": "rec_healthcare_appeal_005",
+      "type": "Decision-RDS",
+      "action": "insurance_appeal_delta",
+      "timestamp": "2025-09-01T12:04:10Z",
+      "inputs_hash": "sha256:wxy901...",
+      "policy_hash": "sha256:zab234...",
+      "model_id": "appeal-processor-v2.3",
+      "outputs_fp": "sha256:cde567...",
+      "receipt_hash": "sha256:fgh890...",
+      "anchor_ref": {
+        "anchor_type": "timestamping",
+        "timestamp": "2025-09-01T12:04:10Z",
+        "merkle_root": "sha256:merkle_root_def"
+      },
+      "proofs": {
+        "inclusion_proof": ["sha256:sibling9", "sha256:sibling10"],
+        "consistency_proof": ["sha256:old_root_5", "sha256:new_root_5"]
+      }
+    }
+  ],
+  "verification_status": "all_verified",
+  "total_receipts": 5,
+  "anchor_coverage": "100%"
+}

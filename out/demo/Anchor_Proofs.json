@@ -1,0 +1,75 @@
+{
+  "proof_bundle_id": "anchor_proofs_demo_2025_09_01",
+  "created_at": "2025-09-01T12:00:00Z",
+  "description": "Cryptographic proofs for receipt anchoring verification",
+  "sth_proofs": {
+    "old_sth": {
+      "tree_size": 1000000,
+      "timestamp": "2025-09-01T11:55:00Z",
+      "root_hash": "sha256:old_tree_root_abc123",
+      "signature": "ecdsa_signature_old_sth"
+    },
+    "new_sth": {
+      "tree_size": 1000005,
+      "timestamp": "2025-09-01T12:05:00Z", 
+      "root_hash": "sha256:new_tree_root_def456",
+      "signature": "ecdsa_signature_new_sth"
+    }
+  },
+  "inclusion_proofs": [
+    {
+      "receipt_id": "rec_retirement_roadmap_001",
+      "leaf_index": 1000001,
+      "leaf_hash": "sha256:leaf_hash_retirement",
+      "audit_path": [
+        "sha256:sibling_1_right",
+        "sha256:sibling_2_left", 
+        "sha256:sibling_3_right",
+        "sha256:root_partial_abc"
+      ],
+      "tree_size": 1000005
+    },
+    {
+      "receipt_id": "rec_401k_benchmark_002",
+      "leaf_index": 1000002,
+      "leaf_hash": "sha256:leaf_hash_401k",
+      "audit_path": [
+        "sha256:sibling_4_left",
+        "sha256:sibling_5_right",
+        "sha256:sibling_6_left",
+        "sha256:root_partial_def"
+      ],
+      "tree_size": 1000005
+    },
+    {
+      "receipt_id": "rec_health_pa_003",
+      "leaf_index": 1000003,
+      "leaf_hash": "sha256:leaf_hash_health_pa",
+      "audit_path": [
+        "sha256:sibling_7_right",
+        "sha256:sibling_8_right",
+        "sha256:sibling_9_left",
+        "sha256:root_partial_ghi"
+      ],
+      "tree_size": 1000005
+    }
+  ],
+  "consistency_proofs": [
+    {
+      "old_tree_size": 1000000,
+      "new_tree_size": 1000005,
+      "consistency_path": [
+        "sha256:consistency_node_1",
+        "sha256:consistency_node_2",
+        "sha256:consistency_node_3",
+        "sha256:consistency_bridge"
+      ]
+    }
+  ],
+  "verification_algorithms": {
+    "inclusion_verify": "rfc6962_merkle_inclusion",
+    "consistency_verify": "rfc6962_merkle_consistency",
+    "signature_verify": "ecdsa_p256_sha256"
+  },
+  "validation_status": "all_proofs_valid"
+}

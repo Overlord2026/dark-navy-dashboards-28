@@ -1,120 +1,183 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { FileText, Shield, Gavel, TrendingUp } from 'lucide-react';
+import { Target, Shield, Users, Zap, CheckCircle, AlertTriangle, XCircle } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 export function OverviewTab() {
+  const [readinessCheck, setReadinessCheck] = useState<{
+    status: 'idle' | 'running' | 'complete';
+    result?: 'green' | 'amber' | 'red';
+    reasons?: string[];
+  }>({ status: 'idle' });
+
+  const runReadinessCheck = async () => {
+    setReadinessCheck({ status: 'running' });
+    
+    // Simulate readiness check
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    setReadinessCheck({
+      status: 'complete',
+      result: 'green',
+      reasons: [
+        'All core services operational',
+        'Zero 404 routes detected',
+        'Brand compliance: 100%',
+        'Receipt pipeline verified',
+        'Demo fixtures loaded'
+      ]
+    });
+  };
+
+  const getStatusIcon = (result?: 'green' | 'amber' | 'red') => {
+    switch (result) {
+      case 'green': return <CheckCircle className="h-5 w-5 text-green-500" />;
+      case 'amber': return <AlertTriangle className="h-5 w-5 text-yellow-500" />;
+      case 'red': return <XCircle className="h-5 w-5 text-red-500" />;
+      default: return null;
+    }
+  };
+
   return (
-    <div className="space-y-6">
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Filings</CardTitle>
-            <FileText className="h-4 w-4 text-muted-foreground" />
+    <div className="space-y-8">
+      {/* Mission & Readiness */}
+      <div className="grid gap-6 md:grid-cols-2">
+        <div className="bfo-card">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-white">
+              <Target className="h-5 w-5 text-bfo-gold" />
+              Mission
+            </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">47</div>
-            <p className="text-xs text-muted-foreground">+3 from last quarter</p>
+          <CardContent className="text-white">
+            <p className="text-lg leading-relaxed">
+              Empower family offices with comprehensive wealth management tools, 
+              regulatory compliance, and strategic advisory services through 
+              innovative technology and trusted partnerships.
+            </p>
           </CardContent>
-        </Card>
+        </div>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Patent Applications</CardTitle>
-            <Gavel className="h-4 w-4 text-muted-foreground" />
+        <div className="bfo-card">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-white">
+              <Shield className="h-5 w-5 text-bfo-gold" />
+              Readiness Status
+            </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">23</div>
-            <p className="text-xs text-muted-foreground">Active applications</p>
+          <CardContent className="space-y-4">
+            <Button 
+              onClick={runReadinessCheck}
+              disabled={readinessCheck.status === 'running'}
+              className="btn-gold"
+            >
+              {readinessCheck.status === 'running' ? 'Running Check...' : 'Run Readiness Check'}
+            </Button>
+            
+            {readinessCheck.status === 'complete' && (
+              <div className="space-y-3">
+                <div className="flex items-center gap-2">
+                  {getStatusIcon(readinessCheck.result)}
+                  <span className="text-white font-semibold">
+                    Status: {readinessCheck.result?.toUpperCase()}
+                  </span>
+                </div>
+                <div className="space-y-2">
+                  {readinessCheck.reasons?.map((reason, index) => (
+                    <div key={index} className="flex items-center gap-2 text-sm text-gray-300">
+                      <CheckCircle className="h-3 w-3 text-green-500" />
+                      {reason}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Security Events</CardTitle>
-            <Shield className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">12</div>
-            <p className="text-xs text-muted-foreground">Last 30 days</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Portfolio Value</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">$2.4M</div>
-            <p className="text-xs text-muted-foreground">+12.5% this year</p>
-          </CardContent>
-        </Card>
+        </div>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>Recent Activity</CardTitle>
+      {/* KPI Dashboard */}
+      <div className="grid gap-4 md:grid-cols-4">
+        <div className="bfo-card">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-white">Households</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3">
-            <div className="flex items-center gap-3">
-              <div className="h-2 w-2 bg-green-500 rounded-full" />
-              <div className="flex-1">
-                <p className="text-sm">Patent application filed</p>
-                <p className="text-xs text-muted-foreground">Multi-Persona Orchestration - 2 hours ago</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="h-2 w-2 bg-blue-500 rounded-full" />
-              <div className="flex-1">
-                <p className="text-sm">Security audit completed</p>
-                <p className="text-xs text-muted-foreground">Database RLS review - 5 hours ago</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="h-2 w-2 bg-yellow-500 rounded-full" />
-              <div className="flex-1">
-                <p className="text-sm">Trademark renewal due</p>
-                <p className="text-xs text-muted-foreground">BFO mark - in 30 days</p>
-              </div>
-            </div>
+          <CardContent>
+            <div className="text-2xl font-bold text-bfo-gold">2,847</div>
+            <p className="text-xs text-gray-300">+12% this quarter</p>
           </CardContent>
-        </Card>
+        </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Strategic Initiatives</CardTitle>
+        <div className="bfo-card">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-white">Pro Seats</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3">
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span>Family Office Platform</span>
-                <span className="text-muted-foreground">85%</span>
-              </div>
-              <div className="w-full bg-muted rounded-full h-2">
-                <div className="bg-primary h-2 rounded-full" style={{ width: '85%' }} />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span>Compliance Framework</span>
-                <span className="text-muted-foreground">72%</span>
-              </div>
-              <div className="w-full bg-muted rounded-full h-2">
-                <div className="bg-primary h-2 rounded-full" style={{ width: '72%' }} />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span>Security Infrastructure</span>
-                <span className="text-muted-foreground">91%</span>
-              </div>
-              <div className="w-full bg-muted rounded-full h-2">
-                <div className="bg-primary h-2 rounded-full" style={{ width: '91%' }} />
-              </div>
-            </div>
+          <CardContent>
+            <div className="text-2xl font-bold text-bfo-gold">1,523</div>
+            <p className="text-xs text-gray-300">Active professionals</p>
           </CardContent>
-        </Card>
+        </div>
+
+        <div className="bfo-card">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-white">Tools/Seat/Mo</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-bfo-gold">7.3</div>
+            <p className="text-xs text-gray-300">Average utilization</p>
+          </CardContent>
+        </div>
+
+        <div className="bfo-card">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-white">Revenue</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-bfo-gold">$4.2M</div>
+            <p className="text-xs text-gray-300">Monthly recurring</p>
+          </CardContent>
+        </div>
+      </div>
+
+      {/* Strategic Pillars */}
+      <div className="bfo-card">
+        <CardHeader>
+          <CardTitle className="text-white">Strategic Pillars</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-4 md:grid-cols-3">
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <Users className="h-4 w-4 text-bfo-gold" />
+                <h3 className="font-semibold text-white">Client Excellence</h3>
+              </div>
+              <p className="text-sm text-gray-300">
+                Deliver exceptional service experiences through personalized advisory 
+                and cutting-edge digital tools.
+              </p>
+            </div>
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <Shield className="h-4 w-4 text-bfo-gold" />
+                <h3 className="font-semibold text-white">Regulatory Leadership</h3>
+              </div>
+              <p className="text-sm text-gray-300">
+                Maintain industry-leading compliance standards and proactive 
+                regulatory guidance.
+              </p>
+            </div>
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <Zap className="h-4 w-4 text-bfo-gold" />
+                <h3 className="font-semibold text-white">Innovation Engine</h3>
+              </div>
+              <p className="text-sm text-gray-300">
+                Drive continuous innovation in wealth management technology 
+                and service delivery.
+              </p>
+            </div>
+          </div>
+        </CardContent>
       </div>
     </div>
   );

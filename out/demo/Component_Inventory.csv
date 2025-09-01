@@ -1,0 +1,31 @@
+component,where_used,brand_ok
+Header,All pages,true
+Navigation,All pages,true
+Sidebar,Admin/Dashboard pages,true
+Footer,All pages,true
+.bfo-card,Cards/Tiles,true
+.btn-gold,Buttons,true
+.input-black,Forms,true
+AdminLayout,Admin pages,true
+DashboardLayout,Dashboard pages,true
+PersonaLayout,Persona pages,true
+Card (shadcn),All pages,true
+Button (shadcn),All pages,true
+Input (shadcn),Forms,true
+Tabs (shadcn),Admin/Dashboard,true
+Dialog (shadcn),Modals,true
+Toast (shadcn),Notifications,true
+OverviewTab,Admin HQ,true
+IPLedgerTab,Admin HQ,true
+SecurityTab,Admin HQ,true
+PublishTab,Admin HQ,true
+PersonaDemosTab,Admin HQ,true
+RoadmapTab,Admin HQ,true
+ReadinessBadge,HQ Overview,true
+KpiCards,HQ Overview,true
+VoiceDrawer,Voice features,true
+DemoDdPackButton,Demo utilities,true
+RouteGuard,App routing,true
+FeatureFlags,Configuration,true
+TenantBranding,Multi-tenant,true
+PerformanceUtils,Optimization,true
