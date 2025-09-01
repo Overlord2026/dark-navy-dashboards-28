@@ -7,6 +7,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
+import { Star, MapPin, Clock, ArrowLeft, Phone, Mail, Calendar } from 'lucide-react';
+
 // Use mock data for advisor profiles until API is implemented
 interface AdvisorProfile {
   id: string;
@@ -19,8 +22,6 @@ interface AdvisorProfile {
   bio?: string;
   website?: string;
 }
-import { supabase } from '@/integrations/supabase/client';
-import { Star, MapPin, Clock, ArrowLeft, Phone, Mail, Calendar } from 'lucide-react';
 
 export default function AdvisorDetail() {
   const { id } = useParams<{ id: string }>();
@@ -79,7 +80,7 @@ export default function AdvisorDetail() {
     try {
       setSubmitting(true);
 
-      // Insert into database
+      // Insert into database using the correct schema
       const { data: inquiryData, error: dbError } = await supabase
         .from('pro_inquiries')
         .insert({
@@ -87,8 +88,8 @@ export default function AdvisorDetail() {
           pro_slug: id,
           name: formData.name,
           email: formData.email,
-          phone: formData.phone,
-          message: formData.message
+          phone: formData.phone || null,
+          message: formData.message || null
         })
         .select()
         .single();
