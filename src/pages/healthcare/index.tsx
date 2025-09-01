@@ -1,68 +1,107 @@
 import React from 'react';
-import { Hero } from '@/components/landing/Hero';
-import { ToolsGrid } from '@/components/landing/ToolsGrid';
-import { PiggyBank, Calculator, Shield, Wallet, FileText, TrendingUp } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Heart, Users, BookOpen } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { GoldButton } from '@/components/ui/brandButtons';
 
-const healthcareTools = [
-  {
-    title: "HSA Optimizer",
-    description: "Maximize your health savings account benefits",
-    icon: PiggyBank,
-    href: "/healthcare/hsa"
-  },
-  {
-    title: "Healthcare Budgeting",
-    description: "Plan and budget for medical expenses",
-    icon: Calculator,
-    href: "/healthcare/budgeting"
-  },
-  {
-    title: "Insurance Analyzer",
-    description: "Compare and optimize health insurance plans",
-    icon: Shield,
-    href: "/healthcare/insurance",
-    comingSoon: true
-  },
-  {
-    title: "FSA Calculator",
-    description: "Plan your flexible spending account contributions",
-    icon: Wallet,
-    href: "/healthcare/fsa",
-    comingSoon: true
-  },
-  {
-    title: "Medical Records",
-    description: "Secure storage and organization of health records",
-    icon: FileText,
-    href: "/healthcare/records",
-    comingSoon: true
-  },
-  {
-    title: "Retirement Healthcare",
-    description: "Plan for healthcare costs in retirement",
-    icon: TrendingUp,
-    href: "/healthcare/retirement",
-    comingSoon: true
-  }
-];
+const HealthcareIndex = () => {
+  const navigate = useNavigate();
 
-export function HealthcareIndex() {
-  const handleDemoClick = () => {
-    // TODO: Implement demo modal or redirect
-    console.log('Demo clicked');
-  };
+  const healthcareServices = [
+    {
+      icon: Heart,
+      title: 'Providers/Clinics',
+      description: 'Connect with healthcare providers, medical clinics, and specialized treatment centers for comprehensive care.',
+      action: () => navigate('/healthcare/providers'),
+      buttonText: 'Find Providers'
+    },
+    {
+      icon: Users,
+      title: 'Coaches',
+      description: 'Work with certified health and wellness coaches to achieve your fitness and lifestyle goals.',
+      action: () => navigate('/healthcare/coaches'),
+      buttonText: 'Find Coaches'
+    },
+    {
+      icon: BookOpen,
+      title: 'Guides',
+      description: 'Access comprehensive health guides, resources, and educational materials for informed decisions.',
+      action: () => navigate('/healthcare/guides'),
+      buttonText: 'Browse Guides'
+    }
+  ];
 
   return (
-    <div className="min-h-screen">
-      <Hero
-        title="Healthcare Financial Planning"
-        subtitle="Comprehensive tools to manage healthcare costs and optimize your health-related financial decisions"
-        onCtaClick={handleDemoClick}
-      />
-      <ToolsGrid tools={healthcareTools} />
+    <div className="min-h-screen bg-bfo-black">
+      <div className="container mx-auto px-4 py-16">
+        {/* Hero Section */}
+        <div className="text-center mb-16">
+          <h1 className="text-5xl md:text-6xl font-bold text-white leading-tight mb-6">
+            Your <span className="text-bfo-gold">Healthcare</span> Journey
+          </h1>
+          <p className="text-white/80 text-xl max-w-4xl mx-auto">
+            Discover comprehensive healthcare solutions tailored to your needs. 
+            Connect with providers, coaches, and access educational resources to optimize your health and wellbeing.
+          </p>
+        </div>
+
+        {/* Services Cards */}
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {healthcareServices.map((service, index) => {
+              const IconComponent = service.icon;
+              return (
+                <Card 
+                  key={index} 
+                  className="bfo-card border border-bfo-gold bg-bfo-black hover:border-bfo-gold/80 transition-all duration-300 group"
+                >
+                  <CardContent className="p-8 text-center">
+                    {/* Icon */}
+                    <div className="w-16 h-16 bg-bfo-gold rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                      <IconComponent className="w-8 h-8 text-bfo-black" />
+                    </div>
+
+                    {/* Title */}
+                    <h2 className="text-2xl font-bold text-white mb-4">
+                      {service.title}
+                    </h2>
+
+                    {/* Description */}
+                    <p className="text-white/80 mb-8 leading-relaxed">
+                      {service.description}
+                    </p>
+
+                    {/* Action Button */}
+                    <GoldButton 
+                      onClick={service.action}
+                      className="w-full"
+                    >
+                      {service.buttonText}
+                    </GoldButton>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Additional Info Section */}
+        <div className="text-center mt-16">
+          <div className="max-w-3xl mx-auto">
+            <h3 className="text-3xl font-bold text-white mb-6">
+              Comprehensive Healthcare Solutions
+            </h3>
+            <p className="text-white/70 text-lg leading-relaxed">
+              Our healthcare platform connects you with verified professionals and resources 
+              to support your journey toward optimal health. Whether you need medical care, 
+              wellness coaching, or educational materials, we're here to help you make 
+              informed decisions about your health.
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
-}
+};
 
-// 👇 this fixes React.lazy + TypeScript
 export default HealthcareIndex;
