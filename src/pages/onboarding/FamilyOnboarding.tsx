@@ -117,18 +117,18 @@ export default function FamilyOnboarding() {
         <meta name="description" content="Quick 3-step setup for your private family workspace" />
       </Helmet>
       
-      <div className="min-h-screen bg-gradient-to-br from-background to-muted/20 p-4">
+      <div className="min-h-screen bg-bfo-black p-4">
         <div className="max-w-4xl mx-auto pt-12">
           
           {/* Progress Bar */}
           <div className="mb-8">
             <div className="flex items-center justify-between mb-4">
-              <h1 className="text-2xl font-bold text-foreground">Set up your Family Workspace</h1>
-              <div className="text-sm text-muted-foreground">Step {step} of 3</div>
+              <h1 className="text-2xl font-bold text-white">Set up your Family Workspace</h1>
+              <div className="text-sm text-white/70">Step {step} of 3</div>
             </div>
-            <div className="w-full bg-muted rounded-full h-2">
+            <div className="w-full bg-white/20 rounded-full h-2">
               <div 
-                className="bg-primary h-2 rounded-full transition-all duration-300"
+                className="bg-bfo-gold h-2 rounded-full transition-all duration-300"
                 style={{ width: `${(step / 3) * 100}%` }}
               />
             </div>
@@ -138,8 +138,8 @@ export default function FamilyOnboarding() {
           {step === 1 && (
             <div className="space-y-6">
               <div className="text-center">
-                <h2 className="text-xl font-semibold mb-2">Choose your family stage</h2>
-                <p className="text-muted-foreground">This helps us personalize your workspace</p>
+                <h2 className="text-xl font-semibold mb-2 text-white">Choose your family stage</h2>
+                <p className="text-white/80">This helps us personalize your workspace</p>
               </div>
               
               <div className="grid md:grid-cols-2 gap-6">
@@ -148,15 +148,15 @@ export default function FamilyOnboarding() {
                   return (
                     <Card
                       key={segment.key}
-                      className={`cursor-pointer transition-all duration-200 hover:shadow-lg bg-gradient-to-br ${segment.color}`}
+                      className="bfo-card cursor-pointer transition-all duration-200 hover:shadow-lg"
                       onClick={() => handleSegmentSelect(segment.key)}
                     >
                       <CardContent className="p-8 text-center">
-                        <div className="w-16 h-16 mx-auto mb-4 rounded-lg bg-white/80 flex items-center justify-center">
-                          <IconComponent className="w-8 h-8 text-primary" />
+                        <div className="w-16 h-16 mx-auto mb-4 rounded-lg bg-bfo-gold/20 flex items-center justify-center">
+                          <IconComponent className="w-8 h-8 text-bfo-gold" />
                         </div>
-                        <h3 className="text-xl font-semibold mb-2">{segment.title}</h3>
-                        <p className="text-muted-foreground">{segment.description}</p>
+                        <h3 className="text-xl font-semibold mb-2 text-white">{segment.title}</h3>
+                        <p className="text-white/80">{segment.description}</p>
                       </CardContent>
                     </Card>
                   );
@@ -169,8 +169,8 @@ export default function FamilyOnboarding() {
           {step === 2 && (
             <div className="space-y-6">
               <div className="text-center">
-                <h2 className="text-xl font-semibold mb-2">What are your main goals?</h2>
-                <p className="text-muted-foreground">Select all that apply - we'll tailor your dashboard</p>
+                <h2 className="text-xl font-semibold mb-2 text-white">What are your main goals?</h2>
+                <p className="text-white/80">Select all that apply - we'll tailor your dashboard</p>
               </div>
               
               <div className="grid md:grid-cols-5 gap-4">
@@ -181,21 +181,21 @@ export default function FamilyOnboarding() {
                   return (
                     <Card
                       key={goal.key}
-                      className={`cursor-pointer transition-all duration-200 ${
-                        isSelected ? 'ring-2 ring-primary shadow-lg' : 'hover:shadow-md'
+                      className={`bfo-card cursor-pointer transition-all duration-200 ${
+                        isSelected ? 'ring-2 ring-bfo-gold shadow-lg' : 'hover:shadow-md'
                       }`}
                       onClick={() => handleGoalToggle(goal.key)}
                     >
                       <CardContent className="p-6 text-center">
                         <div className={`w-12 h-12 mx-auto mb-3 rounded-lg flex items-center justify-center ${
-                          isSelected ? 'bg-primary text-primary-foreground' : 'bg-muted'
+                          isSelected ? 'bg-bfo-gold text-bfo-black' : 'bg-white/10'
                         }`}>
                           <IconComponent className="w-6 h-6" />
                         </div>
-                        <h3 className="font-semibold mb-1">{goal.label}</h3>
-                        <p className="text-xs text-muted-foreground">{goal.description}</p>
+                        <h3 className="font-semibold mb-1 text-white">{goal.label}</h3>
+                        <p className="text-xs text-white/70">{goal.description}</p>
                         {isSelected && (
-                          <Badge variant="default" className="mt-2 text-xs">Selected</Badge>
+                          <Badge className="mt-2 text-xs bg-bfo-gold text-bfo-black">Selected</Badge>
                         )}
                       </CardContent>
                     </Card>
@@ -210,6 +210,7 @@ export default function FamilyOnboarding() {
                 <Button 
                   onClick={() => setStep(3)}
                   disabled={state.goals.length === 0}
+                  className="bfo-cta"
                 >
                   Continue ({state.goals.length} selected)
                 </Button>
@@ -220,28 +221,29 @@ export default function FamilyOnboarding() {
           {/* Step 3: Email */}
           {step === 3 && (
             <div className="max-w-md mx-auto">
-              <Card>
+              <Card className="bfo-card">
                 <CardHeader className="text-center">
-                  <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Heart className="h-6 w-6 text-primary" />
+                  <div className="w-12 h-12 bg-bfo-gold/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Heart className="h-6 w-6 text-bfo-gold" />
                   </div>
-                  <CardTitle>Almost done!</CardTitle>
-                  <p className="text-muted-foreground">Enter your email to create your workspace</p>
+                  <CardTitle className="text-white">Almost done!</CardTitle>
+                  <p className="text-white/80">Enter your email to create your workspace</p>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="email">Email Address</Label>
+                    <Label htmlFor="email" className="text-white">Email Address</Label>
                     <Input
                       id="email"
                       type="email"
                       value={state.email}
                       onChange={(e) => setState(prev => ({ ...prev, email: e.target.value }))}
                       placeholder="your@email.com"
+                      className="bg-white/10 border-bfo-gold/30 text-white placeholder:text-white/50"
                       autoFocus
                     />
                   </div>
                   
-                  <div className="text-sm text-muted-foreground">
+                  <div className="text-sm text-white/70">
                     <p>✓ {SEGMENTS.find(s => s.key === state.segment)?.title} workspace</p>
                     <p>✓ {state.goals.length} goals selected</p>
                     <p>✓ Personalized dashboard ready</p>
@@ -254,7 +256,7 @@ export default function FamilyOnboarding() {
                     <Button 
                       onClick={handleComplete}
                       disabled={!state.email || loading}
-                      className="flex-1"
+                      className="flex-1 bfo-cta"
                     >
                       {loading ? 'Creating workspace...' : 'Launch workspace'}
                     </Button>
