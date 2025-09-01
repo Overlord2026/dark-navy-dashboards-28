@@ -9,6 +9,7 @@ import { InquiryModal } from '@/components/marketplace/InquiryModal';
 import { VoiceDrawer } from '@/components/voice/VoiceDrawer';
 import { recordInquiry } from '@/services/inquiries';
 import { GoldButton, GoldOutlineButton } from '@/components/ui/brandButtons';
+import { ReceiptChip } from '@/components/receipts/ReceiptChip';
 
 export default function AdvisorDetail() {
   const { id } = useParams<{ id: string }>();
@@ -20,6 +21,7 @@ export default function AdvisorDetail() {
   const [inquiryModal, setInquiryModal] = useState({ isOpen: false });
   const [inquiryLoading, setInquiryLoading] = useState(false);
   const [voiceDrawer, setVoiceDrawer] = useState({ isOpen: false });
+  const [lastReceiptHash, setLastReceiptHash] = useState<string | null>(null);
 
   useEffect(() => {
     if (id) {
@@ -76,6 +78,11 @@ export default function AdvisorDetail() {
           ? "We'll follow up with you shortly! Receipt ✓" 
           : "We'll follow up with you shortly!"
       });
+
+      // Store receipt hash for display
+      if (result.receiptHash) {
+        setLastReceiptHash(result.receiptHash);
+      }
 
       setInquiryModal({ isOpen: false });
       return { receiptHash: result.receiptHash };
@@ -164,11 +171,19 @@ export default function AdvisorDetail() {
                     <Star className="h-4 w-4 fill-current" />
                     <span className="font-medium">{advisor.rating} rating</span>
                   </div>
-                )}
-              </div>
-            </div>
+                 )}
 
-            {/* Sidebar */}
+                 {/* Receipt Display */}
+                 {lastReceiptHash && (
+                   <div className="mt-4 p-3 bg-bfo-purple/10 border border-bfo-gold/20 rounded">
+                     <p className="text-sm text-white/70 mb-2">Last inquiry receipt:</p>
+                     <ReceiptChip hash={lastReceiptHash} anchored={false} />
+                   </div>
+                 )}
+               </div>
+             </div>
+
+             {/* Sidebar */}
             <div className="space-y-6">
               {/* Quick Actions */}
               <div className="bfo-card border border-bfo-gold p-6">
