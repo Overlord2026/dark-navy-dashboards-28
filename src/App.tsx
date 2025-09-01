@@ -62,6 +62,7 @@ const AiesConsole = React.lazy(() => import('@/pages/admin/AiesConsole'));
 import AdminPanel from '@/pages/admin/AdminPanel';
 import JobsPanel from '@/pages/admin/JobsPanel';
 import PublishPanel from '@/pages/admin/PublishPanel';
+import Release from '@/pages/admin/Release';
 import { EnvInspector } from '@/pages/admin/EnvInspector';
 import K401Partner from '@/pages/admin/K401Partner';
 import RulesCoverage from '@/pages/admin/RulesCoverage';
@@ -678,8 +679,9 @@ function App() {
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/rulesync" element={<RuleSyncAdmin />} />}
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin" element={<AdminPanel />} />}
             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/jobs" element={<JobsPanel />} />}
-            {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/publish" element={<PublishPanel />} />}
-            {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/env" element={<EnvInspector />} />}
+             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/publish" element={<PublishPanel />} />}
+             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/release" element={<Release />} />}
+             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/env" element={<EnvInspector />} />}
             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/ai/audit" element={<AiAudit />} />}
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/k401/partner" element={<K401Partner />} />}
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/k401/checklist" element={<K401ChecklistRunner />} />}
