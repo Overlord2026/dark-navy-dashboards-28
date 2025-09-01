@@ -5,14 +5,14 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { fetchAdvisors, type Advisor } from '@/services/pros';
+import { listAdvisors, type Pro } from '@/services/advisors';
 import { Star, MapPin, Clock, Search } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const TAGS = ['All', 'Retirement', 'Estate', 'Investment', 'Tax', 'Family Office', 'Inheritance'];
 
 export default function MarketplaceAdvisors() {
-  const [advisors, setAdvisors] = useState<Advisor[]>([]);
+  const [advisors, setAdvisors] = useState<Pro[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedTag, setSelectedTag] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
@@ -25,7 +25,7 @@ export default function MarketplaceAdvisors() {
   const loadAdvisors = async () => {
     try {
       setLoading(true);
-      const data = await fetchAdvisors();
+      const data = await listAdvisors();
       setAdvisors(data);
     } catch (error) {
       console.error('Failed to load advisors:', error);
@@ -40,11 +40,11 @@ export default function MarketplaceAdvisors() {
   };
 
   const filteredAdvisors = advisors.filter(advisor => {
-    const matchesTag = selectedTag === 'All' || advisor.tags.includes(selectedTag);
+    const matchesTag = selectedTag === 'All' || advisor.tags?.includes(selectedTag);
     const matchesSearch = searchQuery === '' || 
       advisor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      advisor.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      advisor.title.toLowerCase().includes(searchQuery.toLowerCase());
+      (advisor.location || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (advisor.title || '').toLowerCase().includes(searchQuery.toLowerCase());
     return matchesTag && matchesSearch;
   });
 
@@ -135,10 +135,10 @@ export default function MarketplaceAdvisors() {
                         </div>
                         <div className="flex-1">
                           <h3 className="font-semibold text-lg">{advisor.name}</h3>
-                          <p className="text-sm text-muted-foreground">{advisor.title}</p>
+                          <p className="text-sm text-muted-foreground">{advisor.title || 'Financial Advisor'}</p>
                           <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
                             <Star className="h-4 w-4 text-yellow-500 fill-current" />
-                            <span>{advisor.rating}</span>
+                            <span>{advisor.rating || 'New'}</span>
                           </div>
                         </div>
                       </div>
@@ -148,23 +148,23 @@ export default function MarketplaceAdvisors() {
                       <div className="space-y-3 mb-4">
                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
                           <MapPin className="h-4 w-4" />
-                          <span>{advisor.location}</span>
+                          <span>{advisor.location || 'Remote'}</span>
                         </div>
                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
                           <Clock className="h-4 w-4" />
-                          <span>{advisor.years}</span>
+                          <span>{advisor.years_exp || 'Experienced professional'}</span>
                         </div>
                       </div>
                       
                       <div className="flex flex-wrap gap-1 mb-4">
-                        {advisor.tags.slice(0, 3).map(tag => (
+                        {(advisor.tags || []).slice(0, 3).map(tag => (
                           <Badge key={tag} variant="secondary" className="text-xs">
                             {tag}
                           </Badge>
                         ))}
-                        {advisor.tags.length > 3 && (
+                        {(advisor.tags || []).length > 3 && (
                           <Badge variant="outline" className="text-xs">
-                            +{advisor.tags.length - 3} more
+                            +{(advisor.tags || []).length - 3} more
                           </Badge>
                         )}
                       </div>

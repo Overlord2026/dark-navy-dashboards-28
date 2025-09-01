@@ -7,25 +7,12 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
 import { Star, MapPin, Clock, ArrowLeft, Phone, Mail, Calendar } from 'lucide-react';
-
-// Use mock data for advisor profiles until API is implemented
-interface AdvisorProfile {
-  id: string;
-  name: string;
-  title?: string;
-  photo_url?: string;
-  location?: string;
-  rating?: number;
-  tags?: string[];
-  bio?: string;
-  website?: string;
-}
+import { getAdvisor, submitInquiry, type Pro } from '@/services/advisors';
 
 export default function AdvisorDetail() {
   const { id } = useParams<{ id: string }>();
-  const [advisor, setAdvisor] = useState<AdvisorProfile | null>(null);
+  const [advisor, setAdvisor] = useState<Pro | null>(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [showContactForm, setShowContactForm] = useState(false);
@@ -49,18 +36,8 @@ export default function AdvisorDetail() {
     
     try {
       setLoading(true);
-      // Mock advisor data
-      const mockAdvisor: AdvisorProfile = {
-        id: id,
-        name: 'John Smith',
-        title: 'Senior Financial Advisor',
-        location: 'New York, NY',
-        rating: 4.8,
-        tags: ['Retirement Planning', 'Estate Planning', 'Tax Strategy'],
-        bio: 'Experienced financial advisor with over 15 years helping families achieve their financial goals.',
-        website: 'https://example.com'
-      };
-      setAdvisor(mockAdvisor);
+      const advisorData = await getAdvisor(id);
+      setAdvisor(advisorData);
     } catch (error) {
       console.error('Failed to load advisor:', error);
       toast({
@@ -80,40 +57,14 @@ export default function AdvisorDetail() {
     try {
       setSubmitting(true);
 
-      // Insert into database using the correct schema
-      const { data: inquiryData, error: dbError } = await supabase
-        .from('pro_inquiries')
-        .insert({
-          persona: 'advisor',
-          pro_id: id,
-          full_name: formData.name,
-          email: formData.email,
-          message: formData.message || null
-        })
-        .select()
-        .single();
-
-      if (dbError) throw dbError;
-
-      // Call email edge function
-      try {
-        await fetch('https://xcmqjkvyvuhoslbzmlgi.supabase.co/functions/v1/pro-inquiry-email', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            pro_slug: id,
-            name: formData.name,
-            email: formData.email,
-            phone: formData.phone,
-            message: formData.message
-          })
-        });
-      } catch (emailError) {
-        console.warn('Email notification failed:', emailError);
-        // Continue since the inquiry was saved to DB
-      }
+      // Use the service function to submit inquiry
+      await submitInquiry({
+        pro_id: id,
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        message: formData.message
+      });
 
       toast({
         title: "Inquiry sent. We'll follow up shortly.",
@@ -186,9 +137,9 @@ export default function AdvisorDetail() {
               <div className="bfo-card p-6">
                 <div className="flex items-start gap-6 mb-6">
                   <div className="w-24 h-24 bg-bfo-purple rounded-full flex items-center justify-center text-2xl font-bold text-white">
-                    {advisor.photo_url ? (
+                    {advisor.avatar_url ? (
                       <img 
-                        src={advisor.photo_url} 
+                        src={advisor.avatar_url} 
                         alt={advisor.name}
                         className="w-full h-full rounded-full object-cover"
                       />
@@ -233,15 +184,8 @@ export default function AdvisorDetail() {
               <div className="bfo-card p-6">
                 <h3 className="text-xl font-semibold mb-4 text-white">About {advisor.name.split(' ')[0]}</h3>
                 <p className="text-white/80">
-                  {advisor.bio || `Experienced financial advisor specializing in ${advisor.tags?.join(', ').toLowerCase() || 'wealth management'}.`}
+                  {`Experienced financial advisor with ${advisor.years_exp || 'several years'} of experience specializing in ${advisor.tags?.join(', ').toLowerCase() || 'wealth management'}.`}
                 </p>
-                {advisor.website && (
-                  <div className="mt-4">
-                    <a href={advisor.website} target="_blank" rel="noopener noreferrer" className="text-bfo-gold hover:underline">
-                      Visit Website →
-                    </a>
-                  </div>
-                )}
               </div>
             </div>
 
