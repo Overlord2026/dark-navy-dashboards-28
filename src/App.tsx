@@ -313,8 +313,8 @@ function App() {
         <Route path="/healthcare" element={<HealthcareLanding />} />
         <Route path="/solutions" element={<SolutionsLanding />} />
         <Route path="/learn" element={<LearnLanding />} />
-        <Route path="/pros/cpa" element={<ProLanding title="CPA Services" />} />
-        <Route path="/pros/attorney" element={<ProLanding title="Attorney Services" />} />
+        <Route path="/pros/cpa" element={<Stub title="CPA Services" />} />
+        <Route path="/pros/attorney" element={<Stub title="Attorney Services" />} />
             <Route path="/solutions" element={
               <Suspense fallback={<div>Loading...</div>}>
                 <SolutionsLanding />
