@@ -11485,24 +11485,33 @@ export type Database = {
       decision_rds: {
         Row: {
           action: string
+          anchored_at: string | null
           created_at: string
           id: string
+          inputs_hash: string | null
+          policy_hash: string | null
           reasons: Json
           receipt_hash: string | null
           subject: string
         }
         Insert: {
           action: string
+          anchored_at?: string | null
           created_at?: string
           id?: string
+          inputs_hash?: string | null
+          policy_hash?: string | null
           reasons: Json
           receipt_hash?: string | null
           subject: string
         }
         Update: {
           action?: string
+          anchored_at?: string | null
           created_at?: string
           id?: string
+          inputs_hash?: string | null
+          policy_hash?: string | null
           reasons?: Json
           receipt_hash?: string | null
           subject?: string
@@ -27166,6 +27175,13 @@ export type Database = {
             referencedRelation: "pros"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "pro_inquiries_pro_id_fkey"
+            columns: ["pro_id"]
+            isOneToOne: false
+            referencedRelation: "v_public_pros"
+            referencedColumns: ["id"]
+          },
         ]
       }
       product_audit_log: {
@@ -29277,36 +29293,45 @@ export type Database = {
       pros: {
         Row: {
           avatar_url: string | null
+          city: string | null
           created_at: string | null
+          email: string | null
           id: string
           is_active: boolean | null
           location: string | null
           name: string
           rating: number | null
+          slug: string | null
           tags: string[] | null
           title: string
           years_exp: string | null
         }
         Insert: {
           avatar_url?: string | null
+          city?: string | null
           created_at?: string | null
+          email?: string | null
           id?: string
           is_active?: boolean | null
           location?: string | null
           name: string
           rating?: number | null
+          slug?: string | null
           tags?: string[] | null
           title: string
           years_exp?: string | null
         }
         Update: {
           avatar_url?: string | null
+          city?: string | null
           created_at?: string | null
+          email?: string | null
           id?: string
           is_active?: boolean | null
           location?: string | null
           name?: string
           rating?: number | null
+          slug?: string | null
           tags?: string[] | null
           title?: string
           years_exp?: string | null
@@ -39477,13 +39502,27 @@ export type Database = {
       v_decision_receipts: {
         Row: {
           action: string | null
-          anchor_ref: string | null
           anchored_at: string | null
           created_at: string | null
-          id: string | null
           reasons: Json | null
           receipt_hash: string | null
           subject: string | null
+        }
+        Insert: {
+          action?: string | null
+          anchored_at?: string | null
+          created_at?: string | null
+          reasons?: Json | null
+          receipt_hash?: string | null
+          subject?: string | null
+        }
+        Update: {
+          action?: string | null
+          anchored_at?: string | null
+          created_at?: string | null
+          reasons?: Json | null
+          receipt_hash?: string | null
+          subject?: string | null
         }
         Relationships: []
       }
@@ -39956,6 +39995,36 @@ export type Database = {
           last_name?: string | null
           phone?: string | null
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_public_pros: {
+        Row: {
+          avatar_url: string | null
+          city: string | null
+          id: string | null
+          name: string | null
+          slug: string | null
+          tags: string[] | null
+          title: string | null
+        }
+        Insert: {
+          avatar_url?: never
+          city?: never
+          id?: string | null
+          name?: never
+          slug?: never
+          tags?: never
+          title?: never
+        }
+        Update: {
+          avatar_url?: never
+          city?: never
+          id?: string | null
+          name?: never
+          slug?: never
+          tags?: never
+          title?: never
         }
         Relationships: []
       }
