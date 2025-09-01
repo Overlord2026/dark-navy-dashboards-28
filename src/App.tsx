@@ -106,7 +106,8 @@ import { getFlag } from '@/lib/flags';
 import '@/features/k401/init'; // Initialize provider rules
 
 // Onboarding Components
-import FamilyOnboarding from '@/pages/onboarding/FamilyOnboarding';
+const FamilyOnboarding = React.lazy(() => import('@/pages/onboarding/FamilyOnboarding'));
+const AdvisorOnboarding = React.lazy(() => import('@/pages/onboarding/AdvisorOnboarding'));
 import ProfessionalOnboarding from '@/pages/onboarding/ProfessionalOnboarding';
 import HealthcareOnboarding from '@/pages/onboarding/HealthcareOnboarding';
 import NILOnboardingFlow from '@/pages/onboarding/NILOnboarding';
@@ -282,7 +283,7 @@ function App() {
             <Route path="/family" element={<Navigate to="/family/home" replace />} />
             <Route path="/advisors" element={<Navigate to="/pros/advisors" replace />} />
             <Route path="/insurance" element={<Navigate to="/pros/insurance" replace />} />
-            <Route path="/onboarding/family" element={<Navigate to="/start/families" replace />} />
+            
             
             {/* Pros sub-routes */}
             <Route path="/pros/advisors" element={<AdvisorDashboardWithSideNav />} />
@@ -352,6 +353,10 @@ function App() {
             {getFlag('ONBOARDING_PUBLIC_ENABLED') && <Route path="/start/nil-athlete" element={<NILOnboardingFlow type="athlete" />} />}
             {getFlag('ONBOARDING_PUBLIC_ENABLED') && <Route path="/start/nil-school" element={<NILOnboardingFlow type="school" />} />}
             {getFlag('BRAND_PUBLIC_ENABLED') && <Route path="/start/brand" element={<BrandOnboarding />} />}
+            
+            {/* Direct Onboarding Routes */}
+            <Route path="/onboarding/family" element={<Suspense fallback={<div>Loading...</div>}><FamilyOnboarding /></Suspense>} />
+            <Route path="/onboarding/advisor" element={<Suspense fallback={<div>Loading...</div>}><AdvisorOnboarding /></Suspense>} />
             
             {/* Persona Dashboard Routes */}
             <Route path="/personas/advisors" element={<PersonaDashboard personaId="advisors" />} />
