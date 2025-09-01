@@ -58,39 +58,33 @@ export default function MinimalProfessionalSignup({ role, onComplete }: MinimalP
 
     try {
       const { data: { user } } = await supabase.auth.getUser();
-      
-      if (user) {
-        // Update profile with basic info
-        const { error: profileError } = await supabase
-          .from('profiles')
-          .upsert({
-            id: user.id,
+      if (!user) throw new Error('Not signed in');
+
+      // Update profile with basic info
+      await supabase
+        .from('profiles')
+        .upsert(
+          { 
+            id: user.id, 
+            email: formData.email || user.email,
             first_name: formData.first_name,
             last_name: formData.last_name,
-            email: formData.email || user.email,
             phone: formData.phone,
-            role: role,
-            updated_at: new Date().toISOString()
-          }, { onConflict: 'id' });
+            role: role
+          },
+          { onConflict: 'id' }
+        );
 
-        if (profileError) throw profileError;
-
-        // Store firm data based on role
-        const firmData = {
-          user_id: user.id,
-          firm_name: formData.firm_name,
-          contact_first_name: formData.first_name,
-          contact_last_name: formData.last_name,
-          email: formData.email || user.email,
-          phone: formData.phone,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        };
-
-        // Store professional data in localStorage for now
-        // (Professional tables would need to be created in the database)
-        localStorage.setItem(`${role}_firm_data`, JSON.stringify(firmData));
-      }
+      // Store firm data (pros table doesn't have firm fields yet, so use localStorage)
+      const firmData = {
+        id: user.id,
+        firm_name: formData.firm_name,
+        contact_first_name: formData.first_name,
+        contact_last_name: formData.last_name,
+        email: formData.email || user.email,
+        phone: formData.phone
+      };
+      localStorage.setItem(`${role}_firm_data`, JSON.stringify(firmData));
 
       // Store in localStorage as backup
       localStorage.setItem(`${role}_profile`, JSON.stringify(formData));
