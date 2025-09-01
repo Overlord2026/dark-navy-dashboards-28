@@ -49,22 +49,20 @@ export default function FamilyOnboarding() {
 
     try {
       const { data: { user } } = await supabase.auth.getUser();
-      
-      if (user) {
-        // Update profile with form data
-        const { error } = await supabase
-          .from('profiles')
-          .upsert({
-            id: user.id,
+      if (!user) throw new Error('Not signed in');
+
+      await supabase
+        .from('profiles')
+        .upsert(
+          { 
+            id: user.id, 
+            email: formData.email || user.email,
             first_name: formData.first_name,
             last_name: formData.last_name,
-            email: formData.email || user.email,
-            phone: formData.phone,
-            updated_at: new Date().toISOString()
-          }, { onConflict: 'id' });
-
-        if (error) throw error;
-      }
+            phone: formData.phone
+          },
+          { onConflict: 'id' }
+        );
 
       // Store in localStorage as backup
       localStorage.setItem('family_profile', JSON.stringify(formData));
