@@ -171,6 +171,8 @@ const CpaTools = React.lazy(() => import('@/pages/cpa/CpaTools'));
 const CpaLearn = React.lazy(() => import('@/pages/cpa/CpaLearn'));
 const EstateWorkbench = React.lazy(() => import('@/pages/estate/EstateWorkbench'));
 const AttorneyMarketplace = React.lazy(() => import('@/pages/marketplace/AttorneyMarketplace'));
+const AttorneysHome = React.lazy(() => import('@/pages/marketplace/AttorneysHome'));
+const AttorneyDetail = React.lazy(() => import('@/pages/marketplace/AttorneyDetail'));
 
 const DemoPage = React.lazy(() => import('@/pages/demos/[persona]'));
 const PreviewPage = React.lazy(() => import('@/components/PreviewPage'));
@@ -372,13 +374,14 @@ function App() {
             <Route path="/cpas/home" element={<React.Suspense fallback={<div>Loading...</div>}><CpaHome /></React.Suspense>} />
             <Route path="/marketplace/cpas" element={<React.Suspense fallback={<div>Loading...</div>}><CpaMarketplace /></React.Suspense>} />
             <Route path="/marketplace/cpas/:id" element={<React.Suspense fallback={<div>Loading...</div>}><CpaProfile /></React.Suspense>} />
-            <Route path="/marketplace/attorneys" element={<React.Suspense fallback={<div>Loading...</div>}><AttorneyMarketplace /></React.Suspense>} />
+            <Route path="/marketplace/attorneys" element={<React.Suspense fallback={<div>Loading...</div>}><AttorneysHome /></React.Suspense>} />
+            <Route path="/marketplace/attorneys/:id" element={<React.Suspense fallback={<div>Loading...</div>}><AttorneyDetail /></React.Suspense>} />
             <Route path="/tools/tax-projection" element={<React.Suspense fallback={<div>Loading...</div>}><TaxProjectionTool /></React.Suspense>} />
             <Route path="/learn/ce" element={<React.Suspense fallback={<div>Loading...</div>}><ContinuingEducation /></React.Suspense>} />
             <Route path="/taxhub/pro" element={<React.Suspense fallback={<div>Loading...</div>}><TaxHubPro /></React.Suspense>} />
             <Route path="/cpa/tools" element={<React.Suspense fallback={<div>Loading...</div>}><CpaTools /></React.Suspense>} />
             <Route path="/cpa/learn" element={<React.Suspense fallback={<div>Loading...</div>}><CpaLearn /></React.Suspense>} />
-            <Route path="/estate/workbench" element={<React.Suspense fallback={<div>Loading...</div>}><EstateWorkbench /></React.Suspense>} />
+            
             <Route path="/families/retirees/goals" element={<RetireeGoals />} />
             
             {/* Remove old stub routes that now have proper pages */}

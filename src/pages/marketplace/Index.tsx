@@ -10,11 +10,14 @@ export default function MarketplaceIndex() {
         <p className="mt-6 text-gray-300 max-w-3xl">
           Connect with premier financial advisors tailored to your family's unique needs. Build wealth, protect assets, and secure your legacy with military-grade security.
         </p>
-        <div className="mt-8 flex gap-3">
-          <a href="/marketplace/advisors" className="px-4 py-2 border border-[var(--bfo-gold)] text-[var(--bfo-gold)] rounded hover:bg-[var(--bfo-gold)] hover:text-black">
-            Find an Advisor
+        <div className="mt-8 flex flex-col sm:flex-row gap-3">
+          <a href="/marketplace/advisors" className="px-4 py-2 border border-[var(--bfo-gold)] text-[var(--bfo-gold)] rounded hover:bg-[var(--bfo-gold)] hover:text-black text-center">
+            Find a Financial Advisor
           </a>
-          <a href="/solutions" className="px-4 py-2 border border-gray-600 text-gray-200 rounded hover:bg-[#152234]">
+          <a href="/marketplace/attorneys" className="px-4 py-2 border border-[var(--bfo-gold)] text-[var(--bfo-gold)] rounded hover:bg-[var(--bfo-gold)] hover:text-black text-center">
+            Find an Estate Attorney
+          </a>
+          <a href="/solutions" className="px-4 py-2 border border-gray-600 text-gray-200 rounded hover:bg-[#152234] text-center">
             Learn More
           </a>
         </div>
