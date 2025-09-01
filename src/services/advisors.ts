@@ -12,7 +12,7 @@ export type Pro = {
 };
 
 export async function listAdvisors(): Promise<Pro[]> {
-  const { data, error } = await supabase
+  const { data, error } = await (supabase as any)
     .from('v_public_pros')
     .select('id, name, title, avatar_url, location, rating, tags, years_exp')
     .order('rating', { ascending: false })
@@ -22,11 +22,11 @@ export async function listAdvisors(): Promise<Pro[]> {
 }
 
 export async function getAdvisor(id: string): Promise<Pro | null> {
-  const { data, error } = await supabase
+  const { data, error } = await (supabase as any)
     .from('v_public_pros')
     .select('id, name, title, avatar_url, location, rating, tags, years_exp')
     .eq('id', id)
-    .single();
+    .maybeSingle();
   if (error) return null;
   return data as Pro;
 }

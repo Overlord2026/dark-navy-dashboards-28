@@ -49,7 +49,7 @@ export default function AdvisorsHome() {
   const loadAdvisors = async () => {
     try {
       setLoading(true);
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('v_public_pros')
         .select('*')
         .order('name', { ascending: true });

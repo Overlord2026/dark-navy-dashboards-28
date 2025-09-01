@@ -32,7 +32,7 @@ export async function fetchAdvisors(): Promise<Advisor[]> {
   }
 
   try {
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
       .from('v_public_pros')
       .select('*')
       .limit(200);
@@ -54,11 +54,11 @@ export async function fetchAdvisors(): Promise<Advisor[]> {
 
 export async function fetchAdvisorById(id: string): Promise<Advisor | null> {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
       .from('v_public_pros')
       .select('*')
       .eq('id', id)
-      .single();
+      .maybeSingle();
 
     if (error || !data) {
       return null;
