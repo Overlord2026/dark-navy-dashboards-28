@@ -95,6 +95,11 @@ import ReviewView from '@/pages/family/ReviewView';
 import ReceiptsViewer from '@/pages/admin/receipts/ReceiptsViewer';
 import TrustAnchors from '@/pages/admin/anchors/Anchors';
 
+// Demo Pages
+const RetireeBucketDemo = React.lazy(() => import('@/pages/demos/retiree-bucket'));
+const AdvisorFeeCompareDemo = React.lazy(() => import('@/pages/demos/advisor-fee-compare'));
+const NILSearchDemo = React.lazy(() => import('@/pages/demos/nil-search'));
+
 // BFO Ops Admin Pages
 import SitesAdmin from '@/pages/admin/sites/SitesAdmin';
 import RevenueAdmin from '@/pages/admin/revenue/RevenueAdmin';
@@ -305,6 +310,23 @@ function App() {
             <Route path="/learn" element={
               <Suspense fallback={<div>Loading...</div>}>
                 <LearnLanding />
+              </Suspense>
+            } />
+            
+            {/* Demo Routes */}
+            <Route path="/demos/retiree-bucket" element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <RetireeBucketDemo />
+              </Suspense>
+            } />
+            <Route path="/demos/advisor-fee-compare" element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <AdvisorFeeCompareDemo />
+              </Suspense>
+            } />
+            <Route path="/demos/nil-search" element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <NILSearchDemo />
               </Suspense>
             } />
             
