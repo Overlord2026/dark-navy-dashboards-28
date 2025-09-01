@@ -7,7 +7,7 @@ interface ProLandingProps {
   title: string;
 }
 
-export default function ProLanding({ title }: ProLandingProps) {
+export default function ProsLanding({ title }: ProLandingProps) {
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Hero Section */}

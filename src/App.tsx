@@ -310,7 +310,11 @@ function App() {
               </Suspense>
             } />
         <Route path="/nil" element={<NILLanding />} />
-        <Route path="/healthcare" element={<HealthcareLanding />} />
+        <Route path="/healthcare" element={
+          <Suspense fallback={<div>Loading...</div>}>
+            <HealthcareNew />
+          </Suspense>
+        } />
         <Route path="/solutions" element={<SolutionsLanding />} />
         <Route path="/learn" element={<LearnLanding />} />
         <Route path="/pros/cpa" element={<Stub title="CPA Services" />} />
