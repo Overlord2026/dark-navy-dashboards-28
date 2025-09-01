@@ -49,6 +49,13 @@
 - Line 123-128: `bg-card` → `BfoCard` component with proper JSX structure
 - Line 246-250: `bg-muted/30` → `BfoCard` component with proper JSX structure
 
+#### 8. src/components/admin/KpiTile.tsx
+**Changes:**
+- Line 2: `Card` import → `BfoStatCard` import
+- Line 12-29: `Card` component → `BfoStatCard` with brand-compliant styling
+- Replaced `text-muted-foreground` with `text-[#FFD700]` (brand gold)
+- Replaced `bg-muted` with `bg-[#FFD700]/20` for loading state
+
 ### Summary:
 - **Zero translucency**: All headers now use pure black with opacity: 1
 - **Pure gold borders**: #FFD700 thin borders on all premium surfaces
