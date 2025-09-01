@@ -48,6 +48,8 @@ import { OnboardingFlow } from '@/pages/OnboardingFlow';
 import QACoverage from '@/pages/admin/QACoverage';
 import ReadyCheck from '@/pages/admin/ReadyCheck';
 import { ReadyCheckEnhanced } from '@/pages/admin/ReadyCheckEnhanced';
+
+const AiesConsole = React.lazy(() => import('@/pages/admin/AiesConsole'));
 import AdminPanel from '@/pages/admin/AdminPanel';
 import JobsPanel from '@/pages/admin/JobsPanel';
 import PublishPanel from '@/pages/admin/PublishPanel';
@@ -375,6 +377,8 @@ function App() {
             <Route path="/admin/migrations" element={<AdminMigrations />} />
             <Route path="/admin/ip-tracker" element={<IPTracker />} />
             <Route path="/admin/ip" element={<ProtectedRoute requiredRole="admin"><IPHQ/></ProtectedRoute>} />
+            <Route path="/admin/hq/ip" element={<Suspense fallback={<div>Loading...</div>}><AiesConsole /></Suspense>} />
+            <Route path="/admin/hq/ip-ledger" element={<ProtectedRoute requiredRole="admin"><IPHQ/></ProtectedRoute>} />
             
             {/* Investor Routes */}
             <Route path="/investor/rollup" element={<InvestorRollupPage />} />
