@@ -156,7 +156,6 @@ const DemoPage = React.lazy(() => import('@/pages/demos/[persona]'));
 const PreviewPage = React.lazy(() => import('@/components/PreviewPage'));
 
 // Estate Planning Components
-const EstateWorkbench = React.lazy(() => import('@/pages/estate/EstateWorkbench'));
 const EstateDIYWizard = React.lazy(() => import('@/pages/estate/EstateDIYWizard'));
 const HealthcareDIYWizard = React.lazy(() => import('@/pages/estate/HealthcareDIYWizard'));
 const AdvisorEstatePage = React.lazy(() => import('@/pages/advisors/AdvisorEstatePage'));
