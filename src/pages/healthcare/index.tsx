@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function HealthcareHome() {
+export function HealthcareIndex() {
   return (
     <div className="min-h-screen bg-[hsl(var(--bfo-black))] p-8">
       <div className="container mx-auto">
@@ -15,3 +15,6 @@ export default function HealthcareHome() {
     </div>
   );
 }
+
+// 👇 this fixes React.lazy + TypeScript
+export default HealthcareIndex;
