@@ -188,7 +188,7 @@ export function CalculatorGrid({
             >
               <CardHeader className="pb-3">
                 <div className="flex items-start justify-between">
-                  <div className={`p-2 rounded-lg ${hasAccess ? 'bg-primary/10' : 'bg-muted'}`}>
+                  <div className={`p-2 rounded-lg ${hasAccess ? 'bg-primary/10' : 'no-gray-bg'}`}>
                     {isGated ? (
                       <Lock className="h-5 w-5 text-muted-foreground" />
                     ) : (

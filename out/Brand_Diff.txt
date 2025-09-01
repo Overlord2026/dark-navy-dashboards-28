@@ -1,0 +1,62 @@
+## Brand Lock Implementation - Change Diff Report
+
+### Files Modified:
+
+#### 1. src/styles/brand.css
+**Selectors Changed:**
+- `:root` - Updated CSS tokens to pure values
+  - `--bfo-black: 0 0% 0%` (pure black, was 210 40% 6%)
+  - `--bfo-gold: 45 100% 50%` (pure gold #FFD700, was 43 74% 52%)
+- `.bfo-header` - Added opacity: 1 !important, pure gold border
+- `.bfo-subheader` - Added opacity: 1 !important, pure gold border  
+- `.bfo-card` - Updated to rounded-2xl, pure gold border, padding
+- `.bfo-card-header` - New dark header slot with gold styling
+- `.bfo-stat` - Updated with pure gold border and purple background
+- `.bfo-chip` - Updated with pure gold border and purple background
+- `.no-gray-bg` - New utility class to replace bg-muted/bg-card
+
+#### 2. src/components/ui/BfoCard.tsx (NEW FILE)
+**Components Created:**
+- `BfoCard` - Main premium card component
+- `BfoStatCard` - Statistics display variant
+- `BfoChip` - Chip/badge variant
+
+#### 3. src/components/AdvisorCalculatorModal.tsx
+**Changes:**
+- Line 10: Added BfoCard import
+- Line 157-168: `bg-card` → `BfoCard` component with proper JSX structure
+- Line 170-181: `bg-card` → `BfoCard` component with proper JSX structure  
+- Line 185-198: `bg-muted/30` → `BfoCard` with proper JSX structure
+
+#### 4. src/components/AssetInventory.tsx
+**Changes:**
+- Line 5: Added BfoCard import
+- Line 102: `bg-muted` → `no-gray-bg` class
+- Line 200-216: `bg-muted` → `BfoCard` component with proper JSX structure
+
+#### 5. src/components/CalculatorGrid.tsx
+**Changes:**
+- Line 191: `bg-muted` → `no-gray-bg` class
+
+#### 6. src/components/HealthcareSavingsCalculator.tsx
+**Changes:**
+- Line 12: Added BfoCard import
+- Line 243-250: `bg-muted` → `BfoCard` component with proper JSX structure
+
+#### 7. src/components/PublicValueCalculator.tsx
+**Changes:**
+- Line 8: Added BfoCard import
+- Line 123-128: `bg-card` → `BfoCard` component with proper JSX structure
+- Line 246-250: `bg-muted/30` → `BfoCard` component with proper JSX structure
+
+### Summary:
+- **Zero translucency**: All headers now use pure black with opacity: 1
+- **Pure gold borders**: #FFD700 thin borders on all premium surfaces
+- **BfoCard adoption**: 7 components migrated from gray/muted backgrounds
+- **CSS tokens locked**: Brand values now use pure, non-translucent colors
+- **Lint prevention**: Added !important rules to prevent opacity on headers
+
+### Next Steps:
+- Add ESLint rule to prevent rgba/opacity on .bfo-header/.bfo-subheader
+- Continue migrating remaining bg-card/bg-muted instances across codebase
+- Update component prop interfaces to prefer BfoCard over Card

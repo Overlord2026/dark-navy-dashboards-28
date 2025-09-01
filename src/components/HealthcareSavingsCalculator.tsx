@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { DollarSign, TrendingUp, Calendar, Heart, Info, Percent } from "lucide-react";
 import { useHealthcareSavings } from "@/hooks/useHealthcareSavings";
+import { BfoCard } from '@/components/ui/BfoCard';
 
 export default function HealthcareSavingsCalculator() {
   const {
@@ -240,14 +241,14 @@ export default function HealthcareSavingsCalculator() {
               </div>
             </div>
             
-            <div className="mt-6 p-4 bg-muted rounded-lg">
+            <BfoCard className="mt-6">
               <div className="text-center">
                 <div className="text-2xl font-bold text-primary mb-1">
                   {formatCurrency(metrics.annualFeeSavings)}
                 </div>
                 <div className="text-sm text-muted-foreground">Annual Savings</div>
               </div>
-            </div>
+            </BfoCard>
           </CardContent>
         </Card>
       </div>

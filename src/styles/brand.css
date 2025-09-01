@@ -1,89 +1,108 @@
 :root {
-  /* Brand tokens (HSL) */
-  --bfo-black: 210 40% 6%;    /* #0B0F14 */
-  --bfo-gold: 43 74% 52%;     /* #D4AF37 */
-  --bfo-purple: 249 48% 15%;  /* #141129 */
+  /* Brand tokens (HSL) - Premium locked values */
+  --bfo-black: 0 0% 0%;         /* Pure #000000 - zero translucency */
+  --bfo-gold: 45 100% 50%;      /* Pure gold #FFD700 - thin borders */
+  --bfo-purple: 249 48% 15%;    /* #141129 - card backgrounds */
 }
 
-/* Header skins */
+/* BRAND LOCKED: Header/Subheader - Zero opacity, pure gold borders */
 .bfo-header { 
   background: hsl(var(--bfo-black)) !important; 
-  border-bottom: 1px solid hsl(var(--bfo-gold)) !important; 
-  color: #fff; 
+  border-bottom: 1px solid #FFD700 !important; 
+  color: #fff !important;
+  /* LINT: No opacity/rgba allowed on headers */
+  opacity: 1 !important;
 }
 .bfo-subheader { 
   background: hsl(var(--bfo-black)) !important; 
-  border-top: 1px solid hsl(var(--bfo-gold)) !important; 
-  border-bottom: 1px solid hsl(var(--bfo-gold)) !important; 
-  color: hsl(var(--bfo-gold)); 
+  border-top: 1px solid #FFD700 !important; 
+  border-bottom: 1px solid #FFD700 !important; 
+  color: #FFD700 !important;
+  /* LINT: No opacity/rgba allowed on headers */
+  opacity: 1 !important;
 }
 
-/* Premium surfaces */
+/* BRAND LOCKED: Premium surfaces - BfoCard styles */
 .bfo-card {
-  background: hsl(var(--bfo-purple));
-  border: 1px solid hsl(var(--bfo-gold) / 0.4);
-  border-radius: 14px; 
-  box-shadow: 0 8px 28px rgba(0,0,0,.35);
-  color: #fff;
+  background: hsl(var(--bfo-purple)) !important;
+  border: 1px solid #FFD700 !important;
+  border-radius: 1rem !important; /* rounded-2xl */
+  box-shadow: 0 10px 24px rgba(0,0,0,.35) !important;
+  color: #fff !important;
+  padding: 1.5rem !important;
 }
-.bfo-chip{
-  border:1px solid rgba(212,175,55,.35); color:var(--bfo-gold);
-  padding:.25rem .5rem; border-radius:999px; background:rgba(212,175,55,.07)
+
+.bfo-card-header {
+  background: hsl(var(--bfo-black)) !important;
+  border: 1px solid #FFD700 !important;
+  border-radius: 0.75rem !important;
+  padding: 1rem !important;
+  margin-bottom: 1rem !important;
+  color: #FFD700 !important;
 }
-.bfo-stat{
-  background:radial-gradient(120% 120% at 50% 0%,rgba(212,175,55,.18),rgba(10,17,27,.6));
-  border:1px solid rgba(212,175,55,.25); border-radius:12px; padding:16px; text-align:center;
+
+.bfo-stat {
+  background: hsl(var(--bfo-purple)) !important;
+  border: 1px solid #FFD700 !important; 
+  border-radius: 1rem !important;
+  padding: 1.5rem !important; 
+  text-align: center !important;
+  box-shadow: 0 8px 20px rgba(0,0,0,.25) !important;
+  color: #fff !important;
+}
+
+.bfo-chip {
+  border: 1px solid #FFD700 !important; 
+  color: #FFD700 !important;
+  padding: 0.25rem 0.5rem !important; 
+  border-radius: 999px !important; 
+  background: hsl(var(--bfo-purple)) !important;
+}
+
+/* DEPRECATED: Remove gray/muted backgrounds */
+.no-gray-bg {
+  background: hsl(var(--bfo-purple)) !important;
+  border: 1px solid #FFD700 !important;
 }
 
 body {
-  background: hsl(var(--bfo-black));
+  background: hsl(var(--bfo-black)) !important;
 }
 
-/* Premium persona cards */
-.bfo-card {
-  background: #141129; /* bfo.purple */
-  border: 1px solid #D4AF37; /* bfo.gold */
-  color: #fff;
-  border-radius: 16px;
-  box-shadow: 0 10px 24px rgba(0,0,0,.25);
-}
-.bfo-card h3, .bfo-card h4, .bfo-card p { color:#fff; }
-.bfo-link { color:#fff; }
-.bfo-link:hover { color:#D4AF37; }
-/* CTA buttons */
+/* CTA buttons - Premium styling */
 .bfo-cta {
-  background: hsl(var(--bfo-black));
-  color: hsl(var(--bfo-gold));
-  border: 1px solid hsl(var(--bfo-gold));
-  border-radius: 12px;
-  padding: 0.75rem 1.5rem;
-  font-weight: 500;
-  transition: all 0.2s ease;
+  background: hsl(var(--bfo-black)) !important;
+  color: #FFD700 !important;
+  border: 1px solid #FFD700 !important;
+  border-radius: 0.75rem !important;
+  padding: 0.75rem 1.5rem !important;
+  font-weight: 500 !important;
+  transition: all 0.2s ease !important;
 }
 .bfo-cta:hover, .bfo-cta:focus-visible {
-  background: hsl(var(--bfo-gold));
-  color: hsl(var(--bfo-black));
+  background: #FFD700 !important;
+  color: hsl(var(--bfo-black)) !important;
 }
 .bfo-cta-secondary {
-  background: transparent;
-  color: hsl(var(--bfo-gold));
-  border: 1px solid hsl(var(--bfo-gold));
-  border-radius: 12px;
-  padding: 0.5rem 1rem;
-  font-weight: 500;
-  transition: all 0.2s ease;
+  background: transparent !important;
+  color: #FFD700 !important;
+  border: 1px solid #FFD700 !important;
+  border-radius: 0.75rem !important;
+  padding: 0.5rem 1rem !important;
+  font-weight: 500 !important;
+  transition: all 0.2s ease !important;
 }
 .bfo-cta-secondary:hover, .bfo-cta-secondary:focus-visible {
-  background: hsl(var(--bfo-gold));
-  color: hsl(var(--bfo-black));
+  background: #FFD700 !important;
+  color: hsl(var(--bfo-black)) !important;
 }
 
 /* Link styles */
 .bfo-link {
-  color: #fff;
-  text-decoration: none;
-  transition: color 0.2s ease;
+  color: #fff !important;
+  text-decoration: none !important;
+  transition: color 0.2s ease !important;
 }
 .bfo-link:hover {
-  color: hsl(var(--bfo-gold));
+  color: #FFD700 !important;
 }

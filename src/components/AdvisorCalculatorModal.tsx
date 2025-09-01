@@ -7,6 +7,7 @@ import { CheckCircle, Share, Calendar, FileDown, TrendingUp, DollarSign, Sparkle
 import CountUp from 'react-countup';
 import { calculateValueDrivenSavings } from '@/hooks/useValueDrivenSavings';
 import { Celebration } from '@/components/ConfettiAnimation';
+import { BfoCard } from '@/components/ui/BfoCard';
 
 interface AdvisorCalculatorModalProps {
   open: boolean;
@@ -154,7 +155,7 @@ export const AdvisorCalculatorModal: React.FC<AdvisorCalculatorModalProps> = ({
 
               {/* Savings Cards */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="text-center p-6 bg-card rounded-lg border">
+                <BfoCard className="text-center">
                   <DollarSign className="h-8 w-8 mx-auto text-green-500 mb-2" />
                   <div className="text-2xl font-bold text-green-500">
                     <CountUp
@@ -165,9 +166,9 @@ export const AdvisorCalculatorModal: React.FC<AdvisorCalculatorModalProps> = ({
                     />
                   </div>
                   <p className="text-sm text-muted-foreground">Total Savings (30 years)</p>
-                </div>
+                </BfoCard>
 
-                <div className="text-center p-6 bg-card rounded-lg border">
+                <BfoCard className="text-center">
                   <TrendingUp className="h-8 w-8 mx-auto text-blue-500 mb-2" />
                   <div className="text-2xl font-bold text-blue-500">
                     <CountUp
@@ -178,11 +179,11 @@ export const AdvisorCalculatorModal: React.FC<AdvisorCalculatorModalProps> = ({
                     />
                   </div>
                   <p className="text-sm text-muted-foreground">Additional Wealth Potential</p>
-                </div>
+                </BfoCard>
               </div>
 
               {/* Service Checklist */}
-              <div className="p-6 bg-muted/30 rounded-lg">
+              <BfoCard>
                 <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
                   <Sparkles className="h-5 w-5 text-primary" />
                   Your BFO relationship includes:
@@ -195,7 +196,7 @@ export const AdvisorCalculatorModal: React.FC<AdvisorCalculatorModalProps> = ({
                     </div>
                   ))}
                 </div>
-              </div>
+              </BfoCard>
 
               {/* Action Buttons */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

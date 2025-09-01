@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { BfoCard } from '@/components/ui/BfoCard';
 
 // All assets discovered in the project
 const projectAssets = {
@@ -99,7 +100,7 @@ const AssetThumbnail: React.FC<AssetThumbnailProps> = ({ asset }) => {
   return (
     <Card className="w-full max-w-sm">
       <CardContent className="p-4">
-        <div className="aspect-square bg-muted rounded-lg mb-3 overflow-hidden flex items-center justify-center">
+        <div className="aspect-square no-gray-bg rounded-lg mb-3 overflow-hidden flex items-center justify-center">
           {!imageError ? (
             <img 
               src={asset.path}
@@ -197,7 +198,7 @@ export const AssetInventory: React.FC = () => {
         ))}
       </Tabs>
 
-      <div className="mt-8 p-4 bg-muted rounded-lg">
+      <BfoCard className="mt-8">
         <h3 className="font-semibold mb-2">Asset Usage Summary</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
           <div>
@@ -213,7 +214,7 @@ export const AssetInventory: React.FC = () => {
             <span className="font-medium">Total:</span> {allAssets.length}
           </div>
         </div>
-      </div>
+      </BfoCard>
     </div>
   );
 };

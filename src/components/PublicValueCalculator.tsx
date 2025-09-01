@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { CheckCircle, TrendingUp, DollarSign, Calendar, ArrowRight } from 'lucide-react';
 import CountUp from 'react-countup';
+import { BfoCard } from '@/components/ui/BfoCard';
 
 export const PublicValueCalculator: React.FC = () => {
   const [portfolioValue, setPortfolioValue] = useState(2000000);
@@ -120,11 +121,11 @@ export const PublicValueCalculator: React.FC = () => {
         {/* BFO Example */}
         <DashboardCard title="BFO Value Comparison" className="bg-gradient-to-br from-primary/5 to-accent/5">
           <div className="space-y-4">
-            <div className="text-center p-4 bg-card rounded-lg border">
+            <BfoCard className="text-center">
               <div className="text-sm text-muted-foreground">BFO Flat Fee for $2M Portfolio</div>
               <div className="text-3xl font-bold text-primary">{formatCurrency(bfoFlatFee)}/year</div>
               <div className="text-sm text-muted-foreground">Investment Management Only</div>
-            </div>
+            </BfoCard>
             
             <div className="space-y-2">
               <p className="text-sm font-medium text-foreground">For that fee, you get:</p>
@@ -243,11 +244,11 @@ export const PublicValueCalculator: React.FC = () => {
           </div>
 
           {/* Disclaimer */}
-          <div className="text-center p-4 bg-muted/30 rounded-lg border">
+          <BfoCard className="text-center border">
             <p className="text-sm text-muted-foreground">
               <strong>Disclaimer:</strong> Actual pricing and services depend on your unique situation and needs. Calculator for illustration only.
             </p>
-          </div>
+          </BfoCard>
         </div>
       )}
     </div>
