@@ -26,6 +26,7 @@ import {
   Briefcase
 } from 'lucide-react';
 import { AdvisorE2EDemo } from '@/components/demos/AdvisorE2EDemo';
+import { VoiceDrawer } from '@/components/voice/VoiceDrawer';
 
 interface ProofSlip {
   id: string;
@@ -192,6 +193,11 @@ export default function AdvisorHome() {
           </div>
           
           <div className="flex items-center gap-2">
+            <VoiceDrawer 
+              triggerLabel="🎙️ Voice Assistant" 
+              persona="advisor" 
+              endpoint="meeting-summary"
+            />
             <AdvisorE2EDemo className="min-h-[44px]" />
             <Button
               variant="outline"

@@ -207,6 +207,10 @@ import MarketplacePage from '@/pages/nil/Marketplace';
 import NILIndexPage from '@/pages/nil/NILIndex';
 import NILDemoPage from '@/pages/nil/DemoPage';
 import NILTourPage from '@/pages/nil/TourPage';
+
+// Contact pages
+const ContactSchedulePage = React.lazy(() => import('@/pages/contact/schedule'));
+const ContactMessagePage = React.lazy(() => import('@/pages/contact/message'));
 import InvestorRollupPage from '@/pages/investor/InvestorRollupPage';
 
 // Crypto Components
@@ -699,6 +703,18 @@ function App() {
                 </Suspense>
               } />
             )}
+            
+            {/* Contact Routes */}
+            <Route path="/contact/schedule" element={
+              <Suspense fallback={<div className="flex items-center justify-center h-64">Loading...</div>}>
+                <ContactSchedulePage />
+              </Suspense>
+            } />
+            <Route path="/contact/message" element={
+              <Suspense fallback={<div className="flex items-center justify-center h-64">Loading...</div>}>
+                <ContactMessagePage />
+              </Suspense>
+            } />
             
             {/* Dev Routes */}
             {process.env.NODE_ENV !== 'production' && (

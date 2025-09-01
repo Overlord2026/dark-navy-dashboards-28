@@ -52,7 +52,7 @@ export default function FamilyHome() {
         <div className="text-center mb-8 relative">
           <div className="absolute top-0 right-0">
             <VoiceDrawer 
-              triggerLabel="🎙️ Ask AI" 
+              triggerLabel="🎙️ Voice Assistant" 
               persona="family" 
               endpoint="meeting-summary"
             />

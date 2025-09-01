@@ -1,12 +1,14 @@
 // Voice Assistant Configuration
 export const VOICE_CONFIG = {
-  VOICE_ENABLED: true,
+  VOICE_ENABLED: import.meta.env.VITE_VOICE_ENABLED !== 'false',
   VOICE_PER_PERSONA: {
     'family': true,
     'insurance': true,
     'advisor': true,
     'accountant': false,
-    'attorney': false
+    'attorney': false,
+    'admin': false,
+    'athlete': false
   },
   REDACTION_ENABLED: true,
   VAD_ENABLED: true,
