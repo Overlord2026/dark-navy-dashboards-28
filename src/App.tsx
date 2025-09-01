@@ -99,6 +99,7 @@ import TrustAnchors from '@/pages/admin/anchors/Anchors';
 const RetireeBucketDemo = React.lazy(() => import('@/pages/demos/retiree-bucket'));
 const AdvisorFeeCompareDemo = React.lazy(() => import('@/pages/demos/advisor-fee-compare'));
 const NILSearchDemo = React.lazy(() => import('@/pages/demos/nil-search'));
+const IPLedgerPage = React.lazy(() => import('@/pages/admin/hq/ip'));
 
 // BFO Ops Admin Pages
 import SitesAdmin from '@/pages/admin/sites/SitesAdmin';
@@ -445,7 +446,13 @@ function App() {
             <Route path="/admin/migrations" element={<AdminMigrations />} />
             <Route path="/admin/ip-tracker" element={<IPTracker />} />
             <Route path="/admin/ip" element={<ProtectedRoute requiredRole="admin"><IPHQ/></ProtectedRoute>} />
-            <Route path="/admin/hq/ip" element={<Suspense fallback={<div>Loading...</div>}><AiesConsole /></Suspense>} />
+            <Route path="/admin/hq/ip" element={
+              <ProtectedRoute requiredRole="admin">
+                <Suspense fallback={<div>Loading...</div>}>
+                  <IPLedgerPage />
+                </Suspense>
+              </ProtectedRoute>
+            } />
             <Route path="/admin/hq/ip-ledger" element={<ProtectedRoute requiredRole="admin"><IPHQ/></ProtectedRoute>} />
             
             {/* Investor Routes */}
