@@ -85,10 +85,9 @@ export default function AdvisorDetail() {
         .from('pro_inquiries')
         .insert({
           persona: 'advisor',
-          pro_slug: id,
-          name: formData.name,
+          pro_id: id,
+          full_name: formData.name,
           email: formData.email,
-          phone: formData.phone || null,
           message: formData.message || null
         })
         .select()

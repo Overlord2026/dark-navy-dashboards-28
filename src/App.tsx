@@ -54,7 +54,7 @@ const HQDashboard = React.lazy(() => import('@/pages/admin/hq'));
 const FamiliesIndex = React.lazy(() => import('@/pages/families/index'));
 const ProsIndex = React.lazy(() => import('@/pages/pros/index'));
 const NILLanding = React.lazy(() => import('@/pages/nil/landing'));
-const HealthcareNew = React.lazy(() => import('@/pages/healthcare/index'));
+const HealthcareNew = React.lazy(() => import('@/pages/healthcare/HealthcareIndex'));
 const SolutionsLanding = React.lazy(() => import('@/pages/solutions/index'));
 const LearnLanding = React.lazy(() => import('@/pages/learn/index'));
 
