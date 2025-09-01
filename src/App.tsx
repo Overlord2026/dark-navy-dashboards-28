@@ -309,11 +309,8 @@ function App() {
                 <ProsIndex />
               </Suspense>
             } />
-            <Route path="/healthcare" element={
-              <Suspense fallback={<div>Loading...</div>}>
-                <HealthcareNew />
-              </Suspense>
-            } />
+            <Route path="/nil" element={<NILLanding />} />
+            <Route path="/healthcare" element={<HealthcareLanding />} />
             <Route path="/solutions" element={
               <Suspense fallback={<div>Loading...</div>}>
                 <SolutionsLanding />
@@ -744,6 +741,20 @@ function App() {
                 <PreviewPage />
               </Suspense>
             } />
+            
+            {/* Stub Routes - Prevent 404s */}
+            <Route path="/contact/schedule" element={<Stub title="Schedule a Meeting" />} />
+            <Route path="/contact/message" element={<Stub title="Send a Message" />} />
+            <Route path="/marketplace/advisors" element={<Stub title="Find Advisors" />} />
+            <Route path="/marketplace/cpas" element={<Stub title="Find CPAs" />} />
+            <Route path="/marketplace/attorneys" element={<Stub title="Find Attorneys" />} />
+            <Route path="/marketplace/insurance" element={<Stub title="Insurance Solutions" />} />
+            <Route path="/tools/retirement-roadmap" element={<Stub title="Retirement Roadmap Tool" />} />
+            <Route path="/tools/tax-projection" element={<Stub title="Tax Projection Tool" />} />
+            <Route path="/tools/estate-planning" element={<Stub title="Estate Planning Tool" />} />
+            <Route path="/vault" element={<Stub title="Secure Document Vault" />} />
+            <Route path="/goals" element={<Stub title="Financial Goals Tracker" />} />
+            <Route path="/discover" element={<Stub title="Discover Solutions" />} />
             
             {/* NotFound Route */}
             <Route path="*" element={<NotFound />} />

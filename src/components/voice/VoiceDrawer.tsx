@@ -177,10 +177,10 @@ export function VoiceDrawer({
             {!isVoiceFeatureEnabled ? (
               <div className="p-3 bg-muted rounded-lg">
                 <p className="text-sm text-muted-foreground mb-2">
-                  Voice capture is currently disabled. Please use the text area below.
+                  ⚠️ Voice capture is disabled (VOICE_ENABLED=false)
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  Contact support if you need voice features enabled.
+                  This is intentional for the investor demo. Text input works normally.
                 </p>
               </div>
             ) : (
