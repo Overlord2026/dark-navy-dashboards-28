@@ -33,24 +33,27 @@ serve(async (req) => {
       );
     }
 
-    // Process the DDPack data
-    const processedItems = payload.items.map((item, index) => ({
-      ...item,
-      processed_at: new Date().toISOString(),
-      sequence: index + 1,
-      pack_title: payload.title
-    }));
+    // Process the DDPack data - handle both strings and objects
+    const processedItems = payload.items.map((item, index) => {
+      const baseItem = typeof item === 'string' ? { id: item } : item;
+      return {
+        ...baseItem,
+        processed_at: new Date().toISOString(),
+        sequence: index + 1,
+        pack_title: payload.title
+      };
+    });
 
     // Simulate some processing time
     await new Promise(resolve => setTimeout(resolve, 100));
 
     const result = {
-      success: true,
+      id: `ddpack_${Date.now()}`,
       title: payload.title,
-      processed_items: processedItems,
+      items: processedItems,
       item_count: processedItems.length,
-      processed_at: new Date().toISOString(),
-      pack_id: `ddpack_${Date.now()}`
+      created_at: new Date().toISOString(),
+      success: true
     };
 
     console.log('DDPack processing completed:', result.pack_id);
