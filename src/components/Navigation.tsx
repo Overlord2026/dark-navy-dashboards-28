@@ -19,13 +19,13 @@ export function Navigation() {
             />
           </Link>
           <div className="flex items-center space-x-6">
-            <Link to="/goals" className="text-sm font-medium text-brand-gold hover:text-brand-white transition-colors">
+            <Link to="/goals" className="text-sm font-medium text-bfo-gold hover:text-white transition-colors">
               Goals
             </Link>
-            <Link to="/receipts" className="text-sm font-medium text-brand-gold hover:text-brand-white transition-colors">
+            <Link to="/receipts" className="text-sm font-medium text-bfo-gold hover:text-white transition-colors">
               Receipts
             </Link>
-            <Link to="/nil-onboarding" className="text-sm font-medium text-brand-gold hover:text-brand-white transition-colors">
+            <Link to="/nil-onboarding" className="text-sm font-medium text-bfo-gold hover:text-white transition-colors">
               NIL Onboarding
             </Link>
           </div>

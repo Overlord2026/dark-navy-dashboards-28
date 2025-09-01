@@ -17,19 +17,29 @@ export default function MastheadPersonaToggle() {
   }, [group]);
 
   return (
-    <div className="w-full flex justify-center pt-2 gap-2">
-      <button
-        className={`px-3 py-1 rounded ${group==="family"?"bg-emerald-600 text-white":"bg-transparent border border-emerald-600 text-emerald-600"}`}
-        onClick={() => setGroup("family")}
-      >
-        For Families
-      </button>
-      <button
-        className={`px-3 py-1 rounded ${group==="pro"?"bg-blue-600 text-white":"bg-transparent border border-blue-600 text-blue-600"}`}
-        onClick={() => setGroup("pro")}
-      >
-        For Service Pros
-      </button>
+    <div className="bfo-subheader w-full flex justify-center py-3">
+      <div className="flex gap-2">
+        <button
+          className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+            group === "family" 
+              ? "bg-bfo-gold text-bfo-black" 
+              : "bg-transparent border border-bfo-gold text-bfo-gold hover:bg-bfo-gold/10"
+          }`}
+          onClick={() => setGroup("family")}
+        >
+          For Families
+        </button>
+        <button
+          className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+            group === "pro" 
+              ? "bg-bfo-gold text-bfo-black" 
+              : "bg-transparent border border-bfo-gold text-bfo-gold hover:bg-bfo-gold/10"
+          }`}
+          onClick={() => setGroup("pro")}
+        >
+          For Service Pros
+        </button>
+      </div>
     </div>
   );
 }

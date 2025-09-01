@@ -45,7 +45,7 @@ export const BFOHeader: React.FC<BFOHeaderProps> = ({
   return (
     <div className={cn("w-full", className)}>
       {/* Main Header */}
-      <header className="bg-background border-b border-border">
+      <header className="bfo-header bfo-no-blur">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
             {/* Logo and Brand */}
@@ -292,7 +292,7 @@ export const BFOHeader: React.FC<BFOHeaderProps> = ({
 
       {/* Persona Sub-Banner */}
       {showPersonaBanner && personaLinks.length > 0 && (
-        <div className="bg-black text-[#D4AF37] gold-border w-full">
+        <div className="bfo-subheader w-full">
           <div className="mx-auto max-w-7xl px-4 py-4">
             <div className="flex items-center space-x-1 overflow-x-auto scrollbar-hide">
               {personaLinks.map((link, index) => (
