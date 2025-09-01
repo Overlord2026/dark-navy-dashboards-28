@@ -173,6 +173,9 @@ const EstateWorkbench = React.lazy(() => import('@/pages/estate/EstateWorkbench'
 const AttorneyMarketplace = React.lazy(() => import('@/pages/marketplace/AttorneyMarketplace'));
 const AttorneysHome = React.lazy(() => import('@/pages/marketplace/AttorneysHome'));
 const AttorneyDetail = React.lazy(() => import('@/pages/marketplace/AttorneyDetail'));
+const MarketplaceInsurance = React.lazy(() => import('@/pages/marketplace/Insurance'));
+const FNOLStub = React.lazy(() => import('@/pages/insurance/fnol'));
+const BindStub = React.lazy(() => import('@/pages/insurance/bind'));
 
 const DemoPage = React.lazy(() => import('@/pages/demos/[persona]'));
 const PreviewPage = React.lazy(() => import('@/components/PreviewPage'));
@@ -376,6 +379,9 @@ function App() {
             <Route path="/marketplace/cpas/:id" element={<React.Suspense fallback={<div>Loading...</div>}><CpaProfile /></React.Suspense>} />
             <Route path="/marketplace/attorneys" element={<React.Suspense fallback={<div>Loading...</div>}><AttorneysHome /></React.Suspense>} />
             <Route path="/marketplace/attorneys/:id" element={<React.Suspense fallback={<div>Loading...</div>}><AttorneyDetail /></React.Suspense>} />
+            <Route path="/marketplace/insurance" element={<React.Suspense fallback={<div>Loading...</div>}><MarketplaceInsurance /></React.Suspense>} />
+            <Route path="/insurance/fnol" element={<React.Suspense fallback={<div>Loading...</div>}><FNOLStub /></React.Suspense>} />
+            <Route path="/insurance/bind" element={<React.Suspense fallback={<div>Loading...</div>}><BindStub /></React.Suspense>} />
             <Route path="/tools/tax-projection" element={<React.Suspense fallback={<div>Loading...</div>}><TaxProjectionTool /></React.Suspense>} />
             <Route path="/learn/ce" element={<React.Suspense fallback={<div>Loading...</div>}><ContinuingEducation /></React.Suspense>} />
             <Route path="/taxhub/pro" element={<React.Suspense fallback={<div>Loading...</div>}><TaxHubPro /></React.Suspense>} />
