@@ -152,7 +152,6 @@ import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 // Marketplace imports
 import MarketplaceIndex from '@/pages/marketplace/Index';
 import MarketplaceAdvisors from '@/pages/marketplace/Advisors';
-import AdvisorProfile from '@/pages/marketplace/AdvisorProfile';
 import AdvisorDetail from '@/pages/marketplace/AdvisorDetail';
 
 const CpaHome = React.lazy(() => import('@/pages/cpas/CpaHome'));
@@ -341,7 +340,7 @@ function App() {
             {/* Marketplace Routes */}
             <Route path="/marketplace" element={<MarketplaceIndex />} />
             <Route path="/marketplace/advisors" element={<MarketplaceAdvisors />} />
-            <Route path="/marketplace/advisors/:id" element={<AdvisorProfile />} />
+            <Route path="/marketplace/advisors/:id" element={<AdvisorDetail />} />
             <Route path="/cpas/home" element={<React.Suspense fallback={<div>Loading...</div>}><CpaHome /></React.Suspense>} />
             <Route path="/marketplace/cpas" element={<React.Suspense fallback={<div>Loading...</div>}><CpaMarketplace /></React.Suspense>} />
             <Route path="/marketplace/cpas/:id" element={<React.Suspense fallback={<div>Loading...</div>}><CpaProfile /></React.Suspense>} />
@@ -635,7 +634,6 @@ function App() {
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/estate/demo" element={<EstateRonDemo />} />}
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/rulesync" element={<RuleSyncAdmin />} />}
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin" element={<AdminPanel />} />}
-             <Route path="/marketplace/advisors/:id" element={<AdvisorDetail />} />
             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/jobs" element={<JobsPanel />} />}
             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/publish" element={<PublishPanel />} />}
             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/env" element={<EnvInspector />} />}
