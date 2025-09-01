@@ -11464,6 +11464,51 @@ export type Database = {
         }
         Relationships: []
       }
+      decision_anchors: {
+        Row: {
+          anchor_ref: string
+          anchored_at: string
+          receipt_hash: string
+        }
+        Insert: {
+          anchor_ref: string
+          anchored_at?: string
+          receipt_hash: string
+        }
+        Update: {
+          anchor_ref?: string
+          anchored_at?: string
+          receipt_hash?: string
+        }
+        Relationships: []
+      }
+      decision_rds: {
+        Row: {
+          action: string
+          created_at: string
+          id: string
+          reasons: Json
+          receipt_hash: string | null
+          subject: string
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          id?: string
+          reasons: Json
+          receipt_hash?: string | null
+          subject: string
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          id?: string
+          reasons?: Json
+          receipt_hash?: string | null
+          subject?: string
+        }
+        Relationships: []
+      }
       demo_data_sets: {
         Row: {
           category: string
@@ -27088,6 +27133,7 @@ export type Database = {
           id: string
           message: string | null
           persona: string
+          phone: string | null
           pro_id: string
         }
         Insert: {
@@ -27098,6 +27144,7 @@ export type Database = {
           id?: string
           message?: string | null
           persona: string
+          phone?: string | null
           pro_id: string
         }
         Update: {
@@ -27108,6 +27155,7 @@ export type Database = {
           id?: string
           message?: string | null
           persona?: string
+          phone?: string | null
           pro_id?: string
         }
         Relationships: [
@@ -27116,13 +27164,6 @@ export type Database = {
             columns: ["pro_id"]
             isOneToOne: false
             referencedRelation: "pros"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "pro_inquiries_pro_id_fkey"
-            columns: ["pro_id"]
-            isOneToOne: false
-            referencedRelation: "v_public_pros"
             referencedColumns: ["id"]
           },
         ]
@@ -39433,6 +39474,19 @@ export type Database = {
         }
         Relationships: []
       }
+      v_decision_receipts: {
+        Row: {
+          action: string | null
+          anchor_ref: string | null
+          anchored_at: string | null
+          created_at: string | null
+          id: string | null
+          reasons: Json | null
+          receipt_hash: string | null
+          subject: string | null
+        }
+        Relationships: []
+      }
       v_document_request_templates_public: {
         Row: {
           attorney_id: string | null
@@ -39902,39 +39956,6 @@ export type Database = {
           last_name?: string | null
           phone?: string | null
           user_id?: string | null
-        }
-        Relationships: []
-      }
-      v_public_pros: {
-        Row: {
-          avatar_url: string | null
-          id: string | null
-          location: string | null
-          name: string | null
-          rating: number | null
-          tags: string[] | null
-          title: string | null
-          years_exp: string | null
-        }
-        Insert: {
-          avatar_url?: string | null
-          id?: string | null
-          location?: string | null
-          name?: string | null
-          rating?: number | null
-          tags?: string[] | null
-          title?: string | null
-          years_exp?: string | null
-        }
-        Update: {
-          avatar_url?: string | null
-          id?: string | null
-          location?: string | null
-          name?: string | null
-          rating?: number | null
-          tags?: string[] | null
-          title?: string | null
-          years_exp?: string | null
         }
         Relationships: []
       }
