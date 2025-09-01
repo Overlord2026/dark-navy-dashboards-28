@@ -1,7 +1,5 @@
 import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { ToolGate } from '@/components/tools/ToolGate';
+import PersonaCard from '@/components/ui/PersonaCard';
 import { DemoLauncher } from './DemoLauncher';
 import { ShareButton } from './ShareButton';
 import { Play, ExternalLink, ArrowRight } from 'lucide-react';
@@ -33,58 +31,55 @@ export const PersonaCarousel: React.FC = () => {
   return (
     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
       {PERSONA_CONFIG.map((persona) => (
-        <Card key={persona.persona + (persona.segment || '')} className="h-full flex flex-col hover:shadow-lg transition-shadow">
-          <CardHeader>
-            <CardTitle className="text-xl">{persona.label}</CardTitle>
-          </CardHeader>
-          
-          <CardContent className="flex-1 flex flex-col">
-            <CardDescription className="text-sm leading-relaxed mb-6 flex-1">
-              {persona.benefit}
-            </CardDescription>
-            
-            <div className="space-y-3">
+        <PersonaCard 
+          key={persona.persona + (persona.segment || '')}
+          title={persona.label}
+          actions={
+            <>
               {withFeatureFlag('DEMOS_ENABLED',
                 <DemoLauncher 
                   demoId={persona.demoId}
                   trigger={
-                    <Button variant="outline" className="w-full">
-                      <Play className="mr-2 h-4 w-4" />
+                    <a className="bfo-cta-secondary px-4 py-2 inline-flex items-center gap-2">
+                      <Play className="w-4 h-4" />
                       See 60-second demo
-                    </Button>
+                    </a>
                   }
                 />
               )}
               
               {withFeatureFlag('CATALOG_ENABLED',
-                <Button 
-                  variant="ghost" 
-                  className="w-full"
+                <a 
+                  href={`/catalog?persona=${persona.tags?.join(',') || persona.persona}`}
+                  className="bfo-cta-secondary px-4 py-2 inline-flex items-center gap-2"
                   onClick={() => handleCatalogOpen(persona.tags?.join(',') || persona.persona)}
                 >
-                  <ExternalLink className="mr-2 h-4 w-4" />
+                  <ExternalLink className="w-4 h-4" />
                   Open catalog
-                </Button>
+                </a>
               )}
               
-              <Button 
-                className="w-full bg-gold hover:bg-gold-hover text-navy"
+              <a 
+                href={`/onboarding?persona=${persona.persona + (persona.segment ? `-${persona.segment}` : '')}`}
+                className="bfo-cta px-5 py-2 font-medium inline-flex items-center gap-2"
                 onClick={() => handleStartWorkspace(persona.persona + (persona.segment ? `-${persona.segment}` : ''))}
               >
-                <ArrowRight className="mr-2 h-4 w-4" />
+                <ArrowRight className="w-4 h-4" />
                 {persona.cta}
-              </Button>
+              </a>
               
-              <div className="pt-2 text-center">
+              <div className="pt-2 text-center w-full">
                 <ShareButton 
                   text={`Check this out — a secure platform to organize everything in one place and keep a record you can trust: ${persona.label}`}
                   url={window.location.href}
-                  className="text-muted-foreground hover:text-foreground text-sm"
+                  className="bfo-link text-sm"
                 />
               </div>
-            </div>
-          </CardContent>
-        </Card>
+            </>
+          }
+        >
+          <p>{persona.benefit}</p>
+        </PersonaCard>
       ))}
     </div>
   );

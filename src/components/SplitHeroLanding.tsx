@@ -1,5 +1,5 @@
 import React from 'react';
-import { GoldButton, GoldOutlineButton } from '@/components/ui/brandButtons';
+import PersonaCard from '@/components/ui/PersonaCard';
 import { BFOHeader } from '@/components/site/BFOHeader';
 import { BrandedFooter } from '@/components/ui/BrandedFooter';
 import analytics from '@/lib/analytics';
@@ -41,65 +41,67 @@ export const SplitHeroLanding: React.FC = () => {
 
             <div className="grid lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
               {/* Families Card */}
-              <div className="bg-card border border-border rounded-lg p-8 text-center hover:shadow-lg transition-shadow">
-                <div className="mb-6">
-                  <h2 className="text-3xl font-bold text-foreground mb-4">
-                    For Families
-                  </h2>
-                  <h3 className="text-xl font-semibold text-emerald-600 mb-4">
-                    Your Private Family Office—On Your Terms
-                  </h3>
-                  <p className="text-muted-foreground leading-relaxed">
-                    You choose the team. You control the plan. We coordinate investments, tax, estate, insurance, and healthcare—so your family thrives for generations.
-                  </p>
-                </div>
-                <div className="space-y-3">
-                  <GoldButton 
-                    className="w-full text-lg px-6 py-3"
-                    onClick={handleFamilyClick}
-                  >
-                    See How It Works
-                  </GoldButton>
-                  <GoldOutlineButton 
-                    className="w-full text-lg px-6 py-3"
-                    onClick={handleFamilyClick}
-                  >
-                    Try the Value Calculator
-                  </GoldOutlineButton>
-                </div>
-              </div>
+              <PersonaCard
+                title="For Families"
+                actions={
+                  <>
+                    <a 
+                      href="/families"
+                      className="bfo-cta px-6 py-3 font-medium w-full text-center"
+                      onClick={handleFamilyClick}
+                    >
+                      See How It Works
+                    </a>
+                    <a 
+                      href="/families"
+                      className="bfo-cta-secondary px-6 py-3 w-full text-center"
+                      onClick={handleFamilyClick}
+                    >
+                      Try the Value Calculator
+                    </a>
+                  </>
+                }
+              >
+                <h3 className="text-xl font-semibold text-bfo-gold mb-4">
+                  Your Private Family Office—On Your Terms
+                </h3>
+                <p className="leading-relaxed">
+                  You choose the team. You control the plan. We coordinate investments, tax, estate, insurance, and healthcare—so your family thrives for generations.
+                </p>
+              </PersonaCard>
 
               {/* Professionals Card */}
-              <div className="bg-card border border-border rounded-lg p-8 text-center hover:shadow-lg transition-shadow">
-                <div className="mb-6">
-                  <h2 className="text-3xl font-bold text-foreground mb-4">
-                    For Service Pros
-                  </h2>
-                  <h3 className="text-xl font-semibold text-blue-600 mb-4">
-                    A Growth & Compliance OS for Professionals
-                  </h3>
-                  <p className="text-muted-foreground leading-relaxed">
-                    Win ideal clients, automate follow-ups, coordinate with the family office, and keep audits clean.
-                  </p>
-                </div>
-                <div className="space-y-3">
-                  <GoldButton 
-                    className="w-full text-lg px-6 py-3"
-                    onClick={handleProsClick}
-                  >
-                    Explore Tools
-                  </GoldButton>
-                  <GoldOutlineButton 
-                    className="w-full text-lg px-6 py-3"
-                    onClick={handleProsClick}
-                  >
-                    Book a Demo
-                  </GoldOutlineButton>
-                </div>
-                <div className="text-sm text-muted-foreground mt-4">
+              <PersonaCard
+                title="For Service Pros"
+                actions={
+                  <>
+                    <a 
+                      href="/pros"
+                      className="bfo-cta px-6 py-3 font-medium w-full text-center"
+                      onClick={handleProsClick}
+                    >
+                      Explore Tools
+                    </a>
+                    <a 
+                      href="/pros"
+                      className="bfo-cta-secondary px-6 py-3 w-full text-center"
+                      onClick={handleProsClick}
+                    >
+                      Book a Demo
+                    </a>
+                  </>
+                }
+              >
+                <h3 className="text-xl font-semibold text-blue-400 mb-4">
+                  A Growth & Compliance OS for Professionals
+                </h3>
+                <p className="leading-relaxed mb-4">
+                  Win ideal clients, automate follow-ups, coordinate with the family office, and keep audits clean.
+                </p>
+                <div className="text-sm text-white/60">
                   Advisors · CPAs · Attorneys · Insurance · Healthcare · Realtors · Bank/Trust
                 </div>
-              </div>
+              </PersonaCard>
             </div>
           </div>
         </section>
