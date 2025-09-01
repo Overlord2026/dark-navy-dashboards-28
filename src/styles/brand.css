@@ -13,10 +13,16 @@
   border-bottom: 1px solid hsl(47, 70%, 56%); /* Gold accent */
 }
 
+.bfo-no-blur {
+  backdrop-filter: none !important;
+  background: hsl(215, 25%, 5%) !important; /* Solid black, no transparency */
+}
+
 .bfo-subheader {
   background: hsl(215, 25%, 7%); /* Slightly lighter BFO Black */
   color: white;
-  border-bottom: 1px solid hsl(47, 70%, 56%); /* Gold accent */
+  border-top: 1px solid hsl(47, 70%, 56%); /* Gold top border */
+  border-bottom: 1px solid hsl(47, 70%, 56%); /* Gold bottom border */
 }
 
 .btn-gold { 

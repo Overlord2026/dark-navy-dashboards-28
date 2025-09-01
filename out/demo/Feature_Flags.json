@@ -2,32 +2,10 @@
   "timestamp": "2025-09-01T12:00:00Z",
   "environment": "demo",
   "flags": {
-    "families_tools_band": true,
-    "pricing_gates": true,
-    "consent_module": true,
-    "nil_booking_v1": true,
     "DEMO_MODE": true,
     "VOICE_ENABLED": false,
     "HQ_BOOT": true,
     "IP_LEDGER": true,
-    "PUBLISH_BATCH": true,
-    "nav.persona": true,
-    "dashboard.familyHero": true,
-    "calc.monte": true,
-    "calc.rmd": true,
-    "calc.socialSecurity": true,
-    "guides.retirement": true,
-    "guides.taxPlanning": true,
-    "guides.estatePlanning": true,
-    "pros.medicareRecordingBanner": false,
-    "pros.complianceMode": false,
-    "features.plaidIntegration": true,
-    "features.docusignIntegration": false,
-    "features.advancedReporting": true,
-    "ui.experimentalDesign": true,
-    "security.rlsPolicies": false,
-    "security.auditLogging": true,
-    "performance.edgeCaching": true,
-    "debug.enableConsoleLogging": true
+    "PUBLISH_BATCH": true
   }
 }

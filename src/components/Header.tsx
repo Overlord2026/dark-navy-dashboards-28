@@ -4,7 +4,7 @@ import { TopNav } from './layout/TopNav';
 
 export function Header() {
   return (
-    <header className="bfo-header sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="bfo-header bfo-no-blur sticky top-0 z-50 w-full">
       <div className="container flex h-14 max-w-screen-2xl items-center">
         <div className="mr-4 hidden md:flex">
           <Link to="/" className="mr-6 flex items-center space-x-2">

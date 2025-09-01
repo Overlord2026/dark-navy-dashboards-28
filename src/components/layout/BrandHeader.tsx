@@ -17,7 +17,7 @@ const Logo = () => (
 
 function BrandHeader() {
   return (
-    <header className="sticky top-0 z-50 bfo-header border-b border-bfo-gold">
+    <header className="sticky top-0 z-50 bfo-header bfo-no-blur">
       <div className="mx-auto flex h-[56px] items-center gap-3 px-4">
         <Logo />
 

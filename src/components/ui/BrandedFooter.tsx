@@ -5,8 +5,8 @@ import { withTrademarks } from '@/utils/trademark';
 export function BrandedFooter() {
   return (
     <footer className="bg-bfo-black border-t border-bfo-gold/20">
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid md:grid-cols-4 gap-6 mb-6">
+      <div className="container mx-auto px-4 py-4">
+        <div className="grid md:grid-cols-4 gap-4 mb-4">
           <div>
             <h4 className="font-semibold text-sm mb-3 text-bfo-gold">Family Tools</h4>
             <ul className="space-y-2 text-sm text-white/70">
@@ -42,7 +42,7 @@ export function BrandedFooter() {
             </ul>
           </div>
         </div>
-        <div className="flex items-center justify-center text-sm text-white/60 border-t border-bfo-gold/20 pt-6">
+        <div className="flex items-center justify-center text-xs text-white/60 border-t border-bfo-gold/20 pt-3">
           <span className="text-bfo-gold">{withTrademarks('Powered by Boutique Family Office')}</span>
         </div>
       </div>
