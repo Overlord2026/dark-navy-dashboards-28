@@ -20,16 +20,20 @@ const navItems: NavItem[] = [
     label: 'Families',
     dropdown: [
       { label: 'Retirees', href: '/families/retirees', description: 'Planning for retirement years' },
-      { label: 'Aspiring', href: '/families/aspiring', description: 'Building wealth for the future' },
+      { label: 'Aspiring Families', href: '/families/aspiring', description: 'Building wealth for the future' },
     ]
   },
   {
-    label: 'Service Pros',
+    label: 'Service Professionals',
     dropdown: [
-      { label: 'Advisor', href: '/pros/advisor', description: 'Wealth management professionals' },
-      { label: 'CPA', href: '/pros/cpa', description: 'Tax and accounting professionals' },
-      { label: 'Attorney', href: '/pros/attorney', description: 'Legal and estate planning' },
-      { label: 'Insurance', href: '/pros/insurance', description: 'All insurance professionals' },
+      { label: 'Financial Advisors', href: '/pros/advisor', description: 'Wealth management professionals' },
+      { label: 'Accountants/CPAs', href: '/pros/cpa', description: 'Tax and accounting professionals' },
+      { label: 'Attorneys', href: '/pros/attorney', description: 'Legal and estate planning' },
+      { 
+        label: 'Insurance', 
+        href: '/pros/insurance', 
+        description: 'P&C, Life/Annuity, Medicare/LTC'
+      },
     ]
   },
   {

@@ -17,18 +17,18 @@ const Logo = () => (
 
 function BrandHeader() {
   return (
-    <header className="sticky top-0 z-50 bfo-header">
+    <header className="sticky top-0 z-50 bfo-header border-b border-bfo-gold">
       <div className="mx-auto flex h-[56px] items-center gap-3 px-4">
         <Logo />
 
         <nav className="ml-auto hidden md:flex items-center gap-6">
           <TopNav />
-          <div className="border-l border-[#FFD700]/30 pl-6 ml-6 flex items-center gap-6">
+          <div className="border-l border-bfo-gold/30 pl-6 ml-6 flex items-center gap-6">
             <RunNILDemo />
-            <Link to="/marketplace" className="text-white hover:text-[#FFD700] transition-colors">Marketplace</Link>
-            <Link to="/admin/ip" className="text-[#FFD700] hover:underline">HQ · IP</Link>
-            <a className="text-white hover:text-[#FFD700] transition-colors" href="/book">Book Demo</a>
-            <a className="text-white hover:text-[#FFD700] transition-colors" href="/login">Log In</a>
+            <Link to="/marketplace" className="text-white hover:text-bfo-gold transition-colors">Marketplace</Link>
+            <Link to="/admin/hq" className="text-bfo-gold hover:underline">HQ</Link>
+            <a className="text-white hover:text-bfo-gold transition-colors" href="/book">Book Demo</a>
+            <a className="text-white hover:text-bfo-gold transition-colors" href="/login">Log In</a>
           </div>
         </nav>
       </div>

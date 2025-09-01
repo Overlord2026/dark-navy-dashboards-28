@@ -76,6 +76,13 @@ export type Database = {
             referencedRelation: "referral_leaderboard"
             referencedColumns: ["user_id"]
           },
+          {
+            foreignKeyName: "accountant_ce_alerts_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "v_profiles_basic"
+            referencedColumns: ["user_id"]
+          },
         ]
       }
       accountant_ce_providers: {
@@ -200,6 +207,13 @@ export type Database = {
             referencedRelation: "referral_leaderboard"
             referencedColumns: ["user_id"]
           },
+          {
+            foreignKeyName: "accountant_ce_records_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "v_profiles_basic"
+            referencedColumns: ["user_id"]
+          },
         ]
       }
       accountant_ce_requirements: {
@@ -321,6 +335,13 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "accountant_license_status_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "v_profiles_basic"
             referencedColumns: ["user_id"]
           },
         ]
@@ -2699,6 +2720,33 @@ export type Database = {
           },
         ]
       }
+      aies_agents: {
+        Row: {
+          active: boolean
+          agent_key: string
+          created_at: string
+          display_name: string
+          id: string
+          scopes: Json
+        }
+        Insert: {
+          active?: boolean
+          agent_key: string
+          created_at?: string
+          display_name: string
+          id?: string
+          scopes?: Json
+        }
+        Update: {
+          active?: boolean
+          agent_key?: string
+          created_at?: string
+          display_name?: string
+          id?: string
+          scopes?: Json
+        }
+        Relationships: []
+      }
       aies_approvals: {
         Row: {
           approver_user_id: string | null
@@ -2943,6 +2991,45 @@ export type Database = {
           started_at?: string | null
           status?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      aies_messages: {
+        Row: {
+          created_at: string
+          decision_rds_id: string | null
+          from_agent: string
+          handoff_rds_id: string | null
+          id: string
+          msg_kind: string
+          plan_id: string | null
+          summary: string | null
+          to_agent: string
+          ttl: number
+        }
+        Insert: {
+          created_at?: string
+          decision_rds_id?: string | null
+          from_agent: string
+          handoff_rds_id?: string | null
+          id?: string
+          msg_kind: string
+          plan_id?: string | null
+          summary?: string | null
+          to_agent: string
+          ttl?: number
+        }
+        Update: {
+          created_at?: string
+          decision_rds_id?: string | null
+          from_agent?: string
+          handoff_rds_id?: string | null
+          id?: string
+          msg_kind?: string
+          plan_id?: string | null
+          summary?: string | null
+          to_agent?: string
+          ttl?: number
         }
         Relationships: []
       }
@@ -4686,6 +4773,13 @@ export type Database = {
             referencedColumns: ["user_id"]
           },
           {
+            foreignKeyName: "fk_attorney_client_links_attorney_id"
+            columns: ["attorney_id"]
+            isOneToOne: false
+            referencedRelation: "v_profiles_basic"
+            referencedColumns: ["user_id"]
+          },
+          {
             foreignKeyName: "fk_attorney_client_links_client_id"
             columns: ["client_id"]
             isOneToOne: false
@@ -4697,6 +4791,13 @@ export type Database = {
             columns: ["client_id"]
             isOneToOne: false
             referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "fk_attorney_client_links_client_id"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "v_profiles_basic"
             referencedColumns: ["user_id"]
           },
         ]
@@ -4772,6 +4873,13 @@ export type Database = {
             referencedColumns: ["user_id"]
           },
           {
+            foreignKeyName: "fk_attorney_client_messages_attorney_id"
+            columns: ["attorney_id"]
+            isOneToOne: false
+            referencedRelation: "v_profiles_basic"
+            referencedColumns: ["user_id"]
+          },
+          {
             foreignKeyName: "fk_attorney_client_messages_client_id"
             columns: ["client_id"]
             isOneToOne: false
@@ -4786,6 +4894,13 @@ export type Database = {
             referencedColumns: ["user_id"]
           },
           {
+            foreignKeyName: "fk_attorney_client_messages_client_id"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "v_profiles_basic"
+            referencedColumns: ["user_id"]
+          },
+          {
             foreignKeyName: "fk_attorney_client_messages_sender_id"
             columns: ["sender_id"]
             isOneToOne: false
@@ -4797,6 +4912,13 @@ export type Database = {
             columns: ["sender_id"]
             isOneToOne: false
             referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "fk_attorney_client_messages_sender_id"
+            columns: ["sender_id"]
+            isOneToOne: false
+            referencedRelation: "v_profiles_basic"
             referencedColumns: ["user_id"]
           },
         ]
@@ -4867,6 +4989,13 @@ export type Database = {
             referencedColumns: ["user_id"]
           },
           {
+            foreignKeyName: "fk_attorney_client_shared_documents_attorney_id"
+            columns: ["attorney_id"]
+            isOneToOne: false
+            referencedRelation: "v_profiles_basic"
+            referencedColumns: ["user_id"]
+          },
+          {
             foreignKeyName: "fk_attorney_client_shared_documents_client_id"
             columns: ["client_id"]
             isOneToOne: false
@@ -4881,6 +5010,13 @@ export type Database = {
             referencedColumns: ["user_id"]
           },
           {
+            foreignKeyName: "fk_attorney_client_shared_documents_client_id"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "v_profiles_basic"
+            referencedColumns: ["user_id"]
+          },
+          {
             foreignKeyName: "fk_attorney_client_shared_documents_shared_by"
             columns: ["shared_by"]
             isOneToOne: false
@@ -4892,6 +5028,13 @@ export type Database = {
             columns: ["shared_by"]
             isOneToOne: false
             referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "fk_attorney_client_shared_documents_shared_by"
+            columns: ["shared_by"]
+            isOneToOne: false
+            referencedRelation: "v_profiles_basic"
             referencedColumns: ["user_id"]
           },
         ]
@@ -4943,6 +5086,13 @@ export type Database = {
             columns: ["attorney_id"]
             isOneToOne: false
             referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "fk_attorney_dashboard_metrics_attorney_id"
+            columns: ["attorney_id"]
+            isOneToOne: false
+            referencedRelation: "v_profiles_basic"
             referencedColumns: ["user_id"]
           },
         ]
@@ -7331,6 +7481,13 @@ export type Database = {
             referencedRelation: "referral_leaderboard"
             referencedColumns: ["user_id"]
           },
+          {
+            foreignKeyName: "client_invitations_advisor_id_fkey"
+            columns: ["advisor_id"]
+            isOneToOne: false
+            referencedRelation: "v_profiles_basic"
+            referencedColumns: ["user_id"]
+          },
         ]
       }
       client_invoices: {
@@ -7722,6 +7879,13 @@ export type Database = {
             referencedColumns: ["user_id"]
           },
           {
+            foreignKeyName: "fk_client_portal_notifications_attorney_id"
+            columns: ["attorney_id"]
+            isOneToOne: false
+            referencedRelation: "v_profiles_basic"
+            referencedColumns: ["user_id"]
+          },
+          {
             foreignKeyName: "fk_client_portal_notifications_client_id"
             columns: ["client_id"]
             isOneToOne: false
@@ -7733,6 +7897,13 @@ export type Database = {
             columns: ["client_id"]
             isOneToOne: false
             referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "fk_client_portal_notifications_client_id"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "v_profiles_basic"
             referencedColumns: ["user_id"]
           },
         ]
@@ -8024,6 +8195,13 @@ export type Database = {
             referencedColumns: ["user_id"]
           },
           {
+            foreignKeyName: "coach_advisor_relationships_advisor_id_fkey"
+            columns: ["advisor_id"]
+            isOneToOne: false
+            referencedRelation: "v_profiles_basic"
+            referencedColumns: ["user_id"]
+          },
+          {
             foreignKeyName: "coach_advisor_relationships_coach_id_fkey"
             columns: ["coach_id"]
             isOneToOne: false
@@ -8035,6 +8213,13 @@ export type Database = {
             columns: ["coach_id"]
             isOneToOne: false
             referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "coach_advisor_relationships_coach_id_fkey"
+            columns: ["coach_id"]
+            isOneToOne: false
+            referencedRelation: "v_profiles_basic"
             referencedColumns: ["user_id"]
           },
         ]
@@ -8124,6 +8309,13 @@ export type Database = {
             referencedRelation: "referral_leaderboard"
             referencedColumns: ["user_id"]
           },
+          {
+            foreignKeyName: "coach_invitations_coach_id_fkey"
+            columns: ["coach_id"]
+            isOneToOne: false
+            referencedRelation: "v_profiles_basic"
+            referencedColumns: ["user_id"]
+          },
         ]
       }
       coach_progress_tracking: {
@@ -8182,6 +8374,13 @@ export type Database = {
             referencedColumns: ["user_id"]
           },
           {
+            foreignKeyName: "coach_progress_tracking_advisor_id_fkey"
+            columns: ["advisor_id"]
+            isOneToOne: false
+            referencedRelation: "v_profiles_basic"
+            referencedColumns: ["user_id"]
+          },
+          {
             foreignKeyName: "coach_progress_tracking_coach_id_fkey"
             columns: ["coach_id"]
             isOneToOne: false
@@ -8193,6 +8392,13 @@ export type Database = {
             columns: ["coach_id"]
             isOneToOne: false
             referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "coach_progress_tracking_coach_id_fkey"
+            columns: ["coach_id"]
+            isOneToOne: false
+            referencedRelation: "v_profiles_basic"
             referencedColumns: ["user_id"]
           },
         ]
@@ -8253,6 +8459,13 @@ export type Database = {
             columns: ["coach_id"]
             isOneToOne: false
             referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "coaching_curriculum_coach_id_fkey"
+            columns: ["coach_id"]
+            isOneToOne: false
+            referencedRelation: "v_profiles_basic"
             referencedColumns: ["user_id"]
           },
         ]
@@ -8778,6 +8991,13 @@ export type Database = {
             columns: ["requested_by"]
             isOneToOne: false
             referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "compliance_export_requests_requested_by_fkey"
+            columns: ["requested_by"]
+            isOneToOne: false
+            referencedRelation: "v_profiles_basic"
             referencedColumns: ["user_id"]
           },
         ]
@@ -13793,6 +14013,36 @@ export type Database = {
         }
         Relationships: []
       }
+      families_intake: {
+        Row: {
+          created_at: string
+          email: string
+          first_name: string
+          id: string
+          last_name: string
+          phone: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          first_name: string
+          id?: string
+          last_name: string
+          phone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          first_name?: string
+          id?: string
+          last_name?: string
+          phone?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       family_group_members: {
         Row: {
           created_at: string
@@ -17762,6 +18012,13 @@ export type Database = {
             columns: ["created_by"]
             isOneToOne: false
             referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "invitation_message_templates_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "v_profiles_basic"
             referencedColumns: ["user_id"]
           },
         ]
@@ -23229,6 +23486,13 @@ export type Database = {
             referencedRelation: "referral_leaderboard"
             referencedColumns: ["user_id"]
           },
+          {
+            foreignKeyName: "onboarding_documents_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "v_profiles_basic"
+            referencedColumns: ["user_id"]
+          },
         ]
       }
       onboarding_email_log: {
@@ -23413,6 +23677,13 @@ export type Database = {
             referencedRelation: "referral_leaderboard"
             referencedColumns: ["user_id"]
           },
+          {
+            foreignKeyName: "onboarding_sessions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "v_profiles_basic"
+            referencedColumns: ["user_id"]
+          },
         ]
       }
       onboarding_step_completions: {
@@ -23472,6 +23743,13 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "onboarding_step_completions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "v_profiles_basic"
             referencedColumns: ["user_id"]
           },
         ]
@@ -30699,6 +30977,13 @@ export type Database = {
             referencedRelation: "referral_leaderboard"
             referencedColumns: ["user_id"]
           },
+          {
+            foreignKeyName: "ria_state_comms_sender_fkey"
+            columns: ["sender"]
+            isOneToOne: false
+            referencedRelation: "v_profiles_basic"
+            referencedColumns: ["user_id"]
+          },
         ]
       }
       ria_state_docs: {
@@ -30775,6 +31060,13 @@ export type Database = {
             referencedRelation: "referral_leaderboard"
             referencedColumns: ["user_id"]
           },
+          {
+            foreignKeyName: "ria_state_docs_reviewed_by_fkey"
+            columns: ["reviewed_by"]
+            isOneToOne: false
+            referencedRelation: "v_profiles_basic"
+            referencedColumns: ["user_id"]
+          },
         ]
       }
       ria_state_license_requests: {
@@ -30848,6 +31140,13 @@ export type Database = {
             referencedColumns: ["user_id"]
           },
           {
+            foreignKeyName: "ria_state_license_requests_reviewer_fkey"
+            columns: ["reviewer"]
+            isOneToOne: false
+            referencedRelation: "v_profiles_basic"
+            referencedColumns: ["user_id"]
+          },
+          {
             foreignKeyName: "ria_state_license_requests_ria_id_fkey"
             columns: ["ria_id"]
             isOneToOne: false
@@ -30859,6 +31158,13 @@ export type Database = {
             columns: ["ria_id"]
             isOneToOne: false
             referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "ria_state_license_requests_ria_id_fkey"
+            columns: ["ria_id"]
+            isOneToOne: false
+            referencedRelation: "v_profiles_basic"
             referencedColumns: ["user_id"]
           },
         ]
@@ -31383,6 +31689,13 @@ export type Database = {
             columns: ["created_by"]
             isOneToOne: false
             referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "seat_audit_logs_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "v_profiles_basic"
             referencedColumns: ["user_id"]
           },
           {
@@ -37473,6 +37786,13 @@ export type Database = {
             referencedRelation: "referral_leaderboard"
             referencedColumns: ["user_id"]
           },
+          {
+            foreignKeyName: "vip_batch_imports_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "v_profiles_basic"
+            referencedColumns: ["user_id"]
+          },
         ]
       }
       vip_invitation_tracking: {
@@ -37700,6 +38020,13 @@ export type Database = {
             referencedRelation: "referral_leaderboard"
             referencedColumns: ["user_id"]
           },
+          {
+            foreignKeyName: "vip_organization_members_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "v_profiles_basic"
+            referencedColumns: ["user_id"]
+          },
         ]
       }
       vip_organizations: {
@@ -37827,6 +38154,13 @@ export type Database = {
             referencedColumns: ["user_id"]
           },
           {
+            foreignKeyName: "vip_organizations_admin_contact_id_fkey"
+            columns: ["admin_contact_id"]
+            isOneToOne: false
+            referencedRelation: "v_profiles_basic"
+            referencedColumns: ["user_id"]
+          },
+          {
             foreignKeyName: "vip_organizations_created_by_fkey"
             columns: ["created_by"]
             isOneToOne: false
@@ -37841,6 +38175,13 @@ export type Database = {
             referencedColumns: ["user_id"]
           },
           {
+            foreignKeyName: "vip_organizations_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "v_profiles_basic"
+            referencedColumns: ["user_id"]
+          },
+          {
             foreignKeyName: "vip_organizations_referred_by_user_id_fkey"
             columns: ["referred_by_user_id"]
             isOneToOne: false
@@ -37852,6 +38193,13 @@ export type Database = {
             columns: ["referred_by_user_id"]
             isOneToOne: false
             referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "vip_organizations_referred_by_user_id_fkey"
+            columns: ["referred_by_user_id"]
+            isOneToOne: false
+            referencedRelation: "v_profiles_basic"
             referencedColumns: ["user_id"]
           },
         ]
@@ -37936,6 +38284,13 @@ export type Database = {
             referencedRelation: "referral_leaderboard"
             referencedColumns: ["user_id"]
           },
+          {
+            foreignKeyName: "vip_outreach_log_sent_by_fkey"
+            columns: ["sent_by"]
+            isOneToOne: false
+            referencedRelation: "v_profiles_basic"
+            referencedColumns: ["user_id"]
+          },
         ]
       }
       vip_referral_networks: {
@@ -38013,6 +38368,13 @@ export type Database = {
             referencedColumns: ["user_id"]
           },
           {
+            foreignKeyName: "vip_referral_networks_referee_id_fkey"
+            columns: ["referee_id"]
+            isOneToOne: false
+            referencedRelation: "v_profiles_basic"
+            referencedColumns: ["user_id"]
+          },
+          {
             foreignKeyName: "vip_referral_networks_referrer_id_fkey"
             columns: ["referrer_id"]
             isOneToOne: false
@@ -38024,6 +38386,13 @@ export type Database = {
             columns: ["referrer_id"]
             isOneToOne: false
             referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "vip_referral_networks_referrer_id_fkey"
+            columns: ["referrer_id"]
+            isOneToOne: false
+            referencedRelation: "v_profiles_basic"
             referencedColumns: ["user_id"]
           },
         ]
@@ -38830,6 +39199,39 @@ export type Database = {
           },
         ]
       }
+      v_aies_mailbox_by_agent: {
+        Row: {
+          created_at: string | null
+          from_agent: string | null
+          id: string | null
+          msg_kind: string | null
+          plan_id: string | null
+          summary: string | null
+          to_agent: string | null
+          ttl: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          from_agent?: string | null
+          id?: string | null
+          msg_kind?: string | null
+          plan_id?: string | null
+          summary?: string | null
+          to_agent?: string | null
+          ttl?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          from_agent?: string | null
+          id?: string | null
+          msg_kind?: string | null
+          plan_id?: string | null
+          summary?: string | null
+          to_agent?: string | null
+          ttl?: number | null
+        }
+        Relationships: []
+      }
       v_attorney_document_classifications_public: {
         Row: {
           classification_name: string | null
@@ -39295,6 +39697,13 @@ export type Database = {
             referencedRelation: "referral_leaderboard"
             referencedColumns: ["user_id"]
           },
+          {
+            foreignKeyName: "invitation_message_templates_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "v_profiles_basic"
+            referencedColumns: ["user_id"]
+          },
         ]
       }
       v_ip_counts_by_family: {
@@ -39468,6 +39877,33 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      v_profiles_basic: {
+        Row: {
+          created_at: string | null
+          email: string | null
+          first_name: string | null
+          last_name: string | null
+          phone: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email?: string | null
+          first_name?: string | null
+          last_name?: string | null
+          phone?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string | null
+          first_name?: string | null
+          last_name?: string | null
+          phone?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
       }
       v_public_pros: {
         Row: {
