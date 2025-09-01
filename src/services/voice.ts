@@ -35,8 +35,8 @@ export async function transcribeAudio(audio: Blob): Promise<{ text: string }> {
 
 // --- Meeting summary (Edge function: generate-meeting-summary) ---------------
 export async function summarizeMeeting(notes: string): Promise<any> {
-  const { aiEdge } = await import('@/services/aiEdge');
-  return await aiEdge.generateMeetingSummary(notes);
+  const { callEdgeJSON } = await import('@/services/aiEdge');
+  return await callEdgeJSON('meeting-summary', { notes });
 }
 
 // --- Save meeting note to database ----------------------------------------

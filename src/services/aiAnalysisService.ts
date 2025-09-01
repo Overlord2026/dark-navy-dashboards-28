@@ -1,5 +1,5 @@
 
-import { aiEdge } from '@/services/aiEdge';
+import { callEdgeJSON } from '@/services/aiEdge';
 import { secretsValidator } from '@/services/security/secretsValidator';
 
 /**
@@ -26,7 +26,7 @@ export const generateStockAnalysis = async (stockData: any): Promise<string> => 
     
     console.log('Generating stock analysis via secure Edge Function');
 
-    const data = await aiEdge.generateAnalysis(stockData, 'stock');
+    const data = await callEdgeJSON('ai-analysis', { stockData, analysisType: 'stock' });
     return data?.analysis || "Analysis could not be generated.";
   } catch (error) {
     console.error('Error calling AI analysis Edge Function:', error);
@@ -50,7 +50,7 @@ export const generatePortfolioAnalysis = async (
     
     console.log('Generating portfolio analysis via secure Edge Function');
 
-    const data = await aiEdge.generateAnalysis(portfolioData, 'portfolio', portfolioName);
+    const data = await callEdgeJSON('ai-analysis', { stockData: portfolioData, analysisType: 'portfolio', portfolioName });
     return data?.analysis || "Portfolio analysis could not be generated.";
   } catch (error) {
     console.error('Error calling portfolio analysis Edge Function:', error);
