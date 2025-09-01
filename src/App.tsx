@@ -164,7 +164,7 @@ const AttorneyEstateWorkbench = React.lazy(() => import('@/pages/attorney/Attorn
 const HealthcareProWorkbench = React.lazy(() => import('@/pages/attorney/HealthcareProWorkbench'));
 const CPAEstatePage = React.lazy(() => import('@/pages/cpa/CPAEstatePage'));
 
-import FamilyHome from '@/pages/family/Home';
+import FamilyHome from '@/pages/families/FamilyHome';
 import FamilyToolsHub from '@/pages/family/FamilyToolsHub';
 import RothLadderTool from '@/pages/family/RothLadderTool';
 import RMDCheckTool from '@/pages/family/RMDCheckTool';
@@ -451,6 +451,7 @@ function App() {
             } />
             
             {/* Family App Routes (Authenticated) */}
+            <Route path="/families/home" element={<FamilyHome />} />
             <Route path="/family/home" element={<FamilyHome />} />
             <Route path="/family/tools" element={<FamilyToolsHub />} />
             <Route path="/family/tools/retirement" element={<RetirementRoadmapTool />} />

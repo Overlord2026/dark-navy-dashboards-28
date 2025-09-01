@@ -70,37 +70,35 @@ export default function FamilyHome() {
 
         {/* Quick Actions */}
         {segmentConfig?.quickActions && (
-          <Card className="mb-8">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <TrendingUp className="h-5 w-5 text-primary" />
+          <div className="bfo-card mb-8 p-6">
+            <div className="mb-6">
+              <h3 className="text-xl font-bold text-white flex items-center gap-2 mb-2">
+                <TrendingUp className="h-5 w-5 text-bfo-gold" />
                 Quick Actions
-              </CardTitle>
-              <CardDescription>
+              </h3>
+              <p className="text-gray-300">
                 Get started with the most important tasks for your financial stage
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {segmentConfig.quickActions.map((action: any, index: number) => {
-                  const IconComponent = getQuickActionIcon(action.icon);
-                  return (
-                    <Button
-                      key={index}
-                      variant="outline"
-                      className="h-auto p-4 flex flex-col items-center gap-2 hover:bg-primary/5"
-                      onClick={() => handleQuickAction(action)}
-                    >
-                      <IconComponent className="h-6 w-6 text-primary" />
-                      <span className="text-sm font-medium text-center">
-                        {action.label}
-                      </span>
-                    </Button>
-                  );
-                })}
-              </div>
-            </CardContent>
-          </Card>
+              </p>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {segmentConfig.quickActions.map((action: any, index: number) => {
+                const IconComponent = getQuickActionIcon(action.icon);
+                return (
+                  <Button
+                    key={index}
+                    variant="outline"
+                    className="h-auto p-4 flex flex-col items-center gap-2 bg-white/10 border-bfo-gold/30 text-white hover:bg-bfo-gold/20"
+                    onClick={() => handleQuickAction(action)}
+                  >
+                    <IconComponent className="h-6 w-6 text-bfo-gold" />
+                    <span className="text-sm font-medium text-center">
+                      {action.label}
+                    </span>
+                  </Button>
+                );
+              })}
+            </div>
+          </div>
         )}
 
         {/* Tabbed Tool Categories */}
