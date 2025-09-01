@@ -42,7 +42,7 @@ const healthcareTools = [
   }
 ];
 
-export default function HealthcareIndex() {
+function HealthcareIndex() {
   const handleDemoClick = () => {
     // Placeholder for demo functionality
     console.log('Starting healthcare demo');
@@ -63,3 +63,5 @@ export default function HealthcareIndex() {
     </div>
   );
 }
+
+export default HealthcareIndex;
