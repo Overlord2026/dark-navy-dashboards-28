@@ -29,14 +29,14 @@ export const FamilyHero: React.FC<FamilyHeroProps> = ({ onNext }) => {
   };
 
   return (
-    <div className="relative overflow-hidden bg-gradient-to-br from-background via-background to-muted/20">
+    <div className="relative overflow-hidden bg-bfo-black">
       <div className="container mx-auto px-6 py-16">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6">
+          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
             Welcome to Your Family's Financial Future
           </h1>
           
-          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+          <p className="text-xl text-white/80 mb-8 max-w-2xl mx-auto">
             Transform your family's wealth management with personalized tools, expert guidance, and comprehensive financial planning.
           </p>
           
@@ -44,15 +44,15 @@ export const FamilyHero: React.FC<FamilyHeroProps> = ({ onNext }) => {
             <Button 
               size="lg" 
               onClick={handleGetStarted}
-              className="bg-primary text-primary-foreground hover:bg-primary/90"
+              className="bfo-cta"
             >
               Get Started
             </Button>
             
             <Button 
-              variant="outline" 
               size="lg"
               onClick={handleSeeHow}
+              className="bfo-cta-secondary"
             >
               See How It Works
             </Button>
