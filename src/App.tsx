@@ -48,6 +48,7 @@ import { OnboardingFlow } from '@/pages/OnboardingFlow';
 import QACoverage from '@/pages/admin/QACoverage';
 import ReadyCheck from '@/pages/admin/ReadyCheck';
 import { ReadyCheckEnhanced } from '@/pages/admin/ReadyCheckEnhanced';
+const HQDashboard = React.lazy(() => import('@/pages/admin/hq'));
 
 const AiesConsole = React.lazy(() => import('@/pages/admin/AiesConsole'));
 import AdminPanel from '@/pages/admin/AdminPanel';
