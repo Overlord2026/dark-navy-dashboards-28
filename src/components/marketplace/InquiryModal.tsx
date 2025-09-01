@@ -11,7 +11,7 @@ type InquiryModalProps = {
     phone?: string;
     message?: string;
     consent_tos: boolean;
-  }) => Promise<void>;
+  }) => Promise<{ receiptHash?: string | null }>;
   advisorName?: string;
   loading?: boolean;
 };

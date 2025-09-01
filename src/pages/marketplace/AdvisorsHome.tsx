@@ -117,7 +117,7 @@ export default function AdvisorsHome() {
     message?: string;
     consent_tos: boolean;
   }) => {
-    if (!inquiryModal.advisorId) return;
+    if (!inquiryModal.advisorId) return { receiptHash: null };
 
     try {
       setInquiryLoading(true);
@@ -131,14 +131,17 @@ export default function AdvisorsHome() {
         consent_tos: data.consent_tos
       });
 
-      console.log('Inquiry saved:', result);
+      console.log('Inquiry saved', result.id, 'pro_id:', result.pro_id, 'receipt:', result.receiptHash);
       
       toast({
         title: "Inquiry sent",
-        description: "We'll follow up with you shortly!"
+        description: result.receiptHash 
+          ? "We'll follow up with you shortly! Receipt ✓" 
+          : "We'll follow up with you shortly!"
       });
 
       setInquiryModal({ isOpen: false });
+      return { receiptHash: result.receiptHash };
     } catch (error) {
       console.error('Failed to submit inquiry:', error);
       toast({
@@ -146,6 +149,7 @@ export default function AdvisorsHome() {
         description: "Please try again later.",
         variant: "destructive"
       });
+      throw error;
     } finally {
       setInquiryLoading(false);
     }

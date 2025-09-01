@@ -1,5 +1,16 @@
 import { supabase } from '@/integrations/supabase/client';
 
+async function saveDecisionRDS(p: { subject: string; action: string; reasons: string[] }) {
+  const res = await fetch('/functions/v1/policy-eval', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(p),
+  });
+  if (!res.ok) return null;
+  const { receipt_hash } = await res.json();
+  return receipt_hash as string | null;
+}
+
 export type Inquiry = {
   pro_id: string;
   full_name: string;
@@ -26,7 +37,20 @@ export async function recordInquiry(i: Inquiry) {
   
   if (error) throw error;
 
-  // 2) send email via Edge function (Resend)
+  // 2) record decision for audit trail
+  let receiptHash: string | null = null;
+  try {
+    receiptHash = await saveDecisionRDS({
+      subject: `inquiry:${data.id}`,
+      action: 'create',
+      reasons: ['consent:tos', 'marketplace:advisor']
+    });
+  } catch (decisionError) {
+    console.warn('Decision recording failed:', decisionError);
+    // Don't fail the entire operation if decision recording fails
+  }
+
+  // 3) send email via Edge function (Resend)
   try {
     const res = await fetch(`https://xcmqjkvyvuhoslbzmlgi.supabase.co/functions/v1/resend-inquiry`, {
       method: 'POST',
@@ -48,5 +72,5 @@ export async function recordInquiry(i: Inquiry) {
     // Don't fail the entire operation if email fails
   }
 
-  return data;
+  return { ...data, receiptHash };
 }
