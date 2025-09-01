@@ -94,6 +94,7 @@ import ReviewView from '@/pages/family/ReviewView';
 // Trust Rails Admin Pages
 import ReceiptsViewer from '@/pages/admin/receipts/ReceiptsViewer';
 import TrustAnchors from '@/pages/admin/anchors/Anchors';
+const ReceiptsAdmin = React.lazy(() => import('@/pages/admin/ReceiptsAdmin'));
 
 // Demo Pages
 const RetireeBucketDemo = React.lazy(() => import('@/pages/demos/retiree-bucket'));
@@ -684,6 +685,11 @@ function App() {
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/anchors" element={<AnchorList />} />}
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/receipt/:id" element={<ReceiptView />} />}
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/receipts" element={<ReceiptsViewer />} />}
+             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/receipts" element={
+               <Suspense fallback={<div>Loading...</div>}>
+                 <ReceiptsAdmin />
+               </Suspense>
+             } />}
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/trust-anchors" element={<TrustAnchors />} />}
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/sites" element={<SitesAdmin />} />}
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/revenue" element={<RevenueAdmin />} />}
