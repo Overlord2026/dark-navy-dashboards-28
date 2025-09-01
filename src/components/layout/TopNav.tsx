@@ -19,20 +19,20 @@ const navItems: NavItem[] = [
   {
     label: 'Families',
     dropdown: [
-      { label: 'Retirees', href: '/families/retirees', description: 'Planning for retirement years' },
-      { label: 'Aspiring Families', href: '/families/aspiring', description: 'Building wealth for the future' },
+      { label: 'Retirees', href: '/families/retirees', description: 'Retirement planning and bucket list' },
+      { label: 'Aspiring', href: '/families/aspiring', description: 'Building wealth for the future' },
     ]
   },
   {
-    label: 'Service Professionals',
+    label: 'Service Pros',
     dropdown: [
-      { label: 'Financial Advisors', href: '/pros/advisor', description: 'Wealth management professionals' },
-      { label: 'Accountants/CPAs', href: '/pros/cpa', description: 'Tax and accounting professionals' },
-      { label: 'Attorneys', href: '/pros/attorney', description: 'Legal and estate planning' },
+      { label: 'Advisors', href: '/pros/advisors', description: 'Financial advisory professionals' },
+      { label: 'CPA', href: '/pros/cpa', description: 'Tax and accounting professionals' },
+      { label: 'Attorney', href: '/pros/attorney', description: 'Legal and estate planning' },
       { 
         label: 'Insurance', 
         href: '/pros/insurance', 
-        description: 'P&C, Life/Annuity, Medicare/LTC'
+        description: 'Life/Annuity, P&C, Medicare/LTC'
       },
     ]
   },
@@ -64,18 +64,18 @@ function DropdownMenu({ items, isOpen, onClose }: DropdownMenuProps) {
   if (!isOpen) return null;
 
   return (
-    <div className="absolute top-full left-0 mt-1 w-64 bg-[hsl(var(--bfo-purple))] border border-[#FFD700] rounded-lg shadow-xl z-50">
+    <div className="absolute top-full left-0 mt-1 w-64 bg-black border border-[#D4AF37] rounded-lg shadow-xl z-50">
       <div className="py-2">
         {items.map((item, index) => (
           <Link
             key={index}
             to={item.href}
-            className="block px-4 py-3 text-white hover:bg-[#FFD700]/10 transition-colors"
+            className="block px-4 py-3 text-white hover:bg-[#D4AF37]/10 transition-colors"
             onClick={onClose}
           >
             <div className="font-medium">{item.label}</div>
             {item.description && (
-              <div className="text-sm text-[#FFD700]/70 mt-1">{item.description}</div>
+              <div className="text-sm text-[#D4AF37]/70 mt-1">{item.description}</div>
             )}
           </Link>
         ))}
@@ -121,7 +121,7 @@ function NavDropdown({ item }: NavDropdownProps) {
     return (
       <Link
         to={item.href}
-        className="text-white hover:text-[#FFD700] transition-colors px-3 py-2"
+        className="text-white hover:text-[#D4AF37] transition-colors px-3 py-2"
       >
         {item.label}
       </Link>
@@ -132,8 +132,8 @@ function NavDropdown({ item }: NavDropdownProps) {
     <div ref={dropdownRef} className="relative">
       <button
         className={cn(
-          "flex items-center gap-1 text-white hover:text-[#FFD700] transition-colors px-3 py-2",
-          isOpen && "text-[#FFD700]"
+          "flex items-center gap-1 text-white hover:text-[#D4AF37] transition-colors px-3 py-2",
+          isOpen && "text-[#D4AF37]"
         )}
         onClick={() => setIsOpen(!isOpen)}
         onKeyDown={handleKeyDown}

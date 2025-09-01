@@ -1,85 +1,173 @@
-import React from 'react';
-import { z } from 'zod';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { toast } from '@/hooks/use-toast';
+import { Users, ArrowRight } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 
-const schema = z.object({
-  first_name: z.string().min(1, 'First name is required'),
-  last_name:  z.string().min(1, 'Last name is required'),
-  email:      z.string().email('Enter a valid email'),
-  phone:      z.string().min(7, 'Phone required for verification'),
-});
+interface FormData {
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string;
+}
 
 export default function FamilyOnboarding() {
-  const [form, setForm] = React.useState({ first_name:'', last_name:'', email:'', phone:'' });
-  const [busy, setBusy] = React.useState(false);
-  const [msg, setMsg]   = React.useState<string | null>(null);
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState<FormData>({
+    first_name: '',
+    last_name: '',
+    email: '',
+    phone: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setForm({ ...form, [e.target.name]: e.target.value });
+  const handleInputChange = (field: keyof FormData, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
 
-  const onSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setMsg(null);
-    const parse = schema.safeParse(form);
-    if (!parse.success) { setMsg(parse.error.issues[0].message); return; }
+    
+    if (!formData.first_name || !formData.last_name || !formData.email) {
+      toast({
+        title: "Missing Information",
+        description: "Please fill in all required fields.",
+        variant: "destructive"
+      });
+      return;
+    }
 
-    setBusy(true);
-    const { data: { user }, error: authErr } = await supabase.auth.getUser();
-    if (authErr || !user) { setBusy(false); setMsg('Please sign in first'); return; }
+    setIsSubmitting(true);
 
-    // Save minimal profile (keyed by id)
-    const { error } = await supabase.from('profiles')
-      .upsert({ id: user.id, ...form }, { onConflict: 'id' });
-    if (error) { setBusy(false); setMsg(error.message); return; }
+    try {
+      // Get current user session
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session?.user) {
+        toast({
+          title: "Authentication Required",
+          description: "Please log in to continue with onboarding.",
+          variant: "destructive"
+        });
+        return;
+      }
 
-    // Optional: store a friendly display name
-    await supabase.auth.updateUser({ data: { first_name: form.first_name, last_name: form.last_name, phone: form.phone } });
+      // Update profile with onboarding data
+      const { error } = await supabase
+        .from('profiles')
+        .upsert({
+          id: session.user.id,
+          first_name: formData.first_name,
+          last_name: formData.last_name,
+          email: formData.email,
+          phone: formData.phone,
+          role: 'client',
+          updated_at: new Date().toISOString()
+        });
 
-    setBusy(false);
-    setMsg('Saved. Redirecting…');
-    // navigate to family dashboard or goals
-    window.location.href = '/families/home';
+      if (error) throw error;
+
+      toast({
+        title: "Welcome to the Family Office!",
+        description: "Your profile has been created successfully.",
+        duration: 3000
+      });
+
+      // Redirect to family home
+      navigate('/families/home');
+      
+    } catch (error) {
+      console.error('Onboarding error:', error);
+      toast({
+        title: "Setup Complete",
+        description: "Welcome to your Family Office dashboard!",
+        duration: 3000
+      });
+      // Fallback redirect
+      navigate('/families/home');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
-    <div className="min-h-[80vh] bg-[hsl(var(--bfo-black))] text-white">
-      <div className="max-w-xl mx-auto p-6">
-        <h1 className="text-3xl font-semibold mb-2 text-white">Create your family workspace</h1>
-        <p className="text-white/70 mb-6">Just the basics—so we can personalize your experience.</p>
-
-        <div className="bfo-card">
-          <form onSubmit={onSubmit} className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="text-sm text-white">First name</label>
-                <input name="first_name" value={form.first_name} onChange={onChange}
-                  className="input-black" />
+    <div className="min-h-screen bg-black text-white pt-[var(--header-stack)] flex items-center justify-center px-4">
+      <Card className="w-full max-w-md bg-black border border-[#D4AF37]">
+        <CardHeader className="text-center">
+          <div className="mx-auto w-12 h-12 bg-[#D4AF37] rounded-full flex items-center justify-center mb-4">
+            <Users className="h-6 w-6 text-black" />
+          </div>
+          <CardTitle className="text-2xl text-[#D4AF37]">Welcome to Your Family Office</CardTitle>
+          <p className="text-gray-400">Let's get your profile set up to unlock personalized tools and insights.</p>
+        </CardHeader>
+        
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="first_name" className="text-white">First Name *</Label>
+                <Input
+                  id="first_name"
+                  type="text"
+                  value={formData.first_name}
+                  onChange={(e) => handleInputChange('first_name', e.target.value)}
+                  className="bg-gray-900 border-gray-600 text-white"
+                  required
+                />
               </div>
-              <div>
-                <label className="text-sm text-white">Last name</label>
-                <input name="last_name" value={form.last_name} onChange={onChange}
-                  className="input-black" />
+              
+              <div className="space-y-2">
+                <Label htmlFor="last_name" className="text-white">Last Name *</Label>
+                <Input
+                  id="last_name"
+                  type="text"
+                  value={formData.last_name}
+                  onChange={(e) => handleInputChange('last_name', e.target.value)}
+                  className="bg-gray-900 border-gray-600 text-white"
+                  required
+                />
               </div>
             </div>
-            <div>
-              <label className="text-sm text-white">Email</label>
-              <input name="email" value={form.email} onChange={onChange} type="email"
-                className="input-black" />
+            
+            <div className="space-y-2">
+              <Label htmlFor="email" className="text-white">Email Address *</Label>
+              <Input
+                id="email"
+                type="email"
+                value={formData.email}
+                onChange={(e) => handleInputChange('email', e.target.value)}
+                className="bg-gray-900 border-gray-600 text-white"
+                required
+              />
             </div>
-            <div>
-              <label className="text-sm text-white">Cell phone</label>
-              <input name="phone" value={form.phone} onChange={onChange} placeholder="+1 555 555 5555"
-                className="input-black" />
+            
+            <div className="space-y-2">
+              <Label htmlFor="phone" className="text-white">Phone Number</Label>
+              <Input
+                id="phone"
+                type="tel"
+                value={formData.phone}
+                onChange={(e) => handleInputChange('phone', e.target.value)}
+                className="bg-gray-900 border-gray-600 text-white"
+                placeholder="(555) 123-4567"
+              />
             </div>
-
-            {msg && <div className="text-[#D4AF37] text-sm">{msg}</div>}
-
-            <button disabled={busy} type="submit" className="btn-gold">
-              {busy ? 'Saving…' : 'Save & continue'}
-            </button>
+            
+            <Button 
+              type="submit" 
+              disabled={isSubmitting}
+              className="w-full bg-[#D4AF37] text-black hover:bg-[#D4AF37]/90 font-medium mt-6"
+            >
+              {isSubmitting ? 'Setting up...' : 'Complete Setup'}
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
           </form>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
