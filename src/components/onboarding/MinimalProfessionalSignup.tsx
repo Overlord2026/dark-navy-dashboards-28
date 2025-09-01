@@ -71,7 +71,7 @@ export default function MinimalProfessionalSignup({ role, onComplete }: MinimalP
             phone: formData.phone,
             role: role,
             updated_at: new Date().toISOString()
-          });
+          }, { onConflict: 'id' });
 
         if (profileError) throw profileError;
 

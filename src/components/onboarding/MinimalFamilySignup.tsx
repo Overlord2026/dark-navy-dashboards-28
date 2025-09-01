@@ -52,7 +52,7 @@ export default function MinimalFamilySignup({ onComplete }: MinimalFamilySignupP
             email: formData.email || user.email,
             phone: formData.phone,
             updated_at: new Date().toISOString()
-          });
+          }, { onConflict: 'id' });
 
         if (error) throw error;
       }
