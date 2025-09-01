@@ -24,9 +24,9 @@ export default {
         
         // BFO Premium Brand Colors (HSL for proper theming)
         bfo: {
-          black: 'hsl(210, 40%, 6%)',    // #0B0F14
-          gold:  'hsl(43, 74%, 52%)',    // #D4AF37  
-          purple: 'hsl(249, 48%, 15%)',  // #141129
+          black: '#0B0F14',
+          gold:  '#D4AF37',
+          purple: '#15132B'
         },
         
         // Brand Colors - Black & Gold
