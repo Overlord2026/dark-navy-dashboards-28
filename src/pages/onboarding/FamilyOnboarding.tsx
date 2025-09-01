@@ -1,169 +1,84 @@
-import React, { useState, useEffect } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
-import { Helmet } from 'react-helmet-async';
-import { toast } from '@/hooks/use-toast';
-import { analytics } from '@/lib/analytics';
-import { Heart } from 'lucide-react';
+import React from 'react';
+import { z } from 'zod';
 import { supabase } from '@/integrations/supabase/client';
 
+const schema = z.object({
+  first_name: z.string().min(1, 'First name is required'),
+  last_name:  z.string().min(1, 'Last name is required'),
+  email:      z.string().email('Enter a valid email'),
+  phone:      z.string().min(7, 'Phone required for verification'),
+});
 
 export default function FamilyOnboarding() {
-  const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    first_name: '',
-    last_name: '',
-    email: '',
-    phone: ''
-  });
-  const [loading, setLoading] = useState(false);
+  const [form, setForm] = React.useState({ first_name:'', last_name:'', email:'', phone:'' });
+  const [busy, setBusy] = React.useState(false);
+  const [msg, setMsg]   = React.useState<string | null>(null);
 
-  useEffect(() => {
-    analytics.trackFamilyOnboardingStart({ 
-      referrer: document.referrer
-    });
-  }, []);
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setForm({ ...form, [e.target.name]: e.target.value });
 
-  const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  };
-
-  const isFormValid = () => {
-    return Object.values(formData).every(value => value.trim() !== '');
-  };
-
-  const handleComplete = async (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!isFormValid()) {
-      toast.error('Please fill in all fields');
-      return;
-    }
+    setMsg(null);
+    const parse = schema.safeParse(form);
+    if (!parse.success) { setMsg(parse.error.issues[0].message); return; }
 
-    setLoading(true);
+    setBusy(true);
+    const { data: { user }, error: authErr } = await supabase.auth.getUser();
+    if (authErr || !user) { setBusy(false); setMsg('Please sign in first'); return; }
 
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('Not signed in');
+    // Save minimal profile (keyed by id)
+    const { error } = await supabase.from('profiles')
+      .upsert({ id: user.id, ...form }, { onConflict: 'id' });
+    if (error) { setBusy(false); setMsg(error.message); return; }
 
-      await supabase
-        .from('profiles')
-        .upsert(
-          { 
-            id: user.id, 
-            email: formData.email || user.email,
-            first_name: formData.first_name,
-            last_name: formData.last_name,
-            phone: formData.phone
-          },
-          { onConflict: 'id' }
-        );
+    // Optional: store a friendly display name
+    await supabase.auth.updateUser({ data: { first_name: form.first_name, last_name: form.last_name, phone: form.phone } });
 
-      // Store in localStorage as backup
-      localStorage.setItem('family_profile', JSON.stringify(formData));
-
-      analytics.trackFamilyOnboardingComplete({
-        email: formData.email
-      });
-
-      toast.success('Welcome to your Family Workspace!');
-      navigate('/families');
-      
-    } catch (error) {
-      console.error('Error saving profile:', error);
-      toast.error('Failed to save profile. Please try again.');
-    } finally {
-      setLoading(false);
-    }
+    setBusy(false);
+    setMsg('Saved. Redirecting…');
+    // navigate to family dashboard or goals
+    window.location.href = '/families/home';
   };
 
   return (
-    <>
-      <Helmet>
-        <title>Family Onboarding - Get Started</title>
-        <meta name="description" content="Quick 3-step setup for your private family workspace" />
-      </Helmet>
-      
-      <div className="min-h-screen bg-bfo-black p-4">
-        <div className="max-w-md mx-auto pt-12">
-          <div className="bfo-card p-8">
-            <div className="text-center mb-6">
-              <div className="w-12 h-12 bg-bfo-gold/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Heart className="h-6 w-6 text-bfo-gold" />
-              </div>
-              <h2 className="text-2xl font-bold text-white mb-2">Start Your Family Workspace</h2>
-              <p className="text-white/80">Just 4 quick details to get started</p>
+    <div className="min-h-[80vh] bg-bfo-black text-white">
+      <div className="max-w-xl mx-auto p-6">
+        <h1 className="text-3xl font-semibold mb-2">Create your family workspace</h1>
+        <p className="text-gray-300 mb-6">Just the basics—so we can personalize your experience.</p>
+
+        <form onSubmit={onSubmit} className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="text-sm text-gray-400">First name</label>
+              <input name="first_name" value={form.first_name} onChange={onChange}
+                className="w-full p-3 rounded border border-bfo-gold bg-bfo-black text-white" />
             </div>
-            
-            <form onSubmit={handleComplete} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="first_name" className="text-white">First Name</Label>
-                <Input
-                  id="first_name"
-                  value={formData.first_name}
-                  onChange={(e) => handleInputChange('first_name', e.target.value)}
-                  className="bg-white/10 border-bfo-gold/30 text-white placeholder:text-white/50"
-                  placeholder="John"
-                  required
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="last_name" className="text-white">Last Name</Label>
-                <Input
-                  id="last_name"
-                  value={formData.last_name}
-                  onChange={(e) => handleInputChange('last_name', e.target.value)}
-                  className="bg-white/10 border-bfo-gold/30 text-white placeholder:text-white/50"
-                  placeholder="Smith"
-                  required
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-white">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) => handleInputChange('email', e.target.value)}
-                  className="bg-white/10 border-bfo-gold/30 text-white placeholder:text-white/50"
-                  placeholder="john@example.com"
-                  required
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="phone" className="text-white">Mobile Phone</Label>
-                <Input
-                  id="phone"
-                  type="tel"
-                  value={formData.phone}
-                  onChange={(e) => handleInputChange('phone', e.target.value)}
-                  className="bg-white/10 border-bfo-gold/30 text-white placeholder:text-white/50"
-                  placeholder="(555) 123-4567"
-                  required
-                />
-              </div>
-
-              <div className="pt-4">
-                <Button
-                  type="submit"
-                  disabled={!isFormValid() || loading}
-                  className="w-full bfo-cta h-12"
-                >
-                  {loading ? 'Creating workspace...' : 'Start workspace'}
-                </Button>
-              </div>
-            </form>
+            <div>
+              <label className="text-sm text-gray-400">Last name</label>
+              <input name="last_name" value={form.last_name} onChange={onChange}
+                className="w-full p-3 rounded border border-bfo-gold bg-bfo-black text-white" />
+            </div>
           </div>
-        </div>
+          <div>
+            <label className="text-sm text-gray-400">Email</label>
+            <input name="email" value={form.email} onChange={onChange} type="email"
+              className="w-full p-3 rounded border border-bfo-gold bg-bfo-black text-white" />
+          </div>
+          <div>
+            <label className="text-sm text-gray-400">Cell phone</label>
+            <input name="phone" value={form.phone} onChange={onChange} placeholder="+1 555 555 5555"
+              className="w-full p-3 rounded border border-bfo-gold bg-bfo-black text-white" />
+          </div>
+
+          {msg && <div className="text-bfo-gold text-sm">{msg}</div>}
+
+          <button disabled={busy}
+            className="px-4 py-3 rounded bg-bfo-gold text-black hover:opacity-90 disabled:opacity-50">
+            {busy ? 'Saving…' : 'Save & continue'}
+          </button>
+        </form>
       </div>
-    </>
+    </div>
   );
 }
