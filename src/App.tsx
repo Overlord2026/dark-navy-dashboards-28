@@ -50,6 +50,14 @@ import ReadyCheck from '@/pages/admin/ReadyCheck';
 import { ReadyCheckEnhanced } from '@/pages/admin/ReadyCheckEnhanced';
 const HQDashboard = React.lazy(() => import('@/pages/admin/hq'));
 
+// New persona landing pages  
+const FamiliesIndex = React.lazy(() => import('@/pages/families/index'));
+const ProsIndex = React.lazy(() => import('@/pages/pros/index'));
+const NILLanding = React.lazy(() => import('@/pages/nil/landing'));
+const HealthcareNew = React.lazy(() => import('@/pages/healthcare/index'));
+const SolutionsLanding = React.lazy(() => import('@/pages/solutions/index'));
+const LearnLanding = React.lazy(() => import('@/pages/learn/index'));
+
 const AiesConsole = React.lazy(() => import('@/pages/admin/AiesConsole'));
 import AdminPanel from '@/pages/admin/AdminPanel';
 import JobsPanel from '@/pages/admin/JobsPanel';
@@ -189,7 +197,7 @@ import PipelinePage from '@/pages/advisors/PipelinePage';
 import AdvisorTools from '@/pages/advisors/AdvisorTools';
 import NILAthleteHome from '@/pages/nil/NILAthleteHome';
 import MarketplacePage from '@/pages/nil/Marketplace';
-import NILIndex from '@/pages/nil/NILIndex';
+import NILIndexPage from '@/pages/nil/NILIndex';
 import NILDemoPage from '@/pages/nil/DemoPage';
 import NILTourPage from '@/pages/nil/TourPage';
 import InvestorRollupPage from '@/pages/investor/InvestorRollupPage';
@@ -272,9 +280,41 @@ function App() {
               <Navigate to="/nil/onboarding" replace />
             } />
             
-            {/* NEW: Primary nav landing pages */}
-            <Route path="/families" element={<FamiliesLanding />} />
-            <Route path="/pros" element={<ProsLanding />} />
+            {/* NEW: Primary persona landing pages */}
+            <Route path="/families" element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <FamiliesIndex />
+              </Suspense>
+            } />
+            <Route path="/pros" element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <ProsIndex />
+              </Suspense>
+            } />
+            <Route path="/healthcare" element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <HealthcareNew />
+              </Suspense>
+            } />
+            <Route path="/solutions" element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <SolutionsLanding />
+              </Suspense>
+            } />
+            <Route path="/learn" element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <LearnLanding />
+              </Suspense>
+            } />
+            
+            {/* Persona sub-routes */}
+            <Route path="/families/retirees" element={<FamilyRetireePersonaDashboard />} />
+            <Route path="/families/aspiring" element={<FamilyAspiringPersonaDashboard />} />
+            <Route path="/pros/advisor" element={<AdvisorPersonaDashboard />} />
+            <Route path="/pros/cpa" element={<AccountantPersonaDashboard />} />
+            <Route path="/pros/attorney" element={<AttorneyPersonaDashboard />} />
+            <Route path="/pros/insurance" element={<InsurancePersonaDashboard />} />
+            
             <Route path="/catalog" element={<CatalogPage />} />
             <Route path="/goals" element={<GoalsPage />} />
             <Route path="/health" element={<HealthcareLanding />} />
@@ -312,21 +352,18 @@ function App() {
             <Route path="/estate/workbench" element={<React.Suspense fallback={<div>Loading...</div>}><EstateWorkbench /></React.Suspense>} />
             <Route path="/families/retirees/goals" element={<RetireeGoals />} />
             
-            {/* Stub routes to avoid 404s */}
+            {/* Remove old stub routes that now have proper pages */}
             <Route path="/platform" element={<Stub title="Platform overview (stub)" />} />
-            <Route path="/solutions" element={<Stub title="Solutions (stub)" />} />
             <Route path="/services" element={<Stub title="Services (stub)" />} />
             
             {/* Helpful redirects for old links */}
             <Route path="/personas" element={<Navigate to="/pros" replace />} />
-            <Route path="/healthcare" element={<Navigate to="/health" replace />} />
             <Route path="/discover" element={<Navigate to="/catalog" replace />} />
             
             {/* Public Pages - Flag Protected */}
             {getFlag('PUBLIC_DISCOVER_ENABLED') && <Route path="/discover" element={<Discover />} />}
             {getFlag('PUBLIC_DISCOVER_ENABLED') && <Route path="/search" element={<SearchPage />} />}
             <Route path="/how-it-works" element={<HowItWorks />} />
-            {getFlag('SOLUTIONS_ENABLED') && <Route path="/solutions" element={<SolutionsPage />} />}
             {getFlag('SOLUTIONS_ENABLED') && <Route path="/solutions/annuities" element={<Annuities />} />}
             {getFlag('SOLUTIONS_ENABLED') && <Route path="/solutions/investments" element={<SolutionsInvestmentsPage />} />}
             {getFlag('SOLUTIONS_ENABLED') && <Route path="/solutions/insurance" element={<SolutionsInsurancePage />} />}
@@ -335,7 +372,14 @@ function App() {
             {getFlag('SOLUTIONS_ENABLED') && <Route path="/solutions/estate" element={<SolutionsEstatePage />} />}
             {getFlag('SOLUTIONS_ENABLED') && <Route path="/solutions/:solutionKey" element={<SolutionCategoryPage />} />}
             
-            {/* NIL Public Pages */}
+            {/* NIL Public Pages - conditional based on flag */}
+            {!getFlag('NIL_PUBLIC_ENABLED') && (
+              <Route path="/nil" element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <NILLanding />
+                </Suspense>
+              } />
+            )}
             {getFlag('NIL_PUBLIC_ENABLED') && <Route path="/nil" element={<MarketplacePage />} />}
             {getFlag('NIL_PUBLIC_ENABLED') && <Route path="/nil/index" element={<Index />} />}
             {getFlag('NIL_PUBLIC_ENABLED') && <Route path="/nil/demo" element={<NILDemoPage />} />}

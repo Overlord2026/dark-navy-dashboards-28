@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { TopNav } from '@/components/layout/TopNav';
 import RunNILDemo from '@/components/demos/RunNILDemo';
 
 const Logo = () => (
@@ -21,12 +22,14 @@ function BrandHeader() {
         <Logo />
 
         <nav className="ml-auto hidden md:flex items-center gap-6">
-          <RunNILDemo />
-          <Link to="/marketplace" className="text-white hover:text-[var(--bfo-gold)]">Marketplace</Link>
-          <Link to="/marketplace/advisors" className="text-white hover:text-[var(--bfo-gold)]">Advisors</Link>
-          <Link to="/admin/ip" className="text-bfo-gold hover:underline">HQ · IP Filings</Link>
-          <a className="text-white hover:text-[var(--bfo-gold)]" href="/book">Book Demo</a>
-          <a className="text-white hover:text-[var(--bfo-gold)]" href="/login">Log In</a>
+          <TopNav />
+          <div className="border-l border-[#FFD700]/30 pl-6 ml-6 flex items-center gap-6">
+            <RunNILDemo />
+            <Link to="/marketplace" className="text-white hover:text-[#FFD700] transition-colors">Marketplace</Link>
+            <Link to="/admin/ip" className="text-[#FFD700] hover:underline">HQ · IP</Link>
+            <a className="text-white hover:text-[#FFD700] transition-colors" href="/book">Book Demo</a>
+            <a className="text-white hover:text-[#FFD700] transition-colors" href="/login">Log In</a>
+          </div>
         </nav>
       </div>
     </header>
