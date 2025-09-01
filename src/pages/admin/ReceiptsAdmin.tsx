@@ -13,7 +13,7 @@ type R = {
 };
 
 function toCsv(rows: R[]) {
-  const header = ['created_at','subject','action','receipt_hash','anchored_at','reasons'];
+  const header = ['Time','Subject','Action','Receipt','Anchor','Reasons'];
   const body = rows.map(r => [
     r.created_at, r.subject, r.action, r.receipt_hash, r.anchored_at ?? '',
     JSON.stringify(r.reasons ?? [])
@@ -32,12 +32,12 @@ export default function ReceiptsAdmin() {
 
   const load = React.useCallback(async()=>{
     setLoading(true);
-    let query = supabase.from('v_decision_receipts')
+    const { data, error } = await (supabase as any)
+      .from('v_decision_receipts')
       .select('*')
-      .order('created_at',{ascending:false})
+      .order('created_at', { ascending: false })
       .limit(1000);
 
-    const { data, error } = await query;
     if (error){ console.error(error); setRows([]); setLoading(false); return; }
     let filtered = (data ?? []) as R[];
 
