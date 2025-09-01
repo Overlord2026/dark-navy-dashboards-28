@@ -26,7 +26,8 @@ export default {
         bfo: {
           black: '#0B0F14',
           gold:  '#D4AF37',
-          navy:  '#0B1E33'
+          navy:  '#0B1E33',
+          purple: '#141129'
         },
         
         // Brand Colors - Black & Gold

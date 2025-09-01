@@ -27,9 +27,9 @@ export const PersonaCard: React.FC<PersonaCardProps> = ({
 
   return (
     <div
-      className={`group relative bg-white/95 backdrop-blur-sm border-2 border-gold/20 rounded-xl ${
+      className={`group relative bfo-card ${
         compact ? 'p-4' : 'p-6'
-      } shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 cursor-pointer overflow-hidden`}
+      } transition-all duration-300 hover:-translate-y-2 cursor-pointer overflow-hidden`}
       onClick={() => navigate(`/onboarding/${id}`)}
     >
       {/* Golden Tree Watermark */}
@@ -47,7 +47,7 @@ export const PersonaCard: React.FC<PersonaCardProps> = ({
           <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-gold to-gold/80 rounded-lg flex items-center justify-center shadow-lg">
             <Icon className="w-6 h-6 text-navy" />
           </div>
-          <h4 className={`font-serif ${compact ? 'text-lg' : 'text-xl'} font-bold text-navy leading-tight`}>
+          <h4 className={`font-serif ${compact ? 'text-lg' : 'text-xl'} font-bold text-white leading-tight`}>
             {title}
           </h4>
         </div>
@@ -55,8 +55,8 @@ export const PersonaCard: React.FC<PersonaCardProps> = ({
         {/* Benefits List */}
         <ul className="space-y-2 mb-6">
           {benefits.map((benefit, index) => (
-            <li key={index} className="flex items-start gap-2 text-sm text-navy/80">
-              <div className="w-1.5 h-1.5 bg-emerald rounded-full mt-2 flex-shrink-0" />
+            <li key={index} className="flex items-start gap-2 text-sm text-white/90">
+              <div className="w-1.5 h-1.5 bg-bfo-gold rounded-full mt-2 flex-shrink-0" />
               <span className="leading-relaxed">{benefit}</span>
             </li>
           ))}
@@ -64,30 +64,27 @@ export const PersonaCard: React.FC<PersonaCardProps> = ({
 
         {/* Action Buttons */}
         <div className={`flex ${compact ? 'flex-col gap-2' : 'gap-3'}`}>
-          <Button
+          <button
             onClick={(e) => {
               e.stopPropagation();
               navigate(learnMoreRoute);
             }}
-            variant="outline"
-            size={compact ? "sm" : "default"}
-            className="flex-1 border-emerald text-emerald hover:bg-emerald hover:text-white transition-all duration-300"
+            className={`bfo-cta-secondary flex-1 ${compact ? 'px-3 py-2 text-sm' : 'px-4 py-3'} flex items-center justify-center gap-2 transition-all duration-300`}
           >
             Learn More
-            <ExternalLink className="w-4 h-4 ml-2" />
-          </Button>
+            <ExternalLink className="w-4 h-4" />
+          </button>
           
-          <Button
+          <button
             onClick={(e) => {
               e.stopPropagation();
               navigate(`/onboarding/${id}`);
             }}
-            size={compact ? "sm" : "default"}
-            className="flex-1 bg-gradient-to-r from-gold to-gold/90 text-navy font-bold hover:from-gold/90 hover:to-gold hover:shadow-lg transition-all duration-300"
+            className={`bfo-cta flex-1 ${compact ? 'px-3 py-2 text-sm' : 'px-4 py-3'} font-bold flex items-center justify-center gap-2 transition-all duration-300`}
           >
             Get Started
-            <ArrowRight className="w-4 h-4 ml-2" />
-          </Button>
+            <ArrowRight className="w-4 h-4" />
+          </button>
         </div>
       </div>
 

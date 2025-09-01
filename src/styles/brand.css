@@ -24,3 +24,35 @@
 body {
   background: var(--bfo-black);
 }
+
+/* Premium persona cards */
+.bfo-card {
+  background: #141129; /* bfo.purple */
+  border: 1px solid #D4AF37; /* bfo.gold */
+  color: #fff;
+  border-radius: 16px;
+  box-shadow: 0 10px 24px rgba(0,0,0,.25);
+}
+.bfo-card h3, .bfo-card h4, .bfo-card p { color:#fff; }
+.bfo-link { color:#fff; }
+.bfo-link:hover { color:#D4AF37; }
+.bfo-cta {
+  background:#0B0F14; /* bfo.black */
+  color:#D4AF37; /* gold text */
+  border:1px solid #D4AF37;
+  border-radius:12px;
+}
+.bfo-cta:hover, .bfo-cta:focus-visible {
+  background:#D4AF37;
+  color:#0B0F14;
+}
+.bfo-cta-secondary { /* small outline CTAs if present */
+  background:transparent;
+  color:#D4AF37;
+  border:1px solid #D4AF37;
+  border-radius:12px;
+}
+.bfo-cta-secondary:hover, .bfo-cta-secondary:focus-visible {
+  background:#D4AF37;
+  color:#0B0F14;
+}
