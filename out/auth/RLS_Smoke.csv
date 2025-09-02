@@ -1,0 +1,6 @@
+table,policy,operation,status,expectedBehavior,actualBehavior,error
+"profiles","RLS Protection","SELECT","PASS","Users should not access other profiles without auth","Access denied by RLS (correct)",""
+"accounts","RLS Protection","SELECT","PASS","Users should only see their own accounts","Access denied by RLS (correct)",""
+"accounting_clients","RLS Protection","SELECT","PASS","Users should only see their client records","Access denied by RLS (correct)",""
+"advisor_assignments","RLS Protection","SELECT","PASS","Users should only see their assignments","Access denied by RLS (correct)",""
+"admin_audit_logs","RLS Protection","SELECT","PASS","Only admins should view audit logs","Access denied by RLS (correct)",""

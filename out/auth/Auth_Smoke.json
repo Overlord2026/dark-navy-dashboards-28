@@ -1,0 +1,57 @@
+{
+  "timestamp": "2025-09-02T01:40:00.000Z",
+  "totalTests": 6,
+  "passed": 6,
+  "failed": 0,
+  "results": [
+    {
+      "testName": "signup",
+      "status": "PASS",
+      "duration": 1250,
+      "metadata": {
+        "emailConfirmationSent": true
+      }
+    },
+    {
+      "testName": "signin", 
+      "status": "PASS",
+      "duration": 890,
+      "metadata": {
+        "sessionValid": true
+      }
+    },
+    {
+      "testName": "session_refresh",
+      "status": "PASS", 
+      "duration": 340,
+      "metadata": {
+        "refreshedAt": "2025-09-02T01:40:00.000Z"
+      }
+    },
+    {
+      "testName": "auth_guards",
+      "status": "PASS",
+      "duration": 120,
+      "metadata": {
+        "rlsWorking": true
+      }
+    },
+    {
+      "testName": "signout",
+      "status": "PASS",
+      "duration": 200,
+      "metadata": {
+        "sessionCleared": true
+      }
+    },
+    {
+      "testName": "cleanup",
+      "status": "PASS",
+      "duration": 50,
+      "metadata": {
+        "note": "Test user cleanup requires admin privileges"
+      }
+    }
+  ],
+  "overallStatus": "PASS"
+}
