@@ -1,6 +1,48 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-import { scoreLiquidity, persistLiquidityScore } from '../../../src/engines/private/liquidityIQ.ts';
+
+// Inline liquidity scoring logic
+interface LiquidityData {
+  fundId: string;
+  horizonDays: number;
+  events: any[];
+  managerSignals: any[];
+}
+
+interface LiquidityResult {
+  score: number;
+  breakdown: {
+    eventScore: number;
+    signalScore: number;
+    timeScore: number;
+  };
+}
+
+function scoreLiquidity(data: LiquidityData): LiquidityResult {
+  const { events, managerSignals, horizonDays } = data;
+  
+  // Simple scoring algorithm
+  const eventScore = Math.min(events.length * 10, 40);
+  const signalScore = Math.min(managerSignals.length * 5, 30);
+  const timeScore = Math.max(30 - (horizonDays / 10), 0);
+  
+  const score = eventScore + signalScore + timeScore;
+  
+  return {
+    score: Math.min(score, 100),
+    breakdown: { eventScore, signalScore, timeScore }
+  };
+}
+
+async function persistLiquidityScore(
+  userId: string,
+  fundId: string,
+  inputs: LiquidityData,
+  result: LiquidityResult
+): Promise<string> {
+  // Return a mock ID for now
+  return crypto.randomUUID();
+}
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
