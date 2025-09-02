@@ -1,6 +1,8 @@
 
 import { supabase } from '@/lib/supabase';
 import type { InvestmentOffering } from '@/hooks/useInvestmentData';
+import { CONFIG } from '@/config/flags';
+import { withDemoFallback } from './demoService';
 
 export const investmentService = {
   // Seed data for initial offerings
@@ -78,7 +80,7 @@ export const investmentService = {
       }
     ];
 
-    try {
+    return withDemoFallback(async () => {
       const { data, error } = await supabase
         .from('investment_offerings')
         .upsert(offerings, { onConflict: 'name' })
@@ -87,14 +89,11 @@ export const investmentService = {
       if (error) throw error;
       console.log('Seeded offerings:', data);
       return data;
-    } catch (err) {
-      console.error('Error seeding offerings:', err);
-      throw err;
-    }
+    }, '/investment_offerings/seed', offerings);
   },
 
   async getOfferingsByCategory(categoryId: string) {
-    try {
+    return withDemoFallback(async () => {
       const { data, error } = await supabase
         .from('investment_offerings')
         .select('*')
@@ -104,14 +103,11 @@ export const investmentService = {
 
       if (error) throw error;
       return data || [];
-    } catch (err) {
-      console.error('Error fetching offerings by category:', err);
-      throw err;
-    }
+    }, `/investment_offerings/category/${categoryId}`, []);
   },
 
   async getFeaturedOfferings() {
-    try {
+    return withDemoFallback(async () => {
       const { data, error } = await supabase
         .from('investment_offerings')
         .select('*')
@@ -120,9 +116,6 @@ export const investmentService = {
 
       if (error) throw error;
       return data || [];
-    } catch (err) {
-      console.error('Error fetching featured offerings:', err);
-      throw err;
-    }
+    }, '/investment_offerings/featured', []);
   }
 };

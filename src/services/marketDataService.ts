@@ -1,6 +1,8 @@
 
 // Service to fetch market data from free APIs
 import { supabase } from '@/integrations/supabase/client';
+import { CONFIG } from '@/config/flags';
+import { withDemoFallback } from './demoService';
 
 interface FinnhubStockStats {
   ticker: string;
@@ -30,7 +32,7 @@ export const fetchStockStats = async (tickers: string[], holdings?: Array<{ticke
   data: FinnhubStockStats[];
   portfolioMetrics?: PortfolioMetrics;
 }> => {
-  try {
+  return withDemoFallback(async () => {
     const { data, error } = await supabase.functions.invoke('finnhub-stock-stats', {
       body: { tickers, holdings }
     });
@@ -41,10 +43,28 @@ export const fetchStockStats = async (tickers: string[], holdings?: Array<{ticke
       data: data.data || [],
       portfolioMetrics: data.portfolioMetrics
     };
-  } catch (error) {
-    console.error('Error fetching stock stats:', error);
-    throw error;
-  }
+  }, '/functions/finnhub-stock-stats', {
+    data: tickers.map(ticker => ({
+      ticker,
+      name: `Demo ${ticker}`,
+      sector: 'Technology',
+      beta: 1.2,
+      volatility: 0.15,
+      yield: 0.02,
+      oneYearReturn: 0.12,
+      threeYearReturn: 0.08,
+      fiveYearReturn: 0.10,
+      price: 150.00
+    })),
+    portfolioMetrics: {
+      portfolioBeta: 1.15,
+      avgVolatility: 0.15,
+      avgYield: 0.02,
+      riskLevel: 'Moderate',
+      volatilityVsSP500: 'Similar',
+      holdingsWithStats: []
+    }
+  });
 };
 
 interface MarketData {
@@ -252,7 +272,7 @@ export const getRealAssetsData = async (): Promise<MarketData> => {
 
 // Function to fetch all investment category data at once
 export const getAllInvestmentCategoryData = async (): Promise<Record<string, MarketData>> => {
-  try {
+  return withDemoFallback(async () => {
     const [privateEquity, privateDebt, digitalAssets, realAssets] = await Promise.all([
       getPrivateEquityData(),
       getPrivateDebtData(),
@@ -266,38 +286,30 @@ export const getAllInvestmentCategoryData = async (): Promise<Record<string, Mar
       'digital-assets': digitalAssets,
       'real-assets': realAssets
     };
-  } catch (error) {
-    console.error('Error fetching all investment category data:', error);
-    // Return fallback data
-    return {
-      'private-equity': {
-        id: 'private-equity',
-        name: 'Private Equity',
-        ytdPerformance: 12.4,
-        isLoading: false,
-        error: 'Failed to fetch data'
-      },
-      'private-debt': {
-        id: 'private-debt',
-        name: 'Private Debt',
-        ytdPerformance: 8.7,
-        isLoading: false,
-        error: 'Failed to fetch data'
-      },
-      'digital-assets': {
-        id: 'digital-assets',
-        name: 'Digital Assets',
-        ytdPerformance: 15.8,
-        isLoading: false,
-        error: 'Failed to fetch data'
-      },
-      'real-assets': {
-        id: 'real-assets',
-        name: 'Real Assets',
-        ytdPerformance: 9.1,
-        isLoading: false,
-        error: 'Failed to fetch data'
-      }
-    };
-  }
+  }, '/market_data/all', {
+    'private-equity': {
+      id: 'private-equity',
+      name: 'Private Equity',
+      ytdPerformance: 12.4,
+      isLoading: false
+    },
+    'private-debt': {
+      id: 'private-debt',
+      name: 'Private Debt',
+      ytdPerformance: 8.7,
+      isLoading: false
+    },
+    'digital-assets': {
+      id: 'digital-assets',
+      name: 'Digital Assets',
+      ytdPerformance: 15.8,
+      isLoading: false
+    },
+    'real-assets': {
+      id: 'real-assets',
+      name: 'Real Assets',
+      ytdPerformance: 9.1,
+      isLoading: false
+    }
+  });
 };

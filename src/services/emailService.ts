@@ -1,5 +1,7 @@
 
 import emailjs from '@emailjs/browser';
+import { CONFIG } from '@/config/flags';
+import { withDemoFallback } from './demoService';
 
 // EmailJS configuration - using environment variables for security
 const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID || 'service_9eb6z0x';
@@ -46,7 +48,7 @@ export interface OnboardingEmailData {
 }
 
 export const sendInterestNotification = async (data: InterestEmailData): Promise<boolean> => {
-  try {
+  return withDemoFallback(async () => {
     const templateParams = {
       to_email: 'namandevops44@gmail.com',
       from_name: 'Family Office Platform',
@@ -80,10 +82,7 @@ Please follow up with this client regarding their interest.`,
 
     console.log('Interest email sent successfully:', result);
     return true;
-  } catch (error) {
-    console.error('Failed to send interest email:', error);
-    return false;
-  }
+  }, '/emails/interest', true);
 };
 
 export const sendLearnMoreNotification = async (data: LearnMoreEmailData): Promise<boolean> => {

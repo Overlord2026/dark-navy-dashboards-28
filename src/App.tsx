@@ -10,6 +10,7 @@ import { ToolsProvider } from '@/contexts/ToolsContext';
 import { Toaster } from '@/components/ui/toaster';
 import DevPanel from '@/components/dev/DevPanel';
 import { AutoLoadDemo } from '@/components/AutoLoadDemo';
+import { DemoStatus } from '@/components/DemoStatus';
 import CTAStickyBar from '@/components/ui/CTAStickyBar';
 import NILOnboarding from '@/pages/nil/Onboarding';
 import Education from '@/pages/nil/Education';
