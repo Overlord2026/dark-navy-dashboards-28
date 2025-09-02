@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { ReceiptChip } from '@/components/families/ReceiptChip';
+import { LegacyReceiptChip } from '@/components/families/ReceiptChip';
 import { getFlag } from '@/lib/flags';
 import { callEdgeJSON } from '@/services/aiEdge';
 import { Calculator, TrendingUp, Award, AlertTriangle } from 'lucide-react';
@@ -147,7 +147,7 @@ export function AdvisorBenchmarkWidget() {
           {benchmarkResult.receipt_hash && (
             <div className="flex items-center justify-between">
               <span className="text-white/60 text-xs">Benchmark Receipt:</span>
-              <ReceiptChip 
+              <LegacyReceiptChip 
                 hash={benchmarkResult.receipt_hash}
                 anchored={benchmarkResult.proof_ok}
                 policyVersion="K-2025.09"

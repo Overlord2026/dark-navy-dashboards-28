@@ -1,7 +1,7 @@
 import React from 'react';
 import { Clock, Shield, CheckCircle, AlertTriangle } from 'lucide-react';
 import { getFlag } from '@/lib/flags';
-import { ReceiptChip } from '@/components/families/ReceiptChip';
+import { LegacyReceiptChip } from '@/components/families/ReceiptChip';
 import { FamiliesReadinessButton } from '@/components/families/FamiliesReadinessButton';
 
 export function DashboardWidgets() {
@@ -32,7 +32,7 @@ export function DashboardWidgets() {
               <div className="font-medium text-white">Onboarding Completed</div>
               <div className="text-sm text-white/60">Family profile setup finished</div>
             </div>
-            <ReceiptChip 
+            <LegacyReceiptChip 
               hash="sha256:9e8d7c6b5a4f3e2d1c0b9a8f7e6d5c4b3a2f1e0d9c8b7a6f5e4d3c2b1a0f9e8d"
               anchored={true}
               policyVersion="K-2025.09"
@@ -43,7 +43,7 @@ export function DashboardWidgets() {
               <div className="font-medium text-white">Wealth Overview Accessed</div>
               <div className="text-sm text-white/60">Portfolio data synchronized</div>
             </div>
-            <ReceiptChip 
+            <LegacyReceiptChip 
               hash="sha256:a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2"
               anchored={true}
               policyVersion="K-2025.09"
@@ -54,7 +54,7 @@ export function DashboardWidgets() {
               <div className="font-medium text-white">Policy Evaluation</div>
               <div className="text-sm text-white/60">Latest compliance check</div>
             </div>
-            <ReceiptChip 
+            <LegacyReceiptChip 
               hash="sha256:b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3"
               anchored={false}
               policyVersion="K-2025.09"

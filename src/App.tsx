@@ -163,6 +163,8 @@ import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import MarketplaceIndex from '@/pages/marketplace/Index';
 import MarketplaceAdvisors from '@/pages/marketplace/Advisors';
 import AdvisorDetail from '@/pages/marketplace/AdvisorDetail';
+import CPAIndex from '@/pages/marketplace/cpa/Index';
+import CPADetail from '@/pages/marketplace/cpa/Detail';
 
 const CpaHome = React.lazy(() => import('@/pages/cpas/CpaHome'));
 const CpaMarketplace = React.lazy(() => import('@/pages/marketplace/CpaMarketplace'));
@@ -758,8 +760,9 @@ function App() {
             <Route path="/contact/schedule" element={<Stub title="Schedule a Meeting" />} />
             <Route path="/contact/message" element={<Stub title="Send a Message" />} />
             <Route path="/marketplace/advisors" element={<Stub title="Find Advisors" />} />
+            <Route path="/marketplace/cpa" element={<CPAIndex />} />
+            <Route path="/marketplace/cpa/:id" element={<CPADetail />} />
             <Route path="/marketplace/cpas" element={<Stub title="Find CPAs" />} />
-            <Route path="/marketplace/attorneys" element={<Stub title="Find Attorneys" />} />
             <Route path="/marketplace/insurance" element={<Stub title="Insurance Solutions" />} />
             <Route path="/tools/retirement-roadmap" element={<Stub title="Retirement Roadmap Tool" />} />
             <Route path="/tools/tax-projection" element={<Stub title="Tax Projection Tool" />} />
