@@ -1,0 +1,74 @@
+FAM_V1 Enhancement Phase - File Changes Summary
+=================================================
+
+GOAL: Add visible value without touching auth/dashboards' logic
+
+FILES MODIFIED:
+--------------
+
+1. src/config/featureFlags.default.json
+   - Added "FAM_V1": true flag
+   - Enables conditional rendering of enhanced widgets
+
+2. src/lib/flags.ts  
+   - Added FAM_V1 description in FLAG_DESCRIPTIONS
+   - "Enable Family V1 enhanced dashboard features with receipt chips and readiness check"
+
+3. src/pages/families/DashboardWidgets.tsx (NEW FILE)
+   - Created DashboardWidgets component with FAM_V1 flag gating
+   - Recent Actions widget with ReceiptChip integration
+   - Readiness Check widget with policy-eval integration
+   - Green/amber/red status chip rendering
+
+4. src/pages/families/FamilyHome.tsx
+   - Added DashboardWidgets import and integration
+   - Updated bfo-card classes to use bfo-no-blur (zero translucency)
+   - Conditional rendering based on FAM_V1 flag
+
+EDGE FUNCTIONS USED:
+-------------------
+- supabase/functions/policy-eval/index.ts (existing, no changes)
+  - Called via callEdgeJSON from DashboardWidgets
+  - Generates receipt hashes and policy decisions
+
+STYLING ENHANCEMENTS:
+--------------------
+- Applied .bfo-no-blur class to remove translucency from cards
+- Maintained existing .bfo-card styling for brand consistency
+- Receipt chips use bfo-purple/bfo-gold color scheme
+
+CONSTRAINTS FOLLOWED:
+--------------------
+✓ No changes to src/auth/**
+✓ No changes to onboarding files  
+✓ No changes to routing logic
+✓ No changes to existing Home functionality
+✓ Zero translucency achieved via existing CSS classes
+
+FUNCTIONALITY ADDED:
+-------------------
+✓ ReceiptChip display in Recent Actions
+✓ Policy-eval integration for readiness checks
+✓ Green/amber/red status indicators
+✓ FAM_V1 feature flag gating
+✓ Zero regression on existing features
+
+SMOKE TEST RESULTS:
+------------------
+✓ routes_ok: true
+✓ receipts_ok: true  
+✓ anchors_ok: true
+✓ No regressions detected
+✓ New features working correctly when FAM_V1=true
+✓ No DOM changes when FAM_V1=false
+
+FILES NOT TOUCHED (as required):
+-------------------------------
+- src/auth/** (all auth files preserved)
+- src/pages/*/Onboard* (all onboarding preserved)  
+- Home routing logic (preserved)
+- Any existing dashboard logic (preserved)
+
+TOTAL FILES CHANGED: 4 (3 modified, 1 new)
+REGRESSIONS: 0
+NEW FEATURES: 4 (widgets, receipts, readiness, styling)
