@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { GoldButton, GoldOutlineButton } from '@/components/ui/brandButtons';
+import { ReceiptChip } from '@/components/receipts/ReceiptChip';
 
 type InquiryModalProps = {
   isOpen: boolean;
@@ -30,6 +31,8 @@ export function InquiryModal({
     message: '',
     consent_tos: false
   });
+  const [receiptHash, setReceiptHash] = useState<string | null>(null);
+  const [submitted, setSubmitted] = useState(false);
 
   // Reset form when modal opens
   useEffect(() => {
@@ -41,6 +44,8 @@ export function InquiryModal({
         message: '',
         consent_tos: false
       });
+      setReceiptHash(null);
+      setSubmitted(false);
     }
   }, [isOpen]);
 
@@ -60,7 +65,13 @@ export function InquiryModal({
     e.preventDefault();
     if (!formData.consent_tos) return;
     
-    await onSubmit(formData);
+    try {
+      const result = await onSubmit(formData);
+      setReceiptHash(result.receiptHash);
+      setSubmitted(true);
+    } catch (error) {
+      console.error('Inquiry submission failed:', error);
+    }
   };
 
   const handleOverlayClick = (e: React.MouseEvent) => {
@@ -170,23 +181,45 @@ export function InquiryModal({
             </label>
           </div>
 
+          {/* Receipt Display */}
+          {submitted && receiptHash && (
+            <div className="pt-4 border-t border-bfo-gold/20">
+              <div className="mb-2">
+                <span className="text-sm text-white/80">Inquiry Receipt:</span>
+              </div>
+              <ReceiptChip hash={receiptHash} anchored={true} />
+            </div>
+          )}
+
           {/* Buttons */}
           <div className="flex gap-3 pt-4">
-            <GoldButton
-              type="submit"
-              disabled={!formData.consent_tos || loading}
-              className="flex-1"
-            >
-              {loading ? 'Sending...' : 'Send Inquiry'}
-            </GoldButton>
-            
-            <GoldOutlineButton
-              type="button"
-              onClick={onClose}
-              disabled={loading}
-            >
-              Cancel
-            </GoldOutlineButton>
+            {!submitted ? (
+              <>
+                <GoldButton
+                  type="submit"
+                  disabled={!formData.consent_tos || loading}
+                  className="flex-1"
+                >
+                  {loading ? 'Sending...' : 'Send Inquiry'}
+                </GoldButton>
+                
+                <GoldOutlineButton
+                  type="button"
+                  onClick={onClose}
+                  disabled={loading}
+                >
+                  Cancel
+                </GoldOutlineButton>
+              </>
+            ) : (
+              <GoldButton
+                type="button"
+                onClick={onClose}
+                className="flex-1"
+              >
+                Close
+              </GoldButton>
+            )}
           </div>
         </form>
       </div>

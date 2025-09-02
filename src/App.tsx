@@ -372,6 +372,7 @@ function App() {
             <Route path="/pros/advisors" element={<AdvisorDashboardWithSideNav />} />
             <Route path="/pros/accountants" element={<AccountantDashboard />} />
             <Route path="/pros/attorneys" element={<Attorneys />} />
+            <Route path="/accountants" element={<AccountantDashboard />} />
             <Route path="/pros/insurance/life" element={<Navigate to="/personas/insurance/life" replace />} />
             <Route path="/pros/insurance/other" element={<Navigate to="/personas/insurance" replace />} />
             
