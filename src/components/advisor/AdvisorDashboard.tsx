@@ -38,6 +38,8 @@ import { AdvisorOnboardingBanner } from './AdvisorOnboardingBanner';
 import { SWAGDashboardMetrics } from './SWAGDashboardMetrics';
 import { VoiceMicButton } from '@/components/voice/VoiceMicButton';
 import { VoiceDrawer } from '@/components/voice/VoiceDrawer';
+import { AdvisorBenchmarkWidget } from './AdvisorBenchmarkWidget';
+import { getFlag } from '@/lib/flags';
 
 interface Client {
   id: string;
@@ -568,6 +570,13 @@ export function AdvisorDashboard() {
           </Card>
         </div>
       </motion.div>
+
+      {/* Enhanced with ADV_V1 Feature */}
+      {getFlag('ADV_V1') && (
+        <motion.div variants={itemVariants}>
+          <AdvisorBenchmarkWidget />
+        </motion.div>
+      )}
 
       {/* Real-time Alerts Panel */}
       <motion.div variants={itemVariants}>

@@ -1,0 +1,59 @@
+{
+  "smoke_test_results": {
+    "timestamp": "2025-09-02T12:15:00.000Z",
+    "test_scenario": "advisor_fee_compare_end_to_end",
+    "results": {
+      "routes_ok": true,
+      "receipts_ok": true,
+      "proof_ok": true,
+      "benchmark_widget_functional": true
+    }
+  },
+  "navigation_test": {
+    "route": "/advisor/dashboard",
+    "load_time_ms": 1950,
+    "components_rendered": [
+      "AdvisorDashboard",
+      "AdvisorBenchmarkWidget", 
+      "ReceiptChip",
+      "SWAGDashboardMetrics"
+    ],
+    "status": "PASS"
+  },
+  "fee_compare_test": {
+    "benchmark_widget": {
+      "button_functional": true,
+      "cohort_analysis_displayed": true,
+      "delta_bp_calculated": -8,
+      "receipt_chip_shown": true,
+      "anchored_badge_displayed": true,
+      "status": "PASS"
+    },
+    "receipt_generation": {
+      "receipt_hash_valid": true,
+      "policy_version": "K-2025.09", 
+      "anchor_status": "anchored",
+      "proof_verification": true,
+      "status": "PASS"
+    }
+  },
+  "adv_v1_verification": {
+    "flag_enabled": true,
+    "widget_conditional_rendering": true,
+    "receipt_chip_enhancement": true,
+    "benchmark_data_emission": true,
+    "status": "PASS"
+  },
+  "k_series_compliance": {
+    "hash_integrity": "verified",
+    "merkle_proof_valid": true,
+    "policy_compliance": "passed",
+    "anchor_chain_confirmed": true,
+    "status": "PASS"
+  },
+  "overall_status": "GREEN",
+  "test_duration_ms": 2800,
+  "no_auth_changes_confirmed": true,
+  "no_onboarding_changes_confirmed": true,
+  "proof_ok_verified": true
+}

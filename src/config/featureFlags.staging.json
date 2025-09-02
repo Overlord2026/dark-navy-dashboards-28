@@ -2,7 +2,7 @@
   "__extends": "featureFlags.default.json",
   "ONBOARDING_PUBLIC_ENABLED": false,
   "FAM_V1": true,
-  "ADV_V1": false,
+  "ADV_V1": true,
   "IA_V2": false,
   "DEMO_MODE": true,
   "MIGRATION_ALLOWED": false
