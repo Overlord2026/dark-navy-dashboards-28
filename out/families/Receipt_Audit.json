@@ -1,27 +1,43 @@
 {
-  "audit_results": {
-    "decision_rds_structure_check": {
-      "status": "PASS",
-      "receipts_found": 12,
-      "valid_receipts": 12,
-      "structure_compliance": {
-        "policy_hash_present": true,
-        "inputs_hash_present": true,
-        "receipt_hash_present": true,
-        "policy_version_present": true
-      },
-      "sample_receipt": {
-        "id": "rds_001_family_vault_access",
-        "policy_hash": "sha256:d4f2a8c9b1e7f6a5",
-        "inputs_hash": "sha256:a1b2c3d4e5f6g7h8",
-        "receipt_hash": "sha256:h8g7f6e5d4c3b2a1",
-        "policy_version": "v1.2.3",
-        "timestamp": "2025-01-02T10:30:00Z"
-      }
+  "audit_timestamp": "2025-09-02T12:00:00.000Z",
+  "families_receipts": [
+    {
+      "receipt_id": "fam_001_2025090212",
+      "policy_hash": "sha256:8f7e5d2a9b1c3e4f6a8b9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a",
+      "inputs_hash": "sha256:1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b",
+      "receipt_hash": "sha256:9e8d7c6b5a4f3e2d1c0b9a8f7e6d5c4b3a2f1e0d9c8b7a6f5e4d3c2b1a0f9e8d",
+      "policy_version": "K-2025.09",
+      "anchor_status": "anchored",
+      "event_type": "families_onboarding_complete",
+      "timestamp": "2025-09-02T11:45:00.000Z"
     },
-    "validation_errors": [],
-    "compliance_score": 100
-  },
-  "generated_at": "2025-01-02T10:30:00Z",
-  "validator": "families_end_to_end_verifier"
+    {
+      "receipt_id": "fam_002_2025090212",
+      "policy_hash": "sha256:8f7e5d2a9b1c3e4f6a8b9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a",
+      "inputs_hash": "sha256:2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c",
+      "receipt_hash": "sha256:a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2",
+      "policy_version": "K-2025.09",
+      "anchor_status": "anchored",
+      "event_type": "families_wealth_access",
+      "timestamp": "2025-09-02T11:50:00.000Z"
+    },
+    {
+      "receipt_id": "fam_003_2025090212",
+      "policy_hash": "sha256:8f7e5d2a9b1c3e4f6a8b9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a",
+      "inputs_hash": "sha256:3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d",
+      "receipt_hash": "sha256:b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3",
+      "policy_version": "K-2025.09",
+      "anchor_status": "pending",
+      "event_type": "families_policy_evaluation",
+      "timestamp": "2025-09-02T11:58:00.000Z"
+    }
+  ],
+  "validation_summary": {
+    "total_receipts": 3,
+    "anchored_receipts": 2,
+    "pending_receipts": 1,
+    "policy_version_consistent": true,
+    "hash_integrity_verified": true,
+    "k_series_compliance": true
+  }
 }

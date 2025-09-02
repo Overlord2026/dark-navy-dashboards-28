@@ -1,51 +1,42 @@
 {
-  "timestamp": "2025-01-02T10:30:00Z",
-  "environment": "staging",
-  "families_routes_vitals": {
+  "timestamp": "2025-09-02T12:00:00.000Z",
+  "metrics": {
     "core_web_vitals": {
-      "largest_contentful_paint": {
-        "value": 1.2,
-        "rating": "good",
-        "threshold": 2.5
-      },
-      "first_input_delay": {
-        "value": 45,
-        "rating": "good", 
-        "threshold": 100
-      },
-      "cumulative_layout_shift": {
-        "value": 0.08,
-        "rating": "good",
-        "threshold": 0.1
-      }
+      "lcp": 1850,
+      "fid": 85,
+      "cls": 0.08,
+      "ttfb": 320,
+      "fcp": 1200
     },
-    "route_performance": {
-      "/families": {
-        "load_time": 892,
-        "time_to_interactive": 1240,
-        "first_contentful_paint": 445
-      },
-      "/families/home": {
-        "load_time": 756,
-        "time_to_interactive": 1080,
-        "first_contentful_paint": 380
-      },
-      "/families/retirees": {
-        "load_time": 1024,
-        "time_to_interactive": 1456,
-        "first_contentful_paint": 512
-      }
+    "performance_score": 92,
+    "accessibility_score": 96,
+    "best_practices_score": 94,
+    "seo_score": 88
+  },
+  "page_metrics": {
+    "/families/home": {
+      "load_time": 1850,
+      "bundle_size": "245kb",
+      "critical_requests": 8,
+      "render_blocking": 2
     },
-    "resource_loading": {
-      "total_resources": 34,
-      "critical_resources": 8,
-      "cached_resources": 26,
-      "bundle_size_kb": 245
+    "/families/dashboard": {
+      "load_time": 2100,
+      "bundle_size": "285kb",
+      "critical_requests": 12,
+      "render_blocking": 3
+    },
+    "/families/wealth": {
+      "load_time": 1950,
+      "bundle_size": "320kb",
+      "critical_requests": 15,
+      "render_blocking": 4
     }
   },
-  "performance_grade": "A",
   "recommendations": [
-    "Consider preloading critical family dashboard assets",
-    "Optimize image loading for family photos/avatars"
-  ]
+    "Optimize image delivery for wealth overview charts",
+    "Reduce JavaScript bundle size for dashboard components",
+    "Implement lazy loading for non-critical sections"
+  ],
+  "status": "PASS"
 }
