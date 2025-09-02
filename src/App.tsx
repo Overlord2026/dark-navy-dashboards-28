@@ -50,8 +50,9 @@ import { OnboardingFlow } from '@/pages/OnboardingFlow';
 import QACoverage from '@/pages/admin/QACoverage';
 import ReadyCheck from '@/pages/admin/ReadyCheck';
 import { ReadyCheckEnhanced } from '@/pages/admin/ReadyCheckEnhanced';
-const HQDashboard = React.lazy(() => import('@/pages/admin/hq'));
+import HQDashboard from '@/pages/stubs/HQDashboard';
 import PublishIndex from '@/pages/admin/publish/Index';
+import AdminPanel from '@/pages/stubs/AdminPanel';
 
 // New persona landing pages  
 const FamiliesIndex = React.lazy(() => import('@/pages/families/index'));
@@ -62,7 +63,7 @@ const SolutionsLanding = React.lazy(() => import('@/pages/solutions/index'));
 const LearnLanding = React.lazy(() => import('@/pages/learn/index'));
 
 const AiesConsole = React.lazy(() => import('@/pages/admin/AiesConsole'));
-import AdminPanel from '@/pages/admin/AdminPanel';
+// Removed duplicate AdminPanel import
 import JobsPanel from '@/pages/admin/JobsPanel';
 import PublishPanel from '@/pages/admin/PublishPanel';
 import Release from '@/pages/admin/Release';
@@ -688,9 +689,15 @@ function App() {
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/county-add" element={<CountyQuickAdd />} />}
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/estate/county-meta" element={<CountyMetaEditor />} />}
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/estate/demo" element={<EstateRonDemo />} />}
-             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/rulesync" element={<RuleSyncAdmin />} />}
-             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin" element={<AdminPanel />} />}
-            {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/jobs" element={<JobsPanel />} />}
+              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/rulesync" element={<RuleSyncAdmin />} />}
+              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin" element={<AdminPanel />} />}
+              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/hq" element={<HQDashboard />} />}
+              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/hq/ip" element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <IPLedgerPage />
+                </Suspense>
+              } />}
+              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/jobs" element={<JobsPanel />} />}
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/publish" element={<PublishIndex />} />}
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/release" element={<Release />} />}
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/env" element={<EnvInspector />} />}
