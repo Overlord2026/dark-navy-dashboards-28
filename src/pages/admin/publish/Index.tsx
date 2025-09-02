@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { CheckCircle, AlertTriangle, XCircle, Download, Play } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { smokeTest } from '@/services/smoke';
+import { AnchorChipViewer } from '@/components/admin/AnchorChipViewer';
 
 interface CheckResult {
   id: string;
@@ -329,6 +330,9 @@ ${smokeResults.details.map((test: any) => `- ${test.name}: ${test.status}`).join
           </CardContent>
         </Card>
       )}
+
+      {/* K-Series Anchor-Chip Viewer */}
+      <AnchorChipViewer />
     </div>
   );
 }

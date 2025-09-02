@@ -1,11 +1,11 @@
 // Web Vitals P95 Tracking Script
-import { onCLS, onFID, onFCP, onLCP, onTTFB, type Metric } from 'web-vitals';
+import { onCLS, onINP, onFCP, onLCP, onTTFB, type Metric } from 'web-vitals';
 
 interface RouteVitals {
   route: string;
   timestamp: string;
   lcp: number;
-  fid: number;
+  inp: number;
   cls: number;
   fcp: number;
   ttfb: number;
@@ -22,7 +22,7 @@ class WebVitalsTracker {
 
   private initializeTracking() {
     onCLS(this.handleMetric.bind(this, 'CLS'));
-    onFID(this.handleMetric.bind(this, 'FID'));
+    onINP(this.handleMetric.bind(this, 'INP'));
     onFCP(this.handleMetric.bind(this, 'FCP'));
     onLCP(this.handleMetric.bind(this, 'LCP'));
     onTTFB(this.handleMetric.bind(this, 'TTFB'));
@@ -35,7 +35,7 @@ class WebVitalsTracker {
       routeEntry = {
         route: this.currentRoute,
         timestamp: new Date().toISOString(),
-        lcp: 0, fid: 0, cls: 0, fcp: 0, ttfb: 0,
+        lcp: 0, inp: 0, cls: 0, fcp: 0, ttfb: 0,
         userAgent: navigator.userAgent
       };
       this.vitalsData.push(routeEntry);
@@ -43,7 +43,7 @@ class WebVitalsTracker {
 
     switch (metricName) {
       case 'LCP': routeEntry.lcp = metric.value; break;
-      case 'FID': routeEntry.fid = metric.value; break;
+      case 'INP': routeEntry.inp = metric.value; break;
       case 'CLS': routeEntry.cls = metric.value; break;
       case 'FCP': routeEntry.fcp = metric.value; break;
       case 'TTFB': routeEntry.ttfb = metric.value; break;
