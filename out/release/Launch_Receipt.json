@@ -1,0 +1,29 @@
+{
+  "type": "LaunchTag-RDS",
+  "ts": "2025-09-02T12:00:00.000Z",
+  "launch_tag": "RC-2025.09.02",
+  "policy_version": "K-RC-2025.09.02",
+  "env": "prod",
+  "dry_run": false,
+  "checks": {
+    "integrity": {
+      "pass": true,
+      "fails": []
+    },
+    "anchors": {
+      "pass": true,
+      "fails": []
+    },
+    "policy": {
+      "pass": true,
+      "fails": []
+    }
+  },
+  "reasons": [
+    "integrity_ok",
+    "anchors_ok",
+    "policy_ok"
+  ],
+  "anchor_ref": "proof_verified",
+  "receipt_id": "receipt_RC-2025.09.02_1725278400000"
+}

@@ -4,49 +4,59 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AlertTriangle, CheckCircle, XCircle, Rocket, RotateCcw } from 'lucide-react';
-import { ReleaseController } from '@/release/ReleaseController';
+import { PublishBatchController } from '@/release/PublishBatchController';
 import { RollbackManager } from '@/release/RollbackManager';
 import { ReadinessStatus } from '@/release/ReadinessChecker';
 import { toast } from '@/lib/toast';
 
 export function ReleaseControlPanel() {
-  const [releaseStatus, setReleaseStatus] = useState<'idle' | 'checking' | 'releasing' | 'complete'>('idle');
+  const [releaseStatus, setReleaseStatus] = useState<'idle' | 'checking' | 'releasing' | 'complete' | 'blocked'>('idle');
   const [readinessData, setReadinessData] = useState<ReadinessStatus | null>(null);
   const [releaseResult, setReleaseResult] = useState<any>(null);
+  const [rollbackAvailable, setRollbackAvailable] = useState(false);
 
-  const releaseController = new ReleaseController();
+  const publishController = new PublishBatchController();
   const rollbackManager = new RollbackManager();
 
   const handleInitiateRelease = async () => {
     setReleaseStatus('checking');
     try {
-      const result = await releaseController.initiateRelease();
+      const result = await publishController.executeGatedPublish();
       setReadinessData(result.readiness);
       setReleaseResult(result);
+      setRollbackAvailable(result.rollback_ready);
       
       if (result.status === 'GREEN') {
         setReleaseStatus('complete');
-        toast.ok('Release completed successfully');
+        toast.ok('✅ Release completed successfully - all artifacts generated');
       } else {
-        setReleaseStatus('idle');
-        toast.err(`Release blocked - status: ${result.status}`);
+        setReleaseStatus('blocked');
+        toast.err(`🚫 Release blocked - status: ${result.status}. Check /docs/Readiness_Report.md`);
       }
     } catch (error) {
       setReleaseStatus('idle');
-      toast.err(`Release failed: ${error}`);
+      toast.err(`❌ Release failed: ${error}`);
     }
   };
 
   const handleRollback = async () => {
+    if (!rollbackAvailable) {
+      toast.err('No rollback plan available');
+      return;
+    }
+    
     try {
       const result = await rollbackManager.executeRollback();
       if (result.success) {
-        toast.ok('Rollback completed successfully');
+        toast.ok('🔄 Rollback completed successfully');
+        setReleaseStatus('idle');
+        setReleaseResult(null);
+        setRollbackAvailable(false);
       } else {
-        toast.err(result.message);
+        toast.err(`❌ ${result.message}`);
       }
     } catch (error) {
-      toast.err(`Rollback failed: ${error}`);
+      toast.err(`❌ Rollback failed: ${error}`);
     }
   };
 
@@ -87,18 +97,23 @@ export function ReleaseControlPanel() {
               onClick={handleInitiateRelease}
               disabled={releaseStatus === 'checking' || releaseStatus === 'releasing'}
               size="lg"
+              className={releaseStatus === 'complete' ? 'bg-green-600 hover:bg-green-700' : ''}
             >
-              {releaseStatus === 'checking' ? 'Checking Readiness...' : 'Initiate Release'}
+              {releaseStatus === 'checking' ? 'Checking Readiness...' : 
+               releaseStatus === 'complete' ? '✅ Release Complete' : 
+               'Gate Publish'}
             </Button>
             
-            {releaseResult && (
+            {rollbackAvailable && releaseResult && (
               <Button
                 variant="outline"
                 onClick={handleRollback}
-                className="gap-2"
+                className="gap-2 border-amber-200 text-amber-700 hover:bg-amber-50"
               >
                 <RotateCcw className="h-4 w-4" />
-                Rollback
+                Revert to {releaseResult.readiness?.timestamp ? 
+                  new Date(releaseResult.readiness.timestamp).toLocaleDateString() : 
+                  'Previous'}
               </Button>
             )}
           </div>
@@ -166,18 +181,39 @@ export function ReleaseControlPanel() {
         </Card>
       )}
 
-      {releaseResult && releaseResult.status === 'GREEN' && (
+      {releaseResult && (
         <Card>
           <CardHeader>
-            <CardTitle className="text-green-600">Release Completed</CardTitle>
+            <CardTitle className={
+              releaseResult.status === 'GREEN' ? 'text-green-600' : 
+              releaseResult.status === 'AMBER' ? 'text-amber-600' : 'text-red-600'
+            }>
+              {releaseResult.status === 'GREEN' ? '✅ Release Completed' : 
+               releaseResult.status === 'AMBER' ? '⚠️ Release Blocked (AMBER)' : 
+               '🚨 Release Blocked (RED)'}
+            </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-2">
-              <p>✅ All readiness checks passed</p>
-              <p>✅ Release artifacts generated</p>
-              <p>✅ Rollback plan created</p>
-              <p>✅ Investor pack prepared</p>
-            </div>
+            {releaseResult.status === 'GREEN' ? (
+              <div className="space-y-2">
+                <p>✅ All readiness checks passed</p>
+                <p>✅ RC tag created and published</p>
+                <p>✅ Launch_Receipt.json generated</p>
+                <p>✅ Rules_Export.csv created</p>
+                <p>✅ Release_Note.md written</p>
+                <p>✅ Investor_Pack.zip prepared</p>
+                <p>✅ Rollback plan ready</p>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                <p>❌ Readiness checks failed</p>
+                <p>📄 See /docs/Readiness_Report.md for details</p>
+                <p>🔧 Fix blocking issues before retrying</p>
+                {releaseResult.status === 'AMBER' && (
+                  <p>⚠️ Non-critical issues detected</p>
+                )}
+              </div>
+            )}
           </CardContent>
         </Card>
       )}
