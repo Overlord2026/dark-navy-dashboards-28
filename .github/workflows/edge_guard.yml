@@ -1,0 +1,61 @@
+name: Edge Guard & Scan
+on: workflow_dispatch
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node & pnpm
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: |
+          corepack enable
+          corepack prepare pnpm@latest --activate
+
+      - name: Install deps (best effort)
+        run: |
+          if [ -f package.json ]; then
+            pnpm install || npm ci || true
+          fi
+
+      - name: ESLint (best effort)
+        run: |
+          npx eslint . --ext .ts,.tsx --max-warnings=0 || true
+
+      - name: Create reports folder
+        run: mkdir -p ops/reports
+
+      - name: Edge-only guard (script if present; else fallback)
+        run: |
+          if [ -f scripts/edge_only_guard.js ]; then
+            node scripts/edge_only_guard.js > ops/reports/edge_guard.txt 2>&1 || true
+          else
+            echo "No guard script found; running fallback scans." > ops/reports/edge_guard.txt
+          fi
+
+      - name: Install ripgrep
+        run: sudo apt-get update && sudo apt-get install -y ripgrep
+
+      - name: Scan for direct external fetch() calls
+        run: rg -n "fetch\\(['\"]https?://" || true
+        continue-on-error: true
+
+      - name: Save fetch() scan
+        run: rg -n "fetch\\(['\"]https?://" > ops/reports/fetch_calls.txt || true
+
+      - name: Scan for client-side secrets
+        run: rg -n "service_role|SUPABASE_SERVICE_ROLE_KEY" src || true
+        continue-on-error: true
+
+      - name: Save secrets scan
+        run: rg -n "service_role|SUPABASE_SERVICE_ROLE_KEY" src > ops/reports/secret_hits.txt || true
+
+      - name: Upload report artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: edge-guard-reports
+          path: ops/reports
