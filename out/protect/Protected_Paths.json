@@ -1,0 +1,13 @@
+{
+  "protected_paths": [
+    "src/auth/**",
+    "src/providers/**",
+    "src/pages/*/Onboard*",
+    "src/pages/*/Home*", 
+    "src/components/auth/**",
+    "supabase/migrations/**"
+  ],
+  "migration_allowed": false,
+  "description": "These paths are protected during enhancement work to prevent accidental edits to critical auth/dashboard functionality",
+  "bypass_instructions": "Set MIGRATION_ALLOWED=true environment variable to bypass protection"
+}
