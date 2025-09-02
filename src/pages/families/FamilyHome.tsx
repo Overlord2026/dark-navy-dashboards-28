@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Shield, TrendingUp } from 'lucide-react';
+import { DashboardWidgets } from './DashboardWidgets';
 
 export default function FamilyHome() {
   return (
@@ -16,10 +17,13 @@ export default function FamilyHome() {
           </p>
         </div>
 
+        {/* Dashboard Widgets - Enhanced with FAM_V1 */}
+        <DashboardWidgets />
+
         {/* Main Action Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
           {/* Goals Card */}
-          <div className="bfo-card">
+          <div className="bfo-card bfo-no-blur">
             <div className="flex items-center gap-4 mb-6">
               <div className="p-3 bg-bfo-gold/20 rounded-lg">
                 <TrendingUp className="h-8 w-8 text-bfo-gold" />
@@ -42,7 +46,7 @@ export default function FamilyHome() {
           </div>
 
           {/* Vault Card */}
-          <div className="bfo-card">
+          <div className="bfo-card bfo-no-blur">
             <div className="flex items-center gap-4 mb-6">
               <div className="p-3 bg-bfo-gold/20 rounded-lg">
                 <Shield className="h-8 w-8 text-bfo-gold" />
@@ -66,7 +70,7 @@ export default function FamilyHome() {
         </div>
 
         {/* Trust Explainer Footer */}
-        <div className="bfo-card">
+        <div className="bfo-card bfo-no-blur">
           <div className="text-center">
             <Shield className="h-8 w-8 text-bfo-gold mx-auto mb-4" />
             <h3 className="text-lg font-semibold mb-2 text-white">

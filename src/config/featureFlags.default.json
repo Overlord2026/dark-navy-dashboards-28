@@ -17,5 +17,6 @@
   "CRYPTO_ENABLED": true,
   "CRYPTO_TRADE_ENABLED": false,
   "CRYPTO_SELF_CUSTODY_ENABLED": true,
-  "CRYPTO_TAX_ENABLED": true
+  "CRYPTO_TAX_ENABLED": true,
+  "FAM_V1": true
 }
