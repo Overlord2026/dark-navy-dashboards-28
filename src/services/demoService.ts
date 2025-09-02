@@ -154,6 +154,23 @@ export class DemoService {
       config: CONFIG
     };
   }
+
+  // Synchronous accessors for cached data (used by smoke tests)
+  getFamilies() {
+    return demoCache.get('families') || [];
+  }
+
+  getAdvisors() {
+    return demoCache.get('advisors') || [];
+  }
+
+  getHealthcare() {
+    return demoCache.get('healthcare') || [];
+  }
+
+  getK401() {
+    return demoCache.get('k401') || [];
+  }
 }
 
 // Export singleton instance

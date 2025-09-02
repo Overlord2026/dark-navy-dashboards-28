@@ -51,6 +51,7 @@ import QACoverage from '@/pages/admin/QACoverage';
 import ReadyCheck from '@/pages/admin/ReadyCheck';
 import { ReadyCheckEnhanced } from '@/pages/admin/ReadyCheckEnhanced';
 const HQDashboard = React.lazy(() => import('@/pages/admin/hq'));
+import PublishIndex from '@/pages/admin/publish/Index';
 
 // New persona landing pages  
 const FamiliesIndex = React.lazy(() => import('@/pages/families/index'));
@@ -690,7 +691,7 @@ function App() {
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/rulesync" element={<RuleSyncAdmin />} />}
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin" element={<AdminPanel />} />}
             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/jobs" element={<JobsPanel />} />}
-             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/publish" element={<PublishPanel />} />}
+             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/publish" element={<PublishIndex />} />}
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/release" element={<Release />} />}
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/env" element={<EnvInspector />} />}
             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/ai/audit" element={<AiAudit />} />}
