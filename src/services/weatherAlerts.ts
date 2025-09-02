@@ -29,7 +29,7 @@ export async function fetchWeatherAlerts(
   provider: 'openweather' | 'tomorrow' | 'accuweather' = 'openweather'
 ): Promise<WeatherAlert[]> {
   try {
-    const response = await fetch('https://xcmqjkvyvuhoslbzmlgi.functions.supabase.co/functions/v1/weather-alerts', {
+    const response = await fetch('/functions/v1/weather-alerts', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -131,7 +131,7 @@ export async function sendStormNotifications(alert: WeatherAlert, clientIds: str
   // Send notifications through communication service
   for (const clientId of clientIds) {
     try {
-      await fetch('https://xcmqjkvyvuhoslbzmlgi.functions.supabase.co/functions/v1/storm-notification', {
+      await fetch('/functions/v1/storm-notification', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

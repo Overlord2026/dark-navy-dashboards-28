@@ -41,8 +41,8 @@ export async function track(
     } else if ((window as any).posthog?.capture) {
       (window as any).posthog.capture(name, payload);
     } else {
-      // 2) Fallback to your Supabase Edge Function
-      await fetch("https://xcmqjkvyvuhoslbzmlgi.supabase.co/functions/v1/analytics-capture", {
+      // 2) Fallback to Supabase Edge Function via proxy
+      await fetch("/functions/v1/analytics-capture", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         keepalive: true, // still send on unload

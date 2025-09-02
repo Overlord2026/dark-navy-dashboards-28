@@ -28,6 +28,15 @@ export default tseslint.config(
       ],
       "@typescript-eslint/no-unused-vars": "off",
       // Analytics guardrails - prevent 3+ arg calls that caused TS issues
+      "no-restricted-imports": ["error", { 
+        "paths": [
+          { 
+            "name": "@supabase/supabase-js", 
+            "importNames": ["createClient"], 
+            "message": "Use src/lib/supabaseClient.ts only." 
+          }
+        ]
+      }],
       "no-restricted-syntax": [
         "error",
         {
@@ -41,6 +50,10 @@ export default tseslint.config(
         {
           "selector": "CallExpression[callee.object.name='sessionStorage'][callee.property.name='setItem']",
           "message": "Review sessionStorage usage. Consider memory-only storage for sensitive data."
+        },
+        { 
+          "selector": "Literal[value=/service_role|SUPABASE_SERVICE_ROLE_KEY|sk_live|api_secret/i]", 
+          "message": "Secrets are not allowed in client code." 
         }
       ],
       // A11y specific rules

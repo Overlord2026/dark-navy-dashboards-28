@@ -338,7 +338,7 @@ export async function createFollowUpCampaign(sessionId: string, campaignType: st
 async function processAudioToText(audioBlob: Blob): Promise<string | null> {
   try {
     // Call speech-to-text edge function
-    const response = await fetch('https://xcmqjkvyvuhoslbzmlgi.functions.supabase.co/functions/v1/speech-to-text', {
+    const response = await fetch('/functions/v1/speech-to-text', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

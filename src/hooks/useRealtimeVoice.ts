@@ -1,4 +1,5 @@
 import React from 'react';
+import { callEdgeJSON } from '@/services/aiEdge';
 
 type RealtimeState = {
   ready: boolean;
@@ -66,19 +67,16 @@ export function useRealtimeVoice(): RealtimeState {
       const offer = await pc.createOffer();
       await pc.setLocalDescription(offer);
 
-      const sdpResp = await fetch('https://api.openai.com/v1/realtime?model=gpt-4o-realtime-preview-2024-12-17', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${EPHEMERAL}`,
-          'Content-Type': 'application/sdp',
-        },
-        body: offer.sdp,
+      // Call OpenAI realtime through edge function (no secrets in client)
+      const sdpResponse = await callEdgeJSON('openai-realtime', {
+        sdp: offer.sdp,
+        model: 'gpt-4o-realtime-preview-2024-12-17'
       });
-      if (!sdpResp.ok) {
-        const t = await sdpResp.text().catch(()=> '');
-        throw new Error(`Realtime SDP error: ${sdpResp.status} ${t}`);
+      
+      if (!sdpResponse.success) {
+        throw new Error(`Realtime SDP error: ${sdpResponse.error || 'Unknown error'}`);
       }
-      const answerSDP = await sdpResp.text();
+      const answerSDP = sdpResponse.answer_sdp;
       await pc.setRemoteDescription({ type: 'answer', sdp: answerSDP });
 
       pcRef.current = pc;
