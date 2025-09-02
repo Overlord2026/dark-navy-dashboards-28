@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { GoldButton, GoldOutlineButton } from '@/components/ui/brandButtons';
-import { ReceiptChip } from '@/components/receipts/ReceiptChip';
+import { LegacyReceiptChip } from '@/components/families/ReceiptChip';
 
 type InquiryModalProps = {
   isOpen: boolean;
@@ -187,7 +187,7 @@ export function InquiryModal({
               <div className="mb-2">
                 <span className="text-sm text-white/80">Inquiry Receipt:</span>
               </div>
-              <ReceiptChip hash={receiptHash} anchored={true} />
+              <LegacyReceiptChip hash={receiptHash} anchored={true} />
             </div>
           )}
 

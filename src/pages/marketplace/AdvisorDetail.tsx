@@ -9,7 +9,7 @@ import { InquiryModal } from '@/components/marketplace/InquiryModal';
 import { VoiceDrawer } from '@/components/voice/VoiceDrawer';
 import { recordInquiry } from '@/services/inquiries';
 import { GoldButton, GoldOutlineButton } from '@/components/ui/brandButtons';
-import { ReceiptChip } from '@/components/receipts/ReceiptChip';
+import { LegacyReceiptChip } from '@/components/families/ReceiptChip';
 
 export default function AdvisorDetail() {
   const { id } = useParams<{ id: string }>();
@@ -177,7 +177,7 @@ export default function AdvisorDetail() {
                  {lastReceiptHash && (
                    <div className="mt-4 p-3 bg-bfo-purple/10 border border-bfo-gold/20 rounded">
                      <p className="text-sm text-white/70 mb-2">Last inquiry receipt:</p>
-                     <ReceiptChip hash={lastReceiptHash} anchored={false} />
+                     <LegacyReceiptChip hash={lastReceiptHash} anchored={false} />
                    </div>
                  )}
                </div>
