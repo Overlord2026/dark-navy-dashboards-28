@@ -1,0 +1,133 @@
+{
+  "timestamp": "2025-09-02T00:56:31Z",
+  "period": "24h",
+  "summary": {
+    "total_errors": 23,
+    "unique_errors": 8,
+    "error_rate": 0.18,
+    "affected_users": 12
+  },
+  "javascript_errors": [
+    {
+      "message": "Cannot read property 'user_id' of null",
+      "file": "src/components/auth/ProtectedRoute.tsx",
+      "line": 15,
+      "occurrences": 8,
+      "first_seen": "2025-09-01T14:23:12Z",
+      "last_seen": "2025-09-02T00:45:33Z",
+      "severity": "medium",
+      "stack_trace": "at ProtectedRoute (ProtectedRoute.tsx:15:23)\n    at renderWithHooks (react-dom.js:8395:18)",
+      "user_agents": ["Chrome/117", "Safari/16.6", "Firefox/118"]
+    },
+    {
+      "message": "Network request failed",
+      "file": "src/services/aiEdge.ts",
+      "line": 8,
+      "occurrences": 5,
+      "first_seen": "2025-09-01T18:12:45Z",
+      "last_seen": "2025-09-01T23:34:22Z",
+      "severity": "low",
+      "stack_trace": "at callEdgeJSON (aiEdge.ts:8:12)\n    at async processRequest (component.tsx:45:20)",
+      "user_agents": ["Chrome/117", "Edge/117"]
+    },
+    {
+      "message": "Feature flag 'undefined' is not a valid flag",
+      "file": "src/lib/featureFlags.ts",
+      "line": 34,
+      "occurrences": 4,
+      "first_seen": "2025-09-01T12:56:33Z",
+      "last_seen": "2025-09-01T20:12:45Z",
+      "severity": "low",
+      "stack_trace": "at isFeatureEnabled (featureFlags.ts:34:5)\n    at useFeatureFlag (featureFlags.ts:38:10)",
+      "user_agents": ["Chrome/117", "Safari/16.6"]
+    },
+    {
+      "message": "Supabase client not initialized",
+      "file": "src/integrations/supabase/client.ts",
+      "line": 7,
+      "occurrences": 3,
+      "first_seen": "2025-09-01T16:45:12Z",
+      "last_seen": "2025-09-01T22:23:44Z",
+      "severity": "high",
+      "stack_trace": "at createClient (client.ts:7:15)\n    at module initialization",
+      "user_agents": ["Firefox/118"]
+    },
+    {
+      "message": "Voice API not supported",
+      "file": "src/components/voice/VoiceBar.tsx",
+      "line": 25,
+      "occurrences": 2,
+      "first_seen": "2025-09-01T09:34:22Z",
+      "last_seen": "2025-09-01T15:45:33Z",
+      "severity": "info",
+      "stack_trace": "at initializeVoice (VoiceBar.tsx:25:8)\n    at useEffect callback",
+      "user_agents": ["Safari/16.6"]
+    }
+  ],
+  "console_warnings": [
+    {
+      "message": "Component re-rendered too many times",
+      "file": "src/components/dashboard/FamilyHero.tsx",
+      "occurrences": 15,
+      "severity": "medium"
+    },
+    {
+      "message": "Deprecated API usage: componentWillMount",
+      "file": "node_modules/react-beautiful-dnd/dist/react-beautiful-dnd.js",
+      "occurrences": 8,
+      "severity": "low"
+    }
+  ],
+  "network_errors": [
+    {
+      "endpoint": "/functions/v1/policy-eval",
+      "status": 500,
+      "occurrences": 6,
+      "error": "Internal Server Error",
+      "response_time_ms": 5200
+    },
+    {
+      "endpoint": "/rest/v1/profiles",
+      "status": 403,
+      "occurrences": 4,
+      "error": "Insufficient permissions",
+      "response_time_ms": 120
+    },
+    {
+      "endpoint": "/storage/v1/object/avatars/",
+      "status": 404,
+      "occurrences": 3,
+      "error": "Object not found",
+      "response_time_ms": 85
+    }
+  ],
+  "performance_issues": [
+    {
+      "type": "long_task",
+      "duration_ms": 250,
+      "file": "src/components/admin/hq/PublishTab.tsx",
+      "occurrences": 5,
+      "description": "Heavy computation blocking main thread"
+    },
+    {
+      "type": "memory_leak",
+      "component": "VoiceDrawer",
+      "occurrences": 2,
+      "description": "Event listeners not properly cleaned up"
+    }
+  ],
+  "accessibility_violations": [
+    {
+      "rule": "color-contrast",
+      "severity": "serious",
+      "elements": 3,
+      "description": "Text color does not meet WCAG contrast requirements"
+    },
+    {
+      "rule": "aria-label-missing",
+      "severity": "moderate",
+      "elements": 7,
+      "description": "Interactive elements missing accessible labels"
+    }
+  ]
+}

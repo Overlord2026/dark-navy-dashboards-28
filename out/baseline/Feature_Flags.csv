@@ -1,0 +1,46 @@
+flag_name,file_path,line,context
+DEMO_MODE,src/lib/featureFlags.ts,6,Interface definition
+DEMO_MODE,src/lib/featureFlags.ts,20,Mock flags value (true)
+DEMO_MODE,src/components/admin/hq/PublishTab.tsx,42,Status warning message
+DEMO_MODE,src/components/admin/hq/PublishTab.tsx,77,Demo configuration
+VOICE_ENABLED,src/lib/featureFlags.ts,7,Interface definition
+VOICE_ENABLED,src/lib/featureFlags.ts,21,Mock flags value (false)
+VOICE_ENABLED,src/components/admin/hq/PublishTab.tsx,78,Demo configuration
+VOICE_ENABLED,src/components/admin/hq/PublishTab.tsx,270,Demo mode warning
+VOICE_ENABLED,src/config/voice.ts,3,Voice configuration
+VOICE_ENABLED,src/components/voice/VoiceBar.tsx,47,Voice enablement check
+VOICE_ENABLED,src/components/voice/VoiceDrawer.tsx,180,Voice disabled warning
+HQ_BOOT,src/lib/featureFlags.ts,8,Interface definition
+HQ_BOOT,src/lib/featureFlags.ts,22,Mock flags value (true)
+HQ_BOOT,src/components/admin/hq/PublishTab.tsx,79,Demo configuration
+IP_LEDGER,src/lib/featureFlags.ts,9,Interface definition
+IP_LEDGER,src/lib/featureFlags.ts,23,Mock flags value (true)
+PUBLISH_BATCH,src/lib/featureFlags.ts,10,Interface definition
+PUBLISH_BATCH,src/lib/featureFlags.ts,24,Mock flags value (true)
+families_tools_band,src/lib/featureFlags.ts,2,Interface definition
+families_tools_band,src/lib/featureFlags.ts,16,Mock flags value (true)
+families_tools_band,src/components/families/FamiliesToolsBand.tsx,8,Usage in component
+pricing_gates,src/lib/featureFlags.ts,3,Interface definition
+pricing_gates,src/lib/featureFlags.ts,17,Mock flags value (true)
+consent_module,src/lib/featureFlags.ts,4,Interface definition
+consent_module,src/lib/featureFlags.ts,18,Mock flags value (true)
+nil_booking_v1,src/lib/featureFlags.ts,5,Interface definition
+nil_booking_v1,src/lib/featureFlags.ts,19,Mock flags value (true)
+useFeatureFlags,src/lib/featureFlags.ts,27,Hook export
+isFeatureEnabled,src/lib/featureFlags.ts,33,Function export
+useFeatureFlag,src/lib/featureFlags.ts,37,Hook export
+dashboard.familyHero,src/components/dashboard/FamilyHero.tsx,126,Feature flag usage
+showTierReceipts,src/features/personalization/components/PersonalizationControls.tsx,17,Personalization flag
+debugPersonalization,src/features/personalization/components/PersonalizationControls.tsx,18,Debug flag
+INSTALL_DEFAULT_TOOLS_ON_FIRST_LOGIN,src/hooks/useFirstLoginToolInstaller.ts,9,Tool installation flag
+PUBLIC_DISCOVER_ENABLED,src/App.tsx,297,Route conditional
+agents,src/pages/AgentsOS.tsx,45,Agents feature flag
+auto_install_tools,src/lib/flags.ts,Various,Tool installation
+demo_mode,src/components/family/Family90sDemo.tsx,Various,Demo mode usage
+demo_mode,src/components/retirement/StressTestPreview.tsx,Various,Demo mode usage
+demo_mode,src/features/k401/adviceOnlyDemo.ts,26,Demo mode reasoning
+demo_mode,src/features/notary/idp/IDScanMock.tsx,36,Demo mode reasoning
+demo_mode,src/features/notary/idp/KBAQuiz.tsx,34,Demo mode reasoning
+demo_mode,src/features/notary/idp/LivenessCheckMock.tsx,44,Demo mode reasoning
+demo_mode,src/pages/admin/HealthDemo.tsx,45,Demo mode reasoning
+demo_mode,src/pages/admin/TradingDemo.tsx,57,Demo mode reasoning

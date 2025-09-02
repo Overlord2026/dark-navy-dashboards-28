@@ -1,0 +1,259 @@
+Family Office Marketplace - Source File Tree (depth 4)
+Generated: 2025-09-02
+
+src/
+├── __tests__/
+├── analytics/
+├── api/
+├── assets/
+├── audit/
+├── components/
+│   ├── admin/
+│   │   ├── FeatureFlagManagement.tsx
+│   │   └── hq/
+│   │       └── PublishTab.tsx
+│   ├── auth/
+│   │   ├── RequireAdmin.tsx
+│   │   └── ProtectedRoute.tsx
+│   ├── bfo/
+│   │   ├── PersonaDashboard.tsx
+│   │   ├── SecurityDashboard.tsx
+│   │   ├── AdminMigrations.tsx
+│   │   └── IPTracker.tsx
+│   ├── dashboard/
+│   │   └── FamilyHero.tsx
+│   ├── demo/
+│   │   └── DemoModeController.tsx
+│   ├── dev/
+│   │   └── DevPanel.tsx
+│   ├── families/
+│   │   └── FamiliesToolsBand.tsx
+│   ├── family/
+│   │   └── Family90sDemo.tsx
+│   ├── landing/
+│   │   ├── FamiliesLanding.tsx
+│   │   ├── ProsLanding.tsx
+│   │   ├── GoalsPage.tsx
+│   │   ├── CatalogPage.tsx
+│   │   └── HealthcareLanding.tsx
+│   ├── layout/
+│   │   └── BrandHeader.tsx
+│   ├── nav/
+│   │   └── MegaMenu.tsx
+│   ├── retirement/
+│   │   └── StressTestPreview.tsx
+│   ├── solutions/
+│   │   └── SolutionsHub.tsx
+│   ├── ui/
+│   │   ├── CTAStickyBar.tsx
+│   │   ├── BrandedFooter.tsx
+│   │   └── toaster.tsx
+│   └── voice/
+│       ├── VoiceBar.tsx
+│       └── VoiceDrawer.tsx
+├── config/
+│   ├── nilFeatureFlags.ts
+│   ├── publicConfig.ts
+│   └── voice.ts
+├── context/
+├── contexts/
+│   └── ToolsContext.tsx
+├── data/
+├── docs/
+├── engines/
+│   └── private/
+│       └── liquidityIQ.ts
+├── features/
+│   ├── k401/
+│   │   ├── init.ts
+│   │   └── adviceOnlyDemo.ts
+│   ├── notary/
+│   │   └── idp/
+│   │       ├── IDScanMock.tsx
+│   │       ├── KBAQuiz.tsx
+│   │       └── LivenessCheckMock.tsx
+│   ├── personalization/
+│   │   ├── components/
+│   │   │   └── PersonalizationControls.tsx
+│   │   └── featureFlags.ts
+│   └── pro/
+│       └── config/
+│           └── flags.ts
+├── fixtures/
+│   └── fixtures.nil.ts
+├── hoc/
+├── hooks/
+│   ├── useAuth.ts
+│   ├── useFirstLoginToolInstaller.ts
+│   ├── useGate.ts
+│   └── useNavigationDiagnostics.ts
+├── integrations/
+│   └── supabase/
+│       ├── client.ts
+│       └── types.ts
+├── jobs/
+├── layouts/
+│   └── AdvisorsLayout.tsx
+├── lib/
+│   ├── featureFlags.ts
+│   ├── flags.ts
+│   └── performance.ts
+├── locales/
+├── marketing/
+├── middleware/
+├── modules/
+├── pages/
+│   ├── admin/
+│   │   ├── AdminPanel.tsx
+│   │   ├── hq/
+│   │   │   ├── index.tsx
+│   │   │   └── ip/
+│   │   ├── HealthDemo.tsx
+│   │   └── TradingDemo.tsx
+│   ├── advisor/
+│   │   └── AdvisorHome.tsx
+│   ├── advisors/
+│   │   ├── AdvisorsHome.tsx
+│   │   ├── LeadsPage.tsx
+│   │   ├── MeetingsPage.tsx
+│   │   ├── CampaignsPage.tsx
+│   │   ├── PipelinePage.tsx
+│   │   └── AdvisorTools.tsx
+│   ├── demos/
+│   │   ├── [persona].tsx
+│   │   ├── retiree-bucket/
+│   │   ├── advisor-fee-compare/
+│   │   └── nil-search/
+│   ├── estate/
+│   │   ├── EstateWorkbench.tsx
+│   │   ├── EstateDIYWizard.tsx
+│   │   └── HealthcareDIYWizard.tsx
+│   ├── families/
+│   │   ├── index.tsx
+│   │   ├── FamilyHome.tsx
+│   │   ├── start.tsx
+│   │   └── RetireeGoals.tsx
+│   ├── family/
+│   │   ├── FamilyToolsHub.tsx
+│   │   ├── RothLadderTool.tsx
+│   │   ├── RMDCheckTool.tsx
+│   │   ├── TaxHubPreview.tsx
+│   │   ├── FamilyReceipts.tsx
+│   │   ├── ReviewView.tsx
+│   │   └── AssetsPage.tsx
+│   ├── healthcare/
+│   │   └── index.tsx
+│   ├── insurance/
+│   │   ├── IntakePage.tsx
+│   │   ├── QuotePage.tsx
+│   │   ├── BindPage.tsx
+│   │   ├── FNOLPage.tsx
+│   │   ├── fnol/
+│   │   └── bind/
+│   ├── k401/
+│   │   ├── RolloverWizard.tsx
+│   │   ├── AdvisorBook.tsx
+│   │   ├── ClientGrantAccess.tsx
+│   │   ├── AdvisorRequestAccess.tsx
+│   │   ├── ClientApproveSession.tsx
+│   │   └── AdvisorAssistConsole.tsx
+│   ├── learn/
+│   │   ├── index.tsx
+│   │   ├── StarterPage.tsx
+│   │   ├── DemoPersona.tsx
+│   │   └── ContinuingEducation.tsx
+│   ├── marketplace/
+│   │   ├── Index.tsx
+│   │   ├── Advisors.tsx
+│   │   ├── AdvisorDetail.tsx
+│   │   ├── CpaMarketplace.tsx
+│   │   ├── AttorneyMarketplace.tsx
+│   │   ├── AttorneysHome.tsx
+│   │   ├── AttorneyDetail.tsx
+│   │   ├── Insurance.tsx
+│   │   ├── AgentsPage.tsx
+│   │   └── QuoteStartPage.tsx
+│   ├── nil/
+│   │   ├── index.tsx
+│   │   ├── landing.tsx
+│   │   ├── Onboarding.tsx
+│   │   ├── Education.tsx
+│   │   ├── NILAthleteHome.tsx
+│   │   ├── Marketplace.tsx
+│   │   ├── NILIndex.tsx
+│   │   ├── DemoPage.tsx
+│   │   └── TourPage.tsx
+│   ├── onboarding/
+│   │   ├── FamilyOnboarding.tsx
+│   │   ├── AdvisorOnboarding.tsx
+│   │   ├── ProfessionalOnboarding.tsx
+│   │   ├── HealthcareOnboarding.tsx
+│   │   └── NILOnboarding.tsx
+│   ├── personas/
+│   │   ├── AdvisorPersonaDashboard.tsx
+│   │   ├── AdvisorDashboardWithSideNav.tsx
+│   │   ├── InsurancePersonaDashboard.tsx
+│   │   ├── AccountantPersonaDashboard.tsx
+│   │   ├── AttorneyPersonaDashboard.tsx
+│   │   ├── FamilyRetireePersonaDashboard.tsx
+│   │   ├── FamilyAspiringPersonaDashboard.tsx
+│   │   ├── Advisors.tsx
+│   │   └── Insurance.tsx
+│   ├── pros/
+│   │   ├── index.tsx
+│   │   ├── AccountantDashboard.tsx
+│   │   ├── Attorneys.tsx
+│   │   └── MeetingsPage.tsx
+│   ├── solutions/
+│   │   ├── index.tsx
+│   │   ├── Annuities.tsx
+│   │   ├── SolutionsInvestmentsPage.tsx
+│   │   ├── SolutionsInsurancePage.tsx
+│   │   ├── SolutionsLendingPage.tsx
+│   │   ├── SolutionsTaxPage.tsx
+│   │   └── SolutionsEstatePage.tsx
+│   ├── tools/
+│   │   ├── RetirementRoadmapTool.tsx
+│   │   ├── SocialSecurityTool.tsx
+│   │   ├── EstateToolPage.tsx
+│   │   ├── TaxToolPage.tsx
+│   │   ├── VaultPage.tsx
+│   │   └── TaxProjectionTool.tsx
+│   ├── AgentsOS.tsx
+│   ├── NILPage.tsx
+│   ├── NotFound.tsx
+│   ├── Pricing.tsx
+│   ├── Discover.tsx
+│   ├── SearchPage.tsx
+│   ├── HowItWorks.tsx
+│   └── SolutionsPage.tsx
+├── policy/
+├── registry/
+├── reports/
+├── routes/
+├── scripts/
+├── seed/
+├── server/
+├── services/
+│   └── aiEdge.ts
+├── store/
+├── styles/
+│   └── brand.css
+├── telemetry/
+├── test/
+├── tests/
+├── theme/
+├── tools/
+├── types/
+├── ui/
+├── utils/
+├── workers/
+├── App.css
+├── App.tsx
+├── global.d.ts
+├── index.css
+├── main.tsx
+├── router.tsx
+├── routes-addition.tsx
+├── routes.tsx
+└── vite-env.d.ts

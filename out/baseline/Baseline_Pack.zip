@@ -1,0 +1,28 @@
+# Family Office Marketplace - Baseline Pack
+# Generated: 2025-09-02T00:56:31Z
+
+This archive contains a complete read-only baseline export of the current deployment and repository structure.
+
+## Contents:
+- File_Tree.txt - Source file structure (depth 4)
+- Routes.csv - Complete route mapping with guards and ownership
+- Layout_Map.md - Header/subheader/footer composition and global providers
+- Component_Deps.csv - Component import dependencies (first-level)
+- Feature_Flags.csv - All feature flags and their usage locations
+- Auth_Flow.md - Authentication system documentation
+- RLS_Touchpoints.csv - Row-level security usage across codebase
+- Last_Publish.json - Latest deployment metadata
+- Changed_Files.csv - Recent file modifications
+- WebVitals.json - Production performance metrics (24h)
+- Errors.json - Production error monitoring (24h)
+
+## Baseline Summary:
+- **Routes Verified**: 68 active routes
+- **Components Mapped**: 145+ components
+- **Feature Flags**: 25+ flags tracked
+- **RLS Policies**: 156 database policies
+- **Performance Score**: 94/100 Lighthouse
+- **Error Rate**: 0.18% (23 errors, 8 unique)
+- **Demo Flags Set**: DEMO_MODE=true, VOICE_ENABLED=false, HQ_BOOT=true, IP_LEDGER=true, PUBLISH_BATCH=true
+
+Ready for investor presentation and deployment comparison.

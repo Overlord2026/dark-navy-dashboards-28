@@ -1,0 +1,101 @@
+table,operation,file,line,context
+user_onboarding,SELECT,src/hooks/useAuth.ts,Various,User onboarding status check
+profiles,SELECT,src/components/auth/RequireAdmin.tsx,Various,Role validation
+profiles,UPDATE,src/pages/onboarding/*,Various,Profile updates during onboarding
+tenant_admins,SELECT,src/components/auth/RequireAdmin.tsx,Various,Admin role verification
+advisor_applications,SELECT,src/pages/admin/*,Various,Application management
+advisor_applications,UPDATE,src/pages/admin/*,Various,Application processing
+advisor_assignments,SELECT,src/pages/advisor/*,Various,Client-advisor relationships
+advisor_assignments,INSERT,src/pages/advisor/*,Various,Assignment creation
+advisor_availability,SELECT,src/pages/marketplace/*,Various,Booking availability
+advisor_availability,UPDATE,src/pages/advisor/*,Various,Schedule management
+accounting_clients,SELECT,src/pages/pros/AccountantDashboard.tsx,Various,Client data access
+accounting_clients,INSERT,src/pages/pros/*,Various,New client onboarding
+accounting_entities,SELECT,src/pages/pros/*,Various,Entity management
+accounting_engagements,SELECT,src/pages/pros/*,Various,Engagement tracking
+accounting_tasks,SELECT,src/pages/pros/*,Various,Task management
+accounting_tasks,UPDATE,src/pages/pros/*,Various,Task completion
+accounting_time_entries,INSERT,src/pages/pros/*,Various,Time tracking
+accounting_invoices,SELECT,src/pages/pros/*,Various,Invoice management
+admin_audit_logs,SELECT,src/pages/admin/*,Various,Audit log viewing
+admin_audit_logs,INSERT,src/lib/*,Various,Audit event logging
+documents,SELECT,src/pages/family/*,Various,Document access
+documents,INSERT,src/pages/family/*,Various,Document upload
+documents,UPDATE,src/pages/family/*,Various,Document metadata
+health_metrics,SELECT,src/pages/family/*,Various,Health data viewing
+health_metrics,INSERT,src/pages/family/*,Various,Health data entry
+health_metrics,UPDATE,src/pages/family/*,Various,Health data updates
+bank_accounts,SELECT,src/pages/family/*,Various,Account viewing
+bank_accounts,INSERT,src/pages/family/*,Various,Account linking
+bank_accounts,UPDATE,src/pages/family/*,Various,Account updates
+transfers,SELECT,src/pages/family/*,Various,Transfer history
+transfers,INSERT,src/pages/family/*,Various,Transfer initiation
+ach_events,SELECT,src/pages/family/*,Various,ACH event monitoring
+receipts,SELECT,src/pages/family/FamilyReceipts.tsx,Various,Receipt viewing
+receipts,INSERT,src/lib/*,Various,Receipt generation
+audit_logs,SELECT,src/pages/admin/*,Various,Audit trail access
+audit_logs,INSERT,src/lib/*,Various,Security event logging
+security_audit_logs,SELECT,src/pages/admin/*,Various,Security audit access
+security_audit_logs,INSERT,src/lib/*,Various,Security event creation
+ad_accounts,SELECT,src/pages/marketing/*,Various,Ad account access
+ad_accounts,UPDATE,src/pages/marketing/*,Various,Campaign management
+ad_campaigns,SELECT,src/pages/marketing/*,Various,Campaign viewing
+ad_campaigns,INSERT,src/pages/marketing/*,Various,Campaign creation
+ad_campaigns,UPDATE,src/pages/marketing/*,Various,Campaign optimization
+project_analytics,SELECT,src/pages/admin/*,Various,Project metrics
+project_analytics,UPDATE,src/pages/admin/*,Various,Analytics calculation
+compliance_checks,SELECT,src/pages/admin/*,Various,Compliance monitoring
+compliance_checks,INSERT,src/pages/admin/*,Various,Compliance verification
+insurance_agents,SELECT,src/pages/insurance/*,Various,Agent data access
+insurance_agents,UPDATE,src/pages/insurance/*,Various,Agent profile updates
+ce_courses,SELECT,src/pages/pros/*,Various,Continuing education
+ce_courses,INSERT,src/pages/pros/*,Various,Course completion
+ce_courses,UPDATE,src/pages/pros/*,Various,Certification updates
+hsa_accounts,SELECT,src/pages/family/*,Various,HSA account access
+hsa_accounts,UPDATE,src/pages/family/*,Various,HSA configuration
+hsa_contributions,SELECT,src/pages/family/*,Various,Contribution history
+hsa_contributions,INSERT,src/pages/family/*,Various,Contribution tracking
+healthcare_documents,SELECT,src/pages/healthcare/*,Various,Healthcare document access
+healthcare_documents,INSERT,src/pages/healthcare/*,Various,Document storage
+healthcare_access_logs,INSERT,src/pages/healthcare/*,Various,Access logging
+partner_applications,SELECT,src/pages/admin/*,Various,Partner review
+partner_applications,UPDATE,src/pages/admin/*,Various,Application processing
+referral_payouts,SELECT,src/pages/advisor/*,Various,Payout tracking
+referral_payouts,INSERT,src/pages/advisor/*,Various,Payout calculation
+franchise_referral_payouts,SELECT,src/pages/franchise/*,Various,Franchise payouts
+meeting_analytics,SELECT,src/pages/advisor/*,Various,Meeting metrics
+meeting_analytics,INSERT,src/pages/advisor/*,Various,Analytics tracking
+security_training_schedules,SELECT,src/pages/admin/*,Various,Training schedules
+security_training_schedules,UPDATE,src/pages/admin/*,Various,Schedule management
+execution_plans,SELECT,src/pages/admin/*,Various,Plan access
+execution_plans,UPDATE,src/pages/admin/*,Various,Plan execution
+approvals,SELECT,src/pages/admin/*,Various,Approval tracking
+approvals,INSERT,src/pages/admin/*,Various,Approval creation
+file_backup_registry,SELECT,src/pages/admin/*,Various,Backup monitoring
+file_backup_registry,UPDATE,src/pages/admin/*,Various,Backup verification
+prospect_invitations,SELECT,src/pages/advisor/*,Various,Invitation tracking
+prospect_invitations,INSERT,src/pages/advisor/*,Various,Invitation creation
+prospect_invitations,UPDATE,src/pages/advisor/*,Various,Invitation status
+connector_accounts,SELECT,src/pages/family/*,Various,Connected accounts
+connector_accounts,UPDATE,src/pages/family/*,Various,Connection management
+accounts,SELECT,src/pages/family/*,Various,Financial accounts
+accounts,UPDATE,src/pages/family/*,Various,Account information
+aies_receipts,SELECT,src/pages/admin/*,Various,AIES audit trail
+aies_receipts,INSERT,src/lib/*,Various,AI decision logging
+message_threads,SELECT,src/pages/advisor/*,Various,Communication history
+message_threads,INSERT,src/pages/advisor/*,Various,Message creation
+message_threads,UPDATE,src/pages/advisor/*,Various,Thread updates
+ip_watch,SELECT,src/pages/admin/*,Various,IP monitoring
+ip_watch,INSERT,src/pages/admin/*,Various,IP tracking
+ip_watch,UPDATE,src/pages/admin/*,Various,IP status updates
+content_upload_log,SELECT,src/pages/admin/*,Various,Content audit
+content_upload_log,INSERT,src/lib/*,Various,Upload logging
+accountant_ce_alerts,SELECT,src/pages/pros/*,Various,CE alert viewing
+accountant_ce_alerts,INSERT,src/pages/pros/*,Various,Alert creation
+accountant_ce_alerts,UPDATE,src/pages/pros/*,Various,Alert resolution
+accountant_license_status,SELECT,src/pages/pros/*,Various,License monitoring
+accountant_license_status,UPDATE,src/pages/pros/*,Various,Status updates
+accountant_ce_records,SELECT,src/pages/pros/*,Various,CE record access
+accountant_ce_records,INSERT,src/pages/pros/*,Various,CE completion
+ad_spend_tracking,SELECT,src/pages/advisor/*,Various,Spend monitoring
+ad_spend_tracking,INSERT,src/pages/advisor/*,Various,Spend logging

@@ -1,0 +1,80 @@
+path,title,element,guard,owner
+/,Landing Page,Navigate to /nil/onboarding,Public,System
+/families,Families Landing,FamiliesIndex,Public,Families
+/pros,Professionals Landing,ProsIndex,Public,Professionals
+/nil,NIL Landing,NILLanding,Public,NIL
+/healthcare,Healthcare Landing,HealthcareNew,Public,Healthcare
+/solutions,Solutions Landing,SolutionsLanding,Public,Solutions
+/learn,Learn Landing,LearnLanding,Public,Learn
+/families/retirees,Retiree Dashboard,FamilyRetireePersonaDashboard,Public,Families
+/families/aspiring,Aspiring Families Dashboard,FamilyAspiringPersonaDashboard,Public,Families
+/families/start,Family Start Guide,FamiliesStart,Public,Families
+/family/home,Family Home,FamilyHome,Protected,Families
+/family/tools,Family Tools Hub,FamilyToolsHub,Protected,Families
+/family/roadmap,Family Roadmap,FamilyRoadmap,Protected,Families
+/family/receipts,Family Receipts,FamilyReceipts,Protected,Families
+/family/assets,Family Assets,FamilyAssetsPage,Protected,Families
+/family/assets/:id,Asset Detail,AssetDetailPage,Protected,Families
+/advisor/home,Advisor Home,AdvisorHome,Protected,Advisors
+/advisors/home,Advisors Hub,AdvisorsHome,Protected,Advisors
+/advisors/leads,Leads Management,LeadsPage,Protected,Advisors
+/advisors/meetings,Meetings Management,MeetingsPage,Protected,Advisors
+/advisors/campaigns,Campaigns,CampaignsPage,Protected,Advisors
+/advisors/pipeline,Pipeline,PipelinePage,Protected,Advisors
+/advisors/tools,Advisor Tools,AdvisorTools,Protected,Advisors
+/pros/accountant,Accountant Dashboard,AccountantDashboard,Protected,Professionals
+/pros/attorney,Attorney Services,Attorneys,Protected,Professionals
+/pros/meetings,Pro Meetings,ProMeetingsPage,Protected,Professionals
+/marketplace,Marketplace Index,MarketplaceIndex,Public,Marketplace
+/marketplace/advisors,Advisor Marketplace,MarketplaceAdvisors,Public,Marketplace
+/marketplace/advisor/:id,Advisor Detail,AdvisorDetail,Public,Marketplace
+/marketplace/cpa,CPA Marketplace,CpaMarketplace,Public,Marketplace
+/marketplace/attorney,Attorney Marketplace,AttorneyMarketplace,Public,Marketplace
+/marketplace/insurance,Insurance Marketplace,MarketplaceInsurance,Public,Marketplace
+/marketplace/agents,Insurance Agents,AgentsPage,Public,Marketplace
+/marketplace/quote-start,Quote Start,QuoteStartPage,Public,Marketplace
+/nil/onboarding,NIL Onboarding,NILOnboarding,Public,NIL
+/nil/education,NIL Education,Education,Public,NIL
+/nil/athlete/home,NIL Athlete Home,NILAthleteHome,Protected,NIL
+/nil/marketplace,NIL Marketplace,MarketplacePage,Public,NIL
+/nil/demo,NIL Demo,NILDemoPage,Public,NIL
+/nil/tour,NIL Tour,NILTourPage,Public,NIL
+/insurance/intake,Insurance Intake,InsuranceIntakePage,Public,Insurance
+/insurance/quote,Insurance Quote,QuotePage,Public,Insurance
+/insurance/bind,Insurance Bind,BindPage,Public,Insurance
+/insurance/fnol,FNOL,FNOLPage,Public,Insurance
+/tools/retirement,Retirement Tool,RetirementRoadmapTool,Protected,Tools
+/tools/social-security,Social Security Tool,SocialSecurityTool,Protected,Tools
+/tools/estate,Estate Tool,EstateToolPage,Protected,Tools
+/tools/tax,Tax Tool,TaxToolPage,Protected,Tools
+/tools/vault,Vault,VaultPage,Protected,Tools
+/estate/diy,Estate DIY Wizard,EstateDIYWizard,Protected,Estate
+/estate/healthcare,Healthcare Directives,HealthcareDIYWizard,Protected,Estate
+/estate/workbench,Estate Workbench,EstateWorkbench,Protected,Estate
+/onboarding/family,Family Onboarding,FamilyOnboarding,Public,Onboarding
+/onboarding/advisor,Advisor Onboarding,AdvisorOnboarding,Public,Onboarding
+/onboarding/professional,Professional Onboarding,ProfessionalOnboarding,Public,Onboarding
+/onboarding/healthcare,Healthcare Onboarding,HealthcareOnboarding,Public,Onboarding
+/onboarding/nil,NIL Onboarding Flow,NILOnboardingFlow,Public,Onboarding
+/admin/hq,HQ Dashboard,HQDashboard,Admin,Admin
+/admin/panel,Admin Panel,AdminPanel,Admin,Admin
+/admin/migrations,Migrations,AdminMigrations,Admin,Admin
+/admin/jobs,Jobs Panel,JobsPanel,Admin,Admin
+/admin/publish,Publish Panel,PublishPanel,Admin,Admin
+/admin/aies,AIES Console,AiesConsole,Admin,Admin
+/admin/ready-check,Ready Check,ReadyCheck,Admin,Admin
+/admin/qa-coverage,QA Coverage,QACoverage,Admin,Admin
+/demos/retiree-bucket,Retiree Bucket Demo,RetireeBucketDemo,Public,Demo
+/demos/advisor-fee-compare,Advisor Fee Compare Demo,AdvisorFeeCompareDemo,Public,Demo
+/demos/nil-search,NIL Search Demo,NILSearchDemo,Public,Demo
+/contact/schedule,Schedule Contact,ContactSchedulePage,Public,Contact
+/contact/message,Message Contact,ContactMessagePage,Public,Contact
+/crypto/dashboard,Crypto Dashboard,CryptoDashboard,Protected,Crypto
+/crypto/beneficiaries,Beneficiary Directives,BeneficiaryDirectives,Protected,Crypto
+/crypto/trade,Trade Panel,TradePanel,Protected,Crypto
+/pricing,Pricing,Pricing,Public,Marketing
+/discover,Discover,Discover,Public,Marketing
+/search,Search,SearchPage,Public,Marketing
+/how-it-works,How It Works,HowItWorks,Public,Marketing
+/solutions/page,Solutions Page,SolutionsPage,Public,Marketing
+*,Not Found,NotFound,Public,System

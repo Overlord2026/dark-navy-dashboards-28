@@ -1,0 +1,97 @@
+{
+  "timestamp": "2025-09-02T00:56:31Z",
+  "period": "24h",
+  "metrics": {
+    "core_web_vitals": {
+      "largest_contentful_paint": {
+        "p50": 1.2,
+        "p75": 1.8,
+        "p90": 2.4,
+        "p95": 3.1,
+        "unit": "seconds"
+      },
+      "first_input_delay": {
+        "p50": 4,
+        "p75": 8,
+        "p90": 15,
+        "p95": 23,
+        "unit": "milliseconds"
+      },
+      "cumulative_layout_shift": {
+        "p50": 0.02,
+        "p75": 0.05,
+        "p90": 0.08,
+        "p95": 0.12,
+        "unit": "score"
+      }
+    },
+    "navigation_timing": {
+      "time_to_first_byte": {
+        "p50": 180,
+        "p75": 250,
+        "p90": 340,
+        "p95": 450,
+        "unit": "milliseconds"
+      },
+      "dom_content_loaded": {
+        "p50": 420,
+        "p75": 580,
+        "p90": 750,
+        "p95": 920,
+        "unit": "milliseconds"
+      },
+      "load_complete": {
+        "p50": 1100,
+        "p75": 1450,
+        "p90": 1800,
+        "p95": 2200,
+        "unit": "milliseconds"
+      }
+    },
+    "resource_timing": {
+      "js_bundle_size": {
+        "main": 2.1,
+        "vendor": 0.7,
+        "total": 2.8,
+        "unit": "megabytes"
+      },
+      "css_bundle_size": {
+        "main": 0.15,
+        "vendor": 0.05,
+        "total": 0.2,
+        "unit": "megabytes"
+      },
+      "image_optimization": {
+        "webp_usage": 78,
+        "compression_ratio": 0.72,
+        "lazy_loading": 92,
+        "unit": "percentage"
+      }
+    },
+    "mobile_performance": {
+      "lighthouse_score": 89,
+      "mobile_lcp": 2.1,
+      "mobile_fid": 12,
+      "mobile_cls": 0.08,
+      "3g_simulation": {
+        "lcp": 4.2,
+        "fid": 18,
+        "cls": 0.09
+      }
+    }
+  },
+  "geographic_breakdown": {
+    "us_east": { "lcp": 1.1, "fid": 6, "cls": 0.04 },
+    "us_west": { "lcp": 1.3, "fid": 8, "cls": 0.05 },
+    "europe": { "lcp": 1.8, "fid": 12, "cls": 0.06 },
+    "asia": { "lcp": 2.4, "fid": 15, "cls": 0.07 }
+  },
+  "page_specific_metrics": {
+    "/": { "lcp": 1.1, "fid": 5, "cls": 0.03, "visitors": 1250 },
+    "/families": { "lcp": 1.3, "fid": 7, "cls": 0.04, "visitors": 890 },
+    "/pros": { "lcp": 1.2, "fid": 6, "cls": 0.04, "visitors": 670 },
+    "/nil": { "lcp": 1.4, "fid": 9, "cls": 0.05, "visitors": 420 },
+    "/healthcare": { "lcp": 1.5, "fid": 8, "cls": 0.05, "visitors": 340 },
+    "/admin/hq": { "lcp": 2.1, "fid": 12, "cls": 0.07, "visitors": 25 }
+  }
+}
