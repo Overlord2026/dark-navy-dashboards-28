@@ -4,7 +4,8 @@ import { ThemeProvider } from "next-themes";
 import { HelmetProvider } from 'react-helmet-async';
 import '@/styles/brand.css';
 import BrandHeader from '@/components/layout/BrandHeader';
-import { MegaMenu } from '@/components/nav/MegaMenu';
+import { ConditionalMegaMenu } from '@/components/nav/ConditionalMegaMenu';
+import { RedirectHandler } from '@/components/RedirectHandler';
 import { ToolsProvider } from '@/contexts/ToolsContext';
 import { Toaster } from '@/components/ui/toaster';
 import DevPanel from '@/components/dev/DevPanel';
@@ -289,7 +290,8 @@ function App() {
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           <div className="min-h-screen bg-background text-foreground">
             <BrandHeader />
-            <MegaMenu />
+            <ConditionalMegaMenu />
+            <RedirectHandler />
             <div>
             <Routes>
             <Route path="/" element={

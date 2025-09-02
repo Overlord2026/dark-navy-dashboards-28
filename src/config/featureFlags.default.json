@@ -19,5 +19,6 @@
   "CRYPTO_SELF_CUSTODY_ENABLED": true,
   "CRYPTO_TAX_ENABLED": true,
   "FAM_V1": true,
-  "ADV_V1": true
+  "ADV_V1": true,
+  "IA_V2": true
 }

@@ -81,7 +81,8 @@ export const FLAG_DESCRIPTIONS: Record<FeatureFlag, string> = {
   CRYPTO_SELF_CUSTODY_ENABLED: 'Enable watch-only wallet support',
   CRYPTO_TAX_ENABLED: 'Enable crypto tax lot tracking and Form 8949 export',
   FAM_V1: 'Enable Family V1 enhanced dashboard features with receipt chips and readiness check',
-  ADV_V1: 'Enable Advisor V1 enhanced fee compare with benchmark receipts and proof verification'
+  ADV_V1: 'Enable Advisor V1 enhanced fee compare with benchmark receipts and proof verification',
+  IA_V2: 'Enable new information architecture with Families hub and Service Pros suite navigation'
 };
 
 // Hook to use feature flags
