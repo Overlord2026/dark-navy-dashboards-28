@@ -8,6 +8,8 @@ import { toast } from '@/hooks/use-toast';
 import { EmptyReceiptsState } from '@/components/ui/empty-states';
 import { ReceiptsStripSkeleton } from '@/components/ui/skeletons';
 import { useFamilyAnalytics } from '@/lib/familyAnalytics';
+import { AdvisorBenchmarkWidget } from '@/components/advisor/AdvisorBenchmarkWidget';
+import { getFlag } from '@/lib/flags';
 import { 
   Users, 
   UserPlus, 
@@ -284,6 +286,32 @@ export default function AdvisorHome() {
             )}
           </div>
         </section>
+
+        {/* ADV_V1 Enhanced Features */}
+        {getFlag('ADV_V1') && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <AdvisorBenchmarkWidget />
+            
+            {/* Quick Performance Metrics */}
+            <div className="bfo-card bfo-no-blur p-6">
+              <h3 className="text-lg font-semibold text-white mb-4">Practice Performance</h3>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="text-white/60 text-sm">Client Retention</span>
+                  <span className="text-white font-medium">94.2%</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-white/60 text-sm">Fee Competitiveness</span>
+                  <span className="text-green-400 font-medium">Above Avg</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-white/60 text-sm">Compliance Score</span>
+                  <span className="text-white font-medium">98%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Performance Metrics */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
