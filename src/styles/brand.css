@@ -1,68 +1,121 @@
-/* Brand Component Styles - BFO Black Headers, Thin Gold Borders */
-.bfo-card { 
-  background: hsl(215, 25%, 5%); /* BFO Black */
-  border: 1px solid hsl(47, 70%, 56%); /* Thin Gold Border */
-  border-radius: 12px; 
-  padding: 16px;
-  color: white;
+/* BFO Brand Styling - Black Headers, Gold Borders, Zero Translucency */
+
+/* Core Brand Variables */
+:root {
+  --bfo-black: #000000;
+  --bfo-gold: #D4AF37;
+  --bfo-white: #FFFFFF;
+  --bfo-gold-thin: 1px;
 }
 
+/* Enforce brand black headers with zero translucency */
 .bfo-header {
-  background: hsl(215, 25%, 5%); /* BFO Black Header */
-  color: white;
-  border-bottom: 1px solid hsl(47, 70%, 56%); /* Gold accent */
-}
-
-.bfo-no-blur {
+  background-color: var(--bfo-black) !important;
+  border-bottom: var(--bfo-gold-thin) solid var(--bfo-gold) !important;
+  color: var(--bfo-white) !important;
   backdrop-filter: none !important;
-  background: hsl(215, 25%, 5%) !important; /* Solid black, no transparency */
+  -webkit-backdrop-filter: none !important;
+  position: sticky;
+  top: 0;
+  z-index: 50;
 }
 
+/* Sub-header styling */
 .bfo-subheader {
-  background: hsl(215, 25%, 7%); /* Slightly lighter BFO Black */
-  color: white;
-  border-top: 1px solid hsl(47, 70%, 56%); /* Gold top border */
-  border-bottom: 1px solid hsl(47, 70%, 56%); /* Gold bottom border */
+  background-color: var(--bfo-black) !important;
+  border-top: var(--bfo-gold-thin) solid var(--bfo-gold) !important;
+  border-bottom: var(--bfo-gold-thin) solid var(--bfo-gold) !important;
+  color: var(--bfo-gold) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 
-.btn-gold { 
-  background: #D4AF37; 
-  color: #000; 
-  padding: 10px 14px; 
-  border-radius: 8px; 
-  border: none;
-  cursor: pointer;
-  font-weight: 500;
-  transition: all 0.2s ease;
+/* BFO Card Component */
+.bfo-card {
+  background-color: var(--bfo-white);
+  border: var(--bfo-gold-thin) solid var(--bfo-gold);
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease-in-out;
 }
 
-.btn-gold:hover {
-  background: #C49B2C;
+.bfo-card:hover {
+  box-shadow: 0 4px 16px rgba(212, 175, 55, 0.2);
   transform: translateY(-1px);
 }
 
-.btn-gold:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
+/* Remove any translucency from headers system-wide */
+.bfo-no-blur,
+.bfo-header,
+.bfo-subheader,
+header[role="banner"] {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  background-attachment: scroll !important;
 }
 
-.input-black { 
-  background: #000; 
-  color: #fff; 
-  border: 1px solid #444; 
-  border-radius: 8px; 
-  padding: 10px; 
-  width: 100%;
-  font-size: 14px;
+/* Kill pseudo-element overlays */
+.bfo-header::before,
+.bfo-header::after,
+.bfo-subheader::before,
+.bfo-subheader::after {
+  content: none !important;
+  display: none !important;
 }
 
-.input-black:focus {
-  outline: none;
-  border-color: #D4AF37;
-  box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
+/* Brand text colors */
+.text-bfo-black { color: var(--bfo-black) !important; }
+.text-bfo-gold { color: var(--bfo-gold) !important; }
+.text-bfo-white { color: var(--bfo-white) !important; }
+
+/* Brand background colors */
+.bg-bfo-black { background-color: var(--bfo-black) !important; }
+.bg-bfo-gold { background-color: var(--bfo-gold) !important; }
+.bg-bfo-white { background-color: var(--bfo-white) !important; }
+
+/* Brand borders */
+.border-bfo-gold { border-color: var(--bfo-gold) !important; }
+.border-bfo-gold-thin { border-width: var(--bfo-gold-thin) !important; }
+
+/* Accessibility: High contrast focus styles */
+.bfo-header a:focus-visible,
+.bfo-header button:focus-visible,
+.bfo-subheader a:focus-visible,
+.bfo-subheader button:focus-visible {
+  outline: 2px solid var(--bfo-gold);
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
-.input-black::placeholder {
-  color: #888;
+/* Mobile-specific adjustments */
+@media (max-width: 768px) {
+  .bfo-card {
+    padding: 1rem;
+    margin: 0.5rem;
+  }
+  
+  .bfo-header {
+    padding: 0.75rem 1rem;
+  }
+  
+  .bfo-subheader {
+    padding: 0.5rem 1rem;
+  }
+}
+
+/* Footer styling to match brand */
+.bfo-footer {
+  background-color: var(--bfo-black) !important;
+  border-top: var(--bfo-gold-thin) solid var(--bfo-gold) !important;
+  color: var(--bfo-white) !important;
+}
+
+.bfo-footer a {
+  color: var(--bfo-gold) !important;
+  transition: color 0.2s ease-in-out;
+}
+
+.bfo-footer a:hover {
+  color: var(--bfo-white) !important;
 }

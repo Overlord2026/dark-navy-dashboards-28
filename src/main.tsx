@@ -30,6 +30,15 @@ registerServiceWorker()
 // Set up PWA install prompt
 promptInstallPWA()
 
+// Initialize Web Vitals tracking
+if (import.meta.env.PROD || import.meta.env.DEV) {
+  import('./scripts/vitals').then(({ vitalsTracker }) => {
+    console.log('[Web Vitals] Tracking initialized');
+  }).catch(err => {
+    console.warn('[Web Vitals] Failed to initialize:', err);
+  });
+}
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <AuthProvider>

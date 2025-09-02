@@ -1,96 +1,62 @@
-{
-  "timestamp": "2025-09-01T12:00:00Z",
-  "environment": "staging",
-  "measurement_period": "24h",
-  "metrics": {
-    "/": {
-      "LCP": 1200,
-      "FID": 45,
-      "CLS": 0.08,
-      "TTFB": 320,
-      "FCP": 850
-    },
-    "/families": {
-      "LCP": 1100,
-      "FID": 42,
-      "CLS": 0.06,
-      "TTFB": 298,
-      "FCP": 780
-    },
-    "/pros": {
-      "LCP": 1150,
-      "FID": 38,
-      "CLS": 0.07,
-      "TTFB": 305,
-      "FCP": 820
-    },
-    "/dashboard": {
-      "LCP": 1350,
-      "FID": 52,
-      "CLS": 0.09,
-      "TTFB": 280,
-      "FCP": 920
-    },
-    "/admin/hq": {
-      "LCP": 1280,
-      "FID": 48,
-      "CLS": 0.05,
-      "TTFB": 310,
-      "FCP": 890
-    },
-    "/marketplace": {
-      "LCP": 1180,
-      "FID": 41,
-      "CLS": 0.06,
-      "TTFB": 295,
-      "FCP": 800
-    },
-    "/nil": {
-      "LCP": 1050,
-      "FID": 35,
-      "CLS": 0.04,
-      "TTFB": 285,
-      "FCP": 750
-    },
-    "/healthcare": {
-      "LCP": 1220,
-      "FID": 46,
-      "CLS": 0.07,
-      "TTFB": 302,
-      "FCP": 860
-    },
-    "/solutions": {
-      "LCP": 1080,
-      "FID": 39,
-      "CLS": 0.05,
-      "TTFB": 290,
-      "FCP": 770
-    },
-    "/pricing": {
-      "LCP": 980,
-      "FID": 32,
-      "CLS": 0.03,
-      "TTFB": 270,
-      "FCP": 720
-    }
+[
+  {
+    "route": "/",
+    "sampleCount": 25,
+    "lcp_p95": 1840,
+    "fid_p95": 12,
+    "cls_p95": 0.08,
+    "fcp_p95": 920,
+    "ttfb_p95": 240,
+    "lastUpdated": "2024-09-02T05:30:00.000Z"
   },
-  "thresholds": {
-    "LCP": {
-      "good": 2500,
-      "needs_improvement": 4000
-    },
-    "FID": {
-      "good": 100,
-      "needs_improvement": 300
-    },
-    "CLS": {
-      "good": 0.1,
-      "needs_improvement": 0.25
-    },
-    "TTFB": {
-      "good": 800,
-      "needs_improvement": 1800
-    }
+  {
+    "route": "/marketplace/advisors",
+    "sampleCount": 18,
+    "lcp_p95": 2100,
+    "fid_p95": 15,
+    "cls_p95": 0.05,
+    "fcp_p95": 1100,
+    "ttfb_p95": 280,
+    "lastUpdated": "2024-09-02T05:30:00.000Z"
   },
-  "overall_score": "good"
-}
+  {
+    "route": "/marketplace/cpa",
+    "sampleCount": 12,
+    "lcp_p95": 1950,
+    "fid_p95": 11,
+    "cls_p95": 0.03,
+    "fcp_p95": 980,
+    "ttfb_p95": 260,
+    "lastUpdated": "2024-09-02T05:30:00.000Z"
+  },
+  {
+    "route": "/families",
+    "sampleCount": 22,
+    "lcp_p95": 2200,
+    "fid_p95": 18,
+    "cls_p95": 0.12,
+    "fcp_p95": 1150,
+    "ttfb_p95": 320,
+    "lastUpdated": "2024-09-02T05:30:00.000Z"
+  },
+  {
+    "route": "/admin/publish",
+    "sampleCount": 8,
+    "lcp_p95": 1600,
+    "fid_p95": 8,
+    "cls_p95": 0.02,
+    "fcp_p95": 800,
+    "ttfb_p95": 200,
+    "lastUpdated": "2024-09-02T05:30:00.000Z"
+  },
+  {
+    "route": "/admin/hq/ip-ledger",
+    "sampleCount": 6,
+    "lcp_p95": 1750,
+    "fid_p95": 10,
+    "cls_p95": 0.04,
+    "fcp_p95": 850,
+    "ttfb_p95": 220,
+    "lastUpdated": "2024-09-02T05:30:00.000Z"
+  }
+]
