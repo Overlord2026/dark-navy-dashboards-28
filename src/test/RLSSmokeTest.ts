@@ -74,51 +74,24 @@ export class RLSSmokeTest {
 
       // Use type assertion to work around strict typing
       const supabaseAny = supabase as any;
+      let query;
 
       switch (operation) {
         case 'SELECT':
-          const { data, error } = await supabaseAny.from(table).select('*').limit(1);
-          
-          if (error) {
-            if (error.message.includes('permission denied') || 
-                error.message.includes('row-level security') ||
-                error.message.includes('insufficient_privilege')) {
-              actualBehavior = 'Access denied by RLS (correct)';
-              this.results.push({
-                table, policy: 'RLS Protection', operation, status: 'PASS',
-                expectedBehavior, actualBehavior
-              });
-            } else {
-              actualBehavior = `Unexpected error: ${error.message}`;
-              this.results.push({
-                table, policy: 'RLS Protection', operation, status: 'FAIL',
-                expectedBehavior, actualBehavior, error: error.message
-              });
-            }
-          } else {
-            actualBehavior = Array.isArray(data) && data.length === 0 ? 'Empty result (acceptable)' : 'Unexpected access';
-            this.results.push({
-              table, policy: 'RLS Protection', operation,
-              status: actualBehavior.includes('acceptable') ? 'PASS' : 'FAIL',
-              expectedBehavior, actualBehavior
-            });
-          }
+          query = supabaseAny.from(table).select('*').limit(1);
           break;
-          
+        case 'INSERT':
+          query = supabaseAny.from(table).insert({});
+          break;
+        case 'UPDATE':
+          query = supabaseAny.from(table).update({}).eq('id', 'fake-id');
+          break;
+        case 'DELETE':
+          query = supabaseAny.from(table).delete().eq('id', 'fake-id');
+          break;
         default:
-          // For non-SELECT operations, assume RLS is working if we can't perform them
-          this.results.push({
-            table, policy: 'RLS Protection', operation, status: 'PASS',
-            expectedBehavior, actualBehavior: 'Operation blocked (expected)'
-          });
+          query = supabaseAny.from(table).select('*').limit(1);
       }
-    } catch (error) {
-      this.results.push({
-        table, policy: 'RLS Protection', operation, status: 'FAIL',
-        expectedBehavior, actualBehavior: 'Test execution failed', error: String(error)
-      });
-    }
-  }
 
       const { data, error } = await query;
 
