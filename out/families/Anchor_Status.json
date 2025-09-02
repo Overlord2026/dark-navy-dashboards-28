@@ -1,0 +1,42 @@
+{
+  "anchor_status": "GREEN",
+  "proof_gate_status": "ACTIVE",
+  "recent_receipts_anchored": 5,
+  "latest_anchor_timestamp": "2025-01-02T10:25:00Z",
+  "k_series_compatibility": true,
+  "anchor_details": {
+    "recent_anchors": [
+      {
+        "receipt_id": "rds_family_vault_001",
+        "anchor_hash": "sha256:1a2b3c4d5e6f7g8h",
+        "block_height": 850123,
+        "anchor_timestamp": "2025-01-02T10:25:00Z",
+        "status": "confirmed"
+      },
+      {
+        "receipt_id": "rds_family_profile_002",
+        "anchor_hash": "sha256:8h7g6f5e4d3c2b1a",
+        "block_height": 850122,
+        "anchor_timestamp": "2025-01-02T10:24:30Z",
+        "status": "confirmed"
+      }
+    ],
+    "proof_verification": {
+      "merkle_root_valid": true,
+      "anchor_chain_integrity": true,
+      "timestamp_consistency": true
+    }
+  },
+  "chip_behavior": {
+    "color": "green",
+    "indicator": "✓",
+    "tooltip": "Anchor verified - K-series compatible",
+    "last_verification": "2025-01-02T10:30:00Z"
+  },
+  "validation_summary": {
+    "total_receipts_checked": 12,
+    "anchored_receipts": 5,
+    "pending_anchor": 2,
+    "anchor_success_rate": 0.417
+  }
+}

@@ -1,0 +1,16 @@
+method,path,auth,rls_table,write
+GET,/profiles,required,profiles,false
+GET,/goals,required,goals,false
+GET,/assets,required,assets,false
+GET,/onboarding_progress,required,user_onboarding_progress,false
+POST,/profiles,required,profiles,true
+PUT,/profiles/{id},required,profiles,true
+POST,/goals,required,goals,true
+PUT,/goals/{id},required,goals,true
+POST,/assets,required,assets,true
+PUT,/assets/{id},required,assets,true
+GET,/families_data,required,families,false
+POST,/family_members,required,family_members,true
+DELETE,/family_members/{id},required,family_members,true
+GET,/financial_accounts,required,financial_accounts,false
+POST,/financial_accounts,required,financial_accounts,true

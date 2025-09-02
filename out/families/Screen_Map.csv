@@ -1,0 +1,11 @@
+route,component,data_dep,owner
+/families,FamiliesIndex,None,Public
+/families/home,FamilyHome,auth.profiles,User
+/families/retirees,FamilyRetireePersonaDashboard,user_profiles+goals,User
+/families/aspiring,FamilyAspiringPersonaDashboard,user_profiles+assets,User
+/families/start,FamiliesStart,None,Public
+/families/retirees/goals,RetireeGoals,user_goals+retirement_data,User
+/family/home,FamilyHome,auth.profiles,User
+/start/families,FamilyOnboarding,auth.profiles+onboarding,User
+/personas/families/retirees,FamilyRetireePersonaDashboard,user_profiles+goals,User
+/personas/families/aspiring,FamilyAspiringPersonaDashboard,user_profiles+assets,User
