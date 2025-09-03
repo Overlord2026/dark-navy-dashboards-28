@@ -1,5 +1,6 @@
 import React from 'react';
 import { PersonaCard } from './PersonaCard';
+import { PersonaPathCard } from '../persona/PersonaPathCard';
 import { Users, Briefcase, Calculator, Scale, Shield, Heart, Home, Crown, Target } from 'lucide-react';
 
 interface PersonaGridProps {
@@ -120,6 +121,10 @@ export const PersonaGrid: React.FC<PersonaGridProps> = ({ compact = false }) => 
 
   return (
     <div className="w-full">
+      <div className="text-center mb-8">
+        <PersonaPathCard className="max-w-md mx-auto mb-8" />
+      </div>
+      
       <div className="text-center mb-12">
         <h3 className="font-serif text-3xl lg:text-4xl font-bold text-foreground mb-4">
           Choose Your Professional Path
