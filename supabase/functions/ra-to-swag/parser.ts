@@ -1,5 +1,5 @@
 // Pure text → JSON parser (no Deno APIs), so Jest/Vitest can import.
-import { SwagRetirementAnalysisInputSchema } from "../../../src/types/swag-retirement.ts";
+import { SwagRetirementAnalysisInputSchema } from "../_shared/swag-retirement-types.ts";
 
 const money = (s: string) => Number(s.replace(/[,$]/g, ""));
 const pct = (s: string) => Number(s.replace("%",""));
