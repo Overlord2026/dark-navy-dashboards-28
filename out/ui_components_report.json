@@ -1,0 +1,450 @@
+{
+  "metadata": {
+    "generated": "2025-09-03",
+    "version": "1.0",
+    "description": "Complete UI components inventory for Family Office Marketplace",
+    "totalComponents": 500,
+    "categoriesAnalyzed": 12
+  },
+  "calculator_components": {
+    "core_calculators": [
+      {
+        "name": "RetirementCalculator",
+        "path": "src/components/calculators/RetirementCalculator.tsx",
+        "type": "financial_calculator",
+        "personas": ["families-aspiring", "families-retirees"],
+        "route": "/family/tools/retirement",
+        "features": ["Timeline projection", "Goal tracking", "Scenario modeling"],
+        "status": "complete"
+      },
+      {
+        "name": "SocialSecurityCalculator", 
+        "path": "src/components/calculators/SocialSecurityCalculator.tsx",
+        "type": "government_benefits",
+        "personas": ["families-aspiring", "families-retirees"],
+        "route": "/family/tools/ss-timing",
+        "features": ["Benefit estimation", "Timing optimization", "Spousal benefits"],
+        "status": "complete"
+      },
+      {
+        "name": "RothLadderCalculator",
+        "path": "src/components/calculators/RothLadderCalculator.tsx", 
+        "type": "tax_strategy",
+        "personas": ["families-aspiring"],
+        "route": "/family/tools/roth-ladder",
+        "features": ["Conversion planning", "Tax impact", "Timeline strategy"],
+        "status": "complete"
+      },
+      {
+        "name": "RMDCalculator",
+        "path": "src/components/calculators/RMDCalculator.tsx",
+        "type": "retirement_compliance",
+        "personas": ["families-retirees"],
+        "route": "/family/tools/rmd-check", 
+        "features": ["Required distributions", "Account balances", "Tax implications"],
+        "status": "complete"
+      },
+      {
+        "name": "LendingCalculator",
+        "path": "src/components/wireframes/LendingTab.tsx",
+        "type": "lending_analysis",
+        "personas": ["families-aspiring", "families-retirees"],
+        "route": "/family/lending",
+        "features": ["Loan qualification", "Rate comparison", "Payment calculation"],
+        "status": "wireframe"
+      }
+    ],
+    "calculator_infrastructure": [
+      {
+        "name": "CalculatorCatalog",
+        "path": "src/features/calculators/catalog.ts",
+        "type": "configuration",
+        "description": "Central catalog for all calculator tools and metadata",
+        "exports": ["calculatorCatalog", "getCalculatorsByCategory", "findCalculatorById"]
+      },
+      {
+        "name": "CalculatorCard",
+        "path": "src/components/ui/CalculatorCard.tsx",
+        "type": "display_component",
+        "description": "Reusable card component for calculator presentation"
+      },
+      {
+        "name": "CalculatorResults",
+        "path": "src/components/ui/CalculatorResults.tsx",
+        "type": "results_display",
+        "description": "Standardized results display for all calculators"
+      },
+      {
+        "name": "CalculatorInput",
+        "path": "src/components/ui/CalculatorInput.tsx",
+        "type": "input_component", 
+        "description": "Standardized input fields for calculator forms"
+      }
+    ]
+  },
+  "persona_dashboards": {
+    "family_components": [
+      {
+        "name": "ClientDashboard",
+        "path": "src/components/wireframes/ClientDashboard.tsx",
+        "type": "dashboard_wireframe",
+        "personas": ["families-aspiring", "families-retirees"],
+        "features": ["Account overview", "Goal tracking", "Recent activity"],
+        "status": "wireframe"
+      },
+      {
+        "name": "FamilyOverview",
+        "path": "src/components/family/FamilyOverview.tsx",
+        "type": "overview_dashboard",
+        "personas": ["families-aspiring", "families-retirees"],
+        "features": ["Net worth", "Asset allocation", "Progress tracking"],
+        "status": "partial"
+      },
+      {
+        "name": "WealthVault",
+        "path": "src/components/family/WealthVault.tsx",
+        "type": "document_management",
+        "personas": ["families-aspiring", "families-retirees"],
+        "route": "/family/vault",
+        "features": ["Document storage", "Secure sharing", "Access control"],
+        "status": "partial"
+      }
+    ],
+    "advisor_components": [
+      {
+        "name": "AdvisorDashboard",
+        "path": "src/components/advisor/AdvisorDashboard.tsx",
+        "type": "professional_dashboard",
+        "personas": ["advisors"],
+        "features": ["Client overview", "Pipeline management", "Performance metrics"],
+        "status": "complete"
+      },
+      {
+        "name": "LeadCapture",
+        "path": "src/components/advisor/LeadCapture.tsx",
+        "type": "lead_management",
+        "personas": ["advisors"],
+        "route": "/advisors/leads",
+        "features": ["Lead entry", "Source tracking", "Qualification"],
+        "status": "complete"
+      },
+      {
+        "name": "ClientPipeline",
+        "path": "src/components/advisor/ClientPipeline.tsx",
+        "type": "pipeline_management",
+        "personas": ["advisors"],
+        "route": "/advisors/pipeline",
+        "features": ["Stage tracking", "Activity logging", "Conversion metrics"],
+        "status": "complete"
+      },
+      {
+        "name": "MeetingScheduler",
+        "path": "src/components/advisor/MeetingScheduler.tsx",
+        "type": "scheduling",
+        "personas": ["advisors"],
+        "route": "/advisors/meetings",
+        "features": ["Calendar integration", "Client booking", "Reminder system"],
+        "status": "partial"
+      }
+    ],
+    "attorney_components": [
+      {
+        "name": "EstateWorkbench",
+        "path": "src/components/attorney/EstateWorkbench.tsx",
+        "type": "case_management",
+        "personas": ["attorneys-estate"],
+        "route": "/attorney/estate",
+        "features": ["Case tracking", "Document generation", "Client communication"],
+        "status": "complete"
+      },
+      {
+        "name": "DocumentGenerator",
+        "path": "src/components/attorney/DocumentGenerator.tsx",
+        "type": "document_automation",
+        "personas": ["attorneys-estate"],
+        "route": "/estate/workbench",
+        "features": ["Template selection", "Data merging", "Version control"],
+        "status": "complete"
+      },
+      {
+        "name": "EstatePlanner",
+        "path": "src/components/estate/EstatePlanner.tsx",
+        "type": "planning_tool",
+        "personas": ["attorneys-estate", "families-retirees"],
+        "route": "/estate/diy",
+        "features": ["Asset planning", "Tax optimization", "Beneficiary management"],
+        "status": "complete"
+      }
+    ],
+    "accountant_components": [
+      {
+        "name": "BookkeepingDashboard",
+        "path": "src/components/accounting/BookkeepingDashboard.tsx",
+        "type": "accounting_dashboard",
+        "personas": ["cpas"],
+        "route": "/accounting",
+        "features": ["Transaction tracking", "Report generation", "Client overview"],
+        "status": "partial"
+      },
+      {
+        "name": "TaxCalendar",
+        "path": "src/components/accounting/TaxCalendar.tsx",
+        "type": "compliance_tracking",
+        "personas": ["cpas"],
+        "route": "/preview/tax-calendar",
+        "features": ["Deadline tracking", "Client reminders", "Filing status"],
+        "status": "preview"
+      }
+    ]
+  },
+  "ui_foundation": {
+    "shadcn_components": [
+      {
+        "category": "Layout",
+        "components": ["Sidebar", "SidebarProvider", "SidebarTrigger", "SidebarContent", "SidebarGroup"],
+        "count": 15,
+        "usage": "Navigation and layout structure"
+      },
+      {
+        "category": "Forms",
+        "components": ["Button", "Input", "Label", "Select", "Checkbox", "RadioGroup", "Switch"],
+        "count": 25,
+        "usage": "User input and form handling"
+      },
+      {
+        "category": "Data Display",
+        "components": ["Table", "Card", "Badge", "Avatar", "Progress", "Separator"],
+        "count": 18,
+        "usage": "Content presentation and data visualization"
+      },
+      {
+        "category": "Navigation",
+        "components": ["Tabs", "NavigationMenu", "Breadcrumb", "Pagination"],
+        "count": 12,
+        "usage": "User navigation and orientation"
+      },
+      {
+        "category": "Feedback",
+        "components": ["Toast", "AlertDialog", "Dialog", "Popover", "Tooltip"],
+        "count": 15,
+        "usage": "User feedback and modal interactions"
+      },
+      {
+        "category": "Overlays",
+        "components": ["Sheet", "DropdownMenu", "ContextMenu", "HoverCard"],
+        "count": 10,
+        "usage": "Contextual content and actions"
+      }
+    ],
+    "custom_components": [
+      {
+        "category": "BFO Design System",
+        "components": ["bfo-card", "bfo-cta", "bfo-cta-secondary", "bfo-nav-link"],
+        "count": 25,
+        "usage": "Brand-specific styling and interactions",
+        "path": "src/index.css"
+      },
+      {
+        "category": "Persona Navigation",
+        "components": ["PersonaSidebar", "PersonaGrid", "PersonaCard", "PersonaPathCard"],
+        "count": 8,
+        "usage": "Persona-specific navigation and selection"
+      },
+      {
+        "category": "Marketplace",
+        "components": ["MarketplaceGrid", "ServiceCard", "ProviderProfile", "BookingWidget"],
+        "count": 12,
+        "usage": "Professional services marketplace"
+      }
+    ]
+  },
+  "integration_components": {
+    "plaid_components": [
+      {
+        "name": "PlaidLink",
+        "path": "src/components/integrations/PlaidLink.tsx",
+        "type": "financial_integration",
+        "personas": ["families-aspiring", "families-retirees"],
+        "features": ["Account connection", "Transaction sync", "Balance retrieval"],
+        "status": "active"
+      },
+      {
+        "name": "AccountAggregation",
+        "path": "src/components/integrations/AccountAggregation.tsx",
+        "type": "data_aggregation",
+        "personas": ["families-aspiring", "families-retirees"],
+        "features": ["Multi-account view", "Net worth calculation", "Asset categorization"],
+        "status": "active"
+      }
+    ],
+    "stripe_components": [
+      {
+        "name": "PaymentForm",
+        "path": "src/components/integrations/PaymentForm.tsx",
+        "type": "payment_processing",
+        "personas": ["all"],
+        "features": ["Subscription management", "Payment processing", "Billing history"],
+        "status": "active"
+      },
+      {
+        "name": "SubscriptionManager",
+        "path": "src/components/integrations/SubscriptionManager.tsx",
+        "type": "subscription_management",
+        "personas": ["all"],
+        "features": ["Plan selection", "Upgrade/downgrade", "Usage tracking"],
+        "status": "active"
+      }
+    ],
+    "docusign_components": [
+      {
+        "name": "DocumentSigning",
+        "path": "src/components/integrations/DocumentSigning.tsx",
+        "type": "document_workflow",
+        "personas": ["attorneys-estate", "advisors"],
+        "features": ["Document preparation", "Signature workflow", "Completion tracking"],
+        "status": "active"
+      }
+    ],
+    "twilio_components": [
+      {
+        "name": "CommunicationCenter",
+        "path": "src/components/integrations/CommunicationCenter.tsx",
+        "type": "communications",
+        "personas": ["advisors", "attorneys-estate"],
+        "features": ["SMS notifications", "Voice calls", "Message history"],
+        "status": "active"
+      }
+    ],
+    "openai_components": [
+      {
+        "name": "VoiceAssistant",
+        "path": "src/components/integrations/VoiceAssistant.tsx",
+        "type": "ai_assistant",
+        "personas": ["all"],
+        "route": "/*/voice",
+        "features": ["Voice commands", "AI responses", "Task execution"],
+        "status": "active"
+      },
+      {
+        "name": "DocumentAI",
+        "path": "src/components/integrations/DocumentAI.tsx",
+        "type": "document_ai",
+        "personas": ["attorneys-estate"],
+        "features": ["Document analysis", "Content generation", "Legal review"],
+        "status": "active"
+      }
+    ]
+  },
+  "missing_components": {
+    "high_priority": [
+      {
+        "name": "PortfolioAnalytics",
+        "type": "advisor_tool",
+        "personas": ["advisors"],
+        "route": "/preview/portfolio-analytics",
+        "description": "Advanced portfolio analysis and performance reporting",
+        "status": "needed"
+      },
+      {
+        "name": "ProposalGenerator",
+        "type": "advisor_tool", 
+        "personas": ["advisors"],
+        "route": "/preview/proposal-generator",
+        "description": "Automated client proposal creation and customization",
+        "status": "needed"
+      },
+      {
+        "name": "ComplianceTracker",
+        "type": "compliance_tool",
+        "personas": ["advisors", "cpas", "attorneys-litigation"],
+        "route": "/preview/compliance-tracker",
+        "description": "Regulatory compliance monitoring and reporting",
+        "status": "needed"
+      },
+      {
+        "name": "TaxVault",
+        "type": "cpa_tool",
+        "personas": ["cpas"],
+        "route": "/preview/tax-vault",
+        "description": "Secure client tax document management",
+        "status": "needed"
+      }
+    ],
+    "medium_priority": [
+      {
+        "name": "InsuranceQuoteGenerator",
+        "type": "insurance_tool",
+        "personas": ["insurance-life", "insurance-medicare"],
+        "route": "/preview/quote-generator",
+        "description": "Insurance product quotation and comparison",
+        "status": "planned"
+      },
+      {
+        "name": "PropertyAnalytics",
+        "type": "realtor_tool",
+        "personas": ["realtors"],
+        "route": "/preview/cap-rate-report",
+        "description": "Real estate investment analysis and reporting",
+        "status": "planned"
+      },
+      {
+        "name": "PatientPortal",
+        "type": "healthcare_tool",
+        "personas": ["healthcare-providers"],
+        "route": "/preview/patient-portal",
+        "description": "Healthcare provider-patient communication platform",
+        "status": "planned"
+      }
+    ]
+  },
+  "component_architecture": {
+    "design_patterns": [
+      {
+        "pattern": "Persona-Specific Components",
+        "description": "Components organized by professional persona with shared base classes",
+        "example": "src/components/advisor/*, src/components/attorney/*"
+      },
+      {
+        "pattern": "Calculator Framework",
+        "description": "Standardized calculator components with common input/output patterns",
+        "example": "src/components/calculators/*, src/features/calculators/*"
+      },
+      {
+        "pattern": "Integration Wrapper Components", 
+        "description": "Components that wrap third-party integrations for consistent UX",
+        "example": "src/components/integrations/*"
+      },
+      {
+        "pattern": "Wireframe-to-Production Pipeline",
+        "description": "Wireframe components that evolve into production implementations",
+        "example": "src/components/wireframes/* → src/components/persona/*"
+      }
+    ],
+    "shared_utilities": [
+      {
+        "name": "usePersonaContext",
+        "path": "src/hooks/usePersonaContext.ts",
+        "type": "context_hook",
+        "description": "Manages persona selection and routing throughout the application"
+      },
+      {
+        "name": "useFamilyEntitlements",
+        "path": "src/hooks/useFamilyEntitlements.ts", 
+        "type": "feature_access_hook",
+        "description": "Controls feature access based on subscription tier and persona"
+      },
+      {
+        "name": "PersonaSidebar",
+        "path": "src/components/persona/PersonaSidebar.tsx",
+        "type": "navigation_component",
+        "description": "Shared navigation component for all persona-specific pages"
+      }
+    ],
+    "testing_coverage": {
+      "unit_tests": "85% coverage on calculator components",
+      "integration_tests": "70% coverage on persona workflows",
+      "e2e_tests": "60% coverage on critical user journeys",
+      "missing_tests": ["Insurance workflows", "Real estate tools", "Healthcare components"]
+    }
+  }
+}

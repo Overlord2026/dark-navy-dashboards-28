@@ -1,0 +1,596 @@
+{
+  "metadata": {
+    "generated": "2025-09-03",
+    "version": "1.0",
+    "description": "Complete personas fixture data export for Family Office Marketplace"
+  },
+  "families": {
+    "households": [
+      {
+        "id": "johnson-family",
+        "name": "The Johnson Family",
+        "segment": "aspiring",
+        "primaryContact": {
+          "name": "Michael Johnson",
+          "email": "michael.johnson@email.com",
+          "phone": "(555) 123-4567",
+          "persona": "pre_retiree"
+        },
+        "members": [
+          {
+            "name": "Michael Johnson",
+            "role": "Primary",
+            "age": 58,
+            "occupation": "Senior Engineer"
+          },
+          {
+            "name": "Sarah Johnson", 
+            "role": "Spouse",
+            "age": 55,
+            "occupation": "Marketing Director"
+          },
+          {
+            "name": "Emma Johnson",
+            "role": "Dependent",
+            "age": 22,
+            "occupation": "College Student"
+          }
+        ],
+        "financialProfile": {
+          "totalAssets": 850000,
+          "annualIncome": 165000,
+          "retirementSavings": 425000,
+          "emergencyFund": 35000,
+          "riskTolerance": "moderate",
+          "goals": [
+            "Retire by 65",
+            "Pay for daughter's education",
+            "Buy vacation home"
+          ]
+        },
+        "toolsUsed": [
+          "retirement-roadmap",
+          "social-security",
+          "rmd-check",
+          "roth-ladder"
+        ]
+      },
+      {
+        "id": "chen-family",
+        "name": "The Chen Family",
+        "segment": "retirees",
+        "primaryContact": {
+          "name": "David Chen",
+          "email": "david.chen@email.com",
+          "phone": "(555) 234-5678",
+          "persona": "hnw_client"
+        },
+        "members": [
+          {
+            "name": "David Chen",
+            "role": "Primary",
+            "age": 67,
+            "occupation": "Retired Physician"
+          },
+          {
+            "name": "Linda Chen",
+            "role": "Spouse", 
+            "age": 64,
+            "occupation": "Retired Teacher"
+          }
+        ],
+        "financialProfile": {
+          "totalAssets": 2350000,
+          "annualIncome": 95000,
+          "retirementSavings": 1450000,
+          "pensionIncome": 48000,
+          "socialSecurityIncome": 47000,
+          "riskTolerance": "conservative",
+          "goals": [
+            "Preserve wealth",
+            "Estate planning",
+            "Healthcare costs",
+            "Legacy for children"
+          ]
+        },
+        "toolsUsed": [
+          "estate-planner",
+          "longevity-hub",
+          "rmd-check",
+          "wealth-vault"
+        ]
+      },
+      {
+        "id": "rodriguez-family",
+        "name": "The Rodriguez Family",
+        "segment": "aspiring",
+        "primaryContact": {
+          "name": "Carlos Rodriguez",
+          "email": "carlos.rodriguez@email.com",
+          "phone": "(555) 345-6789",
+          "persona": "next_gen"
+        },
+        "members": [
+          {
+            "name": "Carlos Rodriguez",
+            "role": "Primary",
+            "age": 32,
+            "occupation": "Software Developer"
+          },
+          {
+            "name": "Maria Rodriguez",
+            "role": "Spouse",
+            "age": 29,
+            "occupation": "Graphic Designer"
+          },
+          {
+            "name": "Sofia Rodriguez",
+            "role": "Dependent",
+            "age": 4,
+            "occupation": "Preschooler"
+          }
+        ],
+        "financialProfile": {
+          "totalAssets": 185000,
+          "annualIncome": 125000,
+          "retirementSavings": 45000,
+          "emergencyFund": 15000,
+          "riskTolerance": "aggressive",
+          "goals": [
+            "Build emergency fund",
+            "Save for home down payment",
+            "Start retirement savings",
+            "Child education fund"
+          ]
+        },
+        "toolsUsed": [
+          "retirement-roadmap",
+          "wealth-vault",
+          "taxhub-diy"
+        ]
+      }
+    ]
+  },
+  "advisors": {
+    "pipelines": [
+      {
+        "id": "thompson-wealth",
+        "name": "Thompson Wealth Management",
+        "advisor": {
+          "name": "Jennifer Thompson",
+          "email": "jennifer@thompsonwealth.com",
+          "phone": "(555) 456-7890",
+          "credentials": ["CFP", "CFA"],
+          "experience": 12
+        },
+        "firm": {
+          "name": "Thompson Wealth Management",
+          "aum": 85000000,
+          "clientCount": 156,
+          "minimumAccount": 500000
+        },
+        "pipeline": {
+          "leads": [
+            {
+              "id": "lead-001",
+              "name": "Robert Smith",
+              "email": "robert.smith@email.com",
+              "source": "referral",
+              "status": "qualified",
+              "estimatedAssets": 750000,
+              "dateAdded": "2024-08-15"
+            },
+            {
+              "id": "lead-002",
+              "name": "Lisa Brown",
+              "email": "lisa.brown@email.com",
+              "source": "website",
+              "status": "contacted",
+              "estimatedAssets": 1200000,
+              "dateAdded": "2024-08-20"
+            }
+          ],
+          "prospects": [
+            {
+              "id": "prospect-001",
+              "name": "Mark Wilson",
+              "email": "mark.wilson@email.com",
+              "status": "meeting_scheduled",
+              "estimatedAssets": 950000,
+              "meetingDate": "2024-09-05"
+            }
+          ],
+          "clients": 156
+        },
+        "toolsUsed": [
+          "lead-capture",
+          "client-onboarding",
+          "client-management"
+        ]
+      },
+      {
+        "id": "premier-financial",
+        "name": "Premier Financial Advisors",
+        "advisor": {
+          "name": "Michael Davis",
+          "email": "mdavis@premierfinancial.com",
+          "phone": "(555) 567-8901",
+          "credentials": ["CFP", "ChFC"],
+          "experience": 8
+        },
+        "firm": {
+          "name": "Premier Financial Advisors",
+          "aum": 125000000,
+          "clientCount": 220,
+          "minimumAccount": 250000
+        },
+        "pipeline": {
+          "leads": [
+            {
+              "id": "lead-003",
+              "name": "Susan Taylor",
+              "email": "susan.taylor@email.com",
+              "source": "seminar",
+              "status": "new",
+              "estimatedAssets": 650000,
+              "dateAdded": "2024-08-25"
+            }
+          ],
+          "prospects": [
+            {
+              "id": "prospect-002",
+              "name": "James Anderson",
+              "email": "james.anderson@email.com",
+              "status": "proposal_sent",
+              "estimatedAssets": 1100000,
+              "proposalDate": "2024-08-28"
+            }
+          ],
+          "clients": 220
+        },
+        "toolsUsed": [
+          "lead-capture",
+          "client-management"
+        ]
+      },
+      {
+        "id": "heritage-advisors",
+        "name": "Heritage Investment Advisors",
+        "advisor": {
+          "name": "Patricia Williams",
+          "email": "pwilliams@heritageia.com",
+          "phone": "(555) 678-9012",
+          "credentials": ["CFP", "CPA/PFS"],
+          "experience": 15
+        },
+        "firm": {
+          "name": "Heritage Investment Advisors",
+          "aum": 195000000,
+          "clientCount": 145,
+          "minimumAccount": 1000000
+        },
+        "pipeline": {
+          "leads": [
+            {
+              "id": "lead-004",
+              "name": "Thomas Garcia",
+              "email": "thomas.garcia@email.com",
+              "source": "referral",
+              "status": "qualified",
+              "estimatedAssets": 2200000,
+              "dateAdded": "2024-08-30"
+            }
+          ],
+          "prospects": [
+            {
+              "id": "prospect-003",
+              "name": "Nancy Martinez",
+              "email": "nancy.martinez@email.com",
+              "status": "discovery_meeting",
+              "estimatedAssets": 1850000,
+              "meetingDate": "2024-09-08"
+            }
+          ],
+          "clients": 145
+        },
+        "toolsUsed": [
+          "lead-capture",
+          "client-onboarding",
+          "client-management"
+        ]
+      }
+    ]
+  },
+  "accountants": {
+    "cpa_firms": [
+      {
+        "id": "martinez-cpa",
+        "name": "Martinez & Associates CPA",
+        "principal": {
+          "name": "Elena Martinez",
+          "email": "elena@martinezcpa.com",
+          "phone": "(555) 789-0123",
+          "credentials": ["CPA", "MST"],
+          "experience": 18
+        },
+        "firm": {
+          "name": "Martinez & Associates CPA",
+          "established": 2005,
+          "staff": 8,
+          "clientCount": 320,
+          "specialties": ["Individual Tax", "Small Business", "Estate Tax"]
+        },
+        "clients": [
+          {
+            "id": "client-001",
+            "name": "ABC Manufacturing Inc",
+            "type": "business",
+            "entityType": "S-Corp",
+            "revenue": 2500000,
+            "services": ["Tax Prep", "Bookkeeping", "Payroll"]
+          },
+          {
+            "id": "client-002",
+            "name": "John & Mary Peterson",
+            "type": "individual",
+            "filingStatus": "married_joint",
+            "income": 185000,
+            "services": ["Tax Prep", "Tax Planning"]
+          }
+        ],
+        "toolsUsed": [
+          "bookkeeping"
+        ]
+      },
+      {
+        "id": "summit-accounting",
+        "name": "Summit Accounting Solutions",
+        "principal": {
+          "name": "Richard Park",
+          "email": "rpark@summitaccounting.com",
+          "phone": "(555) 890-1234",
+          "credentials": ["CPA", "CFE"],
+          "experience": 22
+        },
+        "firm": {
+          "name": "Summit Accounting Solutions",
+          "established": 1998,
+          "staff": 15,
+          "clientCount": 485,
+          "specialties": ["Corporate Tax", "Audit", "Forensic Accounting"]
+        },
+        "clients": [
+          {
+            "id": "client-003",
+            "name": "TechStart Innovations",
+            "type": "business",
+            "entityType": "C-Corp",
+            "revenue": 8500000,
+            "services": ["Tax Prep", "Audit", "CFO Services"]
+          },
+          {
+            "id": "client-004",
+            "name": "Downtown Restaurant Group",
+            "type": "business",
+            "entityType": "Partnership",
+            "revenue": 3200000,
+            "services": ["Tax Prep", "Bookkeeping", "Financial Statements"]
+          }
+        ],
+        "toolsUsed": [
+          "bookkeeping"
+        ]
+      }
+    ]
+  },
+  "attorneys": {
+    "law_firms": [
+      {
+        "id": "harrison-estate-law",
+        "name": "Harrison Estate Law",
+        "attorney": {
+          "name": "Victoria Harrison",
+          "email": "vharrison@harrisonestate.com",
+          "phone": "(555) 901-2345",
+          "barNumber": "123456",
+          "experience": 14,
+          "specialties": ["Estate Planning", "Trust Administration", "Probate"]
+        },
+        "firm": {
+          "name": "Harrison Estate Law",
+          "established": 2010,
+          "attorneys": 3,
+          "paralegals": 2,
+          "clientCount": 450
+        },
+        "cases": [
+          {
+            "id": "case-001",
+            "clientName": "William Thompson Estate",
+            "type": "probate",
+            "status": "active",
+            "assets": 3500000,
+            "opened": "2024-07-15",
+            "documents": ["Will", "Trust Agreement", "Asset Inventory"]
+          },
+          {
+            "id": "case-002",
+            "clientName": "Miller Family Trust",
+            "type": "trust_administration",
+            "status": "ongoing",
+            "assets": 5200000,
+            "opened": "2024-06-20",
+            "documents": ["Trust Agreement", "Annual Report", "Distribution Records"]
+          }
+        ],
+        "toolsUsed": [
+          "case-management",
+          "document-generation",
+          "compliance-tracker",
+          "estate-templates"
+        ]
+      }
+    ]
+  },
+  "shared_data": {
+    "meetings": [
+      {
+        "id": "meeting-001",
+        "title": "Retirement Planning Review",
+        "type": "client_meeting",
+        "participants": [
+          {
+            "name": "Jennifer Thompson",
+            "role": "advisor",
+            "email": "jennifer@thompsonwealth.com"
+          },
+          {
+            "name": "Michael Johnson",
+            "role": "client",
+            "email": "michael.johnson@email.com"
+          }
+        ],
+        "scheduledFor": "2024-09-10T10:00:00Z",
+        "duration": 90,
+        "location": "Thompson Wealth Management Office",
+        "agenda": [
+          "Review current portfolio performance",
+          "Discuss retirement timeline",
+          "Social Security optimization",
+          "Estate planning update"
+        ],
+        "status": "scheduled"
+      },
+      {
+        "id": "meeting-002",
+        "title": "Estate Document Review",
+        "type": "legal_consultation",
+        "participants": [
+          {
+            "name": "Victoria Harrison",
+            "role": "attorney",
+            "email": "vharrison@harrisonestate.com"
+          },
+          {
+            "name": "David Chen",
+            "role": "client",
+            "email": "david.chen@email.com"
+          }
+        ],
+        "scheduledFor": "2024-09-12T14:00:00Z",
+        "duration": 120,
+        "location": "Harrison Estate Law Office",
+        "agenda": [
+          "Review updated will",
+          "Trust structure modifications",
+          "Healthcare directives",
+          "Power of attorney updates"
+        ],
+        "status": "scheduled"
+      },
+      {
+        "id": "meeting-003",
+        "title": "Tax Planning Session",
+        "type": "tax_consultation",
+        "participants": [
+          {
+            "name": "Elena Martinez",
+            "role": "cpa",
+            "email": "elena@martinezcpa.com"
+          },
+          {
+            "name": "Carlos Rodriguez",
+            "role": "client",
+            "email": "carlos.rodriguez@email.com"
+          }
+        ],
+        "scheduledFor": "2024-09-15T16:00:00Z",
+        "duration": 60,
+        "location": "Virtual Meeting",
+        "agenda": [
+          "Year-end tax strategies",
+          "Retirement contributions",
+          "Business deductions",
+          "2025 tax planning"
+        ],
+        "status": "scheduled"
+      }
+    ],
+    "documents": [
+      {
+        "id": "doc-001",
+        "name": "Johnson Family Financial Plan",
+        "type": "financial_plan",
+        "owner": "michael.johnson@email.com",
+        "createdBy": "jennifer@thompsonwealth.com",
+        "createdDate": "2024-08-01",
+        "lastModified": "2024-08-15",
+        "status": "active",
+        "confidentiality": "high"
+      },
+      {
+        "id": "doc-002",
+        "name": "Chen Estate Planning Documents",
+        "type": "legal_documents",
+        "owner": "david.chen@email.com",
+        "createdBy": "vharrison@harrisonestate.com",
+        "createdDate": "2024-07-20",
+        "lastModified": "2024-08-30",
+        "status": "under_review",
+        "confidentiality": "high"
+      }
+    ],
+    "tasks": [
+      {
+        "id": "task-001",
+        "title": "Update beneficiary designations",
+        "assignedTo": "michael.johnson@email.com",
+        "createdBy": "jennifer@thompsonwealth.com",
+        "dueDate": "2024-09-20",
+        "priority": "high",
+        "status": "pending",
+        "category": "retirement_planning"
+      },
+      {
+        "id": "task-002",
+        "title": "Review trust tax returns",
+        "assignedTo": "vharrison@harrisonestate.com",
+        "createdBy": "elena@martinezcpa.com",
+        "dueDate": "2024-09-30",
+        "priority": "medium",
+        "status": "in_progress",
+        "category": "tax_compliance"
+      }
+    ]
+  },
+  "testing_scenarios": {
+    "families": [
+      {
+        "scenario": "Pre-retirement planning",
+        "persona": "families-aspiring",
+        "tools": ["retirement-roadmap", "social-security", "roth-ladder"],
+        "expected_outcomes": ["Retirement projection", "SS optimization", "Tax strategy"]
+      },
+      {
+        "scenario": "Estate planning for retirees",
+        "persona": "families-retirees", 
+        "tools": ["estate-planner", "longevity-hub"],
+        "expected_outcomes": ["Estate documents", "Healthcare planning"]
+      }
+    ],
+    "professionals": [
+      {
+        "scenario": "Advisor client onboarding",
+        "persona": "advisors",
+        "tools": ["lead-capture", "client-onboarding", "client-management"],
+        "expected_outcomes": ["Lead qualification", "Client profile", "Pipeline update"]
+      },
+      {
+        "scenario": "Estate attorney case management",
+        "persona": "attorneys-estate",
+        "tools": ["case-management", "document-generation", "estate-templates"],
+        "expected_outcomes": ["Case file", "Legal documents", "Compliance tracking"]
+      }
+    ]
+  }
+}
