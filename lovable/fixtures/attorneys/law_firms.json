@@ -1,0 +1,133 @@
+[
+  {
+    "firm_id": "law_firm_001",
+    "name": "Estate Planning Associates",
+    "managing_partner": "Margaret Sullivan, Esq.",
+    "practice_areas": ["estate_planning", "trust_administration", "elder_law", "probate"],
+    "attorney_count": 8,
+    "clients": [
+      {
+        "id": "ATT_001",
+        "name": "Williams Family",
+        "matter_type": "comprehensive_estate_plan",
+        "status": "active",
+        "documents": [
+          {
+            "type": "revocable_trust",
+            "execution_date": "2024-03-20",
+            "updated": "2024-09-15"
+          },
+          {
+            "type": "pour_over_wills",
+            "execution_date": "2024-03-20",
+            "spouses": ["Robert Williams", "Margaret Williams"]
+          },
+          {
+            "type": "financial_power_of_attorney",
+            "execution_date": "2024-03-20"
+          },
+          {
+            "type": "healthcare_directives",
+            "execution_date": "2024-03-20"
+          }
+        ],
+        "trust_assets": 12500000,
+        "annual_review": "2025-03-20",
+        "billing": {
+          "rate": 650,
+          "ytd_fees": 15400,
+          "matter_budget": 25000
+        }
+      },
+      {
+        "id": "ATT_002",
+        "name": "Chen Business Succession",
+        "matter_type": "business_succession_planning",
+        "status": "active",
+        "documents": [
+          {
+            "type": "buy_sell_agreement",
+            "execution_date": "2024-06-15"
+          },
+          {
+            "type": "key_person_insurance",
+            "execution_date": "2024-06-15"
+          },
+          {
+            "type": "employment_agreements",
+            "execution_date": "2024-07-01"
+          }
+        ],
+        "business_valuation": 850000,
+        "succession_timeline": "5_years",
+        "billing": {
+          "rate": 575,
+          "ytd_fees": 28500,
+          "matter_budget": 45000
+        }
+      }
+    ],
+    "bar_admissions": [
+      {
+        "attorney": "Margaret Sullivan",
+        "states": ["NJ", "NY"],
+        "specializations": ["estate_planning", "tax_law"],
+        "bar_number": "NJ-034567"
+      },
+      {
+        "attorney": "Thomas Chen",
+        "states": ["NJ", "PA"],
+        "specializations": ["business_law", "succession_planning"],
+        "bar_number": "NJ-045678"
+      }
+    ],
+    "compliance": {
+      "malpractice_insurance": "current",
+      "cle_tracking": true,
+      "trust_account_compliance": "current",
+      "annual_registration": "current"
+    }
+  },
+  {
+    "firm_id": "law_firm_002",
+    "name": "Corporate Legal Solutions",
+    "managing_partner": "David Martinez, Esq.",
+    "practice_areas": ["corporate_law", "securities", "m_and_a", "employment"],
+    "attorney_count": 15,
+    "clients": [
+      {
+        "id": "ATT_003",
+        "name": "Tech Startup Inc",
+        "matter_type": "venture_capital_financing",
+        "status": "active",
+        "transaction_value": 15000000,
+        "documents": [
+          {
+            "type": "preferred_stock_purchase_agreement",
+            "execution_date": "2024-10-15"
+          },
+          {
+            "type": "investors_rights_agreement",
+            "execution_date": "2024-10-15"
+          },
+          {
+            "type": "voting_agreement",
+            "execution_date": "2024-10-15"
+          }
+        ],
+        "billing": {
+          "rate": 750,
+          "ytd_fees": 125000,
+          "matter_budget": 200000
+        }
+      }
+    ],
+    "specialized_services": [
+      "Venture capital transactions",
+      "IPO preparation",
+      "M&A due diligence",
+      "Employment law compliance",
+      "Securities law"
+    ]
+  }
+]

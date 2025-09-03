@@ -1,0 +1,149 @@
+[
+  {
+    "meeting_id": "meeting_001",
+    "type": "client_review", 
+    "advisor_id": "advisor_001",
+    "client_id": "household_001",
+    "scheduled_date": "2024-12-15T14:00:00Z",
+    "duration_minutes": 90,
+    "status": "scheduled",
+    "agenda": [
+      "Portfolio performance review",
+      "2025 tax planning strategies",
+      "College funding progress",
+      "Insurance coverage review"
+    ],
+    "participants": [
+      {
+        "name": "Jennifer Rodriguez",
+        "role": "advisor",
+        "email": "j.rodriguez@wealthassoc.com"
+      },
+      {
+        "name": "Michael Johnson", 
+        "role": "client",
+        "email": "michael.johnson@example.com"
+      },
+      {
+        "name": "Sarah Johnson",
+        "role": "client",
+        "email": "sarah.johnson@example.com"
+      }
+    ],
+    "location": "virtual",
+    "meeting_link": "https://zoom.us/j/1234567890",
+    "pre_meeting_materials": [
+      "Q3 performance report",
+      "Tax planning worksheet",
+      "529 plan statements"
+    ]
+  },
+  {
+    "meeting_id": "meeting_002",
+    "type": "prospect_consultation",
+    "advisor_id": "advisor_002", 
+    "prospect_id": "prospect_004",
+    "scheduled_date": "2024-12-18T10:00:00Z",
+    "duration_minutes": 60,
+    "status": "scheduled",
+    "agenda": [
+      "Financial situation assessment",
+      "Investment philosophy discussion", 
+      "Fee structure explanation",
+      "Next steps planning"
+    ],
+    "participants": [
+      {
+        "name": "Michael Thompson",
+        "role": "advisor",
+        "email": "m.thompson@hnwsolutions.com"
+      },
+      {
+        "name": "Private Equity Executive",
+        "role": "prospect",
+        "email": "prospect@example.com"
+      }
+    ],
+    "location": "office",
+    "address": "123 Main Street, Princeton, NJ",
+    "follow_up_required": true
+  },
+  {
+    "meeting_id": "meeting_003",
+    "type": "estate_planning",
+    "attorney_id": "attorney_001",
+    "client_id": "household_003",
+    "scheduled_date": "2024-12-20T11:00:00Z",
+    "duration_minutes": 120,
+    "status": "scheduled",
+    "agenda": [
+      "Trust document review",
+      "Charitable giving strategies",
+      "Generation-skipping considerations",
+      "Annual gifting program"
+    ],
+    "participants": [
+      {
+        "name": "Margaret Sullivan",
+        "role": "attorney",
+        "email": "m.sullivan@estatelaw.com"
+      },
+      {
+        "name": "Robert Williams",
+        "role": "client", 
+        "email": "robert.williams@example.com"
+      },
+      {
+        "name": "Margaret Williams",
+        "role": "client",
+        "email": "margaret.williams@example.com"
+      }
+    ],
+    "location": "office",
+    "address": "456 Legal Plaza, Princeton, NJ",
+    "documents_needed": [
+      "Updated trust agreement",
+      "Gift tax returns",
+      "Valuation reports"
+    ]
+  },
+  {
+    "meeting_id": "meeting_004",
+    "type": "tax_consultation",
+    "cpa_id": "cpa_001",
+    "client_id": "household_002",
+    "scheduled_date": "2024-12-22T15:30:00Z",
+    "duration_minutes": 75,
+    "status": "scheduled",
+    "agenda": [
+      "Year-end tax planning",
+      "Business entity optimization",
+      "Retirement plan contributions",
+      "Charitable deduction strategies"
+    ],
+    "participants": [
+      {
+        "name": "Patricia Morrison",
+        "role": "cpa",
+        "email": "p.morrison@morrisoncpa.com"
+      },
+      {
+        "name": "David Chen",
+        "role": "client",
+        "email": "david.chen@example.com"
+      },
+      {
+        "name": "Lisa Chen",
+        "role": "client",
+        "email": "lisa.chen@example.com"
+      }
+    ],
+    "location": "virtual",
+    "meeting_link": "https://zoom.us/j/0987654321",
+    "preparation_required": [
+      "Gather business financials",
+      "Review investment statements",
+      "Compile charitable contributions"
+    ]
+  }
+]

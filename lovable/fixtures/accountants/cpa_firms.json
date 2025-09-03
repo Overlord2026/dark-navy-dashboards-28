@@ -1,0 +1,133 @@
+[
+  {
+    "firm_id": "cpa_firm_001",
+    "name": "Morrison & Associates CPA",
+    "managing_partner": "Patricia Morrison, CPA",
+    "specialties": ["individual_tax", "small_business", "estate_tax", "audit"],
+    "staff_count": 12,
+    "client_count": 285,
+    "clients": [
+      {
+        "id": "CPA_001",
+        "name": "David Chen",
+        "client_type": "high_net_worth_individual",
+        "services": ["individual_tax", "business_tax", "planning"],
+        "complexity": "high",
+        "annual_fee": 8500,
+        "last_filing": "2024-04-15",
+        "notes": "Business owner with multiple entities, requires quarterly planning"
+      },
+      {
+        "id": "CPA_002", 
+        "name": "Williams Family Trust",
+        "client_type": "trust_estate",
+        "services": ["trust_tax", "estate_planning", "gift_tax"],
+        "complexity": "very_high",
+        "annual_fee": 15000,
+        "last_filing": "2024-03-30",
+        "notes": "Complex multi-generational trust structures"
+      },
+      {
+        "id": "CPA_003",
+        "name": "Johnson Family",
+        "client_type": "affluent_family",
+        "services": ["individual_tax", "education_planning", "retirement"],
+        "complexity": "moderate",
+        "annual_fee": 3500,
+        "last_filing": "2024-04-10",
+        "notes": "Standard high-income family, good planning opportunities"
+      }
+    ],
+    "ce_tracking": {
+      "staff_licenses": [
+        {
+          "name": "Patricia Morrison",
+          "license_number": "NJ-CPA-12345",
+          "state": "NJ",
+          "expiration": "2025-06-30",
+          "ce_required": 40,
+          "ce_completed": 42,
+          "ethics_required": 4,
+          "ethics_completed": 6
+        },
+        {
+          "name": "James Rodriguez",
+          "license_number": "NJ-CPA-23456",
+          "state": "NJ", 
+          "expiration": "2025-12-31",
+          "ce_required": 40,
+          "ce_completed": 28,
+          "ethics_required": 4,
+          "ethics_completed": 4
+        }
+      ],
+      "firm_compliance": {
+        "peer_review_due": "2025-08-15",
+        "quality_control_updated": "2024-01-15",
+        "professional_liability": "current",
+        "firm_registration": "current"
+      }
+    },
+    "technology_stack": [
+      "CCH Axcess",
+      "QuickBooks Enterprise", 
+      "Thomson Reuters",
+      "DocuSign",
+      "ShareFile"
+    ],
+    "seasonal_workflow": {
+      "busy_season": {
+        "start": "2024-01-15",
+        "end": "2024-04-15",
+        "extension_deadline": "2024-10-15"
+      },
+      "capacity": {
+        "max_new_clients": 50,
+        "current_utilization": 0.85
+      }
+    }
+  },
+  {
+    "firm_id": "cpa_firm_002",
+    "name": "Strategic Tax Partners",
+    "managing_partner": "Robert Kim, CPA",
+    "specialties": ["business_tax", "international_tax", "m_and_a", "forensic"],
+    "staff_count": 25,
+    "client_count": 125,
+    "clients": [
+      {
+        "id": "CPA_004",
+        "name": "Global Manufacturing Corp",
+        "client_type": "c_corporation",
+        "services": ["corporate_tax", "international", "transfer_pricing"],
+        "complexity": "very_high",
+        "annual_fee": 85000,
+        "last_filing": "2024-03-15",
+        "notes": "Multi-jurisdictional operations, complex transfer pricing"
+      },
+      {
+        "id": "CPA_005",
+        "name": "Tech Startup Ventures",
+        "client_type": "s_corporation", 
+        "services": ["corporate_tax", "r_and_d_credits", "equity_compensation"],
+        "complexity": "high",
+        "annual_fee": 25000,
+        "last_filing": "2024-03-20",
+        "notes": "Rapid growth, equity compensation complexity"
+      }
+    ],
+    "specialized_services": [
+      "International tax compliance",
+      "Transfer pricing studies",
+      "M&A tax due diligence",
+      "State and local tax optimization",
+      "R&D credit studies"
+    ],
+    "software_integrations": [
+      "Thomson Reuters ONESOURCE",
+      "BNA Income Tax Planner",
+      "CorpTax",
+      "Fixed Assets CS"
+    ]
+  }
+]

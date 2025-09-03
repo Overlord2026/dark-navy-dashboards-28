@@ -1,0 +1,217 @@
+[
+  {
+    "advisor_id": "advisor_001",
+    "name": "Jennifer Rodriguez, CFP",
+    "firm": "Wealth Management Associates",
+    "specialties": ["retirement_planning", "education_funding", "tax_optimization"],
+    "aum": 125000000,
+    "client_count": 85,
+    "pipeline": {
+      "prospects": [
+        {
+          "id": "prospect_001",
+          "name": "Dr. Amanda Foster",
+          "stage": "initial_consultation",
+          "estimated_aum": 850000,
+          "source": "physician_referral",
+          "contact_date": "2024-12-01",
+          "next_action": "follow_up_call",
+          "probability": 0.75,
+          "notes": "Recently sold medical practice, needs comprehensive retirement planning"
+        },
+        {
+          "id": "prospect_002", 
+          "name": "Tech Startup Founders",
+          "stage": "needs_assessment",
+          "estimated_aum": 2500000,
+          "source": "professional_network",
+          "contact_date": "2024-11-28",
+          "next_action": "proposal_presentation",
+          "probability": 0.60,
+          "notes": "Post-IPO liquidity event, complex equity compensation"
+        },
+        {
+          "id": "prospect_003",
+          "name": "The Martinez Family",
+          "stage": "proposal_sent",
+          "estimated_aum": 650000,
+          "source": "client_referral",
+          "contact_date": "2024-11-15",
+          "next_action": "decision_meeting",
+          "probability": 0.85,
+          "notes": "Young professionals, comprehensive financial planning focus"
+        }
+      ],
+      "clients": [
+        {
+          "id": "household_001",
+          "onboarding_status": "complete",
+          "relationship_length": "3_years",
+          "last_meeting": "2024-11-15",
+          "next_review": "2025-02-15",
+          "satisfaction_score": 9.2
+        }
+      ],
+      "referral_sources": [
+        {
+          "source_type": "existing_clients",
+          "referrals_ytd": 12,
+          "conversion_rate": 0.75
+        },
+        {
+          "source_type": "professional_network",
+          "referrals_ytd": 8,
+          "conversion_rate": 0.50
+        },
+        {
+          "source_type": "digital_marketing",
+          "referrals_ytd": 6,
+          "conversion_rate": 0.25
+        }
+      ]
+    },
+    "metrics": {
+      "ytd_new_clients": 18,
+      "ytd_aum_growth": 15200000,
+      "average_client_size": 1470000,
+      "client_retention_rate": 0.96,
+      "referral_rate": 0.28
+    }
+  },
+  {
+    "advisor_id": "advisor_002",
+    "name": "Michael Thompson, CFA",
+    "firm": "High Net Worth Solutions",
+    "specialties": ["investment_management", "business_succession", "alternative_investments"],
+    "aum": 285000000,
+    "client_count": 45,
+    "pipeline": {
+      "prospects": [
+        {
+          "id": "prospect_004",
+          "name": "Private Equity Executive",
+          "stage": "discovery_call",
+          "estimated_aum": 8500000,
+          "source": "industry_event",
+          "contact_date": "2024-12-03",
+          "next_action": "comprehensive_assessment",
+          "probability": 0.70,
+          "notes": "Carry distributions, need sophisticated tax planning"
+        },
+        {
+          "id": "prospect_005",
+          "name": "Family Business Owner",
+          "stage": "needs_assessment",
+          "estimated_aum": 4200000,
+          "source": "attorney_referral",
+          "contact_date": "2024-11-20",
+          "next_action": "succession_planning_workshop",
+          "probability": 0.80,
+          "notes": "Third-generation business, succession and estate planning priority"
+        }
+      ],
+      "clients": [
+        {
+          "id": "household_002",
+          "onboarding_status": "complete",
+          "relationship_length": "5_years",
+          "last_meeting": "2024-12-01",
+          "next_review": "2025-03-01",
+          "satisfaction_score": 9.8
+        }
+      ],
+      "referral_sources": [
+        {
+          "source_type": "professional_network",
+          "referrals_ytd": 15,
+          "conversion_rate": 0.80
+        },
+        {
+          "source_type": "existing_clients",
+          "referrals_ytd": 10,
+          "conversion_rate": 0.90
+        },
+        {
+          "source_type": "centers_of_influence",
+          "referrals_ytd": 8,
+          "conversion_rate": 0.65
+        }
+      ]
+    },
+    "metrics": {
+      "ytd_new_clients": 12,
+      "ytd_aum_growth": 38500000,
+      "average_client_size": 6330000,
+      "client_retention_rate": 0.98,
+      "referral_rate": 0.35
+    }
+  },
+  {
+    "advisor_id": "advisor_003",
+    "name": "Elizabeth Hamilton, ChFC",
+    "firm": "Premier Family Office",
+    "specialties": ["family_office_services", "estate_planning", "philanthropic_planning"],
+    "aum": 750000000,
+    "client_count": 25,
+    "pipeline": {
+      "prospects": [
+        {
+          "id": "prospect_006",
+          "name": "Tech Entrepreneur Exit",
+          "stage": "relationship_building",
+          "estimated_aum": 45000000,
+          "source": "investment_banker_referral",
+          "contact_date": "2024-11-25",
+          "next_action": "family_governance_discussion",
+          "probability": 0.65,
+          "notes": "Company sale proceeds, multi-generational planning needed"
+        },
+        {
+          "id": "prospect_007",
+          "name": "Inherited Wealth Family",
+          "stage": "trust_review",
+          "estimated_aum": 25000000,
+          "source": "estate_attorney_referral",
+          "contact_date": "2024-11-18",
+          "next_action": "investment_committee_meeting",
+          "probability": 0.75,
+          "notes": "Complex trust structures, need consolidated management"
+        }
+      ],
+      "clients": [
+        {
+          "id": "household_003",
+          "onboarding_status": "complete",
+          "relationship_length": "8_years",
+          "last_meeting": "2024-10-30",
+          "next_review": "2025-01-30",
+          "satisfaction_score": 9.6
+        }
+      ],
+      "referral_sources": [
+        {
+          "source_type": "estate_attorneys",
+          "referrals_ytd": 8,
+          "conversion_rate": 0.88
+        },
+        {
+          "source_type": "existing_clients",
+          "referrals_ytd": 6,
+          "conversion_rate": 0.95
+        },
+        {
+          "source_type": "investment_bankers",
+          "referrals_ytd": 4,
+          "conversion_rate": 0.70
+        }
+      ]
+    },
+    "metrics": {
+      "ytd_new_clients": 6,
+      "ytd_aum_growth": 125000000,
+      "average_client_size": 30000000,
+      "client_retention_rate": 1.00,
+      "referral_rate": 0.45
+    }
+  }
+]

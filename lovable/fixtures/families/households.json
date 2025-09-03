@@ -1,0 +1,320 @@
+[
+  {
+    "id": "household_001",
+    "name": "The Johnson Family",
+    "primary_contact": {
+      "name": "Michael Johnson",
+      "email": "michael.johnson@example.com",
+      "phone": "+1-555-0123"
+    },
+    "spouse": {
+      "name": "Sarah Johnson", 
+      "email": "sarah.johnson@example.com",
+      "phone": "+1-555-0124"
+    },
+    "children": [
+      {
+        "name": "Emma Johnson",
+        "birth_year": 2010,
+        "education_planning": true
+      },
+      {
+        "name": "Lucas Johnson", 
+        "birth_year": 2008,
+        "education_planning": true
+      }
+    ],
+    "net_worth": 2500000,
+    "liquid_assets": 850000,
+    "investment_accounts": [
+      {
+        "type": "taxable_brokerage",
+        "balance": 650000,
+        "advisor_managed": true
+      },
+      {
+        "type": "401k_michael",
+        "balance": 425000,
+        "employer": "Tech Corp"
+      },
+      {
+        "type": "401k_sarah", 
+        "balance": 285000,
+        "employer": "Healthcare Systems"
+      },
+      {
+        "type": "529_emma",
+        "balance": 45000,
+        "beneficiary": "Emma Johnson"
+      },
+      {
+        "type": "529_lucas",
+        "balance": 52000, 
+        "beneficiary": "Lucas Johnson"
+      }
+    ],
+    "real_estate": [
+      {
+        "type": "primary_residence",
+        "value": 850000,
+        "mortgage_balance": 320000,
+        "address": "123 Oak Street, Westfield, NJ"
+      },
+      {
+        "type": "vacation_home",
+        "value": 425000,
+        "mortgage_balance": 185000,
+        "address": "456 Beach Avenue, Cape May, NJ"
+      }
+    ],
+    "insurance": {
+      "life_insurance_michael": 1000000,
+      "life_insurance_sarah": 750000,
+      "disability_insurance": true,
+      "umbrella_policy": 2000000
+    },
+    "estate_planning": {
+      "wills_updated": "2023-08-15",
+      "trust_established": true,
+      "power_of_attorney": true,
+      "healthcare_directives": true
+    },
+    "tax_situation": {
+      "filing_status": "married_joint",
+      "estimated_annual_income": 285000,
+      "tax_advisor": "CPA_003",
+      "charitable_giving": 15000
+    },
+    "goals": [
+      "College funding for children",
+      "Early retirement at 58",
+      "Estate tax minimization",
+      "Philanthropic giving strategy"
+    ],
+    "risk_profile": "moderate_aggressive",
+    "advisor_id": "advisor_001",
+    "last_review": "2024-11-15"
+  },
+  {
+    "id": "household_002", 
+    "name": "The Chen Family",
+    "primary_contact": {
+      "name": "David Chen",
+      "email": "david.chen@example.com",
+      "phone": "+1-555-0225"
+    },
+    "spouse": {
+      "name": "Lisa Chen",
+      "email": "lisa.chen@example.com", 
+      "phone": "+1-555-0226"
+    },
+    "children": [
+      {
+        "name": "Kevin Chen",
+        "birth_year": 2012,
+        "education_planning": true
+      }
+    ],
+    "net_worth": 4200000,
+    "liquid_assets": 1250000,
+    "investment_accounts": [
+      {
+        "type": "taxable_brokerage",
+        "balance": 1850000,
+        "advisor_managed": true
+      },
+      {
+        "type": "401k_david",
+        "balance": 650000,
+        "employer": "Financial Services Inc"
+      },
+      {
+        "type": "roth_ira_lisa",
+        "balance": 285000,
+        "self_directed": true
+      },
+      {
+        "type": "529_kevin", 
+        "balance": 125000,
+        "beneficiary": "Kevin Chen"
+      }
+    ],
+    "business_interests": [
+      {
+        "entity": "Chen Consulting LLC",
+        "ownership": 0.75,
+        "valuation": 850000,
+        "type": "professional_services"
+      }
+    ],
+    "real_estate": [
+      {
+        "type": "primary_residence",
+        "value": 1250000,
+        "mortgage_balance": 485000,
+        "address": "789 Elm Drive, Short Hills, NJ"
+      },
+      {
+        "type": "investment_property",
+        "value": 650000,
+        "mortgage_balance": 420000,
+        "address": "321 Rental Avenue, Newark, NJ",
+        "rental_income": 3600
+      }
+    ],
+    "insurance": {
+      "life_insurance_david": 2000000,
+      "life_insurance_lisa": 1500000,
+      "disability_insurance": true,
+      "umbrella_policy": 5000000,
+      "business_insurance": true
+    },
+    "estate_planning": {
+      "wills_updated": "2024-03-20",
+      "trust_established": true,
+      "irrevocable_trust": true,
+      "business_succession": true,
+      "power_of_attorney": true,
+      "healthcare_directives": true
+    },
+    "tax_situation": {
+      "filing_status": "married_joint",
+      "estimated_annual_income": 425000,
+      "business_income": 185000,
+      "tax_advisor": "CPA_001",
+      "charitable_giving": 35000,
+      "tax_loss_harvesting": true
+    },
+    "goals": [
+      "Business succession planning",
+      "Tax optimization strategies", 
+      "Generational wealth transfer",
+      "Alternative investments"
+    ],
+    "risk_profile": "aggressive",
+    "advisor_id": "advisor_002",
+    "last_review": "2024-12-01"
+  },
+  {
+    "id": "household_003",
+    "name": "The Williams Trust",
+    "primary_contact": {
+      "name": "Robert Williams",
+      "email": "robert.williams@example.com",
+      "phone": "+1-555-0327"
+    },
+    "spouse": {
+      "name": "Margaret Williams",
+      "email": "margaret.williams@example.com",
+      "phone": "+1-555-0328"
+    },
+    "children": [
+      {
+        "name": "Jennifer Williams",
+        "birth_year": 1985,
+        "education_planning": false,
+        "trust_beneficiary": true
+      },
+      {
+        "name": "Christopher Williams",
+        "birth_year": 1987,
+        "education_planning": false,
+        "trust_beneficiary": true
+      }
+    ],
+    "net_worth": 12500000,
+    "liquid_assets": 3200000,
+    "investment_accounts": [
+      {
+        "type": "trust_investment_account",
+        "balance": 8500000,
+        "advisor_managed": true,
+        "institutional": true
+      },
+      {
+        "type": "personal_taxable",
+        "balance": 1250000,
+        "advisor_managed": true
+      },
+      {
+        "type": "municipal_bonds",
+        "balance": 850000,
+        "tax_free": true
+      }
+    ],
+    "real_estate": [
+      {
+        "type": "primary_residence",
+        "value": 2850000,
+        "mortgage_balance": 0,
+        "address": "567 Estate Lane, Princeton, NJ"
+      },
+      {
+        "type": "vacation_home_hamptons",
+        "value": 1850000,
+        "mortgage_balance": 0,
+        "address": "890 Ocean Drive, East Hampton, NY"
+      },
+      {
+        "type": "vacation_home_aspen",
+        "value": 2200000,
+        "mortgage_balance": 0,
+        "address": "234 Mountain View, Aspen, CO"
+      }
+    ],
+    "alternative_investments": [
+      {
+        "type": "private_equity",
+        "value": 1500000,
+        "fund": "Premier Growth Fund III"
+      },
+      {
+        "type": "hedge_fund",
+        "value": 2000000,
+        "fund": "Alpha Strategies LP"
+      },
+      {
+        "type": "real_estate_fund",
+        "value": 750000,
+        "fund": "Commercial Properties REIT"
+      }
+    ],
+    "insurance": {
+      "life_insurance_robert": 5000000,
+      "life_insurance_margaret": 3000000,
+      "disability_insurance": true,
+      "umbrella_policy": 10000000,
+      "valuable_items": 500000
+    },
+    "estate_planning": {
+      "family_trust": true,
+      "charitable_remainder_trust": true,
+      "grantor_retained_annuity_trust": true,
+      "generation_skipping_trust": true,
+      "family_limited_partnership": true,
+      "annual_gifting_program": true,
+      "charitable_lead_trust": true
+    },
+    "tax_situation": {
+      "filing_status": "married_joint",
+      "estimated_annual_income": 650000,
+      "investment_income": 485000,
+      "tax_advisor": "CPA_002",
+      "charitable_giving": 125000,
+      "tax_loss_harvesting": true,
+      "estate_tax_planning": true
+    },
+    "goals": [
+      "Estate tax minimization",
+      "Generational wealth preservation",
+      "Philanthropic legacy",
+      "Family governance",
+      "Investment diversification"
+    ],
+    "risk_profile": "conservative_moderate",
+    "advisor_id": "advisor_003",
+    "family_office_services": true,
+    "concierge_services": true,
+    "last_review": "2024-10-30"
+  }
+]
