@@ -67,7 +67,7 @@ serve(async (req) => {
 
     console.log(`Computing overlap for funds: ${fundIds.join(', ')}`);
 
-    // Compute overlap using the engine
+    // Compute overlap using the shared engine
     const overlapResults = await computeOverlap({ fundIds, asOfDate, userId: user.id }, supabaseClient);
 
     // Persist results to database
