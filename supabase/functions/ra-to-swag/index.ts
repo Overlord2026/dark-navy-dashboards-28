@@ -1,5 +1,8 @@
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
-import { parseToSwag } from "./parser.ts";
+import { parseToSwag } from "./parser.ts"; // relative import with .ts
+
+
+
 
 serve(async (req) => {
   try {
@@ -10,7 +13,8 @@ serve(async (req) => {
     });
   } catch (e) {
     return new Response(JSON.stringify({ ok: false, error: String(e) }), {
-      status: 500, headers: { "Content-Type": "application/json" }
+      status: 500,
+      headers: { "Content-Type": "application/json" },
     });
   }
 });
