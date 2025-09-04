@@ -1,14 +1,21 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export const SecondaryNav: React.FC = () => {
+  const navigate = useNavigate();
+
   const navItems = [
-    'Families',
-    'Service Pros', 
-    'NIL Healthcare Solutions',
-    'Learn',
-    'Load NIL Demo',
-    'Marketplace'
+    { label: 'Families', path: '/families' },
+    { label: 'Service Pros', path: '/pros' }, 
+    { label: 'NIL Healthcare Solutions', path: '/marketplace' },
+    { label: 'Learn', path: '/learn' },
+    { label: 'Load NIL Demo', path: '/nil/demo' },
+    { label: 'Marketplace', path: '/marketplace' }
   ];
+
+  const handleNavigation = (path: string) => {
+    navigate(path);
+  };
 
   return (
     <div 
@@ -17,27 +24,30 @@ export const SecondaryNav: React.FC = () => {
         backgroundColor: '#001F3F', 
         top: '80px',
         height: '80px',
-        border: '1px solid #D4AF37'
+        borderBottom: '1px solid #D4AF37'
       }}
     >
       <nav className="flex items-center justify-center w-full max-w-7xl px-4">
-        <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 md:gap-6">
+        <div className="flex items-center justify-center gap-6">
           {navItems.map((item, index) => (
             <button
               key={index}
-              className="px-3 py-2 sm:px-4 sm:py-2 md:px-6 md:py-3 font-medium transition-all duration-200 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+              onClick={() => handleNavigation(item.path)}
+              className="font-medium transition-all duration-200 hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2 focus:ring-offset-[#001F3F]"
               style={{
-                backgroundColor: '#000000',
+                backgroundColor: '#FFFFFF',
                 color: '#D4AF37',
                 border: '1px solid #D4AF37',
                 fontSize: '14px',
-                letterSpacing: item === 'NIL Healthcare Solutions' ? '1.2rem' : '0.05em',
                 borderRadius: '4px',
-                minHeight: '40px',
-                whiteSpace: 'nowrap'
+                height: '48px',
+                minWidth: '48px',
+                padding: '0 16px',
+                whiteSpace: 'nowrap',
+                cursor: 'pointer'
               }}
             >
-              {item}
+              {item.label}
             </button>
           ))}
         </div>
