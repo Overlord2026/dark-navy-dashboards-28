@@ -99,7 +99,7 @@ const FamiliesPage = () => {
   };
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#001F3F' }}>
+    <div className="min-h-screen bg-brand-black">
       <main className="pt-[var(--header-stack)] scroll-mt-[var(--header-stack)]">
         <FamilyHero />
         
@@ -107,10 +107,10 @@ const FamiliesPage = () => {
           {/* Choose Your Family Stage Section */}
           <section className="text-center">
             <div className="max-w-4xl mx-auto">
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              <h2 className="text-3xl md:text-4xl font-bold text-brand-white mb-4">
                 Choose Your Family's Stage
               </h2>
-              <p className="text-xl text-white/80 mb-12 max-w-2xl mx-auto">
+              <p className="text-xl text-brand-white/80 mb-12 max-w-2xl mx-auto">
                 Select the path that best describes your family's wealth journey
               </p>
               
@@ -123,12 +123,11 @@ const FamiliesPage = () => {
                   return (
                     <Card
                       key={stage.id}
-                      className={`cursor-pointer transition-all duration-300 transform hover:scale-105 ${
-                        isSelected ? 'ring-2 ring-[#D4AF37]' : ''
+                      className={`cursor-pointer transition-all duration-300 transform hover:scale-105 bg-brand-black border-brand-gold hover:bg-brand-black/90 ${
+                        isSelected ? 'ring-2 ring-brand-gold' : ''
                       }`}
                       style={{
-                        backgroundColor: stage.background,
-                        border: '1px solid #D4AF37',
+                        border: '1px solid hsl(var(--brand-gold))',
                         boxShadow: '0 4px 8px rgba(212, 175, 55, 0.2)',
                         minHeight: '220px', // Responsive height
                         filter: isSelected ? 'brightness(110%)' : 'none'
@@ -138,7 +137,7 @@ const FamiliesPage = () => {
                         handleStageSelect(stage);
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.filter = `brightness(${stage.hoverBrightness})`;
+                        e.currentTarget.style.filter = 'brightness(110%)';
                       }}
                       onMouseLeave={(e) => {
                         e.currentTarget.style.filter = isSelected ? 'brightness(110%)' : 'none';
@@ -147,20 +146,18 @@ const FamiliesPage = () => {
                       <CardContent className="p-6 md:p-8 text-center h-full flex flex-col justify-center">
                         <div className="mb-4 md:mb-6">
                           <div 
-                            className="w-12 h-12 md:w-16 md:h-16 mx-auto mb-3 md:mb-4 rounded-lg flex items-center justify-center"
-                            style={{ backgroundColor: 'rgba(212, 175, 55, 0.2)', border: '1px solid #D4AF37' }}
+                            className="w-12 h-12 md:w-16 md:h-16 mx-auto mb-3 md:mb-4 rounded-lg flex items-center justify-center bg-brand-gold/10"
                           >
-                            <Icon className="w-6 h-6 md:w-8 md:h-8" style={{ color: '#D4AF37' }} />
+                            <Icon className="w-6 h-6 md:w-8 md:h-8 text-brand-gold" />
                           </div>
                         </div>
                         
-                        <h3 className="text-xl md:text-2xl font-bold text-white mb-2 md:mb-3">{stage.title}</h3>
-                        <p className="text-white/90 text-base md:text-lg leading-relaxed">{stage.description}</p>
+                        <h3 className="text-xl md:text-2xl font-bold text-brand-white mb-2 md:mb-3">{stage.title}</h3>
+                        <p className="text-brand-white/80 text-base md:text-lg leading-relaxed">{stage.description}</p>
                         
                         {isSelected && (
                           <Badge 
-                            className="mt-3 md:mt-4 mx-auto text-xs md:text-sm"
-                            style={{ backgroundColor: '#D4AF37', color: '#001F3F' }}
+                            className="mt-3 md:mt-4 mx-auto text-xs md:text-sm bg-brand-gold text-brand-black border-brand-gold"
                           >
                             Selected
                           </Badge>
@@ -174,18 +171,9 @@ const FamiliesPage = () => {
               {/* Continue Button */}
               <Button
                 onClick={handleContinue}
-                className="px-6 md:px-8 py-3 md:py-4 text-base md:text-lg font-semibold transition-all duration-300 hover:scale-105 w-full sm:w-auto"
+                className="px-6 md:px-8 py-3 md:py-4 text-base md:text-lg font-semibold transition-all duration-300 hover:scale-105 w-full sm:w-auto bg-brand-gold text-brand-black hover:bg-brand-gold/90 border-brand-gold"
                 style={{
-                  backgroundColor: '#D4AF37',
-                  color: '#001F3F',
-                  border: 'none',
                   boxShadow: '0 4px 8px rgba(212, 175, 55, 0.3)'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = '#E6C04D';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = '#D4AF37';
                 }}
               >
                 Continue
@@ -197,8 +185,8 @@ const FamiliesPage = () => {
           {/* Or Jump Right In Section */}
           <section>
             <div className="text-center mb-8">
-              <h3 className="text-2xl font-bold text-white mb-4">Or Jump Right In</h3>
-              <p className="text-white/70">Start with a specific area that interests you most</p>
+              <h3 className="text-2xl font-bold text-brand-white mb-4">Or Jump Right In</h3>
+              <p className="text-brand-white/70">Start with a specific area that interests you most</p>
             </div>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 max-w-4xl mx-auto">
