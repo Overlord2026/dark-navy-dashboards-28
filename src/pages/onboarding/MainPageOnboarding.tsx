@@ -90,11 +90,11 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
 
   return (
     <>
-      <TopBanner />
+      {/* Secondary Nav only on onboarding page */}
       <SecondaryNav />
       <div className="h-screen w-full" style={{ backgroundColor: '#001F3F' }}>
         {/* Main Content */}
-        <div className="h-full flex flex-col items-center justify-start" style={{ paddingTop: '2rem' }}>
+        <div className="h-full flex flex-col items-center justify-start" style={{ paddingTop: '4rem' }}>
           <div className="w-full max-w-none mx-auto px-4" style={{ width: '90vw' }}>
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
@@ -119,16 +119,16 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
                 />
               </motion.div>
 
-              {/* Linda Disable Toggle */}
+              {/* Linda Disable Toggle - Above her greeting */}
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.6, delay: 0.3 }}
-                className="flex justify-center mb-4"
+                className="flex justify-center mb-6"
               >
                 <button
                   onClick={handleLindaToggle}
-                  className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-white/20"
+                  className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-white/20 border border-white/20"
                   aria-label="Toggle Linda voice assistant"
                 >
                   {isLindaDisabled ? (
@@ -136,8 +136,8 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
                   ) : (
                     <ToggleRight className="h-5 w-5 text-gold-base" />
                   )}
-                  <span className="text-sm text-white/80">
-                    {isLindaDisabled ? 'Linda Disabled' : 'Linda Enabled'}
+                  <span className="text-sm text-white/90 font-medium">
+                    {isLindaDisabled ? 'Enable Linda' : 'Disable Linda'}
                   </span>
                 </button>
               </motion.div>

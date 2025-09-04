@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider } from "next-themes";
 import { HelmetProvider } from 'react-helmet-async';
 import '@/styles/brand.css';
+import { TopBanner } from '@/components/layout/TopBanner';
 import BrandHeader from '@/components/layout/BrandHeader';
 import { ConditionalMegaMenu } from '@/components/nav/ConditionalMegaMenu';
 import { RedirectHandler } from '@/components/RedirectHandler';
@@ -329,6 +330,8 @@ function App() {
       <HelmetProvider>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           <div className="min-h-screen bg-background text-foreground">
+            {/* Permanent Top Banner on ALL pages */}
+            <TopBanner />
             <BrandHeader />
             <ConditionalMegaMenu />
             <RedirectHandler />
