@@ -300,9 +300,9 @@
 
   /* BFO Premium Brand CSS Variables */
   :root {
-    --bfo-black: #0B0F14; /* deep black */
+    --bfo-black: #000000; /* pure black */
     --bfo-gold:  #D4AF37; /* metallic gold */
-    --bfo-navy:  #0B1E33;
+    --bfo-navy:  #0B2239; /* matches the header navy */
     --header-h:  56px;
   }
 
@@ -378,7 +378,7 @@
   }
 
   /* Brand Utility Classes */
-  .brand-bg { @apply bg-bfo-navy text-bfo-white; }
+  .brand-bg { @apply bg-[#0B2239] text-bfo-white; }
   .icon-black { @apply text-bfo-black; }
   .icon-gold { @apply text-bfo-gold; }
   /* Prevent regressions: */
