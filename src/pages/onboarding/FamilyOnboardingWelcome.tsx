@@ -75,7 +75,7 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
       <SecondaryNav />
       <div className="h-screen w-full" style={{ backgroundColor: '#001F3F' }}>
         {/* Main Content */}
-        <div className="h-full flex flex-col items-center justify-center" style={{ paddingTop: '140px' }}>
+        <div className="h-full flex flex-col items-center justify-center" style={{ paddingTop: '120px' }}>
         <div className="w-full max-w-md mx-auto px-6">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
