@@ -12,11 +12,11 @@ export const SecondaryNav: React.FC = () => {
 
   return (
     <div 
-      className="fixed left-0 right-0 z-40 flex justify-center items-center py-4"
+      className="fixed left-0 right-0 z-40 flex justify-center items-center"
       style={{ 
         backgroundColor: '#001F3F', 
-        top: '60px',
-        height: '60px',
+        top: '80px',
+        height: '80px',
         border: '1px solid #D4AF37'
       }}
     >
