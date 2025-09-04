@@ -49,7 +49,7 @@ export default function ProsIndex() {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="page-surface">
       <Hero
         title="Professional Suite"
         subtitle="Comprehensive tools for financial advisors, CPAs, attorneys, and insurance professionals to grow and manage their practice"
