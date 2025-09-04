@@ -362,16 +362,13 @@ function App() {
             } />
             
             {/* Family Routes */}
-            <Route path="/families" element={<FamilyDashboard />} />
-            <Route path="/families/:type" element={<FamilyTypeDashboard />} />
-            <Route path="/family/home" element={<FamilyDashboard />} />
-            
-            {/* NEW: Primary persona landing pages */}
             <Route path="/families" element={
               <Suspense fallback={<div>Loading...</div>}>
                 <FamiliesIndex />
               </Suspense>
             } />
+            <Route path="/families/:type" element={<FamilyTypeDashboard />} />
+            <Route path="/family/home" element={<FamilyDashboard />} />
             <Route path="/pros" element={
               <Suspense fallback={<div>Loading...</div>}>
                 <ProsIndex />

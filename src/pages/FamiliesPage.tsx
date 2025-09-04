@@ -132,11 +132,7 @@ const FamiliesPage = () => {
                       <CardContent className="p-6 md:p-8 text-center h-full flex flex-col justify-center">
                         <div className="mb-4 md:mb-6">
                           <div className="w-12 h-12 md:w-16 md:h-16 mx-auto mb-3 md:mb-4 rounded-full bg-bfo-gold flex items-center justify-center">
-                            <BrandIcon 
-                              as={stage.icon} 
-                              color="black" 
-                              size={28}
-                            />
+                            <stage.icon className="w-6 h-6 md:w-8 md:h-8 text-black" />
                           </div>
                           
                           <Badge className="bg-bfo-gold text-black text-xs font-medium px-2 py-1 mb-2">
@@ -213,13 +209,9 @@ const FamiliesPage = () => {
                           backgroundColor: isWealth ? 'rgba(0, 0, 0, 0.1)' : 'rgba(212, 175, 55, 0.1)', 
                           borderColor: '#D4AF37' 
                         }}
-                      >
-                        <BrandIcon 
-                          as={option.icon} 
-                          color={isWealth ? "black" : "gold"} 
-                          size={20}
-                        />
-                      </div>
+                        >
+                          <option.icon className="w-5 h-5 md:w-6 md:h-6" style={{ color: isWealth ? '#000000' : '#D4AF37' }} />
+                        </div>
                       
                       <h4 className="font-semibold mb-2 text-sm md:text-base" style={{ color: isWealth ? '#000000' : '#000000' }}>
                         {option.title}
