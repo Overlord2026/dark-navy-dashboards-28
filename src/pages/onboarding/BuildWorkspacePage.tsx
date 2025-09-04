@@ -118,28 +118,46 @@ const BuildWorkspacePage = () => {
       title: 'Building Wealth Dashboard',
       subtitle: 'Start your journey to financial independence',
       primaryAction: 'Start Building Wealth',
-      href: '/families/aspiring'
+      href: '/families/aspiring',
+      description: 'Track goals, build emergency funds, and establish smart saving habits',
+      keyFeatures: ['Emergency Fund Builder', 'Debt Payoff Tracker', 'Investment Learning Hub', 'Career Growth Tools']
     },
     retiree: {
       title: 'Retirement Management Dashboard', 
       subtitle: 'Secure and optimize your golden years',
       primaryAction: 'Manage Retirement',
-      href: '/families/retirees'
+      href: '/families/retirees',
+      description: 'Optimize income, protect assets, and plan your legacy',
+      keyFeatures: ['RMD Calculator', 'Healthcare Planning', 'Estate Organization', 'Income Optimization']
     }
   };
 
   const config = personaConfig[persona as keyof typeof personaConfig] || personaConfig.aspiring;
 
+  // Enhanced sidebar with persona-specific features
   const AppSidebar = () => (
     <div className="w-64 bg-[hsl(var(--luxury-navy))] border-r border-[hsl(var(--luxury-gold))]/30 h-full">
       <div className="p-4">
+        {/* Persona Header */}
+        <div className="mb-6 pb-4 border-b border-[hsl(var(--luxury-gold))]/20">
+          <Badge className="mb-2 bg-[hsl(var(--luxury-gold))] text-[hsl(var(--luxury-navy))] font-semibold text-xs">
+            {persona === 'aspiring' ? 'Aspiring Families' : 'Retiree Families'}
+          </Badge>
+          <h2 className="text-[hsl(var(--luxury-white))] font-bold text-lg leading-tight">
+            {config.title}
+          </h2>
+          <p className="text-[hsl(var(--luxury-white))]/70 text-xs mt-1">
+            {config.description}
+          </p>
+        </div>
+
         <div className="mb-6">
           <h3 className="text-[hsl(var(--luxury-gold))] font-semibold px-3 py-2 text-sm uppercase tracking-wide">
             Core Features
           </h3>
           <div className="space-y-1">
             {coreFeatures.map((feature) => (
-              <div key={feature.title} className="flex items-center gap-3 p-3 rounded-lg text-[hsl(var(--luxury-white))] hover:bg-[hsl(var(--luxury-gold))]/20 hover:text-[hsl(var(--luxury-gold))] transition-colors">
+              <div key={feature.title} className="flex items-center gap-3 p-3 rounded-lg text-[hsl(var(--luxury-white))] hover:bg-[hsl(var(--luxury-gold))]/20 hover:text-[hsl(var(--luxury-gold))] transition-colors cursor-pointer">
                 <feature.icon className="h-4 w-4 flex-shrink-0" />
                 <span className="text-sm font-medium">{feature.title}</span>
                 <CheckCircle className="h-3 w-3 ml-auto text-green-400 flex-shrink-0" />
@@ -155,10 +173,10 @@ const BuildWorkspacePage = () => {
           </h3>
           <div className="space-y-1">
             {premiumTools.map((tool) => (
-              <div key={tool.title} className="flex items-center gap-3 p-3 rounded-lg text-[hsl(var(--luxury-white))]/60 hover:bg-[hsl(var(--luxury-purple))]/20 cursor-not-allowed">
-                <tool.icon className="h-4 w-4 opacity-60 flex-shrink-0" />
-                <span className="text-sm opacity-60">{tool.title}</span>
-                <Lock className="h-3 w-3 ml-auto opacity-60 flex-shrink-0" />
+              <div key={tool.title} className="flex items-center gap-3 p-3 rounded-lg text-[hsl(var(--luxury-white))]/60 hover:bg-[hsl(var(--luxury-purple))]/20 cursor-not-allowed group">
+                <tool.icon className="h-4 w-4 opacity-60 flex-shrink-0 group-hover:opacity-80" />
+                <span className="text-sm opacity-60 group-hover:opacity-80">{tool.title}</span>
+                <Lock className="h-3 w-3 ml-auto opacity-60 group-hover:opacity-80 flex-shrink-0" />
               </div>
             ))}
           </div>
@@ -204,32 +222,48 @@ const BuildWorkspacePage = () => {
               </div>
             </div>
 
-            {/* Dashboard Preview */}
+            {/* Enhanced Dashboard Preview with Persona-Specific Features */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-12">
-              <Card className="bg-[hsl(var(--luxury-navy))] border border-[hsl(var(--luxury-gold))]/30">
+              <Card className="bg-[hsl(var(--luxury-navy))] border-2 border-[hsl(var(--luxury-gold))]/50 shadow-[0_8px_32px_rgba(212,175,55,0.3)]">
                 <CardHeader>
                   <CardTitle className="text-[hsl(var(--luxury-white))] flex items-center gap-2">
                     <CheckCircle className="h-5 w-5 text-green-400" />
-                    Available Now
+                    Available Now - Your {persona === 'aspiring' ? 'Wealth Building' : 'Retirement'} Tools
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-[hsl(var(--luxury-white))]/80 mb-4">
-                    Start with these essential financial management tools included in your free account.
+                    {config.description}
                   </p>
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     {coreFeatures.map((feature) => (
-                      <div key={feature.title} className="flex items-center gap-3 p-2 rounded-lg hover:bg-[hsl(var(--luxury-gold))]/10 transition-colors">
-                        <feature.icon className="h-4 w-4 text-[hsl(var(--luxury-gold))]" />
-                        <span className="text-[hsl(var(--luxury-white))] font-medium">{feature.title}</span>
-                        <CheckCircle className="h-3 w-3 text-green-400 ml-auto" />
+                      <div key={feature.title} className="flex items-center gap-3 p-3 rounded-lg bg-[hsl(var(--luxury-gold))]/10 hover:bg-[hsl(var(--luxury-gold))]/20 transition-colors">
+                        <feature.icon className="h-5 w-5 text-[hsl(var(--luxury-gold))]" />
+                        <div className="flex-1">
+                          <span className="text-[hsl(var(--luxury-white))] font-medium block">{feature.title}</span>
+                          <span className="text-[hsl(var(--luxury-white))]/60 text-sm">{feature.description}</span>
+                        </div>
+                        <CheckCircle className="h-4 w-4 text-green-400" />
                       </div>
                     ))}
+                  </div>
+                  
+                  {/* Persona-specific features */}
+                  <div className="mt-4 pt-4 border-t border-[hsl(var(--luxury-gold))]/20">
+                    <h4 className="text-[hsl(var(--luxury-gold))] font-semibold text-sm mb-2">Specialized For You:</h4>
+                    <div className="grid grid-cols-2 gap-2">
+                      {config.keyFeatures.map((feature, index) => (
+                        <div key={index} className="text-xs text-[hsl(var(--luxury-white))]/80 flex items-center gap-1">
+                          <Target className="h-3 w-3 text-[hsl(var(--luxury-gold))]" />
+                          {feature}
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card className="bg-gradient-to-br from-[hsl(var(--luxury-purple))]/20 to-[hsl(var(--luxury-navy))] border-2 border-[hsl(var(--luxury-gold))]">
+              <Card className="bg-gradient-to-br from-[hsl(var(--luxury-purple))]/20 to-[hsl(var(--luxury-navy))] border-2 border-[hsl(var(--luxury-gold))] shadow-[0_12px_48px_rgba(94,23,235,0.4)]">
                 <CardHeader>
                   <CardTitle className="text-[hsl(var(--luxury-white))] flex items-center gap-2">
                     <Crown className="h-5 w-5 text-[hsl(var(--luxury-gold))]" />
@@ -238,19 +272,28 @@ const BuildWorkspacePage = () => {
                 </CardHeader>
                 <CardContent>
                   <p className="text-[hsl(var(--luxury-white))]/80 mb-4">
-                    Unlock advanced wealth management and planning tools with a Premium or Pro subscription.
+                    Unlock advanced {persona === 'aspiring' ? 'wealth building' : 'retirement planning'} and optimization tools with a Premium or Pro subscription.
                   </p>
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     {premiumTools.slice(0, 2).map((tool) => (
-                      <div key={tool.title} className="flex items-center gap-3 p-2 rounded-lg bg-[hsl(var(--luxury-gold))]/10">
-                        <tool.icon className="h-4 w-4 text-[hsl(var(--luxury-gold))]" />
-                        <span className="text-[hsl(var(--luxury-white))] font-medium">{tool.title}</span>
-                        <Badge className="ml-auto bg-[hsl(var(--luxury-purple))] text-white text-xs">
+                      <div key={tool.title} className="flex items-center gap-3 p-3 rounded-lg bg-[hsl(var(--luxury-gold))]/10 border border-[hsl(var(--luxury-gold))]/30">
+                        <tool.icon className="h-5 w-5 text-[hsl(var(--luxury-gold))]" />
+                        <div className="flex-1">
+                          <span className="text-[hsl(var(--luxury-white))] font-medium block">{tool.title}</span>
+                          <span className="text-[hsl(var(--luxury-white))]/60 text-sm">{tool.description}</span>
+                        </div>
+                        <Badge className="bg-[hsl(var(--luxury-purple))] text-white text-xs">
                           {tool.tier}
                         </Badge>
                       </div>
                     ))}
                   </div>
+                  <Button 
+                    className="w-full mt-4 bg-[hsl(var(--luxury-gold))] text-[hsl(var(--luxury-navy))] hover:bg-[hsl(var(--luxury-gold))]/90 font-semibold"
+                    onClick={() => setSelectedTier('Premium')}
+                  >
+                    Upgrade to Premium
+                  </Button>
                 </CardContent>
               </Card>
             </div>
