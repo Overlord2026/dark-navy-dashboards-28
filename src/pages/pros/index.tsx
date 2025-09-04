@@ -92,8 +92,8 @@ export default function ProsIndex() {
                 <Card key={index} className="bg-white border-2 border-bfo-gold hover:shadow-xl transition-all duration-300 group cursor-pointer">
                   <CardContent className="p-6">
                     <div className="flex items-start gap-4 mb-4">
-                      <div className="p-3 rounded-lg bg-bfo-gold/10 group-hover:bg-bfo-gold/20 transition-colors">
-                        <Icon className="h-6 w-6 text-bfo-gold" />
+                      <div className="p-3 rounded-lg bg-black group-hover:bg-black/80 transition-colors">
+                        <Icon className="h-6 w-6 text-white" />
                       </div>
                       
                       <div className="flex-1">
