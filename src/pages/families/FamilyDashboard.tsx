@@ -14,7 +14,7 @@ export const FamilyDashboard: React.FC = () => {
     // Linda's post-login question
     if ('speechSynthesis' in window && !hasPlayedWelcome) {
       const timer = setTimeout(() => {
-        playLindaWelcome("Welcome! What matters most - health, wealth, or your trusted team?")
+        playLindaWelcome("Welcome! Let's build your health and wealth blueprint.")
           .then(() => setHasPlayedWelcome(true))
           .catch(error => {
             console.error('Linda post-login voice error:', error);

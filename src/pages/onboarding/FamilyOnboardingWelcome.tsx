@@ -71,24 +71,24 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
   ];
 
   return (
-    <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#001F3F' }}>
-      <div className="w-full max-w-md px-6">
+    <div className="min-h-screen w-full flex items-center justify-center p-4 sm:p-6" style={{ backgroundColor: '#001F3F' }}>
+      <div className="w-full max-w-lg">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-center space-y-8"
+          className="text-center space-y-6 sm:space-y-8"
         >
           {/* Logo */}
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="flex justify-center mb-8"
+            className="flex justify-center mb-6 sm:mb-8"
           >
-            <div className="h-12 w-auto text-center">
+            <div className="text-center">
               <span 
-                className="text-2xl font-bold tracking-wide"
+                className="text-xl sm:text-2xl font-bold tracking-wide"
                 style={{ color: '#D4AF37' }}
               >
                 BOUTIQUE FAMILY OFFICE
@@ -101,13 +101,13 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="text-center space-y-4"
+            className="text-center space-y-3 sm:space-y-4"
           >
-            <h1 className="text-3xl font-bold text-white">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white leading-tight">
               Hi, I'm Linda from Your<br />
               <span style={{ color: '#D4AF37' }}>Boutique Family Office</span>
             </h1>
-            <p className="text-xl text-blue-100 leading-relaxed">
+            <p className="text-lg sm:text-xl text-blue-100 leading-relaxed px-4">
               Let's get started in just <span className="font-semibold text-white">60 seconds</span><br />
               Your secure family hub awaits
             </p>
@@ -117,11 +117,11 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.8 }}
-            className="space-y-4"
+            className="space-y-3 sm:space-y-4"
           >
-            <h3 className="text-lg font-medium text-white">Meet Your Team</h3>
+            <h3 className="text-base sm:text-lg font-medium text-white">Meet Your Team</h3>
             
-            <div className="flex justify-center items-center space-x-6">
+            <div className="flex justify-center items-center space-x-4 sm:space-x-6">
               {[
                 { icon: Briefcase, label: 'Advisor', delay: 0.1 },
                 { icon: Calculator, label: 'Accountant', delay: 0.2 },
@@ -137,15 +137,15 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
                     className="text-center"
                   >
                     <div 
-                      className="w-16 h-16 rounded-full flex items-center justify-center mb-2 mx-auto transition-all duration-300 hover:scale-110"
+                      className="w-12 h-12 sm:w-16 sm:h-16 rounded-full flex items-center justify-center mb-2 mx-auto transition-all duration-300 hover:scale-110"
                       style={{ 
                         backgroundColor: '#D4AF37',
                         boxShadow: '0 4px 20px rgba(212, 175, 55, 0.3)'
                       }}
                     >
-                      <IconComponent className="h-7 w-7 text-white" />
+                      <IconComponent className="h-5 w-5 sm:h-7 sm:w-7 text-white" />
                     </div>
-                    <span className="text-xs text-blue-200 font-medium">{member.label}</span>
+                    <span className="text-xs sm:text-sm text-blue-200 font-medium">{member.label}</span>
                   </motion.div>
                 );
               })}
@@ -155,7 +155,7 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6, delay: 1.4 }}
-              className="text-center text-blue-100 text-sm font-medium"
+              className="text-center text-blue-100 text-xs sm:text-sm font-medium px-4"
             >
               All working together in your secure space
             </motion.p>
@@ -166,11 +166,11 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 2.4 }}
-            className="space-y-4"
+            className="space-y-3 sm:space-y-4"
           >
-            <h3 className="text-lg font-medium text-white">Health & Wealth Blueprint</h3>
+            <h3 className="text-base sm:text-lg font-medium text-white">Health & Wealth Blueprint</h3>
             
-            <div className="flex justify-center items-center space-x-8">
+            <div className="flex justify-center items-center space-x-6 sm:space-x-8">
               {[
                 { icon: Heart, label: 'Health Tracking', delay: 0.1 },
                 { icon: TrendingUp, label: 'Wealth Planning', delay: 0.2 }
@@ -185,15 +185,15 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
                     className="text-center"
                   >
                     <div 
-                      className="w-20 h-20 rounded-full flex items-center justify-center mb-3 mx-auto transition-all duration-300 hover:scale-110"
+                      className="w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mb-3 mx-auto transition-all duration-300 hover:scale-110"
                       style={{ 
                         backgroundColor: '#D4AF37',
                         boxShadow: '0 6px 25px rgba(212, 175, 55, 0.4)'
                       }}
                     >
-                      <IconComponent className="h-8 w-8 text-white" />
+                      <IconComponent className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
                     </div>
-                    <span className="text-sm text-blue-200 font-medium">{element.label}</span>
+                    <span className="text-sm sm:text-base text-blue-200 font-medium">{element.label}</span>
                   </motion.div>
                 );
               })}
@@ -203,12 +203,12 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6, delay: 2.2 }}
-              className="text-center space-y-2"
+              className="text-center space-y-2 px-4"
             >
-              <p className="text-white font-semibold text-base">
+              <p className="text-white font-semibold text-sm sm:text-base">
                 Live longer, live smarter
               </p>
-              <p className="text-blue-100 text-sm">
+              <p className="text-blue-100 text-xs sm:text-sm leading-relaxed">
                 Your hub for health tracking and wealth planning<br />
                 <span className="font-medium">Invite your whole team to thrive</span>
               </p>
@@ -221,7 +221,7 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 1.6 }}
-            className="space-y-3"
+            className="space-y-3 sm:space-y-4 px-4"
           >
             {authProviders.map((provider, index) => {
               const IconComponent = provider.icon;
@@ -235,14 +235,15 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
                   <Button
                     onClick={() => onAuthChoice(provider.provider)}
                     className={`
-                      w-full h-12 flex items-center justify-center gap-3 
+                      w-full h-12 sm:h-14 flex items-center justify-center gap-3 
                       ${provider.bgColor} ${provider.textColor}
                       transition-all duration-300 ease-in-out
                       hover:scale-105 hover:shadow-lg
                       hover:shadow-white/20
                       focus:ring-2 focus:ring-white/20 focus:ring-offset-2 
                       focus:ring-offset-[#001F3F]
-                      font-medium text-base
+                      font-medium text-sm sm:text-base
+                      rounded-lg
                     `}
                     style={{
                       boxShadow: provider.name === 'Google' ? 
@@ -250,7 +251,7 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
                         '0 0 20px rgba(212, 175, 55, 0.2)'
                     }}
                   >
-                    <IconComponent className="h-5 w-5" />
+                    <IconComponent className="h-4 w-4 sm:h-5 sm:w-5" />
                     Continue with {provider.name}
                   </Button>
                 </motion.div>
@@ -263,7 +264,7 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 3.0 }}
-            className="text-sm text-blue-200 leading-relaxed"
+            className="text-xs sm:text-sm text-blue-200 leading-relaxed px-4"
           >
             We're here when you need us.<br />
             Trusted by families and professionals worldwide.
