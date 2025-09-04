@@ -11,22 +11,26 @@ interface LindaVoiceConfig {
 }
 
 const LINDA_CONFIG: LindaVoiceConfig = {
-  rate: 1.0,    // Natural speaking pace
-  pitch: 1.1,   // Slightly higher for warmth
+  rate: 0.95,   // Soft, inviting flow
+  pitch: 1.3,   // Warmer, more feminine
   volume: 0.8,  // Clear but not overwhelming
+  voiceName: 'en-US-AriaNeural', // Preferred voice
 };
 
 export function getLindaVoice(): SpeechSynthesisVoice | null {
   const voices = window.speechSynthesis.getVoices();
   
-  // Priority order for Linda's voice selection
+  // Priority order for Linda's voice selection (AriaNeural first)
   const voicePriority = [
-    // Microsoft Neural voices (if available)
+    // Microsoft AriaNeural voice (premium quality)
     (v: SpeechSynthesisVoice) => v.name.includes('Aria') && v.lang.startsWith('en-US'),
+    (v: SpeechSynthesisVoice) => v.name.includes('AriaNeural'),
+    // Microsoft Neural voices (if available)
+    (v: SpeechSynthesisVoice) => v.name.includes('Neural') && v.lang.startsWith('en-US'),
     (v: SpeechSynthesisVoice) => v.name.includes('Neural') && v.lang.startsWith('en'),
     // High-quality natural voices
-    (v: SpeechSynthesisVoice) => v.name.includes('Natural') && v.lang.startsWith('en'),
-    (v: SpeechSynthesisVoice) => v.name.includes('Premium') && v.lang.startsWith('en'),
+    (v: SpeechSynthesisVoice) => v.name.includes('Natural') && v.lang.startsWith('en-US'),
+    (v: SpeechSynthesisVoice) => v.name.includes('Premium') && v.lang.startsWith('en-US'),
     // Known good female voices
     (v: SpeechSynthesisVoice) => v.name.includes('Samantha'),
     (v: SpeechSynthesisVoice) => v.name.includes('Victoria'),
@@ -48,7 +52,7 @@ export function getLindaVoice(): SpeechSynthesisVoice | null {
   return null;
 }
 
-export function playLindaWelcome(message: string = "Hi, I'm Linda. Let's get started in 60 seconds - your secure family hub awaits."): Promise<void> {
+export function playLindaWelcome(message: string = "Hi, I'm Linda. Welcome to your family's boutique home. Ready to explore?"): Promise<void> {
   return new Promise((resolve, reject) => {
     if (!('speechSynthesis' in window)) {
       reject(new Error('Speech synthesis not supported'));
@@ -105,7 +109,7 @@ export function testLindaVoice(): void {
   const lindaVoice = getLindaVoice();
   if (lindaVoice) {
     console.log('✅ Linda voice test: Using', lindaVoice.name);
-    playLindaWelcome("Hello! This is Linda testing her voice. How do I sound?")
+    playLindaWelcome("Hello! This is Linda testing her new voice. I sound warmer and more caring now, don't I?")
       .then(() => console.log('✅ Linda voice test completed'))
       .catch(err => console.error('❌ Linda voice test failed:', err));
   } else {

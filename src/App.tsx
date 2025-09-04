@@ -50,6 +50,7 @@ import { OnboardingPage } from '@/pages/onboarding/OnboardingPage';
 import { FamilyOnboardingWelcome } from '@/pages/onboarding/FamilyOnboardingWelcome';
 import { FamilyDashboard } from '@/pages/families/FamilyDashboard';
 import { FamilyTypeDashboard } from '@/pages/families/FamilyTypeDashboard';
+import { VoiceTestPage } from '@/pages/test/VoiceTestPage';
 import QACoverage from '@/pages/admin/QACoverage';
 import ReadyCheck from '@/pages/admin/ReadyCheck';
 import { ReadyCheckEnhanced } from '@/pages/admin/ReadyCheckEnhanced';
@@ -643,6 +644,7 @@ function App() {
             
             {/* Private App Routes */}
             <Route path="/onboarding" element={<FamilyOnboardingWelcome onAuthChoice={handleAuthChoice} />} />
+            <Route path="/test/voice" element={<VoiceTestPage />} />
             <Route path="/nil/onboarding" element={<NILOnboarding />} />
             
             {/* New Welcome Flow Routes */}

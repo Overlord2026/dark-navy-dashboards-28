@@ -104,11 +104,11 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
             className="text-center space-y-3 sm:space-y-4"
           >
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white leading-tight">
-              Hi, I'm Linda from Your<br />
-              <span style={{ color: '#D4AF37' }}>Boutique Family Office</span>
+              Hi, I'm Linda<br />
+              <span style={{ color: '#D4AF37' }}>Welcome to your family's boutique home</span>
             </h1>
             <p className="text-lg sm:text-xl text-blue-100 leading-relaxed px-4">
-              Let's get started in just <span className="font-semibold text-white">60 seconds</span><br />
+              <span className="font-semibold text-white">Ready to explore?</span><br />
               Your secure family hub awaits
             </p>
 
