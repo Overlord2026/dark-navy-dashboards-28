@@ -32,6 +32,12 @@
     /* Header Stack Height for Sticky Navigation */
     --header-stack: 112px;
     
+    /* Luxury Family Stage Colors */
+    --luxury-navy: 210 100% 12%;
+    --luxury-gold: 45 69% 52%;
+    --luxury-purple: 262 84% 45%;
+    --luxury-white: 0 0% 100%;
+    
     /* WCAG AA Compliant Brand Color System - Black & Gold */
     /* Pure Black #000000 for headers/navigation - 21:1 contrast with white */
     --brand-black: 0 0% 0%;

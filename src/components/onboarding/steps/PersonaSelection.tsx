@@ -49,7 +49,7 @@ export function PersonaSelection({ onSelect, currentPersona, isLoading }: Person
         <p className="text-muted-foreground">This helps us personalize your experience</p>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-4">
+      <div className="grid md:grid-cols-2 gap-6">
         {personas.map((persona) => {
           const Icon = persona.icon;
           const isSelected = currentPersona === persona.id;
@@ -57,50 +57,53 @@ export function PersonaSelection({ onSelect, currentPersona, isLoading }: Person
           return (
             <Card 
               key={persona.id}
-              className={`cursor-pointer transition-all duration-200 hover:shadow-md ${
+              className={`cursor-pointer transition-all duration-300 min-h-[320px] ${
                 isSelected 
-                  ? `ring-2 ring-${persona.color}-500 bg-${persona.color}-50` 
-                  : 'hover:border-primary/50'
+                  ? 'bg-[hsl(var(--luxury-navy))] border-2 border-[hsl(var(--luxury-gold))] shadow-[0_8px_32px_rgba(212,175,55,0.3)]' 
+                  : 'bg-[hsl(var(--luxury-navy))] border border-[hsl(var(--luxury-gold))] hover:bg-[hsl(var(--luxury-purple))] hover:shadow-[0_12px_48px_rgba(94,23,235,0.4)] hover:scale-[1.02]'
               }`}
               onClick={() => !isLoading && onSelect(persona.id)}
             >
-              <CardHeader className="pb-3">
-                <div className="flex items-center gap-3">
-                  <div className={`p-2 rounded-lg bg-${persona.color}-100`}>
-                    <Icon className={`h-5 w-5 text-${persona.color}-600`} />
+              <CardHeader className="pb-4">
+                <div className="flex items-center gap-4">
+                  <div className="p-3 rounded-xl bg-[hsl(var(--luxury-gold))]/20 border border-[hsl(var(--luxury-gold))]/30">
+                    <Icon className="h-7 w-7 text-[hsl(var(--luxury-gold))]" />
                   </div>
                   <div className="flex-1">
-                    <CardTitle className="text-lg">{persona.title}</CardTitle>
-                    <p className="text-sm text-muted-foreground">{persona.description}</p>
+                    <CardTitle className="text-xl font-bold text-[hsl(var(--luxury-white))]">{persona.title}</CardTitle>
+                    <p className="text-sm text-[hsl(var(--luxury-white))]/80 mt-1">{persona.description}</p>
                   </div>
                   {isSelected && (
-                    <Badge variant="default" className="text-xs">
+                    <Badge className="text-xs bg-[hsl(var(--luxury-gold))] text-[hsl(var(--luxury-navy))] font-semibold">
                       Selected
                     </Badge>
                   )}
                 </div>
               </CardHeader>
               
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
+              <CardContent className="space-y-5">
+                <div className="space-y-3">
                   {persona.features.map((feature, index) => (
-                    <div key={index} className="flex items-center gap-2 text-sm">
-                      <div className={`w-1.5 h-1.5 rounded-full bg-${persona.color}-500`} />
-                      {feature}
+                    <div key={index} className="flex items-center gap-3 text-sm">
+                      <div className="w-2 h-2 rounded-full bg-[hsl(var(--luxury-gold))] shadow-sm" />
+                      <span className="text-[hsl(var(--luxury-white))]/90 font-medium">{feature}</span>
                     </div>
                   ))}
                 </div>
                 
-                <div className="flex items-center gap-2 pt-2 border-t">
-                  <Clock className="h-3 w-3 text-muted-foreground" />
-                  <span className="text-xs text-muted-foreground">
+                <div className="flex items-center gap-2 pt-3 border-t border-[hsl(var(--luxury-gold))]/30">
+                  <Clock className="h-4 w-4 text-[hsl(var(--luxury-gold))]" />
+                  <span className="text-xs text-[hsl(var(--luxury-white))]/70 font-medium">
                     Time to dashboard: {persona.timeToValue}
                   </span>
                 </div>
 
                 <Button 
-                  className="w-full mt-3"
-                  variant={isSelected ? "default" : "outline"}
+                  className={`w-full mt-4 h-12 text-base font-semibold transition-all duration-300 ${
+                    isSelected 
+                      ? 'bg-[hsl(var(--luxury-gold))] text-[hsl(var(--luxury-navy))] hover:bg-[hsl(var(--luxury-gold))]/90 shadow-[0_4px_16px_rgba(212,175,55,0.4)]' 
+                      : 'bg-transparent border-2 border-[hsl(var(--luxury-gold))] text-[hsl(var(--luxury-gold))] hover:bg-[hsl(var(--luxury-gold))] hover:text-[hsl(var(--luxury-navy))]'
+                  }`}
                   disabled={isLoading}
                   onClick={(e) => {
                     e.stopPropagation();

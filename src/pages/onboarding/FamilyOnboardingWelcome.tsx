@@ -18,12 +18,8 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
     // Play Linda's welcome message after a short delay, unless muted
     if ('speechSynthesis' in window && !hasPlayedWelcome && !isMuted) {
       const timer = setTimeout(() => {
-        playLindaWelcome("Hi, I'm Linda. Welcome to Your Boutique Family Office.")
-          .then(() => setHasPlayedWelcome(true))
-          .catch(error => {
-            console.error('Linda voice error:', error);
-            setHasPlayedWelcome(true);
-          });
+        playWelcome("Linda", "welcome");
+        setHasPlayedWelcome(true);
       }, 1500);
 
       return () => clearTimeout(timer);

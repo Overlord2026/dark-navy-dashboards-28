@@ -36,7 +36,7 @@ export function WizardPersonaStep({ onSelect, currentPersona }: WizardPersonaSte
         <p className="text-muted-foreground">Choose the stage that best describes your situation</p>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-4">
+      <div className="grid md:grid-cols-2 gap-6">
         {personas.map((persona) => {
           const Icon = persona.icon;
           const isSelected = currentPersona === persona.id;
@@ -44,43 +44,46 @@ export function WizardPersonaStep({ onSelect, currentPersona }: WizardPersonaSte
           return (
             <Card 
               key={persona.id}
-              className={`cursor-pointer transition-all duration-200 hover:shadow-md ${
+              className={`cursor-pointer transition-all duration-300 min-h-[280px] ${
                 isSelected 
-                  ? 'ring-2 ring-primary bg-primary/5' 
-                  : 'hover:border-primary/50'
+                  ? 'bg-[hsl(var(--luxury-navy))] border-2 border-[hsl(var(--luxury-gold))] shadow-[0_8px_32px_rgba(212,175,55,0.3)]' 
+                  : 'bg-[hsl(var(--luxury-navy))] border border-[hsl(var(--luxury-gold))] hover:bg-[hsl(var(--luxury-purple))] hover:shadow-[0_12px_48px_rgba(94,23,235,0.4)] hover:scale-[1.02]'
               }`}
               onClick={() => onSelect(persona.id)}
             >
-              <CardHeader className="pb-3">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-primary/10">
-                    <Icon className="h-5 w-5 text-primary" />
+              <CardHeader className="pb-4">
+                <div className="flex items-center gap-4">
+                  <div className="p-3 rounded-xl bg-[hsl(var(--luxury-gold))]/20 border border-[hsl(var(--luxury-gold))]/30">
+                    <Icon className="h-7 w-7 text-[hsl(var(--luxury-gold))]" />
                   </div>
                   <div className="flex-1">
-                    <CardTitle className="text-lg">{persona.title}</CardTitle>
-                    <p className="text-sm text-muted-foreground">{persona.description}</p>
+                    <CardTitle className="text-xl font-bold text-[hsl(var(--luxury-white))]">{persona.title}</CardTitle>
+                    <p className="text-sm text-[hsl(var(--luxury-white))]/80 mt-1">{persona.description}</p>
                   </div>
                   {isSelected && (
-                    <Badge variant="default" className="text-xs">
+                    <Badge className="text-xs bg-[hsl(var(--luxury-gold))] text-[hsl(var(--luxury-navy))] font-semibold">
                       Selected
                     </Badge>
                   )}
                 </div>
               </CardHeader>
               
-              <CardContent className="space-y-3">
-                <div className="space-y-2">
+              <CardContent className="space-y-4">
+                <div className="space-y-3">
                   {persona.keyFeatures.map((feature, index) => (
-                    <div key={index} className="flex items-center gap-2 text-sm">
-                      <div className="w-1.5 h-1.5 rounded-full bg-primary" />
-                      {feature}
+                    <div key={index} className="flex items-center gap-3 text-sm">
+                      <div className="w-2 h-2 rounded-full bg-[hsl(var(--luxury-gold))] shadow-sm" />
+                      <span className="text-[hsl(var(--luxury-white))]/90 font-medium">{feature}</span>
                     </div>
                   ))}
                 </div>
 
                 <Button 
-                  className="w-full mt-3"
-                  variant={isSelected ? "default" : "outline"}
+                  className={`w-full mt-4 h-12 text-base font-semibold transition-all duration-300 ${
+                    isSelected 
+                      ? 'bg-[hsl(var(--luxury-gold))] text-[hsl(var(--luxury-navy))] hover:bg-[hsl(var(--luxury-gold))]/90 shadow-[0_4px_16px_rgba(212,175,55,0.4)]' 
+                      : 'bg-transparent border-2 border-[hsl(var(--luxury-gold))] text-[hsl(var(--luxury-gold))] hover:bg-[hsl(var(--luxury-gold))] hover:text-[hsl(var(--luxury-navy))]'
+                  }`}
                   onClick={(e) => {
                     e.stopPropagation();
                     onSelect(persona.id);
