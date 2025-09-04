@@ -1,8 +1,17 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { ArrowLeft, Home } from 'lucide-react';
 
 export const SecondaryNav: React.FC = () => {
   const navigate = useNavigate();
+
+  const handleBack = () => {
+    window.history.length > 1 ? navigate(-1) : navigate('/');
+  };
+
+  const handleHome = () => {
+    navigate('/');
+  };
 
   const navItems = [
     { label: 'Families', path: '/families' },
@@ -31,6 +40,44 @@ export const SecondaryNav: React.FC = () => {
     >
       <nav className="flex items-center justify-center w-full max-w-7xl px-4">
         <div className="flex items-center justify-between w-full">
+          {/* Left side navigation buttons */}
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleBack}
+              className="flex items-center justify-center transition-all duration-200 hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2 focus:ring-offset-[#001F3F]"
+              style={{
+                backgroundColor: '#000000',
+                color: '#D4AF37',
+                border: '1px solid #D4AF37',
+                borderRadius: '4px',
+                height: '48px',
+                width: '48px',
+                cursor: 'pointer'
+              }}
+              title="Go Back"
+            >
+              <ArrowLeft size={20} />
+            </button>
+            <button
+              onClick={handleHome}
+              className="flex items-center justify-center transition-all duration-200 hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2 focus:ring-offset-[#001F3F]"
+              style={{
+                backgroundColor: '#000000',
+                color: '#D4AF37',
+                border: '1px solid #D4AF37',
+                borderRadius: '4px',
+                height: '48px',
+                width: '48px',
+                cursor: 'pointer'
+              }}
+              title="Go Home"
+            >
+              <Home size={20} />
+            </button>
+          </div>
+          
+          {/* Center navigation items */}
+          <div className="flex items-center gap-2">
           {navItems.map((item, index) => (
             <button
               key={index}
@@ -52,6 +99,7 @@ export const SecondaryNav: React.FC = () => {
               {item.label}
             </button>
           ))}
+          </div>
         </div>
       </nav>
     </div>
