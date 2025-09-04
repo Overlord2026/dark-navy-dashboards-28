@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { GoldButton, GoldOutlineButton, GoldRouterLink, GoldOutlineRouterLink } from '@/components/ui/brandButtons';
 import { Badge } from '@/components/ui/badge';
-import { ArrowRight, Shield, Heart, Wallet, Home, Calculator, Play, Calendar, BookOpen } from 'lucide-react';
+import { ArrowRight, Shield, Heart, Wallet, Home, Calculator, Play, Calendar, BookOpen, FileText, TrendingUp, Users, ChevronDown, ChevronRight } from 'lucide-react';
 import VoiceMic from '@/components/voice/VoiceMic';
 import { Link } from 'react-router-dom';
 import { PersonaSubHeader } from '@/components/layout/PersonaSubHeader';
@@ -11,7 +11,21 @@ import { PersonaSubHeader } from '@/components/layout/PersonaSubHeader';
 const FamilyRetireePersonaDashboard = () => {
   const [transcript, setTranscript] = useState('');
   const [summary, setSummary] = useState<any>(null);
-  const tools = [
+  const [expandedSections, setExpandedSections] = useState<{ [key: string]: boolean }>({
+    'core-tools': true,
+    'planning-tools': false,
+    'organizer-tools': false
+  });
+
+  const toggleSection = (sectionId: string) => {
+    setExpandedSections(prev => ({
+      ...prev,
+      [sectionId]: !prev[sectionId]
+    }));
+  };
+
+  // Core existing tools - preserved completely
+  const coreTools = [
     {
       title: 'Wealth Vault',
       description: 'Secure document storage and family records',
@@ -27,27 +41,6 @@ const FamilyRetireePersonaDashboard = () => {
       category: 'Healthcare'
     },
     {
-      title: 'Annuities Explorer',
-      description: 'Income planning and annuity analysis',
-      icon: <Calculator className="h-6 w-6" />,
-      href: '/solutions/annuities',
-      category: 'Income Planning'
-    },
-    {
-      title: 'Estate Planning',
-      description: 'Legacy planning and asset distribution',
-      icon: <Home className="h-6 w-6" />,
-      href: '/estate/diy',
-      category: 'Estate Planning'
-    },
-    {
-      title: 'Insurance Catalog',
-      description: 'Long-term care and life insurance options',
-      icon: <Shield className="h-6 w-6" />,
-      href: '/solutions/insurance',
-      category: 'Insurance'
-    },
-    {
       title: 'Family Assets',
       description: 'Asset tracking and management',
       icon: <Wallet className="h-6 w-6" />,
@@ -56,94 +49,128 @@ const FamilyRetireePersonaDashboard = () => {
     }
   ];
 
+  // Enhanced planning tools with new additions
+  const planningTools = [
+    {
+      title: 'Annuities Explorer',
+      description: 'Income planning and guaranteed retirement income strategies',
+      icon: <Calculator className="h-6 w-6" />,
+      href: '/solutions/annuities',
+      category: 'Income Planning',
+      isNew: false
+    },
+    {
+      title: 'Tax Planning Center',
+      description: 'RMD optimization, tax-efficient withdrawals, and Roth conversions',
+      icon: <FileText className="h-6 w-6" />,
+      href: '/solutions/tax-planning',
+      category: 'Tax Strategy',
+      isNew: true
+    },
+    {
+      title: 'Estate Planning Suite',
+      description: 'Wills, trusts, legacy planning, and beneficiary management',
+      icon: <Home className="h-6 w-6" />,
+      href: '/estate/diy',
+      category: 'Estate Planning',
+      isNew: true
+    },
+    {
+      title: 'Insurance Catalog',
+      description: 'Long-term care, life insurance, and Medicare planning',
+      icon: <Shield className="h-6 w-6" />,
+      href: '/solutions/insurance',
+      category: 'Insurance',
+      isNew: false
+    }
+  ];
+
+  // New retirement organizer tools
+  const organizerTools = [
+    {
+      title: 'Retirement Organizer',
+      description: 'Social Security optimization, pension tracking, and income coordination',
+      icon: <TrendingUp className="h-6 w-6" />,
+      href: '/retirement/organizer',
+      category: 'Income Coordination',
+      isNew: true
+    },
+    {
+      title: 'Family Coordination Hub',
+      description: 'Share plans with adult children and coordinate care decisions',
+      icon: <Users className="h-6 w-6" />,
+      href: '/family/coordination',
+      category: 'Family Planning',
+      isNew: true
+    }
+  ];
+
   const handleDemoLaunch = () => {
     // Demo launcher logic will be added
     console.log('Launching 90-second demo for retiree families');
   };
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
-      <PersonaSubHeader>
-        <div className="flex items-center justify-between w-full">
-          <div>
-            <h2 className="text-lg font-semibold text-bfo-gold">Welcome back, Retiree Family</h2>
-            <p className="opacity-90 text-sm text-white">Manage your retirement with confidence and clarity</p>
+  const renderToolSection = (title: string, tools: any[], sectionId: string, description?: string) => {
+    const isExpanded = expandedSections[sectionId];
+    
+    return (
+      <div className="mb-8">
+        <button
+          onClick={() => toggleSection(sectionId)}
+          className="w-full flex items-center justify-between p-4 bg-[hsl(var(--luxury-navy))] rounded-xl border border-[hsl(var(--luxury-gold))]/30 hover:bg-[hsl(var(--luxury-purple))]/20 transition-all duration-300 mb-4"
+        >
+          <div className="text-left">
+            <h3 className="text-xl font-bold text-[hsl(var(--luxury-white))] flex items-center gap-2">
+              {title}
+              {tools.some(tool => tool.isNew) && (
+                <Badge className="text-xs bg-[hsl(var(--luxury-gold))] text-[hsl(var(--luxury-navy))]">
+                  Enhanced
+                </Badge>
+              )}
+            </h3>
+            {description && (
+              <p className="text-sm text-[hsl(var(--luxury-white))]/70 mt-1">{description}</p>
+            )}
           </div>
-          <VoiceMic label="Speak" persona="family" autoSummarize onTranscript={setTranscript} onSummary={setSummary} size="sm" />
-        </div>
-      </PersonaSubHeader>
-      <div className="container mx-auto px-4 py-8">
-        {/* Hero Section */}
-        <div className="text-center max-w-4xl mx-auto mb-12">
-          <Badge variant="secondary" className="mb-4">
-            Retiree Families
-          </Badge>
-          <div className="flex items-center justify-center gap-8 mb-6">
-            <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-              Secure Your Golden Years
-            </h1>
-          </div>
-          <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
-            Protect your legacy, manage your health, and ensure your family's financial security 
-            with tools designed for retirees and their loved ones.
-          </p>
-          
-          {/* Main CTAs */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
-            <GoldOutlineButton className="h-14 flex flex-col items-center justify-center gap-2">
-              <Link to="/discover?persona=family&solutions=estate%2Chealth%2Cannuities" className="flex flex-col items-center gap-2">
-                <BookOpen className="h-5 w-5" />
-                <span>Open Catalog</span>
-              </Link>
-            </GoldOutlineButton>
-            
-            <GoldButton onClick={handleDemoLaunch} className="h-14 flex flex-col items-center justify-center gap-2">
-              <Play className="h-5 w-5" />
-              <span>Run 90-Second Demo</span>
-            </GoldButton>
-            
-            <GoldOutlineButton className="h-14 flex flex-col items-center justify-center gap-2">
-              <Link to="/learn/family-retiree/starter" className="flex flex-col items-center gap-2">
-                <Calendar className="h-5 w-5" />
-                <span>Book 15-Min Overview</span>
-              </Link>
-            </GoldOutlineButton>
-          </div>
-        </div>
-
-        {/* Tools Grid */}
-        <div className="mb-12">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold mb-4">Family Protection Tools</h2>
-            <p className="text-muted-foreground">
-              Everything you need to secure your family's future
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {isExpanded ? (
+            <ChevronDown className="h-6 w-6 text-[hsl(var(--luxury-gold))]" />
+          ) : (
+            <ChevronRight className="h-6 w-6 text-[hsl(var(--luxury-gold))]" />
+          )}
+        </button>
+        
+        {isExpanded && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in">
             {tools.map((tool, index) => (
-              <Card key={index} className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+              <Card key={index} className="group hover:shadow-[0_12px_48px_rgba(94,23,235,0.4)] transition-all duration-300 hover:-translate-y-1 bg-[hsl(var(--luxury-navy))] border border-[hsl(var(--luxury-gold))]/30 hover:border-[hsl(var(--luxury-gold))] hover:scale-[1.02]">
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <div className="p-2 rounded-lg bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                      <div className="p-3 rounded-xl bg-[hsl(var(--luxury-gold))]/20 border border-[hsl(var(--luxury-gold))]/30 text-[hsl(var(--luxury-gold))] group-hover:bg-[hsl(var(--luxury-gold))] group-hover:text-[hsl(var(--luxury-navy))] transition-all duration-300">
                         {tool.icon}
                       </div>
                       <div>
-                        <CardTitle className="text-lg">{tool.title}</CardTitle>
-                        <Badge variant="secondary" className="text-xs mt-1">
+                        <CardTitle className="text-lg text-[hsl(var(--luxury-white))] flex items-center gap-2">
+                          {tool.title}
+                          {tool.isNew && (
+                            <Badge className="text-xs bg-[hsl(var(--luxury-purple))] text-white">
+                              New
+                            </Badge>
+                          )}
+                        </CardTitle>
+                        <Badge variant="secondary" className="text-xs mt-1 bg-[hsl(var(--luxury-gold))]/20 text-[hsl(var(--luxury-gold))] border-[hsl(var(--luxury-gold))]/30">
                           {tool.category}
                         </Badge>
                       </div>
                     </div>
-                    <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                    <ArrowRight className="h-4 w-4 text-[hsl(var(--luxury-white))]/60 group-hover:text-[hsl(var(--luxury-gold))] transition-colors" />
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <CardDescription className="mb-4">
+                  <CardDescription className="mb-4 text-[hsl(var(--luxury-white))]/80">
                     {tool.description}
                   </CardDescription>
-                  <Button asChild variant="outline" className="w-full">
+                  <Button asChild className="w-full bg-transparent border-2 border-[hsl(var(--luxury-gold))] text-[hsl(var(--luxury-gold))] hover:bg-[hsl(var(--luxury-gold))] hover:text-[hsl(var(--luxury-navy))] transition-all duration-300">
                     <Link to={tool.href}>
                       Launch Tool
                     </Link>
@@ -152,23 +179,109 @@ const FamilyRetireePersonaDashboard = () => {
               </Card>
             ))}
           </div>
+        )}
+      </div>
+    );
+  };
+
+  return (
+    <div className="min-h-screen bg-[hsl(var(--luxury-navy))]">
+      <PersonaSubHeader>
+        <div className="flex items-center justify-between w-full">
+          <div>
+            <h2 className="text-lg font-semibold text-[hsl(var(--luxury-gold))]">Welcome back, Retiree Family</h2>
+            <p className="opacity-90 text-sm text-[hsl(var(--luxury-white))]">Manage your retirement with confidence and clarity</p>
+          </div>
+          <VoiceMic label="Speak" persona="family" autoSummarize onTranscript={setTranscript} onSummary={setSummary} size="sm" />
+        </div>
+      </PersonaSubHeader>
+      <div className="container mx-auto px-4 py-8">
+        {/* Hero Section - Enhanced but preserved */}
+        <div className="text-center max-w-4xl mx-auto mb-12">
+          <Badge className="mb-4 bg-[hsl(var(--luxury-gold))] text-[hsl(var(--luxury-navy))] font-semibold">
+            Retiree Families
+          </Badge>
+          <div className="flex items-center justify-center gap-8 mb-6">
+            <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-[hsl(var(--luxury-gold))] to-[hsl(var(--luxury-purple))] bg-clip-text text-transparent">
+              Secure Your Golden Years
+            </h1>
+          </div>
+          <p className="text-xl text-[hsl(var(--luxury-white))]/80 mb-8 leading-relaxed">
+            Protect your legacy, manage your health, and ensure your family's financial security 
+            with tools designed for retirees and their loved ones.
+          </p>
+          
+          {/* Main CTAs - Enhanced styling but same functionality */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
+            <Button className="h-14 flex flex-col items-center justify-center gap-2 bg-transparent border-2 border-[hsl(var(--luxury-gold))] text-[hsl(var(--luxury-gold))] hover:bg-[hsl(var(--luxury-gold))] hover:text-[hsl(var(--luxury-navy))] transition-all duration-300">
+              <Link to="/discover?persona=family&solutions=estate%2Chealth%2Cannuities" className="flex flex-col items-center gap-2">
+                <BookOpen className="h-5 w-5" />
+                <span>Open Catalog</span>
+              </Link>
+            </Button>
+            
+            <Button onClick={handleDemoLaunch} className="h-14 flex flex-col items-center justify-center gap-2 bg-[hsl(var(--luxury-gold))] text-[hsl(var(--luxury-navy))] hover:bg-[hsl(var(--luxury-gold))]/90 shadow-[0_4px_16px_rgba(212,175,55,0.4)] transition-all duration-300">
+              <Play className="h-5 w-5" />
+              <span>Run 90-Second Demo</span>
+            </Button>
+            
+            <Button className="h-14 flex flex-col items-center justify-center gap-2 bg-transparent border-2 border-[hsl(var(--luxury-gold))] text-[hsl(var(--luxury-gold))] hover:bg-[hsl(var(--luxury-gold))] hover:text-[hsl(var(--luxury-navy))] transition-all duration-300">
+              <Link to="/learn/family-retiree/starter" className="flex flex-col items-center gap-2">
+                <Calendar className="h-5 w-5" />
+                <span>Book 15-Min Overview</span>
+              </Link>
+            </Button>
+          </div>
         </div>
 
-        {/* Start Workspace CTA */}
+        {/* Enhanced Tools Sections */}
+        <div className="mb-12">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold mb-4 text-[hsl(var(--luxury-white))]">Family Protection Tools</h2>
+            <p className="text-[hsl(var(--luxury-white))]/70">
+              Everything you need to secure your family's future
+            </p>
+          </div>
+          
+          {renderToolSection(
+            "Essential Tools", 
+            coreTools, 
+            "core-tools",
+            "Your fundamental family protection and wealth management tools"
+          )}
+          
+          {renderToolSection(
+            "Advanced Planning", 
+            planningTools, 
+            "planning-tools",
+            "Comprehensive tax, estate, and income planning solutions"
+          )}
+          
+          {renderToolSection(
+            "Retirement Organization", 
+            organizerTools, 
+            "organizer-tools",
+            "Coordinate your retirement income and family planning"
+          )}
+        </div>
+
+        {/* Start Workspace CTA - Enhanced styling but same functionality */}
         <div className="text-center">
-          <Card className="max-w-2xl mx-auto border-primary/20 bg-gradient-to-r from-primary/5 to-primary/10">
+          <Card className="max-w-2xl mx-auto bg-[hsl(var(--luxury-navy))] border-2 border-[hsl(var(--luxury-gold))]/30 shadow-[0_8px_32px_rgba(212,175,55,0.3)]">
             <CardContent className="p-8">
-              <h3 className="text-2xl font-bold mb-4">Ready to Get Started?</h3>
-              <p className="text-muted-foreground mb-6">
+              <h3 className="text-2xl font-bold mb-4 text-[hsl(var(--luxury-white))]">Ready to Get Started?</h3>
+              <p className="text-[hsl(var(--luxury-white))]/80 mb-6">
                 Set up your family workspace with document storage, health planning, and estate management tools.
               </p>
-              <GoldRouterLink 
-                to="/start/families"
-                className="w-full md:w-auto flex items-center gap-2 px-6 py-3"
+              <Button 
+                asChild
+                className="w-full md:w-auto flex items-center gap-2 px-6 py-3 bg-[hsl(var(--luxury-gold))] text-[hsl(var(--luxury-navy))] hover:bg-[hsl(var(--luxury-gold))]/90 font-semibold shadow-[0_4px_16px_rgba(212,175,55,0.4)] transition-all duration-300"
               >
-                Start Workspace
-                <ArrowRight className="h-5 w-5" />
-              </GoldRouterLink>
+                <Link to="/start/families">
+                  Start Workspace
+                  <ArrowRight className="h-5 w-5" />
+                </Link>
+              </Button>
             </CardContent>
           </Card>
         </div>
