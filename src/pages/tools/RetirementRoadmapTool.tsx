@@ -91,7 +91,8 @@ export default function RetirementRoadmapTool() {
   };
 
   return (
-    <div className="container mx-auto p-6 max-w-4xl">
+    <div className="min-h-screen bg-bfo-navy">
+      <div className="container mx-auto p-6 max-w-4xl">
       <ToolHeader title="Retirement Roadmap" />
       
       <div className="space-y-6">
@@ -103,17 +104,17 @@ export default function RetirementRoadmapTool() {
           />
         </div>
 
-        <Card>
+        <Card className="bg-[hsl(210_65%_13%)] border-4 border-bfo-gold shadow-lg shadow-bfo-gold/20">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Calculator className="w-5 h-5" />
+            <CardTitle className="flex items-center gap-2 text-white">
+              <Calculator className="w-5 h-5 text-bfo-gold" />
               Retirement Planning Inputs
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="currentAge">Current Age</Label>
+                <Label htmlFor="currentAge" className="text-white">Current Age</Label>
                 <Input
                   id="currentAge"
                   type="number"
@@ -122,7 +123,7 @@ export default function RetirementRoadmapTool() {
                 />
               </div>
               <div>
-                <Label htmlFor="retirementAge">Target Retirement Age</Label>
+                <Label htmlFor="retirementAge" className="text-white">Target Retirement Age</Label>
                 <Input
                   id="retirementAge"
                   type="number"
@@ -131,7 +132,7 @@ export default function RetirementRoadmapTool() {
                 />
               </div>
               <div>
-                <Label htmlFor="currentSavings">Current Savings ($)</Label>
+                <Label htmlFor="currentSavings" className="text-white">Current Savings ($)</Label>
                 <Input
                   id="currentSavings"
                   type="number"
@@ -140,7 +141,7 @@ export default function RetirementRoadmapTool() {
                 />
               </div>
               <div>
-                <Label htmlFor="monthlyContribution">Monthly Contribution ($)</Label>
+                <Label htmlFor="monthlyContribution" className="text-white">Monthly Contribution ($)</Label>
                 <Input
                   id="monthlyContribution"
                   type="number"
@@ -149,7 +150,7 @@ export default function RetirementRoadmapTool() {
                 />
               </div>
               <div>
-                <Label htmlFor="expectedReturn">Expected Annual Return (%)</Label>
+                <Label htmlFor="expectedReturn" className="text-white">Expected Annual Return (%)</Label>
                 <Input
                   id="expectedReturn"
                   type="number"
@@ -160,7 +161,7 @@ export default function RetirementRoadmapTool() {
               </div>
             </div>
             
-            <Button onClick={calculateRoadmap} className="w-full">
+            <Button onClick={calculateRoadmap} className="w-full bg-bfo-gold text-black hover:bg-bfo-gold/90">
               <TrendingUp className="w-4 h-4 mr-2" />
               Calculate Retirement Roadmap
             </Button>
@@ -168,35 +169,35 @@ export default function RetirementRoadmapTool() {
         </Card>
 
         {results && (
-          <Card>
+          <Card className="bg-[hsl(210_65%_13%)] border-4 border-bfo-gold shadow-lg shadow-bfo-gold/20">
             <CardHeader>
-              <CardTitle>Your Retirement Projection</CardTitle>
+              <CardTitle className="text-white">Your Retirement Projection</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-primary">
+                  <div className="text-2xl font-bold text-bfo-gold">
                     ${Math.round(results.projectedValue).toLocaleString()}
                   </div>
-                  <div className="text-sm text-muted-foreground">Projected Value</div>
+                  <div className="text-sm text-white/70">Projected Value</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold">
+                  <div className="text-2xl font-bold text-white">
                     ${results.projectedNeeded.toLocaleString()}
                   </div>
-                  <div className="text-sm text-muted-foreground">Target Needed</div>
+                  <div className="text-sm text-white/70">Target Needed</div>
                 </div>
                 <div className="text-center">
-                  <div className={`text-2xl font-bold ${results.shortfall === 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  <div className={`text-2xl font-bold ${results.shortfall === 0 ? 'text-green-400' : 'text-red-400'}`}>
                     {results.shortfall === 0 ? '✓ On Track' : `$${results.shortfall.toLocaleString()} Short`}
                   </div>
-                  <div className="text-sm text-muted-foreground">Status</div>
+                  <div className="text-sm text-white/70">Status</div>
                 </div>
               </div>
               
               {results.recommendedIncrease > 0 && (
-                <div className="mt-4 p-4 bg-amber-50 rounded-lg border border-amber-200">
-                  <p className="text-amber-800">
+                <div className="mt-4 p-4 bg-bfo-gold/10 rounded-lg border border-bfo-gold/30">
+                  <p className="text-bfo-gold">
                     <strong>Recommendation:</strong> Increase monthly contributions by ${results.recommendedIncrease} to meet your retirement goal.
                   </p>
                 </div>
@@ -221,6 +222,7 @@ export default function RetirementRoadmapTool() {
             onCsvExport={() => handleExport('csv')}
           />
         </div>
+      </div>
       </div>
     </div>
   );

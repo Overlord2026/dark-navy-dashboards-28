@@ -82,12 +82,12 @@ export default function RothLadderTool() {
       
       <ToolHeader title="Roth Ladder Tool" />
       
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-8 min-h-screen bg-bfo-navy">
         <div className="max-w-4xl mx-auto space-y-6">
-          <Card>
+          <Card className="bg-[hsl(210_65%_13%)] border-4 border-bfo-gold shadow-lg shadow-bfo-gold/20">
             <CardHeader>
-              <CardTitle>Roth Conversion Strategy</CardTitle>
-              <p className="text-muted-foreground">
+              <CardTitle className="text-white">Roth Conversion Strategy</CardTitle>
+              <p className="text-white/70">
                 Plan systematic conversions to maximize tax efficiency
               </p>
             </CardHeader>
@@ -95,7 +95,7 @@ export default function RothLadderTool() {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="currentAge">Current Age</Label>
+                    <Label htmlFor="currentAge" className="text-white">Current Age</Label>
                     <Input
                       id="currentAge"
                       type="number"
@@ -107,7 +107,7 @@ export default function RothLadderTool() {
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="retirementAge">Target Retirement Age</Label>
+                    <Label htmlFor="retirementAge" className="text-white">Target Retirement Age</Label>
                     <Input
                       id="retirementAge"
                       type="number"
@@ -119,7 +119,7 @@ export default function RothLadderTool() {
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="traditionalIRA">Traditional IRA Balance</Label>
+                    <Label htmlFor="traditionalIRA" className="text-white">Traditional IRA Balance</Label>
                     <Input
                       id="traditionalIRA"
                       type="number"
@@ -131,7 +131,7 @@ export default function RothLadderTool() {
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="currentTaxRate">Current Tax Rate (%)</Label>
+                    <Label htmlFor="currentTaxRate" className="text-white">Current Tax Rate (%)</Label>
                     <Input
                       id="currentTaxRate"
                       type="number"
@@ -143,7 +143,7 @@ export default function RothLadderTool() {
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="expectedTaxRate">Expected Retirement Tax Rate (%)</Label>
+                    <Label htmlFor="expectedTaxRate" className="text-white">Expected Retirement Tax Rate (%)</Label>
                     <Input
                       id="expectedTaxRate"
                       type="number"
@@ -155,7 +155,7 @@ export default function RothLadderTool() {
                   </div>
                 </div>
                 
-                <Button type="submit" className="w-full">
+                <Button type="submit" className="w-full bg-bfo-gold text-black hover:bg-bfo-gold/90">
                   Generate Conversion Strategy
                 </Button>
               </form>

@@ -84,12 +84,12 @@ export default function RMDCheckTool() {
       
       <ToolHeader title="RMD Check Tool" />
       
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-8 min-h-screen bg-bfo-navy">
         <div className="max-w-4xl mx-auto space-y-6">
-          <Card>
+          <Card className="bg-[hsl(210_65%_13%)] border-4 border-bfo-gold shadow-lg shadow-bfo-gold/20">
             <CardHeader>
-              <CardTitle>RMD Compliance Check</CardTitle>
-              <p className="text-muted-foreground">
+              <CardTitle className="text-white">RMD Compliance Check</CardTitle>
+              <p className="text-white/70">
                 Calculate required minimum distributions to avoid penalties
               </p>
             </CardHeader>
@@ -97,7 +97,7 @@ export default function RMDCheckTool() {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="age">Current Age</Label>
+                    <Label htmlFor="age" className="text-white">Current Age</Label>
                     <Input
                       id="age"
                       type="number"
@@ -109,7 +109,7 @@ export default function RMDCheckTool() {
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="accountBalance">Account Balance</Label>
+                    <Label htmlFor="accountBalance" className="text-white">Account Balance</Label>
                     <Input
                       id="accountBalance"
                       type="number"
@@ -121,7 +121,7 @@ export default function RMDCheckTool() {
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="accountType">Account Type</Label>
+                    <Label htmlFor="accountType" className="text-white">Account Type</Label>
                     <select
                       id="accountType"
                       value={formData.accountType}
@@ -136,7 +136,7 @@ export default function RMDCheckTool() {
                   </div>
                 </div>
                 
-                <Button type="submit" className="w-full">
+                <Button type="submit" className="w-full bg-bfo-gold text-black hover:bg-bfo-gold/90">
                   Calculate RMD
                 </Button>
               </form>

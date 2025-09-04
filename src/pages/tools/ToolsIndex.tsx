@@ -2,13 +2,14 @@ import { Link } from "react-router-dom";
 
 export default function ToolsIndex() {
   return (
-    <main className="mx-auto max-w-6xl px-4 py-10 space-y-6">
-      <div className="text-center space-y-4">
-        <h1 className="text-3xl font-semibold text-foreground">Tools & Calculators</h1>
-        <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-          Professional-grade financial planning tools to help you make informed decisions about your wealth.
-        </p>
-      </div>
+    <div className="min-h-screen bg-bfo-navy">
+      <main className="mx-auto max-w-6xl px-4 py-10 space-y-6">
+        <div className="text-center space-y-4">
+          <h1 className="text-3xl font-semibold text-white">Tools & Calculators</h1>
+          <p className="text-white/80 text-lg max-w-2xl mx-auto">
+            Professional-grade financial planning tools to help you make informed decisions about your wealth.
+          </p>
+        </div>
       
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-10">
         <ToolCard 
@@ -42,7 +43,8 @@ export default function ToolsIndex() {
           body="Fast calculation of your financial planning value proposition." 
         />
       </div>
-    </main>
+      </main>
+    </div>
   );
 }
 
@@ -50,15 +52,15 @@ function ToolCard({ to, title, body }: { to: string; title: string; body: string
   return (
     <Link 
       to={to} 
-      className="block rounded-xl border border-border bg-card p-6 hover:bg-accent transition-colors group"
+      className="block rounded-xl border-4 border-bfo-gold bg-[hsl(210_65%_13%)] p-6 hover:bg-bfo-gold/10 transition-colors group shadow-lg shadow-bfo-gold/20"
     >
-      <div className="text-lg font-semibold text-foreground group-hover:text-accent-foreground">
+      <div className="text-lg font-semibold text-white group-hover:text-bfo-gold">
         {title}
       </div>
-      <div className="text-muted-foreground text-sm mt-2 leading-relaxed">
+      <div className="text-white/80 text-sm mt-2 leading-relaxed">
         {body}
       </div>
-      <div className="mt-4 text-sm text-primary font-medium">
+      <div className="mt-4 text-sm text-bfo-gold font-medium">
         Open →
       </div>
     </Link>

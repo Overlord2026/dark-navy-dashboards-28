@@ -102,7 +102,8 @@ export default function SocialSecurityTool() {
   };
 
   return (
-    <div className="container mx-auto p-6 max-w-4xl">
+    <div className="min-h-screen bg-bfo-navy">
+      <div className="container mx-auto p-6 max-w-4xl">
       <ToolHeader title="Social Security Optimizer" />
       
       <div className="space-y-6">
@@ -114,17 +115,17 @@ export default function SocialSecurityTool() {
           />
         </div>
 
-        <Card>
+        <Card className="bg-[hsl(210_65%_13%)] border-4 border-bfo-gold shadow-lg shadow-bfo-gold/20">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <DollarSign className="w-5 h-5" />
+            <CardTitle className="flex items-center gap-2 text-white">
+              <DollarSign className="w-5 h-5 text-bfo-gold" />
               Social Security Analysis
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="currentAge">Current Age</Label>
+                <Label htmlFor="currentAge" className="text-white">Current Age</Label>
                 <Input
                   id="currentAge"
                   type="number"
@@ -133,7 +134,7 @@ export default function SocialSecurityTool() {
                 />
               </div>
               <div>
-                <Label htmlFor="fullRetirementAge">Full Retirement Age</Label>
+                <Label htmlFor="fullRetirementAge" className="text-white">Full Retirement Age</Label>
                 <Input
                   id="fullRetirementAge"
                   type="number"
@@ -142,7 +143,7 @@ export default function SocialSecurityTool() {
                 />
               </div>
               <div>
-                <Label htmlFor="estimatedBenefit">Estimated Monthly Benefit at FRA ($)</Label>
+                <Label htmlFor="estimatedBenefit" className="text-white">Estimated Monthly Benefit at FRA ($)</Label>
                 <Input
                   id="estimatedBenefit"
                   type="number"
@@ -158,13 +159,13 @@ export default function SocialSecurityTool() {
                 checked={inputs.includeSpousal}
                 onCheckedChange={(checked) => setInputs({...inputs, includeSpousal: checked})}
               />
-              <Label htmlFor="includeSpousal">Include Spousal Strategy</Label>
+              <Label htmlFor="includeSpousal" className="text-white">Include Spousal Strategy</Label>
             </div>
             
             {inputs.includeSpousal && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-muted rounded-lg">
                 <div>
-                  <Label htmlFor="spouseAge">Spouse Age</Label>
+                  <Label htmlFor="spouseAge" className="text-white">Spouse Age</Label>
                   <Input
                     id="spouseAge"
                     type="number"
@@ -173,7 +174,7 @@ export default function SocialSecurityTool() {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="spouseBenefit">Spouse Estimated Benefit ($)</Label>
+                  <Label htmlFor="spouseBenefit" className="text-white">Spouse Estimated Benefit ($)</Label>
                   <Input
                     id="spouseBenefit"
                     type="number"
@@ -184,7 +185,7 @@ export default function SocialSecurityTool() {
               </div>
             )}
             
-            <Button onClick={calculateOptimization} className="w-full">
+            <Button onClick={calculateOptimization} className="w-full bg-bfo-gold text-black hover:bg-bfo-gold/90">
               <Users className="w-4 h-4 mr-2" />
               Analyze Filing Strategies
             </Button>
@@ -192,37 +193,37 @@ export default function SocialSecurityTool() {
         </Card>
 
         {results && (
-          <Card>
+          <Card className="bg-[hsl(210_65%_13%)] border-4 border-bfo-gold shadow-lg shadow-bfo-gold/20">
             <CardHeader>
-              <CardTitle>Filing Strategy Comparison</CardTitle>
+              <CardTitle className="text-white">Filing Strategy Comparison</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="text-center p-4 border rounded-lg">
-                  <div className="text-lg font-semibold">Early Filing (Age {results.earlyFiling.age})</div>
-                  <div className="text-2xl font-bold text-red-600">${results.earlyFiling.monthly}/month</div>
-                  <div className="text-sm text-muted-foreground">
+                <div className="text-center p-4 border border-bfo-gold/30 rounded-lg bg-bfo-navy">
+                  <div className="text-lg font-semibold text-white">Early Filing (Age {results.earlyFiling.age})</div>
+                  <div className="text-2xl font-bold text-red-400">${results.earlyFiling.monthly}/month</div>
+                  <div className="text-sm text-white/70">
                     Lifetime: ${results.earlyFiling.lifetime.toLocaleString()}
                   </div>
                 </div>
-                <div className="text-center p-4 border rounded-lg bg-primary/5">
-                  <div className="text-lg font-semibold">Full Retirement (Age {results.fullFiling.age})</div>
-                  <div className="text-2xl font-bold text-primary">${results.fullFiling.monthly}/month</div>
-                  <div className="text-sm text-muted-foreground">
+                <div className="text-center p-4 border border-bfo-gold rounded-lg bg-bfo-gold/10">
+                  <div className="text-lg font-semibold text-white">Full Retirement (Age {results.fullFiling.age})</div>
+                  <div className="text-2xl font-bold text-bfo-gold">${results.fullFiling.monthly}/month</div>
+                  <div className="text-sm text-white/70">
                     Lifetime: ${results.fullFiling.lifetime.toLocaleString()}
                   </div>
                 </div>
-                <div className="text-center p-4 border rounded-lg">
-                  <div className="text-lg font-semibold">Delayed Filing (Age {results.delayedFiling.age})</div>
-                  <div className="text-2xl font-bold text-green-600">${results.delayedFiling.monthly}/month</div>
-                  <div className="text-sm text-muted-foreground">
+                <div className="text-center p-4 border border-bfo-gold/30 rounded-lg bg-bfo-navy">
+                  <div className="text-lg font-semibold text-white">Delayed Filing (Age {results.delayedFiling.age})</div>
+                  <div className="text-2xl font-bold text-green-400">${results.delayedFiling.monthly}/month</div>
+                  <div className="text-sm text-white/70">
                     Lifetime: ${results.delayedFiling.lifetime.toLocaleString()}
                   </div>
                 </div>
               </div>
               
-              <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-                <p className="text-blue-800">
+              <div className="mt-6 p-4 bg-bfo-gold/10 rounded-lg border border-bfo-gold/30">
+                <p className="text-bfo-gold">
                   <strong>Recommendation:</strong> {results.recommendation}
                 </p>
               </div>
@@ -246,6 +247,7 @@ export default function SocialSecurityTool() {
             onCsvExport={() => handleExport('csv')}
           />
         </div>
+      </div>
       </div>
     </div>
   );
