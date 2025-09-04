@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { FamilyHero } from '@/components/families/FamilyHero';
 import { FAMILY_SEGMENTS } from '@/data/familySegments';
 import { analytics } from '@/lib/analytics';
+import BrandIcon from '@/components/ui/BrandIcon';
 import { 
   Users, 
   Clock, 
@@ -117,48 +118,49 @@ const FamiliesPage = () => {
               {/* Premium Main Stage Tiles */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-8">
                 {mainStages.map((stage) => {
-                  const Icon = stage.icon;
                   const isSelected = selectedStage === stage.id;
                   
                   return (
                     <Card
                       key={stage.id}
-                      className={`cursor-pointer transition-all duration-300 transform hover:scale-105 bg-brand-black border-brand-gold hover:bg-brand-black/90 ${
-                        isSelected ? 'ring-2 ring-brand-gold' : ''
-                      }`}
-                      style={{
-                        border: '1px solid hsl(var(--brand-gold))',
-                        boxShadow: '0 4px 8px rgba(212, 175, 55, 0.2)',
-                        minHeight: '220px', // Responsive height
-                        filter: isSelected ? 'brightness(110%)' : 'none'
-                      }}
+                      className="cursor-pointer transition-all duration-300 transform hover:scale-105 bg-white border-2 border-bfo-gold hover:border-bfo-gold/80"
                       onClick={() => {
                         setSelectedStage(stage.id);
                         handleStageSelect(stage);
                       }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.filter = 'brightness(110%)';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.filter = isSelected ? 'brightness(110%)' : 'none';
-                      }}
                     >
                       <CardContent className="p-6 md:p-8 text-center h-full flex flex-col justify-center">
                         <div className="mb-4 md:mb-6">
-                          <div 
-                            className="w-12 h-12 md:w-16 md:h-16 mx-auto mb-3 md:mb-4 rounded-lg flex items-center justify-center bg-brand-gold/10"
-                          >
-                            <Icon className="w-6 h-6 md:w-8 md:h-8 text-brand-gold" />
+                          <div className="w-12 h-12 md:w-16 md:h-16 mx-auto mb-3 md:mb-4 rounded-full bg-bfo-gold flex items-center justify-center">
+                            <BrandIcon 
+                              as={stage.icon} 
+                              color="black" 
+                              size={28}
+                            />
+                          </div>
+                          
+                          <Badge className="bg-bfo-gold text-black text-xs font-medium px-2 py-1 mb-2">
+                            {stage.id === 'aspiring' ? 'Growth Focus' : 'Lifestyle Focus'}
+                          </Badge>
+                        </div>
+                        
+                        <h3 className="text-xl md:text-2xl font-bold text-black mb-2 md:mb-3">{stage.title}</h3>
+                        <p className="text-gray-600 text-base md:text-lg leading-relaxed mb-4">{stage.description}</p>
+                        
+                        {/* Feature dots - now black and gold themed */}
+                        <div className="flex justify-between mb-4">
+                          <div className="flex flex-col items-center space-y-1">
+                            <div className="w-2 h-2 rounded-full bg-bfo-gold"></div>
+                            <div className="w-2 h-2 rounded-full bg-bfo-gold"></div>
+                          </div>
+                          <div className="flex flex-col items-center space-y-1">
+                            <div className="w-2 h-2 rounded-full bg-bfo-gold"></div>
+                            <div className="w-2 h-2 rounded-full bg-bfo-gold"></div>
                           </div>
                         </div>
                         
-                        <h3 className="text-xl md:text-2xl font-bold text-brand-white mb-2 md:mb-3">{stage.title}</h3>
-                        <p className="text-brand-white/80 text-base md:text-lg leading-relaxed">{stage.description}</p>
-                        
                         {isSelected && (
-                          <Badge 
-                            className="mt-3 md:mt-4 mx-auto text-xs md:text-sm bg-brand-gold text-brand-black border-brand-gold"
-                          >
+                          <Badge className="mt-2 mx-auto text-xs bg-bfo-gold text-black border-bfo-gold">
                             Selected
                           </Badge>
                         )}
@@ -191,48 +193,38 @@ const FamiliesPage = () => {
             
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 max-w-4xl mx-auto">
               {quickStartOptions.map((option) => {
-                const Icon = option.icon;
-                const isGold = option.id === 'wealth';
+                const isWealth = option.id === 'wealth';
                 
                 return (
                   <Card
                     key={option.id}
-                    className="cursor-pointer transition-all duration-300 hover:scale-105"
+                    className="cursor-pointer transition-all duration-300 hover:scale-105 border-2"
                     style={{
-                      backgroundColor: option.background,
-                      border: '1px solid #D4AF37',
+                      backgroundColor: isWealth ? '#D4AF37' : '#FFFFFF',
+                      borderColor: '#D4AF37',
                       boxShadow: '0 2px 4px rgba(212, 175, 55, 0.15)'
                     }}
                     onClick={() => handleQuickStart(option)}
-                    onMouseEnter={(e) => {
-                      if (isGold) {
-                        e.currentTarget.style.filter = 'brightness(110%)';
-                      } else {
-                        e.currentTarget.style.filter = 'brightness(110%)';
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.filter = 'none';
-                    }}
                   >
                     <CardContent className="p-4 md:p-6 text-center">
                       <div 
-                        className="w-10 h-10 md:w-12 md:h-12 mx-auto mb-3 md:mb-4 rounded-lg flex items-center justify-center"
+                        className="w-10 h-10 md:w-12 md:h-12 mx-auto mb-3 md:mb-4 rounded-lg flex items-center justify-center border-2"
                         style={{ 
-                          backgroundColor: isGold ? 'rgba(0, 31, 63, 0.2)' : 'rgba(212, 175, 55, 0.2)', 
-                          border: '1px solid #D4AF37' 
+                          backgroundColor: isWealth ? 'rgba(0, 0, 0, 0.1)' : 'rgba(212, 175, 55, 0.1)', 
+                          borderColor: '#D4AF37' 
                         }}
                       >
-                        <Icon 
-                          className="w-5 h-5 md:w-6 md:h-6" 
-                          style={{ color: isGold ? '#001F3F' : '#D4AF37' }} 
+                        <BrandIcon 
+                          as={option.icon} 
+                          color={isWealth ? "black" : "gold"} 
+                          size={20}
                         />
                       </div>
                       
-                      <h4 className="font-semibold mb-2 text-sm md:text-base" style={{ color: isGold ? '#001F3F' : '#FFFFFF' }}>
+                      <h4 className="font-semibold mb-2 text-sm md:text-base" style={{ color: isWealth ? '#000000' : '#000000' }}>
                         {option.title}
                       </h4>
-                      <p className="text-xs md:text-sm" style={{ color: isGold ? 'rgba(0, 31, 63, 0.8)' : 'rgba(255, 255, 255, 0.8)' }}>
+                      <p className="text-xs md:text-sm" style={{ color: isWealth ? 'rgba(0, 0, 0, 0.7)' : 'rgba(0, 0, 0, 0.6)' }}>
                         {option.description}
                       </p>
                     </CardContent>
