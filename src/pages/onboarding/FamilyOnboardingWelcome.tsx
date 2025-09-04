@@ -15,7 +15,7 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
     // Play Linda's welcome message after a short delay
     if ('speechSynthesis' in window && !hasPlayedWelcome) {
       const timer = setTimeout(() => {
-        playLindaWelcome("Hi, I'm Linda. Welcome to Your Boutique Family Office. Let's get started in 60 seconds.")
+        playLindaWelcome("Hi, I'm Linda. Welcome to Your Boutique Family Office.")
           .then(() => setHasPlayedWelcome(true))
           .catch(error => {
             console.error('Linda voice error:', error);
@@ -87,7 +87,7 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
               style={{ margin: '1.5rem 0' }}
             >
               <img
-                src="/brand/bfo-logo-white-gold.png"
+                src="/brand/bfo-logo-black-gold.png"
                 alt="Boutique Family Office Logo"
                 className="w-48 h-52 md:w-56 md:h-64"
                 style={{
@@ -110,7 +110,7 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
               Hi, I'm Linda
             </h1>
             <p className="text-lg md:text-xl text-blue-100 leading-relaxed">
-              Let's get started in 60 seconds
+              Welcome to Your Boutique Family Office
             </p>
           </motion.div>
 
