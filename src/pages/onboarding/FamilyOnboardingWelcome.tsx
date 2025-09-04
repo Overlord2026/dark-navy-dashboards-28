@@ -78,7 +78,7 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
               style={{ margin: '1.5rem 0' }}
             >
               <img
-                src="/lovable-uploads/e63fd043-b0e8-4d12-b332-23ecbe473345.png"
+                src="/BFO-logo-black-gold.png"
                 alt="Boutique Family Office Logo"
                 className="w-48 h-52 md:w-56 md:h-64"
                 style={{
