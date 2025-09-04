@@ -91,7 +91,6 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
                 alt="Boutique Family Office Logo"
                 className="w-48 h-52 md:w-56 md:h-64"
                 style={{
-                  filter: 'drop-shadow(0 0 10px rgba(212, 175, 55, 0.5))',
                   maxWidth: '192px',
                   maxHeight: '211px',
                   objectFit: 'contain'
