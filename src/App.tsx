@@ -48,6 +48,7 @@ import { SolutionsTaxPage } from '@/pages/solutions/SolutionsTaxPage';
 import { SolutionsEstatePage } from '@/pages/solutions/SolutionsEstatePage';
 import { OnboardingPage } from '@/pages/onboarding/OnboardingPage';
 import { FamilyOnboardingWelcome } from '@/pages/onboarding/FamilyOnboardingWelcome';
+import MainPageOnboarding from '@/pages/onboarding/MainPageOnboarding';
 import { FamilyDashboard } from '@/pages/families/FamilyDashboard';
 import { FamilyTypeDashboard } from '@/pages/families/FamilyTypeDashboard';
 import { VoiceTestPage } from '@/pages/test/VoiceTestPage';
@@ -337,7 +338,7 @@ function App() {
               isAuthenticated ? (
                 <Navigate to="/families" replace />
               ) : (
-                <FamilyOnboardingWelcome onAuthChoice={handleAuthChoice} />
+                <MainPageOnboarding onAuthChoice={handleAuthChoice} />
               )
             } />
             
