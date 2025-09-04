@@ -188,27 +188,28 @@ export default function RetirementScorecard() {
   };
 
   return (
-    <main className="mx-auto max-w-4xl px-4 py-10 space-y-8 pt-[var(--header-stack)] scroll-mt-[var(--header-stack)]">
-      <div className="text-center space-y-4">
-        <h1 className="text-3xl font-semibold text-foreground">Retirement Confidence Scorecard</h1>
-        <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-          Get a personalized assessment of your retirement readiness with actionable recommendations.
-        </p>
-      </div>
+    <main className="min-h-screen bg-bfo-navy">
+      <div className="container mx-auto px-4 py-8 max-w-4xl">
+        <div className="text-center space-y-4 mb-8">
+          <h1 className="text-3xl font-semibold text-white">Retirement Confidence Scorecard</h1>
+          <p className="text-white/70 text-lg max-w-2xl mx-auto">
+            Get a personalized assessment of your retirement readiness with actionable recommendations.
+          </p>
+        </div>
 
-      <div className="grid gap-8 lg:grid-cols-2">
-        {/* Input Form */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Your Information</CardTitle>
-            <CardDescription>
-              Enter your current financial situation to calculate your retirement confidence score.
-            </CardDescription>
-          </CardHeader>
+        <div className="grid gap-8 lg:grid-cols-2">
+          {/* Input Form */}
+          <Card className="bg-[hsl(210_65%_13%)] border-4 border-bfo-gold shadow-lg shadow-bfo-gold/20">
+            <CardHeader>
+              <CardTitle className="text-white">Your Information</CardTitle>
+              <CardDescription className="text-white/70">
+                Enter your current financial situation to calculate your retirement confidence score.
+              </CardDescription>
+            </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="age">Current Age</Label>
+                <Label htmlFor="age" className="text-white">Current Age</Label>
                 <Input
                   id="age"
                   type="number"
@@ -219,7 +220,7 @@ export default function RetirementScorecard() {
                 />
               </div>
               <div>
-                <Label htmlFor="retirementAge">Planned Retirement Age</Label>
+                <Label htmlFor="retirementAge" className="text-white">Planned Retirement Age</Label>
                 <Input
                   id="retirementAge"
                   type="number"
@@ -232,7 +233,7 @@ export default function RetirementScorecard() {
             </div>
 
             <div>
-              <Label htmlFor="savings">Current Retirement Savings ($)</Label>
+              <Label htmlFor="savings" className="text-white">Current Retirement Savings ($)</Label>
               <Input
                 id="savings"
                 type="number"
@@ -245,7 +246,7 @@ export default function RetirementScorecard() {
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="monthlyIncome">Monthly Income ($)</Label>
+                <Label htmlFor="monthlyIncome" className="text-white">Monthly Income ($)</Label>
                 <Input
                   id="monthlyIncome"
                   type="number"
@@ -256,7 +257,7 @@ export default function RetirementScorecard() {
                 />
               </div>
               <div>
-                <Label htmlFor="monthlySpend">Monthly Expenses ($)</Label>
+                <Label htmlFor="monthlySpend" className="text-white">Monthly Expenses ($)</Label>
                 <Input
                   id="monthlySpend"
                   type="number"
@@ -269,7 +270,7 @@ export default function RetirementScorecard() {
             </div>
 
             <div>
-              <Label htmlFor="guaranteedIncome">Expected Guaranteed Income ($/month)</Label>
+              <Label htmlFor="guaranteedIncome" className="text-white">Expected Guaranteed Income ($/month)</Label>
               <Input
                 id="guaranteedIncome"
                 type="number"
@@ -282,7 +283,7 @@ export default function RetirementScorecard() {
             </div>
 
             <div>
-              <Label htmlFor="risk">Risk Tolerance</Label>
+              <Label htmlFor="risk" className="text-white">Risk Tolerance</Label>
               <Select
                 value={inputs.risk}
                 onValueChange={(value: 'conservative' | 'moderate' | 'aggressive') => 
@@ -302,7 +303,7 @@ export default function RetirementScorecard() {
 
             <Button 
               onClick={handleCalculate} 
-              className="w-full" 
+              className="w-full bg-bfo-gold text-black hover:bg-bfo-gold/90" 
               disabled={loading}
             >
               {loading ? 'Calculating...' : 'Calculate My Score'}
@@ -311,10 +312,10 @@ export default function RetirementScorecard() {
         </Card>
 
         {/* Results */}
-        <Card>
+        <Card className="bg-[hsl(210_65%_13%)] border-4 border-bfo-gold shadow-lg shadow-bfo-gold/20">
           <CardHeader>
-            <CardTitle>Your Retirement Confidence Score</CardTitle>
-            <CardDescription>
+            <CardTitle className="text-white">Your Retirement Confidence Score</CardTitle>
+            <CardDescription className="text-white/70">
               Based on your current financial situation and retirement goals.
             </CardDescription>
           </CardHeader>
@@ -327,10 +328,10 @@ export default function RetirementScorecard() {
                     <span className={`text-4xl font-bold ${getScoreColor(result.score)}`}>
                       {result.score}
                     </span>
-                    <span className="text-2xl text-muted-foreground">/100</span>
+                    <span className="text-2xl text-white/70">/100</span>
                   </div>
                   <Progress value={result.score} className="w-full" />
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-white/70">
                     {result.score >= 80 && "Excellent! You're on track for a confident retirement."}
                     {result.score >= 60 && result.score < 80 && "Good progress! Some adjustments could improve your outlook."}
                     {result.score < 60 && "Needs attention. Consider implementing the recommendations below."}
@@ -338,25 +339,26 @@ export default function RetirementScorecard() {
                 </div>
 
                 <div className="space-y-3">
-                  <h3 className="font-semibold">Recommendations</h3>
+                  <h3 className="font-semibold text-white">Recommendations</h3>
                   {result.recommendations.map((rec, index) => (
-                    <div key={index} className="flex items-start space-x-2 p-3 bg-muted rounded-lg">
-                      <span className="flex-shrink-0 w-6 h-6 bg-primary text-primary-foreground rounded-full text-sm flex items-center justify-center">
+                    <div key={index} className="flex items-start space-x-2 p-3 bg-bfo-gold/10 rounded-lg border border-bfo-gold/30">
+                      <span className="flex-shrink-0 w-6 h-6 bg-bfo-gold text-black rounded-full text-sm flex items-center justify-center">
                         {index + 1}
                       </span>
-                      <p className="text-sm">{rec}</p>
+                      <p className="text-sm text-white">{rec}</p>
                     </div>
                   ))}
                 </div>
               </div>
             ) : (
-              <div className="text-center py-12 text-muted-foreground">
-                <TrendingUp className="h-12 w-12 mx-auto mb-4 opacity-50" />
+              <div className="text-center py-12 text-white/70">
+                <TrendingUp className="h-12 w-12 mx-auto mb-4 opacity-50 text-bfo-gold" />
                 <p>Enter your information and click "Calculate My Score" to see your results.</p>
               </div>
             )}
           </CardContent>
         </Card>
+      </div>
       </div>
     </main>
   );

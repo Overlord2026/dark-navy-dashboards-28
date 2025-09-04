@@ -116,28 +116,28 @@ export default function RetirementConfidenceScorecardPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-bfo-navy">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-primary/5 via-background to-secondary/5 py-20 px-4">
+      <section className="relative bg-bfo-navy py-20 px-4">
         <div className="max-w-7xl mx-auto text-center">
-          <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6">
+          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
             Are You Ready to Retire and Stay Retired?
           </h1>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-4xl mx-auto mb-8">
+          <p className="text-lg md:text-xl text-white/70 max-w-4xl mx-auto mb-8">
             Take our 2-minute, 10-question Retirement Confidence Scorecard™ to see where you stand — and discover the steps to make your money last to age 100 and beyond.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button 
               asChild 
               size="lg" 
-              className="bg-gradient-to-r from-primary to-primary-foreground text-primary-foreground hover:from-primary/90 hover:to-primary-foreground/90"
+              className="bg-bfo-gold text-black hover:bg-bfo-gold/90"
             >
               <Link to="/scorecard/start?tool=retirement-confidence&persona=client-family">
                 Start My Scorecard
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
-            <Button asChild variant="outline" size="lg">
+            <Button asChild variant="outline" size="lg" className="border-bfo-gold text-bfo-gold hover:bg-bfo-gold hover:text-black">
               <Link to="#how-it-works">See How It Works</Link>
             </Button>
           </div>
@@ -145,17 +145,17 @@ export default function RetirementConfidenceScorecardPage() {
       </section>
 
       {/* Value Proposition Blocks */}
-      <section className="py-16 px-4">
+      <section className="py-16 px-4 bg-bfo-navy">
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-3 gap-8">
             {valueProps.map((prop, index) => (
-              <Card key={index} className="text-center border-muted hover:border-primary/20 transition-colors">
+              <Card key={index} className="text-center bg-[hsl(210_65%_13%)] border-4 border-bfo-gold shadow-lg shadow-bfo-gold/20 hover:shadow-bfo-gold/30 transition-all">
                 <CardContent className="p-8">
-                  <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-primary/10 to-secondary/10 rounded-full flex items-center justify-center">
-                    <prop.icon className="h-8 w-8 text-primary" />
+                  <div className="w-16 h-16 mx-auto mb-4 bg-bfo-gold/20 rounded-full flex items-center justify-center">
+                    <prop.icon className="h-8 w-8 text-bfo-gold" />
                   </div>
-                  <h3 className="text-xl font-semibold text-foreground mb-3">{prop.title}</h3>
-                  <p className="text-muted-foreground">{prop.description}</p>
+                  <h3 className="text-xl font-semibold text-white mb-3">{prop.title}</h3>
+                  <p className="text-white/70">{prop.description}</p>
                 </CardContent>
               </Card>
             ))}
@@ -164,21 +164,21 @@ export default function RetirementConfidenceScorecardPage() {
       </section>
 
       {/* Key Features Section */}
-      <section className="py-16 px-4 bg-muted/30">
+      <section className="py-16 px-4 bg-[hsl(210_65%_15%)]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
               Key Features
             </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-lg text-white/70 max-w-2xl mx-auto">
               Everything you need to assess your retirement confidence
             </p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {features.map((feature, index) => (
-              <div key={index} className="flex items-start gap-4 p-6 bg-background rounded-lg border border-muted">
-                <feature.icon className="h-6 w-6 text-primary mt-1 flex-shrink-0" />
-                <p className="text-foreground">{feature.title}</p>
+              <div key={index} className="flex items-start gap-4 p-6 bg-[hsl(210_65%_13%)] rounded-lg border border-bfo-gold/30">
+                <feature.icon className="h-6 w-6 text-bfo-gold mt-1 flex-shrink-0" />
+                <p className="text-white">{feature.title}</p>
               </div>
             ))}
           </div>
@@ -186,23 +186,23 @@ export default function RetirementConfidenceScorecardPage() {
       </section>
 
       {/* How It Works Section */}
-      <section id="how-it-works" className="py-16 px-4">
+      <section id="how-it-works" className="py-16 px-4 bg-bfo-navy">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
               How It Works
             </h2>
-            <p className="text-lg text-muted-foreground">
+            <p className="text-lg text-white/70">
               Simple steps to retirement confidence
             </p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {steps.map((step, index) => (
               <div key={index} className="text-center">
-                <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-primary to-primary-foreground rounded-full flex items-center justify-center">
-                  <span className="text-2xl font-bold text-primary-foreground">{step.number}</span>
+                <div className="w-16 h-16 mx-auto mb-4 bg-bfo-gold rounded-full flex items-center justify-center">
+                  <span className="text-2xl font-bold text-black">{step.number}</span>
                 </div>
-                <p className="text-foreground font-medium">{step.title}</p>
+                <p className="text-white font-medium">{step.title}</p>
               </div>
             ))}
           </div>
