@@ -15,45 +15,72 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
   const [isMuted, setIsMuted] = useState(false);
   const [isLindaDisabled, setIsLindaDisabled] = useState(() => {
     // Check localStorage for persistent setting
-    return localStorage.getItem('lindaDisabled') === 'true';
+    const stored = localStorage.getItem('lindaDisabled');
+    console.log('Linda disabled from localStorage:', stored);
+    return stored === 'true';
   });
 
+  // More robust speech stopping function
+  const stopAllSpeech = () => {
+    console.log('Stopping all speech...');
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      // Force stop by pausing and canceling again
+      window.speechSynthesis.pause();
+      window.speechSynthesis.cancel();
+    }
+  };
+
   useEffect(() => {
+    console.log('Linda voice effect - disabled:', isLindaDisabled, 'muted:', isMuted, 'hasPlayed:', hasPlayedWelcome);
+    
     // Play Linda's welcome message after a short delay, unless disabled or muted
     if ('speechSynthesis' in window && !hasPlayedWelcome && !isMuted && !isLindaDisabled) {
+      console.log('Setting timer to play Linda voice...');
       const timer = setTimeout(() => {
+        console.log('Attempting to play Linda voice...');
         playLindaWelcome("Hi, I'm Linda. Welcome to Your Boutique Family Office.")
-          .then(() => setHasPlayedWelcome(true))
+          .then(() => {
+            console.log('Linda voice played successfully');
+            setHasPlayedWelcome(true);
+          })
           .catch(error => {
             console.error('Linda voice error:', error);
             setHasPlayedWelcome(true);
           });
       }, 1500);
 
-      return () => clearTimeout(timer);
+      return () => {
+        console.log('Clearing Linda voice timer');
+        clearTimeout(timer);
+      };
+    } else {
+      console.log('Skipping Linda voice - conditions not met');
     }
   }, [hasPlayedWelcome, isMuted, isLindaDisabled]);
 
   const handleMuteToggle = () => {
+    console.log('Muting Linda voice...');
     setIsMuted(true);
-    // Stop any currently playing speech
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-    }
+    stopAllSpeech();
   };
 
   const handleLindaToggle = () => {
     const newDisabledState = !isLindaDisabled;
+    console.log('Toggling Linda - new disabled state:', newDisabledState);
+    
     setIsLindaDisabled(newDisabledState);
     // Persist setting to localStorage
     localStorage.setItem('lindaDisabled', newDisabledState.toString());
     
     if (newDisabledState) {
-      // Stop any currently playing speech
-      if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-      }
+      console.log('Disabling Linda - stopping all speech');
+      stopAllSpeech();
       setIsMuted(true);
+    } else {
+      console.log('Enabling Linda');
+      setIsMuted(false);
+      setHasPlayedWelcome(false); // Allow voice to play again if re-enabled
     }
   };
 
@@ -138,6 +165,10 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
                   )}
                   <span className="text-sm text-white/90 font-medium">
                     {isLindaDisabled ? 'Enable Linda' : 'Disable Linda'}
+                  </span>
+                  {/* Debug indicator */}
+                  <span className="text-xs text-white/60">
+                    {isLindaDisabled ? '🔇' : '🔊'}
                   </span>
                 </button>
               </motion.div>
