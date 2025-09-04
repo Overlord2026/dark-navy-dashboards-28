@@ -161,6 +161,11 @@ import FamiliesStart from '@/pages/families/start';
 import RequireAdmin from '@/components/auth/RequireAdmin';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 
+// Welcome Flow Components
+const FamilyWelcomeFlow = React.lazy(() => import('@/components/welcome/FullScreenWelcome').then(m => ({ default: m.FullScreenWelcome })));
+const AuthPage = React.lazy(() => import('@/pages/auth/AuthPage').then(m => ({ default: m.AuthPage })));
+const WelcomeTransition = React.lazy(() => import('@/pages/welcome/WelcomeTransition').then(m => ({ default: m.WelcomeTransition })));
+
 // Marketplace imports
 import MarketplaceIndex from '@/pages/marketplace/Index';
 import MarketplaceAdvisors from '@/pages/marketplace/Advisors';
@@ -604,6 +609,11 @@ function App() {
             {/* Private App Routes */}
             <Route path="/onboarding" element={<OnboardingFlow />} />
             <Route path="/nil/onboarding" element={<NILOnboarding />} />
+            
+            {/* New Welcome Flow Routes */}
+            <Route path="/welcome" element={<React.Suspense fallback={<div>Loading...</div>}><FamilyWelcomeFlow /></React.Suspense>} />
+            <Route path="/auth" element={<React.Suspense fallback={<div>Loading...</div>}><AuthPage /></React.Suspense>} />
+            <Route path="/welcome/transition" element={<React.Suspense fallback={<div>Loading...</div>}><WelcomeTransition /></React.Suspense>} />
             <Route path="/nil/education" element={<Education />} />
             <Route path="/nil/search" element={<Search />} />
             <Route path="/nil/goals" element={<Goals />} />

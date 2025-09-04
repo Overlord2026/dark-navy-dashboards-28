@@ -882,6 +882,11 @@
 .bg-brand-gold { background-color: var(--brand-gold-raw); }
 .text-brand-black { color: var(--brand-black-raw); }
 .text-brand-white { color: var(--brand-white-raw); }
+
+/* Gold Logo Filter for Welcome Screen */
+.gold-logo-filter img {
+  filter: brightness(0) saturate(100%) invert(79%) sepia(20%) saturate(2476%) hue-rotate(21deg) brightness(102%) contrast(101%);
+}
 }
 
 /* Reduced Motion */
