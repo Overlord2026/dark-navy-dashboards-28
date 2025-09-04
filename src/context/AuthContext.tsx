@@ -18,6 +18,8 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string; requires2FA?: boolean; userId?: string }>;
   signup: (email: string, password: string, userData?: any) => Promise<{ success: boolean; error?: string }>;
   signInWithGoogle: () => Promise<{ success: boolean; error?: string }>;
+  signInWithApple: () => Promise<{ success: boolean; error?: string }>;
+  signInWithMicrosoft: () => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
   updateUserProfile: (profile: Partial<UserProfile>) => Promise<void>;
   refreshProfile: () => Promise<void>;
@@ -294,6 +296,53 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
+  const signInWithApple = async (): Promise<{ success: boolean; error?: string }> => {
+    try {
+      setIsLoading(true);
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'apple',
+        options: {
+          redirectTo: `${window.location.origin}/family/home`
+        }
+      });
+      
+      if (error) {
+        return { success: false, error: error.message };
+      }
+      
+      return { success: true };
+    } catch (error) {
+      console.error('Apple sign-in error:', error);
+      return { success: false, error: 'An unexpected error occurred with Apple sign-in' };
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const signInWithMicrosoft = async (): Promise<{ success: boolean; error?: string }> => {
+    try {
+      setIsLoading(true);
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'azure',
+        options: {
+          redirectTo: `${window.location.origin}/family/home`,
+          scopes: 'email'
+        }
+      });
+      
+      if (error) {
+        return { success: false, error: error.message };
+      }
+      
+      return { success: true };
+    } catch (error) {
+      console.error('Microsoft sign-in error:', error);
+      return { success: false, error: 'An unexpected error occurred with Microsoft sign-in' };
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const logout = async (): Promise<void> => {
     try {
       await supabase.auth.signOut();
@@ -400,6 +449,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         login,
         signup,
         signInWithGoogle,
+        signInWithApple,
+        signInWithMicrosoft,
         logout,
         updateUserProfile,
         refreshProfile,
