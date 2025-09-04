@@ -18,9 +18,9 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
     if (isVoiceSupported() && !hasPlayedWelcome) {
       const timer = setTimeout(() => {
         const utterance = new SpeechSynthesisUtterance(
-          "Hi, I'm Linda from Your Boutique Family Office. Let's get you started in 60 seconds - your secure family hub awaits."
+          "Hi, I'm Linda from Your Boutique Family Office. Your family's secure hub - all data in one place, with bank-level protection. Invite trusted advisors anytime. And for pros: your all-in-one practice hub. Coordinate with clients, manage everything easily. We're here when you need us. Let's get you started in 60 seconds."
         );
-        utterance.rate = 0.9;
+        utterance.rate = 0.85;
         utterance.pitch = 1.0;
         utterance.volume = 0.8;
         
@@ -112,8 +112,13 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
               <span style={{ color: '#D4AF37' }}>Boutique Family Office</span>
             </h1>
             <p className="text-xl text-blue-100 leading-relaxed">
-              Let's begin your journey — sign up in just<br />
-              <span className="font-semibold text-white">60 seconds</span>
+              Your family's secure hub — all data in one place,<br />
+              with <span className="font-semibold text-white">bank-level protection</span><br />
+              <span className="text-lg">Invite trusted advisors anytime</span>
+            </p>
+            <p className="text-lg text-blue-200 leading-relaxed mt-2">
+              <span className="font-medium">For pros:</span> your all-in-one practice hub<br />
+              Coordinate with clients, manage everything easily
             </p>
           </motion.div>
 
@@ -166,8 +171,8 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
             transition={{ duration: 0.6, delay: 1.2 }}
             className="text-sm text-blue-200 leading-relaxed"
           >
-            Your data is encrypted and secure.<br />
-            Trusted by families worldwide.
+            We're here when you need us.<br />
+            Trusted by families and professionals worldwide.
           </motion.p>
         </motion.div>
       </div>
