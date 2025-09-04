@@ -332,8 +332,6 @@ function App() {
           <div className="min-h-screen bg-background text-foreground">
             {/* Permanent Top Banner on ALL pages */}
             <TopBanner />
-            <BrandHeader />
-            <ConditionalMegaMenu />
             <RedirectHandler />
             <div>
             <Routes>

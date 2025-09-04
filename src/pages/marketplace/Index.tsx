@@ -2,13 +2,16 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TrendingUp, Scale, Shield } from 'lucide-react';
 import { GoldButton } from '@/components/ui/brandButtons';
+import { SecondaryNav } from '@/components/layout/SecondaryNav';
 
 export default function MarketplaceIndex() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-bfo-black">
-      <div className="container mx-auto px-4 py-16">
+    <>
+      <SecondaryNav />
+      <div className="min-h-screen bg-bfo-black" style={{ paddingTop: '120px' }}>
+        <div className="container mx-auto px-4 py-16">
         {/* Header */}
         <div className="text-center mb-16">
           <h1 className="text-5xl md:text-6xl font-bold text-white leading-tight mb-6">
@@ -81,7 +84,8 @@ export default function MarketplaceIndex() {
             </GoldButton>
           </div>
         </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 }

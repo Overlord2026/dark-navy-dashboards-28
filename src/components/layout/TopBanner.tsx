@@ -9,7 +9,7 @@ export const TopBanner: React.FC = () => {
       <img
         src="/brand/bfo-horizontal-4x8.png"
         alt="Boutique Family Office"
-        className="h-full w-auto px-4"
+        className="h-full w-full px-4 object-contain"
       />
     </div>
   );

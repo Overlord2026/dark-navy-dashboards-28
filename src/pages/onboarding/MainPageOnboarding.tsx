@@ -22,12 +22,17 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
 
   // More robust speech stopping function
   const stopAllSpeech = () => {
-    console.log('Stopping all speech...');
+    console.log('🔇 Stopping all speech...');
     if ('speechSynthesis' in window) {
+      // Multiple approaches to ensure speech stops
       window.speechSynthesis.cancel();
-      // Force stop by pausing and canceling again
       window.speechSynthesis.pause();
       window.speechSynthesis.cancel();
+      
+      // Additional safety: clear any pending utterances
+      setTimeout(() => {
+        window.speechSynthesis.cancel();
+      }, 100);
     }
   };
 
@@ -67,20 +72,22 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
 
   const handleLindaToggle = () => {
     const newDisabledState = !isLindaDisabled;
-    console.log('Toggling Linda - new disabled state:', newDisabledState);
+    console.log('🔄 Toggling Linda - new disabled state:', newDisabledState);
+    
+    // IMMEDIATELY stop speech first
+    stopAllSpeech();
     
     setIsLindaDisabled(newDisabledState);
-    // Persist setting to localStorage
     localStorage.setItem('lindaDisabled', newDisabledState.toString());
     
     if (newDisabledState) {
-      console.log('Disabling Linda - stopping all speech');
-      stopAllSpeech();
+      console.log('🚫 Disabling Linda - stopping all speech');
       setIsMuted(true);
+      setHasPlayedWelcome(true); // Prevent future playback
     } else {
-      console.log('Enabling Linda');
+      console.log('✅ Enabling Linda');
       setIsMuted(false);
-      setHasPlayedWelcome(false); // Allow voice to play again if re-enabled
+      setHasPlayedWelcome(false);
     }
   };
 

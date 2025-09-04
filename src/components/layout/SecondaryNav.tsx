@@ -20,12 +20,12 @@ export const SecondaryNav: React.FC = () => {
         border: '1px solid #D4AF37'
       }}
     >
-      <nav className="flex items-center" style={{ gap: '1rem' }}>
+      <nav className="flex items-center" style={{ gap: '1.5rem' }}>
         {navItems.map((item, index) => (
           <button
             key={index}
             className="text-white hover:text-blue-200 transition-colors duration-200 font-medium whitespace-nowrap"
-            style={{ fontSize: '1.2rem' }}
+            style={{ fontSize: '18px' }}
           >
             {item}
           </button>
