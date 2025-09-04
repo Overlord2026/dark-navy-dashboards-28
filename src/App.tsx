@@ -47,6 +47,7 @@ import { SolutionsLendingPage } from '@/pages/solutions/SolutionsLendingPage';
 import { SolutionsTaxPage } from '@/pages/solutions/SolutionsTaxPage';
 import { SolutionsEstatePage } from '@/pages/solutions/SolutionsEstatePage';
 import { OnboardingPage } from '@/pages/onboarding/OnboardingPage';
+import { FamilyOnboardingWelcome } from '@/pages/onboarding/FamilyOnboardingWelcome';
 import QACoverage from '@/pages/admin/QACoverage';
 import ReadyCheck from '@/pages/admin/ReadyCheck';
 import { ReadyCheckEnhanced } from '@/pages/admin/ReadyCheckEnhanced';
@@ -269,6 +270,31 @@ function App() {
     return () => subscription.unsubscribe();
   }, []);
 
+  // Auth choice handler for FamilyOnboardingWelcome
+  const handleAuthChoice = async (provider: string) => {
+    if (provider === 'email') {
+      // Navigate to auth page for email signup
+      window.location.href = '/auth?mode=signup&redirect=/family/home';
+      return;
+    }
+
+    try {
+      // Handle OAuth providers
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: provider as any,
+        options: {
+          redirectTo: `${window.location.origin}/family/home`,
+        },
+      });
+
+      if (error) {
+        console.error('Auth error:', error);
+      }
+    } catch (error) {
+      console.error('Auth error:', error);
+    }
+  };
+
   // Query param demo auto-loading
   React.useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -305,9 +331,11 @@ function App() {
             <div>
             <Routes>
             <Route path="/" element={
-              isAuthenticated ? <Navigate to="/family/home" replace /> : 
-              getFlag('PUBLIC_DISCOVER_ENABLED') ? <Navigate to="/discover" replace /> : 
-              <Navigate to="/nil/onboarding" replace />
+              isAuthenticated ? (
+                <Navigate to="/family/home" replace />
+              ) : (
+                <FamilyOnboardingWelcome onAuthChoice={handleAuthChoice} />
+              )
             } />
             
             {/* NEW: Primary persona landing pages */}
@@ -607,7 +635,7 @@ function App() {
             {getFlag('BRAND_PUBLIC_ENABLED') && <Route path="/brand/local" element={<BrandHub segment="local-business" />} />}
             
             {/* Private App Routes */}
-            <Route path="/onboarding" element={<OnboardingPage />} />
+            <Route path="/onboarding" element={<FamilyOnboardingWelcome onAuthChoice={handleAuthChoice} />} />
             <Route path="/nil/onboarding" element={<NILOnboarding />} />
             
             {/* New Welcome Flow Routes */}
