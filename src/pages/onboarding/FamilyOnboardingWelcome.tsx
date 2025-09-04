@@ -60,17 +60,8 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
 
   return (
     <div className="h-screen w-full" style={{ backgroundColor: '#001F3F' }}>
-      {/* Fixed Top Banner with 4x8 Horizontal Logo */}
-      <div className="fixed top-0 left-0 right-0 z-50 flex justify-center py-4" style={{ backgroundColor: '#001F3F' }}>
-        <img
-          src="/brand/bfo-horizontal-4x8.png"
-          alt="Boutique Family Office"
-          className="h-8 md:h-10 w-auto"
-        />
-      </div>
-
       {/* Main Content */}
-      <div className="h-full flex flex-col items-center justify-center pt-20">
+      <div className="h-full flex flex-col items-center justify-center">
         <div className="w-full max-w-md mx-auto px-6">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
@@ -87,7 +78,7 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
               style={{ margin: '1.5rem 0' }}
             >
               <img
-                src="/BFO-logo-black-gold.png"
+                src="/lovable-uploads/e63fd043-b0e8-4d12-b332-23ecbe473345.png"
                 alt="Boutique Family Office Logo"
                 className="w-48 h-52 md:w-56 md:h-64"
                 style={{
