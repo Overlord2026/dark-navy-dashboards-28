@@ -19,17 +19,17 @@ const personas = {
     badge: 'AICPA Member',
     compliance: '• AICPA Member • IRS Authorized'
   },
-  'Attorneys': { 
-    color: '#7A1733', // Burgundy
-    icon: '⚖️', 
-    badge: 'Bar Certified',
-    compliance: '• Bar Certified • Ethics Compliant'
-  },
   'Insurance': { 
     color: '#D9534F', // Alert red
     icon: '📋', 
     badge: '10-Year Records',
     compliance: '• NAIC Compliant • State Licensed'
+  },
+  'Attorneys': { 
+    color: '#7A1733', // Burgundy
+    icon: '⚖️', 
+    badge: 'Bar Certified',
+    compliance: '• Bar Certified • Ethics Compliant'
   },
   'Healthcare': { 
     color: '#3946A6', // Indigo
