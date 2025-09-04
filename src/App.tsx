@@ -13,6 +13,7 @@ import DevPanel from '@/components/dev/DevPanel';
 import { AutoLoadDemo } from '@/components/AutoLoadDemo';
 import { DemoStatus } from '@/components/DemoStatus';
 import CTAStickyBar from '@/components/ui/CTAStickyBar';
+import { SecondaryNav } from '@/components/layout/SecondaryNav';
 import NILOnboarding from '@/pages/nil/Onboarding';
 import Education from '@/pages/nil/Education';
 import Search from '@/pages/nil/Search';
@@ -347,6 +348,8 @@ function App() {
           <div className="min-h-screen bg-background text-foreground">
             {/* Permanent Top Banner on ALL pages */}
             <TopBanner />
+            {/* Secondary Navigation on ALL pages */}
+            <SecondaryNav />
             <RedirectHandler />
             <div>
             <Routes>
