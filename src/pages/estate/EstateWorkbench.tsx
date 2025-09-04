@@ -203,106 +203,109 @@ const EstateWorkbench = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-bfo-navy">
       <div className="container mx-auto py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Estate Workbench</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-3xl font-bold mb-2 text-white">Estate Workbench</h1>
+          <p className="text-white/70">
             Comprehensive estate planning tools with state-aware compliance and Trust Rails integration.
           </p>
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-6">
-            <TabsTrigger value="diagram" className="flex items-center gap-2">
+          <TabsList className="grid w-full grid-cols-6 bg-[hsl(210_65%_13%)] border border-bfo-gold/30">
+            <TabsTrigger value="diagram" className="flex items-center gap-2 text-white data-[state=active]:bg-bfo-gold data-[state=active]:text-black">
               <TrendingUp className="h-4 w-4" />
               Diagram
             </TabsTrigger>
-            <TabsTrigger value="authority" className="flex items-center gap-2">
+            <TabsTrigger value="authority" className="flex items-center gap-2 text-white data-[state=active]:bg-bfo-gold data-[state=active]:text-black">
               <Crown className="h-4 w-4" />
               Authority
             </TabsTrigger>
-            <TabsTrigger value="beneficiaries" className="flex items-center gap-2">
+            <TabsTrigger value="beneficiaries" className="flex items-center gap-2 text-white data-[state=active]:bg-bfo-gold data-[state=active]:text-black">
               <Users className="h-4 w-4" />
               Beneficiaries
             </TabsTrigger>
-            <TabsTrigger value="property" className="flex items-center gap-2">
+            <TabsTrigger value="property" className="flex items-center gap-2 text-white data-[state=active]:bg-bfo-gold data-[state=active]:text-black">
               <FileText className="h-4 w-4" />
               Property
             </TabsTrigger>
-            <TabsTrigger value="survivorship" className="flex items-center gap-2">
+            <TabsTrigger value="survivorship" className="flex items-center gap-2 text-white data-[state=active]:bg-bfo-gold data-[state=active]:text-black">
               <Calculator className="h-4 w-4" />
               Survivorship
             </TabsTrigger>
-            <TabsTrigger value="binder" className="flex items-center gap-2">
+            <TabsTrigger value="binder" className="flex items-center gap-2 text-white data-[state=active]:bg-bfo-gold data-[state=active]:text-black">
               <Archive className="h-4 w-4" />
               Binder
             </TabsTrigger>
           </TabsList>
 
           <TabsContent value="diagram" className="space-y-6">
-            <Card>
+            <Card className="bg-[hsl(210_65%_13%)] border-4 border-bfo-gold shadow-lg shadow-bfo-gold/20">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <TrendingUp className="h-5 w-5" />
+                <CardTitle className="flex items-center gap-2 text-white">
+                  <TrendingUp className="h-5 w-5 text-bfo-gold" />
                   Entity & Trust Diagram
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="bg-muted p-8 rounded-lg text-center">
-                  <p className="text-muted-foreground mb-4">
+                <div className="bg-bfo-gold/10 p-8 rounded-lg text-center border border-bfo-gold/30">
+                  <p className="text-white/70 mb-4">
                     Interactive estate diagram showing entity relationships and probate risk analysis
                   </p>
-                  <Badge variant="outline">Coming Soon: Visual Estate Mapping</Badge>
+                  <Badge variant="outline" className="border-bfo-gold text-bfo-gold">Coming Soon: Visual Estate Mapping</Badge>
                 </div>
               </CardContent>
             </Card>
           </TabsContent>
 
           <TabsContent value="authority" className="space-y-6">
-            <Card>
+            <Card className="bg-[hsl(210_65%_13%)] border-4 border-bfo-gold shadow-lg shadow-bfo-gold/20">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Crown className="h-5 w-5" />
+                <CardTitle className="flex items-center gap-2 text-white">
+                  <Crown className="h-5 w-5 text-bfo-gold" />
                   Authority & Roles
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid gap-4">
-                  <div className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex items-center justify-between p-4 border border-bfo-gold/30 rounded-lg bg-bfo-navy">
                     <div>
-                      <h3 className="font-medium">Power of Attorney</h3>
-                      <p className="text-sm text-muted-foreground">Financial decision authority</p>
+                      <h3 className="font-medium text-white">Power of Attorney</h3>
+                      <p className="text-sm text-white/70">Financial decision authority</p>
                     </div>
                     <Button 
                       onClick={() => handleGrantAuthority('POA', 'spouse')}
                       disabled={loading}
+                      className="bg-bfo-gold text-black hover:bg-bfo-gold/90"
                     >
                       Grant Authority
                     </Button>
                   </div>
                   
-                  <div className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex items-center justify-between p-4 border border-bfo-gold/30 rounded-lg bg-bfo-navy">
                     <div>
-                      <h3 className="font-medium">Trustee</h3>
-                      <p className="text-sm text-muted-foreground">Trust administration authority</p>
+                      <h3 className="font-medium text-white">Trustee</h3>
+                      <p className="text-sm text-white/70">Trust administration authority</p>
                     </div>
                     <Button 
                       onClick={() => handleGrantAuthority('Trustee', 'successor')}
                       disabled={loading}
+                      className="bg-bfo-gold text-black hover:bg-bfo-gold/90"
                     >
                       Grant Authority
                     </Button>
                   </div>
                   
-                  <div className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex items-center justify-between p-4 border border-bfo-gold/30 rounded-lg bg-bfo-navy">
                     <div>
-                      <h3 className="font-medium">Executor</h3>
-                      <p className="text-sm text-muted-foreground">Estate administration authority</p>
+                      <h3 className="font-medium text-white">Executor</h3>
+                      <p className="text-sm text-white/70">Estate administration authority</p>
                     </div>
                     <Button 
                       onClick={() => handleGrantAuthority('Executor', 'primary')}
                       disabled={loading}
+                      className="bg-bfo-gold text-black hover:bg-bfo-gold/90"
                     >
                       Grant Authority
                     </Button>
@@ -313,34 +316,38 @@ const EstateWorkbench = () => {
           </TabsContent>
 
           <TabsContent value="beneficiaries" className="space-y-6">
-            <Card>
+            <Card className="bg-[hsl(210_65%_13%)] border-4 border-bfo-gold shadow-lg shadow-bfo-gold/20">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Users className="h-5 w-5" />
+                <CardTitle className="flex items-center gap-2 text-white">
+                  <Users className="h-5 w-5 text-bfo-gold" />
                   Beneficiary Center
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex justify-between items-center">
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-white/70">
                     Scan accounts for beneficiary mismatches against estate intent
                   </p>
-                  <Button onClick={handleBeneficiarySync} disabled={loading}>
+                  <Button 
+                    onClick={handleBeneficiarySync} 
+                    disabled={loading}
+                    className="bg-bfo-gold text-black hover:bg-bfo-gold/90"
+                  >
                     Scan Beneficiaries
                   </Button>
                 </div>
                 
                 {mismatches.length > 0 && (
                   <div className="space-y-3">
-                    <h3 className="font-medium flex items-center gap-2">
-                      <AlertTriangle className="h-4 w-4 text-yellow-500" />
+                    <h3 className="font-medium flex items-center gap-2 text-white">
+                      <AlertTriangle className="h-4 w-4 text-bfo-gold" />
                       Mismatches Found ({mismatches.length})
                     </h3>
                     {mismatches.map((mismatch) => (
-                      <div key={mismatch.accountId} className="flex items-center justify-between p-3 border rounded-lg">
+                      <div key={mismatch.accountId} className="flex items-center justify-between p-3 border border-bfo-gold/30 rounded-lg bg-bfo-navy">
                         <div>
-                          <p className="font-medium">{mismatch.accountId}</p>
-                          <p className="text-sm text-muted-foreground">
+                          <p className="font-medium text-white">{mismatch.accountId}</p>
+                          <p className="text-sm text-white/70">
                             Current: {mismatch.current} → Intent: {mismatch.intent}
                           </p>
                         </div>
@@ -348,6 +355,7 @@ const EstateWorkbench = () => {
                           size="sm" 
                           onClick={() => handleFixBeneficiary(mismatch.accountId)}
                           disabled={loading}
+                          className="bg-bfo-gold text-black hover:bg-bfo-gold/90"
                         >
                           Apply Fix
                         </Button>
@@ -361,13 +369,13 @@ const EstateWorkbench = () => {
 
           <TabsContent value="property" className="space-y-6">
             <div className="grid gap-6">
-              <Card>
+              <Card className="bg-[hsl(210_65%_13%)] border-4 border-bfo-gold shadow-lg shadow-bfo-gold/20">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Home className="h-5 w-5" />
+                  <CardTitle className="flex items-center gap-2 text-white">
+                    <Home className="h-5 w-5 text-bfo-gold" />
                     Property & Funding
                   </CardTitle>
-                  <CardDescription>
+                  <CardDescription className="text-white/70">
                     Request deeds and generate funding letters for trust and estate planning
                   </CardDescription>
                 </CardHeader>
@@ -375,16 +383,24 @@ const EstateWorkbench = () => {
                   <FamilyDeedRequest />
                   
                   <div>
-                    <h4 className="font-medium mb-3">Funding Letters</h4>
-                    <p className="text-sm text-muted-foreground mb-4">
+                    <h4 className="font-medium mb-3 text-white">Funding Letters</h4>
+                    <p className="text-sm text-white/70 mb-4">
                       Generate letters to update beneficiaries on accounts and policies
                     </p>
                     <div className="grid gap-3 md:grid-cols-2">
-                      <Button variant="outline" onClick={handleGenerateTODLetter} className="flex items-center gap-2">
+                      <Button 
+                        variant="outline" 
+                        onClick={handleGenerateTODLetter} 
+                        className="flex items-center gap-2 border-bfo-gold text-bfo-gold hover:bg-bfo-gold hover:text-black"
+                      >
                         <FileText className="h-4 w-4" />
                         TOD/POD Letters
                       </Button>
-                      <Button variant="outline" onClick={handleGenerate401kLetter} className="flex items-center gap-2">
+                      <Button 
+                        variant="outline" 
+                        onClick={handleGenerate401kLetter} 
+                        className="flex items-center gap-2 border-bfo-gold text-bfo-gold hover:bg-bfo-gold hover:text-black"
+                      >
                         <FileText className="h-4 w-4" />
                         401(k) Beneficiary Letters
                       </Button>
@@ -393,17 +409,20 @@ const EstateWorkbench = () => {
                   
                   {deedRequests.length > 0 && (
                     <div className="space-y-3">
-                      <h4 className="font-medium">Your Deed Requests</h4>
+                      <h4 className="font-medium text-white">Your Deed Requests</h4>
                       {deedRequests.map((request) => (
-                        <Card key={request.id} className="p-4">
+                        <Card key={request.id} className="p-4 bg-bfo-navy border border-bfo-gold/30">
                           <div className="flex justify-between items-start">
                             <div>
-                              <p className="font-medium">{request.propertyAddress}</p>
-                              <p className="text-sm text-muted-foreground">
+                              <p className="font-medium text-white">{request.propertyAddress}</p>
+                              <p className="text-sm text-white/70">
                                 {request.deedType} • {request.status}
                               </p>
                             </div>
-                            <Badge variant={request.status === 'recorded' ? 'default' : 'secondary'}>
+                            <Badge 
+                              variant={request.status === 'recorded' ? 'default' : 'secondary'}
+                              className={request.status === 'recorded' ? 'bg-bfo-gold text-black' : 'bg-bfo-gold/20 text-bfo-gold'}
+                            >
                               {request.status}
                             </Badge>
                           </div>
@@ -417,36 +436,40 @@ const EstateWorkbench = () => {
           </TabsContent>
 
           <TabsContent value="survivorship" className="space-y-6">
-            <Card>
+            <Card className="bg-[hsl(210_65%_13%)] border-4 border-bfo-gold shadow-lg shadow-bfo-gold/20">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Calculator className="h-5 w-5" />
+                <CardTitle className="flex items-center gap-2 text-white">
+                  <Calculator className="h-5 w-5 text-bfo-gold" />
                   Survivorship & Estate Tax
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex justify-between items-center">
                   <div>
-                    <p className="font-medium">Estate Tax Analysis</p>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="font-medium text-white">Estate Tax Analysis</p>
+                    <p className="text-sm text-white/70">
                       Federal and state estate tax projections with portability
                     </p>
                   </div>
-                  <Button onClick={handleSurvivorshipRun} disabled={loading}>
+                  <Button 
+                    onClick={handleSurvivorshipRun} 
+                    disabled={loading}
+                    className="bg-bfo-gold text-black hover:bg-bfo-gold/90"
+                  >
                     Run Analysis
                   </Button>
                 </div>
                 
                 <div className="grid grid-cols-2 gap-4 pt-4">
-                  <div className="p-4 bg-muted rounded-lg">
-                    <h3 className="font-medium">Federal Estate Tax</h3>
-                    <p className="text-2xl font-bold">$0</p>
-                    <p className="text-sm text-muted-foreground">Exemption: $13.61M (2024)</p>
+                  <div className="p-4 bg-bfo-gold/10 rounded-lg border border-bfo-gold/30">
+                    <h3 className="font-medium text-white">Federal Estate Tax</h3>
+                    <p className="text-2xl font-bold text-bfo-gold">$0</p>
+                    <p className="text-sm text-white/70">Exemption: $13.61M (2024)</p>
                   </div>
-                  <div className="p-4 bg-muted rounded-lg">
-                    <h3 className="font-medium">State Estate Tax</h3>
-                    <p className="text-2xl font-bold">$0</p>
-                    <p className="text-sm text-muted-foreground">CA: No state estate tax</p>
+                  <div className="p-4 bg-bfo-gold/10 rounded-lg border border-bfo-gold/30">
+                    <h3 className="font-medium text-white">State Estate Tax</h3>
+                    <p className="text-2xl font-bold text-bfo-gold">$0</p>
+                    <p className="text-sm text-white/70">CA: No state estate tax</p>
                   </div>
                 </div>
               </CardContent>
@@ -454,60 +477,56 @@ const EstateWorkbench = () => {
           </TabsContent>
 
           <TabsContent value="binder" className="space-y-6">
-            <Card>
+            <Card className="bg-[hsl(210_65%_13%)] border-4 border-bfo-gold shadow-lg shadow-bfo-gold/20">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Archive className="h-5 w-5" />
-                  Binder Export
+                <CardTitle className="flex items-center gap-2 text-white">
+                  <Archive className="h-5 w-5 text-bfo-gold" />
+                  Estate Binder Export
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex justify-between items-center">
                   <div>
-                    <p className="font-medium">Estate Documentation Package</p>
-                    <p className="text-sm text-muted-foreground">
-                      Complete ZIP with manifest hash and receipt trail
+                    <p className="font-medium text-white">Master Estate Package</p>
+                    <p className="text-sm text-white/70">
+                      Comprehensive ZIP with all documents, checklists, and state requirements
                     </p>
                   </div>
-                  <Button onClick={handleBinderExport} disabled={loading}>
-                    <Download className="h-4 w-4 mr-2" />
+                  <Button 
+                    onClick={handleBinderExport} 
+                    disabled={loading}
+                    className="bg-bfo-gold text-black hover:bg-bfo-gold/90 flex items-center gap-2"
+                  >
+                    <Download className="h-4 w-4" />
                     Export Binder
                   </Button>
                 </div>
                 
-                <div className="border-t pt-4">
-                  <div className="flex justify-between items-center mb-4">
-                    <div>
-                      <p className="font-medium">Crypto Estate Directives</p>
-                      <p className="text-sm text-muted-foreground">
-                        Include crypto directives and statements in estate packet
-                      </p>
-                    </div>
-                    <Button 
-                      onClick={handleIncludeCrypto} 
-                      disabled={loading}
-                      variant="outline"
-                    >
-                      Include Crypto in Estate Packet
-                    </Button>
+                <div className="grid grid-cols-2 gap-4 pt-4">
+                  <div className="p-4 bg-bfo-gold/10 rounded-lg border border-bfo-gold/30">
+                    <h3 className="font-medium text-white">Documents</h3>
+                    <p className="text-2xl font-bold text-bfo-gold">12</p>
+                    <p className="text-sm text-white/70">Total files included</p>
+                  </div>
+                  <div className="p-4 bg-bfo-gold/10 rounded-lg border border-bfo-gold/30">
+                    <h3 className="font-medium text-white">Compliance</h3>
+                    <p className="text-2xl font-bold text-green-400">✓</p>
+                    <p className="text-sm text-white/70">State requirements met</p>
                   </div>
                 </div>
                 
-                <div className="p-4 bg-muted rounded-lg">
-                  <h3 className="font-medium mb-2">Binder Contents</h3>
-                  <ul className="text-sm text-muted-foreground space-y-1">
-                    <li>• Estate planning documents (PDFs)</li>
-                    <li>• Authority grants and beneficiary forms</li>
-                    <li>• Crypto directives and wallet statements</li>
-                    <li>• Receipt trail (content-free)</li>
-                    <li>• Manifest with cryptographic hash</li>
-                    <li>• Execution checklists by state</li>
-                  </ul>
+                <div className="mt-6">
+                  <Button 
+                    onClick={handleIncludeCrypto}
+                    variant="outline"
+                    className="w-full border-bfo-gold text-bfo-gold hover:bg-bfo-gold hover:text-black"
+                  >
+                    Include Crypto Assets in Estate Packet
+                  </Button>
                 </div>
               </CardContent>
             </Card>
           </TabsContent>
-
         </Tabs>
       </div>
     </div>

@@ -146,14 +146,14 @@ const EstateDIYWizard = () => {
         return (
           <div className="space-y-6">
             <div className="text-center">
-              <Crown className="h-12 w-12 mx-auto mb-4 text-primary" />
-              <h2 className="text-2xl font-bold mb-2">Household Information</h2>
-              <p className="text-muted-foreground">Tell us about your family</p>
+              <Crown className="h-12 w-12 mx-auto mb-4 text-bfo-gold" />
+              <h2 className="text-2xl font-bold mb-2 text-white">Household Information</h2>
+              <p className="text-white/70">Tell us about your family</p>
             </div>
             
             <div className="space-y-4">
               <div>
-                <Label htmlFor="clientName">Your Full Legal Name</Label>
+                <Label htmlFor="clientName" className="text-white">Your Full Legal Name</Label>
                 <Input
                   id="clientName"
                   value={formData.clientName}
@@ -163,7 +163,7 @@ const EstateDIYWizard = () => {
               </div>
               
               <div>
-                <Label htmlFor="spouseName">Spouse/Partner Name (Optional)</Label>
+                <Label htmlFor="spouseName" className="text-white">Spouse/Partner Name (Optional)</Label>
                 <Input
                   id="spouseName"
                   value={formData.spouseName}
@@ -173,7 +173,7 @@ const EstateDIYWizard = () => {
               </div>
               
               <div>
-                <Label htmlFor="state">State of Residence</Label>
+                <Label htmlFor="state" className="text-white">State of Residence</Label>
                 <Select 
                   value={formData.state} 
                   onValueChange={(value) => setFormData(prev => ({...prev, state: value}))}
@@ -197,9 +197,9 @@ const EstateDIYWizard = () => {
         return (
           <div className="space-y-6">
             <div className="text-center">
-              <Shield className="h-12 w-12 mx-auto mb-4 text-primary" />
-              <h2 className="text-2xl font-bold mb-2">Trust Setup</h2>
-              <p className="text-muted-foreground">Configure your revocable living trust</p>
+              <Shield className="h-12 w-12 mx-auto mb-4 text-bfo-gold" />
+              <h2 className="text-2xl font-bold mb-2 text-white">Trust Setup</h2>
+              <p className="text-white/70">Configure your revocable living trust</p>
             </div>
             
             <div className="space-y-4">
@@ -211,13 +211,13 @@ const EstateDIYWizard = () => {
                     setFormData(prev => ({...prev, hasTrust: !!checked}))
                   }
                 />
-                <Label htmlFor="hasTrust">Create a Revocable Living Trust</Label>
+                <Label htmlFor="hasTrust" className="text-white">Create a Revocable Living Trust</Label>
               </div>
               
               {formData.hasTrust && (
                 <>
                   <div>
-                    <Label htmlFor="trustee">Successor Trustee</Label>
+                    <Label htmlFor="trustee" className="text-white">Successor Trustee</Label>
                     <Input
                       id="trustee"
                       value={formData.trustee}
@@ -227,12 +227,12 @@ const EstateDIYWizard = () => {
                   </div>
                   
                   {estateRules.rlt.spousalConsents && formData.spouseName && (
-                    <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                    <div className="p-4 bg-bfo-gold/10 border border-bfo-gold/30 rounded-lg">
                       <div className="flex items-start space-x-2">
-                        <AlertTriangle className="h-5 w-5 text-yellow-600 mt-0.5" />
+                        <AlertTriangle className="h-5 w-5 text-bfo-gold mt-0.5" />
                         <div>
-                          <p className="font-medium text-yellow-800">Spousal Consent Required</p>
-                          <p className="text-sm text-yellow-700">
+                          <p className="font-medium text-bfo-gold">Spousal Consent Required</p>
+                          <p className="text-sm text-white/70">
                             {formData.state} requires spousal consent for trust creation.
                           </p>
                         </div>
@@ -249,9 +249,9 @@ const EstateDIYWizard = () => {
         return (
           <div className="space-y-6">
             <div className="text-center">
-              <FileText className="h-12 w-12 mx-auto mb-4 text-primary" />
-              <h2 className="text-2xl font-bold mb-2">Document Selection</h2>
-              <p className="text-muted-foreground">Choose your estate planning documents</p>
+              <FileText className="h-12 w-12 mx-auto mb-4 text-bfo-gold" />
+              <h2 className="text-2xl font-bold mb-2 text-white">Document Selection</h2>
+              <p className="text-white/70">Choose your estate planning documents</p>
             </div>
             
             <div className="space-y-4">
@@ -261,7 +261,7 @@ const EstateDIYWizard = () => {
                 { id: 'poa', name: 'Financial Power of Attorney', required: false, price: 149 },
                 { id: 'pourover', name: 'Pour-Over Will', required: false, price: 99 }
               ].map(doc => (
-                <div key={doc.id} className="flex items-center justify-between p-4 border rounded-lg">
+                <div key={doc.id} className="flex items-center justify-between p-4 border border-bfo-gold/30 rounded-lg bg-bfo-navy">
                   <div className="flex items-center space-x-3">
                     <Checkbox
                       checked={selectedDocs.includes(doc.id)}
@@ -269,19 +269,19 @@ const EstateDIYWizard = () => {
                       disabled={doc.required}
                     />
                     <div>
-                      <p className="font-medium">{doc.name}</p>
+                      <p className="font-medium text-white">{doc.name}</p>
                       {doc.required && (
-                        <p className="text-xs text-muted-foreground">Required</p>
+                        <p className="text-xs text-white/70">Required</p>
                       )}
                     </div>
                   </div>
-                  <p className="font-medium">${doc.price}</p>
+                  <p className="font-medium text-bfo-gold">${doc.price}</p>
                 </div>
               ))}
               
-              <div className="p-4 bg-muted rounded-lg">
-                <h3 className="font-medium">State Requirements ({formData.state})</h3>
-                <ul className="text-sm text-muted-foreground mt-2 space-y-1">
+              <div className="p-4 bg-bfo-gold/10 border border-bfo-gold/30 rounded-lg">
+                <h3 className="font-medium text-bfo-gold">State Requirements ({formData.state})</h3>
+                <ul className="text-sm text-white/70 mt-2 space-y-1">
                   <li>• Will: {estateRules.will.witnesses} witnesses, {estateRules.will.notary ? 'notarization required' : 'no notarization'}</li>
                   <li>• Trust: {estateRules.rlt.notary ? 'notarization required' : 'no notarization'}</li>
                   <li>• POA: {estateRules.poa.notary ? 'notarization required' : 'witnesses required'}</li>
@@ -295,14 +295,14 @@ const EstateDIYWizard = () => {
         return (
           <div className="space-y-6">
             <div className="text-center">
-              <CheckCircle2 className="h-12 w-12 mx-auto mb-4 text-primary" />
-              <h2 className="text-2xl font-bold mb-2">Review & Payment</h2>
-              <p className="text-muted-foreground">Confirm your selections and complete payment</p>
+              <CheckCircle2 className="h-12 w-12 mx-auto mb-4 text-bfo-gold" />
+              <h2 className="text-2xl font-bold mb-2 text-white">Review & Payment</h2>
+              <p className="text-white/70">Confirm your selections and complete payment</p>
             </div>
             
-            <Card>
+            <Card className="bg-[hsl(210_65%_13%)] border-4 border-bfo-gold shadow-lg shadow-bfo-gold/20">
               <CardHeader>
-                <CardTitle>Order Summary</CardTitle>
+                <CardTitle className="text-white">Order Summary</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 {selectedDocs.map(docId => {
@@ -314,16 +314,16 @@ const EstateDIYWizard = () => {
                   };
                   const prices = { will: 199, rlt: 299, poa: 149, pourover: 99 };
                   return (
-                    <div key={docId} className="flex justify-between">
+                    <div key={docId} className="flex justify-between text-white">
                       <span>{docNames[docId as keyof typeof docNames]}</span>
-                      <span>${prices[docId as keyof typeof prices]}</span>
+                      <span className="text-bfo-gold">${prices[docId as keyof typeof prices]}</span>
                     </div>
                   );
                 })}
-                <div className="border-t pt-4">
-                  <div className="flex justify-between font-bold">
+                <div className="border-t border-bfo-gold/30 pt-4">
+                  <div className="flex justify-between font-bold text-white">
                     <span>Total</span>
-                    <span>${selectedDocs.reduce((sum, docId) => {
+                    <span className="text-bfo-gold">${selectedDocs.reduce((sum, docId) => {
                       const prices = { will: 199, rlt: 299, poa: 149, pourover: 99 };
                       return sum + prices[docId as keyof typeof prices];
                     }, 0)}</span>
@@ -332,9 +332,9 @@ const EstateDIYWizard = () => {
               </CardContent>
             </Card>
             
-            <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-              <h3 className="font-medium text-blue-800 mb-2">Important Disclaimers</h3>
-              <ul className="text-sm text-blue-700 space-y-1">
+            <div className="p-4 bg-bfo-gold/10 border border-bfo-gold/30 rounded-lg">
+              <h3 className="font-medium text-bfo-gold mb-2">Important Disclaimers</h3>
+              <ul className="text-sm text-white/70 space-y-1">
                 <li>• This service provides document preparation support, not legal advice</li>
                 <li>• Documents are state-compliant but may require attorney review</li>
                 <li>• Execution requirements vary by state - follow provided guidance</li>
@@ -343,13 +343,13 @@ const EstateDIYWizard = () => {
             </div>
             
             {!paymentComplete && (
-              <Button onClick={handlePayment} className="w-full" size="lg">
+              <Button onClick={handlePayment} className="w-full bg-bfo-gold text-black hover:bg-bfo-gold/90" size="lg">
                 Complete Payment
               </Button>
             )}
             
             {paymentComplete && !documentsGenerated && (
-              <Button onClick={handleGenerateDocuments} className="w-full" size="lg">
+              <Button onClick={handleGenerateDocuments} className="w-full bg-bfo-gold text-black hover:bg-bfo-gold/90" size="lg">
                 Generate Documents
               </Button>
             )}
@@ -360,15 +360,15 @@ const EstateDIYWizard = () => {
         return (
           <div className="space-y-6">
             <div className="text-center">
-              <FileText className="h-12 w-12 mx-auto mb-4 text-green-600" />
-              <h2 className="text-2xl font-bold mb-2">Documents Ready</h2>
-              <p className="text-muted-foreground">Your estate planning documents have been generated</p>
+              <FileText className="h-12 w-12 mx-auto mb-4 text-green-400" />
+              <h2 className="text-2xl font-bold mb-2 text-white">Documents Ready</h2>
+              <p className="text-white/70">Your estate planning documents have been generated</p>
             </div>
             
             {documentsGenerated && (
-              <Card>
+              <Card className="bg-[hsl(210_65%_13%)] border-4 border-bfo-gold shadow-lg shadow-bfo-gold/20">
                 <CardHeader>
-                  <CardTitle>Generated Documents</CardTitle>
+                  <CardTitle className="text-white">Generated Documents</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {selectedDocs.map(docId => {
@@ -379,18 +379,18 @@ const EstateDIYWizard = () => {
                       pourover: 'Pour-Over Will'
                     };
                     return (
-                      <div key={docId} className="flex items-center justify-between p-3 border rounded-lg">
-                        <span>{docNames[docId as keyof typeof docNames]}</span>
-                        <Button variant="outline" size="sm">
+                      <div key={docId} className="flex items-center justify-between p-3 border border-bfo-gold/30 rounded-lg">
+                        <span className="text-white">{docNames[docId as keyof typeof docNames]}</span>
+                        <Button variant="outline" size="sm" className="border-bfo-gold text-bfo-gold hover:bg-bfo-gold hover:text-black">
                           Download PDF
                         </Button>
                       </div>
                     );
                   })}
                   
-                  <div className="flex items-center justify-between p-3 border rounded-lg bg-green-50">
-                    <span>Execution Checklist ({formData.state})</span>
-                    <Button variant="outline" size="sm">
+                  <div className="flex items-center justify-between p-3 border border-bfo-gold/30 rounded-lg bg-green-400/10">
+                    <span className="text-white">Execution Checklist ({formData.state})</span>
+                    <Button variant="outline" size="sm" className="border-bfo-gold text-bfo-gold hover:bg-bfo-gold hover:text-black">
                       Download PDF
                     </Button>
                   </div>
@@ -404,42 +404,47 @@ const EstateDIYWizard = () => {
         return (
           <div className="space-y-6">
             <div className="text-center">
-              <Crown className="h-12 w-12 mx-auto mb-4 text-primary" />
-              <h2 className="text-2xl font-bold mb-2">Attorney Review</h2>
-              <p className="text-muted-foreground">Optional professional review of your estate plan</p>
+              <Crown className="h-12 w-12 mx-auto mb-4 text-bfo-gold" />
+              <h2 className="text-2xl font-bold mb-2 text-white">Attorney Review</h2>
+              <p className="text-white/70">Optional professional review of your estate plan</p>
             </div>
             
-            <Card>
+            <Card className="bg-[hsl(210_65%_13%)] border-4 border-bfo-gold shadow-lg shadow-bfo-gold/20">
               <CardHeader>
-                <CardTitle>Professional Review Available</CardTitle>
+                <CardTitle className="text-white">Professional Review Available</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <p className="text-muted-foreground">
+                <p className="text-white/70">
                   Connect with licensed estate planning attorneys in {formData.state} for:
                 </p>
                 
                 <ul className="space-y-2">
                   <li className="flex items-center space-x-2">
-                    <CheckCircle2 className="h-4 w-4 text-green-600" />
-                    <span>Document review and validation</span>
+                    <CheckCircle2 className="h-4 w-4 text-green-400" />
+                    <span className="text-white">Document review and validation</span>
                   </li>
                   <li className="flex items-center space-x-2">
-                    <CheckCircle2 className="h-4 w-4 text-green-600" />
-                    <span>State-specific compliance verification</span>
+                    <CheckCircle2 className="h-4 w-4 text-green-400" />
+                    <span className="text-white">State-specific compliance verification</span>
                   </li>
                   <li className="flex items-center space-x-2">
-                    <CheckCircle2 className="h-4 w-4 text-green-600" />
-                    <span>Execution guidance and coordination</span>
+                    <CheckCircle2 className="h-4 w-4 text-green-400" />
+                    <span className="text-white">Execution guidance and coordination</span>
                   </li>
                   <li className="flex items-center space-x-2">
-                    <CheckCircle2 className="h-4 w-4 text-green-600" />
-                    <span>Ongoing estate plan maintenance</span>
+                    <CheckCircle2 className="h-4 w-4 text-green-400" />
+                    <span className="text-white">Ongoing estate plan maintenance</span>
                   </li>
                 </ul>
                 
-                <Button onClick={handleRequestAttorneyReview} className="w-full">
-                  Request Attorney Review
-                </Button>
+                <div className="pt-4">
+                  <Button 
+                    onClick={handleRequestAttorneyReview}
+                    className="w-full bg-bfo-gold text-black hover:bg-bfo-gold/90"
+                  >
+                    Request Attorney Review ($297)
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           </div>
@@ -451,47 +456,42 @@ const EstateDIYWizard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto py-8 max-w-2xl">
+    <div className="min-h-screen bg-bfo-navy">
+      <div className="container mx-auto px-4 py-8 max-w-4xl">
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
-            <h1 className="text-2xl font-bold">DIY Premium Estate Planning</h1>
-            <span className="text-sm text-muted-foreground">
+            <h1 className="text-3xl font-bold text-white">Estate DIY Wizard</h1>
+            <div className="text-sm text-white/70">
               Step {currentStep} of {totalSteps}
-            </span>
+            </div>
           </div>
           <Progress value={progress} className="w-full" />
         </div>
 
-        <Card>
+        <Card className="bg-[hsl(210_65%_13%)] border-4 border-bfo-gold shadow-lg shadow-bfo-gold/20">
           <CardContent className="p-8">
             {renderStep()}
-            
-            <div className="flex justify-between mt-8 pt-6 border-t">
-              <Button 
-                variant="outline" 
-                onClick={handleBack} 
-                disabled={currentStep === 1}
-              >
-                Back
-              </Button>
-              
-              {currentStep < totalSteps && (
-                <Button 
-                  onClick={handleNext}
-                  disabled={
-                    (currentStep === 1 && !formData.clientName) ||
-                    (currentStep === 4 && !paymentComplete) ||
-                    (currentStep === 5 && !documentsGenerated)
-                  }
-                >
-                  {currentStep === 4 && paymentComplete && !documentsGenerated ? 'Generate Documents' :
-                   currentStep === totalSteps ? 'Complete' : 'Next'}
-                </Button>
-              )}
-            </div>
           </CardContent>
         </Card>
+
+        <div className="flex justify-between mt-6">
+          <Button 
+            variant="outline" 
+            onClick={handleBack} 
+            disabled={currentStep === 1}
+            className="border-bfo-gold text-bfo-gold hover:bg-bfo-gold hover:text-black"
+          >
+            Back
+          </Button>
+          
+          <Button 
+            onClick={handleNext} 
+            disabled={currentStep === totalSteps}
+            className="bg-bfo-gold text-black hover:bg-bfo-gold/90"
+          >
+            {currentStep === totalSteps ? 'Complete' : 'Next'}
+          </Button>
+        </div>
       </div>
     </div>
   );
