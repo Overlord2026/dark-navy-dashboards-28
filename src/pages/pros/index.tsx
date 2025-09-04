@@ -89,18 +89,18 @@ export default function ProsIndex() {
             {prosTools.map((tool, index) => {
               const Icon = tool.icon;
               return (
-                <Card key={index} className="bg-white border-2 border-bfo-gold hover:shadow-xl transition-all duration-300 group cursor-pointer">
+                <Card key={index} className="bg-black border-2 border-bfo-gold hover:shadow-xl transition-all duration-300 group cursor-pointer">
                   <CardContent className="p-6">
                     <div className="flex items-start gap-4 mb-4">
-                      <div className="p-3 rounded-lg bg-black group-hover:bg-black/80 transition-colors">
-                        <Icon className="h-6 w-6 text-white" />
+                      <div className="p-3 rounded-lg bg-bfo-gold/10 group-hover:bg-bfo-gold/20 transition-colors">
+                        <Icon className="h-6 w-6 text-bfo-gold" />
                       </div>
                       
                       <div className="flex-1">
-                        <h3 className="text-xl font-semibold text-black mb-2 group-hover:text-bfo-gold transition-colors">
+                        <h3 className="text-xl font-semibold text-white mb-2 group-hover:text-bfo-gold transition-colors">
                           {tool.title}
                         </h3>
-                        <p className="text-gray-600 text-sm leading-relaxed">
+                        <p className="text-white/80 text-sm leading-relaxed">
                           {tool.description}
                         </p>
                       </div>
