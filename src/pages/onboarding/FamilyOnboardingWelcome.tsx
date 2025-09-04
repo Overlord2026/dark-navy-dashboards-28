@@ -3,6 +3,8 @@ import { Button } from '@/components/ui/button';
 import { Apple, Mail, Chrome, VolumeX } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { playLindaWelcome } from '@/utils/lindaVoice';
+import { TopBanner } from '@/components/layout/TopBanner';
+import { SecondaryNav } from '@/components/layout/SecondaryNav';
 
 interface FamilyOnboardingWelcomeProps {
   onAuthChoice: (provider: string) => void;
@@ -68,9 +70,12 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
   ];
 
   return (
-    <div className="h-screen w-full" style={{ backgroundColor: '#001F3F' }}>
-      {/* Main Content */}
-      <div className="h-full flex flex-col items-center justify-center">
+    <>
+      <TopBanner />
+      <SecondaryNav />
+      <div className="h-screen w-full" style={{ backgroundColor: '#001F3F' }}>
+        {/* Main Content */}
+        <div className="h-full flex flex-col items-center justify-center" style={{ paddingTop: '140px' }}>
         <div className="w-full max-w-md mx-auto px-6">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
@@ -181,5 +186,6 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
         </div>
       </div>
     </div>
+    </>
   );
 };
