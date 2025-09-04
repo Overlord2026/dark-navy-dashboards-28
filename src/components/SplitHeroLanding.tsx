@@ -1,5 +1,5 @@
 import React from 'react';
-import PersonaCard from '@/components/ui/PersonaCard';
+import { PersonaCard } from '@/components/ui/PersonaCard';
 import { BFOHeader } from '@/components/site/BFOHeader';
 import { BrandedFooter } from '@/components/ui/BrandedFooter';
 import analytics from '@/lib/analytics';

@@ -1,5 +1,5 @@
 import React from 'react';
-import PersonaCard from '@/components/ui/PersonaCard';
+import { PersonaCard } from '@/components/ui/PersonaCard';
 import { DemoLauncher } from './DemoLauncher';
 import { ShareButton } from './ShareButton';
 import { Play, ExternalLink, ArrowRight } from 'lucide-react';
