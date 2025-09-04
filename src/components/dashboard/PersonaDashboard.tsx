@@ -17,7 +17,7 @@ import {
   Clock
 } from 'lucide-react';
 import { ToolCard } from '@/components/ui/ToolCard';
-import { PersonaCard, PersonaType } from '@/components/ui/PersonaCard';
+import PersonaCard, { PersonaType } from '@/components/ui/PersonaCard';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 

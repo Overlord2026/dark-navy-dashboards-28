@@ -1,221 +1,190 @@
 /**
- * Persona-Specific Card Component
- * Implements your color recommendations with WCAG AA compliance
+ * Simple PersonaCard with inline styles
+ * Combines your clean API with our HSL color system
  */
 
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
 
 export type PersonaType = 'family' | 'advisor' | 'attorney' | 'insurance' | 'healthcare' | 'nil' | 'accountant';
 
-interface PersonaCardProps {
-  persona?: PersonaType;
-  title: string;
-  description?: string;
-  children?: React.ReactNode;
-  className?: string;
-  showBadge?: boolean;
-  badgeText?: string;
-  actions?: React.ReactNode; // Support for legacy actions prop
-}
-
-// Persona styling with your recommended colors and contrast
-const personaStyles: Record<PersonaType, {
-  borderColor: string;
-  badgeColor: string;
-  accentColor: string;
-  headerBg: string;
-}> = {
-  family: {
-    borderColor: 'border-brand-gold',
-    badgeColor: 'bg-brand-gold text-black',
-    accentColor: 'text-brand-gold',
-    headerBg: 'bg-brand-gold/10',
-  },
-  advisor: {
-    borderColor: 'border-[hsl(220_100%_70%)]', // Sky blue
-    badgeColor: 'bg-[hsl(220_100%_70%)] text-white',
-    accentColor: 'text-[hsl(220_100%_70%)]',
-    headerBg: 'bg-[hsl(220_100%_70%)]/10',
-  },
-  attorney: {
-    borderColor: 'border-[hsl(336_66%_28%)]', // Burgundy
-    badgeColor: 'bg-[hsl(336_66%_28%)] text-white',
-    accentColor: 'text-[hsl(336_66%_28%)]',
-    headerBg: 'bg-[hsl(336_66%_28%)]/10',
-  },
-  insurance: {
-    borderColor: 'border-destructive', // Alert red
-    badgeColor: 'bg-destructive text-white',
-    accentColor: 'text-destructive',
-    headerBg: 'bg-destructive/10',
-  },
-  healthcare: {
-    borderColor: 'border-[hsl(233_47%_44%)]', // Indigo
-    badgeColor: 'bg-[hsl(233_47%_44%)] text-white',
-    accentColor: 'text-[hsl(233_47%_44%)]',
-    headerBg: 'bg-[hsl(233_47%_44%)]/10',
-  },
-  nil: {
-    borderColor: 'border-emerald', // Emerald/mint
-    badgeColor: 'bg-emerald text-black',
-    accentColor: 'text-emerald',
-    headerBg: 'bg-emerald/10',
-  },
-  accountant: {
-    borderColor: 'border-emerald', // Mint for accountants
-    badgeColor: 'bg-emerald text-black',
-    accentColor: 'text-emerald',
-    headerBg: 'bg-emerald/10',
-  },
+// Persona color mapping using our HSL system
+const personaColors: Record<PersonaType, string> = {
+  family: '#D4AF37',      // Brand gold
+  advisor: '#6BA6FF',     // Sky blue  
+  attorney: '#7A1733',    // Burgundy
+  insurance: '#D9534F',   // Alert red
+  healthcare: '#3946A6',  // Indigo
+  nil: '#75E0C2',         // Emerald/mint
+  accountant: '#75E0C2',  // Mint for accountants
 };
 
-export function PersonaCard({
-  persona = 'family', // Default fallback
-  title,
-  description,
+interface PersonaCardProps {
+  title: string;
+  features?: string[];
+  tagline?: string;
+  color?: string;
+  persona?: PersonaType;
+  icon?: string;
+  children?: React.ReactNode;
+  actions?: React.ReactNode;
+}
+
+const PersonaCard: React.FC<PersonaCardProps> = ({ 
+  title, 
+  features = [], 
+  tagline = '', 
+  color, 
+  persona = 'family',
+  icon,
   children,
-  className,
-  showBadge = false,
-  badgeText,
-  actions,
-}: PersonaCardProps) {
-  const styles = personaStyles[persona];
+  actions
+}) => {
+  // Use persona color if provided, otherwise fallback to color prop or default
+  const cardColor = persona ? personaColors[persona] : (color || '#333333');
+  
+  const cardStyle = {
+    backgroundColor: '#0B0F14', // Brand black background
+    border: `2px solid ${cardColor}`, // Persona-specific border
+    borderRadius: '8px',
+    padding: '15px',
+    boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
+    transition: 'all 0.2s ease',
+    cursor: 'pointer',
+  };
+
+  const titleStyle = {
+    color: '#FFFFFF', // White text for contrast
+    margin: '8px 0',
+    fontSize: '1.1rem',
+    fontWeight: '600',
+  };
+
+  const featureStyle = {
+    margin: '5px 0', 
+    color: '#E0E0E0', // Light gray for features
+    fontSize: '0.9rem',
+  };
+
+  const taglineStyle = {
+    color: cardColor, // Use persona color for tagline
+    fontStyle: 'italic',
+    marginTop: '12px',
+    fontSize: '0.9rem',
+    fontWeight: '500',
+  };
+
+  const iconStyle = {
+    fontSize: '1.2em', 
+    marginRight: '8px',
+    color: cardColor, // Persona color for icon
+  };
 
   return (
-    <Card className={cn(
-      'transition-all duration-300 hover:shadow-lg hover:-translate-y-1',
-      // Enhanced contrast: white background with persona border
-      'bg-white border-2',
-      styles.borderColor,
-      className
-    )}>
-      <CardHeader className={cn(
-        'relative',
-        styles.headerBg
-      )}>
-        <div className="flex items-center justify-between">
-          <CardTitle className={cn(
-            'text-lg font-semibold',
-            // High contrast black text on light backgrounds
-            'text-black'
-          )}>
-            {title}
-          </CardTitle>
-          {showBadge && (
-            <Badge className={cn(
-              'font-medium',
-              styles.badgeColor
-            )}>
-              {badgeText || persona.charAt(0).toUpperCase() + persona.slice(1)}
-            </Badge>
-          )}
-        </div>
-        
-        {/* Special badges for compliance features */}
-        {persona === 'insurance' && (
-          <Badge className="absolute top-2 right-2 bg-destructive text-white text-xs">
-            10-Year Records
-          </Badge>
-        )}
-        
-        {persona === 'advisor' && (
-          <div className="absolute top-2 right-2">
-            <Badge className="bg-emerald text-black text-xs mr-1">
-              SEC Compliant
-            </Badge>
-          </div>
-        )}
-      </CardHeader>
+    <div
+      className="persona-card"
+      style={cardStyle}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.transform = 'translateY(-2px)';
+        e.currentTarget.style.boxShadow = `0 8px 16px rgba(0,0,0,0.3)`;
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.transform = 'none';
+        e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)';
+      }}
+    >
+      {icon && <span className="icon" style={iconStyle}>{icon}</span>}
+      <h3 style={titleStyle}>{title}</h3>
       
-      <CardContent className="p-6">
-        {description && (
-          <p className={cn(
-            'text-sm mb-4',
-            // Medium contrast for description text
-            'text-slate-700'
-          )}>
-            {description}
-          </p>
-        )}
-        
-        {children}
-        
-        {/* Actions section */}
-        {actions && (
-          <div className="mt-6 space-y-2">
-            {actions}
-          </div>
-        )}
-        
-        {/* Persona-specific accent line */}
-        <div className={cn(
-          'mt-4 pt-4 border-t-2',
-          styles.borderColor
-        )}>
-          <div className={cn(
-            'text-xs font-medium',
-            styles.accentColor
-          )}>
-            {persona === 'insurance' && '• NAIC Compliant • State Licensed'}
-            {persona === 'advisor' && '• FINRA Registered • SEC Oversight'}
-            {persona === 'attorney' && '• Bar Certified • Ethics Compliant'}
-            {persona === 'healthcare' && '• HIPAA Secure • State Licensed'}
-            {persona === 'nil' && '• NCAA Compliant • Deal Tracking'}
-            {persona === 'accountant' && '• AICPA Member • IRS Authorized'}
-            {persona === 'family' && '• Wealth Optimization • Legacy Planning'}
-          </div>
+      {/* Children content (for legacy compatibility) */}
+      {children && (
+        <div style={{ marginBottom: '12px', color: '#E0E0E0' }}>
+          {children}
         </div>
-      </CardContent>
-    </Card>
+      )}
+      
+      {/* Features list */}
+      {features.length > 0 && (
+        <ul style={{ paddingLeft: '0', listStyle: 'none' }}>
+          {features.map((feature, index) => (
+            <li key={index} style={featureStyle}>
+              <span style={{ color: cardColor, marginRight: '6px' }}>•</span>
+              {feature}
+            </li>
+          ))}
+        </ul>
+      )}
+      
+      {/* Tagline */}
+      {tagline && <p style={taglineStyle}>{tagline}</p>}
+      
+      {/* Actions */}
+      {actions && (
+        <div style={{ marginTop: '16px' }}>
+          {actions}
+        </div>
+      )}
+      
+      {/* Compliance badge based on persona */}
+      {persona === 'insurance' && (
+        <div style={{
+          fontSize: '0.7rem',
+          color: '#D9534F',
+          fontWeight: 'bold',
+          marginTop: '8px',
+          padding: '2px 6px',
+          border: '1px solid #D9534F',
+          borderRadius: '4px',
+          display: 'inline-block'
+        }}>
+          10-Year Records
+        </div>
+      )}
+      
+      {persona === 'advisor' && (
+        <div style={{
+          fontSize: '0.7rem',
+          color: '#75E0C2',
+          fontWeight: 'bold',
+          marginTop: '8px',
+          padding: '2px 6px',
+          border: '1px solid #75E0C2',
+          borderRadius: '4px',
+          display: 'inline-block'
+        }}>
+          SEC Compliant
+        </div>
+      )}
+    </div>
   );
-}
+};
 
-// Usage examples for your dashboard
-export function AdvisorCard() {
-  return (
-    <PersonaCard
-      persona="advisor"
-      title="Financial Advisor Dashboard"
-      description="FINRA-compliant tools for client management and investment tracking"
-      showBadge
-      badgeText="Advisor"
-    >
-      <div className="space-y-2">
-        <div className="flex justify-between text-sm">
-          <span className="text-slate-600">Clients:</span>
-          <span className="font-medium text-black">127</span>
-        </div>
-        <div className="flex justify-between text-sm">
-          <span className="text-slate-600">AUM:</span>
-          <span className="font-medium text-black">$24.3M</span>
-        </div>
-      </div>
-    </PersonaCard>
-  );
-}
+export default PersonaCard;
 
-export function InsuranceCard() {
-  return (
-    <PersonaCard
-      persona="insurance"
-      title="Insurance Professional"
-      description="NAIC-compliant record keeping with 10-year retention"
-      showBadge
-      badgeText="Licensed"
-    >
-      <div className="space-y-2">
-        <div className="flex justify-between text-sm">
-          <span className="text-slate-600">Active Policies:</span>
-          <span className="font-medium text-black">89</span>
-        </div>
-        <div className="flex justify-between text-sm">
-          <span className="text-slate-600">Premium Volume:</span>
-          <span className="font-medium text-black">$1.2M</span>
-        </div>
-      </div>
-    </PersonaCard>
-  );
-}
+// Example usage matching your original API:
+export const RegBICard = () => (
+  <PersonaCard
+    title="Reg BI Tracker"
+    persona="advisor"
+    features={[
+      'Automated compliance monitoring',
+      'Client interaction logging', 
+      'Suitability analysis reports'
+    ]}
+    tagline="Stay compliant, save hours"
+    icon="🛡️"
+  />
+);
+
+export const InsuranceCard = () => (
+  <PersonaCard
+    title="10-Year Records Vault"
+    persona="insurance"
+    features={[
+      'NAIC-compliant record retention',
+      'Automated policy tracking',
+      'Audit-ready reports'
+    ]}
+    tagline="Secure. Compliant. Accessible."
+    icon="📋"
+  />
+);
