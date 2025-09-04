@@ -78,17 +78,24 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
             transition={{ duration: 0.6 }}
             className="text-center space-y-8"
           >
-            {/* Gold Tree Logo with White Letters - Centered */}
+            {/* BFO Logo with White-Gold Letters - Centered */}
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.2 }}
               className="flex justify-center"
+              style={{ margin: '1.5rem 0' }}
             >
               <img
-                src="/brand/gold-tree-white-letters.png"
-                alt="Boutique Family Office Tree Logo"
-                className="w-32 h-35 md:w-40 md:h-44"
+                src="/brand/bfo-logo-white-gold.png"
+                alt="Boutique Family Office Logo"
+                className="w-48 h-52 md:w-56 md:h-64"
+                style={{
+                  filter: 'drop-shadow(0 0 10px rgba(212, 175, 55, 0.5))',
+                  maxWidth: '192px',
+                  maxHeight: '211px',
+                  objectFit: 'contain'
+                }}
               />
             </motion.div>
 
