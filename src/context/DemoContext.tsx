@@ -27,7 +27,12 @@ export const DemoProvider: React.FC<{ children: React.ReactNode }> = ({ children
 export const useDemo = () => {
   const context = useContext(DemoContext);
   if (context === undefined) {
-    throw new Error('useDemo must be used within a DemoProvider');
+    // Return default values instead of throwing an error
+    return {
+      demoMode: false,
+      setDemoMode: () => {},
+      isDemo: false
+    };
   }
   return context;
 };

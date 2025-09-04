@@ -20,7 +20,7 @@ export const LoadDemoButton: React.FC<LoadDemoButtonProps> = ({
   hasData = false,
   className = ''
 }) => {
-  const { isDemo } = useDemo();
+  const { isDemo } = useDemo() || { isDemo: false };
 
   const handleClick = () => {
     onLoadDemo();
