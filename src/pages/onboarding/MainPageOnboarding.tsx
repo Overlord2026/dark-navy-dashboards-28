@@ -96,28 +96,32 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
       icon: Apple,
       provider: 'apple',
       bgColor: 'bg-black hover:bg-gray-800',
-      textColor: 'text-white'
+      textColor: 'text-white',
+      disabled: true // Disabled until API configured
     },
     {
       name: 'Microsoft',
       icon: Chrome,
       provider: 'microsoft',
       bgColor: 'bg-blue-600 hover:bg-blue-700',
-      textColor: 'text-white'
+      textColor: 'text-white',
+      disabled: true // Disabled until API configured
     },
     {
       name: 'Google',
       icon: Chrome,
       provider: 'google',
       bgColor: 'bg-white hover:bg-gray-50 border border-gray-300',
-      textColor: 'text-gray-900'
+      textColor: 'text-gray-900',
+      disabled: false // Enabled with Supabase OAuth
     },
     {
       name: 'Email',
       icon: Mail,
       provider: 'email',
       bgColor: 'bg-gold-base hover:bg-gold-hi',
-      textColor: 'text-ink'
+      textColor: 'text-ink',
+      disabled: false // Enabled
     }
   ];
 
@@ -224,25 +228,28 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
                       transition={{ duration: 0.4, delay: 1.0 + index * 0.1 }}
                     >
                       <Button
-                        onClick={() => onAuthChoice(provider.provider)}
+                        onClick={() => provider.disabled ? null : onAuthChoice(provider.provider)}
+                        disabled={provider.disabled}
                         className={`
                           w-full h-12 sm:h-14 flex items-center justify-center gap-3 
-                          ${provider.bgColor} ${provider.textColor}
+                          ${provider.disabled ? 'bg-gray-400 text-gray-600 cursor-not-allowed opacity-60' : `${provider.bgColor} ${provider.textColor}`}
                           transition-all duration-300 ease-in-out
-                          hover:scale-105 hover:shadow-lg
+                          ${provider.disabled ? '' : 'hover:scale-105 hover:shadow-lg'}
                           focus:ring-2 focus:ring-white/20 focus:ring-offset-2 
                           focus:ring-offset-[#001F3F]
                           font-medium text-sm sm:text-base
                           rounded-lg border-none
                         `}
                         style={{
-                          boxShadow: provider.name === 'Email' ? 
-                            '0 4px 20px rgba(212, 175, 55, 0.3)' : 
-                            '0 2px 10px rgba(0, 0, 0, 0.2)'
+                          boxShadow: provider.disabled ? 'none' : (
+                            provider.name === 'Email' ? 
+                              '0 4px 20px rgba(212, 175, 55, 0.3)' : 
+                              '0 2px 10px rgba(0, 0, 0, 0.2)'
+                          )
                         }}
                       >
                         <IconComponent className="h-4 w-4 sm:h-5 sm:w-5" />
-                        Continue with {provider.name}
+                        {provider.disabled ? `${provider.name} (Coming Soon)` : `Continue with ${provider.name}`}
                       </Button>
                     </motion.div>
                   );

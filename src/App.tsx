@@ -253,6 +253,7 @@ import { MeetingsPage as ProMeetingsPage } from './pages/pros/MeetingsPage';
 import { AgentsPage } from './pages/marketplace/AgentsPage';
 import { QuoteStartPage } from './pages/marketplace/QuoteStartPage';
 import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 // Stub component for avoiding 404s
 const Stub = ({ title }: { title: string }) => <div className="p-10 text-white text-2xl">{title}</div>;
@@ -283,20 +284,31 @@ function App() {
       return;
     }
 
-    try {
-      // Handle OAuth providers
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: provider as any,
-        options: {
-          redirectTo: `${window.location.origin}/families`,
-        },
-      });
+    if (provider === 'google') {
+      try {
+        // Handle Google OAuth through Supabase
+        const { error } = await supabase.auth.signInWithOAuth({
+          provider: 'google',
+          options: {
+            redirectTo: `${window.location.origin}/families`,
+          },
+        });
 
-      if (error) {
-        console.error('Auth error:', error);
+        if (error) {
+          console.error('Google auth error:', error);
+          toast.error('Failed to sign in with Google. Please try again.');
+        }
+      } catch (error) {
+        console.error('Google auth error:', error);
+        toast.error('Something went wrong with Google authentication.');
       }
-    } catch (error) {
-      console.error('Auth error:', error);
+      return;
+    }
+
+    // Apple and Microsoft are disabled until APIs are configured
+    if (provider === 'apple' || provider === 'microsoft') {
+      toast.info(`${provider === 'apple' ? 'Apple' : 'Microsoft'} sign-in is coming soon!`);
+      return;
     }
   };
 
