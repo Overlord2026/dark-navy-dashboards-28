@@ -351,7 +351,7 @@ function App() {
             {/* Secondary Navigation on ALL pages */}
             <SecondaryNav />
             <RedirectHandler />
-            <div>
+            <div style={{ paddingTop: '160px' }}>
             <Routes>
             <Route path="/" element={
               isAuthenticated ? (
