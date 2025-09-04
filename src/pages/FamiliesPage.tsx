@@ -123,7 +123,7 @@ const FamiliesPage = () => {
                   return (
                     <Card
                       key={stage.id}
-                      className="cursor-pointer transition-all duration-300 transform hover:scale-105 bg-black border-2 border-bfo-gold hover:border-bfo-gold/80"
+                      className="cursor-pointer transition-all duration-300 transform hover:scale-105 bg-[hsl(210_65%_13%)] border-4 border-bfo-gold hover:border-bfo-gold/80 shadow-lg shadow-bfo-gold/20"
                       onClick={() => {
                         setSelectedStage(stage.id);
                         handleStageSelect(stage);
@@ -194,7 +194,7 @@ const FamiliesPage = () => {
                 return (
                   <Card
                     key={option.id}
-                    className="cursor-pointer transition-all duration-300 hover:scale-105 border-2 bg-black border-bfo-gold"
+                    className="cursor-pointer transition-all duration-300 hover:scale-105 border-4 bg-[hsl(210_65%_13%)] border-bfo-gold shadow-lg shadow-bfo-gold/20"
                     onClick={() => handleQuickStart(option)}
                   >
                     <CardContent className="p-4 md:p-6 text-center">
@@ -202,7 +202,7 @@ const FamiliesPage = () => {
                         <option.icon className="w-5 h-5 md:w-6 md:h-6 text-bfo-gold" />
                       </div>
                       
-                      <h4 className="font-semibold mb-2 text-sm md:text-base text-white group-hover:text-bfo-gold transition-colors">
+                      <h4 className="font-semibold mb-2 text-sm md:text-base text-white hover:text-bfo-gold transition-colors">
                         {option.title}
                       </h4>
                       <p className="text-xs md:text-sm text-white/80">
