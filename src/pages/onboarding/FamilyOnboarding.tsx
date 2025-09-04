@@ -95,14 +95,14 @@ export default function FamilyOnboarding() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white pt-[var(--header-stack)] flex items-center justify-center px-4">
-      <Card className="w-full max-w-md bg-black border border-[#D4AF37]">
+    <div className="min-h-screen bg-[hsl(var(--bfo-navy))] text-white pt-[var(--header-stack)] flex items-center justify-center px-4">
+      <Card className="w-full max-w-md bg-[hsl(210_65%_13%)] border-4 border-bfo-gold shadow-lg shadow-bfo-gold/20">
         <CardHeader className="text-center">
-          <div className="mx-auto w-12 h-12 bg-[#D4AF37] rounded-full flex items-center justify-center mb-4">
+          <div className="mx-auto w-12 h-12 bg-bfo-gold rounded-full flex items-center justify-center mb-4">
             <Users className="h-6 w-6 text-black" />
           </div>
-          <CardTitle className="text-2xl text-[#D4AF37]">Welcome to Your Family Office</CardTitle>
-          <p className="text-gray-400">Let's get your profile set up to unlock personalized tools and insights.</p>
+          <CardTitle className="text-2xl text-bfo-gold">Welcome to Your Family Office</CardTitle>
+          <p className="text-white/80">Let's get your profile set up to unlock personalized tools and insights.</p>
         </CardHeader>
         
         <CardContent>
@@ -115,7 +115,7 @@ export default function FamilyOnboarding() {
                   type="text"
                   value={formData.first_name}
                   onChange={(e) => handleInputChange('first_name', e.target.value)}
-                  className="bg-gray-900 border-gray-600 text-white"
+                  className="bg-[hsl(210_65%_8%)] border-bfo-gold/30 text-white focus:border-bfo-gold"
                   required
                 />
               </div>
@@ -127,7 +127,7 @@ export default function FamilyOnboarding() {
                   type="text"
                   value={formData.last_name}
                   onChange={(e) => handleInputChange('last_name', e.target.value)}
-                  className="bg-gray-900 border-gray-600 text-white"
+                  className="bg-[hsl(210_65%_8%)] border-bfo-gold/30 text-white focus:border-bfo-gold"
                   required
                 />
               </div>
@@ -140,7 +140,7 @@ export default function FamilyOnboarding() {
                 type="email"
                 value={formData.email}
                 onChange={(e) => handleInputChange('email', e.target.value)}
-                className="bg-gray-900 border-gray-600 text-white"
+                className="bg-[hsl(210_65%_8%)] border-bfo-gold/30 text-white focus:border-bfo-gold"
                 required
               />
             </div>
@@ -152,7 +152,7 @@ export default function FamilyOnboarding() {
                 type="tel"
                 value={formData.phone}
                 onChange={(e) => handleInputChange('phone', e.target.value)}
-                className="bg-gray-900 border-gray-600 text-white"
+                className="bg-[hsl(210_65%_8%)] border-bfo-gold/30 text-white focus:border-bfo-gold"
                 placeholder="(555) 123-4567"
               />
             </div>
@@ -160,7 +160,7 @@ export default function FamilyOnboarding() {
             <Button 
               type="submit" 
               disabled={isSubmitting}
-              className="w-full bg-[#D4AF37] text-black hover:bg-[#D4AF37]/90 font-medium mt-6"
+              className="w-full bg-bfo-gold text-black hover:bg-bfo-gold/90 font-medium mt-6"
             >
               {isSubmitting ? 'Setting up...' : 'Complete Setup'}
               <ArrowRight className="ml-2 h-4 w-4" />
