@@ -123,7 +123,7 @@ const FamiliesPage = () => {
                   return (
                     <Card
                       key={stage.id}
-                      className="cursor-pointer transition-all duration-300 transform hover:scale-105 bg-white border-2 border-bfo-gold hover:border-bfo-gold/80"
+                      className="cursor-pointer transition-all duration-300 transform hover:scale-105 bg-black border-2 border-bfo-gold hover:border-bfo-gold/80"
                       onClick={() => {
                         setSelectedStage(stage.id);
                         handleStageSelect(stage);
@@ -131,8 +131,8 @@ const FamiliesPage = () => {
                     >
                       <CardContent className="p-6 md:p-8 text-center h-full flex flex-col justify-center">
                         <div className="mb-4 md:mb-6">
-                          <div className="w-12 h-12 md:w-16 md:h-16 mx-auto mb-3 md:mb-4 rounded-full bg-bfo-gold flex items-center justify-center">
-                            <stage.icon className="w-6 h-6 md:w-8 md:h-8 text-black" />
+                          <div className="w-12 h-12 md:w-16 md:h-16 mx-auto mb-3 md:mb-4 rounded-full bg-bfo-gold/10 flex items-center justify-center">
+                            <stage.icon className="w-6 h-6 md:w-8 md:h-8 text-bfo-gold" />
                           </div>
                           
                           <Badge className="bg-bfo-gold text-black text-xs font-medium px-2 py-1 mb-2">
@@ -140,8 +140,8 @@ const FamiliesPage = () => {
                           </Badge>
                         </div>
                         
-                        <h3 className="text-xl md:text-2xl font-bold text-black mb-2 md:mb-3">{stage.title}</h3>
-                        <p className="text-gray-600 text-base md:text-lg leading-relaxed mb-4">{stage.description}</p>
+                        <h3 className="text-xl md:text-2xl font-bold text-white mb-2 md:mb-3">{stage.title}</h3>
+                        <p className="text-white/80 text-base md:text-lg leading-relaxed mb-4">{stage.description}</p>
                         
                         {/* Feature dots - now black and gold themed */}
                         <div className="flex justify-between mb-4">
@@ -194,29 +194,18 @@ const FamiliesPage = () => {
                 return (
                   <Card
                     key={option.id}
-                    className="cursor-pointer transition-all duration-300 hover:scale-105 border-2"
-                    style={{
-                      backgroundColor: isWealth ? '#D4AF37' : '#FFFFFF',
-                      borderColor: '#D4AF37',
-                      boxShadow: '0 2px 4px rgba(212, 175, 55, 0.15)'
-                    }}
+                    className="cursor-pointer transition-all duration-300 hover:scale-105 border-2 bg-black border-bfo-gold"
                     onClick={() => handleQuickStart(option)}
                   >
                     <CardContent className="p-4 md:p-6 text-center">
-                      <div 
-                        className="w-10 h-10 md:w-12 md:h-12 mx-auto mb-3 md:mb-4 rounded-lg flex items-center justify-center border-2"
-                        style={{ 
-                          backgroundColor: isWealth ? 'rgba(0, 0, 0, 0.1)' : 'rgba(212, 175, 55, 0.1)', 
-                          borderColor: '#D4AF37' 
-                        }}
-                        >
-                          <option.icon className="w-5 h-5 md:w-6 md:h-6" style={{ color: isWealth ? '#000000' : '#D4AF37' }} />
-                        </div>
+                      <div className="w-10 h-10 md:w-12 md:h-12 mx-auto mb-3 md:mb-4 rounded-lg flex items-center justify-center border-2 bg-bfo-gold/10 border-bfo-gold">
+                        <option.icon className="w-5 h-5 md:w-6 md:h-6 text-bfo-gold" />
+                      </div>
                       
-                      <h4 className="font-semibold mb-2 text-sm md:text-base" style={{ color: isWealth ? '#000000' : '#000000' }}>
+                      <h4 className="font-semibold mb-2 text-sm md:text-base text-white group-hover:text-bfo-gold transition-colors">
                         {option.title}
                       </h4>
-                      <p className="text-xs md:text-sm" style={{ color: isWealth ? 'rgba(0, 0, 0, 0.7)' : 'rgba(0, 0, 0, 0.6)' }}>
+                      <p className="text-xs md:text-sm text-white/80">
                         {option.description}
                       </p>
                     </CardContent>
