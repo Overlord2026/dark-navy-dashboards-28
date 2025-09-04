@@ -113,43 +113,43 @@ const StarterPage = () => {
   const info = PERSONA_INFO[persona];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
+    <div className="min-h-screen bg-[hsl(var(--bfo-navy))]">
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           {/* Header */}
           <div className="text-center mb-8">
-            <Badge variant="secondary" className="mb-4">
+            <Badge variant="secondary" className="mb-4 bg-bfo-gold text-black">
               {persona.charAt(0).toUpperCase() + persona.slice(1)} Overview
             </Badge>
-            <h1 className="text-4xl font-bold mb-4">{info.title}</h1>
-            <p className="text-xl text-muted-foreground">{info.description}</p>
+            <h1 className="text-4xl font-bold mb-4 text-white">{info.title}</h1>
+            <p className="text-xl text-white/80">{info.description}</p>
           </div>
 
           {/* Video Section */}
-          <Card className="mb-8">
+          <Card className="mb-8 bg-[hsl(210_65%_13%)] border-4 border-bfo-gold shadow-lg shadow-bfo-gold/20">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Play className="h-5 w-5" />
+              <CardTitle className="flex items-center gap-2 text-white">
+                <Play className="h-5 w-5 text-bfo-gold" />
                 {info.videoTitle}
               </CardTitle>
-              <CardDescription>
+              <CardDescription className="text-white/80">
                 Watch this 15-minute overview to see the platform in action
               </CardDescription>
             </CardHeader>
             <CardContent>
               {/* Video Placeholder */}
-              <div className="aspect-video bg-muted rounded-lg flex items-center justify-center mb-4">
+              <div className="aspect-video bg-[hsl(210_65%_8%)] rounded-lg flex items-center justify-center mb-4 border border-bfo-gold/20">
                 <div className="text-center">
-                  <Play className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">Video Coming Soon</h3>
-                  <p className="text-muted-foreground">
+                  <Play className="h-16 w-16 text-bfo-gold mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold mb-2 text-white">Video Coming Soon</h3>
+                  <p className="text-white/80">
                     Our team is preparing a comprehensive walkthrough video for {persona} users.
                   </p>
                 </div>
               </div>
               
               {/* Video Controls Placeholder */}
-              <div className="flex items-center justify-between text-sm text-muted-foreground">
+              <div className="flex items-center justify-between text-sm text-white/60">
                 <div className="flex items-center gap-2">
                   <Clock className="h-4 w-4" />
                   <span>Duration: ~15 minutes</span>
@@ -163,22 +163,22 @@ const StarterPage = () => {
           </Card>
 
           {/* Features Overview */}
-          <Card className="mb-8">
+          <Card className="mb-8 bg-[hsl(210_65%_13%)] border-4 border-bfo-gold shadow-lg shadow-bfo-gold/20">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <CheckCircle className="h-5 w-5" />
+              <CardTitle className="flex items-center gap-2 text-white">
+                <CheckCircle className="h-5 w-5 text-bfo-gold" />
                 Key Platform Features
               </CardTitle>
-              <CardDescription>
+              <CardDescription className="text-white/80">
                 Here's what you'll be able to do with our platform
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {info.features.map((feature, index) => (
-                  <div key={index} className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
+                  <div key={index} className="flex items-center gap-3 p-3 rounded-lg bg-[hsl(210_65%_8%)] border border-bfo-gold/20">
                     <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />
-                    <span className="text-sm">{feature}</span>
+                    <span className="text-sm text-white">{feature}</span>
                   </div>
                 ))}
               </div>
@@ -186,17 +186,17 @@ const StarterPage = () => {
           </Card>
 
           {/* Booking Section */}
-          <Card className="border-primary/20 bg-gradient-to-r from-primary/5 to-primary/10">
+          <Card className="border-4 border-bfo-gold bg-[hsl(210_65%_13%)] shadow-lg shadow-bfo-gold/20">
             <CardContent className="p-8 text-center">
-              <Calendar className="h-12 w-12 mx-auto mb-4 text-primary" />
-              <h3 className="text-2xl font-bold mb-4">Ready to Learn More?</h3>
-              <p className="text-muted-foreground mb-6">
+              <Calendar className="h-12 w-12 mx-auto mb-4 text-bfo-gold" />
+              <h3 className="text-2xl font-bold mb-4 text-white">Ready to Learn More?</h3>
+              <p className="text-white/80 mb-6">
                 Book a personalized 15-minute overview with our team. We'll show you exactly 
                 how the platform works for your specific needs and answer any questions.
               </p>
               
               <div className="space-y-4">
-                <Button size="lg" className="w-full md:w-auto" asChild>
+                <Button size="lg" className="w-full md:w-auto bg-bfo-gold text-black hover:bg-bfo-gold/90" asChild>
                   <a 
                     href={info.calendlyUrl} 
                     target="_blank" 
@@ -208,7 +208,7 @@ const StarterPage = () => {
                   </a>
                 </Button>
                 
-                <div className="text-sm text-muted-foreground">
+                <div className="text-sm text-white/60">
                   <p>✓ No commitment required</p>
                   <p>✓ Personalized to your needs</p>
                   <p>✓ Live Q&A with our experts</p>
@@ -219,17 +219,17 @@ const StarterPage = () => {
 
           {/* Additional Resources */}
           <div className="mt-8 text-center">
-            <p className="text-muted-foreground mb-4">
+            <p className="text-white/80 mb-4">
               Want to explore on your own first?
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button variant="outline" asChild>
+              <Button variant="outline" asChild className="border-bfo-gold text-bfo-gold hover:bg-bfo-gold hover:text-black">
                 <a href={`/personas/${persona}`}>
                   <BookOpen className="h-4 w-4 mr-2" />
                   Return to {persona.charAt(0).toUpperCase() + persona.slice(1)} Dashboard
                 </a>
               </Button>
-              <Button variant="outline" asChild>
+              <Button variant="outline" asChild className="border-bfo-gold text-bfo-gold hover:bg-bfo-gold hover:text-black">
                 <a href={`/discover?persona=${persona}`}>
                   <BookOpen className="h-4 w-4 mr-2" />
                   Browse Solution Catalog

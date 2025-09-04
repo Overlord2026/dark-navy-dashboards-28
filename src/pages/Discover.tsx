@@ -28,7 +28,7 @@ const Discover: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-[hsl(var(--bfo-navy))]">
       <SEOHead
         title="myBFOCFO — One shared workspace for families & pros"
         description="One shared workspace for families and their trusted professionals. AI you can trust, receipts you can prove. Organize everything securely with compliance built-in."
@@ -40,13 +40,13 @@ const Discover: React.FC = () => {
       <PublicNavigation />
       
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-[var(--bfo-black)] text-white pt-20 pb-16">
+      <section className="relative overflow-hidden bg-[hsl(var(--bfo-navy))] text-white pt-20 pb-16">
         <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />
         <div className="container mx-auto px-6 relative">
           <div className="text-center max-w-4xl mx-auto space-y-8">
             <h1 className="text-4xl md:text-6xl font-bold text-white leading-tight">
               One shared workspace for{' '}
-              <span className="bg-gradient-to-r from-gold via-gold-hover to-accent bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-bfo-gold via-bfo-gold to-bfo-gold bg-clip-text text-transparent">
                 families and their trusted pros
               </span>
             </h1>
@@ -67,7 +67,7 @@ const Discover: React.FC = () => {
                 <DemoLauncher 
                   demoId="overview"
                   trigger={
-                    <Button variant="outline" size="lg" className="border-white/20 text-white hover:bg-white/10 px-8 py-4">
+                    <Button variant="outline" size="lg" className="border-bfo-gold/30 text-white hover:bg-bfo-gold/10 px-8 py-4">
                       <Play className="mr-2 h-5 w-5" />
                       See 60-second demo
                     </Button>
@@ -88,11 +88,11 @@ const Discover: React.FC = () => {
       </section>
 
       {/* Persona Carousel */}
-      <section className="py-16 bg-background">
+      <section className="py-16 bg-[hsl(210_65%_13%)]">
         <div className="container mx-auto px-6">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Choose your path</h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">Choose your path</h2>
+            <p className="text-xl text-white/80 max-w-2xl mx-auto">
               Every persona gets the tools they need, with compliance and proof built in.
             </p>
           </div>
@@ -101,20 +101,20 @@ const Discover: React.FC = () => {
       </section>
 
       {/* Benefits Strip */}
-      <section className="py-12 bg-muted/50">
+      <section className="py-12 bg-[hsl(210_65%_8%)]">
         <div className="container mx-auto px-6">
           <div className="flex flex-wrap justify-center items-center gap-8 text-center">
             <div className="flex items-center gap-2">
-              <Zap className="h-5 w-5 text-gold" />
-              <span className="font-semibold">Everything in one place</span>
+              <Zap className="h-5 w-5 text-bfo-gold" />
+              <span className="font-semibold text-white">Everything in one place</span>
             </div>
             <div className="flex items-center gap-2">
-              <Users className="h-5 w-5 text-gold" />
-              <span className="font-semibold">Invite your people</span>
+              <Users className="h-5 w-5 text-bfo-gold" />
+              <span className="font-semibold text-white">Invite your people</span>
             </div>
             <div className="flex items-center gap-2">
-              <Shield className="h-5 w-5 text-gold" />
-              <span className="font-semibold">Compliance built-in</span>
+              <Shield className="h-5 w-5 text-bfo-gold" />
+              <span className="font-semibold text-white">Compliance built-in</span>
             </div>
           </div>
         </div>
@@ -122,11 +122,11 @@ const Discover: React.FC = () => {
 
       {/* Catalog Shelf */}
       {withFeatureFlag('CATALOG_ENABLED',
-        <section className="py-16 bg-background">
+        <section className="py-16 bg-[hsl(var(--bfo-navy))]">
           <div className="container mx-auto px-6">
             <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">Explore our catalog</h2>
-              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">Explore our catalog</h2>
+              <p className="text-xl text-white/80 max-w-2xl mx-auto">
                 Tools, courses, guides, and rails to help you succeed.
               </p>
             </div>
@@ -137,29 +137,29 @@ const Discover: React.FC = () => {
 
       {/* Trust Explainer */}
       {withFeatureFlag('TRUST_EXPLAINER_ENABLED',
-        <section className="py-16 bg-muted/30">
+        <section className="py-16 bg-[hsl(210_65%_8%)]">
           <TrustExplainer />
         </section>
       )}
 
       {/* About & Tools Strip */}
-      <section className="py-16 bg-background border-t">
+      <section className="py-16 bg-[hsl(210_65%_13%)] border-t border-bfo-gold/20">
         <div className="container mx-auto px-6">
           <div className="grid md:grid-cols-2 gap-12">
             <div>
-              <h3 className="text-2xl font-bold mb-4">About us</h3>
-              <p className="text-muted-foreground mb-4">
+              <h3 className="text-2xl font-bold mb-4 text-white">About us</h3>
+              <p className="text-white/80 mb-4">
                 We're building the future of family office technology—where every family 
                 can have enterprise-grade tools and their trusted professionals can collaborate 
                 seamlessly.
               </p>
-              <Button variant="outline" asChild>
+              <Button variant="outline" asChild className="border-bfo-gold text-bfo-gold hover:bg-bfo-gold hover:text-black">
                 <a href="/about">Learn more</a>
               </Button>
             </div>
             
             <div>
-              <h3 className="text-2xl font-bold mb-6">Tools & Calculators</h3>
+              <h3 className="text-2xl font-bold mb-6 text-white">Tools & Calculators</h3>
               <div className="grid sm:grid-cols-2 gap-4">
                 {[
                   { title: "Value Calculator", href: "/tools/value-calculator", toolKey: "value-calculator" },
@@ -171,7 +171,7 @@ const Discover: React.FC = () => {
                   { title: "Income Planner", href: "/tools/income-planner", toolKey: "income-planner" },
                   { title: "Document Vault", href: "/tools/document-vault", toolKey: "wealth-vault" },
                 ].map((tool) => (
-                  <Button key={tool.title} variant="ghost" asChild className="justify-start">
+                  <Button key={tool.title} variant="ghost" asChild className="justify-start text-white hover:bg-bfo-gold/10 hover:text-bfo-gold">
                     <a href={tool.href || `/preview/${tool.toolKey}`}>
                       {tool.title}
                     </a>
