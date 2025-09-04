@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Apple, Mail, Chrome } from 'lucide-react';
+import { Apple, Mail, Chrome, VolumeX } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { playLindaWelcome } from '@/utils/lindaVoice';
 
@@ -10,10 +10,11 @@ interface FamilyOnboardingWelcomeProps {
 
 export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = ({ onAuthChoice }) => {
   const [hasPlayedWelcome, setHasPlayedWelcome] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
 
   useEffect(() => {
-    // Play Linda's welcome message after a short delay
-    if ('speechSynthesis' in window && !hasPlayedWelcome) {
+    // Play Linda's welcome message after a short delay, unless muted
+    if ('speechSynthesis' in window && !hasPlayedWelcome && !isMuted) {
       const timer = setTimeout(() => {
         playLindaWelcome("Hi, I'm Linda. Welcome to Your Boutique Family Office.")
           .then(() => setHasPlayedWelcome(true))
@@ -25,7 +26,15 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
 
       return () => clearTimeout(timer);
     }
-  }, [hasPlayedWelcome]);
+  }, [hasPlayedWelcome, isMuted]);
+
+  const handleMuteToggle = () => {
+    setIsMuted(true);
+    // Stop any currently playing speech
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
+  };
 
   const authProviders = [
     {
@@ -90,16 +99,28 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
               />
             </motion.div>
 
-          {/* Welcome Message */}
+          {/* Welcome Message with Mute Control */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
             className="text-center space-y-4"
           >
-            <h1 className="text-3xl md:text-4xl font-bold text-white leading-tight">
-              Hi, I'm Linda
-            </h1>
+            <div className="flex items-center justify-center gap-3">
+              <h1 className="text-3xl md:text-4xl font-bold text-white leading-tight">
+                Hi, I'm Linda
+              </h1>
+              {!isMuted && (
+                <button
+                  onClick={handleMuteToggle}
+                  className="p-1 rounded-full hover:bg-white/10 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-white/20"
+                  aria-label="Mute Linda's voice"
+                  title="Mute voice"
+                >
+                  <VolumeX className="h-4 w-4 text-white/60 hover:text-white/80" />
+                </button>
+              )}
+            </div>
             <p className="text-lg md:text-xl text-blue-100 leading-relaxed">
               Welcome to Your Boutique Family Office
             </p>
