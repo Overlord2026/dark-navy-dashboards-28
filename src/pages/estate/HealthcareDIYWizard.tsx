@@ -205,15 +205,15 @@ const HealthcareDIYWizard = () => {
         return (
           <div className="space-y-6">
             <div className="text-center">
-              <Heart className="h-12 w-12 mx-auto mb-4 text-primary" />
-              <h2 className="text-2xl font-bold mb-2">Healthcare Profile</h2>
-              <p className="text-muted-foreground">Basic information for your healthcare documents</p>
+              <Heart className="h-12 w-12 mx-auto mb-4 text-bfo-gold" />
+              <h2 className="text-2xl font-bold mb-2 text-white">Healthcare Profile</h2>
+              <p className="text-white/70">Basic information for your healthcare documents</p>
             </div>
             
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="clientName">Full Legal Name</Label>
+                  <Label htmlFor="clientName" className="text-white">Full Legal Name</Label>
                   <Input
                     id="clientName"
                     value={formData.clientName}
@@ -222,7 +222,7 @@ const HealthcareDIYWizard = () => {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="dob">Date of Birth</Label>
+                  <Label htmlFor="dob" className="text-white">Date of Birth</Label>
                   <Input
                     id="dob"
                     type="date"
@@ -233,7 +233,7 @@ const HealthcareDIYWizard = () => {
               </div>
               
               <div>
-                <Label htmlFor="address">Address</Label>
+                <Label htmlFor="address" className="text-white">Address</Label>
                 <Textarea
                   id="address"
                   value={formData.address}
@@ -244,7 +244,7 @@ const HealthcareDIYWizard = () => {
               
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="phone">Phone Number</Label>
+                  <Label htmlFor="phone" className="text-white">Phone Number</Label>
                   <Input
                     id="phone"
                     value={formData.phone}
@@ -253,7 +253,7 @@ const HealthcareDIYWizard = () => {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="state">State</Label>
+                  <Label htmlFor="state" className="text-white">State</Label>
                   <Select 
                     value={formData.state} 
                     onValueChange={(value) => setFormData(prev => ({...prev, state: value}))}
@@ -278,16 +278,16 @@ const HealthcareDIYWizard = () => {
         return (
           <div className="space-y-6">
             <div className="text-center">
-              <Shield className="h-12 w-12 mx-auto mb-4 text-primary" />
-              <h2 className="text-2xl font-bold mb-2">Healthcare Agent</h2>
-              <p className="text-muted-foreground">Choose who will make healthcare decisions for you</p>
+              <Shield className="h-12 w-12 mx-auto mb-4 text-bfo-gold" />
+              <h2 className="text-2xl font-bold mb-2 text-white">Healthcare Agent</h2>
+              <p className="text-white/70">Choose who will make healthcare decisions for you</p>
             </div>
             
             <div className="space-y-4">
-              <h3 className="font-medium">Primary {healthRules.surrogateTerminology || 'Health Care Agent'}</h3>
+              <h3 className="font-medium text-white">Primary {healthRules.surrogateTerminology || 'Health Care Agent'}</h3>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="agentName">Agent Name</Label>
+                  <Label htmlFor="agentName" className="text-white">Agent Name</Label>
                   <Input
                     id="agentName"
                     value={formData.agentName}
@@ -296,7 +296,7 @@ const HealthcareDIYWizard = () => {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="agentRelationship">Relationship</Label>
+                  <Label htmlFor="agentRelationship" className="text-white">Relationship</Label>
                   <Input
                     id="agentRelationship"
                     value={formData.agentRelationship}
@@ -307,7 +307,7 @@ const HealthcareDIYWizard = () => {
               </div>
               
               <div>
-                <Label htmlFor="agentAddress">Agent Address</Label>
+                <Label htmlFor="agentAddress" className="text-white">Agent Address</Label>
                 <Textarea
                   id="agentAddress"
                   value={formData.agentAddress}
@@ -317,7 +317,7 @@ const HealthcareDIYWizard = () => {
               </div>
               
               <div>
-                <Label htmlFor="agentPhone">Agent Phone</Label>
+                <Label htmlFor="agentPhone" className="text-white">Agent Phone</Label>
                 <Input
                   id="agentPhone"
                   value={formData.agentPhone}
@@ -326,10 +326,10 @@ const HealthcareDIYWizard = () => {
                 />
               </div>
               
-              <h3 className="font-medium">Alternate Agent (Optional)</h3>
+              <h3 className="font-medium text-white">Alternate Agent (Optional)</h3>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="altAgentName">Alternate Name</Label>
+                  <Label htmlFor="altAgentName" className="text-white">Alternate Name</Label>
                   <Input
                     id="altAgentName"
                     value={formData.altAgentName}
@@ -338,7 +338,7 @@ const HealthcareDIYWizard = () => {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="altAgentPhone">Alternate Phone</Label>
+                  <Label htmlFor="altAgentPhone" className="text-white">Alternate Phone</Label>
                   <Input
                     id="altAgentPhone"
                     value={formData.altAgentPhone}
@@ -355,14 +355,14 @@ const HealthcareDIYWizard = () => {
         return (
           <div className="space-y-6">
             <div className="text-center">
-              <FileText className="h-12 w-12 mx-auto mb-4 text-primary" />
-              <h2 className="text-2xl font-bold mb-2">Document Selection</h2>
-              <p className="text-muted-foreground">Choose healthcare documents for {formData.state}</p>
+              <FileText className="h-12 w-12 mx-auto mb-4 text-bfo-gold" />
+              <h2 className="text-2xl font-bold mb-2 text-white">Document Selection</h2>
+              <p className="text-white/70">Choose healthcare documents for {formData.state}</p>
             </div>
             
-            <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-              <h3 className="font-medium text-blue-800 mb-2">{formData.state} Requirements</h3>
-              <ul className="text-sm text-blue-700 space-y-1">
+            <div className="p-4 bg-bfo-gold/10 border border-bfo-gold/30 rounded-lg">
+              <h3 className="font-medium text-bfo-gold mb-2">{formData.state} Requirements</h3>
+              <ul className="text-sm text-white/70 space-y-1">
                 <li>• Witnesses required: {healthRules.witnesses}</li>
                 <li>• Notarization: {healthRules.notaryRequired ? 'Required' : 'Not required'}</li>
                 <li>• Terminology: {healthRules.surrogateTerminology || 'Health Care Agent'}</li>
@@ -383,27 +383,27 @@ const HealthcareDIYWizard = () => {
                 const info = formInfo[form as keyof typeof formInfo];
                 
                 return (
-                  <div key={form} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div key={form} className="flex items-center justify-between p-4 border border-bfo-gold/30 rounded-lg bg-bfo-navy">
                     <div className="flex items-center space-x-3">
                       <Checkbox
                         checked={selectedForms.includes(form)}
                         onCheckedChange={() => handleFormToggle(form)}
                       />
                       <div>
-                        <p className="font-medium">{info.name}</p>
-                        <p className="text-sm text-muted-foreground">{info.description}</p>
+                        <p className="font-medium text-white">{info.name}</p>
+                        <p className="text-sm text-white/70">{info.description}</p>
                       </div>
                     </div>
-                    <p className="font-medium">${info.price}</p>
+                    <p className="font-medium text-bfo-gold">${info.price}</p>
                   </div>
                 );
               })}
             </div>
             
             {healthRules.witnessEligibility && (
-              <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                <h3 className="font-medium text-yellow-800 mb-2">Witness Requirements</h3>
-                <p className="text-sm text-yellow-700">{healthRules.witnessEligibility}</p>
+              <div className="p-4 bg-bfo-gold/10 border border-bfo-gold/30 rounded-lg">
+                <h3 className="font-medium text-bfo-gold mb-2">Witness Requirements</h3>
+                <p className="text-sm text-white/70">{healthRules.witnessEligibility}</p>
               </div>
             )}
           </div>
@@ -413,14 +413,14 @@ const HealthcareDIYWizard = () => {
         return (
           <div className="space-y-6">
             <div className="text-center">
-              <CheckCircle2 className="h-12 w-12 mx-auto mb-4 text-primary" />
-              <h2 className="text-2xl font-bold mb-2">Review & Payment</h2>
-              <p className="text-muted-foreground">Confirm your selections and complete payment</p>
+              <CheckCircle2 className="h-12 w-12 mx-auto mb-4 text-bfo-gold" />
+              <h2 className="text-2xl font-bold mb-2 text-white">Review & Payment</h2>
+              <p className="text-white/70">Confirm your selections and complete payment</p>
             </div>
             
-            <Card>
+            <Card className="bg-[hsl(210_65%_13%)] border-4 border-bfo-gold shadow-lg shadow-bfo-gold/20">
               <CardHeader>
-                <CardTitle>Order Summary</CardTitle>
+                <CardTitle className="text-white">Order Summary</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 {selectedForms.map(form => {
@@ -433,45 +433,33 @@ const HealthcareDIYWizard = () => {
                     Surrogate: `${healthRules.surrogateTerminology} Designation`
                   };
                   return (
-                    <div key={form} className="flex justify-between">
+                    <div key={form} className="flex justify-between text-white">
                       <span>{names[form as keyof typeof names]}</span>
-                      <span>${prices[form as keyof typeof prices]}</span>
+                      <span className="text-bfo-gold">${prices[form as keyof typeof prices]}</span>
                     </div>
                   );
                 })}
-                <div className="border-t pt-4">
-                  <div className="flex justify-between font-bold">
+                <div className="border-t border-bfo-gold/30 pt-4">
+                  <div className="flex justify-between font-bold text-white">
                     <span>Total</span>
-                    <span>${selectedForms.reduce((sum, form) => {
+                    <span className="text-bfo-gold">${selectedForms.reduce((sum, form) => {
                       const prices = { AdvanceDirective: 149, LivingWill: 129, HealthcarePOA: 139, HIPAA: 99, Surrogate: 139 };
                       return sum + prices[form as keyof typeof prices];
                     }, 0)}</span>
                   </div>
                 </div>
+                
+                <div className="pt-4">
+                  <Button 
+                    onClick={handlePayment} 
+                    disabled={paymentComplete || selectedForms.length === 0}
+                    className="w-full bg-bfo-gold text-black hover:bg-bfo-gold/90"
+                  >
+                    {paymentComplete ? 'Payment Complete' : 'Pay Now'}
+                  </Button>
+                </div>
               </CardContent>
             </Card>
-            
-            <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-              <h3 className="font-medium text-blue-800 mb-2">Important Disclaimers</h3>
-              <ul className="text-sm text-blue-700 space-y-1">
-                <li>• This service provides document preparation assistance, not legal advice</li>
-                <li>• Documents are state-compliant but may require attorney review for complex situations</li>
-                <li>• Follow state-specific execution requirements provided</li>
-                <li>• Consider professional legal counsel for complex healthcare situations</li>
-              </ul>
-            </div>
-            
-            {!paymentComplete && (
-              <Button onClick={handlePayment} className="w-full" size="lg">
-                Complete Payment
-              </Button>
-            )}
-            
-            {paymentComplete && !documentsGenerated && (
-              <Button onClick={handleGenerateDocuments} className="w-full" size="lg">
-                Generate Documents
-              </Button>
-            )}
           </div>
         );
 
@@ -479,45 +467,69 @@ const HealthcareDIYWizard = () => {
         return (
           <div className="space-y-6">
             <div className="text-center">
-              <FileText className="h-12 w-12 mx-auto mb-4 text-green-600" />
-              <h2 className="text-2xl font-bold mb-2">Documents Ready</h2>
-              <p className="text-muted-foreground">Your healthcare documents have been generated</p>
+              <Download className="h-12 w-12 mx-auto mb-4 text-bfo-gold" />
+              <h2 className="text-2xl font-bold mb-2 text-white">Document Generation</h2>
+              <p className="text-white/70">Generate your healthcare documents</p>
             </div>
             
-            {documentsGenerated && (
-              <Card>
-                <CardHeader>
-                  <CardTitle>Generated Documents</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {selectedForms.map(form => {
-                    const names = {
-                      AdvanceDirective: 'Advance Directive',
-                      LivingWill: 'Living Will',
-                      HealthcarePOA: 'Healthcare Power of Attorney',
-                      HIPAA: 'HIPAA Authorization',
-                      Surrogate: `${healthRules.surrogateTerminology} Designation`
-                    };
-                    return (
-                      <div key={form} className="flex items-center justify-between p-3 border rounded-lg">
-                        <span>{names[form as keyof typeof names]}</span>
-                        <Button variant="outline" size="sm">
-                          <Download className="h-4 w-4 mr-2" />
-                          Download PDF
-                        </Button>
-                      </div>
-                    );
-                  })}
-                  
-                  <div className="flex items-center justify-between p-3 border rounded-lg bg-green-50">
-                    <span>Execution Checklist ({formData.state})</span>
-                    <Button variant="outline" size="sm">
-                      <Download className="h-4 w-4 mr-2" />
-                      Download PDF
-                    </Button>
-                  </div>
+            {!documentsGenerated ? (
+              <Card className="bg-[hsl(210_65%_13%)] border-4 border-bfo-gold shadow-lg shadow-bfo-gold/20">
+                <CardContent className="p-6 text-center">
+                  <p className="text-white mb-4">Ready to generate your healthcare documents?</p>
+                  <Button 
+                    onClick={handleGenerateDocuments}
+                    className="bg-bfo-gold text-black hover:bg-bfo-gold/90"
+                  >
+                    Generate Documents
+                  </Button>
                 </CardContent>
               </Card>
+            ) : (
+              <div className="space-y-4">
+                <Card className="bg-[hsl(210_65%_13%)] border-4 border-bfo-gold shadow-lg shadow-bfo-gold/20">
+                  <CardContent className="p-6">
+                    <div className="flex items-center gap-3 mb-4">
+                      <CheckCircle2 className="h-8 w-8 text-green-400" />
+                      <div>
+                        <h3 className="font-semibold text-white">Documents Generated Successfully</h3>
+                        <p className="text-sm text-white/70">Your healthcare documents are ready for download</p>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      {selectedForms.map(form => (
+                        <div key={form} className="flex items-center justify-between p-2 bg-bfo-gold/10 rounded border border-bfo-gold/30">
+                          <span className="text-white">{form}</span>
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            className="border-bfo-gold text-bfo-gold hover:bg-bfo-gold hover:text-black"
+                          >
+                            Download
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Button 
+                    onClick={handleRequestAttorneyReview}
+                    variant="outline"
+                    className="border-bfo-gold text-bfo-gold hover:bg-bfo-gold hover:text-black"
+                  >
+                    Request Attorney Review
+                  </Button>
+                  <Button 
+                    onClick={handleShareWithProvider}
+                    variant="outline"
+                    className="border-bfo-gold text-bfo-gold hover:bg-bfo-gold hover:text-black"
+                  >
+                    Share with Healthcare Provider
+                  </Button>
+                </div>
+              </div>
             )}
           </div>
         );
@@ -526,72 +538,33 @@ const HealthcareDIYWizard = () => {
         return (
           <div className="space-y-6">
             <div className="text-center">
-              <Crown className="h-12 w-12 mx-auto mb-4 text-primary" />
-              <h2 className="text-2xl font-bold mb-2">Additional Services</h2>
-              <p className="text-muted-foreground">Optional attorney review and provider sharing</p>
+              <Crown className="h-12 w-12 mx-auto mb-4 text-bfo-gold" />
+              <h2 className="text-2xl font-bold mb-2 text-white">Completion</h2>
+              <p className="text-white/70">Your healthcare planning is complete</p>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Attorney Review</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <p className="text-sm text-muted-foreground">
-                    Connect with licensed healthcare attorneys in {formData.state} for:
+            <Card className="bg-[hsl(210_65%_13%)] border-4 border-bfo-gold shadow-lg shadow-bfo-gold/20">
+              <CardContent className="p-6 text-center">
+                <div className="space-y-4">
+                  <CheckCircle2 className="h-16 w-16 mx-auto text-green-400" />
+                  <h3 className="text-xl font-semibold text-white">Healthcare Planning Complete!</h3>
+                  <p className="text-white/70">
+                    Your healthcare documents have been generated and stored securely. 
+                    Remember to review them periodically and update as needed.
                   </p>
                   
-                  <ul className="space-y-2">
-                    <li className="flex items-center space-x-2">
-                      <CheckCircle2 className="h-4 w-4 text-green-600" />
-                      <span className="text-sm">Document review and validation</span>
-                    </li>
-                    <li className="flex items-center space-x-2">
-                      <CheckCircle2 className="h-4 w-4 text-green-600" />
-                      <span className="text-sm">State-specific compliance verification</span>
-                    </li>
-                    <li className="flex items-center space-x-2">
-                      <CheckCircle2 className="h-4 w-4 text-green-600" />
-                      <span className="text-sm">Complex situation guidance</span>
-                    </li>
-                  </ul>
-                  
-                  <Button onClick={handleRequestAttorneyReview} className="w-full">
-                    Request Attorney Review
-                  </Button>
-                </CardContent>
-              </Card>
-              
-              <Card>
-                <CardHeader>
-                  <CardTitle>Share with Provider</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <p className="text-sm text-muted-foreground">
-                    Securely share healthcare documents with your providers:
-                  </p>
-                  
-                  <ul className="space-y-2">
-                    <li className="flex items-center space-x-2">
-                      <Shield className="h-4 w-4 text-blue-600" />
-                      <span className="text-sm">Minimum-necessary sharing</span>
-                    </li>
-                    <li className="flex items-center space-x-2">
-                      <Shield className="h-4 w-4 text-blue-600" />
-                      <span className="text-sm">Time-limited access (30 days)</span>
-                    </li>
-                    <li className="flex items-center space-x-2">
-                      <Shield className="h-4 w-4 text-blue-600" />
-                      <span className="text-sm">Consent-tracked sharing</span>
-                    </li>
-                  </ul>
-                  
-                  <Button onClick={handleShareWithProvider} variant="outline" className="w-full">
-                    Share with Provider
-                  </Button>
-                </CardContent>
-              </Card>
-            </div>
+                  <div className="pt-4 space-y-2">
+                    <p className="text-sm text-white/70">Next Steps:</p>
+                    <ul className="text-sm text-white/70 space-y-1">
+                      <li>• Share copies with your healthcare providers</li>
+                      <li>• Inform your healthcare agent of their responsibilities</li>
+                      <li>• Keep original documents in a secure location</li>
+                      <li>• Review and update annually or after major life events</li>
+                    </ul>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         );
 
@@ -601,49 +574,42 @@ const HealthcareDIYWizard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto py-8 max-w-4xl">
+    <div className="min-h-screen bg-bfo-navy">
+      <div className="container mx-auto px-4 py-8 max-w-4xl">
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
-            <h1 className="text-2xl font-bold">Healthcare Packet (Premium)</h1>
-            <span className="text-sm text-muted-foreground">
+            <h1 className="text-3xl font-bold text-white">Healthcare DIY Wizard</h1>
+            <div className="text-sm text-white/70">
               Step {currentStep} of {totalSteps}
-            </span>
+            </div>
           </div>
           <Progress value={progress} className="w-full" />
         </div>
 
-        <Card>
+        <Card className="bg-[hsl(210_65%_13%)] border-4 border-bfo-gold shadow-lg shadow-bfo-gold/20">
           <CardContent className="p-8">
             {renderStep()}
-            
-            <div className="flex justify-between mt-8 pt-6 border-t">
-              <Button 
-                variant="outline" 
-                onClick={handleBack} 
-                disabled={currentStep === 1}
-              >
-                Back
-              </Button>
-              
-              {currentStep < totalSteps && (
-                <Button 
-                  onClick={handleNext}
-                  disabled={
-                    (currentStep === 1 && !formData.clientName) ||
-                    (currentStep === 2 && !formData.agentName) ||
-                    (currentStep === 3 && selectedForms.length === 0) ||
-                    (currentStep === 4 && !paymentComplete) ||
-                    (currentStep === 5 && !documentsGenerated)
-                  }
-                >
-                  {currentStep === 4 && paymentComplete && !documentsGenerated ? 'Generate Documents' :
-                   currentStep === totalSteps ? 'Complete' : 'Next'}
-                </Button>
-              )}
-            </div>
           </CardContent>
         </Card>
+
+        <div className="flex justify-between mt-6">
+          <Button 
+            variant="outline" 
+            onClick={handleBack} 
+            disabled={currentStep === 1}
+            className="border-bfo-gold text-bfo-gold hover:bg-bfo-gold hover:text-black"
+          >
+            Back
+          </Button>
+          
+          <Button 
+            onClick={handleNext} 
+            disabled={currentStep === totalSteps}
+            className="bg-bfo-gold text-black hover:bg-bfo-gold/90"
+          >
+            {currentStep === totalSteps ? 'Complete' : 'Next'}
+          </Button>
+        </div>
       </div>
     </div>
   );
