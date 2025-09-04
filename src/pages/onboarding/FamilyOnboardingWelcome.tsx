@@ -75,29 +75,26 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
       <SecondaryNav />
       <div className="h-screen w-full" style={{ backgroundColor: '#001F3F' }}>
         {/* Main Content */}
-        <div className="h-full flex flex-col items-center justify-center" style={{ paddingTop: '120px' }}>
-        <div className="w-full max-w-md mx-auto px-6">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center space-y-8"
-          >
+        <div className="h-full flex flex-col items-center justify-start" style={{ paddingTop: '2rem' }}>
+          <div className="w-full max-w-none mx-auto px-4" style={{ width: '90vw' }}>
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="text-center space-y-6"
+            >
             {/* BFO Logo with White-Gold Letters - Centered */}
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="flex justify-center"
-              style={{ margin: '1.5rem 0' }}
+              className="flex justify-center mb-8"
             >
               <img
                 src="/lovable-uploads/e63fd043-b0e8-4d12-b332-23ecbe473345.png"
                 alt="Boutique Family Office Logo"
-                className="w-48 h-52 md:w-56 md:h-64"
+                className="w-72 h-80 md:w-96 md:h-[420px] lg:w-[480px] lg:h-[528px]"
                 style={{
-                  maxWidth: '192px',
-                  maxHeight: '211px',
                   objectFit: 'contain'
                 }}
               />
@@ -108,7 +105,7 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="text-center space-y-4"
+            className="text-center space-y-3 mb-8"
           >
             <div className="flex items-center justify-center gap-3">
               <h1 className="text-3xl md:text-4xl font-bold text-white leading-tight">
@@ -135,7 +132,7 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.8 }}
-            className="space-y-4"
+            className="space-y-3 max-w-md mx-auto"
           >
             {authProviders.map((provider, index) => {
               const IconComponent = provider.icon;
@@ -149,7 +146,7 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
                   <Button
                     onClick={() => onAuthChoice(provider.provider)}
                     className={`
-                      w-full h-14 flex items-center justify-center gap-3 
+                      w-full h-12 flex items-center justify-center gap-3 
                       ${provider.bgColor} ${provider.textColor}
                       transition-all duration-300 ease-in-out
                       hover:scale-105 hover:shadow-lg
@@ -177,7 +174,7 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 1.6 }}
-            className="text-sm text-blue-200 leading-relaxed"
+            className="text-sm text-blue-200 leading-relaxed text-center mt-6"
           >
             Trusted by families worldwide.<br />
             Your secure space starts here.
