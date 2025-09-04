@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Apple, Mail, Chrome, Briefcase, Calculator, Scale } from 'lucide-react';
+import { Apple, Mail, Chrome, Briefcase, Calculator, Scale, Heart, TrendingUp } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { playWelcome, isVoiceSupported } from '@/utils/voiceWelcome';
 import { Logo } from '@/components/ui/Logo';
@@ -18,7 +18,7 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
     if (isVoiceSupported() && !hasPlayedWelcome) {
       const timer = setTimeout(() => {
         const utterance = new SpeechSynthesisUtterance(
-          "Hi, I'm Linda from Your Boutique Family Office. Your family's secure hub - all data in one place, with bank-level protection. Invite trusted advisors anytime. And for pros: your all-in-one practice hub. Coordinate with clients, manage everything easily. We're here when you need us. Let's get you started in 60 seconds."
+          "Hi, I'm Linda from Your Boutique Family Office. Your family's secure hub - all data in one place, with bank-level protection. Invite trusted advisors anytime. And for pros: your all-in-one practice hub. Live longer, live smarter. This is your hub for health tracking and wealth planning - all in one secure space. Invite your whole team to thrive. Let's get you started in 60 seconds."
         );
         utterance.rate = 0.85;
         utterance.pitch = 1.0;
@@ -169,6 +169,60 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
               All working together in your secure space
             </motion.p>
           </motion.div>
+
+          {/* Health & Wealth Blueprint Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 2.4 }}
+            className="space-y-4"
+          >
+            <h3 className="text-lg font-medium text-white">Health & Wealth Blueprint</h3>
+            
+            <div className="flex justify-center items-center space-x-8">
+              {[
+                { icon: Heart, label: 'Health Tracking', delay: 0.1 },
+                { icon: TrendingUp, label: 'Wealth Planning', delay: 0.2 }
+              ].map((element, index) => {
+                const IconComponent = element.icon;
+                return (
+                  <motion.div
+                    key={element.label}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.4, delay: 1.8 + element.delay }}
+                    className="text-center"
+                  >
+                    <div 
+                      className="w-20 h-20 rounded-full flex items-center justify-center mb-3 mx-auto transition-all duration-300 hover:scale-110"
+                      style={{ 
+                        backgroundColor: '#D4AF37',
+                        boxShadow: '0 6px 25px rgba(212, 175, 55, 0.4)'
+                      }}
+                    >
+                      <IconComponent className="h-8 w-8 text-white" />
+                    </div>
+                    <span className="text-sm text-blue-200 font-medium">{element.label}</span>
+                  </motion.div>
+                );
+              })}
+            </div>
+            
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.6, delay: 2.2 }}
+              className="text-center space-y-2"
+            >
+              <p className="text-white font-semibold text-base">
+                Live longer, live smarter
+              </p>
+              <p className="text-blue-100 text-sm">
+                Your hub for health tracking and wealth planning<br />
+                <span className="font-medium">Invite your whole team to thrive</span>
+              </p>
+            </motion.div>
+          </motion.div>
           </motion.div>
 
           {/* Auth Buttons */}
@@ -185,7 +239,7 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
                   key={provider.name}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.4, delay: 1.8 + index * 0.1 }}
+                  transition={{ duration: 0.4, delay: 2.6 + index * 0.1 }}
                 >
                   <Button
                     onClick={() => onAuthChoice(provider.provider)}
@@ -217,7 +271,7 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 2.2 }}
+            transition={{ duration: 0.6, delay: 3.0 }}
             className="text-sm text-blue-200 leading-relaxed"
           >
             We're here when you need us.<br />
