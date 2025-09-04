@@ -59,30 +59,38 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
   ];
 
   return (
-    <div className="h-screen w-full flex flex-col items-center justify-center" style={{ backgroundColor: '#001F3F' }}>
-      <div className="w-full max-w-md mx-auto px-6">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center space-y-8"
-        >
-          {/* Gold Logo - Centered */}
-          <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="flex justify-center"
+    <div className="h-screen w-full" style={{ backgroundColor: '#001F3F' }}>
+      {/* Fixed Top Banner with 4x8 Horizontal Logo */}
+      <div className="fixed top-0 left-0 right-0 z-50 flex justify-center py-4" style={{ backgroundColor: '#001F3F' }}>
+        <img
+          src="/brand/bfo-horizontal-4x8.png"
+          alt="Boutique Family Office"
+          className="h-8 md:h-10 w-auto"
+        />
+      </div>
+
+      {/* Main Content */}
+      <div className="h-full flex flex-col items-center justify-center pt-20">
+        <div className="w-full max-w-md mx-auto px-6">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-center space-y-8"
           >
-            <div className="text-center">
-              <span 
-                className="text-2xl md:text-3xl font-bold tracking-wide font-serif"
-                style={{ color: '#D4AF37' }}
-              >
-                BOUTIQUE FAMILY OFFICE
-              </span>
-            </div>
-          </motion.div>
+            {/* Square Gold Tree Logo - Centered */}
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="flex justify-center"
+            >
+              <img
+                src="/brand/bfo-gold-tree-transparent.png"
+                alt="Boutique Family Office Tree Logo"
+                className="w-24 h-24 md:w-32 md:h-32"
+              />
+            </motion.div>
 
           {/* Welcome Message */}
           <motion.div
@@ -152,7 +160,8 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
             Trusted by families worldwide.<br />
             Your secure space starts here.
           </motion.p>
-        </motion.div>
+          </motion.div>
+        </div>
       </div>
     </div>
   );
