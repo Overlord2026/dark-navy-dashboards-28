@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Apple, Mail, Chrome, Briefcase, Calculator, Scale, Heart, TrendingUp } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { playWelcome, isVoiceSupported } from '@/utils/voiceWelcome';
+import { playLindaWelcome, testLindaVoice } from '@/utils/lindaVoice';
 import { Logo } from '@/components/ui/Logo';
 
 interface FamilyOnboardingWelcomeProps {
@@ -15,33 +15,29 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
 
   useEffect(() => {
     // Play Linda's welcome message after a short delay
-    if (isVoiceSupported() && !hasPlayedWelcome) {
+    if ('speechSynthesis' in window && !hasPlayedWelcome) {
       const timer = setTimeout(() => {
-        const utterance = new SpeechSynthesisUtterance(
-          "Hi, I'm Linda from Your Boutique Family Office. Your family's secure hub - all data in one place, with bank-level protection. Invite trusted advisors anytime. And for pros: your all-in-one practice hub. Live longer, live smarter. This is your hub for health tracking and wealth planning - all in one secure space. Invite your whole team to thrive. Let's get you started in 60 seconds."
-        );
-        utterance.rate = 0.85;
-        utterance.pitch = 1.0;
-        utterance.volume = 0.8;
-        
-        // Select a warm, professional voice
-        const voices = window.speechSynthesis.getVoices();
-        const preferredVoice = voices.find(voice => 
-          voice.lang.startsWith('en') && 
-          (voice.name.includes('Female') || voice.name.includes('Natural'))
-        ) || voices.find(voice => voice.lang.startsWith('en'));
-        
-        if (preferredVoice) {
-          utterance.voice = preferredVoice;
-        }
-        
-        window.speechSynthesis.speak(utterance);
-        setHasPlayedWelcome(true);
+        playLindaWelcome()
+          .then(() => setHasPlayedWelcome(true))
+          .catch(error => {
+            console.error('Linda voice error:', error);
+            setHasPlayedWelcome(true);
+          });
       }, 1000);
 
       return () => clearTimeout(timer);
     }
   }, [hasPlayedWelcome]);
+
+  // Test Linda's voice on component mount (development only)
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'development') {
+      const timer = setTimeout(() => {
+        testLindaVoice();
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, []);
 
   const authProviders = [
     {
@@ -112,13 +108,8 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
               <span style={{ color: '#D4AF37' }}>Boutique Family Office</span>
             </h1>
             <p className="text-xl text-blue-100 leading-relaxed">
-              Your family's secure hub — all data in one place,<br />
-              with <span className="font-semibold text-white">bank-level protection</span><br />
-              <span className="text-lg">Invite trusted advisors anytime</span>
-            </p>
-            <p className="text-lg text-blue-200 leading-relaxed mt-2">
-              <span className="font-medium">For pros:</span> your all-in-one practice hub<br />
-              Coordinate with clients, manage everything easily
+              Let's get started in just <span className="font-semibold text-white">60 seconds</span><br />
+              Your secure family hub awaits
             </p>
 
           {/* Meet Your Team Section */}
