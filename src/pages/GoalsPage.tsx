@@ -111,60 +111,61 @@ const GoalsPage = () => {
   }
 
   return (
-    <div className="container mx-auto p-6 space-y-8">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold text-foreground">Goals & Aspirations</h1>
-          <p className="text-lg text-muted-foreground mt-2">
-            Experience Return is the new investment return. Dream bigger, plan smarter.
-          </p>
-        </div>
-        <Button 
-          onClick={() => navigate('/goals/create')}
-          className="w-fit"
-          size="lg"
-        >
-          <Plus className="w-5 h-5 mr-2" />
-          Create New Goal
-        </Button>
-      </div>
-
-      {/* Empty State */}
-      {goals.length === 0 && (
-        <div className="text-center py-16">
-          <div className="mx-auto max-w-md">
-            <Target className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-            <h3 className="text-xl font-semibold text-foreground mb-2">
-              Ready to dream bigger?
-            </h3>
-            <p className="text-muted-foreground mb-6">
-              Our Boutique Family Office™ platform lets you set, track, and celebrate the same kinds of aspirational goals that ultra-high-net-worth families have used for generations.
+    <div className="min-h-screen bg-background">
+      <div className="container mx-auto p-6 space-y-8">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-bold text-foreground">Goals & Aspirations</h1>
+            <p className="text-lg text-muted-foreground mt-2">
+              Experience Return is the new investment return. Dream bigger, plan smarter.
             </p>
-            <Button 
-              onClick={() => navigate('/goals/create')}
-              size="lg"
-              className="w-full"
-            >
-              <Plus className="w-5 h-5 mr-2" />
-              Create Your First Goal
-            </Button>
           </div>
+          <Button 
+            onClick={() => navigate('/goals/create')}
+            className="w-fit bg-primary hover:bg-primary/90 text-primary-foreground border-2 border-accent"
+            size="lg"
+          >
+            <Plus className="w-5 h-5 mr-2" />
+            Create New Goal
+          </Button>
         </div>
-      )}
 
-      {/* Goals Grid */}
-      {goals.length > 0 && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {goals.map((goal) => {
-            const progress = calculateProgress(goal.current_amount, goal.target_amount);
-            
-            return (
-              <Card 
-                key={goal.id} 
-                className="group hover:shadow-lg transition-all duration-300 cursor-pointer relative overflow-hidden"
-                onClick={() => navigate(`/goals/${goal.id}`)}
+        {/* Empty State */}
+        {goals.length === 0 && (
+          <div className="text-center py-16">
+            <div className="mx-auto max-w-md">
+              <Target className="mx-auto h-12 w-12 text-accent mb-4" />
+              <h3 className="text-xl font-semibold text-foreground mb-2">
+                Ready to dream bigger?
+              </h3>
+              <p className="text-muted-foreground mb-6">
+                Our Boutique Family Office™ platform lets you set, track, and celebrate the same kinds of aspirational goals that ultra-high-net-worth families have used for generations.
+              </p>
+              <Button 
+                onClick={() => navigate('/goals/create')}
+                size="lg"
+                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground border-2 border-accent"
               >
+                <Plus className="w-5 h-5 mr-2" />
+                Create Your First Goal
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {/* Goals Grid */}
+        {goals.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {goals.map((goal) => {
+              const progress = calculateProgress(goal.current_amount, goal.target_amount);
+              
+              return (
+                <Card 
+                  key={goal.id} 
+                  className="group hover:shadow-xl transition-all duration-300 cursor-pointer relative overflow-hidden bg-card border-2 border-accent/20 hover:border-accent"
+                  onClick={() => navigate(`/goals/${goal.id}`)}
+                >
                 {goal.priority === 'top_aspiration' && (
                   <div className="absolute top-3 right-3 z-10">
                     <Badge className={getPriorityColor(goal.priority)}>
@@ -235,51 +236,52 @@ const GoalsPage = () => {
               </Card>
             );
           })}
-        </div>
-      )}
+          </div>
+        )}
 
-      {/* Quick Stats */}
-      {goals.length > 0 && (
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Card>
-            <CardContent className="p-4 text-center">
-              <Target className="w-8 h-8 mx-auto mb-2 text-primary" />
-              <div className="text-2xl font-bold">{goals.length}</div>
-              <div className="text-sm text-muted-foreground">Active Goals</div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardContent className="p-4 text-center">
-              <TrendingUp className="w-8 h-8 mx-auto mb-2 text-green-500" />
-              <div className="text-2xl font-bold">
-                {formatCurrency(goals.reduce((sum, g) => sum + g.current_amount, 0))}
-              </div>
-              <div className="text-sm text-muted-foreground">Total Saved</div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardContent className="p-4 text-center">
-              <Star className="w-8 h-8 mx-auto mb-2 text-yellow-500" />
-              <div className="text-2xl font-bold">
-                {goals.filter(g => g.priority === 'top_aspiration').length}
-              </div>
-              <div className="text-sm text-muted-foreground">Top Aspirations</div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardContent className="p-4 text-center">
-              <CheckCircle2 className="w-8 h-8 mx-auto mb-2 text-blue-500" />
-              <div className="text-2xl font-bold">
-                {Math.round(goals.reduce((sum, g) => sum + calculateProgress(g.current_amount, g.target_amount), 0) / goals.length)}%
-              </div>
-              <div className="text-sm text-muted-foreground">Avg Progress</div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
+        {/* Quick Stats */}
+        {goals.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <Card className="bg-card border-2 border-accent/20 hover:border-accent transition-colors">
+              <CardContent className="p-4 text-center">
+                <Target className="w-8 h-8 mx-auto mb-2 text-accent" />
+                <div className="text-2xl font-bold text-foreground">{goals.length}</div>
+                <div className="text-sm text-muted-foreground">Active Goals</div>
+              </CardContent>
+            </Card>
+            
+            <Card className="bg-card border-2 border-accent/20 hover:border-accent transition-colors">
+              <CardContent className="p-4 text-center">
+                <TrendingUp className="w-8 h-8 mx-auto mb-2 text-accent" />
+                <div className="text-2xl font-bold text-foreground">
+                  {formatCurrency(goals.reduce((sum, g) => sum + g.current_amount, 0))}
+                </div>
+                <div className="text-sm text-muted-foreground">Total Saved</div>
+              </CardContent>
+            </Card>
+            
+            <Card className="bg-card border-2 border-accent/20 hover:border-accent transition-colors">
+              <CardContent className="p-4 text-center">
+                <Star className="w-8 h-8 mx-auto mb-2 text-accent" />
+                <div className="text-2xl font-bold text-foreground">
+                  {goals.filter(g => g.priority === 'top_aspiration').length}
+                </div>
+                <div className="text-sm text-muted-foreground">Top Aspirations</div>
+              </CardContent>
+            </Card>
+            
+            <Card className="bg-card border-2 border-accent/20 hover:border-accent transition-colors">
+              <CardContent className="p-4 text-center">
+                <CheckCircle2 className="w-8 h-8 mx-auto mb-2 text-accent" />
+                <div className="text-2xl font-bold text-foreground">
+                  {Math.round(goals.reduce((sum, g) => sum + calculateProgress(g.current_amount, g.target_amount), 0) / goals.length)}%
+                </div>
+                <div className="text-sm text-muted-foreground">Avg Progress</div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

@@ -15,7 +15,7 @@ export function WelcomeTransition() {
   }, [location.state, navigate]);
 
   const handleGoalSetup = () => {
-    navigate('/dashboard/goals');
+    navigate('/goals');
   };
 
   const handleAccountLink = () => {

@@ -118,49 +118,50 @@ const CreateGoalPage = () => {
   }
 
   return (
-    <div className="container mx-auto p-6 space-y-8">
-      {/* Header */}
-      <div className="flex items-center gap-4">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => navigate('/goals')}
-          className="p-2"
-        >
-          <ArrowLeft className="w-4 h-4" />
-        </Button>
-        <div>
-          <h1 className="text-3xl font-bold text-foreground">Create New Goal</h1>
-          <p className="text-lg text-muted-foreground mt-2">
-            What aspirations would your future self thank you for achieving?
+    <div className="min-h-screen bg-background">
+      <div className="container mx-auto p-6 space-y-8">
+        {/* Header */}
+        <div className="flex items-center gap-4">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate('/goals')}
+            className="p-2 text-accent hover:text-foreground hover:bg-accent/10"
+          >
+            <ArrowLeft className="w-4 h-4" />
+          </Button>
+          <div>
+            <h1 className="text-3xl font-bold text-foreground">Create New Goal</h1>
+            <p className="text-lg text-muted-foreground mt-2">
+              What aspirations would your future self thank you for achieving?
+            </p>
+          </div>
+        </div>
+
+        {/* Inspirational Quote */}
+        <div className="bg-card border-2 border-accent/20 p-6 rounded-lg">
+          <h2 className="text-xl font-semibold mb-3 text-accent">
+            Boutique Family Office Experience
+          </h2>
+          <p className="text-muted-foreground">
+            "Experience Return is the new investment return. What life milestone, legacy, or impact will you create? Choose from the same goal categories that ultra-high-net-worth families use to build meaningful lives."
           </p>
         </div>
-      </div>
 
-      {/* Inspirational Quote */}
-      <div className="bg-gradient-to-r from-primary/10 to-secondary/10 p-6 rounded-lg">
-        <h2 className="text-xl font-semibold mb-3 text-foreground">
-          Boutique Family Office Experience
-        </h2>
-        <p className="text-muted-foreground">
-          "Experience Return is the new investment return. What life milestone, legacy, or impact will you create? Choose from the same goal categories that ultra-high-net-worth families use to build meaningful lives."
-        </p>
-      </div>
-
-      {/* Goal Categories Grid */}
-      <div className="space-y-6">
-        <h3 className="text-xl font-semibold text-foreground">Choose Your Goal Type</h3>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {templates.map((template) => {
-            const IconComponent = getIconComponent(template.icon_name);
-            
-            return (
-              <Card 
-                key={template.id}
-                className="group hover:shadow-lg transition-all duration-300 cursor-pointer relative overflow-hidden"
-                onClick={() => handleTemplateSelect(template)}
-              >
+        {/* Goal Categories Grid */}
+        <div className="space-y-6">
+          <h3 className="text-xl font-semibold text-foreground">Choose Your Goal Type</h3>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {templates.map((template) => {
+              const IconComponent = getIconComponent(template.icon_name);
+              
+              return (
+                <Card 
+                  key={template.id}
+                  className="group hover:shadow-xl transition-all duration-300 cursor-pointer relative overflow-hidden bg-card border-2 border-accent/20 hover:border-accent"
+                  onClick={() => handleTemplateSelect(template)}
+                >
                 <div className={`absolute top-0 left-0 w-full h-2 bg-gradient-to-r ${getCategoryColor(template.category)}`} />
                 
                 <CardHeader className="pb-3">
@@ -208,17 +209,18 @@ const CreateGoalPage = () => {
               </Card>
             );
           })}
+          </div>
         </div>
-      </div>
 
-      {/* Onboarding Encouragement */}
-      <div className="bg-gradient-to-r from-secondary/10 to-primary/10 p-6 rounded-lg text-center">
-        <h3 className="text-lg font-semibold text-foreground mb-2">
-          Start with Your Top 3 Aspirations
-        </h3>
-        <p className="text-muted-foreground">
-          We recommend starting with at least one "retirement" goal, one "experience" goal (travel or family), and one "giving back" goal. This creates a balanced foundation for your aspirational life planning.
-        </p>
+        {/* Onboarding Encouragement */}
+        <div className="bg-card border-2 border-accent/20 p-6 rounded-lg text-center">
+          <h3 className="text-lg font-semibold text-accent mb-2">
+            Start with Your Top 3 Aspirations
+          </h3>
+          <p className="text-muted-foreground">
+            We recommend starting with at least one "retirement" goal, one "experience" goal (travel or family), and one "giving back" goal. This creates a balanced foundation for your aspirational life planning.
+          </p>
+        </div>
       </div>
     </div>
   );

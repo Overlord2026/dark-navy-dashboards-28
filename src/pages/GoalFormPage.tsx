@@ -116,26 +116,27 @@ const GoalFormPage = () => {
   };
 
   return (
-    <div className="container mx-auto p-6 space-y-8">
-      {/* Header */}
-      <div className="flex items-center gap-4">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => navigate('/goals/create')}
-          className="p-2"
-        >
-          <ArrowLeft className="w-4 h-4" />
-        </Button>
-        <div>
-          <h1 className="text-3xl font-bold text-foreground">
-            Create {template?.display_name || 'New Goal'}
-          </h1>
-          <p className="text-lg text-muted-foreground mt-2">
-            {template?.aspirational_prompt || "Define your aspiration and create a plan to achieve it."}
-          </p>
+    <div className="min-h-screen bg-background">
+      <div className="container mx-auto p-6 space-y-8">
+        {/* Header */}
+        <div className="flex items-center gap-4">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate('/goals/create')}
+            className="p-2 text-accent hover:text-foreground hover:bg-accent/10"
+          >
+            <ArrowLeft className="w-4 h-4" />
+          </Button>
+          <div>
+            <h1 className="text-3xl font-bold text-foreground">
+              Create {template?.display_name || 'New Goal'}
+            </h1>
+            <p className="text-lg text-muted-foreground mt-2">
+              {template?.aspirational_prompt || "Define your aspiration and create a plan to achieve it."}
+            </p>
+          </div>
         </div>
-      </div>
 
       <form onSubmit={handleSubmit} className="space-y-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -143,10 +144,10 @@ const GoalFormPage = () => {
           <div className="lg:col-span-2 space-y-6">
             
             {/* Basic Information */}
-            <Card>
+            <Card className="bg-card border-2 border-accent/20">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Target className="w-5 h-5" />
+                <CardTitle className="flex items-center gap-2 text-foreground">
+                  <Target className="w-5 h-5 text-accent" />
                   Goal Details
                 </CardTitle>
                 <CardDescription>
@@ -191,10 +192,10 @@ const GoalFormPage = () => {
             </Card>
 
             {/* Financial Details */}
-            <Card>
+            <Card className="bg-card border-2 border-accent/20">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <DollarSign className="w-5 h-5" />
+                <CardTitle className="flex items-center gap-2 text-foreground">
+                  <DollarSign className="w-5 h-5 text-accent" />
                   Financial Planning
                 </CardTitle>
                 <CardDescription>
@@ -284,10 +285,10 @@ const GoalFormPage = () => {
             </Card>
 
             {/* Experience & Legacy */}
-            <Card>
+            <Card className="bg-card border-2 border-accent/20">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Heart className="w-5 h-5" />
+                <CardTitle className="flex items-center gap-2 text-foreground">
+                  <Heart className="w-5 h-5 text-accent" />
                   Experience Return & Legacy
                 </CardTitle>
                 <CardDescription>
@@ -313,9 +314,9 @@ const GoalFormPage = () => {
           <div className="space-y-6">
             
             {/* Priority */}
-            <Card>
+            <Card className="bg-card border-2 border-accent/20">
               <CardHeader>
-                <CardTitle>Priority Level</CardTitle>
+                <CardTitle className="text-foreground">Priority Level</CardTitle>
                 <CardDescription>
                   How important is this goal to you?
                 </CardDescription>
@@ -349,9 +350,9 @@ const GoalFormPage = () => {
 
             {/* Goal Preview */}
             {formData.name && (
-              <Card>
+              <Card className="bg-card border-2 border-accent/20">
                 <CardHeader>
-                  <CardTitle>Goal Preview</CardTitle>
+                  <CardTitle className="text-foreground">Goal Preview</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div>
@@ -389,11 +390,12 @@ const GoalFormPage = () => {
             )}
 
             {/* Submit Button */}
-            <Card>
+            <Card className="bg-card border-2 border-accent/20">
               <CardContent className="p-4">
                 <Button 
                   type="submit" 
-                  className="w-full"
+                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground border-2 border-accent"
+                  size="lg"
                   disabled={loading || !formData.name || !formData.aspirational_description || formData.target_amount <= 0}
                 >
                   {loading ? 'Creating Goal...' : 'Create Goal'}
@@ -403,6 +405,7 @@ const GoalFormPage = () => {
           </div>
         </div>
       </form>
+      </div>
     </div>
   );
 };
