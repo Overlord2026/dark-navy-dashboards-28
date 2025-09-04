@@ -15,7 +15,7 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
     // Play Linda's welcome message after a short delay
     if ('speechSynthesis' in window && !hasPlayedWelcome) {
       const timer = setTimeout(() => {
-        playLindaWelcome("Hi, I'm Linda. Let's get started in 60 seconds-your secure family hub awaits.")
+        playLindaWelcome("Hi, I'm Linda. Welcome to Your Boutique Family Office. Let's get started in 60 seconds-your secure hub awaits.")
           .then(() => setHasPlayedWelcome(true))
           .catch(error => {
             console.error('Linda voice error:', error);
