@@ -4,10 +4,8 @@ import { Button } from '@/components/ui/button';
 import { GoldButton, GoldOutlineButton, GoldRouterLink, GoldOutlineRouterLink } from '@/components/ui/brandButtons';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRight, Shield, Heart, Wallet, Home, Calculator, Play, Calendar, BookOpen, FileText, TrendingUp, Users, ChevronDown, ChevronRight } from 'lucide-react';
-import VoiceMic from '@/components/voice/VoiceMic';
 import { SilentMuteToggle } from '@/components/voice/SilentMuteToggle';
 import { Link } from 'react-router-dom';
-import { PersonaSubHeader } from '@/components/layout/PersonaSubHeader';
 
 const FamilyRetireePersonaDashboard = () => {
   const [transcript, setTranscript] = useState('');
@@ -192,15 +190,6 @@ const FamilyRetireePersonaDashboard = () => {
         <SilentMuteToggle />
       </div>
       
-      <PersonaSubHeader>
-        <div className="flex items-center justify-between w-full">
-          <div>
-            <h2 className="text-lg font-semibold text-[hsl(var(--luxury-gold))]">Welcome back, Retiree Family</h2>
-            <p className="opacity-90 text-sm text-[hsl(var(--luxury-white))]">Manage your retirement with confidence and clarity</p>
-          </div>
-          <VoiceMic label="Speak" persona="family" autoSummarize onTranscript={setTranscript} onSummary={setSummary} size="sm" />
-        </div>
-      </PersonaSubHeader>
       <div className="container mx-auto px-4 py-8">
         {/* Hero Section - Enhanced but preserved */}
         <div className="text-center max-w-4xl mx-auto mb-12">
