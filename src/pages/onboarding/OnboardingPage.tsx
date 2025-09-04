@@ -18,20 +18,31 @@ export const OnboardingPage: React.FC = () => {
         return;
       }
 
-      // Handle OAuth providers
+      // Handle OAuth providers with proper callback URL
+      console.log(`Initiating ${provider} OAuth with callback URL: https://my.bfocfo.com/auth/callback`);
+      
       const { error } = await supabase.auth.signInWithOAuth({
         provider: provider as any,
         options: {
-          redirectTo: `${window.location.origin}/families`,
+          redirectTo: 'https://my.bfocfo.com/auth/callback',
         },
       });
+      
+      console.log('OAuth request initiated, full URL should be logged by Supabase');
 
       if (error) {
-        toast.error(`Authentication failed: ${error.message}`);
+        console.error(`${provider} OAuth error:`, error);
+        toast.error(`${provider} authentication failed: ${error.message}`);
+        
+        if (error.message.includes('refuse to connect')) {
+          toast.error('Google OAuth configuration issue. Please check Supabase settings.');
+        }
+      } else {
+        console.log(`${provider} OAuth initiated successfully`);
       }
     } catch (error) {
       console.error('Auth error:', error);
-      toast.error('Something went wrong. Please try again.');
+      toast.error(`Something went wrong with ${provider} authentication. Please try again.`);
     } finally {
       setIsLoading(false);
     }

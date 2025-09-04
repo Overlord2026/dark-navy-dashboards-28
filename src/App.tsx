@@ -48,6 +48,7 @@ import { SolutionsLendingPage } from '@/pages/solutions/SolutionsLendingPage';
 import { SolutionsTaxPage } from '@/pages/solutions/SolutionsTaxPage';
 import { SolutionsEstatePage } from '@/pages/solutions/SolutionsEstatePage';
 import { OnboardingPage } from '@/pages/onboarding/OnboardingPage';
+import { AuthCallback } from '@/pages/auth/AuthCallback';
 import { FamilyOnboardingWelcome } from '@/pages/onboarding/FamilyOnboardingWelcome';
 import MainPageOnboarding from '@/pages/onboarding/MainPageOnboarding';
 import { FamilyDashboard } from '@/pages/families/FamilyDashboard';
@@ -664,6 +665,7 @@ function App() {
             {/* New Welcome Flow Routes */}
             <Route path="/welcome" element={<React.Suspense fallback={<div>Loading...</div>}><FamilyWelcomeFlow /></React.Suspense>} />
             <Route path="/auth" element={<React.Suspense fallback={<div>Loading...</div>}><AuthPage /></React.Suspense>} />
+            <Route path="/auth/callback" element={<AuthCallback />} />
             <Route path="/welcome/transition" element={<React.Suspense fallback={<div>Loading...</div>}><WelcomeTransition /></React.Suspense>} />
             <Route path="/nil/education" element={<Education />} />
             <Route path="/nil/search" element={<Search />} />

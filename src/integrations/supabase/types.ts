@@ -9038,6 +9038,45 @@ export type Database = {
           },
         ]
       }
+      compliance_geo_configs: {
+        Row: {
+          additional_requirements: string[] | null
+          county: string | null
+          created_at: string | null
+          exemptions: string[] | null
+          id: string
+          municipality: string | null
+          persona: string
+          special_rules: Json | null
+          state: string
+          updated_at: string | null
+        }
+        Insert: {
+          additional_requirements?: string[] | null
+          county?: string | null
+          created_at?: string | null
+          exemptions?: string[] | null
+          id?: string
+          municipality?: string | null
+          persona: string
+          special_rules?: Json | null
+          state: string
+          updated_at?: string | null
+        }
+        Update: {
+          additional_requirements?: string[] | null
+          county?: string | null
+          created_at?: string | null
+          exemptions?: string[] | null
+          id?: string
+          municipality?: string | null
+          persona?: string
+          special_rules?: Json | null
+          state?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       compliance_incidents: {
         Row: {
           actual_cost: number | null
@@ -9157,6 +9196,96 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      compliance_persona_configs: {
+        Row: {
+          audit_frequency_external_years: number
+          audit_frequency_internal_months: number
+          audit_frequency_regulatory_years: number | null
+          ce_cycle_months: number
+          ce_hours_per_cycle: number
+          county_variances: boolean
+          created_at: string | null
+          ethics_hours: number | null
+          federal_oversight: boolean
+          id: string
+          persona: string
+          premium_advanced_analytics: boolean
+          premium_ai_risk_scoring: boolean
+          premium_custom_reporting: boolean
+          premium_realtime_monitoring: boolean
+          record_retention_audit_years: number
+          record_retention_client_years: number
+          record_retention_communication_years: number
+          record_retention_transaction_years: number
+          regulatory_bodies: string[]
+          requires_state_registration: boolean
+          specialty_requirements: Json | null
+          updated_at: string | null
+          voice_ce_delivery: boolean
+          voice_compliance_alerts: boolean
+          voice_recording_requirements: boolean
+          voice_transcription_mandatory: boolean
+        }
+        Insert: {
+          audit_frequency_external_years?: number
+          audit_frequency_internal_months?: number
+          audit_frequency_regulatory_years?: number | null
+          ce_cycle_months?: number
+          ce_hours_per_cycle?: number
+          county_variances?: boolean
+          created_at?: string | null
+          ethics_hours?: number | null
+          federal_oversight?: boolean
+          id?: string
+          persona: string
+          premium_advanced_analytics?: boolean
+          premium_ai_risk_scoring?: boolean
+          premium_custom_reporting?: boolean
+          premium_realtime_monitoring?: boolean
+          record_retention_audit_years?: number
+          record_retention_client_years?: number
+          record_retention_communication_years?: number
+          record_retention_transaction_years?: number
+          regulatory_bodies?: string[]
+          requires_state_registration?: boolean
+          specialty_requirements?: Json | null
+          updated_at?: string | null
+          voice_ce_delivery?: boolean
+          voice_compliance_alerts?: boolean
+          voice_recording_requirements?: boolean
+          voice_transcription_mandatory?: boolean
+        }
+        Update: {
+          audit_frequency_external_years?: number
+          audit_frequency_internal_months?: number
+          audit_frequency_regulatory_years?: number | null
+          ce_cycle_months?: number
+          ce_hours_per_cycle?: number
+          county_variances?: boolean
+          created_at?: string | null
+          ethics_hours?: number | null
+          federal_oversight?: boolean
+          id?: string
+          persona?: string
+          premium_advanced_analytics?: boolean
+          premium_ai_risk_scoring?: boolean
+          premium_custom_reporting?: boolean
+          premium_realtime_monitoring?: boolean
+          record_retention_audit_years?: number
+          record_retention_client_years?: number
+          record_retention_communication_years?: number
+          record_retention_transaction_years?: number
+          regulatory_bodies?: string[]
+          requires_state_registration?: boolean
+          specialty_requirements?: Json | null
+          updated_at?: string | null
+          voice_ce_delivery?: boolean
+          voice_compliance_alerts?: boolean
+          voice_recording_requirements?: boolean
+          voice_transcription_mandatory?: boolean
+        }
+        Relationships: []
       }
       compliance_profiles: {
         Row: {
@@ -38498,6 +38627,57 @@ export type Database = {
             referencedColumns: ["user_id"]
           },
         ]
+      }
+      voice_ce_sessions: {
+        Row: {
+          completion_percentage: number
+          course_id: string
+          course_name: string
+          created_at: string | null
+          end_time: string | null
+          hours_earned: number
+          id: string
+          interaction_log: Json | null
+          persona: string
+          progress_markers: Json | null
+          start_time: string
+          status: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          completion_percentage?: number
+          course_id: string
+          course_name: string
+          created_at?: string | null
+          end_time?: string | null
+          hours_earned?: number
+          id?: string
+          interaction_log?: Json | null
+          persona: string
+          progress_markers?: Json | null
+          start_time?: string
+          status?: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          completion_percentage?: number
+          course_id?: string
+          course_name?: string
+          created_at?: string | null
+          end_time?: string | null
+          hours_earned?: number
+          id?: string
+          interaction_log?: Json | null
+          persona?: string
+          progress_markers?: Json | null
+          start_time?: string
+          status?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
       }
       voicemails: {
         Row: {
