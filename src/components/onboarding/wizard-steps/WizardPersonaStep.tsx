@@ -4,12 +4,15 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { TrendingUp, Target } from 'lucide-react';
 
+import { useNavigate } from 'react-router-dom';
+
 interface WizardPersonaStepProps {
   onSelect: (persona: 'aspiring' | 'retiree') => void;
   currentPersona: 'aspiring' | 'retiree';
 }
 
 export function WizardPersonaStep({ onSelect, currentPersona }: WizardPersonaStepProps) {
+  const navigate = useNavigate();
   const personas = [
     {
       id: 'aspiring' as const,
@@ -87,6 +90,7 @@ export function WizardPersonaStep({ onSelect, currentPersona }: WizardPersonaSte
                   onClick={(e) => {
                     e.stopPropagation();
                     onSelect(persona.id);
+                    navigate(`/build-workspace?persona=${persona.id}`);
                   }}
                 >
                   Choose {persona.title}

@@ -1,0 +1,351 @@
+import React, { useState } from 'react';
+import { useSearchParams, Link } from 'react-router-dom';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { 
+  Target, 
+  Wallet, 
+  TrendingUp, 
+  CreditCard, 
+  Home, 
+  Calculator, 
+  FileText, 
+  Shield, 
+  Crown, 
+  ArrowRight,
+  CheckCircle,
+  Lock
+} from 'lucide-react';
+
+const BuildWorkspacePage = () => {
+  const [searchParams] = useSearchParams();
+  const persona = searchParams.get('persona') || 'aspiring';
+  const [selectedTier, setSelectedTier] = useState<string>('');
+
+  // Core features available to all users
+  const coreFeatures = [
+    {
+      title: 'Goals',
+      description: 'Set and track financial goals',
+      icon: Target,
+      href: '/goals',
+      available: true
+    },
+    {
+      title: 'Budget',
+      description: 'Monthly budget planning',
+      icon: Wallet,
+      href: '/budget',
+      available: true
+    },
+    {
+      title: 'Cash Flow',
+      description: 'Track income and expenses',
+      icon: TrendingUp,
+      href: '/cash-flow',
+      available: true
+    },
+    {
+      title: 'Transactions',
+      description: 'View and categorize transactions',
+      icon: CreditCard,
+      href: '/transactions',
+      available: true
+    }
+  ];
+
+  // Premium tools requiring subscription
+  const premiumTools = [
+    {
+      title: 'Wealth Wall',
+      description: 'Complete net worth visualization and asset tracking',
+      icon: Shield,
+      tier: 'Premium',
+      price: '$29/month'
+    },
+    {
+      title: 'Retirement Roadmap',
+      description: 'Advanced retirement planning with scenario modeling',
+      icon: Home,
+      tier: 'Premium',
+      price: '$29/month'
+    },
+    {
+      title: 'Tax Planner',
+      description: 'Tax optimization strategies and planning tools',
+      icon: Calculator,
+      tier: 'Pro',
+      price: '$59/month'
+    },
+    {
+      title: 'Estate Organizer',
+      description: 'Estate planning documents and beneficiary management',
+      icon: FileText,
+      tier: 'Pro',
+      price: '$59/month'
+    }
+  ];
+
+  const pricingTiers = [
+    {
+      name: 'Basic',
+      price: 'Free',
+      description: 'Essential financial tracking',
+      features: ['Goals & Budget', 'Cash Flow Tracking', 'Transaction Management', 'Basic Reports'],
+      current: true
+    },
+    {
+      name: 'Premium',
+      price: '$29',
+      period: '/month',
+      description: 'Advanced wealth management',
+      features: ['Everything in Basic', 'Wealth Wall', 'Retirement Roadmap', 'Investment Tracking', 'Advanced Analytics'],
+      popular: true
+    },
+    {
+      name: 'Pro',
+      price: '$59',
+      period: '/month',
+      description: 'Complete financial planning',
+      features: ['Everything in Premium', 'Tax Planning Tools', 'Estate Organization', 'Professional Collaboration', 'Priority Support'],
+      enterprise: true
+    }
+  ];
+
+  const personaConfig = {
+    aspiring: {
+      title: 'Building Wealth Dashboard',
+      subtitle: 'Start your journey to financial independence',
+      primaryAction: 'Start Building Wealth',
+      href: '/families/aspiring'
+    },
+    retiree: {
+      title: 'Retirement Management Dashboard', 
+      subtitle: 'Secure and optimize your golden years',
+      primaryAction: 'Manage Retirement',
+      href: '/families/retirees'
+    }
+  };
+
+  const config = personaConfig[persona as keyof typeof personaConfig] || personaConfig.aspiring;
+
+  const AppSidebar = () => (
+    <div className="w-64 bg-[hsl(var(--luxury-navy))] border-r border-[hsl(var(--luxury-gold))]/30 h-full">
+      <div className="p-4">
+        <div className="mb-6">
+          <h3 className="text-[hsl(var(--luxury-gold))] font-semibold px-3 py-2 text-sm uppercase tracking-wide">
+            Core Features
+          </h3>
+          <div className="space-y-1">
+            {coreFeatures.map((feature) => (
+              <div key={feature.title} className="flex items-center gap-3 p-3 rounded-lg text-[hsl(var(--luxury-white))] hover:bg-[hsl(var(--luxury-gold))]/20 hover:text-[hsl(var(--luxury-gold))] transition-colors">
+                <feature.icon className="h-4 w-4 flex-shrink-0" />
+                <span className="text-sm font-medium">{feature.title}</span>
+                <CheckCircle className="h-3 w-3 ml-auto text-green-400 flex-shrink-0" />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <h3 className="text-[hsl(var(--luxury-gold))] font-semibold px-3 py-2 text-sm uppercase tracking-wide flex items-center gap-2">
+            <Crown className="h-4 w-4" />
+            Premium Tools
+          </h3>
+          <div className="space-y-1">
+            {premiumTools.map((tool) => (
+              <div key={tool.title} className="flex items-center gap-3 p-3 rounded-lg text-[hsl(var(--luxury-white))]/60 hover:bg-[hsl(var(--luxury-purple))]/20 cursor-not-allowed">
+                <tool.icon className="h-4 w-4 opacity-60 flex-shrink-0" />
+                <span className="text-sm opacity-60">{tool.title}</span>
+                <Lock className="h-3 w-3 ml-auto opacity-60 flex-shrink-0" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="min-h-screen bg-[hsl(var(--luxury-navy))]">
+      <div className="flex w-full min-h-screen">
+        <AppSidebar />
+          
+          <main className="flex-1 p-8">
+            {/* Header */}
+            <div className="mb-8">
+              <Badge className="mb-4 bg-[hsl(var(--luxury-gold))] text-[hsl(var(--luxury-navy))] font-semibold">
+                {persona === 'aspiring' ? 'Aspiring Families' : 'Retiree Families'}
+              </Badge>
+              <h1 className="text-4xl font-bold text-[hsl(var(--luxury-white))] mb-2">
+                {config.title}
+              </h1>
+              <p className="text-[hsl(var(--luxury-white))]/80 text-lg mb-6">
+                {config.subtitle}
+              </p>
+              
+              <div className="flex gap-4">
+                <Button 
+                  asChild
+                  className="bg-[hsl(var(--luxury-gold))] text-[hsl(var(--luxury-navy))] hover:bg-[hsl(var(--luxury-gold))]/90 font-semibold px-6 py-3"
+                >
+                  <Link to={config.href}>
+                    {config.primaryAction}
+                    <ArrowRight className="h-4 w-4 ml-2" />
+                  </Link>
+                </Button>
+                <Button 
+                  variant="outline"
+                  className="border-[hsl(var(--luxury-gold))] text-[hsl(var(--luxury-gold))] hover:bg-[hsl(var(--luxury-gold))]/10"
+                >
+                  Take a Tour
+                </Button>
+              </div>
+            </div>
+
+            {/* Dashboard Preview */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-12">
+              <Card className="bg-[hsl(var(--luxury-navy))] border border-[hsl(var(--luxury-gold))]/30">
+                <CardHeader>
+                  <CardTitle className="text-[hsl(var(--luxury-white))] flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5 text-green-400" />
+                    Available Now
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-[hsl(var(--luxury-white))]/80 mb-4">
+                    Start with these essential financial management tools included in your free account.
+                  </p>
+                  <div className="space-y-2">
+                    {coreFeatures.map((feature) => (
+                      <div key={feature.title} className="flex items-center gap-3 p-2 rounded-lg hover:bg-[hsl(var(--luxury-gold))]/10 transition-colors">
+                        <feature.icon className="h-4 w-4 text-[hsl(var(--luxury-gold))]" />
+                        <span className="text-[hsl(var(--luxury-white))] font-medium">{feature.title}</span>
+                        <CheckCircle className="h-3 w-3 text-green-400 ml-auto" />
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-gradient-to-br from-[hsl(var(--luxury-purple))]/20 to-[hsl(var(--luxury-navy))] border-2 border-[hsl(var(--luxury-gold))]">
+                <CardHeader>
+                  <CardTitle className="text-[hsl(var(--luxury-white))] flex items-center gap-2">
+                    <Crown className="h-5 w-5 text-[hsl(var(--luxury-gold))]" />
+                    Upgrade for Full Access
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-[hsl(var(--luxury-white))]/80 mb-4">
+                    Unlock advanced wealth management and planning tools with a Premium or Pro subscription.
+                  </p>
+                  <div className="space-y-2">
+                    {premiumTools.slice(0, 2).map((tool) => (
+                      <div key={tool.title} className="flex items-center gap-3 p-2 rounded-lg bg-[hsl(var(--luxury-gold))]/10">
+                        <tool.icon className="h-4 w-4 text-[hsl(var(--luxury-gold))]" />
+                        <span className="text-[hsl(var(--luxury-white))] font-medium">{tool.title}</span>
+                        <Badge className="ml-auto bg-[hsl(var(--luxury-purple))] text-white text-xs">
+                          {tool.tier}
+                        </Badge>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Premium Tools Grid */}
+            <div className="mb-12">
+              <h2 className="text-2xl font-bold text-[hsl(var(--luxury-white))] mb-6">Premium Tools</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {premiumTools.map((tool) => (
+                  <Card key={tool.title} className="bg-[hsl(var(--luxury-navy))] border-2 border-[hsl(var(--luxury-gold))]/50 hover:border-[hsl(var(--luxury-gold))] transition-all duration-300 hover:shadow-[0_8px_32px_rgba(212,175,55,0.3)]">
+                    <CardHeader>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className="p-3 rounded-xl bg-[hsl(var(--luxury-gold))]/20 border border-[hsl(var(--luxury-gold))]/30">
+                            <tool.icon className="h-6 w-6 text-[hsl(var(--luxury-gold))]" />
+                          </div>
+                          <div>
+                            <CardTitle className="text-[hsl(var(--luxury-white))] text-lg">{tool.title}</CardTitle>
+                            <Badge className={`text-xs mt-1 ${tool.tier === 'Pro' ? 'bg-[hsl(var(--luxury-purple))]' : 'bg-[hsl(var(--luxury-gold))] text-[hsl(var(--luxury-navy))]'}`}>
+                              {tool.tier} - {tool.price}
+                            </Badge>
+                          </div>
+                        </div>
+                        <Lock className="h-4 w-4 text-[hsl(var(--luxury-white))]/60" />
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-[hsl(var(--luxury-white))]/80 mb-4">{tool.description}</p>
+                      <Button 
+                        className="w-full bg-transparent border border-[hsl(var(--luxury-gold))] text-[hsl(var(--luxury-gold))] hover:bg-[hsl(var(--luxury-gold))] hover:text-[hsl(var(--luxury-navy))] transition-all duration-300"
+                        onClick={() => setSelectedTier(tool.tier)}
+                      >
+                        Subscribe to {tool.tier}
+                      </Button>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+
+            {/* Pricing Tiers */}
+            <div className="mb-8">
+              <h2 className="text-2xl font-bold text-[hsl(var(--luxury-white))] mb-6 text-center">Choose Your Plan</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {pricingTiers.map((tier) => (
+                  <Card key={tier.name} className={`relative bg-[hsl(var(--luxury-navy))] transition-all duration-300 hover:scale-105 ${
+                    tier.popular 
+                      ? 'border-2 border-[hsl(var(--luxury-gold))] shadow-[0_8px_32px_rgba(212,175,55,0.3)]' 
+                      : 'border border-[hsl(var(--luxury-gold))]/30 hover:border-[hsl(var(--luxury-gold))]/60'
+                  }`}>
+                    {tier.popular && (
+                      <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                        <Badge className="bg-[hsl(var(--luxury-gold))] text-[hsl(var(--luxury-navy))] font-bold px-4">
+                          Most Popular
+                        </Badge>
+                      </div>
+                    )}
+                    <CardHeader className="text-center">
+                      <CardTitle className="text-[hsl(var(--luxury-white))] text-xl">{tier.name}</CardTitle>
+                      <div className="text-3xl font-bold text-[hsl(var(--luxury-gold))]">
+                        {tier.price}
+                        {tier.period && <span className="text-lg text-[hsl(var(--luxury-white))]/60">{tier.period}</span>}
+                      </div>
+                      <p className="text-[hsl(var(--luxury-white))]/70">{tier.description}</p>
+                    </CardHeader>
+                    <CardContent>
+                      <ul className="space-y-3 mb-6">
+                        {tier.features.map((feature, index) => (
+                          <li key={index} className="flex items-center gap-3">
+                            <CheckCircle className="h-4 w-4 text-green-400 flex-shrink-0" />
+                            <span className="text-[hsl(var(--luxury-white))]/90">{feature}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <Button 
+                        className={`w-full transition-all duration-300 ${
+                          tier.current
+                            ? 'bg-[hsl(var(--luxury-white))]/20 text-[hsl(var(--luxury-white))] cursor-default'
+                            : tier.popular
+                            ? 'bg-[hsl(var(--luxury-gold))] text-[hsl(var(--luxury-navy))] hover:bg-[hsl(var(--luxury-gold))]/90 font-semibold'
+                            : 'bg-transparent border border-[hsl(var(--luxury-gold))] text-[hsl(var(--luxury-gold))] hover:bg-[hsl(var(--luxury-gold))] hover:text-[hsl(var(--luxury-navy))]'
+                        }`}
+                        disabled={tier.current}
+                      >
+                        {tier.current ? 'Current Plan' : `Choose ${tier.name}`}
+                      </Button>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+    );
+  };
+
+export default BuildWorkspacePage;

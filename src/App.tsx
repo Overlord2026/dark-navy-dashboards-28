@@ -156,6 +156,7 @@ import AccountantPersonaDashboard from '@/pages/personas/AccountantPersonaDashbo
 import AttorneyPersonaDashboard from '@/pages/personas/AttorneyPersonaDashboard';
 import FamilyRetireePersonaDashboard from '@/pages/personas/FamilyRetireePersonaDashboard';
 import FamilyAspiringPersonaDashboard from '@/pages/personas/FamilyAspiringPersonaDashboard';
+import BuildWorkspacePage from '@/pages/onboarding/BuildWorkspacePage';
 import Advisors from '@/pages/personas/Advisors';
 import Insurance from '@/pages/personas/Insurance';
 import DemoPersona from '@/pages/learn/DemoPersona';
@@ -412,6 +413,7 @@ function App() {
             } />
             
             {/* Persona sub-routes */}
+            <Route path="/build-workspace" element={<BuildWorkspacePage />} />
             <Route path="/families/retirees" element={<FamilyRetireePersonaDashboard />} />
             <Route path="/families/aspiring" element={<FamilyAspiringPersonaDashboard />} />
             <Route path="/pros/advisor" element={<AdvisorPersonaDashboard />} />

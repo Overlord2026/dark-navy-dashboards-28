@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { TrendingUp, Target, Users, Clock } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface PersonaSelectionProps {
   onSelect: (persona: 'aspiring' | 'retiree') => void;
@@ -11,6 +12,7 @@ interface PersonaSelectionProps {
 }
 
 export function PersonaSelection({ onSelect, currentPersona, isLoading }: PersonaSelectionProps) {
+  const navigate = useNavigate();
   const personas = [
     {
       id: 'aspiring' as const,
@@ -108,6 +110,7 @@ export function PersonaSelection({ onSelect, currentPersona, isLoading }: Person
                   onClick={(e) => {
                     e.stopPropagation();
                     onSelect(persona.id);
+                    navigate(`/build-workspace?persona=${persona.id}`);
                   }}
                 >
                   {isLoading && isSelected ? 'Setting up...' : `Choose ${persona.title}`}
