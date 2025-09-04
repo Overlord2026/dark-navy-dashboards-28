@@ -43,7 +43,7 @@ export function SolutionsInsurancePage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-bfo-navy">
       <SEOHead
         title="Insurance Solutions - Life, Health & Long-Term Care Planning"
         description="Comprehensive insurance planning tools including life needs analysis, Medicare comparison, and long-term care planning with fiduciary guidance."
@@ -51,19 +51,19 @@ export function SolutionsInsurancePage() {
       />
       
       {/* Hero Section */}
-      <section className="py-16 bg-gradient-to-br from-blue-50 via-background to-green-50 dark:from-blue-950/20 dark:via-background dark:to-green-950/20">
+      <section className="py-16 bg-bfo-navy">
         <div className="container mx-auto px-4">
           <div className="text-center max-w-4xl mx-auto">
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">
+            <h1 className="text-4xl md:text-5xl font-bold mb-6 text-white">
               Insurance Made Smart
             </h1>
-            <p className="text-xl text-muted-foreground mb-8">
+            <p className="text-xl text-white/80 mb-8">
               Protect what matters most with intelligent analysis, right-sizing tools, and transparent guidance.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               {PUBLIC_CONFIG.DEMOS_ENABLED && (
-                <Button size="lg" onClick={handleDemo} className="flex items-center gap-2">
+                <Button size="lg" onClick={handleDemo} className="flex items-center gap-2 bg-bfo-gold text-black hover:bg-bfo-gold/90">
                   <Play className="w-5 h-5" />
                   See 60-Second Demo
                 </Button>
@@ -85,19 +85,19 @@ export function SolutionsInsurancePage() {
       <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Coverage Areas</h2>
-            <p className="text-lg text-muted-foreground">
+            <h2 className="text-3xl font-bold mb-4 text-white">Coverage Areas</h2>
+            <p className="text-lg text-white/80">
               Complete protection across all major insurance categories
             </p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {insuranceTypes.map((item) => (
-              <Card key={item.type} className="text-center">
+              <Card key={item.type} className="text-center bg-[hsl(210_65%_13%)] border-4 border-bfo-gold shadow-lg shadow-bfo-gold/20">
                 <CardHeader>
-                  <item.icon className="w-12 h-12 mx-auto text-primary mb-4" />
-                  <CardTitle className="text-lg">{item.type}</CardTitle>
-                  <CardDescription>{item.description}</CardDescription>
+                  <item.icon className="w-12 h-12 mx-auto text-bfo-gold mb-4" />
+                  <CardTitle className="text-lg text-white">{item.type}</CardTitle>
+                  <CardDescription className="text-white/70">{item.description}</CardDescription>
                 </CardHeader>
               </Card>
             ))}
@@ -106,11 +106,11 @@ export function SolutionsInsurancePage() {
       </section>
 
       {/* Tools Section */}
-      <section className="py-16 bg-muted/30">
+      <section className="py-16 bg-bfo-navy/50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Insurance Tools</h2>
-            <p className="text-lg text-muted-foreground">
+            <h2 className="text-3xl font-bold mb-4 text-white">Insurance Tools</h2>
+            <p className="text-lg text-white/80">
               Professional-grade tools for smart insurance decisions
             </p>
           </div>
@@ -120,23 +120,23 @@ export function SolutionsInsurancePage() {
               <ToolGate key={tool.key} toolKey={tool.key}>
                 {({onClick}) => (
                   <Card 
-                    className="group hover:shadow-lg transition-all duration-200 cursor-pointer h-full flex flex-col"
+                    className="group hover:shadow-lg transition-all duration-200 cursor-pointer h-full flex flex-col bg-[hsl(210_65%_13%)] border-4 border-bfo-gold shadow-lg shadow-bfo-gold/20"
                     onClick={onClick}
                     data-tool-card={tool.key}
                   >
                     <CardHeader>
                       <div className="flex items-center gap-2 mb-2">
-                        <CardTitle className="text-lg">{tool.label}</CardTitle>
+                        <CardTitle className="text-lg text-white">{tool.label}</CardTitle>
                         <Badge variant={tool.status === 'ready' ? 'default' : 'secondary'}>
                           {tool.status === 'ready' ? 'Ready' : 'Coming Soon'}
                         </Badge>
                       </div>
-                      <CardDescription className="flex-1">
+                      <CardDescription className="flex-1 text-white/70">
                         {tool.summary}
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="mt-auto">
-                      <Button variant="outline" className="w-full">
+                      <Button variant="outline" className="w-full border-bfo-gold text-bfo-gold hover:bg-bfo-gold hover:text-black">
                         {tool.status === 'ready' ? 'Open Tool' : 'Preview'}
                       </Button>
                     </CardContent>

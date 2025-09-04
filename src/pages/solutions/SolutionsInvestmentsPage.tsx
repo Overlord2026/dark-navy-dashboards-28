@@ -40,7 +40,7 @@ export function SolutionsInvestmentsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-bfo-navy">
       <SEOHead
         title="Investment Solutions - Portfolio Management & Private Markets Access"
         description="Professional investment tools including retirement planning, portfolio optimization, and exclusive private market opportunities for sophisticated investors."
@@ -48,19 +48,19 @@ export function SolutionsInvestmentsPage() {
       />
       
       {/* Hero Section */}
-      <section className="py-16 bg-gradient-to-br from-blue-50 via-background to-purple-50 dark:from-blue-950/20 dark:via-background dark:to-purple-950/20">
+      <section className="py-16 bg-bfo-navy">
         <div className="container mx-auto px-4">
           <div className="text-center max-w-4xl mx-auto">
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">
+            <h1 className="text-4xl md:text-5xl font-bold mb-6 text-white">
               Investment Excellence
             </h1>
-            <p className="text-xl text-muted-foreground mb-8">
+            <p className="text-xl text-white/80 mb-8">
               Build and preserve wealth with professional-grade investment tools and exclusive access to private markets.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               {PUBLIC_CONFIG.DEMOS_ENABLED && (
-                <Button size="lg" onClick={handleDemo} className="flex items-center gap-2">
+                <Button size="lg" onClick={handleDemo} className="flex items-center gap-2 bg-bfo-gold text-black hover:bg-bfo-gold/90">
                   <Play className="w-5 h-5" />
                   See 60-Second Demo
                 </Button>
@@ -89,8 +89,8 @@ export function SolutionsInvestmentsPage() {
             
             <TabsContent value="core" className="mt-8">
               <div className="text-center mb-8">
-                <h2 className="text-2xl font-bold mb-4">Core Investment Tools</h2>
-                <p className="text-muted-foreground">
+                <h2 className="text-2xl font-bold mb-4 text-white">Core Investment Tools</h2>
+                <p className="text-white/80">
                   Essential tools for retirement planning and portfolio management
                 </p>
               </div>
@@ -100,23 +100,23 @@ export function SolutionsInvestmentsPage() {
                   <ToolGate key={tool.key} toolKey={tool.key}>
                     {({onClick}) => (
                       <Card 
-                        className="group hover:shadow-lg transition-all duration-200 cursor-pointer h-full flex flex-col"
+                        className="group hover:shadow-lg transition-all duration-200 cursor-pointer h-full flex flex-col bg-[hsl(210_65%_13%)] border-4 border-bfo-gold shadow-lg shadow-bfo-gold/20"
                         onClick={onClick}
                         data-tool-card={tool.key}
                       >
                         <CardHeader>
                           <div className="flex items-center gap-2 mb-2">
-                            <CardTitle className="text-lg">{tool.label}</CardTitle>
+                            <CardTitle className="text-lg text-white">{tool.label}</CardTitle>
                             <Badge variant={tool.status === 'ready' ? 'default' : 'secondary'}>
                               {tool.status === 'ready' ? 'Ready' : 'Coming Soon'}
                             </Badge>
                           </div>
-                          <CardDescription className="flex-1">
+                          <CardDescription className="flex-1 text-white/70">
                             {tool.summary}
                           </CardDescription>
                         </CardHeader>
                         <CardContent className="mt-auto">
-                          <Button variant="outline" className="w-full">
+                          <Button variant="outline" className="w-full border-bfo-gold text-bfo-gold hover:bg-bfo-gold hover:text-black">
                             {tool.status === 'ready' ? 'Open Tool' : 'Preview'}
                           </Button>
                         </CardContent>
@@ -129,18 +129,18 @@ export function SolutionsInvestmentsPage() {
             
             <TabsContent value="private" className="mt-8">
               <div className="text-center mb-8">
-                <h2 className="text-2xl font-bold mb-4 flex items-center justify-center gap-2">
-                  <Diamond className="w-6 h-6 text-primary" />
+                <h2 className="text-2xl font-bold mb-4 flex items-center justify-center gap-2 text-white">
+                  <Diamond className="w-6 h-6 text-bfo-gold" />
                   Private Markets Access
                 </h2>
-                <p className="text-muted-foreground">
+                <p className="text-white/80">
                   Exclusive investment opportunities previously reserved for institutional investors
                 </p>
               </div>
 
-              <Alert className="mb-8 border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-950/20">
-                <AlertTriangle className="h-4 w-4" />
-                <AlertDescription>
+              <Alert className="mb-8 border-bfo-gold/30 bg-bfo-gold/10">
+                <AlertTriangle className="h-4 w-4 text-bfo-gold" />
+                <AlertDescription className="text-bfo-gold">
                   Private investments involve significant risks and are suitable only for sophisticated investors. 
                   All investments are subject to loss and past performance does not guarantee future results.
                 </AlertDescription>
@@ -151,22 +151,22 @@ export function SolutionsInvestmentsPage() {
                   <ToolGate key={tool.key} toolKey={tool.key}>
                     {({onClick}) => (
                       <Card 
-                        className="group hover:shadow-lg transition-all duration-200 cursor-pointer h-full flex flex-col border-primary/20"
+                        className="group hover:shadow-lg transition-all duration-200 cursor-pointer h-full flex flex-col bg-[hsl(210_65%_13%)] border-4 border-bfo-gold shadow-lg shadow-bfo-gold/20"
                         onClick={onClick}
                         data-tool-card={tool.key}
                       >
                         <CardHeader>
                           <div className="flex items-center gap-2 mb-2">
-                            <Diamond className="w-5 h-5 text-primary" />
-                            <CardTitle className="text-lg">{tool.label}</CardTitle>
+                            <Diamond className="w-5 h-5 text-bfo-gold" />
+                            <CardTitle className="text-lg text-white">{tool.label}</CardTitle>
                             <Badge variant="default">Premium</Badge>
                           </div>
-                          <CardDescription className="flex-1">
+                          <CardDescription className="flex-1 text-white/70">
                             {tool.summary}
                           </CardDescription>
                         </CardHeader>
                         <CardContent className="mt-auto">
-                          <Button className="w-full">
+                          <Button className="w-full bg-bfo-gold text-black hover:bg-bfo-gold/90">
                             Access Private Markets
                           </Button>
                         </CardContent>
@@ -176,20 +176,20 @@ export function SolutionsInvestmentsPage() {
                 ))}
               </div>
 
-              <div className="bg-gradient-to-r from-primary/10 to-accent/10 rounded-2xl p-8">
-                <h3 className="text-xl font-bold mb-4 text-center">Private Market Categories</h3>
+              <div className="bg-bfo-gold/10 border border-bfo-gold/30 rounded-2xl p-8">
+                <h3 className="text-xl font-bold mb-4 text-center text-white">Private Market Categories</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div className="text-center">
-                    <h4 className="font-semibold mb-2">Real Estate</h4>
-                    <p className="text-sm text-muted-foreground">Commercial properties, REITs, and development projects</p>
+                    <h4 className="font-semibold mb-2 text-white">Real Estate</h4>
+                    <p className="text-sm text-white/70">Commercial properties, REITs, and development projects</p>
                   </div>
                   <div className="text-center">
-                    <h4 className="font-semibold mb-2">Private Equity</h4>
-                    <p className="text-sm text-muted-foreground">Growth companies and buyout opportunities</p>
+                    <h4 className="font-semibold mb-2 text-white">Private Equity</h4>
+                    <p className="text-sm text-white/70">Growth companies and buyout opportunities</p>
                   </div>
                   <div className="text-center">
-                    <h4 className="font-semibold mb-2">Alternative Funds</h4>
-                    <p className="text-sm text-muted-foreground">Hedge funds, commodities, and structured products</p>
+                    <h4 className="font-semibold mb-2 text-white">Alternative Funds</h4>
+                    <p className="text-sm text-white/70">Hedge funds, commodities, and structured products</p>
                   </div>
                 </div>
               </div>
@@ -199,35 +199,35 @@ export function SolutionsInvestmentsPage() {
       </section>
 
       {/* Value Proposition */}
-      <section className="py-16 bg-muted/30">
+      <section className="py-16 bg-bfo-navy/50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Why Choose Our Investment Platform</h2>
+            <h2 className="text-3xl font-bold mb-4 text-white">Why Choose Our Investment Platform</h2>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             <div className="text-center">
-              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Shield className="w-8 h-8 text-primary" />
+              <div className="w-16 h-16 bg-bfo-gold/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Shield className="w-8 h-8 text-bfo-gold" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">Fiduciary Standard</h3>
-              <p className="text-muted-foreground">All recommendations are made in your best interest</p>
+              <h3 className="text-xl font-semibold mb-2 text-white">Fiduciary Standard</h3>
+              <p className="text-white/70">All recommendations are made in your best interest</p>
             </div>
             
             <div className="text-center">
-              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Calculator className="w-8 h-8 text-primary" />
+              <div className="w-16 h-16 bg-bfo-gold/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Calculator className="w-8 h-8 text-bfo-gold" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">Transparent Analysis</h3>
-              <p className="text-muted-foreground">Clear calculations and performance tracking</p>
+              <h3 className="text-xl font-semibold mb-2 text-white">Transparent Analysis</h3>
+              <p className="text-white/70">Clear calculations and performance tracking</p>
             </div>
             
             <div className="text-center">
-              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Star className="w-8 h-8 text-primary" />
+              <div className="w-16 h-16 bg-bfo-gold/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Star className="w-8 h-8 text-bfo-gold" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">Exclusive Access</h3>
-              <p className="text-muted-foreground">Private market opportunities not available elsewhere</p>
+              <h3 className="text-xl font-semibold mb-2 text-white">Exclusive Access</h3>
+              <p className="text-white/70">Private market opportunities not available elsewhere</p>
             </div>
           </div>
         </div>

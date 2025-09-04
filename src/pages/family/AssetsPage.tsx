@@ -97,13 +97,14 @@ export function AssetsPage() {
   }
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
+    <div className="min-h-screen bg-bfo-navy">
+      <div className="container mx-auto p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Asset Registry</h1>
-          <p className="text-muted-foreground">High Net Worth Assets & Coverage</p>
+          <h1 className="text-2xl font-bold text-white">Asset Registry</h1>
+          <p className="text-white/70">High Net Worth Assets & Coverage</p>
         </div>
-        <Button onClick={() => navigate('/family/assets/new')}>
+        <Button onClick={() => navigate('/family/assets/new')} className="bg-bfo-gold text-black hover:bg-bfo-gold/90">
           <Plus className="h-4 w-4 mr-2" />
           Add Asset
         </Button>
@@ -112,48 +113,48 @@ export function AssetsPage() {
       {/* Summary Cards */}
       {summary && (
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Card>
+          <Card className="bg-[hsl(210_65%_13%)] border-4 border-bfo-gold shadow-lg shadow-bfo-gold/20">
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">Total Assets</p>
-                  <p className="text-2xl font-bold">{summary.total_assets}</p>
+                  <p className="text-sm font-medium text-white/70">Total Assets</p>
+                  <p className="text-2xl font-bold text-white">{summary.total_assets}</p>
                 </div>
-                <Shield className="h-8 w-8 text-primary" />
+                <Shield className="h-8 w-8 text-bfo-gold" />
               </div>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-[hsl(210_65%_13%)] border-4 border-bfo-gold shadow-lg shadow-bfo-gold/20">
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">Portfolio Value</p>
-                  <p className="text-2xl font-bold">{summary.total_value_band}</p>
+                  <p className="text-sm font-medium text-white/70">Portfolio Value</p>
+                  <p className="text-2xl font-bold text-white">{summary.total_value_band}</p>
                 </div>
                 <TrendingUp className="h-8 w-8 text-green-500" />
               </div>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-[hsl(210_65%_13%)] border-4 border-bfo-gold shadow-lg shadow-bfo-gold/20">
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">Reminders</p>
-                  <p className="text-2xl font-bold">{reminders?.upcoming_count || 0}</p>
+                  <p className="text-sm font-medium text-white/70">Reminders</p>
+                  <p className="text-2xl font-bold text-white">{reminders?.upcoming_count || 0}</p>
                 </div>
                 <Calendar className="h-8 w-8 text-blue-500" />
               </div>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-[hsl(210_65%_13%)] border-4 border-bfo-gold shadow-lg shadow-bfo-gold/20">
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">Action Items</p>
-                  <p className="text-2xl font-bold">{summary.pending_advice}</p>
+                  <p className="text-sm font-medium text-white/70">Action Items</p>
+                  <p className="text-2xl font-bold text-white">{summary.pending_advice}</p>
                 </div>
                 <AlertTriangle className="h-8 w-8 text-orange-500" />
               </div>
@@ -195,14 +196,14 @@ export function AssetsPage() {
               return (
                 <Card 
                   key={asset.id} 
-                  className="cursor-pointer hover:shadow-md transition-shadow"
+                  className="cursor-pointer hover:shadow-md transition-shadow bg-[hsl(210_65%_13%)] border-4 border-bfo-gold shadow-lg shadow-bfo-gold/20"
                   onClick={() => navigate(`/family/assets/${asset.id}`)}
                 >
                   <CardHeader className="pb-3">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <Icon className="h-5 w-5 text-primary" />
-                        <CardTitle className="text-lg">{asset.asset_name}</CardTitle>
+                        <Icon className="h-5 w-5 text-bfo-gold" />
+                        <CardTitle className="text-lg text-white">{asset.asset_name}</CardTitle>
                       </div>
                       <Badge variant={getStatusColor(asset.status)}>
                         {asset.status}
@@ -212,25 +213,25 @@ export function AssetsPage() {
                   <CardContent>
                     <div className="space-y-2">
                       <div className="flex justify-between text-sm">
-                        <span className="text-muted-foreground">Type:</span>
-                        <span>{getAssetTypeDisplay(asset.asset_type)}</span>
+                        <span className="text-white/70">Type:</span>
+                        <span className="text-white">{getAssetTypeDisplay(asset.asset_type)}</span>
                       </div>
                       {asset.current_value_band && (
                         <div className="flex justify-between text-sm">
-                          <span className="text-muted-foreground">Value:</span>
-                          <span>{getValueBandDisplay(asset.current_value_band)}</span>
+                          <span className="text-white/70">Value:</span>
+                          <span className="text-white">{getValueBandDisplay(asset.current_value_band)}</span>
                         </div>
                       )}
                       {asset.location_zip_first3 && (
                         <div className="flex justify-between text-sm">
-                          <span className="text-muted-foreground">Location:</span>
-                          <span>{asset.location_zip_first3}XX</span>
+                          <span className="text-white/70">Location:</span>
+                          <span className="text-white">{asset.location_zip_first3}XX</span>
                         </div>
                       )}
                       {asset.next_appraisal_due && (
                         <div className="flex justify-between text-sm">
-                          <span className="text-muted-foreground">Next Appraisal:</span>
-                          <span>{new Date(asset.next_appraisal_due).toLocaleDateString()}</span>
+                          <span className="text-white/70">Next Appraisal:</span>
+                          <span className="text-white">{new Date(asset.next_appraisal_due).toLocaleDateString()}</span>
                         </div>
                       )}
                     </div>
@@ -241,14 +242,14 @@ export function AssetsPage() {
           </div>
 
           {assets.length === 0 && (
-            <Card>
+            <Card className="bg-[hsl(210_65%_13%)] border-4 border-bfo-gold shadow-lg shadow-bfo-gold/20">
               <CardContent className="text-center py-12">
-                <Shield className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                <h3 className="text-lg font-semibold mb-2">No Assets Found</h3>
-                <p className="text-muted-foreground mb-4">
+                <Shield className="h-12 w-12 mx-auto mb-4 text-bfo-gold" />
+                <h3 className="text-lg font-semibold mb-2 text-white">No Assets Found</h3>
+                <p className="text-white/70 mb-4">
                   Start building your asset registry by adding your first high-value asset.
                 </p>
-                <Button onClick={() => navigate('/family/assets/new')}>
+                <Button onClick={() => navigate('/family/assets/new')} className="bg-bfo-gold text-black hover:bg-bfo-gold/90">
                   <Plus className="h-4 w-4 mr-2" />
                   Add First Asset
                 </Button>
@@ -259,13 +260,13 @@ export function AssetsPage() {
 
         <TabsContent value="reminders" className="space-y-4">
           {reminders?.pending_reminders.map((reminder) => (
-            <Card key={reminder.id}>
+            <Card key={reminder.id} className="bg-[hsl(210_65%_13%)] border-4 border-bfo-gold shadow-lg shadow-bfo-gold/20">
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="font-semibold">{reminder.title}</h3>
-                    <p className="text-sm text-muted-foreground">{reminder.description}</p>
-                    <p className="text-xs text-muted-foreground mt-1">
+                    <h3 className="font-semibold text-white">{reminder.title}</h3>
+                    <p className="text-sm text-white/70">{reminder.description}</p>
+                    <p className="text-xs text-white/50 mt-1">
                       Due: {new Date(reminder.reminder_date).toLocaleDateString()}
                     </p>
                   </div>
@@ -279,11 +280,11 @@ export function AssetsPage() {
         </TabsContent>
 
         <TabsContent value="advice">
-          <Card>
+          <Card className="bg-[hsl(210_65%_13%)] border-4 border-bfo-gold shadow-lg shadow-bfo-gold/20">
             <CardContent className="text-center py-12">
-              <AlertTriangle className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-              <h3 className="text-lg font-semibold mb-2">Coverage Analysis</h3>
-              <p className="text-muted-foreground">
+              <AlertTriangle className="h-12 w-12 mx-auto mb-4 text-bfo-gold" />
+              <h3 className="text-lg font-semibold mb-2 text-white">Coverage Analysis</h3>
+              <p className="text-white/70">
                 Upload asset documents to receive personalized coverage advice and gap analysis.
               </p>
             </CardContent>
@@ -291,8 +292,9 @@ export function AssetsPage() {
         </TabsContent>
       </Tabs>
 
-      <div className="text-xs text-muted-foreground">
+      <div className="text-xs text-white/50">
         Asset values banded for privacy • Documents stored in Vault • Creates Asset-RDS receipts
+      </div>
       </div>
     </div>
   );
