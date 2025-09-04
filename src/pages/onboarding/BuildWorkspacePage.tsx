@@ -3,6 +3,8 @@ import { useSearchParams, Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarProvider } from '@/components/ui/sidebar-new';
+import { SilentMuteToggle } from '@/components/voice/SilentMuteToggle';
 import { 
   Target, 
   Wallet, 
@@ -134,12 +136,12 @@ const BuildWorkspacePage = () => {
 
   const config = personaConfig[persona as keyof typeof personaConfig] || personaConfig.aspiring;
 
-  // Enhanced sidebar with persona-specific features
+  // Enhanced sidebar with persona-specific features using shadcn sidebar
   const AppSidebar = () => (
-    <div className="w-64 bg-[hsl(var(--luxury-navy))] border-r border-[hsl(var(--luxury-gold))]/30 h-full">
-      <div className="p-4">
+    <Sidebar className="w-64 bg-[hsl(var(--luxury-navy))] border-r border-[hsl(var(--luxury-gold))]/30">
+      <SidebarContent>
         {/* Persona Header */}
-        <div className="mb-6 pb-4 border-b border-[hsl(var(--luxury-gold))]/20">
+        <div className="p-4 pb-4 border-b border-[hsl(var(--luxury-gold))]/20">
           <Badge className="mb-2 bg-[hsl(var(--luxury-gold))] text-[hsl(var(--luxury-navy))] font-semibold text-xs">
             {persona === 'aspiring' ? 'Aspiring Families' : 'Retiree Families'}
           </Badge>
@@ -151,44 +153,58 @@ const BuildWorkspacePage = () => {
           </p>
         </div>
 
-        <div className="mb-6">
-          <h3 className="text-[hsl(var(--luxury-gold))] font-semibold px-3 py-2 text-sm uppercase tracking-wide">
+        <SidebarGroup>
+          <SidebarGroupLabel className="text-[hsl(var(--luxury-gold))] font-semibold text-sm uppercase tracking-wide">
             Core Features
-          </h3>
-          <div className="space-y-1">
-            {coreFeatures.map((feature) => (
-              <div key={feature.title} className="flex items-center gap-3 p-3 rounded-lg text-[hsl(var(--luxury-white))] hover:bg-[hsl(var(--luxury-gold))]/20 hover:text-[hsl(var(--luxury-gold))] transition-colors cursor-pointer">
-                <feature.icon className="h-4 w-4 flex-shrink-0" />
-                <span className="text-sm font-medium">{feature.title}</span>
-                <CheckCircle className="h-3 w-3 ml-auto text-green-400 flex-shrink-0" />
-              </div>
-            ))}
-          </div>
-        </div>
+          </SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {coreFeatures.map((feature) => (
+                <SidebarMenuItem key={feature.title}>
+                  <SidebarMenuButton className="text-[hsl(var(--luxury-white))] hover:bg-[hsl(var(--luxury-gold))]/20 hover:text-[hsl(var(--luxury-gold))] transition-colors">
+                    <feature.icon className="h-4 w-4 mr-3" />
+                    <span className="text-sm font-medium">{feature.title}</span>
+                    <CheckCircle className="h-3 w-3 ml-auto text-green-400" />
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
 
-        <div>
-          <h3 className="text-[hsl(var(--luxury-gold))] font-semibold px-3 py-2 text-sm uppercase tracking-wide flex items-center gap-2">
+        <SidebarGroup>
+          <SidebarGroupLabel className="text-[hsl(var(--luxury-gold))] font-semibold text-sm uppercase tracking-wide flex items-center gap-2">
             <Crown className="h-4 w-4" />
             Premium Tools
-          </h3>
-          <div className="space-y-1">
-            {premiumTools.map((tool) => (
-              <div key={tool.title} className="flex items-center gap-3 p-3 rounded-lg text-[hsl(var(--luxury-white))]/60 hover:bg-[hsl(var(--luxury-purple))]/20 cursor-not-allowed group">
-                <tool.icon className="h-4 w-4 opacity-60 flex-shrink-0 group-hover:opacity-80" />
-                <span className="text-sm opacity-60 group-hover:opacity-80">{tool.title}</span>
-                <Lock className="h-3 w-3 ml-auto opacity-60 group-hover:opacity-80 flex-shrink-0" />
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
+          </SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {premiumTools.map((tool) => (
+                <SidebarMenuItem key={tool.title}>
+                  <SidebarMenuButton className="text-[hsl(var(--luxury-white))]/60 hover:bg-[hsl(var(--luxury-purple))]/20 cursor-not-allowed">
+                    <tool.icon className="h-4 w-4 mr-3 opacity-60" />
+                    <span className="text-sm opacity-60">{tool.title}</span>
+                    <Lock className="h-3 w-3 ml-auto opacity-60" />
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
+    </Sidebar>
   );
 
   return (
     <div className="min-h-screen bg-[hsl(var(--luxury-navy))]">
-      <div className="flex w-full min-h-screen">
-        <AppSidebar />
+      {/* Mute Linda Button - Fixed position, always visible */}
+      <div className="fixed top-4 right-4 z-50">
+        <SilentMuteToggle />
+      </div>
+      
+      <SidebarProvider>
+        <div className="flex w-full min-h-screen">
+          <AppSidebar />
           
           <main className="flex-1 p-8">
             {/* Header */}
@@ -387,6 +403,7 @@ const BuildWorkspacePage = () => {
             </div>
           </main>
         </div>
+      </SidebarProvider>
       </div>
     );
   };

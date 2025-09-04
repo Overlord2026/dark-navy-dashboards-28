@@ -5,6 +5,7 @@ import { GoldButton, GoldOutlineButton, GoldRouterLink, GoldOutlineRouterLink } 
 import { Badge } from '@/components/ui/badge';
 import { ArrowRight, Shield, Heart, Wallet, Home, Calculator, Play, Calendar, BookOpen, FileText, TrendingUp, Users, ChevronDown, ChevronRight } from 'lucide-react';
 import VoiceMic from '@/components/voice/VoiceMic';
+import { SilentMuteToggle } from '@/components/voice/SilentMuteToggle';
 import { Link } from 'react-router-dom';
 import { PersonaSubHeader } from '@/components/layout/PersonaSubHeader';
 
@@ -186,6 +187,11 @@ const FamilyRetireePersonaDashboard = () => {
 
   return (
     <div className="min-h-screen bg-[hsl(var(--luxury-navy))]">
+      {/* Mute Linda Button - Fixed position, always visible */}
+      <div className="fixed top-4 right-4 z-50">
+        <SilentMuteToggle />
+      </div>
+      
       <PersonaSubHeader>
         <div className="flex items-center justify-between w-full">
           <div>
