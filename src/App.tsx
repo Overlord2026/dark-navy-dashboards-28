@@ -46,7 +46,7 @@ import { SolutionsInsurancePage } from '@/pages/solutions/SolutionsInsurancePage
 import { SolutionsLendingPage } from '@/pages/solutions/SolutionsLendingPage';
 import { SolutionsTaxPage } from '@/pages/solutions/SolutionsTaxPage';
 import { SolutionsEstatePage } from '@/pages/solutions/SolutionsEstatePage';
-import { OnboardingFlow } from '@/pages/OnboardingFlow';
+import { OnboardingPage } from '@/pages/onboarding/OnboardingPage';
 import QACoverage from '@/pages/admin/QACoverage';
 import ReadyCheck from '@/pages/admin/ReadyCheck';
 import { ReadyCheckEnhanced } from '@/pages/admin/ReadyCheckEnhanced';
@@ -607,7 +607,7 @@ function App() {
             {getFlag('BRAND_PUBLIC_ENABLED') && <Route path="/brand/local" element={<BrandHub segment="local-business" />} />}
             
             {/* Private App Routes */}
-            <Route path="/onboarding" element={<OnboardingFlow />} />
+            <Route path="/onboarding" element={<OnboardingPage />} />
             <Route path="/nil/onboarding" element={<NILOnboarding />} />
             
             {/* New Welcome Flow Routes */}
