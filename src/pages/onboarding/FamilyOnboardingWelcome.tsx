@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Apple, Mail, Chrome } from 'lucide-react';
+import { Apple, Mail, Chrome, Briefcase, Calculator, Scale } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { playWelcome, isVoiceSupported } from '@/utils/voiceWelcome';
 import { Logo } from '@/components/ui/Logo';
@@ -120,13 +120,62 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
               <span className="font-medium">For pros:</span> your all-in-one practice hub<br />
               Coordinate with clients, manage everything easily
             </p>
+
+          {/* Meet Your Team Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.8 }}
+            className="space-y-4"
+          >
+            <h3 className="text-lg font-medium text-white">Meet Your Team</h3>
+            
+            <div className="flex justify-center items-center space-x-6">
+              {[
+                { icon: Briefcase, label: 'Advisor', delay: 0.1 },
+                { icon: Calculator, label: 'Accountant', delay: 0.2 },
+                { icon: Scale, label: 'Attorney', delay: 0.3 }
+              ].map((member, index) => {
+                const IconComponent = member.icon;
+                return (
+                  <motion.div
+                    key={member.label}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.4, delay: 1.0 + member.delay }}
+                    className="text-center"
+                  >
+                    <div 
+                      className="w-16 h-16 rounded-full flex items-center justify-center mb-2 mx-auto transition-all duration-300 hover:scale-110"
+                      style={{ 
+                        backgroundColor: '#D4AF37',
+                        boxShadow: '0 4px 20px rgba(212, 175, 55, 0.3)'
+                      }}
+                    >
+                      <IconComponent className="h-7 w-7 text-white" />
+                    </div>
+                    <span className="text-xs text-blue-200 font-medium">{member.label}</span>
+                  </motion.div>
+                );
+              })}
+            </div>
+            
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.6, delay: 1.4 }}
+              className="text-center text-blue-100 text-sm font-medium"
+            >
+              All working together in your secure space
+            </motion.p>
+          </motion.div>
           </motion.div>
 
           {/* Auth Buttons */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.6 }}
+            transition={{ duration: 0.6, delay: 1.6 }}
             className="space-y-3"
           >
             {authProviders.map((provider, index) => {
@@ -136,7 +185,7 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
                   key={provider.name}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.4, delay: 0.8 + index * 0.1 }}
+                  transition={{ duration: 0.4, delay: 1.8 + index * 0.1 }}
                 >
                   <Button
                     onClick={() => onAuthChoice(provider.provider)}
@@ -168,7 +217,7 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 1.2 }}
+            transition={{ duration: 0.6, delay: 2.2 }}
             className="text-sm text-blue-200 leading-relaxed"
           >
             We're here when you need us.<br />
