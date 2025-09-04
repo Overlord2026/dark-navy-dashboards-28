@@ -137,7 +137,7 @@ const detailedClaims: ClaimStructure[] = [
   {
     claimNumber: 1,
     claimType: 'independent',
-    title: 'Multi-Persona Family Office Platform System',
+    title: 'Family Office Platform System',
     summary: 'A computer-implemented system for managing family office operations through persona-based routing and automated compliance',
     technicalElements: [
       'Multi-persona authentication and routing system',
@@ -212,7 +212,7 @@ const ipLogEntries: IPLogEntry[] = [
   {
     date: '2024-01-15',
     milestone: 'Initial Platform Concept',
-    description: 'First conception and documentation of multi-persona family office platform',
+    description: 'First conception and documentation of family office platform',
     evidence: 'Initial concept documents, wireframes, and technical specifications',
     inventors: ['Platform Development Team', 'Architecture Lead', 'UX Design Lead'],
     documentation: ['Concept_Doc_v1.pdf', 'Initial_Wireframes.fig', 'Technical_Spec_v1.md'],

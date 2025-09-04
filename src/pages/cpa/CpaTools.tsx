@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrandHeader } from '@/components/layout/BrandHeader';
+
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Calculator, FileText, Users, BookOpen, PieChart, Settings } from 'lucide-react';
@@ -53,7 +53,7 @@ export default function CpaTools() {
 
   return (
     <div className="min-h-screen bg-background">
-      <BrandHeader />
+      
       
       <div className="container mx-auto px-4 py-8">
         <div className="space-y-6">

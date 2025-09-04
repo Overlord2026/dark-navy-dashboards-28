@@ -1,13 +1,13 @@
 // TODO: flesh out per /out/CPA_UX_Wireframes.md
 import React from 'react';
-import { BrandHeader } from '@/components/layout/BrandHeader';
+
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Calculator } from 'lucide-react';
 
 export default function TaxProjectionTool() {
   return (
     <div className="min-h-screen bg-background">
-      <BrandHeader />
+      
       
       <div className="container mx-auto px-4 py-8">
         <div className="space-y-6">

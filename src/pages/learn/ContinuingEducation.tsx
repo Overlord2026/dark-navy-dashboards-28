@@ -1,6 +1,6 @@
 // TODO: flesh out per /out/CPA_UX_Wireframes.md
 import React from 'react';
-import { BrandHeader } from '@/components/layout/BrandHeader';
+
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { BookOpen, Award, Clock } from 'lucide-react';
@@ -8,7 +8,7 @@ import { BookOpen, Award, Clock } from 'lucide-react';
 export default function ContinuingEducation() {
   return (
     <div className="min-h-screen bg-background">
-      <BrandHeader />
+      
       
       <div className="container mx-auto px-4 py-8">
         <div className="space-y-6">

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { BrandHeader } from '@/components/layout/BrandHeader';
+
 import { useToast } from '@/hooks/use-toast';
 import { Star, MapPin, ArrowLeft, Mail, Mic, Gavel } from 'lucide-react';
 import { getAdvisor, type Pro } from '@/services/advisors';
@@ -100,7 +100,6 @@ export default function AttorneyDetail() {
   if (loading) {
     return (
       <div className="min-h-screen bg-[hsl(var(--bfo-black))]">
-        <BrandHeader />
         <div className="container mx-auto px-4 py-8">
           <div className="bfo-card p-8 text-center">
             <p className="text-white">Loading attorney profile...</p>
@@ -113,7 +112,6 @@ export default function AttorneyDetail() {
   if (!attorney) {
     return (
       <div className="min-h-screen bg-bfo-black">
-        <BrandHeader />
         <div className="container mx-auto px-4 py-8">
           <div className="bfo-card border border-bfo-gold p-8 text-center">
             <p className="text-white mb-4">Coming soon</p>
@@ -129,7 +127,7 @@ export default function AttorneyDetail() {
 
   return (
     <div className="min-h-screen bg-[hsl(var(--bfo-black))]">
-      <BrandHeader />
+      
       
       <div className="container mx-auto px-4 py-8">
         <div className="space-y-6">

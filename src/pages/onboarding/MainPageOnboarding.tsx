@@ -3,7 +3,6 @@ import { Button } from '@/components/ui/button';
 import { Apple, Mail, Chrome, VolumeX, ToggleLeft, ToggleRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { playLindaWelcome } from '@/utils/lindaVoice';
-import { TopBanner } from '@/components/layout/TopBanner';
 import { SecondaryNav } from '@/components/layout/SecondaryNav';
 
 interface FamilyOnboardingWelcomeProps {
@@ -16,11 +15,11 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
   const [isLindaDisabled, setIsLindaDisabled] = useState(() => {
     // Check localStorage for persistent setting
     const stored = localStorage.getItem('lindaDisabled');
-    console.log('Linda disabled from localStorage:', stored);
+    console.log('🎙️ Linda disabled from localStorage:', stored);
     return stored === 'true';
   });
 
-  // More robust speech stopping function
+  // Enhanced speech stopping function
   const stopAllSpeech = () => {
     console.log('🔇 Stopping all speech...');
     if ('speechSynthesis' in window) {
@@ -37,35 +36,35 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
   };
 
   useEffect(() => {
-    console.log('Linda voice effect - disabled:', isLindaDisabled, 'muted:', isMuted, 'hasPlayed:', hasPlayedWelcome);
+    console.log('🎙️ Linda voice effect - disabled:', isLindaDisabled, 'muted:', isMuted, 'hasPlayed:', hasPlayedWelcome);
     
     // Play Linda's welcome message after a short delay, unless disabled or muted
     if ('speechSynthesis' in window && !hasPlayedWelcome && !isMuted && !isLindaDisabled) {
-      console.log('Setting timer to play Linda voice...');
+      console.log('⏰ Setting timer to play Linda voice...');
       const timer = setTimeout(() => {
-        console.log('Attempting to play Linda voice...');
+        console.log('🎤 Attempting to play Linda voice...');
         playLindaWelcome("Hi, I'm Linda. Welcome to Your Boutique Family Office.")
           .then(() => {
-            console.log('Linda voice played successfully');
+            console.log('✅ Linda voice played successfully');
             setHasPlayedWelcome(true);
           })
           .catch(error => {
-            console.error('Linda voice error:', error);
+            console.error('❌ Linda voice error:', error);
             setHasPlayedWelcome(true);
           });
       }, 1500);
 
       return () => {
-        console.log('Clearing Linda voice timer');
+        console.log('🧹 Clearing Linda voice timer');
         clearTimeout(timer);
       };
     } else {
-      console.log('Skipping Linda voice - conditions not met');
+      console.log('⏭️ Skipping Linda voice - conditions not met');
     }
   }, [hasPlayedWelcome, isMuted, isLindaDisabled]);
 
   const handleMuteToggle = () => {
-    console.log('Muting Linda voice...');
+    console.log('🔇 Muting Linda voice...');
     setIsMuted(true);
     stopAllSpeech();
   };
@@ -126,17 +125,17 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
     <>
       {/* Secondary Nav only on onboarding page */}
       <SecondaryNav />
-      <div className="h-screen w-full" style={{ backgroundColor: '#001F3F' }}>
-        {/* Main Content */}
-        <div className="h-full flex flex-col items-center justify-start" style={{ paddingTop: '4rem' }}>
-          <div className="w-full max-w-none mx-auto px-4" style={{ width: '90vw' }}>
+      <div className="min-h-screen w-full" style={{ backgroundColor: '#001F3F' }}>
+        {/* Main Content - Mobile Responsive */}
+        <div className="flex flex-col items-center justify-center min-h-screen px-4 sm:px-6 lg:px-8" style={{ paddingTop: '140px' }}>
+          <div className="w-full max-w-md mx-auto">
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="text-center space-y-6"
+              className="text-center space-y-8"
             >
-              {/* BFO Logo - Centered */}
+              {/* BFO Logo - Centered at 60% size */}
               <motion.div
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
@@ -146,9 +145,10 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
                 <img
                   src="/lovable-uploads/e63fd043-b0e8-4d12-b332-23ecbe473345.png"
                   alt="Boutique Family Office Logo"
-                  className="w-72 h-80 md:w-96 md:h-[420px] lg:w-[480px] lg:h-[528px]"
+                  className="w-auto h-auto max-w-[60%] max-h-[60%] object-contain"
                   style={{
-                    objectFit: 'contain'
+                    width: '60%',
+                    height: 'auto'
                   }}
                 />
               </motion.div>
@@ -188,7 +188,7 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
                 className="text-center space-y-3 mb-8"
               >
                 <div className="flex items-center justify-center gap-3">
-                  <h1 className="text-3xl md:text-4xl font-bold text-white leading-tight">
+                  <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white leading-tight">
                     Hi, I'm Linda
                   </h1>
                   {!isMuted && !isLindaDisabled && (
@@ -202,17 +202,17 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
                     </button>
                   )}
                 </div>
-                <p className="text-lg md:text-xl text-blue-100 leading-relaxed">
+                <p className="text-base sm:text-lg md:text-xl text-blue-100 leading-relaxed">
                   Welcome to Your Boutique Family Office
                 </p>
               </motion.div>
 
-              {/* Auth Buttons in Clean Row */}
+              {/* Auth Buttons - Mobile Responsive */}
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.8 }}
-                className="space-y-3 max-w-md mx-auto"
+                className="space-y-3"
               >
                 {authProviders.map((provider, index) => {
                   const IconComponent = provider.icon;
@@ -226,13 +226,13 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
                       <Button
                         onClick={() => onAuthChoice(provider.provider)}
                         className={`
-                          w-full h-12 flex items-center justify-center gap-3 
+                          w-full h-12 sm:h-14 flex items-center justify-center gap-3 
                           ${provider.bgColor} ${provider.textColor}
                           transition-all duration-300 ease-in-out
                           hover:scale-105 hover:shadow-lg
                           focus:ring-2 focus:ring-white/20 focus:ring-offset-2 
                           focus:ring-offset-[#001F3F]
-                          font-medium text-base
+                          font-medium text-sm sm:text-base
                           rounded-lg border-none
                         `}
                         style={{
@@ -241,7 +241,7 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
                             '0 2px 10px rgba(0, 0, 0, 0.2)'
                         }}
                       >
-                        <IconComponent className="h-5 w-5" />
+                        <IconComponent className="h-4 w-4 sm:h-5 sm:w-5" />
                         Continue with {provider.name}
                       </Button>
                     </motion.div>
@@ -254,7 +254,7 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.6, delay: 1.6 }}
-                className="text-sm text-blue-200 leading-relaxed text-center mt-6"
+                className="text-xs sm:text-sm text-blue-200 leading-relaxed text-center mt-6"
               >
                 Trusted by families worldwide.<br />
                 Your secure space starts here.

@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrandHeader } from '@/components/layout/BrandHeader';
+
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
@@ -8,7 +8,7 @@ import { BookOpen, Award, Clock, Calendar, CheckCircle } from 'lucide-react';
 export default function CpaLearn() {
   return (
     <div className="min-h-screen bg-background">
-      <BrandHeader />
+      
       
       <div className="container mx-auto px-4 py-8">
         <div className="space-y-6">

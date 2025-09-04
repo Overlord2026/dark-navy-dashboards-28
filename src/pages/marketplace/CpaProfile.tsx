@@ -1,7 +1,7 @@
 // TODO: flesh out per /out/CPA_UX_Wireframes.md
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { BrandHeader } from '@/components/layout/BrandHeader';
+
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
@@ -57,7 +57,7 @@ export default function CpaProfile() {
 
   return (
     <div className="min-h-screen bg-background">
-      <BrandHeader />
+      
       
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

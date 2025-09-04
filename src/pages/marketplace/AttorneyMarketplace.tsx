@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { BrandHeader } from '@/components/layout/BrandHeader';
+import { SecondaryNav } from '@/components/layout/SecondaryNav';
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -26,10 +27,12 @@ export default function AttorneyMarketplace() {
   });
 
   return (
-    <div className="min-h-screen bg-background">
-      <BrandHeader />
-      
-      <div className="container mx-auto px-4 py-8">
+    <>
+      <SecondaryNav />
+      <div className="min-h-screen bg-background" style={{ paddingTop: '120px' }}>
+        
+        
+        <div className="container mx-auto px-4 py-8">
         <div className="space-y-6">
           <section className="bfo-card p-6 text-center">
             <h1 className="text-4xl font-bold mb-4">Find Expert Estate Planning Attorneys</h1>
@@ -117,8 +120,9 @@ export default function AttorneyMarketplace() {
               </Card>
             ))}
           </div>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

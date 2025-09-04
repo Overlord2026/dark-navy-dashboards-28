@@ -33,7 +33,7 @@ const patentClaims: PatentClaim[] = [
   {
     claimNumber: 1,
     claimType: 'independent',
-    title: 'Multi-Persona Family Office Platform System',
+    title: 'Family Office Platform System',
     description: 'A computer-implemented system for managing family office operations through persona-based routing and automated compliance',
     technicalElements: [
       'Multi-persona authentication and routing system',
@@ -306,7 +306,7 @@ const productTimeline = [
   {
     date: '2024-01-15',
     milestone: 'Initial Platform Concept',
-    description: 'First conception of multi-persona family office platform',
+    description: 'First conception of family office platform',
     evidence: 'Initial wireframes and system architecture documents'
   },
   {
@@ -362,7 +362,7 @@ export function FamilyOfficePlatformPatentPackage() {
         inventors: ["Platform Development Team"],
         assignee: "Family Office Platform Inc.",
         filingDate: new Date().toISOString(),
-        applicationTitle: "Multi-Persona Family Office Management Platform with Automated Compliance and Digital Vault Systems"
+        applicationTitle: "Family Office Management Platform with Automated Compliance and Digital Vault Systems"
       }
     };
 

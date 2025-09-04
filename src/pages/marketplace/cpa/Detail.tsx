@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { BrandHeader } from '@/components/layout/BrandHeader';
+
 import { InquiryModal } from '@/components/marketplace/InquiryModal';
 import { VoiceDrawer } from '@/components/voice/VoiceDrawer';
 import { GoldButton, GoldOutlineButton } from '@/components/ui/brandButtons';
@@ -103,7 +103,6 @@ export default function CPADetail() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-bfo-purple via-bfo-purple/90 to-black">
-        <BrandHeader />
         <div className="flex items-center justify-center min-h-[60vh]">
           <div className="text-white text-lg">Loading CPA details...</div>
         </div>
@@ -114,7 +113,6 @@ export default function CPADetail() {
   if (!cpa) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-bfo-purple via-bfo-purple/90 to-black">
-        <BrandHeader />
         <div className="container mx-auto px-6 pt-24">
           <div className="text-center text-white">
             <h1 className="text-2xl font-bold mb-4">CPA Not Found</h1>
@@ -129,7 +127,7 @@ export default function CPADetail() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-bfo-purple via-bfo-purple/90 to-black">
-      <BrandHeader />
+      
       
       <div className="container mx-auto px-6 pt-24 pb-12">
         {/* Back Navigation */}

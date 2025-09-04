@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { BrandHeader } from '@/components/layout/BrandHeader';
+
 import { InquiryModal } from '@/components/marketplace/InquiryModal';
 import { VoiceDrawer } from '@/components/voice/VoiceDrawer';
 import { GoldButton, GoldOutlineButton } from '@/components/ui/brandButtons';
@@ -107,7 +107,6 @@ export default function CPAIndex() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-bfo-purple via-bfo-purple/90 to-black">
-        <BrandHeader />
         <div className="flex items-center justify-center min-h-[60vh]">
           <div className="text-white text-lg">Loading CPAs...</div>
         </div>
@@ -117,7 +116,7 @@ export default function CPAIndex() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-bfo-purple via-bfo-purple/90 to-black">
-      <BrandHeader />
+      
       
       {/* Hero Section */}
       <section className="container mx-auto px-6 pt-24 pb-12">
