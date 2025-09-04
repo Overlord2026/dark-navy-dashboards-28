@@ -99,7 +99,7 @@ const FamiliesPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-brand-black">
+    <div className="min-h-screen" style={{ backgroundColor: '#000000' }}>
       <main className="pt-[var(--header-stack)] scroll-mt-[var(--header-stack)]">
         <FamilyHero />
         
