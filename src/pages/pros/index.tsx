@@ -1,6 +1,6 @@
 import React from 'react';
-import { Hero } from '@/components/landing/Hero';
-import { ToolsGrid } from '@/components/landing/ToolsGrid';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { Users, FileText, Shield, TrendingUp, Calendar, Building } from 'lucide-react';
 
 const prosTools = [
@@ -44,18 +44,74 @@ const prosTools = [
 
 export default function ProsIndex() {
   const handleDemoClick = () => {
-    // TODO: Implement demo modal or redirect
     console.log('Demo clicked');
   };
 
   return (
     <div className="page-surface">
-      <Hero
-        title="Professional Suite"
-        subtitle="Comprehensive tools for financial advisors, CPAs, attorneys, and insurance professionals to grow and manage their practice"
-        onCtaClick={handleDemoClick}
-      />
-      <ToolsGrid tools={prosTools} title="Professional Tools" />
+      {/* Hero Section */}
+      <section className="py-16 px-4 text-center">
+        <div className="max-w-4xl mx-auto">
+          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
+            Professional Suite
+          </h1>
+          
+          <p className="text-xl md:text-2xl text-white/80 mb-8 max-w-2xl mx-auto">
+            Comprehensive tools for financial advisors, CPAs, attorneys, and insurance professionals to grow and manage their practice
+          </p>
+          
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <Button
+              onClick={handleDemoClick}
+              className="bg-bfo-gold text-black hover:bg-bfo-gold/90 text-lg px-8 py-4"
+            >
+              Watch 60-sec demo
+            </Button>
+            
+            <Button
+              variant="outline"
+              className="border-bfo-gold text-bfo-gold hover:bg-bfo-gold hover:text-black text-lg px-8 py-4"
+            >
+              Explore tools
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Tools Grid */}
+      <section id="tools" className="py-16 px-4">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-12">
+            Professional Tools
+          </h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {prosTools.map((tool, index) => {
+              const Icon = tool.icon;
+              return (
+                <Card key={index} className="bg-white border-2 border-bfo-gold hover:shadow-xl transition-all duration-300 group cursor-pointer">
+                  <CardContent className="p-6">
+                    <div className="flex items-start gap-4 mb-4">
+                      <div className="p-3 rounded-lg bg-bfo-gold/10 group-hover:bg-bfo-gold/20 transition-colors">
+                        <Icon className="h-6 w-6 text-bfo-gold" />
+                      </div>
+                      
+                      <div className="flex-1">
+                        <h3 className="text-xl font-semibold text-black mb-2 group-hover:text-bfo-gold transition-colors">
+                          {tool.title}
+                        </h3>
+                        <p className="text-gray-600 text-sm leading-relaxed">
+                          {tool.description}
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
