@@ -48,6 +48,8 @@ import { SolutionsTaxPage } from '@/pages/solutions/SolutionsTaxPage';
 import { SolutionsEstatePage } from '@/pages/solutions/SolutionsEstatePage';
 import { OnboardingPage } from '@/pages/onboarding/OnboardingPage';
 import { FamilyOnboardingWelcome } from '@/pages/onboarding/FamilyOnboardingWelcome';
+import { FamilyDashboard } from '@/pages/families/FamilyDashboard';
+import { FamilyTypeDashboard } from '@/pages/families/FamilyTypeDashboard';
 import QACoverage from '@/pages/admin/QACoverage';
 import ReadyCheck from '@/pages/admin/ReadyCheck';
 import { ReadyCheckEnhanced } from '@/pages/admin/ReadyCheckEnhanced';
@@ -274,7 +276,7 @@ function App() {
   const handleAuthChoice = async (provider: string) => {
     if (provider === 'email') {
       // Navigate to auth page for email signup
-      window.location.href = '/auth?mode=signup&redirect=/family/home';
+      window.location.href = '/auth?mode=signup&redirect=/families';
       return;
     }
 
@@ -283,7 +285,7 @@ function App() {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: provider as any,
         options: {
-          redirectTo: `${window.location.origin}/family/home`,
+          redirectTo: `${window.location.origin}/families`,
         },
       });
 
@@ -332,11 +334,16 @@ function App() {
             <Routes>
             <Route path="/" element={
               isAuthenticated ? (
-                <Navigate to="/family/home" replace />
+                <Navigate to="/families" replace />
               ) : (
                 <FamilyOnboardingWelcome onAuthChoice={handleAuthChoice} />
               )
             } />
+            
+            {/* Family Routes */}
+            <Route path="/families" element={<FamilyDashboard />} />
+            <Route path="/families/:type" element={<FamilyTypeDashboard />} />
+            <Route path="/family/home" element={<FamilyDashboard />} />
             
             {/* NEW: Primary persona landing pages */}
             <Route path="/families" element={
