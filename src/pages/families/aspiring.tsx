@@ -5,7 +5,7 @@ import { TrendingUp, DollarSign, Home, GraduationCap, Baby, Briefcase } from 'lu
 
 export default function AspiringFamiliesPage() {
   return (
-    <div className="min-h-screen bg-black text-white pt-[var(--header-stack)] scroll-mt-[var(--header-stack)]">
+    <div className="min-h-screen bg-slate-900 text-white pt-[var(--header-stack)] scroll-mt-[var(--header-stack)]">
       <main className="container mx-auto px-4 py-8 space-y-8">
         {/* Hero Section */}
         <div className="text-center space-y-4">
