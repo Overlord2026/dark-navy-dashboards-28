@@ -1,4 +1,3 @@
-// Voice functionality permanently disabled
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { VolumeX } from 'lucide-react';
@@ -9,12 +8,6 @@ export interface VoiceMicProps {
   className?: string;
   onRecordingComplete?: (audioBlob: Blob) => void;
   onTranscriptionReceived?: (text: string) => void;
-  onTranscript?: (text: string) => void;
-  autoSummarize?: boolean;
-  onSummary?: (summary: any) => void;
-  triggerLabel?: string;
-  persona?: string;
-  size?: string; // Added to fix TypeScript errors
 }
 
 export default function VoiceMic({
@@ -22,13 +15,7 @@ export default function VoiceMic({
   disabled = true,
   className = '',
   onRecordingComplete,
-  onTranscriptionReceived,
-  onTranscript,
-  autoSummarize,
-  onSummary,
-  triggerLabel,
-  persona,
-  size
+  onTranscriptionReceived
 }: VoiceMicProps) {
   // Voice functionality permanently disabled
   const handleClick = () => {
@@ -45,7 +32,7 @@ export default function VoiceMic({
       title="Voice functionality is disabled in development"
     >
       <VolumeX className="h-4 w-4" />
-      {label || triggerLabel || 'Voice Disabled'}
+      {label}
     </Button>
   );
 }

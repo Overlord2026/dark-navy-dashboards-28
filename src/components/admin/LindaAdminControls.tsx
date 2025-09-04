@@ -27,7 +27,7 @@ export const LindaAdminControls = () => {
   const { toast } = useToast();
   const [isTestCallActive, setIsTestCallActive] = useState(false);
   const [globalSettings, setGlobalSettings] = useState({
-    enabled: true,
+    enabled: false, // Permanently disabled
     defaultVoice: 'professional-female',
     callRetryAttempts: 3,
     smsBackupEnabled: true,
@@ -60,19 +60,11 @@ export const LindaAdminControls = () => {
   ];
 
   const handleTestCall = () => {
-    setIsTestCallActive(true);
+    // Linda disabled - no test calls
     toast({
-      title: "Test Call Started",
-      description: "Linda will call the test number in 30 seconds..."
+      title: "Linda Voice Disabled",
+      description: "Voice functionality is permanently disabled in this environment."
     });
-    
-    setTimeout(() => {
-      setIsTestCallActive(false);
-      toast({
-        title: "Test Call Completed",
-        description: "Call log and recording available in the Test Results tab."
-      });
-    }, 5000);
   };
 
   const togglePersonaEnabled = (personaId: string) => {
@@ -111,8 +103,8 @@ export const LindaAdminControls = () => {
               </>
             )}
           </Button>
-          <Badge variant={globalSettings.enabled ? "default" : "secondary"} className="px-3 py-1">
-            {globalSettings.enabled ? 'Linda Active' : 'Linda Disabled'}
+          <Badge variant="secondary" className="px-3 py-1">
+            Linda Disabled (Dev Environment)
           </Badge>
         </div>
       </div>

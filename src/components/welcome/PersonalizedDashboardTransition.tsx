@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Star, CreditCard, ArrowRight } from 'lucide-react';
-import { playWelcome } from '@/utils/voiceAI';
+import { playWelcome } from '@/utils/voiceSettings';
 
 interface PersonalizedDashboardTransitionProps {
   userName: string;
@@ -19,8 +19,9 @@ export function PersonalizedDashboardTransition({
   const [showContent, setShowContent] = useState(false);
 
   useEffect(() => {
-    // Play personalized welcome
+    // Linda voice disabled - no autoplay or greetings
     const timer = setTimeout(() => {
+      // playWelcome is now a no-op function
       playWelcome(userName, 'Families');
       setShowContent(true);
     }, 800);

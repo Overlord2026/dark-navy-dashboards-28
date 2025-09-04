@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Apple, Mail, Chrome, VolumeX, ToggleLeft, ToggleRight } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { playLindaWelcome } from '@/utils/lindaVoice';
+import { playWelcome } from '@/utils/voiceSettings'; // Disabled Linda functionality
 import { SecondaryNav } from '@/components/layout/SecondaryNav';
 
 interface FamilyOnboardingWelcomeProps {
@@ -36,31 +36,8 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
   };
 
   useEffect(() => {
-    console.log('🎙️ Linda voice effect - disabled:', isLindaDisabled, 'muted:', isMuted, 'hasPlayed:', hasPlayedWelcome);
-    
-    // Play Linda's welcome message after a short delay, unless disabled or muted
-    if ('speechSynthesis' in window && !hasPlayedWelcome && !isMuted && !isLindaDisabled) {
-      console.log('⏰ Setting timer to play Linda voice...');
-      const timer = setTimeout(() => {
-        console.log('🎤 Attempting to play Linda voice...');
-        playLindaWelcome("Hi, I'm Linda. Welcome to Your Boutique Family Office.")
-          .then(() => {
-            console.log('✅ Linda voice played successfully');
-            setHasPlayedWelcome(true);
-          })
-          .catch(error => {
-            console.error('❌ Linda voice error:', error);
-            setHasPlayedWelcome(true);
-          });
-      }, 1500);
-
-      return () => {
-        console.log('🧹 Clearing Linda voice timer');
-        clearTimeout(timer);
-      };
-    } else {
-      console.log('⏭️ Skipping Linda voice - conditions not met');
-    }
+    console.log('🎙️ Linda voice permanently disabled in dev environment');
+    // Linda voice is permanently disabled - no autoplay or greetings
   }, [hasPlayedWelcome, isMuted, isLindaDisabled]);
 
   const handleMuteToggle = () => {

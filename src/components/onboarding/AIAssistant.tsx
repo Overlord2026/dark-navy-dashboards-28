@@ -41,7 +41,7 @@ const STEP_CONTEXTS = {
 };
 
 const SAMPLE_RESPONSES = {
-  greeting: "Hi! I'm Linda, your AI onboarding assistant. I'm here to help you through every step of your wealth management onboarding. What can I help you with today?",
+  greeting: "Hi! I'm Linda, your AI onboarding assistant (currently disabled). Voice features are not available in this environment.",
   
   step2: "For the personal information step, I'll need details about you and any household members. This includes names, dates of birth, Social Security numbers, and contact information. All data is encrypted and secure.",
   
