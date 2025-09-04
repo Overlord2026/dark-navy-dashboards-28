@@ -67,7 +67,7 @@ export function ProfessionalCategories() {
       id: 'family-office',
       title: 'Family Office Services',
       icon: Building,
-      description: 'Multi-family offices and single family office solutions',
+      description: 'Family office solutions',
       count: '25+',
       avgFee: '$150K/year',
       minAUM: '$25M+',

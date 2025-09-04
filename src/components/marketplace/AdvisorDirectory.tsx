@@ -99,7 +99,7 @@ export function AdvisorDirectory() {
       aum: '$850M',
       clients: 12,
       minInvestment: '$25M',
-      specialties: ['Multi-Family Office', 'Governance', 'Next-Gen Education'],
+      specialties: ['Family Office', 'Governance', 'Next-Gen Education'],
       category: 'family-office',
       responseTime: '< 24 hours',
       imageUrl: '/api/placeholder/48/48'

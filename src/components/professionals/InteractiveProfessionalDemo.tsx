@@ -222,7 +222,7 @@ export function InteractiveProfessionalDemo({ role, onFeedback }: InteractiveDem
         ]
       },
       'platform_aggregator': {
-        title: 'Multi-Family Office Platform',
+        title: 'Family Office Platform',
         metrics: {
           familyOffices: 8,
           totalAUM: 2400000000,

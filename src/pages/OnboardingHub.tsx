@@ -79,7 +79,7 @@ const personaOnboardingData = [
 const adminFeatures = [
   {
     title: 'Multi-Tenant Management',
-    description: 'Manage multiple family offices and their professional networks',
+    description: 'Manage family offices and their professional networks',
     icon: <Settings className="h-6 w-6 text-primary" />
   },
   {

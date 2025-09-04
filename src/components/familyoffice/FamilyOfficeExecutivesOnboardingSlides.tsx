@@ -25,7 +25,7 @@ const slides = [
         <div className="bg-gradient-to-r from-gold/10 to-yellow-50 p-6 rounded-lg border border-gold/20">
           <h3 className="font-semibold text-gold-foreground mb-3">Your Executive Platform Includes:</h3>
           <ul className="space-y-2 text-gold-foreground">
-            <li className="flex items-center gap-2"><Crown className="w-4 h-4" /> Multi-entity family office dashboard</li>
+            <li className="flex items-center gap-2"><Crown className="w-4 h-4" /> Family office dashboard</li>
             <li className="flex items-center gap-2"><Users className="w-4 h-4" /> Bulk family member and staff invitations</li>
             <li className="flex items-center gap-2"><Shield className="w-4 h-4" /> Advanced security and privacy controls</li>
             <li className="flex items-center gap-2"><Globe className="w-4 h-4" /> Global provider network access</li>
@@ -37,7 +37,7 @@ const slides = [
   {
     id: 2,
     title: "Multi-Entity Management",
-    subtitle: "Manage multiple family offices, trusts, and business entities",
+    subtitle: "Manage family offices, trusts, and business entities",
     icon: Building,
     content: (
       <div className="space-y-6">
@@ -246,7 +246,7 @@ export const FamilyOfficeExecutivesOnboardingSlides: React.FC = () => {
         <div className="flex items-center justify-between mb-4">
           <div>
             <h1 className="text-3xl font-bold text-foreground">Family Office Executives</h1>
-            <p className="text-muted-foreground">VIP Onboarding for Multi-Family Office & Executive Leaders</p>
+            <p className="text-muted-foreground">VIP Onboarding for Family Office & Executive Leaders</p>
           </div>
           <Badge variant="secondary" className="bg-gold/10 text-gold">
             Slide {currentSlide + 1} of {slides.length}

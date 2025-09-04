@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { BrandHeader } from '@/components/layout/BrandHeader';
+
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
@@ -67,7 +67,7 @@ export default function FamiliesStart() {
 
   return (
     <div className="min-h-screen bg-[hsl(var(--bfo-black))]">
-      <BrandHeader />
+      
       
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-md mx-auto">

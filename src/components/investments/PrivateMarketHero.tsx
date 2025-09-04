@@ -20,7 +20,7 @@ const testimonials = [
   {
     quote: "Access to opportunities we never knew existed. Game changing.",
     author: "Jennifer Walsh",
-    title: "Multi-Family Office CIO",
+    title: "Family Office CIO",
     rating: 5
   }
 ];

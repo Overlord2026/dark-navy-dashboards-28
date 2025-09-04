@@ -73,7 +73,7 @@ export const AdminSystemChecklist: React.FC = () => {
         { name: "Campden Wealth Family Office Directory", status: "complete", priority: "high" },
         { name: "Family Office Exchange (FOX) Member Lists", status: "in-progress", priority: "high" },
         { name: "Single Family Office Networks", status: "pending", priority: "high" },
-        { name: "Multi-Family Office Directories", status: "in-progress", priority: "medium" },
+        { name: "Family Office Directories", status: "in-progress", priority: "medium" },
         { name: "Ultra High Net Worth Family Lists", status: "pending", priority: "high" }
       ]
     }

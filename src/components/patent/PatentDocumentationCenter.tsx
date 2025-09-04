@@ -255,7 +255,7 @@ export function PatentDocumentationCenter() {
                 <div className="bg-muted p-4 rounded-lg">
                   <h4 className="font-semibold mb-2">System Claims (Common Elements)</h4>
                   <ul className="text-sm space-y-1 text-muted-foreground">
-                    <li>• Multi-tenant family office management platform</li>
+                    <li>• Family office management platform</li>
                     <li>• Event-gated access control system</li>
                     <li>• Secure document vault with encryption</li>
                     <li>• AI-powered content analysis and matching</li>

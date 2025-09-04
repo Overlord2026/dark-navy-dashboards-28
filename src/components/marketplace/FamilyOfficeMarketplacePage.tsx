@@ -13,7 +13,7 @@ export function FamilyOfficeMarketplacePage() {
     {
       icon: <TreePine className="w-8 h-8 text-gold" />,
       title: "Elite Family Offices",
-      description: "Connect with top-tier single and multi-family offices",
+      description: "Connect with top-tier family offices",
       action: "Browse Offices"
     },
     {

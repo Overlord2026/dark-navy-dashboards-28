@@ -27,7 +27,7 @@ const showcaseCategories = [
     bgColor: 'bg-gold/10',
     borderColor: 'border-gold/20',
     featured: [
-      { name: 'Rockefeller Capital', type: 'Multi-Family Office', rating: 5.0, clients: '500+' },
+      { name: 'Rockefeller Capital', type: 'Family Office', rating: 5.0, clients: '500+' },
       { name: 'Goldman Sachs PWM', type: 'Private Wealth', rating: 4.9, clients: '1,000+' },
       { name: 'Morgan Stanley FO', type: 'Family Office', rating: 4.8, clients: '750+' }
     ]

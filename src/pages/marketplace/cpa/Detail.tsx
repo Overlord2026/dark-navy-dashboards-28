@@ -46,13 +46,13 @@ const DEMO_CPA: CPA = {
   rating: 4.9,
   years_experience: 15,
   location: 'New York, NY',
-  description: 'Expert in high-net-worth tax strategies and multi-generational wealth planning. Sarah has helped over 200 family offices optimize their tax structures while ensuring compliance with evolving regulations.',
+  description: 'Expert in high-net-worth tax strategies and generational wealth planning. Sarah has helped over 200 family offices optimize their tax structures while ensuring compliance with evolving regulations.',
   certifications: ['CPA', 'CFP', 'PFS'],
   fee_range: '$300-500/hour',
   availability: 'Available',
   education: ['MBA Finance - Wharton', 'MS Taxation - NYU', 'BS Accounting - Columbia'],
   sample_projects: [
-    'Multi-state tax planning for $50M+ family office',
+    'Tax planning for $50M+ family office',
     'International trust structure optimization',
     'Estate tax minimization through charitable planning',
     'Business succession planning for family enterprise'

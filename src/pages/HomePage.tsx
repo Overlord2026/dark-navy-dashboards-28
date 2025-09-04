@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import BrandHeader from '@/components/layout/BrandHeader';
+
 import { MegaMenu } from '@/components/nav/MegaMenu';
 import { useUser } from '@/context/UserContext';
 import { AdminActions } from '@/components/dashboard/AdminActions';
@@ -77,7 +77,7 @@ export function HomePage() {
 
   return (
     <>
-      <BrandHeader />
+      
       <MegaMenu />
       <PageTransition>
         <div className="container mx-auto px-4 py-8">
