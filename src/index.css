@@ -378,6 +378,12 @@
   }
 
   /* Brand Utility Classes */
+  .brand-bg { @apply bg-bfo-navy text-bfo-white; }
+  .icon-black { @apply text-bfo-black; }
+  .icon-gold { @apply text-bfo-gold; }
+  /* Prevent regressions: */
+  .page-surface { @apply min-h-screen brand-bg; }
+  
   .bg-brand-black { background-color: var(--bfo-black); }
   .text-brand-gold { color: var(--bfo-gold); }
   .border-brand-gold { border-color: var(--bfo-gold); }

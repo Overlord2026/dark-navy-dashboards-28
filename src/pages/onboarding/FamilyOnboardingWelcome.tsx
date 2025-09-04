@@ -73,7 +73,7 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
     <>
       <TopBanner />
       <SecondaryNav />
-      <div className="min-h-screen w-full overflow-y-auto" style={{ backgroundColor: '#001F3F' }}>
+      <div className="min-h-screen w-full overflow-y-auto brand-bg">
         {/* Main Content */}
         <div className="flex flex-col items-center justify-start" style={{ paddingTop: '192px', minHeight: 'calc(100vh - 160px)' }}>
           <div className="w-full max-w-none mx-auto px-4" style={{ width: '90vw' }}>

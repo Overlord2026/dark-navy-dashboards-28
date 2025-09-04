@@ -16,7 +16,7 @@ export function MainLayout({ children }: MainLayoutProps) {
   return (
     <GlobalErrorBoundary showDetailedError={process.env.NODE_ENV === 'development'}>
       <PerformanceMonitor />
-      <div className="min-h-screen bg-background">
+      <div className="page-surface">
         <BFOBrandBanner
           wordmarkSrc="/brand/bfo-wordmark-horizontal.png"
           emblemSrc="/brand/bfo-emblem-gold.png"

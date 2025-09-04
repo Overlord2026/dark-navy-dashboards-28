@@ -65,7 +65,7 @@ export const AuthCallback: React.FC = () => {
 
   if (isProcessing) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#001F3F' }}>
+      <div className="min-h-screen flex items-center justify-center brand-bg">
         <div className="text-center text-white">
           <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
           <p className="text-lg">Completing authentication...</p>

@@ -106,7 +106,7 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
     <>
       {/* Secondary Nav only on onboarding page */}
       <SecondaryNav />
-      <div className="min-h-screen w-full" style={{ backgroundColor: '#001F3F' }}>
+      <div className="min-h-screen w-full brand-bg">
         {/* Main Content - Mobile Responsive */}
         <div className="flex flex-col items-center justify-center min-h-screen px-4 sm:px-6 lg:px-8" style={{ paddingTop: '184px' }}>
           <div className="w-full max-w-md mx-auto">

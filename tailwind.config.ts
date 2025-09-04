@@ -24,9 +24,10 @@ export default {
         
         // BFO Premium Brand Colors (HSL for proper theming)
         bfo: {
-          black: '#0B0F14',
-          gold:  '#D4AF37',
-          purple: '#15132B'
+          navy: '#0B0F14',
+          gold: '#D4AF37',
+          black: '#000000',
+          white: '#FFFFFF'
         },
         
         // Brand Colors - Black & Gold

@@ -99,7 +99,7 @@ const FamiliesPage = () => {
   };
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#000000' }}>
+    <div className="page-surface">
       <main className="pt-[var(--header-stack)] scroll-mt-[var(--header-stack)]">
         <FamilyHero />
         
@@ -253,21 +253,13 @@ const FamiliesPage = () => {
               {FAMILY_SEGMENTS.filter(s => !['aspiring', 'retirees'].includes(s.slug)).map(segment => (
                 <Card
                   key={segment.slug}
-                  className="cursor-pointer transition-all duration-300 hover:scale-105"
+                  className="cursor-pointer transition-all duration-300 hover:scale-105 hover:bg-bfo-gold/10 hover:border-bfo-gold"
                   style={{
                     backgroundColor: 'rgba(255, 255, 255, 0.05)',
                     border: '1px solid rgba(212, 175, 55, 0.3)',
                     boxShadow: '0 2px 4px rgba(212, 175, 55, 0.1)'
                   }}
                   onClick={() => analytics.track('segment.view', { segment: segment.slug })}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = 'rgba(212, 175, 55, 0.1)';
-                    e.currentTarget.style.borderColor = '#D4AF37';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
-                    e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.3)';
-                  }}
                 >
                   <CardContent className="p-4 text-center">
                     <h4 className="font-medium text-white mb-2">{segment.title}</h4>

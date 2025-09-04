@@ -134,8 +134,8 @@ export function EnvInspector() {
 
         {/* Build Information */}
         <Card>
-          <CardHeader style={{ backgroundColor: '#0B1E33' }}>
-            <CardTitle style={{ color: '#D4AF37' }}>Build Information</CardTitle>
+          <CardHeader className="bg-bfo-navy">
+            <CardTitle className="text-bfo-gold">Build Information</CardTitle>
           </CardHeader>
           <CardContent className="pt-6">
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -169,8 +169,8 @@ export function EnvInspector() {
 
         {/* Feature Flags */}
         <Card>
-          <CardHeader style={{ backgroundColor: '#0B1E33' }}>
-            <CardTitle style={{ color: '#D4AF37' }}>Feature Flags</CardTitle>
+          <CardHeader className="bg-bfo-navy">
+            <CardTitle className="text-bfo-gold">Feature Flags</CardTitle>
           </CardHeader>
           <CardContent className="pt-6">
             <div className="space-y-3">
@@ -195,8 +195,8 @@ export function EnvInspector() {
 
         {/* Public Environment Variables */}
         <Card>
-          <CardHeader style={{ backgroundColor: '#0B1E33' }}>
-            <CardTitle style={{ color: '#D4AF37' }}>Public Environment (VITE_*)</CardTitle>
+          <CardHeader className="bg-bfo-navy">
+            <CardTitle className="text-bfo-gold">Public Environment (VITE_*)</CardTitle>
           </CardHeader>
           <CardContent className="pt-6">
             {Object.keys(publicEnv).length === 0 ? (
@@ -218,8 +218,8 @@ export function EnvInspector() {
 
         {/* Config Coverage */}
         <Card>
-          <CardHeader style={{ backgroundColor: '#0B1E33' }}>
-            <CardTitle style={{ color: '#D4AF37' }}>Configuration Coverage</CardTitle>
+          <CardHeader className="bg-bfo-navy">
+            <CardTitle className="text-bfo-gold">Configuration Coverage</CardTitle>
           </CardHeader>
           <CardContent className="pt-6">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -257,8 +257,8 @@ export function EnvInspector() {
 
         {/* Public Routes */}
         <Card>
-          <CardHeader style={{ backgroundColor: '#0B1E33' }}>
-            <CardTitle style={{ color: '#D4AF37' }}>Enabled Public Routes</CardTitle>
+          <CardHeader className="bg-bfo-navy">
+            <CardTitle className="text-bfo-gold">Enabled Public Routes</CardTitle>
           </CardHeader>
           <CardContent className="pt-6">
             {enabledRoutes.length === 0 ? (
