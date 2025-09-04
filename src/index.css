@@ -112,7 +112,7 @@
     --alert-red: 5 63% 58%;  /* #D9534F */
 
     /* Core Theme Variables - Enhanced Contrast */
-    --background: var(--bfo-navy); /* Navy #0B2239 */
+    --background: 210 65% 13%; /* Navy #0B2239 - matches header */
     --foreground: var(--text-high-contrast); /* Pure white for maximum contrast */
 
     /* Card contrast improved from slate to lighter shade */
@@ -325,9 +325,9 @@
     color: #fff !important;
   }
 
-  /* Ensure page background is black beneath hero */
+  /* Ensure page background matches the header navy */
   body { 
-    background-color: var(--bfo-black); 
+    background-color: #0B2239; 
   }
 
   /* Additional kill switches for legacy headers */

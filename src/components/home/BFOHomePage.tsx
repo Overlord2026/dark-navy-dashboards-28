@@ -6,7 +6,7 @@ import { BrandedFooter } from '@/components/ui/BrandedFooter';
 
 export function BFOHomePage() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-[#0B2239]">
       <BFOHeader />
       <main>
         <HomeHero />
