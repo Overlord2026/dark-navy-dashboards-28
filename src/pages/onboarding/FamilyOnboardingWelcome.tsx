@@ -75,28 +75,27 @@ export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = (
       <SecondaryNav />
       <div className="h-screen w-full" style={{ backgroundColor: '#001F3F' }}>
         {/* Main Content */}
-        <div className="h-full flex flex-col items-center justify-start" style={{ paddingTop: '2rem' }}>
+        <div className="h-full flex flex-col items-center justify-start pt-6">
           <div className="w-full max-w-none mx-auto px-4" style={{ width: '90vw' }}>
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="text-center space-y-6"
+              className="text-center"
+              style={{ marginTop: '1.5rem' }}
             >
             {/* BFO Logo with White-Gold Letters - Centered */}
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="flex justify-center mb-8"
+              className="flex justify-center"
+              style={{ marginBottom: '1rem' }}
             >
               <img
                 src="/lovable-uploads/e63fd043-b0e8-4d12-b332-23ecbe473345.png"
                 alt="Boutique Family Office Logo"
-                className="w-72 h-80 md:w-96 md:h-[420px] lg:w-[480px] lg:h-[528px]"
-                style={{
-                  objectFit: 'contain'
-                }}
+                className="object-contain h-[35vh] md:h-[40vh]"
               />
             </motion.div>
 
