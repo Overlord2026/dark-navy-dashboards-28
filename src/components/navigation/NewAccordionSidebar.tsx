@@ -31,7 +31,8 @@ import {
   BuildingIcon,
   Scale,
   FileText,
-  Search
+  Search,
+  Target
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -60,6 +61,12 @@ const getNavigationByRole = (role: string, tier?: string): NavItem[] => {
 
   const clientNav: NavItem[] = [
     ...baseNav,
+    {
+      id: 'goals',
+      title: 'Goals',
+      href: '/goals',
+      icon: Target
+    },
     {
       id: 'education',
       title: 'Education & Solutions',
@@ -377,13 +384,13 @@ export function AccordionSidebar({ className }: AccordionSidebarProps) {
         <AccordionItem value={item.id} className="border-none">
           <AccordionTrigger className={cn(
             "flex items-center gap-3 px-3 py-2 text-left hover:no-underline rounded-md transition-colors",
-            "hover:bg-accent hover:text-accent-foreground",
+            "hover:bg-bfo-gold/10 hover:text-bfo-gold text-bfo-gold",
             depth > 0 && "ml-4 text-sm"
           )}>
             <div className="flex items-center gap-3 flex-1">
-              {Icon && <Icon className="h-4 w-4 flex-shrink-0" />}
-              <span className="font-medium truncate">{item.title}</span>
-              {item.isPremium && <Crown className="h-3 w-3 text-amber-500" />}
+              {Icon && <Icon className="h-4 w-4 flex-shrink-0 text-bfo-gold" />}
+              <span className="font-medium truncate text-bfo-gold">{item.title}</span>
+              {item.isPremium && <Crown className="h-3 w-3 text-bfo-gold" />}
             </div>
           </AccordionTrigger>
           <AccordionContent className="pb-0">
@@ -417,24 +424,29 @@ export function AccordionSidebar({ className }: AccordionSidebarProps) {
         className={cn(
           "flex items-center gap-3 px-3 py-2 rounded-md transition-colors",
           isActivePath
-            ? "bg-primary text-primary-foreground font-medium"
-            : "hover:bg-accent hover:text-accent-foreground",
+            ? "bg-bfo-gold text-navy font-medium"
+            : "text-bfo-gold hover:bg-bfo-gold/10 hover:text-bfo-gold",
           depth > 0 && "ml-4 text-sm"
         )}
       >
         {Icon && <Icon className="h-4 w-4 flex-shrink-0" />}
         <span className="truncate">{item.title}</span>
-        {item.isPremium && <Crown className="h-3 w-3 text-amber-500" />}
+        {item.isPremium && <Crown className="h-3 w-3 text-bfo-gold" />}
       </Link>
     );
   };
 
   const SidebarContent = () => (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full bg-navy text-bfo-gold">
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b">
+      <div className="flex items-center justify-between p-4 border-b border-bfo-gold/30">
         <Link to="/" className="flex items-center gap-2">
-          <span className="font-bold text-xl">LOV</span>
+          <img
+            src="/brand/bfo_logo_gold.svg"
+            alt="Boutique Family Office"
+            className="h-8 w-auto"
+            onError={(e) => (e.currentTarget.src = '/brand/bfo_logo_gold.png')}
+          />
         </Link>
         {isMobile && (
           <Button
@@ -457,8 +469,8 @@ export function AccordionSidebar({ className }: AccordionSidebarProps) {
           
           {/* Resources Section */}
           <AccordionItem value="resources" className="border-none">
-            <AccordionTrigger className="flex items-center gap-3 px-3 py-2 text-left hover:no-underline rounded-md transition-colors hover:bg-accent hover:text-accent-foreground">
-              <div className="flex items-center gap-3 flex-1">
+            <AccordionTrigger className="flex items-center gap-3 px-3 py-2 text-left hover:no-underline rounded-md transition-colors hover:bg-bfo-gold/10 hover:text-bfo-gold">
+              <div className="flex items-center gap-3 flex-1 text-bfo-gold">
                 <Ellipsis className="h-4 w-4 flex-shrink-0" />
                 <span className="font-medium">More</span>
               </div>
@@ -475,8 +487,8 @@ export function AccordionSidebar({ className }: AccordionSidebarProps) {
       </div>
 
       {/* Footer */}
-      <div className="p-4 border-t">
-        <div className="text-xs text-muted-foreground mb-2">
+      <div className="p-4 border-t border-bfo-gold/30">
+        <div className="text-xs text-bfo-gold/70 mb-2">
           {userProfile?.email && (
             <div className="truncate">{userProfile.email}</div>
           )}
@@ -485,7 +497,7 @@ export function AccordionSidebar({ className }: AccordionSidebarProps) {
         <Button
           variant="ghost"
           size="sm"
-          className="w-full justify-start gap-2 text-muted-foreground"
+          className="w-full justify-start gap-2 text-bfo-gold hover:bg-bfo-gold/10 hover:text-bfo-gold"
           onClick={async () => {
             await supabase.auth.signOut();
             window.location.href = '/';
@@ -519,7 +531,7 @@ export function AccordionSidebar({ className }: AccordionSidebarProps) {
   }
 
   return (
-    <div className={cn("hidden lg:flex w-80 border-r bg-background", className)}>
+    <div className={cn("hidden lg:flex w-80 border-r border-bfo-gold/30 bg-navy", className)}>
       <SidebarContent />
     </div>
   );

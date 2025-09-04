@@ -32,7 +32,8 @@ import Pricing from '@/pages/Pricing';
 // Landing page imports
 import FamiliesLanding from '@/pages/landing/FamiliesLanding';
 import ProsLanding from '@/pages/landing/ProsLanding';
-import GoalsPage from '@/pages/landing/GoalsPage';
+import GoalsPageLanding from '@/pages/landing/GoalsPage';
+import GoalsPage from '@/pages/GoalsPage';
 import CatalogPage from '@/pages/landing/CatalogPage';
 import HealthcareLanding from '@/pages/landing/HealthcareLanding';
 import FixturesPanel from '@/pages/dev/FixturesPanel';
@@ -839,7 +840,7 @@ function App() {
             <Route path="/tools/tax-projection" element={<Stub title="Tax Projection Tool" />} />
             <Route path="/tools/estate-planning" element={<Stub title="Estate Planning Tool" />} />
             <Route path="/vault" element={<Stub title="Secure Document Vault" />} />
-            <Route path="/goals" element={<Stub title="Financial Goals Tracker" />} />
+            {/* Goals route moved to main routes section */}
             <Route path="/discover" element={<Stub title="Discover Solutions" />} />
             
             {/* NotFound Route */}
