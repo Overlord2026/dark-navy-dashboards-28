@@ -8,10 +8,10 @@ export const SecondaryNav: React.FC = () => {
     { label: 'Families', path: '/families' },
     { label: 'Service Pros', path: '/pros' }, 
     { label: 'NIL', path: '/nil' },
-    { label: 'Healthcare', path: '/healthcare' },
-    { label: 'Solutions', path: '/marketplace' },
-    { label: 'Learn', path: '/learn' },
     { label: 'Load NIL Demo', path: '/nil/demo' },
+    { label: 'Healthcare', path: '/healthcare' },
+    { label: 'Solutions', path: '/solutions' },
+    { label: 'Learn', path: '/learn' },
     { label: 'Marketplace', path: '/marketplace' }
   ];
 
