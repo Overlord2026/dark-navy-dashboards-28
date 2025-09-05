@@ -39,7 +39,8 @@ export const FamilyTypeDashboard: React.FC = () => {
           icon: TrendingUp,
           color: 'from-emerald-500 to-teal-600',
           bgColor: 'bg-emerald-50',
-          route: '/tools/investments'
+          route: '/tools/investments',
+          tier: 'Basic'
         },
         {
           title: 'Savings Goals',
@@ -47,7 +48,8 @@ export const FamilyTypeDashboard: React.FC = () => {
           icon: Target,
           color: 'from-blue-500 to-indigo-600',
           bgColor: 'bg-blue-50',
-          route: '/tools/savings'
+          route: '/tools/savings',
+          tier: 'Elite'
         },
         {
           title: 'Education Funding',
@@ -55,7 +57,8 @@ export const FamilyTypeDashboard: React.FC = () => {
           icon: GraduationCap,
           color: 'from-purple-500 to-violet-600',
           bgColor: 'bg-purple-50',
-          route: '/tools/education'
+          route: '/tools/education',
+          tier: 'Premium'
         },
         {
           title: 'Home Planning',
@@ -63,7 +66,8 @@ export const FamilyTypeDashboard: React.FC = () => {
           icon: Home,
           color: 'from-orange-500 to-red-600',
           bgColor: 'bg-orange-50',
-          route: '/tools/home'
+          route: '/tools/home',
+          tier: 'Basic'
         }
       ]
     },
@@ -79,7 +83,8 @@ export const FamilyTypeDashboard: React.FC = () => {
           icon: Coins,
           color: 'from-amber-500 to-yellow-600',
           bgColor: 'bg-amber-50',
-          route: '/tools/income'
+          route: '/tools/income',
+          tier: 'Basic'
         },
         {
           title: 'Health Tracking',
@@ -87,7 +92,8 @@ export const FamilyTypeDashboard: React.FC = () => {
           icon: Heart,
           color: 'from-rose-500 to-pink-600',
           bgColor: 'bg-rose-50',
-          route: '/tools/health'
+          route: '/tools/health',
+          tier: 'Elite'
         },
         {
           title: 'Bucket List',
@@ -95,7 +101,8 @@ export const FamilyTypeDashboard: React.FC = () => {
           icon: Calendar,
           color: 'from-cyan-500 to-blue-600',
           bgColor: 'bg-cyan-50',
-          route: '/tools/bucket-list'
+          route: '/tools/bucket-list',
+          tier: 'Premium'
         },
         {
           title: 'Legacy Planning',
@@ -103,7 +110,8 @@ export const FamilyTypeDashboard: React.FC = () => {
           icon: Shield,
           color: 'from-indigo-500 to-purple-600',
           bgColor: 'bg-indigo-50',
-          route: '/tools/legacy'
+          route: '/tools/legacy',
+          tier: 'Elite'
         }
       ]
     }
@@ -183,9 +191,23 @@ export const FamilyTypeDashboard: React.FC = () => {
                       <div className={`w-16 h-16 rounded-full bg-gradient-to-br ${tool.color} flex items-center justify-center`}>
                         <IconComponent className="h-8 w-8 text-white" />
                       </div>
-                      <Badge className="bg-white/80 text-slate-700">
-                        {isAspiring ? 'Growth' : 'Lifestyle'}
-                      </Badge>
+                      <div className="flex flex-col gap-2">
+                        {/* Tier Badge */}
+                        <Badge 
+                          className={`text-xs font-medium ${
+                            tool.tier === 'Basic' 
+                              ? 'bg-green-100 text-green-800 border-green-200'
+                              : tool.tier === 'Elite'
+                              ? 'bg-blue-100 text-blue-800 border-blue-200'
+                              : 'bg-purple-100 text-purple-800 border-purple-200'
+                          }`}
+                        >
+                          {tool.tier} {tool.tier === 'Basic' ? '(Free)' : tool.tier === 'Elite' ? '($9.99/mo)' : '($19.99/mo)'}
+                        </Badge>
+                        <Badge className="bg-white/80 text-slate-700">
+                          {isAspiring ? 'Growth' : 'Lifestyle'}
+                        </Badge>
+                      </div>
                     </div>
                     <CardTitle className="text-xl text-slate-800 mb-2">
                       {tool.title}
@@ -195,11 +217,22 @@ export const FamilyTypeDashboard: React.FC = () => {
                     <p className="text-slate-600 mb-6 leading-relaxed">
                       {tool.description}
                     </p>
-                    <Button 
-                      className={`w-full bg-gradient-to-r ${tool.color} text-white hover:opacity-90`}
-                    >
-                      Get Started
-                    </Button>
+                    <div className="space-y-3">
+                      <Button 
+                        className={`w-full bg-gradient-to-r ${tool.color} text-white hover:opacity-90`}
+                      >
+                        Get Started
+                      </Button>
+                      {tool.tier !== 'Basic' && (
+                        <a 
+                          href="#" 
+                          className="block text-center text-sm text-bfo-gold hover:text-bfo-gold/80 underline font-medium"
+                          onClick={(e) => e.preventDefault()}
+                        >
+                          Upgrade to {tool.tier} →
+                        </a>
+                      )}
+                    </div>
                   </CardContent>
                 </Card>
               </motion.div>
