@@ -5,6 +5,8 @@ import { PerformanceMonitor } from '@/components/monitoring/PerformanceMonitor';
 import { BFOBrandBanner, BFOCornerBug } from '@/components/branding/BFOBrandBanner';
 import { usePersonaSublinks } from '@/hooks/usePersonaSublinks';
 import { getStartedRoute } from '@/utils/getStartedUtils';
+import { LegalBar } from '@/components/layout/LegalBar';
+import { useAuth } from '@/context/AuthContext';
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -12,6 +14,7 @@ interface MainLayoutProps {
 
 export function MainLayout({ children }: MainLayoutProps) {
   const sublinks = usePersonaSublinks();
+  const { user } = useAuth();
   
   return (
     <GlobalErrorBoundary showDetailedError={process.env.NODE_ENV === 'development'}>
@@ -27,11 +30,12 @@ export function MainLayout({ children }: MainLayoutProps) {
           sublinks={sublinks}
         />
         <BFOCornerBug position="bottom-right" />
-        <main>
+        <main style={{ paddingBottom: user ? '80px' : '0' }}>
           <GlobalErrorBoundary>
             {children}
           </GlobalErrorBoundary>
         </main>
+        {user && <LegalBar />}
       </div>
     </GlobalErrorBoundary>
   );
