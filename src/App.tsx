@@ -170,6 +170,7 @@ import IPHQ from '@/pages/admin/IPHQ';
 import FamiliesStart from '@/pages/families/start';
 import RequireAdmin from '@/components/auth/RequireAdmin';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import { PersonaGuard } from '@/components/auth/PersonaGuard';
 
 // Welcome Flow Components
 const FamilyWelcomeFlow = React.lazy(() => import('@/components/welcome/FullScreenWelcome').then(m => ({ default: m.FullScreenWelcome })));
@@ -258,6 +259,8 @@ import { AgentsPage } from './pages/marketplace/AgentsPage';
 import { QuoteStartPage } from './pages/marketplace/QuoteStartPage';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+
+const SelectPersona = React.lazy(() => import('@/pages/auth/SelectPersona'));
 
 // Stub component for avoiding 404s
 const Stub = ({ title }: { title: string }) => <div className="p-10 text-white text-2xl">{title}</div>;
@@ -414,12 +417,36 @@ function App() {
             
             {/* Persona sub-routes */}
             <Route path="/build-workspace" element={<BuildWorkspacePage />} />
-            <Route path="/families/retirees" element={<FamilyRetireePersonaDashboard />} />
-            <Route path="/families/aspiring" element={<FamilyAspiringPersonaDashboard />} />
-            <Route path="/pros/advisor" element={<AdvisorPersonaDashboard />} />
-            <Route path="/pros/cpa" element={<AccountantPersonaDashboard />} />
-            <Route path="/pros/attorney" element={<AttorneyPersonaDashboard />} />
-            <Route path="/pros/insurance" element={<InsurancePersonaDashboard />} />
+            <Route path="/families/retirees" element={
+              <PersonaGuard allowedPersonas={['client']}>
+                <FamilyRetireePersonaDashboard />
+              </PersonaGuard>
+            } />
+            <Route path="/families/aspiring" element={
+              <PersonaGuard allowedPersonas={['client']}>
+                <FamilyAspiringPersonaDashboard />
+              </PersonaGuard>
+            } />
+            <Route path="/pros/advisor" element={
+              <PersonaGuard allowedPersonas={['advisor']}>
+                <AdvisorPersonaDashboard />
+              </PersonaGuard>
+            } />
+            <Route path="/pros/cpa" element={
+              <PersonaGuard allowedPersonas={['accountant']}>
+                <AccountantPersonaDashboard />
+              </PersonaGuard>
+            } />
+            <Route path="/pros/attorney" element={
+              <PersonaGuard allowedPersonas={['attorney']}>
+                <AttorneyPersonaDashboard />
+              </PersonaGuard>
+            } />
+            <Route path="/pros/insurance" element={
+              <PersonaGuard allowedPersonas={['advisor']}>
+                <InsurancePersonaDashboard />
+              </PersonaGuard>
+            } />
             
             <Route path="/catalog" element={<CatalogPage />} />
             <Route path="/goals" element={<GoalsPage />} />
@@ -435,9 +462,21 @@ function App() {
             
             
             {/* Pros sub-routes */}
-            <Route path="/pros/advisors" element={<AdvisorDashboardWithSideNav />} />
-            <Route path="/pros/accountants" element={<AccountantDashboard />} />
-            <Route path="/pros/attorneys" element={<Attorneys />} />
+            <Route path="/pros/advisors" element={
+              <PersonaGuard allowedPersonas={['advisor']}>
+                <AdvisorDashboardWithSideNav />
+              </PersonaGuard>
+            } />
+            <Route path="/pros/accountants" element={
+              <PersonaGuard allowedPersonas={['accountant']}>
+                <AccountantDashboard />
+              </PersonaGuard>
+            } />
+            <Route path="/pros/attorneys" element={
+              <PersonaGuard allowedPersonas={['attorney']}>
+                <Attorneys />
+              </PersonaGuard>
+            } />
             <Route path="/accountants" element={<AccountantDashboard />} />
             <Route path="/pros/insurance/life" element={<Navigate to="/personas/insurance/life" replace />} />
             <Route path="/pros/insurance/other" element={<Navigate to="/personas/insurance" replace />} />
@@ -517,21 +556,73 @@ function App() {
             <Route path="/onboarding/advisor" element={<Suspense fallback={<div>Loading...</div>}><AdvisorOnboarding /></Suspense>} />
             
             {/* Persona Dashboard Routes */}
-            <Route path="/personas/advisors" element={<PersonaDashboard personaId="advisors" />} />
-            <Route path="/personas/insurance" element={<PersonaDashboard personaId="insurance" />} />
-            <Route path="/personas/insurance/:subPersonaId" element={<PersonaDashboard personaId="insurance" />} />
-            <Route path="/personas/attorney" element={<PersonaDashboard personaId="attorney" />} />
-            <Route path="/personas/attorney/:subPersonaId" element={<PersonaDashboard personaId="attorney" />} />
-            <Route path="/personas/cpa" element={<PersonaDashboard personaId="cpa" />} />
-            <Route path="/personas/healthcare" element={<PersonaDashboard personaId="healthcare" />} />
-            <Route path="/personas/healthcare/:subPersonaId" element={<PersonaDashboard personaId="healthcare" />} />
-            <Route path="/personas/nil" element={<PersonaDashboard personaId="nil" />} />
-            <Route path="/family/home" element={<PersonaDashboard personaId="family" />} />
+            <Route path="/personas/advisors" element={
+              <PersonaGuard allowedPersonas={['advisor']}>
+                <PersonaDashboard personaId="advisors" />
+              </PersonaGuard>
+            } />
+            <Route path="/personas/insurance" element={
+              <PersonaGuard allowedPersonas={['advisor']}>
+                <PersonaDashboard personaId="insurance" />
+              </PersonaGuard>
+            } />
+            <Route path="/personas/insurance/:subPersonaId" element={
+              <PersonaGuard allowedPersonas={['advisor']}>
+                <PersonaDashboard personaId="insurance" />
+              </PersonaGuard>
+            } />
+            <Route path="/personas/attorney" element={
+              <PersonaGuard allowedPersonas={['attorney']}>
+                <PersonaDashboard personaId="attorney" />
+              </PersonaGuard>
+            } />
+            <Route path="/personas/attorney/:subPersonaId" element={
+              <PersonaGuard allowedPersonas={['attorney']}>
+                <PersonaDashboard personaId="attorney" />
+              </PersonaGuard>
+            } />
+            <Route path="/personas/cpa" element={
+              <PersonaGuard allowedPersonas={['accountant']}>
+                <PersonaDashboard personaId="cpa" />
+              </PersonaGuard>
+            } />
+            <Route path="/personas/healthcare" element={
+              <PersonaGuard allowedPersonas={['advisor']}>
+                <PersonaDashboard personaId="healthcare" />
+              </PersonaGuard>
+            } />
+            <Route path="/personas/healthcare/:subPersonaId" element={
+              <PersonaGuard allowedPersonas={['advisor']}>
+                <PersonaDashboard personaId="healthcare" />
+              </PersonaGuard>
+            } />
+            <Route path="/personas/nil" element={
+              <PersonaGuard allowedPersonas={['client', 'advisor']}>
+                <PersonaDashboard personaId="nil" />
+              </PersonaGuard>
+            } />
+            <Route path="/family/home" element={
+              <PersonaGuard allowedPersonas={['client']}>
+                <PersonaDashboard personaId="family" />
+              </PersonaGuard>
+            } />
             
             {/* Admin & Security Routes */}
-            <Route path="/admin/security" element={<SecurityDashboard />} />
-            <Route path="/admin/migrations" element={<AdminMigrations />} />
-            <Route path="/admin/ip-tracker" element={<IPTracker />} />
+            <Route path="/admin/security" element={
+              <PersonaGuard allowedPersonas={['admin', 'system_administrator', 'tenant_admin']}>
+                <SecurityDashboard />
+              </PersonaGuard>
+            } />
+            <Route path="/admin/migrations" element={
+              <PersonaGuard allowedPersonas={['admin', 'system_administrator', 'tenant_admin']}>
+                <AdminMigrations />
+              </PersonaGuard>
+            } />
+            <Route path="/admin/ip-tracker" element={
+              <PersonaGuard allowedPersonas={['admin', 'system_administrator', 'tenant_admin']}>
+                <IPTracker />
+              </PersonaGuard>
+            } />
             <Route path="/admin/ip" element={<ProtectedRoute requiredRole="admin"><IPHQ/></ProtectedRoute>} />
             <Route path="/admin/hq/ip" element={
               <ProtectedRoute requiredRole="admin">
@@ -669,6 +760,11 @@ function App() {
             <Route path="/welcome" element={<React.Suspense fallback={<div>Loading...</div>}><FamilyWelcomeFlow /></React.Suspense>} />
             <Route path="/auth" element={<React.Suspense fallback={<div>Loading...</div>}><AuthPage /></React.Suspense>} />
             <Route path="/auth/callback" element={<AuthCallback />} />
+            <Route path="/select-persona" element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <SelectPersona />
+              </Suspense>
+            } />
             <Route path="/welcome/transition" element={<React.Suspense fallback={<div>Loading...</div>}><WelcomeTransition /></React.Suspense>} />
             <Route path="/nil/education" element={<Education />} />
             <Route path="/nil/search" element={<Search />} />
