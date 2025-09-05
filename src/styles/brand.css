@@ -5,6 +5,8 @@
   --bfo-black: #000000;
   --bfo-gold: #D4AF37;
   --bfo-white: #FFFFFF;
+  --bfo-navy: #001F3F;
+  --bfo-purple: #5E17EB;
   --bfo-gold-thin: 1px;
 }
 
@@ -68,11 +70,32 @@ header[role="banner"] {
 .text-bfo-black { color: var(--bfo-black) !important; }
 .text-bfo-gold { color: var(--bfo-gold) !important; }
 .text-bfo-white { color: var(--bfo-white) !important; }
+.text-bfo-navy { color: var(--bfo-navy) !important; }
+.text-bfo-purple { color: var(--bfo-purple) !important; }
 
 /* Brand background colors */
 .bg-bfo-black { background-color: var(--bfo-black) !important; }
 .bg-bfo-gold { background-color: var(--bfo-gold) !important; }
 .bg-bfo-white { background-color: var(--bfo-white) !important; }
+.bg-bfo-navy { background-color: var(--bfo-navy) !important; }
+.bg-bfo-purple { background-color: var(--bfo-purple) !important; }
+
+/* Luxury card styling */
+.bfo-card-luxury {
+  background: linear-gradient(135deg, var(--bfo-navy), rgba(0, 31, 63, 0.95));
+  border: 2px solid var(--bfo-gold);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(212, 175, 55, 0.15);
+  transition: all 0.3s ease-in-out;
+  color: var(--bfo-white);
+}
+
+.bfo-card-luxury:hover {
+  box-shadow: 0 8px 32px rgba(212, 175, 55, 0.25);
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, var(--bfo-purple), rgba(94, 23, 235, 0.95));
+}
 
 /* Brand borders */
 .border-bfo-gold { border-color: var(--bfo-gold) !important; }

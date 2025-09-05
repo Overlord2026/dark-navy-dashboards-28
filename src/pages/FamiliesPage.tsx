@@ -121,15 +121,15 @@ const FamiliesPage = () => {
                   const isSelected = selectedStage === stage.id;
                   
                   return (
-                    <Card
+                    <div
                       key={stage.id}
-                      className="cursor-pointer transition-all duration-300 transform hover:scale-105 bg-[hsl(210_65%_13%)] border-4 border-bfo-gold hover:border-bfo-gold/80 shadow-lg shadow-bfo-gold/20"
+                      className="bfo-card-luxury cursor-pointer"
                       onClick={() => {
                         setSelectedStage(stage.id);
                         handleStageSelect(stage);
                       }}
                     >
-                      <CardContent className="p-6 md:p-8 text-center h-full flex flex-col justify-center">
+                      <div className="p-6 md:p-8 text-center h-full flex flex-col justify-center">
                         <div className="mb-4 md:mb-6">
                           <div className="w-12 h-12 md:w-16 md:h-16 mx-auto mb-3 md:mb-4 rounded-full bg-bfo-gold/10 flex items-center justify-center">
                             <stage.icon className="w-6 h-6 md:w-8 md:h-8 text-bfo-gold" />
@@ -160,8 +160,8 @@ const FamiliesPage = () => {
                             Selected
                           </Badge>
                         )}
-                      </CardContent>
-                    </Card>
+                      </div>
+                    </div>
                   );
                 })}
               </div>
@@ -192,12 +192,12 @@ const FamiliesPage = () => {
                 const isWealth = option.id === 'wealth';
                 
                 return (
-                  <Card
+                  <div
                     key={option.id}
-                    className="cursor-pointer transition-all duration-300 hover:scale-105 border-4 bg-[hsl(210_65%_13%)] border-bfo-gold shadow-lg shadow-bfo-gold/20"
+                    className="bfo-card-luxury cursor-pointer"
                     onClick={() => handleQuickStart(option)}
                   >
-                    <CardContent className="p-4 md:p-6 text-center">
+                    <div className="p-4 md:p-6 text-center">
                       <div className="w-10 h-10 md:w-12 md:h-12 mx-auto mb-3 md:mb-4 rounded-lg flex items-center justify-center border-2 bg-bfo-gold/10 border-bfo-gold">
                         <option.icon className="w-5 h-5 md:w-6 md:h-6 text-bfo-gold" />
                       </div>
@@ -208,8 +208,8 @@ const FamiliesPage = () => {
                       <p className="text-xs md:text-sm text-white/80">
                         {option.description}
                       </p>
-                    </CardContent>
-                  </Card>
+                    </div>
+                  </div>
                 );
               })}
             </div>
