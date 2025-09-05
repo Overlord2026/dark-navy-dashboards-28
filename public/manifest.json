@@ -1,11 +1,11 @@
 {
-  "name": "Family Office Marketplace",
-  "short_name": "FO Marketplace",
+  "name": "my.BFOCFO",
+  "short_name": "my.BFOCFO",
   "description": "Connect with vetted wealth professionals and access premium resources",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0f172a",
-  "theme_color": "#d4af37",
+  "background_color": "#ffffff",
+  "theme_color": "#14213D",
   "orientation": "portrait-primary",
   "scope": "/",
   "icons": [

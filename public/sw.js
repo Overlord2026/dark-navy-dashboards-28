@@ -1,31 +1,50 @@
-const CACHE_NAME = 'fom-cache-v1';
-const urlsToCache = [
-  '/',
-  '/static/js/bundle.js',
-  '/static/css/main.css',
-  '/manifest.json'
-];
+const CACHE_NAME = 'mybfocfo-cache-v1';
+const STATIC_CACHE = 'mybfocfo-static-v1';
 
-// Install event - cache resources
+// Install event - cache static resources
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME)
+    caches.open(STATIC_CACHE)
       .then(cache => {
-        console.log('Opened cache');
-        return cache.addAll(urlsToCache);
+        return cache.addAll([
+          '/manifest.json',
+          '/favicon.png'
+        ]);
       })
   );
+  self.skipWaiting();
 });
 
-// Fetch event - serve from cache when offline
+// Fetch event - cache-first for static, network-first for HTML
 self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request)
-      .then(response => {
-        // Return cached version or fetch from network
-        return response || fetch(event.request);
+  const { request } = event;
+  const url = new URL(request.url);
+  
+  // Cache-first for static assets
+  if (request.destination === 'script' || 
+      request.destination === 'style' || 
+      request.destination === 'image' ||
+      url.pathname.includes('/assets/')) {
+    event.respondWith(
+      caches.match(request).then(response => {
+        return response || fetch(request).then(fetchResponse => {
+          const responseClone = fetchResponse.clone();
+          caches.open(STATIC_CACHE).then(cache => {
+            cache.put(request, responseClone);
+          });
+          return fetchResponse;
+        });
       })
-  );
+    );
+  } 
+  // Network-first for HTML and API calls
+  else {
+    event.respondWith(
+      fetch(request).catch(() => {
+        return caches.match(request);
+      })
+    );
+  }
 });
 
 // Activate event - clean up old caches
