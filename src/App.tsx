@@ -173,6 +173,7 @@ import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { PersonaGuard } from '@/components/auth/PersonaGuard';
 import ReceiptsConsole from '@/pages/admin/ReceiptsConsole';
 import RuleSyncConsole from '@/pages/admin/RuleSyncConsole';
+import Control401k from '@/pages/admin/Control401k';
 
 // Welcome Flow Components
 const FamilyWelcomeFlow = React.lazy(() => import('@/components/welcome/FullScreenWelcome').then(m => ({ default: m.FullScreenWelcome })));
@@ -886,14 +887,22 @@ function App() {
                  </PersonaGuard>
                }
              />
-             <Route
-               path="/admin/rulesync"
-               element={
-                 <PersonaGuard allowedPersonas={["admin","system_administrator","tenant_admin"]}>
-                   <RuleSyncConsole />
-                 </PersonaGuard>
-               }
-             />
+              <Route
+                path="/admin/rulesync"
+                element={
+                  <PersonaGuard allowedPersonas={["admin","system_administrator","tenant_admin"]}>
+                    <RuleSyncConsole />
+                  </PersonaGuard>
+                }
+              />
+              <Route
+                path="/admin/401k"
+                element={
+                  <PersonaGuard allowedPersonas={["admin","system_administrator","tenant_admin"]}>
+                    <Control401k />
+                  </PersonaGuard>
+                }
+              />
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/receipts" element={
                <Suspense fallback={<div>Loading...</div>}>
                  <ReceiptsAdmin />
