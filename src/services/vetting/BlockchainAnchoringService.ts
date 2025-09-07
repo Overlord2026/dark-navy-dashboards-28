@@ -433,14 +433,14 @@ export class BlockchainAnchoringService {
     };
   }
 
-  private createContentHash(content: any): string {
+  private async createContentHash(content: any): Promise<string> {
     const serialized = JSON.stringify(content, Object.keys(content).sort());
-    return createHash('sha256').update(serialized).digest('hex');
+    return await sha256Hex(serialized);
   }
 
   private async createFingerprint(assetId: string, contentHash: string): Promise<void> {
-    const salt = createHash('sha256').update(Math.random().toString()).digest('hex');
-    const saltedHash = createHash('sha256').update(contentHash + salt).digest('hex');
+    const salt = await sha256Hex(Math.random().toString());
+    const saltedHash = await sha256Hex(contentHash + salt);
 
     await supabase
       .from('fingerprints')
@@ -461,11 +461,11 @@ export class BlockchainAnchoringService {
     console.log(`Asset ${assetId} added to pending batch queue`);
   }
 
-  private buildMerkleTree(leaves: string[]): { root: string; height: number } {
+  private async buildMerkleTree(leaves: string[]): Promise<{ root: string; height: number }> {
     if (leaves.length === 0) throw new Error('No leaves provided');
     if (leaves.length === 1) return { root: leaves[0], height: 1 };
 
-    let currentLevel = leaves.map(leaf => createHash('sha256').update(leaf).digest('hex'));
+    let currentLevel = await Promise.all(leaves.map(leaf => sha256Hex(leaf)));
     let height = 1;
 
     while (currentLevel.length > 1) {
@@ -474,7 +474,7 @@ export class BlockchainAnchoringService {
       for (let i = 0; i < currentLevel.length; i += 2) {
         const left = currentLevel[i];
         const right = currentLevel[i + 1] || left; // Duplicate last node if odd number
-        const combined = createHash('sha256').update(left + right).digest('hex');
+        const combined = await sha256Hex(left + right);
         nextLevel.push(combined);
       }
       
@@ -496,7 +496,7 @@ export class BlockchainAnchoringService {
 
     // Generate proof path (simplified - actual implementation would traverse tree)
     let currentIndex = leafIndex;
-    let currentLevel = allLeaves.map(leaf => createHash('sha256').update(leaf).digest('hex'));
+    let currentLevel = await Promise.all(allLeaves.map(leaf => sha256Hex(leaf)));
     
     while (currentLevel.length > 1) {
       const siblingIndex = currentIndex % 2 === 0 ? currentIndex + 1 : currentIndex - 1;
@@ -510,7 +510,7 @@ export class BlockchainAnchoringService {
       for (let i = 0; i < currentLevel.length; i += 2) {
         const left = currentLevel[i];
         const right = currentLevel[i + 1] || left;
-        const combined = createHash('sha256').update(left + right).digest('hex');
+        const combined = await sha256Hex(left + right);
         nextLevel.push(combined);
       }
       
@@ -521,15 +521,15 @@ export class BlockchainAnchoringService {
     return proof;
   }
 
-  private verifyMerkleProof(leafHash: string, proof: string[], expectedRoot: string): boolean {
-    let computedHash = createHash('sha256').update(leafHash).digest('hex');
+  private async verifyMerkleProof(leafHash: string, proof: string[], expectedRoot: string): Promise<boolean> {
+    let computedHash = await sha256Hex(leafHash);
     
     for (const proofElement of proof) {
       // Determine order based on hash comparison (simplified)
       if (computedHash <= proofElement) {
-        computedHash = createHash('sha256').update(computedHash + proofElement).digest('hex');
+        computedHash = await sha256Hex(computedHash + proofElement);
       } else {
-        computedHash = createHash('sha256').update(proofElement + computedHash).digest('hex');
+        computedHash = await sha256Hex(proofElement + computedHash);
       }
     }
     
@@ -541,9 +541,7 @@ export class BlockchainAnchoringService {
     await new Promise(resolve => setTimeout(resolve, 2000));
     
     // Generate mock transaction hash
-    const txHash = createHash('sha256')
-      .update(merkleRoot + Date.now().toString() + Math.random().toString())
-      .digest('hex');
+    const txHash = await sha256Hex(merkleRoot + Date.now().toString() + Math.random().toString());
     
     return '0x' + txHash;
   }

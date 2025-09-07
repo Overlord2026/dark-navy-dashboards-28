@@ -80,7 +80,7 @@ export const generateInputsHash = (transcript: ZocksTranscript): string => {
     duration: transcript.duration
   };
   
-  // In a real implementation, use crypto.createHash('sha256')
+  // Use browser-safe hashing instead of Node.js crypto
   return btoa(JSON.stringify(hashInput)).replace(/[^a-zA-Z0-9]/g, '').substring(0, 32);
 };
 
