@@ -172,6 +172,7 @@ import RequireAdmin from '@/components/auth/RequireAdmin';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { PersonaGuard } from '@/components/auth/PersonaGuard';
 import ReceiptsConsole from '@/pages/admin/ReceiptsConsole';
+import RuleSyncConsole from '@/pages/admin/RuleSyncConsole';
 
 // Welcome Flow Components
 const FamilyWelcomeFlow = React.lazy(() => import('@/components/welcome/FullScreenWelcome').then(m => ({ default: m.FullScreenWelcome })));
@@ -882,6 +883,14 @@ function App() {
                element={
                  <PersonaGuard allowedPersonas={["admin","system_administrator","tenant_admin"]}>
                    <ReceiptsConsole />
+                 </PersonaGuard>
+               }
+             />
+             <Route
+               path="/admin/rulesync"
+               element={
+                 <PersonaGuard allowedPersonas={["admin","system_administrator","tenant_admin"]}>
+                   <RuleSyncConsole />
                  </PersonaGuard>
                }
              />
