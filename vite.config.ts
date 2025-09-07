@@ -19,4 +19,44 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    // Code splitting for bundles >200KB
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // Vendor chunks
+          vendor: ['react', 'react-dom'],
+          ui: ['@radix-ui/react-dialog', '@radix-ui/react-select', '@radix-ui/react-toast'],
+          routing: ['react-router-dom'],
+          supabase: ['@supabase/supabase-js'],
+          charts: ['recharts'],
+          forms: ['react-hook-form', '@hookform/resolvers', 'zod'],
+          // Split large features
+          personas: [
+            './src/pages/personas/AdvisorPersonaDashboard.tsx',
+            './src/pages/personas/FamilyRetireePersonaDashboard.tsx',
+            './src/pages/personas/InsurancePersonaDashboard.tsx'
+          ],
+          admin: [
+            './src/pages/admin/AdminHQ.tsx',
+            './src/pages/admin/SecurityDashboard.tsx'
+          ],
+          marketplace: [
+            './src/pages/marketplace/Index.tsx',
+            './src/pages/marketplace/Advisors.tsx'
+          ]
+        }
+      }
+    },
+    // Performance optimizations
+    target: 'esnext',
+    minify: 'esbuild',
+    sourcemap: false,
+    cssCodeSplit: true
+  },
+  // Performance hints
+  optimizeDeps: {
+    include: ['react', 'react-dom', 'lucide-react'],
+    exclude: ['@vite/client', '@vite/env']
+  }
 }));

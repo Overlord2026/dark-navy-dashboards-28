@@ -7,11 +7,20 @@ import './index.css'
 import './styles/brand.css'
 import './styles/nil-a11y-perf.css'
 import './styles/chartColors.css'
+import './styles/accessibility.css'
 import emailjs from '@emailjs/browser'
 import { initializeAnalytics } from './lib/analytics'
 import { registerServiceWorker, promptInstallPWA } from './lib/pwa'
 import { AuthProvider } from '@/context/AuthContext'
 import { EntitlementsProvider } from '@/context/EntitlementsContext'
+import { removeProductionLogs } from './utils/consoleRemoval'
+import { setupNetworkErrorHandling } from './components/monitoring/GlobalErrorBoundary'
+import { initializeAccessibility } from './utils/accessibility'
+
+// Initialize production optimizations
+removeProductionLogs()
+setupNetworkErrorHandling()
+initializeAccessibility()
 
 // Initialize EmailJS at app entry point
 emailjs.init(import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'rfbjUYJ8iPHEZaQvx')
@@ -19,23 +28,16 @@ emailjs.init(import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'rfbjUYJ8iPHEZaQvx')
 // Initialize analytics
 initializeAnalytics()
 
-// Initialize job system for admin users
-import('@/jobs/sample-jobs').then(() => {
-  console.log('[App] Job system samples loaded');
-}).catch(console.error);
-
 // Register service worker for PWA
 registerServiceWorker()
-
-// Set up PWA install prompt
 promptInstallPWA()
 
-// Initialize Web Vitals tracking
+// Initialize Web Vitals tracking (production logging removed)
 if (import.meta.env.PROD || import.meta.env.DEV) {
   import('./scripts/vitals').then(({ vitalsTracker }) => {
-    console.log('[Web Vitals] Tracking initialized');
-  }).catch(err => {
-    console.warn('[Web Vitals] Failed to initialize:', err);
+    // Removed console.log for production
+  }).catch(() => {
+    // Silent fail in production
   });
 }
 
