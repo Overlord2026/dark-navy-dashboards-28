@@ -171,6 +171,7 @@ import FamiliesStart from '@/pages/families/start';
 import RequireAdmin from '@/components/auth/RequireAdmin';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { PersonaGuard } from '@/components/auth/PersonaGuard';
+import ReceiptsConsole from '@/pages/admin/ReceiptsConsole';
 
 // Welcome Flow Components
 const FamilyWelcomeFlow = React.lazy(() => import('@/components/welcome/FullScreenWelcome').then(m => ({ default: m.FullScreenWelcome })));
@@ -876,7 +877,16 @@ function App() {
              <Route path="/broker/kit" element={<BrokerKit />} />
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/anchors" element={<AnchorList />} />}
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/receipt/:id" element={<ReceiptView />} />}
-             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/receipts" element={<ReceiptsViewer />} />}
+             {getFlag('ADMIN_TOOLS_ENABLED') && (
+               <Route
+                 path="/admin/receipts"
+                 element={
+                   <PersonaGuard allowedPersonas={["admin","system_administrator","tenant_admin"]}>
+                     <ReceiptsConsole />
+                   </PersonaGuard>
+                 }
+               />
+             )}
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/receipts" element={
                <Suspense fallback={<div>Loading...</div>}>
                  <ReceiptsAdmin />
