@@ -37,11 +37,11 @@ export default defineConfig(({ mode }) => ({
           ],
           admin: [
             './src/pages/admin/AdminHQ.tsx',
-            './src/components/bfo/AdminMigrations.tsx'
+            './src/components/bfo/AdminMigrations.tsx',
+            './src/components/bfo/SecurityDashboard.tsx'
           ],
           marketplace: [
-            './src/pages/marketplace/Index.tsx',
-            './src/pages/marketplace/Advisors.tsx'
+            './src/pages/marketplace/Index.tsx'
           ]
         }
       }
