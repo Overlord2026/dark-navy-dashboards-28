@@ -31,15 +31,13 @@ export default defineConfig(({ mode }) => ({
           supabase: ['@supabase/supabase-js'],
           charts: ['recharts'],
           forms: ['react-hook-form', '@hookform/resolvers', 'zod'],
-          // Split large features
+          // Split large features by actual existing files
           personas: [
-            './src/pages/personas/AdvisorPersonaDashboard.tsx',
-            './src/pages/personas/FamilyRetireePersonaDashboard.tsx',
-            './src/pages/personas/InsurancePersonaDashboard.tsx'
+            './src/components/bfo/PersonaDashboard.tsx'
           ],
           admin: [
             './src/pages/admin/AdminHQ.tsx',
-            './src/pages/admin/SecurityDashboard.tsx'
+            './src/components/bfo/AdminMigrations.tsx'
           ],
           marketplace: [
             './src/pages/marketplace/Index.tsx',

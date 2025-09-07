@@ -37,8 +37,11 @@ export function LegalBar({ className }: LegalBarProps) {
         !isVisible && "md:translate-y-0 translate-y-full",
         className
       )}
+      role="contentinfo"
+      aria-label="Legal information and company details"
     >
-      <div className="container mx-auto px-4 py-2">
+      <div className="container mx-auto px-4 py-2"
+           aria-label="Footer content">
         <div className="flex flex-col md:flex-row items-center justify-between gap-2 text-xs text-muted-foreground">
           {/* Company name and tagline */}
           <div className="flex flex-col md:flex-row items-center gap-1 md:gap-2 text-center md:text-left">
@@ -54,25 +57,36 @@ export function LegalBar({ className }: LegalBarProps) {
             <Link 
               to="/legal/terms" 
               className="hover:text-foreground transition-colors"
+              aria-label="Read Terms of Use"
             >
               Terms of Use
             </Link>
             <Link 
               to="/legal/privacy" 
               className="hover:text-foreground transition-colors"
+              aria-label="Read Privacy Policy"
             >
               Privacy
             </Link>
             <Link 
               to="/legal/disclosures" 
               className="hover:text-foreground transition-colors"
+              aria-label="Read Legal Disclosures"
             >
               Disclosures
             </Link>
-            <span className="hover:text-foreground cursor-default">
+            <span 
+              className="hover:text-foreground cursor-default" 
+              role="text"
+              aria-label="Patent status"
+            >
               Patent Pending
             </span>
-            <span className="hover:text-foreground cursor-default">
+            <span 
+              className="hover:text-foreground cursor-default font-medium" 
+              role="text"
+              aria-label="Investment advice disclaimer"
+            >
               Not investment advice
             </span>
           </div>
