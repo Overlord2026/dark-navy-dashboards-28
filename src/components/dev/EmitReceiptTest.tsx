@@ -1,12 +1,12 @@
 import React from "react";
 import { supabase } from "@/lib/supabaseClient";
-import { initReceiptsEmitter, hashActionRequest } from "@/lib/receiptsEmitter";
+import { initReceiptsEmitterAuto, hashActionRequest } from "@/lib/receiptsEmitter";
 import { evaluateAction } from "@/lib/policy/policyEvaluator";
 import { collectApprovals } from "@/lib/policy/hitlGate";
 
 export default function EmitReceiptTest({ tenantId, userId }: { tenantId: string; userId?: string }) {
   const onRun = async () => {
-    const emitter = initReceiptsEmitter(supabase, () => tenantId, () => userId || "");
+    const emitter = initReceiptsEmitterAuto(supabase);
     const action = { type: "TEST_TRANSFER", amount: 5000, currency: "USD" };
     const request_hash = await hashActionRequest(action);
     const evalRes = await evaluateAction(action, { domain: "general" });

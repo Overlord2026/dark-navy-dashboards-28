@@ -877,16 +877,14 @@ function App() {
              <Route path="/broker/kit" element={<BrokerKit />} />
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/anchors" element={<AnchorList />} />}
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/receipt/:id" element={<ReceiptView />} />}
-             {getFlag('ADMIN_TOOLS_ENABLED') && (
-               <Route
-                 path="/admin/receipts"
-                 element={
-                   <PersonaGuard allowedPersonas={["admin","system_administrator","tenant_admin"]}>
-                     <ReceiptsConsole />
-                   </PersonaGuard>
-                 }
-               />
-             )}
+             <Route
+               path="/admin/receipts"
+               element={
+                 <PersonaGuard allowedPersonas={["admin","system_administrator","tenant_admin"]}>
+                   <ReceiptsConsole />
+                 </PersonaGuard>
+               }
+             />
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/receipts" element={
                <Suspense fallback={<div>Loading...</div>}>
                  <ReceiptsAdmin />

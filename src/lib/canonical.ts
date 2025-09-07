@@ -4,15 +4,12 @@ export async function sha256Hex(input: string): Promise<string> {
   const digest = await crypto.subtle.digest("SHA-256", data);
   return bufferToHex(digest);
 }
-
 function bufferToHex(buf: ArrayBuffer): string {
   const bytes = new Uint8Array(buf);
   let out = "";
   for (let i = 0; i < bytes.length; i++) out += bytes[i].toString(16).padStart(2, "0");
   return out;
 }
-
-// Canonicalize object keys (one-level) and stringify
 export async function canonicalize(obj: unknown): Promise<{ canonical: string; hash: string }> {
   const canonical = JSON.stringify(obj, Object.keys(obj as any).sort());
   const hash = await sha256Hex(canonical);
