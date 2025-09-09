@@ -22,6 +22,7 @@ export async function initMock() {
   if (saved) {
     try {
       store.receipts = JSON.parse(saved);
+      console.log('Loaded receipts from localStorage:', store.receipts.length);
       return;
     } catch (e) {
       console.warn('Failed to parse saved receipts, loading fixtures');
@@ -31,11 +32,14 @@ export async function initMock() {
   // Load fixtures - start with basic fixtures if needed
   const defaultFixtures: RDS[] = [
     { id: 'rds_001', type: 'RuleVersion_RDS', created_at: new Date().toISOString(), value: { version: 'v1.0.0' }, family: 'rulesync' },
-    { id: 'voice_001', type: 'Voice_RDS', created_at: new Date().toISOString(), value: { session_id: 'demo' }, family: 'voice' }
+    { id: 'voice_001', type: 'Voice_RDS', created_at: new Date().toISOString(), value: { session_id: 'demo' }, family: 'voice' },
+    { id: 'k401_001', type: 'Plan_Benchmark_Receipt', created_at: new Date().toISOString(), value: { plan_id: 'demo' }, family: '401k' },
+    { id: 'creator_001', type: 'OfferLock_RDS', created_at: new Date().toISOString(), value: { offer_id: 'demo' }, family: 'creator' }
   ];
   
   store.receipts = defaultFixtures;
   localStorage.setItem('mock.receipts', JSON.stringify(store.receipts));
+  console.log('Initialized mock receipts:', store.receipts.length);
 }
 
 export async function emitReceipt(r: RDS): Promise<RDS> {

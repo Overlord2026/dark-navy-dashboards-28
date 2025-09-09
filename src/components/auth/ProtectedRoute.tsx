@@ -3,6 +3,7 @@ import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { shouldEnforceAuthentication, getEnvironmentConfig } from '@/utils/environment';
+import { MOCK_MODE } from '@/config/featureFlags';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -12,6 +13,11 @@ interface ProtectedRouteProps {
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requiredRole }) => {
   const { user, session, isLoading, userProfile, isQABypassActive } = useAuth();
   const isAuthenticated = !!(user && session);
+
+  // In mock mode, always allow access
+  if (MOCK_MODE) {
+    return <>{children}</>;
+  }
 
   if (isLoading) {
     return (
@@ -24,13 +30,10 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requir
     );
   }
 
-  // Check if authentication should be enforced for this user
   const enforceAuth = shouldEnforceAuthentication(userProfile?.email);
-  
-  // In non-production environments, allow access without authentication for development
   const env = getEnvironmentConfig();
+  
   if (!env.isProduction && !enforceAuth) {
-    // Allow QA bypass and development access
     return <>{children}</>;
   }
   
@@ -38,9 +41,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requir
     return <Navigate to="/auth" replace />;
   }
 
-  // Check role-based access if requiredRole is specified
   if (requiredRole && userProfile?.role !== requiredRole) {
-    // You can customize this to redirect to an access denied page
     return <Navigate to="/client-dashboard" replace />;
   }
 

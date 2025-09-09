@@ -5,6 +5,7 @@ import { shouldEnforceAuthentication, isQABypassAllowed } from '@/utils/environm
 import { UserProfile } from '@/types/user';
 import { useFirstLoginToolInstaller } from '@/hooks/useFirstLoginToolInstaller';
 import type { PersonaType } from '@/config/defaultToolsByPersona';
+import { MOCK_MODE } from '@/config/featureFlags';
 
 
 interface AuthContextType {
@@ -36,8 +37,23 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isChecking2FA, setIsChecking2FA] = useState(false);
-  const [isQABypassActive, setIsQABypassActive] = useState(false);
+  const [isQABypassActive, setIsQABypassActive] = useState(MOCK_MODE);
   const { checkAndInstallDefaultTools } = useFirstLoginToolInstaller();
+
+  // Mock mode user profile
+  const mockUserProfile: UserProfile = {
+    id: 'mock-user-id',
+    name: 'Mock User',
+    displayName: 'Mock Admin',
+    email: 'mock@example.com',
+    firstName: 'Mock',
+    lastName: 'User',
+    role: 'admin',
+    permissions: ['admin'],
+    twoFactorEnabled: false,
+    tenant_id: 'mock-tenant',
+    segments: []
+  };
 
   // Helper function to safely parse date from database
   const parseDateSafely = (dateString: string): Date => {
@@ -117,27 +133,28 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   useEffect(() => {
-    // Set up auth state listener first
+    if (MOCK_MODE) {
+      // In mock mode, simulate authentication with mock user
+      const mockUser = { id: 'mock-user-id', email: 'mock@example.com' } as User;
+      const mockSession = { user: mockUser } as Session;
+      
+      setUser(mockUser);
+      setSession(mockSession);
+      setUserProfile(mockUserProfile);
+      setIsQABypassActive(true);
+      setIsLoading(false);
+      return;
+    }
+
+    // Real auth mode
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         console.log('Auth state changed:', event, session?.user?.id);
-        
-        // Handle email confirmation
-        if (event === 'TOKEN_REFRESHED' || event === 'SIGNED_IN') {
-          console.log('User signed in or token refreshed');
-        }
-        
-        // Handle password recovery
-        if (event === 'PASSWORD_RECOVERY') {
-          console.log('Password recovery event detected');
-          // The user will be redirected to reset-password page automatically
-        }
         
         setSession(session);
         setUser(session?.user ?? null);
         
         if (session?.user) {
-          // Use setTimeout to defer profile loading and prevent auth state deadlock
           setTimeout(() => {
             loadUserProfile(session.user.id);
           }, 0);
@@ -150,7 +167,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       }
     );
 
-    // Then check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
