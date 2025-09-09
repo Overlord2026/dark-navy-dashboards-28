@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from 'react';
+import { useEffect, useState, Suspense, lazy } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider } from "next-themes";
 import { HelmetProvider } from 'react-helmet-async';
@@ -64,14 +64,14 @@ import PublishIndex from '@/pages/admin/publish/Index';
 import AdminPanel from '@/pages/stubs/AdminPanel';
 
 // New persona landing pages  
-const FamiliesIndex = React.lazy(() => import('@/pages/families/index'));
-const ProsIndex = React.lazy(() => import('@/pages/pros/index'));
-const NILLanding = React.lazy(() => import('@/pages/nil/landing'));
-const HealthcareNew = React.lazy(() => import('@/pages/healthcare/index'));
-const SolutionsLanding = React.lazy(() => import('@/pages/solutions/index'));
-const LearnLanding = React.lazy(() => import('@/pages/learn/index'));
+const FamiliesIndex = lazy(() => import('@/pages/families/index'));
+const ProsIndex = lazy(() => import('@/pages/pros/index'));
+const NILLanding = lazy(() => import('@/pages/nil/landing'));
+const HealthcareNew = lazy(() => import('@/pages/healthcare/index'));
+const SolutionsLanding = lazy(() => import('@/pages/solutions/index'));
+const LearnLanding = lazy(() => import('@/pages/learn/index'));
 
-const AiesConsole = React.lazy(() => import('@/pages/admin/AiesConsole'));
+const AiesConsole = lazy(() => import('@/pages/admin/AiesConsole'));
 // Removed duplicate AdminPanel import
 import JobsPanel from '@/pages/admin/JobsPanel';
 import PublishPanel from '@/pages/admin/PublishPanel';
@@ -108,15 +108,15 @@ import ReviewView from '@/pages/family/ReviewView';
 // Trust Rails Admin Pages
 import ReceiptsViewer from '@/pages/admin/receipts/ReceiptsViewer';
 import TrustAnchors from '@/pages/admin/anchors/Anchors';
-const ReceiptsAdmin = React.lazy(() => import('@/pages/admin/ReceiptsAdmin'));
+const ReceiptsAdmin = lazy(() => import('@/pages/admin/ReceiptsAdmin'));
 const CanonTest = lazy(() => import("@/components/testing/CanonTest"));
 import HealthCheck from "@/pages/HealthCheck";
 
 // Demo Pages
-const RetireeBucketDemo = React.lazy(() => import('@/pages/demos/retiree-bucket'));
-const AdvisorFeeCompareDemo = React.lazy(() => import('@/pages/demos/advisor-fee-compare'));
-const NILSearchDemo = React.lazy(() => import('@/pages/demos/nil-search'));
-const IPLedgerPage = React.lazy(() => import('@/pages/admin/hq/ip'));
+const RetireeBucketDemo = lazy(() => import('@/pages/demos/retiree-bucket'));
+const AdvisorFeeCompareDemo = lazy(() => import('@/pages/demos/advisor-fee-compare'));
+const NILSearchDemo = lazy(() => import('@/pages/demos/nil-search'));
+const IPLedgerPage = lazy(() => import('@/pages/admin/hq/ip'));
 
 // BFO Ops Admin Pages
 import SitesAdmin from '@/pages/admin/sites/SitesAdmin';
@@ -124,14 +124,14 @@ import RevenueAdmin from '@/pages/admin/revenue/RevenueAdmin';
 import AutomationsAdmin from '@/pages/admin/automations/AutomationsAdmin';
 import TransitionDetail from '@/pages/admin/transition/TransitionDetail';
 import DiligenceAdmin from '@/pages/admin/diligence/DiligenceAdmin';
-const RolloverWizard = React.lazy(() => import('@/pages/k401/RolloverWizard'));
-const AdvisorBook = React.lazy(() => import('@/pages/k401/AdvisorBook'));
+const RolloverWizard = lazy(() => import('@/pages/k401/RolloverWizard'));
+const AdvisorBook = lazy(() => import('@/pages/k401/AdvisorBook'));
 
 // K401 Delegated Access Components
-const ClientGrantAccess = React.lazy(() => import('@/pages/k401/ClientGrantAccess'));
-const AdvisorRequestAccess = React.lazy(() => import('@/pages/k401/AdvisorRequestAccess'));
-const ClientApproveSession = React.lazy(() => import('@/pages/k401/ClientApproveSession'));
-const AdvisorAssistConsole = React.lazy(() => import('@/pages/k401/AdvisorAssistConsole'));
+const ClientGrantAccess = lazy(() => import('@/pages/k401/ClientGrantAccess'));
+const AdvisorRequestAccess = lazy(() => import('@/pages/k401/AdvisorRequestAccess'));
+const ClientApproveSession = lazy(() => import('@/pages/k401/ClientApproveSession'));
+const AdvisorAssistConsole = lazy(() => import('@/pages/k401/AdvisorAssistConsole'));
 import VaultAutofillConsent from '@/pages/family/VaultAutofillConsent';
 import VaultAutofillReview from '@/pages/advisor/VaultAutofillReview';
 import ChecklistExport from '@/pages/supervisor/ChecklistExport';
@@ -140,8 +140,8 @@ import { getFlag } from '@/lib/flags';
 import '@/features/k401/init'; // Initialize provider rules
 
 // Onboarding Components
-const FamilyOnboarding = React.lazy(() => import('@/pages/onboarding/FamilyOnboarding'));
-const AdvisorOnboarding = React.lazy(() => import('@/pages/onboarding/AdvisorOnboarding'));
+const FamilyOnboarding = lazy(() => import('@/pages/onboarding/FamilyOnboarding'));
+const AdvisorOnboarding = lazy(() => import('@/pages/onboarding/AdvisorOnboarding'));
 import ProfessionalOnboarding from '@/pages/onboarding/ProfessionalOnboarding';
 import HealthcareOnboarding from '@/pages/onboarding/HealthcareOnboarding';
 import NILOnboardingFlow from '@/pages/onboarding/NILOnboarding';
@@ -179,9 +179,9 @@ import Control401k from '@/pages/admin/Control401k';
 import Evidence from '@/pages/admin/Evidence';
 
 // Welcome Flow Components
-const FamilyWelcomeFlow = React.lazy(() => import('@/components/welcome/FullScreenWelcome').then(m => ({ default: m.FullScreenWelcome })));
-const AuthPage = React.lazy(() => import('@/pages/auth/AuthPage').then(m => ({ default: m.AuthPage })));
-const WelcomeTransition = React.lazy(() => import('@/pages/welcome/WelcomeTransition').then(m => ({ default: m.WelcomeTransition })));
+const FamilyWelcomeFlow = lazy(() => import('@/components/welcome/FullScreenWelcome').then(m => ({ default: m.FullScreenWelcome })));
+const AuthPage = lazy(() => import('@/pages/auth/AuthPage').then(m => ({ default: m.AuthPage })));
+const WelcomeTransition = lazy(() => import('@/pages/welcome/WelcomeTransition').then(m => ({ default: m.WelcomeTransition })));
 
 // Marketplace imports
 import MarketplaceIndex from '@/pages/marketplace/Index';
@@ -190,32 +190,32 @@ import AdvisorDetail from '@/pages/marketplace/AdvisorDetail';
 import CPAIndex from '@/pages/marketplace/cpa/Index';
 import CPADetail from '@/pages/marketplace/cpa/Detail';
 
-const CpaHome = React.lazy(() => import('@/pages/cpas/CpaHome'));
-const CpaMarketplace = React.lazy(() => import('@/pages/marketplace/CpaMarketplace'));
-const CpaProfile = React.lazy(() => import('@/pages/marketplace/CpaProfile'));
-const TaxProjectionTool = React.lazy(() => import('@/pages/tools/TaxProjectionTool'));
-const ContinuingEducation = React.lazy(() => import('@/pages/learn/ContinuingEducation'));
-const TaxHubPro = React.lazy(() => import('@/pages/taxhub/TaxHubPro'));
-const CpaTools = React.lazy(() => import('@/pages/cpa/CpaTools'));
-const CpaLearn = React.lazy(() => import('@/pages/cpa/CpaLearn'));
-const EstateWorkbench = React.lazy(() => import('@/pages/estate/EstateWorkbench'));
-const AttorneyMarketplace = React.lazy(() => import('@/pages/marketplace/AttorneyMarketplace'));
-const AttorneysHome = React.lazy(() => import('@/pages/marketplace/AttorneysHome'));
-const AttorneyDetail = React.lazy(() => import('@/pages/marketplace/AttorneyDetail'));
-const MarketplaceInsurance = React.lazy(() => import('@/pages/marketplace/Insurance'));
-const FNOLStub = React.lazy(() => import('@/pages/insurance/fnol'));
-const BindStub = React.lazy(() => import('@/pages/insurance/bind'));
+const CpaHome = lazy(() => import('@/pages/cpas/CpaHome'));
+const CpaMarketplace = lazy(() => import('@/pages/marketplace/CpaMarketplace'));
+const CpaProfile = lazy(() => import('@/pages/marketplace/CpaProfile'));
+const TaxProjectionTool = lazy(() => import('@/pages/tools/TaxProjectionTool'));
+const ContinuingEducation = lazy(() => import('@/pages/learn/ContinuingEducation'));
+const TaxHubPro = lazy(() => import('@/pages/taxhub/TaxHubPro'));
+const CpaTools = lazy(() => import('@/pages/cpa/CpaTools'));
+const CpaLearn = lazy(() => import('@/pages/cpa/CpaLearn'));
+const EstateWorkbench = lazy(() => import('@/pages/estate/EstateWorkbench'));
+const AttorneyMarketplace = lazy(() => import('@/pages/marketplace/AttorneyMarketplace'));
+const AttorneysHome = lazy(() => import('@/pages/marketplace/AttorneysHome'));
+const AttorneyDetail = lazy(() => import('@/pages/marketplace/AttorneyDetail'));
+const MarketplaceInsurance = lazy(() => import('@/pages/marketplace/Insurance'));
+const FNOLStub = lazy(() => import('@/pages/insurance/fnol'));
+const BindStub = lazy(() => import('@/pages/insurance/bind'));
 
-const DemoPage = React.lazy(() => import('@/pages/demos/[persona]'));
-const PreviewPage = React.lazy(() => import('@/components/PreviewPage'));
+const DemoPage = lazy(() => import('@/pages/demos/[persona]'));
+const PreviewPage = lazy(() => import('@/components/PreviewPage'));
 
 // Estate Planning Components
-const EstateDIYWizard = React.lazy(() => import('@/pages/estate/EstateDIYWizard'));
-const HealthcareDIYWizard = React.lazy(() => import('@/pages/estate/HealthcareDIYWizard'));
-const AdvisorEstatePage = React.lazy(() => import('@/pages/advisors/AdvisorEstatePage'));
-const AttorneyEstateWorkbench = React.lazy(() => import('@/pages/attorney/AttorneyEstateWorkbench'));
-const HealthcareProWorkbench = React.lazy(() => import('@/pages/attorney/HealthcareProWorkbench'));
-const CPAEstatePage = React.lazy(() => import('@/pages/cpa/CPAEstatePage'));
+const EstateDIYWizard = lazy(() => import('@/pages/estate/EstateDIYWizard'));
+const HealthcareDIYWizard = lazy(() => import('@/pages/estate/HealthcareDIYWizard'));
+const AdvisorEstatePage = lazy(() => import('@/pages/advisors/AdvisorEstatePage'));
+const AttorneyEstateWorkbench = lazy(() => import('@/pages/attorney/AttorneyEstateWorkbench'));
+const HealthcareProWorkbench = lazy(() => import('@/pages/attorney/HealthcareProWorkbench'));
+const CPAEstatePage = lazy(() => import('@/pages/cpa/CPAEstatePage'));
 
 import FamilyHome from '@/pages/families/FamilyHome';
 import FamilyToolsHub from '@/pages/family/FamilyToolsHub';
@@ -244,14 +244,14 @@ import NILDemoPage from '@/pages/nil/DemoPage';
 import NILTourPage from '@/pages/nil/TourPage';
 
 // Contact pages
-const ContactSchedulePage = React.lazy(() => import('@/pages/contact/schedule'));
-const ContactMessagePage = React.lazy(() => import('@/pages/contact/message'));
+const ContactSchedulePage = lazy(() => import('@/pages/contact/schedule'));
+const ContactMessagePage = lazy(() => import('@/pages/contact/message'));
 import InvestorRollupPage from '@/pages/investor/InvestorRollupPage';
 
 // Crypto Components
-const CryptoDashboard = React.lazy(() => import('@/pages/crypto/CryptoDashboard'));
-const BeneficiaryDirectives = React.lazy(() => import('@/pages/crypto/BeneficiaryDirectives'));
-const TradePanel = React.lazy(() => import('@/pages/crypto/TradePanel'));
+const CryptoDashboard = lazy(() => import('@/pages/crypto/CryptoDashboard'));
+const BeneficiaryDirectives = lazy(() => import('@/pages/crypto/BeneficiaryDirectives'));
+const TradePanel = lazy(() => import('@/pages/crypto/TradePanel'));
 
 // Insurance & Marketplace
 import { IntakePage as InsuranceIntakePage } from './pages/insurance/IntakePage';
@@ -266,16 +266,16 @@ import { QuoteStartPage } from './pages/marketplace/QuoteStartPage';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
-const SelectPersona = React.lazy(() => import('@/pages/auth/SelectPersona'));
+const SelectPersona = lazy(() => import('@/pages/auth/SelectPersona'));
 
 // Stub component for avoiding 404s
 const Stub = ({ title }: { title: string }) => <div className="p-10 text-white text-2xl">{title}</div>;
 
 function App() {
   // Check authentication status using Supabase session
-  const [isAuthenticated, setIsAuthenticated] = React.useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   
-  React.useEffect(() => {
+  useEffect(() => {
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setIsAuthenticated(!!session);
@@ -326,7 +326,7 @@ function App() {
   };
 
   // Query param demo auto-loading
-  React.useEffect(() => {
+  useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const demo = params.get('demo');
     const autoplay = params.get('autoplay');
@@ -492,19 +492,19 @@ function App() {
             <Route path="/marketplace" element={<MarketplaceIndex />} />
             <Route path="/marketplace/advisors" element={<MarketplaceAdvisors />} />
             <Route path="/marketplace/advisors/:id" element={<AdvisorDetail />} />
-            <Route path="/cpas/home" element={<React.Suspense fallback={<div>Loading...</div>}><CpaHome /></React.Suspense>} />
-            <Route path="/marketplace/cpas" element={<React.Suspense fallback={<div>Loading...</div>}><CpaMarketplace /></React.Suspense>} />
-            <Route path="/marketplace/cpas/:id" element={<React.Suspense fallback={<div>Loading...</div>}><CpaProfile /></React.Suspense>} />
-            <Route path="/marketplace/attorneys" element={<React.Suspense fallback={<div>Loading...</div>}><AttorneysHome /></React.Suspense>} />
-            <Route path="/marketplace/attorneys/:id" element={<React.Suspense fallback={<div>Loading...</div>}><AttorneyDetail /></React.Suspense>} />
-            <Route path="/marketplace/insurance" element={<React.Suspense fallback={<div>Loading...</div>}><MarketplaceInsurance /></React.Suspense>} />
-            <Route path="/insurance/fnol" element={<React.Suspense fallback={<div>Loading...</div>}><FNOLStub /></React.Suspense>} />
-            <Route path="/insurance/bind" element={<React.Suspense fallback={<div>Loading...</div>}><BindStub /></React.Suspense>} />
-            <Route path="/tools/tax-projection" element={<React.Suspense fallback={<div>Loading...</div>}><TaxProjectionTool /></React.Suspense>} />
-            <Route path="/learn/ce" element={<React.Suspense fallback={<div>Loading...</div>}><ContinuingEducation /></React.Suspense>} />
-            <Route path="/taxhub/pro" element={<React.Suspense fallback={<div>Loading...</div>}><TaxHubPro /></React.Suspense>} />
-            <Route path="/cpa/tools" element={<React.Suspense fallback={<div>Loading...</div>}><CpaTools /></React.Suspense>} />
-            <Route path="/cpa/learn" element={<React.Suspense fallback={<div>Loading...</div>}><CpaLearn /></React.Suspense>} />
+            <Route path="/cpas/home" element={<Suspense fallback={<div>Loading...</div>}><CpaHome /></Suspense>} />
+            <Route path="/marketplace/cpas" element={<Suspense fallback={<div>Loading...</div>}><CpaMarketplace /></Suspense>} />
+            <Route path="/marketplace/cpas/:id" element={<Suspense fallback={<div>Loading...</div>}><CpaProfile /></Suspense>} />
+            <Route path="/marketplace/attorneys" element={<Suspense fallback={<div>Loading...</div>}><AttorneysHome /></Suspense>} />
+            <Route path="/marketplace/attorneys/:id" element={<Suspense fallback={<div>Loading...</div>}><AttorneyDetail /></Suspense>} />
+            <Route path="/marketplace/insurance" element={<Suspense fallback={<div>Loading...</div>}><MarketplaceInsurance /></Suspense>} />
+            <Route path="/insurance/fnol" element={<Suspense fallback={<div>Loading...</div>}><FNOLStub /></Suspense>} />
+            <Route path="/insurance/bind" element={<Suspense fallback={<div>Loading...</div>}><BindStub /></Suspense>} />
+            <Route path="/tools/tax-projection" element={<Suspense fallback={<div>Loading...</div>}><TaxProjectionTool /></Suspense>} />
+            <Route path="/learn/ce" element={<Suspense fallback={<div>Loading...</div>}><ContinuingEducation /></Suspense>} />
+            <Route path="/taxhub/pro" element={<Suspense fallback={<div>Loading...</div>}><TaxHubPro /></Suspense>} />
+            <Route path="/cpa/tools" element={<Suspense fallback={<div>Loading...</div>}><CpaTools /></Suspense>} />
+            <Route path="/cpa/learn" element={<Suspense fallback={<div>Loading...</div>}><CpaLearn /></Suspense>} />
             
             <Route path="/families/retirees/goals" element={<RetireeGoals />} />
             
@@ -763,15 +763,15 @@ function App() {
             <Route path="/nil/onboarding" element={<NILOnboarding />} />
             
             {/* New Welcome Flow Routes */}
-            <Route path="/welcome" element={<React.Suspense fallback={<div>Loading...</div>}><FamilyWelcomeFlow /></React.Suspense>} />
-            <Route path="/auth" element={<React.Suspense fallback={<div>Loading...</div>}><AuthPage /></React.Suspense>} />
+            <Route path="/welcome" element={<Suspense fallback={<div>Loading...</div>}><FamilyWelcomeFlow /></Suspense>} />
+            <Route path="/auth" element={<Suspense fallback={<div>Loading...</div>}><AuthPage /></Suspense>} />
             <Route path="/auth/callback" element={<AuthCallback />} />
             <Route path="/select-persona" element={
               <Suspense fallback={<div>Loading...</div>}>
                 <SelectPersona />
               </Suspense>
             } />
-            <Route path="/welcome/transition" element={<React.Suspense fallback={<div>Loading...</div>}><WelcomeTransition /></React.Suspense>} />
+            <Route path="/welcome/transition" element={<Suspense fallback={<div>Loading...</div>}><WelcomeTransition /></Suspense>} />
             <Route path="/nil/education" element={<Education />} />
             <Route path="/nil/search" element={<Search />} />
             <Route path="/nil/goals" element={<Goals />} />
