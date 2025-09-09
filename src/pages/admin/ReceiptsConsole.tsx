@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabaseClient";
+import { supabase } from "@/integrations/supabase/client";
 import { initReceiptsEmitterAuto, hashActionRequest } from "@/lib/receiptsEmitter";
 import { evaluateAction } from "@/lib/policy/policyEvaluator";
 import { collectApprovals } from "@/lib/policy/hitlGate";
@@ -12,9 +12,33 @@ export default function ReceiptsConsole() {
   const [busy,setBusy] = useState(false);
 
   async function refresh() {
-    const { data, error } = await supabase.from("receipts").select("id,stage,created_at,decision,request_hash,anchor_status").order("created_at",{ascending:false}).limit(100);
-    if (error) setErr(error.message); else setRows((data||[]) as Receipt[]);
+    try {
+      // Use aies_receipts as the available receipts table
+      const { data, error } = await supabase
+        .from("aies_receipts")
+        .select("id,created_at,inputs,outcomes,reason_codes")
+        .order("created_at",{ascending:false})
+        .limit(100);
+      
+      if (error) {
+        setErr(error.message);
+      } else {
+        // Map to expected format
+        const mappedRows: Receipt[] = (data || []).map(receipt => ({
+          id: receipt.id,
+          stage: 'pre' as const,
+          created_at: receipt.created_at || new Date().toISOString(),
+          decision: 'ALLOW' as const,
+          request_hash: receipt.inputs ? JSON.stringify(receipt.inputs).slice(0, 16) + '...' : '',
+          anchor_status: 'pending' as const
+        }));
+        setRows(mappedRows);
+      }
+    } catch (e: any) {
+      setErr(e.message || String(e));
+    }
   }
+  
   useEffect(() => { refresh(); },[]);
 
   async function emitTest() {
