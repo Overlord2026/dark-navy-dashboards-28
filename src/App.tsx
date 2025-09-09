@@ -109,7 +109,7 @@ import ReviewView from '@/pages/family/ReviewView';
 import ReceiptsViewer from '@/pages/admin/receipts/ReceiptsViewer';
 import TrustAnchors from '@/pages/admin/anchors/Anchors';
 const ReceiptsAdmin = React.lazy(() => import('@/pages/admin/ReceiptsAdmin'));
-const CanonTest = lazy(() => import("@/pages/admin/CanonTest"));
+const CanonTest = lazy(() => import("@/components/testing/CanonTest"));
 
 // Demo Pages
 const RetireeBucketDemo = React.lazy(() => import('@/pages/demos/retiree-bucket'));
