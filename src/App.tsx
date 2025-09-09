@@ -174,6 +174,7 @@ import { PersonaGuard } from '@/components/auth/PersonaGuard';
 import ReceiptsConsole from '@/pages/admin/ReceiptsConsole';
 import RuleSyncConsole from '@/pages/admin/RuleSyncConsole';
 import Control401k from '@/pages/admin/Control401k';
+import Evidence from '@/pages/admin/Evidence';
 
 // Welcome Flow Components
 const FamilyWelcomeFlow = React.lazy(() => import('@/components/welcome/FullScreenWelcome').then(m => ({ default: m.FullScreenWelcome })));
