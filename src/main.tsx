@@ -14,7 +14,7 @@ import { registerServiceWorker, promptInstallPWA } from './lib/pwa'
 import { AuthProvider } from '@/context/AuthContext'
 import { EntitlementsProvider } from '@/context/EntitlementsContext'
 import { removeProductionLogs } from './utils/consoleRemoval'
-import { setupNetworkErrorHandling } from './components/monitoring/GlobalErrorBoundary'
+import { setupNetworkErrorHandling } from './components/monitoring/GlobalErrorBoundary.tsx'
 import { initializeAccessibility } from './utils/accessibility'
 
 // Initialize production optimizations
