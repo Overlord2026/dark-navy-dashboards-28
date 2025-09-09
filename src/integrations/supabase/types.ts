@@ -63,6 +63,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "accountant_ce_alerts_license_id_fkey"
+            columns: ["license_id"]
+            isOneToOne: false
+            referencedRelation: "v_accountant_license_status_me"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "accountant_ce_alerts_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
@@ -403,6 +410,13 @@ export type Database = {
             referencedRelation: "personas"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "accounting_clients_persona_id_fkey"
+            columns: ["persona_id"]
+            isOneToOne: false
+            referencedRelation: "v_personas_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       accounting_documents: {
@@ -602,6 +616,13 @@ export type Database = {
             columns: ["client_id"]
             isOneToOne: false
             referencedRelation: "accounting_clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "accounting_entities_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "v_accounting_clients_me"
             referencedColumns: ["id"]
           },
         ]
@@ -1108,6 +1129,13 @@ export type Database = {
             referencedRelation: "connector_accounts"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "accounts_connector_account_id_fkey"
+            columns: ["connector_account_id"]
+            isOneToOne: false
+            referencedRelation: "v_connector_accounts_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       ach_events: {
@@ -1144,6 +1172,13 @@ export type Database = {
             columns: ["transfer_id"]
             isOneToOne: false
             referencedRelation: "transfers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ach_events_transfer_id_fkey"
+            columns: ["transfer_id"]
+            isOneToOne: false
+            referencedRelation: "v_transfers_me"
             referencedColumns: ["id"]
           },
         ]
@@ -1589,6 +1624,13 @@ export type Database = {
             referencedRelation: "tenants"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "advisor_applications_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_tenants_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       advisor_assignments: {
@@ -1939,10 +1981,31 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "advisor_matches_advisor_id_fkey"
+            columns: ["advisor_id"]
+            isOneToOne: false
+            referencedRelation: "v_advisor_profiles_me"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "advisor_matches_advisor_id_fkey"
+            columns: ["advisor_id"]
+            isOneToOne: false
+            referencedRelation: "v_advisor_profiles_public"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "advisor_matches_questionnaire_id_fkey"
             columns: ["questionnaire_id"]
             isOneToOne: false
             referencedRelation: "client_questionnaires"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "advisor_matches_questionnaire_id_fkey"
+            columns: ["questionnaire_id"]
+            isOneToOne: false
+            referencedRelation: "v_client_questionnaires_me"
             referencedColumns: ["id"]
           },
         ]
@@ -2000,6 +2063,20 @@ export type Database = {
             columns: ["advisor_id"]
             isOneToOne: false
             referencedRelation: "advisor_profiles_public"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "advisor_messages_advisor_id_fkey"
+            columns: ["advisor_id"]
+            isOneToOne: false
+            referencedRelation: "v_advisor_profiles_me"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "advisor_messages_advisor_id_fkey"
+            columns: ["advisor_id"]
+            isOneToOne: false
+            referencedRelation: "v_advisor_profiles_public"
             referencedColumns: ["id"]
           },
         ]
@@ -2095,6 +2172,13 @@ export type Database = {
             columns: ["tenant_id"]
             isOneToOne: false
             referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "advisor_overrides_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_tenants_me"
             referencedColumns: ["id"]
           },
         ]
@@ -2226,6 +2310,13 @@ export type Database = {
             columns: ["tenant_id"]
             isOneToOne: false
             referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "advisor_production_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_tenants_me"
             referencedColumns: ["id"]
           },
         ]
@@ -2382,10 +2473,31 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "advisor_proposals_advisor_id_fkey"
+            columns: ["advisor_id"]
+            isOneToOne: false
+            referencedRelation: "v_advisor_profiles_me"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "advisor_proposals_advisor_id_fkey"
+            columns: ["advisor_id"]
+            isOneToOne: false
+            referencedRelation: "v_advisor_profiles_public"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "advisor_proposals_questionnaire_id_fkey"
             columns: ["questionnaire_id"]
             isOneToOne: false
             referencedRelation: "client_questionnaires"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "advisor_proposals_questionnaire_id_fkey"
+            columns: ["questionnaire_id"]
+            isOneToOne: false
+            referencedRelation: "v_client_questionnaires_me"
             referencedColumns: ["id"]
           },
         ]
@@ -2816,6 +2928,13 @@ export type Database = {
             referencedRelation: "aies_executions"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "aies_approvals_execution_id_fkey"
+            columns: ["execution_id"]
+            isOneToOne: false
+            referencedRelation: "v_aies_executions_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       aies_budget_policies: {
@@ -3132,6 +3251,13 @@ export type Database = {
             referencedRelation: "aies_executions"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "aies_policy_checks_execution_id_fkey"
+            columns: ["execution_id"]
+            isOneToOne: false
+            referencedRelation: "v_aies_executions_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       aies_receipts: {
@@ -3232,6 +3358,13 @@ export type Database = {
             referencedRelation: "aies_executions"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "aies_zk_assertions_execution_id_fkey"
+            columns: ["execution_id"]
+            isOneToOne: false
+            referencedRelation: "v_aies_executions_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       analytics_dashboards: {
@@ -3321,6 +3454,13 @@ export type Database = {
             referencedRelation: "tenants"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "analytics_events_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_tenants_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       analytics_scorecard_events: {
@@ -3357,6 +3497,13 @@ export type Database = {
             columns: ["submission_id"]
             isOneToOne: false
             referencedRelation: "retirement_confidence_submissions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "analytics_scorecard_events_submission_id_fkey"
+            columns: ["submission_id"]
+            isOneToOne: false
+            referencedRelation: "v_retirement_confidence_submissions_me"
             referencedColumns: ["id"]
           },
         ]
@@ -3425,6 +3572,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "annual_reviews_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "v_employees_me"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "annual_reviews_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
@@ -3436,6 +3590,13 @@ export type Database = {
             columns: ["reviewer_id"]
             isOneToOne: false
             referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "annual_reviews_reviewer_id_fkey"
+            columns: ["reviewer_id"]
+            isOneToOne: false
+            referencedRelation: "v_employees_me"
             referencedColumns: ["id"]
           },
         ]
@@ -3820,10 +3981,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "appointments_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "v_family_members_me"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "appointments_provider_id_fkey"
             columns: ["provider_id"]
             isOneToOne: false
             referencedRelation: "healthcare_providers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "appointments_provider_id_fkey"
+            columns: ["provider_id"]
+            isOneToOne: false
+            referencedRelation: "v_healthcare_providers_me"
             referencedColumns: ["id"]
           },
           {
@@ -4279,6 +4454,13 @@ export type Database = {
             referencedRelation: "assets"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "asset_advice_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "v_assets_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       asset_docs: {
@@ -4321,6 +4503,13 @@ export type Database = {
             columns: ["asset_id"]
             isOneToOne: false
             referencedRelation: "assets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "asset_docs_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "v_assets_me"
             referencedColumns: ["id"]
           },
         ]
@@ -4409,6 +4598,13 @@ export type Database = {
             columns: ["asset_id"]
             isOneToOne: false
             referencedRelation: "assets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "asset_reminders_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "v_assets_me"
             referencedColumns: ["id"]
           },
         ]
@@ -4567,6 +4763,13 @@ export type Database = {
             columns: ["bar_status_id"]
             isOneToOne: false
             referencedRelation: "attorney_bar_status"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_attorney_cle_alerts_bar_status"
+            columns: ["bar_status_id"]
+            isOneToOne: false
+            referencedRelation: "v_attorney_bar_status_me"
             referencedColumns: ["id"]
           },
         ]
@@ -5315,6 +5518,13 @@ export type Database = {
             columns: ["onboarding_id"]
             isOneToOne: false
             referencedRelation: "attorney_onboarding"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "attorney_documents_onboarding_id_fkey"
+            columns: ["onboarding_id"]
+            isOneToOne: false
+            referencedRelation: "v_attorney_onboarding_me"
             referencedColumns: ["id"]
           },
         ]
@@ -6078,6 +6288,13 @@ export type Database = {
             referencedRelation: "bills"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "bill_transactions_bill_id_fkey"
+            columns: ["bill_id"]
+            isOneToOne: false
+            referencedRelation: "v_bills_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       billing_daily: {
@@ -6726,6 +6943,13 @@ export type Database = {
             referencedRelation: "ce_tracking"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "ce_completions_ce_tracking_id_fkey"
+            columns: ["ce_tracking_id"]
+            isOneToOne: false
+            referencedRelation: "v_ce_tracking_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       ce_courses: {
@@ -6779,6 +7003,13 @@ export type Database = {
             referencedRelation: "insurance_agents"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "ce_courses_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "v_insurance_agents_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       ce_reminders: {
@@ -6818,6 +7049,13 @@ export type Database = {
             columns: ["agent_id"]
             isOneToOne: false
             referencedRelation: "insurance_agents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ce_reminders_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "v_insurance_agents_me"
             referencedColumns: ["id"]
           },
         ]
@@ -6932,6 +7170,13 @@ export type Database = {
             columns: ["employee_id"]
             isOneToOne: false
             referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "certificates_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "v_employees_me"
             referencedColumns: ["id"]
           },
         ]
@@ -7166,6 +7411,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "client_assignments_assigned_by_fkey"
+            columns: ["assigned_by"]
+            isOneToOne: false
+            referencedRelation: "v_professional_users_me"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "client_assignments_firm_id_fkey"
             columns: ["firm_id"]
             isOneToOne: false
@@ -7177,6 +7429,13 @@ export type Database = {
             columns: ["professional_user_id"]
             isOneToOne: false
             referencedRelation: "professional_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "client_assignments_professional_user_id_fkey"
+            columns: ["professional_user_id"]
+            isOneToOne: false
+            referencedRelation: "v_professional_users_me"
             referencedColumns: ["id"]
           },
         ]
@@ -7784,6 +8043,13 @@ export type Database = {
             columns: ["cpa_partner_id"]
             isOneToOne: false
             referencedRelation: "cpa_partners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "client_organizers_cpa_partner_id_fkey"
+            columns: ["cpa_partner_id"]
+            isOneToOne: false
+            referencedRelation: "v_cpa_partners_me"
             referencedColumns: ["id"]
           },
         ]
@@ -8557,6 +8823,13 @@ export type Database = {
             referencedRelation: "cpa_partners"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "communication_campaigns_cpa_partner_id_fkey"
+            columns: ["cpa_partner_id"]
+            isOneToOne: false
+            referencedRelation: "v_cpa_partners_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       communication_deliveries: {
@@ -8742,6 +9015,13 @@ export type Database = {
             columns: ["entity_id"]
             isOneToOne: false
             referencedRelation: "business_entities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "compliance_alerts_entity_id_fkey"
+            columns: ["entity_id"]
+            isOneToOne: false
+            referencedRelation: "v_business_entities_me"
             referencedColumns: ["id"]
           },
         ]
@@ -8958,6 +9238,13 @@ export type Database = {
             columns: ["ria_id"]
             isOneToOne: false
             referencedRelation: "ria_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "compliance_events_ria_id_fkey"
+            columns: ["ria_id"]
+            isOneToOne: false
+            referencedRelation: "v_ria_profiles_me"
             referencedColumns: ["id"]
           },
         ]
@@ -9195,6 +9482,13 @@ export type Database = {
             referencedRelation: "compliance_profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "compliance_officer_actions_officer_id_fkey"
+            columns: ["officer_id"]
+            isOneToOne: false
+            referencedRelation: "v_compliance_profiles_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       compliance_persona_configs: {
@@ -9373,6 +9667,13 @@ export type Database = {
             columns: ["employee_id"]
             isOneToOne: false
             referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "compliance_records_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "v_employees_me"
             referencedColumns: ["id"]
           },
           {
@@ -9952,6 +10253,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "course_enrollments_assigned_by_fkey"
+            columns: ["assigned_by"]
+            isOneToOne: false
+            referencedRelation: "v_employees_me"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "course_enrollments_course_id_fkey"
             columns: ["course_id"]
             isOneToOne: false
@@ -9963,6 +10271,13 @@ export type Database = {
             columns: ["employee_id"]
             isOneToOne: false
             referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_enrollments_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "v_employees_me"
             referencedColumns: ["id"]
           },
         ]
@@ -10120,10 +10435,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "cpa_client_invitations_cpa_partner_id_fkey"
+            columns: ["cpa_partner_id"]
+            isOneToOne: false
+            referencedRelation: "v_cpa_partners_me"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "cpa_client_invitations_invited_by_fkey"
             columns: ["invited_by"]
             isOneToOne: false
             referencedRelation: "cpa_staff"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cpa_client_invitations_invited_by_fkey"
+            columns: ["invited_by"]
+            isOneToOne: false
+            referencedRelation: "v_cpa_staff_me"
             referencedColumns: ["id"]
           },
         ]
@@ -10201,10 +10530,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "cpa_client_onboarding_assigned_staff_id_fkey"
+            columns: ["assigned_staff_id"]
+            isOneToOne: false
+            referencedRelation: "v_cpa_staff_me"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "cpa_client_onboarding_cpa_partner_id_fkey"
             columns: ["cpa_partner_id"]
             isOneToOne: false
             referencedRelation: "cpa_partners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cpa_client_onboarding_cpa_partner_id_fkey"
+            columns: ["cpa_partner_id"]
+            isOneToOne: false
+            referencedRelation: "v_cpa_partners_me"
             referencedColumns: ["id"]
           },
           {
@@ -10273,6 +10616,13 @@ export type Database = {
             referencedRelation: "cpa_partners"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "cpa_client_relationships_cpa_partner_id_fkey"
+            columns: ["cpa_partner_id"]
+            isOneToOne: false
+            referencedRelation: "v_cpa_partners_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       cpa_client_staff_assignments: {
@@ -10327,6 +10677,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "cpa_client_staff_assignments_assigned_by_fkey"
+            columns: ["assigned_by"]
+            isOneToOne: false
+            referencedRelation: "v_cpa_staff_me"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "cpa_client_staff_assignments_cpa_partner_id_fkey"
             columns: ["cpa_partner_id"]
             isOneToOne: false
@@ -10334,10 +10691,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "cpa_client_staff_assignments_cpa_partner_id_fkey"
+            columns: ["cpa_partner_id"]
+            isOneToOne: false
+            referencedRelation: "v_cpa_partners_me"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "cpa_client_staff_assignments_staff_id_fkey"
             columns: ["staff_id"]
             isOneToOne: false
             referencedRelation: "cpa_staff"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cpa_client_staff_assignments_staff_id_fkey"
+            columns: ["staff_id"]
+            isOneToOne: false
+            referencedRelation: "v_cpa_staff_me"
             referencedColumns: ["id"]
           },
         ]
@@ -10415,6 +10786,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "cpa_document_requests_cpa_partner_id_fkey"
+            columns: ["cpa_partner_id"]
+            isOneToOne: false
+            referencedRelation: "v_cpa_partners_me"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "cpa_document_requests_onboarding_id_fkey"
             columns: ["onboarding_id"]
             isOneToOne: false
@@ -10471,6 +10849,13 @@ export type Database = {
             referencedRelation: "cpa_partners"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "cpa_onboarding_checklists_cpa_partner_id_fkey"
+            columns: ["cpa_partner_id"]
+            isOneToOne: false
+            referencedRelation: "v_cpa_partners_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       cpa_onboarding_status_log: {
@@ -10523,6 +10908,13 @@ export type Database = {
             columns: ["triggered_by"]
             isOneToOne: false
             referencedRelation: "cpa_staff"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cpa_onboarding_status_log_triggered_by_fkey"
+            columns: ["triggered_by"]
+            isOneToOne: false
+            referencedRelation: "v_cpa_staff_me"
             referencedColumns: ["id"]
           },
         ]
@@ -10671,6 +11063,13 @@ export type Database = {
             referencedRelation: "cpa_partners"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "cpa_practice_metrics_cpa_partner_id_fkey"
+            columns: ["cpa_partner_id"]
+            isOneToOne: false
+            referencedRelation: "v_cpa_partners_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       cpa_staff: {
@@ -10730,6 +11129,13 @@ export type Database = {
             referencedRelation: "cpa_partners"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "cpa_staff_cpa_partner_id_fkey"
+            columns: ["cpa_partner_id"]
+            isOneToOne: false
+            referencedRelation: "v_cpa_partners_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       cpa_welcome_templates: {
@@ -10784,10 +11190,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "cpa_welcome_templates_cpa_partner_id_fkey"
+            columns: ["cpa_partner_id"]
+            isOneToOne: false
+            referencedRelation: "v_cpa_partners_me"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "cpa_welcome_templates_created_by_fkey"
             columns: ["created_by"]
             isOneToOne: false
             referencedRelation: "cpa_staff"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cpa_welcome_templates_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "v_cpa_staff_me"
             referencedColumns: ["id"]
           },
         ]
@@ -10856,6 +11276,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "cpa_workflow_assignments_assigned_by_fkey"
+            columns: ["assigned_by"]
+            isOneToOne: false
+            referencedRelation: "v_cpa_staff_me"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "cpa_workflow_assignments_assigned_to_fkey"
             columns: ["assigned_to"]
             isOneToOne: false
@@ -10863,10 +11290,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "cpa_workflow_assignments_assigned_to_fkey"
+            columns: ["assigned_to"]
+            isOneToOne: false
+            referencedRelation: "v_cpa_staff_me"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "cpa_workflow_assignments_cpa_partner_id_fkey"
             columns: ["cpa_partner_id"]
             isOneToOne: false
             referencedRelation: "cpa_partners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cpa_workflow_assignments_cpa_partner_id_fkey"
+            columns: ["cpa_partner_id"]
+            isOneToOne: false
+            referencedRelation: "v_cpa_partners_me"
             referencedColumns: ["id"]
           },
         ]
@@ -11268,6 +11709,13 @@ export type Database = {
             referencedRelation: "tenants"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "crm_integrations_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_tenants_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       crm_pipeline_items: {
@@ -11430,6 +11878,13 @@ export type Database = {
             columns: ["tenant_id"]
             isOneToOne: false
             referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "daily_analytics_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_tenants_me"
             referencedColumns: ["id"]
           },
         ]
@@ -12208,6 +12663,13 @@ export type Database = {
             referencedRelation: "documents"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "document_permissions_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "v_documents_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       document_request_items: {
@@ -12341,6 +12803,13 @@ export type Database = {
             referencedRelation: "cpa_partners"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "document_requests_cpa_partner_id_fkey"
+            columns: ["cpa_partner_id"]
+            isOneToOne: false
+            referencedRelation: "v_cpa_partners_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       document_templates: {
@@ -12383,6 +12852,13 @@ export type Database = {
             columns: ["cpa_partner_id"]
             isOneToOne: false
             referencedRelation: "cpa_partners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "document_templates_cpa_partner_id_fkey"
+            columns: ["cpa_partner_id"]
+            isOneToOne: false
+            referencedRelation: "v_cpa_partners_me"
             referencedColumns: ["id"]
           },
         ]
@@ -12463,10 +12939,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "documents_parent_folder_id_fkey"
+            columns: ["parent_folder_id"]
+            isOneToOne: false
+            referencedRelation: "v_documents_me"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "documents_tenant_id_fkey"
             columns: ["tenant_id"]
             isOneToOne: false
             referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "documents_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_tenants_me"
             referencedColumns: ["id"]
           },
         ]
@@ -12797,6 +13287,13 @@ export type Database = {
             referencedRelation: "tenants"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "educational_content_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_tenants_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       email_schedule: {
@@ -12932,6 +13429,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "employees_manager_id_fkey"
+            columns: ["manager_id"]
+            isOneToOne: false
+            referencedRelation: "v_employees_me"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "employees_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
@@ -13038,6 +13542,13 @@ export type Database = {
             referencedRelation: "business_entities"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "entity_documents_entity_id_fkey"
+            columns: ["entity_id"]
+            isOneToOne: false
+            referencedRelation: "v_business_entities_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       entity_ownership: {
@@ -13088,6 +13599,13 @@ export type Database = {
             referencedRelation: "business_entities"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "entity_ownership_entity_id_fkey"
+            columns: ["entity_id"]
+            isOneToOne: false
+            referencedRelation: "v_business_entities_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       entity_professionals: {
@@ -13133,6 +13651,13 @@ export type Database = {
             columns: ["entity_id"]
             isOneToOne: false
             referencedRelation: "business_entities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "entity_professionals_entity_id_fkey"
+            columns: ["entity_id"]
+            isOneToOne: false
+            referencedRelation: "v_business_entities_me"
             referencedColumns: ["id"]
           },
         ]
@@ -13221,6 +13746,13 @@ export type Database = {
             referencedRelation: "estate_requests"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "estate_audit_log_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "v_estate_requests_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       estate_document_reminders: {
@@ -13260,6 +13792,13 @@ export type Database = {
             columns: ["document_id"]
             isOneToOne: false
             referencedRelation: "estate_documents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "estate_document_reminders_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "v_estate_documents_me"
             referencedColumns: ["id"]
           },
         ]
@@ -13324,6 +13863,13 @@ export type Database = {
             referencedRelation: "estate_intake"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "estate_documents_intake_id_fkey"
+            columns: ["intake_id"]
+            isOneToOne: false
+            referencedRelation: "v_estate_intake_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       estate_filings: {
@@ -13369,6 +13915,13 @@ export type Database = {
             columns: ["request_id"]
             isOneToOne: false
             referencedRelation: "estate_requests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "estate_filings_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "v_estate_requests_me"
             referencedColumns: ["id"]
           },
         ]
@@ -13464,6 +14017,13 @@ export type Database = {
             columns: ["request_id"]
             isOneToOne: false
             referencedRelation: "estate_requests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "estate_notaries_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "v_estate_requests_me"
             referencedColumns: ["id"]
           },
         ]
@@ -13612,6 +14172,13 @@ export type Database = {
             referencedRelation: "estate_requests"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "estate_sessions_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "v_estate_requests_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       estate_witnesses: {
@@ -13657,6 +14224,13 @@ export type Database = {
             columns: ["request_id"]
             isOneToOne: false
             referencedRelation: "estate_requests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "estate_witnesses_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "v_estate_requests_me"
             referencedColumns: ["id"]
           },
         ]
@@ -14317,6 +14891,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "family_group_members_linked_professional_id_fkey"
+            columns: ["linked_professional_id"]
+            isOneToOne: false
+            referencedRelation: "v_professionals_me"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "family_group_members_seat_purchase_id_fkey"
             columns: ["seat_purchase_id"]
             isOneToOne: false
@@ -14380,6 +14961,13 @@ export type Database = {
             columns: ["family_id"]
             isOneToOne: false
             referencedRelation: "families"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "family_members_family_id_fkey"
+            columns: ["family_id"]
+            isOneToOne: false
+            referencedRelation: "v_families_me"
             referencedColumns: ["id"]
           },
         ]
@@ -14743,6 +15331,13 @@ export type Database = {
             referencedRelation: "business_entities"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "filing_schedules_entity_id_fkey"
+            columns: ["entity_id"]
+            isOneToOne: false
+            referencedRelation: "v_business_entities_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       financial_accounts: {
@@ -14782,6 +15377,13 @@ export type Database = {
             columns: ["plan_id"]
             isOneToOne: false
             referencedRelation: "financial_plans"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "financial_accounts_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "v_financial_plans_me"
             referencedColumns: ["id"]
           },
         ]
@@ -14832,6 +15434,13 @@ export type Database = {
             columns: ["plan_id"]
             isOneToOne: false
             referencedRelation: "financial_plans"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "financial_goals_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "v_financial_plans_me"
             referencedColumns: ["id"]
           },
         ]
@@ -15717,6 +16326,13 @@ export type Database = {
             referencedRelation: "user_goals"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "goal_attachments_goal_id_fkey"
+            columns: ["goal_id"]
+            isOneToOne: false
+            referencedRelation: "v_user_goals_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       goal_category_templates: {
@@ -15812,6 +16428,13 @@ export type Database = {
             referencedRelation: "user_goals"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "goal_milestones_goal_id_fkey"
+            columns: ["goal_id"]
+            isOneToOne: false
+            referencedRelation: "v_user_goals_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       health_alerts: {
@@ -15851,6 +16474,13 @@ export type Database = {
             columns: ["metric_id"]
             isOneToOne: false
             referencedRelation: "metrics_catalog"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "health_alerts_metric_id_fkey"
+            columns: ["metric_id"]
+            isOneToOne: false
+            referencedRelation: "v_metrics_catalog_public"
             referencedColumns: ["id"]
           },
         ]
@@ -15900,6 +16530,13 @@ export type Database = {
             referencedRelation: "health_docs"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "health_doc_access_log_doc_id_fkey"
+            columns: ["doc_id"]
+            isOneToOne: false
+            referencedRelation: "v_health_docs_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       health_doc_reminders: {
@@ -15933,6 +16570,13 @@ export type Database = {
             columns: ["doc_id"]
             isOneToOne: false
             referencedRelation: "health_docs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "health_doc_reminders_doc_id_fkey"
+            columns: ["doc_id"]
+            isOneToOne: false
+            referencedRelation: "v_health_docs_me"
             referencedColumns: ["id"]
           },
         ]
@@ -15980,6 +16624,13 @@ export type Database = {
             columns: ["doc_id"]
             isOneToOne: false
             referencedRelation: "health_docs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "health_doc_shares_doc_id_fkey"
+            columns: ["doc_id"]
+            isOneToOne: false
+            referencedRelation: "v_health_docs_me"
             referencedColumns: ["id"]
           },
         ]
@@ -16078,10 +16729,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "health_docs_family_id_fkey"
+            columns: ["family_id"]
+            isOneToOne: false
+            referencedRelation: "v_families_me"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "health_docs_member_id_fkey"
             columns: ["member_id"]
             isOneToOne: false
             referencedRelation: "family_members"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "health_docs_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "v_family_members_me"
             referencedColumns: ["id"]
           },
         ]
@@ -16412,6 +17077,13 @@ export type Database = {
             referencedRelation: "healthcare_documents"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "healthcare_document_permissions_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "v_healthcare_documents_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       healthcare_documents: {
@@ -16625,10 +17297,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "healthcare_shared_documents_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "v_healthcare_documents_me"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "healthcare_shared_documents_professional_id_fkey"
             columns: ["professional_id"]
             isOneToOne: false
             referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "healthcare_shared_documents_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "v_professionals_me"
             referencedColumns: ["id"]
           },
         ]
@@ -16724,10 +17410,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "hsa_accounts_family_id_fkey"
+            columns: ["family_id"]
+            isOneToOne: false
+            referencedRelation: "v_families_me"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "hsa_accounts_family_member_id_fkey"
             columns: ["family_member_id"]
             isOneToOne: false
             referencedRelation: "family_members"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hsa_accounts_family_member_id_fkey"
+            columns: ["family_member_id"]
+            isOneToOne: false
+            referencedRelation: "v_family_members_me"
             referencedColumns: ["id"]
           },
         ]
@@ -16763,6 +17463,13 @@ export type Database = {
             columns: ["account_id"]
             isOneToOne: false
             referencedRelation: "hsa_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hsa_contributions_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "v_hsa_accounts_me"
             referencedColumns: ["id"]
           },
         ]
@@ -16810,10 +17517,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "hsa_expenses_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "v_hsa_accounts_me"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "hsa_expenses_member_id_fkey"
             columns: ["member_id"]
             isOneToOne: false
             referencedRelation: "family_members"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hsa_expenses_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "v_family_members_me"
             referencedColumns: ["id"]
           },
         ]
@@ -16861,6 +17582,13 @@ export type Database = {
             columns: ["hsa_account_id"]
             isOneToOne: false
             referencedRelation: "hsa_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hsa_investment_rules_hsa_account_id_fkey"
+            columns: ["hsa_account_id"]
+            isOneToOne: false
+            referencedRelation: "v_hsa_accounts_me"
             referencedColumns: ["id"]
           },
         ]
@@ -16944,10 +17672,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "hsa_receipts_hsa_account_id_fkey"
+            columns: ["hsa_account_id"]
+            isOneToOne: false
+            referencedRelation: "v_hsa_accounts_me"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "hsa_receipts_matched_transaction_id_fkey"
             columns: ["matched_transaction_id"]
             isOneToOne: false
             referencedRelation: "hsa_transactions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hsa_receipts_matched_transaction_id_fkey"
+            columns: ["matched_transaction_id"]
+            isOneToOne: false
+            referencedRelation: "v_hsa_transactions_me"
             referencedColumns: ["id"]
           },
         ]
@@ -17004,10 +17746,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "hsa_reimbursements_hsa_account_id_fkey"
+            columns: ["hsa_account_id"]
+            isOneToOne: false
+            referencedRelation: "v_hsa_accounts_me"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "hsa_reimbursements_receipt_id_fkey"
             columns: ["receipt_id"]
             isOneToOne: false
             referencedRelation: "hsa_receipts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hsa_reimbursements_receipt_id_fkey"
+            columns: ["receipt_id"]
+            isOneToOne: false
+            referencedRelation: "v_hsa_receipts_me"
             referencedColumns: ["id"]
           },
         ]
@@ -17115,6 +17871,13 @@ export type Database = {
             columns: ["hsa_account_id"]
             isOneToOne: false
             referencedRelation: "hsa_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hsa_transactions_hsa_account_id_fkey"
+            columns: ["hsa_account_id"]
+            isOneToOne: false
+            referencedRelation: "v_hsa_accounts_me"
             referencedColumns: ["id"]
           },
         ]
@@ -17257,6 +18020,13 @@ export type Database = {
             columns: ["report_id"]
             isOneToOne: false
             referencedRelation: "impact_reports"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "impact_notifications_report_id_fkey"
+            columns: ["report_id"]
+            isOneToOne: false
+            referencedRelation: "v_impact_reports_me"
             referencedColumns: ["id"]
           },
         ]
@@ -17891,6 +18661,13 @@ export type Database = {
             referencedRelation: "investment_offerings"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "investment_meetings_offering_id_fkey"
+            columns: ["offering_id"]
+            isOneToOne: false
+            referencedRelation: "v_investment_offerings_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       investment_models: {
@@ -17990,6 +18767,13 @@ export type Database = {
             columns: ["category_id"]
             isOneToOne: false
             referencedRelation: "investment_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "investment_offerings_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "v_investment_categories_public"
             referencedColumns: ["id"]
           },
         ]
@@ -18093,6 +18877,13 @@ export type Database = {
             referencedRelation: "investment_categories"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "investment_products_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "v_investment_categories_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       investment_strategies: {
@@ -18171,6 +18962,13 @@ export type Database = {
             columns: ["tenant_id"]
             isOneToOne: false
             referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "investment_strategies_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_tenants_me"
             referencedColumns: ["id"]
           },
         ]
@@ -19560,6 +20358,13 @@ export type Database = {
             referencedRelation: "family_vaults"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "legacy_items_vault_id_fkey"
+            columns: ["vault_id"]
+            isOneToOne: false
+            referencedRelation: "v_family_vaults_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       legacy_recipients: {
@@ -19605,6 +20410,13 @@ export type Database = {
             columns: ["legacy_item_id"]
             isOneToOne: false
             referencedRelation: "legacy_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "legacy_recipients_vault_member_id_fkey"
+            columns: ["vault_member_id"]
+            isOneToOne: false
+            referencedRelation: "v_vault_members_me"
             referencedColumns: ["id"]
           },
           {
@@ -20636,10 +21448,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "med_adherence_family_member_id_fkey"
+            columns: ["family_member_id"]
+            isOneToOne: false
+            referencedRelation: "v_family_members_me"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "med_adherence_medication_id_fkey"
             columns: ["medication_id"]
             isOneToOne: false
             referencedRelation: "medications"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "med_adherence_medication_id_fkey"
+            columns: ["medication_id"]
+            isOneToOne: false
+            referencedRelation: "v_medications_me"
             referencedColumns: ["id"]
           },
         ]
@@ -20678,6 +21504,13 @@ export type Database = {
             columns: ["source_med_id"]
             isOneToOne: false
             referencedRelation: "medications"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "med_interactions_source_med_id_fkey"
+            columns: ["source_med_id"]
+            isOneToOne: false
+            referencedRelation: "v_medications_me"
             referencedColumns: ["id"]
           },
         ]
@@ -20767,6 +21600,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "medications_family_id_fkey"
+            columns: ["family_id"]
+            isOneToOne: false
+            referencedRelation: "v_families_me"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "medications_member_id_fkey"
             columns: ["member_id"]
             isOneToOne: false
@@ -20774,10 +21614,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "medications_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "v_family_members_me"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "medications_prescribing_provider_fkey"
             columns: ["prescribing_provider"]
             isOneToOne: false
             referencedRelation: "healthcare_providers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "medications_prescribing_provider_fkey"
+            columns: ["prescribing_provider"]
+            isOneToOne: false
+            referencedRelation: "v_healthcare_providers_me"
             referencedColumns: ["id"]
           },
         ]
@@ -21102,6 +21956,13 @@ export type Database = {
             foreignKeyName: "meeting_recordings_meeting_id_fkey"
             columns: ["meeting_id"]
             isOneToOne: false
+            referencedRelation: "v_video_meetings_me"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "meeting_recordings_meeting_id_fkey"
+            columns: ["meeting_id"]
+            isOneToOne: false
             referencedRelation: "video_meetings"
             referencedColumns: ["id"]
           },
@@ -21220,6 +22081,13 @@ export type Database = {
             referencedRelation: "meeting_recordings"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "meeting_summaries_meeting_recording_id_fkey"
+            columns: ["meeting_recording_id"]
+            isOneToOne: false
+            referencedRelation: "v_meeting_recordings_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       member_providers: {
@@ -21256,10 +22124,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "member_providers_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "v_family_members_me"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "member_providers_provider_id_fkey"
             columns: ["provider_id"]
             isOneToOne: false
             referencedRelation: "healthcare_providers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "member_providers_provider_id_fkey"
+            columns: ["provider_id"]
+            isOneToOne: false
+            referencedRelation: "v_healthcare_providers_me"
             referencedColumns: ["id"]
           },
         ]
@@ -21686,6 +22568,13 @@ export type Database = {
             referencedRelation: "metrics_catalog"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "metric_entries_metric_id_fkey"
+            columns: ["metric_id"]
+            isOneToOne: false
+            referencedRelation: "v_metrics_catalog_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       metrics_catalog: {
@@ -21919,6 +22808,13 @@ export type Database = {
             referencedRelation: "cpa_partners"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "migration_jobs_cpa_partner_id_fkey"
+            columns: ["cpa_partner_id"]
+            isOneToOne: false
+            referencedRelation: "v_cpa_partners_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       mock_audits: {
@@ -22131,6 +23027,13 @@ export type Database = {
             referencedRelation: "professionals"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "monitoring_jobs_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "v_professionals_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       monitoring_receipts: {
@@ -22317,6 +23220,13 @@ export type Database = {
             columns: ["athlete_id"]
             isOneToOne: false
             referencedRelation: "nil_athletes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "nil_booking_requests_athlete_id_fkey"
+            columns: ["athlete_id"]
+            isOneToOne: false
+            referencedRelation: "v_nil_athletes_me"
             referencedColumns: ["id"]
           },
         ]
@@ -23359,10 +24269,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "notifications_family_id_fkey"
+            columns: ["family_id"]
+            isOneToOne: false
+            referencedRelation: "v_families_me"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "notifications_member_id_fkey"
             columns: ["member_id"]
             isOneToOne: false
             referencedRelation: "family_members"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "v_family_members_me"
             referencedColumns: ["id"]
           },
         ]
@@ -23635,6 +24559,13 @@ export type Database = {
             referencedRelation: "tenants"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "onboarding_checklists_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_tenants_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       onboarding_documents: {
@@ -23689,6 +24620,13 @@ export type Database = {
             columns: ["session_id"]
             isOneToOne: false
             referencedRelation: "onboarding_sessions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "onboarding_documents_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "v_onboarding_sessions_me"
             referencedColumns: ["id"]
           },
           {
@@ -23948,6 +24886,13 @@ export type Database = {
             columns: ["session_id"]
             isOneToOne: false
             referencedRelation: "onboarding_sessions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "onboarding_step_completions_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "v_onboarding_sessions_me"
             referencedColumns: ["id"]
           },
           {
@@ -25547,6 +26492,13 @@ export type Database = {
             referencedRelation: "personas"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "persona_sessions_persona_id_fkey"
+            columns: ["persona_id"]
+            isOneToOne: false
+            referencedRelation: "v_personas_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       persona_signals: {
@@ -26001,6 +26953,13 @@ export type Database = {
             referencedRelation: "financial_plans"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "plan_expenses_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "v_financial_plans_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       plan_import_audit: {
@@ -26131,6 +27090,13 @@ export type Database = {
             referencedRelation: "financial_plans"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "plan_income_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "v_financial_plans_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       plan_insurance: {
@@ -26170,6 +27136,13 @@ export type Database = {
             columns: ["plan_id"]
             isOneToOne: false
             referencedRelation: "financial_plans"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "plan_insurance_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "v_financial_plans_me"
             referencedColumns: ["id"]
           },
         ]
@@ -26271,6 +27244,13 @@ export type Database = {
             columns: ["plan_id"]
             isOneToOne: false
             referencedRelation: "financial_plans"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "plan_savings_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "v_financial_plans_me"
             referencedColumns: ["id"]
           },
         ]
@@ -26457,6 +27437,20 @@ export type Database = {
             columns: ["advisor_id"]
             isOneToOne: false
             referencedRelation: "advisor_profiles_public"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "planning_scenarios_advisor_id_fkey"
+            columns: ["advisor_id"]
+            isOneToOne: false
+            referencedRelation: "v_advisor_profiles_me"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "planning_scenarios_advisor_id_fkey"
+            columns: ["advisor_id"]
+            isOneToOne: false
+            referencedRelation: "v_advisor_profiles_public"
             referencedColumns: ["id"]
           },
         ]
@@ -26650,6 +27644,13 @@ export type Database = {
             referencedRelation: "tenants"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "playbooks_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_tenants_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       policies: {
@@ -26703,6 +27704,54 @@ export type Database = {
         }
         Relationships: []
       }
+      policy_bundles: {
+        Row: {
+          bundle_id: string
+          content: Json
+          content_hash: string
+          created_at: string
+          created_by: string
+          domain: string
+          effective_at: string
+          id: string
+          jurisdiction: string
+          provider_id: string
+          provider_sig: string | null
+          tenant_id: string
+          version: string
+        }
+        Insert: {
+          bundle_id: string
+          content: Json
+          content_hash: string
+          created_at?: string
+          created_by: string
+          domain: string
+          effective_at: string
+          id?: string
+          jurisdiction: string
+          provider_id?: string
+          provider_sig?: string | null
+          tenant_id: string
+          version: string
+        }
+        Update: {
+          bundle_id?: string
+          content?: Json
+          content_hash?: string
+          created_at?: string
+          created_by?: string
+          domain?: string
+          effective_at?: string
+          id?: string
+          jurisdiction?: string
+          provider_id?: string
+          provider_sig?: string | null
+          tenant_id?: string
+          version?: string
+        }
+        Relationships: []
+      }
       policy_denials: {
         Row: {
           action_attempted: string
@@ -26753,6 +27802,51 @@ export type Database = {
           user_scopes?: string[] | null
         }
         Relationships: []
+      }
+      policy_diffs: {
+        Row: {
+          created_at: string
+          created_by: string
+          diff_summary: Json
+          from_bundle: string | null
+          id: string
+          tenant_id: string
+          to_bundle: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          diff_summary: Json
+          from_bundle?: string | null
+          id?: string
+          tenant_id: string
+          to_bundle: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          diff_summary?: Json
+          from_bundle?: string | null
+          id?: string
+          tenant_id?: string
+          to_bundle?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_from_bundle"
+            columns: ["from_bundle"]
+            isOneToOne: false
+            referencedRelation: "policy_bundles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_to_bundle"
+            columns: ["to_bundle"]
+            isOneToOne: false
+            referencedRelation: "policy_bundles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       policy_tokens: {
         Row: {
@@ -27030,6 +28124,13 @@ export type Database = {
             referencedRelation: "accounts"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "positions_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "v_accounts_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       practice_benchmarks: {
@@ -27138,6 +28239,13 @@ export type Database = {
             columns: ["cpa_partner_id"]
             isOneToOne: false
             referencedRelation: "cpa_partners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "practice_metrics_cpa_partner_id_fkey"
+            columns: ["cpa_partner_id"]
+            isOneToOne: false
+            referencedRelation: "v_cpa_partners_me"
             referencedColumns: ["id"]
           },
         ]
@@ -27601,6 +28709,13 @@ export type Database = {
             referencedRelation: "professionals"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "professional_assignments_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "v_professionals_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       professional_client_connections: {
@@ -27643,6 +28758,13 @@ export type Database = {
             columns: ["professional_id"]
             isOneToOne: false
             referencedRelation: "tax_professionals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "professional_client_connections_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "v_tax_professionals_me"
             referencedColumns: ["id"]
           },
         ]
@@ -27696,6 +28818,13 @@ export type Database = {
             columns: ["professional_id"]
             isOneToOne: false
             referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "professional_client_links_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "v_professionals_me"
             referencedColumns: ["id"]
           },
           {
@@ -27798,6 +28927,13 @@ export type Database = {
             columns: ["professional_id"]
             isOneToOne: false
             referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "professional_compliance_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "v_professionals_me"
             referencedColumns: ["id"]
           },
         ]
@@ -28061,6 +29197,13 @@ export type Database = {
             columns: ["professional_id"]
             isOneToOne: false
             referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "professional_reviews_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "v_professionals_me"
             referencedColumns: ["id"]
           },
         ]
@@ -28394,6 +29537,13 @@ export type Database = {
             referencedRelation: "tenants"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "professionals_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_tenants_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       profiles: {
@@ -28607,6 +29757,13 @@ export type Database = {
             columns: ["tenant_id"]
             isOneToOne: false
             referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "profiles_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_tenants_me"
             referencedColumns: ["id"]
           },
         ]
@@ -29209,6 +30366,13 @@ export type Database = {
             referencedRelation: "properties"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "property_business_details_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "v_properties_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       property_financials: {
@@ -29289,6 +30453,13 @@ export type Database = {
             referencedRelation: "properties"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "property_improvements_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "v_properties_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       property_rental_details: {
@@ -29333,6 +30504,13 @@ export type Database = {
             referencedRelation: "properties"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "property_rental_details_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "v_properties_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       property_valuations: {
@@ -29369,6 +30547,13 @@ export type Database = {
             columns: ["property_id"]
             isOneToOne: false
             referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "property_valuations_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "v_properties_me"
             referencedColumns: ["id"]
           },
         ]
@@ -29632,10 +30817,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "provider_reviews_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "v_family_members_me"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "provider_reviews_provider_id_fkey"
             columns: ["provider_id"]
             isOneToOne: false
             referencedRelation: "healthcare_providers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "provider_reviews_provider_id_fkey"
+            columns: ["provider_id"]
+            isOneToOne: false
+            referencedRelation: "v_healthcare_providers_me"
             referencedColumns: ["id"]
           },
         ]
@@ -29847,6 +31046,13 @@ export type Database = {
             referencedRelation: "personas"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "reason_receipts_persona_id_fkey"
+            columns: ["persona_id"]
+            isOneToOne: false
+            referencedRelation: "v_personas_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       rebalancing_events: {
@@ -29890,44 +31096,86 @@ export type Database = {
       }
       receipts: {
         Row: {
+          anchor_status: string | null
+          approvals: Json | null
           created_at: string | null
+          created_by: string | null
+          decision: string | null
+          effects: Json | null
           entity_id: string | null
+          exceptions: Json | null
+          id: string | null
           inputs_hash: string
           leaf: string
+          linked_receipt_id: string | null
           model_hash: string | null
           outcome: string
+          policies: Json | null
           policy_hash: string
+          rds_type: string | null
           reason_codes: Json | null
           receipt_id: string
+          redaction_map: Json | null
+          request_hash: string | null
           root: string
+          stage: string | null
+          tenant_id: string | null
           txid: string | null
           worm_uri: string | null
         }
         Insert: {
+          anchor_status?: string | null
+          approvals?: Json | null
           created_at?: string | null
+          created_by?: string | null
+          decision?: string | null
+          effects?: Json | null
           entity_id?: string | null
+          exceptions?: Json | null
+          id?: string | null
           inputs_hash: string
           leaf: string
+          linked_receipt_id?: string | null
           model_hash?: string | null
           outcome: string
+          policies?: Json | null
           policy_hash: string
+          rds_type?: string | null
           reason_codes?: Json | null
           receipt_id?: string
+          redaction_map?: Json | null
+          request_hash?: string | null
           root: string
+          stage?: string | null
+          tenant_id?: string | null
           txid?: string | null
           worm_uri?: string | null
         }
         Update: {
+          anchor_status?: string | null
+          approvals?: Json | null
           created_at?: string | null
+          created_by?: string | null
+          decision?: string | null
+          effects?: Json | null
           entity_id?: string | null
+          exceptions?: Json | null
+          id?: string | null
           inputs_hash?: string
           leaf?: string
+          linked_receipt_id?: string | null
           model_hash?: string | null
           outcome?: string
+          policies?: Json | null
           policy_hash?: string
+          rds_type?: string | null
           reason_codes?: Json | null
           receipt_id?: string
+          redaction_map?: Json | null
+          request_hash?: string | null
           root?: string
+          stage?: string | null
+          tenant_id?: string | null
           txid?: string | null
           worm_uri?: string | null
         }
@@ -30018,6 +31266,13 @@ export type Database = {
             columns: ["professional_id"]
             isOneToOne: false
             referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reconciliation_logs_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "v_professionals_me"
             referencedColumns: ["id"]
           },
         ]
@@ -30246,6 +31501,13 @@ export type Database = {
             referencedRelation: "tenants"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "referrals_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_tenants_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       registry_records: {
@@ -30333,6 +31595,13 @@ export type Database = {
             columns: ["professional_id"]
             isOneToOne: false
             referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "registry_records_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "v_professionals_me"
             referencedColumns: ["id"]
           },
           {
@@ -30555,6 +31824,13 @@ export type Database = {
             referencedRelation: "reserved_profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "reserved_profile_invitations_reserved_profile_id_fkey"
+            columns: ["reserved_profile_id"]
+            isOneToOne: false
+            referencedRelation: "reserved_profiles_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       reserved_profiles: {
@@ -30642,6 +31918,13 @@ export type Database = {
             columns: ["tenant_id"]
             isOneToOne: false
             referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reserved_profiles_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_tenants_me"
             referencedColumns: ["id"]
           },
         ]
@@ -31003,10 +32286,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "ria_filings_reviewer_id_fkey"
+            columns: ["reviewer_id"]
+            isOneToOne: false
+            referencedRelation: "v_compliance_profiles_me"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "ria_filings_ria_id_fkey"
             columns: ["ria_id"]
             isOneToOne: false
             referencedRelation: "ria_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ria_filings_ria_id_fkey"
+            columns: ["ria_id"]
+            isOneToOne: false
+            referencedRelation: "v_ria_profiles_me"
             referencedColumns: ["id"]
           },
         ]
@@ -31487,6 +32784,13 @@ export type Database = {
             referencedRelation: "retirement_confidence_submissions"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "roadmap_intake_sessions_scorecard_submission_id_fkey"
+            columns: ["scorecard_submission_id"]
+            isOneToOne: false
+            referencedRelation: "v_retirement_confidence_submissions_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       rollup_analytics: {
@@ -31552,6 +32856,33 @@ export type Database = {
         }
         Relationships: []
       }
+      rule_providers: {
+        Row: {
+          created_at: string
+          created_by: string
+          display_name: string
+          id: string
+          provider_id: string
+          tenant_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          display_name: string
+          id?: string
+          provider_id: string
+          tenant_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          display_name?: string
+          id?: string
+          provider_id?: string
+          tenant_id?: string
+        }
+        Relationships: []
+      }
       sanction_hits: {
         Row: {
           created_at: string
@@ -31601,6 +32932,13 @@ export type Database = {
             columns: ["professional_id"]
             isOneToOne: false
             referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sanction_hits_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "v_professionals_me"
             referencedColumns: ["id"]
           },
         ]
@@ -31849,6 +33187,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "seat_assignments_assigned_by_fkey"
+            columns: ["assigned_by"]
+            isOneToOne: false
+            referencedRelation: "v_professional_users_me"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "seat_assignments_firm_id_fkey"
             columns: ["firm_id"]
             isOneToOne: false
@@ -31860,6 +33205,13 @@ export type Database = {
             columns: ["professional_user_id"]
             isOneToOne: false
             referencedRelation: "professional_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "seat_assignments_professional_user_id_fkey"
+            columns: ["professional_user_id"]
+            isOneToOne: false
+            referencedRelation: "v_professional_users_me"
             referencedColumns: ["id"]
           },
         ]
@@ -31993,6 +33345,13 @@ export type Database = {
             columns: ["professional_id"]
             isOneToOne: false
             referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "seat_purchases_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "v_professionals_me"
             referencedColumns: ["id"]
           },
         ]
@@ -32725,10 +34084,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "shared_documents_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "v_documents_me"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "shared_documents_professional_id_fkey"
             columns: ["professional_id"]
             isOneToOne: false
             referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "shared_documents_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "v_professionals_me"
             referencedColumns: ["id"]
           },
         ]
@@ -32785,6 +34158,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "signature_requests_cpa_partner_id_fkey"
+            columns: ["cpa_partner_id"]
+            isOneToOne: false
+            referencedRelation: "v_cpa_partners_me"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "signature_requests_document_template_id_fkey"
             columns: ["document_template_id"]
             isOneToOne: false
@@ -32834,6 +34214,13 @@ export type Database = {
             columns: ["member_id"]
             isOneToOne: false
             referencedRelation: "social_security_members"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "social_security_estimates_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "v_social_security_members_me"
             referencedColumns: ["id"]
           },
         ]
@@ -33015,6 +34402,13 @@ export type Database = {
             columns: ["scenario_config_id"]
             isOneToOne: false
             referencedRelation: "scenario_configs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stress_runs_scenario_config_id_fkey"
+            columns: ["scenario_config_id"]
+            isOneToOne: false
+            referencedRelation: "v_scenario_configs_me"
             referencedColumns: ["id"]
           },
         ]
@@ -33316,10 +34710,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "supplements_family_id_fkey"
+            columns: ["family_id"]
+            isOneToOne: false
+            referencedRelation: "v_families_me"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "supplements_member_id_fkey"
             columns: ["member_id"]
             isOneToOne: false
             referencedRelation: "family_members"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "supplements_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "v_family_members_me"
             referencedColumns: ["id"]
           },
         ]
@@ -34148,6 +35556,13 @@ export type Database = {
             referencedRelation: "tenants"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "tenant_admin_credentials_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_tenants_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       tenant_feature_flags: {
@@ -34297,6 +35712,13 @@ export type Database = {
             referencedRelation: "tenants"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "tenant_licenses_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_tenants_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       tenant_onboarding_applications: {
@@ -34369,6 +35791,13 @@ export type Database = {
             columns: ["tenant_id"]
             isOneToOne: false
             referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tenant_onboarding_applications_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_tenants_me"
             referencedColumns: ["id"]
           },
         ]
@@ -34470,6 +35899,13 @@ export type Database = {
             columns: ["tenant_id"]
             isOneToOne: true
             referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tenant_settings_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: true
+            referencedRelation: "v_tenants_me"
             referencedColumns: ["id"]
           },
         ]
@@ -34666,7 +36102,86 @@ export type Database = {
             referencedRelation: "tenants"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "tracked_events_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_tenants_me"
+            referencedColumns: ["id"]
+          },
         ]
+      }
+      trading_tlh_pairs: {
+        Row: {
+          correlation: number
+          created_at: string
+          created_by: string | null
+          effective_at: string
+          id: string
+          notes: string | null
+          proxy_symbol: string
+          symbol: string
+          tenant_id: string
+        }
+        Insert: {
+          correlation?: number
+          created_at?: string
+          created_by?: string | null
+          effective_at?: string
+          id?: string
+          notes?: string | null
+          proxy_symbol: string
+          symbol: string
+          tenant_id: string
+        }
+        Update: {
+          correlation?: number
+          created_at?: string
+          created_by?: string | null
+          effective_at?: string
+          id?: string
+          notes?: string | null
+          proxy_symbol?: string
+          symbol?: string
+          tenant_id?: string
+        }
+        Relationships: []
+      }
+      trading_venue_prefs: {
+        Row: {
+          cost_score: number
+          created_at: string
+          created_by: string | null
+          effective_at: string
+          id: string
+          latency_ms: number
+          liquidity_score: number
+          tenant_id: string
+          venue: string
+        }
+        Insert: {
+          cost_score?: number
+          created_at?: string
+          created_by?: string | null
+          effective_at?: string
+          id?: string
+          latency_ms?: number
+          liquidity_score?: number
+          tenant_id: string
+          venue: string
+        }
+        Update: {
+          cost_score?: number
+          created_at?: string
+          created_by?: string | null
+          effective_at?: string
+          id?: string
+          latency_ms?: number
+          liquidity_score?: number
+          tenant_id?: string
+          venue?: string
+        }
+        Relationships: []
       }
       training_library: {
         Row: {
@@ -34788,6 +36303,13 @@ export type Database = {
             columns: ["tenant_id"]
             isOneToOne: false
             referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "training_modules_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_tenants_me"
             referencedColumns: ["id"]
           },
         ]
@@ -34966,6 +36488,13 @@ export type Database = {
             referencedRelation: "accounts"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "transactions_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "v_accounts_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       transfers: {
@@ -35047,10 +36576,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "fk_transfers_from_account"
+            columns: ["from_account_id"]
+            isOneToOne: false
+            referencedRelation: "v_bank_accounts_me"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "fk_transfers_to_account"
             columns: ["to_account_id"]
             isOneToOne: false
             referencedRelation: "bank_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_transfers_to_account"
+            columns: ["to_account_id"]
+            isOneToOne: false
+            referencedRelation: "v_bank_accounts_me"
             referencedColumns: ["id"]
           },
         ]
@@ -35436,6 +36979,13 @@ export type Database = {
             columns: ["professional_id"]
             isOneToOne: false
             referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "trust_scores_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "v_professionals_me"
             referencedColumns: ["id"]
           },
         ]
@@ -35936,6 +37486,13 @@ export type Database = {
             referencedRelation: "tenants"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "user_checklist_progress_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_tenants_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       user_consent: {
@@ -36187,6 +37744,13 @@ export type Database = {
             columns: ["metric_id"]
             isOneToOne: false
             referencedRelation: "metrics_catalog"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_enabled_metrics_metric_id_fkey"
+            columns: ["metric_id"]
+            isOneToOne: false
+            referencedRelation: "v_metrics_catalog_public"
             referencedColumns: ["id"]
           },
         ]
@@ -36479,6 +38043,13 @@ export type Database = {
             referencedRelation: "investment_offerings"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "user_investment_interests_offering_id_fkey"
+            columns: ["offering_id"]
+            isOneToOne: false
+            referencedRelation: "v_investment_offerings_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       user_liabilities: {
@@ -36599,6 +38170,13 @@ export type Database = {
             columns: ["tenant_id"]
             isOneToOne: false
             referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_onboarding_progress_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_tenants_me"
             referencedColumns: ["id"]
           },
         ]
@@ -36823,6 +38401,21 @@ export type Database = {
         }
         Relationships: []
       }
+      user_tenants: {
+        Row: {
+          tenant_id: string
+          user_id: string
+        }
+        Insert: {
+          tenant_id: string
+          user_id: string
+        }
+        Update: {
+          tenant_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_training_progress: {
         Row: {
           completed_at: string | null
@@ -36875,6 +38468,13 @@ export type Database = {
             referencedRelation: "tenants"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "user_training_progress_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_tenants_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       user_trust_documents: {
@@ -36917,6 +38517,13 @@ export type Database = {
             columns: ["trust_id"]
             isOneToOne: false
             referencedRelation: "user_trusts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_trust_documents_trust_id_fkey"
+            columns: ["trust_id"]
+            isOneToOne: false
+            referencedRelation: "v_user_trusts_me"
             referencedColumns: ["id"]
           },
         ]
@@ -37039,6 +38646,13 @@ export type Database = {
             referencedRelation: "family_vaults"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "vault_access_logs_vault_id_fkey"
+            columns: ["vault_id"]
+            isOneToOne: false
+            referencedRelation: "v_family_vaults_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       vault_access_rules: {
@@ -37085,6 +38699,13 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "vault_access_rules_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "v_vault_items_me"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "vault_access_rules_item_id_fkey"
             columns: ["item_id"]
@@ -37165,6 +38786,13 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "vault_audit_log_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "v_vault_items_me"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "vault_audit_log_item_id_fkey"
             columns: ["item_id"]
@@ -37342,6 +38970,13 @@ export type Database = {
             referencedRelation: "family_vaults"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "vault_files_vault_id_fkey"
+            columns: ["vault_id"]
+            isOneToOne: false
+            referencedRelation: "v_family_vaults_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       vault_items: {
@@ -37470,6 +39105,13 @@ export type Database = {
             referencedRelation: "family_vaults"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "vault_members_vault_id_fkey"
+            columns: ["vault_id"]
+            isOneToOne: false
+            referencedRelation: "v_family_vaults_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       vault_milestones: {
@@ -37516,6 +39158,13 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "vault_milestones_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "v_vault_items_me"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "vault_milestones_item_id_fkey"
             columns: ["item_id"]
@@ -37577,6 +39226,13 @@ export type Database = {
             columns: ["vault_id"]
             isOneToOne: false
             referencedRelation: "family_vaults"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vault_notifications_vault_id_fkey"
+            columns: ["vault_id"]
+            isOneToOne: false
+            referencedRelation: "v_family_vaults_me"
             referencedColumns: ["id"]
           },
         ]
@@ -37812,6 +39468,13 @@ export type Database = {
             referencedRelation: "professionals"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "vetting_requests_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "v_professionals_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       video_meeting_integrations: {
@@ -37906,6 +39569,13 @@ export type Database = {
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "video_meetings_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: false
+            referencedRelation: "v_video_meeting_integrations_me"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "video_meetings_integration_id_fkey"
             columns: ["integration_id"]
@@ -38858,6 +40528,13 @@ export type Database = {
             referencedRelation: "tenants"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "webhook_configs_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_tenants_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       webhook_deliveries: {
@@ -38915,10 +40592,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "webhook_deliveries_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "v_analytics_events_me"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "webhook_deliveries_tenant_id_fkey"
             columns: ["tenant_id"]
             isOneToOne: false
             referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "webhook_deliveries_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_tenants_me"
             referencedColumns: ["id"]
           },
           {
@@ -39089,6 +40780,13 @@ export type Database = {
             referencedRelation: "cpa_partners"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "white_label_configs_cpa_partner_id_fkey"
+            columns: ["cpa_partner_id"]
+            isOneToOne: false
+            referencedRelation: "v_cpa_partners_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       workflow_templates: {
@@ -39170,6 +40868,13 @@ export type Database = {
             columns: ["receipt_id"]
             isOneToOne: false
             referencedRelation: "reason_receipts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "xr_attestations_receipt_id_fkey"
+            columns: ["receipt_id"]
+            isOneToOne: false
+            referencedRelation: "v_reason_receipts_me"
             referencedColumns: ["id"]
           },
         ]
@@ -39256,61 +40961,16 @@ export type Database = {
     Views: {
       advisor_profiles_public: {
         Row: {
-          availability_status: string | null
-          average_rating: number | null
-          bio: string | null
-          certifications: string[] | null
-          expertise_areas: string[] | null
-          firm_name: string | null
-          hourly_rate: number | null
+          email_public: string | null
           id: string | null
-          is_active: boolean | null
-          is_verified: boolean | null
-          license_states: string[] | null
-          meeting_types: string[] | null
-          name: string | null
-          specializations: string[] | null
-          specialties: Json | null
-          total_reviews: number | null
-          years_experience: number | null
         }
         Insert: {
-          availability_status?: string | null
-          average_rating?: number | null
-          bio?: string | null
-          certifications?: string[] | null
-          expertise_areas?: string[] | null
-          firm_name?: string | null
-          hourly_rate?: number | null
+          email_public?: never
           id?: string | null
-          is_active?: boolean | null
-          is_verified?: boolean | null
-          license_states?: string[] | null
-          meeting_types?: string[] | null
-          name?: string | null
-          specializations?: string[] | null
-          specialties?: Json | null
-          total_reviews?: number | null
-          years_experience?: number | null
         }
         Update: {
-          availability_status?: string | null
-          average_rating?: number | null
-          bio?: string | null
-          certifications?: string[] | null
-          expertise_areas?: string[] | null
-          firm_name?: string | null
-          hourly_rate?: number | null
+          email_public?: never
           id?: string | null
-          is_active?: boolean | null
-          is_verified?: boolean | null
-          license_states?: string[] | null
-          meeting_types?: string[] | null
-          name?: string | null
-          specializations?: string[] | null
-          specialties?: Json | null
-          total_reviews?: number | null
-          years_experience?: number | null
         }
         Relationships: []
       }
@@ -39382,6 +41042,51 @@ export type Database = {
         }
         Relationships: []
       }
+      receipts_redacted: {
+        Row: {
+          anchor_status: string | null
+          approvals_min: Json | null
+          created_at: string | null
+          decision: string | null
+          effects: Json | null
+          exceptions: Json | null
+          id: string | null
+          policies: Json | null
+          rds_type: string | null
+          request_hash: string | null
+          stage: string | null
+          tenant_id: string | null
+        }
+        Insert: {
+          anchor_status?: string | null
+          approvals_min?: never
+          created_at?: string | null
+          decision?: string | null
+          effects?: Json | null
+          exceptions?: Json | null
+          id?: string | null
+          policies?: never
+          rds_type?: string | null
+          request_hash?: string | null
+          stage?: string | null
+          tenant_id?: string | null
+        }
+        Update: {
+          anchor_status?: string | null
+          approvals_min?: never
+          created_at?: string | null
+          decision?: string | null
+          effects?: Json | null
+          exceptions?: Json | null
+          id?: string | null
+          policies?: never
+          rds_type?: string | null
+          request_hash?: string | null
+          stage?: string | null
+          tenant_id?: string | null
+        }
+        Relationships: []
+      }
       referral_leaderboard: {
         Row: {
           last_referral_date: string | null
@@ -39389,6 +41094,467 @@ export type Database = {
           successful_referrals: number | null
           total_referrals: number | null
           user_id: string | null
+        }
+        Relationships: []
+      }
+      reserved_profiles_public: {
+        Row: {
+          email_public: string | null
+          id: string | null
+        }
+        Insert: {
+          email_public?: never
+          id?: string | null
+        }
+        Update: {
+          email_public?: never
+          id?: string | null
+        }
+        Relationships: []
+      }
+      v_accountant_ce_alerts_me: {
+        Row: {
+          alert_type: string | null
+          created_at: string | null
+          due_date: string | null
+          id: string | null
+          license_id: string | null
+          metadata: Json | null
+          notes: string | null
+          priority: string | null
+          resolved: boolean | null
+          resolved_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          alert_type?: string | null
+          created_at?: string | null
+          due_date?: string | null
+          id?: string | null
+          license_id?: string | null
+          metadata?: Json | null
+          notes?: string | null
+          priority?: string | null
+          resolved?: boolean | null
+          resolved_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          alert_type?: string | null
+          created_at?: string | null
+          due_date?: string | null
+          id?: string | null
+          license_id?: string | null
+          metadata?: Json | null
+          notes?: string | null
+          priority?: string | null
+          resolved?: boolean | null
+          resolved_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "accountant_ce_alerts_license_id_fkey"
+            columns: ["license_id"]
+            isOneToOne: false
+            referencedRelation: "accountant_license_status"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "accountant_ce_alerts_license_id_fkey"
+            columns: ["license_id"]
+            isOneToOne: false
+            referencedRelation: "v_accountant_license_status_me"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "accountant_ce_alerts_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "accountant_ce_alerts_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "accountant_ce_alerts_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "v_profiles_basic"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      v_accountant_ce_records_me: {
+        Row: {
+          ce_hours: number | null
+          certificate_number: string | null
+          certificate_url: string | null
+          course_name: string | null
+          created_at: string | null
+          credential_type: string | null
+          date_completed: string | null
+          ethics_hours: number | null
+          id: string | null
+          notes: string | null
+          provider: string | null
+          provider_id: string | null
+          renewal_period: string | null
+          state: string | null
+          status: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          ce_hours?: number | null
+          certificate_number?: string | null
+          certificate_url?: string | null
+          course_name?: string | null
+          created_at?: string | null
+          credential_type?: string | null
+          date_completed?: string | null
+          ethics_hours?: number | null
+          id?: string | null
+          notes?: string | null
+          provider?: string | null
+          provider_id?: string | null
+          renewal_period?: string | null
+          state?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          ce_hours?: number | null
+          certificate_number?: string | null
+          certificate_url?: string | null
+          course_name?: string | null
+          created_at?: string | null
+          credential_type?: string | null
+          date_completed?: string | null
+          ethics_hours?: number | null
+          id?: string | null
+          notes?: string | null
+          provider?: string | null
+          provider_id?: string | null
+          renewal_period?: string | null
+          state?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "accountant_ce_records_provider_id_fkey"
+            columns: ["provider_id"]
+            isOneToOne: false
+            referencedRelation: "accountant_ce_providers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "accountant_ce_records_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "accountant_ce_records_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "accountant_ce_records_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "v_profiles_basic"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      v_accountant_license_status_me: {
+        Row: {
+          audit_flag: boolean | null
+          audit_selected_date: string | null
+          ce_hours_completed: number | null
+          ce_hours_required: number | null
+          created_at: string | null
+          credential_type: string | null
+          ethics_hours_completed: number | null
+          ethics_hours_required: number | null
+          expiration_date: string | null
+          id: string | null
+          issue_date: string | null
+          license_number: string | null
+          notes: string | null
+          renewal_status: string | null
+          state: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          audit_flag?: boolean | null
+          audit_selected_date?: string | null
+          ce_hours_completed?: number | null
+          ce_hours_required?: number | null
+          created_at?: string | null
+          credential_type?: string | null
+          ethics_hours_completed?: number | null
+          ethics_hours_required?: number | null
+          expiration_date?: string | null
+          id?: string | null
+          issue_date?: string | null
+          license_number?: string | null
+          notes?: string | null
+          renewal_status?: string | null
+          state?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          audit_flag?: boolean | null
+          audit_selected_date?: string | null
+          ce_hours_completed?: number | null
+          ce_hours_required?: number | null
+          created_at?: string | null
+          credential_type?: string | null
+          ethics_hours_completed?: number | null
+          ethics_hours_required?: number | null
+          expiration_date?: string | null
+          id?: string | null
+          issue_date?: string | null
+          license_number?: string | null
+          notes?: string | null
+          renewal_status?: string | null
+          state?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "accountant_license_status_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "accountant_license_status_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "accountant_license_status_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "v_profiles_basic"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      v_accounting_clients_me: {
+        Row: {
+          address: Json | null
+          business_name: string | null
+          client_number: string | null
+          contact_name: string | null
+          created_at: string | null
+          email: string | null
+          id: string | null
+          kba_status: string | null
+          onboarding_status: string | null
+          persona_id: string | null
+          phone: string | null
+          risk_flags: Json | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          address?: Json | null
+          business_name?: string | null
+          client_number?: string | null
+          contact_name?: string | null
+          created_at?: string | null
+          email?: string | null
+          id?: string | null
+          kba_status?: string | null
+          onboarding_status?: string | null
+          persona_id?: string | null
+          phone?: string | null
+          risk_flags?: Json | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          address?: Json | null
+          business_name?: string | null
+          client_number?: string | null
+          contact_name?: string | null
+          created_at?: string | null
+          email?: string | null
+          id?: string | null
+          kba_status?: string | null
+          onboarding_status?: string | null
+          persona_id?: string | null
+          phone?: string | null
+          risk_flags?: Json | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "accounting_clients_persona_id_fkey"
+            columns: ["persona_id"]
+            isOneToOne: false
+            referencedRelation: "personas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "accounting_clients_persona_id_fkey"
+            columns: ["persona_id"]
+            isOneToOne: false
+            referencedRelation: "v_personas_me"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_accounting_time_entries_me: {
+        Row: {
+          bill_rate: number | null
+          billable: boolean | null
+          created_at: string | null
+          date_worked: string | null
+          description: string | null
+          id: string | null
+          minutes: number | null
+          task_id: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          bill_rate?: number | null
+          billable?: boolean | null
+          created_at?: string | null
+          date_worked?: string | null
+          description?: string | null
+          id?: string | null
+          minutes?: number | null
+          task_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          bill_rate?: number | null
+          billable?: boolean | null
+          created_at?: string | null
+          date_worked?: string | null
+          description?: string | null
+          id?: string | null
+          minutes?: number | null
+          task_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "accounting_time_entries_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "accounting_tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_accounts_me: {
+        Row: {
+          account_name: string | null
+          account_number: string | null
+          account_status: string | null
+          account_type: string | null
+          available_balance: number | null
+          connector_account_id: string | null
+          created_at: string | null
+          currency: string | null
+          current_balance: number | null
+          id: string | null
+          institution_name: string | null
+          last_updated_at: string | null
+          metadata: Json | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          account_name?: string | null
+          account_number?: string | null
+          account_status?: string | null
+          account_type?: string | null
+          available_balance?: number | null
+          connector_account_id?: string | null
+          created_at?: string | null
+          currency?: string | null
+          current_balance?: number | null
+          id?: string | null
+          institution_name?: string | null
+          last_updated_at?: string | null
+          metadata?: Json | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          account_name?: string | null
+          account_number?: string | null
+          account_status?: string | null
+          account_type?: string | null
+          available_balance?: number | null
+          connector_account_id?: string | null
+          created_at?: string | null
+          currency?: string | null
+          current_balance?: number | null
+          id?: string | null
+          institution_name?: string | null
+          last_updated_at?: string | null
+          metadata?: Json | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "accounts_connector_account_id_fkey"
+            columns: ["connector_account_id"]
+            isOneToOne: false
+            referencedRelation: "connector_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "accounts_connector_account_id_fkey"
+            columns: ["connector_account_id"]
+            isOneToOne: false
+            referencedRelation: "v_connector_accounts_me"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_admin_users_me: {
+        Row: {
+          created_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -39421,6 +41587,261 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: []
+      }
+      v_advisor_invitation_usage_me: {
+        Row: {
+          client_tier: string | null
+          id: string | null
+          invitation_id: string | null
+          signup_completed: boolean | null
+          used_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          client_tier?: string | null
+          id?: string | null
+          invitation_id?: string | null
+          signup_completed?: boolean | null
+          used_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          client_tier?: string | null
+          id?: string | null
+          invitation_id?: string | null
+          signup_completed?: boolean | null
+          used_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "advisor_invitation_usage_invitation_id_fkey"
+            columns: ["invitation_id"]
+            isOneToOne: false
+            referencedRelation: "advisor_invitations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_advisor_profiles_me: {
+        Row: {
+          availability_status: string | null
+          average_rating: number | null
+          bio: string | null
+          calendly_url: string | null
+          certifications: string[] | null
+          client_capacity: number | null
+          created_at: string | null
+          current_clients: number | null
+          email: string | null
+          expertise_areas: string[] | null
+          firm_name: string | null
+          hourly_rate: number | null
+          id: string | null
+          is_active: boolean | null
+          is_verified: boolean | null
+          license_states: string[] | null
+          meeting_types: string[] | null
+          name: string | null
+          phone: string | null
+          specializations: string[] | null
+          specialties: Json | null
+          total_reviews: number | null
+          updated_at: string | null
+          user_id: string | null
+          years_experience: number | null
+        }
+        Insert: {
+          availability_status?: string | null
+          average_rating?: number | null
+          bio?: string | null
+          calendly_url?: string | null
+          certifications?: string[] | null
+          client_capacity?: number | null
+          created_at?: string | null
+          current_clients?: number | null
+          email?: string | null
+          expertise_areas?: string[] | null
+          firm_name?: string | null
+          hourly_rate?: number | null
+          id?: string | null
+          is_active?: boolean | null
+          is_verified?: boolean | null
+          license_states?: string[] | null
+          meeting_types?: string[] | null
+          name?: string | null
+          phone?: string | null
+          specializations?: string[] | null
+          specialties?: Json | null
+          total_reviews?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+          years_experience?: number | null
+        }
+        Update: {
+          availability_status?: string | null
+          average_rating?: number | null
+          bio?: string | null
+          calendly_url?: string | null
+          certifications?: string[] | null
+          client_capacity?: number | null
+          created_at?: string | null
+          current_clients?: number | null
+          email?: string | null
+          expertise_areas?: string[] | null
+          firm_name?: string | null
+          hourly_rate?: number | null
+          id?: string | null
+          is_active?: boolean | null
+          is_verified?: boolean | null
+          license_states?: string[] | null
+          meeting_types?: string[] | null
+          name?: string | null
+          phone?: string | null
+          specializations?: string[] | null
+          specialties?: Json | null
+          total_reviews?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+          years_experience?: number | null
+        }
+        Relationships: []
+      }
+      v_advisor_profiles_public: {
+        Row: {
+          availability_status: string | null
+          average_rating: number | null
+          expertise_areas: string[] | null
+          firm_name: string | null
+          id: string | null
+          is_verified: boolean | null
+          name: string | null
+          specialties: Json | null
+          total_reviews: number | null
+          years_experience: number | null
+        }
+        Insert: {
+          availability_status?: string | null
+          average_rating?: number | null
+          expertise_areas?: string[] | null
+          firm_name?: string | null
+          id?: string | null
+          is_verified?: boolean | null
+          name?: string | null
+          specialties?: Json | null
+          total_reviews?: number | null
+          years_experience?: number | null
+        }
+        Update: {
+          availability_status?: string | null
+          average_rating?: number | null
+          expertise_areas?: string[] | null
+          firm_name?: string | null
+          id?: string | null
+          is_verified?: boolean | null
+          name?: string | null
+          specialties?: Json | null
+          total_reviews?: number | null
+          years_experience?: number | null
+        }
+        Relationships: []
+      }
+      v_advisor_proposals_me: {
+        Row: {
+          accepted_at: string | null
+          advisor_id: string | null
+          compliance_summary: Json | null
+          content: Json | null
+          created_at: string | null
+          id: string | null
+          pdf_url: string | null
+          proposal_type: string | null
+          questionnaire_id: string | null
+          scenario_ids: string[] | null
+          sent_at: string | null
+          status: string | null
+          updated_at: string | null
+          user_id: string | null
+          viewed_at: string | null
+        }
+        Insert: {
+          accepted_at?: string | null
+          advisor_id?: string | null
+          compliance_summary?: Json | null
+          content?: Json | null
+          created_at?: string | null
+          id?: string | null
+          pdf_url?: string | null
+          proposal_type?: string | null
+          questionnaire_id?: string | null
+          scenario_ids?: string[] | null
+          sent_at?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          viewed_at?: string | null
+        }
+        Update: {
+          accepted_at?: string | null
+          advisor_id?: string | null
+          compliance_summary?: Json | null
+          content?: Json | null
+          created_at?: string | null
+          id?: string | null
+          pdf_url?: string | null
+          proposal_type?: string | null
+          questionnaire_id?: string | null
+          scenario_ids?: string[] | null
+          sent_at?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          viewed_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "advisor_proposals_advisor_id_fkey"
+            columns: ["advisor_id"]
+            isOneToOne: false
+            referencedRelation: "advisor_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "advisor_proposals_advisor_id_fkey"
+            columns: ["advisor_id"]
+            isOneToOne: false
+            referencedRelation: "advisor_profiles_public"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "advisor_proposals_advisor_id_fkey"
+            columns: ["advisor_id"]
+            isOneToOne: false
+            referencedRelation: "v_advisor_profiles_me"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "advisor_proposals_advisor_id_fkey"
+            columns: ["advisor_id"]
+            isOneToOne: false
+            referencedRelation: "v_advisor_profiles_public"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "advisor_proposals_questionnaire_id_fkey"
+            columns: ["questionnaire_id"]
+            isOneToOne: false
+            referencedRelation: "client_questionnaires"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "advisor_proposals_questionnaire_id_fkey"
+            columns: ["questionnaire_id"]
+            isOneToOne: false
+            referencedRelation: "v_client_questionnaires_me"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       v_agreement_workflow_templates_public: {
         Row: {
@@ -39481,6 +41902,75 @@ export type Database = {
           },
         ]
       }
+      v_aies_consents_me: {
+        Row: {
+          connector_key: string | null
+          expires_at: string | null
+          granted_at: string | null
+          id: string | null
+          jurisdiction: string | null
+          metadata: Json | null
+          revoked_at: string | null
+          scopes: string[] | null
+          user_id: string | null
+        }
+        Insert: {
+          connector_key?: string | null
+          expires_at?: string | null
+          granted_at?: string | null
+          id?: string | null
+          jurisdiction?: string | null
+          metadata?: Json | null
+          revoked_at?: string | null
+          scopes?: string[] | null
+          user_id?: string | null
+        }
+        Update: {
+          connector_key?: string | null
+          expires_at?: string | null
+          granted_at?: string | null
+          id?: string | null
+          jurisdiction?: string | null
+          metadata?: Json | null
+          revoked_at?: string | null
+          scopes?: string[] | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_aies_executions_me: {
+        Row: {
+          context: Json | null
+          ended_at: string | null
+          id: string | null
+          op_key: string | null
+          requested_cents: number | null
+          started_at: string | null
+          status: string | null
+          user_id: string | null
+        }
+        Insert: {
+          context?: Json | null
+          ended_at?: string | null
+          id?: string | null
+          op_key?: string | null
+          requested_cents?: number | null
+          started_at?: string | null
+          status?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          context?: Json | null
+          ended_at?: string | null
+          id?: string | null
+          op_key?: string | null
+          requested_cents?: number | null
+          started_at?: string | null
+          status?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       v_aies_mailbox_by_agent: {
         Row: {
           created_at: string | null
@@ -39513,6 +42003,460 @@ export type Database = {
           ttl?: number | null
         }
         Relationships: []
+      }
+      v_analytics_dashboards_me: {
+        Row: {
+          created_at: string | null
+          dashboard_name: string | null
+          dashboard_type: string | null
+          id: string | null
+          is_shared: boolean | null
+          layout_config: Json | null
+          shared_with: string[] | null
+          tenant_id: string | null
+          updated_at: string | null
+          user_id: string | null
+          widgets_config: Json | null
+        }
+        Insert: {
+          created_at?: string | null
+          dashboard_name?: string | null
+          dashboard_type?: string | null
+          id?: string | null
+          is_shared?: boolean | null
+          layout_config?: Json | null
+          shared_with?: string[] | null
+          tenant_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          widgets_config?: Json | null
+        }
+        Update: {
+          created_at?: string | null
+          dashboard_name?: string | null
+          dashboard_type?: string | null
+          id?: string | null
+          is_shared?: boolean | null
+          layout_config?: Json | null
+          shared_with?: string[] | null
+          tenant_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          widgets_config?: Json | null
+        }
+        Relationships: []
+      }
+      v_analytics_events_me: {
+        Row: {
+          created_at: string | null
+          event_category: string | null
+          event_data: Json | null
+          event_type: string | null
+          id: string | null
+          ip_address: unknown | null
+          session_id: string | null
+          tenant_id: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          event_category?: string | null
+          event_data?: Json | null
+          event_type?: string | null
+          id?: string | null
+          ip_address?: unknown | null
+          session_id?: string | null
+          tenant_id?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          event_category?: string | null
+          event_data?: Json | null
+          event_type?: string | null
+          id?: string | null
+          ip_address?: unknown | null
+          session_id?: string | null
+          tenant_id?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "analytics_events_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "analytics_events_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_tenants_me"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_analytics_scorecard_events_me: {
+        Row: {
+          created_at: string | null
+          event_data: Json | null
+          event_type: string | null
+          id: string | null
+          session_id: string | null
+          submission_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          event_data?: Json | null
+          event_type?: string | null
+          id?: string | null
+          session_id?: string | null
+          submission_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          event_data?: Json | null
+          event_type?: string | null
+          id?: string | null
+          session_id?: string | null
+          submission_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "analytics_scorecard_events_submission_id_fkey"
+            columns: ["submission_id"]
+            isOneToOne: false
+            referencedRelation: "retirement_confidence_submissions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "analytics_scorecard_events_submission_id_fkey"
+            columns: ["submission_id"]
+            isOneToOne: false
+            referencedRelation: "v_retirement_confidence_submissions_me"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_app_events_me: {
+        Row: {
+          context: Json | null
+          created_at: string | null
+          event_type: string | null
+          id: string | null
+          page: string | null
+          referrer: string | null
+          session_id: string | null
+          user_id: string | null
+          utm: Json | null
+        }
+        Insert: {
+          context?: Json | null
+          created_at?: string | null
+          event_type?: string | null
+          id?: string | null
+          page?: string | null
+          referrer?: string | null
+          session_id?: string | null
+          user_id?: string | null
+          utm?: Json | null
+        }
+        Update: {
+          context?: Json | null
+          created_at?: string | null
+          event_type?: string | null
+          id?: string | null
+          page?: string | null
+          referrer?: string | null
+          session_id?: string | null
+          user_id?: string | null
+          utm?: Json | null
+        }
+        Relationships: []
+      }
+      v_assets_me: {
+        Row: {
+          acquisition_date: string | null
+          asset_name: string | null
+          asset_type: string | null
+          created_at: string | null
+          current_value_band: string | null
+          id: string | null
+          last_appraisal_date: string | null
+          location_zip_first3: string | null
+          metadata: Json | null
+          next_appraisal_due: string | null
+          status: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          acquisition_date?: string | null
+          asset_name?: string | null
+          asset_type?: string | null
+          created_at?: string | null
+          current_value_band?: string | null
+          id?: string | null
+          last_appraisal_date?: string | null
+          location_zip_first3?: string | null
+          metadata?: Json | null
+          next_appraisal_due?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          acquisition_date?: string | null
+          asset_name?: string | null
+          asset_type?: string | null
+          created_at?: string | null
+          current_value_band?: string | null
+          id?: string | null
+          last_appraisal_date?: string | null
+          location_zip_first3?: string | null
+          metadata?: Json | null
+          next_appraisal_due?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_attorney_bar_status_me: {
+        Row: {
+          admission_date: string | null
+          bar_number: string | null
+          cle_hours_completed: number | null
+          cle_hours_required: number | null
+          created_at: string | null
+          ethics_hours_completed: number | null
+          ethics_hours_required: number | null
+          expiration_date: string | null
+          good_standing: boolean | null
+          id: string | null
+          notes: string | null
+          renewal_status: string | null
+          state: string | null
+          tech_hours_completed: number | null
+          tech_hours_required: number | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          admission_date?: string | null
+          bar_number?: string | null
+          cle_hours_completed?: number | null
+          cle_hours_required?: number | null
+          created_at?: string | null
+          ethics_hours_completed?: number | null
+          ethics_hours_required?: number | null
+          expiration_date?: string | null
+          good_standing?: boolean | null
+          id?: string | null
+          notes?: string | null
+          renewal_status?: string | null
+          state?: string | null
+          tech_hours_completed?: number | null
+          tech_hours_required?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          admission_date?: string | null
+          bar_number?: string | null
+          cle_hours_completed?: number | null
+          cle_hours_required?: number | null
+          created_at?: string | null
+          ethics_hours_completed?: number | null
+          ethics_hours_required?: number | null
+          expiration_date?: string | null
+          good_standing?: boolean | null
+          id?: string | null
+          notes?: string | null
+          renewal_status?: string | null
+          state?: string | null
+          tech_hours_completed?: number | null
+          tech_hours_required?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_attorney_cle_alerts_me: {
+        Row: {
+          alert_type: string | null
+          bar_status_id: string | null
+          created_at: string | null
+          due_date: string | null
+          id: string | null
+          metadata: Json | null
+          notes: string | null
+          priority: string | null
+          resolved: boolean | null
+          resolved_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          alert_type?: string | null
+          bar_status_id?: string | null
+          created_at?: string | null
+          due_date?: string | null
+          id?: string | null
+          metadata?: Json | null
+          notes?: string | null
+          priority?: string | null
+          resolved?: boolean | null
+          resolved_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          alert_type?: string | null
+          bar_status_id?: string | null
+          created_at?: string | null
+          due_date?: string | null
+          id?: string | null
+          metadata?: Json | null
+          notes?: string | null
+          priority?: string | null
+          resolved?: boolean | null
+          resolved_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_attorney_cle_alerts_bar_status"
+            columns: ["bar_status_id"]
+            isOneToOne: false
+            referencedRelation: "attorney_bar_status"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_attorney_cle_alerts_bar_status"
+            columns: ["bar_status_id"]
+            isOneToOne: false
+            referencedRelation: "v_attorney_bar_status_me"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_attorney_cle_records_me: {
+        Row: {
+          bar_number: string | null
+          certificate_number: string | null
+          certificate_url: string | null
+          cle_hours: number | null
+          course_name: string | null
+          created_at: string | null
+          date_completed: string | null
+          ethics_hours: number | null
+          id: string | null
+          notes: string | null
+          provider: string | null
+          provider_id: string | null
+          state: string | null
+          status: string | null
+          tech_hours: number | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          bar_number?: string | null
+          certificate_number?: string | null
+          certificate_url?: string | null
+          cle_hours?: number | null
+          course_name?: string | null
+          created_at?: string | null
+          date_completed?: string | null
+          ethics_hours?: number | null
+          id?: string | null
+          notes?: string | null
+          provider?: string | null
+          provider_id?: string | null
+          state?: string | null
+          status?: string | null
+          tech_hours?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          bar_number?: string | null
+          certificate_number?: string | null
+          certificate_url?: string | null
+          cle_hours?: number | null
+          course_name?: string | null
+          created_at?: string | null
+          date_completed?: string | null
+          ethics_hours?: number | null
+          id?: string | null
+          notes?: string | null
+          provider?: string | null
+          provider_id?: string | null
+          state?: string | null
+          status?: string | null
+          tech_hours?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_attorney_cle_records_provider"
+            columns: ["provider_id"]
+            isOneToOne: false
+            referencedRelation: "attorney_cle_providers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_attorney_document_access_log_me: {
+        Row: {
+          access_granted: boolean | null
+          access_type: string | null
+          created_at: string | null
+          denial_reason: string | null
+          document_id: string | null
+          id: string | null
+          ip_address: unknown | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          access_granted?: boolean | null
+          access_type?: string | null
+          created_at?: string | null
+          denial_reason?: string | null
+          document_id?: string | null
+          id?: string | null
+          ip_address?: unknown | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          access_granted?: boolean | null
+          access_type?: string | null
+          created_at?: string | null
+          denial_reason?: string | null
+          document_id?: string | null
+          id?: string | null
+          ip_address?: unknown | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attorney_document_access_log_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "attorney_documents_metadata"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       v_attorney_document_classifications_public: {
         Row: {
@@ -39547,6 +42491,225 @@ export type Database = {
           retention_period_years?: number | null
           updated_at?: string | null
           validation_rules?: Json | null
+        }
+        Relationships: []
+      }
+      v_attorney_documents_me: {
+        Row: {
+          document_name: string | null
+          document_type: string | null
+          file_path: string | null
+          file_size: number | null
+          id: string | null
+          onboarding_id: string | null
+          status: string | null
+          uploaded_at: string | null
+          user_id: string | null
+          verified_at: string | null
+          verified_by: string | null
+        }
+        Insert: {
+          document_name?: string | null
+          document_type?: string | null
+          file_path?: string | null
+          file_size?: number | null
+          id?: string | null
+          onboarding_id?: string | null
+          status?: string | null
+          uploaded_at?: string | null
+          user_id?: string | null
+          verified_at?: string | null
+          verified_by?: string | null
+        }
+        Update: {
+          document_name?: string | null
+          document_type?: string | null
+          file_path?: string | null
+          file_size?: number | null
+          id?: string | null
+          onboarding_id?: string | null
+          status?: string | null
+          uploaded_at?: string | null
+          user_id?: string | null
+          verified_at?: string | null
+          verified_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attorney_documents_onboarding_id_fkey"
+            columns: ["onboarding_id"]
+            isOneToOne: false
+            referencedRelation: "attorney_onboarding"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "attorney_documents_onboarding_id_fkey"
+            columns: ["onboarding_id"]
+            isOneToOne: false
+            referencedRelation: "v_attorney_onboarding_me"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_attorney_onboarding_me: {
+        Row: {
+          admission_dates: Json | null
+          attorney_bio: string | null
+          bar_number: string | null
+          bar_status: string | null
+          billing_method: string | null
+          cle_compliance_status: string | null
+          cle_expiration_date: string | null
+          cle_hours_completed: number | null
+          cle_hours_required: number | null
+          consultation_fee: number | null
+          created_at: string | null
+          current_step: string | null
+          email: string | null
+          firm_name: string | null
+          firm_website: string | null
+          first_name: string | null
+          hourly_rate: number | null
+          id: string | null
+          jurisdictions_licensed: string[] | null
+          last_name: string | null
+          nda_signed: boolean | null
+          office_address: string | null
+          participation_agreement_signed: boolean | null
+          phone: string | null
+          practice_areas: string[] | null
+          primary_jurisdiction: string | null
+          primary_practice_area: string | null
+          retainer_required: boolean | null
+          specializations: string[] | null
+          status: string | null
+          tenant_id: string | null
+          terms_accepted: boolean | null
+          typical_retainer_amount: number | null
+          updated_at: string | null
+          user_id: string | null
+          years_experience: number | null
+        }
+        Insert: {
+          admission_dates?: Json | null
+          attorney_bio?: string | null
+          bar_number?: string | null
+          bar_status?: string | null
+          billing_method?: string | null
+          cle_compliance_status?: string | null
+          cle_expiration_date?: string | null
+          cle_hours_completed?: number | null
+          cle_hours_required?: number | null
+          consultation_fee?: number | null
+          created_at?: string | null
+          current_step?: string | null
+          email?: string | null
+          firm_name?: string | null
+          firm_website?: string | null
+          first_name?: string | null
+          hourly_rate?: number | null
+          id?: string | null
+          jurisdictions_licensed?: string[] | null
+          last_name?: string | null
+          nda_signed?: boolean | null
+          office_address?: string | null
+          participation_agreement_signed?: boolean | null
+          phone?: string | null
+          practice_areas?: string[] | null
+          primary_jurisdiction?: string | null
+          primary_practice_area?: string | null
+          retainer_required?: boolean | null
+          specializations?: string[] | null
+          status?: string | null
+          tenant_id?: string | null
+          terms_accepted?: boolean | null
+          typical_retainer_amount?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+          years_experience?: number | null
+        }
+        Update: {
+          admission_dates?: Json | null
+          attorney_bio?: string | null
+          bar_number?: string | null
+          bar_status?: string | null
+          billing_method?: string | null
+          cle_compliance_status?: string | null
+          cle_expiration_date?: string | null
+          cle_hours_completed?: number | null
+          cle_hours_required?: number | null
+          consultation_fee?: number | null
+          created_at?: string | null
+          current_step?: string | null
+          email?: string | null
+          firm_name?: string | null
+          firm_website?: string | null
+          first_name?: string | null
+          hourly_rate?: number | null
+          id?: string | null
+          jurisdictions_licensed?: string[] | null
+          last_name?: string | null
+          nda_signed?: boolean | null
+          office_address?: string | null
+          participation_agreement_signed?: boolean | null
+          phone?: string | null
+          practice_areas?: string[] | null
+          primary_jurisdiction?: string | null
+          primary_practice_area?: string | null
+          retainer_required?: boolean | null
+          specializations?: string[] | null
+          status?: string | null
+          tenant_id?: string | null
+          terms_accepted?: boolean | null
+          typical_retainer_amount?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+          years_experience?: number | null
+        }
+        Relationships: []
+      }
+      v_audit_logs_me: {
+        Row: {
+          changed_at: string | null
+          changed_columns: string[] | null
+          created_at: string | null
+          details: Json | null
+          event_type: string | null
+          id: string | null
+          new_row: Json | null
+          old_row: Json | null
+          record_id: string | null
+          status: string | null
+          table_name: string | null
+          user_id: string | null
+        }
+        Insert: {
+          changed_at?: string | null
+          changed_columns?: string[] | null
+          created_at?: string | null
+          details?: Json | null
+          event_type?: string | null
+          id?: string | null
+          new_row?: Json | null
+          old_row?: Json | null
+          record_id?: string | null
+          status?: string | null
+          table_name?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          changed_at?: string | null
+          changed_columns?: string[] | null
+          created_at?: string | null
+          details?: Json | null
+          event_type?: string | null
+          id?: string | null
+          new_row?: Json | null
+          old_row?: Json | null
+          record_id?: string | null
+          status?: string | null
+          table_name?: string | null
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -39595,6 +42758,785 @@ export type Database = {
         }
         Relationships: []
       }
+      v_automation_enrollments_me: {
+        Row: {
+          feature_key: string | null
+          granted_at: string | null
+          household_id: string | null
+          id: string | null
+          plan: string | null
+          user_id: string | null
+        }
+        Insert: {
+          feature_key?: string | null
+          granted_at?: string | null
+          household_id?: string | null
+          id?: string | null
+          plan?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          feature_key?: string | null
+          granted_at?: string | null
+          household_id?: string | null
+          id?: string | null
+          plan?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_bank_accounts_me: {
+        Row: {
+          account_number_last4: string | null
+          account_type: string | null
+          ach_enabled: boolean | null
+          balance: number | null
+          created_at: string | null
+          id: string | null
+          institution_name: string | null
+          is_plaid_linked: boolean | null
+          last_plaid_sync: string | null
+          name: string | null
+          plaid_account_id: string | null
+          plaid_institution_id: string | null
+          plaid_item_id: string | null
+          routing_number: string | null
+          stripe_account_id: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          account_number_last4?: string | null
+          account_type?: string | null
+          ach_enabled?: boolean | null
+          balance?: number | null
+          created_at?: string | null
+          id?: string | null
+          institution_name?: string | null
+          is_plaid_linked?: boolean | null
+          last_plaid_sync?: string | null
+          name?: string | null
+          plaid_account_id?: string | null
+          plaid_institution_id?: string | null
+          plaid_item_id?: string | null
+          routing_number?: string | null
+          stripe_account_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          account_number_last4?: string | null
+          account_type?: string | null
+          ach_enabled?: boolean | null
+          balance?: number | null
+          created_at?: string | null
+          id?: string | null
+          institution_name?: string | null
+          is_plaid_linked?: boolean | null
+          last_plaid_sync?: string | null
+          name?: string | null
+          plaid_account_id?: string | null
+          plaid_institution_id?: string | null
+          plaid_item_id?: string | null
+          routing_number?: string | null
+          stripe_account_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_bill_pay_me: {
+        Row: {
+          amount: number | null
+          autopay: boolean | null
+          bill_name: string | null
+          category: string | null
+          created_at: string | null
+          due_date: string | null
+          id: string | null
+          last_paid: string | null
+          user_id: string | null
+          vendor: string | null
+        }
+        Insert: {
+          amount?: number | null
+          autopay?: boolean | null
+          bill_name?: string | null
+          category?: string | null
+          created_at?: string | null
+          due_date?: string | null
+          id?: string | null
+          last_paid?: string | null
+          user_id?: string | null
+          vendor?: string | null
+        }
+        Update: {
+          amount?: number | null
+          autopay?: boolean | null
+          bill_name?: string | null
+          category?: string | null
+          created_at?: string | null
+          due_date?: string | null
+          id?: string | null
+          last_paid?: string | null
+          user_id?: string | null
+          vendor?: string | null
+        }
+        Relationships: []
+      }
+      v_bill_transactions_me: {
+        Row: {
+          amount: number | null
+          bill_id: string | null
+          confirmation_number: string | null
+          created_at: string | null
+          id: string | null
+          notes: string | null
+          payment_date: string | null
+          payment_method: string | null
+          transaction_status: string | null
+          user_id: string | null
+        }
+        Insert: {
+          amount?: number | null
+          bill_id?: string | null
+          confirmation_number?: string | null
+          created_at?: string | null
+          id?: string | null
+          notes?: string | null
+          payment_date?: string | null
+          payment_method?: string | null
+          transaction_status?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          amount?: number | null
+          bill_id?: string | null
+          confirmation_number?: string | null
+          created_at?: string | null
+          id?: string | null
+          notes?: string | null
+          payment_date?: string | null
+          payment_method?: string | null
+          transaction_status?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bill_transactions_bill_id_fkey"
+            columns: ["bill_id"]
+            isOneToOne: false
+            referencedRelation: "bills"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bill_transactions_bill_id_fkey"
+            columns: ["bill_id"]
+            isOneToOne: false
+            referencedRelation: "v_bills_me"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_billing_metrics_me: {
+        Row: {
+          created_at: string | null
+          id: string | null
+          invoice_count: number | null
+          paid_revenue: number | null
+          pending_revenue: number | null
+          period_end: string | null
+          period_start: string | null
+          tenant_id: string | null
+          total_revenue: number | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string | null
+          invoice_count?: number | null
+          paid_revenue?: number | null
+          pending_revenue?: number | null
+          period_end?: string | null
+          period_start?: string | null
+          tenant_id?: string | null
+          total_revenue?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string | null
+          invoice_count?: number | null
+          paid_revenue?: number | null
+          pending_revenue?: number | null
+          period_end?: string | null
+          period_start?: string | null
+          tenant_id?: string | null
+          total_revenue?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_bills_me: {
+        Row: {
+          amount: number | null
+          biller_name: string | null
+          category: Database["public"]["Enums"]["bill_category"] | null
+          created_at: string | null
+          due_date: string | null
+          frequency: Database["public"]["Enums"]["bill_frequency"] | null
+          household_id: string | null
+          id: string | null
+          is_auto_pay: boolean | null
+          next_due_date: string | null
+          notes: string | null
+          payment_method: string | null
+          reminder_days: number | null
+          status: Database["public"]["Enums"]["bill_status"] | null
+          updated_at: string | null
+          user_id: string | null
+          vendor_id: string | null
+        }
+        Insert: {
+          amount?: number | null
+          biller_name?: string | null
+          category?: Database["public"]["Enums"]["bill_category"] | null
+          created_at?: string | null
+          due_date?: string | null
+          frequency?: Database["public"]["Enums"]["bill_frequency"] | null
+          household_id?: string | null
+          id?: string | null
+          is_auto_pay?: boolean | null
+          next_due_date?: string | null
+          notes?: string | null
+          payment_method?: string | null
+          reminder_days?: number | null
+          status?: Database["public"]["Enums"]["bill_status"] | null
+          updated_at?: string | null
+          user_id?: string | null
+          vendor_id?: string | null
+        }
+        Update: {
+          amount?: number | null
+          biller_name?: string | null
+          category?: Database["public"]["Enums"]["bill_category"] | null
+          created_at?: string | null
+          due_date?: string | null
+          frequency?: Database["public"]["Enums"]["bill_frequency"] | null
+          household_id?: string | null
+          id?: string | null
+          is_auto_pay?: boolean | null
+          next_due_date?: string | null
+          notes?: string | null
+          payment_method?: string | null
+          reminder_days?: number | null
+          status?: Database["public"]["Enums"]["bill_status"] | null
+          updated_at?: string | null
+          user_id?: string | null
+          vendor_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bills_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_bookkeeping_reports_me: {
+        Row: {
+          anomalies_found: number | null
+          auto_classified_count: number | null
+          category_breakdown: Json | null
+          created_at: string | null
+          id: string | null
+          manual_review_count: number | null
+          report_data: Json | null
+          report_period_end: string | null
+          report_period_start: string | null
+          report_type: string | null
+          status: string | null
+          tenant_id: string | null
+          total_transactions: number | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          anomalies_found?: number | null
+          auto_classified_count?: number | null
+          category_breakdown?: Json | null
+          created_at?: string | null
+          id?: string | null
+          manual_review_count?: number | null
+          report_data?: Json | null
+          report_period_end?: string | null
+          report_period_start?: string | null
+          report_type?: string | null
+          status?: string | null
+          tenant_id?: string | null
+          total_transactions?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          anomalies_found?: number | null
+          auto_classified_count?: number | null
+          category_breakdown?: Json | null
+          created_at?: string | null
+          id?: string | null
+          manual_review_count?: number | null
+          report_data?: Json | null
+          report_period_end?: string | null
+          report_period_start?: string | null
+          report_type?: string | null
+          status?: string | null
+          tenant_id?: string | null
+          total_transactions?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_budget_goals_me: {
+        Row: {
+          category: string | null
+          created_at: string | null
+          current_amount: number | null
+          description: string | null
+          id: string | null
+          priority: string | null
+          target_amount: number | null
+          target_date: string | null
+          title: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string | null
+          current_amount?: number | null
+          description?: string | null
+          id?: string | null
+          priority?: string | null
+          target_amount?: number | null
+          target_date?: string | null
+          title?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          category?: string | null
+          created_at?: string | null
+          current_amount?: number | null
+          description?: string | null
+          id?: string | null
+          priority?: string | null
+          target_amount?: number | null
+          target_date?: string | null
+          title?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_business_entities_me: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          ein: string | null
+          entity_name: string | null
+          entity_type: string | null
+          formation_date: string | null
+          id: string | null
+          jurisdiction: string | null
+          mailing_address: Json | null
+          registered_address: Json | null
+          status: string | null
+          tenant_id: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          ein?: string | null
+          entity_name?: string | null
+          entity_type?: string | null
+          formation_date?: string | null
+          id?: string | null
+          jurisdiction?: string | null
+          mailing_address?: Json | null
+          registered_address?: Json | null
+          status?: string | null
+          tenant_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          ein?: string | null
+          entity_name?: string | null
+          entity_type?: string | null
+          formation_date?: string | null
+          id?: string | null
+          jurisdiction?: string | null
+          mailing_address?: Json | null
+          registered_address?: Json | null
+          status?: string | null
+          tenant_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_business_filings_me: {
+        Row: {
+          business_name: string | null
+          completed: boolean | null
+          created_at: string | null
+          description: string | null
+          due_date: string | null
+          filing_type: string | null
+          id: string | null
+          name: string | null
+          recurring: boolean | null
+          recurring_period: string | null
+          reminder_days: number | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          business_name?: string | null
+          completed?: boolean | null
+          created_at?: string | null
+          description?: string | null
+          due_date?: string | null
+          filing_type?: string | null
+          id?: string | null
+          name?: string | null
+          recurring?: boolean | null
+          recurring_period?: string | null
+          reminder_days?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          business_name?: string | null
+          completed?: boolean | null
+          created_at?: string | null
+          description?: string | null
+          due_date?: string | null
+          filing_type?: string | null
+          id?: string | null
+          name?: string | null
+          recurring?: boolean | null
+          recurring_period?: string | null
+          reminder_days?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_calendar_sync_logs_me: {
+        Row: {
+          error_message: string | null
+          events_created: number | null
+          events_deleted: number | null
+          events_processed: number | null
+          events_updated: number | null
+          id: string | null
+          metadata: Json | null
+          sync_completed_at: string | null
+          sync_direction: string | null
+          sync_started_at: string | null
+          sync_status: string | null
+          sync_type: string | null
+          user_id: string | null
+        }
+        Insert: {
+          error_message?: string | null
+          events_created?: number | null
+          events_deleted?: number | null
+          events_processed?: number | null
+          events_updated?: number | null
+          id?: string | null
+          metadata?: Json | null
+          sync_completed_at?: string | null
+          sync_direction?: string | null
+          sync_started_at?: string | null
+          sync_status?: string | null
+          sync_type?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          error_message?: string | null
+          events_created?: number | null
+          events_deleted?: number | null
+          events_processed?: number | null
+          events_updated?: number | null
+          id?: string | null
+          metadata?: Json | null
+          sync_completed_at?: string | null
+          sync_direction?: string | null
+          sync_started_at?: string | null
+          sync_status?: string | null
+          sync_type?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_ce_tracking_me: {
+        Row: {
+          ce_period_end: string | null
+          ce_period_start: string | null
+          completed_hours: number | null
+          compliance_status: string | null
+          created_at: string | null
+          ethics_hours_completed: number | null
+          ethics_hours_required: number | null
+          firm_id: string | null
+          id: string | null
+          license_number: string | null
+          license_state: string | null
+          license_type: string | null
+          notes: string | null
+          required_hours: number | null
+          status: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          ce_period_end?: string | null
+          ce_period_start?: string | null
+          completed_hours?: number | null
+          compliance_status?: string | null
+          created_at?: string | null
+          ethics_hours_completed?: number | null
+          ethics_hours_required?: number | null
+          firm_id?: string | null
+          id?: string | null
+          license_number?: string | null
+          license_state?: string | null
+          license_type?: string | null
+          notes?: string | null
+          required_hours?: number | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          ce_period_end?: string | null
+          ce_period_start?: string | null
+          completed_hours?: number | null
+          compliance_status?: string | null
+          created_at?: string | null
+          ethics_hours_completed?: number | null
+          ethics_hours_required?: number | null
+          firm_id?: string | null
+          id?: string | null
+          license_number?: string | null
+          license_state?: string | null
+          license_type?: string | null
+          notes?: string | null
+          required_hours?: number | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_charity_suggestions_me: {
+        Row: {
+          charity_name: string | null
+          created_at: string | null
+          description: string | null
+          id: string | null
+          reason: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string | null
+          user_id: string | null
+          website_url: string | null
+        }
+        Insert: {
+          charity_name?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string | null
+          reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string | null
+          user_id?: string | null
+          website_url?: string | null
+        }
+        Update: {
+          charity_name?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string | null
+          reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string | null
+          user_id?: string | null
+          website_url?: string | null
+        }
+        Relationships: []
+      }
+      v_client_invoices_me: {
+        Row: {
+          amount: number | null
+          client_id: string | null
+          client_name: string | null
+          created_at: string | null
+          due_date: string | null
+          id: string | null
+          invoice_number: string | null
+          paid_date: string | null
+          status: string | null
+          tenant_id: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          amount?: number | null
+          client_id?: string | null
+          client_name?: string | null
+          created_at?: string | null
+          due_date?: string | null
+          id?: string | null
+          invoice_number?: string | null
+          paid_date?: string | null
+          status?: string | null
+          tenant_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          amount?: number | null
+          client_id?: string | null
+          client_name?: string | null
+          created_at?: string | null
+          due_date?: string | null
+          id?: string | null
+          invoice_number?: string | null
+          paid_date?: string | null
+          status?: string | null
+          tenant_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_client_questionnaires_me: {
+        Row: {
+          budget_range: string | null
+          complexity_score: number | null
+          created_at: string | null
+          id: string | null
+          preferred_meeting_type: string | null
+          questionnaire_type: string | null
+          responses: Json | null
+          specialization_needs: string[] | null
+          timeline: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          budget_range?: string | null
+          complexity_score?: number | null
+          created_at?: string | null
+          id?: string | null
+          preferred_meeting_type?: string | null
+          questionnaire_type?: string | null
+          responses?: Json | null
+          specialization_needs?: string[] | null
+          timeline?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          budget_range?: string | null
+          complexity_score?: number | null
+          created_at?: string | null
+          id?: string | null
+          preferred_meeting_type?: string | null
+          questionnaire_type?: string | null
+          responses?: Json | null
+          specialization_needs?: string[] | null
+          timeline?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_client_storage_audit_me: {
+        Row: {
+          error_message: string | null
+          id: string | null
+          operation: string | null
+          storage_key: string | null
+          success: boolean | null
+          timestamp: string | null
+          user_id: string | null
+        }
+        Insert: {
+          error_message?: string | null
+          id?: string | null
+          operation?: string | null
+          storage_key?: string | null
+          success?: boolean | null
+          timestamp?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          error_message?: string | null
+          id?: string | null
+          operation?: string | null
+          storage_key?: string | null
+          success?: boolean | null
+          timestamp?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_coach_insights_me: {
+        Row: {
+          context_data: Json | null
+          created_at: string | null
+          date: string | null
+          id: string | null
+          insight_1: string | null
+          insight_2: string | null
+          user_id: string | null
+        }
+        Insert: {
+          context_data?: Json | null
+          created_at?: string | null
+          date?: string | null
+          id?: string | null
+          insight_1?: string | null
+          insight_2?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          context_data?: Json | null
+          created_at?: string | null
+          date?: string | null
+          id?: string | null
+          insight_1?: string | null
+          insight_2?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       v_communication_templates_public: {
         Row: {
           content: string | null
@@ -39634,6 +43576,436 @@ export type Database = {
         }
         Relationships: []
       }
+      v_compliance_profiles_me: {
+        Row: {
+          created_at: string | null
+          id: string | null
+          jurisdiction: string[] | null
+          license_number: string | null
+          officer_name: string | null
+          specializations: string[] | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string | null
+          jurisdiction?: string[] | null
+          license_number?: string | null
+          officer_name?: string | null
+          specializations?: string[] | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string | null
+          jurisdiction?: string[] | null
+          license_number?: string | null
+          officer_name?: string | null
+          specializations?: string[] | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_connector_accounts_me: {
+        Row: {
+          account_name: string | null
+          auth_data_encrypted: string | null
+          connector_id: string | null
+          created_at: string | null
+          error_count: number | null
+          external_account_id: string | null
+          id: string | null
+          last_error_message: string | null
+          last_sync_at: string | null
+          metadata: Json | null
+          next_sync_at: string | null
+          sync_frequency: string | null
+          sync_status: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          account_name?: string | null
+          auth_data_encrypted?: string | null
+          connector_id?: string | null
+          created_at?: string | null
+          error_count?: number | null
+          external_account_id?: string | null
+          id?: string | null
+          last_error_message?: string | null
+          last_sync_at?: string | null
+          metadata?: Json | null
+          next_sync_at?: string | null
+          sync_frequency?: string | null
+          sync_status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          account_name?: string | null
+          auth_data_encrypted?: string | null
+          connector_id?: string | null
+          created_at?: string | null
+          error_count?: number | null
+          external_account_id?: string | null
+          id?: string | null
+          last_error_message?: string | null
+          last_sync_at?: string | null
+          metadata?: Json | null
+          next_sync_at?: string | null
+          sync_frequency?: string | null
+          sync_status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "connector_accounts_connector_id_fkey"
+            columns: ["connector_id"]
+            isOneToOne: false
+            referencedRelation: "connectors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_consent_rds_receipts_me: {
+        Row: {
+          anchor_ref: Json | null
+          consent_time: string | null
+          created_at: string | null
+          expiry: string | null
+          freshness_score: number | null
+          hipaa_scope: string[] | null
+          id: string | null
+          inputs_hash: string | null
+          policy_version: string | null
+          proof_hash: string | null
+          purpose_of_use: string | null
+          receipt_id: string | null
+          receipt_timestamp: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          anchor_ref?: Json | null
+          consent_time?: string | null
+          created_at?: string | null
+          expiry?: string | null
+          freshness_score?: number | null
+          hipaa_scope?: string[] | null
+          id?: string | null
+          inputs_hash?: string | null
+          policy_version?: string | null
+          proof_hash?: string | null
+          purpose_of_use?: string | null
+          receipt_id?: string | null
+          receipt_timestamp?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          anchor_ref?: Json | null
+          consent_time?: string | null
+          created_at?: string | null
+          expiry?: string | null
+          freshness_score?: number | null
+          hipaa_scope?: string[] | null
+          id?: string | null
+          inputs_hash?: string | null
+          policy_version?: string | null
+          proof_hash?: string | null
+          purpose_of_use?: string | null
+          receipt_id?: string | null
+          receipt_timestamp?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "consent_rds_receipts_receipt_id_fkey"
+            columns: ["receipt_id"]
+            isOneToOne: false
+            referencedRelation: "receipts"
+            referencedColumns: ["receipt_id"]
+          },
+        ]
+      }
+      v_consent_records_me: {
+        Row: {
+          accepted_at: string | null
+          created_at: string | null
+          id: string | null
+          ip_address: unknown | null
+          metadata: Json | null
+          scope: string | null
+          user_agent: string | null
+          user_id: string | null
+          version: string | null
+        }
+        Insert: {
+          accepted_at?: string | null
+          created_at?: string | null
+          id?: string | null
+          ip_address?: unknown | null
+          metadata?: Json | null
+          scope?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+          version?: string | null
+        }
+        Update: {
+          accepted_at?: string | null
+          created_at?: string | null
+          id?: string | null
+          ip_address?: unknown | null
+          metadata?: Json | null
+          scope?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+          version?: string | null
+        }
+        Relationships: []
+      }
+      v_consents_me: {
+        Row: {
+          accepted_at: string | null
+          id: string | null
+          scope: string | null
+          user_id: string | null
+          version: string | null
+        }
+        Insert: {
+          accepted_at?: string | null
+          id?: string | null
+          scope?: string | null
+          user_id?: string | null
+          version?: string | null
+        }
+        Update: {
+          accepted_at?: string | null
+          id?: string | null
+          scope?: string | null
+          user_id?: string | null
+          version?: string | null
+        }
+        Relationships: []
+      }
+      v_contacts_me: {
+        Row: {
+          assigned_advisor_id: string | null
+          created_at: string | null
+          email: string | null
+          first_name: string | null
+          follow_up_opt_in: boolean | null
+          id: string | null
+          last_name: string | null
+          lead_score: number | null
+          lead_source: string | null
+          marketing_opt_in: boolean | null
+          metadata: Json | null
+          phone: string | null
+          pipeline_stage: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          assigned_advisor_id?: string | null
+          created_at?: string | null
+          email?: string | null
+          first_name?: string | null
+          follow_up_opt_in?: boolean | null
+          id?: string | null
+          last_name?: string | null
+          lead_score?: number | null
+          lead_source?: string | null
+          marketing_opt_in?: boolean | null
+          metadata?: Json | null
+          phone?: string | null
+          pipeline_stage?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          assigned_advisor_id?: string | null
+          created_at?: string | null
+          email?: string | null
+          first_name?: string | null
+          follow_up_opt_in?: boolean | null
+          id?: string | null
+          last_name?: string | null
+          lead_score?: number | null
+          lead_source?: string | null
+          marketing_opt_in?: boolean | null
+          metadata?: Json | null
+          phone?: string | null
+          pipeline_stage?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_cpa_partners_me: {
+        Row: {
+          approved_at: string | null
+          approved_by: string | null
+          bio: string | null
+          certifications: string[] | null
+          client_capacity: number | null
+          created_at: string | null
+          firm_ein: string | null
+          firm_name: string | null
+          firm_size: string | null
+          hourly_rate: number | null
+          id: string | null
+          license_number: string | null
+          license_state: string | null
+          linkedin_url: string | null
+          office_address: Json | null
+          onboarding_status: string | null
+          phone: string | null
+          profile_image_url: string | null
+          service_areas: string[] | null
+          software_used: string[] | null
+          specialties: string[] | null
+          status: string | null
+          tenant_id: string | null
+          updated_at: string | null
+          user_id: string | null
+          website_url: string | null
+          white_label_enabled: boolean | null
+          years_experience: number | null
+        }
+        Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
+          bio?: string | null
+          certifications?: string[] | null
+          client_capacity?: number | null
+          created_at?: string | null
+          firm_ein?: string | null
+          firm_name?: string | null
+          firm_size?: string | null
+          hourly_rate?: number | null
+          id?: string | null
+          license_number?: string | null
+          license_state?: string | null
+          linkedin_url?: string | null
+          office_address?: Json | null
+          onboarding_status?: string | null
+          phone?: string | null
+          profile_image_url?: string | null
+          service_areas?: string[] | null
+          software_used?: string[] | null
+          specialties?: string[] | null
+          status?: string | null
+          tenant_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          website_url?: string | null
+          white_label_enabled?: boolean | null
+          years_experience?: number | null
+        }
+        Update: {
+          approved_at?: string | null
+          approved_by?: string | null
+          bio?: string | null
+          certifications?: string[] | null
+          client_capacity?: number | null
+          created_at?: string | null
+          firm_ein?: string | null
+          firm_name?: string | null
+          firm_size?: string | null
+          hourly_rate?: number | null
+          id?: string | null
+          license_number?: string | null
+          license_state?: string | null
+          linkedin_url?: string | null
+          office_address?: Json | null
+          onboarding_status?: string | null
+          phone?: string | null
+          profile_image_url?: string | null
+          service_areas?: string[] | null
+          software_used?: string[] | null
+          specialties?: string[] | null
+          status?: string | null
+          tenant_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          website_url?: string | null
+          white_label_enabled?: boolean | null
+          years_experience?: number | null
+        }
+        Relationships: []
+      }
+      v_cpa_staff_me: {
+        Row: {
+          cpa_partner_id: string | null
+          created_at: string | null
+          email: string | null
+          first_name: string | null
+          hired_date: string | null
+          hourly_rate: number | null
+          id: string | null
+          is_active: boolean | null
+          last_name: string | null
+          notes: string | null
+          permissions: Json | null
+          role: Database["public"]["Enums"]["cpa_staff_role"] | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          cpa_partner_id?: string | null
+          created_at?: string | null
+          email?: string | null
+          first_name?: string | null
+          hired_date?: string | null
+          hourly_rate?: number | null
+          id?: string | null
+          is_active?: boolean | null
+          last_name?: string | null
+          notes?: string | null
+          permissions?: Json | null
+          role?: Database["public"]["Enums"]["cpa_staff_role"] | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          cpa_partner_id?: string | null
+          created_at?: string | null
+          email?: string | null
+          first_name?: string | null
+          hired_date?: string | null
+          hourly_rate?: number | null
+          id?: string | null
+          is_active?: boolean | null
+          last_name?: string | null
+          notes?: string | null
+          permissions?: Json | null
+          role?: Database["public"]["Enums"]["cpa_staff_role"] | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cpa_staff_cpa_partner_id_fkey"
+            columns: ["cpa_partner_id"]
+            isOneToOne: false
+            referencedRelation: "cpa_partners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cpa_staff_cpa_partner_id_fkey"
+            columns: ["cpa_partner_id"]
+            isOneToOne: false
+            referencedRelation: "v_cpa_partners_me"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       v_cpa_welcome_templates_public: {
         Row: {
           client_type: string | null
@@ -39667,6 +44039,258 @@ export type Database = {
           template_name?: string | null
           updated_at?: string | null
           video_url?: string | null
+        }
+        Relationships: []
+      }
+      v_credit_cards_me: {
+        Row: {
+          apr: number | null
+          available_credit: number | null
+          created_at: string | null
+          credit_limit: number | null
+          current_balance: number | null
+          due_date: string | null
+          id: string | null
+          is_plaid_linked: boolean | null
+          issuer: string | null
+          last_four: string | null
+          minimum_payment: number | null
+          name: string | null
+          notes: string | null
+          plaid_account_id: string | null
+          plaid_item_id: string | null
+          rewards_program: string | null
+          statement_balance: number | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          apr?: number | null
+          available_credit?: number | null
+          created_at?: string | null
+          credit_limit?: number | null
+          current_balance?: number | null
+          due_date?: string | null
+          id?: string | null
+          is_plaid_linked?: boolean | null
+          issuer?: string | null
+          last_four?: string | null
+          minimum_payment?: number | null
+          name?: string | null
+          notes?: string | null
+          plaid_account_id?: string | null
+          plaid_item_id?: string | null
+          rewards_program?: string | null
+          statement_balance?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          apr?: number | null
+          available_credit?: number | null
+          created_at?: string | null
+          credit_limit?: number | null
+          current_balance?: number | null
+          due_date?: string | null
+          id?: string | null
+          is_plaid_linked?: boolean | null
+          issuer?: string | null
+          last_four?: string | null
+          minimum_payment?: number | null
+          name?: string | null
+          notes?: string | null
+          plaid_account_id?: string | null
+          plaid_item_id?: string | null
+          rewards_program?: string | null
+          statement_balance?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_crm_activities_me: {
+        Row: {
+          activity_type: string | null
+          contact_email: string | null
+          contact_id: string | null
+          contact_name: string | null
+          created_at: string | null
+          description: string | null
+          duration_minutes: number | null
+          id: string | null
+          next_steps: string | null
+          outcome: string | null
+          title: string | null
+          user_id: string | null
+        }
+        Insert: {
+          activity_type?: string | null
+          contact_email?: string | null
+          contact_id?: string | null
+          contact_name?: string | null
+          created_at?: string | null
+          description?: string | null
+          duration_minutes?: number | null
+          id?: string | null
+          next_steps?: string | null
+          outcome?: string | null
+          title?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          activity_type?: string | null
+          contact_email?: string | null
+          contact_id?: string | null
+          contact_name?: string | null
+          created_at?: string | null
+          description?: string | null
+          duration_minutes?: number | null
+          id?: string | null
+          next_steps?: string | null
+          outcome?: string | null
+          title?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_crm_contacts_me: {
+        Row: {
+          company: string | null
+          created_at: string | null
+          email: string | null
+          id: string | null
+          last_contact: string | null
+          name: string | null
+          notes: string | null
+          phone: string | null
+          role: string | null
+          status: string | null
+          tags: string[] | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          company?: string | null
+          created_at?: string | null
+          email?: string | null
+          id?: string | null
+          last_contact?: string | null
+          name?: string | null
+          notes?: string | null
+          phone?: string | null
+          role?: string | null
+          status?: string | null
+          tags?: string[] | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          company?: string | null
+          created_at?: string | null
+          email?: string | null
+          id?: string | null
+          last_contact?: string | null
+          name?: string | null
+          notes?: string | null
+          phone?: string | null
+          role?: string | null
+          status?: string | null
+          tags?: string[] | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_crm_pipeline_items_me: {
+        Row: {
+          contact_email: string | null
+          contact_id: string | null
+          contact_name: string | null
+          created_at: string | null
+          expected_close: string | null
+          id: string | null
+          notes: string | null
+          probability: number | null
+          stage_id: string | null
+          updated_at: string | null
+          user_id: string | null
+          value: number | null
+        }
+        Insert: {
+          contact_email?: string | null
+          contact_id?: string | null
+          contact_name?: string | null
+          created_at?: string | null
+          expected_close?: string | null
+          id?: string | null
+          notes?: string | null
+          probability?: number | null
+          stage_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          value?: number | null
+        }
+        Update: {
+          contact_email?: string | null
+          contact_id?: string | null
+          contact_name?: string | null
+          created_at?: string | null
+          expected_close?: string | null
+          id?: string | null
+          notes?: string | null
+          probability?: number | null
+          stage_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          value?: number | null
+        }
+        Relationships: []
+      }
+      v_crm_reminders_me: {
+        Row: {
+          auto_generated: boolean | null
+          contact_email: string | null
+          contact_id: string | null
+          contact_name: string | null
+          created_at: string | null
+          description: string | null
+          due_date: string | null
+          id: string | null
+          priority: string | null
+          reminder_type: string | null
+          status: string | null
+          title: string | null
+          user_id: string | null
+        }
+        Insert: {
+          auto_generated?: boolean | null
+          contact_email?: string | null
+          contact_id?: string | null
+          contact_name?: string | null
+          created_at?: string | null
+          description?: string | null
+          due_date?: string | null
+          id?: string | null
+          priority?: string | null
+          reminder_type?: string | null
+          status?: string | null
+          title?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          auto_generated?: boolean | null
+          contact_email?: string | null
+          contact_id?: string | null
+          contact_name?: string | null
+          created_at?: string | null
+          description?: string | null
+          due_date?: string | null
+          id?: string | null
+          priority?: string | null
+          reminder_type?: string | null
+          status?: string | null
+          title?: string | null
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -39715,6 +44339,111 @@ export type Database = {
         }
         Relationships: []
       }
+      v_data_export_audit_me: {
+        Row: {
+          completed_at: string | null
+          download_count: number | null
+          expiry_date: string | null
+          export_type: string | null
+          file_path: string | null
+          gdpr_request: boolean | null
+          id: string | null
+          ip_address: unknown | null
+          requested_at: string | null
+          status: string | null
+          user_id: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          download_count?: number | null
+          expiry_date?: string | null
+          export_type?: string | null
+          file_path?: string | null
+          gdpr_request?: boolean | null
+          id?: string | null
+          ip_address?: unknown | null
+          requested_at?: string | null
+          status?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          download_count?: number | null
+          expiry_date?: string | null
+          export_type?: string | null
+          file_path?: string | null
+          gdpr_request?: boolean | null
+          id?: string | null
+          ip_address?: unknown | null
+          requested_at?: string | null
+          status?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_data_export_requests_me: {
+        Row: {
+          download_url: string | null
+          expires_at: string | null
+          export_format: string | null
+          file_size: number | null
+          id: string | null
+          processed_at: string | null
+          requested_at: string | null
+          status: string | null
+          user_id: string | null
+        }
+        Insert: {
+          download_url?: string | null
+          expires_at?: string | null
+          export_format?: string | null
+          file_size?: number | null
+          id?: string | null
+          processed_at?: string | null
+          requested_at?: string | null
+          status?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          download_url?: string | null
+          expires_at?: string | null
+          export_format?: string | null
+          file_size?: number | null
+          id?: string | null
+          processed_at?: string | null
+          requested_at?: string | null
+          status?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_dd_packages_me: {
+        Row: {
+          artifact_urls: Json | null
+          created_at: string | null
+          fund_id: string | null
+          id: string | null
+          snapshot: Json | null
+          user_id: string | null
+        }
+        Insert: {
+          artifact_urls?: Json | null
+          created_at?: string | null
+          fund_id?: string | null
+          id?: string | null
+          snapshot?: Json | null
+          user_id?: string | null
+        }
+        Update: {
+          artifact_urls?: Json | null
+          created_at?: string | null
+          fund_id?: string | null
+          id?: string | null
+          snapshot?: Json | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       v_decision_receipts: {
         Row: {
           action: string | null
@@ -39741,6 +44470,186 @@ export type Database = {
           subject?: string | null
         }
         Relationships: []
+      }
+      v_denial_telemetry_me: {
+        Row: {
+          block_id: number | null
+          created_at: string | null
+          id: string | null
+          metadata: Json | null
+          policy_node_id: string | null
+          reason_code: string | null
+          tenant_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          block_id?: number | null
+          created_at?: string | null
+          id?: string | null
+          metadata?: Json | null
+          policy_node_id?: string | null
+          reason_code?: string | null
+          tenant_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          block_id?: number | null
+          created_at?: string | null
+          id?: string | null
+          metadata?: Json | null
+          policy_node_id?: string | null
+          reason_code?: string | null
+          tenant_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_device_tokens_me: {
+        Row: {
+          access_token: string | null
+          created_at: string | null
+          expires_at: string | null
+          id: string | null
+          is_active: boolean | null
+          last_sync: string | null
+          provider: string | null
+          refresh_token: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          access_token?: string | null
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          last_sync?: string | null
+          provider?: string | null
+          refresh_token?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          access_token?: string | null
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          last_sync?: string | null
+          provider?: string | null
+          refresh_token?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_digital_assets_me: {
+        Row: {
+          asset_type: string | null
+          created_at: string | null
+          custom_asset_type: string | null
+          id: string | null
+          price_per_unit: number | null
+          quantity: number | null
+          total_value: number | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          asset_type?: string | null
+          created_at?: string | null
+          custom_asset_type?: string | null
+          id?: string | null
+          price_per_unit?: number | null
+          quantity?: number | null
+          total_value?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          asset_type?: string | null
+          created_at?: string | null
+          custom_asset_type?: string | null
+          id?: string | null
+          price_per_unit?: number | null
+          quantity?: number | null
+          total_value?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_document_categories_public: {
+        Row: {
+          description: string | null
+          id: string | null
+          name: string | null
+        }
+        Insert: {
+          description?: string | null
+          id?: string | null
+          name?: string | null
+        }
+        Update: {
+          description?: string | null
+          id?: string | null
+          name?: string | null
+        }
+        Relationships: []
+      }
+      v_document_permissions_me: {
+        Row: {
+          access_level: string | null
+          created_at: string | null
+          document_id: string | null
+          granted_at: string | null
+          granted_by_user_id: string | null
+          id: string | null
+          user_email: string | null
+          user_id: string | null
+          user_name: string | null
+          user_role: string | null
+        }
+        Insert: {
+          access_level?: string | null
+          created_at?: string | null
+          document_id?: string | null
+          granted_at?: string | null
+          granted_by_user_id?: string | null
+          id?: string | null
+          user_email?: string | null
+          user_id?: string | null
+          user_name?: string | null
+          user_role?: string | null
+        }
+        Update: {
+          access_level?: string | null
+          created_at?: string | null
+          document_id?: string | null
+          granted_at?: string | null
+          granted_by_user_id?: string | null
+          id?: string | null
+          user_email?: string | null
+          user_id?: string | null
+          user_name?: string | null
+          user_role?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "document_permissions_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "documents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "document_permissions_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "v_documents_me"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       v_document_request_templates_public: {
         Row: {
@@ -39823,122 +44732,2786 @@ export type Database = {
             referencedRelation: "cpa_partners"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "document_templates_cpa_partner_id_fkey"
+            columns: ["cpa_partner_id"]
+            isOneToOne: false
+            referencedRelation: "v_cpa_partners_me"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_documents_me: {
+        Row: {
+          category: string | null
+          content_type: string | null
+          created_at: string | null
+          description: string | null
+          encrypted: boolean | null
+          file_path: string | null
+          id: string | null
+          is_folder: boolean | null
+          is_private: boolean | null
+          modified: string | null
+          name: string | null
+          parent_folder_id: string | null
+          shared: boolean | null
+          size: number | null
+          tags: string[] | null
+          tenant_id: string | null
+          type: string | null
+          updated_at: string | null
+          uploaded_by: string | null
+          user_id: string | null
+        }
+        Insert: {
+          category?: string | null
+          content_type?: string | null
+          created_at?: string | null
+          description?: string | null
+          encrypted?: boolean | null
+          file_path?: string | null
+          id?: string | null
+          is_folder?: boolean | null
+          is_private?: boolean | null
+          modified?: string | null
+          name?: string | null
+          parent_folder_id?: string | null
+          shared?: boolean | null
+          size?: number | null
+          tags?: string[] | null
+          tenant_id?: string | null
+          type?: string | null
+          updated_at?: string | null
+          uploaded_by?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          category?: string | null
+          content_type?: string | null
+          created_at?: string | null
+          description?: string | null
+          encrypted?: boolean | null
+          file_path?: string | null
+          id?: string | null
+          is_folder?: boolean | null
+          is_private?: boolean | null
+          modified?: string | null
+          name?: string | null
+          parent_folder_id?: string | null
+          shared?: boolean | null
+          size?: number | null
+          tags?: string[] | null
+          tenant_id?: string | null
+          type?: string | null
+          updated_at?: string | null
+          uploaded_by?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "documents_parent_folder_id_fkey"
+            columns: ["parent_folder_id"]
+            isOneToOne: false
+            referencedRelation: "documents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "documents_parent_folder_id_fkey"
+            columns: ["parent_folder_id"]
+            isOneToOne: false
+            referencedRelation: "v_documents_me"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "documents_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "documents_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_tenants_me"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_email_schedule_me: {
+        Row: {
+          created_at: string | null
+          id: string | null
+          is_sent: boolean | null
+          persona: string | null
+          scheduled_for: string | null
+          sequence_type: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string | null
+          is_sent?: boolean | null
+          persona?: string | null
+          scheduled_for?: string | null
+          sequence_type?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string | null
+          is_sent?: boolean | null
+          persona?: string | null
+          scheduled_for?: string | null
+          sequence_type?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_employees_me: {
+        Row: {
+          created_at: string | null
+          current_projects: string[] | null
+          department: string | null
+          email: string | null
+          employee_number: string | null
+          first_name: string | null
+          id: string | null
+          job_title: string | null
+          last_name: string | null
+          manager_id: string | null
+          organization_id: string | null
+          phone: string | null
+          profile_image_url: string | null
+          role: string | null
+          start_date: string | null
+          status: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          current_projects?: string[] | null
+          department?: string | null
+          email?: string | null
+          employee_number?: string | null
+          first_name?: string | null
+          id?: string | null
+          job_title?: string | null
+          last_name?: string | null
+          manager_id?: string | null
+          organization_id?: string | null
+          phone?: string | null
+          profile_image_url?: string | null
+          role?: string | null
+          start_date?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          current_projects?: string[] | null
+          department?: string | null
+          email?: string | null
+          employee_number?: string | null
+          first_name?: string | null
+          id?: string | null
+          job_title?: string | null
+          last_name?: string | null
+          manager_id?: string | null
+          organization_id?: string | null
+          phone?: string | null
+          profile_image_url?: string | null
+          role?: string | null
+          start_date?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "employees_manager_id_fkey"
+            columns: ["manager_id"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "employees_manager_id_fkey"
+            columns: ["manager_id"]
+            isOneToOne: false
+            referencedRelation: "v_employees_me"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "employees_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_epigenetic_tests_me: {
+        Row: {
+          biological_age: number | null
+          chronological_age: number | null
+          cost: number | null
+          created_at: string | null
+          delta_age: number | null
+          id: string | null
+          provider: string | null
+          results: Json | null
+          test_date: string | null
+          test_type: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          biological_age?: number | null
+          chronological_age?: number | null
+          cost?: number | null
+          created_at?: string | null
+          delta_age?: number | null
+          id?: string | null
+          provider?: string | null
+          results?: Json | null
+          test_date?: string | null
+          test_type?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          biological_age?: number | null
+          chronological_age?: number | null
+          cost?: number | null
+          created_at?: string | null
+          delta_age?: number | null
+          id?: string | null
+          provider?: string | null
+          results?: Json | null
+          test_date?: string | null
+          test_type?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_estate_audit_log_me: {
+        Row: {
+          action: string | null
+          actor_role: string | null
+          created_at: string | null
+          details: Json | null
+          id: string | null
+          ip: unknown | null
+          request_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action?: string | null
+          actor_role?: string | null
+          created_at?: string | null
+          details?: Json | null
+          id?: string | null
+          ip?: unknown | null
+          request_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string | null
+          actor_role?: string | null
+          created_at?: string | null
+          details?: Json | null
+          id?: string | null
+          ip?: unknown | null
+          request_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "estate_audit_log_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "estate_requests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "estate_audit_log_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "v_estate_requests_me"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_estate_document_reminders_me: {
+        Row: {
+          created_at: string | null
+          document_id: string | null
+          id: string | null
+          message: string | null
+          reminder_date: string | null
+          reminder_type: string | null
+          status: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          document_id?: string | null
+          id?: string | null
+          message?: string | null
+          reminder_date?: string | null
+          reminder_type?: string | null
+          status?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          document_id?: string | null
+          id?: string | null
+          message?: string | null
+          reminder_date?: string | null
+          reminder_type?: string | null
+          status?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "estate_document_reminders_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "estate_documents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "estate_document_reminders_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "v_estate_documents_me"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_estate_documents_me: {
+        Row: {
+          category: string | null
+          document_type: string | null
+          expires_at: string | null
+          file_name: string | null
+          file_path: string | null
+          file_size: number | null
+          id: string | null
+          intake_id: string | null
+          notes: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string | null
+          tags: string[] | null
+          uploaded_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          category?: string | null
+          document_type?: string | null
+          expires_at?: string | null
+          file_name?: string | null
+          file_path?: string | null
+          file_size?: number | null
+          id?: string | null
+          intake_id?: string | null
+          notes?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string | null
+          tags?: string[] | null
+          uploaded_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          category?: string | null
+          document_type?: string | null
+          expires_at?: string | null
+          file_name?: string | null
+          file_path?: string | null
+          file_size?: number | null
+          id?: string | null
+          intake_id?: string | null
+          notes?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string | null
+          tags?: string[] | null
+          uploaded_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "estate_documents_intake_id_fkey"
+            columns: ["intake_id"]
+            isOneToOne: false
+            referencedRelation: "estate_intake"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "estate_documents_intake_id_fkey"
+            columns: ["intake_id"]
+            isOneToOne: false
+            referencedRelation: "v_estate_intake_me"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_estate_intake_me: {
+        Row: {
+          assessment_results: Json | null
+          assigned_attorney: string | null
+          client_email: string | null
+          client_name: string | null
+          created_at: string | null
+          current_step: number | null
+          id: string | null
+          intake_data: Json | null
+          priority: string | null
+          progress_percentage: number | null
+          status: string | null
+          total_steps: number | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          assessment_results?: Json | null
+          assigned_attorney?: string | null
+          client_email?: string | null
+          client_name?: string | null
+          created_at?: string | null
+          current_step?: number | null
+          id?: string | null
+          intake_data?: Json | null
+          priority?: string | null
+          progress_percentage?: number | null
+          status?: string | null
+          total_steps?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          assessment_results?: Json | null
+          assigned_attorney?: string | null
+          client_email?: string | null
+          client_name?: string | null
+          created_at?: string | null
+          current_step?: number | null
+          id?: string | null
+          intake_data?: Json | null
+          priority?: string | null
+          progress_percentage?: number | null
+          status?: string | null
+          total_steps?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_estate_planning_documents_me: {
+        Row: {
+          content_type: string | null
+          created_at: string | null
+          description: string | null
+          document_name: string | null
+          document_type: string | null
+          file_path: string | null
+          file_size: number | null
+          id: string | null
+          shared_with: string[] | null
+          status: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          content_type?: string | null
+          created_at?: string | null
+          description?: string | null
+          document_name?: string | null
+          document_type?: string | null
+          file_path?: string | null
+          file_size?: number | null
+          id?: string | null
+          shared_with?: string[] | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          content_type?: string | null
+          created_at?: string | null
+          description?: string | null
+          document_name?: string | null
+          document_type?: string | null
+          file_path?: string | null
+          file_size?: number | null
+          id?: string | null
+          shared_with?: string[] | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_estate_requests_me: {
+        Row: {
+          advisor_id: string | null
+          attorney_id: string | null
+          compliance: Json | null
+          created_at: string | null
+          docs: Json | null
+          household_id: string | null
+          id: string | null
+          intake: Json | null
+          matter_type: string | null
+          priority: string | null
+          state_code: string | null
+          status: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          advisor_id?: string | null
+          attorney_id?: string | null
+          compliance?: Json | null
+          created_at?: string | null
+          docs?: Json | null
+          household_id?: string | null
+          id?: string | null
+          intake?: Json | null
+          matter_type?: string | null
+          priority?: string | null
+          state_code?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          advisor_id?: string | null
+          attorney_id?: string | null
+          compliance?: Json | null
+          created_at?: string | null
+          docs?: Json | null
+          household_id?: string | null
+          id?: string | null
+          intake?: Json | null
+          matter_type?: string | null
+          priority?: string | null
+          state_code?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_exercise_entries_me: {
+        Row: {
+          activity: string | null
+          calories_burned: number | null
+          created_at: string | null
+          date: string | null
+          duration: number | null
+          exercise_type: string | null
+          id: string | null
+          intensity: string | null
+          notes: string | null
+          reps: number | null
+          sets: number | null
+          updated_at: string | null
+          user_id: string | null
+          weight: number | null
+        }
+        Insert: {
+          activity?: string | null
+          calories_burned?: number | null
+          created_at?: string | null
+          date?: string | null
+          duration?: number | null
+          exercise_type?: string | null
+          id?: string | null
+          intensity?: string | null
+          notes?: string | null
+          reps?: number | null
+          sets?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+          weight?: number | null
+        }
+        Update: {
+          activity?: string | null
+          calories_burned?: number | null
+          created_at?: string | null
+          date?: string | null
+          duration?: number | null
+          exercise_type?: string | null
+          id?: string | null
+          intensity?: string | null
+          notes?: string | null
+          reps?: number | null
+          sets?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+          weight?: number | null
+        }
+        Relationships: []
+      }
+      v_exercise_goals_me: {
+        Row: {
+          created_at: string | null
+          id: string | null
+          is_active: boolean | null
+          preferred_activities: string[] | null
+          updated_at: string | null
+          user_id: string | null
+          weekly_calories_burn: number | null
+          weekly_minutes: number | null
+          weekly_workouts: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          preferred_activities?: string[] | null
+          updated_at?: string | null
+          user_id?: string | null
+          weekly_calories_burn?: number | null
+          weekly_minutes?: number | null
+          weekly_workouts?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          preferred_activities?: string[] | null
+          updated_at?: string | null
+          user_id?: string | null
+          weekly_calories_burn?: number | null
+          weekly_minutes?: number | null
+          weekly_workouts?: number | null
+        }
+        Relationships: []
+      }
+      v_f20_analytics_me: {
+        Row: {
+          created_at: string | null
+          event_data: Json | null
+          event_type: string | null
+          id: string | null
+          ip_address: unknown | null
+          segment: string | null
+          session_id: string | null
+          target_name: string | null
+          user_agent: string | null
+          user_id: string | null
+          utm_campaign: string | null
+          utm_content: string | null
+          utm_medium: string | null
+          utm_source: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          event_data?: Json | null
+          event_type?: string | null
+          id?: string | null
+          ip_address?: unknown | null
+          segment?: string | null
+          session_id?: string | null
+          target_name?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          event_data?: Json | null
+          event_type?: string | null
+          id?: string | null
+          ip_address?: unknown | null
+          segment?: string | null
+          session_id?: string | null
+          target_name?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Relationships: []
+      }
+      v_families_me: {
+        Row: {
+          created_at: string | null
+          family_name: string | null
+          id: string | null
+          primary_member_id: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          family_name?: string | null
+          id?: string | null
+          primary_member_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          family_name?: string | null
+          id?: string | null
+          primary_member_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_family_group_members_me: {
+        Row: {
+          created_at: string | null
+          family_group_id: string | null
+          id: string | null
+          invitation_status: string | null
+          invited_at: string | null
+          invited_by: string | null
+          joined_at: string | null
+          linked_professional_id: string | null
+          relationship: string | null
+          role: string | null
+          seat_purchase_id: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          family_group_id?: string | null
+          id?: string | null
+          invitation_status?: string | null
+          invited_at?: string | null
+          invited_by?: string | null
+          joined_at?: string | null
+          linked_professional_id?: string | null
+          relationship?: string | null
+          role?: string | null
+          seat_purchase_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          family_group_id?: string | null
+          id?: string | null
+          invitation_status?: string | null
+          invited_at?: string | null
+          invited_by?: string | null
+          joined_at?: string | null
+          linked_professional_id?: string | null
+          relationship?: string | null
+          role?: string | null
+          seat_purchase_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "family_group_members_linked_professional_id_fkey"
+            columns: ["linked_professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "family_group_members_linked_professional_id_fkey"
+            columns: ["linked_professional_id"]
+            isOneToOne: false
+            referencedRelation: "v_professionals_me"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "family_group_members_seat_purchase_id_fkey"
+            columns: ["seat_purchase_id"]
+            isOneToOne: false
+            referencedRelation: "seat_purchases"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_family_members_me: {
+        Row: {
+          access_level: string | null
+          created_at: string | null
+          device_token: string | null
+          email: string | null
+          family_id: string | null
+          has_app_access: boolean | null
+          id: string | null
+          invitation_sent_at: string | null
+          invited_user_id: string | null
+          name: string | null
+          phone: string | null
+          relationship: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          access_level?: string | null
+          created_at?: string | null
+          device_token?: string | null
+          email?: string | null
+          family_id?: string | null
+          has_app_access?: boolean | null
+          id?: string | null
+          invitation_sent_at?: string | null
+          invited_user_id?: string | null
+          name?: string | null
+          phone?: string | null
+          relationship?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          access_level?: string | null
+          created_at?: string | null
+          device_token?: string | null
+          email?: string | null
+          family_id?: string | null
+          has_app_access?: boolean | null
+          id?: string | null
+          invitation_sent_at?: string | null
+          invited_user_id?: string | null
+          name?: string | null
+          phone?: string | null
+          relationship?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "family_members_family_id_fkey"
+            columns: ["family_id"]
+            isOneToOne: false
+            referencedRelation: "families"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "family_members_family_id_fkey"
+            columns: ["family_id"]
+            isOneToOne: false
+            referencedRelation: "v_families_me"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_family_vaults_me: {
+        Row: {
+          cover_photo_url: string | null
+          created_at: string | null
+          custom_css: Json | null
+          description: string | null
+          encryption_key_id: string | null
+          family_motto: string | null
+          family_values: string[] | null
+          font_family: string | null
+          id: string | null
+          is_active: boolean | null
+          tenant_id: string | null
+          theme_color: string | null
+          updated_at: string | null
+          user_id: string | null
+          vault_name: string | null
+          vault_photo_url: string | null
+        }
+        Insert: {
+          cover_photo_url?: string | null
+          created_at?: string | null
+          custom_css?: Json | null
+          description?: string | null
+          encryption_key_id?: string | null
+          family_motto?: string | null
+          family_values?: string[] | null
+          font_family?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          tenant_id?: string | null
+          theme_color?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          vault_name?: string | null
+          vault_photo_url?: string | null
+        }
+        Update: {
+          cover_photo_url?: string | null
+          created_at?: string | null
+          custom_css?: Json | null
+          description?: string | null
+          encryption_key_id?: string | null
+          family_motto?: string | null
+          family_values?: string[] | null
+          font_family?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          tenant_id?: string | null
+          theme_color?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          vault_name?: string | null
+          vault_photo_url?: string | null
+        }
+        Relationships: []
+      }
+      v_fee_scenarios_me: {
+        Row: {
+          created_at: string | null
+          current_fee: number | null
+          current_fee_type: string | null
+          growth_rate: number | null
+          healthcare_annual_budget: number | null
+          id: string | null
+          our_fee: number | null
+          our_fee_type: string | null
+          portfolio_value: number | null
+          time_horizon: number | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          current_fee?: number | null
+          current_fee_type?: string | null
+          growth_rate?: number | null
+          healthcare_annual_budget?: number | null
+          id?: string | null
+          our_fee?: number | null
+          our_fee_type?: string | null
+          portfolio_value?: number | null
+          time_horizon?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          current_fee?: number | null
+          current_fee_type?: string | null
+          growth_rate?: number | null
+          healthcare_annual_budget?: number | null
+          id?: string | null
+          our_fee?: number | null
+          our_fee_type?: string | null
+          portfolio_value?: number | null
+          time_horizon?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_file_access_log_me: {
+        Row: {
+          access_type: string | null
+          bucket_name: string | null
+          download_duration_ms: number | null
+          file_path: string | null
+          file_size: number | null
+          id: string | null
+          ip_address: unknown | null
+          success: boolean | null
+          tenant_id: string | null
+          timestamp: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          access_type?: string | null
+          bucket_name?: string | null
+          download_duration_ms?: number | null
+          file_path?: string | null
+          file_size?: number | null
+          id?: string | null
+          ip_address?: unknown | null
+          success?: boolean | null
+          tenant_id?: string | null
+          timestamp?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          access_type?: string | null
+          bucket_name?: string | null
+          download_duration_ms?: number | null
+          file_path?: string | null
+          file_size?: number | null
+          id?: string | null
+          ip_address?: unknown | null
+          success?: boolean | null
+          tenant_id?: string | null
+          timestamp?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_financial_plans_me: {
+        Row: {
+          created_at: string | null
+          draft_data: Json | null
+          id: string | null
+          is_active: boolean | null
+          is_draft: boolean | null
+          is_favorite: boolean | null
+          name: string | null
+          status: string | null
+          step: number | null
+          success_rate: number | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          draft_data?: Json | null
+          id?: string | null
+          is_active?: boolean | null
+          is_draft?: boolean | null
+          is_favorite?: boolean | null
+          name?: string | null
+          status?: string | null
+          step?: number | null
+          success_rate?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          draft_data?: Json | null
+          id?: string | null
+          is_active?: boolean | null
+          is_draft?: boolean | null
+          is_favorite?: boolean | null
+          name?: string | null
+          status?: string | null
+          step?: number | null
+          success_rate?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_firm_users_me: {
+        Row: {
+          assigned_at: string | null
+          assigned_by: string | null
+          created_at: string | null
+          firm_id: string | null
+          id: string | null
+          is_active: boolean | null
+          permissions: Json | null
+          role: string | null
+          seat_type: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          assigned_at?: string | null
+          assigned_by?: string | null
+          created_at?: string | null
+          firm_id?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          permissions?: Json | null
+          role?: string | null
+          seat_type?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          assigned_at?: string | null
+          assigned_by?: string | null
+          created_at?: string | null
+          firm_id?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          permissions?: Json | null
+          role?: string | null
+          seat_type?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "firm_users_firm_id_fkey"
+            columns: ["firm_id"]
+            isOneToOne: false
+            referencedRelation: "firms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_fund_holdings_lookup_public: {
+        Row: {
+          id: string | null
+        }
+        Insert: {
+          id?: string | null
+        }
+        Update: {
+          id?: string | null
+        }
+        Relationships: []
+      }
+      v_fund_holdings_overlap_me: {
+        Row: {
+          created_at: string | null
+          id: string | null
+          overlap_metrics: Json | null
+          portfolio_id: string | null
+          scope: Json | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string | null
+          overlap_metrics?: Json | null
+          portfolio_id?: string | null
+          scope?: Json | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string | null
+          overlap_metrics?: Json | null
+          portfolio_id?: string | null
+          scope?: Json | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_goal_attachments_me: {
+        Row: {
+          attachment_type: string | null
+          created_at: string | null
+          description: string | null
+          file_name: string | null
+          file_path: string | null
+          file_size: number | null
+          file_type: string | null
+          goal_id: string | null
+          id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          attachment_type?: string | null
+          created_at?: string | null
+          description?: string | null
+          file_name?: string | null
+          file_path?: string | null
+          file_size?: number | null
+          file_type?: string | null
+          goal_id?: string | null
+          id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          attachment_type?: string | null
+          created_at?: string | null
+          description?: string | null
+          file_name?: string | null
+          file_path?: string | null
+          file_size?: number | null
+          file_type?: string | null
+          goal_id?: string | null
+          id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "goal_attachments_goal_id_fkey"
+            columns: ["goal_id"]
+            isOneToOne: false
+            referencedRelation: "user_goals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "goal_attachments_goal_id_fkey"
+            columns: ["goal_id"]
+            isOneToOne: false
+            referencedRelation: "v_user_goals_me"
+            referencedColumns: ["id"]
+          },
         ]
       }
       v_goal_category_templates_public: {
         Row: {
-          aspirational_prompt: string | null
           category: Database["public"]["Enums"]["goal_category"] | null
-          created_at: string | null
-          default_fields: Json | null
           description: string | null
-          display_name: string | null
-          icon_name: string | null
           id: string | null
-          image_url: string | null
-          required_fields: string[] | null
-          success_story_example: string | null
-          suggested_amounts: number[] | null
-          updated_at: string | null
         }
         Insert: {
-          aspirational_prompt?: string | null
           category?: Database["public"]["Enums"]["goal_category"] | null
-          created_at?: string | null
-          default_fields?: Json | null
           description?: string | null
-          display_name?: string | null
-          icon_name?: string | null
           id?: string | null
-          image_url?: string | null
-          required_fields?: string[] | null
-          success_story_example?: string | null
-          suggested_amounts?: number[] | null
-          updated_at?: string | null
         }
         Update: {
-          aspirational_prompt?: string | null
           category?: Database["public"]["Enums"]["goal_category"] | null
-          created_at?: string | null
-          default_fields?: Json | null
           description?: string | null
-          display_name?: string | null
-          icon_name?: string | null
           id?: string | null
-          image_url?: string | null
-          required_fields?: string[] | null
-          success_story_example?: string | null
-          suggested_amounts?: number[] | null
+        }
+        Relationships: []
+      }
+      v_goal_milestones_me: {
+        Row: {
+          completed_at: string | null
+          created_at: string | null
+          description: string | null
+          goal_id: string | null
+          id: string | null
+          is_completed: boolean | null
+          target_amount: number | null
+          target_date: string | null
+          title: string | null
+          user_id: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string | null
+          description?: string | null
+          goal_id?: string | null
+          id?: string | null
+          is_completed?: boolean | null
+          target_amount?: number | null
+          target_date?: string | null
+          title?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string | null
+          description?: string | null
+          goal_id?: string | null
+          id?: string | null
+          is_completed?: boolean | null
+          target_amount?: number | null
+          target_date?: string | null
+          title?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "goal_milestones_goal_id_fkey"
+            columns: ["goal_id"]
+            isOneToOne: false
+            referencedRelation: "user_goals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "goal_milestones_goal_id_fkey"
+            columns: ["goal_id"]
+            isOneToOne: false
+            referencedRelation: "v_user_goals_me"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_health_alerts_me: {
+        Row: {
+          created_at: string | null
+          id: string | null
+          is_read: boolean | null
+          message: string | null
+          metric_id: string | null
+          severity: string | null
+          title: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string | null
+          is_read?: boolean | null
+          message?: string | null
+          metric_id?: string | null
+          severity?: string | null
+          title?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string | null
+          is_read?: boolean | null
+          message?: string | null
+          metric_id?: string | null
+          severity?: string | null
+          title?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "health_alerts_metric_id_fkey"
+            columns: ["metric_id"]
+            isOneToOne: false
+            referencedRelation: "metrics_catalog"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "health_alerts_metric_id_fkey"
+            columns: ["metric_id"]
+            isOneToOne: false
+            referencedRelation: "v_metrics_catalog_public"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_health_docs_me: {
+        Row: {
+          agent_name: string | null
+          agent_phone: string | null
+          agent_relationship: string | null
+          content_type: string | null
+          created_at: string | null
+          doc_type: string | null
+          document_name: string | null
+          document_status: string | null
+          expires_on: string | null
+          family_id: string | null
+          file_path: string | null
+          file_size: number | null
+          group_number: string | null
+          id: string | null
+          is_emergency_accessible: boolean | null
+          is_placeholder: boolean | null
+          lawyer_contact: string | null
+          member_id: string | null
+          plan_name: string | null
+          signed_date: string | null
+          signer_name: string | null
+          storage_bucket: string | null
+          subscriber_id: string | null
+          updated_at: string | null
+          user_id: string | null
+          witness_names: string[] | null
+        }
+        Insert: {
+          agent_name?: string | null
+          agent_phone?: string | null
+          agent_relationship?: string | null
+          content_type?: string | null
+          created_at?: string | null
+          doc_type?: string | null
+          document_name?: string | null
+          document_status?: string | null
+          expires_on?: string | null
+          family_id?: string | null
+          file_path?: string | null
+          file_size?: number | null
+          group_number?: string | null
+          id?: string | null
+          is_emergency_accessible?: boolean | null
+          is_placeholder?: boolean | null
+          lawyer_contact?: string | null
+          member_id?: string | null
+          plan_name?: string | null
+          signed_date?: string | null
+          signer_name?: string | null
+          storage_bucket?: string | null
+          subscriber_id?: string | null
           updated_at?: string | null
+          user_id?: string | null
+          witness_names?: string[] | null
+        }
+        Update: {
+          agent_name?: string | null
+          agent_phone?: string | null
+          agent_relationship?: string | null
+          content_type?: string | null
+          created_at?: string | null
+          doc_type?: string | null
+          document_name?: string | null
+          document_status?: string | null
+          expires_on?: string | null
+          family_id?: string | null
+          file_path?: string | null
+          file_size?: number | null
+          group_number?: string | null
+          id?: string | null
+          is_emergency_accessible?: boolean | null
+          is_placeholder?: boolean | null
+          lawyer_contact?: string | null
+          member_id?: string | null
+          plan_name?: string | null
+          signed_date?: string | null
+          signer_name?: string | null
+          storage_bucket?: string | null
+          subscriber_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          witness_names?: string[] | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "health_docs_family_id_fkey"
+            columns: ["family_id"]
+            isOneToOne: false
+            referencedRelation: "families"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "health_docs_family_id_fkey"
+            columns: ["family_id"]
+            isOneToOne: false
+            referencedRelation: "v_families_me"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "health_docs_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "family_members"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "health_docs_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "v_family_members_me"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_health_goals_me: {
+        Row: {
+          created_at: string | null
+          current_value: string | null
+          description: string | null
+          id: string | null
+          priority: string | null
+          status: string | null
+          target_date: string | null
+          target_value: string | null
+          title: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          current_value?: string | null
+          description?: string | null
+          id?: string | null
+          priority?: string | null
+          status?: string | null
+          target_date?: string | null
+          target_value?: string | null
+          title?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          current_value?: string | null
+          description?: string | null
+          id?: string | null
+          priority?: string | null
+          status?: string | null
+          target_date?: string | null
+          target_value?: string | null
+          title?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_health_metrics_me: {
+        Row: {
+          created_at: string | null
+          date: string | null
+          id: string | null
+          notes: string | null
+          type: string | null
+          unit: string | null
+          updated_at: string | null
+          user_id: string | null
+          value: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          date?: string | null
+          id?: string | null
+          notes?: string | null
+          type?: string | null
+          unit?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          value?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          date?: string | null
+          id?: string | null
+          notes?: string | null
+          type?: string | null
+          unit?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          value?: string | null
+        }
+        Relationships: []
+      }
+      v_health_rds_receipts_me: {
+        Row: {
+          action: string | null
+          anchor_ref: Json | null
+          created_at: string | null
+          disclosures: string[] | null
+          financial_data: Json | null
+          id: string | null
+          inputs_hash: string | null
+          policy_version: string | null
+          reasons: string[] | null
+          receipt_id: string | null
+          receipt_timestamp: string | null
+          result: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action?: string | null
+          anchor_ref?: Json | null
+          created_at?: string | null
+          disclosures?: string[] | null
+          financial_data?: Json | null
+          id?: string | null
+          inputs_hash?: string | null
+          policy_version?: string | null
+          reasons?: string[] | null
+          receipt_id?: string | null
+          receipt_timestamp?: string | null
+          result?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string | null
+          anchor_ref?: Json | null
+          created_at?: string | null
+          disclosures?: string[] | null
+          financial_data?: Json | null
+          id?: string | null
+          inputs_hash?: string | null
+          policy_version?: string | null
+          reasons?: string[] | null
+          receipt_id?: string | null
+          receipt_timestamp?: string | null
+          result?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "health_rds_receipts_receipt_id_fkey"
+            columns: ["receipt_id"]
+            isOneToOne: false
+            referencedRelation: "receipts"
+            referencedColumns: ["receipt_id"]
+          },
+        ]
+      }
+      v_health_recommendations_me: {
+        Row: {
+          category: string | null
+          created_at: string | null
+          description: string | null
+          id: string | null
+          priority: string | null
+          status: string | null
+          title: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string | null
+          priority?: string | null
+          status?: string | null
+          title?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          category?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string | null
+          priority?: string | null
+          status?: string | null
+          title?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_healthcare_document_permissions_me: {
+        Row: {
+          access_level: string | null
+          created_at: string | null
+          document_id: string | null
+          granted_at: string | null
+          granted_by_user_id: string | null
+          id: string | null
+          user_email: string | null
+          user_id: string | null
+          user_name: string | null
+          user_role: string | null
+        }
+        Insert: {
+          access_level?: string | null
+          created_at?: string | null
+          document_id?: string | null
+          granted_at?: string | null
+          granted_by_user_id?: string | null
+          id?: string | null
+          user_email?: string | null
+          user_id?: string | null
+          user_name?: string | null
+          user_role?: string | null
+        }
+        Update: {
+          access_level?: string | null
+          created_at?: string | null
+          document_id?: string | null
+          granted_at?: string | null
+          granted_by_user_id?: string | null
+          id?: string | null
+          user_email?: string | null
+          user_id?: string | null
+          user_name?: string | null
+          user_role?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "healthcare_document_permissions_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "healthcare_documents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "healthcare_document_permissions_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "v_healthcare_documents_me"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_healthcare_documents_me: {
+        Row: {
+          category: string | null
+          content_type: string | null
+          created_at: string | null
+          description: string | null
+          encrypted: boolean | null
+          file_path: string | null
+          id: string | null
+          is_folder: boolean | null
+          is_private: boolean | null
+          modified: string | null
+          name: string | null
+          parent_folder_id: string | null
+          shared: boolean | null
+          size: number | null
+          tags: string[] | null
+          type: string | null
+          updated_at: string | null
+          uploaded_by: string | null
+          user_id: string | null
+        }
+        Insert: {
+          category?: string | null
+          content_type?: string | null
+          created_at?: string | null
+          description?: string | null
+          encrypted?: boolean | null
+          file_path?: string | null
+          id?: string | null
+          is_folder?: boolean | null
+          is_private?: boolean | null
+          modified?: string | null
+          name?: string | null
+          parent_folder_id?: string | null
+          shared?: boolean | null
+          size?: number | null
+          tags?: string[] | null
+          type?: string | null
+          updated_at?: string | null
+          uploaded_by?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          category?: string | null
+          content_type?: string | null
+          created_at?: string | null
+          description?: string | null
+          encrypted?: boolean | null
+          file_path?: string | null
+          id?: string | null
+          is_folder?: boolean | null
+          is_private?: boolean | null
+          modified?: string | null
+          name?: string | null
+          parent_folder_id?: string | null
+          shared?: boolean | null
+          size?: number | null
+          tags?: string[] | null
+          type?: string | null
+          updated_at?: string | null
+          uploaded_by?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_healthcare_providers_me: {
+        Row: {
+          address: string | null
+          created_at: string | null
+          email: string | null
+          family_id: string | null
+          id: string | null
+          name: string | null
+          notes: string | null
+          npi: string | null
+          phone: string | null
+          photo_url: string | null
+          portal_url: string | null
+          rating: number | null
+          specialty: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string | null
+          email?: string | null
+          family_id?: string | null
+          id?: string | null
+          name?: string | null
+          notes?: string | null
+          npi?: string | null
+          phone?: string | null
+          photo_url?: string | null
+          portal_url?: string | null
+          rating?: number | null
+          specialty?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          address?: string | null
+          created_at?: string | null
+          email?: string | null
+          family_id?: string | null
+          id?: string | null
+          name?: string | null
+          notes?: string | null
+          npi?: string | null
+          phone?: string | null
+          photo_url?: string | null
+          portal_url?: string | null
+          rating?: number | null
+          specialty?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_healthcare_shared_documents_me: {
+        Row: {
+          created_at: string | null
+          document_id: string | null
+          expires_at: string | null
+          id: string | null
+          permission_level: string | null
+          professional_id: string | null
+          shared_at: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          document_id?: string | null
+          expires_at?: string | null
+          id?: string | null
+          permission_level?: string | null
+          professional_id?: string | null
+          shared_at?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          document_id?: string | null
+          expires_at?: string | null
+          id?: string | null
+          permission_level?: string | null
+          professional_id?: string | null
+          shared_at?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "healthcare_shared_documents_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "healthcare_documents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "healthcare_shared_documents_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "v_healthcare_documents_me"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "healthcare_shared_documents_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "healthcare_shared_documents_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "v_professionals_me"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_hsa_accounts_me: {
+        Row: {
+          account_name: string | null
+          account_number_last4: string | null
+          account_type: string | null
+          annual_contribution_limit: number | null
+          annual_contribution_ytd: number | null
+          available_cash: number | null
+          cash_balance: number | null
+          catch_up_eligible: boolean | null
+          created_at: string | null
+          current_balance: number | null
+          custodian_id: string | null
+          custodian_name: string | null
+          employer_contribution_ytd: number | null
+          family_id: string | null
+          family_member_id: string | null
+          id: string | null
+          invested_balance: number | null
+          is_active: boolean | null
+          is_primary: boolean | null
+          last_sync_at: string | null
+          nickname: string | null
+          plaid_account_id: string | null
+          provider: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          account_name?: string | null
+          account_number_last4?: string | null
+          account_type?: string | null
+          annual_contribution_limit?: number | null
+          annual_contribution_ytd?: number | null
+          available_cash?: number | null
+          cash_balance?: number | null
+          catch_up_eligible?: boolean | null
+          created_at?: string | null
+          current_balance?: number | null
+          custodian_id?: string | null
+          custodian_name?: string | null
+          employer_contribution_ytd?: number | null
+          family_id?: string | null
+          family_member_id?: string | null
+          id?: string | null
+          invested_balance?: number | null
+          is_active?: boolean | null
+          is_primary?: boolean | null
+          last_sync_at?: string | null
+          nickname?: string | null
+          plaid_account_id?: string | null
+          provider?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          account_name?: string | null
+          account_number_last4?: string | null
+          account_type?: string | null
+          annual_contribution_limit?: number | null
+          annual_contribution_ytd?: number | null
+          available_cash?: number | null
+          cash_balance?: number | null
+          catch_up_eligible?: boolean | null
+          created_at?: string | null
+          current_balance?: number | null
+          custodian_id?: string | null
+          custodian_name?: string | null
+          employer_contribution_ytd?: number | null
+          family_id?: string | null
+          family_member_id?: string | null
+          id?: string | null
+          invested_balance?: number | null
+          is_active?: boolean | null
+          is_primary?: boolean | null
+          last_sync_at?: string | null
+          nickname?: string | null
+          plaid_account_id?: string | null
+          provider?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hsa_accounts_family_id_fkey"
+            columns: ["family_id"]
+            isOneToOne: false
+            referencedRelation: "families"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hsa_accounts_family_id_fkey"
+            columns: ["family_id"]
+            isOneToOne: false
+            referencedRelation: "v_families_me"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hsa_accounts_family_member_id_fkey"
+            columns: ["family_member_id"]
+            isOneToOne: false
+            referencedRelation: "family_members"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hsa_accounts_family_member_id_fkey"
+            columns: ["family_member_id"]
+            isOneToOne: false
+            referencedRelation: "v_family_members_me"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_hsa_investment_rules_me: {
+        Row: {
+          cash_threshold: number | null
+          created_at: string | null
+          hsa_account_id: string | null
+          id: string | null
+          investment_percentage: number | null
+          is_active: boolean | null
+          rule_name: string | null
+          target_allocation: Json | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          cash_threshold?: number | null
+          created_at?: string | null
+          hsa_account_id?: string | null
+          id?: string | null
+          investment_percentage?: number | null
+          is_active?: boolean | null
+          rule_name?: string | null
+          target_allocation?: Json | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          cash_threshold?: number | null
+          created_at?: string | null
+          hsa_account_id?: string | null
+          id?: string | null
+          investment_percentage?: number | null
+          is_active?: boolean | null
+          rule_name?: string | null
+          target_allocation?: Json | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hsa_investment_rules_hsa_account_id_fkey"
+            columns: ["hsa_account_id"]
+            isOneToOne: false
+            referencedRelation: "hsa_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hsa_investment_rules_hsa_account_id_fkey"
+            columns: ["hsa_account_id"]
+            isOneToOne: false
+            referencedRelation: "v_hsa_accounts_me"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_hsa_receipts_me: {
+        Row: {
+          category: string | null
+          content_type: string | null
+          created_at: string | null
+          description: string | null
+          file_name: string | null
+          file_path: string | null
+          file_size: number | null
+          hsa_account_id: string | null
+          id: string | null
+          is_hsa_eligible: boolean | null
+          is_matched: boolean | null
+          is_processed: boolean | null
+          matched_transaction_id: string | null
+          merchant_name: string | null
+          ocr_confidence: number | null
+          ocr_data: Json | null
+          receipt_date: string | null
+          tax_amount: number | null
+          total_amount: number | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          category?: string | null
+          content_type?: string | null
+          created_at?: string | null
+          description?: string | null
+          file_name?: string | null
+          file_path?: string | null
+          file_size?: number | null
+          hsa_account_id?: string | null
+          id?: string | null
+          is_hsa_eligible?: boolean | null
+          is_matched?: boolean | null
+          is_processed?: boolean | null
+          matched_transaction_id?: string | null
+          merchant_name?: string | null
+          ocr_confidence?: number | null
+          ocr_data?: Json | null
+          receipt_date?: string | null
+          tax_amount?: number | null
+          total_amount?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          category?: string | null
+          content_type?: string | null
+          created_at?: string | null
+          description?: string | null
+          file_name?: string | null
+          file_path?: string | null
+          file_size?: number | null
+          hsa_account_id?: string | null
+          id?: string | null
+          is_hsa_eligible?: boolean | null
+          is_matched?: boolean | null
+          is_processed?: boolean | null
+          matched_transaction_id?: string | null
+          merchant_name?: string | null
+          ocr_confidence?: number | null
+          ocr_data?: Json | null
+          receipt_date?: string | null
+          tax_amount?: number | null
+          total_amount?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hsa_receipts_hsa_account_id_fkey"
+            columns: ["hsa_account_id"]
+            isOneToOne: false
+            referencedRelation: "hsa_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hsa_receipts_hsa_account_id_fkey"
+            columns: ["hsa_account_id"]
+            isOneToOne: false
+            referencedRelation: "v_hsa_accounts_me"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hsa_receipts_matched_transaction_id_fkey"
+            columns: ["matched_transaction_id"]
+            isOneToOne: false
+            referencedRelation: "hsa_transactions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hsa_receipts_matched_transaction_id_fkey"
+            columns: ["matched_transaction_id"]
+            isOneToOne: false
+            referencedRelation: "v_hsa_transactions_me"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_hsa_reimbursements_me: {
+        Row: {
+          created_at: string | null
+          hsa_account_id: string | null
+          id: string | null
+          method: string | null
+          notes: string | null
+          processed_date: string | null
+          receipt_id: string | null
+          reimbursement_amount: number | null
+          requested_date: string | null
+          status: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          hsa_account_id?: string | null
+          id?: string | null
+          method?: string | null
+          notes?: string | null
+          processed_date?: string | null
+          receipt_id?: string | null
+          reimbursement_amount?: number | null
+          requested_date?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          hsa_account_id?: string | null
+          id?: string | null
+          method?: string | null
+          notes?: string | null
+          processed_date?: string | null
+          receipt_id?: string | null
+          reimbursement_amount?: number | null
+          requested_date?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hsa_reimbursements_hsa_account_id_fkey"
+            columns: ["hsa_account_id"]
+            isOneToOne: false
+            referencedRelation: "hsa_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hsa_reimbursements_hsa_account_id_fkey"
+            columns: ["hsa_account_id"]
+            isOneToOne: false
+            referencedRelation: "v_hsa_accounts_me"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hsa_reimbursements_receipt_id_fkey"
+            columns: ["receipt_id"]
+            isOneToOne: false
+            referencedRelation: "hsa_receipts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hsa_reimbursements_receipt_id_fkey"
+            columns: ["receipt_id"]
+            isOneToOne: false
+            referencedRelation: "v_hsa_receipts_me"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_hsa_spending_categories_me: {
+        Row: {
+          annual_budget: number | null
+          category_name: string | null
+          created_at: string | null
+          id: string | null
+          is_hsa_eligible: boolean | null
+          parent_category: string | null
+          updated_at: string | null
+          user_id: string | null
+          ytd_spending: number | null
+        }
+        Insert: {
+          annual_budget?: number | null
+          category_name?: string | null
+          created_at?: string | null
+          id?: string | null
+          is_hsa_eligible?: boolean | null
+          parent_category?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          ytd_spending?: number | null
+        }
+        Update: {
+          annual_budget?: number | null
+          category_name?: string | null
+          created_at?: string | null
+          id?: string | null
+          is_hsa_eligible?: boolean | null
+          parent_category?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          ytd_spending?: number | null
+        }
+        Relationships: []
+      }
+      v_hsa_transactions_me: {
+        Row: {
+          amount: number | null
+          category: string | null
+          created_at: string | null
+          description: string | null
+          hsa_account_id: string | null
+          id: string | null
+          is_qualified_expense: boolean | null
+          merchant_name: string | null
+          notes: string | null
+          posted_date: string | null
+          receipt_id: string | null
+          reimbursement_id: string | null
+          subcategory: string | null
+          transaction_date: string | null
+          transaction_id: string | null
+          transaction_type: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          amount?: number | null
+          category?: string | null
+          created_at?: string | null
+          description?: string | null
+          hsa_account_id?: string | null
+          id?: string | null
+          is_qualified_expense?: boolean | null
+          merchant_name?: string | null
+          notes?: string | null
+          posted_date?: string | null
+          receipt_id?: string | null
+          reimbursement_id?: string | null
+          subcategory?: string | null
+          transaction_date?: string | null
+          transaction_id?: string | null
+          transaction_type?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          amount?: number | null
+          category?: string | null
+          created_at?: string | null
+          description?: string | null
+          hsa_account_id?: string | null
+          id?: string | null
+          is_qualified_expense?: boolean | null
+          merchant_name?: string | null
+          notes?: string | null
+          posted_date?: string | null
+          receipt_id?: string | null
+          reimbursement_id?: string | null
+          subcategory?: string | null
+          transaction_date?: string | null
+          transaction_id?: string | null
+          transaction_type?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hsa_transactions_hsa_account_id_fkey"
+            columns: ["hsa_account_id"]
+            isOneToOne: false
+            referencedRelation: "hsa_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hsa_transactions_hsa_account_id_fkey"
+            columns: ["hsa_account_id"]
+            isOneToOne: false
+            referencedRelation: "v_hsa_accounts_me"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_impact_milestones_me: {
+        Row: {
+          achieved_at: string | null
+          created_at: string | null
+          id: string | null
+          is_celebrated: boolean | null
+          milestone_data: Json | null
+          milestone_type: string | null
+          milestone_value: number | null
+          user_id: string | null
+        }
+        Insert: {
+          achieved_at?: string | null
+          created_at?: string | null
+          id?: string | null
+          is_celebrated?: boolean | null
+          milestone_data?: Json | null
+          milestone_type?: string | null
+          milestone_value?: number | null
+          user_id?: string | null
+        }
+        Update: {
+          achieved_at?: string | null
+          created_at?: string | null
+          id?: string | null
+          is_celebrated?: boolean | null
+          milestone_data?: Json | null
+          milestone_type?: string | null
+          milestone_value?: number | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_impact_notifications_me: {
+        Row: {
+          created_at: string | null
+          error_message: string | null
+          id: string | null
+          notification_type: string | null
+          report_id: string | null
+          sent_at: string | null
+          status: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          error_message?: string | null
+          id?: string | null
+          notification_type?: string | null
+          report_id?: string | null
+          sent_at?: string | null
+          status?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          error_message?: string | null
+          id?: string | null
+          notification_type?: string | null
+          report_id?: string | null
+          sent_at?: string | null
+          status?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "impact_notifications_report_id_fkey"
+            columns: ["report_id"]
+            isOneToOne: false
+            referencedRelation: "impact_reports"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "impact_notifications_report_id_fkey"
+            columns: ["report_id"]
+            isOneToOne: false
+            referencedRelation: "v_impact_reports_me"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_impact_reports_me: {
+        Row: {
+          charities_supported: number | null
+          created_at: string | null
+          file_url: string | null
+          id: string | null
+          projects_supported: number | null
+          report_data: Json | null
+          report_period_end: string | null
+          report_period_start: string | null
+          report_type: string | null
+          status: string | null
+          tenant_id: string | null
+          total_donated: number | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          charities_supported?: number | null
+          created_at?: string | null
+          file_url?: string | null
+          id?: string | null
+          projects_supported?: number | null
+          report_data?: Json | null
+          report_period_end?: string | null
+          report_period_start?: string | null
+          report_type?: string | null
+          status?: string | null
+          tenant_id?: string | null
+          total_donated?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          charities_supported?: number | null
+          created_at?: string | null
+          file_url?: string | null
+          id?: string | null
+          projects_supported?: number | null
+          report_data?: Json | null
+          report_period_end?: string | null
+          report_period_start?: string | null
+          report_type?: string | null
+          status?: string | null
+          tenant_id?: string | null
+          total_donated?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_impact_stories_me: {
+        Row: {
+          charity_id: string | null
+          created_at: string | null
+          id: string | null
+          is_anonymous: boolean | null
+          is_featured: boolean | null
+          status: string | null
+          story: string | null
+          title: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          charity_id?: string | null
+          created_at?: string | null
+          id?: string | null
+          is_anonymous?: boolean | null
+          is_featured?: boolean | null
+          status?: string | null
+          story?: string | null
+          title?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          charity_id?: string | null
+          created_at?: string | null
+          id?: string | null
+          is_anonymous?: boolean | null
+          is_featured?: boolean | null
+          status?: string | null
+          story?: string | null
+          title?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "impact_stories_charity_id_fkey"
+            columns: ["charity_id"]
+            isOneToOne: false
+            referencedRelation: "charities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_imports_ra_me: {
+        Row: {
+          created_at: string | null
+          id: string | null
+          parsed_data: Json | null
+          raw_text: string | null
+          run_id: string | null
+          sha256_hash: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string | null
+          parsed_data?: Json | null
+          raw_text?: string | null
+          run_id?: string | null
+          sha256_hash?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string | null
+          parsed_data?: Json | null
+          raw_text?: string | null
+          run_id?: string | null
+          sha256_hash?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_insurance_agents_me: {
+        Row: {
+          ce_credits_completed: number | null
+          ce_credits_required: number | null
+          ce_reporting_period_end: string | null
+          ce_reporting_period_start: string | null
+          created_at: string | null
+          email: string | null
+          id: string | null
+          license_expiry: string | null
+          license_number: string | null
+          license_type: string | null
+          name: string | null
+          nmls_id: string | null
+          state: string | null
+          status: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          ce_credits_completed?: number | null
+          ce_credits_required?: number | null
+          ce_reporting_period_end?: string | null
+          ce_reporting_period_start?: string | null
+          created_at?: string | null
+          email?: string | null
+          id?: string | null
+          license_expiry?: string | null
+          license_number?: string | null
+          license_type?: string | null
+          name?: string | null
+          nmls_id?: string | null
+          state?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          ce_credits_completed?: number | null
+          ce_credits_required?: number | null
+          ce_reporting_period_end?: string | null
+          ce_reporting_period_start?: string | null
+          created_at?: string | null
+          email?: string | null
+          id?: string | null
+          license_expiry?: string | null
+          license_number?: string | null
+          license_type?: string | null
+          name?: string | null
+          nmls_id?: string | null
+          state?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_insurance_policies_me: {
+        Row: {
+          coverage: string | null
+          created_at: string | null
+          deductible: number | null
+          effective_date: string | null
+          expiration_date: string | null
+          group_number: string | null
+          id: string | null
+          member_id: string | null
+          notes: string | null
+          plan: string | null
+          policy_number: string | null
+          premium: number | null
+          provider: string | null
+          type: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          coverage?: string | null
+          created_at?: string | null
+          deductible?: number | null
+          effective_date?: string | null
+          expiration_date?: string | null
+          group_number?: string | null
+          id?: string | null
+          member_id?: string | null
+          notes?: string | null
+          plan?: string | null
+          policy_number?: string | null
+          premium?: number | null
+          provider?: string | null
+          type?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          coverage?: string | null
+          created_at?: string | null
+          deductible?: number | null
+          effective_date?: string | null
+          expiration_date?: string | null
+          group_number?: string | null
+          id?: string | null
+          member_id?: string | null
+          notes?: string | null
+          plan?: string | null
+          policy_number?: string | null
+          premium?: number | null
+          provider?: string | null
+          type?: string | null
+          updated_at?: string | null
+          user_id?: string | null
         }
         Relationships: []
       }
       v_integration_templates_public: {
         Row: {
           category: string | null
-          created_at: string | null
-          created_by: string | null
-          default_mappings: Json | null
           description: string | null
-          documentation_url: string | null
           id: string | null
-          install_count: number | null
-          is_featured: boolean | null
-          is_verified: boolean | null
           name: string | null
-          provider: string | null
-          rating: number | null
-          required_credentials: string[] | null
-          setup_instructions: string | null
-          support_url: string | null
-          supported_features: string[] | null
-          template_config: Json | null
-          updated_at: string | null
-          version: string | null
         }
         Insert: {
           category?: string | null
-          created_at?: string | null
-          created_by?: string | null
-          default_mappings?: Json | null
           description?: string | null
-          documentation_url?: string | null
           id?: string | null
-          install_count?: number | null
-          is_featured?: boolean | null
-          is_verified?: boolean | null
           name?: string | null
-          provider?: string | null
-          rating?: number | null
-          required_credentials?: string[] | null
-          setup_instructions?: string | null
-          support_url?: string | null
-          supported_features?: string[] | null
-          template_config?: Json | null
-          updated_at?: string | null
-          version?: string | null
         }
         Update: {
           category?: string | null
-          created_at?: string | null
-          created_by?: string | null
-          default_mappings?: Json | null
           description?: string | null
-          documentation_url?: string | null
           id?: string | null
-          install_count?: number | null
-          is_featured?: boolean | null
-          is_verified?: boolean | null
           name?: string | null
-          provider?: string | null
-          rating?: number | null
-          required_credentials?: string[] | null
-          setup_instructions?: string | null
-          support_url?: string | null
-          supported_features?: string[] | null
-          template_config?: Json | null
+        }
+        Relationships: []
+      }
+      v_investment_accounts_me: {
+        Row: {
+          account_type: string | null
+          balance: number | null
+          created_at: string | null
+          id: string | null
+          name: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          account_type?: string | null
+          balance?: number | null
+          created_at?: string | null
+          id?: string | null
+          name?: string | null
           updated_at?: string | null
-          version?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          account_type?: string | null
+          balance?: number | null
+          created_at?: string | null
+          id?: string | null
+          name?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_investment_categories_public: {
+        Row: {
+          description: string | null
+          id: string | null
+          name: string | null
+        }
+        Insert: {
+          description?: string | null
+          id?: string | null
+          name?: string | null
+        }
+        Update: {
+          description?: string | null
+          id?: string | null
+          name?: string | null
+        }
+        Relationships: []
+      }
+      v_investment_meetings_me: {
+        Row: {
+          consultation_type: string | null
+          created_at: string | null
+          id: string | null
+          notes: string | null
+          offering_id: string | null
+          preferred_date: string | null
+          preferred_time: string | null
+          status: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          consultation_type?: string | null
+          created_at?: string | null
+          id?: string | null
+          notes?: string | null
+          offering_id?: string | null
+          preferred_date?: string | null
+          preferred_time?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          consultation_type?: string | null
+          created_at?: string | null
+          id?: string | null
+          notes?: string | null
+          offering_id?: string | null
+          preferred_date?: string | null
+          preferred_time?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "investment_meetings_offering_id_fkey"
+            columns: ["offering_id"]
+            isOneToOne: false
+            referencedRelation: "investment_offerings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "investment_meetings_offering_id_fkey"
+            columns: ["offering_id"]
+            isOneToOne: false
+            referencedRelation: "v_investment_offerings_public"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_investment_offerings_public: {
+        Row: {
+          description: string | null
+          id: string | null
+          name: string | null
+        }
+        Insert: {
+          description?: string | null
+          id?: string | null
+          name?: string | null
+        }
+        Update: {
+          description?: string | null
+          id?: string | null
+          name?: string | null
         }
         Relationships: []
       }
@@ -40101,6 +47674,1045 @@ export type Database = {
         }
         Relationships: []
       }
+      v_lender_reviews_me: {
+        Row: {
+          approval_speed_rating: number | null
+          communication_rating: number | null
+          created_at: string | null
+          helpful_votes: number | null
+          id: string | null
+          is_published: boolean | null
+          is_verified: boolean | null
+          lender_partner_id: string | null
+          loan_amount: number | null
+          loan_application_id: string | null
+          loan_type: string | null
+          rating: number | null
+          review_text: string | null
+          review_title: string | null
+          terms_satisfaction_rating: number | null
+          updated_at: string | null
+          user_id: string | null
+          would_recommend: boolean | null
+        }
+        Insert: {
+          approval_speed_rating?: number | null
+          communication_rating?: number | null
+          created_at?: string | null
+          helpful_votes?: number | null
+          id?: string | null
+          is_published?: boolean | null
+          is_verified?: boolean | null
+          lender_partner_id?: string | null
+          loan_amount?: number | null
+          loan_application_id?: string | null
+          loan_type?: string | null
+          rating?: number | null
+          review_text?: string | null
+          review_title?: string | null
+          terms_satisfaction_rating?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+          would_recommend?: boolean | null
+        }
+        Update: {
+          approval_speed_rating?: number | null
+          communication_rating?: number | null
+          created_at?: string | null
+          helpful_votes?: number | null
+          id?: string | null
+          is_published?: boolean | null
+          is_verified?: boolean | null
+          lender_partner_id?: string | null
+          loan_amount?: number | null
+          loan_application_id?: string | null
+          loan_type?: string | null
+          rating?: number | null
+          review_text?: string | null
+          review_title?: string | null
+          terms_satisfaction_rating?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+          would_recommend?: boolean | null
+        }
+        Relationships: []
+      }
+      v_lending_pdf_exports_me: {
+        Row: {
+          created_at: string | null
+          download_count: number | null
+          expires_at: string | null
+          export_status: string | null
+          export_type: string | null
+          file_size: number | null
+          file_url: string | null
+          id: string | null
+          lender_partner_ids: string[] | null
+          loan_application_ids: string[] | null
+          pdf_content: Json | null
+          scenario_ids: string[] | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          download_count?: number | null
+          expires_at?: string | null
+          export_status?: string | null
+          export_type?: string | null
+          file_size?: number | null
+          file_url?: string | null
+          id?: string | null
+          lender_partner_ids?: string[] | null
+          loan_application_ids?: string[] | null
+          pdf_content?: Json | null
+          scenario_ids?: string[] | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          download_count?: number | null
+          expires_at?: string | null
+          export_status?: string | null
+          export_type?: string | null
+          file_size?: number | null
+          file_url?: string | null
+          id?: string | null
+          lender_partner_ids?: string[] | null
+          loan_application_ids?: string[] | null
+          pdf_content?: Json | null
+          scenario_ids?: string[] | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_lending_sms_alerts_me: {
+        Row: {
+          alert_type: string | null
+          application_id: string | null
+          created_at: string | null
+          id: string | null
+          message: string | null
+          phone_number: string | null
+          sent_at: string | null
+          status: string | null
+          user_id: string | null
+        }
+        Insert: {
+          alert_type?: string | null
+          application_id?: string | null
+          created_at?: string | null
+          id?: string | null
+          message?: string | null
+          phone_number?: string | null
+          sent_at?: string | null
+          status?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          alert_type?: string | null
+          application_id?: string | null
+          created_at?: string | null
+          id?: string | null
+          message?: string | null
+          phone_number?: string | null
+          sent_at?: string | null
+          status?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_liquidity_scores_me: {
+        Row: {
+          as_of_date: string | null
+          breakdown: Json | null
+          created_at: string | null
+          fund_id: string | null
+          id: string | null
+          inputs: Json | null
+          score: number | null
+          user_id: string | null
+        }
+        Insert: {
+          as_of_date?: string | null
+          breakdown?: Json | null
+          created_at?: string | null
+          fund_id?: string | null
+          id?: string | null
+          inputs?: Json | null
+          score?: number | null
+          user_id?: string | null
+        }
+        Update: {
+          as_of_date?: string | null
+          breakdown?: Json | null
+          created_at?: string | null
+          fund_id?: string | null
+          id?: string | null
+          inputs?: Json | null
+          score?: number | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_loan_documents_me: {
+        Row: {
+          created_at: string | null
+          doc_type: string | null
+          expiry_date: string | null
+          file_name: string | null
+          file_size: number | null
+          file_url: string | null
+          id: string | null
+          loan_id: string | null
+          notes: string | null
+          status: string | null
+          tenant_id: string | null
+          updated_at: string | null
+          uploaded_at: string | null
+          user_id: string | null
+          verified_at: string | null
+          verified_by: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          doc_type?: string | null
+          expiry_date?: string | null
+          file_name?: string | null
+          file_size?: number | null
+          file_url?: string | null
+          id?: string | null
+          loan_id?: string | null
+          notes?: string | null
+          status?: string | null
+          tenant_id?: string | null
+          updated_at?: string | null
+          uploaded_at?: string | null
+          user_id?: string | null
+          verified_at?: string | null
+          verified_by?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          doc_type?: string | null
+          expiry_date?: string | null
+          file_name?: string | null
+          file_size?: number | null
+          file_url?: string | null
+          id?: string | null
+          loan_id?: string | null
+          notes?: string | null
+          status?: string | null
+          tenant_id?: string | null
+          updated_at?: string | null
+          uploaded_at?: string | null
+          user_id?: string | null
+          verified_at?: string | null
+          verified_by?: string | null
+        }
+        Relationships: []
+      }
+      v_loan_requests_me: {
+        Row: {
+          application_data: Json | null
+          compliance_status: string | null
+          created_at: string | null
+          eligibility_result: Json | null
+          id: string | null
+          loan_type: string | null
+          partner_id: string | null
+          requested_amount: number | null
+          status: string | null
+          submitted_at: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          application_data?: Json | null
+          compliance_status?: string | null
+          created_at?: string | null
+          eligibility_result?: Json | null
+          id?: string | null
+          loan_type?: string | null
+          partner_id?: string | null
+          requested_amount?: number | null
+          status?: string | null
+          submitted_at?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          application_data?: Json | null
+          compliance_status?: string | null
+          created_at?: string | null
+          eligibility_result?: Json | null
+          id?: string | null
+          loan_type?: string | null
+          partner_id?: string | null
+          requested_amount?: number | null
+          status?: string | null
+          submitted_at?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "loan_requests_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "lending_partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_loan_scenarios_me: {
+        Row: {
+          base_interest_rate: number | null
+          base_loan_amount: number | null
+          base_term_months: number | null
+          calculated_results: Json | null
+          created_at: string | null
+          id: string | null
+          loan_application_id: string | null
+          scenario_name: string | null
+          scenario_parameters: Json | null
+          scenario_type: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          base_interest_rate?: number | null
+          base_loan_amount?: number | null
+          base_term_months?: number | null
+          calculated_results?: Json | null
+          created_at?: string | null
+          id?: string | null
+          loan_application_id?: string | null
+          scenario_name?: string | null
+          scenario_parameters?: Json | null
+          scenario_type?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          base_interest_rate?: number | null
+          base_loan_amount?: number | null
+          base_term_months?: number | null
+          calculated_results?: Json | null
+          created_at?: string | null
+          id?: string | null
+          loan_application_id?: string | null
+          scenario_name?: string | null
+          scenario_parameters?: Json | null
+          scenario_type?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_longevity_params_me: {
+        Row: {
+          created_at: string | null
+          gender: string | null
+          gm_a: number | null
+          gm_b: number | null
+          gm_c: number | null
+          health_adjustment: number | null
+          id: string | null
+          is_active: boolean | null
+          lifestyle_adjustment: number | null
+          region: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          gender?: string | null
+          gm_a?: number | null
+          gm_b?: number | null
+          gm_c?: number | null
+          health_adjustment?: number | null
+          id?: string | null
+          is_active?: boolean | null
+          lifestyle_adjustment?: number | null
+          region?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          gender?: string | null
+          gm_a?: number | null
+          gm_b?: number | null
+          gm_c?: number | null
+          health_adjustment?: number | null
+          id?: string | null
+          is_active?: boolean | null
+          lifestyle_adjustment?: number | null
+          region?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_ltc_params_me: {
+        Row: {
+          adult_daycare_cost: number | null
+          age_0: number | null
+          assisted_living_cost: number | null
+          base_hazard: number | null
+          created_at: string | null
+          gender: string | null
+          home_health_cost: number | null
+          id: string | null
+          inflation_rate: number | null
+          intensity_distribution: Json | null
+          is_active: boolean | null
+          nursing_home_cost: number | null
+          region: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          adult_daycare_cost?: number | null
+          age_0?: number | null
+          assisted_living_cost?: number | null
+          base_hazard?: number | null
+          created_at?: string | null
+          gender?: string | null
+          home_health_cost?: number | null
+          id?: string | null
+          inflation_rate?: number | null
+          intensity_distribution?: Json | null
+          is_active?: boolean | null
+          nursing_home_cost?: number | null
+          region?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          adult_daycare_cost?: number | null
+          age_0?: number | null
+          assisted_living_cost?: number | null
+          base_hazard?: number | null
+          created_at?: string | null
+          gender?: string | null
+          home_health_cost?: number | null
+          id?: string | null
+          inflation_rate?: number | null
+          intensity_distribution?: Json | null
+          is_active?: boolean | null
+          nursing_home_cost?: number | null
+          region?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_manager_signals_public: {
+        Row: {
+          id: string | null
+        }
+        Insert: {
+          id?: string | null
+        }
+        Update: {
+          id?: string | null
+        }
+        Relationships: []
+      }
+      v_med_adherence_me: {
+        Row: {
+          created_at: string | null
+          family_member_id: string | null
+          id: string | null
+          medication_id: string | null
+          notes: string | null
+          scheduled_date: string | null
+          scheduled_time: string | null
+          taken_at: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          family_member_id?: string | null
+          id?: string | null
+          medication_id?: string | null
+          notes?: string | null
+          scheduled_date?: string | null
+          scheduled_time?: string | null
+          taken_at?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          family_member_id?: string | null
+          id?: string | null
+          medication_id?: string | null
+          notes?: string | null
+          scheduled_date?: string | null
+          scheduled_time?: string | null
+          taken_at?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "med_adherence_family_member_id_fkey"
+            columns: ["family_member_id"]
+            isOneToOne: false
+            referencedRelation: "family_members"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "med_adherence_family_member_id_fkey"
+            columns: ["family_member_id"]
+            isOneToOne: false
+            referencedRelation: "v_family_members_me"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "med_adherence_medication_id_fkey"
+            columns: ["medication_id"]
+            isOneToOne: false
+            referencedRelation: "medications"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "med_adherence_medication_id_fkey"
+            columns: ["medication_id"]
+            isOneToOne: false
+            referencedRelation: "v_medications_me"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_medications_me: {
+        Row: {
+          created_at: string | null
+          dosage_form: string | null
+          dose: string | null
+          dose_reminders: boolean | null
+          end_date: string | null
+          family_id: string | null
+          frequency: string | null
+          has_warning: boolean | null
+          hsa_eligible: boolean | null
+          id: string | null
+          member_id: string | null
+          name: string | null
+          notes: string | null
+          pharmacy: string | null
+          prescribing_provider: string | null
+          prescription_number: string | null
+          refill_reminders: boolean | null
+          rxnorm_id: string | null
+          schedule: Json | null
+          start_date: string | null
+          strength: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          dosage_form?: string | null
+          dose?: string | null
+          dose_reminders?: boolean | null
+          end_date?: string | null
+          family_id?: string | null
+          frequency?: string | null
+          has_warning?: boolean | null
+          hsa_eligible?: boolean | null
+          id?: string | null
+          member_id?: string | null
+          name?: string | null
+          notes?: string | null
+          pharmacy?: string | null
+          prescribing_provider?: string | null
+          prescription_number?: string | null
+          refill_reminders?: boolean | null
+          rxnorm_id?: string | null
+          schedule?: Json | null
+          start_date?: string | null
+          strength?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          dosage_form?: string | null
+          dose?: string | null
+          dose_reminders?: boolean | null
+          end_date?: string | null
+          family_id?: string | null
+          frequency?: string | null
+          has_warning?: boolean | null
+          hsa_eligible?: boolean | null
+          id?: string | null
+          member_id?: string | null
+          name?: string | null
+          notes?: string | null
+          pharmacy?: string | null
+          prescribing_provider?: string | null
+          prescription_number?: string | null
+          refill_reminders?: boolean | null
+          rxnorm_id?: string | null
+          schedule?: Json | null
+          start_date?: string | null
+          strength?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "medications_family_id_fkey"
+            columns: ["family_id"]
+            isOneToOne: false
+            referencedRelation: "families"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "medications_family_id_fkey"
+            columns: ["family_id"]
+            isOneToOne: false
+            referencedRelation: "v_families_me"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "medications_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "family_members"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "medications_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "v_family_members_me"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "medications_prescribing_provider_fkey"
+            columns: ["prescribing_provider"]
+            isOneToOne: false
+            referencedRelation: "healthcare_providers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "medications_prescribing_provider_fkey"
+            columns: ["prescribing_provider"]
+            isOneToOne: false
+            referencedRelation: "v_healthcare_providers_me"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_meeting_notes_me: {
+        Row: {
+          created_at: string | null
+          id: string | null
+          persona: string | null
+          text: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string | null
+          persona?: string | null
+          text?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string | null
+          persona?: string | null
+          text?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_meeting_recordings_me: {
+        Row: {
+          client_id: string | null
+          created_at: string | null
+          download_url: string | null
+          duration_seconds: number | null
+          file_path: string | null
+          file_size: number | null
+          id: string | null
+          meeting_id: string | null
+          metadata: Json | null
+          provider_recording_id: string | null
+          recording_type: string | null
+          recording_url: string | null
+          shared_with: Json | null
+          status: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          client_id?: string | null
+          created_at?: string | null
+          download_url?: string | null
+          duration_seconds?: number | null
+          file_path?: string | null
+          file_size?: number | null
+          id?: string | null
+          meeting_id?: string | null
+          metadata?: Json | null
+          provider_recording_id?: string | null
+          recording_type?: string | null
+          recording_url?: string | null
+          shared_with?: Json | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          client_id?: string | null
+          created_at?: string | null
+          download_url?: string | null
+          duration_seconds?: number | null
+          file_path?: string | null
+          file_size?: number | null
+          id?: string | null
+          meeting_id?: string | null
+          metadata?: Json | null
+          provider_recording_id?: string | null
+          recording_type?: string | null
+          recording_url?: string | null
+          shared_with?: Json | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "meeting_recordings_meeting_id_fkey"
+            columns: ["meeting_id"]
+            isOneToOne: false
+            referencedRelation: "v_video_meetings_me"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "meeting_recordings_meeting_id_fkey"
+            columns: ["meeting_id"]
+            isOneToOne: false
+            referencedRelation: "video_meetings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_meeting_summaries_me: {
+        Row: {
+          action_items: Json | null
+          client_id: string | null
+          confidence_score: number | null
+          created_at: string | null
+          error_message: string | null
+          id: string | null
+          key_decisions: Json | null
+          meeting_duration_minutes: number | null
+          meeting_recording_id: string | null
+          next_steps: Json | null
+          participants: Json | null
+          processing_status: string | null
+          summary: string | null
+          summary_completed_at: string | null
+          transcription: string | null
+          transcription_completed_at: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action_items?: Json | null
+          client_id?: string | null
+          confidence_score?: number | null
+          created_at?: string | null
+          error_message?: string | null
+          id?: string | null
+          key_decisions?: Json | null
+          meeting_duration_minutes?: number | null
+          meeting_recording_id?: string | null
+          next_steps?: Json | null
+          participants?: Json | null
+          processing_status?: string | null
+          summary?: string | null
+          summary_completed_at?: string | null
+          transcription?: string | null
+          transcription_completed_at?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action_items?: Json | null
+          client_id?: string | null
+          confidence_score?: number | null
+          created_at?: string | null
+          error_message?: string | null
+          id?: string | null
+          key_decisions?: Json | null
+          meeting_duration_minutes?: number | null
+          meeting_recording_id?: string | null
+          next_steps?: Json | null
+          participants?: Json | null
+          processing_status?: string | null
+          summary?: string | null
+          summary_completed_at?: string | null
+          transcription?: string | null
+          transcription_completed_at?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "meeting_summaries_meeting_recording_id_fkey"
+            columns: ["meeting_recording_id"]
+            isOneToOne: false
+            referencedRelation: "meeting_recordings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "meeting_summaries_meeting_recording_id_fkey"
+            columns: ["meeting_recording_id"]
+            isOneToOne: false
+            referencedRelation: "v_meeting_recordings_me"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_message_thread_participants_me: {
+        Row: {
+          id: string | null
+          joined_at: string | null
+          last_read_at: string | null
+          role: string | null
+          thread_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          id?: string | null
+          joined_at?: string | null
+          last_read_at?: string | null
+          role?: string | null
+          thread_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          id?: string | null
+          joined_at?: string | null
+          last_read_at?: string | null
+          role?: string | null
+          thread_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "message_thread_participants_thread_id_fkey"
+            columns: ["thread_id"]
+            isOneToOne: false
+            referencedRelation: "message_threads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_methylation_markers_me: {
+        Row: {
+          category: string | null
+          created_at: string | null
+          date: string | null
+          id: string | null
+          name: string | null
+          unit: string | null
+          updated_at: string | null
+          user_id: string | null
+          value: number | null
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string | null
+          date?: string | null
+          id?: string | null
+          name?: string | null
+          unit?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          value?: number | null
+        }
+        Update: {
+          category?: string | null
+          created_at?: string | null
+          date?: string | null
+          id?: string | null
+          name?: string | null
+          unit?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          value?: number | null
+        }
+        Relationships: []
+      }
+      v_metric_entries_me: {
+        Row: {
+          created_at: string | null
+          device_id: string | null
+          id: string | null
+          metric_id: string | null
+          notes: string | null
+          source: string | null
+          timestamp: string | null
+          updated_at: string | null
+          user_id: string | null
+          value: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          device_id?: string | null
+          id?: string | null
+          metric_id?: string | null
+          notes?: string | null
+          source?: string | null
+          timestamp?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          value?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          device_id?: string | null
+          id?: string | null
+          metric_id?: string | null
+          notes?: string | null
+          source?: string | null
+          timestamp?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          value?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "metric_entries_metric_id_fkey"
+            columns: ["metric_id"]
+            isOneToOne: false
+            referencedRelation: "metrics_catalog"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "metric_entries_metric_id_fkey"
+            columns: ["metric_id"]
+            isOneToOne: false
+            referencedRelation: "v_metrics_catalog_public"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_metrics_catalog_public: {
+        Row: {
+          category: string | null
+          description: string | null
+          id: string | null
+        }
+        Insert: {
+          category?: string | null
+          description?: string | null
+          id?: string | null
+        }
+        Update: {
+          category?: string | null
+          description?: string | null
+          id?: string | null
+        }
+        Relationships: []
+      }
+      v_mfa_bypass_audit_me: {
+        Row: {
+          bypass_reason: string | null
+          created_at: string | null
+          expires_at: string | null
+          id: string | null
+          initiated_by: string | null
+          is_active: boolean | null
+          user_id: string | null
+          user_role: string | null
+        }
+        Insert: {
+          bypass_reason?: string | null
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string | null
+          initiated_by?: string | null
+          is_active?: boolean | null
+          user_id?: string | null
+          user_role?: string | null
+        }
+        Update: {
+          bypass_reason?: string | null
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string | null
+          initiated_by?: string | null
+          is_active?: boolean | null
+          user_id?: string | null
+          user_role?: string | null
+        }
+        Relationships: []
+      }
+      v_nil_athletes_me: {
+        Row: {
+          athlete_name: string | null
+          bio: string | null
+          compliance_status: string | null
+          created_at: string | null
+          hourly_rate: number | null
+          id: string | null
+          is_available: boolean | null
+          profile_image_url: string | null
+          school: string | null
+          session_types: string[] | null
+          social_links: Json | null
+          sport: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          athlete_name?: string | null
+          bio?: string | null
+          compliance_status?: string | null
+          created_at?: string | null
+          hourly_rate?: number | null
+          id?: string | null
+          is_available?: boolean | null
+          profile_image_url?: string | null
+          school?: string | null
+          session_types?: string[] | null
+          social_links?: Json | null
+          sport?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          athlete_name?: string | null
+          bio?: string | null
+          compliance_status?: string | null
+          created_at?: string | null
+          hourly_rate?: number | null
+          id?: string | null
+          is_available?: boolean | null
+          profile_image_url?: string | null
+          school?: string | null
+          session_types?: string[] | null
+          social_links?: Json | null
+          sport?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       v_nil_disclosures_admin: {
         Row: {
           athlete_user_id: string | null
@@ -40130,6 +48742,657 @@ export type Database = {
           school_id?: string | null
         }
         Relationships: []
+      }
+      v_notifications_me: {
+        Row: {
+          body: string | null
+          click_action: string | null
+          created_at: string | null
+          family_id: string | null
+          id: string | null
+          member_id: string | null
+          read: boolean | null
+          title: string | null
+          type: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          body?: string | null
+          click_action?: string | null
+          created_at?: string | null
+          family_id?: string | null
+          id?: string | null
+          member_id?: string | null
+          read?: boolean | null
+          title?: string | null
+          type?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          body?: string | null
+          click_action?: string | null
+          created_at?: string | null
+          family_id?: string | null
+          id?: string | null
+          member_id?: string | null
+          read?: boolean | null
+          title?: string | null
+          type?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_family_id_fkey"
+            columns: ["family_id"]
+            isOneToOne: false
+            referencedRelation: "families"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_family_id_fkey"
+            columns: ["family_id"]
+            isOneToOne: false
+            referencedRelation: "v_families_me"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "family_members"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "v_family_members_me"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_nutrition_entries_me: {
+        Row: {
+          calories: number | null
+          carbs: number | null
+          created_at: string | null
+          date: string | null
+          fat: number | null
+          fiber: number | null
+          food_item: string | null
+          id: string | null
+          meal_type: string | null
+          notes: string | null
+          protein: number | null
+          serving_size: string | null
+          sugar: number | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          calories?: number | null
+          carbs?: number | null
+          created_at?: string | null
+          date?: string | null
+          fat?: number | null
+          fiber?: number | null
+          food_item?: string | null
+          id?: string | null
+          meal_type?: string | null
+          notes?: string | null
+          protein?: number | null
+          serving_size?: string | null
+          sugar?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          calories?: number | null
+          carbs?: number | null
+          created_at?: string | null
+          date?: string | null
+          fat?: number | null
+          fiber?: number | null
+          food_item?: string | null
+          id?: string | null
+          meal_type?: string | null
+          notes?: string | null
+          protein?: number | null
+          serving_size?: string | null
+          sugar?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_nutrition_goals_me: {
+        Row: {
+          created_at: string | null
+          daily_calories: number | null
+          daily_carbs: number | null
+          daily_fat: number | null
+          daily_fiber: number | null
+          daily_protein: number | null
+          daily_water_glasses: number | null
+          id: string | null
+          is_active: boolean | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          daily_calories?: number | null
+          daily_carbs?: number | null
+          daily_fat?: number | null
+          daily_fiber?: number | null
+          daily_protein?: number | null
+          daily_water_glasses?: number | null
+          id?: string | null
+          is_active?: boolean | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          daily_calories?: number | null
+          daily_carbs?: number | null
+          daily_fat?: number | null
+          daily_fiber?: number | null
+          daily_protein?: number | null
+          daily_water_glasses?: number | null
+          id?: string | null
+          is_active?: boolean | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_onboarding_documents_me: {
+        Row: {
+          created_at: string | null
+          document_type: string | null
+          file_name: string | null
+          file_path: string | null
+          file_size: number | null
+          id: string | null
+          mime_type: string | null
+          session_id: string | null
+          status: string | null
+          tenant_id: string | null
+          updated_at: string | null
+          uploaded_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          document_type?: string | null
+          file_name?: string | null
+          file_path?: string | null
+          file_size?: number | null
+          id?: string | null
+          mime_type?: string | null
+          session_id?: string | null
+          status?: string | null
+          tenant_id?: string | null
+          updated_at?: string | null
+          uploaded_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          document_type?: string | null
+          file_name?: string | null
+          file_path?: string | null
+          file_size?: number | null
+          id?: string | null
+          mime_type?: string | null
+          session_id?: string | null
+          status?: string | null
+          tenant_id?: string | null
+          updated_at?: string | null
+          uploaded_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "onboarding_documents_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "onboarding_sessions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "onboarding_documents_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "v_onboarding_sessions_me"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "onboarding_documents_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "onboarding_documents_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "onboarding_documents_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "v_profiles_basic"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      v_onboarding_email_log_me: {
+        Row: {
+          created_at: string | null
+          email_id: string | null
+          email_sent_at: string | null
+          id: string | null
+          persona: string | null
+          sequence_type: string | null
+          status: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email_id?: string | null
+          email_sent_at?: string | null
+          id?: string | null
+          persona?: string | null
+          sequence_type?: string | null
+          status?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email_id?: string | null
+          email_sent_at?: string | null
+          id?: string | null
+          persona?: string | null
+          sequence_type?: string | null
+          status?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_onboarding_flow_progress_me: {
+        Row: {
+          abandonment_reminder_sent_at: string | null
+          completed_at: string | null
+          created_at: string | null
+          current_step: number | null
+          id: string | null
+          last_active_at: string | null
+          progress_percentage: number | null
+          status: string | null
+          step_data: Json | null
+          total_steps: number | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          abandonment_reminder_sent_at?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          current_step?: number | null
+          id?: string | null
+          last_active_at?: string | null
+          progress_percentage?: number | null
+          status?: string | null
+          step_data?: Json | null
+          total_steps?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          abandonment_reminder_sent_at?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          current_step?: number | null
+          id?: string | null
+          last_active_at?: string | null
+          progress_percentage?: number | null
+          status?: string | null
+          step_data?: Json | null
+          total_steps?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_onboarding_progress_me: {
+        Row: {
+          app_id: string | null
+          completed_at: string | null
+          created_at: string | null
+          data: Json | null
+          id: string | null
+          notes: string | null
+          status: string | null
+          step_key: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          app_id?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          data?: Json | null
+          id?: string | null
+          notes?: string | null
+          status?: string | null
+          step_key?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          app_id?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          data?: Json | null
+          id?: string | null
+          notes?: string | null
+          status?: string | null
+          step_key?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_onboarding_sessions_me: {
+        Row: {
+          completed_at: string | null
+          completed_steps: string[] | null
+          created_at: string | null
+          current_step: string | null
+          id: string | null
+          invitation_id: string | null
+          session_data: Json | null
+          started_at: string | null
+          status: string | null
+          tenant_id: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          completed_steps?: string[] | null
+          created_at?: string | null
+          current_step?: string | null
+          id?: string | null
+          invitation_id?: string | null
+          session_data?: Json | null
+          started_at?: string | null
+          status?: string | null
+          tenant_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          completed_steps?: string[] | null
+          created_at?: string | null
+          current_step?: string | null
+          id?: string | null
+          invitation_id?: string | null
+          session_data?: Json | null
+          started_at?: string | null
+          status?: string | null
+          tenant_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "onboarding_sessions_invitation_id_fkey"
+            columns: ["invitation_id"]
+            isOneToOne: false
+            referencedRelation: "client_invitations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "onboarding_sessions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "onboarding_sessions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "onboarding_sessions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "v_profiles_basic"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      v_onboarding_step_completions_me: {
+        Row: {
+          completed_at: string | null
+          created_at: string | null
+          id: string | null
+          is_completed: boolean | null
+          session_id: string | null
+          step_name: string | null
+          tenant_id: string | null
+          updated_at: string | null
+          user_id: string | null
+          user_type: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string | null
+          id?: string | null
+          is_completed?: boolean | null
+          session_id?: string | null
+          step_name?: string | null
+          tenant_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          user_type?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string | null
+          id?: string | null
+          is_completed?: boolean | null
+          session_id?: string | null
+          step_name?: string | null
+          tenant_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          user_type?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "onboarding_step_completions_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "onboarding_sessions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "onboarding_step_completions_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "v_onboarding_sessions_me"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "onboarding_step_completions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "onboarding_step_completions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "onboarding_step_completions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "v_profiles_basic"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      v_onboarding_steps_me: {
+        Row: {
+          created_at: string | null
+          id: string | null
+          status: string | null
+          step: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string | null
+          status?: string | null
+          step?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string | null
+          status?: string | null
+          step?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_organization_activity_logs_me: {
+        Row: {
+          activity_category: string | null
+          activity_type: string | null
+          branch_id: string | null
+          created_at: string | null
+          description: string | null
+          id: string | null
+          ip_address: unknown | null
+          metadata: Json | null
+          organization_id: string | null
+          resource_id: string | null
+          resource_type: string | null
+          severity: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          activity_category?: string | null
+          activity_type?: string | null
+          branch_id?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string | null
+          ip_address?: unknown | null
+          metadata?: Json | null
+          organization_id?: string | null
+          resource_id?: string | null
+          resource_type?: string | null
+          severity?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          activity_category?: string | null
+          activity_type?: string | null
+          branch_id?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string | null
+          ip_address?: unknown | null
+          metadata?: Json | null
+          organization_id?: string | null
+          resource_id?: string | null
+          resource_type?: string | null
+          severity?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organization_activity_logs_branch_id_fkey"
+            columns: ["branch_id"]
+            isOneToOne: false
+            referencedRelation: "organization_branches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "organization_activity_logs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_organization_admins_me: {
+        Row: {
+          created_at: string | null
+          id: string | null
+          invited_by: string | null
+          is_active: boolean | null
+          organization_id: string | null
+          permissions: Json | null
+          role: Database["public"]["Enums"]["admin_role"] | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string | null
+          invited_by?: string | null
+          is_active?: boolean | null
+          organization_id?: string | null
+          permissions?: Json | null
+          role?: Database["public"]["Enums"]["admin_role"] | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string | null
+          invited_by?: string | null
+          is_active?: boolean | null
+          organization_id?: string | null
+          permissions?: Json | null
+          role?: Database["public"]["Enums"]["admin_role"] | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organization_admins_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       v_organization_agreement_templates_public: {
         Row: {
@@ -40187,6 +49450,1303 @@ export type Database = {
           },
         ]
       }
+      v_other_assets_me: {
+        Row: {
+          created_at: string | null
+          id: string | null
+          name: string | null
+          owner: string | null
+          type: string | null
+          updated_at: string | null
+          user_id: string | null
+          value: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string | null
+          name?: string | null
+          owner?: string | null
+          type?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          value?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string | null
+          name?: string | null
+          owner?: string | null
+          type?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          value?: number | null
+        }
+        Relationships: []
+      }
+      v_password_history_me: {
+        Row: {
+          created_at: string | null
+          id: string | null
+          password_hash: string | null
+          tenant_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string | null
+          password_hash?: string | null
+          tenant_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string | null
+          password_hash?: string | null
+          tenant_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_payout_notifications_me: {
+        Row: {
+          created_at: string | null
+          email_sent: boolean | null
+          id: string | null
+          notification_type: string | null
+          payout_id: string | null
+          push_sent: boolean | null
+          sent_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email_sent?: boolean | null
+          id?: string | null
+          notification_type?: string | null
+          payout_id?: string | null
+          push_sent?: boolean | null
+          sent_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email_sent?: boolean | null
+          id?: string | null
+          notification_type?: string | null
+          payout_id?: string | null
+          push_sent?: boolean | null
+          sent_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payout_notifications_payout_id_fkey"
+            columns: ["payout_id"]
+            isOneToOne: false
+            referencedRelation: "referral_payouts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_persona_audit_me: {
+        Row: {
+          block_number: number | null
+          created_at: string | null
+          current_hash: string | null
+          id: string | null
+          inputs_hash: string | null
+          metadata: Json | null
+          narrative: string | null
+          operation_type: string | null
+          outputs_hash: string | null
+          parent_hash: string | null
+          tenant_id: string | null
+          timestamp: string | null
+          user_id: string | null
+        }
+        Insert: {
+          block_number?: number | null
+          created_at?: string | null
+          current_hash?: string | null
+          id?: string | null
+          inputs_hash?: string | null
+          metadata?: Json | null
+          narrative?: string | null
+          operation_type?: string | null
+          outputs_hash?: string | null
+          parent_hash?: string | null
+          tenant_id?: string | null
+          timestamp?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          block_number?: number | null
+          created_at?: string | null
+          current_hash?: string | null
+          id?: string | null
+          inputs_hash?: string | null
+          metadata?: Json | null
+          narrative?: string | null
+          operation_type?: string | null
+          outputs_hash?: string | null
+          parent_hash?: string | null
+          tenant_id?: string | null
+          timestamp?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_persona_sessions_me: {
+        Row: {
+          active: boolean | null
+          ended_at: string | null
+          id: string | null
+          persona_id: string | null
+          started_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          active?: boolean | null
+          ended_at?: string | null
+          id?: string | null
+          persona_id?: string | null
+          started_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          active?: boolean | null
+          ended_at?: string | null
+          id?: string | null
+          persona_id?: string | null
+          started_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "persona_sessions_persona_id_fkey"
+            columns: ["persona_id"]
+            isOneToOne: false
+            referencedRelation: "personas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "persona_sessions_persona_id_fkey"
+            columns: ["persona_id"]
+            isOneToOne: false
+            referencedRelation: "v_personas_me"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_persona_signals_me: {
+        Row: {
+          collected_at: string | null
+          confidence: number | null
+          created_at: string | null
+          id: string | null
+          session_id: string | null
+          signal_type: string | null
+          signal_value: Json | null
+          tenant_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          collected_at?: string | null
+          confidence?: number | null
+          created_at?: string | null
+          id?: string | null
+          session_id?: string | null
+          signal_type?: string | null
+          signal_value?: Json | null
+          tenant_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          collected_at?: string | null
+          confidence?: number | null
+          created_at?: string | null
+          id?: string | null
+          session_id?: string | null
+          signal_type?: string | null
+          signal_value?: Json | null
+          tenant_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_personas_me: {
+        Row: {
+          confidence_score: number | null
+          created_at: string | null
+          detected_at: string | null
+          expires_at: string | null
+          id: string | null
+          metadata: Json | null
+          persona_kind: Database["public"]["Enums"]["persona_kind"] | null
+          persona_type: string | null
+          tenant_id: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          confidence_score?: number | null
+          created_at?: string | null
+          detected_at?: string | null
+          expires_at?: string | null
+          id?: string | null
+          metadata?: Json | null
+          persona_kind?: Database["public"]["Enums"]["persona_kind"] | null
+          persona_type?: string | null
+          tenant_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          confidence_score?: number | null
+          created_at?: string | null
+          detected_at?: string | null
+          expires_at?: string | null
+          id?: string | null
+          metadata?: Json | null
+          persona_kind?: Database["public"]["Enums"]["persona_kind"] | null
+          persona_type?: string | null
+          tenant_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_phase_results_me: {
+        Row: {
+          allocation_data: Json | null
+          analysis_run_id: string | null
+          ate: number | null
+          created_at: string | null
+          dgbp: number | null
+          household_id: string | null
+          id: string | null
+          isp: number | null
+          lci: number | null
+          lcr: number | null
+          outcome_score: number | null
+          phase_id: string | null
+          projection_data: Json | null
+          user_id: string | null
+        }
+        Insert: {
+          allocation_data?: Json | null
+          analysis_run_id?: string | null
+          ate?: number | null
+          created_at?: string | null
+          dgbp?: number | null
+          household_id?: string | null
+          id?: string | null
+          isp?: number | null
+          lci?: number | null
+          lcr?: number | null
+          outcome_score?: number | null
+          phase_id?: string | null
+          projection_data?: Json | null
+          user_id?: string | null
+        }
+        Update: {
+          allocation_data?: Json | null
+          analysis_run_id?: string | null
+          ate?: number | null
+          created_at?: string | null
+          dgbp?: number | null
+          household_id?: string | null
+          id?: string | null
+          isp?: number | null
+          lci?: number | null
+          lcr?: number | null
+          outcome_score?: number | null
+          phase_id?: string | null
+          projection_data?: Json | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_phishing_simulation_results_me: {
+        Row: {
+          clicked_at: string | null
+          created_at: string | null
+          data_entered: boolean | null
+          email_opened: boolean | null
+          id: string | null
+          ip_address: unknown | null
+          link_clicked: boolean | null
+          opened_at: string | null
+          reported_at: string | null
+          reported_suspicious: boolean | null
+          simulation_id: string | null
+          tenant_id: string | null
+          time_to_report_minutes: number | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          clicked_at?: string | null
+          created_at?: string | null
+          data_entered?: boolean | null
+          email_opened?: boolean | null
+          id?: string | null
+          ip_address?: unknown | null
+          link_clicked?: boolean | null
+          opened_at?: string | null
+          reported_at?: string | null
+          reported_suspicious?: boolean | null
+          simulation_id?: string | null
+          tenant_id?: string | null
+          time_to_report_minutes?: number | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          clicked_at?: string | null
+          created_at?: string | null
+          data_entered?: boolean | null
+          email_opened?: boolean | null
+          id?: string | null
+          ip_address?: unknown | null
+          link_clicked?: boolean | null
+          opened_at?: string | null
+          reported_at?: string | null
+          reported_suspicious?: boolean | null
+          simulation_id?: string | null
+          tenant_id?: string | null
+          time_to_report_minutes?: number | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "phishing_simulation_results_simulation_id_fkey"
+            columns: ["simulation_id"]
+            isOneToOne: false
+            referencedRelation: "phishing_simulations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_physicians_me: {
+        Row: {
+          created_at: string | null
+          email: string | null
+          facility: string | null
+          id: string | null
+          last_visit: string | null
+          name: string | null
+          notes: string | null
+          phone: string | null
+          specialty: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email?: string | null
+          facility?: string | null
+          id?: string | null
+          last_visit?: string | null
+          name?: string | null
+          notes?: string | null
+          phone?: string | null
+          specialty?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string | null
+          facility?: string | null
+          id?: string | null
+          last_visit?: string | null
+          name?: string | null
+          notes?: string | null
+          phone?: string | null
+          specialty?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_planning_scenarios_me: {
+        Row: {
+          advisor_id: string | null
+          ai_analysis: Json | null
+          created_at: string | null
+          created_by: string | null
+          id: string | null
+          input_parameters: Json | null
+          recommendations: string | null
+          scenario_name: string | null
+          scenario_type: string | null
+          simulation_results: Json | null
+          status: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          advisor_id?: string | null
+          ai_analysis?: Json | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string | null
+          input_parameters?: Json | null
+          recommendations?: string | null
+          scenario_name?: string | null
+          scenario_type?: string | null
+          simulation_results?: Json | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          advisor_id?: string | null
+          ai_analysis?: Json | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string | null
+          input_parameters?: Json | null
+          recommendations?: string | null
+          scenario_name?: string | null
+          scenario_type?: string | null
+          simulation_results?: Json | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "planning_scenarios_advisor_id_fkey"
+            columns: ["advisor_id"]
+            isOneToOne: false
+            referencedRelation: "advisor_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "planning_scenarios_advisor_id_fkey"
+            columns: ["advisor_id"]
+            isOneToOne: false
+            referencedRelation: "advisor_profiles_public"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "planning_scenarios_advisor_id_fkey"
+            columns: ["advisor_id"]
+            isOneToOne: false
+            referencedRelation: "v_advisor_profiles_me"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "planning_scenarios_advisor_id_fkey"
+            columns: ["advisor_id"]
+            isOneToOne: false
+            referencedRelation: "v_advisor_profiles_public"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_policy_denials_me: {
+        Row: {
+          action_attempted: string | null
+          created_at: string | null
+          denial_reason: string | null
+          id: string | null
+          ip_address: unknown | null
+          metadata: Json | null
+          required_scopes: string[] | null
+          resource_id: string | null
+          resource_type: string | null
+          tenant_id: string | null
+          token_hash: string | null
+          user_agent: string | null
+          user_id: string | null
+          user_scopes: string[] | null
+        }
+        Insert: {
+          action_attempted?: string | null
+          created_at?: string | null
+          denial_reason?: string | null
+          id?: string | null
+          ip_address?: unknown | null
+          metadata?: Json | null
+          required_scopes?: string[] | null
+          resource_id?: string | null
+          resource_type?: string | null
+          tenant_id?: string | null
+          token_hash?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+          user_scopes?: string[] | null
+        }
+        Update: {
+          action_attempted?: string | null
+          created_at?: string | null
+          denial_reason?: string | null
+          id?: string | null
+          ip_address?: unknown | null
+          metadata?: Json | null
+          required_scopes?: string[] | null
+          resource_id?: string | null
+          resource_type?: string | null
+          tenant_id?: string | null
+          token_hash?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+          user_scopes?: string[] | null
+        }
+        Relationships: []
+      }
+      v_policy_tokens_me: {
+        Row: {
+          expires_at: string | null
+          hash_alg: string | null
+          id: string | null
+          issued_at: string | null
+          metadata: Json | null
+          persona_id: string | null
+          revoked_at: string | null
+          scopes: string[] | null
+          tenant_id: string | null
+          token_body: string | null
+          token_hash: string | null
+          user_id: string | null
+        }
+        Insert: {
+          expires_at?: string | null
+          hash_alg?: string | null
+          id?: string | null
+          issued_at?: string | null
+          metadata?: Json | null
+          persona_id?: string | null
+          revoked_at?: string | null
+          scopes?: string[] | null
+          tenant_id?: string | null
+          token_body?: string | null
+          token_hash?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          expires_at?: string | null
+          hash_alg?: string | null
+          id?: string | null
+          issued_at?: string | null
+          metadata?: Json | null
+          persona_id?: string | null
+          revoked_at?: string | null
+          scopes?: string[] | null
+          tenant_id?: string | null
+          token_body?: string | null
+          token_hash?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_portfolio_performance_me: {
+        Row: {
+          account_id: string | null
+          allocation_percentage: number | null
+          benchmark_performance: number | null
+          created_at: string | null
+          id: string | null
+          performance_percentage: number | null
+          period_end: string | null
+          period_start: string | null
+          sector: string | null
+          updated_at: string | null
+          user_id: string | null
+          value_amount: number | null
+        }
+        Insert: {
+          account_id?: string | null
+          allocation_percentage?: number | null
+          benchmark_performance?: number | null
+          created_at?: string | null
+          id?: string | null
+          performance_percentage?: number | null
+          period_end?: string | null
+          period_start?: string | null
+          sector?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          value_amount?: number | null
+        }
+        Update: {
+          account_id?: string | null
+          allocation_percentage?: number | null
+          benchmark_performance?: number | null
+          created_at?: string | null
+          id?: string | null
+          performance_percentage?: number | null
+          period_end?: string | null
+          period_start?: string | null
+          sector?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          value_amount?: number | null
+        }
+        Relationships: []
+      }
+      v_portfolio_positions_me: {
+        Row: {
+          account_id: string | null
+          as_of_date: string | null
+          asset_class: string | null
+          cost_basis: number | null
+          created_at: string | null
+          id: string | null
+          market_value: number | null
+          quantity: number | null
+          symbol: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          account_id?: string | null
+          as_of_date?: string | null
+          asset_class?: string | null
+          cost_basis?: number | null
+          created_at?: string | null
+          id?: string | null
+          market_value?: number | null
+          quantity?: number | null
+          symbol?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          account_id?: string | null
+          as_of_date?: string | null
+          asset_class?: string | null
+          cost_basis?: number | null
+          created_at?: string | null
+          id?: string | null
+          market_value?: number | null
+          quantity?: number | null
+          symbol?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_portfolio_targets_me: {
+        Row: {
+          asset_class: string | null
+          created_at: string | null
+          drift_threshold: number | null
+          id: string | null
+          model_version: string | null
+          phase: string | null
+          target_weight: number | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          asset_class?: string | null
+          created_at?: string | null
+          drift_threshold?: number | null
+          id?: string | null
+          model_version?: string | null
+          phase?: string | null
+          target_weight?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          asset_class?: string | null
+          created_at?: string | null
+          drift_threshold?: number | null
+          id?: string | null
+          model_version?: string | null
+          phase?: string | null
+          target_weight?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_positions_me: {
+        Row: {
+          account_id: string | null
+          as_of: string | null
+          as_of_date: string | null
+          asset_class: string | null
+          asset_name: string | null
+          cost_basis: number | null
+          created_at: string | null
+          currency: string | null
+          cusip: string | null
+          id: string | null
+          isin: string | null
+          market_value: number | null
+          metadata: Json | null
+          position_type: string | null
+          quantity: number | null
+          symbol: string | null
+          unit_price: number | null
+          unrealized_gain_loss: number | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          account_id?: string | null
+          as_of?: string | null
+          as_of_date?: string | null
+          asset_class?: string | null
+          asset_name?: string | null
+          cost_basis?: number | null
+          created_at?: string | null
+          currency?: string | null
+          cusip?: string | null
+          id?: string | null
+          isin?: string | null
+          market_value?: number | null
+          metadata?: Json | null
+          position_type?: string | null
+          quantity?: number | null
+          symbol?: string | null
+          unit_price?: number | null
+          unrealized_gain_loss?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          account_id?: string | null
+          as_of?: string | null
+          as_of_date?: string | null
+          asset_class?: string | null
+          asset_name?: string | null
+          cost_basis?: number | null
+          created_at?: string | null
+          currency?: string | null
+          cusip?: string | null
+          id?: string | null
+          isin?: string | null
+          market_value?: number | null
+          metadata?: Json | null
+          position_type?: string | null
+          quantity?: number | null
+          symbol?: string | null
+          unit_price?: number | null
+          unrealized_gain_loss?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "positions_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "positions_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "v_accounts_me"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_prescriptions_me: {
+        Row: {
+          created_at: string | null
+          doctor: string | null
+          dosage: string | null
+          frequency: string | null
+          id: string | null
+          name: string | null
+          next_refill: string | null
+          notes: string | null
+          pharmacy: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          doctor?: string | null
+          dosage?: string | null
+          frequency?: string | null
+          id?: string | null
+          name?: string | null
+          next_refill?: string | null
+          notes?: string | null
+          pharmacy?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          doctor?: string | null
+          dosage?: string | null
+          frequency?: string | null
+          id?: string | null
+          name?: string | null
+          next_refill?: string | null
+          notes?: string | null
+          pharmacy?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_private_equity_accounts_me: {
+        Row: {
+          created_at: string | null
+          entity_name: string | null
+          entity_type: string | null
+          id: string | null
+          ownership_percentage: number | null
+          updated_at: string | null
+          user_id: string | null
+          valuation: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          entity_name?: string | null
+          entity_type?: string | null
+          id?: string | null
+          ownership_percentage?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+          valuation?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          entity_name?: string | null
+          entity_type?: string | null
+          id?: string | null
+          ownership_percentage?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+          valuation?: number | null
+        }
+        Relationships: []
+      }
+      v_private_fund_holdings_me: {
+        Row: {
+          called_capital: number | null
+          committed_capital: number | null
+          fund_id: string | null
+          fund_name: string | null
+          fund_type: string | null
+          id: string | null
+          liquidity_term: string | null
+          market_value: number | null
+          updated_at: string | null
+          user_id: string | null
+          vintage_year: number | null
+        }
+        Insert: {
+          called_capital?: number | null
+          committed_capital?: number | null
+          fund_id?: string | null
+          fund_name?: string | null
+          fund_type?: string | null
+          id?: string | null
+          liquidity_term?: string | null
+          market_value?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+          vintage_year?: number | null
+        }
+        Update: {
+          called_capital?: number | null
+          committed_capital?: number | null
+          fund_id?: string | null
+          fund_name?: string | null
+          fund_type?: string | null
+          id?: string | null
+          liquidity_term?: string | null
+          market_value?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+          vintage_year?: number | null
+        }
+        Relationships: []
+      }
+      v_product_audit_log_me: {
+        Row: {
+          action_type: string | null
+          change_summary: string | null
+          created_at: string | null
+          field_name: string | null
+          id: string | null
+          ip_address: unknown | null
+          new_value: string | null
+          old_value: string | null
+          product_id: string | null
+          record_id: string | null
+          table_name: string | null
+          tenant_id: string | null
+          user_agent: string | null
+          user_id: string | null
+          user_role: string | null
+        }
+        Insert: {
+          action_type?: string | null
+          change_summary?: string | null
+          created_at?: string | null
+          field_name?: string | null
+          id?: string | null
+          ip_address?: unknown | null
+          new_value?: string | null
+          old_value?: string | null
+          product_id?: string | null
+          record_id?: string | null
+          table_name?: string | null
+          tenant_id?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+          user_role?: string | null
+        }
+        Update: {
+          action_type?: string | null
+          change_summary?: string | null
+          created_at?: string | null
+          field_name?: string | null
+          id?: string | null
+          ip_address?: unknown | null
+          new_value?: string | null
+          old_value?: string | null
+          product_id?: string | null
+          record_id?: string | null
+          table_name?: string | null
+          tenant_id?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+          user_role?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_audit_log_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "investment_products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_professional_metrics_me: {
+        Row: {
+          created_at: string | null
+          id: string | null
+          metadata: Json | null
+          metric_date: string | null
+          metric_type: string | null
+          metric_value: number | null
+          tenant_id: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string | null
+          metadata?: Json | null
+          metric_date?: string | null
+          metric_type?: string | null
+          metric_value?: number | null
+          tenant_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string | null
+          metadata?: Json | null
+          metric_date?: string | null
+          metric_type?: string | null
+          metric_value?: number | null
+          tenant_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_professional_onboarding_me: {
+        Row: {
+          approved_at: string | null
+          created_at: string | null
+          current_step: string | null
+          form_data: Json | null
+          id: string | null
+          professional_type: string | null
+          segment: string | null
+          status: string | null
+          submitted_at: string | null
+          updated_at: string | null
+          uploaded_documents: string[] | null
+          user_id: string | null
+        }
+        Insert: {
+          approved_at?: string | null
+          created_at?: string | null
+          current_step?: string | null
+          form_data?: Json | null
+          id?: string | null
+          professional_type?: string | null
+          segment?: string | null
+          status?: string | null
+          submitted_at?: string | null
+          updated_at?: string | null
+          uploaded_documents?: string[] | null
+          user_id?: string | null
+        }
+        Update: {
+          approved_at?: string | null
+          created_at?: string | null
+          current_step?: string | null
+          form_data?: Json | null
+          id?: string | null
+          professional_type?: string | null
+          segment?: string | null
+          status?: string | null
+          submitted_at?: string | null
+          updated_at?: string | null
+          uploaded_documents?: string[] | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_professional_users_me: {
+        Row: {
+          assigned_clients: number | null
+          bio: string | null
+          certifications: string[] | null
+          created_at: string | null
+          email: string | null
+          firm_id: string | null
+          id: string | null
+          last_active_at: string | null
+          name: string | null
+          onboarded_at: string | null
+          phone: string | null
+          profile_url: string | null
+          role: string | null
+          specialties: string[] | null
+          status: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          assigned_clients?: number | null
+          bio?: string | null
+          certifications?: string[] | null
+          created_at?: string | null
+          email?: string | null
+          firm_id?: string | null
+          id?: string | null
+          last_active_at?: string | null
+          name?: string | null
+          onboarded_at?: string | null
+          phone?: string | null
+          profile_url?: string | null
+          role?: string | null
+          specialties?: string[] | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          assigned_clients?: number | null
+          bio?: string | null
+          certifications?: string[] | null
+          created_at?: string | null
+          email?: string | null
+          firm_id?: string | null
+          id?: string | null
+          last_active_at?: string | null
+          name?: string | null
+          onboarded_at?: string | null
+          phone?: string | null
+          profile_url?: string | null
+          role?: string | null
+          specialties?: string[] | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "professional_users_firm_id_fkey"
+            columns: ["firm_id"]
+            isOneToOne: false
+            referencedRelation: "firms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_professionals_me: {
+        Row: {
+          accepting_new_clients: boolean | null
+          accepts_referrals: boolean | null
+          address: string | null
+          aum_minimums: number | null
+          availability: Json | null
+          bio: string | null
+          certifications: string[] | null
+          client_capacity: number | null
+          company: string | null
+          compliance_status: string | null
+          created_at: string | null
+          custom_fields: Json | null
+          email: string | null
+          external_review_score: number | null
+          external_verification_id: string | null
+          featured: boolean | null
+          fee_model: string | null
+          firm: string | null
+          id: string | null
+          languages: string[] | null
+          license_states: string[] | null
+          location: string | null
+          marketplace_tier: string | null
+          min_client_assets: number | null
+          name: string | null
+          notes: string | null
+          onboarding_process: string | null
+          phone: string | null
+          photo_url: string | null
+          practice_areas: string[] | null
+          rating: number | null
+          ratings_average: number | null
+          referral_fee_structure: string | null
+          reviews_count: number | null
+          scheduling_url: string | null
+          segment: string | null
+          show_email: boolean | null
+          show_phone: boolean | null
+          specialties: string[] | null
+          sponsored: boolean | null
+          status: string | null
+          tenant_id: string | null
+          type: string | null
+          typical_engagement_fee: string | null
+          updated_at: string | null
+          user_id: string | null
+          verified: boolean | null
+          website: string | null
+        }
+        Insert: {
+          accepting_new_clients?: boolean | null
+          accepts_referrals?: boolean | null
+          address?: string | null
+          aum_minimums?: number | null
+          availability?: Json | null
+          bio?: string | null
+          certifications?: string[] | null
+          client_capacity?: number | null
+          company?: string | null
+          compliance_status?: string | null
+          created_at?: string | null
+          custom_fields?: Json | null
+          email?: string | null
+          external_review_score?: number | null
+          external_verification_id?: string | null
+          featured?: boolean | null
+          fee_model?: string | null
+          firm?: string | null
+          id?: string | null
+          languages?: string[] | null
+          license_states?: string[] | null
+          location?: string | null
+          marketplace_tier?: string | null
+          min_client_assets?: number | null
+          name?: string | null
+          notes?: string | null
+          onboarding_process?: string | null
+          phone?: string | null
+          photo_url?: string | null
+          practice_areas?: string[] | null
+          rating?: number | null
+          ratings_average?: number | null
+          referral_fee_structure?: string | null
+          reviews_count?: number | null
+          scheduling_url?: string | null
+          segment?: string | null
+          show_email?: boolean | null
+          show_phone?: boolean | null
+          specialties?: string[] | null
+          sponsored?: boolean | null
+          status?: string | null
+          tenant_id?: string | null
+          type?: string | null
+          typical_engagement_fee?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          verified?: boolean | null
+          website?: string | null
+        }
+        Update: {
+          accepting_new_clients?: boolean | null
+          accepts_referrals?: boolean | null
+          address?: string | null
+          aum_minimums?: number | null
+          availability?: Json | null
+          bio?: string | null
+          certifications?: string[] | null
+          client_capacity?: number | null
+          company?: string | null
+          compliance_status?: string | null
+          created_at?: string | null
+          custom_fields?: Json | null
+          email?: string | null
+          external_review_score?: number | null
+          external_verification_id?: string | null
+          featured?: boolean | null
+          fee_model?: string | null
+          firm?: string | null
+          id?: string | null
+          languages?: string[] | null
+          license_states?: string[] | null
+          location?: string | null
+          marketplace_tier?: string | null
+          min_client_assets?: number | null
+          name?: string | null
+          notes?: string | null
+          onboarding_process?: string | null
+          phone?: string | null
+          photo_url?: string | null
+          practice_areas?: string[] | null
+          rating?: number | null
+          ratings_average?: number | null
+          referral_fee_structure?: string | null
+          reviews_count?: number | null
+          scheduling_url?: string | null
+          segment?: string | null
+          show_email?: boolean | null
+          show_phone?: boolean | null
+          specialties?: string[] | null
+          sponsored?: boolean | null
+          status?: string | null
+          tenant_id?: string | null
+          type?: string | null
+          typical_engagement_fee?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          verified?: boolean | null
+          website?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "professionals_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "professionals_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_tenants_me"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       v_profiles_basic: {
         Row: {
           created_at: string | null
@@ -40213,6 +50773,202 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: []
+      }
+      v_properties_me: {
+        Row: {
+          address: string | null
+          created_at: string | null
+          current_value: number | null
+          id: string | null
+          name: string | null
+          notes: string | null
+          original_cost: number | null
+          owner: string | null
+          ownership: string | null
+          purchase_date: string | null
+          type: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string | null
+          current_value?: number | null
+          id?: string | null
+          name?: string | null
+          notes?: string | null
+          original_cost?: number | null
+          owner?: string | null
+          ownership?: string | null
+          purchase_date?: string | null
+          type?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          address?: string | null
+          created_at?: string | null
+          current_value?: number | null
+          id?: string | null
+          name?: string | null
+          notes?: string | null
+          original_cost?: number | null
+          owner?: string | null
+          ownership?: string | null
+          purchase_date?: string | null
+          type?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_property_financials_me: {
+        Row: {
+          created_at: string | null
+          expense_amount: number | null
+          expense_category: string | null
+          expense_date: string | null
+          id: string | null
+          notes: string | null
+          owner_id: string | null
+          property_name: string | null
+          property_type: string | null
+          revenue_amount: number | null
+          revenue_date: string | null
+          vendor: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          expense_amount?: number | null
+          expense_category?: string | null
+          expense_date?: string | null
+          id?: string | null
+          notes?: string | null
+          owner_id?: string | null
+          property_name?: string | null
+          property_type?: string | null
+          revenue_amount?: number | null
+          revenue_date?: string | null
+          vendor?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          expense_amount?: number | null
+          expense_category?: string | null
+          expense_date?: string | null
+          id?: string | null
+          notes?: string | null
+          owner_id?: string | null
+          property_name?: string | null
+          property_type?: string | null
+          revenue_amount?: number | null
+          revenue_date?: string | null
+          vendor?: string | null
+        }
+        Relationships: []
+      }
+      v_proposal_audit_me: {
+        Row: {
+          action: string | null
+          details: Json | null
+          id: string | null
+          ip_address: unknown | null
+          proposal_id: string | null
+          timestamp: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action?: string | null
+          details?: Json | null
+          id?: string | null
+          ip_address?: unknown | null
+          proposal_id?: string | null
+          timestamp?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string | null
+          details?: Json | null
+          id?: string | null
+          ip_address?: unknown | null
+          proposal_id?: string | null
+          timestamp?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "proposal_audit_proposal_id_fkey"
+            columns: ["proposal_id"]
+            isOneToOne: false
+            referencedRelation: "draft_proposals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_provider_reviews_me: {
+        Row: {
+          comment: string | null
+          created_at: string | null
+          id: string | null
+          member_id: string | null
+          provider_id: string | null
+          rating: number | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          comment?: string | null
+          created_at?: string | null
+          id?: string | null
+          member_id?: string | null
+          provider_id?: string | null
+          rating?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          comment?: string | null
+          created_at?: string | null
+          id?: string | null
+          member_id?: string | null
+          provider_id?: string | null
+          rating?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "provider_reviews_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "family_members"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "provider_reviews_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "v_family_members_me"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "provider_reviews_provider_id_fkey"
+            columns: ["provider_id"]
+            isOneToOne: false
+            referencedRelation: "healthcare_providers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "provider_reviews_provider_id_fkey"
+            columns: ["provider_id"]
+            isOneToOne: false
+            referencedRelation: "v_healthcare_providers_me"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       v_public_pros: {
         Row: {
@@ -40244,10 +51000,1803 @@ export type Database = {
         }
         Relationships: []
       }
+      v_public_stocks_me: {
+        Row: {
+          company_name: string | null
+          created_at: string | null
+          id: string | null
+          number_of_shares: number | null
+          price_per_share: number | null
+          ticker_symbol: string | null
+          total_value: number | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          company_name?: string | null
+          created_at?: string | null
+          id?: string | null
+          number_of_shares?: number | null
+          price_per_share?: number | null
+          ticker_symbol?: string | null
+          total_value?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          company_name?: string | null
+          created_at?: string | null
+          id?: string | null
+          number_of_shares?: number | null
+          price_per_share?: number | null
+          ticker_symbol?: string | null
+          total_value?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_query_performance_logs_me: {
+        Row: {
+          cache_hit: boolean | null
+          created_at: string | null
+          execution_time_ms: number | null
+          function_name: string | null
+          id: string | null
+          index_usage: Json | null
+          operation_type: string | null
+          query_hash: string | null
+          query_plan: Json | null
+          rows_affected: number | null
+          slow_query_threshold_exceeded: boolean | null
+          table_name: string | null
+          user_id: string | null
+        }
+        Insert: {
+          cache_hit?: boolean | null
+          created_at?: string | null
+          execution_time_ms?: number | null
+          function_name?: string | null
+          id?: string | null
+          index_usage?: Json | null
+          operation_type?: string | null
+          query_hash?: string | null
+          query_plan?: Json | null
+          rows_affected?: number | null
+          slow_query_threshold_exceeded?: boolean | null
+          table_name?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          cache_hit?: boolean | null
+          created_at?: string | null
+          execution_time_ms?: number | null
+          function_name?: string | null
+          id?: string | null
+          index_usage?: Json | null
+          operation_type?: string | null
+          query_hash?: string | null
+          query_plan?: Json | null
+          rows_affected?: number | null
+          slow_query_threshold_exceeded?: boolean | null
+          table_name?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_real_estate_properties_me: {
+        Row: {
+          address: string | null
+          created_at: string | null
+          current_market_value: number | null
+          id: string | null
+          name: string | null
+          property_type: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string | null
+          current_market_value?: number | null
+          id?: string | null
+          name?: string | null
+          property_type?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          address?: string | null
+          created_at?: string | null
+          current_market_value?: number | null
+          id?: string | null
+          name?: string | null
+          property_type?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_reason_receipts_me: {
+        Row: {
+          action_key: string | null
+          anchor_txid: string | null
+          content_fingerprint: string | null
+          created_at: string | null
+          explanation: string | null
+          id: string | null
+          persona_id: string | null
+          policy_version: string | null
+          reason_code: string | null
+          sha256: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action_key?: string | null
+          anchor_txid?: string | null
+          content_fingerprint?: string | null
+          created_at?: string | null
+          explanation?: string | null
+          id?: string | null
+          persona_id?: string | null
+          policy_version?: string | null
+          reason_code?: string | null
+          sha256?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action_key?: string | null
+          anchor_txid?: string | null
+          content_fingerprint?: string | null
+          created_at?: string | null
+          explanation?: string | null
+          id?: string | null
+          persona_id?: string | null
+          policy_version?: string | null
+          reason_code?: string | null
+          sha256?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reason_receipts_persona_id_fkey"
+            columns: ["persona_id"]
+            isOneToOne: false
+            referencedRelation: "personas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reason_receipts_persona_id_fkey"
+            columns: ["persona_id"]
+            isOneToOne: false
+            referencedRelation: "v_personas_me"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_rebalancing_events_me: {
+        Row: {
+          account_id: string | null
+          created_at: string | null
+          executed_at: string | null
+          execution_status: string | null
+          id: string | null
+          rationale: string | null
+          trades: Json | null
+          trigger_data: Json | null
+          trigger_type: string | null
+          user_id: string | null
+        }
+        Insert: {
+          account_id?: string | null
+          created_at?: string | null
+          executed_at?: string | null
+          execution_status?: string | null
+          id?: string | null
+          rationale?: string | null
+          trades?: Json | null
+          trigger_data?: Json | null
+          trigger_type?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          account_id?: string | null
+          created_at?: string | null
+          executed_at?: string | null
+          execution_status?: string | null
+          id?: string | null
+          rationale?: string | null
+          trades?: Json | null
+          trigger_data?: Json | null
+          trigger_type?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_recommendation_audit_me: {
+        Row: {
+          created_at: string | null
+          id: string | null
+          input_snapshot: Json | null
+          model_version: string | null
+          optimization_results: Json | null
+          rationale: string | null
+          rationale_hash: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string | null
+          input_snapshot?: Json | null
+          model_version?: string | null
+          optimization_results?: Json | null
+          rationale?: string | null
+          rationale_hash?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string | null
+          input_snapshot?: Json | null
+          model_version?: string | null
+          optimization_results?: Json | null
+          rationale?: string | null
+          rationale_hash?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       v_referral_leaderboard: {
         Row: {
           owner_id: string | null
           referrals: number | null
+        }
+        Relationships: []
+      }
+      v_referral_rewards_me: {
+        Row: {
+          amount: number | null
+          created_at: string | null
+          id: string | null
+          notes: string | null
+          paid_at: string | null
+          payment_method: string | null
+          referral_id: string | null
+          reward_type: string | null
+          status: string | null
+          user_id: string | null
+        }
+        Insert: {
+          amount?: number | null
+          created_at?: string | null
+          id?: string | null
+          notes?: string | null
+          paid_at?: string | null
+          payment_method?: string | null
+          referral_id?: string | null
+          reward_type?: string | null
+          status?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          amount?: number | null
+          created_at?: string | null
+          id?: string | null
+          notes?: string | null
+          paid_at?: string | null
+          payment_method?: string | null
+          referral_id?: string | null
+          reward_type?: string | null
+          status?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referral_rewards_referral_id_fkey"
+            columns: ["referral_id"]
+            isOneToOne: false
+            referencedRelation: "referrals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_reports_me: {
+        Row: {
+          download_url: string | null
+          evidence_id: string | null
+          format: string | null
+          generated_at: string | null
+          id: string | null
+          metadata: Json | null
+          persona_scope: string | null
+          report_type: string | null
+          role: string | null
+          user_id: string | null
+        }
+        Insert: {
+          download_url?: string | null
+          evidence_id?: string | null
+          format?: string | null
+          generated_at?: string | null
+          id?: string | null
+          metadata?: Json | null
+          persona_scope?: string | null
+          report_type?: string | null
+          role?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          download_url?: string | null
+          evidence_id?: string | null
+          format?: string | null
+          generated_at?: string | null
+          id?: string | null
+          metadata?: Json | null
+          persona_scope?: string | null
+          report_type?: string | null
+          role?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_retirement_confidence_submissions_me: {
+        Row: {
+          answers_json: Json | null
+          created_at: string | null
+          email: string | null
+          first_name: string | null
+          follow_up_opt_in: boolean | null
+          id: string | null
+          last_name: string | null
+          lead_source: string | null
+          marketing_opt_in: boolean | null
+          persona: string | null
+          phone: string | null
+          score: number | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          answers_json?: Json | null
+          created_at?: string | null
+          email?: string | null
+          first_name?: string | null
+          follow_up_opt_in?: boolean | null
+          id?: string | null
+          last_name?: string | null
+          lead_source?: string | null
+          marketing_opt_in?: boolean | null
+          persona?: string | null
+          phone?: string | null
+          score?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          answers_json?: Json | null
+          created_at?: string | null
+          email?: string | null
+          first_name?: string | null
+          follow_up_opt_in?: boolean | null
+          id?: string | null
+          last_name?: string | null
+          lead_source?: string | null
+          marketing_opt_in?: boolean | null
+          persona?: string | null
+          phone?: string | null
+          score?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_retirement_plans_me: {
+        Row: {
+          balance: number | null
+          contribution_amount: number | null
+          created_at: string | null
+          id: string | null
+          plan_type: string | null
+          provider: string | null
+          source: string | null
+          updated_at: string | null
+          user_id: string | null
+          vesting_schedule: string | null
+        }
+        Insert: {
+          balance?: number | null
+          contribution_amount?: number | null
+          created_at?: string | null
+          id?: string | null
+          plan_type?: string | null
+          provider?: string | null
+          source?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          vesting_schedule?: string | null
+        }
+        Update: {
+          balance?: number | null
+          contribution_amount?: number | null
+          created_at?: string | null
+          id?: string | null
+          plan_type?: string | null
+          provider?: string | null
+          source?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          vesting_schedule?: string | null
+        }
+        Relationships: []
+      }
+      v_ria_profiles_me: {
+        Row: {
+          aum_range: string | null
+          crd_number: string | null
+          created_at: string | null
+          firm_name: string | null
+          id: string | null
+          state_registrations: string[] | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          aum_range?: string | null
+          crd_number?: string | null
+          created_at?: string | null
+          firm_name?: string | null
+          id?: string | null
+          state_registrations?: string[] | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          aum_range?: string | null
+          crd_number?: string | null
+          created_at?: string | null
+          firm_name?: string | null
+          id?: string | null
+          state_registrations?: string[] | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_roadmap_intake_sessions_me: {
+        Row: {
+          completed_at: string | null
+          created_at: string | null
+          id: string | null
+          pre_filled: boolean | null
+          scorecard_submission_id: string | null
+          session_data: Json | null
+          status: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string | null
+          id?: string | null
+          pre_filled?: boolean | null
+          scorecard_submission_id?: string | null
+          session_data?: Json | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string | null
+          id?: string | null
+          pre_filled?: boolean | null
+          scorecard_submission_id?: string | null
+          session_data?: Json | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "roadmap_intake_sessions_scorecard_submission_id_fkey"
+            columns: ["scorecard_submission_id"]
+            isOneToOne: false
+            referencedRelation: "retirement_confidence_submissions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "roadmap_intake_sessions_scorecard_submission_id_fkey"
+            columns: ["scorecard_submission_id"]
+            isOneToOne: false
+            referencedRelation: "v_retirement_confidence_submissions_me"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_scenario_configs_me: {
+        Row: {
+          block_len_months: number | null
+          created_at: string | null
+          crypto_config: Json | null
+          description: string | null
+          equity_config: Json | null
+          horizon_years: number | null
+          id: string | null
+          inflation_config: Json | null
+          infrastructure_config: Json | null
+          is_active: boolean | null
+          n_paths: number | null
+          name: string | null
+          private_credit_config: Json | null
+          rates_config: Json | null
+          tax_config: Json | null
+          tenant_id: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          block_len_months?: number | null
+          created_at?: string | null
+          crypto_config?: Json | null
+          description?: string | null
+          equity_config?: Json | null
+          horizon_years?: number | null
+          id?: string | null
+          inflation_config?: Json | null
+          infrastructure_config?: Json | null
+          is_active?: boolean | null
+          n_paths?: number | null
+          name?: string | null
+          private_credit_config?: Json | null
+          rates_config?: Json | null
+          tax_config?: Json | null
+          tenant_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          block_len_months?: number | null
+          created_at?: string | null
+          crypto_config?: Json | null
+          description?: string | null
+          equity_config?: Json | null
+          horizon_years?: number | null
+          id?: string | null
+          inflation_config?: Json | null
+          infrastructure_config?: Json | null
+          is_active?: boolean | null
+          n_paths?: number | null
+          name?: string | null
+          private_credit_config?: Json | null
+          rates_config?: Json | null
+          tax_config?: Json | null
+          tenant_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_scorecard_runs_me: {
+        Row: {
+          breakdown: Json | null
+          created_at: string | null
+          id: string | null
+          inputs: Json | null
+          results: Json | null
+          score: number | null
+          tenant_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          breakdown?: Json | null
+          created_at?: string | null
+          id?: string | null
+          inputs?: Json | null
+          results?: Json | null
+          score?: number | null
+          tenant_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          breakdown?: Json | null
+          created_at?: string | null
+          id?: string | null
+          inputs?: Json | null
+          results?: Json | null
+          score?: number | null
+          tenant_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_securities_public: {
+        Row: {
+          id: string | null
+          name: string | null
+        }
+        Insert: {
+          id?: string | null
+          name?: string | null
+        }
+        Update: {
+          id?: string | null
+          name?: string | null
+        }
+        Relationships: []
+      }
+      v_security_audit_logs_me: {
+        Row: {
+          changed_fields: string[] | null
+          compliance_flags: string[] | null
+          id: string | null
+          ip_address: unknown | null
+          new_data: Json | null
+          old_data: Json | null
+          operation: string | null
+          record_id: string | null
+          retention_date: string | null
+          session_id: string | null
+          severity: string | null
+          table_name: string | null
+          tenant_id: string | null
+          timestamp: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          changed_fields?: string[] | null
+          compliance_flags?: string[] | null
+          id?: string | null
+          ip_address?: unknown | null
+          new_data?: Json | null
+          old_data?: Json | null
+          operation?: string | null
+          record_id?: string | null
+          retention_date?: string | null
+          session_id?: string | null
+          severity?: string | null
+          table_name?: string | null
+          tenant_id?: string | null
+          timestamp?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          changed_fields?: string[] | null
+          compliance_flags?: string[] | null
+          id?: string | null
+          ip_address?: unknown | null
+          new_data?: Json | null
+          old_data?: Json | null
+          operation?: string | null
+          record_id?: string | null
+          retention_date?: string | null
+          session_id?: string | null
+          severity?: string | null
+          table_name?: string | null
+          tenant_id?: string | null
+          timestamp?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_security_training_completions_me: {
+        Row: {
+          attempts: number | null
+          certificate_issued: boolean | null
+          certificate_url: string | null
+          completed_at: string | null
+          created_at: string | null
+          id: string | null
+          notes: string | null
+          passed: boolean | null
+          program_id: string | null
+          schedule_id: string | null
+          score: number | null
+          started_at: string | null
+          tenant_id: string | null
+          time_spent_minutes: number | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          attempts?: number | null
+          certificate_issued?: boolean | null
+          certificate_url?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          id?: string | null
+          notes?: string | null
+          passed?: boolean | null
+          program_id?: string | null
+          schedule_id?: string | null
+          score?: number | null
+          started_at?: string | null
+          tenant_id?: string | null
+          time_spent_minutes?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          attempts?: number | null
+          certificate_issued?: boolean | null
+          certificate_url?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          id?: string | null
+          notes?: string | null
+          passed?: boolean | null
+          program_id?: string | null
+          schedule_id?: string | null
+          score?: number | null
+          started_at?: string | null
+          tenant_id?: string | null
+          time_spent_minutes?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "security_training_completions_program_id_fkey"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "security_training_programs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "security_training_completions_schedule_id_fkey"
+            columns: ["schedule_id"]
+            isOneToOne: false
+            referencedRelation: "security_training_schedules"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_shared_documents_me: {
+        Row: {
+          created_at: string | null
+          document_id: string | null
+          expires_at: string | null
+          id: string | null
+          permission_level: string | null
+          professional_id: string | null
+          shared_at: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          document_id?: string | null
+          expires_at?: string | null
+          id?: string | null
+          permission_level?: string | null
+          professional_id?: string | null
+          shared_at?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          document_id?: string | null
+          expires_at?: string | null
+          id?: string | null
+          permission_level?: string | null
+          professional_id?: string | null
+          shared_at?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shared_documents_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "documents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "shared_documents_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "v_documents_me"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "shared_documents_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "shared_documents_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "v_professionals_me"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_social_security_members_me: {
+        Row: {
+          account_linked: boolean | null
+          created_at: string | null
+          id: string | null
+          name: string | null
+          preferred_retirement_age: number | null
+          relationship: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          account_linked?: boolean | null
+          created_at?: string | null
+          id?: string | null
+          name?: string | null
+          preferred_retirement_age?: number | null
+          relationship?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          account_linked?: boolean | null
+          created_at?: string | null
+          id?: string | null
+          name?: string | null
+          preferred_retirement_age?: number | null
+          relationship?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_strategy_comparisons_me: {
+        Row: {
+          created_at: string | null
+          id: string | null
+          strategies: string[] | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string | null
+          strategies?: string[] | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string | null
+          strategies?: string[] | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_strategy_educational_content_public: {
+        Row: {
+          id: string | null
+        }
+        Insert: {
+          id?: string | null
+        }
+        Update: {
+          id?: string | null
+        }
+        Relationships: []
+      }
+      v_strategy_engagement_tracking_me: {
+        Row: {
+          event_type: string | null
+          id: string | null
+          metadata: Json | null
+          occurred_at: string | null
+          strategy_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          event_type?: string | null
+          id?: string | null
+          metadata?: Json | null
+          occurred_at?: string | null
+          strategy_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          event_type?: string | null
+          id?: string | null
+          metadata?: Json | null
+          occurred_at?: string | null
+          strategy_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "strategy_engagement_tracking_strategy_id_fkey"
+            columns: ["strategy_id"]
+            isOneToOne: false
+            referencedRelation: "investment_strategies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_stress_runs_me: {
+        Row: {
+          analysis_run_id: string | null
+          cashflow_data: Json | null
+          created_at: string | null
+          final_portfolio_value: number | null
+          id: string | null
+          max_drawdown: number | null
+          path_number: number | null
+          scenario_config_id: string | null
+          scenario_name: string | null
+          success_probability: number | null
+          total_withdrawals: number | null
+          user_id: string | null
+          years_to_depletion: number | null
+        }
+        Insert: {
+          analysis_run_id?: string | null
+          cashflow_data?: Json | null
+          created_at?: string | null
+          final_portfolio_value?: number | null
+          id?: string | null
+          max_drawdown?: number | null
+          path_number?: number | null
+          scenario_config_id?: string | null
+          scenario_name?: string | null
+          success_probability?: number | null
+          total_withdrawals?: number | null
+          user_id?: string | null
+          years_to_depletion?: number | null
+        }
+        Update: {
+          analysis_run_id?: string | null
+          cashflow_data?: Json | null
+          created_at?: string | null
+          final_portfolio_value?: number | null
+          id?: string | null
+          max_drawdown?: number | null
+          path_number?: number | null
+          scenario_config_id?: string | null
+          scenario_name?: string | null
+          success_probability?: number | null
+          total_withdrawals?: number | null
+          user_id?: string | null
+          years_to_depletion?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stress_runs_scenario_config_id_fkey"
+            columns: ["scenario_config_id"]
+            isOneToOne: false
+            referencedRelation: "scenario_configs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stress_runs_scenario_config_id_fkey"
+            columns: ["scenario_config_id"]
+            isOneToOne: false
+            referencedRelation: "v_scenario_configs_me"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_subscribers_me: {
+        Row: {
+          created_at: string | null
+          email: string | null
+          id: string | null
+          stripe_customer_id: string | null
+          subscribed: boolean | null
+          subscription_end: string | null
+          subscription_tier: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email?: string | null
+          id?: string | null
+          stripe_customer_id?: string | null
+          subscribed?: boolean | null
+          subscription_end?: string | null
+          subscription_tier?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string | null
+          id?: string | null
+          stripe_customer_id?: string | null
+          subscribed?: boolean | null
+          subscription_end?: string | null
+          subscription_tier?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_subscription_analytics_me: {
+        Row: {
+          add_on_type: string | null
+          created_at: string | null
+          event_type: string | null
+          feature_name: string | null
+          id: string | null
+          metadata: Json | null
+          revenue_impact: number | null
+          subscription_tier: string | null
+          usage_count: number | null
+          user_id: string | null
+        }
+        Insert: {
+          add_on_type?: string | null
+          created_at?: string | null
+          event_type?: string | null
+          feature_name?: string | null
+          id?: string | null
+          metadata?: Json | null
+          revenue_impact?: number | null
+          subscription_tier?: string | null
+          usage_count?: number | null
+          user_id?: string | null
+        }
+        Update: {
+          add_on_type?: string | null
+          created_at?: string | null
+          event_type?: string | null
+          feature_name?: string | null
+          id?: string | null
+          metadata?: Json | null
+          revenue_impact?: number | null
+          subscription_tier?: string | null
+          usage_count?: number | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_supplement_education_public: {
+        Row: {
+          id: string | null
+        }
+        Insert: {
+          id?: string | null
+        }
+        Update: {
+          id?: string | null
+        }
+        Relationships: []
+      }
+      v_supplement_tiers_public: {
+        Row: {
+          id: string | null
+          name: string | null
+        }
+        Insert: {
+          id?: string | null
+          name?: string | null
+        }
+        Update: {
+          id?: string | null
+          name?: string | null
+        }
+        Relationships: []
+      }
+      v_supplements_me: {
+        Row: {
+          created_at: string | null
+          dosage: string | null
+          dsld_id: string | null
+          evidence_grade: string | null
+          family_id: string | null
+          frequency: string | null
+          has_warning: boolean | null
+          id: string | null
+          intake_reminders: boolean | null
+          last_refill: string | null
+          member_id: string | null
+          name: string | null
+          notes: string | null
+          pill_count: number | null
+          price: number | null
+          purpose: string | null
+          quality_cert: string | null
+          raw_refs: Json | null
+          refill_reminders: boolean | null
+          rxnorm_id: string | null
+          schedule: Json | null
+          tier: string | null
+          updated_at: string | null
+          user_id: string | null
+          youtube_url: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          dosage?: string | null
+          dsld_id?: string | null
+          evidence_grade?: string | null
+          family_id?: string | null
+          frequency?: string | null
+          has_warning?: boolean | null
+          id?: string | null
+          intake_reminders?: boolean | null
+          last_refill?: string | null
+          member_id?: string | null
+          name?: string | null
+          notes?: string | null
+          pill_count?: number | null
+          price?: number | null
+          purpose?: string | null
+          quality_cert?: string | null
+          raw_refs?: Json | null
+          refill_reminders?: boolean | null
+          rxnorm_id?: string | null
+          schedule?: Json | null
+          tier?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          youtube_url?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          dosage?: string | null
+          dsld_id?: string | null
+          evidence_grade?: string | null
+          family_id?: string | null
+          frequency?: string | null
+          has_warning?: boolean | null
+          id?: string | null
+          intake_reminders?: boolean | null
+          last_refill?: string | null
+          member_id?: string | null
+          name?: string | null
+          notes?: string | null
+          pill_count?: number | null
+          price?: number | null
+          purpose?: string | null
+          quality_cert?: string | null
+          raw_refs?: Json | null
+          refill_reminders?: boolean | null
+          rxnorm_id?: string | null
+          schedule?: Json | null
+          tier?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          youtube_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "supplements_family_id_fkey"
+            columns: ["family_id"]
+            isOneToOne: false
+            referencedRelation: "families"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "supplements_family_id_fkey"
+            columns: ["family_id"]
+            isOneToOne: false
+            referencedRelation: "v_families_me"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "supplements_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "family_members"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "supplements_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "v_family_members_me"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_support_tickets_me: {
+        Row: {
+          category: string | null
+          created_at: string | null
+          description: string | null
+          id: string | null
+          last_updated: string | null
+          priority: string | null
+          resolved_at: string | null
+          resolved_by: string | null
+          status: string | null
+          subject: string | null
+          user_id: string | null
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string | null
+          last_updated?: string | null
+          priority?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          status?: string | null
+          subject?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          category?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string | null
+          last_updated?: string | null
+          priority?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          status?: string | null
+          subject?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_tax_documents_me: {
+        Row: {
+          category: string | null
+          created_at: string | null
+          encrypted_key: string | null
+          file_name: string | null
+          file_size: number | null
+          file_type: string | null
+          id: string | null
+          professional_id: string | null
+          shared_at: string | null
+          shared_with_professional: boolean | null
+          storage_path: string | null
+          updated_at: string | null
+          upload_status: string | null
+          user_id: string | null
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string | null
+          encrypted_key?: string | null
+          file_name?: string | null
+          file_size?: number | null
+          file_type?: string | null
+          id?: string | null
+          professional_id?: string | null
+          shared_at?: string | null
+          shared_with_professional?: boolean | null
+          storage_path?: string | null
+          updated_at?: string | null
+          upload_status?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          category?: string | null
+          created_at?: string | null
+          encrypted_key?: string | null
+          file_name?: string | null
+          file_size?: number | null
+          file_type?: string | null
+          id?: string | null
+          professional_id?: string | null
+          shared_at?: string | null
+          shared_with_professional?: boolean | null
+          storage_path?: string | null
+          updated_at?: string | null
+          upload_status?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_tax_planning_analytics_me: {
+        Row: {
+          created_at: string | null
+          event_data: Json | null
+          event_type: string | null
+          id: string | null
+          ip_address: unknown | null
+          page_context: string | null
+          session_id: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          event_data?: Json | null
+          event_type?: string | null
+          id?: string | null
+          ip_address?: unknown | null
+          page_context?: string | null
+          session_id?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          event_data?: Json | null
+          event_type?: string | null
+          id?: string | null
+          ip_address?: unknown | null
+          page_context?: string | null
+          session_id?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_tax_planning_consultations_me: {
+        Row: {
+          advisor_notes: string | null
+          consultation_type: string | null
+          created_at: string | null
+          id: string | null
+          notes: string | null
+          preferred_date: string | null
+          preferred_time: string | null
+          scheduled_at: string | null
+          status: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          advisor_notes?: string | null
+          consultation_type?: string | null
+          created_at?: string | null
+          id?: string | null
+          notes?: string | null
+          preferred_date?: string | null
+          preferred_time?: string | null
+          scheduled_at?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          advisor_notes?: string | null
+          consultation_type?: string | null
+          created_at?: string | null
+          id?: string | null
+          notes?: string | null
+          preferred_date?: string | null
+          preferred_time?: string | null
+          scheduled_at?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_tax_planning_interests_me: {
+        Row: {
+          asset_name: string | null
+          created_at: string | null
+          id: string | null
+          interest_type: string | null
+          notes: string | null
+          user_id: string | null
+        }
+        Insert: {
+          asset_name?: string | null
+          created_at?: string | null
+          id?: string | null
+          interest_type?: string | null
+          notes?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          asset_name?: string | null
+          created_at?: string | null
+          id?: string | null
+          interest_type?: string | null
+          notes?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_tax_planning_strategies_me: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          estimated_savings: number | null
+          id: string | null
+          implementation_date: string | null
+          notes: string | null
+          status: string | null
+          strategy_type: string | null
+          title: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          estimated_savings?: number | null
+          id?: string | null
+          implementation_date?: string | null
+          notes?: string | null
+          status?: string | null
+          strategy_type?: string | null
+          title?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          estimated_savings?: number | null
+          id?: string | null
+          implementation_date?: string | null
+          notes?: string | null
+          status?: string | null
+          strategy_type?: string | null
+          title?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_tax_professionals_me: {
+        Row: {
+          available_for_new_clients: boolean | null
+          bio: string | null
+          created_at: string | null
+          credentials: string[] | null
+          hourly_rate: number | null
+          id: string | null
+          location: string | null
+          professional_name: string | null
+          rating: number | null
+          review_count: number | null
+          scheduling_url: string | null
+          specialties: string[] | null
+          updated_at: string | null
+          user_id: string | null
+          verified: boolean | null
+          years_experience: number | null
+        }
+        Insert: {
+          available_for_new_clients?: boolean | null
+          bio?: string | null
+          created_at?: string | null
+          credentials?: string[] | null
+          hourly_rate?: number | null
+          id?: string | null
+          location?: string | null
+          professional_name?: string | null
+          rating?: number | null
+          review_count?: number | null
+          scheduling_url?: string | null
+          specialties?: string[] | null
+          updated_at?: string | null
+          user_id?: string | null
+          verified?: boolean | null
+          years_experience?: number | null
+        }
+        Update: {
+          available_for_new_clients?: boolean | null
+          bio?: string | null
+          created_at?: string | null
+          credentials?: string[] | null
+          hourly_rate?: number | null
+          id?: string | null
+          location?: string | null
+          professional_name?: string | null
+          rating?: number | null
+          review_count?: number | null
+          scheduling_url?: string | null
+          specialties?: string[] | null
+          updated_at?: string | null
+          user_id?: string | null
+          verified?: boolean | null
+          years_experience?: number | null
+        }
+        Relationships: []
+      }
+      v_team_productivity_analytics_me: {
+        Row: {
+          active_projects: number | null
+          average_task_duration: number | null
+          calculated_at: string | null
+          client_feedback_score: number | null
+          created_at: string | null
+          documents_shared: number | null
+          hours_logged: number | null
+          id: string | null
+          meetings_attended: number | null
+          messages_sent: number | null
+          period_end: string | null
+          period_start: string | null
+          productivity_score: number | null
+          projects_completed: number | null
+          task_revision_count: number | null
+          tasks_assigned: number | null
+          tasks_completed: number | null
+          tasks_completion_rate: number | null
+          tenant_id: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          active_projects?: number | null
+          average_task_duration?: number | null
+          calculated_at?: string | null
+          client_feedback_score?: number | null
+          created_at?: string | null
+          documents_shared?: number | null
+          hours_logged?: number | null
+          id?: string | null
+          meetings_attended?: number | null
+          messages_sent?: number | null
+          period_end?: string | null
+          period_start?: string | null
+          productivity_score?: number | null
+          projects_completed?: number | null
+          task_revision_count?: number | null
+          tasks_assigned?: number | null
+          tasks_completed?: number | null
+          tasks_completion_rate?: number | null
+          tenant_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          active_projects?: number | null
+          average_task_duration?: number | null
+          calculated_at?: string | null
+          client_feedback_score?: number | null
+          created_at?: string | null
+          documents_shared?: number | null
+          hours_logged?: number | null
+          id?: string | null
+          meetings_attended?: number | null
+          messages_sent?: number | null
+          period_end?: string | null
+          period_start?: string | null
+          productivity_score?: number | null
+          projects_completed?: number | null
+          task_revision_count?: number | null
+          tasks_assigned?: number | null
+          tasks_completed?: number | null
+          tasks_completion_rate?: number | null
+          tenant_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_tenants_me: {
+        Row: {
+          billing_status: string | null
+          brand_logo_url: string | null
+          color_palette: Json | null
+          created_at: string | null
+          domain: string | null
+          franchisee_status: string | null
+          id: string | null
+          name: string | null
+          owner_id: string | null
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          billing_status?: string | null
+          brand_logo_url?: string | null
+          color_palette?: Json | null
+          created_at?: string | null
+          domain?: string | null
+          franchisee_status?: string | null
+          id?: string | null
+          name?: string | null
+          owner_id?: string | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          billing_status?: string | null
+          brand_logo_url?: string | null
+          color_palette?: Json | null
+          created_at?: string | null
+          domain?: string | null
+          franchisee_status?: string | null
+          id?: string | null
+          name?: string | null
+          owner_id?: string | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      v_tools_results_me: {
+        Row: {
+          created_at: string | null
+          id: string | null
+          inputs: Json | null
+          outputs: Json | null
+          tool_key: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string | null
+          inputs?: Json | null
+          outputs?: Json | null
+          tool_key?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string | null
+          inputs?: Json | null
+          outputs?: Json | null
+          tool_key?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_tracked_events_me: {
+        Row: {
+          created_at: string | null
+          event_data: Json | null
+          event_name: string | null
+          event_type: string | null
+          id: string | null
+          ip_address: unknown | null
+          referrer: string | null
+          source: string | null
+          tenant_id: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          event_data?: Json | null
+          event_name?: string | null
+          event_type?: string | null
+          id?: string | null
+          ip_address?: unknown | null
+          referrer?: string | null
+          source?: string | null
+          tenant_id?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          event_data?: Json | null
+          event_name?: string | null
+          event_type?: string | null
+          id?: string | null
+          ip_address?: unknown | null
+          referrer?: string | null
+          source?: string | null
+          tenant_id?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tracked_events_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tracked_events_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_tenants_me"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_transaction_categories_me: {
+        Row: {
+          amount_ranges: Json | null
+          category_name: string | null
+          confidence_score: number | null
+          created_at: string | null
+          id: string | null
+          is_system_generated: boolean | null
+          keywords: string[] | null
+          parent_category: string | null
+          tenant_id: string | null
+          updated_at: string | null
+          user_id: string | null
+          vendor_patterns: string[] | null
+        }
+        Insert: {
+          amount_ranges?: Json | null
+          category_name?: string | null
+          confidence_score?: number | null
+          created_at?: string | null
+          id?: string | null
+          is_system_generated?: boolean | null
+          keywords?: string[] | null
+          parent_category?: string | null
+          tenant_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          vendor_patterns?: string[] | null
+        }
+        Update: {
+          amount_ranges?: Json | null
+          category_name?: string | null
+          confidence_score?: number | null
+          created_at?: string | null
+          id?: string | null
+          is_system_generated?: boolean | null
+          keywords?: string[] | null
+          parent_category?: string | null
+          tenant_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          vendor_patterns?: string[] | null
+        }
+        Relationships: []
+      }
+      v_transaction_classifications_me: {
+        Row: {
+          ai_model_used: string | null
+          anomaly_reasons: string[] | null
+          cleaned_description: string | null
+          confidence_score: number | null
+          created_at: string | null
+          final_category: string | null
+          id: string | null
+          is_anomaly: boolean | null
+          is_recurring: boolean | null
+          learning_data: Json | null
+          manual_override: boolean | null
+          original_description: string | null
+          suggested_category: string | null
+          tenant_id: string | null
+          transaction_id: string | null
+          updated_at: string | null
+          user_id: string | null
+          vendor_name: string | null
+        }
+        Insert: {
+          ai_model_used?: string | null
+          anomaly_reasons?: string[] | null
+          cleaned_description?: string | null
+          confidence_score?: number | null
+          created_at?: string | null
+          final_category?: string | null
+          id?: string | null
+          is_anomaly?: boolean | null
+          is_recurring?: boolean | null
+          learning_data?: Json | null
+          manual_override?: boolean | null
+          original_description?: string | null
+          suggested_category?: string | null
+          tenant_id?: string | null
+          transaction_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          vendor_name?: string | null
+        }
+        Update: {
+          ai_model_used?: string | null
+          anomaly_reasons?: string[] | null
+          cleaned_description?: string | null
+          confidence_score?: number | null
+          created_at?: string | null
+          final_category?: string | null
+          id?: string | null
+          is_anomaly?: boolean | null
+          is_recurring?: boolean | null
+          learning_data?: Json | null
+          manual_override?: boolean | null
+          original_description?: string | null
+          suggested_category?: string | null
+          tenant_id?: string | null
+          transaction_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          vendor_name?: string | null
         }
         Relationships: []
       }
@@ -40314,6 +52863,1259 @@ export type Database = {
         }
         Relationships: []
       }
+      v_transactions_me: {
+        Row: {
+          account_id: string | null
+          amount: number | null
+          created_at: string | null
+          currency: string | null
+          description: string | null
+          external_transaction_id: string | null
+          fees: number | null
+          id: string | null
+          metadata: Json | null
+          price: number | null
+          quantity: number | null
+          settlement_date: string | null
+          symbol: string | null
+          transaction_date: string | null
+          transaction_type: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          account_id?: string | null
+          amount?: number | null
+          created_at?: string | null
+          currency?: string | null
+          description?: string | null
+          external_transaction_id?: string | null
+          fees?: number | null
+          id?: string | null
+          metadata?: Json | null
+          price?: number | null
+          quantity?: number | null
+          settlement_date?: string | null
+          symbol?: string | null
+          transaction_date?: string | null
+          transaction_type?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          account_id?: string | null
+          amount?: number | null
+          created_at?: string | null
+          currency?: string | null
+          description?: string | null
+          external_transaction_id?: string | null
+          fees?: number | null
+          id?: string | null
+          metadata?: Json | null
+          price?: number | null
+          quantity?: number | null
+          settlement_date?: string | null
+          symbol?: string | null
+          transaction_date?: string | null
+          transaction_type?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transactions_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transactions_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "v_accounts_me"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_transfers_me: {
+        Row: {
+          ach_credit_status: string | null
+          ach_debit_status: string | null
+          ach_return_code: string | null
+          amount: number | null
+          created_at: string | null
+          description: string | null
+          estimated_completion_date: string | null
+          failure_reason: string | null
+          from_account_id: string | null
+          funds_held_at: string | null
+          id: string | null
+          processed_at: string | null
+          reference_number: string | null
+          status: string | null
+          stripe_credit_payment_intent_id: string | null
+          stripe_debit_payment_intent_id: string | null
+          to_account_id: string | null
+          transfer_fee: number | null
+          transfer_type: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          ach_credit_status?: string | null
+          ach_debit_status?: string | null
+          ach_return_code?: string | null
+          amount?: number | null
+          created_at?: string | null
+          description?: string | null
+          estimated_completion_date?: string | null
+          failure_reason?: string | null
+          from_account_id?: string | null
+          funds_held_at?: string | null
+          id?: string | null
+          processed_at?: string | null
+          reference_number?: string | null
+          status?: string | null
+          stripe_credit_payment_intent_id?: string | null
+          stripe_debit_payment_intent_id?: string | null
+          to_account_id?: string | null
+          transfer_fee?: number | null
+          transfer_type?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          ach_credit_status?: string | null
+          ach_debit_status?: string | null
+          ach_return_code?: string | null
+          amount?: number | null
+          created_at?: string | null
+          description?: string | null
+          estimated_completion_date?: string | null
+          failure_reason?: string | null
+          from_account_id?: string | null
+          funds_held_at?: string | null
+          id?: string | null
+          processed_at?: string | null
+          reference_number?: string | null
+          status?: string | null
+          stripe_credit_payment_intent_id?: string | null
+          stripe_debit_payment_intent_id?: string | null
+          to_account_id?: string | null
+          transfer_fee?: number | null
+          transfer_type?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_transfers_from_account"
+            columns: ["from_account_id"]
+            isOneToOne: false
+            referencedRelation: "bank_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_transfers_from_account"
+            columns: ["from_account_id"]
+            isOneToOne: false
+            referencedRelation: "v_bank_accounts_me"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_transfers_to_account"
+            columns: ["to_account_id"]
+            isOneToOne: false
+            referencedRelation: "bank_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_transfers_to_account"
+            columns: ["to_account_id"]
+            isOneToOne: false
+            referencedRelation: "v_bank_accounts_me"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_trial_grants_me: {
+        Row: {
+          converted_at: string | null
+          created_at: string | null
+          id: string | null
+          is_active: boolean | null
+          persona: string | null
+          plan: string | null
+          segment: string | null
+          trial_end: string | null
+          trial_start: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          converted_at?: string | null
+          created_at?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          persona?: string | null
+          plan?: string | null
+          segment?: string | null
+          trial_end?: string | null
+          trial_start?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          converted_at?: string | null
+          created_at?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          persona?: string | null
+          plan?: string | null
+          segment?: string | null
+          trial_end?: string | null
+          trial_start?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_user_additional_info_me: {
+        Row: {
+          citizenship_status: string | null
+          created_at: string | null
+          employment_status: string | null
+          id: string | null
+          income_range: string | null
+          investing_objective: string | null
+          investor_type: string | null
+          ira_contribution: boolean | null
+          net_worth: string | null
+          ssn: string | null
+          tax_bracket_capital: string | null
+          tax_bracket_income: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          citizenship_status?: string | null
+          created_at?: string | null
+          employment_status?: string | null
+          id?: string | null
+          income_range?: string | null
+          investing_objective?: string | null
+          investor_type?: string | null
+          ira_contribution?: boolean | null
+          net_worth?: string | null
+          ssn?: string | null
+          tax_bracket_capital?: string | null
+          tax_bracket_income?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          citizenship_status?: string | null
+          created_at?: string | null
+          employment_status?: string | null
+          id?: string | null
+          income_range?: string | null
+          investing_objective?: string | null
+          investor_type?: string | null
+          ira_contribution?: boolean | null
+          net_worth?: string | null
+          ssn?: string | null
+          tax_bracket_capital?: string | null
+          tax_bracket_income?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_user_affiliations_me: {
+        Row: {
+          awm_employee: boolean | null
+          broker_dealer: boolean | null
+          created_at: string | null
+          custodian: boolean | null
+          family_broker_dealer: boolean | null
+          id: string | null
+          public_company: boolean | null
+          stock_exchange_or_finra: boolean | null
+          updated_at: string | null
+          us_politically_exposed: boolean | null
+          user_id: string | null
+        }
+        Insert: {
+          awm_employee?: boolean | null
+          broker_dealer?: boolean | null
+          created_at?: string | null
+          custodian?: boolean | null
+          family_broker_dealer?: boolean | null
+          id?: string | null
+          public_company?: boolean | null
+          stock_exchange_or_finra?: boolean | null
+          updated_at?: string | null
+          us_politically_exposed?: boolean | null
+          user_id?: string | null
+        }
+        Update: {
+          awm_employee?: boolean | null
+          broker_dealer?: boolean | null
+          created_at?: string | null
+          custodian?: boolean | null
+          family_broker_dealer?: boolean | null
+          id?: string | null
+          public_company?: boolean | null
+          stock_exchange_or_finra?: boolean | null
+          updated_at?: string | null
+          us_politically_exposed?: boolean | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_user_agreements_me: {
+        Row: {
+          agreement_type: Database["public"]["Enums"]["agreement_type"] | null
+          created_at: string | null
+          document_url: string | null
+          expires_at: string | null
+          id: string | null
+          organization_id: string | null
+          signature_data: Json | null
+          signed_at: string | null
+          signed_ip_address: unknown | null
+          signed_user_agent: string | null
+          status: Database["public"]["Enums"]["agreement_status"] | null
+          template_id: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          agreement_type?: Database["public"]["Enums"]["agreement_type"] | null
+          created_at?: string | null
+          document_url?: string | null
+          expires_at?: string | null
+          id?: string | null
+          organization_id?: string | null
+          signature_data?: Json | null
+          signed_at?: string | null
+          signed_ip_address?: unknown | null
+          signed_user_agent?: string | null
+          status?: Database["public"]["Enums"]["agreement_status"] | null
+          template_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          agreement_type?: Database["public"]["Enums"]["agreement_type"] | null
+          created_at?: string | null
+          document_url?: string | null
+          expires_at?: string | null
+          id?: string | null
+          organization_id?: string | null
+          signature_data?: Json | null
+          signed_at?: string | null
+          signed_ip_address?: unknown | null
+          signed_user_agent?: string | null
+          status?: Database["public"]["Enums"]["agreement_status"] | null
+          template_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_agreements_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_agreements_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "organization_agreement_templates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_agreements_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "v_organization_agreement_templates_public"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_user_assets_me: {
+        Row: {
+          created_at: string | null
+          id: string | null
+          name: string | null
+          owner: string | null
+          type: string | null
+          updated_at: string | null
+          user_id: string | null
+          value: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string | null
+          name?: string | null
+          owner?: string | null
+          type?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          value?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string | null
+          name?: string | null
+          owner?: string | null
+          type?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          value?: number | null
+        }
+        Relationships: []
+      }
+      v_user_beneficiaries_me: {
+        Row: {
+          address: string | null
+          address2: string | null
+          city: string | null
+          created_at: string | null
+          date_of_birth: string | null
+          email: string | null
+          first_name: string | null
+          id: string | null
+          last_name: string | null
+          relationship: string | null
+          ssn: string | null
+          state: string | null
+          updated_at: string | null
+          user_id: string | null
+          zip_code: string | null
+        }
+        Insert: {
+          address?: string | null
+          address2?: string | null
+          city?: string | null
+          created_at?: string | null
+          date_of_birth?: string | null
+          email?: string | null
+          first_name?: string | null
+          id?: string | null
+          last_name?: string | null
+          relationship?: string | null
+          ssn?: string | null
+          state?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          zip_code?: string | null
+        }
+        Update: {
+          address?: string | null
+          address2?: string | null
+          city?: string | null
+          created_at?: string | null
+          date_of_birth?: string | null
+          email?: string | null
+          first_name?: string | null
+          id?: string | null
+          last_name?: string | null
+          relationship?: string | null
+          ssn?: string | null
+          state?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          zip_code?: string | null
+        }
+        Relationships: []
+      }
+      v_user_charities_me: {
+        Row: {
+          charity_id: string | null
+          created_at: string | null
+          date_selected: string | null
+          id: string | null
+          is_primary: boolean | null
+          user_id: string | null
+        }
+        Insert: {
+          charity_id?: string | null
+          created_at?: string | null
+          date_selected?: string | null
+          id?: string | null
+          is_primary?: boolean | null
+          user_id?: string | null
+        }
+        Update: {
+          charity_id?: string | null
+          created_at?: string | null
+          date_selected?: string | null
+          id?: string | null
+          is_primary?: boolean | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_charities_charity_id_fkey"
+            columns: ["charity_id"]
+            isOneToOne: false
+            referencedRelation: "charities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_user_checklist_progress_me: {
+        Row: {
+          checklist_id: string | null
+          completed_at: string | null
+          completed_items: Json | null
+          created_at: string | null
+          id: string | null
+          started_at: string | null
+          status: string | null
+          tenant_id: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          checklist_id?: string | null
+          completed_at?: string | null
+          completed_items?: Json | null
+          created_at?: string | null
+          id?: string | null
+          started_at?: string | null
+          status?: string | null
+          tenant_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          checklist_id?: string | null
+          completed_at?: string | null
+          completed_items?: Json | null
+          created_at?: string | null
+          id?: string | null
+          started_at?: string | null
+          status?: string | null
+          tenant_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_checklist_progress_checklist_id_fkey"
+            columns: ["checklist_id"]
+            isOneToOne: false
+            referencedRelation: "onboarding_checklists"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_checklist_progress_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_checklist_progress_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_tenants_me"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_user_consent_me: {
+        Row: {
+          consent_type: string | null
+          given_at: string | null
+          id: string | null
+          ip_address: unknown | null
+          is_active: boolean | null
+          user_agent: string | null
+          user_id: string | null
+          version: string | null
+          withdrawn_at: string | null
+        }
+        Insert: {
+          consent_type?: string | null
+          given_at?: string | null
+          id?: string | null
+          ip_address?: unknown | null
+          is_active?: boolean | null
+          user_agent?: string | null
+          user_id?: string | null
+          version?: string | null
+          withdrawn_at?: string | null
+        }
+        Update: {
+          consent_type?: string | null
+          given_at?: string | null
+          id?: string | null
+          ip_address?: unknown | null
+          is_active?: boolean | null
+          user_agent?: string | null
+          user_id?: string | null
+          version?: string | null
+          withdrawn_at?: string | null
+        }
+        Relationships: []
+      }
+      v_user_contact_info_me: {
+        Row: {
+          address1: string | null
+          address2: string | null
+          city: string | null
+          created_at: string | null
+          email: string | null
+          id: string | null
+          phone: string | null
+          state: string | null
+          updated_at: string | null
+          user_id: string | null
+          zip_code: string | null
+        }
+        Insert: {
+          address1?: string | null
+          address2?: string | null
+          city?: string | null
+          created_at?: string | null
+          email?: string | null
+          id?: string | null
+          phone?: string | null
+          state?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          zip_code?: string | null
+        }
+        Update: {
+          address1?: string | null
+          address2?: string | null
+          city?: string | null
+          created_at?: string | null
+          email?: string | null
+          id?: string | null
+          phone?: string | null
+          state?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          zip_code?: string | null
+        }
+        Relationships: []
+      }
+      v_user_content_interactions_me: {
+        Row: {
+          accessed_at: string | null
+          content_id: string | null
+          content_type: string | null
+          created_at: string | null
+          id: string | null
+          interaction_type: string | null
+          user_id: string | null
+        }
+        Insert: {
+          accessed_at?: string | null
+          content_id?: string | null
+          content_type?: string | null
+          created_at?: string | null
+          id?: string | null
+          interaction_type?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          accessed_at?: string | null
+          content_id?: string | null
+          content_type?: string | null
+          created_at?: string | null
+          id?: string | null
+          interaction_type?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_user_course_progress_me: {
+        Row: {
+          completed_at: string | null
+          course_id: string | null
+          created_at: string | null
+          id: string | null
+          last_accessed_at: string | null
+          lesson_id: string | null
+          progress_percentage: number | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          course_id?: string | null
+          created_at?: string | null
+          id?: string | null
+          last_accessed_at?: string | null
+          lesson_id?: string | null
+          progress_percentage?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          course_id?: string | null
+          created_at?: string | null
+          id?: string | null
+          last_accessed_at?: string | null
+          lesson_id?: string | null
+          progress_percentage?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_user_donations_me: {
+        Row: {
+          amount: number | null
+          charity_id: string | null
+          created_at: string | null
+          description: string | null
+          donation_date: string | null
+          id: string | null
+          is_verified: boolean | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          amount?: number | null
+          charity_id?: string | null
+          created_at?: string | null
+          description?: string | null
+          donation_date?: string | null
+          id?: string | null
+          is_verified?: boolean | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          amount?: number | null
+          charity_id?: string | null
+          created_at?: string | null
+          description?: string | null
+          donation_date?: string | null
+          id?: string | null
+          is_verified?: boolean | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_donations_charity_id_fkey"
+            columns: ["charity_id"]
+            isOneToOne: false
+            referencedRelation: "charities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_user_downloads_me: {
+        Row: {
+          created_at: string | null
+          downloaded_at: string | null
+          id: string | null
+          resource_id: string | null
+          resource_name: string | null
+          resource_type: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          downloaded_at?: string | null
+          id?: string | null
+          resource_id?: string | null
+          resource_name?: string | null
+          resource_type?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          downloaded_at?: string | null
+          id?: string | null
+          resource_id?: string | null
+          resource_name?: string | null
+          resource_type?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_user_enabled_metrics_me: {
+        Row: {
+          created_at: string | null
+          is_pinned: boolean | null
+          metric_id: string | null
+          threshold_high: number | null
+          threshold_low: number | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          is_pinned?: boolean | null
+          metric_id?: string | null
+          threshold_high?: number | null
+          threshold_low?: number | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          is_pinned?: boolean | null
+          metric_id?: string | null
+          threshold_high?: number | null
+          threshold_low?: number | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_enabled_metrics_metric_id_fkey"
+            columns: ["metric_id"]
+            isOneToOne: false
+            referencedRelation: "metrics_catalog"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_enabled_metrics_metric_id_fkey"
+            columns: ["metric_id"]
+            isOneToOne: false
+            referencedRelation: "v_metrics_catalog_public"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_user_entitlements_me: {
+        Row: {
+          feature_key: string | null
+          granted_at: string | null
+          plan: string | null
+          user_id: string | null
+        }
+        Insert: {
+          feature_key?: string | null
+          granted_at?: string | null
+          plan?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          feature_key?: string | null
+          granted_at?: string | null
+          plan?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_user_events_me: {
+        Row: {
+          created_at: string | null
+          event_data: Json | null
+          event_type: string | null
+          ghl_synced: boolean | null
+          id: string | null
+          user_id: string | null
+          utm_data: Json | null
+        }
+        Insert: {
+          created_at?: string | null
+          event_data?: Json | null
+          event_type?: string | null
+          ghl_synced?: boolean | null
+          id?: string | null
+          user_id?: string | null
+          utm_data?: Json | null
+        }
+        Update: {
+          created_at?: string | null
+          event_data?: Json | null
+          event_type?: string | null
+          ghl_synced?: boolean | null
+          id?: string | null
+          user_id?: string | null
+          utm_data?: Json | null
+        }
+        Relationships: []
+      }
+      v_user_financial_snapshots_me: {
+        Row: {
+          created_at: string | null
+          id: string | null
+          net_worth: number | null
+          snapshot_date: string | null
+          total_assets: number | null
+          total_liabilities: number | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string | null
+          net_worth?: number | null
+          snapshot_date?: string | null
+          total_assets?: number | null
+          total_liabilities?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string | null
+          net_worth?: number | null
+          snapshot_date?: string | null
+          total_assets?: number | null
+          total_liabilities?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_user_goals_me: {
+        Row: {
+          aspirational_description: string | null
+          category: Database["public"]["Enums"]["goal_category"] | null
+          completed_at: string | null
+          created_at: string | null
+          current_amount: number | null
+          description: string | null
+          experience_story: string | null
+          family_member_ids: string[] | null
+          funding_frequency:
+            | Database["public"]["Enums"]["funding_frequency"]
+            | null
+          goal_metadata: Json | null
+          id: string | null
+          image_url: string | null
+          linked_account_ids: string[] | null
+          monthly_contribution: number | null
+          name: string | null
+          priority: Database["public"]["Enums"]["goal_priority"] | null
+          sort_order: number | null
+          status: Database["public"]["Enums"]["goal_status"] | null
+          target_amount: number | null
+          target_date: string | null
+          tenant_id: string | null
+          updated_at: string | null
+          user_id: string | null
+          why_important: string | null
+        }
+        Insert: {
+          aspirational_description?: string | null
+          category?: Database["public"]["Enums"]["goal_category"] | null
+          completed_at?: string | null
+          created_at?: string | null
+          current_amount?: number | null
+          description?: string | null
+          experience_story?: string | null
+          family_member_ids?: string[] | null
+          funding_frequency?:
+            | Database["public"]["Enums"]["funding_frequency"]
+            | null
+          goal_metadata?: Json | null
+          id?: string | null
+          image_url?: string | null
+          linked_account_ids?: string[] | null
+          monthly_contribution?: number | null
+          name?: string | null
+          priority?: Database["public"]["Enums"]["goal_priority"] | null
+          sort_order?: number | null
+          status?: Database["public"]["Enums"]["goal_status"] | null
+          target_amount?: number | null
+          target_date?: string | null
+          tenant_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          why_important?: string | null
+        }
+        Update: {
+          aspirational_description?: string | null
+          category?: Database["public"]["Enums"]["goal_category"] | null
+          completed_at?: string | null
+          created_at?: string | null
+          current_amount?: number | null
+          description?: string | null
+          experience_story?: string | null
+          family_member_ids?: string[] | null
+          funding_frequency?:
+            | Database["public"]["Enums"]["funding_frequency"]
+            | null
+          goal_metadata?: Json | null
+          id?: string | null
+          image_url?: string | null
+          linked_account_ids?: string[] | null
+          monthly_contribution?: number | null
+          name?: string | null
+          priority?: Database["public"]["Enums"]["goal_priority"] | null
+          sort_order?: number | null
+          status?: Database["public"]["Enums"]["goal_status"] | null
+          target_amount?: number | null
+          target_date?: string | null
+          tenant_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          why_important?: string | null
+        }
+        Relationships: []
+      }
+      v_user_impact_preferences_me: {
+        Row: {
+          allow_public_recognition: boolean | null
+          annual_reports: boolean | null
+          created_at: string | null
+          email_notifications: boolean | null
+          id: string | null
+          quarterly_reports: boolean | null
+          report_format: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          allow_public_recognition?: boolean | null
+          annual_reports?: boolean | null
+          created_at?: string | null
+          email_notifications?: boolean | null
+          id?: string | null
+          quarterly_reports?: boolean | null
+          report_format?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          allow_public_recognition?: boolean | null
+          annual_reports?: boolean | null
+          created_at?: string | null
+          email_notifications?: boolean | null
+          id?: string | null
+          quarterly_reports?: boolean | null
+          report_format?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_user_integrations_me: {
+        Row: {
+          access_token_encrypted: string | null
+          auto_sync_enabled: boolean | null
+          connected_at: string | null
+          created_at: string | null
+          expires_at: string | null
+          id: string | null
+          integration_type: string | null
+          last_sync_at: string | null
+          metadata: Json | null
+          refresh_token_encrypted: string | null
+          scopes: string[] | null
+          status: string | null
+          sync_direction: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          access_token_encrypted?: string | null
+          auto_sync_enabled?: boolean | null
+          connected_at?: string | null
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string | null
+          integration_type?: string | null
+          last_sync_at?: string | null
+          metadata?: Json | null
+          refresh_token_encrypted?: string | null
+          scopes?: string[] | null
+          status?: string | null
+          sync_direction?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          access_token_encrypted?: string | null
+          auto_sync_enabled?: boolean | null
+          connected_at?: string | null
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string | null
+          integration_type?: string | null
+          last_sync_at?: string | null
+          metadata?: Json | null
+          refresh_token_encrypted?: string | null
+          scopes?: string[] | null
+          status?: string | null
+          sync_direction?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_user_investment_interests_me: {
+        Row: {
+          created_at: string | null
+          id: string | null
+          offering_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string | null
+          offering_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string | null
+          offering_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_investment_interests_offering_id_fkey"
+            columns: ["offering_id"]
+            isOneToOne: false
+            referencedRelation: "investment_offerings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_investment_interests_offering_id_fkey"
+            columns: ["offering_id"]
+            isOneToOne: false
+            referencedRelation: "v_investment_offerings_public"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_user_liabilities_me: {
+        Row: {
+          created_at: string | null
+          current_balance: number | null
+          end_date: string | null
+          id: string | null
+          interest_rate: number | null
+          monthly_payment: number | null
+          name: string | null
+          original_loan_amount: number | null
+          start_date: string | null
+          type: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          current_balance?: number | null
+          end_date?: string | null
+          id?: string | null
+          interest_rate?: number | null
+          monthly_payment?: number | null
+          name?: string | null
+          original_loan_amount?: number | null
+          start_date?: string | null
+          type?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          current_balance?: number | null
+          end_date?: string | null
+          id?: string | null
+          interest_rate?: number | null
+          monthly_payment?: number | null
+          name?: string | null
+          original_loan_amount?: number | null
+          start_date?: string | null
+          type?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_user_onboarding_me: {
+        Row: {
+          consent_ok: boolean | null
+          created_at: string | null
+          disclosures_done: boolean | null
+          id: string | null
+          profile_complete: boolean | null
+          updated_at: string | null
+          user_id: string | null
+          vault_onboarded: boolean | null
+        }
+        Insert: {
+          consent_ok?: boolean | null
+          created_at?: string | null
+          disclosures_done?: boolean | null
+          id?: string | null
+          profile_complete?: boolean | null
+          updated_at?: string | null
+          user_id?: string | null
+          vault_onboarded?: boolean | null
+        }
+        Update: {
+          consent_ok?: boolean | null
+          created_at?: string | null
+          disclosures_done?: boolean | null
+          id?: string | null
+          profile_complete?: boolean | null
+          updated_at?: string | null
+          user_id?: string | null
+          vault_onboarded?: boolean | null
+        }
+        Relationships: []
+      }
+      v_user_onboarding_progress_me: {
+        Row: {
+          completed_at: string | null
+          created_at: string | null
+          id: string | null
+          is_completed: boolean | null
+          step_name: string | null
+          tenant_id: string | null
+          updated_at: string | null
+          user_id: string | null
+          user_type: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string | null
+          id?: string | null
+          is_completed?: boolean | null
+          step_name?: string | null
+          tenant_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          user_type?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string | null
+          id?: string | null
+          is_completed?: boolean | null
+          step_name?: string | null
+          tenant_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          user_type?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_onboarding_progress_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_onboarding_progress_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_tenants_me"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       v_user_onboarding_status: {
         Row: {
           last_update: string | null
@@ -40323,12 +54125,1178 @@ export type Database = {
         }
         Relationships: []
       }
+      v_user_otp_codes_me: {
+        Row: {
+          attempts: number | null
+          created_at: string | null
+          expires_at: string | null
+          id: string | null
+          is_used: boolean | null
+          otp_code: string | null
+          user_id: string | null
+        }
+        Insert: {
+          attempts?: number | null
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string | null
+          is_used?: boolean | null
+          otp_code?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          attempts?: number | null
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string | null
+          is_used?: boolean | null
+          otp_code?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_user_persona_profile_me: {
+        Row: {
+          persona: string | null
+          segment: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          persona?: string | null
+          segment?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          persona?: string | null
+          segment?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_user_portfolio_assignments_me: {
+        Row: {
+          assigned_accounts: number | null
+          assignment_date: string | null
+          created_at: string | null
+          id: string | null
+          is_active: boolean | null
+          model_portfolio_id: string | null
+          trading_groups: number | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          assigned_accounts?: number | null
+          assignment_date?: string | null
+          created_at?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          model_portfolio_id?: string | null
+          trading_groups?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          assigned_accounts?: number | null
+          assignment_date?: string | null
+          created_at?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          model_portfolio_id?: string | null
+          trading_groups?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_portfolio_assignments_model_portfolio_id_fkey"
+            columns: ["model_portfolio_id"]
+            isOneToOne: false
+            referencedRelation: "model_portfolios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_user_product_interests_marketplace_me: {
+        Row: {
+          advisor_response: string | null
+          advisor_response_at: string | null
+          created_at: string | null
+          id: string | null
+          interest_type: string | null
+          notes: string | null
+          product_id: string | null
+          request_details: Json | null
+          status: string | null
+          tenant_id: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          advisor_response?: string | null
+          advisor_response_at?: string | null
+          created_at?: string | null
+          id?: string | null
+          interest_type?: string | null
+          notes?: string | null
+          product_id?: string | null
+          request_details?: Json | null
+          status?: string | null
+          tenant_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          advisor_response?: string | null
+          advisor_response_at?: string | null
+          created_at?: string | null
+          id?: string | null
+          interest_type?: string | null
+          notes?: string | null
+          product_id?: string | null
+          request_details?: Json | null
+          status?: string | null
+          tenant_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_product_interests_marketplace_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "investment_products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_user_saved_content_me: {
+        Row: {
+          content_id: string | null
+          content_type: string | null
+          id: string | null
+          saved_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          content_id?: string | null
+          content_type?: string | null
+          id?: string | null
+          saved_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          content_id?: string | null
+          content_type?: string | null
+          id?: string | null
+          saved_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_user_sessions_me: {
+        Row: {
+          created_at: string | null
+          device_fingerprint: string | null
+          expires_at: string | null
+          id: string | null
+          ip_address: unknown | null
+          is_active: boolean | null
+          last_activity: string | null
+          location_data: Json | null
+          revoked_at: string | null
+          revoked_by: string | null
+          session_token: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          device_fingerprint?: string | null
+          expires_at?: string | null
+          id?: string | null
+          ip_address?: unknown | null
+          is_active?: boolean | null
+          last_activity?: string | null
+          location_data?: Json | null
+          revoked_at?: string | null
+          revoked_by?: string | null
+          session_token?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          device_fingerprint?: string | null
+          expires_at?: string | null
+          id?: string | null
+          ip_address?: unknown | null
+          is_active?: boolean | null
+          last_activity?: string | null
+          location_data?: Json | null
+          revoked_at?: string | null
+          revoked_by?: string | null
+          session_token?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_user_training_progress_me: {
+        Row: {
+          completed_at: string | null
+          completion_percentage: number | null
+          created_at: string | null
+          id: string | null
+          module_id: string | null
+          started_at: string | null
+          status: string | null
+          tenant_id: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          completion_percentage?: number | null
+          created_at?: string | null
+          id?: string | null
+          module_id?: string | null
+          started_at?: string | null
+          status?: string | null
+          tenant_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          completion_percentage?: number | null
+          created_at?: string | null
+          id?: string | null
+          module_id?: string | null
+          started_at?: string | null
+          status?: string | null
+          tenant_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_training_progress_module_id_fkey"
+            columns: ["module_id"]
+            isOneToOne: false
+            referencedRelation: "training_modules"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_training_progress_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_training_progress_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_tenants_me"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_user_trust_documents_me: {
+        Row: {
+          content_type: string | null
+          created_at: string | null
+          file_name: string | null
+          file_path: string | null
+          file_size: number | null
+          id: string | null
+          trust_id: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          content_type?: string | null
+          created_at?: string | null
+          file_name?: string | null
+          file_path?: string | null
+          file_size?: number | null
+          id?: string | null
+          trust_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          content_type?: string | null
+          created_at?: string | null
+          file_name?: string | null
+          file_path?: string | null
+          file_size?: number | null
+          id?: string | null
+          trust_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_trust_documents_trust_id_fkey"
+            columns: ["trust_id"]
+            isOneToOne: false
+            referencedRelation: "user_trusts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_trust_documents_trust_id_fkey"
+            columns: ["trust_id"]
+            isOneToOne: false
+            referencedRelation: "v_user_trusts_me"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_user_trusts_me: {
+        Row: {
+          address: string | null
+          assets_value: string | null
+          beneficiary_names: string | null
+          city: string | null
+          country: string | null
+          created_at: string | null
+          document_type: string | null
+          email_address: string | null
+          establishment_date: string | null
+          id: string | null
+          phone_number: string | null
+          purpose: string | null
+          state: string | null
+          trust_name: string | null
+          trust_type: string | null
+          trustee_name: string | null
+          updated_at: string | null
+          user_id: string | null
+          zip_code: string | null
+        }
+        Insert: {
+          address?: string | null
+          assets_value?: string | null
+          beneficiary_names?: string | null
+          city?: string | null
+          country?: string | null
+          created_at?: string | null
+          document_type?: string | null
+          email_address?: string | null
+          establishment_date?: string | null
+          id?: string | null
+          phone_number?: string | null
+          purpose?: string | null
+          state?: string | null
+          trust_name?: string | null
+          trust_type?: string | null
+          trustee_name?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          zip_code?: string | null
+        }
+        Update: {
+          address?: string | null
+          assets_value?: string | null
+          beneficiary_names?: string | null
+          city?: string | null
+          country?: string | null
+          created_at?: string | null
+          document_type?: string | null
+          email_address?: string | null
+          establishment_date?: string | null
+          id?: string | null
+          phone_number?: string | null
+          purpose?: string | null
+          state?: string | null
+          trust_name?: string | null
+          trust_type?: string | null
+          trustee_name?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          zip_code?: string | null
+        }
+        Relationships: []
+      }
+      v_vault_access_logs_me: {
+        Row: {
+          action_type: string | null
+          created_at: string | null
+          id: string | null
+          ip_address: unknown | null
+          legacy_item_id: string | null
+          metadata: Json | null
+          user_agent: string | null
+          user_email: string | null
+          user_id: string | null
+          vault_id: string | null
+        }
+        Insert: {
+          action_type?: string | null
+          created_at?: string | null
+          id?: string | null
+          ip_address?: unknown | null
+          legacy_item_id?: string | null
+          metadata?: Json | null
+          user_agent?: string | null
+          user_email?: string | null
+          user_id?: string | null
+          vault_id?: string | null
+        }
+        Update: {
+          action_type?: string | null
+          created_at?: string | null
+          id?: string | null
+          ip_address?: unknown | null
+          legacy_item_id?: string | null
+          metadata?: Json | null
+          user_agent?: string | null
+          user_email?: string | null
+          user_id?: string | null
+          vault_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vault_access_logs_legacy_item_id_fkey"
+            columns: ["legacy_item_id"]
+            isOneToOne: false
+            referencedRelation: "legacy_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vault_access_logs_vault_id_fkey"
+            columns: ["vault_id"]
+            isOneToOne: false
+            referencedRelation: "family_vaults"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vault_access_logs_vault_id_fkey"
+            columns: ["vault_id"]
+            isOneToOne: false
+            referencedRelation: "v_family_vaults_me"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_vault_access_rules_me: {
+        Row: {
+          access_type: string | null
+          authorized_by: string | null
+          created_at: string | null
+          id: string | null
+          item_id: string | null
+          milestone_description: string | null
+          status: string | null
+          unlock_date: string | null
+          unlock_event: string | null
+          updated_at: string | null
+          user_email: string | null
+          user_id: string | null
+        }
+        Insert: {
+          access_type?: string | null
+          authorized_by?: string | null
+          created_at?: string | null
+          id?: string | null
+          item_id?: string | null
+          milestone_description?: string | null
+          status?: string | null
+          unlock_date?: string | null
+          unlock_event?: string | null
+          updated_at?: string | null
+          user_email?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          access_type?: string | null
+          authorized_by?: string | null
+          created_at?: string | null
+          id?: string | null
+          item_id?: string | null
+          milestone_description?: string | null
+          status?: string | null
+          unlock_date?: string | null
+          unlock_event?: string | null
+          updated_at?: string | null
+          user_email?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vault_access_rules_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "v_vault_items_me"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vault_access_rules_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "vault_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_vault_activity_log_me: {
+        Row: {
+          action_type: string | null
+          created_at: string | null
+          details: Json | null
+          id: string | null
+          ip_address: unknown | null
+          resource_id: string | null
+          resource_type: string | null
+          user_id: string | null
+          vault_id: string | null
+        }
+        Insert: {
+          action_type?: string | null
+          created_at?: string | null
+          details?: Json | null
+          id?: string | null
+          ip_address?: unknown | null
+          resource_id?: string | null
+          resource_type?: string | null
+          user_id?: string | null
+          vault_id?: string | null
+        }
+        Update: {
+          action_type?: string | null
+          created_at?: string | null
+          details?: Json | null
+          id?: string | null
+          ip_address?: unknown | null
+          resource_id?: string | null
+          resource_type?: string | null
+          user_id?: string | null
+          vault_id?: string | null
+        }
+        Relationships: []
+      }
+      v_vault_audit_log_me: {
+        Row: {
+          action: string | null
+          details: Json | null
+          id: string | null
+          ip_address: unknown | null
+          item_id: string | null
+          timestamp: string | null
+          user_agent: string | null
+          user_email: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action?: string | null
+          details?: Json | null
+          id?: string | null
+          ip_address?: unknown | null
+          item_id?: string | null
+          timestamp?: string | null
+          user_agent?: string | null
+          user_email?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string | null
+          details?: Json | null
+          id?: string | null
+          ip_address?: unknown | null
+          item_id?: string | null
+          timestamp?: string | null
+          user_agent?: string | null
+          user_email?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vault_audit_log_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "v_vault_items_me"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vault_audit_log_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "vault_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_vault_avatar_me: {
+        Row: {
+          avatar_file_url: string | null
+          avatar_name: string | null
+          created_at: string | null
+          id: string | null
+          notes: string | null
+          owner_id: string | null
+          personality_prompts: string[] | null
+          status: string | null
+          training_data_url: string | null
+          updated_at: string | null
+          voice_sample_url: string | null
+        }
+        Insert: {
+          avatar_file_url?: string | null
+          avatar_name?: string | null
+          created_at?: string | null
+          id?: string | null
+          notes?: string | null
+          owner_id?: string | null
+          personality_prompts?: string[] | null
+          status?: string | null
+          training_data_url?: string | null
+          updated_at?: string | null
+          voice_sample_url?: string | null
+        }
+        Update: {
+          avatar_file_url?: string | null
+          avatar_name?: string | null
+          created_at?: string | null
+          id?: string | null
+          notes?: string | null
+          owner_id?: string | null
+          personality_prompts?: string[] | null
+          status?: string | null
+          training_data_url?: string | null
+          updated_at?: string | null
+          voice_sample_url?: string | null
+        }
+        Relationships: []
+      }
+      v_vault_items_me: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          encrypted: boolean | null
+          file_size: number | null
+          file_url: string | null
+          id: string | null
+          mime_type: string | null
+          owner_id: string | null
+          status: string | null
+          tags: string[] | null
+          title: string | null
+          type: string | null
+          updated_at: string | null
+          upload_date: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          encrypted?: boolean | null
+          file_size?: number | null
+          file_url?: string | null
+          id?: string | null
+          mime_type?: string | null
+          owner_id?: string | null
+          status?: string | null
+          tags?: string[] | null
+          title?: string | null
+          type?: string | null
+          updated_at?: string | null
+          upload_date?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          encrypted?: boolean | null
+          file_size?: number | null
+          file_url?: string | null
+          id?: string | null
+          mime_type?: string | null
+          owner_id?: string | null
+          status?: string | null
+          tags?: string[] | null
+          title?: string | null
+          type?: string | null
+          updated_at?: string | null
+          upload_date?: string | null
+        }
+        Relationships: []
+      }
+      v_vault_members_me: {
+        Row: {
+          accepted_at: string | null
+          can_delete: boolean | null
+          can_manage_members: boolean | null
+          can_share: boolean | null
+          can_upload: boolean | null
+          can_view: boolean | null
+          created_by: string | null
+          email: string | null
+          first_name: string | null
+          id: string | null
+          invited_at: string | null
+          is_executor: boolean | null
+          last_name: string | null
+          permission_level:
+            | Database["public"]["Enums"]["vault_permission_level"]
+            | null
+          permissions: Json | null
+          status: string | null
+          user_id: string | null
+          vault_id: string | null
+        }
+        Insert: {
+          accepted_at?: string | null
+          can_delete?: boolean | null
+          can_manage_members?: boolean | null
+          can_share?: boolean | null
+          can_upload?: boolean | null
+          can_view?: boolean | null
+          created_by?: string | null
+          email?: string | null
+          first_name?: string | null
+          id?: string | null
+          invited_at?: string | null
+          is_executor?: boolean | null
+          last_name?: string | null
+          permission_level?:
+            | Database["public"]["Enums"]["vault_permission_level"]
+            | null
+          permissions?: Json | null
+          status?: string | null
+          user_id?: string | null
+          vault_id?: string | null
+        }
+        Update: {
+          accepted_at?: string | null
+          can_delete?: boolean | null
+          can_manage_members?: boolean | null
+          can_share?: boolean | null
+          can_upload?: boolean | null
+          can_view?: boolean | null
+          created_by?: string | null
+          email?: string | null
+          first_name?: string | null
+          id?: string | null
+          invited_at?: string | null
+          is_executor?: boolean | null
+          last_name?: string | null
+          permission_level?:
+            | Database["public"]["Enums"]["vault_permission_level"]
+            | null
+          permissions?: Json | null
+          status?: string | null
+          user_id?: string | null
+          vault_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vault_members_vault_id_fkey"
+            columns: ["vault_id"]
+            isOneToOne: false
+            referencedRelation: "family_vaults"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vault_members_vault_id_fkey"
+            columns: ["vault_id"]
+            isOneToOne: false
+            referencedRelation: "v_family_vaults_me"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_vault_sessions_me: {
+        Row: {
+          created_at: string | null
+          expires_at: string | null
+          id: string | null
+          ip_address: unknown | null
+          last_activity: string | null
+          session_token: string | null
+          two_factor_verified: boolean | null
+          user_agent: string | null
+          user_id: string | null
+          vault_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string | null
+          ip_address?: unknown | null
+          last_activity?: string | null
+          session_token?: string | null
+          two_factor_verified?: boolean | null
+          user_agent?: string | null
+          user_id?: string | null
+          vault_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string | null
+          ip_address?: unknown | null
+          last_activity?: string | null
+          session_token?: string | null
+          two_factor_verified?: boolean | null
+          user_agent?: string | null
+          user_id?: string | null
+          vault_id?: string | null
+        }
+        Relationships: []
+      }
+      v_vendor_learning_me: {
+        Row: {
+          confidence_level: number | null
+          created_at: string | null
+          default_category: string | null
+          frequency_pattern: string | null
+          id: string | null
+          last_seen_at: string | null
+          tenant_id: string | null
+          transaction_count: number | null
+          typical_amounts: Json | null
+          updated_at: string | null
+          user_id: string | null
+          vendor_aliases: string[] | null
+          vendor_name: string | null
+        }
+        Insert: {
+          confidence_level?: number | null
+          created_at?: string | null
+          default_category?: string | null
+          frequency_pattern?: string | null
+          id?: string | null
+          last_seen_at?: string | null
+          tenant_id?: string | null
+          transaction_count?: number | null
+          typical_amounts?: Json | null
+          updated_at?: string | null
+          user_id?: string | null
+          vendor_aliases?: string[] | null
+          vendor_name?: string | null
+        }
+        Update: {
+          confidence_level?: number | null
+          created_at?: string | null
+          default_category?: string | null
+          frequency_pattern?: string | null
+          id?: string | null
+          last_seen_at?: string | null
+          tenant_id?: string | null
+          transaction_count?: number | null
+          typical_amounts?: Json | null
+          updated_at?: string | null
+          user_id?: string | null
+          vendor_aliases?: string[] | null
+          vendor_name?: string | null
+        }
+        Relationships: []
+      }
+      v_video_meeting_integrations_me: {
+        Row: {
+          access_token: string | null
+          created_at: string | null
+          expires_at: string | null
+          id: string | null
+          is_active: boolean | null
+          provider: string | null
+          refresh_token: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          access_token?: string | null
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          provider?: string | null
+          refresh_token?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          access_token?: string | null
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          provider?: string | null
+          refresh_token?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_video_meetings_me: {
+        Row: {
+          attendees: Json | null
+          calendar_event_id: string | null
+          created_at: string | null
+          description: string | null
+          end_time: string | null
+          external_meeting_id: string | null
+          id: string | null
+          integration_id: string | null
+          join_url: string | null
+          lead_id: string | null
+          passcode: string | null
+          phone_dial_in: string | null
+          start_time: string | null
+          title: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          attendees?: Json | null
+          calendar_event_id?: string | null
+          created_at?: string | null
+          description?: string | null
+          end_time?: string | null
+          external_meeting_id?: string | null
+          id?: string | null
+          integration_id?: string | null
+          join_url?: string | null
+          lead_id?: string | null
+          passcode?: string | null
+          phone_dial_in?: string | null
+          start_time?: string | null
+          title?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          attendees?: Json | null
+          calendar_event_id?: string | null
+          created_at?: string | null
+          description?: string | null
+          end_time?: string | null
+          external_meeting_id?: string | null
+          id?: string | null
+          integration_id?: string | null
+          join_url?: string | null
+          lead_id?: string | null
+          passcode?: string | null
+          phone_dial_in?: string | null
+          start_time?: string | null
+          title?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "video_meetings_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: false
+            referencedRelation: "v_video_meeting_integrations_me"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "video_meetings_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: false
+            referencedRelation: "video_meeting_integrations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       v_view_grants_audit: {
         Row: {
           grantee: unknown | null
           privilege_type: string | null
           table_name: unknown | null
           table_schema: unknown | null
+        }
+        Relationships: []
+      }
+      v_vip_organization_members_me: {
+        Row: {
+          created_at: string | null
+          email: string | null
+          id: string | null
+          invitation_sent_at: string | null
+          invitation_status: string | null
+          invitation_token: string | null
+          joined_at: string | null
+          name: string | null
+          organization_id: string | null
+          permissions: Json | null
+          role: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email?: string | null
+          id?: string | null
+          invitation_sent_at?: string | null
+          invitation_status?: string | null
+          invitation_token?: string | null
+          joined_at?: string | null
+          name?: string | null
+          organization_id?: string | null
+          permissions?: Json | null
+          role?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string | null
+          id?: string | null
+          invitation_sent_at?: string | null
+          invitation_status?: string | null
+          invitation_token?: string | null
+          joined_at?: string | null
+          name?: string | null
+          organization_id?: string | null
+          permissions?: Json | null
+          role?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vip_organization_members_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "vip_organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vip_organization_members_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vip_organization_members_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "referral_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "vip_organization_members_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "v_profiles_basic"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      v_voice_ce_sessions_me: {
+        Row: {
+          completion_percentage: number | null
+          course_id: string | null
+          course_name: string | null
+          created_at: string | null
+          end_time: string | null
+          hours_earned: number | null
+          id: string | null
+          interaction_log: Json | null
+          persona: string | null
+          progress_markers: Json | null
+          start_time: string | null
+          status: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          completion_percentage?: number | null
+          course_id?: string | null
+          course_name?: string | null
+          created_at?: string | null
+          end_time?: string | null
+          hours_earned?: number | null
+          id?: string | null
+          interaction_log?: Json | null
+          persona?: string | null
+          progress_markers?: Json | null
+          start_time?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          completion_percentage?: number | null
+          course_id?: string | null
+          course_name?: string | null
+          created_at?: string | null
+          end_time?: string | null
+          hours_earned?: number | null
+          id?: string | null
+          interaction_log?: Json | null
+          persona?: string | null
+          progress_markers?: Json | null
+          start_time?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      v_weather_alerts_me: {
+        Row: {
+          alert: Json | null
+          created_at: string | null
+          id: string | null
+          user_id: string | null
+          zip_first3: string | null
+        }
+        Insert: {
+          alert?: Json | null
+          created_at?: string | null
+          id?: string | null
+          user_id?: string | null
+          zip_first3?: string | null
+        }
+        Update: {
+          alert?: Json | null
+          created_at?: string | null
+          id?: string | null
+          user_id?: string | null
+          zip_first3?: string | null
+        }
+        Relationships: []
+      }
+      v_webinar_registrations_me: {
+        Row: {
+          attendance_duration: number | null
+          attended: boolean | null
+          created_at: string | null
+          id: string | null
+          registered_at: string | null
+          updated_at: string | null
+          user_id: string | null
+          webinar_id: string | null
+          webinar_title: string | null
+        }
+        Insert: {
+          attendance_duration?: number | null
+          attended?: boolean | null
+          created_at?: string | null
+          id?: string | null
+          registered_at?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          webinar_id?: string | null
+          webinar_title?: string | null
+        }
+        Update: {
+          attendance_duration?: number | null
+          attended?: boolean | null
+          created_at?: string | null
+          id?: string | null
+          registered_at?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          webinar_id?: string | null
+          webinar_title?: string | null
         }
         Relationships: []
       }
@@ -40835,6 +55803,10 @@ export type Database = {
         }
         Returns: Json
       }
+      email_mask: {
+        Args: { p_email: string; p_user_id: string }
+        Returns: string
+      }
       emit_ad_rds: {
         Args: {
           p_ad_id: string
@@ -40866,6 +55838,10 @@ export type Database = {
         }
         Returns: string
       }
+      ensure_user_tenant: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
       final_security_validation: {
         Args: Record<PropertyKey, never>
         Returns: {
@@ -40873,6 +55849,10 @@ export type Database = {
           remaining_issues: string[]
           status: string
         }[]
+      }
+      first_present_column: {
+        Args: { p_candidates: string[]; p_schema: string; p_table: string }
+        Returns: string
       }
       generate_advisor_invitation_code: {
         Args: Record<PropertyKey, never>
@@ -41171,6 +56151,17 @@ export type Database = {
           rls_enabled: boolean
           rls_forced: boolean
           table_name: string
+        }[]
+      }
+      get_tenant_invitation_by_token: {
+        Args: { p_token: string }
+        Returns: {
+          email: string
+          expires_at: string
+          id: string
+          role: string
+          status: string
+          tenant_id: string
         }[]
       }
       get_top_referrers: {
@@ -41528,6 +56519,26 @@ export type Database = {
         Args: { p_professional_id: string }
         Returns: undefined
       }
+      replay_verify: {
+        Args: { p_receipt: string }
+        Returns: Json
+      }
+      replay_verify_401k: {
+        Args: { p_receipt: string }
+        Returns: Json
+      }
+      replay_verify_creator: {
+        Args: { p_receipt: string }
+        Returns: Json
+      }
+      replay_verify_trading: {
+        Args: { p_receipt: string }
+        Returns: Json
+      }
+      replay_verify_voice: {
+        Args: { p_receipt: string }
+        Returns: Json
+      }
       request_compliance_export: {
         Args: {
           p_date_range_end?: string
@@ -41556,6 +56567,24 @@ export type Database = {
       rpc_database_health: {
         Args: Record<PropertyKey, never>
         Returns: Json
+      }
+      rules_resolve: {
+        Args: { p_at?: string; p_domain: string; p_jurisdiction: string }
+        Returns: {
+          bundle_id: string
+          content: Json
+          content_hash: string
+          created_at: string
+          created_by: string
+          domain: string
+          effective_at: string
+          id: string
+          jurisdiction: string
+          provider_id: string
+          provider_sig: string | null
+          tenant_id: string
+          version: string
+        }[]
       }
       run_database_review_tests: {
         Args: Record<PropertyKey, never>
@@ -41692,6 +56721,10 @@ export type Database = {
           p_user_id: string
         }
         Returns: string
+      }
+      trading_resolve_tlh: {
+        Args: { p_symbol: string }
+        Returns: Json
       }
       update_agency_performance_metrics: {
         Args: {
