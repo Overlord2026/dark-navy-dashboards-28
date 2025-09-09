@@ -82,7 +82,8 @@ export const FLAG_DESCRIPTIONS: Record<FeatureFlag, string> = {
   CRYPTO_TAX_ENABLED: 'Enable crypto tax lot tracking and Form 8949 export',
   FAM_V1: 'Enable Family V1 enhanced dashboard features with receipt chips and readiness check',
   ADV_V1: 'Enable Advisor V1 enhanced fee compare with benchmark receipts and proof verification',
-  IA_V2: 'Enable new information architecture with Families hub and Service Pros suite navigation'
+  IA_V2: 'Enable new information architecture with Families hub and Service Pros suite navigation',
+  HEALTH_PUBLIC: 'Enable public health check endpoint'
 };
 
 // Hook to use feature flags

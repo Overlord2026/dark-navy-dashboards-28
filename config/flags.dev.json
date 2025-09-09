@@ -16,5 +16,6 @@
   "security.rlsPolicies": false,
   "security.auditLogging": true,
   "performance.edgeCaching": true,
-  "debug.enableConsoleLogging": true
+  "debug.enableConsoleLogging": true,
+  "HEALTH_PUBLIC": true
 }

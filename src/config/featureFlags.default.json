@@ -20,5 +20,6 @@
   "CRYPTO_TAX_ENABLED": true,
   "FAM_V1": true,
   "ADV_V1": true,
-  "IA_V2": true
+  "IA_V2": true,
+  "HEALTH_PUBLIC": true
 }
