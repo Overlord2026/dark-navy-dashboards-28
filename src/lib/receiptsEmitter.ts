@@ -1,5 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { canonicalize } from "./canonical";
+import { emitReceipt, type RDS } from "./dataAdapter";
+import { inputsHash } from "./canonical";
 
 export type ReceiptDecision = "ALLOW" | "DENY" | "ALLOW_WITH_CONDITIONS";
 export type ReceiptStage = "pre" | "post";
@@ -64,6 +66,25 @@ export function initReceiptsEmitterAuto(supabase: SupabaseClient): ReceiptsEmitt
 }
 
 export async function hashActionRequest(action: unknown): Promise<string> {
-  const { hash } = await canonicalize(action);
-  return hash;
+  return inputsHash(action);
+}
+
+// Mock-compatible emitter
+export function initEmitter(adapter?: { emitReceipt: typeof emitReceipt; inputsHash: typeof inputsHash }) {
+  const emit = adapter?.emitReceipt || emitReceipt;
+  const hash = adapter?.inputsHash || inputsHash;
+  
+  return {
+    async emit(type: string, value: any, family?: string): Promise<RDS> {
+      const receipt: RDS = {
+        id: crypto.randomUUID(),
+        type,
+        created_at: new Date().toISOString(),
+        value,
+        family
+      };
+      return emit(receipt);
+    },
+    hash
+  };
 }

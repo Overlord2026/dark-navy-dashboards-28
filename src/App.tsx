@@ -895,14 +895,22 @@ function App() {
                   </PersonaGuard>
                 }
               />
-              <Route
-                path="/admin/401k"
-                element={
-                  <PersonaGuard allowedPersonas={["admin","system_administrator","tenant_admin"]}>
-                    <Control401k />
-                  </PersonaGuard>
-                }
-              />
+          <Route
+            path="/admin/401k"
+            element={
+              <PersonaGuard allowedPersonas={["admin","system_administrator","tenant_admin"]}>
+                <Control401k />
+              </PersonaGuard>
+            }
+          />
+          <Route
+            path="/admin/evidence"
+            element={
+              <PersonaGuard allowedPersonas={["admin","system_administrator","tenant_admin"]}>
+                <Evidence />
+              </PersonaGuard>
+            }
+          />
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/receipts" element={
                <Suspense fallback={<div>Loading...</div>}>
                  <ReceiptsAdmin />

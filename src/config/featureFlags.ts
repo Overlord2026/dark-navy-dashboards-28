@@ -50,3 +50,6 @@ export const COMPLIANCE_RETENTION = {
   REALTOR: 5,
   INSURANCE: 5,
 } as const;
+
+// Mock Mode Feature Flag
+export const MOCK_MODE = (import.meta.env.VITE_APP_MOCK_MODE ?? 'true') === 'true';
