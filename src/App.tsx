@@ -110,6 +110,7 @@ import ReceiptsViewer from '@/pages/admin/receipts/ReceiptsViewer';
 import TrustAnchors from '@/pages/admin/anchors/Anchors';
 const ReceiptsAdmin = React.lazy(() => import('@/pages/admin/ReceiptsAdmin'));
 const CanonTest = lazy(() => import("@/components/testing/CanonTest"));
+import HealthCheck from "@/pages/HealthCheck";
 
 // Demo Pages
 const RetireeBucketDemo = React.lazy(() => import('@/pages/demos/retiree-bucket'));
@@ -933,9 +934,12 @@ function App() {
                      <CanonTest />
                    </Suspense>
                  }
-               />}
-              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/db/migrations" element={<DbMigrations />} />}
-              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/migration" element={<MigrationHub />} />}
+                />}
+               {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/db/migrations" element={<DbMigrations />} />}
+               {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/migration" element={<MigrationHub />} />}
+               
+               {/* Public Health Check Route */}
+               <Route path="/__health" element={<HealthCheck />} />
             
             {/* Demo Routes */}
             {getFlag('DEMOS_ENABLED') && (
