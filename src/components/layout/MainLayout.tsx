@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { GlobalErrorBoundary } from '@/components/monitoring/GlobalErrorBoundary';
+import GlobalErrorBoundary from '@/components/monitoring/GlobalErrorBoundary';
 import { PerformanceMonitor } from '@/components/monitoring/PerformanceMonitor';
 import { BFOBrandBanner, BFOCornerBug } from '@/components/branding/BFOBrandBanner';
 import { usePersonaSublinks } from '@/hooks/usePersonaSublinks';
@@ -17,7 +17,7 @@ export function MainLayout({ children }: MainLayoutProps) {
   const { user } = useAuth();
   
   return (
-    <GlobalErrorBoundary showDetailedError={process.env.NODE_ENV === 'development'}>
+    <GlobalErrorBoundary>
       <PerformanceMonitor />
       <div className="page-surface">
         <BFOBrandBanner
