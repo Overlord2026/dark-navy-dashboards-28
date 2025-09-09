@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, lazy } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider } from "next-themes";
 import { HelmetProvider } from 'react-helmet-async';
@@ -109,6 +109,7 @@ import ReviewView from '@/pages/family/ReviewView';
 import ReceiptsViewer from '@/pages/admin/receipts/ReceiptsViewer';
 import TrustAnchors from '@/pages/admin/anchors/Anchors';
 const ReceiptsAdmin = React.lazy(() => import('@/pages/admin/ReceiptsAdmin'));
+const CanonTest = lazy(() => import("@/pages/admin/CanonTest"));
 
 // Demo Pages
 const RetireeBucketDemo = React.lazy(() => import('@/pages/demos/retiree-bucket'));
@@ -924,7 +925,15 @@ function App() {
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/transition/:id" element={<TransitionDetail />} />}
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/diligence" element={<DiligenceAdmin />} />}
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/migration-invite" element={<MigrationHubInvite />} />}
-              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/migration-queue" element={<MigrationQueueAdmin />} />}
+               {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/migration-queue" element={<MigrationQueueAdmin />} />}
+               {getFlag('ADMIN_TOOLS_ENABLED') && <Route
+                 path="/admin/canon"
+                 element={
+                   <Suspense fallback={<div />}>
+                     <CanonTest />
+                   </Suspense>
+                 }
+               />}
               {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/db/migrations" element={<DbMigrations />} />}
               {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/migration" element={<MigrationHub />} />}
             
