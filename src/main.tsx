@@ -1,6 +1,6 @@
 
-import React from 'react'
-import ReactDOM from 'react-dom/client'
+import React, { Suspense } from "react";
+import ReactDOM from "react-dom/client";
 import { RouterProvider } from 'react-router-dom'
 import { router } from './router'
 import './index.css'
@@ -14,12 +14,12 @@ import { registerServiceWorker, promptInstallPWA } from './lib/pwa'
 import { AuthProvider } from '@/context/AuthContext'
 import { EntitlementsProvider } from '@/context/EntitlementsContext'
 import { removeProductionLogs } from './utils/consoleRemoval'
-import { setupNetworkErrorHandling } from './components/monitoring/network'
 import { initializeAccessibility } from './utils/accessibility'
+import GlobalErrorBoundary from "@/components/monitoring/GlobalErrorBoundary";
+import { setupNetworkErrorHandling } from "@/components/monitoring/network";
 
 // Initialize production optimizations
 removeProductionLogs()
-setupNetworkErrorHandling()
 initializeAccessibility()
 
 // Initialize EmailJS at app entry point
@@ -41,12 +41,30 @@ if (import.meta.env.PROD || import.meta.env.DEV) {
   });
 }
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+const teardown = setupNetworkErrorHandling({
+  onError: (p) => {
+    // Optional: forward to your toast bus
+    // window.dispatchEvent(new CustomEvent('toast', { detail: { title: 'Network error', payload: p }}));
+  },
+});
+
+ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <AuthProvider>
-      <EntitlementsProvider>
-        <RouterProvider router={router} />
-      </EntitlementsProvider>
-    </AuthProvider>
-  </React.StrictMode>,
-)
+    <GlobalErrorBoundary>
+      <Suspense fallback={<div />}>
+        <AuthProvider>
+          <EntitlementsProvider>
+            <RouterProvider router={router} />
+          </EntitlementsProvider>
+        </AuthProvider>
+      </Suspense>
+    </GlobalErrorBoundary>
+  </React.StrictMode>
+);
+
+// Optional HMR cleanup
+if ((import.meta as any).hot) {
+  (import.meta as any).hot.dispose(() => {
+    try { teardown?.(); } catch {}
+  });
+}
