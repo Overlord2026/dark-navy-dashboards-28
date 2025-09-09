@@ -78,7 +78,7 @@ export function CalculatorGrid({
   const counts = getCalculatorCounts(persona, tier);
 
   // Filter calculators based on search and category
-  const filteredCalculators = React.useMemo(() => {
+  const filteredCalculators = useMemo(() => {
     let filtered = searchQuery 
       ? searchCalculators(searchQuery, persona, tier, 'elite')
       : allCalculators;

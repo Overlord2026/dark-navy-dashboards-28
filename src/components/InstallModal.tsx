@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 import { installTool } from '@/lib/workspaceTools';
 import { useNavigate } from 'react-router-dom';
 
@@ -6,11 +6,11 @@ export default function InstallModal({ toolKey, registryItem, onClose }: {
   toolKey: string, registryItem: any, onClose: () => void
 }) {
   const nav = useNavigate();
-  const [seed, setSeed] = React.useState(true);
+  const [seed, setSeed] = useState(true);
   const { label, summary, routePriv, routePub } = registryItem || {};
   
   // ESC key handler
-  React.useEffect(() => {
+  useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
     };
