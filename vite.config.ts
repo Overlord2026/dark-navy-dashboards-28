@@ -17,8 +17,11 @@ export default defineConfig(({ mode }) => ({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      // Force single React instance
+      "react": path.resolve(__dirname, "node_modules/react"),
+      "react-dom": path.resolve(__dirname, "node_modules/react-dom"),
     },
-    dedupe: ['react', 'react-dom'],
+    dedupe: ['react', 'react-dom', 'scheduler'],
   },
   build: {
     // Code splitting for bundles >200KB
@@ -56,6 +59,12 @@ export default defineConfig(({ mode }) => ({
   // Performance hints
   optimizeDeps: {
     include: ['react', 'react-dom', 'lucide-react'],
-    exclude: ['@vite/client', '@vite/env']
-  }
+    exclude: ['@vite/client', '@vite/env'],
+    // Force single React instance in dependencies
+    force: true
+  },
+  // Ensure single React instance globally
+  define: {
+    'process.env.NODE_ENV': JSON.stringify(mode),
+  },
 }));

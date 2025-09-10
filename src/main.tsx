@@ -24,6 +24,13 @@ import { setupNetworkErrorHandling } from "@/components/monitoring/network";
 removeProductionLogs()
 initializeAccessibility()
 
+// Debug React health in DEV
+if (import.meta.env.DEV) {
+  import('./utils/reactHealth').then(({ checkReactHealth }) => {
+    checkReactHealth();
+  }).catch(console.error);
+}
+
 // Initialize EmailJS at app entry point
 emailjs.init(import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'rfbjUYJ8iPHEZaQvx')
 

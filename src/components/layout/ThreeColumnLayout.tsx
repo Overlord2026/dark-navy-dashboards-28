@@ -1,5 +1,6 @@
 
-import { ReactNode, useState, useEffect } from "react";
+import * as React from "react";
+import { useState, useEffect, ReactNode } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
