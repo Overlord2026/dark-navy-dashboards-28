@@ -16,7 +16,8 @@ import {
   AlertTriangle,
   CheckCircle,
   Plus,
-  Target
+  Target,
+  Wallet
 } from 'lucide-react';
 import { useFeatureAccess } from '@/hooks/useFeatureAccess';
 import { PremiumWrapper } from '@/components/ui/premium-badge';
@@ -131,20 +132,30 @@ export const BudgetsPage = () => {
   const savingsRate = ((currentBudget.totalIncome - currentBudget.totalSpent) / currentBudget.totalIncome) * 100;
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold">Budget Management</h1>
-          <p className="text-muted-foreground">
-            Track spending, manage budgets, and reach your financial goals
-          </p>
+    <div className="min-h-screen family-background">
+      <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60" role="banner">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+                  <Wallet className="w-5 h-5 text-primary" />
+                </div>
+                <div>
+                  <h1 className="text-xl font-semibold">Budget Planning</h1>
+                  <p className="text-sm text-muted-foreground">Track spending, manage budgets, and reach your financial goals</p>
+                </div>
+              </div>
+            </div>
+            <PremiumWrapper isPremium={hasAdvancedBudgets} showBadge>
+              <Badge variant="outline" className="ml-2">
+                {hasAdvancedBudgets ? 'Advanced Analytics' : 'Basic Budgets'}
+              </Badge>
+            </PremiumWrapper>
+          </div>
         </div>
-        <PremiumWrapper isPremium={hasAdvancedBudgets} showBadge>
-          <Badge variant="outline" className="ml-2">
-            {hasAdvancedBudgets ? 'Advanced Analytics' : 'Basic Budgets'}
-          </Badge>
-        </PremiumWrapper>
-      </div>
+      </header>
+      <main className="container mx-auto px-4 py-8 space-y-8" role="main">
 
       {/* Summary Cards */}
       <div className="grid md:grid-cols-4 gap-6">
@@ -426,6 +437,7 @@ export const BudgetsPage = () => {
           </div>
         </TabsContent>
       </Tabs>
+      </main>
     </div>
   );
 };
