@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useSearchParams, Link } from 'react-router-dom';
+import { useSearchParams, Link, useNavigate } from 'react-router-dom';
 import { getToolRoute, TOOL_METADATA } from '@/config/toolsRegistry';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -25,6 +25,7 @@ const BuildWorkspacePage = () => {
   const [searchParams] = useSearchParams();
   const persona = searchParams.get('persona') || 'aspiring';
   const [selectedTier, setSelectedTier] = useState<string>('');
+  const navigate = useNavigate();
 
   // Core features available to all users - using existing component routes
   const coreFeatures = [
@@ -161,7 +162,7 @@ const BuildWorkspacePage = () => {
           <SidebarGroupContent>
             <SidebarMenu>
               {coreFeatures.map((feature) => (
-                <SidebarMenuItem key={feature.title}>
+                <SidebarMenuItem key={feature.title} onClick={() => navigate(feature.href)}>
                   <SidebarMenuButton asChild className="text-[hsl(var(--luxury-white))] hover:bg-[hsl(var(--luxury-gold))]/20 hover:text-[hsl(var(--luxury-gold))] transition-colors">
                     <Link to={feature.href}>
                       <feature.icon className="h-4 w-4 mr-3" />
