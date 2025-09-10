@@ -1,6 +1,5 @@
 
 import * as React from "react";
-import { useState, useEffect, ReactNode } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -21,7 +20,7 @@ import { TopNavigationBar } from "@/components/navigation/TopNavigationBar";
 import { SkipLink } from "@/components/SkipLink";
 
 interface ThreeColumnLayoutProps {
-  children: ReactNode;
+  children: React.ReactNode;
   title?: string;
   activeMainItem?: string;
   activeSecondaryItem?: string;
@@ -37,10 +36,10 @@ export function ThreeColumnLayout({
   secondaryMenuItems,
   breadcrumbs
 }: ThreeColumnLayoutProps) {
-  const [mainSidebarCollapsed, setMainSidebarCollapsed] = useState(false);
-  const [secondarySidebarCollapsed, setSecondarySidebarCollapsed] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>(
+  const [mainSidebarCollapsed, setMainSidebarCollapsed] = React.useState(false);
+  const [secondarySidebarCollapsed, setSecondarySidebarCollapsed] = React.useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+  const [expandedCategories, setExpandedCategories] = React.useState<Record<string, boolean>>(
     navigationCategories.reduce((acc, category) => {
       acc[category.id] = category.defaultExpanded ?? true;
       return acc;
@@ -51,12 +50,12 @@ export function ThreeColumnLayout({
 
   // Close mobile menu when route changes
   const location = useLocation();
-  useEffect(() => {
+  React.useEffect(() => {
     setMobileMenuOpen(false);
   }, [location.pathname]);
 
   // Handle window resize
-  useEffect(() => {
+  React.useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 1024 && mobileMenuOpen) {
         setMobileMenuOpen(false);
