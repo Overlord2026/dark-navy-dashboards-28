@@ -14,6 +14,9 @@ export default defineConfig({
   optimizeDeps: {
     include: ["react", "react-dom"],
   },
+  server: {
+    port: 8080,
+  },
   build: {
     sourcemap: false,
   },
