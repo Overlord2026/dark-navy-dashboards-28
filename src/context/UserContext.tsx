@@ -20,6 +20,7 @@ interface UserContextType {
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  console.log('[UserProvider] mount');
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const { user, session, isAuthenticated, login: authLogin, logout: authLogout, userProfile: authUserProfile } = useAuth();

@@ -62,6 +62,7 @@ const defaultAdvisorInfo: AdvisorInfo = {
 const AdvisorContext = createContext<AdvisorContextType | undefined>(undefined);
 
 export const AdvisorProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  console.log('[AdvisorProvider] mount');
   const [advisorInfo, setAdvisorInfo] = useState<AdvisorInfo>(defaultAdvisorInfo);
 
   const updateAdvisorInfo = (info: Partial<AdvisorInfo>) => {
