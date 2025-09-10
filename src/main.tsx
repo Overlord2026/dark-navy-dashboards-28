@@ -15,6 +15,8 @@ import { initializeAnalytics } from './lib/analytics'
 import { registerServiceWorker, promptInstallPWA } from './lib/pwa'
 import { AuthProvider } from '@/context/AuthContext'
 import { EntitlementsProvider } from '@/context/EntitlementsContext'
+import { UserProvider } from '@/context/UserContext'
+import { AdvisorProvider } from '@/context/AdvisorContext'
 import { removeProductionLogs } from './utils/consoleRemoval'
 import { initializeAccessibility } from './utils/accessibility'
 import { GlobalErrorBoundary } from "@/components/errors/GlobalErrorBoundary";
@@ -74,7 +76,11 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <Suspense fallback={<div />}>
           <AuthProvider>
             <EntitlementsProvider>
-              <RouterProvider router={router} />
+              <UserProvider>
+                <AdvisorProvider>
+                  <RouterProvider router={router} />
+                </AdvisorProvider>
+              </UserProvider>
             </EntitlementsProvider>
           </AuthProvider>
         </Suspense>
