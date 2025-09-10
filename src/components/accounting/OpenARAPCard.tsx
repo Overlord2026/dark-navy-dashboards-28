@@ -1,13 +1,13 @@
 'use client';
-import * as React from "react";
+import { useState, useEffect } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
 
 export function OpenARAPCard({ orgId }: { orgId: string }) {
-  const [ar, setAr] = React.useState(0);
-  const [ap, setAp] = React.useState(0);
+  const [ar, setAr] = useState(0);
+  const [ap, setAp] = useState(0);
 
-  React.useEffect(() => {
+  useEffect(() => {
     (async () => {
       const [{ data: inv }, { data: bills }] = await Promise.all([
         supabase.from("ar_invoices").select("total,status").eq("org_id", orgId).eq("status", "open"),

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import toolReg from '@/config/toolRegistry.json';
 import { isInstalled } from '@/lib/workspaceTools';
 import InstallModal from '@/components/InstallModal';
@@ -9,7 +9,7 @@ export default function ToolGate({ toolKey, children }: {
   children: (p: { onClick: () => void }) => React.ReactNode
 }) {
   const nav = useNavigate();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const item = (toolReg as any[]).find(t => t.key === toolKey);
   
   function onClick() {
