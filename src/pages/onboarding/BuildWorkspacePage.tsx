@@ -26,34 +26,34 @@ const BuildWorkspacePage = () => {
   const [selectedTier, setSelectedTier] = useState<string>('');
   const navigate = useNavigate();
 
-  // Core features available to all users - mapped to existing tools
+  // Core features available to all users - mapped to their specific tools
   const coreFeatures = [
     {
       title: 'Goals',
       description: 'Set and track financial goals',
       icon: Target,
-      href: '/family/home', // Goals tracking in family dashboard
+      href: '/goals', // Existing goals page
       available: true
     },
     {
       title: 'Budget',
       description: 'Monthly budget planning',
       icon: Wallet,
-      href: '/family/home', // Budget planning in family dashboard
+      href: '/preview/budget-planner', // Preview for budget tool
       available: true
     },
     {
       title: 'Cash Flow',
       description: 'Track income and expenses',
       icon: TrendingUp,
-      href: '/tools/retirement-roadmap', // Cash flow analysis in retirement roadmap
+      href: '/preview/cash-flow-tracker', // Preview for cash flow tool
       available: true
     },
     {
       title: 'Transactions',
       description: 'View and categorize transactions',
       icon: CreditCard,
-      href: '/tools/taxhub-diy', // Transaction management in TaxHub
+      href: '/preview/transactions-manager', // Preview for transactions tool
       available: true
     }
   ];
