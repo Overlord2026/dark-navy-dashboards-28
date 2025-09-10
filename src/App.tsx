@@ -111,6 +111,7 @@ import TrustAnchors from '@/pages/admin/anchors/Anchors';
 const ReceiptsAdmin = lazy(() => import('@/pages/admin/ReceiptsAdmin'));
 const CanonTest = lazy(() => import("@/components/testing/CanonTest"));
 const MockTest = lazy(() => import("@/pages/admin/MockTest"));
+const LiveModeTest = lazy(() => import("@/pages/admin/LiveModeTest"));
 import HealthCheck from "@/pages/HealthCheck";
 
 // Demo Pages
@@ -941,6 +942,14 @@ function App() {
                    element={
                      <Suspense fallback={<div>Loading...</div>}>
                        <MockTest />
+                    </Suspense>
+                  }
+                 />}
+                {getFlag('ADMIN_TOOLS_ENABLED') && <Route
+                   path="/admin/live-test"
+                   element={
+                     <Suspense fallback={<div>Loading...</div>}>
+                       <LiveModeTest />
                     </Suspense>
                   }
                  />}
