@@ -162,7 +162,7 @@ const BuildWorkspacePage = () => {
           <SidebarGroupContent>
             <SidebarMenu>
               {coreFeatures.map((feature) => (
-                <SidebarMenuItem key={feature.title} onClick={() => navigate(feature.href)}>
+                <SidebarMenuItem key={feature.title}>
                   <SidebarMenuButton asChild className="text-[hsl(var(--luxury-white))] hover:bg-[hsl(var(--luxury-gold))]/20 hover:text-[hsl(var(--luxury-gold))] transition-colors">
                     <Link to={feature.href}>
                       <feature.icon className="h-4 w-4 mr-3" />
