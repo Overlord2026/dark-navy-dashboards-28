@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useMemo } from "react";
+import * as React from "react";
+import { createContext, useContext, useMemo } from "react";
 import { useAuth } from "./AuthContext";
 import { Plan } from "@/types/pricing";
 

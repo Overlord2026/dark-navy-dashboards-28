@@ -1,9 +1,11 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import * as React from "react";
+import { createContext, useContext, useState, useEffect } from "react";
+import type { ReactNode } from "react";
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { shouldEnforceAuthentication, isQABypassAllowed } from '@/utils/environment';
 import { UserProfile } from '@/types/user';
-import { useFirstLoginToolInstaller } from '@/hooks/useFirstLoginToolInstaller';
+// Removed useFirstLoginToolInstaller import - causes circular dependency with toast
 import type { PersonaType } from '@/config/defaultToolsByPersona';
 import { MOCK_MODE } from '@/config/featureFlags';
 
@@ -38,7 +40,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [isLoading, setIsLoading] = useState(true);
   const [isChecking2FA, setIsChecking2FA] = useState(false);
   const [isQABypassActive, setIsQABypassActive] = useState(MOCK_MODE);
-  const { checkAndInstallDefaultTools } = useFirstLoginToolInstaller();
+  // Removed useFirstLoginToolInstaller hook - causes circular dependency with toast context
 
   // Mock mode user profile
   const mockUserProfile: UserProfile = {
@@ -122,10 +124,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setUserProfile(userProfileData);
         setIsQABypassActive(isQABypassAllowed(profile.email));
         
-        // Check for first login and auto-install tools
-        if (userProfileData.role) {
-          checkAndInstallDefaultTools(userProfileData.role as PersonaType);
-        }
+        // Removed auto-install tools logic to prevent circular dependency with toast context
+        // Tools can be manually installed from the workspace UI
       }
     } catch (error) {
       console.error('Error in loadUserProfile:', error);
