@@ -29,7 +29,7 @@ interface AuthContextType {
   complete2FALogin: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -482,8 +482,32 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+  if (!context) {
+    if (import.meta.env.DEV) {
+      console.error("useAuth called outside <AuthProvider>. Rendering stub in DEV.");
+      // Provide a minimal non-throwing stub only in DEV so the app doesn't crash.
+      return {
+        user: null,
+        session: null,
+        userProfile: null,
+        isAuthenticated: false,
+        isLoading: false,
+        isEmailConfirmed: false,
+        isQABypassActive: false,
+        login: async () => { throw new Error("Auth unavailable in DEV: wrap with <AuthProvider>."); },
+        signup: async () => { throw new Error("Auth unavailable in DEV: wrap with <AuthProvider>."); },
+        signInWithGoogle: async () => { throw new Error("Auth unavailable in DEV: wrap with <AuthProvider>."); },
+        signInWithApple: async () => { throw new Error("Auth unavailable in DEV: wrap with <AuthProvider>."); },
+        signInWithMicrosoft: async () => { throw new Error("Auth unavailable in DEV: wrap with <AuthProvider>."); },
+        logout: async () => {},
+        updateUserProfile: async () => {},
+        refreshProfile: async () => {},
+        resendConfirmation: async () => { throw new Error("Auth unavailable in DEV: wrap with <AuthProvider>."); },
+        resetPassword: async () => { throw new Error("Auth unavailable in DEV: wrap with <AuthProvider>."); },
+        complete2FALogin: async () => { throw new Error("Auth unavailable in DEV: wrap with <AuthProvider>."); },
+      } as AuthContextType;
+    }
+    throw new Error("useAuth must be used within <AuthProvider>.");
   }
   return context;
 };
