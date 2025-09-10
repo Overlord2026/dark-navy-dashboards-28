@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
+import { getToolRoute, TOOL_METADATA } from '@/config/toolsRegistry';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -25,34 +26,34 @@ const BuildWorkspacePage = () => {
   const persona = searchParams.get('persona') || 'aspiring';
   const [selectedTier, setSelectedTier] = useState<string>('');
 
-  // Core features available to all users
+  // Core features available to all users - using existing component routes
   const coreFeatures = [
     {
-      title: 'Goals',
-      description: 'Set and track financial goals',
+      title: TOOL_METADATA.goals.title,
+      description: TOOL_METADATA.goals.description,
       icon: Target,
-      href: '/goals',
+      href: TOOL_METADATA.goals.route,
       available: true
     },
     {
-      title: 'Budget',
-      description: 'Monthly budget planning',
+      title: TOOL_METADATA.budget.title,
+      description: TOOL_METADATA.budget.description,
       icon: Wallet,
-      href: '/budget',
+      href: TOOL_METADATA.budget.route,
       available: true
     },
     {
-      title: 'Cash Flow',
-      description: 'Track income and expenses',
+      title: TOOL_METADATA.cashflow.title,
+      description: TOOL_METADATA.cashflow.description,
       icon: TrendingUp,
-      href: '/cash-flow',
+      href: TOOL_METADATA.cashflow.route,
       available: true
     },
     {
-      title: 'Transactions',
-      description: 'View and categorize transactions',
+      title: TOOL_METADATA.transactions.title,
+      description: TOOL_METADATA.transactions.description,
       icon: CreditCard,
-      href: '/transactions',
+      href: TOOL_METADATA.transactions.route,
       available: true
     }
   ];
@@ -161,10 +162,12 @@ const BuildWorkspacePage = () => {
             <SidebarMenu>
               {coreFeatures.map((feature) => (
                 <SidebarMenuItem key={feature.title}>
-                  <SidebarMenuButton className="text-[hsl(var(--luxury-white))] hover:bg-[hsl(var(--luxury-gold))]/20 hover:text-[hsl(var(--luxury-gold))] transition-colors">
-                    <feature.icon className="h-4 w-4 mr-3" />
-                    <span className="text-sm font-medium">{feature.title}</span>
-                    <CheckCircle className="h-3 w-3 ml-auto text-green-400" />
+                  <SidebarMenuButton asChild className="text-[hsl(var(--luxury-white))] hover:bg-[hsl(var(--luxury-gold))]/20 hover:text-[hsl(var(--luxury-gold))] transition-colors">
+                    <Link to={feature.href}>
+                      <feature.icon className="h-4 w-4 mr-3" />
+                      <span className="text-sm font-medium">{feature.title}</span>
+                      <CheckCircle className="h-3 w-3 ml-auto text-green-400" />
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -251,17 +254,19 @@ const BuildWorkspacePage = () => {
                   <p className="text-[hsl(var(--luxury-white))]/80 mb-4">
                     {config.description}
                   </p>
-                  <div className="space-y-3">
-                    {coreFeatures.map((feature) => (
-                      <div key={feature.title} className="flex items-center gap-3 p-3 rounded-lg bg-[hsl(var(--luxury-gold))]/10 hover:bg-[hsl(var(--luxury-gold))]/20 transition-colors">
-                        <feature.icon className="h-5 w-5 text-[hsl(var(--luxury-gold))]" />
-                        <div className="flex-1">
-                          <span className="text-[hsl(var(--luxury-white))] font-medium block">{feature.title}</span>
-                          <span className="text-[hsl(var(--luxury-white))]/60 text-sm">{feature.description}</span>
-                        </div>
-                        <CheckCircle className="h-4 w-4 text-green-400" />
-                      </div>
-                    ))}
+                   <div className="space-y-3">
+                     {coreFeatures.map((feature) => (
+                       <Link key={feature.title} to={feature.href} className="block">
+                         <div className="flex items-center gap-3 p-3 rounded-lg bg-[hsl(var(--luxury-gold))]/10 hover:bg-[hsl(var(--luxury-gold))]/20 transition-colors cursor-pointer">
+                           <feature.icon className="h-5 w-5 text-[hsl(var(--luxury-gold))]" />
+                           <div className="flex-1">
+                             <span className="text-[hsl(var(--luxury-white))] font-medium block">{feature.title}</span>
+                             <span className="text-[hsl(var(--luxury-white))]/60 text-sm">{feature.description}</span>
+                           </div>
+                           <CheckCircle className="h-4 w-4 text-green-400" />
+                         </div>
+                       </Link>
+                     ))}
                   </div>
                   
                   {/* Persona-specific features */}

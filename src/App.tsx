@@ -35,6 +35,9 @@ import FamiliesLanding from '@/pages/landing/FamiliesLanding';
 import ProsLanding from '@/pages/landing/ProsLanding';
 import GoalsPageLanding from '@/pages/landing/GoalsPage';
 import GoalsPage from '@/pages/GoalsPage';
+import { BudgetsPage } from '@/pages/BudgetsPage';
+import { CashFlowPage } from '@/features/cashflow/pages/CashFlowPage';
+import { TransactionsPage } from '@/features/transactions/pages/TransactionsPage';
 import CatalogPage from '@/pages/landing/CatalogPage';
 import HealthcareLanding from '@/pages/landing/HealthcareLanding';
 import FixturesPanel from '@/pages/dev/FixturesPanel';
@@ -456,6 +459,16 @@ function App() {
             
             <Route path="/catalog" element={<CatalogPage />} />
             <Route path="/goals" element={<GoalsPage />} />
+            <Route path="/budgets" element={<BudgetsPage />} />
+            <Route path="/cashflow" element={<CashFlowPage />} />
+            <Route path="/transactions" element={<TransactionsPage />} />
+            
+            {/* Tool routes - standardized paths that redirect to existing components */}
+            <Route path="/tools/goals" element={<Navigate to="/goals" replace />} />
+            <Route path="/tools/budget" element={<Navigate to="/budgets" replace />} />
+            <Route path="/tools/cashflow" element={<Navigate to="/cashflow" replace />} />
+            <Route path="/tools/transactions" element={<Navigate to="/transactions" replace />} />
+            
             <Route path="/health" element={<HealthcareLanding />} />
             
             {/* Family Routes */}
