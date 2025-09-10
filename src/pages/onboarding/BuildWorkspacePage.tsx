@@ -39,21 +39,21 @@ const BuildWorkspacePage = () => {
       title: 'Budget',
       description: 'Monthly budget planning',
       icon: Wallet,
-      href: '/tools/retirement-roadmap', // Budget planning in retirement roadmap
+      href: '/wealth/goals/budgets',
       available: true
     },
     {
       title: 'Cash Flow',
       description: 'Track income and expenses',
       icon: TrendingUp,
-      href: '/tools/retirement', // Cash flow tracking via Retirement Roadmap tool
+      href: '/family/cash-flow',
       available: true
     },
     {
       title: 'Transactions',
       description: 'View and categorize transactions',
       icon: CreditCard,
-      href: '/family/tools/taxhub-preview', // Transaction management in TaxHub Preview
+      href: '/family/transactions',
       available: true
     }
   ];

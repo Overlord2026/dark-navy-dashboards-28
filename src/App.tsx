@@ -267,6 +267,9 @@ import { AgentsPage } from './pages/marketplace/AgentsPage';
 import { QuoteStartPage } from './pages/marketplace/QuoteStartPage';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { BudgetsPage } from '@/pages/BudgetsPage';
+import { CashFlowPage } from '@/features/cashflow/pages/CashFlowPage';
+import { TransactionsPage } from '@/features/transactions/pages/TransactionsPage';
 
 const SelectPersona = lazy(() => import('@/pages/auth/SelectPersona'));
 
@@ -725,6 +728,9 @@ function App() {
             <Route path="/family/tools/rmd-check" element={<RMDCheckTool />} />
             <Route path="/family/tools/taxhub-preview" element={<TaxHubPreview />} />
             <Route path="/family/receipts" element={<FamilyReceipts />} />
+            <Route path="/family/cash-flow" element={<CashFlowPage />} />
+            <Route path="/family/transactions" element={<TransactionsPage />} />
+            <Route path="/wealth/goals/budgets" element={<BudgetsPage />} />
             
             {/* Tool Pages */}
             <Route path="/tools/retirement" element={<RetirementRoadmapTool />} />
