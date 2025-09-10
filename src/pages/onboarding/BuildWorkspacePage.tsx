@@ -46,14 +46,14 @@ const BuildWorkspacePage = () => {
       title: 'Cash Flow',
       description: 'Track income and expenses',
       icon: TrendingUp,
-      href: '/tools/income-planner', // Cash flow tracking in income planner
+      href: '/tools/retirement', // Cash flow tracking via Retirement Roadmap tool
       available: true
     },
     {
       title: 'Transactions',
       description: 'View and categorize transactions',
       icon: CreditCard,
-      href: '/tools/taxhub-diy', // Transaction management in TaxHub DIY
+      href: '/family/tools/taxhub-preview', // Transaction management in TaxHub Preview
       available: true
     }
   ];

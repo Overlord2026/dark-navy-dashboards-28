@@ -1000,7 +1000,7 @@ function App() {
             <Route path="/marketplace/cpa/:id" element={<CPADetail />} />
             <Route path="/marketplace/cpas" element={<Stub title="Find CPAs" />} />
             <Route path="/marketplace/insurance" element={<Stub title="Insurance Solutions" />} />
-            <Route path="/tools/retirement-roadmap" element={<Stub title="Retirement Roadmap Tool" />} />
+            <Route path="/tools/retirement-roadmap" element={<RetirementRoadmapTool />} />
             <Route path="/tools/tax-projection" element={<Stub title="Tax Projection Tool" />} />
             <Route path="/tools/estate-planning" element={<Stub title="Estate Planning Tool" />} />
             <Route path="/vault" element={<Stub title="Secure Document Vault" />} />
