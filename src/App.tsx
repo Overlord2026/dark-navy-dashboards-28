@@ -110,6 +110,7 @@ import ReceiptsViewer from '@/pages/admin/receipts/ReceiptsViewer';
 import TrustAnchors from '@/pages/admin/anchors/Anchors';
 const ReceiptsAdmin = lazy(() => import('@/pages/admin/ReceiptsAdmin'));
 const CanonTest = lazy(() => import("@/components/testing/CanonTest"));
+const MockTest = lazy(() => import("@/pages/admin/MockTest"));
 import HealthCheck from "@/pages/HealthCheck";
 
 // Demo Pages
@@ -927,14 +928,22 @@ function App() {
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/diligence" element={<DiligenceAdmin />} />}
              {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/migration-invite" element={<MigrationHubInvite />} />}
                {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/migration-queue" element={<MigrationQueueAdmin />} />}
-               {getFlag('ADMIN_TOOLS_ENABLED') && <Route
-                 path="/admin/canon"
-                 element={
-                   <Suspense fallback={<div />}>
-                     <CanonTest />
-                   </Suspense>
-                 }
-                />}
+                {getFlag('ADMIN_TOOLS_ENABLED') && <Route
+                  path="/admin/canon"
+                  element={
+                    <Suspense fallback={<div />}>
+                       <CanonTest />
+                     </Suspense>
+                   }
+                 />}
+                {getFlag('ADMIN_TOOLS_ENABLED') && <Route
+                   path="/admin/mock-test"
+                   element={
+                     <Suspense fallback={<div>Loading...</div>}>
+                       <MockTest />
+                    </Suspense>
+                  }
+                 />}
                {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/db/migrations" element={<DbMigrations />} />}
                {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/migration" element={<MigrationHub />} />}
                
