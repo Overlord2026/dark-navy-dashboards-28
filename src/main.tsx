@@ -12,11 +12,11 @@ import './styles/accessibility.css'
 import emailjs from '@emailjs/browser'
 import { initializeAnalytics } from './lib/analytics'
 import { registerServiceWorker, promptInstallPWA } from './lib/pwa'
-import { AuthProvider } from '@/context/AuthContext'
+import { AuthProvider } from '@/contexts/AuthContext'
 import { EntitlementsProvider } from '@/context/EntitlementsContext'
 import { removeProductionLogs } from './utils/consoleRemoval'
 import { initializeAccessibility } from './utils/accessibility'
-import GlobalErrorBoundary from "@/components/monitoring/GlobalErrorBoundary";
+import { GlobalErrorBoundary } from "@/components/errors/GlobalErrorBoundary";
 import { setupNetworkErrorHandling } from "@/components/monitoring/network";
 
 // Initialize production optimizations
