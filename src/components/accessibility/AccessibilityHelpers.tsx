@@ -1,5 +1,5 @@
 // Skip to content link component for accessibility
-import React, { useEffect } from 'react';
+import React from 'react';
 
 export const SkipToContent: React.FC = () => {
   return (
@@ -15,7 +15,7 @@ export const SkipToContent: React.FC = () => {
 
 // Keyboard navigation helper
 export const useKeyboardNavigation = () => {
-  useEffect(() => {
+  React.useEffect(() => {
     const handleKeydown = (event: KeyboardEvent) => {
       // Tab trap for modals
       if (event.key === 'Escape') {
@@ -55,7 +55,7 @@ export const useKeyboardNavigation = () => {
 
 // Focus trap for modals
 export const useFocusTrap = (isActive: boolean) => {
-  useEffect(() => {
+  React.useEffect(() => {
     if (!isActive) return;
 
     const focusableElements = document.querySelectorAll(

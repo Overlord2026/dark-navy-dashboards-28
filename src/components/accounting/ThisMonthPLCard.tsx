@@ -1,13 +1,13 @@
 'use client';
-import { useState, useEffect } from "react";
+import * as React from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
 
 export function ThisMonthPLCard({ orgId }: { orgId: string }) {
-  const [income, setIncome] = useState(0);
-  const [expense, setExpense] = useState(0);
+  const [income, setIncome] = React.useState(0);
+  const [expense, setExpense] = React.useState(0);
 
-  useEffect(() => {
+  React.useEffect(() => {
     (async () => {
       const { data, error } = await supabase
         .from("vw_income_statement")

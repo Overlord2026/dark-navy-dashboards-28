@@ -1,10 +1,9 @@
 import React from "react";
-import { useState } from 'react';
 import { callEdgeJSON } from "@/services/aiEdge";
 
 export default function DemoDdPackButton() {
-  const [busy, setBusy] = useState(false);
-  const [out, setOut] = useState<string>("");
+  const [busy, setBusy] = React.useState(false);
+  const [out, setOut] = React.useState<string>("");
 
   const run = async () => {
     setBusy(true); setOut("");

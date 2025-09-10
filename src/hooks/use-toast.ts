@@ -1,6 +1,4 @@
-import * as React from "react";
-import { useState, useEffect } from "react";
-import type { ReactNode } from "react";
+import * as React from "react"
 
 import type {
   ToastActionElement,
@@ -12,8 +10,8 @@ const TOAST_REMOVE_DELAY = 1000000
 
 type ToasterToast = ToastProps & {
   id: string
-  title?: ReactNode
-  description?: ReactNode
+  title?: React.ReactNode
+  description?: React.ReactNode
   action?: ToastActionElement
 }
 
@@ -181,9 +179,9 @@ toast.info = (message: string, props?: Omit<Toast, 'title' | 'description'>) =>
   toast({ title: "Info", description: message, variant: "default", ...props });
 
 function useToast() {
-  const [state, setState] = useState<State>(memoryState)
+  const [state, setState] = React.useState<State>(memoryState)
 
-  useEffect(() => {
+  React.useEffect(() => {
     listeners.push(setState)
     return () => {
       const index = listeners.indexOf(setState)

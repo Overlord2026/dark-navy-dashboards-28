@@ -16,8 +16,7 @@ import {
   AlertTriangle,
   CheckCircle,
   Plus,
-  Target,
-  Wallet
+  Target
 } from 'lucide-react';
 import { useFeatureAccess } from '@/hooks/useFeatureAccess';
 import { PremiumWrapper } from '@/components/ui/premium-badge';
@@ -132,34 +131,24 @@ export const BudgetsPage = () => {
   const savingsRate = ((currentBudget.totalIncome - currentBudget.totalSpent) / currentBudget.totalIncome) * 100;
 
   return (
-    <div className="min-h-screen family-background">
-      <header className="bfo-header" role="banner">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                <div className="w-10 h-10 bg-bfo-gold/20 rounded-lg flex items-center justify-center">
-                  <Wallet className="w-5 h-5 text-bfo-gold" />
-                </div>
-                <div>
-                  <h1 className="text-xl font-semibold text-bfo-white">Budget Planning</h1>
-                  <p className="text-sm text-bfo-gold">Track spending, manage budgets, and reach your financial goals</p>
-                </div>
-              </div>
-            </div>
-            <PremiumWrapper isPremium={hasAdvancedBudgets} showBadge>
-              <Badge variant="outline" className="ml-2 border-bfo-gold text-bfo-gold">
-                {hasAdvancedBudgets ? 'Advanced Analytics' : 'Basic Budgets'}
-              </Badge>
-            </PremiumWrapper>
-          </div>
+    <div className="container mx-auto p-6 space-y-6">
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-bold">Budget Management</h1>
+          <p className="text-muted-foreground">
+            Track spending, manage budgets, and reach your financial goals
+          </p>
         </div>
-      </header>
-      <main className="container mx-auto px-4 py-8 space-y-8" role="main">
+        <PremiumWrapper isPremium={hasAdvancedBudgets} showBadge>
+          <Badge variant="outline" className="ml-2">
+            {hasAdvancedBudgets ? 'Advanced Analytics' : 'Basic Budgets'}
+          </Badge>
+        </PremiumWrapper>
+      </div>
 
       {/* Summary Cards */}
       <div className="grid md:grid-cols-4 gap-6">
-        <Card className="bfo-card-luxury">
+        <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">Monthly Income</CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
@@ -172,10 +161,10 @@ export const BudgetsPage = () => {
           </CardContent>
         </Card>
 
-        <Card className="bfo-card-luxury">
+        <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">Total Budgeted</CardTitle>
-            <Target className="h-4 w-4 text-bfo-gold" />
+            <Target className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">${currentBudget.totalBudgeted.toLocaleString()}</div>
@@ -185,10 +174,10 @@ export const BudgetsPage = () => {
           </CardContent>
         </Card>
 
-        <Card className="bfo-card-luxury">
+        <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">Total Spent</CardTitle>
-            <BarChart3 className="h-4 w-4 text-bfo-gold" />
+            <BarChart3 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">${currentBudget.totalSpent.toLocaleString()}</div>
@@ -198,10 +187,10 @@ export const BudgetsPage = () => {
           </CardContent>
         </Card>
 
-        <Card className="bfo-card-luxury">
+        <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">Savings Rate</CardTitle>
-            <PieChart className="h-4 w-4 text-bfo-gold" />
+            <PieChart className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{savingsRate.toFixed(1)}%</div>
@@ -222,7 +211,7 @@ export const BudgetsPage = () => {
         <TabsContent value="overview">
           <div className="grid lg:grid-cols-3 gap-6">
             {/* Budget Progress */}
-            <Card className="lg:col-span-2 bfo-card">
+            <Card className="lg:col-span-2">
               <CardHeader>
                 <CardTitle>Budget Categories</CardTitle>
                 <CardDescription>
@@ -266,10 +255,10 @@ export const BudgetsPage = () => {
 
             {/* Quick Actions */}
             <div className="space-y-6">
-              <Card className="bfo-card">
+              <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-bfo-black">
-                    <Plus className="h-5 w-5 text-bfo-gold" />
+                  <CardTitle className="flex items-center gap-2">
+                    <Plus className="h-5 w-5" />
                     Add Category
                   </CardTitle>
                 </CardHeader>
@@ -299,9 +288,9 @@ export const BudgetsPage = () => {
                 </CardContent>
               </Card>
 
-              <Card className="bfo-card">
+              <Card>
                 <CardHeader>
-                  <CardTitle className="text-bfo-black">Budget Health</CardTitle>
+                  <CardTitle>Budget Health</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
@@ -331,7 +320,7 @@ export const BudgetsPage = () => {
         </TabsContent>
 
         <TabsContent value="categories">
-          <Card className="bfo-card">
+          <Card>
             <CardHeader>
               <CardTitle>Category Management</CardTitle>
               <CardDescription>
@@ -374,9 +363,9 @@ export const BudgetsPage = () => {
 
         <TabsContent value="trends">
           <div className="grid lg:grid-cols-2 gap-6">
-            <Card className="bfo-card">
+            <Card>
               <CardHeader>
-                <CardTitle className="text-bfo-black">Spending Trends</CardTitle>
+                <CardTitle>Spending Trends</CardTitle>
                 <CardDescription>
                   Analyze your spending patterns over time
                 </CardDescription>
@@ -395,9 +384,9 @@ export const BudgetsPage = () => {
               </CardContent>
             </Card>
 
-            <Card className="bfo-card">
+            <Card>
               <CardHeader>
-                <CardTitle className="text-bfo-black">Budget Insights</CardTitle>
+                <CardTitle>Budget Insights</CardTitle>
                 <CardDescription>
                   AI-powered insights and recommendations
                 </CardDescription>
@@ -437,7 +426,6 @@ export const BudgetsPage = () => {
           </div>
         </TabsContent>
       </Tabs>
-      </main>
     </div>
   );
 };

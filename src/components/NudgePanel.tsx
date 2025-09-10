@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
 export const NudgePanel: React.FC = () => {
   const { persona, tier, facts } = usePersonalizationStore();
   const navigate = useNavigate();
-  const [dismissedNudges, setDismissedNudges] = useState<Set<string>>(new Set());
+  const [dismissedNudges, setDismissedNudges] = React.useState<Set<string>>(new Set());
 
   const nudges = evalNudges({ persona, tier, facts }).filter(
     nudge => !dismissedNudges.has(nudge.id)

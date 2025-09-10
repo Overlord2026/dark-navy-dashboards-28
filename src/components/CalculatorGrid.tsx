@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -78,7 +78,7 @@ export function CalculatorGrid({
   const counts = getCalculatorCounts(persona, tier);
 
   // Filter calculators based on search and category
-  const filteredCalculators = useMemo(() => {
+  const filteredCalculators = React.useMemo(() => {
     let filtered = searchQuery 
       ? searchCalculators(searchQuery, persona, tier, 'elite')
       : allCalculators;

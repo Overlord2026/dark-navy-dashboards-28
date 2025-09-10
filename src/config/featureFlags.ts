@@ -51,5 +51,5 @@ export const COMPLIANCE_RETENTION = {
   INSURANCE: 5,
 } as const;
 
-// Mock Mode Feature Flag - Set to false for Live Mode testing
-export const MOCK_MODE = false; // (import.meta.env.VITE_APP_MOCK_MODE ?? 'true') === 'true';
+// Mock Mode Feature Flag
+export const MOCK_MODE = (import.meta.env.VITE_APP_MOCK_MODE ?? 'true') === 'true';

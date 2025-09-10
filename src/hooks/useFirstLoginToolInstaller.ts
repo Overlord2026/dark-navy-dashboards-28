@@ -1,5 +1,4 @@
-import * as React from "react";
-import { useEffect } from "react";
+import { useEffect } from 'react';
 import { getWorkspaceTools, installTool, setPersona } from '@/lib/workspaceTools';
 import { DEFAULT_TOOLS_BY_PERSONA, type PersonaType } from '@/config/defaultToolsByPersona';
 import { useFeatureFlag } from '@/lib/flags';

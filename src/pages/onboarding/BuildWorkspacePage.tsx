@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useSearchParams, Link, useNavigate } from 'react-router-dom';
+import { useSearchParams, Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -24,36 +24,35 @@ const BuildWorkspacePage = () => {
   const [searchParams] = useSearchParams();
   const persona = searchParams.get('persona') || 'aspiring';
   const [selectedTier, setSelectedTier] = useState<string>('');
-  const navigate = useNavigate();
 
-  // Core features available to all users - mapped to existing tools
+  // Core features available to all users
   const coreFeatures = [
     {
       title: 'Goals',
       description: 'Set and track financial goals',
       icon: Target,
-      href: '/goals', // Existing goals page
+      href: '/goals',
       available: true
     },
     {
       title: 'Budget',
       description: 'Monthly budget planning',
       icon: Wallet,
-      href: '/wealth/goals/budgets',
+      href: '/budget',
       available: true
     },
     {
       title: 'Cash Flow',
       description: 'Track income and expenses',
       icon: TrendingUp,
-      href: '/family/cash-flow',
+      href: '/cash-flow',
       available: true
     },
     {
       title: 'Transactions',
       description: 'View and categorize transactions',
       icon: CreditCard,
-      href: '/family/transactions',
+      href: '/transactions',
       available: true
     }
   ];
@@ -162,10 +161,7 @@ const BuildWorkspacePage = () => {
             <SidebarMenu>
               {coreFeatures.map((feature) => (
                 <SidebarMenuItem key={feature.title}>
-                  <SidebarMenuButton 
-                    className="text-[hsl(var(--luxury-white))] hover:bg-[hsl(var(--luxury-gold))]/20 hover:text-[hsl(var(--luxury-gold))] transition-colors cursor-pointer"
-                    onClick={() => navigate(feature.href)}
-                  >
+                  <SidebarMenuButton className="text-[hsl(var(--luxury-white))] hover:bg-[hsl(var(--luxury-gold))]/20 hover:text-[hsl(var(--luxury-gold))] transition-colors">
                     <feature.icon className="h-4 w-4 mr-3" />
                     <span className="text-sm font-medium">{feature.title}</span>
                     <CheckCircle className="h-3 w-3 ml-auto text-green-400" />
@@ -257,11 +253,7 @@ const BuildWorkspacePage = () => {
                   </p>
                   <div className="space-y-3">
                     {coreFeatures.map((feature) => (
-                      <div 
-                        key={feature.title} 
-                        className="flex items-center gap-3 p-3 rounded-lg bg-[hsl(var(--luxury-gold))]/10 hover:bg-[hsl(var(--luxury-gold))]/20 transition-colors cursor-pointer"
-                        onClick={() => navigate(feature.href)}
-                      >
+                      <div key={feature.title} className="flex items-center gap-3 p-3 rounded-lg bg-[hsl(var(--luxury-gold))]/10 hover:bg-[hsl(var(--luxury-gold))]/20 transition-colors">
                         <feature.icon className="h-5 w-5 text-[hsl(var(--luxury-gold))]" />
                         <div className="flex-1">
                           <span className="text-[hsl(var(--luxury-white))] font-medium block">{feature.title}</span>

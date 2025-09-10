@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Eye, EyeOff, Tag, FolderOpen, CreditCard } from 'lucide-react';
+import { Eye, EyeOff, Tag, FolderOpen } from 'lucide-react';
 import { toast } from 'sonner';
 
 export function TransactionsPage() {
@@ -95,43 +95,26 @@ export function TransactionsPage() {
   }
 
   return (
-    <div className="min-h-screen family-background">
-      <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60" role="banner">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                  <CreditCard className="w-5 h-5 text-primary" />
-                </div>
-                <div>
-                  <h1 className="text-xl font-semibold">Transaction Management</h1>
-                  <p className="text-sm text-muted-foreground">Manage and categorize your transactions</p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="flex items-center gap-2">
-              <Badge variant="outline">
-                {visibleTransactions.length} visible
-              </Badge>
-              {hiddenCount > 0 && (
-                <Badge variant="secondary">
-                  {hiddenCount} hidden
-                </Badge>
-              )}
-            </div>
-          </div>
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold">Transactions</h1>
+          <p className="text-muted-foreground">
+            Manage and categorize your transactions
+          </p>
         </div>
-      </header>
-
-      <main className="container mx-auto px-4 py-8 space-y-8" role="main">
-
-        <TransactionFilters
-          filter={filter}
-          categories={categories}
-          onFilterChange={setFilter}
-        />
+        
+        <div className="flex items-center gap-2">
+          <Badge variant="outline">
+            {visibleTransactions.length} visible
+          </Badge>
+          {hiddenCount > 0 && (
+            <Badge variant="secondary">
+              {hiddenCount} hidden
+            </Badge>
+          )}
+        </div>
+      </div>
 
       <TransactionFilters
         filter={filter}
@@ -260,7 +243,6 @@ export function TransactionsPage() {
           </CardContent>
         </Card>
       )}
-      </main>
     </div>
   );
 }

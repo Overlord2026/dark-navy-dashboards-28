@@ -1,11 +1,9 @@
-import * as React from "react";
-import { createContext, useContext, useState, useEffect } from "react";
-import type { ReactNode } from "react";
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { shouldEnforceAuthentication, isQABypassAllowed } from '@/utils/environment';
 import { UserProfile } from '@/types/user';
-// Removed useFirstLoginToolInstaller import - causes circular dependency with toast
+import { useFirstLoginToolInstaller } from '@/hooks/useFirstLoginToolInstaller';
 import type { PersonaType } from '@/config/defaultToolsByPersona';
 import { MOCK_MODE } from '@/config/featureFlags';
 
@@ -31,7 +29,7 @@ interface AuthContextType {
   complete2FALogin: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
 }
 
-const AuthContext = createContext<AuthContextType | null>(null);
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -40,7 +38,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [isLoading, setIsLoading] = useState(true);
   const [isChecking2FA, setIsChecking2FA] = useState(false);
   const [isQABypassActive, setIsQABypassActive] = useState(MOCK_MODE);
-  // Removed useFirstLoginToolInstaller hook - causes circular dependency with toast context
+  const { checkAndInstallDefaultTools } = useFirstLoginToolInstaller();
 
   // Mock mode user profile
   const mockUserProfile: UserProfile = {
@@ -124,8 +122,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setUserProfile(userProfileData);
         setIsQABypassActive(isQABypassAllowed(profile.email));
         
-        // Removed auto-install tools logic to prevent circular dependency with toast context
-        // Tools can be manually installed from the workspace UI
+        // Check for first login and auto-install tools
+        if (userProfileData.role) {
+          checkAndInstallDefaultTools(userProfileData.role as PersonaType);
+        }
       }
     } catch (error) {
       console.error('Error in loadUserProfile:', error);
@@ -482,32 +482,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
-  if (!context) {
-    if (import.meta.env.DEV) {
-      console.error("useAuth called outside <AuthProvider>. Rendering stub in DEV.");
-      // Provide a minimal non-throwing stub only in DEV so the app doesn't crash.
-      return {
-        user: null,
-        session: null,
-        userProfile: null,
-        isAuthenticated: false,
-        isLoading: false,
-        isEmailConfirmed: false,
-        isQABypassActive: false,
-        login: async () => { throw new Error("Auth unavailable in DEV: wrap with <AuthProvider>."); },
-        signup: async () => { throw new Error("Auth unavailable in DEV: wrap with <AuthProvider>."); },
-        signInWithGoogle: async () => { throw new Error("Auth unavailable in DEV: wrap with <AuthProvider>."); },
-        signInWithApple: async () => { throw new Error("Auth unavailable in DEV: wrap with <AuthProvider>."); },
-        signInWithMicrosoft: async () => { throw new Error("Auth unavailable in DEV: wrap with <AuthProvider>."); },
-        logout: async () => {},
-        updateUserProfile: async () => {},
-        refreshProfile: async () => {},
-        resendConfirmation: async () => { throw new Error("Auth unavailable in DEV: wrap with <AuthProvider>."); },
-        resetPassword: async () => { throw new Error("Auth unavailable in DEV: wrap with <AuthProvider>."); },
-        complete2FALogin: async () => { throw new Error("Auth unavailable in DEV: wrap with <AuthProvider>."); },
-      } as AuthContextType;
-    }
-    throw new Error("useAuth must be used within <AuthProvider>.");
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
 };

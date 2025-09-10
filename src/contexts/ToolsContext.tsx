@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, type FC, type ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import toolRegistry from '@/config/toolRegistry.json';
 import { getWorkspaceTools, isInstalled, installTool as installWorkspaceTool, setPersona } from '@/lib/workspaceTools';
 
@@ -40,7 +40,7 @@ export const useTools = () => {
   return context;
 };
 
-export const ToolsProvider: FC<{ children: ReactNode }> = ({ children }) => {
+export const ToolsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [workspaceTools, setWorkspaceTools] = useState(getWorkspaceTools());
   const [subscription, setSubscription] = useState<'basic' | 'premium' | 'elite'>('basic');
 

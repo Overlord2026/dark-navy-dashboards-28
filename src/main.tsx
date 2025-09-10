@@ -1,10 +1,8 @@
 
-import * as React from "react";
-import { Suspense } from "react";
+import React, { Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import { RouterProvider } from 'react-router-dom'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { router } from './routes'
+import { router } from './router'
 import './index.css'
 import './styles/brand.css'
 import './styles/nil-a11y-perf.css'
@@ -15,23 +13,14 @@ import { initializeAnalytics } from './lib/analytics'
 import { registerServiceWorker, promptInstallPWA } from './lib/pwa'
 import { AuthProvider } from '@/context/AuthContext'
 import { EntitlementsProvider } from '@/context/EntitlementsContext'
-import { UserProvider } from '@/context/UserContext'
-import { AdvisorProvider } from '@/context/AdvisorContext'
 import { removeProductionLogs } from './utils/consoleRemoval'
 import { initializeAccessibility } from './utils/accessibility'
-import { GlobalErrorBoundary } from "@/components/errors/GlobalErrorBoundary";
+import GlobalErrorBoundary from "@/components/monitoring/GlobalErrorBoundary";
 import { setupNetworkErrorHandling } from "@/components/monitoring/network";
 
 // Initialize production optimizations
 removeProductionLogs()
 initializeAccessibility()
-
-// Debug React health in DEV
-if (import.meta.env.DEV) {
-  import('./utils/reactHealth').then(({ checkReactHealth }) => {
-    checkReactHealth();
-  }).catch(console.error);
-}
 
 // Initialize EmailJS at app entry point
 emailjs.init(import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'rfbjUYJ8iPHEZaQvx')
@@ -59,32 +48,16 @@ const teardown = setupNetworkErrorHandling({
   },
 });
 
-// Create QueryClient instance
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: 1,
-      refetchOnWindowFocus: false,
-    },
-  },
-});
-
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <GlobalErrorBoundary>
-      <QueryClientProvider client={queryClient}>
-        <Suspense fallback={<div />}>
-          <AuthProvider>
-            <EntitlementsProvider>
-              <UserProvider>
-                <AdvisorProvider>
-                  <RouterProvider router={router} />
-                </AdvisorProvider>
-              </UserProvider>
-            </EntitlementsProvider>
-          </AuthProvider>
-        </Suspense>
-      </QueryClientProvider>
+      <Suspense fallback={<div />}>
+        <AuthProvider>
+          <EntitlementsProvider>
+            <RouterProvider router={router} />
+          </EntitlementsProvider>
+        </AuthProvider>
+      </Suspense>
     </GlobalErrorBoundary>
   </React.StrictMode>
 );
