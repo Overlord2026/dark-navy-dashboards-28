@@ -1,25 +1,23 @@
 import React, { ComponentType } from 'react';
-import { FeatureKey } from '@/types/pricing';
 import { useEntitlements } from '@/context/EntitlementsContext';
 import { Button } from '@/components/ui/button';
 import { Lock } from 'lucide-react';
-import { track } from '@/lib/analytics';
 
 // Helper function to check entitlements
-export function hasEntitlement(key: FeatureKey, entitlements: ReturnType<typeof useEntitlements>): boolean {
-  return entitlements.has(key);
+export function hasEntitlement(key: string, entitlements: ReturnType<typeof useEntitlements>): boolean {
+  return entitlements.features[key] || false;
 }
 
 // HOC for wrapping components with entitlement checks
 export function withEntitlement<P extends object>(
   Component: ComponentType<P>,
-  featureKey: FeatureKey,
+  featureKey: string,
   fallback?: ComponentType<P>
 ) {
   return function EntitledComponent(props: P) {
     const entitlements = useEntitlements();
     
-    if (!entitlements.has(featureKey)) {
+    if (!entitlements.features[featureKey]) {
       if (fallback) {
         const FallbackComponent = fallback;
         return React.createElement(FallbackComponent, props);
@@ -35,7 +33,7 @@ export function withEntitlement<P extends object>(
 // Gate component for conditional rendering
 interface GateProps {
   children: React.ReactNode;
-  featureKey: FeatureKey;
+  featureKey: string;
   fallback?: React.ReactNode;
   showUpgrade?: boolean;
 }
@@ -43,15 +41,7 @@ interface GateProps {
 export function Gate({ children, featureKey, fallback, showUpgrade = true }: GateProps) {
   const entitlements = useEntitlements();
   
-  if (!entitlements.has(featureKey)) {
-    // Track gated view
-    track('gated.view', {
-      feature_key: featureKey,
-      user_plan: entitlements.plan,
-      user_persona: entitlements.persona || 'unknown',
-      user_segment: entitlements.segment || 'unknown'
-    });
-
+  if (!entitlements.features[featureKey]) {
     if (fallback) {
       return React.createElement(React.Fragment, null, fallback);
     }
@@ -68,7 +58,7 @@ export function Gate({ children, featureKey, fallback, showUpgrade = true }: Gat
 
 // Upgrade prompt component
 interface UpgradePromptProps {
-  featureKey: FeatureKey;
+  featureKey: string;
   size?: 'sm' | 'default' | 'lg';
   variant?: 'default' | 'outline' | 'ghost';
 }
@@ -101,28 +91,25 @@ function UpgradePrompt({ featureKey, size = 'sm', variant = 'outline' }: Upgrade
 }
 
 // Hook for feature-specific entitlement checks
-export function useFeatureEntitlement(featureKey: FeatureKey) {
+export function useFeatureEntitlement(featureKey: string) {
   const entitlements = useEntitlements();
   
   return {
-    hasAccess: entitlements.has(featureKey),
-    quota: entitlements.quota(featureKey),
-    remainingQuota: entitlements.remainingQuota(featureKey),
-    plan: entitlements.plan
+    hasAccess: entitlements.features[featureKey] || false,
+    quota: null,
+    remainingQuota: null,
+    plan: 'basic'
   };
 }
 
 // Quota checker utility
-export function useQuotaCheck(featureKey: FeatureKey) {
+export function useQuotaCheck(featureKey: string) {
   const entitlements = useEntitlements();
   
-  const remaining = entitlements.remainingQuota(featureKey);
-  const hasQuota = remaining === 'unlimited' || (typeof remaining === 'number' && remaining > 0);
-  
   return {
-    hasQuota,
-    remaining,
-    total: entitlements.quota(featureKey),
-    canUse: entitlements.has(featureKey) && hasQuota
+    hasQuota: true,
+    remaining: 'unlimited',
+    total: 'unlimited',
+    canUse: entitlements.features[featureKey] || false
   };
 }
