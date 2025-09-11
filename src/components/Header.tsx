@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import HeaderNav from './nav/HeaderNav';
+import PersonaSwitcher from './nav/PersonaSwitcher';
 
 export function Header() {
   return (
@@ -20,6 +21,7 @@ export function Header() {
           </nav>
         </div>
       </div>
+      <PersonaSwitcher />
     </>
   );
 }

@@ -1,31 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Logo } from "@/components/ui/Logo";
-
-type Item = { label: string; to: string };
-type Group = { label: string; items: Item[] };
-
-const NAV: Group[] = [
-  {
-    label: "Service Professionals",
-    items: [
-      { label: "Advisors", to: "/pros/advisors" },
-      { label: "Accountants", to: "/pros/accountants" },
-      { label: "Attorneys", to: "/pros/attorneys" },
-      { label: "Insurance", to: "/pros/insurance" },
-      { label: "Realtors / Property Managers", to: "/pros/realtors" },
-      { label: "Consultants", to: "/pros/consultants" },
-      { label: "Medicare Specialists", to: "/pros/medicare" },
-    ],
-  },
-  {
-    label: "Families",
-    items: [
-      { label: "Aspiring Families", to: "/families/aspiring" },
-      { label: "Retirees", to: "/families/retirees" },
-    ],
-  },
-];
+import { PROS, FAMILIES } from "@/config/personas";
 
 function useRouteClose(setOpen: (v: boolean) => void) {
   const loc = useLocation();
@@ -49,23 +25,13 @@ export default function HeaderNav() {
 
         {/* Desktop menus */}
         <nav className="hidden md:flex items-center gap-6" role="navigation" aria-label="Main navigation">
-          {NAV.map(group => (
-            <Popover key={group.label} label={group.label}>
-              <ul className="py-2" role="menu">
-                {group.items.map(it => (
-                  <li key={it.to} role="none">
-                    <Link 
-                      className="block px-4 py-2 text-foreground hover:bg-accent transition-colors rounded-md"
-                      to={it.to}
-                      role="menuitem"
-                    >
-                      {it.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </Popover>
-          ))}
+          <Popover label="Service Professionals">
+            <MenuList items={PROS.map(p=>({label:p.label,to:p.to}))} />
+          </Popover>
+          <Popover label="Families">
+            <MenuList items={FAMILIES} />
+          </Popover>
+          <Link to="/pros" className="px-3 py-2 rounded hover:bg-accent">All Pros</Link>
         </nav>
 
         {/* Hamburger */}
@@ -155,7 +121,6 @@ function Popover({ label, children }: { label: string; children: React.ReactNode
           ref={panelRef}
           role="menu"
           className="absolute right-0 mt-2 w-64 rounded-md border bg-popover shadow-lg z-50"
-          onMouseLeave={() => setOpen(false)}
         >
           {children}
         </div>
@@ -222,28 +187,29 @@ function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => void })
           </div>
 
           {/* Navigation groups */}
-          {NAV.map(g => (
-            <div key={g.label} className="mb-6">
-              <div className="px-2 py-1 text-xs uppercase tracking-wide text-muted-foreground font-semibold mb-2">
-                {g.label}
-              </div>
-              <ul className="space-y-1">
-                {g.items.map(it => (
-                  <li key={it.to}>
-                    <Link 
-                      className="block px-3 py-2 rounded-md text-foreground hover:bg-accent transition-colors focus:outline-none focus:ring-2 focus:ring-primary" 
-                      to={it.to} 
-                      onClick={onClose}
-                    >
-                      {it.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+          <div className="mb-4">
+            <div className="px-2 py-1 text-xs uppercase text-muted-foreground">Service Professionals</div>
+            <ul>{PROS.map(p=>(<li key={p.to}><Link to={p.to} className="block px-2 py-2 rounded hover:bg-accent" onClick={onClose}>{p.label}</Link></li>))}</ul>
+          </div>
+          <div>
+            <div className="px-2 py-1 text-xs uppercase text-muted-foreground">Families</div>
+            <ul>{FAMILIES.map(f=>(<li key={f.to}><Link to={f.to} className="block px-2 py-2 rounded hover:bg-accent" onClick={onClose}>{f.label}</Link></li>))}</ul>
+          </div>
+          <div className="mt-4 border-t pt-3">
+            <Link to="/pros" className="block px-2 py-2 rounded hover:bg-accent" onClick={onClose}>All Pros</Link>
+          </div>
         </div>
       </nav>
     </div>
+  );
+}
+
+function MenuList({items}:{items:{label:string;to:string}[]}) {
+  return (
+    <ul className="py-2">
+      {items.map(it=>(
+        <li key={it.to}><Link className="block px-4 py-2 hover:bg-accent" to={it.to}>{it.label}</Link></li>
+      ))}
+    </ul>
   );
 }

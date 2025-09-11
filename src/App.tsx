@@ -69,6 +69,7 @@ import AdminPanel from '@/pages/stubs/AdminPanel';
 // New persona landing pages  
 const FamiliesIndex = lazy(() => import('@/pages/families/index'));
 const ProsIndex = lazy(() => import('@/pages/pros/index'));
+import ProsHub from '@/pages/pros/ProsHub';
 const NILLanding = lazy(() => import('@/pages/nil/landing'));
 const HealthcareNew = lazy(() => import('@/pages/healthcare/index'));
 const SolutionsLanding = lazy(() => import('@/pages/solutions/index'));
@@ -382,11 +383,7 @@ function App() {
             } />
             <Route path="/families/:type" element={<FamilyTypeDashboard />} />
             <Route path="/family/home" element={<FamilyDashboard />} />
-            <Route path="/pros" element={
-              <Suspense fallback={<div>Loading...</div>}>
-                <ProsIndex />
-              </Suspense>
-            } />
+            <Route path="/pros" element={<ProsHub />} />
         <Route path="/nil" element={<NILLanding />} />
         <Route path="/healthcare" element={
           <Suspense fallback={<div>Loading...</div>}>
