@@ -71,6 +71,7 @@ import AdminPanel from '@/pages/stubs/AdminPanel';
 const FamiliesIndex = lazy(() => import('@/pages/families/index'));
 const ProsIndex = lazy(() => import('@/pages/pros/index'));
 import ProsHub from '@/pages/pros/ProsHub';
+import ToolsLauncher from '@/pages/pros/ToolsLauncher';
 import ProWorkspaceLayout from '@/components/layout/ProWorkspaceLayout';
 const NILLanding = lazy(() => import('@/pages/nil/landing'));
 const HealthcareNew = lazy(() => import('@/pages/healthcare/index'));
@@ -387,7 +388,7 @@ function App() {
             <Route path="/family/home" element={<FamilyDashboard />} />
             <Route path="/pros" element={<ProsHub />} />
             <Route path="/pros/:role" element={<ProWorkspaceLayout />}>
-              <Route index element={<Navigate to="reports" replace />} />
+              <Route index element={<ToolsLauncher />} />
               <Route path="reports" element={<ReportsPage />} />
               <Route path="cashflow" element={<CashFlowPage />} />
               <Route path="transactions" element={<TransactionsPage />} />

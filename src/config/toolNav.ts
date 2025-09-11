@@ -20,6 +20,20 @@ export const TOOL_NAV: ToolItem[] = [
   { key: "advice",       label: "Advice",       to: "/advice",      icon: Lightbulb },
 ];
 
+// Tool descriptions for the launcher
+export const TOOL_COPY: Partial<Record<ToolKey, string>> = {
+  dashboard:   "Overview of your finances this month.",
+  accounts:    "Linked accounts and balances.",
+  transactions:"Categorize and review activity.",
+  cashflow:    "Cash in vs. cash out trends.",
+  reports:     "Spending, income, categories.",
+  budget:      "Plan monthly categories.",
+  recurring:   "Subscriptions, bills, and repeats.",
+  goals:       "Track savings and progress.",
+  investments: "Holdings and performance.",
+  advice:      "Insights and recommendations."
+};
+
 // persona-specific orders + quick actions (idempotent; expand later)
 export const PRO_RECOMMENDED_ORDER: Record<string, ToolKey[]> = {
   advisors:    ["dashboard","investments","reports","goals","accounts","transactions","cashflow","advice","budget","recurring"],

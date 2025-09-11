@@ -71,3 +71,33 @@
 - Improved accessibility with proper ARIA labels and focus states
 
 ### Branch: feat/pro-workspace-v2
+
+## 2025-01-XX - feat(pro-tools): Tools Launcher as /pros/:role index (Monarch-style buttons) + layout polish
+
+### Features Added
+- Created professional Tools Launcher as landing page for service professionals
+- Large, accessible tool cards with descriptions and icons
+- Role-specific tool ordering and personalized copy
+- Clean grid layout with semantic design tokens
+
+### Files Modified
+- `src/config/toolNav.ts` - Added TOOL_COPY descriptions for launcher cards
+- `src/pages/pros/ToolsLauncher.tsx` - Created Tools Launcher component with professional grid layout
+- `src/App.tsx` - Updated routing to use ToolsLauncher as index instead of redirecting to reports
+- `docs/_lovable/patch-log.md` - Updated documentation
+
+### Technical Details
+- Professional grid of tool cards with hover states and focus management
+- Role-aware tool ordering using existing PRO_RECOMMENDED_ORDER configuration
+- Maintains left sidebar navigation while providing clear central tool selection
+- Each card routes to existing tool pages (Reports, Cash Flow, Transactions, etc.)
+- Uses semantic design tokens for consistent theming
+
+### UI/UX Improvements
+- Monarch-style launcher with big, clickable tool cards
+- Clear descriptions help users understand each tool's purpose
+- Professional spacing and typography
+- Enhanced accessibility with proper focus states and semantic markup
+- Removes immediate redirect to Reports, giving users choice and context
+
+### Branch: feat/pro-tools-launcher
