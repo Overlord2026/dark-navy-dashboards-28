@@ -1,6 +1,6 @@
 import type { Checklist, ChecklistItemKey, ChecklistStatus, ChecklistItem } from './types';
 import type { DocSignal } from './signals';
-import { hash as sha } from '@/lib/canonical';
+import * as Canonical from '@/lib/canonical';
 
 const CLASS_TO_KEY: Record<string, ChecklistItemKey | undefined> = {
   Will: 'will',
@@ -232,5 +232,5 @@ async function computeChecklistHash(checklist: Checklist): Promise<string> {
     }))
   };
   
-  return await sha(hashInput);
+  return await Canonical.hash(hashInput);
 }

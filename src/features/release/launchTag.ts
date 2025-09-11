@@ -1,4 +1,4 @@
-import { canonicalJson, sha256Hex } from '@/lib/canonical';
+import * as Canonical from '@/lib/canonical';
 
 export type AnchorRef = {
   merkle_root: string;
@@ -26,14 +26,14 @@ export type LaunchTagRDS = {
 
 // Create a reproducible "launch tag" (sha256 of canonicalized payload)
 export async function makeLaunchTag(payload: unknown): Promise<string> {
-  const json = canonicalJson(payload);
-  const hex = await sha256Hex(json);
+  const json = Canonical.canonicalJson(payload);
+  const hex = await Canonical.sha256Hex(json);
   return 'sha256:' + hex;
 }
 
 export async function writeLaunchTagRDS(summary: Omit<LaunchTagRDS,"inputs_hash"|"receipt_id">) {
-  const canon = canonicalJson(summary);
-  const hash = await sha256Hex(JSON.stringify(canon));
+  const canon = Canonical.canonicalJson(summary);
+  const hash = await Canonical.sha256Hex(JSON.stringify(canon));
   const rds: LaunchTagRDS = {
     ...summary,
     inputs_hash: `sha256:${hash}`,

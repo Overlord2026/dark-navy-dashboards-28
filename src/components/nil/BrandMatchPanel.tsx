@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Building2, MapPin, TrendingUp } from 'lucide-react';
 import { GoldOutlineButton } from '@/components/ui/brandButtons';
 import { recordReceipt } from '@/features/receipts/record';
-import { hash } from '@/lib/canonical';
+import * as Canonical from '@/lib/canonical';
 import { toast } from 'sonner';
 import type { DecisionRDS } from '@/features/receipts/types';
 
@@ -94,7 +94,7 @@ export function BrandMatchPanel({ searchQuery = '' }: BrandMatchPanelProps) {
         type: 'Decision-RDS',
         action: 'brand.contact',
         policy_version: 'NIL-2025.01',
-        inputs_hash: await hash({ brand_id: brand.id, brand_name: brand.name }),
+        inputs_hash: await Canonical.hash({ brand_id: brand.id, brand_name: brand.name }),
         reasons: ['BRAND_CONTACT_INITIATED'],
         result: 'approve',
         anchor_ref: null,

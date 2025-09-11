@@ -4,7 +4,7 @@ import { buildBinderPack } from '@/features/estate/binder';
 import { recordReceipt } from '@/features/receipts/record';
 import { storeInVault, grantPre } from '@/features/vault/api';
 import { sendEmail } from '@/features/comms/send';
-import { hash } from '@/lib/canonical';
+import * as Canonical from '@/lib/canonical';
 
 interface MonthlyReportOptions {
   firmId: string;
@@ -70,7 +70,7 @@ export async function buildAndSendMonthlyReport(opts: MonthlyReportOptions): Pro
     
     // Optional anchoring
     if (opts.anchor) {
-      const reportHash = await hash({
+      const reportHash = await Canonical.hash({
         'monthly-report': true,
         month_label: metrics.month_label,
         pdf_hash: pdfHash

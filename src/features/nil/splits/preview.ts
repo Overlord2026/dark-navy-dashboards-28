@@ -36,9 +36,9 @@ export function calculateSplitAmounts(offerId: string, totalAmount: number): Arr
   }));
 }
 
-import { hash } from '@/lib/canonical';
+import * as Canonical from '@/lib/canonical';
 
 export async function hashSplit(splits: SplitParty[]): Promise<string> {
   const splitData = splits.map(s => ({ party: s.party, share: s.share }));
-  return await hash(splitData);
+  return await Canonical.hash(splitData);
 }

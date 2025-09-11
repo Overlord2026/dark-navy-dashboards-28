@@ -1,6 +1,6 @@
 import { mergePdfs, loadPdfFromVault } from '@/lib/pdf/merge';
 import { stampPdfBrandHeaderFooter } from '@/lib/pdf/brandFooter';
-import { hash } from '@/lib/canonical';
+import * as Canonical from '@/lib/canonical';
 import { recordReceipt } from '@/features/receipts/record';
 import type { FinalVersion } from './types';
 import { onReviewFinalReady } from '@/features/vault/autofill/connectors';
@@ -41,7 +41,7 @@ export async function finalizeReviewPacket({
   });
 
   // 3) Hash for integrity and optional anchor
-  const sha = await hash(stamped);
+  const sha = await Canonical.hash(stamped);
   
   // 4) Save to Vault (WORM)
   const finalPdfId = `vault://review_final_${sessionId}_${Date.now()}.pdf`;
@@ -121,7 +121,7 @@ export async function computeReviewInputsHash({
   packetSha256: string;
   checklistState: any; // serialize minimal shape (IDs + pass/fail booleans, not PII)
 }) {
-  return await hash({ 
+  return await Canonical.hash({ 
     clientId, 
     state, 
     letterSha256, 

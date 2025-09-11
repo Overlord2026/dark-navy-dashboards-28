@@ -1,6 +1,6 @@
 import { setK401Flags } from "@/features/k401/flags";
 import { recordReceipt } from "@/features/receipts/store";
-import { sha256Hex } from "@/lib/canonical";
+import * as Canonical from "@/lib/canonical";
 
 const API_BASE = (import.meta.env.VITE_K401_PDF_BASE || "http://localhost:4000");
 
@@ -38,7 +38,7 @@ export async function generateCompliancePack(policyVersion: string) {
     type: "Vault-RDS",
     ts: isoNow(),
     policy_version: policyVersion,
-    inputs_hash: `sha256:${await sha256Hex(JSON.stringify(json.artifacts))}`,
+    inputs_hash: `sha256:${await Canonical.sha256Hex(JSON.stringify(json.artifacts))}`,
     artifacts: json.artifacts.map((a: any) => ({ kind: a.kind, hash: a.hash })),
     retention: { policy_id: "ret_7y", delete_stub: null },
     reasons: ["stored_in_worm","k401.compliance.pack.pdf"]
@@ -77,7 +77,7 @@ export async function generateBrokerDemoPack(policyVersion: string) {
     type: "Vault-RDS",
     ts: isoNow(),
     policy_version: policyVersion,
-    inputs_hash: `sha256:${await sha256Hex(JSON.stringify(json.artifacts))}`,
+    inputs_hash: `sha256:${await Canonical.sha256Hex(JSON.stringify(json.artifacts))}`,
     artifacts: json.artifacts.map((a: any) => ({ kind: a.kind, hash: a.hash })),
     retention: { policy_id: "ret_7y", delete_stub: null },
     reasons: ["stored_in_worm","k401.broker.demo.pdf"]

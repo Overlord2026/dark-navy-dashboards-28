@@ -1,7 +1,7 @@
 import { supabase } from '@/integrations/supabase/client';
 import { calculatePM3Score } from '@/engines/portfolio/pm3';
 import { scoreLiquidity } from './liquidityIQ';
-import { sha256Hex } from '@/lib/canonical';
+import * as Canonical from '@/lib/canonical';
 
 export interface DDPackageInput {
   userId: string;
@@ -90,7 +90,7 @@ export async function buildDDPackage(input: DDPackageInput): Promise<DDPackageRe
       generationTimestamp,
       regulatoryFramework: regulatoryStandard,
       auditTrail: includeAuditTrail ? auditTrail : [],
-      inputsHash: await sha256Hex(JSON.stringify({ userId, fundId, regulatoryStandard })),
+      inputsHash: await Canonical.sha256Hex(JSON.stringify({ userId, fundId, regulatoryStandard })),
       algorithmVersions: {
         pm3: '1.0.0',
         liquidityIQ: '2.0.0',
@@ -109,7 +109,7 @@ export async function buildDDPackage(input: DDPackageInput): Promise<DDPackageRe
     
     // Create package hash for integrity verification
     const packageContent = JSON.stringify({ snapshot, complianceMetadata, regulatoryStandard });
-    const packageHash = await sha256Hex(packageContent);
+    const packageHash = await Canonical.sha256Hex(packageContent);
 
     // Get next version number
     const { data: existingPackages } = await supabase

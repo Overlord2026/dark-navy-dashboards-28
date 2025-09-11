@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Shield, CheckCircle, XCircle, AlertTriangle } from 'lucide-react';
 import { listReceipts } from '@/features/receipts/record';
 import { buildMerkle } from '@/lib/merkle';
-import { hash } from '@/lib/canonical';
+import * as Canonical from '@/lib/canonical';
 import { AnyRDS } from '@/features/receipts/types';
 import { toast } from 'sonner';
 
@@ -46,7 +46,7 @@ export default function AdminAnchorsPanel() {
 
       // Build local Merkle tree from all anchored receipts
       const receiptHashes = await Promise.all(
-        anchoredReceipts.map(async receipt => await hash(receipt))
+        anchoredReceipts.map(async receipt => await Canonical.hash(receipt))
       );
 
       const { root: localRoot } = await buildMerkle(receiptHashes);
@@ -68,7 +68,7 @@ export default function AdminAnchorsPanel() {
         }
 
         try {
-          const receiptHash = await hash(receipt);
+          const receiptHash = await Canonical.hash(receipt);
           const receiptIndex = receiptHashes.indexOf(receiptHash);
           
           if (receiptIndex === -1) {

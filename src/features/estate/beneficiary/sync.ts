@@ -1,6 +1,6 @@
 import { getEstateIntent, listAccountsWithBeneficiaries } from '@/features/estate/api';
 import { recordReceipt } from '@/features/receipts/record';
-import { hash } from '@/lib/canonical';
+import * as Canonical from '@/lib/canonical';
 
 export interface BeneficiaryMismatch {
   accountId: string;
@@ -27,7 +27,7 @@ export async function scanBeneficiaries(clientId: string): Promise<BeneficiaryMi
   }
   
   if (mismatches.length) {
-    const inputs_hash = await hash({ clientId, mismatches });
+    const inputs_hash = await Canonical.hash({ clientId, mismatches });
     await recordReceipt({
       type: 'Decision-RDS',
       action: 'beneficiary.sync',

@@ -1,4 +1,4 @@
-import { hash } from '@/lib/canonical';
+import * as Canonical from '@/lib/canonical';
 
 export type ReviewPacketData = {
   clientName: string;
@@ -82,7 +82,7 @@ ${mockData.disclaimerText}
   `.trim();
   
   const bytes = new TextEncoder().encode(content);
-  const sha256 = await hash(bytes);
+  const sha256 = await Canonical.hash(bytes);
   
   console.log(`[Review Builder] Generated packet: ${bytes.length} bytes, hash: ${sha256.slice(0, 16)}...`);
   
@@ -93,12 +93,12 @@ export async function buildReviewLetter(options: any): Promise<{ bytes: Uint8Arr
   // TODO: Implement review letter builder
   const content = "Review Letter Placeholder";
   const bytes = new TextEncoder().encode(content);
-  const sha256 = await hash(bytes);
+  const sha256 = await Canonical.hash(bytes);
   return { bytes, sha256 };
 }
 
 export async function applyAttorneyESign(letterBytes: Uint8Array, attorney: any): Promise<{ bytes: Uint8Array; sha256: string }> {
   // TODO: Implement attorney e-signature
-  const sha256 = await hash(letterBytes);
+  const sha256 = await Canonical.hash(letterBytes);
   return { bytes: letterBytes, sha256 };
 }

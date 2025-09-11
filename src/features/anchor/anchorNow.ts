@@ -1,4 +1,4 @@
-import { sha256Hex } from "@/lib/canonical";
+import * as Canonical from "@/lib/canonical";
 import { listUnanchoredReceipts, updateReceiptAnchorRef } from "@/features/receipts/store";
 import { writeAuditRDS } from "@/features/receipts/audit";
 
@@ -27,14 +27,14 @@ function canonicalJson(obj: any) {
 
 async function merkleRootHex(docHashes: string[]) {
   // Simple pairwise combine using sha256(left + right) hex concatenation (browser-safe)
-  if (docHashes.length === 0) return await sha256Hex("");
+  if (docHashes.length === 0) return await Canonical.sha256Hex("");
   let layer = [...docHashes];
   while (layer.length > 1) {
     const next: string[] = [];
     for (let i = 0; i < layer.length; i += 2) {
       const L = layer[i];
       const R = layer[i + 1] ?? L;
-      const combined = await sha256Hex(L + R);
+      const combined = await Canonical.sha256Hex(L + R);
       next.push(combined);
     }
     layer = next;
@@ -81,8 +81,8 @@ export async function anchorNow(opts: AnchorNowOptions) {
   // 2) Canonicalize and hash each doc to a leaf hash (sha256 of canonical JSON string)
   const leaves: string[] = [];
   for (const r of receipts) {
-    const canon = canonicalJson(r);
-    const h = await sha256Hex(JSON.stringify(canon));
+    const canon = Canonical.canonicalJson(r);
+    const h = await Canonical.sha256Hex(JSON.stringify(canon));
     leaves.push(h);
   }
 

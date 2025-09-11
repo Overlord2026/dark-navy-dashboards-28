@@ -1,4 +1,4 @@
-import { hash } from '@/lib/canonical';
+import * as Canonical from '@/lib/canonical';
 import { recordReceipt } from '@/features/receipts/record';
 
 export type AttorneyInfo = {
@@ -76,7 +76,7 @@ Date: ${letterData.reviewDate}
   `.trim();
   
   const bytes = new TextEncoder().encode(content);
-  const sha256 = await hash(bytes);
+  const sha256 = await Canonical.hash(bytes);
   
   console.log(`[Sign Letter] Generated letter: ${bytes.length} bytes, hash: ${sha256.slice(0, 16)}...`);
   
@@ -102,11 +102,11 @@ Signed by: ${attorney.name}
 Bar Number: ${attorney.barNo}
 Timestamp: ${timestamp}
 IP Address: [REDACTED]
-Signature Hash: ${await hash(attorney.name + timestamp)}
+Signature Hash: ${await Canonical.hash(attorney.name + timestamp)}
 `;
   
   const bytes = new TextEncoder().encode(signedContent);
-  const sha256 = await hash(bytes);
+  const sha256 = await Canonical.hash(bytes);
   
   // Record the signing event
   await recordReceipt({

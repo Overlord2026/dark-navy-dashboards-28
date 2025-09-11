@@ -16,6 +16,13 @@ module.exports = {
         message: 'Do not store sensitive data in sessionStorage.',
       }
     ],
-    'no-console': ['warn', { allow: ['warn','error'] }]
+    'no-console': ['warn', { allow: ['warn','error'] }],
+    'no-restricted-imports': ['error', {
+      'paths': [{
+        'name': '@/lib/canonical',
+        'importNames': ['canonicalize','inputsHash','inputs_hash','hash','sha256Hex','canonicalJson','stableStringify'],
+        'message': 'Use: import * as Canonical from "@/lib/canonical"; then Canonical.fn(...). Type-only named imports are allowed.'
+      }]
+    }]
   }
 };

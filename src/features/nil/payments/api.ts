@@ -87,8 +87,8 @@ export function getEscrowAccount(id: string): EscrowAccount | null {
   return escrowAccounts.find(e => e.id === id) || null;
 }
 
-import { hash } from '@/lib/canonical';
+import * as Canonical from '@/lib/canonical';
 
 async function hashInputs(obj: any): Promise<string> {
-  return await hash(obj);
+  return await Canonical.hash(obj);
 }

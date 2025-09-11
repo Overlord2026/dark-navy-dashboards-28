@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { recordReceipt } from '@/features/receipts/record';
 import { anchorBatch } from '@/features/anchor/providers';
-import { hash } from '@/lib/canonical';
+import * as Canonical from '@/lib/canonical';
 import { toast } from 'sonner';
 import type { DecisionRDS } from '@/features/receipts/types';
 
@@ -51,7 +51,7 @@ export function GuardianCosignModal({
       ...contextData
     };
 
-    const inputs_hash = await hash(baseData);
+    const inputs_hash = await Canonical.hash(baseData);
     const shouldAnchor = Math.random() > 0.5; // Demo: randomly anchor some receipts
 
     const receipt: DecisionRDS = {
