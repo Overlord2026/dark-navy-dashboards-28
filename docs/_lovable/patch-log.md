@@ -1,5 +1,16 @@
 # Lovable Patch Log
 
+## 2025-09-11-06: Single React Enforcement
+
+**Files Modified:**
+- `vite.config.ts` - Removed lovable-tagger import/plugin; expanded React deduplication aliases
+- `package.json` - Removed lovable-tagger and @vitejs/plugin-react-swc from devDependencies
+- `.chore/reinstall-trigger-1736618400000.txt` - Created to force dependency reinstall
+
+**Commit:** build: enforce single React (remove lovable-tagger; alias+dedupe; pin versions; peerDeps); force reinstall
+
+**Summary:** Eliminated duplicate React sources by removing lovable-tagger development plugin, expanding Vite React deduplication, and forcing clean dependency reinstall to resolve "Cannot read properties of null (reading 'useState')" crashes.
+
 ## 2025-09-11-05: GlobalErrorBoundary Export Fix
 
 **Files Modified:**
