@@ -1,5 +1,25 @@
 # Lovable Patch Log
 
+## 2025-09-11-11: Responsive Persona Navigation Header (feat/nav-personas)
+
+**Files Modified:**
+- `src/components/nav/HeaderNav.tsx` - Created responsive, accessible header with hamburger menu
+- `src/components/Header.tsx` - Integrated new HeaderNav component, moved admin nav to secondary header
+
+**Branch:** feat/nav-personas
+
+**Commit:** feat(nav): add responsive persona navigation with a11y hamburger menu
+
+**Routes Added:**
+- Service Professionals: /pros/{advisors,accountants,attorneys,insurance,realtors,consultants,medicare}
+- Families: /families/{aspiring,retirees}
+
+**Features:**
+- Desktop: hover/click popovers for "Service Professionals" and "Families"
+- Mobile: slide-over hamburger menu with focus trapping and ESC/backdrop close
+- A11y: full keyboard navigation, aria-expanded/controls, screen reader support
+- Responsive design with semantic tokens from design system
+
 ## 2025-09-11-10: Canonical Namespace Import Codemod (Complete)
 
 **Files Modified:**
