@@ -1,6 +1,6 @@
-import { NavLink, Outlet, useNavigate, useParams } from "react-router-dom";
+import { NavLink, Outlet, useParams } from "react-router-dom";
 import { useMemo } from "react";
-import { TOOL_NAV, PRO_RECOMMENDED_ORDER, PRO_QUICK_ACTIONS } from "@/config/toolNav";
+import { TOOL_NAV, PRO_RECOMMENDED_ORDER, PRO_QUICK_ACTIONS, DEFAULT_QUICK_ACTIONS } from "@/config/toolNav";
 
 function useSortedNav(role?: string) {
   return useMemo(() => {
@@ -12,9 +12,8 @@ function useSortedNav(role?: string) {
 
 export default function ProWorkspaceLayout() {
   const { role = "" } = useParams();
-  const nav = useNavigate();
   const items = useSortedNav(role);
-  const quick = PRO_QUICK_ACTIONS[role] || [];
+  const quick = PRO_QUICK_ACTIONS[role] ?? DEFAULT_QUICK_ACTIONS;
   const mkTo = (to: string) => (role ? `/pros/${role}${to}` : to);
 
   return (
@@ -28,7 +27,7 @@ export default function ProWorkspaceLayout() {
               key={it.key}
               to={mkTo(it.to)}
               className={({isActive}) =>
-                "group flex items-center gap-2 rounded-md px-3 py-2 text-sm outline-none transition-colors " +
+                "group flex items-center gap-2 rounded-md px-3 py-2 text-sm outline-none transition-colors focus:outline-none focus:ring-2 focus:ring-primary " +
                 (isActive
                   ? "bg-primary text-primary-foreground"
                   : "text-muted-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground")
@@ -41,44 +40,37 @@ export default function ProWorkspaceLayout() {
             </NavLink>
           ))}
         </nav>
+
+        {/* Shortcuts section */}
+        <nav aria-label="Shortcuts" className="px-2 pb-4 mt-4 border-t border-border">
+          <div className="px-3 pt-3 pb-2 text-xs uppercase tracking-wide text-muted-foreground">Shortcuts</div>
+          <ul className="space-y-1">
+            {quick.map(q => (
+              <li key={q.to}>
+                <NavLink
+                  to={mkTo(q.to)}
+                  className={({isActive}) =>
+                    "block rounded-md px-3 py-2 text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary " +
+                    (isActive ? "bg-accent text-accent-foreground" : "text-muted-foreground hover:bg-accent/50 hover:text-accent-foreground")
+                  }
+                >
+                  {q.label}
+                </NavLink>
+              </li>
+            ))}
+          </ul>
+        </nav>
       </aside>
 
       {/* Main */}
       <main className="min-h-screen">
         {/* Top bar */}
         <div className="sticky top-0 z-10 border-b border-border bg-background/85 backdrop-blur">
-          <div className="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="inline-flex items-center rounded-full border border-border bg-card px-3 py-1 text-sm font-medium">
-                {role ? role.replace("-", " ").replace(/\b\w/g, c => c.toUpperCase()) : "Professionals"}
-              </span>
-            </div>
-            <button
-              onClick={() => nav("/pros")}
-              className="inline-flex items-center rounded-md border border-input bg-background px-3 py-1.5 text-sm hover:bg-accent hover:text-accent-foreground transition-colors"
-              aria-label="Switch persona"
-              title="Switch persona"
-            >
-              Switch persona
-            </button>
+          <div className="mx-auto max-w-7xl px-4 py-3">
+            <span className="inline-flex items-center rounded-full border border-border bg-card px-3 py-1 text-sm font-medium">
+              {role ? role.replace("-", " ").replace(/\b\w/g, c => c.toUpperCase()) : "Professionals"}
+            </span>
           </div>
-
-          {/* Quick actions toolbar */}
-          {quick.length > 0 && (
-            <div className="mx-auto max-w-7xl px-4 pb-3">
-              <div className="flex flex-wrap gap-2">
-                {quick.map(q => (
-                  <NavLink
-                    key={q.to}
-                    to={mkTo(q.to)}
-                    className="inline-flex items-center rounded-md bg-primary/15 text-primary hover:bg-primary/25 px-3 py-1.5 text-sm transition-colors"
-                  >
-                    {q.label} →
-                  </NavLink>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
 
         {/* Tools content */}

@@ -45,12 +45,20 @@ export const PRO_RECOMMENDED_ORDER: Record<string, ToolKey[]> = {
   consultants: ["dashboard","cashflow","reports","transactions","accounts"],
 };
 
+export const DEFAULT_QUICK_ACTIONS: { label: string; to: string }[] = [
+  { label: "Cash flows", to: "/cashflow" },
+  { label: "Transactions", to: "/transactions" },
+];
+
 export const PRO_QUICK_ACTIONS: Record<string, { label: string; to: string }[]> = {
-  advisors:    [{ label:"Review investments", to:"/investments" }, { label:"Run spending report", to:"/reports" }],
-  accountants: [{ label:"Download CSV", to:"/reports" }, { label:"Review categories", to:"/transactions" }],
-  attorneys:   [{ label:"Confirm entities & accounts", to:"/accounts" }, { label:"Estate spend summary", to:"/reports" }],
-  insurance:   [{ label:"Find premium cash flows", to:"/cashflow" }, { label:"Policy transactions", to:"/transactions" }],
-  medicare:    [{ label:"Verify income/premiums", to:"/cashflow" }, { label:"Spending summary", to:"/reports" }],
-  realtors:    [{ label:"Property cash flows", to:"/cashflow" }, { label:"Deposits/escrows", to:"/transactions" }],
-  consultants: [{ label:"Scan monthly cash flow", to:"/cashflow" }, { label:"Spot largest expenses", to:"/reports" }],
+  advisors:    DEFAULT_QUICK_ACTIONS,
+  accountants: DEFAULT_QUICK_ACTIONS,
+  attorneys:   DEFAULT_QUICK_ACTIONS,
+  insurance:   DEFAULT_QUICK_ACTIONS,
+  medicare:    DEFAULT_QUICK_ACTIONS,
+  realtors:    [
+    { label: "Property cash flows", to: "/cashflow" },
+    { label: "Deposits/escrows", to: "/transactions" },
+  ],
+  consultants: DEFAULT_QUICK_ACTIONS,
 };

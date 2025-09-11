@@ -101,3 +101,33 @@
 - Removes immediate redirect to Reports, giving users choice and context
 
 ### Branch: feat/pro-tools-launcher
+
+## 2025-01-XX - feat(pro-workspace-polish): move Shortcuts to sidebar; remove 'Switch persona'; strip foundational badges; spacing/typography polish
+
+### Features Added
+- Moved quick action shortcuts to left sidebar as dedicated "Shortcuts" section
+- Removed "Switch persona" button entirely for cleaner interface
+- Stripped "foundational" tier badges from reports for professional appearance
+- Enhanced typography and focus states throughout
+
+### Files Modified
+- `src/config/toolNav.ts` - Added DEFAULT_QUICK_ACTIONS for universal shortcuts
+- `src/components/layout/ProWorkspaceLayout.tsx` - Moved shortcuts to sidebar, removed persona switcher, improved focus states
+- `src/components/reports/ReportsPage.tsx` - Removed tier badge from header and foundational badges from cards
+- `docs/_lovable/patch-log.md` - Updated documentation
+
+### Technical Details
+- Universal shortcuts section in sidebar with proper navigation states
+- Simplified top bar with only persona indicator
+- Enhanced accessibility with proper focus ring styling
+- Clean separation between tools navigation and quick shortcuts
+- Professional typography with consistent text sizing
+
+### UI/UX Improvements
+- Monarch-style sidebar with clear sections and visual hierarchy
+- Cleaner interface without unnecessary tier indicators
+- Better focus management and keyboard navigation
+- Professional spacing and color usage throughout workspace
+- Streamlined user experience with contextual shortcuts
+
+### Branch: feat/pro-workspace-polish

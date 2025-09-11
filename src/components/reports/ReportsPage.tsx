@@ -64,9 +64,6 @@ export const ReportsPage: React.FC = () => {
             Comprehensive financial insights based on your {persona} profile
           </p>
         </div>
-        <Badge variant="outline" className="capitalize">
-          {tier} tier
-        </Badge>
       </div>
 
       {/* Foundational Reports */}
@@ -95,9 +92,11 @@ export const ReportsPage: React.FC = () => {
                       {getReportIcon(config.category, reportId)}
                       <CardTitle className="text-lg">{config.title}</CardTitle>
                     </div>
-                    <Badge variant={getTierBadgeColor(config.tier)} className="text-xs">
-                      {config.tier}
-                    </Badge>
+                    {config.tier !== 'foundational' && (
+                      <Badge variant={getTierBadgeColor(config.tier)} className="text-xs">
+                        {config.tier}
+                      </Badge>
+                    )}
                   </div>
                   <CardDescription className="text-sm">
                     {config.description}
@@ -164,7 +163,7 @@ export const ReportsPage: React.FC = () => {
         </div>
       )}
 
-      {/* Upgrade Notice for Foundational Users */}
+      {/* Upgrade Notice */}
       {tier === 'foundational' && (
         <Card className="border-dashed">
           <CardHeader>
