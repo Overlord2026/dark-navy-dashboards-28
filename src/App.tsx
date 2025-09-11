@@ -273,6 +273,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
 const SelectPersona = lazy(() => import('@/pages/auth/SelectPersona'));
+const SpendingReportsPage = lazy(() => import('@/pages/reports/SpendingReportsPage'));
 
 // Stub component for avoiding 404s
 const Stub = ({ title }: { title: string }) => <div className="p-10 text-white text-2xl">{title}</div>;
@@ -462,6 +463,7 @@ function App() {
             <Route path="/budgets" element={<BudgetsPage />} />
             <Route path="/cashflow" element={<CashFlowPage />} />
             <Route path="/transactions" element={<TransactionsPage />} />
+            <Route path="/reports/spending" element={<Suspense fallback={<div>Loading...</div>}><SpendingReportsPage /></Suspense>} />
             
             {/* Tool routes - standardized paths that redirect to existing components */}
             <Route path="/tools/goals" element={<Navigate to="/goals" replace />} />
