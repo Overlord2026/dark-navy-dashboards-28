@@ -89,3 +89,7 @@ export async function inputs_hash(obj: unknown): Promise<string> {
 export function canonicalJson(obj: any): string {
   return JSON.stringify(obj, Object.keys(obj as any).sort());
 }
+
+// Alias and version exports
+export const stableStringify = canonicalize;
+export const __CANONICAL_BUILD_ID = "canonical-2025-09-11-01";

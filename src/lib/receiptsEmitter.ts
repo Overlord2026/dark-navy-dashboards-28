@@ -1,7 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { canonicalize } from "./canonical";
+import { canonicalize, inputsHash } from "@/lib/canonical";
 import { emitReceipt, type RDS } from "./dataAdapter";
-import { inputsHash } from "./canonical";
 
 export type ReceiptDecision = "ALLOW" | "DENY" | "ALLOW_WITH_CONDITIONS";
 export type ReceiptStage = "pre" | "post";
