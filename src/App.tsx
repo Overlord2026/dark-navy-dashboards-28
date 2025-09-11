@@ -180,6 +180,7 @@ import ReceiptsConsole from '@/pages/admin/ReceiptsConsole';
 import RuleSyncConsole from '@/pages/admin/RuleSyncConsole';
 import Control401k from '@/pages/admin/Control401k';
 import Evidence from '@/pages/admin/Evidence';
+import CanonicalExports from "@/diag/CanonicalExports";
 
 // Welcome Flow Components
 const FamilyWelcomeFlow = lazy(() => import('@/components/welcome/FullScreenWelcome').then(m => ({ default: m.FullScreenWelcome })));
@@ -1001,6 +1002,7 @@ function App() {
             <Route path="/vault" element={<Stub title="Secure Document Vault" />} />
             {/* Goals route moved to main routes section */}
             <Route path="/discover" element={<Stub title="Discover Solutions" />} />
+            <Route path="/diag/canonical" element={<CanonicalExports />} />
             
             {/* NotFound Route */}
             <Route path="*" element={<NotFound />} />

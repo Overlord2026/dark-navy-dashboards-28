@@ -31,3 +31,20 @@
 - All imports already using correct @/lib/canonical alias path
 - Temporarily disabled service worker to prevent cached modules during debugging
 - Created cache-bust file to ensure fresh rebuild
+
+## 2025-09-11: Fix Canonical Imports with Namespace Imports and Diagnostics
+
+**Commit:** "fix(canonical): namespace import in receiptsEmitter + diag page + build id"
+
+**Files modified:**
+- `src/lib/receiptsEmitter.ts` - Switched to namespace imports (`import * as Canonical`)
+- `src/lib/canonical.ts` - Bumped __CANONICAL_BUILD_ID to "canonical-2025-09-11-04"
+- `src/diag/CanonicalExports.tsx` - Created diagnostics page to display canonical exports
+- `src/App.tsx` - Added route `/diag/canonical` for diagnostics page
+- `docs/_lovable/patch-log.md` - Updated patch log
+
+**Changes:**
+- Fixed import error by switching from named imports to namespace imports in receiptsEmitter.ts
+- Added runtime diagnostics page at /diag/canonical to verify exports are working
+- Updated all usage patterns from `inputsHash()` to `Canonical.inputsHash()`
+- Cache busting via build ID increment
