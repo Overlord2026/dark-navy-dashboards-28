@@ -1,5 +1,15 @@
 # Lovable Patch Log
 
+## 2025-09-11-08: Latest Lovable Version Update
+
+**Files Modified:**
+- `vite.config.ts` - Added componentTagger plugin for development mode while maintaining React deduplication
+- `package.json` - Added lovable-tagger dependency
+
+**Commit:** feat: update to latest Lovable version with componentTagger
+
+**Summary:** Updated project template to latest Lovable version by adding componentTagger plugin in development mode while preserving React deduplication fixes.
+
 ## 2025-09-11-07: Canonical Namespace Import Fix
 
 **Files Modified:**
