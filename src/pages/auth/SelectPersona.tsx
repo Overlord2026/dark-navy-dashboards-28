@@ -21,7 +21,7 @@ const personas = [
     title: 'Financial Advisor',
     description: 'Client management and advisory tools',
     icon: Briefcase,
-    route: '/advisor/home',
+    route: '/pros/advisors',
     color: 'text-green-600'
   },
   {
