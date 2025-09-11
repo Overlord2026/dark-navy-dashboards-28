@@ -108,7 +108,7 @@ export async function createAsset(
     asset_type: assetData.asset_type,
     value_band: assetData.current_value_band || 'unspecified',
     location_hash: assetData.location_zip_first3 ? 
-      await inputs_hash({ zip_first3: assetData.location_zip_first3 }) : undefined
+      await Canonical.inputs_hash({ zip_first3: assetData.location_zip_first3 }) : undefined
   });
 
   return data.id;

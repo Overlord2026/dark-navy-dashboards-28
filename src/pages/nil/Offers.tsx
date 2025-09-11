@@ -96,7 +96,7 @@ export default function OffersPage() {
         type: 'Decision-RDS' as const,
         action: 'publish' as const,
         policy_version: 'E-2025.08',
-        inputs_hash: await hash({ offerId, brand: formData.brand, category: formData.category }),
+        inputs_hash: await Canonical.hash({ offerId, brand: formData.brand, category: formData.category }),
         reasons: ['Offer created successfully', 'Compliance check passed'],
         result: 'approve' as const,
         asset_id: offerId,
@@ -105,7 +105,7 @@ export default function OffersPage() {
       };
 
       // Anchor the receipt
-      const receiptHash = await hash(decisionReceipt);
+      const receiptHash = await Canonical.hash(decisionReceipt);
       const anchorRef = await anchorBatch([receiptHash]);
       decisionReceipt.anchor_ref = anchorRef;
 
@@ -176,7 +176,7 @@ export default function OffersPage() {
         const deltaReceipt: DeltaRDS = {
           id: `delta_${Date.now()}`,
           type: 'Delta-RDS',
-          inputs_hash: await hash({ offerId, action, prior: priorRef }),
+          inputs_hash: await Canonical.hash({ offerId, action, prior: priorRef }),
           policy_version: 'NIL-2025.01',
           prior_ref: priorRef,
           diffs: [{
@@ -186,7 +186,7 @@ export default function OffersPage() {
           }],
           reasons: ['DISPUTE_INITIATED', 'ESCROW_CONTESTED'],
           ts: new Date().toISOString(),
-          anchor_ref: await anchorBatch([await hash({ offerId, action })]).catch(() => null)
+          anchor_ref: await anchorBatch([await Canonical.hash({ offerId, action })]).catch(() => null)
         };
 
         recordReceipt(deltaReceipt);
@@ -204,14 +204,14 @@ export default function OffersPage() {
         const settlementReceipt: SettlementRDS = {
           id: `settlement_${Date.now()}`,
           type: 'Settlement-RDS',
-          inputs_hash: await hash({ offerId, action }),
+          inputs_hash: await Canonical.hash({ offerId, action }),
           policy_version: 'NIL-2025.01',
           escrow_state: action === 'hold' ? 'held' : 'released',
           offerLock: offer.offerLock || offerId,
-          attribution_hash: await hash({ brand: offer.brand, category: offer.category }),
-          split_tree_hash: await hash({ amount: offer.amount, channels: offer.channels }),
+          attribution_hash: await Canonical.hash({ brand: offer.brand, category: offer.category }),
+          split_tree_hash: await Canonical.hash({ amount: offer.amount, channels: offer.channels }),
           ts: new Date().toISOString(),
-          anchor_ref: await anchorBatch([await hash({ offerId, action })]).catch(() => null)
+          anchor_ref: await anchorBatch([await Canonical.hash({ offerId, action })]).catch(() => null)
         };
 
         recordReceipt(settlementReceipt);

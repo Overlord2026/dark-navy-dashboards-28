@@ -173,14 +173,14 @@ export async function runAutomation(
   );
 
   // Generate content-free hashes
-  const explainabilityHash = await inputs_hash({
+  const explainabilityHash = await Canonical.inputs_hash({
     automation: key,
     household_id: householdId,
     explanation_length: result.explanation.length,
     timestamp: new Date().toISOString()
   });
 
-  const tradeHash = await inputs_hash({
+  const tradeHash = await Canonical.inputs_hash({
     household_id: householdId,
     trades_suggested: result.trades_suggested,
     trades_executed: result.trades_executed,
