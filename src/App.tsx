@@ -70,6 +70,7 @@ import AdminPanel from '@/pages/stubs/AdminPanel';
 const FamiliesIndex = lazy(() => import('@/pages/families/index'));
 const ProsIndex = lazy(() => import('@/pages/pros/index'));
 import ProsHub from '@/pages/pros/ProsHub';
+import ProsToolsRouter from '@/pages/pros/ProsToolsRouter';
 const NILLanding = lazy(() => import('@/pages/nil/landing'));
 const HealthcareNew = lazy(() => import('@/pages/healthcare/index'));
 const SolutionsLanding = lazy(() => import('@/pages/solutions/index'));
@@ -384,6 +385,7 @@ function App() {
             <Route path="/families/:type" element={<FamilyTypeDashboard />} />
             <Route path="/family/home" element={<FamilyDashboard />} />
             <Route path="/pros" element={<ProsHub />} />
+            <Route path="/pros/:role" element={<ProsToolsRouter />} />
         <Route path="/nil" element={<NILLanding />} />
         <Route path="/healthcare" element={
           <Suspense fallback={<div>Loading...</div>}>

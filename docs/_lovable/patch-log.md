@@ -20,3 +20,21 @@
 - Routes link to existing pages where available, TODO comments for missing routes
 
 ### Branch: feat/nav-personas
+
+## 2024-01-XX - feat(pros→tools): route pros to existing tools dashboard + persona banner/checklist
+
+### Files Modified:
+- `src/config/toolsHome.ts` - Created tools home path configuration  
+- `src/pages/pros/ProsToolsRouter.tsx` - Created router for professional personas to tools
+- `src/components/pros/PersonaOnboarding.tsx` - Created persona banner with role-specific checklists
+- `src/features/cashflow/pages/CashFlowPage.tsx` - Added PersonaOnboarding banner
+- `src/App.tsx` - Added routing for /pros/:role
+
+### Changes:
+- Service professionals from ProsHub now route to existing tools dashboard (/cashflow)
+- Added persona-specific onboarding banners with "start here" checklists
+- Each professional role gets tailored quick-start recommendations
+- Seamless integration with existing tools without UI changes
+- Query params preserve persona context for banner display
+
+### Branch: feat/pros→tools
