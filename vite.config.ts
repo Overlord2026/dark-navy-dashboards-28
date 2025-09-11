@@ -15,10 +15,9 @@ export default defineConfig(({ mode }) => ({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
-      react: path.resolve(__dirname, "./src/shims/react-shim.ts"),
     },
     dedupe: ["react", "react-dom", "react/jsx-runtime", "react/jsx-dev-runtime", "react-dom/client"],
-  }
+  },
   optimizeDeps: {
     include: ["react", "react-dom", "react-dom/client"],
     force: true
