@@ -387,7 +387,16 @@ function App() {
             <Route path="/family/home" element={<FamilyDashboard />} />
             <Route path="/pros" element={<ProsHub />} />
             <Route path="/pros/:role" element={<ProWorkspaceLayout />}>
-              <Route index element={<Navigate to="/reports" replace />} />
+              <Route index element={<Navigate to="reports" replace />} />
+              <Route path="reports" element={<ReportsPage />} />
+              <Route path="cashflow" element={<CashFlowPage />} />
+              <Route path="transactions" element={<TransactionsPage />} />
+              <Route path="budgets" element={<BudgetsPage />} />
+              <Route path="goals" element={<GoalsPage />} />
+              <Route path="accounts" element={<Stub title="Accounts - Coming Soon" />} />
+              <Route path="recurring" element={<Stub title="Recurring Transactions - Coming Soon" />} />
+              <Route path="investments" element={<Stub title="Investments - Coming Soon" />} />
+              <Route path="advice" element={<Stub title="Advisory Services - Coming Soon" />} />
             </Route>
         <Route path="/nil" element={<NILLanding />} />
         <Route path="/healthcare" element={

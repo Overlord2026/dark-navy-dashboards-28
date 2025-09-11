@@ -15,6 +15,7 @@ export default function ProWorkspaceLayout() {
   const nav = useNavigate();
   const items = useSortedNav(role);
   const quick = PRO_QUICK_ACTIONS[role] || [];
+  const mkTo = (to: string) => (role ? `/pros/${role}${to}` : to);
 
   return (
     <div className="min-h-screen grid grid-cols-[260px_1fr] bg-background text-foreground">
@@ -25,7 +26,7 @@ export default function ProWorkspaceLayout() {
           {items.map(it => (
             <NavLink
               key={it.key}
-              to={it.to}
+              to={mkTo(it.to)}
               className={({isActive}) =>
                 "group flex items-center gap-2 rounded-md px-3 py-2 text-sm outline-none transition-colors " +
                 (isActive
@@ -69,7 +70,7 @@ export default function ProWorkspaceLayout() {
                 {quick.map(q => (
                   <NavLink
                     key={q.to}
-                    to={q.to}
+                    to={mkTo(q.to)}
                     className="inline-flex items-center rounded-md bg-primary/15 text-primary hover:bg-primary/25 px-3 py-1.5 text-sm transition-colors"
                   >
                     {q.label} →
