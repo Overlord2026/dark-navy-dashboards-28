@@ -24,18 +24,20 @@
 ## 2024-01-XX - feat(pros→tools): route pros to existing tools dashboard + persona banner/checklist
 
 ### Files Modified:
-- `src/config/toolsHome.ts` - Updated tools home path to spending reports dashboard
-- `src/pages/pros/ProsToolsRouter.tsx` - Created router for professional personas to tools
+- `src/config/toolsHome.ts` - Updated tools home path to budgets page with spending analysis
+- `src/pages/pros/ProsToolsRouter.tsx` - Created router for professional personas to tools with improved logging
 - `src/components/pros/PersonaOnboarding.tsx` - Created persona banner with role-specific checklists
-- `src/pages/reports/SpendingReportsPage.tsx` - Created spending dashboard with charts and analytics
-- `src/App.tsx` - Added routing for /pros/:role and /reports/spending
+- `src/pages/BudgetsPage.tsx` - Enhanced budgets page with spending analysis tab and persona integration
+- `src/App.tsx` - Added routing for /pros/:role
 
 ### Changes:
-- Service professionals from ProsHub now route to spending dashboard (/reports/spending)
-- Added persona-specific onboarding banners with "start here" checklists  
+- Service professionals from ProsHub now route to enhanced budgets page (/budgets) 
+- Added persona-specific onboarding banners with "start here" checklists
 - Each professional role gets tailored quick-start recommendations
-- Spending dashboard features donut chart, category breakdown, and transaction list
-- Matches design shown in reference screenshot with theme colors
+- Budgets page now includes spending analysis tab with donut chart and category breakdown
+- First tab shows comprehensive spending dashboard matching reference design
+- Second tab maintains original budget management functionality
 - Query params preserve persona context for banner display
+- Added console logging for debugging navigation flow
 
 ### Branch: feat/pros→tools

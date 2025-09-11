@@ -15,11 +15,11 @@ export default function ProsToolsRouter() {
       nav("/pros", { replace: true });
       return;
     }
-    // Carry persona via query; tools read it for the banner/checklist.
-    const url = new URL(TOOLS_HOME_PATH, window.location.origin);
-    url.searchParams.set("persona", role);
-    url.searchParams.set("src", "pros-hub");
-    nav(url.pathname + url.search, { replace: true });
+    
+    console.log("ProsToolsRouter: navigating to", TOOLS_HOME_PATH, "with persona", role);
+    
+    // Direct navigation to avoid any auth redirects
+    nav(`${TOOLS_HOME_PATH}?persona=${role}&src=pros-hub`, { replace: true });
   }, [role, nav]);
 
   return null;

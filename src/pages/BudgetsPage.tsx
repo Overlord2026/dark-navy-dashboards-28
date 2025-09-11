@@ -21,6 +21,8 @@ import {
 import { useFeatureAccess } from '@/hooks/useFeatureAccess';
 import { PremiumWrapper } from '@/components/ui/premium-badge';
 import { toast } from 'sonner';
+import PersonaOnboarding from "@/components/pros/PersonaOnboarding";
+import { SpendingAnalysis } from '@/components/budget/SpendingAnalysis';
 
 interface BudgetCategory {
   id: string;
@@ -132,11 +134,13 @@ export const BudgetsPage = () => {
 
   return (
     <div className="container mx-auto p-6 space-y-6">
+      <PersonaOnboarding />
+      
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold">Budget Management</h1>
+          <h1 className="text-3xl font-bold">Spending Dashboard</h1>
           <p className="text-muted-foreground">
-            Track spending, manage budgets, and reach your financial goals
+            Comprehensive spending analysis and category breakdown
           </p>
         </div>
         <PremiumWrapper isPremium={hasAdvancedBudgets} showBadge>
@@ -146,69 +150,72 @@ export const BudgetsPage = () => {
         </PremiumWrapper>
       </div>
 
-      {/* Summary Cards */}
-      <div className="grid md:grid-cols-4 gap-6">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Monthly Income</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">${currentBudget.totalIncome.toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">
-              Total income for {currentBudget.month}
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Total Budgeted</CardTitle>
-            <Target className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">${currentBudget.totalBudgeted.toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">
-              Allocated across all categories
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Total Spent</CardTitle>
-            <BarChart3 className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">${currentBudget.totalSpent.toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">
-              {((currentBudget.totalSpent / currentBudget.totalBudgeted) * 100).toFixed(1)}% of budget used
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Savings Rate</CardTitle>
-            <PieChart className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{savingsRate.toFixed(1)}%</div>
-            <p className="text-xs text-muted-foreground">
-              Of total income saved
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-
-      <Tabs defaultValue="overview" className="space-y-6">
+      <Tabs defaultValue="spending" className="space-y-6">
         <TabsList>
-          <TabsTrigger value="overview">Budget Overview</TabsTrigger>
-          <TabsTrigger value="categories">Categories</TabsTrigger>
+          <TabsTrigger value="spending">Spending Analysis</TabsTrigger>
+          <TabsTrigger value="budget">Budget Management</TabsTrigger>
           <TabsTrigger value="trends">Trends & Analysis</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="overview">
+        <TabsContent value="spending">
+          <SpendingAnalysis />
+        </TabsContent>
+
+        <TabsContent value="budget">
+          {/* Summary Cards */}
+          <div className="grid md:grid-cols-4 gap-6 mb-6">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium">Monthly Income</CardTitle>
+                <DollarSign className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">${currentBudget.totalIncome.toLocaleString()}</div>
+                <p className="text-xs text-muted-foreground">
+                  Total income for {currentBudget.month}
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium">Total Budgeted</CardTitle>
+                <Target className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">${currentBudget.totalBudgeted.toLocaleString()}</div>
+                <p className="text-xs text-muted-foreground">
+                  Allocated across all categories
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium">Total Spent</CardTitle>
+                <BarChart3 className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">${currentBudget.totalSpent.toLocaleString()}</div>
+                <p className="text-xs text-muted-foreground">
+                  {((currentBudget.totalSpent / currentBudget.totalBudgeted) * 100).toFixed(1)}% of budget used
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium">Savings Rate</CardTitle>
+                <PieChart className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{savingsRate.toFixed(1)}%</div>
+                <p className="text-xs text-muted-foreground">
+                  Of total income saved
+                </p>
+              </CardContent>
+            </Card>
+          </div>
           <div className="grid lg:grid-cols-3 gap-6">
             {/* Budget Progress */}
             <Card className="lg:col-span-2">
