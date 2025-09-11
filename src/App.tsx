@@ -33,6 +33,7 @@ import Pricing from '@/pages/Pricing';
 // Landing page imports
 import FamiliesLanding from '@/pages/landing/FamiliesLanding';
 import ProsLanding from '@/pages/landing/ProsLanding';
+import ReportsPage from '@/pages/ReportsPage';
 import GoalsPageLanding from '@/pages/landing/GoalsPage';
 import GoalsPage from '@/pages/GoalsPage';
 import { BudgetsPage } from '@/pages/BudgetsPage';
@@ -464,6 +465,11 @@ function App() {
             <Route path="/budgets" element={<BudgetsPage />} />
             <Route path="/cashflow" element={<CashFlowPage />} />
             <Route path="/transactions" element={<TransactionsPage />} />
+            <Route path="/reports" element={<ReportsPage />} />
+            <Route path="/accounts" element={<Stub title="Accounts - Coming Soon" />} />
+            <Route path="/recurring" element={<Stub title="Recurring Transactions - Coming Soon" />} />
+            <Route path="/investments" element={<Stub title="Investments - Coming Soon" />} />
+            <Route path="/advice" element={<Stub title="Advisory Services - Coming Soon" />} />
             
             
             {/* Tool routes - standardized paths that redirect to existing components */}
