@@ -5,7 +5,7 @@
 
 import { supabase } from '@/integrations/supabase/client';
 import { recordReceipt } from './receipts';
-import { inputs_hash } from '@/lib/canonical';
+import * as Canonical from '@/lib/canonical';
 
 type AssetType =
   | 'home_high_value' | 'exotic_auto' | 'marine_boat' | 'marine_yacht' | 'rv'

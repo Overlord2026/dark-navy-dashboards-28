@@ -6,7 +6,7 @@
 import { supabase } from '@/integrations/supabase/client';
 import { recordReceipt } from './receipts';
 import { withAttestation } from './attestation';
-import { inputs_hash } from '@/lib/canonical';
+import * as Canonical from '@/lib/canonical';
 
 export type AutomationKey = 'rebalance' | 'tlh' | 'drift_check' | 'cash_sweep';
 

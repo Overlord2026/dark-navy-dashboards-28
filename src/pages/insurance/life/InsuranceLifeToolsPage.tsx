@@ -21,7 +21,7 @@ import {
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { recordDecisionRDS } from "@/features/pro/compliance/DecisionTracker";
-import { hash } from "@/lib/canonical";
+import * as Canonical from "@/lib/canonical";
 import { SuitabilityDecision } from "@/features/insurance/types";
 
 export default function InsuranceLifeToolsPage() {
@@ -107,7 +107,7 @@ export default function InsuranceLifeToolsPage() {
       const decision = await recordDecisionRDS({
         action: '1035_exchange_analysis',
         persona: 'insurance',
-        inputs_hash: await hash({
+        inputs_hash: await Canonical.hash({
           currentValue: currentVal,
           surrenderCharges,
           clientAge: age,
@@ -165,7 +165,7 @@ export default function InsuranceLifeToolsPage() {
       const decision = await recordDecisionRDS({
         action: 'life_needs_analysis',
         persona: 'insurance',
-        inputs_hash: await hash({
+        inputs_hash: await Canonical.hash({
           income,
           expenses,
           debts,
@@ -209,7 +209,7 @@ export default function InsuranceLifeToolsPage() {
       const decision = await recordDecisionRDS({
         action: 'beneficiary_change',
         persona: 'insurance',
-        inputs_hash: await hash({
+        inputs_hash: await Canonical.hash({
           policy: beneficiaryData.policyNumber,
           primary: beneficiaryData.primaryBeneficiary,
           contingent: beneficiaryData.contingentBeneficiary,

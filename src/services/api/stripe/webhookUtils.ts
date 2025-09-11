@@ -1,6 +1,6 @@
 import { StripeWebhookEvent } from '../types/webhookTypes';
 import { logger } from '@/services/logging/loggingService';
-import { sha256Hex } from '@/lib/canonical';
+import * as Canonical from '@/lib/canonical';
 
 // Mock secret for webhook signature verification
 // In a real app, this would be stored securely and retrieved from environment variables
@@ -47,7 +47,7 @@ export const verifyWebhookSignature = async (
     // In a real implementation, this would use Stripe's constructEvent method
     // For demonstration, implement a simple hash verification
     // This is NOT production-ready, but illustrates the concept
-    const expectedSignature = await sha256Hex(STRIPE_WEBHOOK_SECRET + payload);
+    const expectedSignature = await Canonical.sha256Hex(STRIPE_WEBHOOK_SECRET + payload);
     
     // Simple comparison (in production, use proper HMAC and timing-safe comparison)
     const signaturesMatch = signature === expectedSignature;

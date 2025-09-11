@@ -25,7 +25,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { recordDecisionRDS } from "@/features/pro/compliance/DecisionTracker";
 import { recordConsentRDS } from "@/features/pro/compliance/ConsentTracker";
-import { hash } from "@/lib/canonical";
+import * as Canonical from "@/lib/canonical";
 
 export default function HealthcareToolsPage() {
   const { toast } = useToast();
@@ -151,7 +151,7 @@ export default function HealthcareToolsPage() {
       const decision = await recordDecisionRDS({
         action: 'healthcare_screening_order',
         persona: 'healthcare',
-        inputs_hash: await hash({
+        inputs_hash: await Canonical.hash({
           patientName: screeningData.patientName,
           screeningType: screeningData.screeningType,
           orderingProvider: screeningData.orderingProvider,

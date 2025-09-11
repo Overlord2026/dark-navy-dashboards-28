@@ -1,5 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
-import { sha256Hex } from "@/lib/canonical";
+import * as Canonical from "@/lib/canonical";
 
 export type PolicyBundle = {
   id: string;
@@ -39,7 +39,7 @@ export async function publishMockUpdate(domain: string, jurisdiction: string) {
     ],
     meta: { domain, jurisdiction, issued_at: now }
   };
-  const content_hash = await sha256Hex(JSON.stringify(content));
+  const content_hash = await Canonical.sha256Hex(JSON.stringify(content));
   const bundle_id = `rs://${domain}@${version}`;
   
   // This would need to be implemented with actual policy_bundles table if it exists

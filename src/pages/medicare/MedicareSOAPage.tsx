@@ -24,7 +24,7 @@ import {
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { recordDecisionRDS } from "@/features/pro/compliance/DecisionTracker";
-import { hash } from "@/lib/canonical";
+import * as Canonical from "@/lib/canonical";
 
 export default function MedicareSOAPage() {
   const { toast } = useToast();
@@ -109,7 +109,7 @@ export default function MedicareSOAPage() {
       const decision = await recordDecisionRDS({
         action: 'medicare.soa.signed',
         persona: 'medicare',
-        inputs_hash: await hash({
+        inputs_hash: await Canonical.hash({
           clientName: soaData.clientName,
           planTypes: soaData.planTypes,
           discussionTopics: soaData.discussionTopics,

@@ -1,8 +1,8 @@
 // src/lib/merkle.ts (browser-safe; async)
-import { sha256Hex } from '@/lib/canonical';
+import * as Canonical from '@/lib/canonical';
 
 export async function buildMerkle(leavesHex: string[]) {
-  if (!leavesHex.length) return { root: await sha256Hex(''), levels: [[await sha256Hex('')]] };
+  if (!leavesHex.length) return { root: await Canonical.sha256Hex(''), levels: [[await Canonical.sha256Hex('')]] };
   const levels: string[][] = [];
   levels.push([...leavesHex]);
 
@@ -12,7 +12,7 @@ export async function buildMerkle(leavesHex: string[]) {
     for (let i = 0; i < prev.length; i += 2) {
       const left = prev[i];
       const right = prev[i + 1] ?? prev[i];
-      next.push(await sha256Hex(left + right));
+      next.push(await Canonical.sha256Hex(left + right));
     }
     levels.push(next);
   }
@@ -38,7 +38,7 @@ export async function verifyProof(leaf: string, proof: string[], root: string): 
   for (const step of proof) {
     const side = step.slice(0, 2);
     const sib  = step.slice(2);
-    computed = (side === 'L:') ? await sha256Hex(sib + computed) : await sha256Hex(computed + sib);
+    computed = (side === 'L:') ? await Canonical.sha256Hex(sib + computed) : await Canonical.sha256Hex(computed + sib);
   }
   return computed === root;
 }

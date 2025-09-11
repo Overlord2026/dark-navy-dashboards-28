@@ -13,7 +13,7 @@ import { createOffer, checkConflicts, getOffers, NILOffer } from '@/features/nil
 import type { SettlementRDS, DeltaRDS } from '@/features/receipts/types';
 import { previewSplit, calculateSplitAmounts } from '@/features/nil/splits/preview';
 import { recordReceipt } from '@/features/receipts/record';
-import { hash } from '@/lib/canonical';
+import * as Canonical from '@/lib/canonical';
 import { toast } from 'sonner';
 import { GoldButton, GoldOutlineButton } from '@/components/ui/brandButtons';
 import NilReceiptsStrip from '@/components/nil/NilReceiptsStrip';

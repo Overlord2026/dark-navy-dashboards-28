@@ -1,4 +1,4 @@
-import { sha256Hex } from "@/lib/canonical";
+import * as Canonical from "@/lib/canonical";
 
 /** Mock cohort + quantiles aligned to JSON appendix and figures */
 const COHORT_ID = "size_5_asset_mix_3";
@@ -15,7 +15,7 @@ export async function runPlanBenchmark() {
     share_class: "R3",
   };
   const inputsCanonical = JSON.stringify(planInputs, Object.keys(planInputs).sort());
-  const inputs_hash = await sha256Hex(inputsCanonical);
+  const inputs_hash = await Canonical.sha256Hex(inputsCanonical);
 
   const delta_bp = DELTA_BP_DEFAULT;
   const FeeCompare_RDS = { quantiles: QUANTILES, delta_bp, reasons: ["share class differential","recordkeeper fee"] };

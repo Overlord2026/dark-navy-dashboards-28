@@ -4,7 +4,7 @@
  */
 
 import { recordReceipt, RDS } from './receipts';
-import { inputs_hash } from '@/lib/canonical';
+import * as Canonical from '@/lib/canonical';
 
 export interface JobMetrics {
   start_time: number;
@@ -69,7 +69,7 @@ export async function withAttestation<T>(
       timestamp: new Date().toISOString()
     };
 
-    const runtimeMeasHash = await inputs_hash(runtimeData);
+    const runtimeMeasHash = await Canonical.inputs_hash(runtimeData);
 
     // Emit Attestation-RDS
     const attestationRDS: RDS = {

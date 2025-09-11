@@ -1,4 +1,4 @@
-import { sha256Hex } from '@/lib/canonical';
+import * as Canonical from '@/lib/canonical';
 
 /**
  * Enhanced hashing service using SHA3-256 for policy and audit operations
@@ -14,7 +14,7 @@ export class HashingService {
    */
   static async sha3Hash(data: string | object): Promise<string> {
     const canonical = typeof data === 'string' ? data : this.canonicalize(data);
-    return await sha256Hex(canonical);
+    return await Canonical.sha256Hex(canonical);
   }
 
   /**

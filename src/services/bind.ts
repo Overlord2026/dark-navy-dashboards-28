@@ -5,7 +5,7 @@
 
 import { supabase } from '@/integrations/supabase/client';
 import { recordReceipt, anchorSingle } from './receipts';
-import { inputs_hash } from '@/lib/canonical';
+import * as Canonical from '@/lib/canonical';
 
 export interface BindingChecklist {
   identity_verified: boolean;
@@ -156,7 +156,7 @@ export async function completeBind(bindingId: string): Promise<void> {
     .eq('id', bindingId);
 
   // Record Bind-RDS
-  const bindHash = await inputs_hash({
+  const bindHash = await Canonical.inputs_hash({
     binding_id: bindingId,
     policy_number: (binding as any).policy_number,
     quote_id: (binding as any).quote_id,
@@ -209,7 +209,7 @@ export async function initiateESign(bindingId: string, signerEmail: string): Pro
     policy_version: 'v1.0',
     binding_id: bindingId,
     action: 'initiated',
-    signer_email_hash: await inputs_hash({ email: signerEmail })
+    signer_email_hash: await Canonical.inputs_hash({ email: signerEmail })
   });
   
   return esignUrl;
