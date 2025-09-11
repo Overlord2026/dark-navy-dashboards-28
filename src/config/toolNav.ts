@@ -1,22 +1,23 @@
-import { ReactNode } from "react";
+import { ComponentType } from "react";
+import { BarChart2, Wallet, Receipt, Activity, PieChart, PiggyBank, RefreshCw, Goal, LineChart, Lightbulb } from "lucide-react";
 
 export type ToolKey =
   | "dashboard" | "accounts" | "transactions" | "cashflow"
   | "reports" | "budget" | "recurring" | "goals" | "investments" | "advice";
 
-export type ToolItem = { key: ToolKey; label: string; to: string; icon?: ReactNode };
+export type ToolItem = { key: ToolKey; label: string; to: string; icon?: ComponentType<{ className?: string }> };
 
 export const TOOL_NAV: ToolItem[] = [
-  { key: "dashboard",    label: "Dashboard",    to: "/reports" },        // fallback to reports summary
-  { key: "accounts",     label: "Accounts",     to: "/accounts" },
-  { key: "transactions", label: "Transactions", to: "/transactions" },
-  { key: "cashflow",     label: "Cash Flow",    to: "/cashflow" },
-  { key: "reports",      label: "Reports",      to: "/reports" },
-  { key: "budget",       label: "Budget",       to: "/budgets" },
-  { key: "recurring",    label: "Recurring",    to: "/recurring" },      // TODO: implement route
-  { key: "goals",        label: "Goals",        to: "/goals" },
-  { key: "investments",  label: "Investments",  to: "/investments" },    // TODO: implement route
-  { key: "advice",       label: "Advice",       to: "/advice" },         // TODO: implement route
+  { key: "dashboard",    label: "Dashboard",    to: "/reports",     icon: BarChart2 },
+  { key: "accounts",     label: "Accounts",     to: "/accounts",    icon: Wallet },
+  { key: "transactions", label: "Transactions", to: "/transactions", icon: Receipt },
+  { key: "cashflow",     label: "Cash Flow",    to: "/cashflow",    icon: Activity },
+  { key: "reports",      label: "Reports",      to: "/reports",     icon: PieChart },
+  { key: "budget",       label: "Budget",       to: "/budgets",     icon: PiggyBank },
+  { key: "recurring",    label: "Recurring",    to: "/recurring",   icon: RefreshCw },
+  { key: "goals",        label: "Goals",        to: "/goals",       icon: Goal },
+  { key: "investments",  label: "Investments",  to: "/investments", icon: LineChart },
+  { key: "advice",       label: "Advice",       to: "/advice",      icon: Lightbulb },
 ];
 
 // persona-specific orders + quick actions (idempotent; expand later)

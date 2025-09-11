@@ -42,23 +42,32 @@
 
 ### Branch: feat/pros→tools
 
-## 2024-01-XX - feat(pro-workspace): left sidebar nav, persona quick actions, switch persona; reuse existing tools
+## 2025-01-XX - feat(pro-workspace-v2): Monarch-style sidebar, polished top bar, persona quick actions; reuse existing tools
 
-### Files Modified:
-- `src/config/toolNav.ts` - Created tool navigation config with persona-specific ordering and quick actions
-- `src/components/layout/ProWorkspaceLayout.tsx` - Created professional workspace layout with left sidebar
-- `src/config/personas.ts` - Updated PROS routes to use /pros/:role pattern
-- `src/App.tsx` - Updated routing to use nested ProWorkspaceLayout with Outlet for existing tools
-- `docs/_lovable/patch-log.md` - Updated patch log
+### Features Added
+- Upgraded to Monarch-style workspace with fixed left sidebar
+- Added Lucide React icons to navigation items
+- Implemented clean top bar with persona chip and quick actions
+- Enhanced focus states and accessibility
+- Professional typography and spacing alignment
 
-### Changes:
-- Created professional workspace with left sidebar navigation (Monarch-style)
-- Service professionals from ProsHub now route to /pros/:role with sidebar access to all tools
-- Left sidebar shows persona-specific tool ordering (advisors see investments first, accountants see reports first, etc.)
-- Quick actions banner shows role-specific recommended next steps
-- "Switch persona" button for easy role switching
-- Reuses existing tools pages (/reports, /cashflow, /transactions, /budgets, /goals) exactly as they are
-- Responsive design with semantic colors and proper accessibility
-- Nested routing structure allows clean URLs and tool navigation
+### Files Modified
+- `src/config/toolNav.ts` - Added Lucide icons to navigation items, stored as components
+- `src/components/layout/ProWorkspaceLayout.tsx` - Complete redesign with sidebar icons, persona chip, and improved layout
+- `docs/_lovable/patch-log.md` - Updated documentation
 
-### Branch: feat/pro-workspace
+### Technical Details
+- Fixed left sidebar with icons and labels, active state highlighting
+- Compact persona chip in top bar instead of large banner
+- Quick actions integrated into top bar toolbar
+- Consistent semantic design tokens and spacing
+- Enhanced keyboard navigation and focus management
+- Responsive grid layout with proper backdrop blur effects
+
+### UI/UX Improvements
+- Professional Monarch-style appearance
+- Better visual hierarchy with icons and typography
+- Cleaner quick actions presentation
+- Improved accessibility with proper ARIA labels and focus states
+
+### Branch: feat/pro-workspace-v2
