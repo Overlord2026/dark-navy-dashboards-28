@@ -1,5 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import * as Canonical from "@/lib/canonical";
+import * as Canonical from "@/lib/canonical"; // Force cache refresh
 import { emitReceipt, type RDS } from "./dataAdapter";
 
 export type ReceiptDecision = "ALLOW" | "DENY" | "ALLOW_WITH_CONDITIONS";
