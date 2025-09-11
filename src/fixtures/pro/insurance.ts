@@ -56,7 +56,7 @@ Risk Factors:
 - Retirement income gap identified
 `;
 
-  const inputs_hash = await hash({ transcript: meetingContent, source: 'manual' });
+  const inputs_hash = await Canonical.hash({ transcript: meetingContent, source: 'manual' });
   
   const meeting = MeetingModel.create({
     persona: 'insurance',
@@ -118,7 +118,7 @@ export async function seedInsuranceCampaign() {
   const commDecision = recordDecisionRDS({
     action: 'communication_send',
     persona: 'insurance',
-    inputs_hash: await hash({ template_id: campaign.template_id, recipients: ['patricia.wilson@email.com'] }),
+    inputs_hash: await Canonical.hash({ template_id: campaign.template_id, recipients: ['patricia.wilson@email.com'] }),
     reasons: ['template_approved', 'consent_valid', 'state_licensed', 'compliance_reviewed'],
     result: 'approve',
     metadata: {
