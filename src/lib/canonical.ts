@@ -92,4 +92,4 @@ export function canonicalJson(obj: any): string {
 
 // Alias and version exports
 export const stableStringify = canonicalize;
-export const __CANONICAL_BUILD_ID = "canonical-2025-09-11-01";
+export const __CANONICAL_BUILD_ID = "canonical-2025-09-11-02";

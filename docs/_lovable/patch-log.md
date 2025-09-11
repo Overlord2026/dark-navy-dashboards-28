@@ -15,3 +15,19 @@
 - Added cache-busting build ID to force Vite recompilation
 - Consolidated duplicate imports in receiptsEmitter.ts
 - Configured required server port for preview
+
+## 2025-09-11: Fix Canonical Imports Export Error
+
+**Commit:** "fix(canonical): normalize imports; add build id; disable SW during debug"
+
+**Files modified:**
+- `src/lib/canonical.ts` - Bumped __CANONICAL_BUILD_ID to force rebuild
+- `src/pwa/registerSW.ts` - Temporarily disabled service worker to avoid cache during debug
+- `.chore/cache-bust-1736618400000.txt` - Created cache-bust file to force fresh rebuild
+- `docs/_lovable/patch-log.md` - Updated patch log
+
+**Changes:**
+- Fixed "does not provide an export named 'inputsHash'" error
+- All imports already using correct @/lib/canonical alias path
+- Temporarily disabled service worker to prevent cached modules during debugging
+- Created cache-bust file to ensure fresh rebuild
