@@ -61,7 +61,10 @@ export default function Advisors() {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <GoldOutlineButton className="h-auto p-6 flex flex-col items-center gap-2">
+              <GoldOutlineButton 
+                onClick={handleOpenCatalog}
+                className="h-auto p-6 flex flex-col items-center gap-2"
+              >
                 <span className="text-lg font-semibold">Open Catalog</span>
                 <span className="text-sm opacity-80">Browse all tools</span>
               </GoldOutlineButton>
@@ -74,7 +77,10 @@ export default function Advisors() {
                 <span className="text-sm opacity-80">Quick preview</span>
               </GoldButton>
               
-              <GoldOutlineButton className="h-auto p-6 flex flex-col items-center gap-2">
+              <GoldOutlineButton 
+                onClick={handleBookMeeting}
+                className="h-auto p-6 flex flex-col items-center gap-2"
+              >
                 <span className="text-lg font-semibold">Book 15-min</span>
                 <span className="text-sm opacity-80">Personal walkthrough</span>
               </GoldOutlineButton>
