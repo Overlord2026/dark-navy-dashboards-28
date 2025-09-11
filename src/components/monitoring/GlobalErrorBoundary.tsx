@@ -27,7 +27,7 @@ type Props = {
 
 type State = { hasError: boolean; error?: unknown };
 
-export default class GlobalErrorBoundary extends React.Component<Props, State> {
+class GlobalErrorBoundary extends React.Component<Props, State> {
   state: State = { hasError: false, error: undefined };
 
   static getDerivedStateFromError(error: unknown): State {
@@ -53,3 +53,6 @@ export default class GlobalErrorBoundary extends React.Component<Props, State> {
     );
   }
 }
+
+export default GlobalErrorBoundary;
+export { GlobalErrorBoundary };

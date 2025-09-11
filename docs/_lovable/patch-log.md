@@ -1,5 +1,14 @@
 # Lovable Patch Log
 
+## 2025-09-11-05: GlobalErrorBoundary Export Fix
+
+**Files Modified:**
+- `src/components/monitoring/GlobalErrorBoundary.tsx` - Added both named and default exports
+
+**Commit:** fix(error-boundary): provide default + named export for GlobalErrorBoundary
+
+**Summary:** Modified GlobalErrorBoundary to export both named `GlobalErrorBoundary` and default exports, enabling flexible import patterns while maintaining backward compatibility.
+
 ## 2025-09-11: Canonical Imports Refactor
 
 **Commit:** "refactor(canonical): alias path + named imports; add stableStringify and build id"
