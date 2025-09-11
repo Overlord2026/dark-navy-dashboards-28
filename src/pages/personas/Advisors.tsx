@@ -12,7 +12,7 @@ export default function Advisors() {
   const { toast } = useToast();
 
   const handleOpenCatalog = () => {
-    navigate('/discover?persona=advisors');
+    navigate('/catalog');
   };
 
   const handleRunDemo = () => {
@@ -62,6 +62,7 @@ export default function Advisors() {
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <GoldOutlineButton 
+                type="button"
                 onClick={handleOpenCatalog}
                 className="h-auto p-6 flex flex-col items-center gap-2"
               >
@@ -70,6 +71,7 @@ export default function Advisors() {
               </GoldOutlineButton>
               
               <GoldButton 
+                type="button"
                 onClick={handleRunDemo}
                 className="h-auto p-6 flex flex-col items-center gap-2"
               >
