@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { TrendingUp, TrendingDown, DollarSign, Calendar, BarChart3 } from 'lucide-react';
-import PersonaOnboarding from "@/components/pros/PersonaOnboarding";
 
 export function CashFlowPage() {
   const [selectedPeriod, setSelectedPeriod] = useState('MTD');
@@ -54,7 +53,6 @@ export function CashFlowPage() {
 
   return (
     <div className="space-y-6">
-      <PersonaOnboarding />
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold flex items-center gap-2">

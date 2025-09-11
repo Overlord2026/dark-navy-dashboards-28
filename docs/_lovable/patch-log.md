@@ -41,3 +41,24 @@
 - Added console logging for debugging navigation flow
 
 ### Branch: feat/pros→tools
+
+## 2024-01-XX - feat(pro-workspace): left sidebar nav, persona quick actions, switch persona; reuse existing tools
+
+### Files Modified:
+- `src/config/toolNav.ts` - Created tool navigation config with persona-specific ordering and quick actions
+- `src/components/layout/ProWorkspaceLayout.tsx` - Created professional workspace layout with left sidebar
+- `src/config/personas.ts` - Updated PROS routes to use /pros/:role pattern
+- `src/App.tsx` - Updated routing to use nested ProWorkspaceLayout with Outlet for existing tools
+- `docs/_lovable/patch-log.md` - Updated patch log
+
+### Changes:
+- Created professional workspace with left sidebar navigation (Monarch-style)
+- Service professionals from ProsHub now route to /pros/:role with sidebar access to all tools
+- Left sidebar shows persona-specific tool ordering (advisors see investments first, accountants see reports first, etc.)
+- Quick actions banner shows role-specific recommended next steps
+- "Switch persona" button for easy role switching
+- Reuses existing tools pages (/reports, /cashflow, /transactions, /budgets, /goals) exactly as they are
+- Responsive design with semantic colors and proper accessibility
+- Nested routing structure allows clean URLs and tool navigation
+
+### Branch: feat/pro-workspace

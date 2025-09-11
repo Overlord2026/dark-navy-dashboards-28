@@ -70,7 +70,7 @@ import AdminPanel from '@/pages/stubs/AdminPanel';
 const FamiliesIndex = lazy(() => import('@/pages/families/index'));
 const ProsIndex = lazy(() => import('@/pages/pros/index'));
 import ProsHub from '@/pages/pros/ProsHub';
-import ProsToolsRouter from '@/pages/pros/ProsToolsRouter';
+import ProWorkspaceLayout from '@/components/layout/ProWorkspaceLayout';
 const NILLanding = lazy(() => import('@/pages/nil/landing'));
 const HealthcareNew = lazy(() => import('@/pages/healthcare/index'));
 const SolutionsLanding = lazy(() => import('@/pages/solutions/index'));
@@ -273,7 +273,6 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
 const SelectPersona = lazy(() => import('@/pages/auth/SelectPersona'));
-const SpendingReportsPage = lazy(() => import('@/pages/reports/SpendingReportsPage'));
 
 // Stub component for avoiding 404s
 const Stub = ({ title }: { title: string }) => <div className="p-10 text-white text-2xl">{title}</div>;
@@ -386,7 +385,9 @@ function App() {
             <Route path="/families/:type" element={<FamilyTypeDashboard />} />
             <Route path="/family/home" element={<FamilyDashboard />} />
             <Route path="/pros" element={<ProsHub />} />
-            <Route path="/pros/:role" element={<ProsToolsRouter />} />
+            <Route path="/pros/:role" element={<ProWorkspaceLayout />}>
+              <Route index element={<Navigate to="/reports" replace />} />
+            </Route>
         <Route path="/nil" element={<NILLanding />} />
         <Route path="/healthcare" element={
           <Suspense fallback={<div>Loading...</div>}>
@@ -463,7 +464,7 @@ function App() {
             <Route path="/budgets" element={<BudgetsPage />} />
             <Route path="/cashflow" element={<CashFlowPage />} />
             <Route path="/transactions" element={<TransactionsPage />} />
-            <Route path="/reports/spending" element={<Suspense fallback={<div>Loading...</div>}><SpendingReportsPage /></Suspense>} />
+            
             
             {/* Tool routes - standardized paths that redirect to existing components */}
             <Route path="/tools/goals" element={<Navigate to="/goals" replace />} />

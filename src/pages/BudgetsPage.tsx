@@ -21,8 +21,6 @@ import {
 import { useFeatureAccess } from '@/hooks/useFeatureAccess';
 import { PremiumWrapper } from '@/components/ui/premium-badge';
 import { toast } from 'sonner';
-import PersonaOnboarding from "@/components/pros/PersonaOnboarding";
-import { SpendingAnalysis } from '@/components/budget/SpendingAnalysis';
 
 interface BudgetCategory {
   id: string;
@@ -134,13 +132,12 @@ export const BudgetsPage = () => {
 
   return (
     <div className="container mx-auto p-6 space-y-6">
-      <PersonaOnboarding />
       
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold">Spending Dashboard</h1>
+          <h1 className="text-3xl font-bold">Budget Management</h1>
           <p className="text-muted-foreground">
-            Comprehensive spending analysis and category breakdown
+            Track spending, manage budgets, and reach your financial goals
           </p>
         </div>
         <PremiumWrapper isPremium={hasAdvancedBudgets} showBadge>
@@ -150,18 +147,14 @@ export const BudgetsPage = () => {
         </PremiumWrapper>
       </div>
 
-      <Tabs defaultValue="spending" className="space-y-6">
+      <Tabs defaultValue="overview" className="space-y-6">
         <TabsList>
-          <TabsTrigger value="spending">Spending Analysis</TabsTrigger>
-          <TabsTrigger value="budget">Budget Management</TabsTrigger>
+          <TabsTrigger value="overview">Budget Overview</TabsTrigger>
+          <TabsTrigger value="categories">Categories</TabsTrigger>
           <TabsTrigger value="trends">Trends & Analysis</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="spending">
-          <SpendingAnalysis />
-        </TabsContent>
-
-        <TabsContent value="budget">
+        <TabsContent value="overview">
           {/* Summary Cards */}
           <div className="grid md:grid-cols-4 gap-6 mb-6">
             <Card>
