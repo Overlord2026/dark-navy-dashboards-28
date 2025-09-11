@@ -500,11 +500,7 @@ function App() {
             
             
             {/* Pros sub-routes */}
-            <Route path="/pros/advisors" element={
-              <PersonaGuard allowedPersonas={['advisor']}>
-                <AdvisorDashboardWithSideNav />
-              </PersonaGuard>
-            } />
+            <Route path="/pros/advisors" element={<Advisors />} />
             <Route path="/pros/accountants" element={
               <PersonaGuard allowedPersonas={['accountant']}>
                 <AccountantDashboard />

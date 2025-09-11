@@ -131,3 +131,27 @@
 - Streamlined user experience with contextual shortcuts
 
 ### Branch: feat/pro-workspace-polish
+
+## 2025-01-11 - feat(pro-advisors-route): connect Financial Advisors hub to existing Advisors page
+
+### Features Added
+- Connected Service Professionals hub "Financial Advisors" link to existing Advisors page
+- Simplified routing by reusing the pre-built Financial Advisors component
+- Maintains existing page functionality and design while integrating with pro hub
+
+### Files Modified
+- `src/App.tsx` - Updated /pros/advisors route to use existing Advisors component instead of AdvisorDashboardWithSideNav
+- `docs/_lovable/patch-log.md` - Updated documentation
+
+### Technical Details
+- Detected existing Advisors component at src/pages/personas/Advisors.tsx
+- Updated route mapping to use existing component with established design
+- Preserved existing navigation and functionality while connecting to hub flow
+- Removed unnecessary PersonaGuard wrapper for cleaner routing
+
+### UI/UX Improvements
+- Seamless navigation from Service Professionals hub to dedicated Advisors page
+- Maintains existing page design and user experience
+- Consistent routing pattern for professional personas
+
+### Branch: feat/pro-advisors-route
