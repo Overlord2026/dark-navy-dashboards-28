@@ -1,7 +1,7 @@
 import { listScenarios } from '@/features/roadmap/store';
 import { runScenario } from '@/features/roadmap/engine';
 import { recordReceipt } from '@/features/receipts/record';
-import { hash } from '@/lib/canonical';
+import * as Canonical from '@/lib/canonical';
 import { guardrailsCfg } from './policy';
 
 export async function evaluateGuardrailsForHousehold(householdId: string) {
@@ -13,7 +13,7 @@ export async function evaluateGuardrailsForHousehold(householdId: string) {
     const within = res.successProb >= guardrailsCfg.lower && res.successProb <= guardrailsCfg.upper;
     const state = within ? 'GUARDRAIL_OK' : (res.successProb < guardrailsCfg.lower ? 'GUARDRAIL_WARN' : 'GUARDRAIL_WARN');
     
-    const inputs_hash = await hash({
+    const inputs_hash = await Canonical.hash({
       householdId, 
       scenarioId: s.id, 
       assumptions: s.assumptions

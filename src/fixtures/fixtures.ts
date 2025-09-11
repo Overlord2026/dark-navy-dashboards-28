@@ -3,7 +3,7 @@
 import { recordReceipt, listReceipts, clearReceipts } from '@/features/receipts/record'
 import type { DecisionRDS, ConsentRDS, SettlementRDS, DeltaRDS, AnyRDS } from '@/features/receipts/types'
 import { anchorBatch } from '@/features/anchor/providers'
-import { hash } from '@/lib/canonical'
+import * as Canonical from '@/lib/canonical'
 
 // Domain stubs you already planned/created:
 import { getModules, completeModule } from '@/features/nil/education/api'
@@ -86,7 +86,7 @@ export async function loadFixtures(opts: { profile: Profile } = { profile: 'coac
     id: `rds_pub_${Date.now()}`, type: 'Decision-RDS', action: 'publish',
     policy_version: 'E-2025.08', inputs_hash: 'sha256:demo',
     reasons: checks.reasons, result: 'approve', asset_id: `asset_${offerId}`,
-    anchor_ref: await anchorBatch(await hash({ offerId, asset: `asset_${offerId}` })),
+    anchor_ref: await anchorBatch(await Canonical.hash({ offerId, asset: `asset_${offerId}` })),
     ts: new Date().toISOString()
   }
   recordReceipt(publishReceipt)

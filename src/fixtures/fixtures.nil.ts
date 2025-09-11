@@ -2,7 +2,7 @@
 import { recordReceipt, listReceipts, clearReceipts } from '@/features/receipts/record'
 import type { DecisionRDS } from '@/features/receipts/types'
 import { anchorBatch } from '@/features/anchor/providers'
-import { hash } from '@/lib/canonical'
+import * as Canonical from '@/lib/canonical'
 
 // Robust configuration
 const CONFIG = {
@@ -256,7 +256,7 @@ export async function loadNilFixtures(profile: Profile = 'coach'): Promise<NILSn
       inputs_hash: 'sha256:catalog_demo',
       reasons: ['CATALOG_ACCESS_GRANTED'],
       result: 'approve',
-      anchor_ref: await safeAnchorBatch(await hash({ action: 'catalog.view', profile }).catch(() => 'demo_hash')),
+      anchor_ref: await safeAnchorBatch(await Canonical.hash({ action: 'catalog.view', profile }).catch(() => 'demo_hash')),
       ts: new Date().toISOString()
     }
     safeRecordReceipt(catalogReceipt)

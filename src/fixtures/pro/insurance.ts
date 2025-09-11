@@ -2,7 +2,7 @@
 import { recordReceipt } from '@/features/receipts/record';
 import { recordConsentRDS } from '@/features/pro/compliance/ConsentTracker';
 import { recordDecisionRDS } from '@/features/pro/compliance/DecisionTracker';
-import { hash } from '@/lib/canonical';
+import * as Canonical from '@/lib/canonical';
 import { LeadModel } from '@/features/pro/lead/LeadModel';
 import { MeetingModel } from '@/features/pro/meetings/MeetingModel';
 import { CampaignModel } from '@/features/pro/campaigns/CampaignModel';

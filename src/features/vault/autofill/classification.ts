@@ -1,4 +1,4 @@
-import { hash } from '@/lib/canonical';
+import * as Canonical from '@/lib/canonical';
 
 export type DocumentClass = 
   | 'Will'
@@ -64,7 +64,7 @@ export function classify(
 }
 
 export async function computeHash(bytes: Uint8Array): Promise<string> {
-  return await hash(bytes);
+  return await Canonical.hash(bytes);
 }
 
 export function suggestFolderAndTags(cls: DocumentClass, meta: Record<string, any> = {}) {

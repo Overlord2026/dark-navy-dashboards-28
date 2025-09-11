@@ -1,4 +1,4 @@
-import { sha256Hex } from "@/lib/canonical";
+import * as Canonical from "@/lib/canonical";
 
 export type AuditRDS = {
   receipt_id: string;                 // rds_audit_<iso>
@@ -44,7 +44,7 @@ function saveAuditList(list: AuditRDS[]) {
 export async function writeAuditRDS(data: Omit<AuditRDS, "receipt_id" | "prev_audit_hash">) {
   // Load previous audit for chaining (use your store if available)
   const prev = window.localStorage.getItem(KEY_AUDIT_LAST);
-  const prevHash = prev ? "sha256:" + await sha256Hex(prev) : null;
+  const prevHash = prev ? "sha256:" + await Canonical.sha256Hex(prev) : null;
   const rds: AuditRDS = {
     ...data,
     prev_audit_hash: prevHash,

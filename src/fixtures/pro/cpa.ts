@@ -2,7 +2,7 @@
 import { recordReceipt } from '@/features/receipts/record';
 import { recordConsentRDS } from '@/features/pro/compliance/ConsentTracker';
 import { recordDecisionRDS } from '@/features/pro/compliance/DecisionTracker';
-import { hash } from '@/lib/canonical';
+import * as Canonical from '@/lib/canonical';
 import { LeadModel } from '@/features/pro/lead/LeadModel';
 import { MeetingModel } from '@/features/pro/meetings/MeetingModel';
 import { CampaignModel } from '@/features/pro/campaigns/CampaignModel';
@@ -56,7 +56,7 @@ Risk Factors:
 - Potential estimated tax underpayment for Q4
 `;
 
-  const inputs_hash = await hash({ transcript: sampleTranscript, source: 'manual' });
+  const inputs_hash = await Canonical.hash({ transcript: sampleTranscript, source: 'manual' });
   
   const meeting = MeetingModel.create({
     persona: 'cpa',
@@ -117,7 +117,7 @@ export async function seedCPACampaign() {
   const commDecision = recordDecisionRDS({
     action: 'communication_send',
     persona: 'cpa',
-    inputs_hash: await hash({ template_id: campaign.template_id, recipients: ['jennifer.martinez@email.com'] }),
+    inputs_hash: await Canonical.hash({ template_id: campaign.template_id, recipients: ['jennifer.martinez@email.com'] }),
     reasons: ['template_approved', 'consent_valid'],
     result: 'approve',
     metadata: {

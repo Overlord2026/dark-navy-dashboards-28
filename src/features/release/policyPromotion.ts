@@ -1,4 +1,4 @@
-import { sha256Hex } from "@/lib/canonical";
+import * as Canonical from "@/lib/canonical";
 
 export type AnchorRef = {
   merkle_root: string;
@@ -32,7 +32,7 @@ function canonicalJson(obj: any) {
 
 export async function writePolicyPromotionRDS(data: Omit<PolicyPromotionRDS, "inputs_hash" | "receipt_id">) {
   const canon = canonicalJson(data);
-  const hash = await sha256Hex(JSON.stringify(canon));
+  const hash = await Canonical.sha256Hex(JSON.stringify(canon));
   const rds: PolicyPromotionRDS = {
     ...data,
     inputs_hash: `sha256:${hash}`,

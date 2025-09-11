@@ -2,7 +2,7 @@
 import { recordReceipt } from '@/features/receipts/record';
 import { recordConsentRDS } from '@/features/pro/compliance/ConsentTracker';
 import { recordDecisionRDS } from '@/features/pro/compliance/DecisionTracker';
-import { hash } from '@/lib/canonical';
+import * as Canonical from '@/lib/canonical';
 import { LeadModel } from '@/features/pro/lead/LeadModel';
 import { MeetingModel } from '@/features/pro/meetings/MeetingModel';
 import { CampaignModel } from '@/features/pro/campaigns/CampaignModel';
@@ -47,7 +47,7 @@ Action Items: Draft will and trust documents
 Risk Factors: Complex family situation requiring careful beneficiary planning
 `;
 
-  const inputs_hash = await hash({ content: privilegedContent, source: 'manual', privilege: true });
+  const inputs_hash = await Canonical.hash({ content: privilegedContent, source: 'manual', privilege: true });
   
   const meeting = MeetingModel.create({
     persona: 'attorney',
@@ -110,7 +110,7 @@ export async function seedAttorneyCampaign() {
   const commDecision = recordDecisionRDS({
     action: 'communication_send',
     persona: 'attorney',
-    inputs_hash: await hash({ template_id: campaign.template_id, recipients: ['robert.thompson@email.com'] }),
+    inputs_hash: await Canonical.hash({ template_id: campaign.template_id, recipients: ['robert.thompson@email.com'] }),
     reasons: ['template_approved', 'consent_valid', 'no_solicitation_rules_checked'],
     result: 'approve',
     metadata: {

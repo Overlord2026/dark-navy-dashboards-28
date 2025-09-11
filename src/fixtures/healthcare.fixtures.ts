@@ -1,5 +1,5 @@
 // Healthcare demo fixtures - PA → Appeal → Approve flow
-import { hash } from '@/lib/canonical';
+import * as Canonical from '@/lib/canonical';
 
 export const HEALTHCARE_DEMO_DATA = {
   patient: {
@@ -73,7 +73,7 @@ export async function loadHealthcareFixtures() {
     type: 'Decision-RDS',
     action: 'prior_auth_review',
     policy_version: 'HC-2024.09',
-    inputs_hash: await hash({ 
+    inputs_hash: await Canonical.hash({ 
       patient_id: patient.id,
       medication: priorAuth.medication,
       indication: priorAuth.indication,
@@ -95,7 +95,7 @@ export async function loadHealthcareFixtures() {
     type: 'Decision-RDS',
     action: 'appeal_review',
     policy_version: 'HC-2024.09',
-    inputs_hash: await hash({
+    inputs_hash: await Canonical.hash({
       patient_id: patient.id,
       pa_id: priorAuth.id,
       appeal_type: appeal.type,
@@ -117,7 +117,7 @@ export async function loadHealthcareFixtures() {
     type: 'Decision-RDS',
     action: 'prior_auth_approval',
     policy_version: 'HC-2024.09', 
-    inputs_hash: await hash({
+    inputs_hash: await Canonical.hash({
       patient_id: patient.id,
       pa_id: priorAuth.id,
       appeal_id: appeal.id,

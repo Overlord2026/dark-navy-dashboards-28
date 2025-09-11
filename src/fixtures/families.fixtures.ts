@@ -1,5 +1,5 @@
 // Family demo fixtures
-import { hash } from '@/lib/canonical';
+import * as Canonical from '@/lib/canonical';
 
 export const FAMILY_DEMO_DATA = {
   profile: {
@@ -124,7 +124,7 @@ export async function loadFamilyFixtures() {
     type: 'Decision-RDS',
     action: 'financial_planning',
     policy_version: 'FAM-2024.09',
-    inputs_hash: await hash({ 
+    inputs_hash: await Canonical.hash({ 
       family_id: profile.id, 
       goals: FAMILY_DEMO_DATA.goals,
       accounts: FAMILY_DEMO_DATA.accounts 
@@ -145,7 +145,7 @@ export async function loadFamilyFixtures() {
     type: 'Decision-RDS',
     action: 'portfolio_rebalance', 
     policy_version: 'FAM-2024.09',
-    inputs_hash: await hash({ 
+    inputs_hash: await Canonical.hash({ 
       family_id: profile.id,
       current_allocation: { stocks: 70, bonds: 25, alternatives: 5 },
       target_allocation: { stocks: 65, bonds: 30, alternatives: 5 }

@@ -3,7 +3,7 @@
 import { recordReceipt, listReceipts } from '@/features/receipts/record'
 import type { AnyRDS, ConsentRDS, DecisionRDS } from '@/features/receipts/types'
 import { anchorBatch } from '@/features/anchor/providers'
-import { hash } from '@/lib/canonical'
+import * as Canonical from '@/lib/canonical'
 
 // Use NIL consent API for now (health-specific APIs to be implemented)
 import { issueConsent } from '@/features/nil/consent/api'
@@ -16,7 +16,7 @@ const healthModules = {
     type: 'Decision-RDS',
     action: 'education',
     policy_version: 'H-2025.08',
-    inputs_hash: await hash({ amount }),
+    inputs_hash: await Canonical.hash({ amount }),
     reasons: ['HSA_ELIGIBLE'],
     result: 'approve',
     anchor_ref: null,
@@ -28,7 +28,7 @@ const healthModules = {
     type: 'Decision-RDS',
     action: 'education',
     policy_version: 'H-2025.08',
-    inputs_hash: await hash({ screening: key }),
+    inputs_hash: await Canonical.hash({ screening: key }),
     reasons: ['AGE_ELIGIBLE', 'IN_NETWORK'],
     result: 'approve',
     anchor_ref: null,
@@ -40,7 +40,7 @@ const healthModules = {
     type: 'Decision-RDS',
     action: 'education',
     policy_version: 'H-2025.08',
-    inputs_hash: await hash({ pa: 'demo' }),
+    inputs_hash: await Canonical.hash({ pa: 'demo' }),
     reasons: ['MISSING_EVIDENCE'],
     result: 'deny',
     anchor_ref: null,
@@ -51,7 +51,7 @@ const healthModules = {
     type: 'Decision-RDS',
     action: 'education',
     policy_version: 'H-2025.08',
-    inputs_hash: await hash({ vault: 'demo' }),
+    inputs_hash: await Canonical.hash({ vault: 'demo' }),
     reasons: ['PRE_GRANTED'],
     result: 'approve',
     anchor_ref: null,
@@ -89,7 +89,7 @@ const state: { snapshot: HealthSnapshot | null } = { snapshot: null }
 export async function loadHealthFixtures() {
   // 1) Inputs → inputs_hash
   const summary = await fetchFhirSummary()
-  const inputs_hash = await hash(summary)
+  const inputs_hash = await Canonical.hash(summary)
 
   // 2) Consent Passport (HIPAA scope + freshness)
   const consent = await issueConsent({
@@ -127,7 +127,7 @@ export async function loadHealthFixtures() {
   const anchored_ids: string[] = []
   const toAnchor = [screeningRds, hsaRds]
   for (const r of toAnchor) {
-    const ref = await anchorBatch(await hash({ id: r.id, inputs_hash }))
+    const ref = await anchorBatch(await Canonical.hash({ id: r.id, inputs_hash }))
     r.anchor_ref = ref
     recordReceipt(r)
     anchored_ids.push(r.id)

@@ -2,7 +2,7 @@
 import { recordReceipt } from '@/features/receipts/record';
 import { recordConsentRDS } from '@/features/pro/compliance/ConsentTracker';
 import { recordDecisionRDS } from '@/features/pro/compliance/DecisionTracker';
-import { hash } from '@/lib/canonical';
+import * as Canonical from '@/lib/canonical';
 import { LeadModel } from '@/features/pro/lead/LeadModel';
 import { MeetingModel } from '@/features/pro/meetings/MeetingModel';
 import { CampaignModel } from '@/features/pro/campaigns/CampaignModel';
@@ -47,7 +47,7 @@ Action Items: Develop personalized wellness plan
 Risk Factors: Identified areas for health optimization
 `;
 
-  const inputs_hash = await hash({ content: healthContent, source: 'manual', hipaa_protected: true });
+  const inputs_hash = await Canonical.hash({ content: healthContent, source: 'manual', hipaa_protected: true });
   
   const meeting = MeetingModel.create({
     persona: 'healthcare',
@@ -110,7 +110,7 @@ export async function seedHealthcareCampaign() {
   const commDecision = recordDecisionRDS({
     action: 'communication_send',
     persona: 'healthcare',
-    inputs_hash: await hash({ template_id: campaign.template_id, recipients: ['david.chen@email.com'] }),
+    inputs_hash: await Canonical.hash({ template_id: campaign.template_id, recipients: ['david.chen@email.com'] }),
     reasons: ['education_only', 'consent_valid', 'hipaa_compliant'],
     result: 'approve',
     metadata: {

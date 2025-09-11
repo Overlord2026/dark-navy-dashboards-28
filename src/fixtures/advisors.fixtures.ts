@@ -1,5 +1,5 @@
 // Advisor demo fixtures
-import { hash } from '@/lib/canonical';
+import * as Canonical from '@/lib/canonical';
 
 export const ADVISOR_DEMO_DATA = {
   profile: {
@@ -106,7 +106,7 @@ export async function loadAdvisorFixtures() {
     type: 'Decision-RDS',
     action: 'compliance_check',
     policy_version: 'ADV-2024.09',
-    inputs_hash: await hash({ advisor_id: profile.id, certifications: profile.certifications }),
+    inputs_hash: await Canonical.hash({ advisor_id: profile.id, certifications: profile.certifications }),
     reasons: ['CERTIFICATIONS_CURRENT', 'FIDUCIARY_CONFIRMED'],
     result: 'approve',
     anchor_ref: {
@@ -123,7 +123,7 @@ export async function loadAdvisorFixtures() {
     type: 'Decision-RDS', 
     action: 'fee_benchmark',
     policy_version: 'ADV-2024.09',
-    inputs_hash: await hash(ADVISOR_DEMO_DATA.benchmarkData),
+    inputs_hash: await Canonical.hash(ADVISOR_DEMO_DATA.benchmarkData),
     reasons: ['PEER_GROUP_VALIDATED', 'COMPETITIVE_POSITIONING'],
     result: 'approve',
     anchor_ref: {

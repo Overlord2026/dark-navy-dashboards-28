@@ -1,5 +1,5 @@
 // 401k cohort demo fixtures
-import { hash } from '@/lib/canonical';
+import * as Canonical from '@/lib/canonical';
 
 export const K401_DEMO_DATA = {
   cohortAnalysis: {
@@ -107,7 +107,7 @@ export async function loadK401Fixtures() {
     type: 'Decision-RDS',
     action: 'cohort_analysis',
     policy_version: 'K401-2024.09',
-    inputs_hash: await hash({
+    inputs_hash: await Canonical.hash({
       user_id: userPosition.id,
       cohort_id: cohortAnalysis.id,
       age: userPosition.age,
@@ -130,7 +130,7 @@ export async function loadK401Fixtures() {
     type: 'Decision-RDS',
     action: 'contribution_recommendations',
     policy_version: 'K401-2024.09',
-    inputs_hash: await hash({
+    inputs_hash: await Canonical.hash({
       user_id: userPosition.id,
       current_contribution: userPosition.contribution_rate,
       current_balance: userPosition.current_balance,
