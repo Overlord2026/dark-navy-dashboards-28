@@ -1,5 +1,15 @@
 # Lovable Patch Log
 
+## 2025-09-11-07: Canonical Namespace Import Fix
+
+**Files Modified:**
+- `src/components/testing/CanonTest.tsx` - Converted named imports to namespace import for canonical functions
+- `.chore/cache-bust-1736618400000.txt` - Updated to force dev server reload
+
+**Commit:** fix(canonical): CanonTest namespace import + alias sweep; cache-bust
+
+**Summary:** Fixed remaining named import usage in CanonTest.tsx causing 'inputsHash' export error by converting to consistent namespace import pattern (Canonical.inputsHash, Canonical.canonicalize).
+
 ## 2025-09-11-06: Single React Enforcement
 
 **Files Modified:**

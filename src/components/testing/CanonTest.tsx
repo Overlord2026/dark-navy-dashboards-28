@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { canonicalize, inputsHash } from "@/lib/canonical";
+import * as Canonical from "@/lib/canonical";
 
 export default function CanonTest() {
   const [raw, setRaw] = useState<string>(
@@ -23,9 +23,9 @@ export default function CanonTest() {
     try {
       setError("");
       const parsed = JSON.parse(raw);
-      const c = canonicalize(parsed, arrKeys);
+      const c = Canonical.canonicalize(parsed, arrKeys);
       setCanon(c);
-      const h = await inputsHash(parsed, arrKeys);
+      const h = await Canonical.inputsHash(parsed, arrKeys);
       setHash(h);
     } catch (e: any) {
       setError(e?.message ?? String(e));
