@@ -172,3 +172,18 @@
 ### Branch: fix/canonical-final
 ### Commit: fix(canonical): receiptsEmitter alias+namespace; explicit named export; remove absolute path; cache-bust
 ### SHA: N/A (web editor)
+
+## 2025-01-12 - fix(personas): add named PROS & FAMILIES exports; normalize imports; cache-bust
+
+### Files Modified:
+- `src/config/personas.ts` - Added canonical PersonaLink type and ensured proper named exports
+- `.chore/cache-bust-1757702500001.txt` - Cache bust to refresh module graph
+
+### Changes:
+- Fixed missing named export error for FAMILIES by normalizing personas config  
+- Updated PersonaLink type with optional blurb field for consistency
+- Ensured both PROS and FAMILIES are properly exported as named exports
+- Added cache-bust to force rebuild and refresh module graph
+- No route changes, only export/import normalization
+
+### Branch: fix/personas-exports
