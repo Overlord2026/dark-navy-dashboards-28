@@ -1,0 +1,262 @@
+{
+  "lastUpdated": "2025-09-12",
+  "version": "1.0.0",
+  "routes": [
+    {"path": "/", "file": "src/pages/LandingPage.tsx", "description": "Main landing page"},
+    {"path": "/about", "file": "src/pages/AboutPage.tsx", "description": "Platform overview"},
+    {"path": "/contact", "file": "src/pages/ContactPage.tsx", "description": "Contact form"},
+    {"path": "/privacy", "file": "src/pages/PrivacyPage.tsx", "description": "Privacy policy"},
+    {"path": "/terms", "file": "src/pages/TermsPage.tsx", "description": "Terms of service"},
+    {"path": "/auth", "file": "src/pages/AuthPage.tsx", "description": "Authentication"},
+    {"path": "/auth/callback", "file": "src/pages/AuthCallbackPage.tsx", "description": "OAuth callback"},
+    {"path": "/onboarding", "file": "src/pages/OnboardingPage.tsx", "description": "User onboarding"},
+    {"path": "/onboarding/advisor", "file": "src/pages/AdvisorOnboardingPage.tsx", "description": "Advisor onboarding"},
+    {"path": "/onboarding/family", "file": "src/pages/FamilyOnboardingPage.tsx", "description": "Family onboarding"},
+    {"path": "/invite/:token", "file": "src/pages/InvitePage.tsx", "description": "Magic link invitations"},
+    {"path": "/pros", "file": "src/pages/ProfessionalsPage.tsx", "description": "Professionals overview"},
+    {"path": "/pros/advisors", "file": "src/pages/AdvisorsPage.tsx", "description": "Financial advisors hub"},
+    {"path": "/pros/accountants", "file": "src/pages/AccountantsPage.tsx", "description": "CPA hub"},
+    {"path": "/pros/attorneys", "file": "src/pages/AttorneysPage.tsx", "description": "Legal professionals hub"},
+    {"path": "/pros/insurance/life", "file": "src/pages/LifeInsurancePage.tsx", "description": "Life insurance professionals"},
+    {"path": "/pros/insurance/other", "file": "src/pages/OtherInsurancePage.tsx", "description": "Other insurance professionals"},
+    {"path": "/families", "file": "src/pages/FamiliesPage.tsx", "description": "Family overview"},
+    {"path": "/start/families", "file": "src/pages/FamiliesPage.tsx", "description": "Family onboarding with segments"},
+    {"path": "/goals", "file": "src/pages/GoalsPage.tsx", "description": "Financial goals management"},
+    {"path": "/budgets", "file": "src/pages/BudgetsPage.tsx", "description": "Budget management"},
+    {"path": "/cashflow", "file": "src/features/cashflow/pages/CashFlowPage.tsx", "description": "Cash flow analysis"},
+    {"path": "/transactions", "file": "src/features/transactions/pages/TransactionsPage.tsx", "description": "Transaction management"},
+    {"path": "/reports", "file": "src/pages/ReportsPage.tsx", "description": "Financial reporting"},
+    {"path": "/accounts", "file": "src/pages/AccountsPage.tsx", "description": "Account management"},
+    {"path": "/investments", "file": "src/pages/InvestmentsPage.tsx", "description": "Investment management"},
+    {"path": "/advice", "file": "src/pages/AdvicePage.tsx", "description": "Advisory services"},
+    {"path": "/health", "file": "src/pages/HealthcarePage.tsx", "description": "Healthcare tools"},
+    {"path": "/solutions", "file": "src/pages/SolutionsPage.tsx", "description": "Platform solutions"},
+    {"path": "/catalog", "file": "src/pages/CatalogPage.tsx", "description": "Service catalog"},
+    {"path": "/search", "file": "src/pages/SearchPage.tsx", "description": "Global search"},
+    {"path": "/nil", "file": "src/pages/NilPage.tsx", "description": "Development placeholder"},
+    {"path": "/dashboard", "file": "src/pages/DashboardPage.tsx", "description": "User dashboard"},
+    {"path": "/settings", "file": "src/pages/SettingsPage.tsx", "description": "User settings"},
+    {"path": "/profile", "file": "src/pages/ProfilePage.tsx", "description": "User profile"},
+    {"path": "/wealth/*", "file": "src/components/navigation/WealthManagementRegistry.ts", "description": "Wealth management tools"}
+  ],
+  "nav": {
+    "header": [
+      "src/components/layout/Header.tsx",
+      "src/components/navigation/ConditionalMegaMenu.tsx"
+    ],
+    "sidebar": [
+      "src/components/sidebar/MainSidebar.tsx",
+      "src/components/sidebar/SidebarBottomNav.tsx",
+      "src/components/navigation/SecondaryNav.tsx"
+    ]
+  },
+  "personas": [
+    {
+      "key": "advisors",
+      "hubPath": "/pros/advisors",
+      "hubFile": "src/pages/AdvisorsPage.tsx",
+      "features": ["client_management", "prospect_invitations", "advisor_dashboard"]
+    },
+    {
+      "key": "accountants", 
+      "hubPath": "/pros/accountants",
+      "hubFile": "src/pages/AccountantsPage.tsx",
+      "features": ["tax_planning", "client_coordination", "document_management"]
+    },
+    {
+      "key": "attorneys",
+      "hubPath": "/pros/attorneys", 
+      "hubFile": "src/pages/AttorneysPage.tsx",
+      "features": ["estate_planning", "legal_documents", "client_collaboration"]
+    },
+    {
+      "key": "insurance_life",
+      "hubPath": "/pros/insurance/life",
+      "hubFile": "src/pages/LifeInsurancePage.tsx", 
+      "features": ["policy_management", "needs_analysis", "product_recommendations"]
+    },
+    {
+      "key": "insurance_other",
+      "hubPath": "/pros/insurance/other",
+      "hubFile": "src/pages/OtherInsurancePage.tsx",
+      "features": ["policy_management", "needs_analysis", "product_recommendations"]
+    },
+    {
+      "key": "families",
+      "hubPath": "/families",
+      "hubFile": "src/pages/FamiliesPage.tsx",
+      "segments": ["retirees", "aspiring"],
+      "features": ["wealth_management", "advisor_coordination", "financial_planning"]
+    }
+  ],
+  "tools": [
+    {
+      "name": "Reports",
+      "route": "/reports", 
+      "file": "src/pages/ReportsPage.tsx",
+      "category": "analytics",
+      "features": ["dashboards", "performance_analytics", "custom_reporting"]
+    },
+    {
+      "name": "Cash Flow",
+      "route": "/cashflow",
+      "file": "src/features/cashflow/pages/CashFlowPage.tsx", 
+      "category": "planning",
+      "features": ["income_tracking", "expense_tracking", "projections"]
+    },
+    {
+      "name": "Transactions", 
+      "route": "/transactions",
+      "file": "src/features/transactions/pages/TransactionsPage.tsx",
+      "category": "management", 
+      "features": ["categorization", "spending_analysis", "reconciliation"]
+    },
+    {
+      "name": "Accounts",
+      "route": "/accounts",
+      "file": "src/pages/AccountsPage.tsx",
+      "category": "management",
+      "features": ["aggregation", "balance_tracking", "account_management"]
+    },
+    {
+      "name": "Budget", 
+      "route": "/budgets",
+      "file": "src/pages/BudgetsPage.tsx",
+      "category": "planning",
+      "features": ["budget_creation", "variance_analysis", "spending_controls"]
+    },
+    {
+      "name": "Goals",
+      "route": "/goals", 
+      "file": "src/pages/GoalsPage.tsx",
+      "category": "planning",
+      "features": ["goal_setting", "progress_tracking", "milestone_management"]
+    },
+    {
+      "name": "Investments",
+      "route": "/investments",
+      "file": "src/pages/InvestmentsPage.tsx",
+      "category": "management", 
+      "features": ["portfolio_management", "asset_allocation", "performance_tracking"]
+    },
+    {
+      "name": "Advice",
+      "route": "/advice",
+      "file": "src/pages/AdvicePage.tsx",
+      "category": "advisory",
+      "features": ["recommendations", "financial_guidance", "planning_tools"]
+    }
+  ],
+  "wealthManagementTools": [
+    {
+      "name": "Cash Management",
+      "route": "/wealth/cash/management",
+      "icon": "WalletIcon"
+    },
+    {
+      "name": "Transfers", 
+      "route": "/wealth/cash/transfers",
+      "icon": "RepeatIcon"
+    },
+    {
+      "name": "Properties",
+      "route": "/wealth/properties", 
+      "icon": "HomeIcon"
+    },
+    {
+      "name": "Documents & Vault",
+      "route": "/wealth/docs",
+      "icon": "FileTextIcon"
+    },
+    {
+      "name": "Social Security",
+      "route": "/wealth/social-security",
+      "icon": "UserCheckIcon"
+    },
+    {
+      "name": "Business Filings", 
+      "route": "/wealth/business-filings",
+      "icon": "BriefcaseIcon"
+    },
+    {
+      "name": "Bill Pay",
+      "route": "/wealth/bill-pay", 
+      "icon": "CreditCardIcon"
+    }
+  ],
+  "config": {
+    "navigation": [
+      "src/config/nav.ts",
+      "src/components/navigation/WealthManagementRegistry.ts", 
+      "src/components/navigation/newNavigationConfig.ts"
+    ],
+    "tools": [
+      "src/config/toolsRegistry.ts"
+    ],
+    "personas": [
+      "src/types/p5.ts"
+    ],
+    "integrations": [
+      "src/types/integrations.ts"
+    ],
+    "types": [
+      "src/types/navigation.ts",
+      "src/types/jest.d.ts"
+    ]
+  },
+  "auth": {
+    "flows": [
+      {
+        "name": "unified_auth",
+        "file": "src/pages/AuthPage.tsx",
+        "features": ["signin", "signup", "oauth", "magic_links"]
+      },
+      {
+        "name": "callback_handling", 
+        "file": "src/pages/AuthCallbackPage.tsx",
+        "features": ["oauth_redirect", "session_establishment"]
+      },
+      {
+        "name": "onboarding",
+        "files": [
+          "src/pages/OnboardingPage.tsx",
+          "src/pages/AdvisorOnboardingPage.tsx", 
+          "src/pages/FamilyOnboardingPage.tsx"
+        ],
+        "features": ["user_setup", "persona_detection", "preference_setting"]
+      },
+      {
+        "name": "invitations",
+        "file": "src/pages/InvitePage.tsx", 
+        "features": ["magic_link", "advisor_client_linking", "token_validation"]
+      }
+    ]
+  },
+  "featureFlags": {
+    "environment": [
+      "supabase_integration",
+      "oauth_providers", 
+      "email_services",
+      "file_storage"
+    ],
+    "conditional": [
+      "professional_workspaces",
+      "wealth_management_tools", 
+      "integration_capabilities"
+    ],
+    "development": [
+      "test_data_reset",
+      "audit_logging",
+      "security_scanning"
+    ]
+  },
+  "stats": {
+    "totalRoutes": 31,
+    "totalTools": 8, 
+    "totalPersonas": 6,
+    "totalWealthTools": 7,
+    "headerComponents": 2,
+    "sidebarComponents": 3,
+    "configFiles": 8
+  }
+}
