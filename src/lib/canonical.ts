@@ -64,7 +64,7 @@ export async function sha256Hex(input: string): Promise<string> {
  * inputsHash: convenience wrapper used across the app
  * canonicalize(obj) → sha256Hex(canonical)
  */
-export async function inputsHash(obj: any, arraySortKeys: string[] = []): Promise<string> {
+async function inputsHash(obj: any, arraySortKeys: string[] = []): Promise<string> {
   const canon = canonicalize(obj, arraySortKeys);
   return sha256Hex(canon);
 }
@@ -92,4 +92,5 @@ export function canonicalJson(obj: any): string {
 
 // Alias and version exports
 export const stableStringify = canonicalize;
-export const __CANONICAL_BUILD_ID = "canonical-2025-09-11-05";
+export const __CANONICAL_BUILD_ID = "canonical-final-01";
+export { inputsHash };

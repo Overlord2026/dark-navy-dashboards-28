@@ -155,3 +155,20 @@
 - Consistent routing pattern for professional personas
 
 ### Branch: feat/pro-advisors-route
+
+## 2025-09-12 - fix(canonical): receiptsEmitter alias+namespace; explicit named export; remove absolute path; cache-bust
+
+### Files Modified:
+- `src/lib/receiptsEmitter.ts`
+- `src/lib/canonical.ts`
+- `.chore/cache-bust-1757702400000.txt`
+
+### Changes:
+- Enforced namespace alias import in receiptsEmitter and removed trailing comment.
+- Ensured `inputsHash` is explicit named export and bumped `__CANONICAL_BUILD_ID` to force HMR.
+- Repo sweep: no absolute "/src/lib/canonical.ts" imports remained.
+- Added cache-bust chore file to force clean rebuild.
+
+### Branch: fix/canonical-final
+### Commit: fix(canonical): receiptsEmitter alias+namespace; explicit named export; remove absolute path; cache-bust
+### SHA: N/A (web editor)
