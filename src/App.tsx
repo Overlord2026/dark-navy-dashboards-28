@@ -496,6 +496,7 @@ function App() {
             {/* Route Redirects */}
             <Route path="/family" element={<Navigate to="/family/home" replace />} />
             <Route path="/advisors" element={<Navigate to="/pros/advisors" replace />} />
+            <Route path="/pros/onboarding/advisors" element={<Navigate to="/pros/advisors" replace />} />
             <Route path="/insurance" element={<Navigate to="/pros/insurance" replace />} />
             
             
