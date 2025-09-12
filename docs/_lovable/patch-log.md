@@ -187,3 +187,16 @@
 - No route changes, only export/import normalization
 
 ### Branch: fix/personas-exports
+
+## 2025-01-12 - fix(personas): normalize imports; cache-bust for module graph refresh
+
+### Files Modified:
+- `.chore/cache-bust-1757702600001.txt` - Cache bust to refresh module graph
+
+### Changes:
+- Verified all persona imports already use proper named exports from @/config/personas alias
+- ProsHub, HeaderNav, and PersonaSwitcher already use correct `import { PROS, FAMILIES } from "@/config/personas"`
+- Added cache-bust to force rebuild and refresh module graph for ESM import consistency
+- No import normalization needed - all files already follow correct pattern
+
+### Branch: fix/personas-exports
