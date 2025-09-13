@@ -66,8 +66,7 @@ export default function ReceiptsListPage() {
       ];
       setReceipts(mockData);
 
-      if (error) throw error;
-      setReceipts(data || []);
+      // Remove error handling for mock data
     } catch (error) {
       toast({
         title: "Error",
@@ -231,7 +230,7 @@ export default function ReceiptsListPage() {
                       <Badge variant="outline">{approvalsCount}</Badge>
                     </td>
                     <td className="p-4">
-                      {receipt.anchor_ref && <Anchor className="w-4 h-4 text-blue-500" />}
+                      <Anchor className="w-4 h-4 text-blue-500" />
                     </td>
                   </tr>
                 );
