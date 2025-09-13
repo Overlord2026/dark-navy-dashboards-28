@@ -31,13 +31,24 @@ VONAGE_APPLICATION_ID=your_app_id
 VONAGE_PHONE_NUMBER=+1234567890
 ```
 
-### AIES Legal Signing
+### AIES Signing Configuration
 ```bash
-# KMS/HSM Configuration for Legal Signatures
+# KMS/HSM Configuration for Legal Signatures (preferred for legal persona)
 AIES_LEGAL_KEY=your_kms_key_reference
 AIES_LEGAL_ALGORITHM=ES256
-AIES_LEGAL_PROVIDER=aws-kms|azure-keyvault|gcp-kms
+
+# Alternative signing key (preferred for finance persona, fallback for legal)
+AIES_SIGNING_KEY=your_kms_key_reference_or_pem_key
+AIES_SIGNING_ALG=Ed25519|P-256
+
+# Provider configuration (optional, auto-detected)
+AIES_SIGNING_PROVIDER=aws-kms|azure-keyvault|gcp-kms
 ```
+
+**Key Selection Logic:**
+- Legal operations: Use `AIES_LEGAL_KEY` if set, otherwise fall back to `AIES_SIGNING_KEY`
+- Finance operations: Use `AIES_SIGNING_KEY` if set, otherwise fall back to `AIES_LEGAL_KEY`
+- Either key can be used for any operation - the preference is organizational, not technical
 
 ### OpenAI Realtime (for Voice Processing)
 ```bash
