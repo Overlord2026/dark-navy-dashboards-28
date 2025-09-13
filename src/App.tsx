@@ -28,6 +28,9 @@ import Receipts from '@/pages/nil/Receipts';
 import NILIndex from '@/pages/nil/index';
 import Admin from '@/pages/nil/Admin';
 import NilReadyCheckPage from '@/pages/nil/admin/NilReadyCheckPage';
+import ReceiptsListPage from '@/pages/ReceiptsListPage';
+import ReceiptDetailPage from '@/pages/ReceiptDetailPage';
+import SamplesPage from '@/pages/SamplesPage';
 import Pricing from '@/pages/Pricing';
 
 // Landing page imports
