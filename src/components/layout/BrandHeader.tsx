@@ -2,7 +2,8 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { TopNav } from '@/components/layout/TopNav';
 import RunNILDemo from '@/components/demos/RunNILDemo';
-import { ChevronLeft, ChevronRight, Home, VolumeX, Volume2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Home, VolumeX, Volume2, TestTube } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 import { useAudio } from '@/context/AudioContext';
 
 const Logo = () => (
@@ -96,6 +97,14 @@ function BrandHeader() {
             <a className="text-white hover:text-bfo-gold transition-colors" href="/book">Book Demo</a>
             <a className="text-white hover:text-bfo-gold transition-colors" href="/login">Log In</a>
             <MuteLindaToggle />
+            {process.env.NODE_ENV !== 'production' && (
+              <Link to="/dev/try">
+                <Badge variant="outline" className="border-orange-500 text-orange-400 hover:bg-orange-500/10 transition-colors">
+                  <TestTube className="w-3 h-3 mr-1" />
+                  Dev / Try
+                </Badge>
+              </Link>
+            )}
           </div>
         </nav>
       </div>
