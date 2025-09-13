@@ -38,40 +38,32 @@ export default function DevTryPage() {
     setResults(null);
 
     try {
-      const sampleData = {
-        actor_id: "user_12345",
-        persona: "legal",
-        connector_key: "voice_intake_pi",
-        inputs: {
-          org_id: orgId,
-          matter_type: matterType,
-          client_data: {
-            name: "John Doe",
-            phone: "+1-555-123-4567",
-            email: "john.doe@example.com"
-          },
-          incident_details: {
-            date: "2024-01-15",
-            location: "123 Main St, Anytown, ST 12345",
-            description: "Slip and fall incident at grocery store"
-          }
-        },
-        outcomes: {
-          intake_completed: true,
-          disclaimers_accepted: ["attorney_client", "no_guarantee", "fee_structure"],
-          next_steps: ["case_evaluation", "document_collection"]
-        },
-        reason_codes: ["initial_intake", "personal_injury"],
-        policy_id: "policy_pi_intake_v1",
-        trust_grade: "medium"
+      const piPayload = {
+        org_id: orgId,
+        matter_type: matterType,
+        disclaimers: [
+          'Personal injury consultation recorded for legal compliance',
+          'Attorney-client privilege may apply to this conversation', 
+          'Recording stored securely per state bar requirements'
+        ],
+        sample_data: {
+          client_name: 'Jane Doe',
+          incident_date: '2024-01-15', 
+          injury_type: 'auto_accident'
+        }
       };
 
-      const { data, error } = await supabase.functions.invoke('aies-receipts-create', {
-        body: sampleData
+      const response = await fetch('/api/voice/intake/finish', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(piPayload)
       });
 
-      if (error) throw error;
+      if (!response.ok) {
+        throw new Error(`API Error: ${response.status}`);
+      }
 
+      const data = await response.json();
       setResults({ type: 'create', data });
       setReceiptId(data.receipt_id);
       toast({
@@ -101,16 +93,21 @@ export default function DevTryPage() {
     setResults(null);
 
     try {
-      const { data, error } = await supabase.functions.invoke('aies-receipts-sign', {
-        body: { receipt_id: receiptId, persona: "legal" }
+      const response = await fetch('/api/voice/intake/sign', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ receipt_id: receiptId })
       });
 
-      if (error) throw error;
+      if (!response.ok) {
+        throw new Error(`API Error: ${response.status}`);
+      }
 
+      const data = await response.json();
       setResults({ type: 'sign', data });
       toast({
         title: "Receipt Signed",
-        description: `Signatures: ${data.signatures?.length || 0}`
+        description: `Signatures count: ${data.count || 0}`
       });
     } catch (err: any) {
       setError(err.message || 'Failed to sign receipt');
@@ -135,12 +132,17 @@ export default function DevTryPage() {
     setResults(null);
 
     try {
-      const { data, error } = await supabase.functions.invoke('aies-receipts-export', {
-        body: { receipt_id: receiptId }
+      const response = await fetch('/api/voice/intake/export', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ receipt_id: receiptId })
       });
 
-      if (error) throw error;
+      if (!response.ok) {
+        throw new Error(`API Error: ${response.status}`);
+      }
 
+      const data = await response.json();
       setResults({ type: 'export', data });
       toast({
         title: "Evidence Bundle Exported",
@@ -278,7 +280,7 @@ export default function DevTryPage() {
               <div>
                 <p className="font-medium">Receipt Signed Successfully</p>
                 <p className="text-sm text-muted-foreground mt-1">
-                  Signatures: {results.data.signatures?.length || 0}
+                  Signatures count: {results.data.count || 0}
                 </p>
                 <pre className="mt-2 text-xs bg-muted p-2 rounded overflow-auto">
                   {JSON.stringify(results.data, null, 2)}

@@ -997,7 +997,10 @@ function App() {
             
             {/* Dev Routes */}
             {process.env.NODE_ENV !== 'production' && (
-              <Route path="/dev/fixtures" element={<FixturesPanel />} />
+              <>
+                <Route path="/dev/fixtures" element={<FixturesPanel />} />
+                <Route path="/dev/try" element={<DevTryPage />} />
+              </>
             )}
             
             {/* Dev Tools */}
