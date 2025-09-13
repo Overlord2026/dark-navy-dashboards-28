@@ -61,13 +61,47 @@ function getSigningAlgorithm(persona?: 'legal' | 'finance'): string {
   return getEnv('AIES_SIGNING_ALG') || 'Ed25519';
 }
 
+// Global variable to store ephemeral key for development
+let devEphemeralKey: CryptoKeyPair | null = null;
+
+/**
+ * Generate ephemeral Ed25519 key pair for development
+ */
+async function generateDevEphemeralKey(): Promise<CryptoKeyPair> {
+  if (devEphemeralKey) return devEphemeralKey;
+  
+  devEphemeralKey = await crypto.subtle.generateKey(
+    { name: 'Ed25519' },
+    false, // Not extractable for security
+    ['sign', 'verify']
+  ) as CryptoKeyPair;
+  
+  console.log('Generated ephemeral Ed25519 key for development signing');
+  return devEphemeralKey;
+}
+
+/**
+ * Check if we should use dev signing fallback
+ */
+function shouldUseDevSigning(persona?: 'legal' | 'finance'): boolean {
+  const nodeEnv = getEnv('NODE_ENV');
+  const signingKey = getSigningKey(persona);
+  
+  return nodeEnv !== 'production' && (!signingKey || signingKey === 'DEV_AUTOGEN');
+}
+
 /**
  * Sign a hash using WebCrypto or KMS
  * @param hash - The hash to sign (hex string)
  * @param persona - Optional persona preference ('legal' or 'finance')
- * @returns Base64-encoded signature
+ * @returns Base64-encoded signature with metadata
  */
 export async function signHash(hash: string, persona?: 'legal' | 'finance'): Promise<string> {
+  // Check if we should use dev signing fallback
+  if (shouldUseDevSigning(persona)) {
+    return await signWithDevEphemeral(hash);
+  }
+  
   const signingKey = getSigningKey(persona);
   const algorithm = getSigningAlgorithm(persona);
   
@@ -93,6 +127,17 @@ export async function signHash(hash: string, persona?: 'legal' | 'finance'): Pro
   } catch (error) {
     throw new Error(`Signature failed: ${error.message}`);
   }
+}
+
+/**
+ * Sign with ephemeral dev key
+ */
+async function signWithDevEphemeral(hash: string): Promise<string> {
+  const keyPair = await generateDevEphemeralKey();
+  const hashBytes = new Uint8Array(hash.match(/.{2}/g)!.map(byte => parseInt(byte, 16)));
+  
+  const signature = await crypto.subtle.sign('Ed25519', keyPair.privateKey, hashBytes);
+  return btoa(String.fromCharCode(...new Uint8Array(signature)));
 }
 
 /**

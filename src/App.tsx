@@ -276,6 +276,7 @@ import { AgentsPage } from './pages/marketplace/AgentsPage';
 import { QuoteStartPage } from './pages/marketplace/QuoteStartPage';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import DevTryPage from './pages/DevTryPage';
 
 const SelectPersona = lazy(() => import('@/pages/auth/SelectPersona'));
 
@@ -998,6 +999,9 @@ function App() {
             {process.env.NODE_ENV !== 'production' && (
               <Route path="/dev/fixtures" element={<FixturesPanel />} />
             )}
+            
+            {/* Dev Tools */}
+            <Route path="/dev/try" element={<DevTryPage />} />
             
             {/* Preview Routes - Marketing pages for missing tools */}
             <Route path="/preview/:key" element={

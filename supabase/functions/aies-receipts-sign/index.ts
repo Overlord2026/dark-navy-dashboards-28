@@ -53,6 +53,46 @@ function getSigningAlgorithm(persona?: 'legal' | 'finance'): string {
   return Deno.env.get('AIES_SIGNING_ALG') || 'Ed25519';
 }
 
+// Global variable to store ephemeral key for development
+let devEphemeralKey: CryptoKeyPair | null = null;
+
+/**
+ * Generate ephemeral Ed25519 key pair for development
+ */
+async function generateDevEphemeralKey(): Promise<CryptoKeyPair> {
+  if (devEphemeralKey) return devEphemeralKey;
+  
+  devEphemeralKey = await crypto.subtle.generateKey(
+    { name: 'Ed25519' },
+    false, // Not extractable for security
+    ['sign', 'verify']
+  );
+  
+  console.log('Generated ephemeral Ed25519 key for development signing');
+  return devEphemeralKey;
+}
+
+/**
+ * Check if we should use dev signing fallback
+ */
+function shouldUseDevSigning(persona?: 'legal' | 'finance'): boolean {
+  const nodeEnv = Deno.env.get('NODE_ENV');
+  const signingKey = getSigningKey(persona);
+  
+  return nodeEnv !== 'production' && (!signingKey || signingKey === 'DEV_AUTOGEN');
+}
+
+/**
+ * Sign with ephemeral dev key
+ */
+async function signWithDevEphemeral(hash: string): Promise<string> {
+  const keyPair = await generateDevEphemeralKey();
+  const hashBytes = new Uint8Array(hash.match(/.{2}/g)!.map(byte => parseInt(byte, 16)));
+  
+  const signature = await crypto.subtle.sign('Ed25519', keyPair.privateKey, hashBytes);
+  return btoa(String.fromCharCode(...new Uint8Array(signature)));
+}
+
 /**
  * Mock signing function for development
  * In production, this would integrate with actual KMS/HSM
@@ -122,18 +162,38 @@ serve(async (req) => {
 
     console.log(`Signing receipt ${receipt_id} with ${algorithm} using persona: ${persona || 'default'}`);
 
-    // Sign the receipt hash
-    const signature = await mockSignHash(receipt.receipt_hash, signingKey, algorithm);
+    // Check if we should use dev signing fallback
+    let signature: string;
+    let actualKeyRef = signingKey;
+    let actualAlgorithm = algorithm;
+    let isDev = false;
 
-    // Store signature
+    if (shouldUseDevSigning(persona)) {
+      console.log('Using development ephemeral signing');
+      signature = await signWithDevEphemeral(receipt.receipt_hash);
+      actualKeyRef = 'dev:ephemeral';
+      actualAlgorithm = 'Ed25519';
+      isDev = true;
+    } else {
+      // Use normal signing path
+      signature = await mockSignHash(receipt.receipt_hash, signingKey, algorithm);
+    }
+
+    // Store signature with dev metadata if applicable
+    const signatureData: any = {
+      receipt_id,
+      alg: actualAlgorithm,
+      key_ref: actualKeyRef,
+      sig_b64: signature
+    };
+
+    if (isDev) {
+      signatureData.metadata = { dev: true, ephemeral: true };
+    }
+
     const { data: signatureRecord, error: signatureError } = await supabase
       .from('aies_receipt_signatures')
-      .insert({
-        receipt_id,
-        alg: algorithm,
-        key_ref: signingKey,
-        sig_b64: signature
-      })
+      .insert(signatureData)
       .select()
       .single();
 
