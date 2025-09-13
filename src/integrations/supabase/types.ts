@@ -3319,6 +3319,127 @@ export type Database = {
           },
         ]
       }
+      aies_voice_calls: {
+        Row: {
+          as_of_ts: string | null
+          audio_hash: string | null
+          call_id: string
+          conflict_passed: boolean | null
+          consent_obtained: boolean | null
+          consent_required: boolean | null
+          created_at: string | null
+          geo: Json | null
+          id: string
+          matter_type: string | null
+          org_id: string
+          qualified: boolean | null
+          scheduling: Json | null
+          transcript_hash: string | null
+        }
+        Insert: {
+          as_of_ts?: string | null
+          audio_hash?: string | null
+          call_id: string
+          conflict_passed?: boolean | null
+          consent_obtained?: boolean | null
+          consent_required?: boolean | null
+          created_at?: string | null
+          geo?: Json | null
+          id?: string
+          matter_type?: string | null
+          org_id: string
+          qualified?: boolean | null
+          scheduling?: Json | null
+          transcript_hash?: string | null
+        }
+        Update: {
+          as_of_ts?: string | null
+          audio_hash?: string | null
+          call_id?: string
+          conflict_passed?: boolean | null
+          consent_obtained?: boolean | null
+          consent_required?: boolean | null
+          created_at?: string | null
+          geo?: Json | null
+          id?: string
+          matter_type?: string | null
+          org_id?: string
+          qualified?: boolean | null
+          scheduling?: Json | null
+          transcript_hash?: string | null
+        }
+        Relationships: []
+      }
+      aies_voice_receipts: {
+        Row: {
+          call_id: string
+          canonical_receipt: Json
+          created_at: string | null
+          org_id: string
+          receipt_hash: string
+          receipt_id: string
+        }
+        Insert: {
+          call_id: string
+          canonical_receipt: Json
+          created_at?: string | null
+          org_id: string
+          receipt_hash: string
+          receipt_id?: string
+        }
+        Update: {
+          call_id?: string
+          canonical_receipt?: Json
+          created_at?: string | null
+          org_id?: string
+          receipt_hash?: string
+          receipt_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "aies_voice_receipts_call_id_fkey"
+            columns: ["call_id"]
+            isOneToOne: false
+            referencedRelation: "aies_voice_calls"
+            referencedColumns: ["call_id"]
+          },
+        ]
+      }
+      aies_voice_signatures: {
+        Row: {
+          alg: string | null
+          created_at: string | null
+          id: number
+          key_ref: string | null
+          receipt_id: string
+          sig_b64: string | null
+        }
+        Insert: {
+          alg?: string | null
+          created_at?: string | null
+          id?: number
+          key_ref?: string | null
+          receipt_id: string
+          sig_b64?: string | null
+        }
+        Update: {
+          alg?: string | null
+          created_at?: string | null
+          id?: number
+          key_ref?: string | null
+          receipt_id?: string
+          sig_b64?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "aies_voice_signatures_receipt_id_fkey"
+            columns: ["receipt_id"]
+            isOneToOne: false
+            referencedRelation: "aies_voice_receipts"
+            referencedColumns: ["receipt_id"]
+          },
+        ]
+      }
       aies_zk_assertions: {
         Row: {
           details: Json
@@ -56188,6 +56309,10 @@ export type Database = {
           query_hash: string
           table_name: string
         }[]
+      }
+      get_user_org_id: {
+        Args: Record<PropertyKey, never>
+        Returns: string
       }
       get_user_organization_id: {
         Args: Record<PropertyKey, never>
