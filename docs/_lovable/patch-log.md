@@ -200,3 +200,19 @@
 - No import normalization needed - all files already follow correct pattern
 
 ### Branch: fix/personas-exports
+
+## 2025-09-14 - docs: MVP Brief (team & investor) + one-pager
+
+### Files Created:
+- `docs/MVP_BRIEF_TEAM.md` - Comprehensive MVP brief (31 routes, 8 tools, 6 personas)
+- `docs/MVP_BRIEF_TEAM.onepager.md` - Executive summary (400 words)
+
+### Changes:
+- Synthesized 10 documentation sources into investor-ready briefing
+- Documented current product map with 31 routes and 8 financial tools
+- Identified P0 blockers: missing Accounts tool, incomplete Reports, navigation fragmentation
+- Created actionable 2-sprint plan with file paths and acceptance criteria
+- Established MVP KPIs: invites sent, families onboarded, DAU on reports, linking completion
+- Professional briefing suitable for team alignment and investor presentations
+
+### Branch: docs/brief
