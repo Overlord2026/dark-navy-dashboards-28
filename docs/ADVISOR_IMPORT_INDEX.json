@@ -1,0 +1,129 @@
+{
+  "audit_metadata": {
+    "date": "2025-09-15",
+    "branch": "docs/advisor-audit",
+    "scan_scope": "src/**",
+    "total_features": 7,
+    "found_features": 5,
+    "missing_features": 1,
+    "partial_features": 2
+  },
+  "features": [
+    {
+      "feature": "dashboard",
+      "routes": [
+        "/advisors/home",
+        "/advisor-dashboard",
+        "/pros/advisor"
+      ],
+      "files": [
+        "src/pages/advisors/AdvisorsHome.tsx",
+        "src/pages/personas/AdvisorDashboardWithSideNav.tsx",
+        "src/pages/AdvisorDashboard.tsx",
+        "src/components/advisor/AdvisorDashboard.tsx"
+      ],
+      "status": "FOUND",
+      "completeness": "COMPLETE",
+      "notes": "Comprehensive dashboard with KPIs, quick actions, activity tracking"
+    },
+    {
+      "feature": "prospects",
+      "routes": [
+        "/advisors/leads",
+        "/advisors/pipeline"
+      ],
+      "files": [
+        "src/pages/advisors/LeadsPage.tsx",
+        "src/pages/advisors/PipelinePage.tsx",
+        "src/components/advisor/ProspectsList.tsx",
+        "src/components/advisor/PipelineBoard.tsx"
+      ],
+      "status": "FOUND",
+      "completeness": "COMPLETE",
+      "notes": "Lead management, pipeline tracking, conversion metrics, CSV export"
+    },
+    {
+      "feature": "recordings",
+      "routes": [
+        "/advisors/recordings"
+      ],
+      "files": [],
+      "status": "MISSING",
+      "completeness": "NONE",
+      "notes": "Only compliance mentions found, no dedicated recording management UI"
+    },
+    {
+      "feature": "questionnaires",
+      "routes": [
+        "/advisors/questionnaires"
+      ],
+      "files": [
+        "src/components/advisor/AdvisorQuestionnaire.tsx"
+      ],
+      "status": "PARTIAL",
+      "completeness": "BASIC",
+      "notes": "Basic questionnaire for advisor matching exists, no comprehensive builder/management system"
+    },
+    {
+      "feature": "templates",
+      "routes": [
+        "/advisors/templates"
+      ],
+      "files": [
+        "src/components/advisor/EmailTemplates.tsx",
+        "src/components/advisor/CampaignTemplates.tsx"
+      ],
+      "status": "PARTIAL",
+      "completeness": "SCATTERED",
+      "notes": "Email templates exist in various components, no unified template library or management"
+    },
+    {
+      "feature": "roi_tracker",
+      "routes": [
+        "/advisors/analytics",
+        "/advisors/campaigns"
+      ],
+      "files": [
+        "src/components/advisor/ReportsAnalytics.tsx",
+        "src/pages/advisors/CampaignsPage.tsx",
+        "src/components/advisor/MarketingEngine.tsx"
+      ],
+      "status": "FOUND",
+      "completeness": "INTEGRATED",
+      "notes": "ROI tracking embedded in campaigns and reports, marketing performance metrics"
+    },
+    {
+      "feature": "calendar",
+      "routes": [
+        "/advisors/meetings",
+        "/advisors/calendar"
+      ],
+      "files": [
+        "src/pages/advisors/MeetingsPage.tsx",
+        "src/components/advisor/AdvisorCalendar.tsx",
+        "src/components/advisor/MeetingScheduler.tsx"
+      ],
+      "status": "FOUND",
+      "completeness": "COMPLETE",
+      "notes": "Meeting scheduling, calendar management, client consultation booking"
+    }
+  ],
+  "architecture_notes": {
+    "layout_system": "src/layouts/AdvisorsLayout.tsx",
+    "navigation_pattern": "Tab-based horizontal navigation",
+    "persona_guards": "Role-based access control implemented",
+    "integration_points": [
+      "advisor-to-family invitations",
+      "shared financial tools",
+      "unified auth system"
+    ]
+  },
+  "missing_components": [
+    "src/pages/advisors/RecordingsPage.tsx",
+    "src/components/advisor/RecordingManager.tsx",
+    "src/pages/advisors/QuestionnairesPage.tsx", 
+    "src/components/advisor/QuestionnaireBuilder.tsx",
+    "src/pages/advisors/TemplatesPage.tsx",
+    "src/components/advisor/TemplateLibrary.tsx"
+  ]
+}
