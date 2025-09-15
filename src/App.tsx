@@ -293,6 +293,10 @@ import { TaxDonorAdvisedFund } from '@/pages/tax/calculators/daf';
 import { TaxReturnAnalyzer } from '@/pages/tax/calculators/tax-return-analyzer';
 import { TaxSocialSecurity } from '@/pages/tax/calculators/social-security';
 
+// Advisor Platform Imports
+import { AdvisorPlatformLayout } from '@/features/advisors/platform/layouts/AdvisorPlatformLayout';
+import AdvisorPlatformDashboard from '@/features/advisors/platform/pages/AdvisorPlatformDashboard';
+
 const SelectPersona = lazy(() => import('@/pages/auth/SelectPersona'));
 
 // Stub component for avoiding 404s
@@ -521,6 +525,16 @@ function App() {
             
             {/* Pros sub-routes */}
             <Route path="/pros/advisors" element={<Advisors />} />
+            <Route path="/pros/advisors/platform" element={<AdvisorPlatformLayout children={undefined} />}>
+              <Route index element={<AdvisorPlatformDashboard />} />
+              <Route path="prospects" element={<div className="p-6">Prospects (TODO)</div>} />
+              <Route path="recordings" element={<div className="p-6">Recordings (TODO)</div>} />
+              <Route path="questionnaires" element={<div className="p-6">Questionnaires (TODO)</div>} />
+              <Route path="templates" element={<div className="p-6">Templates (TODO)</div>} />
+              <Route path="roi" element={<div className="p-6">ROI Tracker (TODO)</div>} />
+              <Route path="calendar" element={<div className="p-6">Calendar (TODO)</div>} />
+              <Route path="settings" element={<div className="p-6">Platform Settings (TODO)</div>} />
+            </Route>
             <Route path="/pros/accountants" element={
               <PersonaGuard allowedPersonas={['accountant']}>
                 <AccountantDashboard />

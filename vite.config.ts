@@ -16,6 +16,7 @@ export default defineConfig(({ mode }) => ({
     alias: {
       "@": path.resolve(__dirname, "./src"),
       "@tax": path.resolve(__dirname, "./src/features/tax"),
+      "@advisor": path.resolve(__dirname, "./src/features/advisors/platform"),
     },
     dedupe: ["react", "react-dom", "react/jsx-runtime", "react/jsx-dev-runtime", "react-dom/client"],
   },

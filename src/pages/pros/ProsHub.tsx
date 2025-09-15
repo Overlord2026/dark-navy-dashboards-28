@@ -18,6 +18,13 @@ export default function ProsHub() {
                 <div className="text-lg font-medium">{p.label}</div>
                 <p className="text-sm text-muted-foreground mt-1">{p.blurb}</p>
                 <div className="mt-3 text-sm text-primary">Where to start →</div>
+                {p.key === 'advisors' && (
+                  <div className="mt-2 pt-2 border-t">
+                    <Link to="/pros/advisors/platform" className="text-xs bg-primary text-primary-foreground px-2 py-1 rounded hover:bg-primary/90">
+                      Access Platform
+                    </Link>
+                  </div>
+                )}
               </Link>
             </li>
           ))}
