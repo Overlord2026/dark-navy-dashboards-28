@@ -278,6 +278,21 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import DevTryPage from './pages/DevTryPage';
 
+// Tax Planning Imports
+import { TaxShell } from '@/features/tax/TaxShell';
+import { TaxLauncher } from '@/pages/tax/TaxLauncher';
+import { TaxRothConversion } from '@/pages/tax/calculators/roth-conversion';
+import { TaxNua } from '@/pages/tax/calculators/nua';
+import { TaxBracketManager } from '@/pages/tax/calculators/bracket-manager';
+import { TaxAppreciatedStock } from '@/pages/tax/calculators/appreciated-stock';
+import { TaxQsbs } from '@/pages/tax/calculators/qsbs';
+import { TaxLossHarvest } from '@/pages/tax/calculators/loss-harvest';
+import { TaxBasisPlanning } from '@/pages/tax/calculators/basis-planning';
+import { TaxCharitableGift } from '@/pages/tax/calculators/charitable-gift';
+import { TaxDonorAdvisedFund } from '@/pages/tax/calculators/daf';
+import { TaxReturnAnalyzer } from '@/pages/tax/calculators/tax-return-analyzer';
+import { TaxSocialSecurity } from '@/pages/tax/calculators/social-security';
+
 const SelectPersona = lazy(() => import('@/pages/auth/SelectPersona'));
 
 // Stub component for avoiding 404s
@@ -762,6 +777,22 @@ function App() {
             <Route path="/tools/estate" element={<EstateToolPage />} />
             <Route path="/tools/tax" element={<TaxToolPage />} />
             <Route path="/tools/vault" element={<VaultPage />} />
+            
+            {/* Tax Planning Routes */}
+            <Route path="/tax" element={<TaxShell />}>
+              <Route index element={<TaxLauncher />} />
+              <Route path="roth-conversion" element={<TaxRothConversion />} />
+              <Route path="appreciated-stock" element={<TaxAppreciatedStock />} />
+              <Route path="qsbs" element={<TaxQsbs />} />
+              <Route path="nua" element={<TaxNua />} />
+              <Route path="loss-harvest" element={<TaxLossHarvest />} />
+              <Route path="basis-planning" element={<TaxBasisPlanning />} />
+              <Route path="charitable-gift" element={<TaxCharitableGift />} />
+              <Route path="daf" element={<TaxDonorAdvisedFund />} />
+              <Route path="tax-return-analyzer" element={<TaxReturnAnalyzer />} />
+              <Route path="bracket-manager" element={<TaxBracketManager />} />
+              <Route path="social-security" element={<TaxSocialSecurity />} />
+            </Route>
             
             {/* Estate Review Routes */}
             <Route path="/estate/review/new" element={<NewReviewSession />} />
