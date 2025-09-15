@@ -1,6 +1,6 @@
 # Advisor Platform UI Import Audit
 
-**Branch:** docs/advisor-audit  
+**Branch:** feat/advisor-intake  
 **Date:** 2025-09-15  
 **Scope:** Scan src/** for Advisor Platform UI components and features
 
@@ -8,13 +8,13 @@
 
 | Feature | Expected Routes | Found? | Main File(s) | Notes |
 |---------|----------------|--------|--------------|-------|
-| Dashboard | `/advisors/home`, `/advisor-dashboard` | ✅ FOUND | `src/pages/advisors/AdvisorsHome.tsx`, `src/pages/personas/AdvisorDashboardWithSideNav.tsx` | Comprehensive dashboard with KPIs, quick actions, recent activity |
-| Prospects | `/advisors/leads`, `/advisors/pipeline` | ✅ FOUND | `src/pages/advisors/LeadsPage.tsx`, `src/pages/advisors/PipelinePage.tsx` | Lead management, pipeline tracking, conversion metrics |
-| Recordings | `/advisors/recordings` | ❌ MISSING | N/A | Only compliance mentions found, no dedicated recording UI |
-| Questionnaires | `/advisors/questionnaires` | ⚠️ PARTIAL | `src/components/advisor/AdvisorQuestionnaire.tsx` | Basic questionnaire for advisor matching, no builder/management |
-| Templates | `/advisors/templates` | ⚠️ PARTIAL | Various email template components | Scattered email templates, no unified template library |
-| ROI Tracker | `/advisors/roi`, `/advisors/analytics` | ✅ FOUND | `src/components/advisor/ReportsAnalytics.tsx`, campaign components | ROI tracking embedded in campaigns and reports |
-| Calendar | `/advisors/meetings`, `/advisors/calendar` | ✅ FOUND | `src/pages/advisors/MeetingsPage.tsx`, `src/components/advisor/AdvisorCalendar.tsx` | Meeting scheduling and calendar management |
+| Dashboard | `/pros/advisors/platform`, `/advisors/home` | ✅ FOUND | `src/pages/advisors/AdvisorsHome.tsx`, `src/pages/personas/AdvisorDashboardWithSideNav.tsx` | Comprehensive dashboard with KPIs, quick actions, recent activity |
+| Prospects | `/pros/advisors/platform/prospects`, `/advisors/leads` | ✅ FOUND | `src/pages/advisors/LeadsPage.tsx`, `src/pages/advisors/PipelinePage.tsx` | Lead management, pipeline tracking, conversion metrics |
+| Recordings | `/pros/advisors/platform/recordings` | ❌ MISSING | N/A | Only compliance mentions found, no dedicated recording UI |
+| Questionnaires | `/pros/advisors/platform/questionnaires` | ⚠️ PARTIAL | `src/components/advisor/AdvisorQuestionnaire.tsx` | Basic questionnaire for advisor matching, no builder/management |
+| Templates | `/pros/advisors/platform/templates` | ⚠️ PARTIAL | Various email template components | Scattered email templates, no unified template library |
+| ROI Tracker | `/pros/advisors/platform/roi`, `/advisors/analytics` | ✅ FOUND | `src/components/advisor/ReportsAnalytics.tsx`, campaign components | ROI tracking embedded in campaigns and reports |
+| Calendar | `/pros/advisors/platform/calendar`, `/advisors/meetings` | ✅ FOUND | `src/pages/advisors/MeetingsPage.tsx`, `src/components/advisor/AdvisorCalendar.tsx` | Meeting scheduling and calendar management |
 
 ## Summary
 
@@ -24,8 +24,8 @@
 
 ### Key Findings
 
-1. **Strong Foundation**: Core advisor workflows (dashboard, leads, meetings) are well-implemented
-2. **Modern Architecture**: Uses integrated workflows rather than standalone feature modules
+1. **Strong Foundation**: Core advisor workflows (dashboard, prospects, calendar) are well-implemented
+2. **Modern Architecture**: Uses persona-based architecture with unified navigation
 3. **Missing Gaps**: Dedicated recording management and comprehensive questionnaire builder
 4. **Template Fragmentation**: Email templates exist but lack centralized management
 
