@@ -11,7 +11,7 @@ export function TaxNua() {
         </p>
       </div>
       
-      <NUAAnalyzer />
+      <NUAAnalyzer subscriptionTier="premium" />
     </div>
   );
 }

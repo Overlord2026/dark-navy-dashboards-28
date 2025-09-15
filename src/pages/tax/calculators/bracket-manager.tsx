@@ -11,7 +11,7 @@ export function TaxBracketManager() {
         </p>
       </div>
       
-      <TaxBracketProjector />
+      <TaxBracketProjector subscriptionTier="premium" />
     </div>
   );
 }

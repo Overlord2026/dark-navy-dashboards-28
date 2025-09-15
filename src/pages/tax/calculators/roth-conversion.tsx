@@ -11,7 +11,7 @@ export function TaxRothConversion() {
         </p>
       </div>
       
-      <RothConversionAnalyzer />
+      <RothConversionAnalyzer subscriptionTier="premium" />
     </div>
   );
 }
