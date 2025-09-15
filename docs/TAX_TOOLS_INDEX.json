@@ -1,0 +1,236 @@
+{
+  "audit_metadata": {
+    "project": "Advanced Tax Planning Integration",
+    "source_repo": "https://github.com/Overlord2026/neptune-react-orbit",
+    "audit_date": "2025-09-15",
+    "branch": "docs/tax-audit",
+    "total_calculators": 14,
+    "found": 6,
+    "partial": 3,
+    "missing": 2,
+    "additional": 6
+  },
+  "target_calculators": [
+    {
+      "id": "roth-conversion",
+      "name": "Roth Conversion Analyzer",
+      "route": "/tax/roth-conversion",
+      "status": "FOUND",
+      "files": [
+        "src/components/tax-planning/RothConversionAnalyzer.tsx"
+      ],
+      "notes": "Full implementation with multi-year projections, IRS compliance",
+      "priority": "ready"
+    },
+    {
+      "id": "appreciated-stock",
+      "name": "Appreciated Stock Calculator",
+      "route": "/tax/appreciated-stock",
+      "status": "PARTIAL",
+      "files": [
+        "src/pages/wealth/premium/AppreciatedStock.tsx"
+      ],
+      "notes": "Premium placeholder only, no calculator logic",
+      "priority": "upgrade"
+    },
+    {
+      "id": "qsbs",
+      "name": "QSBS Calculator",
+      "route": "/tax/qsbs",
+      "status": "MISSING",
+      "files": [],
+      "notes": "Only mentioned in investment descriptions",
+      "priority": "create"
+    },
+    {
+      "id": "nua",
+      "name": "Net Unrealized Appreciation",
+      "route": "/tax/nua",
+      "status": "FOUND",
+      "files": [
+        "src/components/tax-planning/NUAAnalyzer.tsx"
+      ],
+      "notes": "Comprehensive NUA calculator with employer stock analysis",
+      "priority": "ready"
+    },
+    {
+      "id": "loss-harvest",
+      "name": "Tax Loss Harvesting",
+      "route": "/tax/loss-harvest",
+      "status": "SCATTERED",
+      "files": [
+        "src/components/scenarios/",
+        "src/pages/advisor-tools/"
+      ],
+      "notes": "Features exist but no dedicated calculator",
+      "priority": "consolidate"
+    },
+    {
+      "id": "basis-planning",
+      "name": "Basis Planning Calculator",
+      "route": "/tax/basis-planning",
+      "status": "MISSING",
+      "files": [],
+      "notes": "No dedicated basis planning calculator found",
+      "priority": "create"
+    },
+    {
+      "id": "charitable-gift",
+      "name": "Charitable Gift Calculator",
+      "route": "/tax/charitable-gift",
+      "status": "PARTIAL",
+      "files": [
+        "src/components/calculators/TaxPlanningModal.tsx"
+      ],
+      "notes": "Basic calculator in modal, not standalone",
+      "priority": "enhance"
+    },
+    {
+      "id": "donor-advised-fund",
+      "name": "Donor Advised Fund Calculator",
+      "route": "/tax/donor-advised",
+      "status": "MISSING",
+      "files": [],
+      "notes": "Mentioned in features but no calculator",
+      "priority": "create"
+    }
+  ],
+  "additional_calculators": [
+    {
+      "id": "tax-bracket-projector",
+      "name": "Tax Bracket Projector",
+      "route": "/tax/brackets",
+      "status": "FOUND",
+      "files": [
+        "src/components/tax-planning/TaxBracketProjector.tsx"
+      ],
+      "notes": "Comprehensive tax bracket analysis and projection",
+      "priority": "ready"
+    },
+    {
+      "id": "multi-year-projector",
+      "name": "Multi-Year Tax Projector",
+      "route": "/tax/multi-year",
+      "status": "FOUND",
+      "files": [
+        "src/components/tax-planning/MultiYearTaxProjector.tsx"
+      ],
+      "notes": "Long-term tax planning and scenario analysis",
+      "priority": "ready"
+    },
+    {
+      "id": "withdrawal-sequencing",
+      "name": "Withdrawal Sequencing Simulator",
+      "route": "/tax/withdrawal",
+      "status": "FOUND",
+      "files": [
+        "src/components/tax-planning/WithdrawalSequencingSimulator.tsx"
+      ],
+      "notes": "Optimal withdrawal strategy for tax efficiency",
+      "priority": "ready"
+    },
+    {
+      "id": "qcd-planner",
+      "name": "Qualified Charitable Distribution Planner",
+      "route": "/tax/qcd",
+      "status": "FOUND",
+      "files": [
+        "src/components/tax-planning/QCDPlanner.tsx"
+      ],
+      "notes": "QCD strategy planning and optimization",
+      "priority": "ready"
+    },
+    {
+      "id": "tax-readiness",
+      "name": "Tax Readiness Assessment",
+      "route": "/tax/readiness",
+      "status": "FOUND",
+      "files": [
+        "src/components/tax-planning/TaxReadinessAssessment.tsx"
+      ],
+      "notes": "Comprehensive tax preparation readiness evaluation",
+      "priority": "ready"
+    },
+    {
+      "id": "unified-analyzer",
+      "name": "Unified Tax Analyzer",
+      "route": "/tax/analyzer",
+      "status": "FOUND",
+      "files": [
+        "src/components/tax-planning/UnifiedTaxAnalyzer.tsx"
+      ],
+      "notes": "All-in-one tax analysis and planning tool",
+      "priority": "ready"
+    }
+  ],
+  "current_structure": {
+    "primary_location": "src/components/tax-planning/",
+    "component_count": 20,
+    "pages": [
+      "src/pages/TaxPlanning.tsx",
+      "src/pages/TaxRulesAdminPage.tsx", 
+      "src/pages/TaxPlatformQAPage.tsx"
+    ],
+    "existing_routes": [
+      "/tools/tax",
+      "/solutions/tax",
+      "/family/tools/taxhub-preview",
+      "/calculators"
+    ],
+    "support_libraries": [
+      "src/lib/401k/",
+      "src/lib/scorecard/",
+      "src/features/calculators/"
+    ]
+  },
+  "integration_plan": {
+    "phase_1": {
+      "name": "Foundation Assessment",
+      "status": "complete",
+      "description": "Audit existing tax infrastructure"
+    },
+    "phase_2": {
+      "name": "Neptune Integration",
+      "status": "pending",
+      "tasks": [
+        "Import missing calculator components",
+        "Upgrade partial implementations",
+        "Standardize tax utilities"
+      ]
+    },
+    "phase_3": {
+      "name": "Route Consolidation", 
+      "status": "pending",
+      "tasks": [
+        "Unify under /tax/* namespace",
+        "Implement shared calculation library",
+        "Add comprehensive test coverage"
+      ]
+    }
+  },
+  "next_actions": [
+    {
+      "action": "Create tax-tools module structure",
+      "priority": "high",
+      "files_to_create": [
+        "packages/tax-tools/",
+        "src/features/tax/"
+      ]
+    },
+    {
+      "action": "Implement missing calculators",
+      "priority": "high", 
+      "calculators": ["qsbs", "basis-planning", "donor-advised-fund"]
+    },
+    {
+      "action": "Upgrade partial calculators",
+      "priority": "medium",
+      "calculators": ["appreciated-stock", "charitable-gift", "loss-harvest"]
+    },
+    {
+      "action": "Route namespace consolidation",
+      "priority": "medium",
+      "description": "Unify scattered tax routes under /tax/*"
+    }
+  ]
+}
