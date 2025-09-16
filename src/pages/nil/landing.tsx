@@ -59,6 +59,7 @@ export default function NILIndex() {
       <ToolsGrid
         tools={nilTools}
         title="NIL Management Tools"
+        luxuryTheme={true}
       />
     </div>
   );

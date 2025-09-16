@@ -54,12 +54,14 @@ interface ToolsGridProps {
   tools?: Tool[];
   title?: string;
   className?: string;
+  luxuryTheme?: boolean;
 }
 
 export function ToolsGrid({ 
   tools = defaultTools, 
   title = "Essential Tools", 
-  className 
+  className,
+  luxuryTheme = false
 }: ToolsGridProps) {
   return (
     <section id="tools" className={`py-16 px-4 ${className || ''}`}>
@@ -70,7 +72,12 @@ export function ToolsGrid({
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {tools.map((tool, index) => (
-            <BfoCard key={index} className="hover:shadow-xl transition-all duration-300 group">
+            <BfoCard 
+              key={index} 
+              className={`hover:shadow-xl transition-all duration-300 group ${
+                luxuryTheme ? 'bfo-card-luxury-purple' : ''
+              }`}
+            >
               <Link 
                 to={tool.href} 
                 className="block h-full"
@@ -82,20 +89,38 @@ export function ToolsGrid({
                 }}
               >
                 <div className="flex items-start gap-4 mb-4">
-                  <div className="p-3 rounded-lg bg-[#FFD700]/10 group-hover:bg-[#FFD700]/20 transition-colors">
-                    <tool.icon className="h-6 w-6 text-[#FFD700]" />
+                  <div className={`p-3 rounded-lg transition-all duration-300 icon-container ${
+                    luxuryTheme 
+                      ? 'bg-[rgba(212,175,55,0.15)] border border-[#D4AF37] group-hover:bg-[rgba(212,175,55,0.25)]' 
+                      : 'bg-[#FFD700]/10 group-hover:bg-[#FFD700]/20'
+                  }`}>
+                    <tool.icon className={`h-6 w-6 ${
+                      luxuryTheme ? 'text-[#D4AF37]' : 'text-[#FFD700]'
+                    }`} />
                   </div>
                   
                   <div className="flex-1">
-                    <h3 className="text-xl font-semibold text-white mb-2 group-hover:text-[#FFD700] transition-colors">
+                    <h3 className={`text-xl font-semibold mb-2 transition-colors ${
+                      luxuryTheme 
+                        ? 'text-[#D4AF37] group-hover:text-[#D4AF37]' 
+                        : 'text-white group-hover:text-[#FFD700]'
+                    }`}>
                       {tool.title}
                       {tool.comingSoon && (
-                        <span className="ml-2 text-xs bg-[#FFD700]/20 text-[#FFD700] px-2 py-1 rounded">
+                        <span className={`ml-2 text-xs px-2 py-1 rounded ${
+                          luxuryTheme
+                            ? 'bg-[rgba(212,175,55,0.2)] text-[#D4AF37]'
+                            : 'bg-[#FFD700]/20 text-[#FFD700]'
+                        }`}>
                           Coming Soon
                         </span>
                       )}
                     </h3>
-                    <p className="text-white/70 text-sm leading-relaxed">
+                    <p className={`text-sm leading-relaxed ${
+                      luxuryTheme 
+                        ? 'text-[rgba(212,175,55,0.9)]' 
+                        : 'text-white/70'
+                    }`}>
                       {tool.description}
                     </p>
                   </div>

@@ -7,6 +7,7 @@
   --bfo-white: #FFFFFF;
   --bfo-navy: #001F3F;
   --bfo-purple: #5E17EB;
+  --luxury-purple: 262 84% 45%;
   --bfo-gold-thin: 1px;
 }
 
@@ -80,7 +81,58 @@ header[role="banner"] {
 .bg-bfo-navy { background-color: var(--bfo-navy) !important; }
 .bg-bfo-purple { background-color: var(--bfo-purple) !important; }
 
-/* Luxury card styling */
+/* Luxury Purple & Gold Card styling for NIL */
+.bfo-card-luxury-purple {
+  background: hsl(var(--luxury-purple));
+  border: 2px solid var(--bfo-gold);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(212, 175, 55, 0.15);
+  transition: all 0.3s ease-in-out;
+  color: var(--bfo-gold);
+  position: relative;
+  overflow: hidden;
+}
+
+.bfo-card-luxury-purple::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, transparent 0%, rgba(212, 175, 55, 0.03) 50%, transparent 100%);
+  pointer-events: none;
+}
+
+.bfo-card-luxury-purple:hover {
+  box-shadow: 0 8px 32px rgba(212, 175, 55, 0.3);
+  transform: translateY(-2px);
+  background: hsl(262 84% 50%);
+  border-color: var(--bfo-gold);
+}
+
+.bfo-card-luxury-purple .icon-container {
+  background: rgba(212, 175, 55, 0.15);
+  border: 1px solid var(--bfo-gold);
+}
+
+.bfo-card-luxury-purple:hover .icon-container {
+  background: rgba(212, 175, 55, 0.25);
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+}
+
+.bfo-card-luxury-purple h3 {
+  color: var(--bfo-gold);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.bfo-card-luxury-purple p {
+  color: rgba(212, 175, 55, 0.9);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Legacy luxury card styling */
 .bfo-card-luxury {
   background: linear-gradient(135deg, var(--bfo-navy), rgba(0, 31, 63, 0.95));
   border: 2px solid var(--bfo-gold);
