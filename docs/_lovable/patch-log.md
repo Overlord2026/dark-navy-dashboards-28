@@ -2,7 +2,17 @@
 
 ## Latest Changes
 
-### feat/advisor-intake  
+### docs/repo-map
+- **Status**: ✅ Complete
+- **Problem**: Need external module mapping documentation
+- **Solution**: 
+  - Created docs/REPO_MAP.md with external repos to internal prefixes mapping
+  - Documents advisor-platform, tax-tools, and marketplace modules
+  - Maps GitHub repos to canonical subtree prefixes
+- **Files**:
+  - `docs/REPO_MAP.md` (created module mapping table)
+
+### feat/advisor-intake
 - **Status**: ✅ Complete
 - **Problem**: Finalize advisor platform wiring and routing integration
 - **Solution**: 
