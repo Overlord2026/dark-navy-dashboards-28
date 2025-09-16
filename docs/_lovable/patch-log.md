@@ -2,6 +2,19 @@
 
 ## Latest Changes
 
+### fix/sidebar-shim  
+- **Status**: ✅ Complete
+- **Problem**: TaxShell imports from non-existent "@/components/ui/sidebar", conflicting with existing sidebar-new.tsx
+- **Solution**: 
+  - Renamed sidebar-new.tsx to sidebar-shadcn.tsx to avoid import conflicts
+  - Updated BuildWorkspacePage to import from renamed sidebar-shadcn.tsx
+  - Maintained existing simple sidebar.tsx for TaxShell compatibility
+  - Applied cache busting for clean rebuild
+- **Files**:
+  - `src/components/ui/sidebar-new.tsx` → `src/components/ui/sidebar-shadcn.tsx` (renamed)
+  - `src/pages/onboarding/BuildWorkspacePage.tsx` (updated import path)
+  - `.chore/cache-bust-1737135123000.txt` (cache invalidation)
+
 ### fix/personas-exports
 - **Status**: ✅ Complete
 - **Problem**: "does not provide an export named 'FAMILIES'" due to missing canonical named exports
