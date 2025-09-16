@@ -188,6 +188,7 @@ import RuleSyncConsole from '@/pages/admin/RuleSyncConsole';
 import Control401k from '@/pages/admin/Control401k';
 import Evidence from '@/pages/admin/Evidence';
 import CanonicalExports from "@/diag/CanonicalExports";
+import ReactDiag from '@/pages/ReactDiag';
 
 // Welcome Flow Components
 const FamilyWelcomeFlow = lazy(() => import('@/components/welcome/FullScreenWelcome').then(m => ({ default: m.FullScreenWelcome })));
@@ -1073,6 +1074,7 @@ function App() {
             {/* Goals route moved to main routes section */}
             <Route path="/discover" element={<Stub title="Discover Solutions" />} />
             <Route path="/diag/canonical" element={<CanonicalExports />} />
+            <Route path="/react-diag" element={<ReactDiag />} />
             
             {/* NotFound Route */}
             <Route path="*" element={<NotFound />} />

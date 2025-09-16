@@ -6,34 +6,57 @@ export type PersonaKey =
 
 export type PersonaLink = { key: PersonaKey; label: string; to: string; blurb?: string };
 
-// Service Professionals (cards on the Pros hub)
+// Service Professionals
 export const PROS: PersonaLink[] = [
-  { key: "advisors",    label: "Financial Advisors",     to: "/pros/advisors",    blurb: "Planning, portfolios, PMA, workflows." },
-  { key: "accountants", label: "Accountants",            to: "/pros/accountants", blurb: "Tax sync, docs, client collaboration." },
-  { key: "attorneys",   label: "Attorneys",              to: "/pros/attorneys",   blurb: "Estate, entity, engagement handoffs." },
-  { key: "insurance",   label: "Insurance",              to: "/pros/insurance",   blurb: "Policy reviews, annuities, LTC sync." },
-  { key: "medicare",    label: "Medicare Specialists",   to: "/pros/medicare",    blurb: "Enrollment, plan fit, renewal tasks." },
-  { key: "realtors",    label: "Realtors / PM",          to: "/pros/realtors",    blurb: "Properties, cash flows, closings." },
-  { key: "consultants", label: "Consultants",            to: "/pros/consultants", blurb: "Biz ops, transitions, diligence." },
+  { key: "advisors",    label: "Financial Advisors", to: "/pros/advisors" },
+  { key: "accountants", label: "Accountants",        to: "/pros/accountants" },
+  { key: "attorneys",   label: "Attorneys",          to: "/pros/attorneys" },
+  { key: "insurance",   label: "Insurance",          to: "/pros/insurance" },
+  { key: "medicare",    label: "Medicare Specialists", to: "/pros/medicare" },
+  { key: "realtors",    label: "Realtors / PM",      to: "/pros/realtors" },
+  { key: "consultants", label: "Consultants",        to: "/pros/consultants" },
 ];
 
-// Families (two segments)
+// Families
 export const FAMILIES: PersonaLink[] = [
   { key: "families_aspiring", label: "Aspiring Families", to: "/families/aspiring" },
   { key: "families_retirees", label: "Retirees",          to: "/families/retirees" },
 ];
 
-// Legacy compatibility for existing PersonaDashboard
+// Persona configurations for PersonaDashboard compatibility
 export const PERSONA_CONFIGS = [
   {
-    id: "advisor",
-    name: "Financial Advisor",
-    category: "professional",
+    id: "advisors",
+    name: "Financial Advisors",
+    description: "Professional financial advisory services",
+    route: "/pros/advisors",
     tools: [],
-    receipts: [],
+    subPersonas: []
+  },
+  {
+    id: "accountants", 
+    name: "Accountants",
+    description: "Tax and accounting services",
+    route: "/pros/accountants",
+    tools: [],
+    subPersonas: []
+  },
+  {
+    id: "attorneys",
+    name: "Attorneys", 
+    description: "Legal and estate planning services",
+    route: "/pros/attorneys",
+    tools: [],
+    subPersonas: []
+  },
+  {
+    id: "insurance",
+    name: "Insurance",
+    description: "Insurance and risk management",
+    route: "/pros/insurance", 
+    tools: [],
     subPersonas: []
   }
 ];
 
-// No default export on purpose to avoid ambiguity.
-// If a previous default existed, imports will be normalized in step B.
+// no default export on purpose

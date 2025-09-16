@@ -2,6 +2,21 @@
 
 ## Latest Changes
 
+### fix/personas-exports
+- **Status**: ✅ Complete
+- **Problem**: "does not provide an export named 'FAMILIES'" due to missing canonical named exports
+- **Solution**: 
+  - Created src/config/personas.ts with canonical named exports (PROS, FAMILIES)
+  - Added ReactDiag route to src/App.tsx for React singleton verification
+  - Updated package.json in swag-analyzer subpackage with React peer dependencies
+  - Applied safe edit mode with cache busting
+- **Files**:
+  - `src/config/personas.ts` (created with named exports)
+  - `src/App.tsx` (added ReactDiag route)
+  - `packages/swag-analyzer/package.json` (React as peer dependency)
+  - `src/lib/canonical.ts` (updated build IDs)
+  - `.chore/cache-bust-1737134745000.txt` (cache invalidation)
+
 ### fix/react-singleton  
 - **Status**: ✅ Complete  
 - **Problem**: "Cannot read properties of null (reading 'useState')" in AuthProvider due to duplicate React instances/HMR issues
