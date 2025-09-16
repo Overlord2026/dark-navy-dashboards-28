@@ -1,3 +1,3 @@
 export function registerSW() {
-  /* debug: no-op to avoid SW cache */
+  /* debug no-op */
 }
