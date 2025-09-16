@@ -297,6 +297,13 @@ import { TaxSocialSecurity } from '@/pages/tax/calculators/social-security';
 // Advisor Platform Imports
 import { AdvisorPlatformLayout } from '@/features/advisors/platform/layouts/AdvisorPlatformLayout';
 import AdvisorPlatformDashboard from '@/features/advisors/platform/pages/AdvisorPlatformDashboard';
+import ProspectsPage from '@/features/advisors/platform/pages/ProspectsPage';
+import RecordingsPage from '@/features/advisors/platform/pages/RecordingsPage';
+import QuestionnairesPage from '@/features/advisors/platform/pages/QuestionnairesPage';
+import TemplatesPage from '@/features/advisors/platform/pages/TemplatesPage';
+import ROITrackerPage from '@/features/advisors/platform/pages/ROITrackerPage';
+import CalendarPage from '@/features/advisors/platform/pages/CalendarPage';
+import SettingsPage from '@/features/advisors/platform/pages/SettingsPage';
 
 const SelectPersona = lazy(() => import('@/pages/auth/SelectPersona'));
 
@@ -528,13 +535,13 @@ function App() {
             <Route path="/pros/advisors" element={<Advisors />} />
             <Route path="/pros/advisors/platform" element={<AdvisorPlatformLayout children={undefined} />}>
               <Route index element={<AdvisorPlatformDashboard />} />
-              <Route path="prospects" element={<div className="p-6">Prospects (TODO)</div>} />
-              <Route path="recordings" element={<div className="p-6">Recordings (TODO)</div>} />
-              <Route path="questionnaires" element={<div className="p-6">Questionnaires (TODO)</div>} />
-              <Route path="templates" element={<div className="p-6">Templates (TODO)</div>} />
-              <Route path="roi" element={<div className="p-6">ROI Tracker (TODO)</div>} />
-              <Route path="calendar" element={<div className="p-6">Calendar (TODO)</div>} />
-              <Route path="settings" element={<div className="p-6">Platform Settings (TODO)</div>} />
+              <Route path="prospects" element={<ProspectsPage />} />
+              <Route path="recordings" element={<RecordingsPage />} />
+              <Route path="questionnaires" element={<QuestionnairesPage />} />
+              <Route path="templates" element={<TemplatesPage />} />
+              <Route path="roi" element={<ROITrackerPage />} />
+              <Route path="calendar" element={<CalendarPage />} />
+              <Route path="settings" element={<SettingsPage />} />
             </Route>
             <Route path="/pros/accountants" element={
               <PersonaGuard allowedPersonas={['accountant']}>

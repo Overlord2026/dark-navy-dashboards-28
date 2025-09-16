@@ -2,6 +2,20 @@
 
 ## Latest Changes
 
+### feat/advisor-intake  
+- **Status**: ✅ Complete
+- **Problem**: Finalize advisor platform wiring and routing integration
+- **Solution**: 
+  - Added @advisor alias to tsconfig.json and vite.config.ts pointing to src/features/advisors/platform/*
+  - Updated App.tsx to import and use actual advisor platform page components instead of TODO stubs
+  - Maintained existing /pros/advisors/platform route structure and ProsHub linking
+  - Applied cache busting for clean rebuild
+- **Files**:
+  - `tsconfig.json` (added @advisor alias)
+  - `vite.config.ts` (added @advisor alias with React dedupe)
+  - `src/App.tsx` (imported platform components and updated routes)
+  - `.chore/cache-bust-1737135340000.txt` (cache invalidation)
+
 ### fix/sidebar-shim  
 - **Status**: ✅ Complete
 - **Problem**: TaxShell imports from non-existent "@/components/ui/sidebar", conflicting with existing sidebar-new.tsx
