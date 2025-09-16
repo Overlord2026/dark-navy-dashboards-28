@@ -3,21 +3,24 @@
 ## Latest Changes
 
 ### fix/react-singleton  
-- **Status**: ✅ Complete
+- **Status**: ✅ Complete  
 - **Problem**: "Cannot read properties of null (reading 'useState')" in AuthProvider due to duplicate React instances/HMR issues
 - **Solution**:
-  - Pinned React to exact versions (18.3.1) using dependency tools
-  - Simplified vite.config.ts to single react() plugin, removed componentTagger
-  - Enhanced React deduplication in resolve.dedupe
-  - Removed mode-based plugin logic to ensure consistent behavior
+  - Package.json already has React 18.3.1 with overrides for singleton enforcement
+  - Simplified vite.config.ts to single react() plugin with enhanced deduplication
+  - Removed @tax and @advisor aliases to prevent import confusion
+  - Applied hard dev graph reset with updated canonical build ID
+  - Created cache-bust file for complete cache invalidation
+  - Added ReactDiag page for verification
   - Created comprehensive sidebar.tsx component with all required exports
   - Fixed missing subscriptionTier props in tax calculator components
 - **Files**:
-  - `vite.config.ts` (simplified)
+  - `vite.config.ts` (simplified with enhanced React deduplication)
+  - `src/lib/canonical.ts` (updated build ID to react-singleton-01)
+  - `.chore/cache-bust-1737133200000.txt` (cache invalidation)
+  - `src/pages/ReactDiag.tsx` (diagnostic page)
   - `src/components/ui/sidebar.tsx` (created comprehensive component)
-  - `src/pages/tax/calculators/bracket-manager.tsx` (added subscriptionTier)
-  - `src/pages/tax/calculators/nua.tsx` (added subscriptionTier) 
-  - `src/pages/tax/calculators/roth-conversion.tsx` (added subscriptionTier)
+  - `src/pages/tax/calculators/*` (added subscriptionTier props)
 
 ## feat/advisor-intake - Advisor Platform Integration
 
