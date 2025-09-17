@@ -304,8 +304,8 @@ import TemplatesPage from '@/features/advisors/platform/pages/TemplatesPage';
 import ROITrackerPage from '@/features/advisors/platform/pages/ROITrackerPage';
 import CalendarPage from '@/features/advisors/platform/pages/CalendarPage';
 import SettingsPage from '@/features/advisors/platform/pages/SettingsPage';
-import InvitePage from '@/features/advisors/platform/pages/InvitePage';
-import BillingPage from '@/features/advisors/platform/pages/BillingPage';
+const InvitePage = lazy(() => import('@/features/advisors/platform/pages/InvitePage'));
+const BillingPage = lazy(() => import('@/features/advisors/platform/pages/BillingPage'));
 
 const SelectPersona = lazy(() => import('@/pages/auth/SelectPersona'));
 
