@@ -2,6 +2,11 @@
 
 ## Latest Changes
 
+### feat/advisor-intake - Calendar Month/Week/Day Views
+- **Status**: ✅ Complete
+- **Solution**: Implemented styled Calendar page with month/week/day views, mocked events (10 events), "New Event" modal form, URL query params (?view=month|week|day), date navigation, themed grid layouts using design tokens
+- **Files**: CalendarPage.tsx, calendar.mock.ts (new mock state with calendar events)
+
 ### feat/advisor-intake - Prospects Table + Filters + Row Actions
 - **Status**: ✅ Complete
 - **Solution**: Enhanced Prospects page with data table (Name, Email, Status, Source, HNW Score, Next Meeting), search input, dropdown filters (Status/Source), row actions (View/Edit/Delete), client-side pagination (8 items/page), mocked data selectors

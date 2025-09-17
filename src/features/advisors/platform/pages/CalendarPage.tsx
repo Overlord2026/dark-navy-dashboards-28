@@ -1,15 +1,258 @@
-import React from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Calendar, Plus, Clock, Users, Video, MapPin, Filter } from 'lucide-react';
-
-// TODO: Import existing calendar components if available
-// import { AdvisorCalendar } from '@/components/advisor/AdvisorCalendar';
-// import { MeetingScheduler } from '@/components/advisor/MeetingScheduler';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Calendar, Plus, Clock, Users, Video, MapPin, Filter, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useSearchParams } from 'react-router-dom';
+import { 
+  getMockCalendarEvents, 
+  getEventTypeStyle, 
+  getEventStatusStyle, 
+  formatEventTime,
+  type CalendarEvent,
+  type CalendarView 
+} from '../state/calendar.mock';
 
 export default function CalendarPage() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [isNewEventModalOpen, setIsNewEventModalOpen] = useState(false);
+  const [newEventForm, setNewEventForm] = useState({
+    title: '',
+    description: '',
+    type: 'meeting' as CalendarEvent['type'],
+    prospect: '',
+    location: '',
+    date: '',
+    startTime: '',
+    endTime: ''
+  });
+
+  const view = (searchParams.get('view') as CalendarView) || 'month';
+  const events = getMockCalendarEvents();
+
+  const handleViewChange = (newView: CalendarView) => {
+    setSearchParams({ view: newView });
+  };
+
+  const handleDateNavigation = (direction: 'prev' | 'next') => {
+    const newDate = new Date(currentDate);
+    if (view === 'month') {
+      newDate.setMonth(newDate.getMonth() + (direction === 'next' ? 1 : -1));
+    } else if (view === 'week') {
+      newDate.setDate(newDate.getDate() + (direction === 'next' ? 7 : -7));
+    } else {
+      newDate.setDate(newDate.getDate() + (direction === 'next' ? 1 : -1));
+    }
+    setCurrentDate(newDate);
+  };
+
+  const getDateRange = () => {
+    if (view === 'month') {
+      return currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    } else if (view === 'week') {
+      const startOfWeek = new Date(currentDate);
+      startOfWeek.setDate(currentDate.getDate() - currentDate.getDay());
+      const endOfWeek = new Date(startOfWeek);
+      endOfWeek.setDate(startOfWeek.getDate() + 6);
+      return `${startOfWeek.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - ${endOfWeek.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`;
+    } else {
+      return currentDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+    }
+  };
+
+  const getFilteredEvents = () => {
+    const start = new Date(currentDate);
+    const end = new Date(currentDate);
+
+    if (view === 'month') {
+      start.setDate(1);
+      end.setMonth(end.getMonth() + 1, 0);
+    } else if (view === 'week') {
+      start.setDate(currentDate.getDate() - currentDate.getDay());
+      end.setDate(start.getDate() + 6);
+    } else {
+      // day view - same start and end date
+    }
+
+    return events.filter(event => {
+      const eventDate = new Date(event.start);
+      if (view === 'day') {
+        return eventDate.toDateString() === currentDate.toDateString();
+      }
+      return eventDate >= start && eventDate <= end;
+    }).sort((a, b) => a.start.getTime() - b.start.getTime());
+  };
+
+  const filteredEvents = getFilteredEvents();
+
+  const handleNewEventSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // TODO: Implement event creation
+    console.log('New event:', newEventForm);
+    setIsNewEventModalOpen(false);
+    setNewEventForm({
+      title: '',
+      description: '',
+      type: 'meeting',
+      prospect: '',
+      location: '',
+      date: '',
+      startTime: '',
+      endTime: ''
+    });
+  };
+
+  const renderMonthView = () => {
+    const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+    const lastDay = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+    const startDate = new Date(firstDay);
+    startDate.setDate(startDate.getDate() - firstDay.getDay());
+    
+    const days = [];
+    const currentDay = new Date(startDate);
+    
+    for (let i = 0; i < 42; i++) {
+      const dayEvents = events.filter(event => 
+        new Date(event.start).toDateString() === currentDay.toDateString()
+      );
+      
+      days.push(
+        <div
+          key={currentDay.toISOString()}
+          className={`min-h-24 p-2 border border-border bg-card hover:bg-accent/50 transition-colors ${
+            currentDay.getMonth() !== currentDate.getMonth() ? 'opacity-40' : ''
+          } ${
+            currentDay.toDateString() === new Date().toDateString() ? 'bg-primary/10 border-primary' : ''
+          }`}
+        >
+          <div className="font-medium text-sm text-foreground mb-1">
+            {currentDay.getDate()}
+          </div>
+          <div className="space-y-1">
+            {dayEvents.slice(0, 2).map(event => (
+              <div
+                key={event.id}
+                className={`text-xs p-1 rounded border ${getEventTypeStyle(event.type)} ${getEventStatusStyle(event.status)}`}
+                title={`${event.title} - ${formatEventTime(event.start, event.end)}`}
+              >
+                {event.title.length > 15 ? `${event.title.substring(0, 15)}...` : event.title}
+              </div>
+            ))}
+            {dayEvents.length > 2 && (
+              <div className="text-xs text-muted-foreground">
+                +{dayEvents.length - 2} more
+              </div>
+            )}
+          </div>
+        </div>
+      );
+      
+      currentDay.setDate(currentDay.getDate() + 1);
+    }
+
+    return (
+      <div className="grid grid-cols-7 gap-1">
+        {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
+          <div key={day} className="p-2 text-center font-semibold text-muted-foreground bg-muted">
+            {day}
+          </div>
+        ))}
+        {days}
+      </div>
+    );
+  };
+
+  const renderWeekView = () => {
+    const startOfWeek = new Date(currentDate);
+    startOfWeek.setDate(currentDate.getDate() - currentDate.getDay());
+    
+    const weekDays = [];
+    for (let i = 0; i < 7; i++) {
+      const day = new Date(startOfWeek);
+      day.setDate(startOfWeek.getDate() + i);
+      weekDays.push(day);
+    }
+
+    return (
+      <div className="grid grid-cols-7 gap-1">
+        {weekDays.map(day => {
+          const dayEvents = events.filter(event => 
+            new Date(event.start).toDateString() === day.toDateString()
+          );
+          
+          return (
+            <div key={day.toISOString()} className="min-h-96">
+              <div className={`p-2 text-center border-b border-border ${
+                day.toDateString() === new Date().toDateString() ? 'bg-primary/10 text-primary font-semibold' : 'text-foreground'
+              }`}>
+                <div className="text-sm font-medium">
+                  {day.toLocaleDateString('en-US', { weekday: 'short' })}
+                </div>
+                <div className="text-lg font-bold">
+                  {day.getDate()}
+                </div>
+              </div>
+              <div className="p-2 space-y-2">
+                {dayEvents.map(event => (
+                  <div
+                    key={event.id}
+                    className={`text-xs p-2 rounded border ${getEventTypeStyle(event.type)} ${getEventStatusStyle(event.status)}`}
+                  >
+                    <div className="font-medium">{formatEventTime(event.start, event.end)}</div>
+                    <div>{event.title}</div>
+                    {event.prospect && <div className="opacity-80">{event.prospect}</div>}
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
+  const renderDayView = () => {
+    const hours = Array.from({ length: 24 }, (_, i) => i);
+    
+    return (
+      <div className="space-y-1">
+        {hours.map(hour => {
+          const hourEvents = filteredEvents.filter(event => 
+            new Date(event.start).getHours() === hour
+          );
+          
+          return (
+            <div key={hour} className="flex">
+              <div className="w-16 text-sm text-muted-foreground p-2">
+                {hour.toString().padStart(2, '0')}:00
+              </div>
+              <div className="flex-1 min-h-12 border-l border-border p-2">
+                {hourEvents.map(event => (
+                  <div
+                    key={event.id}
+                    className={`p-2 rounded border mb-1 ${getEventTypeStyle(event.type)} ${getEventStatusStyle(event.status)}`}
+                  >
+                    <div className="font-medium">{event.title}</div>
+                    <div className="text-sm opacity-80">{formatEventTime(event.start, event.end)}</div>
+                    {event.prospect && <div className="text-sm opacity-80">{event.prospect}</div>}
+                    {event.location && <div className="text-sm opacity-80">{event.location}</div>}
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
   return (
     <>
       <Helmet>
@@ -21,7 +264,7 @@ export default function CalendarPage() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold flex items-center gap-2">
+            <h1 className="text-2xl font-bold flex items-center gap-2 text-foreground">
               <Calendar className="w-6 h-6" />
               Calendar Management
             </h1>
@@ -32,244 +275,211 @@ export default function CalendarPage() {
           <div className="flex gap-2">
             <Button variant="outline" size="sm">
               <Filter className="w-4 h-4 mr-2" />
-              Filter View
+              Filter
             </Button>
-            <Button variant="outline" size="sm">
-              <Calendar className="w-4 h-4 mr-2" />
-              Sync Calendar
-            </Button>
-            <Button size="sm">
-              <Plus className="w-4 h-4 mr-2" />
-              Schedule Meeting
-            </Button>
+            <Dialog open={isNewEventModalOpen} onOpenChange={setIsNewEventModalOpen}>
+              <DialogTrigger asChild>
+                <Button size="sm">
+                  <Plus className="w-4 h-4 mr-2" />
+                  New Event
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                  <DialogTitle>Create New Event</DialogTitle>
+                </DialogHeader>
+                <form onSubmit={handleNewEventSubmit} className="space-y-4">
+                  <div>
+                    <Label htmlFor="title">Event Title</Label>
+                    <Input
+                      id="title"
+                      value={newEventForm.title}
+                      onChange={(e) => setNewEventForm({...newEventForm, title: e.target.value})}
+                      placeholder="Meeting with client..."
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="type">Event Type</Label>
+                    <Select value={newEventForm.type} onValueChange={(value: CalendarEvent['type']) => setNewEventForm({...newEventForm, type: value})}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="meeting">Meeting</SelectItem>
+                        <SelectItem value="call">Call</SelectItem>
+                        <SelectItem value="follow-up">Follow-up</SelectItem>
+                        <SelectItem value="presentation">Presentation</SelectItem>
+                        <SelectItem value="deadline">Deadline</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label htmlFor="prospect">Prospect/Client</Label>
+                    <Input
+                      id="prospect"
+                      value={newEventForm.prospect}
+                      onChange={(e) => setNewEventForm({...newEventForm, prospect: e.target.value})}
+                      placeholder="Client name..."
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="location">Location</Label>
+                    <Input
+                      id="location"
+                      value={newEventForm.location}
+                      onChange={(e) => setNewEventForm({...newEventForm, location: e.target.value})}
+                      placeholder="Office, Zoom, etc..."
+                    />
+                  </div>
+                  <div className="grid grid-cols-3 gap-2">
+                    <div>
+                      <Label htmlFor="date">Date</Label>
+                      <Input
+                        id="date"
+                        type="date"
+                        value={newEventForm.date}
+                        onChange={(e) => setNewEventForm({...newEventForm, date: e.target.value})}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="startTime">Start</Label>
+                      <Input
+                        id="startTime"
+                        type="time"
+                        value={newEventForm.startTime}
+                        onChange={(e) => setNewEventForm({...newEventForm, startTime: e.target.value})}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="endTime">End</Label>
+                      <Input
+                        id="endTime"
+                        type="time"
+                        value={newEventForm.endTime}
+                        onChange={(e) => setNewEventForm({...newEventForm, endTime: e.target.value})}
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <Label htmlFor="description">Description</Label>
+                    <Textarea
+                      id="description"
+                      value={newEventForm.description}
+                      onChange={(e) => setNewEventForm({...newEventForm, description: e.target.value})}
+                      placeholder="Meeting agenda, notes..."
+                      rows={3}
+                    />
+                  </div>
+                  <div className="flex gap-2 pt-4">
+                    <Button type="submit" className="flex-1">Create Event</Button>
+                    <Button type="button" variant="outline" onClick={() => setIsNewEventModalOpen(false)}>
+                      Cancel
+                    </Button>
+                  </div>
+                </form>
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
 
-        {/* Today's Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Today's Meetings</p>
-                  <p className="text-2xl font-bold">5</p>
-                </div>
-                <Clock className="w-6 h-6 text-blue-600" />
-              </div>
-              <div className="mt-2">
-                <Badge variant="secondary" className="text-xs">2 confirmed</Badge>
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">This Week</p>
-                  <p className="text-2xl font-bold">18</p>
-                </div>
-                <Calendar className="w-6 h-6 text-green-600" />
-              </div>
-              <div className="mt-2">
-                <Badge variant="outline" className="text-xs">3 pending</Badge>
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Video Calls</p>
-                  <p className="text-2xl font-bold">12</p>
-                </div>
-                <Video className="w-6 h-6 text-purple-600" />
-              </div>
-              <div className="mt-2">
-                <Badge variant="secondary" className="text-xs">67% remote</Badge>
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Available Slots</p>
-                  <p className="text-2xl font-bold">8</p>
-                </div>
-                <Plus className="w-6 h-6 text-yellow-600" />
-              </div>
-              <div className="mt-2">
-                <Badge variant="outline" className="text-xs">This week</Badge>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Calendar and Upcoming */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Calendar View */}
-          <div className="lg:col-span-2">
-            <Card>
-              <CardHeader>
-                <CardTitle>Weekly Calendar</CardTitle>
-              </CardHeader>
-              <CardContent>
-                {/* TODO: Replace with actual calendar component */}
-                <div className="h-96 border rounded-lg p-4 bg-gray-50">
-                  <div className="text-center text-muted-foreground">
-                    <Calendar className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                    <p className="text-lg font-medium">Calendar Integration</p>
-                    <p className="text-sm">
-                      Advanced calendar view with meeting management will be displayed here.
-                      Currently integrating with existing AdvisorCalendar component.
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Upcoming Meetings */}
-          <div>
-            <Card>
-              <CardHeader>
-                <CardTitle>Upcoming Meetings</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {/* TODO: Replace with actual meeting data */}
-                  <div className="flex items-start gap-3 p-3 border rounded-lg">
-                    <div className="p-2 bg-blue-100 rounded-lg">
-                      <Users className="w-4 h-4 text-blue-600" />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-medium text-sm">Johnson Family Consultation</h3>
-                      <p className="text-xs text-muted-foreground">Estate planning review</p>
-                      <div className="flex items-center gap-2 mt-1">
-                        <Badge variant="outline" className="text-xs">
-                          <Clock className="w-3 h-3 mr-1" />
-                          2:00 PM
-                        </Badge>
-                        <Badge variant="outline" className="text-xs">
-                          <Video className="w-3 h-3 mr-1" />
-                          Zoom
-                        </Badge>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-3 p-3 border rounded-lg">
-                    <div className="p-2 bg-green-100 rounded-lg">
-                      <Users className="w-4 h-4 text-green-600" />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-medium text-sm">New Client Onboarding</h3>
-                      <p className="text-xs text-muted-foreground">Sarah & Michael Chen</p>
-                      <div className="flex items-center gap-2 mt-1">
-                        <Badge variant="outline" className="text-xs">
-                          <Clock className="w-3 h-3 mr-1" />
-                          4:30 PM
-                        </Badge>
-                        <Badge variant="outline" className="text-xs">
-                          <MapPin className="w-3 h-3 mr-1" />
-                          Office
-                        </Badge>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-3 p-3 border rounded-lg">
-                    <div className="p-2 bg-purple-100 rounded-lg">
-                      <Users className="w-4 h-4 text-purple-600" />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-medium text-sm">Quarterly Review</h3>
-                      <p className="text-xs text-muted-foreground">Davis Family Trust</p>
-                      <div className="flex items-center gap-2 mt-1">
-                        <Badge variant="outline" className="text-xs">
-                          <Clock className="w-3 h-3 mr-1" />
-                          Tomorrow 10:00 AM
-                        </Badge>
-                        <Badge variant="outline" className="text-xs">
-                          <Video className="w-3 h-3 mr-1" />
-                          Teams
-                        </Badge>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-3 p-3 border rounded-lg">
-                    <div className="p-2 bg-yellow-100 rounded-lg">
-                      <Users className="w-4 h-4 text-yellow-600" />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-medium text-sm">Prospect Discovery</h3>
-                      <p className="text-xs text-muted-foreground">Thompson Holdings</p>
-                      <div className="flex items-center gap-2 mt-1">
-                        <Badge variant="outline" className="text-xs">
-                          <Clock className="w-3 h-3 mr-1" />
-                          Thu 3:00 PM
-                        </Badge>
-                        <Badge variant="outline" className="text-xs">
-                          <MapPin className="w-3 h-3 mr-1" />
-                          Client Office
-                        </Badge>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-4 pt-4 border-t">
-                  <Button variant="outline" className="w-full">
-                    View All Appointments
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Meeting Types */}
-            <Card className="mt-6">
-              <CardHeader>
-                <CardTitle className="text-lg">Quick Schedule</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  <Button variant="outline" className="w-full justify-start">
-                    <Users className="w-4 h-4 mr-2" />
-                    Client Consultation (60m)
-                  </Button>
-                  <Button variant="outline" className="w-full justify-start">
-                    <Clock className="w-4 h-4 mr-2" />
-                    Prospect Discovery (30m)
-                  </Button>
-                  <Button variant="outline" className="w-full justify-start">
-                    <Video className="w-4 h-4 mr-2" />
-                    Portfolio Review (45m)
-                  </Button>
-                  <Button variant="outline" className="w-full justify-start">
-                    <Calendar className="w-4 h-4 mr-2" />
-                    Follow-up Call (15m)
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-
-        {/* Integration Notice */}
-        <Card className="bg-purple-50 border-purple-200">
+        {/* Calendar Controls */}
+        <Card className="border-border bg-card">
           <CardContent className="p-4">
-            <div className="flex items-start gap-3">
-              <div className="p-2 bg-purple-100 rounded-lg">
-                <Calendar className="w-4 h-4 text-purple-600" />
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleDateNavigation('prev')}
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleDateNavigation('next')}
+                  >
+                    <ChevronRight className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentDate(new Date())}
+                  >
+                    Today
+                  </Button>
+                </div>
+                <h2 className="text-lg font-semibold text-foreground">{getDateRange()}</h2>
               </div>
-              <div>
-                <h3 className="font-medium text-purple-900">Calendar Integration</h3>
-                <p className="text-sm text-purple-700 mt-1">
-                  This calendar integrates with your existing meeting scheduling system and advisor calendar components. 
-                  Sync with Google Calendar, Outlook, or other calendar systems for unified scheduling.
-                </p>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant={view === 'month' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => handleViewChange('month')}
+                >
+                  Month
+                </Button>
+                <Button
+                  variant={view === 'week' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => handleViewChange('week')}
+                >
+                  Week
+                </Button>
+                <Button
+                  variant={view === 'day' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => handleViewChange('day')}
+                >
+                  Day
+                </Button>
               </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Calendar View */}
+        <Card className="border-border bg-card">
+          <CardContent className="p-4">
+            {view === 'month' && renderMonthView()}
+            {view === 'week' && renderWeekView()}
+            {view === 'day' && renderDayView()}
+          </CardContent>
+        </Card>
+
+        {/* Upcoming Events Summary */}
+        <Card className="border-border bg-card">
+          <CardHeader>
+            <CardTitle className="text-foreground">Upcoming Events</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {filteredEvents.slice(0, 5).map(event => (
+                <div key={event.id} className="flex items-center gap-3 p-3 rounded-lg border border-border hover:bg-accent/50 transition-colors">
+                  <div className={`w-3 h-3 rounded-full ${getEventTypeStyle(event.type)}`} />
+                  <div className="flex-1">
+                    <div className="font-medium text-foreground">{event.title}</div>
+                    <div className="text-sm text-muted-foreground">
+                      {formatEventTime(event.start, event.end)}
+                      {event.prospect && ` • ${event.prospect}`}
+                      {event.location && ` • ${event.location}`}
+                    </div>
+                  </div>
+                  <Badge variant="outline" className={getEventTypeStyle(event.type)}>
+                    {event.type}
+                  </Badge>
+                </div>
+              ))}
+              {filteredEvents.length === 0 && (
+                <div className="text-center text-muted-foreground py-8">
+                  No events scheduled for this {view}
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
