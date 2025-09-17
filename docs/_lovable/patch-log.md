@@ -2,6 +2,11 @@
 
 ## Latest Changes
 
+### feat/advisor-intake - Advisor Platform Navigation Wired
+- **Status**: ✅ Complete
+- **Solution**: Fixed AdvisorPlatformLayout to use Outlet for nested routes, enabling functional navigation for Dashboard, Prospects, Recordings, Questionnaires, Templates, ROI Tracker, Calendar
+- **Files**: AdvisorPlatformLayout.tsx, App.tsx
+
 ### feat/advisor-intake - React Deps Alignment
 - **Status**: ✅ Complete
 - **Solution**: Aligned React deps/overrides, removed nested lockfiles, finalized alias/routes

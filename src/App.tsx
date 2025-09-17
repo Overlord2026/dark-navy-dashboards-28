@@ -533,7 +533,7 @@ function App() {
             
             {/* Pros sub-routes */}
             <Route path="/pros/advisors" element={<Advisors />} />
-            <Route path="/pros/advisors/platform" element={<AdvisorPlatformLayout children={undefined} />}>
+            <Route path="/pros/advisors/platform" element={<AdvisorPlatformLayout />}>
               <Route index element={<AdvisorPlatformDashboard />} />
               <Route path="prospects" element={<ProspectsPage />} />
               <Route path="recordings" element={<RecordingsPage />} />

@@ -1,11 +1,7 @@
-import { Button } from "@/components/ui/button"
+import { Outlet } from "react-router-dom"
 import { AdvisorPlatformSidebar } from "../components/AdvisorPlatformSidebar"
 
-interface AdvisorPlatformLayoutProps {
-  children: React.ReactNode
-}
-
-export function AdvisorPlatformLayout({ children }: AdvisorPlatformLayoutProps) {
+export function AdvisorPlatformLayout() {
   return (
     <div className="min-h-screen flex w-full">
       <AdvisorPlatformSidebar />
@@ -16,7 +12,7 @@ export function AdvisorPlatformLayout({ children }: AdvisorPlatformLayoutProps) 
         </header>
         
         <main className="flex-1 p-6">
-          {children}
+          <Outlet />
         </main>
       </div>
     </div>
