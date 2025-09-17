@@ -17,7 +17,8 @@ import {
   Shield
 } from 'lucide-react';
 import { listReceipts, getReceiptsByType } from '@/features/receipts/record';
-import { getNilSnapshot } from '@/fixtures/fixtures.nil';
+// NIL snapshot removed
+const nilSnapshot = null;
 import { GoldButton, GoldOutlineButton } from '@/components/ui/brandButtons';
 import SEOHead from '@/components/seo/SEOHead';
 
@@ -82,7 +83,8 @@ export default function InvestorRollupPage() {
       r.action === 'cosign.approve'
     );
 
-    const nilSnapshot = getNilSnapshot();
+  // NIL snapshot removed - using null
+  const nilSnapshot = null;
     
     return {
       nil: {

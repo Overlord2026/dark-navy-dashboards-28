@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import RunAdvisorDemo from '@/components/demos/RunAdvisorDemo';
-import RunNILDemo from '@/components/demos/RunNILDemo';
+import { Button } from '@/components/ui/button';
 
 export default function ProsLanding() {
   return (
@@ -11,7 +11,6 @@ export default function ProsLanding() {
       </p>
       <div className="flex gap-3 mb-8 flex-wrap">
         <RunAdvisorDemo />
-        <RunNILDemo />
       </div>
       <div className="grid gap-4 md:grid-cols-3">
         <Tile label="Financial Advisors" to="/pros/advisors" />

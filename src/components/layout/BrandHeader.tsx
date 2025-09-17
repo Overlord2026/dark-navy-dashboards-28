@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { TopNav } from '@/components/layout/TopNav';
-import RunNILDemo from '@/components/demos/RunNILDemo';
+import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight, Home, VolumeX, Volume2, TestTube } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useAudio } from '@/context/AudioContext';
@@ -91,7 +91,6 @@ function BrandHeader() {
         <nav className="ml-auto hidden md:flex items-center gap-6">
           <TopNav />
           <div className="border-l border-bfo-gold/30 pl-6 ml-6 flex items-center gap-6">
-            <RunNILDemo />
             <Link to="/marketplace" className="text-white hover:text-bfo-gold transition-colors">Marketplace</Link>
             <Link to="/admin/hq" className="text-bfo-gold hover:underline">HQ</Link>
             <a className="text-white hover:text-bfo-gold transition-colors" href="/book">Book Demo</a>
