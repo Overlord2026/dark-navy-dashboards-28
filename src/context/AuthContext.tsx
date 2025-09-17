@@ -3,8 +3,6 @@ import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { shouldEnforceAuthentication, isQABypassAllowed } from '@/utils/environment';
 import { UserProfile } from '@/types/user';
-import { useFirstLoginToolInstaller } from '@/hooks/useFirstLoginToolInstaller';
-import type { PersonaType } from '@/config/defaultToolsByPersona';
 import { MOCK_MODE } from '@/config/featureFlags';
 
 
@@ -38,7 +36,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [isLoading, setIsLoading] = useState(true);
   const [isChecking2FA, setIsChecking2FA] = useState(false);
   const [isQABypassActive, setIsQABypassActive] = useState(MOCK_MODE);
-  const { checkAndInstallDefaultTools } = useFirstLoginToolInstaller();
 
   // Mock mode user profile
   const mockUserProfile: UserProfile = {
@@ -121,11 +118,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         
         setUserProfile(userProfileData);
         setIsQABypassActive(isQABypassAllowed(profile.email));
-        
-        // Check for first login and auto-install tools
-        if (userProfileData.role) {
-          checkAndInstallDefaultTools(userProfileData.role as PersonaType);
-        }
       }
     } catch (error) {
       console.error('Error in loadUserProfile:', error);
