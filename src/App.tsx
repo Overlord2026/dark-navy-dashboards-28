@@ -304,6 +304,8 @@ import TemplatesPage from '@/features/advisors/platform/pages/TemplatesPage';
 import ROITrackerPage from '@/features/advisors/platform/pages/ROITrackerPage';
 import CalendarPage from '@/features/advisors/platform/pages/CalendarPage';
 import SettingsPage from '@/features/advisors/platform/pages/SettingsPage';
+import InvitePage from '@/features/advisors/platform/pages/InvitePage';
+import BillingPage from '@/features/advisors/platform/pages/BillingPage';
 
 const SelectPersona = lazy(() => import('@/pages/auth/SelectPersona'));
 
@@ -535,6 +537,8 @@ function App() {
             <Route path="/pros/advisors" element={<Advisors />} />
             <Route path="/pros/advisors/platform" element={<AdvisorPlatformLayout />}>
               <Route index element={<AdvisorPlatformDashboard />} />
+              <Route path="invite" element={<InvitePage />} />
+              <Route path="billing" element={<BillingPage />} />
               <Route path="prospects" element={<ProspectsPage />} />
               <Route path="recordings" element={<RecordingsPage />} />
               <Route path="questionnaires" element={<QuestionnairesPage />} />

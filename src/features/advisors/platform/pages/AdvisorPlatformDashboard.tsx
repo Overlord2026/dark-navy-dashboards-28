@@ -33,6 +33,14 @@ const quickActions = [
     color: 'bg-primary text-primary-foreground hover:bg-primary/90'
   },
   {
+    title: 'Invite Client',
+    description: 'Send magic link invite',
+    icon: Send,
+    route: '/pros/advisors/platform/invite',
+    variant: 'outline' as const,
+    color: 'bg-blue-500/10 text-blue-600 hover:bg-blue-500/20'
+  },
+  {
     title: 'Schedule Meeting',
     description: 'Book consultation',
     icon: CalendarPlus,
@@ -92,7 +100,7 @@ export default function AdvisorPlatformDashboard() {
           </div>
 
           {/* Quick Actions */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {quickActions.map((action, index) => (
               <Button
                 key={index}
