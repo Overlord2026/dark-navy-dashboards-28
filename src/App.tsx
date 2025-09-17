@@ -998,8 +998,6 @@ function App() {
             } />
             
             {/* Stub Routes - Prevent 404s */}
-            <Route path="/contact/schedule" element={<Stub title="Schedule a Meeting" />} />
-            <Route path="/contact/message" element={<Stub title="Send a Message" />} />
             <Route path="/marketplace/advisors" element={<Stub title="Find Advisors" />} />
             <Route path="/marketplace/cpa" element={<CPAIndex />} />
             <Route path="/marketplace/cpa/:id" element={<CPADetail />} />
