@@ -2,6 +2,11 @@
 
 ## Latest Changes
 
+### feat/advisor-intake - ROI Tracker Scaffold with Charts/Tables
+- **Status**: ✅ Complete
+- **Solution**: Implemented ROI Tracker with KPI strip (Spend, Conversion Rate, New Prospects, New AUM), bar/line charts using recharts, sortable channel performance table (Facebook, LinkedIn, Google, Webinars, Seminars), mocked data selectors
+- **Files**: ROITrackerPage.tsx, roi.mock.ts (new mock state with ROI metrics, channel performance, chart data)
+
 ### feat/advisor-intake - Calendar Month/Week/Day Views
 - **Status**: ✅ Complete
 - **Solution**: Implemented styled Calendar page with month/week/day views, mocked events (10 events), "New Event" modal form, URL query params (?view=month|week|day), date navigation, themed grid layouts using design tokens

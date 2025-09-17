@@ -1,14 +1,71 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { TrendingUp, DollarSign, Users, Calendar, BarChart3, Filter, Download } from 'lucide-react';
-
-// TODO: Import existing ROI tracking components if available
-// import { ReportsAnalytics } from '@/components/advisor/ReportsAnalytics';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { TrendingUp, DollarSign, Users, Calendar, BarChart3, Filter, Download, Eye, ArrowUp, ArrowDown } from 'lucide-react';
+import {
+  BarChart,
+  Bar,
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer
+} from 'recharts';
+import {
+  getMockROIMetrics,
+  getMockChannelPerformance,
+  getMockChartData,
+  formatCurrency,
+  formatPercentage,
+  getChannelPerformanceColor,
+  type ChannelPerformance
+} from '../state/roi.mock';
 
 export default function ROITrackerPage() {
+  const [selectedPeriod, setSelectedPeriod] = useState('6m');
+  const [sortField, setSortField] = useState<keyof ChannelPerformance>('roi');
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
+
+  const roiMetrics = getMockROIMetrics();
+  const channelData = getMockChannelPerformance();
+  const chartData = getMockChartData();
+
+  const handleSort = (field: keyof ChannelPerformance) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortField(field);
+      setSortDirection('desc');
+    }
+  };
+
+  const sortedChannelData = [...channelData].sort((a, b) => {
+    const aVal = a[sortField];
+    const bVal = b[sortField];
+    
+    if (typeof aVal === 'string' && typeof bVal === 'string') {
+      return sortDirection === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
+    }
+    
+    if (typeof aVal === 'number' && typeof bVal === 'number') {
+      return sortDirection === 'asc' ? aVal - bVal : bVal - aVal;
+    }
+    
+    return 0;
+  });
+
+  const getSortIcon = (field: keyof ChannelPerformance) => {
+    if (sortField !== field) return null;
+    return sortDirection === 'asc' ? <ArrowUp className="w-4 h-4" /> : <ArrowDown className="w-4 h-4" />;
+  };
+
   return (
     <>
       <Helmet>
@@ -20,7 +77,7 @@ export default function ROITrackerPage() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold flex items-center gap-2">
+            <h1 className="text-2xl font-bold flex items-center gap-2 text-foreground">
               <TrendingUp className="w-6 h-6" />
               ROI Tracker
             </h1>
@@ -29,9 +86,20 @@ export default function ROITrackerPage() {
             </p>
           </div>
           <div className="flex gap-2">
+            <Select value={selectedPeriod} onValueChange={setSelectedPeriod}>
+              <SelectTrigger className="w-32">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="1m">1 Month</SelectItem>
+                <SelectItem value="3m">3 Months</SelectItem>
+                <SelectItem value="6m">6 Months</SelectItem>
+                <SelectItem value="12m">12 Months</SelectItem>
+              </SelectContent>
+            </Select>
             <Button variant="outline" size="sm">
               <Filter className="w-4 h-4 mr-2" />
-              Filter Period
+              Filter
             </Button>
             <Button variant="outline" size="sm">
               <Download className="w-4 h-4 mr-2" />
@@ -44,275 +112,364 @@ export default function ROITrackerPage() {
           </div>
         </div>
 
-        {/* ROI Overview */}
+        {/* KPI Strip */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Card>
-            <CardContent className="p-4">
+          <Card className="border-border bg-card">
+            <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-muted-foreground">Total ROI</p>
-                  <p className="text-2xl font-bold text-green-600">324%</p>
+                  <p className="text-sm text-muted-foreground font-medium">Total Spend</p>
+                  <p className="text-3xl font-bold text-foreground">{formatCurrency(roiMetrics.totalSpend)}</p>
+                  <p className="text-xs text-muted-foreground mt-1">{roiMetrics.period}</p>
                 </div>
-                <TrendingUp className="w-6 h-6 text-green-600" />
-              </div>
-              <div className="mt-2">
-                <Badge variant="secondary" className="text-xs">+52% vs last quarter</Badge>
+                <div className="p-3 bg-red-500/10 rounded-lg">
+                  <DollarSign className="w-6 h-6 text-red-600" />
+                </div>
               </div>
             </CardContent>
           </Card>
-          <Card>
-            <CardContent className="p-4">
+
+          <Card className="border-border bg-card">
+            <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-muted-foreground">Marketing Spend</p>
-                  <p className="text-2xl font-bold">$24,500</p>
+                  <p className="text-sm text-muted-foreground font-medium">Conversion Rate</p>
+                  <p className="text-3xl font-bold text-foreground">{formatPercentage(roiMetrics.conversionRate)}</p>
+                  <p className="text-xs text-green-600 mt-1">+2.1% vs last period</p>
                 </div>
-                <DollarSign className="w-6 h-6 text-blue-600" />
-              </div>
-              <div className="mt-2">
-                <Badge variant="outline" className="text-xs">Q4 2024</Badge>
+                <div className="p-3 bg-green-500/10 rounded-lg">
+                  <TrendingUp className="w-6 h-6 text-green-600" />
+                </div>
               </div>
             </CardContent>
           </Card>
-          <Card>
-            <CardContent className="p-4">
+
+          <Card className="border-border bg-card">
+            <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-muted-foreground">Revenue Generated</p>
-                  <p className="text-2xl font-bold">$103,680</p>
+                  <p className="text-sm text-muted-foreground font-medium">New Prospects</p>
+                  <p className="text-3xl font-bold text-foreground">{roiMetrics.newProspects}</p>
+                  <p className="text-xs text-blue-600 mt-1">+15 vs last period</p>
                 </div>
-                <TrendingUp className="w-6 h-6 text-purple-600" />
-              </div>
-              <div className="mt-2">
-                <Badge variant="secondary" className="text-xs">From campaigns</Badge>
+                <div className="p-3 bg-blue-500/10 rounded-lg">
+                  <Users className="w-6 h-6 text-blue-600" />
+                </div>
               </div>
             </CardContent>
           </Card>
-          <Card>
-            <CardContent className="p-4">
+
+          <Card className="border-border bg-card">
+            <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-muted-foreground">Clients Acquired</p>
-                  <p className="text-2xl font-bold">18</p>
+                  <p className="text-sm text-muted-foreground font-medium">New AUM</p>
+                  <p className="text-3xl font-bold text-foreground">{formatCurrency(roiMetrics.newAUM)}</p>
+                  <p className="text-xs text-purple-600 mt-1">+18% vs last period</p>
                 </div>
-                <Users className="w-6 h-6 text-yellow-600" />
-              </div>
-              <div className="mt-2">
-                <Badge variant="secondary" className="text-xs">This quarter</Badge>
+                <div className="p-3 bg-purple-500/10 rounded-lg">
+                  <BarChart3 className="w-6 h-6 text-purple-600" />
+                </div>
               </div>
             </CardContent>
           </Card>
         </div>
 
-        {/* Campaign Performance */}
+        {/* Charts Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Top Performing Campaigns */}
-          <Card>
+          {/* Spend vs Prospects Bar Chart */}
+          <Card className="border-border bg-card">
             <CardHeader>
-              <CardTitle>Top Performing Campaigns</CardTitle>
+              <CardTitle className="text-foreground">Monthly Spend vs Prospects</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                {/* TODO: Replace with actual campaign performance data */}
-                <div className="flex items-center justify-between p-4 border rounded-lg">
-                  <div>
-                    <h3 className="font-medium">Retirement Planning Series</h3>
-                    <p className="text-sm text-muted-foreground">Email campaign • 7 touches</p>
-                    <div className="flex items-center gap-2 mt-1">
-                      <Badge variant="secondary">8 clients</Badge>
-                      <Badge variant="outline">Active</Badge>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-lg font-bold text-green-600">485%</p>
-                    <p className="text-sm text-muted-foreground">ROI</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between p-4 border rounded-lg">
-                  <div>
-                    <h3 className="font-medium">Estate Planning Webinar</h3>
-                    <p className="text-sm text-muted-foreground">Webinar + follow-up sequence</p>
-                    <div className="flex items-center gap-2 mt-1">
-                      <Badge variant="secondary">5 clients</Badge>
-                      <Badge variant="outline">Completed</Badge>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-lg font-bold text-green-600">372%</p>
-                    <p className="text-sm text-muted-foreground">ROI</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between p-4 border rounded-lg">
-                  <div>
-                    <h3 className="font-medium">Tax Planning Outreach</h3>
-                    <p className="text-sm text-muted-foreground">Direct mail + email</p>
-                    <div className="flex items-center gap-2 mt-1">
-                      <Badge variant="secondary">3 clients</Badge>
-                      <Badge variant="outline">Active</Badge>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-lg font-bold text-green-600">298%</p>
-                    <p className="text-sm text-muted-foreground">ROI</p>
-                  </div>
-                </div>
+              <div className="h-80">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={chartData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--muted))" />
+                    <XAxis 
+                      dataKey="month" 
+                      stroke="hsl(var(--muted-foreground))"
+                      fontSize={12}
+                    />
+                    <YAxis 
+                      stroke="hsl(var(--muted-foreground))"
+                      fontSize={12}
+                    />
+                    <Tooltip 
+                      contentStyle={{
+                        backgroundColor: 'hsl(var(--card))',
+                        border: '1px solid hsl(var(--border))',
+                        borderRadius: '6px'
+                      }}
+                      formatter={(value, name) => [
+                        name === 'spend' ? formatCurrency(value as number) : value,
+                        name === 'spend' ? 'Spend' : 'Prospects'
+                      ]}
+                    />
+                    <Legend />
+                    <Bar 
+                      dataKey="spend" 
+                      fill="hsl(var(--primary))" 
+                      name="Spend"
+                      radius={[4, 4, 0, 0]}
+                    />
+                    <Bar 
+                      dataKey="prospects" 
+                      fill="hsl(var(--secondary))" 
+                      name="Prospects"
+                      radius={[4, 4, 0, 0]}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
               </div>
             </CardContent>
           </Card>
 
-          {/* Channel Performance */}
-          <Card>
+          {/* ROI Trend Line Chart */}
+          <Card className="border-border bg-card">
             <CardHeader>
-              <CardTitle>Channel Performance</CardTitle>
+              <CardTitle className="text-foreground">ROI Trend Over Time</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
-                  <div>
-                    <h3 className="font-medium">Email Marketing</h3>
-                    <p className="text-sm text-muted-foreground">$8,200 spent</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-bold text-blue-600">425%</p>
-                    <p className="text-xs text-muted-foreground">12 clients</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
-                  <div>
-                    <h3 className="font-medium">Referral Program</h3>
-                    <p className="text-sm text-muted-foreground">$2,500 spent</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-bold text-green-600">680%</p>
-                    <p className="text-xs text-muted-foreground">4 clients</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
-                  <div>
-                    <h3 className="font-medium">Social Media</h3>
-                    <p className="text-sm text-muted-foreground">$4,800 spent</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-bold text-purple-600">185%</p>
-                    <p className="text-xs text-muted-foreground">2 clients</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between p-3 bg-yellow-50 rounded-lg">
-                  <div>
-                    <h3 className="font-medium">Direct Mail</h3>
-                    <p className="text-sm text-muted-foreground">$9,000 spent</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-bold text-yellow-600">156%</p>
-                    <p className="text-xs text-muted-foreground">3 clients</p>
-                  </div>
-                </div>
+              <div className="h-80">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={chartData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--muted))" />
+                    <XAxis 
+                      dataKey="month" 
+                      stroke="hsl(var(--muted-foreground))"
+                      fontSize={12}
+                    />
+                    <YAxis 
+                      stroke="hsl(var(--muted-foreground))"
+                      fontSize={12}
+                      domain={['dataMin - 1000', 'dataMax + 1000']}
+                    />
+                    <Tooltip 
+                      contentStyle={{
+                        backgroundColor: 'hsl(var(--card))',
+                        border: '1px solid hsl(var(--border))',
+                        borderRadius: '6px'
+                      }}
+                      formatter={(value) => [`${formatPercentage(value as number)}`, 'ROI %']}
+                    />
+                    <Legend />
+                    <Line 
+                      type="monotone" 
+                      dataKey="roi" 
+                      stroke="hsl(var(--primary))" 
+                      strokeWidth={3}
+                      dot={{ fill: 'hsl(var(--primary))', strokeWidth: 2, r: 4 }}
+                      activeDot={{ r: 6, stroke: 'hsl(var(--primary))', strokeWidth: 2 }}
+                      name="ROI %"
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
               </div>
             </CardContent>
           </Card>
         </div>
 
-        {/* Detailed Metrics */}
-        <Card>
+        {/* Channel Performance Table */}
+        <Card className="border-border bg-card">
           <CardHeader>
-            <CardTitle>Detailed Metrics</CardTitle>
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-foreground">Channel Performance</CardTitle>
+              <div className="flex items-center gap-2">
+                <Button variant="outline" size="sm">
+                  <Eye className="w-4 h-4 mr-2" />
+                  View Details
+                </Button>
+              </div>
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {/* Cost Per Acquisition */}
-              <div>
-                <h3 className="font-medium mb-3">Cost Per Acquisition</h3>
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span className="text-sm">Email Marketing</span>
-                    <span className="font-medium">$683</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm">Referral Program</span>
-                    <span className="font-medium">$625</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm">Social Media</span>
-                    <span className="font-medium">$2,400</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm">Direct Mail</span>
-                    <span className="font-medium">$3,000</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Lifetime Value */}
-              <div>
-                <h3 className="font-medium mb-3">Client Lifetime Value</h3>
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span className="text-sm">Average LTV</span>
-                    <span className="font-medium">$5,760</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm">High-Value Clients</span>
-                    <span className="font-medium">$12,500</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm">Estate Planning</span>
-                    <span className="font-medium">$8,750</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm">Retirement Planning</span>
-                    <span className="font-medium">$6,200</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Conversion Rates */}
-              <div>
-                <h3 className="font-medium mb-3">Conversion Rates</h3>
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span className="text-sm">Overall</span>
-                    <span className="font-medium">18.5%</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm">Email Campaigns</span>
-                    <span className="font-medium">22.3%</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm">Webinars</span>
-                    <span className="font-medium">28.7%</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm">Referrals</span>
-                    <span className="font-medium">45.2%</span>
-                  </div>
-                </div>
-              </div>
+            <div className="rounded-md border border-border overflow-hidden">
+              <Table>
+                <TableHeader>
+                  <TableRow className="bg-muted/50">
+                    <TableHead 
+                      className="text-foreground font-semibold cursor-pointer hover:bg-muted/80 transition-colors"
+                      onClick={() => handleSort('channel')}
+                    >
+                      <div className="flex items-center gap-2">
+                        Channel
+                        {getSortIcon('channel')}
+                      </div>
+                    </TableHead>
+                    <TableHead 
+                      className="text-foreground font-semibold cursor-pointer hover:bg-muted/80 transition-colors"
+                      onClick={() => handleSort('spend')}
+                    >
+                      <div className="flex items-center gap-2">
+                        Spend
+                        {getSortIcon('spend')}
+                      </div>
+                    </TableHead>
+                    <TableHead 
+                      className="text-foreground font-semibold cursor-pointer hover:bg-muted/80 transition-colors"
+                      onClick={() => handleSort('prospects')}
+                    >
+                      <div className="flex items-center gap-2">
+                        Prospects
+                        {getSortIcon('prospects')}
+                      </div>
+                    </TableHead>
+                    <TableHead 
+                      className="text-foreground font-semibold cursor-pointer hover:bg-muted/80 transition-colors"
+                      onClick={() => handleSort('conversions')}
+                    >
+                      <div className="flex items-center gap-2">
+                        Conversions
+                        {getSortIcon('conversions')}
+                      </div>
+                    </TableHead>
+                    <TableHead 
+                      className="text-foreground font-semibold cursor-pointer hover:bg-muted/80 transition-colors"
+                      onClick={() => handleSort('aum')}
+                    >
+                      <div className="flex items-center gap-2">
+                        New AUM
+                        {getSortIcon('aum')}
+                      </div>
+                    </TableHead>
+                    <TableHead 
+                      className="text-foreground font-semibold cursor-pointer hover:bg-muted/80 transition-colors"
+                      onClick={() => handleSort('costPerConversion')}
+                    >
+                      <div className="flex items-center gap-2">
+                        Cost/Conversion
+                        {getSortIcon('costPerConversion')}
+                      </div>
+                    </TableHead>
+                    <TableHead 
+                      className="text-foreground font-semibold cursor-pointer hover:bg-muted/80 transition-colors"
+                      onClick={() => handleSort('roi')}
+                    >
+                      <div className="flex items-center gap-2">
+                        ROI %
+                        {getSortIcon('roi')}
+                      </div>
+                    </TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {sortedChannelData.map((channel) => (
+                    <TableRow key={channel.id} className="hover:bg-muted/50">
+                      <TableCell>
+                        <div className="font-medium text-foreground">{channel.channel}</div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="text-foreground">{formatCurrency(channel.spend)}</div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="text-foreground">{channel.prospects}</div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="text-foreground">{channel.conversions}</div>
+                        <div className="text-xs text-muted-foreground">
+                          {formatPercentage((channel.conversions / channel.prospects) * 100)} rate
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="text-foreground font-medium">{formatCurrency(channel.aum)}</div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="text-foreground">{formatCurrency(channel.costPerConversion)}</div>
+                        <div className="text-xs text-muted-foreground">
+                          {formatCurrency(channel.costPerProspect)}/prospect
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <span className={`font-bold ${getChannelPerformanceColor(channel.roi)}`}>
+                            {formatPercentage(channel.roi / 100)}
+                          </span>
+                          {channel.roi >= 12000 && (
+                            <Badge variant="outline" className="text-green-700 border-green-200 bg-green-50">
+                              Excellent
+                            </Badge>
+                          )}
+                          {channel.roi >= 8000 && channel.roi < 12000 && (
+                            <Badge variant="outline" className="text-yellow-700 border-yellow-200 bg-yellow-50">
+                              Good
+                            </Badge>
+                          )}
+                          {channel.roi < 8000 && (
+                            <Badge variant="outline" className="text-red-700 border-red-200 bg-red-50">
+                              Needs Improvement
+                            </Badge>
+                          )}
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             </div>
           </CardContent>
         </Card>
 
-        {/* Integration Notice */}
-        <Card className="bg-green-50 border-green-200">
-          <CardContent className="p-4">
-            <div className="flex items-start gap-3">
-              <div className="p-2 bg-green-100 rounded-lg">
-                <BarChart3 className="w-4 h-4 text-green-600" />
+        {/* Performance Summary */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <Card className="border-border bg-card">
+            <CardHeader>
+              <CardTitle className="text-foreground">Top Performing Channels</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {sortedChannelData.slice(0, 3).map((channel, index) => (
+                  <div key={channel.id} className="flex items-center gap-3 p-3 rounded-lg border border-border">
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-bold ${
+                      index === 0 ? 'bg-yellow-500' : index === 1 ? 'bg-gray-400' : 'bg-orange-600'
+                    }`}>
+                      {index + 1}
+                    </div>
+                    <div className="flex-1">
+                      <div className="font-medium text-foreground">{channel.channel}</div>
+                      <div className="text-sm text-muted-foreground">
+                        {formatCurrency(channel.aum)} AUM • {formatPercentage(channel.roi / 100)} ROI
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="font-semibold text-foreground">{channel.conversions}</div>
+                      <div className="text-xs text-muted-foreground">conversions</div>
+                    </div>
+                  </div>
+                ))}
               </div>
-              <div>
-                <h3 className="font-medium text-green-900">Integrated Analytics</h3>
-                <p className="text-sm text-green-700 mt-1">
-                  ROI tracking data is automatically integrated from your campaign management and client acquisition 
-                  systems. Analytics are updated in real-time to provide accurate performance metrics.
-                </p>
+            </CardContent>
+          </Card>
+
+          <Card className="border-border bg-card">
+            <CardHeader>
+              <CardTitle className="text-foreground">Key Insights</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
+                  <div className="font-medium text-green-800">Best ROI Channel</div>
+                  <div className="text-sm text-green-700">
+                    Webinar Series delivering {formatPercentage(13900 / 100)} ROI with lowest cost per conversion
+                  </div>
+                </div>
+                <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                  <div className="font-medium text-blue-800">Highest Volume</div>
+                  <div className="text-sm text-blue-700">
+                    Webinars generated 45 prospects this period, 20% more than LinkedIn
+                  </div>
+                </div>
+                <div className="p-3 bg-orange-50 border border-orange-200 rounded-lg">
+                  <div className="font-medium text-orange-800">Optimization Opportunity</div>
+                  <div className="text-sm text-orange-700">
+                    Google Ads has the highest cost per conversion - consider refining targeting
+                  </div>
+                </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </>
   );
