@@ -2,6 +2,11 @@
 
 ## Latest Changes
 
+### feat/advisor-intake - Prospects Table + Filters + Row Actions
+- **Status**: ✅ Complete
+- **Solution**: Enhanced Prospects page with data table (Name, Email, Status, Source, HNW Score, Next Meeting), search input, dropdown filters (Status/Source), row actions (View/Edit/Delete), client-side pagination (8 items/page), mocked data selectors
+- **Files**: ProspectsPage.tsx, prospects.mock.ts (new mock state with 10 prospects)
+
 ### feat/advisor-intake - Dashboard KPIs + Recent Activity + Quick Actions
 - **Status**: ✅ Complete
 - **Solution**: Enhanced Dashboard with 4 KPI cards (total prospects, active prospects, meetings, conversions), Recent Activity list (5 mocked items), Quick Action buttons (Add Prospect, Schedule Meeting, Send Questionnaire), responsive grid layout using theme tokens
