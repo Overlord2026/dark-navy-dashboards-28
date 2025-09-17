@@ -4,8 +4,8 @@ export async function runDevSeed(kind: 'nil' | 'family'): Promise<'ok' | 'noop' 
     if (import.meta.env.PROD) return 'noop';
     
     if (kind === 'nil') {
-      const { seedNilProofs } = await import('@/tools/seedNilProofs');
-      seedNilProofs();
+      // NIL proofs removed - return ok for backward compatibility
+      return 'ok';
     } else {
       const { seedFamilyProofs } = await import('@/tools/seedProofs');
       seedFamilyProofs?.();

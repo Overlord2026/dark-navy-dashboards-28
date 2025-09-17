@@ -8,20 +8,49 @@ import * as Canonical from '@/lib/canonical'
 // Stub implementations for removed NIL functionality
 const nilStubs = {
   getModules: () => [],
-  completeModule: () => ({}),
-  confirmDisclosurePack: () => ({ id: 'stub' }),
-  createOffer: () => ({ offerId: 'stub', offerLock: 'stub' }),
-  checkConflicts: () => ({ ok: true }),
-  previewSplit: () => [],
-  invite: () => ({ pendingId: 'stub' }),
-  accept: () => ({ accepted: true }),
+  completeModule: (id: string) => ({ id, completed: true }),
+  confirmDisclosurePack: (packId: string, params: any) => ({ 
+    id: `disc_${Date.now()}`, 
+    type: 'Decision-RDS' as const,
+    disclosure_pack: packId,
+    ts: new Date().toISOString()
+  }),
+  createOffer: (params: any) => ({ offerId: `offer_${Date.now()}`, offerLock: `lock_${Date.now()}` }),
+  checkConflicts: (offerId: string) => ({ ok: true, conflicts: [] }),
+  previewSplit: (offerId: string) => [],
+  invite: (role: string, email: string) => ({ pendingId: `pend_${Date.now()}` }),
+  accept: (pendingId: string) => ({ accepted: true }),
   listInvites: () => [],
-  issueConsent: async () => ({ id: 'stub', type: 'Consent-RDS', ts: new Date().toISOString() }),
-  runChecks: () => ({ ok: true, reasons: [] }),
-  hold: () => ({ escrowId: 'stub' }),
-  release: () => ({ txnId: 'stub', receipt: { id: 'stub' } }),
-  fileDispute: () => 'stub',
-  adjudicate: () => ({ id: 'stub' })
+  issueConsent: async (params: any) => ({ 
+    id: `consent_${Date.now()}`, 
+    type: 'Consent-RDS' as const,
+    ...params,
+    ts: new Date().toISOString() 
+  }),
+  runChecks: (contractId: string, offerId: string) => ({ ok: true, reasons: ['STUB_APPROVED'] }),
+  hold: (params: any) => ({ escrowId: `escrow_${Date.now()}` }),
+  release: (escrowId: string) => ({ 
+    txnId: `txn_${Date.now()}`, 
+    receipt: { 
+      id: `settle_${Date.now()}`, 
+      type: 'Settlement-RDS' as const,
+      offerLock: 'stub',
+      attribution_hash: 'stub_hash',
+      split_tree_hash: 'stub_split',
+      escrow_state: 'released',
+      anchor_ref: null,
+      ts: new Date().toISOString()
+    } as SettlementRDS
+  }),
+  fileDispute: (offerId: string, code: string, notes: string) => `dispute_${Date.now()}`,
+  adjudicate: (disputeId: string, outcome: string, reallocation: any[]) => ({ 
+    id: `delta_${Date.now()}`,
+    type: 'Delta-RDS' as const,
+    prior_ref: 'stub',
+    diffs: reallocation,
+    reasons: ['STUB_ADJUDICATION'],
+    ts: new Date().toISOString()
+  } as DeltaRDS)
 };
 
 type Profile = 'coach' | 'mom'
@@ -52,8 +81,8 @@ export async function loadFixtures(opts: { profile: Profile } = { profile: 'coac
   const mods = nilStubs.getModules()
   // Stub implementation - no actual modules to complete
 
-  // 3) Disclosure pack for IG/US
-  const discReceipt = confirmDisclosurePack('us-ig-standard', { channel: 'IG', jurisdiction: 'US' })
+  // 3) Disclosure pack for IG/US  
+  const discReceipt = nilStubs.confirmDisclosurePack('us-ig-standard', { channel: 'IG', jurisdiction: 'US' })
   
   const eduReceipt: DecisionRDS = {
     id: `rds_edu_${Date.now()}`, type: 'Decision-RDS', action: 'education',
@@ -63,30 +92,30 @@ export async function loadFixtures(opts: { profile: Profile } = { profile: 'coac
   recordReceipt(eduReceipt)
 
   // 4) Offer w/ no conflict (Aurora Athletics)
-  const { offerId, offerLock } = createOffer({
+  const { offerId, offerLock } = nilStubs.createOffer({
     brand: 'Aurora Athletics', category: 'Sports Nutrition',
     startDate: '2025-09-01', endDate: '2025-12-31', channels, amount: 10000
   })
-  const conflict = checkConflicts(offerId)
+  const conflict = nilStubs.checkConflicts(offerId)
   if (!conflict.ok) throw new Error('Fixture expected no conflict')
-  const _split = previewSplit(offerId)
+  const _split = nilStubs.previewSplit(offerId)
 
   // 5) Marketplace invites & Consent:
   // coach -> advisor, mom -> guardian co-sign flavor (we demo as 'attorney' for signature)
   const inviteRoles = opts.profile === 'coach' ? ['advisor', 'attorney'] : ['attorney', 'cpa']
   const inviteIds: string[] = []
   for (const r of inviteRoles) {
-    const { pendingId } = invite(r as any, `${r}@example.com`)
+    const { pendingId } = nilStubs.invite(r as any, `${r}@example.com`)
     inviteIds.push(pendingId)
-    accept(pendingId)
+    nilStubs.accept(pendingId)
   }
   // Consent scope to collaborators
-  const consent: ConsentRDS = await issueConsent({
+  const consent: ConsentRDS = await nilStubs.issueConsent({
     roles: inviteRoles, resources: ['contracts', 'disclosures'], ttlDays: 30, purpose_of_use: 'contract_collab'
   })
 
   // 6) Contract checks → Publish (anchored Decision-RDS)
-  const checks = await runChecks(offerId, offerId)
+  const checks = await nilStubs.runChecks(offerId, offerId)
   if (!checks.ok) throw new Error('Fixture expected checks to pass')
 
   const publishReceipt: DecisionRDS = {
@@ -99,17 +128,17 @@ export async function loadFixtures(opts: { profile: Profile } = { profile: 'coac
   recordReceipt(publishReceipt)
 
   // 7) Payments: escrow → release → Settlement-RDS (anchored)
-  const { escrowId } = hold({ offerId, amount: 10_000 })
-  const releaseResult = await release(escrowId)
+  const { escrowId } = nilStubs.hold({ offerId, amount: 10_000 })
+  const releaseResult = await nilStubs.release(escrowId)
   const settlement: SettlementRDS = releaseResult.receipt
 
   // 8) Dispute → Delta-RDS diff
-  const disputeId = fileDispute(offerId, 'WRONG_ALLOCATION', 'Brand share high')
-  const delta: DeltaRDS = adjudicate(disputeId, 'adjust', [{ field: 'allocation.brand', from: 7500, to: 7000 }])
+  const disputeId = nilStubs.fileDispute(offerId, 'WRONG_ALLOCATION', 'Brand share high')
+  const delta: DeltaRDS = nilStubs.adjudicate(disputeId, 'adjust', [{ field: 'allocation.brand', from: 7500, to: 7000 }])
 
   // Build snapshot (ids only; no PII)
   const receiptIds = [eduReceipt.id, discReceipt.id, publishReceipt.id, settlement.id, delta.id]
-  const invites = listInvites()
+  const invites = nilStubs.listInvites()
   state.snapshot = { profile: opts.profile, offerId, offerLock, escrowId, receiptIds, invites }
 
   console.info('[fixtures] Loaded NIL fixtures', state.snapshot)

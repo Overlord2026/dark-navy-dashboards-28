@@ -1,7 +1,6 @@
 import { PERSONA_CONFIG } from '@/config/personaConfig';
 import catalogConfig from '@/config/catalogConfig.json';
 import familyToolsConfig from '@/config/familyTools.json';
-import nilToolsConfig from '@/config/nilTools.json';
 import { routeExists } from './routeMap';
 
 export interface LinkAuditResult {
@@ -99,33 +98,7 @@ export function auditAllLinks(): LinkAuditResult[] {
     });
   });
   
-  // 5. NIL tools
-  Object.entries(nilToolsConfig).forEach(([segment, config]) => {
-    // Quick actions
-    (config as any).quickActions?.forEach((action: any) => {
-      if (action.route) {
-        results.push({
-          source: `nilTools.${segment}.quickActions`,
-          route: action.route,
-          exists: routeExists(action.route),
-          label: action.label
-        });
-      }
-    });
-    
-    // Tab cards
-    (config as any).tabs?.forEach((tab: any) => {
-      tab.cards?.forEach((card: any) => {
-        if (card.route) {
-          results.push({
-            source: `nilTools.${segment}.tabs.${tab.key}`,
-            route: card.route,
-            exists: routeExists(card.route)
-          });
-        }
-      });
-    });
-  });
+  // 5. NIL tools removed - skip
   
   return results;
 }

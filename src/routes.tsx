@@ -43,15 +43,7 @@ import { APIPage } from "./pages/help/APIPage";
 import { WebinarsPage } from "./pages/help/WebinarsPage";
 import EducationPage from "./pages/EducationPage";
 
-// NIL pages
-import NILHub from "./pages/NILHub";
-import NILIndex from "./pages/NILIndex";
-import AthleteProfile from "./pages/AthleteProfile";
-import SchoolDashboard from "./pages/nil/school/SchoolDashboard";
-import BrandDashboard from "./pages/nil/brand/BrandDashboard";
-import NILAdminAnchors from "./pages/admin/NILAdminAnchors";
-import AthleteHomeDashboard from "./pages/nil/athlete/AthleteHomeDashboard";
-import AgentHomeDashboard from "./pages/nil/agent/AgentHomeDashboard";
+// NIL pages - removed
 import ReadyCheck from "./pages/admin/ReadyCheck";
 import { QAPlaybookPage } from "./pages/qa/QAPlaybookPage";
 
@@ -202,39 +194,7 @@ export const router = createBrowserRouter([
       }
     ]
   },
-  // NIL Platform routes
-  {
-    path: "/nil",
-    element: <NILHub />
-  },
-  {
-    path: "/nil/index",
-    element: <NILIndex />
-  },
-  {
-    path: "/a/:handle",
-    element: <AthleteProfile />
-  },
-  {
-    path: "/nil/school/home",
-    element: <SchoolDashboard />
-  },
-  {
-    path: "/nil/brand/home",
-    element: <BrandDashboard />
-  },
-  {
-    path: "/nil/athlete/home",
-    element: <AthleteHomeDashboard />
-  },
-  {
-    path: "/nil/agent/home",
-    element: <AgentHomeDashboard />
-  },
-  {
-    path: "/admin/nil/anchors",
-    element: <NILAdminAnchors />
-  },
+  // NIL Platform routes - removed
   {
     path: "/admin/ready-check",
     element: <ReadyCheck />

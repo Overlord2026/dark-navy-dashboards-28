@@ -6,14 +6,12 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Download, RefreshCw, CheckCircle, AlertTriangle, XCircle } from 'lucide-react';
 import { validateConfigs } from '@/tools/validateConfigs';
 import { validateFamilyTools } from '@/tools/validateFamilyToolsWrapper';
-import { validateNil } from '@/tools/validateNil';
 import { checkPublicRoutes } from '@/tools/checkPublicRoutes';
 import { runDevSeed } from '@/tools/devSeed';
 import { auditAllLinks, getMissingRoutes, getToolsNeedingStatusUpdate } from '@/tools/auditLinks';
 import { routeExists } from '@/tools/routeMap';
 import { CATALOG_TOOLS } from '@/data/catalogTools';
 import familyToolsConfig from '@/config/familyTools.json';
-import nilToolsConfig from '@/config/nilTools.json';
 import { getWorkspaceTools, installTool } from '@/lib/workspaceTools';
 import { useToast } from '@/hooks/use-toast';
 
@@ -43,11 +41,6 @@ interface RouteAuditResult {
   broken: any[];
   previews: any[];
   familyToolsCoverage: {
-    total: number;
-    covered: number;
-    missing: any[];
-  };
-  nilToolsCoverage: {
     total: number;
     covered: number;
     missing: any[];
@@ -102,33 +95,8 @@ export default function ReadyCheck() {
       });
     });
 
-    // Check NIL tools coverage
+    // NIL tools removed - skip coverage check
     const nilToolsLinks: any[] = [];
-    Object.entries(nilToolsConfig).forEach(([segment, config]) => {
-      (config as any).tabs?.forEach((tab: any) => {
-        tab.cards?.forEach((card: any) => {
-          if (card.route) {
-            nilToolsLinks.push({
-              route: card.route,
-              segment,
-              tab: tab.key,
-              exists: routeExists(card.route)
-            });
-          }
-        });
-      });
-      
-      (config as any).quickActions?.forEach((action: any) => {
-        if (action.route) {
-          nilToolsLinks.push({
-            route: action.route,
-            segment,
-            type: 'quickAction',
-            exists: routeExists(action.route)
-          });
-        }
-      });
-    });
 
     return {
       broken: allLinks.filter(link => !link.exists && !missing.some(m => m.route === link.route)),
@@ -137,11 +105,6 @@ export default function ReadyCheck() {
         total: familyToolsLinks.length,
         covered: familyToolsLinks.filter(link => link.exists).length,
         missing: familyToolsLinks.filter(link => !link.exists)
-      },
-      nilToolsCoverage: {
-        total: nilToolsLinks.length,
-        covered: nilToolsLinks.filter(link => link.exists).length,
-        missing: nilToolsLinks.filter(link => !link.exists)
       }
     };
   };
@@ -165,15 +128,7 @@ export default function ReadyCheck() {
                  notes: [...(fam.errors||[]), ...(fam.warnings||[])] });
     }
 
-    // 3) NIL tools linkage (optional)
-    try {
-      const nil = validateNil?.();
-      if (nil) {
-        const nilStatus = nil.errors?.length ? 'fail' : nil.warnings?.length ? 'warn' : 'ok';
-        res.push({ label:'NIL tools config', status: nilStatus,
-                   notes: [...(nil.errors||[]), ...(nil.warnings||[])] });
-      }
-    } catch { /* ignore if module absent */ }
+    // 3) NIL tools removed - skip validation
 
     // 4) Public routes reachable
     const rt = await checkPublicRoutes(PUBLIC_ROUTES);
@@ -233,16 +188,11 @@ export default function ReadyCheck() {
       }
     });
 
-    // NIL tools coverage
-    const nilCoveragePercent = Math.round((audit.nilToolsCoverage.covered / audit.nilToolsCoverage.total) * 100);
+    // NIL tools coverage - removed
     res.push({
       label: 'NIL tools coverage',
-      status: audit.nilToolsCoverage.missing.length > 0 ? 'warn' : 'ok',
-      notes: [
-        `${audit.nilToolsCoverage.covered}/${audit.nilToolsCoverage.total} tools accessible (${nilCoveragePercent}%)`,
-        ...audit.nilToolsCoverage.missing.slice(0, 3).map(m => `Missing: ${m.route} (${m.segment}/${m.tab || m.type})`)
-      ],
-      details: audit.nilToolsCoverage
+      status: 'ok',
+      notes: ['NIL functionality removed from platform']
     });
 
     // Workspace tools status
@@ -337,8 +287,7 @@ export default function ReadyCheck() {
       ['Type', 'Route', 'Status', 'Source', 'Tool Key', 'Notes'],
       ...routeAudit.broken.map(item => ['Broken', item.route, 'FAIL', item.source, item.toolKey || '', 'Hard 404']),
       ...routeAudit.previews.map(item => ['Preview', item.route, 'WARN', item.source, item.toolKey || '', 'Mapped to preview']),
-      ...routeAudit.familyToolsCoverage.missing.map(item => ['Family Tool', item.route, 'WARN', `${item.segment}/${item.tab || item.type}`, item.toolKey || '', 'Missing from family tools']),
-      ...routeAudit.nilToolsCoverage.missing.map(item => ['NIL Tool', item.route, 'WARN', `${item.segment}/${item.tab || item.type}`, '', 'Missing from NIL tools'])
+      ...routeAudit.familyToolsCoverage.missing.map(item => ['Family Tool', item.route, 'WARN', `${item.segment}/${item.tab || item.type}`, item.toolKey || '', 'Missing from family tools'])
     ];
     
     const csvContent = csvData.map(row => row.map(cell => `"${cell}"`).join(',')).join('\n');
