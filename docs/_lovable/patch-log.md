@@ -2,6 +2,11 @@
 
 ## Latest Changes
 
+### feat/advisor-intake - React Deps Alignment
+- **Status**: ✅ Complete
+- **Solution**: Aligned React deps/overrides, removed nested lockfiles, finalized alias/routes
+- **Files**: packages/swag-analyzer/package.json, package.json, tsconfig.json, tsconfig.app.json
+
 ### docs/repo-map
 - **Status**: ✅ Complete
 - **Problem**: Need external module mapping documentation
