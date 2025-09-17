@@ -5,16 +5,24 @@ import type { DecisionRDS, ConsentRDS, SettlementRDS, DeltaRDS, AnyRDS } from '@
 import { anchorBatch } from '@/features/anchor/providers'
 import * as Canonical from '@/lib/canonical'
 
-// Domain stubs you already planned/created:
-import { getModules, completeModule } from '@/features/nil/education/api'
-import { confirmDisclosurePack } from '@/features/nil/disclosures/rules'
-import { createOffer, checkConflicts } from '@/features/nil/offers/store'
-import { previewSplit } from '@/features/nil/splits/preview'
-import { invite, accept, list as listInvites } from '@/features/nil/invite/api'
-import { issueConsent } from '@/features/nil/consent/api'
-import { runChecks } from '@/features/nil/policy/checks'
-import { hold, release } from '@/features/nil/payments/api'
-import { fileDispute, adjudicate } from '@/features/nil/disputes/api'
+// Stub implementations for removed NIL functionality
+const nilStubs = {
+  getModules: () => [],
+  completeModule: () => ({}),
+  confirmDisclosurePack: () => ({ id: 'stub' }),
+  createOffer: () => ({ offerId: 'stub', offerLock: 'stub' }),
+  checkConflicts: () => ({ ok: true }),
+  previewSplit: () => [],
+  invite: () => ({ pendingId: 'stub' }),
+  accept: () => ({ accepted: true }),
+  listInvites: () => [],
+  issueConsent: async () => ({ id: 'stub', type: 'Consent-RDS', ts: new Date().toISOString() }),
+  runChecks: () => ({ ok: true, reasons: [] }),
+  hold: () => ({ escrowId: 'stub' }),
+  release: () => ({ txnId: 'stub', receipt: { id: 'stub' } }),
+  fileDispute: () => 'stub',
+  adjudicate: () => ({ id: 'stub' })
+};
 
 type Profile = 'coach' | 'mom'
 
@@ -41,9 +49,8 @@ export async function loadFixtures(opts: { profile: Profile } = { profile: 'coac
   const channels = ['IG']
 
   // 2) Education: mark 2 modules as complete (freshness OK)
-  const mods = await getModules()
-  const toComplete = mods.filter(m => m.status !== 'done').slice(0, 1) // complete 1 if needed
-  for (const m of toComplete) await completeModule(m.id)
+  const mods = nilStubs.getModules()
+  // Stub implementation - no actual modules to complete
 
   // 3) Disclosure pack for IG/US
   const discReceipt = confirmDisclosurePack('us-ig-standard', { channel: 'IG', jurisdiction: 'US' })

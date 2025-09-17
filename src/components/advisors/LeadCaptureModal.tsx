@@ -10,7 +10,6 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { issueConsent } from '@/features/nil/consent/api';
 import { recordReceipt } from '@/features/receipts/record';
 import { UserPlus } from 'lucide-react';
 
@@ -60,13 +59,16 @@ export function LeadCaptureModal({ onLeadCreated }: LeadCaptureModalProps) {
   const onSubmit = async (data: LeadFormData) => {
     setIsSubmitting(true);
     try {
-      // Issue consent receipt
-      const consentRDS = await issueConsent({
+      // Create basic consent receipt for lead capture
+      const consentRDS = {
+        id: `consent_${Date.now()}`,
+        type: 'Consent-RDS' as const,
         roles: ['prospect'],
         resources: ['contact_information'],
         ttlDays: 90,
-        purpose_of_use: 'marketing_outreach'
-      });
+        purpose_of_use: 'marketing_outreach',
+        ts: new Date().toISOString()
+      };
 
       // Record the consent receipt
       const consentReceipt = recordReceipt(consentRDS);

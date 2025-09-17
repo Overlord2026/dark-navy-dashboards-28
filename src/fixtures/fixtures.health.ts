@@ -5,8 +5,13 @@ import type { AnyRDS, ConsentRDS, DecisionRDS } from '@/features/receipts/types'
 import { anchorBatch } from '@/features/anchor/providers'
 import * as Canonical from '@/lib/canonical'
 
-// Use NIL consent API for now (health-specific APIs to be implemented)
-import { issueConsent } from '@/features/nil/consent/api'
+// Basic consent implementation (health-specific APIs to be implemented)
+const issueConsent = async (params: any) => ({
+  id: `consent_${Date.now()}`,
+  type: 'Consent-RDS' as const,
+  ...params,
+  ts: new Date().toISOString()
+});
 
 // Health module stubs (to be implemented)
 const healthModules = {
