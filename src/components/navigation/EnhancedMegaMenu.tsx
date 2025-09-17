@@ -27,7 +27,7 @@ const attorneyPersonas = PERSONA_CONFIG.filter(p => p.persona === 'attorneys');
 const insurancePersonas = PERSONA_CONFIG.filter(p => p.persona === 'insurance');
 const healthcarePersonas = PERSONA_CONFIG.filter(p => p.persona === 'healthcare');
 const realtorPersonas = PERSONA_CONFIG.filter(p => p.persona === 'realtor');
-const nilPersonas = PERSONA_CONFIG.filter(p => p.persona?.startsWith('nil'));
+// Removed NIL personas - focusing on advisor/family workflows
 
 // Get top tools per persona for "Tools you'll use today"
 const getTopToolsForPersona = (personaTags: string[]) => {

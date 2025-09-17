@@ -10,11 +10,6 @@ export const educationNavItems: NavItem[] = [
     href: "/client-education", 
     icon: GraduationCapIcon 
   },
-  { 
-    title: "NIL Education", 
-    href: "/athletes/nil-landing", 
-    icon: GraduationCapIcon 
-  }
 ];
 
 const EducationTab = React.memo(() => {

@@ -6,16 +6,6 @@ import { Button } from '@/components/ui/button';
 const navItems = [
   { label: 'Families', href: '/families', description: 'Family wealth management solutions' },
   { label: 'Professionals', href: '/pros', description: 'Professional services and tools' },
-  { 
-    label: 'NIL', 
-    href: '/nil', 
-    description: 'Name, Image, Likeness services',
-    submenu: [
-      { label: 'Athletes', href: '/nil/athlete', description: 'Athlete NIL services' },
-      { label: 'Universities', href: '/nil/university', description: 'University NIL compliance' },
-      { label: 'Brands/Agencies', href: '/nil/brand', description: 'Brand partnerships' }
-    ]
-  },
   { label: 'Resources', href: '/resources', description: 'Educational resources and guides' },
   { label: 'Solutions', href: '/solutions', description: 'Technology and platform solutions' },
   { label: 'Education', href: '/education', description: 'Learning center and courses' },

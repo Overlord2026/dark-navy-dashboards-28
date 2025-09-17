@@ -2,7 +2,6 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { usePersonaContext } from '@/context/persona-context';
-import { runtimeFlags } from '@/config/runtimeFlags';
 
 const familyNavItems = [
   { label: 'Families', href: '/families' },
@@ -12,20 +11,13 @@ const familyNavItems = [
   { label: 'Pricing', href: '/pricing' }
 ];
 
-const conditionalNavItems = [
-  { label: 'Athletes & NIL', href: '/nil', condition: () => 
-    runtimeFlags.demoSegment === 'retirees' || runtimeFlags.demoSegment === 'aspiring' 
-  }
-];
+// Removed NIL conditional nav items - focusing on advisor/family workflows
 
 export const PersonaNavBar: React.FC = () => {
   const location = useLocation();
   const { personaRoot } = usePersonaContext();
 
-  const navItems = [
-    ...familyNavItems,
-    ...conditionalNavItems.filter(item => item.condition())
-  ];
+  const navItems = familyNavItems;
 
   return (
     <div className="bg-background border-b border-border">
