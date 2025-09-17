@@ -15,100 +15,54 @@ import {
   Target,
   Mic,
   FileText,
-  Layout
+  UserCheck,
+  CalendarPlus,
+  Send,
+  Activity
 } from 'lucide-react';
+import { getDashboardKPIs, getRecentActivity, getActivityStatusStyle, getActivityTypeColor } from '../state/dashboardSelectors';
 
+// Quick action buttons for the dashboard
 const quickActions = [
   {
-    title: 'Add New Prospect',
+    title: 'Add Prospect',
     description: 'Capture a new lead',
     icon: Plus,
     route: '/pros/advisors/platform/prospects',
-    variant: 'default' as const
+    variant: 'default' as const,
+    color: 'bg-primary text-primary-foreground hover:bg-primary/90'
   },
   {
     title: 'Schedule Meeting',
-    description: 'Book client consultation',
-    icon: Calendar,
+    description: 'Book consultation',
+    icon: CalendarPlus,
     route: '/pros/advisors/platform/calendar',
-    variant: 'outline' as const
+    variant: 'outline' as const,
+    color: 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
   },
   {
-    title: 'Review Recordings',
-    description: 'Analyze call recordings',
-    icon: Mic,
-    route: '/pros/advisors/platform/recordings',
-    variant: 'outline' as const
-  },
-  {
-    title: 'Track ROI',
-    description: 'Monitor campaign performance',
-    icon: Target,
-    route: '/pros/advisors/platform/roi',
-    variant: 'outline' as const
+    title: 'Send Questionnaire',
+    description: 'Client assessment',
+    icon: Send,
+    route: '/pros/advisors/platform/questionnaires',
+    variant: 'outline' as const,
+    color: 'bg-accent text-accent-foreground hover:bg-accent/80'
   }
 ];
 
-const platformStats = [
-  {
-    title: 'Active Prospects',
-    value: '32',
-    change: '+5 this week',
-    icon: Users,
-    color: 'text-blue-600'
-  },
-  {
-    title: 'Recordings',
-    value: '18',
-    change: '3 pending review',
-    icon: Mic,
-    color: 'text-green-600'
-  },
-  {
-    title: 'Templates',
-    value: '24',
-    change: '2 new this month',
-    icon: Layout,
-    color: 'text-purple-600'
-  },
-  {
-    title: 'ROI Score',
-    value: '8.5%',
-    change: '+1.2% improvement',
-    icon: TrendingUp,
-    color: 'text-yellow-600'
-  }
-];
-
-const recentActivity = [
-  {
-    type: 'recording',
-    title: 'New recording processed: Client consultation with Smith Family',
-    time: '2 hours ago',
-    status: 'completed'
-  },
-  {
-    type: 'prospect',
-    title: 'High-value prospect added: Johnson Trust (Estate Planning)',
-    time: '4 hours ago',
-    status: 'new'
-  },
-  {
-    type: 'template',
-    title: 'Updated email template: Retirement Planning Sequence #3',
-    time: '1 day ago',
-    status: 'updated'
-  },
-  {
-    type: 'questionnaire',
-    title: 'New questionnaire response: Risk Assessment - Davis Family',
-    time: '2 days ago',
-    status: 'pending'
-  }
-];
+// Activity type icon mapping
+const activityIcons = {
+  conversion: UserCheck,
+  meeting: Calendar,
+  questionnaire: FileText,
+  recording: Mic,
+  prospect: Users
+};
 
 export default function AdvisorPlatformDashboard() {
   const navigate = useNavigate();
+  const kpis = getDashboardKPIs();
+  const recentActivity = getRecentActivity();
 
   const handleQuickAction = (action: typeof quickActions[0]) => {
     navigate(action.route);
@@ -122,103 +76,206 @@ export default function AdvisorPlatformDashboard() {
       </Helmet>
 
       <div className="space-y-8">
-        {/* Welcome Section */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold">Platform Dashboard</h1>
-            <p className="text-muted-foreground text-lg">
-              Complete advisor toolkit with integrated prospect and client management
-            </p>
+        {/* Welcome Section with Quick Actions */}
+        <div className="flex flex-col space-y-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-foreground">Platform Dashboard</h1>
+              <p className="text-muted-foreground text-lg">
+                Complete advisor toolkit with integrated prospect and client management
+              </p>
+            </div>
+            <Badge variant="outline" className="text-sm">
+              <Clock className="w-3 h-3 mr-1" />
+              Last updated: Now
+            </Badge>
           </div>
-          <Badge variant="outline" className="text-sm">
-            <Clock className="w-3 h-3 mr-1" />
-            Last updated: Now
-          </Badge>
-        </div>
 
-        {/* Quick Actions */}
-        <section>
-          <h2 className="text-xl font-semibold mb-4">Quick Actions</h2>
-          <div className="grid md:grid-cols-4 gap-4">
+          {/* Quick Actions */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {quickActions.map((action, index) => (
-              <Card 
+              <Button
                 key={index}
-                className="cursor-pointer hover:shadow-md transition-shadow group"
+                variant={action.variant}
+                size="lg"
+                className="h-auto p-4 justify-start"
                 onClick={() => handleQuickAction(action)}
               >
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-primary/10 rounded-lg">
-                      <action.icon className="w-4 h-4 text-primary" />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-medium group-hover:text-primary transition-colors">
-                        {action.title}
-                      </h3>
-                      <p className="text-sm text-muted-foreground">
-                        {action.description}
-                      </p>
-                    </div>
-                    <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
-                  </div>
-                </CardContent>
-              </Card>
+                <action.icon className="w-5 h-5 mr-3" />
+                <div className="text-left">
+                  <div className="font-semibold">{action.title}</div>
+                  <div className="text-xs opacity-80">{action.description}</div>
+                </div>
+              </Button>
             ))}
           </div>
-        </section>
+        </div>
 
-        {/* Platform Stats */}
+        {/* KPI Cards */}
         <section>
-          <h2 className="text-xl font-semibold mb-4">Platform Metrics</h2>
-          <div className="grid md:grid-cols-4 gap-4">
-            {platformStats.map((stat, index) => (
-              <Card key={index}>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm text-muted-foreground">{stat.title}</p>
-                      <p className="text-2xl font-bold">{stat.value}</p>
-                      <p className="text-xs text-muted-foreground mt-1">{stat.change}</p>
-                    </div>
-                    <stat.icon className={`w-6 h-6 ${stat.color}`} />
+          <h2 className="text-xl font-semibold mb-4 text-foreground">Key Performance Indicators</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <Card className="border-border bg-card">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-muted-foreground font-medium">Total Prospects</p>
+                    <p className="text-3xl font-bold text-foreground">{kpis.totalProspects}</p>
+                    <p className="text-xs text-muted-foreground mt-1">All-time count</p>
                   </div>
-                </CardContent>
-              </Card>
-            ))}
+                  <div className="p-3 bg-primary/10 rounded-lg">
+                    <Users className="w-6 h-6 text-primary" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-border bg-card">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-muted-foreground font-medium">Active Prospects</p>
+                    <p className="text-3xl font-bold text-foreground">{kpis.activeProspects}</p>
+                    <p className="text-xs text-muted-foreground mt-1">In pipeline</p>
+                  </div>
+                  <div className="p-3 bg-blue-500/10 rounded-lg">
+                    <Target className="w-6 h-6 text-blue-600" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-border bg-card">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-muted-foreground font-medium">Meetings Scheduled</p>
+                    <p className="text-3xl font-bold text-foreground">{kpis.meetingsScheduled}</p>
+                    <p className="text-xs text-muted-foreground mt-1">This month</p>
+                  </div>
+                  <div className="p-3 bg-green-500/10 rounded-lg">
+                    <Calendar className="w-6 h-6 text-green-600" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-border bg-card">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-muted-foreground font-medium">Conversions</p>
+                    <p className="text-3xl font-bold text-foreground">{kpis.conversions}</p>
+                    <p className="text-xs text-green-600 mt-1">{kpis.conversionRate}% rate</p>
+                  </div>
+                  <div className="p-3 bg-yellow-500/10 rounded-lg">
+                    <TrendingUp className="w-6 h-6 text-yellow-600" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </section>
 
-        {/* Recent Platform Activity */}
+        {/* Recent Activity */}
         <section>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold">Recent Platform Activity</h2>
+            <h2 className="text-xl font-semibold text-foreground flex items-center gap-2">
+              <Activity className="w-5 h-5" />
+              Recent Activity
+            </h2>
             <Button variant="outline" size="sm">
               View All Activity
+              <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
           </div>
-          <Card>
+          
+          <Card className="border-border bg-card">
             <CardContent className="p-6">
               <div className="space-y-4">
-                {recentActivity.map((activity, index) => (
-                  <div key={index} className="flex items-center gap-4 p-3 rounded-lg hover:bg-muted/50 transition-colors">
-                    <div className={`w-2 h-2 rounded-full ${
-                      activity.status === 'completed' ? 'bg-green-500' :
-                      activity.status === 'new' ? 'bg-blue-500' :
-                      activity.status === 'updated' ? 'bg-purple-500' :
-                      'bg-yellow-500'
-                    }`} />
-                    <div className="flex-1">
-                      <p className="font-medium">{activity.title}</p>
-                      <p className="text-sm text-muted-foreground">{activity.time}</p>
+                {recentActivity.map((activity, index) => {
+                  const IconComponent = activityIcons[activity.type];
+                  return (
+                    <div key={activity.id} className="flex items-center gap-4 p-4 rounded-lg hover:bg-accent/50 transition-colors">
+                      <div className="flex-shrink-0">
+                        <div className={`p-2 rounded-lg bg-background border ${getActivityTypeColor(activity.type)}`}>
+                          <IconComponent className={`w-4 h-4 ${getActivityTypeColor(activity.type)}`} />
+                        </div>
+                      </div>
+                      
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <h3 className="font-semibold text-foreground truncate">{activity.title}</h3>
+                          <Badge 
+                            variant="outline" 
+                            className={`text-xs ${getActivityStatusStyle(activity.status)}`}
+                          >
+                            {activity.status}
+                          </Badge>
+                        </div>
+                        <p className="text-sm text-muted-foreground line-clamp-1">{activity.description}</p>
+                        <p className="text-xs text-muted-foreground mt-1">{activity.timestamp}</p>
+                      </div>
                     </div>
-                    <Badge variant="outline" className="text-xs">
-                      {activity.status}
-                    </Badge>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </CardContent>
           </Card>
+        </section>
+
+        {/* Platform Performance Summary */}
+        <section>
+          <h2 className="text-xl font-semibold mb-4 text-foreground">Platform Overview</h2>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Card className="border-border bg-card">
+              <CardHeader>
+                <CardTitle className="text-foreground">This Week's Highlights</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-muted-foreground">New prospects added</span>
+                    <span className="font-semibold text-foreground">+12</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-muted-foreground">Meetings completed</span>
+                    <span className="font-semibold text-foreground">8</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-muted-foreground">Questionnaires sent</span>
+                    <span className="font-semibold text-foreground">15</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-muted-foreground">Conversions achieved</span>
+                    <span className="font-semibold text-green-600">3</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-border bg-card">
+              <CardHeader>
+                <CardTitle className="text-foreground">Next Actions</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2 p-2 rounded border border-border">
+                    <Calendar className="w-4 h-4 text-primary" />
+                    <span className="text-sm text-foreground">3 meetings scheduled for today</span>
+                  </div>
+                  <div className="flex items-center gap-2 p-2 rounded border border-border">
+                    <FileText className="w-4 h-4 text-blue-600" />
+                    <span className="text-sm text-foreground">5 questionnaire responses pending review</span>
+                  </div>
+                  <div className="flex items-center gap-2 p-2 rounded border border-border">
+                    <Users className="w-4 h-4 text-green-600" />
+                    <span className="text-sm text-foreground">7 prospects need follow-up</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </section>
       </div>
     </>

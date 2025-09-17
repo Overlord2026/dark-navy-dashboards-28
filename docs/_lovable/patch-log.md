@@ -2,6 +2,11 @@
 
 ## Latest Changes
 
+### feat/advisor-intake - Dashboard KPIs + Recent Activity + Quick Actions
+- **Status**: ✅ Complete
+- **Solution**: Enhanced Dashboard with 4 KPI cards (total prospects, active prospects, meetings, conversions), Recent Activity list (5 mocked items), Quick Action buttons (Add Prospect, Schedule Meeting, Send Questionnaire), responsive grid layout using theme tokens
+- **Files**: AdvisorPlatformDashboard.tsx, dashboardSelectors.ts (new mock state)
+
 ### feat/advisor-intake - Advisor Platform Navigation Wired
 - **Status**: ✅ Complete
 - **Solution**: Fixed AdvisorPlatformLayout to use Outlet for nested routes, enabling functional navigation for Dashboard, Prospects, Recordings, Questionnaires, Templates, ROI Tracker, Calendar
