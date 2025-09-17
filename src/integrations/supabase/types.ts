@@ -30851,6 +30851,7 @@ export type Database = {
           expires_at: string
           id: string
           magic_token: string
+          payment_responsibility: string | null
           persona_group: string | null
           personal_note: string | null
           sent_at: string
@@ -30869,6 +30870,7 @@ export type Database = {
           expires_at?: string
           id?: string
           magic_token: string
+          payment_responsibility?: string | null
           persona_group?: string | null
           personal_note?: string | null
           sent_at?: string
@@ -30887,6 +30889,7 @@ export type Database = {
           expires_at?: string
           id?: string
           magic_token?: string
+          payment_responsibility?: string | null
           persona_group?: string | null
           personal_note?: string | null
           sent_at?: string

@@ -14,6 +14,7 @@ interface InviteRequest {
   email: string;
   clientSegment: string;
   personalNote?: string;
+  paymentResponsibility?: 'advisor_paid' | 'client_paid';
   utmSource?: string;
   utmMedium?: string;
   utmCampaign?: string;
@@ -51,6 +52,7 @@ const handler = async (req: Request): Promise<Response> => {
       email,
       clientSegment,
       personalNote,
+      paymentResponsibility,
       utmSource,
       utmMedium,
       utmCampaign,
@@ -73,6 +75,7 @@ const handler = async (req: Request): Promise<Response> => {
         magic_token: magicToken,
         client_segment: clientSegment,
         personal_note: personalNote,
+        payment_responsibility: paymentResponsibility || 'client_paid',
         utm_source: utmSource,
         utm_medium: utmMedium || "advisor_invite",
         utm_campaign: utmCampaign,
@@ -119,6 +122,11 @@ const handler = async (req: Request): Promise<Response> => {
             <h3 style="margin: 0 0 10px 0; color: #333;">Personal Message from ${advisorName}:</h3>
             <p style="margin: 0; font-style: italic;">"${personalNote}"</p>
           </div>` : ''}
+          
+          ${paymentResponsibility === 'advisor_paid' ? `
+            <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #28a745;">
+              <p style="margin: 0; color: #155724;"><strong>Complimentary Access:</strong> Your advisor has provided you with complimentary access to our platform.</p>
+            </div>` : ''}
           
           <div style="text-align: center; margin: 30px 0;">
             <a href="${magicLink}" 
