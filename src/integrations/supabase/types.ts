@@ -31086,6 +31086,45 @@ export type Database = {
         }
         Relationships: []
       }
+      rds_receipts: {
+        Row: {
+          anchors: Json | null
+          created_at: string | null
+          hash: string
+          id: string
+          k_of_n_approved: boolean | null
+          parent_hash: string | null
+          persona_id: string | null
+          policy_version: string
+          status: string | null
+          tenant_id: string | null
+        }
+        Insert: {
+          anchors?: Json | null
+          created_at?: string | null
+          hash: string
+          id?: string
+          k_of_n_approved?: boolean | null
+          parent_hash?: string | null
+          persona_id?: string | null
+          policy_version: string
+          status?: string | null
+          tenant_id?: string | null
+        }
+        Update: {
+          anchors?: Json | null
+          created_at?: string | null
+          hash?: string
+          id?: string
+          k_of_n_approved?: boolean | null
+          parent_hash?: string | null
+          persona_id?: string | null
+          policy_version?: string
+          status?: string | null
+          tenant_id?: string | null
+        }
+        Relationships: []
+      }
       real_estate_properties: {
         Row: {
           address: string
@@ -55521,6 +55560,10 @@ export type Database = {
         Args: { p_magic_token: string; p_user_id: string }
         Returns: Json
       }
+      add_rds_anchor: {
+        Args: { p_anchor_data: Json; p_anchor_type: string; p_hash: string }
+        Returns: boolean
+      }
       aies_emit_receipt: {
         Args: {
           p_actor: string
@@ -55533,6 +55576,10 @@ export type Database = {
           p_trust_grade?: string
         }
         Returns: string
+      }
+      approve_k_of_n: {
+        Args: { p_approved?: boolean; p_hash: string; p_threshold?: number }
+        Returns: boolean
       }
       audit_public_schema_extensions: {
         Args: Record<PropertyKey, never>
@@ -55785,7 +55832,7 @@ export type Database = {
               p_version?: string
             }
           | { p_scope: string; p_version?: string }
-        Returns: string
+        Returns: undefined
       }
       consent_check: {
         Args: { p_scope: string; p_version?: string }
