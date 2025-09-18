@@ -1,5 +1,37 @@
 # Patch Log
 
+## 2024-01-18 - Attorneys Persona Implementation
+
+### Summary
+Added minimal Attorneys persona with dashboard, entities/trusts management, and estate vault functionality for legal practice management.
+
+### Files Changed
+- **NEW**: `src/pages/attorneys/AttorneysDashboard.tsx` - KPI dashboard (47 entities, 28 trusts, 14 pending signatures)
+- **NEW**: `src/pages/attorneys/EntitiesAndTrusts.tsx` - Entity/trust management table with search/filter
+- **NEW**: `src/pages/attorneys/EstateVault.tsx` - Secure document vault with status tracking
+- **MODIFIED**: `src/routes.tsx` - Added `/pros/attorneys` routes with nested children
+- **MODIFIED**: `src/lib/persona.ts` - Added Attorneys to Legal Services menu group
+
+### Features Implemented
+1. **Attorneys Dashboard** - KPI strip showing active entities, trusts, and pending documents with quick actions
+2. **Entities & Trusts** - Management table for LLCs, corporations, partnerships, trusts with filtering
+3. **Estate Vault** - Secure document storage with encryption status, categories, and access controls
+4. **Professional Integration** - Added to sidebar under Legal Services
+
+### Routes Added
+- `/pros/attorneys` - Main dashboard (index route)
+- `/pros/attorneys/entities` - Entities and trusts management
+- `/pros/attorneys/vault` - Estate document vault
+
+### Mock Data Included
+- 8 sample entities (LLCs, trusts, corporations) with realistic details
+- 8 sample vault documents with security status and categories
+- Status tracking (active, pending, executed, draft, review)
+
+### Commit: `feat(attorneys): dashboard + entities/trusts + vault (mocked)`
+
+---
+
 ## 2024-01-18 - React Singleton Fix + Accountants Persona
 
 ### Summary

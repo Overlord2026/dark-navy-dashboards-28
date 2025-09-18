@@ -347,6 +347,36 @@ export const router = createBrowserRouter([
     ]
   },
   {
+    path: "/pros/attorneys",
+    element: React.createElement(() => {
+      const { AttorneysDashboard } = require('./pages/attorneys/AttorneysDashboard');
+      return React.createElement(AttorneysDashboard);
+    }),
+    children: [
+      {
+        index: true,
+        element: React.createElement(() => {
+          const { AttorneysDashboard } = require('./pages/attorneys/AttorneysDashboard');
+          return React.createElement(AttorneysDashboard);
+        })
+      },
+      {
+        path: "entities",
+        element: React.createElement(() => {
+          const { EntitiesAndTrusts } = require('./pages/attorneys/EntitiesAndTrusts');
+          return React.createElement(EntitiesAndTrusts);
+        })
+      },
+      {
+        path: "vault",
+        element: React.createElement(() => {
+          const { EstateVault } = require('./pages/attorneys/EstateVault');
+          return React.createElement(EstateVault);
+        })
+      }
+    ]
+  },
+  {
     path: "/attorney",
     element: React.createElement(() => {
       const { ProDashboard } = require('./pages/pro/ProDashboard');

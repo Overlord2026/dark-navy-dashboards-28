@@ -13,6 +13,7 @@ export type ProSegment =
   | "advisor"
   | "cpa" 
   | "accountant"
+  | "attorney"
   | "attorney-estate"
   | "attorney-litigation"
   | "realtor"
@@ -172,7 +173,8 @@ export const PROFESSIONAL_MENU_GROUPS: MenuGroup[] = [
     label: 'Legal Services',
     items: [
       { label: 'Estate Attorneys', href: '/pros/attorney-estate', segment: 'attorney-estate' },
-      { label: 'Litigation Attorneys', href: '/pros/attorney-litigation', segment: 'attorney-litigation' }
+      { label: 'Litigation Attorneys', href: '/pros/attorney-litigation', segment: 'attorney-litigation' },
+      { label: 'Attorneys', href: '/pros/attorneys', segment: 'attorney' }
     ]
   },
   {
