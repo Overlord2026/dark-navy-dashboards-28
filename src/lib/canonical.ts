@@ -93,5 +93,5 @@ export function canonicalJson(obj: any): string {
 // Alias and version exports
 export const stableStringify = canonicalize;
 export const __CANONICAL_BUILD_ID = "react-singleton-01";
-export const __BUILD_ID__ = "react-singleton-03";
+export const __BUILD_ID__ = "react-singleton-04-toast-fix";
 export { inputsHash };

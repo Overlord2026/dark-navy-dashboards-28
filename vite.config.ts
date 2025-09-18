@@ -16,5 +16,12 @@ export default defineConfig(({ mode }) => ({
     },
     dedupe: ["react","react-dom","react-dom/client","react/jsx-runtime","react/jsx-dev-runtime"],
   },
-  optimizeDeps: { include: ["react","react-dom","react-dom/client"] }
+  optimizeDeps: { 
+    include: ["react","react-dom","react-dom/client"],
+    exclude: ["@radix-ui/react-toast"] 
+  },
+  define: {
+    // Force single React instance
+    'process.env.NODE_ENV': JSON.stringify(mode)
+  }
 }));
