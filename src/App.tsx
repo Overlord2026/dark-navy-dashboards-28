@@ -1019,7 +1019,6 @@ function App() {
             <Route path="*" element={<NotFound />} />
           </Routes>
           
-          <Toaster />
           <DevPanel />
           <AutoLoadDemo />
           

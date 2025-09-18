@@ -317,6 +317,36 @@ export const router = createBrowserRouter([
     })
   },
   {
+    path: "/pros/accountants",
+    element: React.createElement(() => {
+      const { AccountantsDashboard } = require('./pages/accountants/AccountantsDashboard');
+      return React.createElement(AccountantsDashboard);
+    }),
+    children: [
+      {
+        index: true,
+        element: React.createElement(() => {
+          const { AccountantsDashboard } = require('./pages/accountants/AccountantsDashboard');
+          return React.createElement(AccountantsDashboard);
+        })
+      },
+      {
+        path: "documents",
+        element: React.createElement(() => {
+          const { DocumentsReview } = require('./pages/accountants/DocumentsReview');
+          return React.createElement(DocumentsReview);
+        })
+      },
+      {
+        path: "exports",
+        element: React.createElement(() => {
+          const { CSVExport } = require('./pages/accountants/CSVExport');
+          return React.createElement(CSVExport);
+        })
+      }
+    ]
+  },
+  {
     path: "/attorney",
     element: React.createElement(() => {
       const { ProDashboard } = require('./pages/pro/ProDashboard');

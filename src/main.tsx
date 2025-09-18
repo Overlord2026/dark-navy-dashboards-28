@@ -17,6 +17,8 @@ import { removeProductionLogs } from './utils/consoleRemoval'
 import { initializeAccessibility } from './utils/accessibility'
 import GlobalErrorBoundary from "@/components/monitoring/GlobalErrorBoundary";
 import { setupNetworkErrorHandling } from "@/components/monitoring/network";
+import { Toaster } from '@/components/ui/toaster';
+import { Toaster as SonnerToaster } from '@/components/ui/sonner';
 
 // Create a client
 const queryClient = new QueryClient({
@@ -62,6 +64,8 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <GlobalErrorBoundary>
       <QueryClientProvider client={queryClient}>
+        <Toaster />
+        <SonnerToaster />
         <Suspense fallback={<div />}>
           <AuthProvider>
             <EntitlementsProvider>

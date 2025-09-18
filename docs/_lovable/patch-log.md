@@ -1,5 +1,38 @@
 # Patch Log
 
+## 2024-01-18 - React Singleton Fix + Accountants Persona
+
+### Summary
+Fixed React singleton useState error by enforcing single React instance and proper Toast provider order. Added minimal Accountants persona with dashboard, document review, and CSV export functionality.
+
+### Files Changed - React Fix
+- **MODIFIED**: `src/main.tsx` - Added Toaster providers above AuthProvider to fix hook execution context
+- **MODIFIED**: `src/App.tsx` - Removed duplicate Toaster to prevent provider conflicts  
+- **MODIFIED**: `src/lib/canonical.ts` - Updated build ID to `react-singleton-03`
+- **NEW**: `.chore/cache-bust-20250118.txt` - Cache invalidation for clean rebuild
+
+### Files Changed - Accountants Persona
+- **NEW**: `src/pages/accountants/AccountantsDashboard.tsx` - KPI dashboard with returns/docs/clients metrics
+- **NEW**: `src/pages/accountants/DocumentsReview.tsx` - Document review table with search/filter functionality
+- **NEW**: `src/pages/accountants/CSVExport.tsx` - Client-side CSV export with configurable data selection
+- **MODIFIED**: `src/routes.tsx` - Added `/pros/accountants` routes with nested children
+- **MODIFIED**: `src/lib/persona.ts` - Added Accountants to Professional menu groups
+
+### Features Implemented
+1. **React Singleton Fix** - Toast providers moved to root level above AuthProvider to prevent useState null errors
+2. **Accountants Dashboard** - KPI strip (23 returns, 12 docs, 156 clients) with quick actions and recent activity
+3. **Document Review** - Filterable table with mock client data, status tracking, priority badges
+4. **CSV Export** - Download functionality with data selection options and export summary
+
+### Routes Added
+- `/pros/accountants` - Main dashboard (index route)
+- `/pros/accountants/documents` - Document review page  
+- `/pros/accountants/exports` - CSV export page
+
+### Commit: `feat(accountants): dashboard + docs review + CSV export (mocked)`
+
+---
+
 ## 2024-12-XX - Bidirectional Invite Flow Implementation
 
 ### Summary

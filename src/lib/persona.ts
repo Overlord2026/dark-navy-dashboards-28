@@ -12,6 +12,7 @@ export type FamilySegment =
 export type ProSegment =
   | "advisor"
   | "cpa" 
+  | "accountant"
   | "attorney-estate"
   | "attorney-litigation"
   | "realtor"
@@ -163,7 +164,8 @@ export const PROFESSIONAL_MENU_GROUPS: MenuGroup[] = [
     label: 'Financial Services',
     items: [
       { label: 'Financial Advisors', href: '/pros/advisor', segment: 'advisor' },
-      { label: 'CPAs', href: '/pros/cpa', segment: 'cpa' }
+      { label: 'CPAs', href: '/pros/cpa', segment: 'cpa' },
+      { label: 'Accountants', href: '/pros/accountants', segment: 'accountant' }
     ]
   },
   {
