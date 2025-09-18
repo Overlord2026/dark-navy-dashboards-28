@@ -2,10 +2,16 @@
 
 ## Latest Changes
 
-### feat/advisors-invite - Advisor Family Invite Page + Quick Action
+### feat/advisors-invite - Enhanced Advisor Family Invite Integration with Supabase
 - **Status**: ✅ Complete  
-- **Solution**: Added `/pros/advisors/platform/invite` route with InviteFamily component, mock service integration, form validation, and dashboard quick action integration
-- **Files**: InviteFamily.tsx (new page), invite.mock.ts (new service), App.tsx (route updated), patch-log.md
+- **Solution**: Enhanced `/pros/advisors/platform/invite` route with advanced invite service, Supabase integration, and invitation history tracking
+- **Features**: 
+  - Advanced form schema: firstName, lastName, clientSegment, paymentResponsibility, personalNote
+  - Supabase integration: connects to `leads-invite` edge function and `prospect_invitations` table
+  - Invitation history: "Recent Invitations" section with status tracking and visual indicators
+  - Payment responsibility: advisor-paid vs client-paid tracking with UI badges
+  - Enhanced UX: status badges (pending, activated, expired), form validation, success toasts
+- **Files**: InviteFamily.tsx (enhanced), invite.mock.ts (uses advanced service from features/advisors/platform), patch-log.md
 
 ### feat/advisor-intake - ROI Tracker Scaffold with Charts/Tables
 - **Status**: ✅ Complete
