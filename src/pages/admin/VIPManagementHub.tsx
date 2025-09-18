@@ -16,7 +16,7 @@ import { InsuranceOnboardingSlides } from '@/components/insurance/InsuranceOnboa
 import { InsuranceVIPLaunchKit } from '@/components/insurance/InsuranceVIPLaunchKit';
 import { InsuranceAgentsOnboardingSlides } from '@/components/insurance/InsuranceAgentsOnboardingSlides';
 import { InsuranceAgentsVIPLaunchKit } from '@/components/insurance/InsuranceAgentsVIPLaunchKit';
-import { AthleteVIPLaunchKit } from '@/components/athletes/AthleteVIPLaunchKit';
+
 import { HealthcareInnovatorsOnboardingSlides } from '@/components/healthcare/HealthcareInnovatorsOnboardingSlides';
 import { HealthcareInnovatorsVIPLaunchKit } from '@/components/healthcare/HealthcareInnovatorsVIPLaunchKit';
 import { HealthcareExecutivesOnboardingSlides } from '@/components/healthcare/HealthcareExecutivesOnboardingSlides';

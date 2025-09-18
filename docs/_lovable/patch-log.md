@@ -2,6 +2,11 @@
 
 ## Latest Changes
 
+### feat/advisors-invite - Advisor Family Invite Page + Quick Action
+- **Status**: ✅ Complete  
+- **Solution**: Added `/pros/advisors/platform/invite` route with InviteFamily component, mock service integration, form validation, and dashboard quick action integration
+- **Files**: InviteFamily.tsx (new page), invite.mock.ts (new service), App.tsx (route updated), patch-log.md
+
 ### feat/advisor-intake - ROI Tracker Scaffold with Charts/Tables
 - **Status**: ✅ Complete
 - **Solution**: Implemented ROI Tracker with KPI strip (Spend, Conversion Rate, New Prospects, New AUM), bar/line charts using recharts, sortable channel performance table (Facebook, LinkedIn, Google, Webinars, Seminars), mocked data selectors

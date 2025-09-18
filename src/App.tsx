@@ -283,6 +283,7 @@ import RecordingsPage from '@/features/advisors/platform/pages/RecordingsPage';
 import QuestionnairesPage from '@/features/advisors/platform/pages/QuestionnairesPage';
 import TemplatesPage from '@/features/advisors/platform/pages/TemplatesPage';
 import ROITrackerPage from '@/features/advisors/platform/pages/ROITrackerPage';
+import InviteFamily from '@/pages/advisors/InviteFamily';
 import CalendarPage from '@/features/advisors/platform/pages/CalendarPage';
 import SettingsPage from '@/features/advisors/platform/pages/SettingsPage';
 const InvitePage = lazy(() => import('@/features/advisors/platform/pages/InvitePage'));
@@ -496,7 +497,7 @@ function App() {
             <Route path="/pros/advisors" element={<Advisors />} />
             <Route path="/pros/advisors/platform" element={<AdvisorPlatformLayout />}>
               <Route index element={<AdvisorPlatformDashboard />} />
-              <Route path="invite" element={<InvitePage />} />
+              <Route path="invite" element={<InviteFamily />} />
               <Route path="billing" element={<BillingPage />} />
               <Route path="prospects" element={<ProspectsPage />} />
               <Route path="recordings" element={<RecordingsPage />} />
