@@ -98,20 +98,6 @@ const App = () => {
             Family Office Marketplace
           </Link>
           
-          <Link 
-            to="/nil"
-            style={{ 
-              color: '#FFFFFF', 
-              textDecoration: 'none',
-              padding: '8px 12px',
-              borderRadius: '4px',
-              transition: 'background-color 0.2s'
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#D4AF37')}
-            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
-          >
-            NIL Compliance
-          </Link>
         </nav>
         
         <main style={{ marginTop: '140px' }}>
@@ -121,7 +107,7 @@ const App = () => {
             <Route path="/families/aspiring" element={<AspiringFamiliesPage />} />
             <Route path="/families/retirees" element={<RetireesPage />} />
             <Route path="/marketplace" element={<MarketplacePage />} />
-            <Route path="/nil" element={<NILPage />} />
+            
           </Routes>
         </main>
       </div>
@@ -232,16 +218,5 @@ const MarketplacePage = () => (
   </div>
 );
 
-const NILPage = () => (
-  <div style={{ 
-    padding: '20px', 
-    color: '#FFFFFF', 
-    backgroundColor: '#0B0F14', 
-    minHeight: '100vh' 
-  }}>
-    <h1 style={{ color: '#D4AF37' }}>NIL Compliance</h1>
-    <p>NCAA compliance tools and deal tracking for student athletes.</p>
-  </div>
-);
 
 export default App;

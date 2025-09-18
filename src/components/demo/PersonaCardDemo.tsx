@@ -59,14 +59,6 @@ export function PersonaCardDemo() {
             icon="🏥"
           />
 
-          {/* NIL example */}
-          <PersonaCard
-            title="NIL Deal Tracker"
-            persona="nil"
-            features={['NCAA compliance check', 'Deal structure analysis', 'Revenue reporting']}
-            tagline="Game-changing compliance"
-            icon="🏆"
-          />
         </div>
 
         {/* Usage examples */}

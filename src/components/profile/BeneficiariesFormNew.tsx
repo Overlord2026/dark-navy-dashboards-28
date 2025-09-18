@@ -22,7 +22,7 @@ import {
 import { DatePicker } from "@/components/ui/date-picker";
 import { beneficiarySchema } from "./beneficiarySchema";
 import { BeneficiaryList } from "./BeneficiaryList";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
 

@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { LockIcon, ShieldIcon, ArrowLeft, CheckCircle } from "lucide-react";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { auditLog } from "@/services/auditLog/auditLogService";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
 
 export function SecurityForm({ onSave }: { onSave: () => void }) {

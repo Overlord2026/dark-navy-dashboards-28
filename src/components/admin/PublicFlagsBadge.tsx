@@ -13,12 +13,11 @@ const BRAND = {
 const GROUPS = {
   publicShell: ['PUBLIC_DISCOVER_ENABLED','PUBLIC_CATALOG_ENABLED','PUBLIC_CTA_BAR','TRUST_EXPLAINER_ENABLED','DEMOS_ENABLED'],
   solutions:   ['SOLUTIONS_ENABLED'],
-  nil:         ['NIL_PUBLIC_ENABLED','NIL_AGENT_ENABLED','NIL_SCHOOL_ENABLED'],
   brands:      ['BRAND_PUBLIC_ENABLED'],
 };
 
 function computeStatus(f: any) {
-  const allKeys = [...GROUPS.publicShell, ...GROUPS.solutions, ...GROUPS.nil, ...GROUPS.brands];
+  const allKeys = [...GROUPS.publicShell, ...GROUPS.solutions, ...GROUPS.brands];
   const values = allKeys.map(k => !!f[k]);
   const trues = values.filter(Boolean).length;
   const falses = allKeys.filter(k => !f[k]);

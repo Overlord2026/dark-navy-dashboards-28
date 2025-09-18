@@ -9,7 +9,7 @@ import {
   FinancialPlansSummary
 } from "@/types/financial-plan";
 import { FinancialPlanService } from "./FinancialPlanService";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/integrations/supabase/client";
 
 export class SupabaseFinancialPlanService implements FinancialPlanService {
   

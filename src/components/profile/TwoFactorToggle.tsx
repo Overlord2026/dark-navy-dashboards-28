@@ -6,7 +6,7 @@ import { useUser } from "@/context/UserContext";
 import { toast } from "sonner";
 import { Shield, AlertTriangle } from "lucide-react";
 import { TwoFactorDialog } from "./TwoFactorDialog";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/integrations/supabase/client";
 
 interface TwoFactorToggleProps {
   className?: string;

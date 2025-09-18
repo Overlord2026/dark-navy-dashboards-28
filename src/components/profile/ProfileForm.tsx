@@ -11,7 +11,7 @@ import { PersonalInfoSection } from "./PersonalInfoSection";
 import { DemographicInfoSection } from "./DemographicInfoSection";
 import { ProfileDateOfBirthField } from "./ProfileDateOfBirthField";
 import { ProfileFormActions } from "./ProfileFormActions";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/integrations/supabase/client";
 
 const formSchema = z.object({
   title: z.string().optional(),
