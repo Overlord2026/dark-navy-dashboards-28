@@ -175,6 +175,7 @@ import Control401k from '@/pages/admin/Control401k';
 import Evidence from '@/pages/admin/Evidence';
 import CanonicalExports from "@/diag/CanonicalExports";
 import ReactDiag from '@/pages/ReactDiag';
+import AdminDiagnostics from '@/pages/admin/AdminDiagnostics';
 
 // Welcome Flow Components
 const FamilyWelcomeFlow = lazy(() => import('@/components/welcome/FullScreenWelcome').then(m => ({ default: m.FullScreenWelcome })));
@@ -864,6 +865,7 @@ function App() {
             )}
 
             {/* Admin Routes - Flag Protected */}
+            <Route path="/admin/diagnostics" element={<AdminDiagnostics />} />
             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/qa-coverage" element={<QACoverage />} />}
             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/ready-check" element={<ReadyCheck />} />}
             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/ready-check-enhanced" element={<ReadyCheckEnhanced />} />}
