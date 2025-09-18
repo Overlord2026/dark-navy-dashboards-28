@@ -219,6 +219,63 @@ export default function InvitePage() {
                 </form>
               </CardContent>
             </Card>
+
+            {/* Recent Invitations Management */}
+            <Card className="border-border bg-card">
+              <CardHeader>
+                <CardTitle className="text-lg">Recent Invitations</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="p-4 border rounded-lg">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-medium">john@example.com</p>
+                        <p className="text-sm text-muted-foreground">Sent 2 days ago • Pending</p>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          onClick={() => {
+                            navigator.clipboard.writeText(`${window.location.origin}/invite/abc123`);
+                            toast.success('Invite link copied to clipboard');
+                          }}
+                        >
+                          Copy Link
+                        </Button>
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          onClick={() => toast.success('Invitation re-sent')}
+                        >
+                          Re-send
+                        </Button>
+                        <Button 
+                          size="sm" 
+                          variant="destructive"
+                          onClick={() => toast.success('Invitation revoked')}
+                        >
+                          Revoke
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="p-4 border rounded-lg">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-medium">jane@example.com</p>
+                        <p className="text-sm text-muted-foreground">Sent 1 week ago • Accepted</p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded">Active</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
 
           {/* Sidebar Info */}

@@ -1,5 +1,26 @@
 # Patch Log
 
+## 2024-12-XX - Bidirectional Invite Flow Implementation
+
+### Summary
+Implemented complete bidirectional invite functionality: advisor→family and family→advisor flows with lifecycle management.
+
+### Files Changed
+- **NEW**: `src/pages/invite/InviteAdvisor.tsx` - Family-initiated advisor invitation page
+- **NEW**: `src/pages/invite/InviteRedemption.tsx` - Universal invite redemption handler  
+- **MODIFIED**: `src/routes.tsx` - Added `/invite/advisor` and `/invite/:token` routes
+- **MODIFIED**: `src/features/advisors/platform/pages/InvitePage.tsx` - Enhanced with copy/re-send/revoke actions
+
+### Features
+1. **Family→Advisor** (`/invite/advisor`) - Form submission inserts pending row in prospect_invitations
+2. **Redemption** (`/invite/:token`) - Validates tokens, updates status to accepted, redirects appropriately  
+3. **Management** - Copy link, re-send, revoke with toast feedback
+4. **Schema** - Uses existing prospect_invitations table, compatible with leads-invite edge function
+
+### Commit: `feat(invites): bidirectional invites + row actions`
+
+---
+
 ## Latest Changes
 
 ### feat/advisors-invite - Enhanced Advisor Family Invite Integration with Supabase

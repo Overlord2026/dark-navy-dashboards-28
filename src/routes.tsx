@@ -635,6 +635,20 @@ export const router = createBrowserRouter([
     element: <SecureMessagesPage />
   },
   {
+    path: "/invite/advisor",
+    element: React.createElement(() => {
+      const { default: InviteAdvisor } = require('./pages/invite/InviteAdvisor');
+      return React.createElement(InviteAdvisor);
+    })
+  },
+  {
+    path: "/invite/:token",
+    element: React.createElement(() => {
+      const { default: InviteRedemption } = require('./pages/invite/InviteRedemption');
+      return React.createElement(InviteRedemption);
+    })
+  },
+  {
     path: "/qa-playbook",
     element: <QAPlaybookPage />
   },
