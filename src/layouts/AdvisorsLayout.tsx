@@ -88,31 +88,31 @@ export function AdvisorsLayout() {
 
       <div className="min-h-screen bg-background">
         {/* Header */}
-        <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
+        <header className="bfo-header sticky top-0 z-50">
           <div className="container mx-auto px-4 py-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2">
-                  <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                    <TrendingUp className="w-5 h-5 text-primary" />
+                  <div className="bfo-icon-container">
+                    <TrendingUp className="w-5 h-5" />
                   </div>
                   <div>
-                    <h1 className="text-xl font-semibold">Advisor Workspace</h1>
+                    <h1 className="text-xl font-semibold text-bfo-gold">ADVISOR PLATFORM</h1>
                     {activeTabData && (
-                      <p className="text-sm text-muted-foreground">{activeTabData.description}</p>
+                      <p className="text-sm text-white/70">{activeTabData.description}</p>
                     )}
                   </div>
                 </div>
-                <Badge variant="secondary" className="ml-2">
+                <Badge variant="secondary" className="ml-2 bg-bfo-gold text-bfo-navy">
                   Professional
                 </Badge>
               </div>
               
               <div className="flex items-center gap-2">
-                <Button variant="ghost" size="sm" className="min-h-[44px] min-w-[44px]">
+                <Button variant="ghost" size="sm" className="text-white hover:text-bfo-gold min-h-[44px] min-w-[44px]">
                   <Bell className="w-4 h-4" />
                 </Button>
-                <Button variant="ghost" size="sm" className="min-h-[44px] min-w-[44px]">
+                <Button variant="ghost" size="sm" className="text-white hover:text-bfo-gold min-h-[44px] min-w-[44px]">
                   <Settings className="w-4 h-4" />
                 </Button>
               </div>
@@ -121,18 +121,18 @@ export function AdvisorsLayout() {
         </header>
 
         {/* Navigation Tabs */}
-        <nav className="border-b bg-background/95" aria-label="Advisor workspace navigation">
+        <nav className="bfo-subheader" aria-label="Advisor workspace navigation">
           <div className="container mx-auto px-4">
             <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-              <TabsList className="grid grid-cols-6 w-full h-auto p-1 bg-muted/50">
+              <TabsList className="grid grid-cols-6 w-full h-auto p-1 bg-transparent">
                 {advisorTabs.map((tab) => (
                   <TabsTrigger
                     key={tab.key}
                     value={tab.key}
                     className={cn(
                       "flex flex-col items-center gap-1 py-3 px-2 text-xs font-medium transition-all",
-                      "data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm",
-                      "hover:text-foreground/80"
+                      "data-[state=active]:bg-bfo-gold data-[state=active]:text-bfo-navy",
+                      "text-bfo-gold hover:text-white"
                     )}
                     aria-label={`${tab.label} - ${tab.description}`}
                   >
@@ -146,7 +146,7 @@ export function AdvisorsLayout() {
         </nav>
 
         {/* Main Content */}
-        <main className="container mx-auto px-4 py-6">
+        <main className="bg-bfo-navy-dark min-h-screen">
           <Outlet />
         </main>
       </div>
