@@ -1,5 +1,16 @@
 # Patch Log
 
+## 2025-09-19 - Safe Boot Hotfix (SafeToastProvider)
+
+**Issue**: "useState of null" crash caused by Radix ToastProvider React context issues at app startup.
+
+**Solution**: Hotfix - replaced Radix ToastProvider with SafeToastProvider (lazy Toaster only) to avoid duplicate React resolution at boot. No dependency changes.
+
+**Files Changed**:
+- Modified `src/providers/SafeToastProvider.tsx` - removed Radix ToastProvider wrapper, kept only Toaster component
+
+**Impact**: Maintains toast functionality while preventing React context crash. Reversible change that doesn't modify package.json.
+
 ## 2025-09-19 - Enhanced React Deduplication Fix
 
 **Issue**: "Cannot read properties of null (reading 'useState')" caused by React version mismatch between `react: "^18.3.1"` and `react-dom: "18.3.1"` creating multiple React instances.
