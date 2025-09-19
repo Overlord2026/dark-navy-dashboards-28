@@ -3,12 +3,17 @@
 /* Core Brand Variables */
 :root {
   --bfo-black: #000000;
-  --bfo-gold: #D4AF37;
+  --bfo-gold: #FFD700;
+  --bfo-gold-alt: #D4AF37;
   --bfo-white: #FFFFFF;
-  --bfo-navy: #001F3F;
+  --bfo-navy: #1e3a8a;
+  --bfo-navy-light: #1e40af;
+  --bfo-navy-dark: #0f172a;
   --bfo-purple: #5E17EB;
   --luxury-purple: 262 84% 45%;
   --bfo-gold-thin: 1px;
+  --bfo-emerald: #10b981;
+  --bfo-emerald-light: #34d399;
 }
 
 /* Enforce brand black headers with zero translucency */
@@ -33,19 +38,88 @@
   -webkit-backdrop-filter: none !important;
 }
 
-/* BFO Card Component */
+/* Professional Advisor Platform Cards */
 .bfo-card {
-  background-color: var(--bfo-white);
-  border: var(--bfo-gold-thin) solid var(--bfo-gold);
-  border-radius: 8px;
+  background-color: var(--bfo-navy);
+  border: 1px solid rgba(255, 215, 0, 0.2);
+  border-radius: 12px;
   padding: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: all 0.2s ease-in-out;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease-in-out;
+  color: var(--bfo-white);
 }
 
 .bfo-card:hover {
-  box-shadow: 0 4px 16px rgba(212, 175, 55, 0.2);
+  box-shadow: 0 8px 32px rgba(255, 215, 0, 0.1);
+  transform: translateY(-2px);
+  border-color: rgba(255, 215, 0, 0.3);
+}
+
+/* Professional Metric Cards */
+.bfo-metric-card {
+  background: linear-gradient(145deg, var(--bfo-navy), var(--bfo-navy-light));
+  border: 1px solid rgba(255, 215, 0, 0.15);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  transition: all 0.3s ease-in-out;
+  color: var(--bfo-white);
+  position: relative;
+  overflow: hidden;
+}
+
+.bfo-metric-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, transparent 0%, rgba(255, 215, 0, 0.02) 50%, transparent 100%);
+  pointer-events: none;
+}
+
+.bfo-metric-card:hover {
+  box-shadow: 0 12px 48px rgba(255, 215, 0, 0.08);
+  transform: translateY(-3px);
+  border-color: rgba(255, 215, 0, 0.25);
+}
+
+/* Professional Button System */
+.bfo-btn-gold {
+  background: linear-gradient(145deg, var(--bfo-gold), #ffed4e);
+  color: var(--bfo-navy);
+  border: none;
+  border-radius: 12px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  box-shadow: 0 4px 16px rgba(255, 215, 0, 0.3);
+  transition: all 0.3s ease-in-out;
+  text-transform: none;
+}
+
+.bfo-btn-gold:hover {
+  background: linear-gradient(145deg, #ffed4e, var(--bfo-gold));
+  box-shadow: 0 6px 24px rgba(255, 215, 0, 0.4);
   transform: translateY(-1px);
+  color: var(--bfo-navy);
+}
+
+.bfo-btn-outline {
+  background: transparent;
+  color: var(--bfo-white);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 500;
+  transition: all 0.3s ease-in-out;
+}
+
+.bfo-btn-outline:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.5);
+  color: var(--bfo-white);
 }
 
 /* Remove any translucency from headers system-wide */
@@ -67,19 +141,52 @@ header[role="banner"] {
   display: none !important;
 }
 
-/* Brand text colors */
+/* Professional Brand Colors */
 .text-bfo-black { color: var(--bfo-black) !important; }
 .text-bfo-gold { color: var(--bfo-gold) !important; }
+.text-bfo-gold-alt { color: var(--bfo-gold-alt) !important; }
 .text-bfo-white { color: var(--bfo-white) !important; }
 .text-bfo-navy { color: var(--bfo-navy) !important; }
 .text-bfo-purple { color: var(--bfo-purple) !important; }
+.text-bfo-emerald { color: var(--bfo-emerald) !important; }
 
-/* Brand background colors */
+/* Professional Background Colors */
 .bg-bfo-black { background-color: var(--bfo-black) !important; }
 .bg-bfo-gold { background-color: var(--bfo-gold) !important; }
+.bg-bfo-gold-alt { background-color: var(--bfo-gold-alt) !important; }
 .bg-bfo-white { background-color: var(--bfo-white) !important; }
 .bg-bfo-navy { background-color: var(--bfo-navy) !important; }
+.bg-bfo-navy-dark { background-color: var(--bfo-navy-dark) !important; }
 .bg-bfo-purple { background-color: var(--bfo-purple) !important; }
+.bg-bfo-emerald { background-color: var(--bfo-emerald) !important; }
+
+/* Professional Gradients */
+.bg-bfo-gradient-navy {
+  background: linear-gradient(145deg, var(--bfo-navy), var(--bfo-navy-light)) !important;
+}
+
+.bg-bfo-gradient-gold {
+  background: linear-gradient(145deg, var(--bfo-gold), #ffed4e) !important;
+}
+
+/* Professional Icon Containers */
+.bfo-icon-container {
+  width: 3rem;
+  height: 3rem;
+  background: rgba(255, 215, 0, 0.15);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--bfo-gold);
+  transition: all 0.3s ease-in-out;
+}
+
+.bfo-icon-container:hover {
+  background: rgba(255, 215, 0, 0.25);
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+}
 
 /* Luxury Purple & Gold Card styling for NIL */
 .bfo-card-luxury-purple {

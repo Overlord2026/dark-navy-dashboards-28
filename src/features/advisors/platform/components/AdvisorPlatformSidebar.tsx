@@ -8,7 +8,7 @@ import {
   TrendingUp, 
   Calendar,
   Settings,
-  ChevronDown,
+  ChevronLeft,
   ChevronRight
 } from "lucide-react"
 import { NavLink, useLocation } from "react-router-dom"
@@ -38,13 +38,16 @@ export function AdvisorPlatformSidebar() {
   const isActive = (path: string) => currentPath === path
 
   return (
-    <div className={cn("bg-background border-r flex flex-col h-full", collapsed ? "w-14" : "w-60")}>
-      <div className="p-4 border-b">
+    <div className={cn(
+      "bg-bfo-navy border-r border-bfo-gold/20 flex flex-col h-full transition-all duration-300",
+      collapsed ? "w-16" : "w-64"
+    )}>
+      <div className="p-4 border-b border-bfo-gold/20 flex justify-end">
         <button 
           onClick={() => setCollapsed(!collapsed)}
-          className="p-2 hover:bg-muted rounded-lg"
+          className="p-2 hover:bg-white/10 rounded-lg text-white/70 hover:text-white transition-colors"
         >
-          {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+          {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
         </button>
       </div>
       
@@ -54,27 +57,35 @@ export function AdvisorPlatformSidebar() {
             key={item.title}
             to={item.url}
             className={cn(
-              "flex items-center gap-3 px-3 py-2 rounded-lg transition-colors",
-              isActive(item.url) ? "bg-primary text-primary-foreground" : "hover:bg-muted"
+              "flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200 group",
+              isActive(item.url) 
+                ? "bg-bfo-gold/10 text-bfo-gold border border-bfo-gold/30" 
+                : "hover:bg-white/5 text-white/70 hover:text-white"
             )}
           >
-            <item.icon className="w-4 h-4" />
-            {!collapsed && <span>{item.title}</span>}
+            <item.icon className="w-5 h-5 flex-shrink-0" />
+            {!collapsed && (
+              <span className="font-medium text-sm">{item.title}</span>
+            )}
           </NavLink>
         ))}
         
-        <div className="pt-4 mt-4 border-t">
+        <div className="pt-4 mt-4 border-t border-bfo-gold/20">
           {settingsItems.map((item) => (
             <NavLink
               key={item.title}
               to={item.url}
               className={cn(
-                "flex items-center gap-3 px-3 py-2 rounded-lg transition-colors",
-                isActive(item.url) ? "bg-primary text-primary-foreground" : "hover:bg-muted"
+                "flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200",
+                isActive(item.url) 
+                  ? "bg-bfo-gold/10 text-bfo-gold border border-bfo-gold/30" 
+                  : "hover:bg-white/5 text-white/70 hover:text-white"
               )}
             >
-              <item.icon className="w-4 h-4" />
-              {!collapsed && <span>{item.title}</span>}
+              <item.icon className="w-5 h-5 flex-shrink-0" />
+              {!collapsed && (
+                <span className="font-medium text-sm">{item.title}</span>
+              )}
             </NavLink>
           ))}
         </div>
