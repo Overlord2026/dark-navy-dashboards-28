@@ -13,12 +13,16 @@ export default defineConfig(({ mode }) => ({
     alias: {
       "@": path.resolve(__dirname, "src"),
       "@advisor": path.resolve(__dirname, "src/features/advisors/platform"),
+      // Force single React instance
+      "react": path.resolve(__dirname, "node_modules/react"),
+      "react-dom": path.resolve(__dirname, "node_modules/react-dom"),
     },
     dedupe: ["react","react-dom","react-dom/client","react/jsx-runtime","react/jsx-dev-runtime"],
   },
   optimizeDeps: { 
     include: ["react","react-dom","react-dom/client"],
-    exclude: ["@radix-ui/react-toast"] 
+    exclude: ["@radix-ui/react-toast"],
+    force: true // Force re-optimization
   },
   define: {
     // Force single React instance

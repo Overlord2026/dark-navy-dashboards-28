@@ -1,5 +1,16 @@
 # Patch Log
 
+## 2025-09-19 - Enhanced React Deduplication Fix
+
+**Issue**: "Cannot read properties of null (reading 'useState')" caused by React version mismatch between `react: "^18.3.1"` and `react-dom: "18.3.1"` creating multiple React instances.
+
+**Solution**: Enhanced Vite config with explicit React alias paths and forced re-optimization to ensure single React instance.
+
+**Files Changed**:
+- Modified `vite.config.ts` - added explicit react/react-dom aliases and `force: true` for optimizeDeps
+
+**Impact**: Forces Vite to use single React instance, preventing hook context null errors.
+
 ## 2025-09-19 - Toast Provider Hotfix
 
 **Issue**: Radix ToastProvider causing "useState of null" runtime crash on app boot.
