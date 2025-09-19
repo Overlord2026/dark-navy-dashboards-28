@@ -4,7 +4,6 @@ import {
   Toast,
   ToastClose,
   ToastDescription,
-  ToastProvider,
   ToastTitle,
   ToastViewport,
 } from "@/components/ui/toast"
@@ -13,7 +12,7 @@ export function Toaster() {
   const { toasts } = useToast()
 
   return (
-    <ToastProvider>
+    <>
       {toasts
         // Ultra-aggressive filtering to prevent ghost toasts using whitelist approach
         .filter(toast => {
@@ -50,6 +49,6 @@ export function Toaster() {
           )
         })}
       <ToastViewport />
-    </ToastProvider>
+    </>
   )
 }
