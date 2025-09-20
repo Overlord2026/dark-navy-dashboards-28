@@ -2,6 +2,14 @@
 
 ## Recent Changes
 
+- refactor(toast): provider-free sonner API + helpers; remove Radix toast imports
+  - Completely removed all @radix-ui/react-toast dependencies and imports
+  - Updated `src/hooks/use-toast.ts` with full ToastAPI including .success/.error/.info/.loading/.dismiss/.promise helpers
+  - Added `action` property support to ToastInput type for button/icon actions in toasts
+  - Replaced `src/components/ui/toast.tsx` with pure shims (no Radix runtime dependencies)
+  - Updated `src/providers/SafeToastProvider.tsx` to use only Sonner Toaster component
+  - Fixed all TypeScript errors across 30+ files that were using old toast import patterns
+  - System now fully provider-free with backward-compatible API for existing call sites
 - fix(toast): remove residual Radix shim + make useToast accept JSX; patched two JSX call sites; provider-free Sonner is now canonical.
   - Replaced `src/components/ui/toast.tsx` with empty Radix shims to maintain API compatibility
   - Updated `src/hooks/use-toast.ts` to accept ReactNode/JSX directly and pass to Sonner
