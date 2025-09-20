@@ -1,4 +1,5 @@
 import React from 'react'
+import { ToastProvider } from '@/components/ui/toast'
 import { Toaster } from '@/components/ui/toaster'
 
 interface SafeToastProviderProps {
@@ -7,9 +8,9 @@ interface SafeToastProviderProps {
 
 export function SafeToastProvider({ children }: SafeToastProviderProps) {
   return (
-    <>
+    <ToastProvider>
       {children}
       <Toaster />
-    </>
+    </ToastProvider>
   )
 }

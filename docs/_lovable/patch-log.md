@@ -23,6 +23,17 @@
 
 **Impact**: Prevents React context crashes during app initialization while maintaining full toast functionality.
 
+## 2025-09-20 - ToastProvider Context Fix
+
+**Issue**: "ToastViewport must be used within ToastProvider" error after removing ToastProvider wrapper.
+
+**Solution**: Added ToastProvider back to SafeToastProvider to provide required context for ToastViewport.
+
+**Files Changed**:
+- `src/providers/SafeToastProvider.tsx` - Added ToastProvider wrapper around children and Toaster
+
+**Impact**: Fixes toast context errors while maintaining the safe provider pattern.
+
 ## 2025-09-20 - Toast Provider Fix Confirmation
 
 **Issue**: Confirmed SafeToastProvider replacement is already implemented correctly to prevent React "useState of null" crash.
