@@ -16,8 +16,8 @@ export const SecondaryNav: React.FC = () => {
   const navItems = [
     { label: 'Families', path: '/families' },
     { label: 'Service Pros', path: '/pros' }, 
-    { label: 'NIL', path: '/nil' },
-    { label: 'Load NIL Demo', path: '/nil/demo' },
+    // NIL conditionally included based on feature flag
+    ...((window as any).__ENABLE_NIL__ ? [{ label: 'NIL', path: '/nil' }, { label: 'Load NIL Demo', path: '/nil/demo' }] : []),
     { label: 'Healthcare', path: '/healthcare' },
     { label: 'Solutions', path: '/solutions' },
     { label: 'Learn', path: '/learn' },

@@ -1,4 +1,4 @@
-import { useEffect, useState, Suspense, lazy } from 'react';
+import React, { useEffect, useState, Suspense, lazy } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider } from "next-themes";
 import { HelmetProvider } from 'react-helmet-async';
@@ -109,6 +109,13 @@ import TrustAnchors from '@/pages/admin/anchors/Anchors';
 const ReceiptsAdmin = lazy(() => import('@/pages/admin/ReceiptsAdmin'));
 const CanonTest = lazy(() => import("@/components/testing/CanonTest"));
 import HealthCheck from "@/pages/HealthCheck";
+
+// NIL Components - Lazy loaded and gated
+const NILUniversity = lazy(() => import('@/pages/NILUniversity'));
+const NILLandingPage = lazy(() => import('@/pages/athletes/NILLandingPage'));
+const NILEducationCenter = lazy(() => import('@/pages/athletes/NILEducationCenter'));
+const NILSearchDemo = lazy(() => import('@/pages/demos/nil-search'));
+import NilDisabled from '@/pages/NilDisabled';
 
 // Demo Pages
 const RetireeBucketDemo = lazy(() => import('@/pages/demos/retiree-bucket'));
@@ -554,6 +561,51 @@ function App() {
             {/* Helpful redirects for old links */}
             <Route path="/personas" element={<Navigate to="/pros" replace />} />
             <Route path="/discover" element={<Navigate to="/catalog" replace />} />
+            
+            
+            {/* NIL Routes - Flag Gated */}
+            {(window as any).__ENABLE_NIL__ ? (
+              <>
+                <Route path="/nil" element={
+                  <Suspense fallback={<div className="min-h-screen bg-background flex items-center justify-center">Loading NIL...</div>}>
+                    <NILLandingPage />
+                  </Suspense>
+                } />
+                <Route path="/nil/university" element={
+                  <Suspense fallback={<div className="min-h-screen bg-background flex items-center justify-center">Loading NIL...</div>}>
+                    <NILUniversity />
+                  </Suspense>
+                } />
+                <Route path="/nil/education" element={
+                  <Suspense fallback={<div className="min-h-screen bg-background flex items-center justify-center">Loading NIL...</div>}>
+                    <NILEducationCenter />
+                  </Suspense>
+                } />
+                <Route path="/nil/demo" element={
+                  <Suspense fallback={<div className="min-h-screen bg-background flex items-center justify-center">Loading NIL...</div>}>
+                    <NILSearchDemo />
+                  </Suspense>
+                } />
+              </>
+            ) : (
+              <Route path="/nil/*" element={<NilDisabled />} />
+            )}
+
+            {/* Demo Routes for NIL personas - Flag Gated */}
+            {(window as any).__ENABLE_NIL__ ? (
+              <>
+                <Route path="/demos/nil-athlete" element={
+                  <Suspense fallback={<div className="min-h-screen bg-background flex items-center justify-center">Loading demo...</div>}>
+                    <DemoPage />
+                  </Suspense>
+                } />
+                <Route path="/demos/nil-school" element={
+                  <Suspense fallback={<div className="min-h-screen bg-background flex items-center justify-center">Loading demo...</div>}>
+                    <DemoPage />
+                  </Suspense>
+                } />
+              </>
+            ) : null}
             
             {/* Public Pages - Flag Protected */}
             {getFlag('PUBLIC_DISCOVER_ENABLED') && <Route path="/discover" element={<Discover />} />}

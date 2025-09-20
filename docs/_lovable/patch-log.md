@@ -66,6 +66,38 @@
 
 **Impact**: Toast system stable with SafeToastProvider preventing React context crashes. No changes needed.
 
+## 2025-09-20 - NIL Quarantine: Feature Flag Gating + Lazy Routes + 410 Guard
+
+**Issue**: Cleanly disable all NIL surfaces without deleting code or touching database.
+
+**Solution**: Implemented comprehensive feature flag system with build-time and runtime gating, lazy-loaded routes, and 410 Gone guards.
+
+**Changes Made**:
+- **Feature Flag System**: Created `src/config/features.ts` with `ENABLE_NIL = false` and added `__ENABLE_NIL__: false` build-time define in vite.config.ts
+- **Route Quarantine**: All NIL routes (`/nil/*`, `/demos/nil-*`) are now lazy-loaded and conditionally registered based on `__ENABLE_NIL__` flag
+- **Navigation Gating**: NIL items conditionally excluded from nav menus and secondary navigation when flag disabled
+- **410 Gone Guard**: Created `/src/pages/NilDisabled.tsx` to catch direct NIL URLs when feature disabled
+- **Code Preservation**: No NIL files deleted, no database changes - full quarantine via feature flags only
+
+**Files Modified**:
+- `src/config/features.ts` - NEW: Feature flag configuration with `ENABLE_NIL = false`
+- `vite.config.ts` - Added `__ENABLE_NIL__: false` build-time define
+- `src/pages/NilDisabled.tsx` - NEW: 410 Gone guard page for disabled NIL routes
+- `src/config/nav.ts` - Removed direct NIL nav item (now conditionally added in components)
+- `src/components/layout/SecondaryNav.tsx` - NIL nav items conditionally shown based on flag
+- `src/components/discover/PublicNavigation.tsx` - NIL dropdowns conditionally shown based on flag  
+- `src/App.tsx` - Added lazy-loaded, flag-gated NIL routes with 410 fallback
+
+**QA Checklist**:
+- [x] NIL nav items hidden when `__ENABLE_NIL__` is false
+- [x] Direct `/nil/*` URLs show 410 Gone page when flag disabled
+- [x] NIL components not imported/bundled when flag disabled
+- [x] Flag can be toggled in `src/config/features.ts` and `vite.config.ts` to re-enable
+- [x] All existing NIL functionality preserved behind flag for future use
+- [x] No database changes or file deletions
+
+**Impact**: Complete NIL quarantine achieved through feature flags. NIL surfaces hidden from users but code preserved for future re-enabling. Zero breaking changes to non-NIL functionality.
+
 ## 2025-09-20 - P0 Polish: Advisor UI + CPA/Attorney CTAs + Marketplace Links + Non-prod Badge
 
 **Issue**: Final P0 polish with minimal, additive changes to ship clean preview.

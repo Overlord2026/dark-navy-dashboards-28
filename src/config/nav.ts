@@ -6,7 +6,7 @@ export type NavItem = {
 };
 
 export const NAV: NavItem[] = [
-  { label: 'NIL', path: '/nil' },
+  // NIL item conditionally included based on feature flag in components that use this config
   { label: 'Search', path: '/search' },
   { label: 'Goals', path: '/goals' },
   { label: 'Catalog', path: '/catalog' },
