@@ -97,7 +97,7 @@ export const PublicNavigation: React.FC = () => {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             {/* NIL Dropdown - First Priority */}
-            {((window as any).__ENABLE_NIL__ || getFlag('NIL_PUBLIC_ENABLED')) && (
+            {(window as any).__ENABLE_NIL__ && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
@@ -199,8 +199,8 @@ export const PublicNavigation: React.FC = () => {
                 onKeyDown={handleKeyDown}
               >
                 <div className="space-y-6 mt-6">
-                  {/* NIL Accordion Section */}
-                  {((window as any).__ENABLE_NIL__ || getFlag('NIL_PUBLIC_ENABLED')) && (
+                   {/* NIL Accordion Section */}
+                   {(window as any).__ENABLE_NIL__ && (
                     <div className="space-y-2">
                       <Collapsible open={isNilOpen} onOpenChange={setIsNilOpen}>
                          <CollapsibleTrigger asChild>

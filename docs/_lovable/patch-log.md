@@ -1,5 +1,19 @@
 # Patch Log
 
+## 2025-09-20 - NIL Quarantine: Complete Flag-Gated Isolation
+
+**Files Changed:**
+- `src/components/discover/PublicNavigation.tsx` - Consolidated NIL gating to single `__ENABLE_NIL__` flag
+- `src/components/dashboard/PersonaDashboard.tsx` - Gated entire NIL persona section behind feature flag  
+- `src/components/discover/CatalogShelf.tsx` - Gated NIL persona formatting behind feature flag
+
+**QA Checklist:**
+- [ ] No NIL menu items appear when `ENABLE_NIL = false`
+- [ ] No NIL personas appear in dashboard when disabled
+- [ ] No NIL-related catalog entries when disabled
+- [ ] All `/nil/*` routes redirect to 410 page when disabled
+- [ ] No NIL components are imported/bundled when disabled
+
 ## Recent Changes
 
 - refactor(toast): provider-free sonner API + helpers; remove Radix toast imports

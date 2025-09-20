@@ -130,8 +130,10 @@ export const CatalogShelf: React.FC = () => {
       'insurance': 'Insurance',
       'healthcare': 'Healthcare',
       'realtor': 'Realtors',
-      'nil-athlete': 'NIL Athletes',
-      'nil-school': 'NIL Schools'
+      ...((window as any).__ENABLE_NIL__ ? {
+        'nil-athlete': 'NIL Athletes',
+        'nil-school': 'NIL Schools'
+      } : {})
     };
     return names[persona] || persona.charAt(0).toUpperCase() + persona.slice(1);
   };

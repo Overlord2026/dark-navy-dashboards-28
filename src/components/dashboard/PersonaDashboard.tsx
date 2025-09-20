@@ -26,14 +26,14 @@ interface PersonaDashboardProps {
   onPersonaChange: (persona: PersonaType) => void;
 }
 
-// Tool configurations for each persona
-const personaTools: Record<PersonaType, Array<{
+// Tool configurations for each persona - NIL gated  
+const personaTools: Partial<Record<PersonaType, Array<{
   title: string;
   features: string[];
   tagline: string;
   icon: any;
   priority: 'high' | 'medium' | 'low';
-}>> = {
+}>>> = {
   advisor: [
     {
       title: 'Reg BI Tracker',
@@ -186,44 +186,46 @@ const personaTools: Record<PersonaType, Array<{
       priority: 'medium'
     }
   ],
-  nil: [
-    {
-      title: 'NIL Deal Tracker',
-      features: [
-        'NCAA compliance verification',
-        'Deal structure analysis',
-        'Revenue reporting tools',
-        'Coach notification system'
-      ],
-      tagline: 'Game-changing compliance',
-      icon: Trophy,
-      priority: 'high'
-    },
-    {
-      title: 'Athlete Portfolio Manager',
-      features: [
-        'Brand value assessment',
-        'Social media monitoring',
-        'Performance analytics',
-        'Contract management'
-      ],
-      tagline: 'Maximize athlete potential',
-      icon: Users,
-      priority: 'high'
-    },
-    {
-      title: 'Educational Progress Tracker',
-      features: [
-        'Academic performance monitoring',
-        'Eligibility verification',
-        'Graduation pathway planning',
-        'Academic support coordination'
-      ],
-      tagline: 'Student-athlete success',
-      icon: CheckCircle,
-      priority: 'medium'
-    }
-  ],
+  ...((window as any).__ENABLE_NIL__ ? {
+    nil: [
+      {
+        title: 'NIL Deal Tracker',
+        features: [
+          'NCAA compliance verification',
+          'Deal structure analysis',
+          'Revenue reporting tools',
+          'Coach notification system'
+        ],
+        tagline: 'Game-changing compliance',
+        icon: Trophy,
+        priority: 'high'
+      },
+      {
+        title: 'Athlete Portfolio Manager',
+        features: [
+          'Brand value assessment',
+          'Social media monitoring',
+          'Performance analytics',
+          'Contract management'
+        ],
+        tagline: 'Maximize athlete potential',
+        icon: Users,
+        priority: 'high'
+      },
+      {
+        title: 'Educational Progress Tracker',
+        features: [
+          'Academic performance monitoring',
+          'Eligibility verification',
+          'Graduation pathway planning',
+          'Academic support coordination'
+        ],
+        tagline: 'Student-athlete success',
+        icon: CheckCircle,
+        priority: 'medium'
+      }
+    ]
+  } : {}),
   accountant: [
     {
       title: 'AICPA Compliance Suite',
@@ -299,13 +301,53 @@ const personaTools: Record<PersonaType, Array<{
       icon: Shield,
       priority: 'medium'
     }
-  ]
+  ],
+  ...((window as any).__ENABLE_NIL__ ? {
+    nil: [
+      {
+        title: 'NIL Deal Tracker',
+        features: [
+          'NCAA compliance verification',
+          'Deal structure analysis',
+          'Revenue reporting tools',
+          'Coach notification system'
+        ],
+        tagline: 'Game-changing compliance',
+        icon: Trophy,
+        priority: 'high' as const
+      },
+      {
+        title: 'Athlete Portfolio Manager',
+        features: [
+          'Brand value assessment',
+          'Social media monitoring',
+          'Performance analytics',
+          'Contract management'
+        ],
+        tagline: 'Maximize athlete potential',
+        icon: Users,
+        priority: 'high' as const
+      },
+      {
+        title: 'Educational Progress Tracker',
+        features: [
+          'Academic performance monitoring',
+          'Eligibility verification',
+          'Graduation pathway planning',
+          'Academic support coordination'
+        ],
+        tagline: 'Student-athlete success',
+        icon: CheckCircle,
+        priority: 'medium' as const
+      }
+    ]
+  } : {})
 };
 
 export function PersonaDashboard({ currentPersona, onPersonaChange }: PersonaDashboardProps) {
   const [selectedTool, setSelectedTool] = useState<string | null>(null);
   
-  const currentTools = personaTools[currentPersona];
+  const currentTools = personaTools[currentPersona] || [];
   const highPriorityTools = currentTools.filter(tool => tool.priority === 'high');
   const mediumPriorityTools = currentTools.filter(tool => tool.priority === 'medium');
 
