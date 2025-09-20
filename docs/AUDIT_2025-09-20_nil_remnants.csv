@@ -1,0 +1,58 @@
+path,line,match,context
+BFO_HQ/02_ROUTE_MAP.md,7,nil,/nil/* - NIL athlete management
+BFO_HQ/10_CHANGELOG.md,7,NIL,NIL demo components
+BFO_HQ/11_RELEASE_NOTES.md,8,NIL,NIL athlete management system
+BFO_HQ/12_CROSS_PROJECT_INDEX.md,14,NIL,### NIL Management Platform
+MASTER_INVENTORY_DOCUMENT.md,151,athlete,18. **Professional Athlete/NIL** ✅
+MASTER_INVENTORY_DOCUMENT.md,152,athlete,Route: `/athletes/*`
+MASTER_INVENTORY_DOCUMENT.md,154,NIL,Tools: NIL education wealth preservation
+NIL_MIGRATION_PLAN.md,1,NIL,# NIL Project Migration Plan - Phase 1
+NIL_MIGRATION_PLAN.md,4,NIL,separating the NIL (Name Image Likeness) compliance platform
+NIL_MIGRATION_PLAN.md,6,NIL,## Current NIL Implementation Analysis
+NIL_MIGRATION_PLAN.md,8,NIL,### Frontend Components (239 files with NIL references)
+NIL_MIGRATION_PLAN.md,9,NIL,**Core NIL Pages:** 25+ pages including:
+NIL_MIGRATION_PLAN.md,10,nil,/pages/nil/ - Landing onboarding education search goals
+NIL_MIGRATION_PLAN.md,11,nil,/pages/nil/admin/ - Admin ready-check tools
+NIL_MIGRATION_PLAN.md,12,nil,/pages/nil/athlete/ - Athlete-specific home page
+NIL_MIGRATION_PLAN.md,13,nil,/pages/demos/nil-search - NIL search demonstration
+NIL_MIGRATION_PLAN.md,15,NIL,**NIL Components:** 50+ components in:
+NIL_MIGRATION_PLAN.md,16,nil,src/features/nil/ - Core NIL business logic
+NIL_MIGRATION_PLAN.md,17,nil,src/components/nil/ - NIL-specific UI components
+NIL_MIGRATION_PLAN.md,18,NIL,NIL-specific routing and navigation
+NIL_MIGRATION_PLAN.md,21,NIL,**Edge Functions (5 NIL-specific):**
+NIL_MIGRATION_PLAN.md,22,nil,nil-anchor-resolver - Blockchain anchoring for NIL receipts
+NIL_MIGRATION_PLAN.md,23,nil,nil-auth-verify - NIL authentication verification
+NIL_MIGRATION_PLAN.md,24,nil,nil-disclosure-processor - NIL disclosure document processing
+NIL_MIGRATION_PLAN.md,25,nil,nil-onboarding-automation - Automated NIL onboarding
+NIL_MIGRATION_PLAN.md,26,nil,nil-policy-evaluate - Policy evaluation engine
+NIL_MIGRATION_PLAN.md,28,NIL,**Database Tables (22+ NIL tables):**
+NIL_MIGRATION_PLAN.md,29,nil_,nil_athletes nil_contracts nil_deals nil_disclosures
+NIL_MIGRATION_PLAN.md,30,nil_,nil_events nil_receipts nil_brand_offers nil_posts
+NIL_MIGRATION_PLAN.md,31,nil_,nil_disputes nil_training_modules nil_consent_passports
+NIL_MIGRATION_PLAN.md,32,NIL,And 11 more NIL-specific tables
+NIL_MIGRATION_PLAN.md,35,nilFeatureFlags,src/config/nilFeatureFlags.ts - NIL feature toggles
+NIL_MIGRATION_PLAN.md,36,nilTools,src/config/nilTools.json - NIL workspace configuration
+NIL_MIGRATION_PLAN.md,37,nilEntitlements,src/data/nilEntitlements.ts - NIL subscription tiers
+NIL_MIGRATION_PLAN.md,38,useNILAccess,src/hooks/useNILAccess.ts - NIL access control
+NIL_MIGRATION_PLAN.md,39,nil,fixtures/fixtures.nil.ts - NIL demo data
+NIL_MIGRATION_PLAN.md,42,nil-athlete,nil-athlete and nil-school personas in persona configuration
+NIL_MIGRATION_PLAN.md,43,NIL,NIL-specific onboarding flows and workspace layouts
+NIL_MIGRATION_PLAN.md,51,NIL,Name: "NIL Compliance Platform"
+NIL_MIGRATION_PLAN.md,52,NIL,Description: "Name Image Likeness compliance platform"
+NIL_MIGRATION_PLAN.md,55,NIL,Set up new Supabase project for NIL
+NIL_MIGRATION_PLAN.md,61,NIL,1. **Export NIL Database Schema**
+NIL_MIGRATION_PLAN.md,63,NIL,-- Export all 22 NIL tables
+NIL_MIGRATION_PLAN.md,64,nil_,pg_dump --schema-only --table="nil_*" source_db > nil_schema.sql
+NIL_MIGRATION_PLAN.md,67,NIL,2. **Migrate NIL Tables**
+NIL_MIGRATION_PLAN.md,68,nil_,Transfer all `nil_*` tables with their data
+NIL_MIGRATION_PLAN.md,69,NIL,Update RLS policies for NIL-only context
+NIL_MIGRATION_PLAN.md,70,NIL,Migrate NIL-specific database functions
+NIL_MIGRATION_PLAN.md,74,NIL,Remove non-NIL user references
+NIL_MIGRATION_PLAN.md,75,NIL,Simplify authentication for NIL personas only
+NIL_MIGRATION_PLAN.md,76,NIL,Optimize indexes for NIL-specific queries
+NIL_MIGRATION_PLAN.md,81,NIL,Copy all 5 NIL edge functions to new project
+NIL_MIGRATION_PLAN.md,92,NIL,1. **Core NIL Features Transfer**
+NIL_MIGRATION_PLAN.md,94,NIL,# Copy entire NIL feature set
+NIL_MIGRATION_PLAN.md,95,nil,src/features/nil/ -> new-project/src/features/nil/
+NIL_MIGRATION_PLAN.md,96,nil,src/pages/nil/ -> new-project/src/pages/nil/
+NIL_MIGRATION_PLAN.md,97,nil,src/components/nil/ -> new-project/src/components/
