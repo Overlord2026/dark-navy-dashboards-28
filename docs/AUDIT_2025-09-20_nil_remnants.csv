@@ -37,22 +37,19 @@ NIL_MIGRATION_PLAN.md,38,useNILAccess,src/hooks/useNILAccess.ts - NIL access con
 NIL_MIGRATION_PLAN.md,39,nil,fixtures/fixtures.nil.ts - NIL demo data
 NIL_MIGRATION_PLAN.md,42,nil-athlete,nil-athlete and nil-school personas in persona configuration
 NIL_MIGRATION_PLAN.md,43,NIL,NIL-specific onboarding flows and workspace layouts
-NIL_MIGRATION_PLAN.md,51,NIL,Name: "NIL Compliance Platform"
-NIL_MIGRATION_PLAN.md,52,NIL,Description: "Name Image Likeness compliance platform"
-NIL_MIGRATION_PLAN.md,55,NIL,Set up new Supabase project for NIL
-NIL_MIGRATION_PLAN.md,61,NIL,1. **Export NIL Database Schema**
-NIL_MIGRATION_PLAN.md,63,NIL,-- Export all 22 NIL tables
-NIL_MIGRATION_PLAN.md,64,nil_,pg_dump --schema-only --table="nil_*" source_db > nil_schema.sql
-NIL_MIGRATION_PLAN.md,67,NIL,2. **Migrate NIL Tables**
-NIL_MIGRATION_PLAN.md,68,nil_,Transfer all `nil_*` tables with their data
-NIL_MIGRATION_PLAN.md,69,NIL,Update RLS policies for NIL-only context
-NIL_MIGRATION_PLAN.md,70,NIL,Migrate NIL-specific database functions
-NIL_MIGRATION_PLAN.md,74,NIL,Remove non-NIL user references
-NIL_MIGRATION_PLAN.md,75,NIL,Simplify authentication for NIL personas only
-NIL_MIGRATION_PLAN.md,76,NIL,Optimize indexes for NIL-specific queries
-NIL_MIGRATION_PLAN.md,81,NIL,Copy all 5 NIL edge functions to new project
-NIL_MIGRATION_PLAN.md,92,NIL,1. **Core NIL Features Transfer**
-NIL_MIGRATION_PLAN.md,94,NIL,# Copy entire NIL feature set
-NIL_MIGRATION_PLAN.md,95,nil,src/features/nil/ -> new-project/src/features/nil/
-NIL_MIGRATION_PLAN.md,96,nil,src/pages/nil/ -> new-project/src/pages/nil/
-NIL_MIGRATION_PLAN.md,97,nil,src/components/nil/ -> new-project/src/components/
+src/api/purge.ts,15,nil,console.log('   - /nil/*');
+src/audit/multi_persona_os_inventory.json,132,athlete,src/pages/AthleteNIL.tsx
+src/audit/multi_persona_os_inventory.json,136,athlete,Athlete management
+src/audit/multi_persona_os_inventory.json,137,NIL,NIL deal tracking
+src/components/admin/AdminFixturesPanel.tsx,69,NIL,Manage demo data for NIL compliance testing
+src/components/admin/AdminFixturesPanel.tsx,127,athlete,Parent/guardian scenario with multiple student-athletes
+src/components/agents/AgentRepAgreements.tsx,19,athleteName,athleteName: string;
+src/components/agents/AgentRepAgreements.tsx,20,athleteEmail,athleteEmail: string;
+src/components/agents/AgentRepAgreements.tsx,31,athleteName,athleteName: 'Jordan Mitchell'
+src/components/agents/AgentRepAgreements.tsx,32,athleteEmail,athleteEmail: 'jordan.mitchell@university.edu'
+src/components/agents/AgentRepAgreements.tsx,39,athleteName,athleteName: 'Alex Rodriguez'
+src/components/agents/AgentRepAgreements.tsx,40,athleteEmail,athleteEmail: 'alex.rodriguez@university.edu'
+src/components/agents/AgentRepAgreements.tsx,80,athlete,description: `Signature request sent to ${agreement.athleteName}`
+src/components/agents/AgentRepAgreements.tsx,125,athlete,Manage athlete representation agreements and signatures
+src/components/agents/AgentRepAgreements.tsx,157,athlete,{agreement.athleteName}
+src/components/agents/AgentRepAgreements.tsx,161,athlete,{agreement.athleteEmail}
