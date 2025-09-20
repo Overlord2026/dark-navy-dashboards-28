@@ -159,9 +159,9 @@ export function ProfessionalTabs() {
     
     // Route to specific professional hubs for accountants and attorneys
     if (segment === 'cpa') {
-      navigate('/pros/accountants-cta');
+      navigate('/pros/accountants');
     } else if (segment === 'attorney_estate' || segment === 'attorney_litigation') {
-      navigate('/pros/attorneys-cta');
+      navigate('/pros/attorneys');
     } else if (segment === 'advisor') {
       navigate('/pros/advisors');
     } else {

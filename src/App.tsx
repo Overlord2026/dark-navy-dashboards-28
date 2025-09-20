@@ -157,7 +157,8 @@ import StarterPage from '@/pages/learn/StarterPage';
 import AdvisorPersonaDashboard from '@/pages/personas/AdvisorPersonaDashboard';
 import AdvisorDashboardWithSideNav from '@/pages/personas/AdvisorDashboardWithSideNav';
 import AccountantDashboard from '@/pages/pros/AccountantDashboard';
-import Attorneys from '@/pages/pros/Attorneys';
+import AccountantsAccess from '@/pages/pros/AccountantsAccess';
+import AttorneysAccess from '@/pages/pros/AttorneysAccess';
 import FamilyRoadmap from '@/pages/family/FamilyRoadmap';
 import InsurancePersonaDashboard from '@/pages/personas/InsurancePersonaDashboard';
 import AccountantPersonaDashboard from '@/pages/personas/AccountantPersonaDashboard';
@@ -395,6 +396,8 @@ function App() {
             <Route path="/families/:type" element={<FamilyTypeDashboard />} />
             <Route path="/family/home" element={<FamilyDashboard />} />
             <Route path="/pros" element={<ProsHub />} />
+            <Route path="/pros/accountants" element={<AccountantsAccess />} />
+            <Route path="/pros/attorneys" element={<AttorneysAccess />} />
             <Route path="/pros/accountants-cta" element={<AccountantsCTA />} />
             <Route path="/pros/attorneys-cta" element={<AttorneysCTA />} />
             <Route path="/pros/:role" element={<ProWorkspaceLayout />}>
@@ -519,14 +522,14 @@ function App() {
               <Route path="calendar" element={<CalendarPage />} />
               <Route path="settings" element={<SettingsPage />} />
             </Route>
-            <Route path="/pros/accountants" element={
+            <Route path="/pros/accountants/dashboard" element={
               <PersonaGuard allowedPersonas={['accountant']}>
                 <AccountantDashboard />
               </PersonaGuard>
             } />
-            <Route path="/pros/attorneys" element={
+            <Route path="/pros/attorneys/dashboard" element={
               <PersonaGuard allowedPersonas={['attorney']}>
-                <Attorneys />
+                <AttorneysAccess />
               </PersonaGuard>
             } />
             <Route path="/accountants" element={<AccountantDashboard />} />
