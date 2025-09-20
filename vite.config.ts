@@ -20,12 +20,16 @@ export default defineConfig(({ mode }) => ({
     dedupe: ["react","react-dom","react-dom/client","react/jsx-runtime","react/jsx-dev-runtime"],
   },
   optimizeDeps: { 
-    include: ["react","react-dom","react-dom/client"],
+    include: ["react","react-dom","react-dom/client","react/jsx-runtime"],
     exclude: ["@radix-ui/react-toast"],
     force: true // Force re-optimization
   },
   define: {
-    // Force single React instance
-    'process.env.NODE_ENV': JSON.stringify(mode)
+    // Force single React instance and build-time defines  
+    'process.env.NODE_ENV': JSON.stringify(mode),
+    __RUNTIME_REPO__: JSON.stringify(process.env.GITHUB_REPOSITORY || 'unknown'),
+    __RUNTIME_BRANCH__: JSON.stringify(process.env.VERCEL_GIT_COMMIT_REF || process.env.GITHUB_REF_NAME || 'local'),
+    // Ensure React globals are available
+    global: 'globalThis',
   }
 }));

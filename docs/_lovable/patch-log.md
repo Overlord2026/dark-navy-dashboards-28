@@ -11,6 +11,18 @@
 
 **Impact**: Maintains toast functionality while preventing React context crash. Reversible change that doesn't modify package.json.
 
+## 2025-09-20 - React useState Null Error Fix
+
+**Issue**: "Cannot read properties of null (reading 'useState')" crash during app initialization caused by React instance conflicts.
+
+**Solution**: Enhanced React deduplication in vite.config.ts and added defensive checks in useToast hook to handle React initialization issues.
+
+**Files Changed**:
+- `vite.config.ts` - Enhanced React deduplication and runtime defines  
+- `src/hooks/use-toast.ts` - Added React safety checks to prevent useState null errors
+
+**Impact**: Prevents React context crashes during app initialization while maintaining full toast functionality.
+
 ## 2025-09-20 - Toast Provider Fix Confirmation
 
 **Issue**: Confirmed SafeToastProvider replacement is already implemented correctly to prevent React "useState of null" crash.

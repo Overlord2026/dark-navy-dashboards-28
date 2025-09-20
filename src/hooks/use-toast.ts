@@ -1,4 +1,5 @@
 import { useState, useEffect, type ReactNode } from "react"
+import * as React from "react"
 
 import type {
   ToastActionElement,
@@ -179,6 +180,27 @@ toast.info = (message: string, props?: Omit<Toast, 'title' | 'description'>) =>
   toast({ title: "Info", description: message, variant: "default", ...props });
 
 function useToast() {
+  // Safety check: ensure React is properly initialized
+  if (typeof React === 'undefined' || !React) {
+    console.warn('React not properly initialized for useToast');
+    
+    // Create a fallback toast function that matches the interface
+    const fallbackToast = Object.assign(
+      () => ({ id: '', dismiss: () => {}, update: () => {} }),
+      {
+        success: (message: string, props?: any) => ({ id: '', dismiss: () => {}, update: () => {} }),
+        error: (message: string, props?: any) => ({ id: '', dismiss: () => {}, update: () => {} }),
+        info: (message: string, props?: any) => ({ id: '', dismiss: () => {}, update: () => {} }),
+      }
+    );
+    
+    return {
+      toasts: [],
+      toast: fallbackToast,
+      dismiss: () => {},
+    };
+  }
+
   const [state, setState] = useState<State>(memoryState)
 
   useEffect(() => {
