@@ -29,17 +29,14 @@ export default function TaxHubPreview() {
       feature
     });
 
-    toast({
-      title: `${feature} Demo`,
-      description: (
-        <div className="space-y-2">
-          <p>TaxHub feature demonstration completed</p>
-          <Badge variant="outline" className="text-xs">
-            Saved to Proof Slips
-          </Badge>
-        </div>
-      )
-    });
+    toast(
+      <div className="space-y-2">
+        <p><strong>{feature} Demo</strong> - TaxHub feature demonstration completed</p>
+        <Badge variant="outline" className="text-xs">
+          Saved to Proof Slips
+        </Badge>
+      </div>
+    );
   };
 
   const features = [

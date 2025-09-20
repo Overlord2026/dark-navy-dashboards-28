@@ -1,15 +1,13 @@
 # Patch Log
 
-## 2025-09-19 - Safe Boot Hotfix (SafeToastProvider)
+## Recent Changes
 
-**Issue**: "useState of null" crash caused by Radix ToastProvider React context issues at app startup.
-
-**Solution**: Hotfix - replaced Radix ToastProvider with SafeToastProvider (lazy Toaster only) to avoid duplicate React resolution at boot. No dependency changes.
-
-**Files Changed**:
-- Modified `src/providers/SafeToastProvider.tsx` - removed Radix ToastProvider wrapper, kept only Toaster component
-
-**Impact**: Maintains toast functionality while preventing React context crash. Reversible change that doesn't modify package.json.
+- fix(toast): remove residual Radix shim + make useToast accept JSX; patched two JSX call sites; provider-free Sonner is now canonical.
+  - Replaced `src/components/ui/toast.tsx` with empty Radix shims to maintain API compatibility
+  - Updated `src/hooks/use-toast.ts` to accept ReactNode/JSX directly and pass to Sonner
+  - Fixed TypeScript errors in `src/components/onboarding/OnboardingWizard.tsx` and `src/pages/family/TaxHubPreview.tsx`
+  - Eliminated all remaining @radix-ui/react-toast dependencies
+  - System now uses provider-free Sonner architecture with full JSX support
 
 ## 2025-09-20 - React useState Null Error Fix
 

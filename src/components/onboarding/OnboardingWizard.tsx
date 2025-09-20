@@ -189,22 +189,19 @@ export function OnboardingWizard({ onComplete, initialPersona }: OnboardingWizar
     );
     addReceipt(receipt);
     
-    toast({
-      title: "Receipt recorded",
-      description: (
-        <div className="flex items-center gap-2">
-          <span>Goal creation recorded</span>
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            onClick={() => window.location.href = '/receipts'}
-            className="h-auto p-1 text-xs"
-          >
-            View in Receipts
-          </Button>
-        </div>
-      ),
-    });
+    toast(
+      <div className="flex items-center gap-2">
+        <span><strong>Receipt recorded</strong> - Goal creation recorded</span>
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          onClick={() => window.location.href = '/receipts'}
+          className="h-auto p-1 text-xs"
+        >
+          View in Receipts
+        </Button>
+      </div>
+    );
 
     setSession(prev => ({
       ...prev,
