@@ -18,7 +18,7 @@ import { initializeAccessibility } from './utils/accessibility'
 import GlobalErrorBoundary from "@/components/monitoring/GlobalErrorBoundary";
 import { setupNetworkErrorHandling } from "@/components/monitoring/network";
 import { Toaster as SonnerToaster } from '@/components/ui/sonner';
-import { SafeToastProvider } from '@/providers/SafeToastProvider';
+import SafeToastProvider from '@/providers/SafeToastProvider';
 
 // Create a client
 const queryClient = new QueryClient({
@@ -65,7 +65,6 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <SafeToastProvider>
       <GlobalErrorBoundary>
         <QueryClientProvider client={queryClient}>
-          <SonnerToaster />
           <Suspense fallback={<div />}>
             <AuthProvider>
               <EntitlementsProvider>

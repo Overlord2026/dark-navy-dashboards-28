@@ -34,6 +34,19 @@
 
 **Impact**: Fixes toast context errors while maintaining the safe provider pattern.
 
+## 2025-09-20 - Provider-Free Toast System
+
+**Issue**: "useState of null" crashes from Radix ToastProvider during React initialization.
+
+**Solution**: Replaced Radix toast system with provider-free Sonner implementation while maintaining API compatibility.
+
+**Files Changed**:
+- `src/components/ui/toaster.tsx` - Simple Sonner wrapper with richColors and closeButton
+- `src/hooks/use-toast.ts` - Provider-free hook wrapping Sonner toast functions
+- `src/providers/SafeToastProvider.tsx` - Removed ToastProvider wrapper, just renders children + Toaster
+
+**Impact**: Eliminates React context crashes while maintaining 800+ existing useToast() calls unchanged.
+
 ## 2025-09-20 - Toast Provider Fix Confirmation
 
 **Issue**: Confirmed SafeToastProvider replacement is already implemented correctly to prevent React "useState of null" crash.

@@ -1,16 +1,11 @@
-import React from 'react'
-import { ToastProvider } from '@/components/ui/toast'
-import { Toaster } from '@/components/ui/toaster'
+import { ReactNode } from "react";
+import { Toaster } from "@/components/ui/toaster";
 
-interface SafeToastProviderProps {
-  children: React.ReactNode
-}
-
-export function SafeToastProvider({ children }: SafeToastProviderProps) {
+export default function SafeToastProvider({ children }: { children: ReactNode }) {
   return (
-    <ToastProvider>
+    <>
       {children}
       <Toaster />
-    </ToastProvider>
-  )
+    </>
+  );
 }
