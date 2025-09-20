@@ -12,8 +12,24 @@ export default function HeaderNav() {
   const [mobileOpen, setMobileOpen] = useState(false);
   useRouteClose(setMobileOpen);
 
+  // Non-prod environment badge
+  const showDevBadge = import.meta.env.MODE !== 'production';
+  const appName = import.meta.env.VITE_APP_NAME || 'BFO';
+  const repoInfo = typeof globalThis !== 'undefined' && (globalThis as any).__RUNTIME_REPO__ && (globalThis as any).__RUNTIME_BRANCH__ 
+    ? `${(globalThis as any).__RUNTIME_REPO__}@${(globalThis as any).__RUNTIME_BRANCH__}`
+    : 'dev-env';
+
   return (
     <header className="w-full border-b bg-background/80 backdrop-blur-sm sticky top-0 z-50" role="banner">
+      {showDevBadge && (
+        <div className="w-full bg-yellow-500/10 border-b border-yellow-500/20">
+          <div className="mx-auto max-w-7xl px-4 py-1">
+            <p className="text-xs text-yellow-700 dark:text-yellow-300 text-center font-mono">
+              {appName} • {repoInfo}
+            </p>
+          </div>
+        </div>
+      )}
       <div className="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between">
         {/* Logo */}
         <Link to="/" className="flex items-center space-x-2" aria-label="Boutique Family Office - Home">

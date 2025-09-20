@@ -178,7 +178,7 @@ export function AdvisorLeadsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Lead Management</h1>
+          <h1 className="text-2xl font-bold">Lead Management</h1>
           <p className="text-muted-foreground">Capture and manage prospects with PTC consent</p>
         </div>
         <div className="flex gap-2">
@@ -264,8 +264,8 @@ export function AdvisorLeadsPage() {
       </div>
 
       {/* Search and Filters */}
-      <Card>
-        <CardContent className="p-4">
+      <Card className="rounded-2xl shadow-sm border p-6 md:p-8">
+        <CardContent>
           <div className="flex items-center gap-4">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
@@ -285,9 +285,9 @@ export function AdvisorLeadsPage() {
       </Card>
 
       {/* Leads Table */}
-      <Card>
+      <Card className="rounded-2xl shadow-sm border p-6 md:p-8">
         <CardHeader>
-          <CardTitle>Leads ({filteredLeads.length})</CardTitle>
+          <CardTitle className="text-xl">Leads ({filteredLeads.length})</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">

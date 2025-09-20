@@ -66,23 +66,37 @@
 
 **Impact**: Toast system stable with SafeToastProvider preventing React context crashes. No changes needed.
 
-## 2025-09-20 - Read-Only NIL Audit & Integration Preparation
+## 2025-09-20 - P0 Polish: Advisor UI + CPA/Attorney CTAs + Marketplace Links + Non-prod Badge
 
-**Issue**: Comprehensive audit of NIL remnants and codebase analysis for Family Office Marketplace integration.
+**Issue**: Final P0 polish with minimal, additive changes to ship clean preview.
 
-**Analysis**: Generated audit artifacts to document current state:
-- 3,458+ NIL references across 279 files identified
-- Complete NIL database schema with 22+ tables and 8 custom ENUM types catalogued
-- 5 NIL-specific edge functions documented
-- Receipt/RDS system integration points mapped
-- 4 NIL personas (athlete, agent, school, brand) documented
-- Migration readiness assessment completed
+**Changes Made**:
+- **Advisor UI Polish**: Normalized headings (H1→text-2xl, H2→text-xl, H3→text-lg), standardized panels (rounded-2xl shadow-sm border p-6 md:p-8), consistent spacing (space-y-6, gap-6)
+- **CPA/Attorney CTA Pages**: Created `/pros/accountants-cta` and `/pros/attorneys-cta` with dual CTAs (Accept Invite → /invite/:token, Request Invite → /pros or /catalog)
+- **Marketplace Links**: Updated ProfessionalTabs component to route CPA→/pros/accountants, Attorney→/pros/attorneys, Advisor→/pros/advisors for proper navigation
+- **Non-prod Header Badge**: Added environment badge showing `${VITE_APP_NAME} • ${RUNTIME_REPO}@${RUNTIME_BRANCH}` when MODE !== 'production'
 
-**Artifacts Generated**:
-- `docs/AUDIT_2025-09-20.md` - Complete audit report with migration checklist, risk assessment, and integration roadmap
-- `docs/AUDIT_2025-09-20_nil_remnants.csv` - Detailed NIL reference locations (top 50 lines shown)
+**Files Modified**:
+- `src/pages/advisors/AdvisorHomePage.tsx` - Normalized H1 to text-2xl, panels to rounded-2xl shadow-sm border p-6 md:p-8
+- `src/pages/advisors/AdvisorLeadsPage.tsx` - Normalized H1 to text-2xl, consistent panel styling
+- `src/pages/advisors/AdvisorMeetingsPage.tsx` - Normalized H1 to text-2xl, consistent panel styling  
+- `src/pages/pros/AccountantsCTA.tsx` - NEW: CPA access page with Accept/Request CTAs
+- `src/pages/pros/AttorneysCTA.tsx` - NEW: Attorney access page with Accept/Request CTAs
+- `src/components/nav/HeaderNav.tsx` - Added non-prod environment badge
+- `src/components/pros/ProfessionalTabs.tsx` - Updated routing for proper marketplace navigation
+- `src/App.tsx` - Added routes for new CTA pages
 
-**Impact**: Preparation phase complete for potential NIL feature migration to standalone project. Comprehensive documentation provides foundation for Family Office Marketplace integration planning. No code changes made - documentation only.
+**QA Checklist**:
+- [ ] All advisor headings are text-2xl (not text-3xl)
+- [ ] All advisor panels use rounded-2xl shadow-sm border p-6 md:p-8
+- [ ] /pros/accountants-cta loads with dual CTAs
+- [ ] /pros/attorneys-cta loads with dual CTAs  
+- [ ] ProfessionalTabs routes CPA/Attorney segments to their respective pages
+- [ ] Non-prod badge shows in development (yellow banner with app/repo info)
+- [ ] No broken marketplace links from /pros or /catalog
+- [ ] All existing advisor functionality preserved
+
+**Impact**: Clean P0 preview ready with consistent UI, proper navigation, and development visibility. All changes are additive and preserve existing functionality.
 
 ## 2025-09-19 - Enhanced React Deduplication Fix
 

@@ -156,7 +156,17 @@ export function ProfessionalTabs() {
       segment,
       source: 'tabs'
     });
-    navigate(`/onboarding?persona=professional&segment=${segment}`);
+    
+    // Route to specific professional hubs for accountants and attorneys
+    if (segment === 'cpa') {
+      navigate('/pros/accountants');
+    } else if (segment === 'attorney_estate' || segment === 'attorney_litigation') {
+      navigate('/pros/attorneys');
+    } else if (segment === 'advisor') {
+      navigate('/pros/advisors');
+    } else {
+      navigate(`/onboarding?persona=professional&segment=${segment}`);
+    }
   };
 
   return (

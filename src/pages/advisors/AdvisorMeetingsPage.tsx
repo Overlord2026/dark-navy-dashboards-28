@@ -249,7 +249,7 @@ This summary was generated using AI and is stored in Keep-Safe vault.
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Meeting Management</h1>
+          <h1 className="text-2xl font-bold">Meeting Management</h1>
           <p className="text-muted-foreground">Record, import, and manage client meetings</p>
         </div>
         <div className="flex gap-2">
@@ -330,7 +330,7 @@ This summary was generated using AI and is stored in Keep-Safe vault.
 
       {/* Live Recording Status */}
       {isRecording && (
-        <Card className="border-red-200 bg-red-50">
+        <Card className="rounded-2xl shadow-sm border-red-200 bg-red-50 p-6">
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2">
@@ -345,9 +345,9 @@ This summary was generated using AI and is stored in Keep-Safe vault.
       )}
 
       {/* Meetings List */}
-      <Card>
+      <Card className="rounded-2xl shadow-sm border p-6 md:p-8">
         <CardHeader>
-          <CardTitle>Recent Meetings</CardTitle>
+          <CardTitle className="text-xl">Recent Meetings</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">

@@ -61,6 +61,8 @@ const FamiliesIndex = lazy(() => import('@/pages/families/index'));
 const ProsIndex = lazy(() => import('@/pages/pros/index'));
 import ProsHub from '@/pages/pros/ProsHub';
 import ToolsLauncher from '@/pages/pros/ToolsLauncher';
+import AccountantsCTA from '@/pages/pros/AccountantsCTA';
+import AttorneysCTA from '@/pages/pros/AttorneysCTA';
 import ProWorkspaceLayout from '@/components/layout/ProWorkspaceLayout';
 
 const HealthcareNew = lazy(() => import('@/pages/healthcare/index'));
@@ -386,6 +388,8 @@ function App() {
             <Route path="/families/:type" element={<FamilyTypeDashboard />} />
             <Route path="/family/home" element={<FamilyDashboard />} />
             <Route path="/pros" element={<ProsHub />} />
+            <Route path="/pros/accountants-cta" element={<AccountantsCTA />} />
+            <Route path="/pros/attorneys-cta" element={<AttorneysCTA />} />
             <Route path="/pros/:role" element={<ProWorkspaceLayout />}>
               <Route index element={<ToolsLauncher />} />
               <Route path="reports" element={<ReportsPage />} />

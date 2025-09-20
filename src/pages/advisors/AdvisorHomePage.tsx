@@ -108,16 +108,16 @@ export function AdvisorHomePage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Welcome back, {advisorInfo.name}</h1>
+          <h1 className="text-2xl font-bold">Welcome back, {advisorInfo.name}</h1>
           <p className="text-muted-foreground mt-1">{advisorInfo.title} • {advisorInfo.location}</p>
         </div>
         <Badge variant="secondary">Professional</Badge>
       </div>
 
       {/* Quick Actions */}
-      <Card>
+      <Card className="rounded-2xl shadow-sm border p-6 md:p-8">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+          <CardTitle className="text-xl flex items-center gap-2">
             <TrendingUp className="w-5 h-5" />
             Quick Actions
           </CardTitle>
@@ -147,8 +147,8 @@ export function AdvisorHomePage() {
       </Card>
 
       {/* Dashboard Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <Card className="rounded-2xl shadow-sm border p-6">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
@@ -160,8 +160,8 @@ export function AdvisorHomePage() {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardContent className="p-6">
+        <Card className="rounded-2xl shadow-sm border p-6">
+          <CardContent>
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-muted-foreground">This Month Meetings</p>
@@ -172,8 +172,8 @@ export function AdvisorHomePage() {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardContent className="p-6">
+        <Card className="rounded-2xl shadow-sm border p-6">
+          <CardContent>
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-muted-foreground">Campaign Opens</p>
@@ -184,8 +184,8 @@ export function AdvisorHomePage() {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardContent className="p-6">
+        <Card className="rounded-2xl shadow-sm border p-6">
+          <CardContent>
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-muted-foreground">Proof Slips</p>
@@ -198,10 +198,10 @@ export function AdvisorHomePage() {
       </div>
 
       {/* Recent Receipts */}
-      <Card>
+      <Card className="rounded-2xl shadow-sm border p-6 md:p-8">
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="text-xl flex items-center gap-2">
               <Receipt className="w-5 h-5" />
               Recent Proof Slips
             </CardTitle>
