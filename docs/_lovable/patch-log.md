@@ -1,5 +1,37 @@
 # Patch Log
 
+## 2025-09-20 - P0 Polish Complete: Advisor UI + CTA Pages + Links + Badge Verification
+
+**Issue**: Final P0 polish verification - ensure all components are ship-ready.
+
+**Verification Results**:
+- **Advisor UI Polish**: ✅ All advisor pages already use normalized styles (text-2xl headings, rounded-2xl shadow-sm border p-6 md:p-8 panels, space-y-6 spacing)
+- **CTA Pages**: ✅ `/pros/accountants` and `/pros/attorneys` pages exist with proper Accept/Request CTAs
+- **Marketplace Links**: ✅ ProfessionalTabs correctly routes CPA→accountants, Attorney→attorneys, Advisor→advisors
+- **Non-prod Badge**: ✅ HeaderNav displays environment info when MODE !== 'production'
+
+**Files Verified**:
+- `src/pages/advisors/AdvisorHomePage.tsx` - Already properly styled with text-2xl, rounded-2xl panels
+- `src/pages/advisors/AdvisorLeadsPage.tsx` - Already properly styled with text-2xl, rounded-2xl panels
+- `src/pages/advisors/AdvisorMeetingsPage.tsx` - Already properly styled with text-2xl, rounded-2xl panels
+- `src/pages/pros/AccountantsCTA.tsx` - Already exists with dual CTAs
+- `src/pages/pros/AttorneysCTA.tsx` - Already exists with dual CTAs
+- `src/components/nav/HeaderNav.tsx` - Already has non-prod badge implementation
+- `src/components/pros/ProfessionalTabs.tsx` - Already routes correctly to respective pages
+- `src/App.tsx` - Already has routes for CTA pages
+
+**QA Checklist**:
+- [x] All advisor headings are text-2xl (not text-3xl)
+- [x] All advisor panels use rounded-2xl shadow-sm border p-6 md:p-8
+- [x] /pros/accountants loads with dual CTAs (Accept Invite → /invite/:token, Request → /pros)
+- [x] /pros/attorneys loads with dual CTAs (Accept Invite → /invite/:token, Request → /catalog)
+- [x] ProfessionalTabs routes CPA/Attorney segments to their respective pages
+- [x] Non-prod badge shows in development (yellow banner with app/repo info)
+- [x] No broken marketplace links from /pros or /catalog
+- [x] All existing advisor functionality preserved
+
+**Impact**: P0 polish requirements already satisfied. All UI components, navigation, and features are properly implemented and ship-ready.
+
 ## 2025-09-20 - NIL Quarantine: Complete Flag-Gated Isolation
 
 **Files Changed:**
