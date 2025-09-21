@@ -11,3 +11,6 @@ export function SafeToastProvider({ children }: { children: React.ReactNode }) {
     </>
   );
 }
+
+// Keep default export too, so both import styles work
+export default SafeToastProvider;
