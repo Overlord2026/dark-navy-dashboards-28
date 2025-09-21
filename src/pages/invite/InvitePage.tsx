@@ -1,70 +1,41 @@
-import { useEffect } from 'react';
-import { useParams, Navigate } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
-
-type PersonaGroup = "family" | "pro";
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { acceptInvite, hubForPersona } from '@/lib/invites';
 
 export default function InvitePage() {
   const { token } = useParams<{ token: string }>();
+  const [sp] = useSearchParams();
+  const navigate = useNavigate();
+  const [status, setStatus] = useState<'loading' | 'ok' | 'error'>('loading');
+  const [message, setMessage] = useState<string>('Processing your invite…');
 
   useEffect(() => {
-    const processInvitation = async () => {
-      if (!token) return;
-
-      try {
-        console.log('Processing invitation token:', token);
-        
-        // Call the secure RPC function to validate and accept the invitation
-        const { data, error } = await supabase.rpc('accept_invite', { 
-          raw_token: token 
-        });
-
-        if (error) {
-          console.error('Error validating invitation:', error);
-          // Redirect to home with error
-          window.location.replace("/?error=invalid_invitation");
-          return;
-        }
-
-        if (!data || data.length === 0) {
-          console.error('Invalid or expired invitation token');
-          window.location.replace("/?error=expired_invitation");
-          return;
-        }
-
-        const invitation = data[0];
-        const persona_group: PersonaGroup = invitation.persona_group === 'pro' ? 'pro' : 'family';
-        const target_path = invitation.target_path || (persona_group === 'pro' ? '/pros' : '/families');
-        
-        // Set persona context
-        localStorage.setItem("persona_group", persona_group);
-        document.cookie = `persona_group=${persona_group};path=/;SameSite=Lax`;
-        
-        // Fire persona-switched event
-        window.dispatchEvent(new CustomEvent("persona-switched", { 
-          detail: { group: persona_group } 
-        }));
-
-        // Redirect to appropriate target
-        window.location.replace(target_path);
-        
-      } catch (error) {
-        console.error('Error processing invitation:', error);
-        // Fallback to home with error
-        window.location.replace("/?error=invitation_error");
+    const run = async () => {
+      if (!token) {
+        setStatus('error'); setMessage('Missing invite token.'); return;
+      }
+      const personaHint = sp.get('persona') || undefined;
+      const res = await acceptInvite(token, personaHint);
+      if (res.ok) {
+        const target = hubForPersona(res.persona || personaHint);
+        setStatus('ok'); setMessage('Invite accepted. Redirecting…');
+        setTimeout(() => navigate(target, { replace: true }), 600);
+      } else {
+        setStatus('error'); setMessage(res.error || 'Invite could not be accepted.');
       }
     };
+    run();
+  }, [token, sp, navigate]);
 
-    processInvitation();
-  }, [token]);
-
-  // Show loading while processing
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="text-center space-y-4">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-        <p className="text-muted-foreground">Processing your invitation...</p>
-      </div>
+    <div className="container mx-auto max-w-xl px-4 py-16 text-center">
+      <h1 className="text-2xl font-bold mb-2">Invite</h1>
+      <p className="text-muted-foreground">{message}</p>
+      {status === 'error' && (
+        <a href="/pros" className="inline-flex mt-6 rounded-lg border px-4 py-2">
+          Go to Professionals
+        </a>
+      )}
     </div>
   );
 }

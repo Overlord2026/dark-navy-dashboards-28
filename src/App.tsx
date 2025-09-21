@@ -229,6 +229,7 @@ const HealthcareProWorkbench = lazy(() => import('@/pages/attorney/HealthcarePro
 const CPAEstatePage = lazy(() => import('@/pages/cpa/CPAEstatePage'));
 
 import FamilyHome from '@/pages/families/FamilyHome';
+import InviteTokenPage from '@/pages/invite/InvitePage';
 import FamilyToolsHub from '@/pages/family/FamilyToolsHub';
 import RothLadderTool from '@/pages/family/RothLadderTool';
 import RMDCheckTool from '@/pages/family/RMDCheckTool';
@@ -388,6 +389,9 @@ function App() {
                 <MainPageOnboarding onAuthChoice={handleAuthChoice} />
               )
             } />
+            
+            {/* Invite Route */}
+            <Route path="/invite/:token" element={<InviteTokenPage />} />
             
             {/* Family Routes */}
             <Route path="/families" element={
