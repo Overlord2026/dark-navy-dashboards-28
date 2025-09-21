@@ -1,13 +1,12 @@
 [
   {
-    "key": "retirement-roadmap",
-    "label": "Retirement Roadmap",
-    "summary": "Turn assets into lifetime income with sequence-risk guardrails.",
-    "routePriv": "/tools/retirement-roadmap",
-    "routePub": "/catalog/retirement-roadmap",
-    "personas": ["family", "retiree", "advisor"],
-    "solutions": ["investments"],
-    "deps": []
+    "slug": "swag-retirement-roadmap",
+    "title": "SWAG™ Retirement Roadmap Analyzer",
+    "summary": "A guided income plan using our Strategic Wealth Alpha GPS™ holistic planning process.",
+    "personas": ["aspiring", "retirees", "families", "advisor"],
+    "tiers": ["premium", "pro"],
+    "status": "live",
+    "tags": ["retirement","income","planning","swag"]
   },
   {
     "key": "rmd-check",
