@@ -20,6 +20,11 @@ import { setupNetworkErrorHandling } from "@/components/monitoring/network";
 import { Toaster as SonnerToaster } from '@/components/ui/sonner';
 import { SafeToastProvider } from '@/providers/SafeToastProvider';
 
+// CRITICAL: Ensure React runtime is properly initialized
+if (!React || typeof React.useState !== 'function' || typeof React.createElement !== 'function') {
+  throw new Error(`React runtime initialization failed. React: ${!!React}, useState: ${typeof React?.useState}, createElement: ${typeof React?.createElement}`);
+}
+
 // Create a client
 const queryClient = new QueryClient({
   defaultOptions: {

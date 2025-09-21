@@ -12,6 +12,11 @@ import {
 import { useSubscriptionAccess } from '@/hooks/useSubscriptionAccess';
 import { TrialManager, TrialGrant } from '@/lib/trialManager';
 
+// Ensure React is properly initialized
+if (!React || typeof React.useState !== 'function') {
+  throw new Error('React runtime not properly initialized in EntitlementsContext');
+}
+
 interface EntitlementsContextType {
   entitlements: UserEntitlements | null;
   loading: boolean;

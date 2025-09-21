@@ -1,6 +1,11 @@
 import { toast as sonnerToast } from "sonner";
 import * as React from "react";
 
+// Ensure React is properly initialized
+if (!React || typeof React.createElement !== 'function') {
+  throw new Error('React runtime not properly initialized in use-toast');
+}
+
 export type ToastObject = {
   title?: React.ReactNode;
   description?: React.ReactNode;

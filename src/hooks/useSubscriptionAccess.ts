@@ -3,6 +3,12 @@ import { supabase } from '@/lib/supabase';
 import { useToast } from '@/hooks/use-toast';
 import { SubscriptionTierType, AddOnAccess, UsageCounters, UsageLimits } from '@/types/subscription';
 
+// Ensure React is properly initialized
+import React from 'react';
+if (!React || typeof React.useState !== 'function') {
+  throw new Error('React runtime not properly initialized');
+}
+
 interface UserProfile {
   subscription_tier: SubscriptionTierType;
   subscription_status: string;
