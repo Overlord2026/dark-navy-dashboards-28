@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Users, Search, BookOpen, Wrench, TrendingUp, DollarSign } from 'lucide-react';
 import { CatalogGrid } from '@/components/catalog/CatalogGrid';
+import { EduPreview } from '@/components/education/EduPreview';
 
 export default function LandingNew() {
   return (
@@ -68,6 +69,9 @@ export default function LandingNew() {
 
       {/* Catalog Grid Section */}
       <CatalogGrid />
+
+      {/* Education Preview Section */}
+      <EduPreview />
 
       {/* Education Center Section */}
       <section className="py-16 px-4">
