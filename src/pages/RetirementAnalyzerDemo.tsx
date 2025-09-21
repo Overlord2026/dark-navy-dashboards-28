@@ -3,6 +3,7 @@ import { RetirementCalculatorEngine } from '@/components/retirement/RetirementCa
 import { RetirementErrorBoundary } from '@/components/retirement/RetirementErrorBoundary';
 import { PlanImportWizard } from '@/components/retirement/PlanImportWizard';
 import { PlanImportDashboard } from '@/components/retirement/PlanImportDashboard';
+import { AdvisorClientDashboard } from '@/components/retirement/AdvisorClientDashboard';
 import { RetirementAnalysisInput } from '@/types/retirement';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
@@ -159,8 +160,9 @@ export default function RetirementAnalyzerDemo() {
 
           {/* Main Content */}
           <Tabs defaultValue="analyzer" className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
+            <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="analyzer">Retirement Analyzer</TabsTrigger>
+              <TabsTrigger value="advisor">Advisor Dashboard</TabsTrigger>
               <TabsTrigger value="imports">Plan Imports</TabsTrigger>
             </TabsList>
             
@@ -171,6 +173,10 @@ export default function RetirementAnalyzerDemo() {
                   onInputsChange={setInputs}
                 />
               </RetirementErrorBoundary>
+            </TabsContent>
+            
+            <TabsContent value="advisor" className="mt-8">
+              <AdvisorClientDashboard />
             </TabsContent>
             
             <TabsContent value="imports" className="mt-8">
