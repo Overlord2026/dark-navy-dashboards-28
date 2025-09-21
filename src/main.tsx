@@ -1,53 +1,37 @@
-
-import React, { Suspense, StrictMode } from "react";
-import { createRoot } from "react-dom/client";
-import { RouterProvider } from 'react-router-dom'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { router } from './router'
-import './index.css'
-import './styles/brand.css'
-import './styles/chartColors.css'
-import './styles/accessibility.css'
-import emailjs from '@emailjs/browser'
-import { initializeAnalytics } from './lib/analytics'
-import { registerServiceWorker, promptInstallPWA } from './lib/pwa'
-import { AuthProvider } from '@/context/AuthContext'
-import { EntitlementsProvider } from '@/context/EntitlementsContext'
-import { removeProductionLogs } from './utils/consoleRemoval'
-import { initializeAccessibility } from './utils/accessibility'
-import GlobalErrorBoundary from "@/components/monitoring/GlobalErrorBoundary";
-import { setupNetworkErrorHandling } from "@/components/monitoring/network";
-import { Toaster as SonnerToaster } from '@/components/ui/sonner';
+import React, { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import App from './AppWrapper';
+import { AuthProvider } from '@/context/AuthContext';
 import { SafeToastProvider } from '@/providers/SafeToastProvider';
+import emailjs from '@emailjs/browser';
+import { initializeAnalytics } from './lib/analytics';
+import { registerServiceWorker, promptInstallPWA } from './lib/pwa';
+import { removeProductionLogs } from './utils/consoleRemoval';
+import { initializeAccessibility } from './utils/accessibility';
+import { setupNetworkErrorHandling } from "@/components/monitoring/network";
+import './index.css';
+import './styles/brand.css';
+import './styles/chartColors.css';
+import './styles/accessibility.css';
 
 // CRITICAL: Ensure React runtime is properly initialized
 if (!React || typeof React.useState !== 'function' || typeof React.createElement !== 'function') {
   throw new Error(`React runtime initialization failed. React: ${!!React}, useState: ${typeof React?.useState}, createElement: ${typeof React?.createElement}`);
 }
 
-// Create a client
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: 1,
-      refetchOnWindowFocus: false,
-    },
-  },
-});
-
 // Initialize production optimizations
-removeProductionLogs()
-initializeAccessibility()
+removeProductionLogs();
+initializeAccessibility();
 
 // Initialize EmailJS at app entry point
-emailjs.init(import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'rfbjUYJ8iPHEZaQvx')
+emailjs.init(import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'rfbjUYJ8iPHEZaQvx');
 
 // Initialize analytics
-initializeAnalytics()
+initializeAnalytics();
 
 // Register service worker for PWA
-registerServiceWorker()
-promptInstallPWA()
+registerServiceWorker();
+promptInstallPWA();
 
 // Initialize Web Vitals tracking (production logging removed)
 if (import.meta.env.PROD || import.meta.env.DEV) {
@@ -65,23 +49,15 @@ const teardown = setupNetworkErrorHandling({
   },
 });
 
-const el = document.getElementById("root");
+const el = document.getElementById('root');
 if (!el) throw new Error('Root element #root not found');
 
 createRoot(el).render(
   <StrictMode>
     <SafeToastProvider>
-      <GlobalErrorBoundary>
-        <QueryClientProvider client={queryClient}>
-          <Suspense fallback={<div />}>
-            <AuthProvider>
-              <EntitlementsProvider>
-                <RouterProvider router={router} />
-              </EntitlementsProvider>
-            </AuthProvider>
-          </Suspense>
-        </QueryClientProvider>
-      </GlobalErrorBoundary>
+      <AuthProvider>
+        <App />
+      </AuthProvider>
     </SafeToastProvider>
   </StrictMode>
 );
