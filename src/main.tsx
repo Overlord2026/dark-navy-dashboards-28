@@ -1,6 +1,6 @@
 
-import React, { Suspense } from "react";
-import ReactDOM from "react-dom/client";
+import React, { Suspense, StrictMode } from "react";
+import { createRoot } from "react-dom/client";
 import { RouterProvider } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { router } from './router'
@@ -60,8 +60,11 @@ const teardown = setupNetworkErrorHandling({
   },
 });
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
+const el = document.getElementById("root");
+if (!el) throw new Error('Root element #root not found');
+
+createRoot(el).render(
+  <StrictMode>
     <SafeToastProvider>
       <GlobalErrorBoundary>
         <QueryClientProvider client={queryClient}>
@@ -75,7 +78,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         </QueryClientProvider>
       </GlobalErrorBoundary>
     </SafeToastProvider>
-  </React.StrictMode>
+  </StrictMode>
 );
 
 // Optional HMR cleanup
