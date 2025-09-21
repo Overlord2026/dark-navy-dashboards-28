@@ -48,6 +48,11 @@ export async function acceptInvite(token: string, personaHint?: string): Promise
         const persona = (data as any).persona ?? personaHint;
         const path = (data as any).target;
         saveLocal(persona);
+        try {
+          const m = await import('@/lib/analytics');
+          const analytics = (m as any).analytics || (m as any).default || m;
+          if (analytics?.track) analytics.track('invite.accepted', { persona, path });
+        } catch {}
         return { ok: true, persona, path };
       }
     } catch { /* continue */ }
@@ -61,6 +66,11 @@ export async function acceptInvite(token: string, personaHint?: string): Promise
         const persona = (row?.persona_group as string) ?? personaHint;
         const path = (row?.target_path as string) ?? undefined;
         saveLocal(persona);
+        try {
+          const m = await import('@/lib/analytics');
+          const analytics = (m as any).analytics || (m as any).default || m;
+          if (analytics?.track) analytics.track('invite.accepted', { persona, path });
+        } catch {}
         return { ok: true, persona, path };
       }
     } catch { /* continue */ }
@@ -69,6 +79,11 @@ export async function acceptInvite(token: string, personaHint?: string): Promise
   // Local fallback for demos
   const persona = personaHint || 'accountant';
   saveLocal(persona);
+  try {
+    const m = await import('@/lib/analytics');
+    const analytics = (m as any).analytics || (m as any).default || m;
+    if (analytics?.track) analytics.track('invite.accepted', { persona, path: undefined });
+  } catch {}
   return { ok: true, persona };
 }
 
