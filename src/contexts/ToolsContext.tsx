@@ -1,6 +1,11 @@
-import { createContext, useContext, useState, useEffect, type FC, type ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, type FC, type ReactNode } from 'react';
 import toolRegistry from '@/config/toolRegistry.json';
 import { getWorkspaceTools, isInstalled, installTool as installWorkspaceTool, setPersona } from '@/lib/workspaceTools';
+
+// Ensure React is properly initialized
+if (!React || typeof React.useState !== 'function') {
+  throw new Error('React runtime not properly initialized in ToolsContext');
+}
 
 export interface ToolRegistryItem {
   key: string;

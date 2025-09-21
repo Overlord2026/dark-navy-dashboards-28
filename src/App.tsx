@@ -7,7 +7,6 @@ import { TopBanner } from '@/components/layout/TopBanner';
 import BrandHeader from '@/components/layout/BrandHeader';
 import { ConditionalMegaMenu } from '@/components/nav/ConditionalMegaMenu';
 import { RedirectHandler } from '@/components/RedirectHandler';
-import { ToolsProvider } from '@/contexts/ToolsContext';
 import { Toaster } from '@/components/ui/toaster';
 import DevPanel from '@/components/dev/DevPanel';
 import { AutoLoadDemo } from '@/components/AutoLoadDemo';
@@ -372,10 +371,9 @@ function App() {
   }, []);
 
   return (
-    <ToolsProvider>
-      <HelmetProvider>
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-          <div className="min-h-screen bg-background text-foreground">
+    <HelmetProvider>
+      <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+        <div className="min-h-screen bg-background text-foreground">
             {/* Permanent Top Banner on ALL pages */}
             <TopBanner />
             {/* Secondary Navigation on ALL pages */}
@@ -1098,7 +1096,6 @@ function App() {
           </div>
         </ThemeProvider>
       </HelmetProvider>
-    </ToolsProvider>
   );
 }
 

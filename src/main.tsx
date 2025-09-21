@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import App from './AppWrapper';
 import { AuthProvider } from '@/context/AuthContext';
 import { EntitlementsProvider } from '@/context/EntitlementsContext';
+import { ToolsProvider } from '@/contexts/ToolsContext';
 import { SafeToastProvider } from '@/providers/SafeToastProvider';
 import emailjs from '@emailjs/browser';
 import { initializeAnalytics } from './lib/analytics';
@@ -59,7 +60,9 @@ createRoot(el).render(
     <SafeToastProvider>
       <AuthProvider>
         <EntitlementsProvider>
-          <App />
+          <ToolsProvider>
+            <App />
+          </ToolsProvider>
         </EntitlementsProvider>
       </AuthProvider>
     </SafeToastProvider>
