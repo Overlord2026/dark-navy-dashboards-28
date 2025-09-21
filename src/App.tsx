@@ -184,6 +184,10 @@ import { IPTracker } from '@/components/bfo/IPTracker';
 import AdminHQ from '@/pages/admin/AdminHQ';
 import IPHQ from '@/pages/admin/IPHQ';
 import FamiliesStart from '@/pages/families/start';
+const FamiliesOverview = lazy(() => import('@/pages/families/Overview'));
+const AspiringStart = lazy(() => import('@/pages/families/onboarding/AspiringStart'));
+const RetireesStart = lazy(() => import('@/pages/families/onboarding/RetireesStart'));
+const ProsOverview = lazy(() => import('@/pages/pros/Overview'));
 import RequireAdmin from '@/components/auth/RequireAdmin';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { PersonaGuard } from '@/components/auth/PersonaGuard';
@@ -423,12 +427,26 @@ function App() {
             {/* Family Routes */}
             <Route path="/families" element={
               <Suspense fallback={<div>Loading...</div>}>
-                <FamiliesIndex />
+                <FamiliesOverview />
+              </Suspense>
+            } />
+            <Route path="/families/start/aspiring" element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <AspiringStart />
+              </Suspense>
+            } />
+            <Route path="/families/start/retirees" element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <RetireesStart />
               </Suspense>
             } />
             <Route path="/families/:type" element={<FamilyTypeDashboard />} />
             <Route path="/family/home" element={<FamilyDashboard />} />
-            <Route path="/pros" element={<ProsHub />} />
+            <Route path="/pros" element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <ProsOverview />
+              </Suspense>
+            } />
             <Route path="/pros/accountants" element={<Accountants />} />
             <Route path="/pros/accountants/access" element={<AccountantsAccess />} />
             <Route path="/pros/attorneys" element={<Attorneys />} />
