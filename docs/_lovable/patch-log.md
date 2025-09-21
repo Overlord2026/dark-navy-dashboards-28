@@ -241,3 +241,15 @@ QA:
 - Confirmed `optimizeDeps` includes React packages properly
 
 **Impact**: Ensures consistent React resolution across all dependencies. Build stability improved.
+
+## 2025-09-21 — Invite UX: Auth-aware + Token Entry + Gated Hubs [Additive]
+- Auth-aware invite handler: persists token, redirects to /auth when signed out, returns to /invite/:token.
+- CTA pages now accept a pasted invite code (navigates to /invite/<code>?persona=…).
+- Hubs (CPA/Attorney) show dashboard link only after invite acceptance; otherwise prompt to accept.
+- Optional analytics event invite.accepted.
+- No package.json changes; all edits additive.
+
+QA:
+- [x] Signed-out users: /invite/DEMO123?persona=accountant → /auth then back.
+- [x] CTA token box works; dev link still OK in dev.
+- [x] Hubs gate dashboard button based on acceptance.
