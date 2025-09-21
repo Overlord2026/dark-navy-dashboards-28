@@ -1,8 +1,9 @@
-import React, { StrictMode } from 'react';
+import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './AppWrapper';
 import { AuthProvider } from '@/context/AuthContext';
-import SafeToastProvider from '@/providers/SafeToastProvider';
+import { EntitlementsProvider } from '@/context/EntitlementsContext';
+import { SafeToastProvider } from '@/providers/SafeToastProvider';
 import emailjs from '@emailjs/browser';
 import { initializeAnalytics } from './lib/analytics';
 import { registerServiceWorker, promptInstallPWA } from './lib/pwa';
@@ -15,6 +16,7 @@ import './styles/chartColors.css';
 import './styles/accessibility.css';
 
 // CRITICAL: Ensure React runtime is properly initialized
+import React from 'react';
 if (!React || typeof React.useState !== 'function' || typeof React.createElement !== 'function') {
   throw new Error(`React runtime initialization failed. React: ${!!React}, useState: ${typeof React?.useState}, createElement: ${typeof React?.createElement}`);
 }
@@ -56,7 +58,9 @@ createRoot(el).render(
   <StrictMode>
     <SafeToastProvider>
       <AuthProvider>
-        <App />
+        <EntitlementsProvider>
+          <App />
+        </EntitlementsProvider>
       </AuthProvider>
     </SafeToastProvider>
   </StrictMode>
