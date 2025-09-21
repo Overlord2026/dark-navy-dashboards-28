@@ -17,7 +17,7 @@ export default function InvitePage() {
       const personaHint = sp.get('persona') || undefined;
       const res = await acceptInvite(token, personaHint);
       if (res.ok) {
-        const target = hubForPersona(res.persona || personaHint);
+        const target = res.path || hubForPersona(res.persona || personaHint);
         setStatus('ok'); setMessage('Invite accepted. Redirecting…');
         setTimeout(() => navigate(target, { replace: true }), 600);
       } else {
