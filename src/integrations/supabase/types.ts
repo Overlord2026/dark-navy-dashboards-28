@@ -29079,6 +29079,57 @@ export type Database = {
         }
         Relationships: []
       }
+      professional_collaboration_requests: {
+        Row: {
+          created_at: string
+          due_date: string | null
+          family_feedback: string | null
+          family_user_id: string
+          id: string
+          message: string | null
+          priority: string | null
+          professional_notes: string | null
+          professional_type: string
+          professional_user_id: string | null
+          request_type: string
+          status: string
+          tool_data: Json | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          due_date?: string | null
+          family_feedback?: string | null
+          family_user_id: string
+          id?: string
+          message?: string | null
+          priority?: string | null
+          professional_notes?: string | null
+          professional_type: string
+          professional_user_id?: string | null
+          request_type: string
+          status?: string
+          tool_data?: Json | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          due_date?: string | null
+          family_feedback?: string | null
+          family_user_id?: string
+          id?: string
+          message?: string | null
+          priority?: string | null
+          professional_notes?: string | null
+          professional_type?: string
+          professional_user_id?: string | null
+          request_type?: string
+          status?: string
+          tool_data?: Json | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       professional_compliance: {
         Row: {
           created_at: string | null
@@ -41049,6 +41100,48 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      workflow_automations: {
+        Row: {
+          action_data: Json | null
+          action_type: string
+          created_at: string
+          error_message: string | null
+          id: string
+          processed_at: string | null
+          status: string
+          target_professional_type: string | null
+          target_user_id: string
+          trigger_data: Json
+          trigger_type: string
+        }
+        Insert: {
+          action_data?: Json | null
+          action_type: string
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          processed_at?: string | null
+          status?: string
+          target_professional_type?: string | null
+          target_user_id: string
+          trigger_data: Json
+          trigger_type: string
+        }
+        Update: {
+          action_data?: Json | null
+          action_type?: string
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          processed_at?: string | null
+          status?: string
+          target_professional_type?: string | null
+          target_user_id?: string
+          trigger_data?: Json
+          trigger_type?: string
+        }
+        Relationships: []
       }
       workflow_templates: {
         Row: {
@@ -56826,6 +56919,17 @@ export type Database = {
         }
         Returns: string
       }
+      request_professional_collaboration: {
+        Args: {
+          p_due_date?: string
+          p_message?: string
+          p_professional_type: string
+          p_professional_user_id?: string
+          p_request_type: string
+          p_tool_data?: Json
+        }
+        Returns: string
+      }
       request_receipt_emission: {
         Args: {
           entity_id?: string
@@ -56836,6 +56940,14 @@ export type Database = {
           reasons?: Json
         }
         Returns: string
+      }
+      respond_to_collaboration_request: {
+        Args: {
+          p_professional_notes?: string
+          p_request_id: string
+          p_status: string
+        }
+        Returns: boolean
       }
       rpc_backup_status: {
         Args: Record<PropertyKey, never>

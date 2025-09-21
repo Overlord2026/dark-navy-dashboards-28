@@ -195,6 +195,12 @@ export const useEstatePlanning = () => {
     }
   };
 
+  const requestAttorneyReview = async (estateData: any, message?: string) => {
+    // This will be handled by the professional collaboration system
+    console.log('Estate attorney review requested:', { estateData, message });
+    // The actual implementation will use the ProfessionalRequestModal
+  };
+
   return {
     createInterest,
     createConsultation,
@@ -203,6 +209,7 @@ export const useEstatePlanning = () => {
     createDocument,
     updateDocument,
     deleteDocument,
-    fetchDocuments
+    fetchDocuments,
+    requestAttorneyReview
   };
 };

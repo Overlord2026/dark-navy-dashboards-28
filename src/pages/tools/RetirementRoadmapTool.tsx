@@ -8,8 +8,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { Calculator, TrendingUp } from 'lucide-react';
+import { Calculator, TrendingUp, Users } from 'lucide-react';
 import { seedRetirementRoadmap } from '@/tools/seeds/retirement-roadmap';
+import { ProfessionalRequestModal } from '@/components/professional-collaboration/ProfessionalRequestModal';
 
 export default function RetirementRoadmapTool() {
   const [inputs, setInputs] = useState({
@@ -21,6 +22,7 @@ export default function RetirementRoadmapTool() {
   });
   const [results, setResults] = useState<any>(null);
   const [proofSlip, setProofSlip] = useState<any>(null);
+  const [showRequestModal, setShowRequestModal] = useState(false);
 
   const calculateRoadmap = () => {
     const years = inputs.retirementAge - inputs.currentAge;
@@ -202,6 +204,26 @@ export default function RetirementRoadmapTool() {
                   </p>
                 </div>
               )}
+              
+              {/* Professional Review Request */}
+              <div className="mt-6 p-4 bg-primary/5 rounded-lg border border-primary/20">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="font-semibold text-primary mb-2">Need Professional Guidance?</h4>
+                    <p className="text-sm text-muted-foreground">
+                      Get your SWAG™ retirement analysis reviewed by a qualified financial advisor
+                    </p>
+                  </div>
+                  <Button 
+                    onClick={() => setShowRequestModal(true)}
+                    variant="outline"
+                    className="border-primary text-primary hover:bg-primary/10"
+                  >
+                    <Users className="h-4 w-4 mr-2" />
+                    Request Advisor Review
+                  </Button>
+                </div>
+              </div>
             </CardContent>
           </Card>
         )}
@@ -224,6 +246,20 @@ export default function RetirementRoadmapTool() {
         </div>
       </div>
       </div>
+
+      {/* Professional Request Modal */}
+      <ProfessionalRequestModal
+        open={showRequestModal}
+        onClose={() => setShowRequestModal(false)}
+        toolData={{
+          tool_type: 'swag_retirement_roadmap',
+          inputs,
+          results,
+          analysis_date: new Date().toISOString()
+        }}
+        defaultRequestType="swag_analysis_review"
+        defaultProfessionalType="advisor"
+      />
     </div>
   );
 }
