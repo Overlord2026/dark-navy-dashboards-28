@@ -72,39 +72,39 @@ export default function AccountantDashboard() {
       <div className="grid lg:grid-cols-[240px_1fr] gap-6">
         <PersonaSideNav />
         <main className="space-y-6">
-          <div className="flex items-center justify-between">
-            <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <h1 className="text-3xl font-bold text-bfo-gold">Accountant Dashboard</h1>
-                {FLAGS.__ENABLE_AGENT_AUTOMATIONS__ && <AssistedBadge />}
+            <div className="flex items-center justify-between">
+              <div className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <h1 className="text-3xl font-bold text-bfo-gold">Accountant Dashboard</h1>
+                  {FLAGS.__ENABLE_AGENT_AUTOMATIONS__ && <AssistedBadge />}
+                </div>
+                <p className="text-white/80">Manage tax services, bookkeeping, and financial reporting</p>
               </div>
-              <p className="text-white/80">Manage tax services, bookkeeping, and financial reporting</p>
+              <div className="flex gap-2">
+                <Button 
+                  onClick={handleLogCheckPassed}
+                  variant="outline" 
+                  size="sm" 
+                  className="gap-2 border-bfo-gold/40 text-white hover:bg-bfo-gold/10"
+                >
+                  <CheckCircle className="h-4 w-4" />
+                  Log Check Passed
+                </Button>
+                <Button 
+                  onClick={handleExportExplainPack}
+                  variant="outline" 
+                  size="sm" 
+                  className="gap-2 border-bfo-gold/40 text-white hover:bg-bfo-gold/10"
+                >
+                  <FileText className="h-4 w-4" />
+                  Export ExplainPack
+                </Button>
+                <Button className="gap-2 bg-bfo-gold text-bfo-black hover:bg-bfo-gold/90">
+                  <FileText className="h-4 w-4" />
+                  New Tax Return
+                </Button>
+              </div>
             </div>
-            <div className="flex gap-2">
-              <Button 
-                onClick={handleLogCheckPassed}
-                variant="outline" 
-                size="sm" 
-                className="gap-2 border-bfo-gold/40 text-white hover:bg-bfo-gold/10"
-              >
-                <CheckCircle className="h-4 w-4" />
-                Log Check Passed
-              </Button>
-              <Button 
-                onClick={handleExportExplainPack}
-                variant="outline" 
-                size="sm" 
-                className="gap-2 border-bfo-gold/40 text-white hover:bg-bfo-gold/10"
-              >
-                <FileText className="h-4 w-4" />
-                Export ExplainPack
-              </Button>
-              <Button className="gap-2 bg-bfo-gold text-bfo-black hover:bg-bfo-gold/90">
-                <FileText className="h-4 w-4" />
-                New Tax Return
-              </Button>
-            </div>
-          </div>
 
           {/* Key Metrics */}
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">

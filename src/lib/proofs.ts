@@ -26,7 +26,7 @@ export async function createProof(
 ): Promise<ProofSlip | null> {
   try {
     const { data, error } = await supabase
-      .from('proof_slips')
+      .from('proof_slips' as any)
       .insert({
         job_id: jobId,
         proof_type: proofType,
@@ -42,7 +42,7 @@ export async function createProof(
       return null;
     }
 
-    return data;
+    return data as unknown as ProofSlip;
   } catch (error) {
     console.error('Error creating proof slip:', error);
     return null;
@@ -52,7 +52,7 @@ export async function createProof(
 export async function getProofSlips(jobId: string): Promise<ProofSlip[]> {
   try {
     const { data, error } = await supabase
-      .from('proof_slips')
+      .from('proof_slips' as any)
       .select('*')
       .eq('job_id', jobId)
       .order('created_at', { ascending: false });
@@ -62,7 +62,7 @@ export async function getProofSlips(jobId: string): Promise<ProofSlip[]> {
       return [];
     }
 
-    return data || [];
+    return (data || []) as unknown as ProofSlip[];
   } catch (error) {
     console.error('Error getting proof slips:', error);
     return [];

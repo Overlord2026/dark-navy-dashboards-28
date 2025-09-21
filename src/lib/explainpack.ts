@@ -20,7 +20,7 @@ export async function buildExplainPack(jobId: string): Promise<ExplainPack | nul
 
     // Get policy bundles (you may need to adjust this based on your schema)
     const { data: policyBundles, error: policyError } = await supabase
-      .from('policy_bundles')
+      .from('policy_bundles' as any)
       .select('*')
       .eq('domain', 'general') // Adjust this filter as needed
       .order('effective_at', { ascending: false })
@@ -35,7 +35,7 @@ export async function buildExplainPack(jobId: string): Promise<ExplainPack | nul
 
     const explainPack: ExplainPack = {
       job_id: jobId,
-      policy_version: policyBundles?.[0]?.version || 'v1.0.0',
+      policy_version: (policyBundles as any)?.[0]?.version || 'v1.0.0',
       proof_slips: proofSlips,
       policy_bundles: policyBundles || [],
       generated_at: new Date().toISOString(),

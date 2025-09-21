@@ -30471,6 +30471,36 @@ export type Database = {
         }
         Relationships: []
       }
+      proof_slips: {
+        Row: {
+          created_at: string | null
+          details: Json | null
+          id: string
+          job_id: string
+          proof_type: string
+          summary: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          details?: Json | null
+          id?: string
+          job_id: string
+          proof_type: string
+          summary: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          details?: Json | null
+          id?: string
+          job_id?: string
+          proof_type?: string
+          summary?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       properties: {
         Row: {
           address: string
