@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { ArrowRight, Users, Search, BookOpen, Wrench, TrendingUp, DollarSign } from 'lucide-react';
 import { CatalogGrid } from '@/components/catalog/CatalogGrid';
 import { EduPreview } from '@/components/education/EduPreview';
+import { ToolsOverview } from '@/components/tools/ToolsOverview';
 
 export default function LandingNew() {
   return (
@@ -72,6 +73,9 @@ export default function LandingNew() {
 
       {/* Education Preview Section */}
       <EduPreview />
+
+      {/* Tools Overview Section */}
+      <ToolsOverview />
 
       {/* Education Center Section */}
       <section className="py-16 px-4">
