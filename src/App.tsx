@@ -8,6 +8,11 @@ import BrandHeader from '@/components/layout/BrandHeader';
 import { ConditionalMegaMenu } from '@/components/nav/ConditionalMegaMenu';
 import { RedirectHandler } from '@/components/RedirectHandler';
 import { Toaster } from '@/components/ui/toaster';
+
+// Ensure React is properly initialized before using hooks
+if (!React || typeof React.useState !== 'function') {
+  throw new Error('React runtime not properly initialized in App');
+}
 import DevPanel from '@/components/dev/DevPanel';
 import { AutoLoadDemo } from '@/components/AutoLoadDemo';
 import { DemoStatus } from '@/components/DemoStatus';
@@ -309,9 +314,34 @@ const SelectPersona = lazy(() => import('@/pages/auth/SelectPersona'));
 const Stub = ({ title }: { title: string }) => <div className="p-10 text-white text-2xl">{title}</div>;
 
 function App() {
+  // Router context safety check
+  const [routerReady, setRouterReady] = useState(false);
+  
   // Check authentication status using Supabase session
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   
+  useEffect(() => {
+    // Ensure Router context is available before rendering navigation components
+    const checkRouter = () => {
+      try {
+        // Test if router context is available
+        if (window.location && typeof window.history !== 'undefined') {
+          setRouterReady(true);
+        }
+      } catch (error) {
+        console.warn('Router context not ready:', error);
+        // Still set to true to avoid infinite loading
+        setRouterReady(true);
+      }
+    };
+    
+    checkRouter();
+    // Fallback timer to ensure we render even if context check fails
+    const timer = setTimeout(() => setRouterReady(true), 100);
+    
+    return () => clearTimeout(timer);
+  }, []);
+
   useEffect(() => {
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -369,6 +399,22 @@ function App() {
     const autoplay = params.get('autoplay');
     
   }, []);
+
+  // Early return for router loading state
+  if (!routerReady) {
+    return (
+      <HelmetProvider>
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+          <div className="min-h-screen bg-background text-foreground">
+            <TopBanner />
+            <div className="flex items-center justify-center min-h-screen">
+              <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+            </div>
+          </div>
+        </ThemeProvider>
+      </HelmetProvider>
+    );
+  }
 
   return (
     <HelmetProvider>

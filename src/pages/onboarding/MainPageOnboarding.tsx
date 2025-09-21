@@ -5,6 +5,11 @@ import { motion } from 'framer-motion';
 import { playWelcome } from '@/utils/voiceSettings'; // Disabled Linda functionality
 import { SecondaryNav } from '@/components/layout/SecondaryNav';
 
+// Ensure React is properly initialized
+if (!React || typeof React.useState !== 'function') {
+  throw new Error('React runtime not properly initialized in FamilyOnboardingWelcome');
+}
+
 interface FamilyOnboardingWelcomeProps {
   onAuthChoice: (provider: string) => void;
 }

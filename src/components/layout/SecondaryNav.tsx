@@ -2,6 +2,11 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Home } from 'lucide-react';
 
+// Ensure React is properly initialized
+if (!React || typeof React.useContext !== 'function') {
+  throw new Error('React runtime not properly initialized in SecondaryNav');
+}
+
 export const SecondaryNav: React.FC = () => {
   const navigate = useNavigate();
 
