@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Suspense, lazy } from 'react';
+import React, { useEffect, useState, Suspense, lazy, useMemo } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider } from "next-themes";
 import { HelmetProvider } from 'react-helmet-async';
@@ -318,18 +318,38 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   
   useEffect(() => {
-    // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setIsAuthenticated(!!session);
-    });
-    
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => setIsAuthenticated(!!session)
-    );
-    
-    return () => subscription.unsubscribe();
-  }, []);
+    let isMounted = true;
+    let subscription: { unsubscribe?: () => void } | null = null;
+
+    (async () => {
+      try {
+        // Optional: auth session bootstrap
+        const sb = supabase; // Use existing supabase import
+
+        // If your project exposes onAuthStateChange
+        if (sb?.auth?.onAuthStateChange) {
+          const res = await sb.auth.onAuthStateChange((_event: any, _session: any) => {
+            if (!isMounted) return;
+            // TODO: set state from session if needed
+            setIsAuthenticated(!!_session);
+          });
+          // Supabase v2: res.data.subscription
+          subscription = res?.data?.subscription ?? null;
+        }
+      } catch {
+        // swallow; app should not crash on auth bootstrap
+      }
+    })();
+
+    return () => {
+      isMounted = false;
+      try {
+        if (subscription?.unsubscribe) subscription.unsubscribe();
+      } catch {
+        // ignore
+      }
+    };
+  }, []); // ← keep this line EXACTLY
 
   // Auth choice handler for FamilyOnboardingWelcome
   const handleAuthChoice = async (provider: string) => {
