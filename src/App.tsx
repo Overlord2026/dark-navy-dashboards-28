@@ -159,6 +159,7 @@ import AdvisorDashboardWithSideNav from '@/pages/personas/AdvisorDashboardWithSi
 import AccountantDashboard from '@/pages/pros/AccountantDashboard';
 import AccountantsAccess from '@/pages/pros/AccountantsAccess';
 import Accountants from '@/pages/pros/Accountants';
+import Attorneys from '@/pages/pros/Attorneys';
 import AttorneysAccess from '@/pages/pros/AttorneysAccess';
 import FamilyRoadmap from '@/pages/family/FamilyRoadmap';
 import InsurancePersonaDashboard from '@/pages/personas/InsurancePersonaDashboard';
@@ -399,7 +400,8 @@ function App() {
             <Route path="/pros" element={<ProsHub />} />
             <Route path="/pros/accountants" element={<Accountants />} />
             <Route path="/pros/accountants/access" element={<AccountantsAccess />} />
-            <Route path="/pros/attorneys" element={<AttorneysAccess />} />
+            <Route path="/pros/attorneys" element={<Attorneys />} />
+            <Route path="/pros/attorneys/access" element={<AttorneysAccess />} />
             <Route path="/pros/accountants-cta" element={<AccountantsCTA />} />
             <Route path="/pros/attorneys-cta" element={<AttorneysCTA />} />
             <Route path="/pros/:role" element={<ProWorkspaceLayout />}>

@@ -319,62 +319,30 @@ export const router = createBrowserRouter([
   {
     path: "/pros/accountants",
     element: React.createElement(() => {
-      const { AccountantsDashboard } = require('./pages/accountants/AccountantsDashboard');
-      return React.createElement(AccountantsDashboard);
-    }),
-    children: [
-      {
-        index: true,
-        element: React.createElement(() => {
-          const { AccountantsDashboard } = require('./pages/accountants/AccountantsDashboard');
-          return React.createElement(AccountantsDashboard);
-        })
-      },
-      {
-        path: "documents",
-        element: React.createElement(() => {
-          const { DocumentsReview } = require('./pages/accountants/DocumentsReview');
-          return React.createElement(DocumentsReview);
-        })
-      },
-      {
-        path: "exports",
-        element: React.createElement(() => {
-          const { CSVExport } = require('./pages/accountants/CSVExport');
-          return React.createElement(CSVExport);
-        })
-      }
-    ]
+      const C = require("./pages/pros/Accountants").default;
+      return React.createElement(C);
+    })
+  },
+  {
+    path: "/pros/accountants/access",
+    element: React.createElement(() => {
+      const C = require("./pages/pros/AccountantsAccess").default;
+      return React.createElement(C);
+    })
   },
   {
     path: "/pros/attorneys",
     element: React.createElement(() => {
-      const { AttorneysDashboard } = require('./pages/attorneys/AttorneysDashboard');
-      return React.createElement(AttorneysDashboard);
-    }),
-    children: [
-      {
-        index: true,
-        element: React.createElement(() => {
-          const { AttorneysDashboard } = require('./pages/attorneys/AttorneysDashboard');
-          return React.createElement(AttorneysDashboard);
-        })
-      },
-      {
-        path: "entities",
-        element: React.createElement(() => {
-          const { EntitiesAndTrusts } = require('./pages/attorneys/EntitiesAndTrusts');
-          return React.createElement(EntitiesAndTrusts);
-        })
-      },
-      {
-        path: "vault",
-        element: React.createElement(() => {
-          const { EstateVault } = require('./pages/attorneys/EstateVault');
-          return React.createElement(EstateVault);
-        })
-      }
-    ]
+      const C = require("./pages/pros/Attorneys").default;
+      return React.createElement(C);
+    })
+  },
+  {
+    path: "/pros/attorneys/access",
+    element: React.createElement(() => {
+      const C = require("./pages/pros/AttorneysAccess").default;
+      return React.createElement(C);
+    })
   },
   {
     path: "/attorney",
