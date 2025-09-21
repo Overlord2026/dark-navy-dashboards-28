@@ -3,6 +3,10 @@ import react from "@vitejs/plugin-react";
 import path from "node:path";
 import { componentTagger } from "lovable-tagger";
 
+function r(...p: string[]) {
+  return path.resolve(__dirname, ...p);
+}
+
 export default defineConfig(({ mode }) => ({
   server: { host: "::", port: 8080 },
   plugins: [
@@ -13,14 +17,18 @@ export default defineConfig(({ mode }) => ({
     alias: {
       "@": path.resolve(__dirname, "src"),
       "@advisor": path.resolve(__dirname, "src/features/advisors/platform"),
-      // Force single React instance
-      "react": path.resolve(__dirname, "node_modules/react"),
-      "react-dom": path.resolve(__dirname, "node_modules/react-dom"),
+      // Force all subpackages to the root React
+      react: r('node_modules/react'),
+      'react-dom': r('node_modules/react-dom'),
+      'react/jsx-runtime': r('node_modules/react/jsx-runtime'),
+      'react/jsx-dev-runtime': r('node_modules/react/jsx-dev-runtime'),
+      'react-dom/client': r('node_modules/react-dom/client'),
     },
-    dedupe: ["react","react-dom","react-dom/client","react/jsx-runtime","react/jsx-dev-runtime"],
+    dedupe: ['react', 'react-dom']
   },
-  optimizeDeps: { 
-    include: ["react","react-dom","react-dom/client","react/jsx-runtime","sonner"],
+  optimizeDeps: {
+    // Pre-bundle against the root React so deps (e.g., sonner) don't bring their own
+    include: ['react', 'react-dom', 'react/jsx-runtime', 'react/jsx-dev-runtime', 'sonner'],
     exclude: ["@radix-ui/react-toast"],
     force: true // Force re-optimization
   },
