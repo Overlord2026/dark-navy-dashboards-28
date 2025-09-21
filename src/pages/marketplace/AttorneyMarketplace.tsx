@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SecondaryNav } from '@/components/layout/SecondaryNav';
+import SecondaryNav from '@/components/layout/SecondaryNav';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

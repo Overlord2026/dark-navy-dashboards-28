@@ -1,5 +1,6 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useMemo } from 'react';
 import { ArrowLeft, Home } from 'lucide-react';
 
 // Ensure React is properly initialized
@@ -7,30 +8,30 @@ if (!React || typeof React.useContext !== 'function') {
   throw new Error('React runtime not properly initialized in SecondaryNav');
 }
 
-export const SecondaryNav: React.FC = () => {
-  const navigate = useNavigate();
+export default function SecondaryNav() {
+  const nav = useNavigate();
+  const loc = useLocation();
+  const items = useMemo(() => [
+    { to: '/pros', label: 'Pros' },
+    { to: '/pros/accountants', label: 'CPAs' },
+    { to: '/pros/attorneys', label: 'Attorneys' },
+    { to: '/families', label: 'Families' },
+    { to: '/healthcare', label: 'Healthcare' },
+    { to: '/solutions', label: 'Solutions' },
+    { to: '/learn', label: 'Learn' },
+    { to: '/marketplace', label: 'Marketplace' }
+  ], []);
 
   const handleBack = () => {
-    window.history.length > 1 ? navigate(-1) : navigate('/');
+    window.history.length > 1 ? nav(-1) : nav('/');
   };
 
   const handleHome = () => {
-    navigate('/');
+    nav('/');
   };
 
-  const navItems = [
-    { label: 'Families', path: '/families' },
-    { label: 'Service Pros', path: '/pros' }, 
-    // NIL conditionally included based on feature flag
-    ...((window as any).__ENABLE_NIL__ ? [{ label: 'NIL', path: '/nil' }, { label: 'Load NIL Demo', path: '/nil/demo' }] : []),
-    { label: 'Healthcare', path: '/healthcare' },
-    { label: 'Solutions', path: '/solutions' },
-    { label: 'Learn', path: '/learn' },
-    { label: 'Marketplace', path: '/marketplace' }
-  ];
-
   const handleNavigation = (path: string) => {
-    navigate(path);
+    nav(path);
   };
 
   return (
@@ -65,14 +66,16 @@ export const SecondaryNav: React.FC = () => {
           
           {/* Center navigation items - spread evenly */}
           <div className="flex items-center justify-center flex-1 gap-4 mx-8">
-            {navItems.map((item, index) => (
+            {items.map((item, index) => (
               <button
                 key={index}
-                onClick={() => handleNavigation(item.path)}
-                className="font-medium transition-all duration-200 hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2 focus:ring-offset-[#001F3F] flex-1"
+                onClick={() => handleNavigation(item.to)}
+                className={`font-medium transition-all duration-200 hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2 focus:ring-offset-[#001F3F] flex-1 ${
+                  loc.pathname === item.to ? 'opacity-100' : 'opacity-70'
+                }`}
                 style={{
-                  backgroundColor: '#000000',
-                  color: '#D4AF37',
+                  backgroundColor: loc.pathname === item.to ? '#D4AF37' : '#000000',
+                  color: loc.pathname === item.to ? '#000000' : '#D4AF37',
                   border: '1px solid #D4AF37',
                   fontSize: '14px',
                   borderRadius: '4px',
@@ -109,4 +112,7 @@ export const SecondaryNav: React.FC = () => {
       </nav>
     </div>
   );
-};
+}
+
+// Named export for backward compatibility  
+export { SecondaryNav };

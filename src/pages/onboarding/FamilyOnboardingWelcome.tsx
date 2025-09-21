@@ -4,7 +4,7 @@ import { Apple, Mail, Chrome, VolumeX } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { playWelcome } from '@/utils/voiceSettings'; // Disabled Linda functionality
 import { TopBanner } from '@/components/layout/TopBanner';
-import { SecondaryNav } from '@/components/layout/SecondaryNav';
+import SecondaryNav from '@/components/layout/SecondaryNav';
 
 interface FamilyOnboardingWelcomeProps {
   onAuthChoice: (provider: string) => void;

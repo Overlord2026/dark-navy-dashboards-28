@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TrendingUp, Scale, Shield } from 'lucide-react';
 import { GoldButton } from '@/components/ui/brandButtons';
-import { SecondaryNav } from '@/components/layout/SecondaryNav';
+import SecondaryNav from '@/components/layout/SecondaryNav';
 
 export default function MarketplaceIndex() {
   const navigate = useNavigate();

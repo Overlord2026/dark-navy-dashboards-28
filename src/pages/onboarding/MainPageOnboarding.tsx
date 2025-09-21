@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Apple, Mail, Chrome, VolumeX, ToggleLeft, ToggleRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { playWelcome } from '@/utils/voiceSettings'; // Disabled Linda functionality
-import { SecondaryNav } from '@/components/layout/SecondaryNav';
+import SecondaryNav from '@/components/layout/SecondaryNav';
 
 // Ensure React is properly initialized
 if (!React || typeof React.useState !== 'function') {

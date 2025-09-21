@@ -17,7 +17,7 @@ import DevPanel from '@/components/dev/DevPanel';
 import { AutoLoadDemo } from '@/components/AutoLoadDemo';
 import { DemoStatus } from '@/components/DemoStatus';
 import CTAStickyBar from '@/components/ui/CTAStickyBar';
-import { SecondaryNav } from '@/components/layout/SecondaryNav';
+import SecondaryNav from '@/components/layout/SecondaryNav';
 import ReceiptsListPage from '@/pages/ReceiptsListPage';
 import ReceiptDetailPage from '@/pages/ReceiptDetailPage';
 import SamplesPage from '@/pages/SamplesPage';
