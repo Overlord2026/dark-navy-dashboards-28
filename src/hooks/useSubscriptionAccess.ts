@@ -1,10 +1,25 @@
 import { useEffect, useMemo, useState } from 'react';
 import { SubscriptionTierType, AddOnAccess, UsageCounters, UsageLimits } from '@/types/subscription';
+import { Plan } from '@/types/pricing';
 
 export type SubscriptionAccess = {
-  plan: string | null;
+  plan: Plan;
   features: Record<string, boolean>;
   loading: boolean;
+  subscriptionPlan: UserProfile | null;
+  isLoading: boolean;
+  checkFeatureAccess: (tier: SubscriptionTierType) => boolean;
+  checkAddOnAccess: (addOnKey: keyof AddOnAccess) => boolean;
+  checkUsageLimit: (usageType: keyof UsageCounters) => boolean;
+  incrementUsage: (usageType: keyof UsageCounters) => Promise<void>;
+  isSubscriptionActive: () => boolean;
+  syncWithStripe: () => Promise<void>;
+  fetchSubscriptionData: () => Promise<void>;
+  has: (key: string) => boolean;
+  quota: (key: string) => number | 'unlimited' | null;
+  remainingQuota: (key: string) => number | 'unlimited' | null;
+  persona?: string;
+  segment?: string;
 };
 
 interface UserProfile {
@@ -69,7 +84,7 @@ function createMockProfile(tier: SubscriptionTierType): UserProfile {
 }
 
 export function useSubscriptionAccess() {
-  const [plan, setPlan] = useState<string | null>(null);
+  const [plan, setPlan] = useState<Plan>('basic');
   const [features, setFeatures] = useState<Record<string, boolean>>({});
   const [loading, setLoading] = useState(true);
   const [subscriptionPlan, setSubscriptionPlan] = useState<UserProfile | null>(null);
@@ -96,7 +111,7 @@ export function useSubscriptionAccess() {
           } catch { /* ignore */ }
         }
 
-        const finalPlan = currentPlan ?? 'basic';
+        const finalPlan = (currentPlan ?? 'basic') as Plan;
         setPlan(finalPlan);
         setFeatures(buildFeatures(finalPlan));
         setSubscriptionPlan(createMockProfile(finalPlan as SubscriptionTierType));
@@ -150,6 +165,26 @@ export function useSubscriptionAccess() {
     console.log('Fetching subscription data');
   };
 
+  const has = (key: string): boolean => {
+    return features[key] || false;
+  };
+
+  const quota = (key: string): number | 'unlimited' | null => {
+    // Basic quota implementation based on plan
+    if (!subscriptionPlan) return null;
+    const tier = subscriptionPlan.subscription_tier;
+    if (tier === 'elite') return 'unlimited';
+    if (tier === 'premium') return 100;
+    return 10;
+  };
+
+  const remainingQuota = (key: string): number | 'unlimited' | null => {
+    const q = quota(key);
+    if (q === 'unlimited') return 'unlimited';
+    if (typeof q === 'number') return Math.max(0, q - 5); // Mock usage
+    return null;
+  };
+
   return useMemo(() => ({
     plan,
     features,
@@ -162,6 +197,11 @@ export function useSubscriptionAccess() {
     incrementUsage,
     isSubscriptionActive,
     syncWithStripe,
-    fetchSubscriptionData
+    fetchSubscriptionData,
+    has,
+    quota,
+    remainingQuota,
+    persona: 'basic',
+    segment: 'individual'
   }), [plan, features, loading, subscriptionPlan]);
 }
